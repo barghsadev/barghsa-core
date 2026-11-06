@@ -2,12 +2,28 @@ import { escapeHtml } from './template-engine.js';
 
 export interface EmailBranding {
   appTitle: string;
+  appTitleFa?: string;
   slogan: string;
   primaryColor: string;
   secondaryColor: string;
   accentColor: string;
   logoUrl: string | null;
   darkMode: boolean;
+  backgroundColor?: string;
+  darkBackgroundColor?: string;
+}
+
+const isColor = (value: unknown): value is string =>
+  typeof value === 'string' && /^#[0-9a-f]{6}$/i.test(value);
+
+/** Choose the higher WCAG contrast ratio for a validated six-digit sRGB background. */
+function emailForeground(background: string): string {
+  const channels = [1, 3, 5].map((start) => {
+    const value = Number.parseInt(background.slice(start, start + 2), 16) / 255;
+    return value <= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4;
+  });
+  const luminance = channels[0]! * 0.2126 + channels[1]! * 0.7152 + channels[2]! * 0.0722;
+  return (luminance + 0.05) / 0.05 >= 1.05 / (luminance + 0.05) ? '#000000' : '#ffffff';
 }
 
 /** Resolve only persistent HTTPS assets; never embed credentials or executable URLs. */
@@ -33,17 +49,22 @@ export function normalizeEmailBranding(value: unknown, publicUrl?: string): Emai
           .slice(0, limit)
       : fallback;
   const color = (name: string, fallback: string): string =>
-    typeof config[name] === 'string' && /^#[0-9a-f]{6}$/i.test(config[name])
-      ? config[name]
-      : fallback;
+    isColor(config[name]) ? config[name] : fallback;
   return {
     appTitle: text('appTitle', 'Barghsa', 100),
+    ...(typeof config.appTitleFa === 'string' && config.appTitleFa.trim()
+      ? { appTitleFa: text('appTitleFa', '', 100) }
+      : {}),
     slogan: text('slogan', '', 200),
     primaryColor: color('primaryColor', '#2563eb'),
     secondaryColor: color('secondaryColor', '#64748b'),
     accentColor: color('accentColor', '#f59e0b'),
     logoUrl: logoUrl(config.logoUrl, publicUrl),
     darkMode: config.darkMode === true,
+    ...(isColor(config.backgroundColor) ? { backgroundColor: config.backgroundColor } : {}),
+    ...(isColor(config.darkBackgroundColor)
+      ? { darkBackgroundColor: config.darkBackgroundColor }
+      : {}),
   };
 }
 
@@ -54,10 +75,15 @@ export function renderBrandedEmail(
   locale: 'fa' | 'en'
 ): string {
   const brand = normalizeEmailBranding(branding);
-  const title = escapeHtml(brand.appTitle),
+  const title = escapeHtml(locale === 'fa' ? brand.appTitleFa || brand.appTitle : brand.appTitle),
     slogan = escapeHtml(brand.slogan);
-  const background = brand.darkMode ? '#0f172a' : '#ffffff';
-  const foreground = brand.darkMode ? '#f8fafc' : '#111827';
+  const configuredBackground = brand.darkMode ? brand.darkBackgroundColor : brand.backgroundColor;
+  const background = configuredBackground ?? (brand.darkMode ? '#0f172a' : '#ffffff');
+  const foreground = configuredBackground
+    ? emailForeground(configuredBackground)
+    : brand.darkMode
+      ? '#f8fafc'
+      : '#111827';
   const logo = brand.logoUrl
     ? `<img src="${escapeHtml(brand.logoUrl)}" alt="${title}" width="160" style="max-width:160px;height:auto;border:0">`
     : '';

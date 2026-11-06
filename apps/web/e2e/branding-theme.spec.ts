@@ -149,3 +149,46 @@ for (const locale of ['fa', 'en'] as const)
       });
     });
   }
+
+for (const locale of ['fa', 'en'] as const)
+  for (const darkMode of [false, true]) {
+    test(`auth and public entry points consume active branding (${locale}, dark=${darkMode})`, async ({
+      page,
+    }) => {
+      await page.addInitScript((value) => localStorage.setItem('barghsa.locale', value), locale);
+      await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+      await page.route('**/api/auth/user', (route) => route.fulfill({ status: 401, json: {} }));
+      await page.route('**/api/public/branding/config', (route) =>
+        route.fulfill({
+          json: {
+            appTitle: 'Public & Energy',
+            appTitleFa: 'برق همگانی',
+            slogan: '',
+            supportEmail: 'support@example.test',
+            supportPhone: '02126658042',
+            supportMobile: '09002550292',
+            primaryColor: '#176b5b',
+            secondaryColor: '#547467',
+            accentColor: '#d6a74e',
+            backgroundColor: '#e0f2e9',
+            darkBackgroundColor: '#000000',
+            darkMode,
+            logoUrl: null,
+            faviconUrl: null,
+            numberStyle: 'locale',
+          },
+        })
+      );
+      for (const path of ['/login', '/support']) {
+        await page.goto(path);
+        await expect(page).toHaveTitle(locale === 'fa' ? 'برق همگانی' : 'Public & Energy');
+        await expect(page.locator('html')).toHaveAttribute('dir', locale === 'fa' ? 'rtl' : 'ltr');
+        await expect(page.locator('html')).toHaveCSS('--primary', '#176b5b');
+        await expect(page.locator('html')).toHaveClass(darkMode ? /dark/ : /^(?!.*\bdark\b)/);
+        await expect(page.locator('body')).toHaveCSS(
+          'background-color',
+          darkMode ? 'rgb(0, 0, 0)' : 'rgb(224, 242, 233)'
+        );
+      }
+    });
+  }

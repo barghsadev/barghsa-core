@@ -50,11 +50,12 @@ ${message.activationUrl}`
             ? normalizeEmailBranding(message.emailBranding)
             : await loadEmailBranding(pool);
       if (brand) {
+        const persianTitle = brand.appTitleFa || brand.appTitle;
         subject = activation
-          ? `فعال‌سازی حساب ${brand.appTitle} / Activate your ${brand.appTitle} account`
-          : `کد تأیید ${brand.appTitle} / ${brand.appTitle} verification code`;
+          ? `فعال‌سازی حساب ${persianTitle} / Activate your ${brand.appTitle} account`
+          : `کد تأیید ${persianTitle} / ${brand.appTitle} verification code`;
         if (!activation)
-          text = `کد تأیید ${brand.appTitle}: ${message.code}\n${brand.appTitle} verification code: ${message.code}\nاین کد را با کسی به اشتراک نگذارید. Do not share this code.`;
+          text = `کد تأیید ${persianTitle}: ${message.code}\n${brand.appTitle} verification code: ${message.code}\nاین کد را با کسی به اشتراک نگذارید. Do not share this code.`;
       }
       return createEmailSender(
         pool,

@@ -2,6 +2,52 @@ import { describe, expect, it, vi } from 'vitest';
 import { loadEmailBranding, normalizeEmailBranding, renderBrandedEmail } from './branding.js';
 
 describe('email branding', () => {
+  it.each(['fa', 'en'] as const)(
+    'uses the configured %s title without HTML or subject injection',
+    (locale) => {
+      const brand = normalizeEmailBranding({
+        appTitle: 'English & Energy',
+        appTitleFa: 'برق <آزمایش>\r\n\u0000',
+      });
+      expect(brand.appTitleFa).toBe('برق <آزمایش>');
+      const html = renderBrandedEmail('<p>Body</p>', brand, locale);
+      expect(html).toContain(locale === 'fa' ? 'برق &lt;آزمایش&gt;' : 'English &amp; Energy');
+      expect(html).not.toContain('<آزمایش>');
+      expect(html).toContain('<p>Body</p>');
+    }
+  );
+  it.each([
+    [false, '#000000', '#ffffff'],
+    [false, '#777777', '#000000'],
+    [true, '#ffffff', '#000000'],
+    [true, '#000000', '#ffffff'],
+  ] as const)(
+    'uses the configured background with readable text (dark=%s, %s)',
+    (darkMode, background, foreground) => {
+      const brand = normalizeEmailBranding({
+        darkMode,
+        backgroundColor: darkMode ? '#abcdef' : background,
+        darkBackgroundColor: darkMode ? background : '#abcdef',
+      });
+      expect(renderBrandedEmail('Message', brand, 'fa')).toContain(
+        `background:${background};color:${foreground}`
+      );
+    }
+  );
+  it('rejects executable background values and preserves legacy rendering defaults', () => {
+    const brand = normalizeEmailBranding({
+      appTitle: 'Legacy',
+      appTitleFa: '',
+      backgroundColor: '#fff; background:url(evil)',
+      darkBackgroundColor: 'url(javascript:alert(1))',
+    });
+    const light = renderBrandedEmail('Body', brand, 'fa');
+    const dark = renderBrandedEmail('Body', { ...brand, darkMode: true }, 'en');
+    expect(light).toContain('background:#ffffff;color:#111827');
+    expect(dark).toContain('background:#0f172a;color:#f8fafc');
+    expect(light).toContain('Legacy');
+    expect(light + dark).not.toMatch(/url\(|javascript:/);
+  });
   it('removes controls before brand names reach email subjects', () => {
     expect(normalizeEmailBranding({ appTitle: 'Brand\r\n\u0000name' }).appTitle).toBe(
       'Brand   name'

@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-10-12T04:51:19.438896+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-06T15:26:25.854636+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.3.0**. Next milestone: **v0.4.0**.
 
@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 594 | Accepted with unchanged source bindings. |
-| verify | 730 | Existing work may be complete; inspect evidence before building. |
+| done | 595 | Accepted with unchanged source bindings. |
+| verify | 729 | Existing work may be complete; inspect evidence before building. |
 | partial | 35 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 7 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
@@ -39,11 +39,10 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Resolve owner-blocked staging Telegram outbound route or approved protected proxy, then authorized actual webhook handoff/private linkage/isolation/version checks. Four non-Telegram native AI slots are verified. Accept and stage v0.4.0 only after all gates; no later release or production deployment.
+Inspect existing versioned branding asset implementation and complete demonstrated favicon upload/editor gaps through native ownership, byte verification, draft/activate and public/private asset boundaries. Reuse accepted theme evidence. Keep deployed CDN proof and deferred Telegram hosting explicit; no new server or release claim.
 
-- `02-auth-users-admin.md#T-09.11.05`: Agent slot assignment
-- `05-notifications-documents-ai.md#T-05.22.04`: Data isolation per slot
-- `release-readiness#R-03.02`: Verify live staging provider and storage boundaries
+- `02-auth-users-admin.md#T-09.01.01`: Branding settings page
+- `07-ui-ux-design.md#T-07.30.02.01`: BrandingSettingsPage: logo upload with preview (light + dark), color pickers (primary, secondary, accent), app title inputs (FA/EN), favicon upload, preview toggle, versioned save + activate.
 
 ## v0.2.0: Complete customer journeys
 
@@ -642,7 +641,7 @@ Customer and admin workflows work on desktop/mobile in both languages and themes
 | `release-readiness#R-04.01` | todo | Inventory needed | Verify full customer and admin UI adoption |
 | `release-readiness#R-04.02` | todo | Inventory needed | Renew accessibility and performance evidence |
 | `02-auth-users-admin.md#T-09.01.01` | partial | Earlier partial | Branding settings page |
-| `02-auth-users-admin.md#T-09.01.02` | verify | Earlier acceptance_verified | Theme application |
+| `02-auth-users-admin.md#T-09.01.02` | done | Earlier acceptance_verified | Theme application |
 | `07-ui-ux-design.md#T-07.01.01.01` | done | Earlier acceptance_verified | Initialize `packages/ui` with Tailwind CSS v4, PostCSS, autoprefixer. Configure `tailwind.config.ts` with extended color palette, font families (Vazirmatn for Persian, Inter for English), border-radius, spacing scale, and animation tokens. |
 | `07-ui-ux-design.md#T-07.01.01.02` | partial | Earlier partial | Install and configure shadcn/ui CLI: set `style: "new-york"`, `baseColor: "zinc"`, `cssVariables: true`. Generate initial component set: Button, Input, Label, Card, Badge, Dialog, DropdownMenu, Select, Separator, Sheet, Skeleton, Toast, Tooltip, Tabs, Avatar, Popover, Command, Switch, Progress, Slider, Textarea, Alert, Breadcrumb, ScrollArea, Calendar, Checkbox, RadioGroup, Sonner (toaster). |
 | `07-ui-ux-design.md#T-07.01.01.03` | partial | Earlier partial | Install and configure Base UI (by MUI — `@mui/base` / `@mui/base-ui`) for complex patterns: NumberField (with locale-aware formatting), DatePicker/DateRangePicker (with Jalali support), ComboBox (with search + keyboard nav), Select (with multi-select + chips), Table (sortable, selectable rows via useTable). |

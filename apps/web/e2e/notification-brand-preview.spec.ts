@@ -23,6 +23,8 @@ for (const locale of ['en', 'fa'] as const)
             primaryColor: '#123456',
             secondaryColor: '#345678',
             accentColor: '#567890',
+            backgroundColor: '#ffffff',
+            darkBackgroundColor: '#0f172a',
             logoUrl: null,
             faviconUrl: null,
             darkMode,
@@ -132,3 +134,71 @@ for (const channel of ['sms', 'in_app']) {
     await expect(page.locator('iframe')).toHaveCount(0);
   });
 }
+
+for (const locale of ['fa', 'en'] as const)
+  for (const darkMode of [false, true]) {
+    test(`localized branded preview uses configured backgrounds (${locale}, dark=${darkMode})`, async ({
+      page,
+    }, testInfo) => {
+      await crmShell(page, locale);
+      await page.route('**/api/public/branding/config', (route) =>
+        route.fulfill({
+          json: {
+            appTitle: 'English & Energy',
+            appTitleFa: 'برق <آزمایش>',
+            supportEmail: 'staff@example.test',
+            supportPhone: '02126658042',
+            supportMobile: '09002550292',
+            primaryColor: '#176b5b',
+            secondaryColor: '#547467',
+            accentColor: '#d6a74e',
+            backgroundColor: '#e0f2e9',
+            darkBackgroundColor: '#000000',
+            darkMode,
+            logoUrl: null,
+            faviconUrl: null,
+            slogan: '',
+            numberStyle: 'locale',
+          },
+        })
+      );
+      await page.route('**/api/admin/notifications/templates', (route) =>
+        route.fulfill({
+          json: [
+            {
+              ...notificationTemplate(),
+              id: 'localized-preview',
+              channel: 'email',
+              locale,
+              bodyTemplate: '<p>Localized preview body</p>',
+              variables: [],
+            },
+          ],
+        })
+      );
+      await page.goto('/admin/notifications');
+      const frame = page.frameLocator('iframe').first();
+      await expect(
+        frame.getByText(locale === 'fa' ? 'برق <آزمایش>' : 'English & Energy', { exact: true })
+      ).toBeVisible();
+      await expect(frame.getByText('Localized preview body')).toBeVisible();
+      await expect(frame.locator('div[lang]')).toHaveAttribute(
+        'dir',
+        locale === 'fa' ? 'rtl' : 'ltr'
+      );
+      await expect(frame.locator('div[lang]')).toHaveCSS(
+        'background-color',
+        darkMode ? 'rgb(0, 0, 0)' : 'rgb(224, 242, 233)'
+      );
+      await expect(frame.locator('div[lang]')).toHaveCSS(
+        'color',
+        darkMode ? 'rgb(255, 255, 255)' : 'rgb(0, 0, 0)'
+      );
+      await expect(page.locator('iframe').first()).toHaveAttribute('sandbox', '');
+      await expect(page.locator('iframe').first()).toHaveAttribute('referrerpolicy', 'no-referrer');
+      await page
+        .locator('iframe')
+        .first()
+        .screenshot({ path: testInfo.outputPath('localized-brand-preview.png') });
+    });
+  }

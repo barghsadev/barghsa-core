@@ -480,41 +480,103 @@ it('sends OTP and activation email through the real shared adapter with stable i
   expect(bodies[1].html).toContain('Barghsa');
 });
 
-it('freezes active auth-email branding in encrypted delivery data across retries', async () => {
-  await emailProvider();
-  await pool.query(`INSERT INTO brand_config(config,version,status,created_by)
-    VALUES ('{"appTitle":"First & Energy","primaryColor":"#123456"}',1,'active','delivery-user'),
-    ('{"appTitle":"Draft name"}',2,'draft','delivery-user')`);
-  const bodies: Record<string, unknown>[] = [];
-  const request = vi.fn<typeof fetch>(async (_url, options) => {
-    bodies.push(JSON.parse(String(options?.body)));
-    return new Response(JSON.stringify({ id: 'branded-mail' }), {
-      status: bodies.length === 1 ? 503 : 200,
+it.each(['login', 'staff_activation'] as const)(
+  'localizes %s email identity with the real adapter',
+  async (purpose) => {
+    await emailProvider();
+    await pool.query(
+      `INSERT INTO brand_config(config,version,status,created_by) VALUES($1,1,'active','delivery-user')`,
+      [{ appTitle: 'English & Energy', appTitleFa: 'برقسا\r\n', backgroundColor: '#000000' }]
+    );
+    const request = vi.fn<typeof fetch>(
+      async () => new Response(JSON.stringify({ id: 'localized-mail' }), { status: 200 })
+    );
+    const link = 'https://app.example.test/activate#token=' + 'a'.repeat(64);
+    const input = {
+      ...message,
+      destination,
+      purpose,
+      ...(purpose === 'staff_activation' ? { code: 'a'.repeat(64), activationUrl: link } : {}),
+    };
+    expect(await createAuthSender(pool, request)(input)).toBe('localized-mail');
+    expect(request).toHaveBeenCalledOnce();
+    const body = JSON.parse(String(request.mock.calls[0]![1]?.body));
+    expect(body.subject).toBe(
+      purpose === 'staff_activation'
+        ? 'فعال‌سازی حساب برقسا / Activate your English & Energy account'
+        : 'کد تأیید برقسا / English & Energy verification code'
+    );
+    expect(body.subject).not.toMatch(/[\r\n]/);
+    expect(body.html).toContain('برقسا');
+    expect(body.html).toContain('background:#000000;color:#ffffff');
+    expect(body.text).toContain(purpose === 'staff_activation' ? link : code);
+    expect(request.mock.calls[0]![1]?.headers).toMatchObject({ 'Idempotency-Key': message.id });
+  }
+);
+
+it.each([false, true])(
+  'freezes active auth-email branding across retries (localized theme=%s)',
+  async (localized) => {
+    await emailProvider();
+    await pool.query(
+      `INSERT INTO brand_config(config,version,status,created_by)
+    VALUES ($1,1,'active','delivery-user'),
+    ('{"appTitle":"Draft name"}',2,'draft','delivery-user')`,
+      [
+        {
+          appTitle: 'First & Energy',
+          primaryColor: '#123456',
+          ...(localized
+            ? {
+                appTitleFa: 'برق نخست',
+                darkMode: true,
+                backgroundColor: '#ffffff',
+                darkBackgroundColor: '#000000',
+              }
+            : {}),
+        },
+      ]
+    );
+    const bodies: Record<string, unknown>[] = [];
+    const request = vi.fn<typeof fetch>(async (_url, options) => {
+      bodies.push(JSON.parse(String(options?.body)));
+      return new Response(JSON.stringify({ id: 'branded-mail' }), {
+        status: bodies.length === 1 ? 503 : 200,
+      });
     });
-  });
-  const sender = createAuthSender(pool, request);
-  const { id } = await queued();
-  expect(await runAuthDelivery(pool, sender)).toBe('retry');
-  const saved = await state(id);
-  expect(saved.encrypted_payload).not.toContain('First & Energy');
-  expect(decryptAuthDelivery(id, saved.encrypted_payload)).toMatchObject({
-    emailBranding: { appTitle: 'First & Energy' },
-  });
-  await pool.query(
-    `UPDATE brand_config SET config='{"appTitle":"Later name","primaryColor":"#654321"}' WHERE status='active'`
-  );
-  await pool.query("UPDATE auth_delivery_outbox SET available_at=NOW()-INTERVAL '1 second'");
-  expect(await runAuthDelivery(pool, sender)).toBe('sent');
-  expect(bodies[0]).toEqual(bodies[1]);
-  expect(bodies[1]?.subject).toContain('First & Energy');
-  expect(bodies[1]?.html).toContain('First &amp; Energy');
-  expect(bodies[1]?.html).toContain('#123456');
-  expect(bodies[1]?.html).not.toMatch(/Draft name|Later name/);
-  expect((await state(id)).encrypted_payload).toBeNull();
-  await queued();
-  expect(await runAuthDelivery(pool, sender)).toBe('sent');
-  expect(bodies[2]?.subject).toContain('Later name');
-});
+    const sender = createAuthSender(pool, request);
+    const { id } = await queued();
+    expect(await runAuthDelivery(pool, sender)).toBe('retry');
+    const saved = await state(id);
+    expect(saved.encrypted_payload).not.toContain('First & Energy');
+    expect(decryptAuthDelivery(id, saved.encrypted_payload)).toMatchObject({
+      emailBranding: { appTitle: 'First & Energy' },
+    });
+    await pool.query(
+      `UPDATE brand_config SET config='{"appTitle":"Later name","primaryColor":"#654321"}' WHERE status='active'`
+    );
+    await pool.query("UPDATE auth_delivery_outbox SET available_at=NOW()-INTERVAL '1 second'");
+    expect(await runAuthDelivery(pool, sender)).toBe('sent');
+    expect(bodies[0]).toEqual(bodies[1]);
+    expect(bodies[1]?.subject).toContain('First & Energy');
+    expect(bodies[1]?.html).toContain('First &amp; Energy');
+    expect(bodies[1]?.html).toContain('#123456');
+    expect(bodies[1]?.html).not.toMatch(/Draft name|Later name/);
+    if (localized) {
+      expect(saved.encrypted_payload).not.toContain('برق نخست');
+      expect(decryptAuthDelivery(id, saved.encrypted_payload)).toMatchObject({
+        emailBranding: { appTitleFa: 'برق نخست', darkMode: true, darkBackgroundColor: '#000000' },
+      });
+      expect(bodies[1]?.subject).toBe('کد تأیید برق نخست / First & Energy verification code');
+      expect(bodies[1]?.html).toContain('برق نخست');
+      expect(bodies[1]?.html).toContain('background:#000000;color:#ffffff');
+    }
+    expect((await state(id)).encrypted_payload).toBeNull();
+    await queued();
+    expect(await runAuthDelivery(pool, sender)).toBe('sent');
+    expect(bodies[2]?.subject).toContain('Later name');
+  }
+);
 
 it('retains the original plain email for already-attempted legacy delivery keys', async () => {
   await emailProvider();

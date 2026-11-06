@@ -42,6 +42,27 @@ for (const locale of ['en', 'fa'] as const)
             },
           })
         );
+        // Admit the known owner through bootstrap; the page's business reads still fail below.
+        await page.route('**/api/profiles', (route) =>
+          route.fulfill({
+            json: {
+              profiles: [
+                {
+                  id: 'theme-profile',
+                  profileType: 'INDIVIDUAL',
+                  isDefault: true,
+                  status: 'VERIFIED',
+                  title: null,
+                  firstName: 'Theme',
+                  lastName: 'Owner',
+                  nationalId: null,
+                },
+              ],
+              hasDefault: true,
+              activeProfileId: 'theme-profile',
+            },
+          })
+        );
         await page.route('**/api/user/settings/timezone', (route) =>
           route.fulfill({ json: { timezone: 'America/New_York' } })
         );

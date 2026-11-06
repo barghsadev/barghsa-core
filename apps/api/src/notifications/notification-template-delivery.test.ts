@@ -250,6 +250,48 @@ it.each(['fa', 'en'] as const)(
   }
 );
 
+it.each([
+  ['fa', false],
+  ['fa', true],
+  ['en', false],
+  ['en', true],
+] as const)(
+  'keeps localized %s branding and dark=%s identical in preview and delivery',
+  async (locale, darkMode) => {
+    const { instance, lockTemplate } = service('email');
+    const template = { ...(await lockTemplate()), locale };
+    lockTemplate.mockResolvedValue(template);
+    query.mockImplementation(async (sql: string) => {
+      if (sql.includes('FROM brand_config'))
+        return {
+          rows: [
+            {
+              config: {
+                appTitle: 'English & Energy',
+                appTitleFa: 'برق <آزمایش>',
+                backgroundColor: '#777777',
+                darkBackgroundColor: '#000000',
+                darkMode,
+              },
+            },
+          ],
+        };
+      if (sql.includes('FROM notification_templates')) return { rows: [template] };
+      return { rows: [{ ...sessionRow, username: 'staff@example.test' }] };
+    });
+    send.mockResolvedValue('localized-email-receipt');
+    const preview = await instance.preview('template');
+    await instance.testSend('template', actor, { destination: 'staff@example.test' });
+    expect(send).toHaveBeenCalledWith(expect.objectContaining({ html: preview.body }));
+    expect(preview.body).toContain(locale === 'fa' ? 'برق &lt;آزمایش&gt;' : 'English &amp; Energy');
+    expect(preview.body).toContain(
+      darkMode ? 'background:#000000;color:#ffffff' : 'background:#777777;color:#000000'
+    );
+    expect(preview.body).toContain(`dir="${locale === 'fa' ? 'rtl' : 'ltr'}"`);
+    expect(preview.body).toContain('Test body');
+  }
+);
+
 it('does not relabel a sent email as failed when its audit cannot persist', async () => {
   const { instance } = service('email');
   send.mockResolvedValue('email-receipt');

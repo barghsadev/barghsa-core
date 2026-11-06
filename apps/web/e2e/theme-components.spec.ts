@@ -56,6 +56,10 @@ for (const locale of ['en', 'fa'])
         route.fulfill({
           json: {
             appTitle: 'Controls',
+            appTitleFa: 'آزمون نمایش',
+            supportEmail: 'support@example.test',
+            supportPhone: '02126658042',
+            supportMobile: '09002550292',
             slogan: '',
             primaryColor: '#777777',
             secondaryColor: '#64748b',
@@ -237,6 +241,10 @@ for (const locale of ['en', 'fa'])
           route.fulfill({
             json: {
               appTitle: 'Theme checks',
+              appTitleFa: 'آزمون نمایش',
+              supportEmail: 'support@example.test',
+              supportPhone: '02126658042',
+              supportMobile: '09002550292',
               slogan: '',
               primaryColor,
               secondaryColor: '#64748b',
@@ -322,6 +330,10 @@ for (const locale of ['en', 'fa'])
         route.fulfill({
           json: {
             appTitle: 'Controls',
+            appTitleFa: 'آزمون نمایش',
+            supportEmail: 'support@example.test',
+            supportPhone: '02126658042',
+            supportMobile: '09002550292',
             slogan: '',
             primaryColor: '#777777',
             secondaryColor: '#64748b',

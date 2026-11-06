@@ -41,3 +41,15 @@ Apply migration `0276_auth_delivery_notices` before the updated API and worker. 
 The current worker polls hourly and permits document destruction only when the UTC hour is 02. This implements the documented nightly 02:00 UTC window. It is not unrestricted hourly destruction. Each pass remains bounded and requires legal approval, retention eligibility, current hold checks and exact-version deletion. Restarts do not bypass idempotent manifests or permanent financial/contractual retention.
 
 Live versioned-storage cleanup and operations receiver evidence remain separate release criteria. These decisions do not authorize production deployment.
+
+## Telegram hosting boundary
+
+On 6 November 2026 the owner confirmed that the application server's network blocks Telegram. Run the customer Telegram service on a reachable external host when provisioning becomes possible. Continue independent product implementation in release order while that deployment is deferred. This decision does not waive live Telegram acceptance or authorize purchasing another server.
+
+Preserve the existing bot webhook until the replacement is configured and verified. Keep bot credentials and webhook secrets in protected configuration. External hosting must preserve the application's account/profile authority, private-chat checks, webhook authenticity and replay protections. Verify the actual webhook handoff, owned account/profile linkage, audience isolation, root version and delivery receipts before accepting the affected release gates. Local fixtures and successful non-Telegram AI checks do not replace those receipts. Production authorization remains separate.
+
+## Branding in email delivery
+
+Email previews and delivery use the published Persian or English brand title and the configured light/dark background. Only six-digit hexadecimal colors are admitted into email styles; text uses the higher-contrast black or white foreground. Legacy branding snapshots without these optional fields retain their earlier rendering defaults.
+
+Authentication delivery freezes branding in its encrypted payload before the first attempt. Later branding changes do not change that attempted message or its provider identity. Already-attempted legacy keys retain their original plain email. Localization does not alter OTP/contact boundaries, template bodies, transport credentials, accepted receipts or uncertainty holds.

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-10-12T04:51:19.438896+00:00",
+  "updated": "2026-11-06T15:26:25.854636+00:00",
   "source_commit": "93b9fec7a2c18f2635d57cd923ffce0626ee0413",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -726,8 +726,8 @@
       "notes_path": "docs/decisions/notification-provider-closure.md"
     },
     "v04_liara_staging_subscription": {
-      "status": "approval_pending",
-      "source": "Owner input requested12October after actual protected account/plan discovery",
+      "status": "approved_and_provisioned",
+      "source": "Explicit owner approval on2026-10-12; prior native provisioning and live AI receipts retained",
       "request": {
         "workspace_name": "barghsa-staging",
         "plan": "standard",
@@ -741,7 +741,20 @@
         "free_tier_available": false
       },
       "proposal": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/liara-staging-workspace-proposal.json",
-      "actual_cloud_creation": false
+      "actual_cloud_creation": true,
+      "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/approved-ai-live-proof.json"
+    },
+    "v04_telegram_external_host": {
+      "status": "approved_external_host_deferred",
+      "approved_by": "owner",
+      "approved_at": "2026-11-06",
+      "source": "Telegram is blocked in server network; host Telegram service on another server later; another server is not possible now; continue building in this situation.",
+      "scope": "Continue independent implementation in dependency order starting v0.5.0. Retain v0.4.0 live Telegram task/release gates as blocked; no new server purchase, network bypass or fabricated receipt. Release acceptance and production readiness still require actual external-host Telegram verification.",
+      "task_keys": [
+        "02-auth-users-admin.md#T-09.11.05",
+        "05-notifications-documents-ai.md#T-05.22.04",
+        "release-readiness#R-03.02"
+      ]
     }
   },
   "specification_sources": {
@@ -3337,7 +3350,7 @@
       "version": "0.5.0",
       "title": "Usable and accessible product",
       "goal": "Customer and admin workflows work on desktop/mobile in both languages and themes, including keyboard use, errors, filters and safe confirmations.",
-      "status": "planned",
+      "status": "in_progress",
       "depends_on": [
         "0.4.0"
       ],
@@ -30604,11 +30617,11 @@
           "source_evidence": [
             {
               "path": "apps/web/e2e/branding-theme.spec.ts",
-              "sha256": "3dcf8fec53a0a4c49c53da5eb635cf1d8c8f5a9e745ef3b3e0690d754f67da04"
+              "sha256": "9e01921593b5962fc843f0fc1a8e653bdbf08a4a89e99e8545948affcb80ce11"
             },
             {
               "path": "apps/web/e2e/consumer-theme.spec.ts",
-              "sha256": "54884aa2f3d7f463efb7df5aedcf536010350075d7f70dc78c7ab76299a47163"
+              "sha256": "c20ba5f1942524442fb723feaa906b17bfff4283186fb34a8a4e569587bbf9f8"
             },
             {
               "path": "apps/web/e2e/direction-component.spec.ts",
@@ -30624,7 +30637,7 @@
             },
             {
               "path": "apps/web/e2e/notification-brand-preview.spec.ts",
-              "sha256": "d59be9f4e04dc9b130e3afb15ebaace0ccf74753ce24e17ed11f9c8525284f34"
+              "sha256": "3ad070e8eb5574a85f5524e63b8d8c7ff7e5f9643b8d2172a941479f15ffd5b3"
             },
             {
               "path": "apps/web/e2e/profile-settings-name.spec.ts",
@@ -30636,7 +30649,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "f4fbd257ea77c8ae07e706418fa6a93fdcc4bf09485b17e7b7d243b100137b54"
+              "sha256": "c71b7dadc132ba8411dadc46f33d7ffe4d7b483a81fcf7ee07a2bd4cf123f664"
             },
             {
               "path": "apps/web/e2e/timezone-settings.spec.ts",
@@ -30964,7 +30977,8 @@
             "CRM-profile read renewal: 40 targeted units, 128 related CRM browser cases and 88 budgets pass. Original edit/command/normalization/step-up/acknowledgement/archive/success prefix, 13 action if statements and full UI are exact. Added owned query cancellation/current-result fences, account/context isolation and localized identity refusal; current follow-up completion owns loading cleanup while committed actions remain successful across read failures. Prior effective criteria/status preserved. Scoped proof: /Users/majid/.local/state/barghsa-manual-batches/server-state-crm-profile-reads.",
             "Assistant display read renewal: 74 targeted unit outcomes, 46 deduplicated related browser outcomes, types/lint/format/build and 88 budgets pass. Prior criteria/status retained; exact source/AST/native-header/dedup evidence: /Users/majid/.local/state/barghsa-manual-batches/server-state-assistant-display-reads",
             "v0.2.0 closure renews only exact baseline-matched bindings: original business bodies/assertions/SQL and auth dictionary preserved; intentional new recovery/draft/CSP boundaries, cold dictionary, additive contract/migration and version metadata reviewed with current relevant checks. Prior effective criteria retained, no unrelated whole-task recertification. Evidence: /Users/majid/.local/state/barghsa-manual-batches/release-0.2-closure",
-            "Scoped provider pause renewal: unchanged migration prefix/schema and existing behavior retained; current targeted native/browser/auth/AI checks cover changed provider branches. Whole task status and existing live limitations remain. Evidence: /Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/pause-proof.json"
+            "Scoped provider pause renewal: unchanged migration prefix/schema and existing behavior retained; current targeted native/browser/auth/AI checks cover changed provider branches. Whole task status and existing live limitations remain. Evidence: /Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/pause-proof.json",
+            "Brand-theme caller renewal: /Users/majid/.local/state/barghsa-manual-batches/release-0.5-brand-theme/acceptance-proof.json. 239 current unit/native cases and61 distinct source-bound browser cases pass;16 legacy frame/normalization cases byte-identical. Sender/claim/authority/money/unknown-outcome code unchanged. Original assertions and numeric limits retained; no new physical provider, Telegram, staging or whole-release claim."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/account-preferences-acceptance",
           "limitations": [
@@ -31248,6 +31262,15 @@
               "apps/web/src/pages/AdminEmailProvidersPage.tsx"
             ]
           }
+        },
+        "brand_theme_caller_renewal": {
+          "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-brand-theme/acceptance-proof.json",
+          "paths": [
+            "apps/web/e2e/branding-theme.spec.ts",
+            "apps/web/e2e/consumer-theme.spec.ts",
+            "apps/web/e2e/notification-brand-preview.spec.ts",
+            "apps/web/e2e/theme-components.spec.ts"
+          ]
         }
       }
     },
@@ -52310,12 +52333,10 @@
         "story": "02-auth-users-admin.md#spec-2642ea7427ee"
       },
       "requirement": "**T-09.01.02 — Theme application**\n\n- Description: Branding settings applied to auth pages, public pages, email templates, and notification templates. Full light/dark theme support.\n- Technical notes: CSS custom properties injected from brand config. Email templates reference brand colors. Both themes independently configurable or derived from primary.\n- UI/UX: Instant preview on dashboard. Consistent across all touchpoints.\n- Dependencies: T-09.01.01\n- Complexity: M",
-      "status": "verify",
+      "status": "done",
       "release": "0.5.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -52617,7 +52638,325 @@
           "packages/ui/src/styles.css"
         ],
         "batches": [],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "accepted-native-brand-theme-application",
+          "base_commit": "8467954e00dc80d45f14e315be70f69715af9132",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/notifications/notification-template-delivery.test.ts",
+              "sha256": "5b342c9a3d9d7c737bc8b7a7ce5300af9dc425d739435dea759333b35a4d3eea"
+            },
+            {
+              "path": "apps/api/src/notifications/notification-template.service.ts",
+              "sha256": "fbd230be0ce64a510824d2cca58201921ae5c210e09ab5749aed825c2bf5bf5b"
+            },
+            {
+              "path": "apps/web/e2e/branding-theme.spec.ts",
+              "sha256": "9e01921593b5962fc843f0fc1a8e653bdbf08a4a89e99e8545948affcb80ce11"
+            },
+            {
+              "path": "apps/web/e2e/consumer-theme.spec.ts",
+              "sha256": "c20ba5f1942524442fb723feaa906b17bfff4283186fb34a8a4e569587bbf9f8"
+            },
+            {
+              "path": "apps/web/e2e/direction-component.spec.ts",
+              "sha256": "0894c25e430cf620abcd7efd14f5b718eb0e3bf92c093f1be2a1c96feb12df88"
+            },
+            {
+              "path": "apps/web/e2e/notification-brand-preview.spec.ts",
+              "sha256": "3ad070e8eb5574a85f5524e63b8d8c7ff7e5f9643b8d2172a941479f15ffd5b3"
+            },
+            {
+              "path": "apps/web/e2e/terms-theme.spec.ts",
+              "sha256": "6582d9a677fd65f88219c2439eb5bf792d974b199a996aca070725861b73fc23"
+            },
+            {
+              "path": "apps/web/e2e/theme-components.spec.ts",
+              "sha256": "c71b7dadc132ba8411dadc46f33d7ffe4d7b483a81fcf7ee07a2bd4cf123f664"
+            },
+            {
+              "path": "apps/web/e2e/timezone-settings.spec.ts",
+              "sha256": "95638515e9440b4847bc341a7290ef64eca3c0a121504e090d77fca5b84e9785"
+            },
+            {
+              "path": "apps/web/src/components/AssignmentFallbackEditor.tsx",
+              "sha256": "911fb3cc2f705803d3b6ccfbedd31f0b58354e0ec130dd87bb25a243d55213ba"
+            },
+            {
+              "path": "apps/web/src/components/AuthLayout.tsx",
+              "sha256": "5828202e1f8ccb28b85b567fc251902df7923a2416265c91bb5846c460c60898"
+            },
+            {
+              "path": "apps/web/src/components/BrandedEmailPreview.tsx",
+              "sha256": "5faa869a743e20b91d6e98486f36bbccd1b0cb6ebbc42ee6cc0dc2881e101581"
+            },
+            {
+              "path": "apps/web/src/components/DeadLetterPanel.tsx",
+              "sha256": "9d084431dab36c6215518460f649268dcaa3815cc399274c9a4aadb370d26ca4"
+            },
+            {
+              "path": "apps/web/src/components/DefaultProfileModal.tsx",
+              "sha256": "e7b0f15857b1ee4c24886c2a5f202db55ccb86726ea761094ff7018481e5c6e4"
+            },
+            {
+              "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
+              "sha256": "c7dc99f55256082ce3f087512e16aae5f11b9a918def3dcbe6dc281be22bea91"
+            },
+            {
+              "path": "apps/web/src/components/NotificationBell.tsx",
+              "sha256": "ca732cb7c7d1b8fd9e656436e045c150ee56ee36083f3a31742988a5e61193e2"
+            },
+            {
+              "path": "apps/web/src/components/NotificationRow.tsx",
+              "sha256": "6ecba97ccd23cd592d527686add90bd9ff97be5b6f62d932370de896ca7737ff"
+            },
+            {
+              "path": "apps/web/src/components/OnlinePaymentReturnPanel.tsx",
+              "sha256": "a163b2eb38d2ba528e13f737a2319211c425529573e3d74cd2f1b5781f262ef1"
+            },
+            {
+              "path": "apps/web/src/components/ProfileSwitcher.tsx",
+              "sha256": "cb28e8a844c0ada396511e18340e1443e654a9468ea83a782f85a33ff8ba0ad4"
+            },
+            {
+              "path": "apps/web/src/components/QuickStatusCards.tsx",
+              "sha256": "82ebca7890c5ecdf05632adc3fd9fff1f821688ea239ef00db4c10330d74c829"
+            },
+            {
+              "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
+              "sha256": "8950e7567c504ee99a37cd55a8901c030df3864af0d71f9a47cddc5fa80c9f54"
+            },
+            {
+              "path": "apps/web/src/components/TemplatePreviewPanel.tsx",
+              "sha256": "699b511cc34640b78edc0d6cbf0b9749b4ebaa03c6c493d06e17417649bd5502"
+            },
+            {
+              "path": "apps/web/src/components/WalletBalanceCard.tsx",
+              "sha256": "5b4983ee91f685d455082310283ef8816c34025f3c7739a3e56ac92fba3477f0"
+            },
+            {
+              "path": "apps/web/src/components/WalletTopUpLimitConfigPanel.tsx",
+              "sha256": "8a19ff629274e6115292830f392e7bcd9c2adadad4125c1eea158531e8ac5b1e"
+            },
+            {
+              "path": "apps/web/src/hooks/useAccountTime.test.tsx",
+              "sha256": "0362048bfd281c205250cef68745a3f34e9f9a7c6680f163a8270f92c10ebac7"
+            },
+            {
+              "path": "apps/web/src/hooks/useAccountTime.tsx",
+              "sha256": "e3f3524399d2f7cccafc0315d915a888cdb73e9d49eb8f43659400d910c18ed1"
+            },
+            {
+              "path": "apps/web/src/hooks/useDirection.ts",
+              "sha256": "be6a237736ac7820d0aaa20bab598a68ad8d82671a250c77d7115a1cbf8e035c"
+            },
+            {
+              "path": "apps/web/src/hooks/useLocale.ts",
+              "sha256": "b753d2595d649722a4d9e131ba4d688b434c4183a8bea106c08d965c3d252856"
+            },
+            {
+              "path": "apps/web/src/hooks/useTimezone.ts",
+              "sha256": "f251d68f5fd82d7d1fd3e1a592db5b3f02c7562dc4d8e5042d6732f1ca9a62ef"
+            },
+            {
+              "path": "apps/web/src/pages/AIChat.tsx",
+              "sha256": "68a0f3261b6ab7d489e264134505d55b7c371a2d3330d7f3d3837249d838e2c6"
+            },
+            {
+              "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
+              "sha256": "5dc1a959c0dfacd5779c5b3c3c865e2f06900a13a983d688172f3c19aa9b5856"
+            },
+            {
+              "path": "apps/web/src/pages/AdminContractLimitsPage.tsx",
+              "sha256": "7ae1dd4d68d4552a3be4074e892f2d50e62cf2d0ed07873f08ddc3f8908e4db3"
+            },
+            {
+              "path": "apps/web/src/pages/AdminDashboard.tsx",
+              "sha256": "f3d981aa42bee7b08a89cd650221eeb899c6b8ab1ca6a1b08123f7a102eb901b"
+            },
+            {
+              "path": "apps/web/src/pages/AdminElectricityRulesPage.tsx",
+              "sha256": "8bd57b484840389a6fadbb43f14e3e8dc14e443b881d46b5380c8bd40e753912"
+            },
+            {
+              "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
+              "sha256": "4bfcbfddbf5181324c06de75ea647d7417fc0851bd906a7c1b9b23e1e5752def"
+            },
+            {
+              "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
+              "sha256": "ee22c2c49ac11f4df8c88cf11cf8c42a3784c1a923e83d6b426caab059d83e95"
+            },
+            {
+              "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
+              "sha256": "a258fd38bb11869d710f273a977704c8305d79f11b547067cb2cd18e342f3035"
+            },
+            {
+              "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
+              "sha256": "a6a935e3d42cd89b825be85582872ad466770aa6e3a7ea780619e26c574a0395"
+            },
+            {
+              "path": "apps/web/src/pages/AdminServiceTargetsPage.tsx",
+              "sha256": "9841a050ee12762ffd054816d817cac82414043c3a3cf1c75e3ea431dc9359e4"
+            },
+            {
+              "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
+              "sha256": "865c0e0a537722060519d01d29a74688116058e899dee04618b56d624f932ea2"
+            },
+            {
+              "path": "apps/web/src/pages/AdminTosPage.tsx",
+              "sha256": "a5bb9ebf4e5d4ad335bffbef3171e89ba9666292f2432e7abf84deed5d8683ff"
+            },
+            {
+              "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
+              "sha256": "2f56149261eeff3849bdb2805c0fe96812e32a5a26770bfb7c3eb4d271549eb8"
+            },
+            {
+              "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
+              "sha256": "143786921ef55380f04f91b9edb8456ca6b79c69064fa8d564e9f4d8620de383"
+            },
+            {
+              "path": "apps/web/src/pages/ChartsPage.tsx",
+              "sha256": "59fe536f68eb3fa48b099f2f48895a3805743ccf3c9ef451ff3de226cd439547"
+            },
+            {
+              "path": "apps/web/src/pages/CrmProfileDetail.tsx",
+              "sha256": "21721398ba0c9732b53410f557062c718951d9494c60bb92b15acfec638d9b7d"
+            },
+            {
+              "path": "apps/web/src/pages/DashboardLayout.tsx",
+              "sha256": "82536abaa846d676139258f65483348d1dc17964cfd7a9ab33573f25f582d390"
+            },
+            {
+              "path": "apps/web/src/pages/DashboardPage.tsx",
+              "sha256": "c9d71f578bd236b96f9ec8a9d764f8e8341aede95556fc867ab117bd218be4a3"
+            },
+            {
+              "path": "apps/web/src/pages/DocumentsPage.tsx",
+              "sha256": "9e48d22e718e01f2c1d1d3212103e8cb95f344dbab9f14923470e3ce73f685f8"
+            },
+            {
+              "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.tsx",
+              "sha256": "6204d1d8fed35d68f0ef924fcc4f996d015663769f98e499bd6226724b2bd3a0"
+            },
+            {
+              "path": "apps/web/src/pages/InvoicesPage.tsx",
+              "sha256": "564a675568b04180511a07c52949dd94e58b8383765edd5b7c2fc730cce41fb6"
+            },
+            {
+              "path": "apps/web/src/pages/NotificationCenterPage.tsx",
+              "sha256": "57d7402d0a071cdc6d9ea480af1d19b236e135db9f171af6ba6ca2a761acd339"
+            },
+            {
+              "path": "apps/web/src/pages/TosPreview.tsx",
+              "sha256": "e2ba9a09049614fa4251b06fdbb0a41bb058ba69b8c0d5d8f87909b2f8b29cd9"
+            },
+            {
+              "path": "apps/web/src/pages/TosRichText.tsx",
+              "sha256": "9b6155fac43f41f2bdc92b96507f04c543204fa3a34322d60f964bf9e618b105"
+            },
+            {
+              "path": "apps/web/src/pages/VideosPage.tsx",
+              "sha256": "b9fe8a1f44e8e234669709808eecb51c7f5a68f88f1f744b675afa9de6c159c6"
+            },
+            {
+              "path": "apps/web/src/pages/WalletPage.tsx",
+              "sha256": "487f20306dded67662d4739288bee73983d5aabc13e0b3ee7936e0a3ec9977d3"
+            },
+            {
+              "path": "apps/web/src/providers/BrandThemeProvider.tsx",
+              "sha256": "c647dd1a82e97d48ae84606083494b7e02b5ece0c4d405b5bdccbbc6d279190e"
+            },
+            {
+              "path": "apps/web/src/providers/UiDirectionProvider.tsx",
+              "sha256": "52dd4b7b25aee2b6bc485ed4de87f6910c47cbaa2a391024cf0c88fd7e370776"
+            },
+            {
+              "path": "apps/web/src/routes/__root.tsx",
+              "sha256": "beaee53e712a8eb4d85f713247eb959eeddf315bfdcbff16cd774a088a5966a0"
+            },
+            {
+              "path": "apps/web/src/routes/_app/electricity/index.tsx",
+              "sha256": "1046d784562f6d80c1347ca12066e9840b992f17e968bbbfb508d918914ef6dd"
+            },
+            {
+              "path": "apps/web/src/routes/_app/savings.tsx",
+              "sha256": "87b3c86fc54370f1bc581c4251905624f759541214423a83c57b2c684eb94561"
+            },
+            {
+              "path": "apps/web/src/routes/_app/settings/index.tsx",
+              "sha256": "acfe9e4e80512b25da94c4652976ca5fec96ed502d4baab88d9d3a3ad502dd37"
+            },
+            {
+              "path": "apps/web/src/routes/_app/settings/profile.tsx",
+              "sha256": "e92ff2e38cdb2494ce51c9080f2c122447f0320b9f7612dd70d6855d18525ad1"
+            },
+            {
+              "path": "apps/worker/src/auth-delivery/providers.ts",
+              "sha256": "29ca13db7c3451124bd1e5c7677005d7b033c3d79ccbe64fb02d6ec57b47152f"
+            },
+            {
+              "path": "apps/worker/src/auth-delivery/runner.integration.test.ts",
+              "sha256": "612abb6419e56df269dd9e87b53faa22d7d6973196b2a324f912acee29cbdcd5"
+            },
+            {
+              "path": "apps/worker/src/auth-delivery/runner.ts",
+              "sha256": "f2f15c04243b5e896b589977ef1c9c986ad28f87e6a9ee4bf5e71177ba218b8b"
+            },
+            {
+              "path": "apps/worker/src/notifications/email-transport.ts",
+              "sha256": "250048ed0a04cbb33a39e312062c8add8e209f65f5e6acee88ffe664057ccbe4"
+            },
+            {
+              "path": "docs/decisions/notification-provider-closure.md",
+              "sha256": "59b9eb61d325ec46c30ae638aaa9ebd946a9a7e925ad953eaf9898b50a20519c"
+            },
+            {
+              "path": "packages/i18n/src/date-time.test.ts",
+              "sha256": "a48c6388730c7113f22d873cca23797f069c7f2cf75169dcefe06777cbd66bda"
+            },
+            {
+              "path": "packages/i18n/src/date-time.ts",
+              "sha256": "4c509aa5cbc6c8c50c342914c887d3bdd44e71ace6542f5d65c10ee2542c645a"
+            },
+            {
+              "path": "packages/shared/src/notification-delivery/branding.test.ts",
+              "sha256": "83398430bfbdced697b71a95c76c2cb5c5a8936692ecdd0b6ea92738602cb0db"
+            },
+            {
+              "path": "packages/shared/src/notifications/email-branding.ts",
+              "sha256": "2ddd4ce07e9c6767dabaaf628fdffb33fb09cd1d7d55a6795251470e38f51722"
+            },
+            {
+              "path": "packages/ui/src/styles.css",
+              "sha256": "c9edac644f0774091cefefb3c9a75db00a73bd5c22227ec462da16ae2345eb86"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "36dc4da67c80c5fb3b31c37d25fc7aafa43ed9f063d076f6df473e3050c47381"
+            }
+          ],
+          "checks": [
+            "Current native template preview/test-send and real shared auth-delivery adapter preserve FA/EN titles, configured light/dark backgrounds, safe escaping, active-only reads and frozen retry/legacy bytes. 239 distinct unit/native cases pass.",
+            "61 distinct current production-browser cases cover auth/public entry points, customer/admin error/populated views, editor activation preview, account theme preference, isolated email previews, form/control focus/contrast/RTL, terms/timezone and direction. Case-level provenance retained; failed suite results never counted as wholly passing.",
+            "Shared/API/worker/web builds and all four package types pass, changed-file lint/format and89 unchanged route/interaction gzip budgets pass. Source bindings, exact16-case legacy byte comparison and4 reviewed captures: /Users/majid/.local/state/barghsa-manual-batches/release-0.5-brand-theme/acceptance-proof.json",
+            "Brand asset deployment/CDN proof remains separately scoped to T-09.01.01. Owner-deferred external Telegram host and all launch gates remain open; this task acceptance is not release or production acceptance."
+          ]
+        },
+        "current_brand_theme_batch": {
+          "batch": "release-0.5-brand-theme-adoption",
+          "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-brand-theme",
+          "runtime_source_bindings": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-brand-theme/runtime-source-bindings.json",
+          "verified_native_unit_cases": 239,
+          "verified_browser_case_groups": "61 distinct passing cases; component theme renewal completed",
+          "failed_attempts_retained": [
+            "email-branding-baseline.json",
+            "brand-browser.json",
+            "brand-browser-installed.json",
+            "brand-browser-fixtures-corrected.json"
+          ],
+          "external_hosting_gate": "Owner deferred Telegram provisioning; no live Telegram or release acceptance claimed",
+          "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-brand-theme/acceptance-proof.json"
+        }
       }
     },
     {
@@ -54680,7 +55019,7 @@
             },
             {
               "path": "apps/api/src/notifications/notification-template-delivery.test.ts",
-              "sha256": "869747bbbc595a091fc20450be5cd4339ffad16825af0cdc185a33b2b5f6b46a"
+              "sha256": "5b342c9a3d9d7c737bc8b7a7ce5300af9dc425d739435dea759333b35a4d3eea"
             },
             {
               "path": "apps/api/src/notifications/notification-template-http.integration.test.ts",
@@ -54736,7 +55075,7 @@
             },
             {
               "path": "apps/web/e2e/notification-brand-preview.spec.ts",
-              "sha256": "d59be9f4e04dc9b130e3afb15ebaace0ccf74753ce24e17ed11f9c8525284f34"
+              "sha256": "3ad070e8eb5574a85f5524e63b8d8c7ff7e5f9643b8d2172a941479f15ffd5b3"
             },
             {
               "path": "apps/web/e2e/notification-template-authoring.spec.ts",
@@ -54828,7 +55167,7 @@
             },
             {
               "path": "packages/shared/src/notification-delivery/branding.test.ts",
-              "sha256": "1194dd14e00b19fa122553f0942e1b59d46d21a07c51ef720f2e855504687e3d"
+              "sha256": "83398430bfbdced697b71a95c76c2cb5c5a8936692ecdd0b6ea92738602cb0db"
             },
             {
               "path": "packages/shared/src/notification-delivery/branding.ts",
@@ -54836,7 +55175,7 @@
             },
             {
               "path": "packages/shared/src/notifications/email-branding.ts",
-              "sha256": "991bebe092366c4eceaa5bac66d6240909f02c2a4003a4b7c9037a4bc208b3a2"
+              "sha256": "2ddd4ce07e9c6767dabaaf628fdffb33fb09cd1d7d55a6795251470e38f51722"
             },
             {
               "path": "packages/shared/src/notifications/template-engine.test.ts",
@@ -54867,7 +55206,8 @@
             "Scoped v0.3.0 SMS renewal: 404 current related cases, 16 production browser cases, types/lint/format and 89 original budgets pass. Mapped delivery remains unchanged; direct text is used only for unmapped events with approved local body. Immutable recipient/provider payload, access/preferences recheck, quota/breaker, durable receipts and unknown-outcome hold remain. Financial policy sections unchanged. Root package differs only in version. Evidence: /Users/majid/.local/state/barghsa-manual-batches/release-0.3-sms-direct",
             "Scoped provider pause renewal: unchanged migration prefix/schema and existing behavior retained; current targeted native/browser/auth/AI checks cover changed provider branches. Whole task status and existing live limitations remain. Evidence: /Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/pause-proof.json",
             "Scoped safe-OTP source renewal: only new auth event/bound registration metadata, additive auth-delivery migration and OTP inbox templates changed; other methods, event branches, templates and all old SQL retained.187 related checks pass. This does not recertify a whole suite or any unresolved live gate. Proof: /Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/auth-notice-proof.json",
-            "Scoped operations source renewal: original event/recipient/money/auth/template branches, registry definitions, schema tables and old SQL retained outside the explicit new private operations guard/event.159 related checks pass; this does not certify new browser assets/budgets, a whole suite or pending live gates. Proof: /Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/operations-proof.json"
+            "Scoped operations source renewal: original event/recipient/money/auth/template branches, registry definitions, schema tables and old SQL retained outside the explicit new private operations guard/event.159 related checks pass; this does not certify new browser assets/budgets, a whole suite or pending live gates. Proof: /Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/operations-proof.json",
+            "Brand-theme caller renewal: /Users/majid/.local/state/barghsa-manual-batches/release-0.5-brand-theme/acceptance-proof.json. 239 current unit/native cases and61 distinct source-bound browser cases pass;16 legacy frame/normalization cases byte-identical. Sender/claim/authority/money/unknown-outcome code unchanged. Original assertions and numeric limits retained; no new physical provider, Telegram, staging or whole-release claim."
           ],
           "limitations": [],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/template-catalogue-current-acceptance",
@@ -54966,6 +55306,15 @@
               "packages/i18n/src/providers.ts"
             ]
           }
+        },
+        "brand_theme_caller_renewal": {
+          "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-brand-theme/acceptance-proof.json",
+          "paths": [
+            "apps/api/src/notifications/notification-template-delivery.test.ts",
+            "apps/web/e2e/notification-brand-preview.spec.ts",
+            "packages/shared/src/notification-delivery/branding.test.ts",
+            "packages/shared/src/notifications/email-branding.ts"
+          ]
         }
       }
     },
@@ -59697,7 +60046,7 @@
             },
             {
               "path": "docs/decisions/notification-provider-closure.md",
-              "sha256": "7896457972cd32aef476ed7665ad17bfbde2d2c3887748237c64a38f64ade584"
+              "sha256": "59b9eb61d325ec46c30ae638aaa9ebd946a9a7e925ad953eaf9898b50a20519c"
             },
             {
               "path": "kanban/epics/05-notifications-documents-ai.md",
@@ -59714,7 +60063,8 @@
             "Scoped safe-OTP source renewal: only new auth event/bound registration metadata, additive auth-delivery migration and OTP inbox templates changed; other methods, event branches, templates and all old SQL retained.187 related checks pass. This does not recertify a whole suite or any unresolved live gate. Proof: /Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/auth-notice-proof.json",
             "Scoped operations source renewal: original event/recipient/money/auth/template branches, registry definitions, schema tables and old SQL retained outside the explicit new private operations guard/event.159 related checks pass; this does not certify new browser assets/budgets, a whole suite or pending live gates. Proof: /Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/operations-proof.json",
             "Scoped financial-notice renewal:164 related native checks pass; old financial/auth/permission/NOWAIT/message and service-method bytes retained, only opt-in private staff delivery envelope and stable occurrence keys added. No broader suite/live acceptance inferred. Proof: /Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/financial-notice-proof.json",
-            "Scoped generic-notice renewal:207 related cases pass with exact canonical and informational envelope assertions; existing private business writers retain authorization, recipients, messages and transaction safeguards. Proof: /Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/generic-notice-proof.json"
+            "Scoped generic-notice renewal:207 related cases pass with exact canonical and informational envelope assertions; existing private business writers retain authorization, recipients, messages and transaction safeguards. Proof: /Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/generic-notice-proof.json",
+            "Brand-theme caller renewal: /Users/majid/.local/state/barghsa-manual-batches/release-0.5-brand-theme/acceptance-proof.json. 239 current unit/native cases and61 distinct source-bound browser cases pass;16 legacy frame/normalization cases byte-identical. Sender/claim/authority/money/unknown-outcome code unchanged. Original assertions and numeric limits retained; no new physical provider, Telegram, staging or whole-release claim."
           ],
           "limitations": [],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure",
@@ -59726,6 +60076,12 @@
           ],
           "source_binding": "identity-proof.json",
           "review": "identity-proof.json"
+        },
+        "brand_theme_caller_renewal": {
+          "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-brand-theme/acceptance-proof.json",
+          "paths": [
+            "docs/decisions/notification-provider-closure.md"
+          ]
         }
       }
     },
@@ -63524,7 +63880,7 @@
             },
             {
               "path": "apps/api/src/notifications/notification-template-delivery.test.ts",
-              "sha256": "869747bbbc595a091fc20450be5cd4339ffad16825af0cdc185a33b2b5f6b46a"
+              "sha256": "5b342c9a3d9d7c737bc8b7a7ce5300af9dc425d739435dea759333b35a4d3eea"
             },
             {
               "path": "apps/api/src/notifications/notification-template-http.integration.test.ts",
@@ -63580,7 +63936,7 @@
             },
             {
               "path": "apps/web/e2e/notification-brand-preview.spec.ts",
-              "sha256": "d59be9f4e04dc9b130e3afb15ebaace0ccf74753ce24e17ed11f9c8525284f34"
+              "sha256": "3ad070e8eb5574a85f5524e63b8d8c7ff7e5f9643b8d2172a941479f15ffd5b3"
             },
             {
               "path": "apps/web/e2e/notification-template-authoring.spec.ts",
@@ -63672,7 +64028,7 @@
             },
             {
               "path": "packages/shared/src/notification-delivery/branding.test.ts",
-              "sha256": "1194dd14e00b19fa122553f0942e1b59d46d21a07c51ef720f2e855504687e3d"
+              "sha256": "83398430bfbdced697b71a95c76c2cb5c5a8936692ecdd0b6ea92738602cb0db"
             },
             {
               "path": "packages/shared/src/notification-delivery/branding.ts",
@@ -63680,7 +64036,7 @@
             },
             {
               "path": "packages/shared/src/notifications/email-branding.ts",
-              "sha256": "991bebe092366c4eceaa5bac66d6240909f02c2a4003a4b7c9037a4bc208b3a2"
+              "sha256": "2ddd4ce07e9c6767dabaaf628fdffb33fb09cd1d7d55a6795251470e38f51722"
             },
             {
               "path": "packages/shared/src/notifications/template-engine.test.ts",
@@ -63711,7 +64067,8 @@
             "Scoped v0.3.0 SMS renewal: 404 current related cases, 16 production browser cases, types/lint/format and 89 original budgets pass. Mapped delivery remains unchanged; direct text is used only for unmapped events with approved local body. Immutable recipient/provider payload, access/preferences recheck, quota/breaker, durable receipts and unknown-outcome hold remain. Financial policy sections unchanged. Root package differs only in version. Evidence: /Users/majid/.local/state/barghsa-manual-batches/release-0.3-sms-direct",
             "Scoped provider pause renewal: unchanged migration prefix/schema and existing behavior retained; current targeted native/browser/auth/AI checks cover changed provider branches. Whole task status and existing live limitations remain. Evidence: /Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/pause-proof.json",
             "Scoped safe-OTP source renewal: only new auth event/bound registration metadata, additive auth-delivery migration and OTP inbox templates changed; other methods, event branches, templates and all old SQL retained.187 related checks pass. This does not recertify a whole suite or any unresolved live gate. Proof: /Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/auth-notice-proof.json",
-            "Scoped operations source renewal: original event/recipient/money/auth/template branches, registry definitions, schema tables and old SQL retained outside the explicit new private operations guard/event.159 related checks pass; this does not certify new browser assets/budgets, a whole suite or pending live gates. Proof: /Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/operations-proof.json"
+            "Scoped operations source renewal: original event/recipient/money/auth/template branches, registry definitions, schema tables and old SQL retained outside the explicit new private operations guard/event.159 related checks pass; this does not certify new browser assets/budgets, a whole suite or pending live gates. Proof: /Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/operations-proof.json",
+            "Brand-theme caller renewal: /Users/majid/.local/state/barghsa-manual-batches/release-0.5-brand-theme/acceptance-proof.json. 239 current unit/native cases and61 distinct source-bound browser cases pass;16 legacy frame/normalization cases byte-identical. Sender/claim/authority/money/unknown-outcome code unchanged. Original assertions and numeric limits retained; no new physical provider, Telegram, staging or whole-release claim."
           ],
           "limitations": [],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/template-catalogue-current-acceptance",
@@ -63810,6 +64167,15 @@
               "packages/i18n/src/providers.ts"
             ]
           }
+        },
+        "brand_theme_caller_renewal": {
+          "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-brand-theme/acceptance-proof.json",
+          "paths": [
+            "apps/api/src/notifications/notification-template-delivery.test.ts",
+            "apps/web/e2e/notification-brand-preview.spec.ts",
+            "packages/shared/src/notification-delivery/branding.test.ts",
+            "packages/shared/src/notifications/email-branding.ts"
+          ]
         }
       }
     },
@@ -63962,7 +64328,7 @@
             },
             {
               "path": "apps/api/src/notifications/notification-template-delivery.test.ts",
-              "sha256": "869747bbbc595a091fc20450be5cd4339ffad16825af0cdc185a33b2b5f6b46a"
+              "sha256": "5b342c9a3d9d7c737bc8b7a7ce5300af9dc425d739435dea759333b35a4d3eea"
             },
             {
               "path": "apps/api/src/notifications/notification-template-http.integration.test.ts",
@@ -64018,7 +64384,7 @@
             },
             {
               "path": "apps/web/e2e/notification-brand-preview.spec.ts",
-              "sha256": "d59be9f4e04dc9b130e3afb15ebaace0ccf74753ce24e17ed11f9c8525284f34"
+              "sha256": "3ad070e8eb5574a85f5524e63b8d8c7ff7e5f9643b8d2172a941479f15ffd5b3"
             },
             {
               "path": "apps/web/e2e/notification-template-authoring.spec.ts",
@@ -64110,7 +64476,7 @@
             },
             {
               "path": "packages/shared/src/notification-delivery/branding.test.ts",
-              "sha256": "1194dd14e00b19fa122553f0942e1b59d46d21a07c51ef720f2e855504687e3d"
+              "sha256": "83398430bfbdced697b71a95c76c2cb5c5a8936692ecdd0b6ea92738602cb0db"
             },
             {
               "path": "packages/shared/src/notification-delivery/branding.ts",
@@ -64118,7 +64484,7 @@
             },
             {
               "path": "packages/shared/src/notifications/email-branding.ts",
-              "sha256": "991bebe092366c4eceaa5bac66d6240909f02c2a4003a4b7c9037a4bc208b3a2"
+              "sha256": "2ddd4ce07e9c6767dabaaf628fdffb33fb09cd1d7d55a6795251470e38f51722"
             },
             {
               "path": "packages/shared/src/notifications/template-engine.test.ts",
@@ -64149,7 +64515,8 @@
             "Scoped v0.3.0 SMS renewal: 404 current related cases, 16 production browser cases, types/lint/format and 89 original budgets pass. Mapped delivery remains unchanged; direct text is used only for unmapped events with approved local body. Immutable recipient/provider payload, access/preferences recheck, quota/breaker, durable receipts and unknown-outcome hold remain. Financial policy sections unchanged. Root package differs only in version. Evidence: /Users/majid/.local/state/barghsa-manual-batches/release-0.3-sms-direct",
             "Scoped provider pause renewal: unchanged migration prefix/schema and existing behavior retained; current targeted native/browser/auth/AI checks cover changed provider branches. Whole task status and existing live limitations remain. Evidence: /Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/pause-proof.json",
             "Scoped safe-OTP source renewal: only new auth event/bound registration metadata, additive auth-delivery migration and OTP inbox templates changed; other methods, event branches, templates and all old SQL retained.187 related checks pass. This does not recertify a whole suite or any unresolved live gate. Proof: /Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/auth-notice-proof.json",
-            "Scoped operations source renewal: original event/recipient/money/auth/template branches, registry definitions, schema tables and old SQL retained outside the explicit new private operations guard/event.159 related checks pass; this does not certify new browser assets/budgets, a whole suite or pending live gates. Proof: /Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/operations-proof.json"
+            "Scoped operations source renewal: original event/recipient/money/auth/template branches, registry definitions, schema tables and old SQL retained outside the explicit new private operations guard/event.159 related checks pass; this does not certify new browser assets/budgets, a whole suite or pending live gates. Proof: /Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/operations-proof.json",
+            "Brand-theme caller renewal: /Users/majid/.local/state/barghsa-manual-batches/release-0.5-brand-theme/acceptance-proof.json. 239 current unit/native cases and61 distinct source-bound browser cases pass;16 legacy frame/normalization cases byte-identical. Sender/claim/authority/money/unknown-outcome code unchanged. Original assertions and numeric limits retained; no new physical provider, Telegram, staging or whole-release claim."
           ],
           "limitations": [],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/template-catalogue-current-acceptance",
@@ -64417,7 +64784,16 @@
               "remaining": "Othergeneric/legacy producers,catalogue/owner/live/launch criteria remainpartial."
             }
           }
-        ]
+        ],
+        "brand_theme_caller_renewal": {
+          "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-brand-theme/acceptance-proof.json",
+          "paths": [
+            "apps/api/src/notifications/notification-template-delivery.test.ts",
+            "apps/web/e2e/notification-brand-preview.spec.ts",
+            "packages/shared/src/notification-delivery/branding.test.ts",
+            "packages/shared/src/notifications/email-branding.ts"
+          ]
+        }
       }
     },
     {
@@ -64567,7 +64943,7 @@
             },
             {
               "path": "apps/api/src/notifications/notification-template-delivery.test.ts",
-              "sha256": "869747bbbc595a091fc20450be5cd4339ffad16825af0cdc185a33b2b5f6b46a"
+              "sha256": "5b342c9a3d9d7c737bc8b7a7ce5300af9dc425d739435dea759333b35a4d3eea"
             },
             {
               "path": "apps/api/src/notifications/notification-template-http.integration.test.ts",
@@ -64623,7 +64999,7 @@
             },
             {
               "path": "apps/web/e2e/notification-brand-preview.spec.ts",
-              "sha256": "d59be9f4e04dc9b130e3afb15ebaace0ccf74753ce24e17ed11f9c8525284f34"
+              "sha256": "3ad070e8eb5574a85f5524e63b8d8c7ff7e5f9643b8d2172a941479f15ffd5b3"
             },
             {
               "path": "apps/web/e2e/notification-template-authoring.spec.ts",
@@ -64715,7 +65091,7 @@
             },
             {
               "path": "packages/shared/src/notification-delivery/branding.test.ts",
-              "sha256": "1194dd14e00b19fa122553f0942e1b59d46d21a07c51ef720f2e855504687e3d"
+              "sha256": "83398430bfbdced697b71a95c76c2cb5c5a8936692ecdd0b6ea92738602cb0db"
             },
             {
               "path": "packages/shared/src/notification-delivery/branding.ts",
@@ -64723,7 +65099,7 @@
             },
             {
               "path": "packages/shared/src/notifications/email-branding.ts",
-              "sha256": "991bebe092366c4eceaa5bac66d6240909f02c2a4003a4b7c9037a4bc208b3a2"
+              "sha256": "2ddd4ce07e9c6767dabaaf628fdffb33fb09cd1d7d55a6795251470e38f51722"
             },
             {
               "path": "packages/shared/src/notifications/template-engine.test.ts",
@@ -64754,7 +65130,8 @@
             "Scoped v0.3.0 SMS renewal: 404 current related cases, 16 production browser cases, types/lint/format and 89 original budgets pass. Mapped delivery remains unchanged; direct text is used only for unmapped events with approved local body. Immutable recipient/provider payload, access/preferences recheck, quota/breaker, durable receipts and unknown-outcome hold remain. Financial policy sections unchanged. Root package differs only in version. Evidence: /Users/majid/.local/state/barghsa-manual-batches/release-0.3-sms-direct",
             "Scoped provider pause renewal: unchanged migration prefix/schema and existing behavior retained; current targeted native/browser/auth/AI checks cover changed provider branches. Whole task status and existing live limitations remain. Evidence: /Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/pause-proof.json",
             "Scoped safe-OTP source renewal: only new auth event/bound registration metadata, additive auth-delivery migration and OTP inbox templates changed; other methods, event branches, templates and all old SQL retained.187 related checks pass. This does not recertify a whole suite or any unresolved live gate. Proof: /Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/auth-notice-proof.json",
-            "Scoped operations source renewal: original event/recipient/money/auth/template branches, registry definitions, schema tables and old SQL retained outside the explicit new private operations guard/event.159 related checks pass; this does not certify new browser assets/budgets, a whole suite or pending live gates. Proof: /Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/operations-proof.json"
+            "Scoped operations source renewal: original event/recipient/money/auth/template branches, registry definitions, schema tables and old SQL retained outside the explicit new private operations guard/event.159 related checks pass; this does not certify new browser assets/budgets, a whole suite or pending live gates. Proof: /Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/operations-proof.json",
+            "Brand-theme caller renewal: /Users/majid/.local/state/barghsa-manual-batches/release-0.5-brand-theme/acceptance-proof.json. 239 current unit/native cases and61 distinct source-bound browser cases pass;16 legacy frame/normalization cases byte-identical. Sender/claim/authority/money/unknown-outcome code unchanged. Original assertions and numeric limits retained; no new physical provider, Telegram, staging or whole-release claim."
           ],
           "limitations": [],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/template-catalogue-current-acceptance",
@@ -64853,6 +65230,15 @@
               "packages/i18n/src/providers.ts"
             ]
           }
+        },
+        "brand_theme_caller_renewal": {
+          "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-brand-theme/acceptance-proof.json",
+          "paths": [
+            "apps/api/src/notifications/notification-template-delivery.test.ts",
+            "apps/web/e2e/notification-brand-preview.spec.ts",
+            "packages/shared/src/notification-delivery/branding.test.ts",
+            "packages/shared/src/notifications/email-branding.ts"
+          ]
         }
       }
     },
@@ -65002,7 +65388,7 @@
             },
             {
               "path": "apps/api/src/notifications/notification-template-delivery.test.ts",
-              "sha256": "869747bbbc595a091fc20450be5cd4339ffad16825af0cdc185a33b2b5f6b46a"
+              "sha256": "5b342c9a3d9d7c737bc8b7a7ce5300af9dc425d739435dea759333b35a4d3eea"
             },
             {
               "path": "apps/api/src/notifications/notification-template-http.integration.test.ts",
@@ -65058,7 +65444,7 @@
             },
             {
               "path": "apps/web/e2e/notification-brand-preview.spec.ts",
-              "sha256": "d59be9f4e04dc9b130e3afb15ebaace0ccf74753ce24e17ed11f9c8525284f34"
+              "sha256": "3ad070e8eb5574a85f5524e63b8d8c7ff7e5f9643b8d2172a941479f15ffd5b3"
             },
             {
               "path": "apps/web/e2e/notification-template-authoring.spec.ts",
@@ -65150,7 +65536,7 @@
             },
             {
               "path": "packages/shared/src/notification-delivery/branding.test.ts",
-              "sha256": "1194dd14e00b19fa122553f0942e1b59d46d21a07c51ef720f2e855504687e3d"
+              "sha256": "83398430bfbdced697b71a95c76c2cb5c5a8936692ecdd0b6ea92738602cb0db"
             },
             {
               "path": "packages/shared/src/notification-delivery/branding.ts",
@@ -65158,7 +65544,7 @@
             },
             {
               "path": "packages/shared/src/notifications/email-branding.ts",
-              "sha256": "991bebe092366c4eceaa5bac66d6240909f02c2a4003a4b7c9037a4bc208b3a2"
+              "sha256": "2ddd4ce07e9c6767dabaaf628fdffb33fb09cd1d7d55a6795251470e38f51722"
             },
             {
               "path": "packages/shared/src/notifications/template-engine.test.ts",
@@ -65189,7 +65575,8 @@
             "Scoped v0.3.0 SMS renewal: 404 current related cases, 16 production browser cases, types/lint/format and 89 original budgets pass. Mapped delivery remains unchanged; direct text is used only for unmapped events with approved local body. Immutable recipient/provider payload, access/preferences recheck, quota/breaker, durable receipts and unknown-outcome hold remain. Financial policy sections unchanged. Root package differs only in version. Evidence: /Users/majid/.local/state/barghsa-manual-batches/release-0.3-sms-direct",
             "Scoped provider pause renewal: unchanged migration prefix/schema and existing behavior retained; current targeted native/browser/auth/AI checks cover changed provider branches. Whole task status and existing live limitations remain. Evidence: /Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/pause-proof.json",
             "Scoped safe-OTP source renewal: only new auth event/bound registration metadata, additive auth-delivery migration and OTP inbox templates changed; other methods, event branches, templates and all old SQL retained.187 related checks pass. This does not recertify a whole suite or any unresolved live gate. Proof: /Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/auth-notice-proof.json",
-            "Scoped operations source renewal: original event/recipient/money/auth/template branches, registry definitions, schema tables and old SQL retained outside the explicit new private operations guard/event.159 related checks pass; this does not certify new browser assets/budgets, a whole suite or pending live gates. Proof: /Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/operations-proof.json"
+            "Scoped operations source renewal: original event/recipient/money/auth/template branches, registry definitions, schema tables and old SQL retained outside the explicit new private operations guard/event.159 related checks pass; this does not certify new browser assets/budgets, a whole suite or pending live gates. Proof: /Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/operations-proof.json",
+            "Brand-theme caller renewal: /Users/majid/.local/state/barghsa-manual-batches/release-0.5-brand-theme/acceptance-proof.json. 239 current unit/native cases and61 distinct source-bound browser cases pass;16 legacy frame/normalization cases byte-identical. Sender/claim/authority/money/unknown-outcome code unchanged. Original assertions and numeric limits retained; no new physical provider, Telegram, staging or whole-release claim."
           ],
           "limitations": [],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/template-catalogue-current-acceptance",
@@ -65288,6 +65675,15 @@
               "packages/i18n/src/providers.ts"
             ]
           }
+        },
+        "brand_theme_caller_renewal": {
+          "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-brand-theme/acceptance-proof.json",
+          "paths": [
+            "apps/api/src/notifications/notification-template-delivery.test.ts",
+            "apps/web/e2e/notification-brand-preview.spec.ts",
+            "packages/shared/src/notification-delivery/branding.test.ts",
+            "packages/shared/src/notifications/email-branding.ts"
+          ]
         }
       }
     },
@@ -65440,7 +65836,7 @@
             },
             {
               "path": "apps/api/src/notifications/notification-template-delivery.test.ts",
-              "sha256": "869747bbbc595a091fc20450be5cd4339ffad16825af0cdc185a33b2b5f6b46a"
+              "sha256": "5b342c9a3d9d7c737bc8b7a7ce5300af9dc425d739435dea759333b35a4d3eea"
             },
             {
               "path": "apps/api/src/notifications/notification-template-http.integration.test.ts",
@@ -65496,7 +65892,7 @@
             },
             {
               "path": "apps/web/e2e/notification-brand-preview.spec.ts",
-              "sha256": "d59be9f4e04dc9b130e3afb15ebaace0ccf74753ce24e17ed11f9c8525284f34"
+              "sha256": "3ad070e8eb5574a85f5524e63b8d8c7ff7e5f9643b8d2172a941479f15ffd5b3"
             },
             {
               "path": "apps/web/e2e/notification-template-authoring.spec.ts",
@@ -65588,7 +65984,7 @@
             },
             {
               "path": "packages/shared/src/notification-delivery/branding.test.ts",
-              "sha256": "1194dd14e00b19fa122553f0942e1b59d46d21a07c51ef720f2e855504687e3d"
+              "sha256": "83398430bfbdced697b71a95c76c2cb5c5a8936692ecdd0b6ea92738602cb0db"
             },
             {
               "path": "packages/shared/src/notification-delivery/branding.ts",
@@ -65596,7 +65992,7 @@
             },
             {
               "path": "packages/shared/src/notifications/email-branding.ts",
-              "sha256": "991bebe092366c4eceaa5bac66d6240909f02c2a4003a4b7c9037a4bc208b3a2"
+              "sha256": "2ddd4ce07e9c6767dabaaf628fdffb33fb09cd1d7d55a6795251470e38f51722"
             },
             {
               "path": "packages/shared/src/notifications/template-engine.test.ts",
@@ -65627,7 +66023,8 @@
             "Scoped v0.3.0 SMS renewal: 404 current related cases, 16 production browser cases, types/lint/format and 89 original budgets pass. Mapped delivery remains unchanged; direct text is used only for unmapped events with approved local body. Immutable recipient/provider payload, access/preferences recheck, quota/breaker, durable receipts and unknown-outcome hold remain. Financial policy sections unchanged. Root package differs only in version. Evidence: /Users/majid/.local/state/barghsa-manual-batches/release-0.3-sms-direct",
             "Scoped provider pause renewal: unchanged migration prefix/schema and existing behavior retained; current targeted native/browser/auth/AI checks cover changed provider branches. Whole task status and existing live limitations remain. Evidence: /Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/pause-proof.json",
             "Scoped safe-OTP source renewal: only new auth event/bound registration metadata, additive auth-delivery migration and OTP inbox templates changed; other methods, event branches, templates and all old SQL retained.187 related checks pass. This does not recertify a whole suite or any unresolved live gate. Proof: /Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/auth-notice-proof.json",
-            "Scoped operations source renewal: original event/recipient/money/auth/template branches, registry definitions, schema tables and old SQL retained outside the explicit new private operations guard/event.159 related checks pass; this does not certify new browser assets/budgets, a whole suite or pending live gates. Proof: /Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/operations-proof.json"
+            "Scoped operations source renewal: original event/recipient/money/auth/template branches, registry definitions, schema tables and old SQL retained outside the explicit new private operations guard/event.159 related checks pass; this does not certify new browser assets/budgets, a whole suite or pending live gates. Proof: /Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/operations-proof.json",
+            "Brand-theme caller renewal: /Users/majid/.local/state/barghsa-manual-batches/release-0.5-brand-theme/acceptance-proof.json. 239 current unit/native cases and61 distinct source-bound browser cases pass;16 legacy frame/normalization cases byte-identical. Sender/claim/authority/money/unknown-outcome code unchanged. Original assertions and numeric limits retained; no new physical provider, Telegram, staging or whole-release claim."
           ],
           "limitations": [],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/template-catalogue-current-acceptance",
@@ -65895,7 +66292,16 @@
               "remaining": "Othergeneric/legacy producers,catalogue/owner/live/launch criteria remainpartial."
             }
           }
-        ]
+        ],
+        "brand_theme_caller_renewal": {
+          "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-brand-theme/acceptance-proof.json",
+          "paths": [
+            "apps/api/src/notifications/notification-template-delivery.test.ts",
+            "apps/web/e2e/notification-brand-preview.spec.ts",
+            "packages/shared/src/notification-delivery/branding.test.ts",
+            "packages/shared/src/notifications/email-branding.ts"
+          ]
+        }
       }
     },
     {
@@ -67378,7 +67784,7 @@
             },
             {
               "path": "apps/api/src/notifications/notification-template-delivery.test.ts",
-              "sha256": "869747bbbc595a091fc20450be5cd4339ffad16825af0cdc185a33b2b5f6b46a"
+              "sha256": "5b342c9a3d9d7c737bc8b7a7ce5300af9dc425d739435dea759333b35a4d3eea"
             },
             {
               "path": "apps/api/src/notifications/notification-template-http.integration.test.ts",
@@ -67614,7 +68020,7 @@
             },
             {
               "path": "packages/shared/src/notification-delivery/branding.test.ts",
-              "sha256": "1194dd14e00b19fa122553f0942e1b59d46d21a07c51ef720f2e855504687e3d"
+              "sha256": "83398430bfbdced697b71a95c76c2cb5c5a8936692ecdd0b6ea92738602cb0db"
             },
             {
               "path": "packages/shared/src/notification-delivery/branding.ts",
@@ -67650,7 +68056,7 @@
             },
             {
               "path": "packages/shared/src/notifications/email-branding.ts",
-              "sha256": "991bebe092366c4eceaa5bac66d6240909f02c2a4003a4b7c9037a4bc208b3a2"
+              "sha256": "2ddd4ce07e9c6767dabaaf628fdffb33fb09cd1d7d55a6795251470e38f51722"
             },
             {
               "path": "packages/shared/src/notifications/template-engine.test.ts",
@@ -67689,7 +68095,8 @@
             "Documentation-only live preflight renewal: protected staging role/files provisioned with actual denied financial/user access; existing native storage helper proved distinct versions, provider-hold refusal, exact-version physical cleanup and exact tagged policy/readback. This updates configuration instructions only; no application, thresholds or task criteria change. External receipts: /Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure.",
             "Scoped active-provider health renewal:20 related native cases and original/new Prometheus rule checks pass; no sender, authority, consent, lifecycle, money or schema change. Health series retire with configuration status; SMS outage keeps protected native system.service_outage. Proof: /Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/provider-health-proof.json",
             "Reviewed operational rehearsal/failed-workspace runbook clarification only; executable sources and assertions unchanged. release-0.4-live-operations-rehearsal",
-            "Reviewed private permanent-pause rehearsal and correct Liara URL/key-reentry runbook clarification only. Existing executable assertions/acceptance retained. release-0.4-permanent-pause-live-replacement"
+            "Reviewed private permanent-pause rehearsal and correct Liara URL/key-reentry runbook clarification only. Existing executable assertions/acceptance retained. release-0.4-permanent-pause-live-replacement",
+            "Brand-theme caller renewal: /Users/majid/.local/state/barghsa-manual-batches/release-0.5-brand-theme/acceptance-proof.json. 239 current unit/native cases and61 distinct source-bound browser cases pass;16 legacy frame/normalization cases byte-identical. Sender/claim/authority/money/unknown-outcome code unchanged. Original assertions and numeric limits retained; no new physical provider, Telegram, staging or whole-release claim."
           ],
           "limitations": [],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/email-provider-config-current-acceptance",
@@ -67850,6 +68257,14 @@
               "packages/shared/src/notification-delivery/provider-errors.test.ts"
             ]
           }
+        },
+        "brand_theme_caller_renewal": {
+          "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-brand-theme/acceptance-proof.json",
+          "paths": [
+            "apps/api/src/notifications/notification-template-delivery.test.ts",
+            "packages/shared/src/notification-delivery/branding.test.ts",
+            "packages/shared/src/notifications/email-branding.ts"
+          ]
         }
       }
     },
@@ -68177,7 +68592,7 @@
             },
             {
               "path": "apps/api/src/notifications/notification-template-delivery.test.ts",
-              "sha256": "869747bbbc595a091fc20450be5cd4339ffad16825af0cdc185a33b2b5f6b46a"
+              "sha256": "5b342c9a3d9d7c737bc8b7a7ce5300af9dc425d739435dea759333b35a4d3eea"
             },
             {
               "path": "apps/api/src/notifications/notification-template-http.integration.test.ts",
@@ -68413,7 +68828,7 @@
             },
             {
               "path": "packages/shared/src/notification-delivery/branding.test.ts",
-              "sha256": "1194dd14e00b19fa122553f0942e1b59d46d21a07c51ef720f2e855504687e3d"
+              "sha256": "83398430bfbdced697b71a95c76c2cb5c5a8936692ecdd0b6ea92738602cb0db"
             },
             {
               "path": "packages/shared/src/notification-delivery/branding.ts",
@@ -68449,7 +68864,7 @@
             },
             {
               "path": "packages/shared/src/notifications/email-branding.ts",
-              "sha256": "991bebe092366c4eceaa5bac66d6240909f02c2a4003a4b7c9037a4bc208b3a2"
+              "sha256": "2ddd4ce07e9c6767dabaaf628fdffb33fb09cd1d7d55a6795251470e38f51722"
             },
             {
               "path": "packages/shared/src/notifications/template-engine.test.ts",
@@ -68488,7 +68903,8 @@
             "Documentation-only live preflight renewal: protected staging role/files provisioned with actual denied financial/user access; existing native storage helper proved distinct versions, provider-hold refusal, exact-version physical cleanup and exact tagged policy/readback. This updates configuration instructions only; no application, thresholds or task criteria change. External receipts: /Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure.",
             "Scoped active-provider health renewal:20 related native cases and original/new Prometheus rule checks pass; no sender, authority, consent, lifecycle, money or schema change. Health series retire with configuration status; SMS outage keeps protected native system.service_outage. Proof: /Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/provider-health-proof.json",
             "Reviewed operational rehearsal/failed-workspace runbook clarification only; executable sources and assertions unchanged. release-0.4-live-operations-rehearsal",
-            "Reviewed private permanent-pause rehearsal and correct Liara URL/key-reentry runbook clarification only. Existing executable assertions/acceptance retained. release-0.4-permanent-pause-live-replacement"
+            "Reviewed private permanent-pause rehearsal and correct Liara URL/key-reentry runbook clarification only. Existing executable assertions/acceptance retained. release-0.4-permanent-pause-live-replacement",
+            "Brand-theme caller renewal: /Users/majid/.local/state/barghsa-manual-batches/release-0.5-brand-theme/acceptance-proof.json. 239 current unit/native cases and61 distinct source-bound browser cases pass;16 legacy frame/normalization cases byte-identical. Sender/claim/authority/money/unknown-outcome code unchanged. Original assertions and numeric limits retained; no new physical provider, Telegram, staging or whole-release claim."
           ],
           "limitations": [],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/email-provider-config-current-acceptance",
@@ -68649,6 +69065,14 @@
               "packages/shared/src/notification-delivery/provider-errors.test.ts"
             ]
           }
+        },
+        "brand_theme_caller_renewal": {
+          "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-brand-theme/acceptance-proof.json",
+          "paths": [
+            "apps/api/src/notifications/notification-template-delivery.test.ts",
+            "packages/shared/src/notification-delivery/branding.test.ts",
+            "packages/shared/src/notifications/email-branding.ts"
+          ]
         }
       }
     },
@@ -68976,7 +69400,7 @@
             },
             {
               "path": "apps/api/src/notifications/notification-template-delivery.test.ts",
-              "sha256": "869747bbbc595a091fc20450be5cd4339ffad16825af0cdc185a33b2b5f6b46a"
+              "sha256": "5b342c9a3d9d7c737bc8b7a7ce5300af9dc425d739435dea759333b35a4d3eea"
             },
             {
               "path": "apps/api/src/notifications/notification-template-http.integration.test.ts",
@@ -69212,7 +69636,7 @@
             },
             {
               "path": "packages/shared/src/notification-delivery/branding.test.ts",
-              "sha256": "1194dd14e00b19fa122553f0942e1b59d46d21a07c51ef720f2e855504687e3d"
+              "sha256": "83398430bfbdced697b71a95c76c2cb5c5a8936692ecdd0b6ea92738602cb0db"
             },
             {
               "path": "packages/shared/src/notification-delivery/branding.ts",
@@ -69248,7 +69672,7 @@
             },
             {
               "path": "packages/shared/src/notifications/email-branding.ts",
-              "sha256": "991bebe092366c4eceaa5bac66d6240909f02c2a4003a4b7c9037a4bc208b3a2"
+              "sha256": "2ddd4ce07e9c6767dabaaf628fdffb33fb09cd1d7d55a6795251470e38f51722"
             },
             {
               "path": "packages/shared/src/notifications/template-engine.test.ts",
@@ -69287,7 +69711,8 @@
             "Documentation-only live preflight renewal: protected staging role/files provisioned with actual denied financial/user access; existing native storage helper proved distinct versions, provider-hold refusal, exact-version physical cleanup and exact tagged policy/readback. This updates configuration instructions only; no application, thresholds or task criteria change. External receipts: /Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure.",
             "Scoped active-provider health renewal:20 related native cases and original/new Prometheus rule checks pass; no sender, authority, consent, lifecycle, money or schema change. Health series retire with configuration status; SMS outage keeps protected native system.service_outage. Proof: /Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/provider-health-proof.json",
             "Reviewed operational rehearsal/failed-workspace runbook clarification only; executable sources and assertions unchanged. release-0.4-live-operations-rehearsal",
-            "Reviewed private permanent-pause rehearsal and correct Liara URL/key-reentry runbook clarification only. Existing executable assertions/acceptance retained. release-0.4-permanent-pause-live-replacement"
+            "Reviewed private permanent-pause rehearsal and correct Liara URL/key-reentry runbook clarification only. Existing executable assertions/acceptance retained. release-0.4-permanent-pause-live-replacement",
+            "Brand-theme caller renewal: /Users/majid/.local/state/barghsa-manual-batches/release-0.5-brand-theme/acceptance-proof.json. 239 current unit/native cases and61 distinct source-bound browser cases pass;16 legacy frame/normalization cases byte-identical. Sender/claim/authority/money/unknown-outcome code unchanged. Original assertions and numeric limits retained; no new physical provider, Telegram, staging or whole-release claim."
           ],
           "limitations": [],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/email-provider-config-current-acceptance",
@@ -69448,6 +69873,14 @@
               "packages/shared/src/notification-delivery/provider-errors.test.ts"
             ]
           }
+        },
+        "brand_theme_caller_renewal": {
+          "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-brand-theme/acceptance-proof.json",
+          "paths": [
+            "apps/api/src/notifications/notification-template-delivery.test.ts",
+            "packages/shared/src/notification-delivery/branding.test.ts",
+            "packages/shared/src/notifications/email-branding.ts"
+          ]
         }
       }
     },
@@ -69776,7 +70209,7 @@
             },
             {
               "path": "apps/api/src/notifications/notification-template-delivery.test.ts",
-              "sha256": "869747bbbc595a091fc20450be5cd4339ffad16825af0cdc185a33b2b5f6b46a"
+              "sha256": "5b342c9a3d9d7c737bc8b7a7ce5300af9dc425d739435dea759333b35a4d3eea"
             },
             {
               "path": "apps/api/src/notifications/notification-template-http.integration.test.ts",
@@ -70012,7 +70445,7 @@
             },
             {
               "path": "packages/shared/src/notification-delivery/branding.test.ts",
-              "sha256": "1194dd14e00b19fa122553f0942e1b59d46d21a07c51ef720f2e855504687e3d"
+              "sha256": "83398430bfbdced697b71a95c76c2cb5c5a8936692ecdd0b6ea92738602cb0db"
             },
             {
               "path": "packages/shared/src/notification-delivery/branding.ts",
@@ -70048,7 +70481,7 @@
             },
             {
               "path": "packages/shared/src/notifications/email-branding.ts",
-              "sha256": "991bebe092366c4eceaa5bac66d6240909f02c2a4003a4b7c9037a4bc208b3a2"
+              "sha256": "2ddd4ce07e9c6767dabaaf628fdffb33fb09cd1d7d55a6795251470e38f51722"
             },
             {
               "path": "packages/shared/src/notifications/template-engine.test.ts",
@@ -70087,7 +70520,8 @@
             "Documentation-only live preflight renewal: protected staging role/files provisioned with actual denied financial/user access; existing native storage helper proved distinct versions, provider-hold refusal, exact-version physical cleanup and exact tagged policy/readback. This updates configuration instructions only; no application, thresholds or task criteria change. External receipts: /Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure.",
             "Scoped active-provider health renewal:20 related native cases and original/new Prometheus rule checks pass; no sender, authority, consent, lifecycle, money or schema change. Health series retire with configuration status; SMS outage keeps protected native system.service_outage. Proof: /Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/provider-health-proof.json",
             "Reviewed operational rehearsal/failed-workspace runbook clarification only; executable sources and assertions unchanged. release-0.4-live-operations-rehearsal",
-            "Reviewed private permanent-pause rehearsal and correct Liara URL/key-reentry runbook clarification only. Existing executable assertions/acceptance retained. release-0.4-permanent-pause-live-replacement"
+            "Reviewed private permanent-pause rehearsal and correct Liara URL/key-reentry runbook clarification only. Existing executable assertions/acceptance retained. release-0.4-permanent-pause-live-replacement",
+            "Brand-theme caller renewal: /Users/majid/.local/state/barghsa-manual-batches/release-0.5-brand-theme/acceptance-proof.json. 239 current unit/native cases and61 distinct source-bound browser cases pass;16 legacy frame/normalization cases byte-identical. Sender/claim/authority/money/unknown-outcome code unchanged. Original assertions and numeric limits retained; no new physical provider, Telegram, staging or whole-release claim."
           ],
           "limitations": [],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/email-provider-config-current-acceptance",
@@ -70248,6 +70682,14 @@
               "packages/shared/src/notification-delivery/provider-errors.test.ts"
             ]
           }
+        },
+        "brand_theme_caller_renewal": {
+          "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-brand-theme/acceptance-proof.json",
+          "paths": [
+            "apps/api/src/notifications/notification-template-delivery.test.ts",
+            "packages/shared/src/notification-delivery/branding.test.ts",
+            "packages/shared/src/notifications/email-branding.ts"
+          ]
         }
       }
     },
@@ -70575,7 +71017,7 @@
             },
             {
               "path": "apps/api/src/notifications/notification-template-delivery.test.ts",
-              "sha256": "869747bbbc595a091fc20450be5cd4339ffad16825af0cdc185a33b2b5f6b46a"
+              "sha256": "5b342c9a3d9d7c737bc8b7a7ce5300af9dc425d739435dea759333b35a4d3eea"
             },
             {
               "path": "apps/api/src/notifications/notification-template-http.integration.test.ts",
@@ -70811,7 +71253,7 @@
             },
             {
               "path": "packages/shared/src/notification-delivery/branding.test.ts",
-              "sha256": "1194dd14e00b19fa122553f0942e1b59d46d21a07c51ef720f2e855504687e3d"
+              "sha256": "83398430bfbdced697b71a95c76c2cb5c5a8936692ecdd0b6ea92738602cb0db"
             },
             {
               "path": "packages/shared/src/notification-delivery/branding.ts",
@@ -70847,7 +71289,7 @@
             },
             {
               "path": "packages/shared/src/notifications/email-branding.ts",
-              "sha256": "991bebe092366c4eceaa5bac66d6240909f02c2a4003a4b7c9037a4bc208b3a2"
+              "sha256": "2ddd4ce07e9c6767dabaaf628fdffb33fb09cd1d7d55a6795251470e38f51722"
             },
             {
               "path": "packages/shared/src/notifications/template-engine.test.ts",
@@ -70886,7 +71328,8 @@
             "Documentation-only live preflight renewal: protected staging role/files provisioned with actual denied financial/user access; existing native storage helper proved distinct versions, provider-hold refusal, exact-version physical cleanup and exact tagged policy/readback. This updates configuration instructions only; no application, thresholds or task criteria change. External receipts: /Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure.",
             "Scoped active-provider health renewal:20 related native cases and original/new Prometheus rule checks pass; no sender, authority, consent, lifecycle, money or schema change. Health series retire with configuration status; SMS outage keeps protected native system.service_outage. Proof: /Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/provider-health-proof.json",
             "Reviewed operational rehearsal/failed-workspace runbook clarification only; executable sources and assertions unchanged. release-0.4-live-operations-rehearsal",
-            "Reviewed private permanent-pause rehearsal and correct Liara URL/key-reentry runbook clarification only. Existing executable assertions/acceptance retained. release-0.4-permanent-pause-live-replacement"
+            "Reviewed private permanent-pause rehearsal and correct Liara URL/key-reentry runbook clarification only. Existing executable assertions/acceptance retained. release-0.4-permanent-pause-live-replacement",
+            "Brand-theme caller renewal: /Users/majid/.local/state/barghsa-manual-batches/release-0.5-brand-theme/acceptance-proof.json. 239 current unit/native cases and61 distinct source-bound browser cases pass;16 legacy frame/normalization cases byte-identical. Sender/claim/authority/money/unknown-outcome code unchanged. Original assertions and numeric limits retained; no new physical provider, Telegram, staging or whole-release claim."
           ],
           "limitations": [],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/email-provider-config-current-acceptance",
@@ -71047,6 +71490,14 @@
               "packages/shared/src/notification-delivery/provider-errors.test.ts"
             ]
           }
+        },
+        "brand_theme_caller_renewal": {
+          "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-brand-theme/acceptance-proof.json",
+          "paths": [
+            "apps/api/src/notifications/notification-template-delivery.test.ts",
+            "packages/shared/src/notification-delivery/branding.test.ts",
+            "packages/shared/src/notifications/email-branding.ts"
+          ]
         }
       }
     },
@@ -72469,7 +72920,7 @@
             },
             {
               "path": "apps/api/src/notifications/notification-template-delivery.test.ts",
-              "sha256": "869747bbbc595a091fc20450be5cd4339ffad16825af0cdc185a33b2b5f6b46a"
+              "sha256": "5b342c9a3d9d7c737bc8b7a7ce5300af9dc425d739435dea759333b35a4d3eea"
             },
             {
               "path": "apps/api/src/notifications/notification-template-http.integration.test.ts",
@@ -72705,7 +73156,7 @@
             },
             {
               "path": "packages/shared/src/notification-delivery/branding.test.ts",
-              "sha256": "1194dd14e00b19fa122553f0942e1b59d46d21a07c51ef720f2e855504687e3d"
+              "sha256": "83398430bfbdced697b71a95c76c2cb5c5a8936692ecdd0b6ea92738602cb0db"
             },
             {
               "path": "packages/shared/src/notification-delivery/branding.ts",
@@ -72741,7 +73192,7 @@
             },
             {
               "path": "packages/shared/src/notifications/email-branding.ts",
-              "sha256": "991bebe092366c4eceaa5bac66d6240909f02c2a4003a4b7c9037a4bc208b3a2"
+              "sha256": "2ddd4ce07e9c6767dabaaf628fdffb33fb09cd1d7d55a6795251470e38f51722"
             },
             {
               "path": "packages/shared/src/notifications/template-engine.test.ts",
@@ -72780,7 +73231,8 @@
             "Documentation-only live preflight renewal: protected staging role/files provisioned with actual denied financial/user access; existing native storage helper proved distinct versions, provider-hold refusal, exact-version physical cleanup and exact tagged policy/readback. This updates configuration instructions only; no application, thresholds or task criteria change. External receipts: /Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure.",
             "Scoped active-provider health renewal:20 related native cases and original/new Prometheus rule checks pass; no sender, authority, consent, lifecycle, money or schema change. Health series retire with configuration status; SMS outage keeps protected native system.service_outage. Proof: /Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/provider-health-proof.json",
             "Reviewed operational rehearsal/failed-workspace runbook clarification only; executable sources and assertions unchanged. release-0.4-live-operations-rehearsal",
-            "Reviewed private permanent-pause rehearsal and correct Liara URL/key-reentry runbook clarification only. Existing executable assertions/acceptance retained. release-0.4-permanent-pause-live-replacement"
+            "Reviewed private permanent-pause rehearsal and correct Liara URL/key-reentry runbook clarification only. Existing executable assertions/acceptance retained. release-0.4-permanent-pause-live-replacement",
+            "Brand-theme caller renewal: /Users/majid/.local/state/barghsa-manual-batches/release-0.5-brand-theme/acceptance-proof.json. 239 current unit/native cases and61 distinct source-bound browser cases pass;16 legacy frame/normalization cases byte-identical. Sender/claim/authority/money/unknown-outcome code unchanged. Original assertions and numeric limits retained; no new physical provider, Telegram, staging or whole-release claim."
           ],
           "limitations": [],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/email-provider-config-current-acceptance",
@@ -72941,6 +73393,14 @@
               "packages/shared/src/notification-delivery/provider-errors.test.ts"
             ]
           }
+        },
+        "brand_theme_caller_renewal": {
+          "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-brand-theme/acceptance-proof.json",
+          "paths": [
+            "apps/api/src/notifications/notification-template-delivery.test.ts",
+            "packages/shared/src/notification-delivery/branding.test.ts",
+            "packages/shared/src/notifications/email-branding.ts"
+          ]
         }
       }
     },
@@ -85898,7 +86358,7 @@
       "release": "0.4.0",
       "launch_required": true,
       "remaining": [
-        "Provide working staging Telegram BotAPI outbound connectivity or an approved protected proxy configuration. Latest protected getMe returns ECONNREFUSED at2026-10-12T04:50:13.718Z. Then perform the authorized webhook handoff, actual private owned account/profile linkage, Telegram audience isolation and root-version receipts. Existing healthy webhook preserved. Native public/staff/individual/legal AI, real Ready vectors, model test and application chat budget are verified."
+        "When a reachable external Telegram host is available, configure protected bot/webhook credentials and complete the authorized one-webhook handoff, actual private owned profile linkage, Telegram audience isolation and root-version receipts. Preserve the current webhook until the replacement is verified. Provisioning is explicitly deferred; no live Telegram gate is waived."
       ],
       "owner": null,
       "depends_on": [],
@@ -86937,9 +87397,21 @@
             "legal_entity_chatbot"
           ],
           "telegram": "blocked; no fabricated linkage/notification receipt"
+        },
+        "owner_telegram_hosting_disposition": {
+          "status": "approved_external_host_deferred",
+          "approved_by": "owner",
+          "approved_at": "2026-11-06",
+          "source": "Telegram is blocked in server network; host Telegram service on another server later; another server is not possible now; continue building in this situation.",
+          "scope": "Continue independent implementation in dependency order starting v0.5.0. Retain v0.4.0 live Telegram task/release gates as blocked; no new server purchase, network bypass or fabricated receipt. Release acceptance and production readiness still require actual external-host Telegram verification.",
+          "task_keys": [
+            "02-auth-users-admin.md#T-09.11.05",
+            "05-notifications-documents-ai.md#T-05.22.04",
+            "release-readiness#R-03.02"
+          ]
         }
       },
-      "blocker": "Staging Telegram BotAPI outbound connectivity fails ECONNREFUSED, after prior EHOSTUNREACH. Owner/hosting-provider route repair or an approved protected proxy configuration is required. Paid Liara provisioning and all four non-Telegram native AI slot checks are complete; existing webhook remains preserved."
+      "blocker": "Owner confirmed staging network blocks Telegram. External Telegram hosting is required and provisioning is deferred. Independent implementation may continue; actual handoff/private linkage/Telegram isolation/version receipts remain unaccepted."
     },
     {
       "key": "02-auth-users-admin.md#T-09.12.01",
@@ -362608,7 +363080,7 @@
             },
             {
               "path": "docs/decisions/notification-provider-closure.md",
-              "sha256": "7896457972cd32aef476ed7665ad17bfbde2d2c3887748237c64a38f64ade584"
+              "sha256": "59b9eb61d325ec46c30ae638aaa9ebd946a9a7e925ad953eaf9898b50a20519c"
             },
             {
               "path": "kanban/epics/05-notifications-documents-ai.md",
@@ -362636,7 +363108,8 @@
             "Scoped safe-OTP source renewal: only new auth event/bound registration metadata, additive auth-delivery migration and OTP inbox templates changed; other methods, event branches, templates and all old SQL retained.187 related checks pass. This does not recertify a whole suite or any unresolved live gate. Proof: /Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/auth-notice-proof.json",
             "Scoped financial-notice renewal:164 related native checks pass; old financial/auth/permission/NOWAIT/message and service-method bytes retained, only opt-in private staff delivery envelope and stable occurrence keys added. No broader suite/live acceptance inferred. Proof: /Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/financial-notice-proof.json",
             "Scoped generic-notice renewal:207 related cases pass with exact canonical and informational envelope assertions; existing private business writers retain authorization, recipients, messages and transaction safeguards. Proof: /Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/generic-notice-proof.json",
-            "Scoped active-provider health renewal:20 related native cases and original/new Prometheus rule checks pass; no sender, authority, consent, lifecycle, money or schema change. Health series retire with configuration status; SMS outage keeps protected native system.service_outage. Proof: /Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/provider-health-proof.json"
+            "Scoped active-provider health renewal:20 related native cases and original/new Prometheus rule checks pass; no sender, authority, consent, lifecycle, money or schema change. Health series retire with configuration status; SMS outage keeps protected native system.service_outage. Proof: /Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/provider-health-proof.json",
+            "Brand-theme caller renewal: /Users/majid/.local/state/barghsa-manual-batches/release-0.5-brand-theme/acceptance-proof.json. 239 current unit/native cases and61 distinct source-bound browser cases pass;16 legacy frame/normalization cases byte-identical. Sender/claim/authority/money/unknown-outcome code unchanged. Original assertions and numeric limits retained; no new physical provider, Telegram, staging or whole-release claim."
           ],
           "limitations": [],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/sms-provider-current-acceptance",
@@ -362755,6 +363228,12 @@
               "packages/shared/src/notification-delivery/sms.ts"
             ]
           }
+        },
+        "brand_theme_caller_renewal": {
+          "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-brand-theme/acceptance-proof.json",
+          "paths": [
+            "docs/decisions/notification-provider-closure.md"
+          ]
         }
       }
     },
@@ -362964,7 +363443,7 @@
             },
             {
               "path": "docs/decisions/notification-provider-closure.md",
-              "sha256": "7896457972cd32aef476ed7665ad17bfbde2d2c3887748237c64a38f64ade584"
+              "sha256": "59b9eb61d325ec46c30ae638aaa9ebd946a9a7e925ad953eaf9898b50a20519c"
             },
             {
               "path": "kanban/epics/05-notifications-documents-ai.md",
@@ -362992,7 +363471,8 @@
             "Scoped safe-OTP source renewal: only new auth event/bound registration metadata, additive auth-delivery migration and OTP inbox templates changed; other methods, event branches, templates and all old SQL retained.187 related checks pass. This does not recertify a whole suite or any unresolved live gate. Proof: /Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/auth-notice-proof.json",
             "Scoped financial-notice renewal:164 related native checks pass; old financial/auth/permission/NOWAIT/message and service-method bytes retained, only opt-in private staff delivery envelope and stable occurrence keys added. No broader suite/live acceptance inferred. Proof: /Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/financial-notice-proof.json",
             "Scoped generic-notice renewal:207 related cases pass with exact canonical and informational envelope assertions; existing private business writers retain authorization, recipients, messages and transaction safeguards. Proof: /Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/generic-notice-proof.json",
-            "Scoped active-provider health renewal:20 related native cases and original/new Prometheus rule checks pass; no sender, authority, consent, lifecycle, money or schema change. Health series retire with configuration status; SMS outage keeps protected native system.service_outage. Proof: /Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/provider-health-proof.json"
+            "Scoped active-provider health renewal:20 related native cases and original/new Prometheus rule checks pass; no sender, authority, consent, lifecycle, money or schema change. Health series retire with configuration status; SMS outage keeps protected native system.service_outage. Proof: /Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/provider-health-proof.json",
+            "Brand-theme caller renewal: /Users/majid/.local/state/barghsa-manual-batches/release-0.5-brand-theme/acceptance-proof.json. 239 current unit/native cases and61 distinct source-bound browser cases pass;16 legacy frame/normalization cases byte-identical. Sender/claim/authority/money/unknown-outcome code unchanged. Original assertions and numeric limits retained; no new physical provider, Telegram, staging or whole-release claim."
           ],
           "limitations": [],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/sms-provider-current-acceptance",
@@ -363111,6 +363591,12 @@
               "packages/shared/src/notification-delivery/sms.ts"
             ]
           }
+        },
+        "brand_theme_caller_renewal": {
+          "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-brand-theme/acceptance-proof.json",
+          "paths": [
+            "docs/decisions/notification-provider-closure.md"
+          ]
         }
       }
     },
@@ -363680,7 +364166,7 @@
             },
             {
               "path": "docs/decisions/notification-provider-closure.md",
-              "sha256": "7896457972cd32aef476ed7665ad17bfbde2d2c3887748237c64a38f64ade584"
+              "sha256": "59b9eb61d325ec46c30ae638aaa9ebd946a9a7e925ad953eaf9898b50a20519c"
             },
             {
               "path": "kanban/epics/05-notifications-documents-ai.md",
@@ -363757,7 +364243,8 @@
             "Reviewed private permanent-pause rehearsal and correct Liara URL/key-reentry runbook clarification only. Existing executable assertions/acceptance retained. release-0.4-permanent-pause-live-replacement",
             "Reviewed Liara console/documentation path discrepancy and require actual owned generated endpoint; executable scope retained. release-0.4-live-provider-provisioning-prerequisites",
             "Bounded Flash source renewal: /Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json. 79 passing related AI-model/API-budget/breaker/inference cases, exact shared package build/typecheck and lint. Only exact Flash request reasoning spread changes; all other production bytes identical. Generic payload assertion retained; two Flash aliases added. Documentation records approved provisioning and actual diagnostics. Prior effective criteria and independent live limits remain.",
-            "Documentation-only live AI receipt renewal: /Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/approved-ai-live-proof.json. Approved paid provisioning, successful native four-slot/model/vector/budget/isolation/replay/cleanup results and actual Telegram network blocker recorded. Executable source and all prior effective acceptance boundaries unchanged."
+            "Documentation-only live AI receipt renewal: /Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/approved-ai-live-proof.json. Approved paid provisioning, successful native four-slot/model/vector/budget/isolation/replay/cleanup results and actual Telegram network blocker recorded. Executable source and all prior effective acceptance boundaries unchanged.",
+            "Brand-theme caller renewal: /Users/majid/.local/state/barghsa-manual-batches/release-0.5-brand-theme/acceptance-proof.json. 239 current unit/native cases and61 distinct source-bound browser cases pass;16 legacy frame/normalization cases byte-identical. Sender/claim/authority/money/unknown-outcome code unchanged. Original assertions and numeric limits retained; no new physical provider, Telegram, staging or whole-release claim."
           ],
           "limitations": [],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/sms-provider-current-acceptance",
@@ -363900,6 +364387,12 @@
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
           "paths": [
             "docs/operations/ai-model-tests.md"
+          ]
+        },
+        "brand_theme_caller_renewal": {
+          "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-brand-theme/acceptance-proof.json",
+          "paths": [
+            "docs/decisions/notification-provider-closure.md"
           ]
         }
       }
@@ -364143,7 +364636,7 @@
             },
             {
               "path": "docs/decisions/notification-provider-closure.md",
-              "sha256": "7896457972cd32aef476ed7665ad17bfbde2d2c3887748237c64a38f64ade584"
+              "sha256": "59b9eb61d325ec46c30ae638aaa9ebd946a9a7e925ad953eaf9898b50a20519c"
             },
             {
               "path": "kanban/epics/05-notifications-documents-ai.md",
@@ -364173,7 +364666,8 @@
             "Scoped safe-OTP source renewal: only new auth event/bound registration metadata, additive auth-delivery migration and OTP inbox templates changed; other methods, event branches, templates and all old SQL retained.187 related checks pass. This does not recertify a whole suite or any unresolved live gate. Proof: /Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/auth-notice-proof.json",
             "Scoped financial-notice renewal:164 related native checks pass; old financial/auth/permission/NOWAIT/message and service-method bytes retained, only opt-in private staff delivery envelope and stable occurrence keys added. No broader suite/live acceptance inferred. Proof: /Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/financial-notice-proof.json",
             "Scoped generic-notice renewal:207 related cases pass with exact canonical and informational envelope assertions; existing private business writers retain authorization, recipients, messages and transaction safeguards. Proof: /Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/generic-notice-proof.json",
-            "Scoped active-provider health renewal:20 related native cases and original/new Prometheus rule checks pass; no sender, authority, consent, lifecycle, money or schema change. Health series retire with configuration status; SMS outage keeps protected native system.service_outage. Proof: /Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/provider-health-proof.json"
+            "Scoped active-provider health renewal:20 related native cases and original/new Prometheus rule checks pass; no sender, authority, consent, lifecycle, money or schema change. Health series retire with configuration status; SMS outage keeps protected native system.service_outage. Proof: /Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/provider-health-proof.json",
+            "Brand-theme caller renewal: /Users/majid/.local/state/barghsa-manual-batches/release-0.5-brand-theme/acceptance-proof.json. 239 current unit/native cases and61 distinct source-bound browser cases pass;16 legacy frame/normalization cases byte-identical. Sender/claim/authority/money/unknown-outcome code unchanged. Original assertions and numeric limits retained; no new physical provider, Telegram, staging or whole-release claim."
           ],
           "limitations": [],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/sms-variable-dropdowns",
@@ -364293,6 +364787,12 @@
               "packages/shared/src/notification-delivery/sms.ts"
             ]
           }
+        },
+        "brand_theme_caller_renewal": {
+          "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-brand-theme/acceptance-proof.json",
+          "paths": [
+            "docs/decisions/notification-provider-closure.md"
+          ]
         }
       }
     },
@@ -364337,7 +364837,7 @@
             },
             {
               "path": "apps/api/src/notifications/notification-template-delivery.test.ts",
-              "sha256": "869747bbbc595a091fc20450be5cd4339ffad16825af0cdc185a33b2b5f6b46a"
+              "sha256": "5b342c9a3d9d7c737bc8b7a7ce5300af9dc425d739435dea759333b35a4d3eea"
             },
             {
               "path": "apps/api/src/notifications/notification-template-http.integration.test.ts",
@@ -364417,7 +364917,7 @@
             },
             {
               "path": "apps/worker/src/auth-delivery/runner.integration.test.ts",
-              "sha256": "9c187759e4814524afa7ede8ed8518170039bc651366560e6eabc8844429c3ba"
+              "sha256": "612abb6419e56df269dd9e87b53faa22d7d6973196b2a324f912acee29cbdcd5"
             },
             {
               "path": "apps/worker/src/notifications/delivery-identity.integration.test.ts",
@@ -364519,7 +365019,8 @@
             "UI interaction batch renews exact baseline-matched paths. New exports/clear helper preserve all prior combobox function bodies; provider page changes only to an explicit pills variant with exactly its former class string. Tooltip ARIA/default description and canonical tab styling/opt-in overflow have current unit/distribution/browser/type/SAST evidence and 88 unchanged budgets. Unrelated backend/schema/worker/source outputs remain exact. No broad UI-adoption or live release acceptance. Evidence: /Users/majid/.local/state/barghsa-manual-batches/ui-interaction-current-acceptance.",
             "Scoped v0.3.0 SMS renewal: 404 current related cases, 16 production browser cases, types/lint/format and 89 original budgets pass. Mapped delivery remains unchanged; direct text is used only for unmapped events with approved local body. Immutable recipient/provider payload, access/preferences recheck, quota/breaker, durable receipts and unknown-outcome hold remain. Financial policy sections unchanged. Root package differs only in version. Evidence: /Users/majid/.local/state/barghsa-manual-batches/release-0.3-sms-direct",
             "Scoped provider pause renewal: unchanged migration prefix/schema and existing behavior retained; current targeted native/browser/auth/AI checks cover changed provider branches. Whole task status and existing live limitations remain. Evidence: /Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/pause-proof.json",
-            "Scoped identity renewal: owner approved only T-05.01.04 wording; other original event requirements retained. Receipt tests preserve all prior assertions, use recipient104 instead of disabled-key11 in the quota-sharing fixture and add48-hour cache-expiry cases.46 current real-PG/worker checks pass; runtime/compiled application unchanged. Proof: /Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/identity-proof.json"
+            "Scoped identity renewal: owner approved only T-05.01.04 wording; other original event requirements retained. Receipt tests preserve all prior assertions, use recipient104 instead of disabled-key11 in the quota-sharing fixture and add48-hour cache-expiry cases.46 current real-PG/worker checks pass; runtime/compiled application unchanged. Proof: /Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/identity-proof.json",
+            "Brand-theme caller renewal: /Users/majid/.local/state/barghsa-manual-batches/release-0.5-brand-theme/acceptance-proof.json. 239 current unit/native cases and61 distinct source-bound browser cases pass;16 legacy frame/normalization cases byte-identical. Sender/claim/authority/money/unknown-outcome code unchanged. Original assertions and numeric limits retained; no new physical provider, Telegram, staging or whole-release claim."
           ],
           "limitations": [],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/provider-preflight-classification",
@@ -364588,6 +365089,13 @@
               "packages/shared/src/notification-delivery/sms.ts"
             ]
           }
+        },
+        "brand_theme_caller_renewal": {
+          "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-brand-theme/acceptance-proof.json",
+          "paths": [
+            "apps/api/src/notifications/notification-template-delivery.test.ts",
+            "apps/worker/src/auth-delivery/runner.integration.test.ts"
+          ]
         }
       }
     },
@@ -373485,7 +373993,7 @@
             },
             {
               "path": "docs/decisions/notification-provider-closure.md",
-              "sha256": "7896457972cd32aef476ed7665ad17bfbde2d2c3887748237c64a38f64ade584"
+              "sha256": "59b9eb61d325ec46c30ae638aaa9ebd946a9a7e925ad953eaf9898b50a20519c"
             },
             {
               "path": "kanban/epics/05-notifications-documents-ai.md",
@@ -373520,7 +374028,8 @@
             "Scoped financial-notice renewal:164 related native checks pass; old financial/auth/permission/NOWAIT/message and service-method bytes retained, only opt-in private staff delivery envelope and stable occurrence keys added. No broader suite/live acceptance inferred. Proof: /Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/financial-notice-proof.json",
             "Scoped generic-notice renewal:207 related cases pass with exact canonical and informational envelope assertions; existing private business writers retain authorization, recipients, messages and transaction safeguards. Proof: /Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/generic-notice-proof.json",
             "Documentation-only live preflight renewal: protected staging role/files provisioned with actual denied financial/user access; existing native storage helper proved distinct versions, provider-hold refusal, exact-version physical cleanup and exact tagged policy/readback. This updates configuration instructions only; no application, thresholds or task criteria change. External receipts: /Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure.",
-            "Documentation-only scanner scope renewal: actual native canonical upload/conditional replay, clean/quarantine/private-download and real scanner-pause retry/recovery receipts pass. Clarifies generic upload inspection metadata versus canonical document availability; no implementation, policy, deadline or assertion change. Proof: /Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/scanner-live-source-proof.json"
+            "Documentation-only scanner scope renewal: actual native canonical upload/conditional replay, clean/quarantine/private-download and real scanner-pause retry/recovery receipts pass. Clarifies generic upload inspection metadata versus canonical document availability; no implementation, policy, deadline or assertion change. Proof: /Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/scanner-live-source-proof.json",
+            "Brand-theme caller renewal: /Users/majid/.local/state/barghsa-manual-batches/release-0.5-brand-theme/acceptance-proof.json. 239 current unit/native cases and61 distinct source-bound browser cases pass;16 legacy frame/normalization cases byte-identical. Sender/claim/authority/money/unknown-outcome code unchanged. Original assertions and numeric limits retained; no new physical provider, Telegram, staging or whole-release claim."
           ],
           "limitations": [],
           "operational_limits": [
@@ -373593,6 +374102,12 @@
             "proof": "provider-retention-proof.json",
             "fresh_cases": 16
           }
+        },
+        "brand_theme_caller_renewal": {
+          "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-brand-theme/acceptance-proof.json",
+          "paths": [
+            "docs/decisions/notification-provider-closure.md"
+          ]
         }
       }
     },
@@ -382230,7 +382745,7 @@
       "release": "0.4.0",
       "launch_required": true,
       "remaining": [
-        "Provide working staging Telegram BotAPI outbound connectivity or an approved protected proxy configuration. Latest protected getMe returns ECONNREFUSED at2026-10-12T04:50:13.718Z. Then perform the authorized webhook handoff, actual private owned account/profile linkage, Telegram audience isolation and root-version receipts. Existing healthy webhook preserved. Native public/staff/individual/legal AI, real Ready vectors, model test and application chat budget are verified."
+        "When a reachable external Telegram host is available, configure protected bot/webhook credentials and complete the authorized one-webhook handoff, actual private owned profile linkage, Telegram audience isolation and root-version receipts. Preserve the current webhook until the replacement is verified. Provisioning is explicitly deferred; no live Telegram gate is waived."
       ],
       "owner": null,
       "depends_on": [],
@@ -383107,9 +383622,21 @@
             "legal_entity_chatbot"
           ],
           "telegram": "blocked; no fabricated linkage/notification receipt"
+        },
+        "owner_telegram_hosting_disposition": {
+          "status": "approved_external_host_deferred",
+          "approved_by": "owner",
+          "approved_at": "2026-11-06",
+          "source": "Telegram is blocked in server network; host Telegram service on another server later; another server is not possible now; continue building in this situation.",
+          "scope": "Continue independent implementation in dependency order starting v0.5.0. Retain v0.4.0 live Telegram task/release gates as blocked; no new server purchase, network bypass or fabricated receipt. Release acceptance and production readiness still require actual external-host Telegram verification.",
+          "task_keys": [
+            "02-auth-users-admin.md#T-09.11.05",
+            "05-notifications-documents-ai.md#T-05.22.04",
+            "release-readiness#R-03.02"
+          ]
         }
       },
-      "blocker": "Staging Telegram BotAPI outbound connectivity fails ECONNREFUSED, after prior EHOSTUNREACH. Owner/hosting-provider route repair or an approved protected proxy configuration is required. Paid Liara provisioning and all four non-Telegram native AI slot checks are complete; existing webhook remains preserved."
+      "blocker": "Owner confirmed staging network blocks Telegram. External Telegram hosting is required and provisioning is deferred. Independent implementation may continue; actual handoff/private linkage/Telegram isolation/version receipts remain unaccepted."
     },
     {
       "key": "05-notifications-documents-ai.md#T-05.22.05",
@@ -417419,7 +417946,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "Existing editor has logo upload, color/title fields, live light/dark preview and versioned save/activation. Favicon currently accepts a URL only; implement native file upload with the same ownership/byte and publication safeguards, then verify complete page acceptance."
       ],
       "owner": null,
       "depends_on": [],
@@ -428931,7 +429458,7 @@
             },
             {
               "path": "apps/api/src/notifications/notification-template-delivery.test.ts",
-              "sha256": "869747bbbc595a091fc20450be5cd4339ffad16825af0cdc185a33b2b5f6b46a"
+              "sha256": "5b342c9a3d9d7c737bc8b7a7ce5300af9dc425d739435dea759333b35a4d3eea"
             },
             {
               "path": "apps/api/src/notifications/notification-template-http.integration.test.ts",
@@ -429531,7 +430058,7 @@
             },
             {
               "path": "apps/web/e2e/notification-brand-preview.spec.ts",
-              "sha256": "d59be9f4e04dc9b130e3afb15ebaace0ccf74753ce24e17ed11f9c8525284f34"
+              "sha256": "3ad070e8eb5574a85f5524e63b8d8c7ff7e5f9643b8d2172a941479f15ffd5b3"
             },
             {
               "path": "apps/web/e2e/notification-center-recovery.spec.ts",
@@ -430199,7 +430726,7 @@
             },
             {
               "path": "apps/worker/src/auth-delivery/runner.integration.test.ts",
-              "sha256": "9c187759e4814524afa7ede8ed8518170039bc651366560e6eabc8844429c3ba"
+              "sha256": "612abb6419e56df269dd9e87b53faa22d7d6973196b2a324f912acee29cbdcd5"
             },
             {
               "path": "apps/worker/src/documents/clamav.test.ts",
@@ -431059,7 +431586,7 @@
             },
             {
               "path": "packages/shared/src/notification-delivery/branding.test.ts",
-              "sha256": "1194dd14e00b19fa122553f0942e1b59d46d21a07c51ef720f2e855504687e3d"
+              "sha256": "83398430bfbdced697b71a95c76c2cb5c5a8936692ecdd0b6ea92738602cb0db"
             },
             {
               "path": "packages/shared/src/notification-delivery/branding.ts",
@@ -431111,7 +431638,7 @@
             },
             {
               "path": "packages/shared/src/notifications/email-branding.ts",
-              "sha256": "991bebe092366c4eceaa5bac66d6240909f02c2a4003a4b7c9037a4bc208b3a2"
+              "sha256": "2ddd4ce07e9c6767dabaaf628fdffb33fb09cd1d7d55a6795251470e38f51722"
             },
             {
               "path": "packages/shared/src/notifications/inbox-content.test.ts",
@@ -431354,7 +431881,8 @@
             "Reviewed private permanent-pause rehearsal and correct Liara URL/key-reentry runbook clarification only. Existing executable assertions/acceptance retained. release-0.4-permanent-pause-live-replacement",
             "Bounded Flash source renewal: /Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json. 79 passing related AI-model/API-budget/breaker/inference cases, exact shared package build/typecheck and lint. Only exact Flash request reasoning spread changes; all other production bytes identical. Generic payload assertion retained; two Flash aliases added. Documentation records approved provisioning and actual diagnostics. Prior effective criteria and independent live limits remain.",
             "Staff knowledge context renewal: /Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/staff-context-review.json. 65 current related cases pass, plus API build/typecheck/lint/format. Only fixed staff slot trusted context added; all original production bytes/assertions outside three-line insertion retained. Actual default-provider staff refusal preserved; final native marker check remains pending.",
-            "Final staff context placement renewal: /Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/staff-final-context-review.json. 65 current related checks, API build/typecheck/lint/format pass. All original non-staff service bytes and prior assertions preserved; final trusted fixed-role context follows untrusted passage data. Actual earlier staff marker failures remain open pending final native proof."
+            "Final staff context placement renewal: /Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/staff-final-context-review.json. 65 current related checks, API build/typecheck/lint/format pass. All original non-staff service bytes and prior assertions preserved; final trusted fixed-role context follows untrusted passage data. Actual earlier staff marker failures remain open pending final native proof.",
+            "Brand-theme caller renewal: /Users/majid/.local/state/barghsa-manual-batches/release-0.5-brand-theme/acceptance-proof.json. 239 current unit/native cases and61 distinct source-bound browser cases pass;16 legacy frame/normalization cases byte-identical. Sender/claim/authority/money/unknown-outcome code unchanged. Original assertions and numeric limits retained; no new physical provider, Telegram, staging or whole-release claim."
           ],
           "limitations": [],
           "operational_limits": [
@@ -431738,6 +432266,16 @@
             "apps/api/src/ai-agents/ai-test-chat.service.ts",
             "apps/api/src/ai-agents/ai-website-chat-http.integration.test.ts"
           ]
+        },
+        "brand_theme_caller_renewal": {
+          "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-brand-theme/acceptance-proof.json",
+          "paths": [
+            "apps/api/src/notifications/notification-template-delivery.test.ts",
+            "apps/web/e2e/notification-brand-preview.spec.ts",
+            "apps/worker/src/auth-delivery/runner.integration.test.ts",
+            "packages/shared/src/notification-delivery/branding.test.ts",
+            "packages/shared/src/notifications/email-branding.ts"
+          ]
         }
       }
     },
@@ -431757,7 +432295,7 @@
       "release": "0.4.0",
       "launch_required": true,
       "remaining": [
-        "Provide working staging Telegram BotAPI outbound connectivity or an approved protected proxy configuration. Latest protected getMe returns ECONNREFUSED at2026-10-12T04:50:13.718Z. Then perform the authorized webhook handoff, actual private owned account/profile linkage, Telegram audience isolation and root-version receipts. Existing healthy webhook preserved. Native public/staff/individual/legal AI, real Ready vectors, model test and application chat budget are verified.",
+        "When a reachable external Telegram host is available, configure protected bot/webhook credentials and complete the authorized one-webhook handoff, actual private owned profile linkage, Telegram audience isolation and root-version receipts. Preserve the current webhook until the replacement is verified. Provisioning is explicitly deferred; no live Telegram gate is waived.",
         "After the Telegram gate and every v0.4 effective criterion are accepted, prepare version/captures, verify exact release push, immediately enqueue staging worker, and verify actual deployment and grouped Persian Telegram receipts. No later-release work or production deployment."
       ],
       "owner": null,
@@ -432381,7 +432919,7 @@
             },
             {
               "path": "apps/api/src/notifications/notification-template-delivery.test.ts",
-              "sha256": "869747bbbc595a091fc20450be5cd4339ffad16825af0cdc185a33b2b5f6b46a"
+              "sha256": "5b342c9a3d9d7c737bc8b7a7ce5300af9dc425d739435dea759333b35a4d3eea"
             },
             {
               "path": "apps/api/src/notifications/notification-template-http.integration.test.ts",
@@ -432977,7 +433515,7 @@
             },
             {
               "path": "apps/web/e2e/notification-brand-preview.spec.ts",
-              "sha256": "d59be9f4e04dc9b130e3afb15ebaace0ccf74753ce24e17ed11f9c8525284f34"
+              "sha256": "3ad070e8eb5574a85f5524e63b8d8c7ff7e5f9643b8d2172a941479f15ffd5b3"
             },
             {
               "path": "apps/web/e2e/notification-center-recovery.spec.ts",
@@ -433625,7 +434163,7 @@
             },
             {
               "path": "apps/worker/src/auth-delivery/runner.integration.test.ts",
-              "sha256": "9c187759e4814524afa7ede8ed8518170039bc651366560e6eabc8844429c3ba"
+              "sha256": "612abb6419e56df269dd9e87b53faa22d7d6973196b2a324f912acee29cbdcd5"
             },
             {
               "path": "apps/worker/src/documents/clamav.test.ts",
@@ -434481,7 +435019,7 @@
             },
             {
               "path": "packages/shared/src/notification-delivery/branding.test.ts",
-              "sha256": "1194dd14e00b19fa122553f0942e1b59d46d21a07c51ef720f2e855504687e3d"
+              "sha256": "83398430bfbdced697b71a95c76c2cb5c5a8936692ecdd0b6ea92738602cb0db"
             },
             {
               "path": "packages/shared/src/notification-delivery/branding.ts",
@@ -434533,7 +435071,7 @@
             },
             {
               "path": "packages/shared/src/notifications/email-branding.ts",
-              "sha256": "991bebe092366c4eceaa5bac66d6240909f02c2a4003a4b7c9037a4bc208b3a2"
+              "sha256": "2ddd4ce07e9c6767dabaaf628fdffb33fb09cd1d7d55a6795251470e38f51722"
             },
             {
               "path": "packages/shared/src/notifications/inbox-content.test.ts",
@@ -434756,7 +435294,8 @@
             "Reviewed private permanent-pause rehearsal and correct Liara URL/key-reentry runbook clarification only. Existing executable assertions/acceptance retained. release-0.4-permanent-pause-live-replacement",
             "Bounded Flash source renewal: /Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json. 79 passing related AI-model/API-budget/breaker/inference cases, exact shared package build/typecheck and lint. Only exact Flash request reasoning spread changes; all other production bytes identical. Generic payload assertion retained; two Flash aliases added. Documentation records approved provisioning and actual diagnostics. Prior effective criteria and independent live limits remain.",
             "Staff knowledge context renewal: /Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/staff-context-review.json. 65 current related cases pass, plus API build/typecheck/lint/format. Only fixed staff slot trusted context added; all original production bytes/assertions outside three-line insertion retained. Actual default-provider staff refusal preserved; final native marker check remains pending.",
-            "Final staff context placement renewal: /Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/staff-final-context-review.json. 65 current related checks, API build/typecheck/lint/format pass. All original non-staff service bytes and prior assertions preserved; final trusted fixed-role context follows untrusted passage data. Actual earlier staff marker failures remain open pending final native proof."
+            "Final staff context placement renewal: /Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/staff-final-context-review.json. 65 current related checks, API build/typecheck/lint/format pass. All original non-staff service bytes and prior assertions preserved; final trusted fixed-role context follows untrusted passage data. Actual earlier staff marker failures remain open pending final native proof.",
+            "Brand-theme caller renewal: /Users/majid/.local/state/barghsa-manual-batches/release-0.5-brand-theme/acceptance-proof.json. 239 current unit/native cases and61 distinct source-bound browser cases pass;16 legacy frame/normalization cases byte-identical. Sender/claim/authority/money/unknown-outcome code unchanged. Original assertions and numeric limits retained; no new physical provider, Telegram, staging or whole-release claim."
           ],
           "limitations": [
             "Current staging is v0.3.0/2ac708c11225a1239156787cddfdd3ab094fb8f8, API/web/worker healthy and Redis/object storage readiness verified. After effective v0.4.0 criteria are accepted, deploy its immutable candidate and verify actual AI routing, slot isolation and notification/storage operations. Earlier v0.1.29/forced-TLS warning description is stale and does not dispatch a rebuild.",
@@ -435145,9 +435684,31 @@
             "legal_entity_chatbot"
           ],
           "telegram": "blocked; no fabricated linkage/notification receipt"
+        },
+        "owner_telegram_hosting_disposition": {
+          "status": "approved_external_host_deferred",
+          "approved_by": "owner",
+          "approved_at": "2026-11-06",
+          "source": "Telegram is blocked in server network; host Telegram service on another server later; another server is not possible now; continue building in this situation.",
+          "scope": "Continue independent implementation in dependency order starting v0.5.0. Retain v0.4.0 live Telegram task/release gates as blocked; no new server purchase, network bypass or fabricated receipt. Release acceptance and production readiness still require actual external-host Telegram verification.",
+          "task_keys": [
+            "02-auth-users-admin.md#T-09.11.05",
+            "05-notifications-documents-ai.md#T-05.22.04",
+            "release-readiness#R-03.02"
+          ]
+        },
+        "brand_theme_caller_renewal": {
+          "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-brand-theme/acceptance-proof.json",
+          "paths": [
+            "apps/api/src/notifications/notification-template-delivery.test.ts",
+            "apps/web/e2e/notification-brand-preview.spec.ts",
+            "apps/worker/src/auth-delivery/runner.integration.test.ts",
+            "packages/shared/src/notification-delivery/branding.test.ts",
+            "packages/shared/src/notifications/email-branding.ts"
+          ]
         }
       },
-      "blocker": "Staging Telegram BotAPI outbound connectivity fails ECONNREFUSED, after prior EHOSTUNREACH. Owner/hosting-provider route repair or an approved protected proxy configuration is required. Paid Liara provisioning and all four non-Telegram native AI slot checks are complete; existing webhook remains preserved."
+      "blocker": "Owner confirmed staging network blocks Telegram. External Telegram hosting is required and provisioning is deferred. Independent implementation may continue; actual handoff/private linkage/Telegram isolation/version receipts remain unaccepted."
     },
     {
       "key": "release-readiness#R-04.01",
@@ -450415,6 +450976,365 @@
       "milestone_released": false,
       "production_authorized": false,
       "recorded_at": "2026-10-12T04:51:19.438896+00:00"
+    },
+    "release-0.5-brand-theme-adoption": {
+      "batch": "release-0.5-brand-theme-adoption",
+      "base_commit": "8467954e00dc80d45f14e315be70f69715af9132",
+      "task_keys": [
+        "02-auth-users-admin.md#T-09.01.02"
+      ],
+      "scope": "Native FA/EN branding and configured readable light/dark email backgrounds, with frozen auth-delivery compatibility. Current root/auth/public/customer/admin/editor/template/component/terms/timezone theme journeys renewed.",
+      "review": {
+        "result": "accepted",
+        "findings": [],
+        "details": "Complete source/test/doc batch reviewed once. Only two runtime files change: normalization/rendering of optional branding fields and bilingual authentication email identity. Color values remain strict six-digit hex, titles are control-sanitized and HTML-escaped, old snapshots render byte-identically. No changes to provider transport, claims, money, OTP identity, permissions, replay/uncertain holds, template bodies or migrations. Original assertions retained; fixtures now supply required current branding/profile-bootstrap fields, with original numeric contrast/focus/RTL/isolation budgets intact. Four reviewed actual captures retained."
+      },
+      "source_evidence": [
+        {
+          "path": "apps/api/src/notifications/notification-template-delivery.test.ts",
+          "sha256": "5b342c9a3d9d7c737bc8b7a7ce5300af9dc425d739435dea759333b35a4d3eea"
+        },
+        {
+          "path": "apps/api/src/notifications/notification-template.service.ts",
+          "sha256": "fbd230be0ce64a510824d2cca58201921ae5c210e09ab5749aed825c2bf5bf5b"
+        },
+        {
+          "path": "apps/web/e2e/branding-theme.spec.ts",
+          "sha256": "9e01921593b5962fc843f0fc1a8e653bdbf08a4a89e99e8545948affcb80ce11"
+        },
+        {
+          "path": "apps/web/e2e/consumer-theme.spec.ts",
+          "sha256": "c20ba5f1942524442fb723feaa906b17bfff4283186fb34a8a4e569587bbf9f8"
+        },
+        {
+          "path": "apps/web/e2e/direction-component.spec.ts",
+          "sha256": "0894c25e430cf620abcd7efd14f5b718eb0e3bf92c093f1be2a1c96feb12df88"
+        },
+        {
+          "path": "apps/web/e2e/notification-brand-preview.spec.ts",
+          "sha256": "3ad070e8eb5574a85f5524e63b8d8c7ff7e5f9643b8d2172a941479f15ffd5b3"
+        },
+        {
+          "path": "apps/web/e2e/terms-theme.spec.ts",
+          "sha256": "6582d9a677fd65f88219c2439eb5bf792d974b199a996aca070725861b73fc23"
+        },
+        {
+          "path": "apps/web/e2e/theme-components.spec.ts",
+          "sha256": "c71b7dadc132ba8411dadc46f33d7ffe4d7b483a81fcf7ee07a2bd4cf123f664"
+        },
+        {
+          "path": "apps/web/e2e/timezone-settings.spec.ts",
+          "sha256": "95638515e9440b4847bc341a7290ef64eca3c0a121504e090d77fca5b84e9785"
+        },
+        {
+          "path": "apps/web/src/components/AssignmentFallbackEditor.tsx",
+          "sha256": "911fb3cc2f705803d3b6ccfbedd31f0b58354e0ec130dd87bb25a243d55213ba"
+        },
+        {
+          "path": "apps/web/src/components/AuthLayout.tsx",
+          "sha256": "5828202e1f8ccb28b85b567fc251902df7923a2416265c91bb5846c460c60898"
+        },
+        {
+          "path": "apps/web/src/components/BrandedEmailPreview.tsx",
+          "sha256": "5faa869a743e20b91d6e98486f36bbccd1b0cb6ebbc42ee6cc0dc2881e101581"
+        },
+        {
+          "path": "apps/web/src/components/DeadLetterPanel.tsx",
+          "sha256": "9d084431dab36c6215518460f649268dcaa3815cc399274c9a4aadb370d26ca4"
+        },
+        {
+          "path": "apps/web/src/components/DefaultProfileModal.tsx",
+          "sha256": "e7b0f15857b1ee4c24886c2a5f202db55ccb86726ea761094ff7018481e5c6e4"
+        },
+        {
+          "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
+          "sha256": "c7dc99f55256082ce3f087512e16aae5f11b9a918def3dcbe6dc281be22bea91"
+        },
+        {
+          "path": "apps/web/src/components/NotificationBell.tsx",
+          "sha256": "ca732cb7c7d1b8fd9e656436e045c150ee56ee36083f3a31742988a5e61193e2"
+        },
+        {
+          "path": "apps/web/src/components/NotificationRow.tsx",
+          "sha256": "6ecba97ccd23cd592d527686add90bd9ff97be5b6f62d932370de896ca7737ff"
+        },
+        {
+          "path": "apps/web/src/components/OnlinePaymentReturnPanel.tsx",
+          "sha256": "a163b2eb38d2ba528e13f737a2319211c425529573e3d74cd2f1b5781f262ef1"
+        },
+        {
+          "path": "apps/web/src/components/ProfileSwitcher.tsx",
+          "sha256": "cb28e8a844c0ada396511e18340e1443e654a9468ea83a782f85a33ff8ba0ad4"
+        },
+        {
+          "path": "apps/web/src/components/QuickStatusCards.tsx",
+          "sha256": "82ebca7890c5ecdf05632adc3fd9fff1f821688ea239ef00db4c10330d74c829"
+        },
+        {
+          "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
+          "sha256": "8950e7567c504ee99a37cd55a8901c030df3864af0d71f9a47cddc5fa80c9f54"
+        },
+        {
+          "path": "apps/web/src/components/TemplatePreviewPanel.tsx",
+          "sha256": "699b511cc34640b78edc0d6cbf0b9749b4ebaa03c6c493d06e17417649bd5502"
+        },
+        {
+          "path": "apps/web/src/components/WalletBalanceCard.tsx",
+          "sha256": "5b4983ee91f685d455082310283ef8816c34025f3c7739a3e56ac92fba3477f0"
+        },
+        {
+          "path": "apps/web/src/components/WalletTopUpLimitConfigPanel.tsx",
+          "sha256": "8a19ff629274e6115292830f392e7bcd9c2adadad4125c1eea158531e8ac5b1e"
+        },
+        {
+          "path": "apps/web/src/hooks/useAccountTime.test.tsx",
+          "sha256": "0362048bfd281c205250cef68745a3f34e9f9a7c6680f163a8270f92c10ebac7"
+        },
+        {
+          "path": "apps/web/src/hooks/useAccountTime.tsx",
+          "sha256": "e3f3524399d2f7cccafc0315d915a888cdb73e9d49eb8f43659400d910c18ed1"
+        },
+        {
+          "path": "apps/web/src/hooks/useDirection.ts",
+          "sha256": "be6a237736ac7820d0aaa20bab598a68ad8d82671a250c77d7115a1cbf8e035c"
+        },
+        {
+          "path": "apps/web/src/hooks/useLocale.ts",
+          "sha256": "b753d2595d649722a4d9e131ba4d688b434c4183a8bea106c08d965c3d252856"
+        },
+        {
+          "path": "apps/web/src/hooks/useTimezone.ts",
+          "sha256": "f251d68f5fd82d7d1fd3e1a592db5b3f02c7562dc4d8e5042d6732f1ca9a62ef"
+        },
+        {
+          "path": "apps/web/src/pages/AIChat.tsx",
+          "sha256": "68a0f3261b6ab7d489e264134505d55b7c371a2d3330d7f3d3837249d838e2c6"
+        },
+        {
+          "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
+          "sha256": "5dc1a959c0dfacd5779c5b3c3c865e2f06900a13a983d688172f3c19aa9b5856"
+        },
+        {
+          "path": "apps/web/src/pages/AdminContractLimitsPage.tsx",
+          "sha256": "7ae1dd4d68d4552a3be4074e892f2d50e62cf2d0ed07873f08ddc3f8908e4db3"
+        },
+        {
+          "path": "apps/web/src/pages/AdminDashboard.tsx",
+          "sha256": "f3d981aa42bee7b08a89cd650221eeb899c6b8ab1ca6a1b08123f7a102eb901b"
+        },
+        {
+          "path": "apps/web/src/pages/AdminElectricityRulesPage.tsx",
+          "sha256": "8bd57b484840389a6fadbb43f14e3e8dc14e443b881d46b5380c8bd40e753912"
+        },
+        {
+          "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
+          "sha256": "4bfcbfddbf5181324c06de75ea647d7417fc0851bd906a7c1b9b23e1e5752def"
+        },
+        {
+          "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
+          "sha256": "ee22c2c49ac11f4df8c88cf11cf8c42a3784c1a923e83d6b426caab059d83e95"
+        },
+        {
+          "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
+          "sha256": "a258fd38bb11869d710f273a977704c8305d79f11b547067cb2cd18e342f3035"
+        },
+        {
+          "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
+          "sha256": "a6a935e3d42cd89b825be85582872ad466770aa6e3a7ea780619e26c574a0395"
+        },
+        {
+          "path": "apps/web/src/pages/AdminServiceTargetsPage.tsx",
+          "sha256": "9841a050ee12762ffd054816d817cac82414043c3a3cf1c75e3ea431dc9359e4"
+        },
+        {
+          "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
+          "sha256": "865c0e0a537722060519d01d29a74688116058e899dee04618b56d624f932ea2"
+        },
+        {
+          "path": "apps/web/src/pages/AdminTosPage.tsx",
+          "sha256": "a5bb9ebf4e5d4ad335bffbef3171e89ba9666292f2432e7abf84deed5d8683ff"
+        },
+        {
+          "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
+          "sha256": "2f56149261eeff3849bdb2805c0fe96812e32a5a26770bfb7c3eb4d271549eb8"
+        },
+        {
+          "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
+          "sha256": "143786921ef55380f04f91b9edb8456ca6b79c69064fa8d564e9f4d8620de383"
+        },
+        {
+          "path": "apps/web/src/pages/ChartsPage.tsx",
+          "sha256": "59fe536f68eb3fa48b099f2f48895a3805743ccf3c9ef451ff3de226cd439547"
+        },
+        {
+          "path": "apps/web/src/pages/CrmProfileDetail.tsx",
+          "sha256": "21721398ba0c9732b53410f557062c718951d9494c60bb92b15acfec638d9b7d"
+        },
+        {
+          "path": "apps/web/src/pages/DashboardLayout.tsx",
+          "sha256": "82536abaa846d676139258f65483348d1dc17964cfd7a9ab33573f25f582d390"
+        },
+        {
+          "path": "apps/web/src/pages/DashboardPage.tsx",
+          "sha256": "c9d71f578bd236b96f9ec8a9d764f8e8341aede95556fc867ab117bd218be4a3"
+        },
+        {
+          "path": "apps/web/src/pages/DocumentsPage.tsx",
+          "sha256": "9e48d22e718e01f2c1d1d3212103e8cb95f344dbab9f14923470e3ce73f685f8"
+        },
+        {
+          "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.tsx",
+          "sha256": "6204d1d8fed35d68f0ef924fcc4f996d015663769f98e499bd6226724b2bd3a0"
+        },
+        {
+          "path": "apps/web/src/pages/InvoicesPage.tsx",
+          "sha256": "564a675568b04180511a07c52949dd94e58b8383765edd5b7c2fc730cce41fb6"
+        },
+        {
+          "path": "apps/web/src/pages/NotificationCenterPage.tsx",
+          "sha256": "57d7402d0a071cdc6d9ea480af1d19b236e135db9f171af6ba6ca2a761acd339"
+        },
+        {
+          "path": "apps/web/src/pages/TosPreview.tsx",
+          "sha256": "e2ba9a09049614fa4251b06fdbb0a41bb058ba69b8c0d5d8f87909b2f8b29cd9"
+        },
+        {
+          "path": "apps/web/src/pages/TosRichText.tsx",
+          "sha256": "9b6155fac43f41f2bdc92b96507f04c543204fa3a34322d60f964bf9e618b105"
+        },
+        {
+          "path": "apps/web/src/pages/VideosPage.tsx",
+          "sha256": "b9fe8a1f44e8e234669709808eecb51c7f5a68f88f1f744b675afa9de6c159c6"
+        },
+        {
+          "path": "apps/web/src/pages/WalletPage.tsx",
+          "sha256": "487f20306dded67662d4739288bee73983d5aabc13e0b3ee7936e0a3ec9977d3"
+        },
+        {
+          "path": "apps/web/src/providers/BrandThemeProvider.tsx",
+          "sha256": "c647dd1a82e97d48ae84606083494b7e02b5ece0c4d405b5bdccbbc6d279190e"
+        },
+        {
+          "path": "apps/web/src/providers/UiDirectionProvider.tsx",
+          "sha256": "52dd4b7b25aee2b6bc485ed4de87f6910c47cbaa2a391024cf0c88fd7e370776"
+        },
+        {
+          "path": "apps/web/src/routes/__root.tsx",
+          "sha256": "beaee53e712a8eb4d85f713247eb959eeddf315bfdcbff16cd774a088a5966a0"
+        },
+        {
+          "path": "apps/web/src/routes/_app/electricity/index.tsx",
+          "sha256": "1046d784562f6d80c1347ca12066e9840b992f17e968bbbfb508d918914ef6dd"
+        },
+        {
+          "path": "apps/web/src/routes/_app/savings.tsx",
+          "sha256": "87b3c86fc54370f1bc581c4251905624f759541214423a83c57b2c684eb94561"
+        },
+        {
+          "path": "apps/web/src/routes/_app/settings/index.tsx",
+          "sha256": "acfe9e4e80512b25da94c4652976ca5fec96ed502d4baab88d9d3a3ad502dd37"
+        },
+        {
+          "path": "apps/web/src/routes/_app/settings/profile.tsx",
+          "sha256": "e92ff2e38cdb2494ce51c9080f2c122447f0320b9f7612dd70d6855d18525ad1"
+        },
+        {
+          "path": "apps/worker/src/auth-delivery/providers.ts",
+          "sha256": "29ca13db7c3451124bd1e5c7677005d7b033c3d79ccbe64fb02d6ec57b47152f"
+        },
+        {
+          "path": "apps/worker/src/auth-delivery/runner.integration.test.ts",
+          "sha256": "612abb6419e56df269dd9e87b53faa22d7d6973196b2a324f912acee29cbdcd5"
+        },
+        {
+          "path": "apps/worker/src/auth-delivery/runner.ts",
+          "sha256": "f2f15c04243b5e896b589977ef1c9c986ad28f87e6a9ee4bf5e71177ba218b8b"
+        },
+        {
+          "path": "apps/worker/src/notifications/email-transport.ts",
+          "sha256": "250048ed0a04cbb33a39e312062c8add8e209f65f5e6acee88ffe664057ccbe4"
+        },
+        {
+          "path": "docs/decisions/notification-provider-closure.md",
+          "sha256": "59b9eb61d325ec46c30ae638aaa9ebd946a9a7e925ad953eaf9898b50a20519c"
+        },
+        {
+          "path": "packages/i18n/src/date-time.test.ts",
+          "sha256": "a48c6388730c7113f22d873cca23797f069c7f2cf75169dcefe06777cbd66bda"
+        },
+        {
+          "path": "packages/i18n/src/date-time.ts",
+          "sha256": "4c509aa5cbc6c8c50c342914c887d3bdd44e71ace6542f5d65c10ee2542c645a"
+        },
+        {
+          "path": "packages/shared/src/notification-delivery/branding.test.ts",
+          "sha256": "83398430bfbdced697b71a95c76c2cb5c5a8936692ecdd0b6ea92738602cb0db"
+        },
+        {
+          "path": "packages/shared/src/notifications/email-branding.ts",
+          "sha256": "2ddd4ce07e9c6767dabaaf628fdffb33fb09cd1d7d55a6795251470e38f51722"
+        },
+        {
+          "path": "packages/ui/src/styles.css",
+          "sha256": "c9edac644f0774091cefefb3c9a75db00a73bd5c22227ec462da16ae2345eb86"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "36dc4da67c80c5fb3b31c37d25fc7aafa43ed9f063d076f6df473e3050c47381"
+        }
+      ],
+      "passing_check_receipts": [
+        "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-brand-theme/email-branding-fixed.json",
+        "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-brand-theme/brand-api-consumers.json",
+        "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-brand-theme/brand-worker-consumers.json",
+        "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-brand-theme/brand-web-consumers.json",
+        "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-brand-theme/brand-preview-unit.json",
+        "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-brand-theme/legacy-brand-bytes.json",
+        "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-brand-theme/shared-brand-build.json",
+        "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-brand-theme/brand-api-build.json",
+        "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-brand-theme/brand-worker-build.json",
+        "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-brand-theme/brand-types.json",
+        "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-brand-theme/brand-web-typecheck.json",
+        "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-brand-theme/brand-web-build.json",
+        "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-brand-theme/brand-bundle-budgets.json",
+        "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-brand-theme/brand-lint.json",
+        "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-brand-theme/brand-browser-final.json",
+        "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-brand-theme/brand-component-browser-corrected.json"
+      ],
+      "passing_unit_native_cases": 239,
+      "passing_browser_cases": 61,
+      "case_provenance": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-brand-theme/browser-cases.json",
+      "compatibility_cases": 16,
+      "route_interaction_gzip_budgets": 89,
+      "failed_attempts_preserved": [
+        "email-branding-baseline.json",
+        "brand-browser.json",
+        "brand-browser-installed.json",
+        "brand-browser-fixtures-corrected.json",
+        "brand-theme-remaining-browser.json"
+      ],
+      "failure_disposition": "Baseline confirms six missing-behavior failures. Missing browser binary installed at pinned version. Later fixture failures diagnosed and corrected without changing product guards/assertions; only actual passing cases counted, failed suites not marked passed.",
+      "captures": [
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-brand-theme/captures/notification-brand-preview-6b58e--backgrounds-fa-dark-false--chromium.png",
+          "sha256": "55d41abfb6a05ad9bb7c1807e3a0cdbdd3ac5277d93ff43a45b5b4e1694585aa"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-brand-theme/captures/notification-brand-preview-b8a02--backgrounds-en-dark-false--chromium.png",
+          "sha256": "4d437d66982c6a39a2acc82907b1c30c6b6e2bec0a687477520bbd05dc4246c8"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-brand-theme/captures/notification-brand-preview-3d654-d-backgrounds-en-dark-true--chromium.png",
+          "sha256": "a8bd4d3f8ad818a17ffbb7bb8760963ab04dfe79200d4f379fd9b7b3f63be4f5"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-brand-theme/captures/notification-brand-preview-b5cf6-d-backgrounds-fa-dark-true--chromium.png",
+          "sha256": "35a7fa26b93c47a6760d012159326f08c79ff4e4dc4f7169e1172068766cd228"
+        }
+      ],
+      "external_sends": false,
+      "release_accepted": false,
+      "production_authorized": false
     }
   },
   "historical_improvements": [
@@ -450454,14 +451374,13 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.4-approved-provider-live-closure",
-    "release": "0.4.0",
+    "id": "release-0.5-branding-editor-assets",
+    "release": "0.5.0",
     "task_keys": [
-      "02-auth-users-admin.md#T-09.11.05",
-      "05-notifications-documents-ai.md#T-05.22.04",
-      "release-readiness#R-03.02"
+      "02-auth-users-admin.md#T-09.01.01",
+      "07-ui-ux-design.md#T-07.30.02.01"
     ],
-    "goal": "Resolve owner-blocked staging Telegram outbound route or approved protected proxy, then authorized actual webhook handoff/private linkage/isolation/version checks. Four non-Telegram native AI slots are verified. Accept and stage v0.4.0 only after all gates; no later release or production deployment."
+    "goal": "Inspect existing versioned branding asset implementation and complete demonstrated favicon upload/editor gaps through native ownership, byte verification, draft/activate and public/private asset boundaries. Reuse accepted theme evidence. Keep deployed CDN proof and deferred Telegram hosting explicit; no new server or release claim."
   },
   "launch_forecast": {
     "status": "not_yet_defensible",
