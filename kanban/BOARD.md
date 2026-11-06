@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 640 | Accepted with unchanged source bindings. |
-| verify | 685 | Existing work may be complete; inspect evidence before building. |
+| done | 652 | Accepted with unchanged source bindings. |
+| verify | 673 | Existing work may be complete; inspect evidence before building. |
 | partial | 34 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 7 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
@@ -39,20 +39,13 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Verify and finish responsive customer, staff and admin dashboard widgets with independent loading/retry, stable layout, permission-scoped counts/lists and useful navigation. Reuse current money/status/invitation evidence and inspect existing implementations before building demonstrated gaps. Preserve exact balances, profile isolation, current authority, truthful failures and separate external release gates.
+Verify and finish actual contract, invoice, bank receipt, electricity order and solar postal detail/list compositions. Reuse matching financial/status/dashboard evidence, inspect existing domain controls and build only concrete missing details. Preserve native financial consent, exact amounts, immutable documents, postal evidence, current authority and profile isolation. Accept complete business page patterns before moving to the next group.
 
-- `07-ui-ux-design.md#T-07.19.01.01`: Build `DashboardLayout` component: responsive grid of widgets. 1 column mobile, 2 columns tablet, 3 columns desktop. Each widget is a Card with header (icon + title + optional "View all" link) and body (data content).
-- `07-ui-ux-design.md#T-07.19.01.02`: Build `DashboardWidget` wrapper: loading skeleton (per-widget), error state (per-widget retry), empty state, data content slot. Each widget independently fetches data with `useAsyncData`.
-- `07-ui-ux-design.md#T-07.19.01.03`: Widget layout must be stable — no layout shift as widgets load. Each widget reserves its card space with a skeleton placeholder.
-- `07-ui-ux-design.md#T-07.19.02.01`: `WalletBalanceWidget`: current available balance (IRR/toman), charge button, low-balance warning if pending invoices exceed balance. Alert banner if wallet data fails to load.
-- `07-ui-ux-design.md#T-07.19.02.02`: `QuickStatusWidget`: grid of 4 small stat cards — Active Contracts, Pending Orders, Open Tickets, Unpaid Invoices. Each: icon + count + label + color indicator (green/yellow/red). Click navigates to filtered list.
-- `07-ui-ux-design.md#T-07.19.02.03`: `PendingVerificationWidget` (staff): profiles awaiting verification. Count + last 5 entries + "Show all" link.
-- `07-ui-ux-design.md#T-07.19.02.04`: `AgentInvitationWidget` (customer): banner for pending legal entity invitations. Accept/Decline buttons. Not dismissible until action taken.
-- `07-ui-ux-design.md#T-07.19.02.05`: `LatestOrdersWidget`: last 5 orders with status, date, amount. "View all" link.
-- `07-ui-ux-design.md#T-07.19.02.06`: `UpcomingInvoicesWidget`: next due invoices with amount, due date, days remaining. Color-coded urgency. Pay Now button.
-- `07-ui-ux-design.md#T-07.19.02.07`: `ActiveContractsWidget`: active contracts with end date, status, progress.
-- `07-ui-ux-design.md#T-07.19.02.08`: `StaffWorkQueueWidget` (staff): pending tickets, awaiting-review orders, unassigned consultations. Counts with links to each work queue.
-- `07-ui-ux-design.md#T-07.19.02.09`: `FailedJobsWidget` (admin): failed background jobs count, failed notifications in dead-letter queue, unresolved refund obligations. Severity indicators.
+- `07-ui-ux-design.md#T-07.18.03.01`: Contract list/detail page pattern: List columns (contract number, type, status badge, legal entity, start date, end date, amount). Detail sections (header with status, parties, terms, schedule, version timeline, amendment history, download links). Prerequisite display: show linked order, invoice, and document statuses. Contract detail page owned by E-04; this pattern defines the UI composition.
+- `07-ui-ux-design.md#T-07.18.03.02`: Invoice list/detail page pattern: List columns (invoice number, type, status badge, period, amount, due date, payment status). Detail sections (header with status + amount, line items table, VAT breakdown, payment timeline, bank receipt attachment, payment method). Invoice detail page owned by E-04.
+- `07-ui-ux-design.md#T-07.18.03.03`: Bank receipt list/detail page pattern: List columns (receipt ID, invoice reference, amount, bank name, deposit date, verification status). Detail sections (receipt image, deposit metadata, matched invoice, verification timeline). Bank receipt page owned by E-04.
+- `07-ui-ux-design.md#T-07.18.03.04`: Electricity order detail page pattern: Detail sections (header with dual status badge, period, bundle/quantity breakdown, green composition, price preview, gift code used, payment status, contract link, timeline, document requirements). Uses `DualStatusDisplay` from T-07.27.01.04. Owned by E-03.
+- `07-ui-ux-design.md#T-07.18.03.05`: Solar postal tracking page pattern: Detail sections (header with stage status, current postal stage, estimated delivery, tracking number link, document checklist, construction stage progress stepper). Uses `ProgressStepper` from T-07.27.01.03. Owned by E-03.
 
 ## v0.2.0: Complete customer journeys
 
@@ -856,18 +849,18 @@ Customer and admin workflows work on desktop/mobile in both languages and themes
 | `07-ui-ux-design.md#T-07.18.03.03` | verify | Recorded batch work | Bank receipt list/detail page pattern: List columns (receipt ID, invoice reference, amount, bank name, deposit date, verification status). Detail sections (receipt image, deposit metadata, matched invoice, verification timeline). Bank receipt page owned by E-04. |
 | `07-ui-ux-design.md#T-07.18.03.04` | verify | Recorded batch work | Electricity order detail page pattern: Detail sections (header with dual status badge, period, bundle/quantity breakdown, green composition, price preview, gift code used, payment status, contract link, timeline, document requirements). Uses `DualStatusDisplay` from T-07.27.01.04. Owned by E-03. |
 | `07-ui-ux-design.md#T-07.18.03.05` | verify | Recorded batch work | Solar postal tracking page pattern: Detail sections (header with stage status, current postal stage, estimated delivery, tracking number link, document checklist, construction stage progress stepper). Uses `ProgressStepper` from T-07.27.01.03. Owned by E-03. |
-| `07-ui-ux-design.md#T-07.19.01.01` | verify | Recorded batch work | Build `DashboardLayout` component: responsive grid of widgets. 1 column mobile, 2 columns tablet, 3 columns desktop. Each widget is a Card with header (icon + title + optional "View all" link) and body (data content). |
-| `07-ui-ux-design.md#T-07.19.01.02` | verify | Recorded batch work | Build `DashboardWidget` wrapper: loading skeleton (per-widget), error state (per-widget retry), empty state, data content slot. Each widget independently fetches data with `useAsyncData`. |
-| `07-ui-ux-design.md#T-07.19.01.03` | verify | Recorded batch work | Widget layout must be stable — no layout shift as widgets load. Each widget reserves its card space with a skeleton placeholder. |
-| `07-ui-ux-design.md#T-07.19.02.01` | verify | Inventory needed | `WalletBalanceWidget`: current available balance (IRR/toman), charge button, low-balance warning if pending invoices exceed balance. Alert banner if wallet data fails to load. |
-| `07-ui-ux-design.md#T-07.19.02.02` | verify | Inventory needed | `QuickStatusWidget`: grid of 4 small stat cards — Active Contracts, Pending Orders, Open Tickets, Unpaid Invoices. Each: icon + count + label + color indicator (green/yellow/red). Click navigates to filtered list. |
-| `07-ui-ux-design.md#T-07.19.02.03` | verify | Recorded batch work | `PendingVerificationWidget` (staff): profiles awaiting verification. Count + last 5 entries + "Show all" link. |
-| `07-ui-ux-design.md#T-07.19.02.04` | verify | Recorded batch work | `AgentInvitationWidget` (customer): banner for pending legal entity invitations. Accept/Decline buttons. Not dismissible until action taken. |
-| `07-ui-ux-design.md#T-07.19.02.05` | verify | Recorded batch work | `LatestOrdersWidget`: last 5 orders with status, date, amount. "View all" link. |
-| `07-ui-ux-design.md#T-07.19.02.06` | verify | Recorded batch work | `UpcomingInvoicesWidget`: next due invoices with amount, due date, days remaining. Color-coded urgency. Pay Now button. |
-| `07-ui-ux-design.md#T-07.19.02.07` | verify | Recorded batch work | `ActiveContractsWidget`: active contracts with end date, status, progress. |
-| `07-ui-ux-design.md#T-07.19.02.08` | verify | Recorded batch work | `StaffWorkQueueWidget` (staff): pending tickets, awaiting-review orders, unassigned consultations. Counts with links to each work queue. |
-| `07-ui-ux-design.md#T-07.19.02.09` | verify | Recorded batch work | `FailedJobsWidget` (admin): failed background jobs count, failed notifications in dead-letter queue, unresolved refund obligations. Severity indicators. |
+| `07-ui-ux-design.md#T-07.19.01.01` | done | Recorded batch work | Build `DashboardLayout` component: responsive grid of widgets. 1 column mobile, 2 columns tablet, 3 columns desktop. Each widget is a Card with header (icon + title + optional "View all" link) and body (data content). |
+| `07-ui-ux-design.md#T-07.19.01.02` | done | Recorded batch work | Build `DashboardWidget` wrapper: loading skeleton (per-widget), error state (per-widget retry), empty state, data content slot. Each widget independently fetches data with `useAsyncData`. |
+| `07-ui-ux-design.md#T-07.19.01.03` | done | Recorded batch work | Widget layout must be stable — no layout shift as widgets load. Each widget reserves its card space with a skeleton placeholder. |
+| `07-ui-ux-design.md#T-07.19.02.01` | done | Recorded batch work | `WalletBalanceWidget`: current available balance (IRR/toman), charge button, low-balance warning if pending invoices exceed balance. Alert banner if wallet data fails to load. |
+| `07-ui-ux-design.md#T-07.19.02.02` | done | Recorded batch work | `QuickStatusWidget`: grid of 4 small stat cards — Active Contracts, Pending Orders, Open Tickets, Unpaid Invoices. Each: icon + count + label + color indicator (green/yellow/red). Click navigates to filtered list. |
+| `07-ui-ux-design.md#T-07.19.02.03` | done | Recorded batch work | `PendingVerificationWidget` (staff): profiles awaiting verification. Count + last 5 entries + "Show all" link. |
+| `07-ui-ux-design.md#T-07.19.02.04` | done | Recorded batch work | `AgentInvitationWidget` (customer): banner for pending legal entity invitations. Accept/Decline buttons. Not dismissible until action taken. |
+| `07-ui-ux-design.md#T-07.19.02.05` | done | Recorded batch work | `LatestOrdersWidget`: last 5 orders with status, date, amount. "View all" link. |
+| `07-ui-ux-design.md#T-07.19.02.06` | done | Recorded batch work | `UpcomingInvoicesWidget`: next due invoices with amount, due date, days remaining. Color-coded urgency. Pay Now button. |
+| `07-ui-ux-design.md#T-07.19.02.07` | done | Recorded batch work | `ActiveContractsWidget`: active contracts with end date, status, progress. |
+| `07-ui-ux-design.md#T-07.19.02.08` | done | Recorded batch work | `StaffWorkQueueWidget` (staff): pending tickets, awaiting-review orders, unassigned consultations. Counts with links to each work queue. |
+| `07-ui-ux-design.md#T-07.19.02.09` | done | Recorded batch work | `FailedJobsWidget` (admin): failed background jobs count, failed notifications in dead-letter queue, unresolved refund obligations. Severity indicators. |
 | `07-ui-ux-design.md#T-07.20.01.01` | verify | Recorded batch work | Build `AIChatPanel`: slide-over sheet from right (LTR) / left (RTL) triggered by a floating action button (bottom-right/bottom-left corner of the app). Contains: chat header (AI avatar + "Barghsa AI Assistant" + close button), message list (scrollable, auto-scroll to bottom), input area (textarea + send button + suggested prompts). |
 | `07-ui-ux-design.md#T-07.20.01.02` | verify | Recorded batch work | Build `ChatMessage` component: user message (right-aligned, brand-colored bubble), AI message (left-aligned, muted bubble). AI messages include: text content, source KB citations (expandable "Sources" section with KB name + title + excerpt), policy filter badges applied. Timestamp per message. |
 | `07-ui-ux-design.md#T-07.20.01.03` | verify | Recorded batch work | Build `ChatInput` component: auto-resizing textarea, send button (disabled while AI is responding), suggested prompt chips (3–4 contextual suggestions, e.g. "Show my invoices", "What's my wallet balance?"). Enter to send, Shift+Enter for newline. |
