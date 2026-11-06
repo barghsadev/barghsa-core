@@ -14,6 +14,7 @@ export function Topbar({
   isWide,
   currentLabel,
   actions,
+  profileBadge,
   menuOpen,
   menuButton,
   onMenuToggle,
@@ -25,6 +26,7 @@ export function Topbar({
   isWide: boolean;
   currentLabel: string | undefined;
   actions: ReactNode;
+  profileBadge?: ReactNode;
   menuOpen: boolean;
   menuButton: RefObject<HTMLButtonElement | null>;
   onMenuToggle: () => void;
@@ -37,9 +39,11 @@ export function Topbar({
       <Link
         to="/app"
         aria-label={shellText('workspace', locale)}
-        className="flex min-h-11 min-w-11 items-center text-foreground no-underline md:w-[calc(var(--sidebar-width)-3rem)]"
+        className={
+          isWide ? 'hidden' : 'flex min-h-11 min-w-11 items-center text-foreground no-underline'
+        }
       >
-        <BrandMark />
+        <BrandMark compact />
       </Link>
       <div className="hidden min-w-0 flex-1 items-center gap-2 text-sm md:flex">
         <span className="shrink-0 text-muted-foreground">{title}</span>
@@ -64,6 +68,7 @@ export function Topbar({
           area={area}
           locale={locale}
           onOpen={onAccountOpen}
+          profileBadge={!isWide ? profileBadge : undefined}
           preferences={
             !isWide ? (
               <div className="flex flex-wrap items-center gap-3">

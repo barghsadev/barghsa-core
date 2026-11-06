@@ -1,227 +1,357 @@
-import { refreshProfileContext } from '../lib/profile-context.js';
-import { withCsrf } from '../lib/csrf.js';
-import { useEffect, useMemo, useState } from 'react';
-import { useRouter } from '@tanstack/react-router';
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+  type ReactNode,
+  type ComponentType,
+} from 'react';
+import { Link, useLocation } from '@tanstack/react-router';
+import { Building2, Check, ChevronDown, UserRound } from 'lucide-react';
 import { t, type Locale } from '@barghsa/i18n/workspace';
-import { Badge } from '@barghsa/ui';
+import { Badge, Button, Popover, PopoverContent, PopoverTitle, PopoverTrigger } from '@barghsa/ui';
+import { useAccountUser } from '../hooks/useAccountUser.js';
+import { useOwnedProfileRead } from '../hooks/useOwnedProfileRead.js';
+import { useSettingsCommand } from '../hooks/useSettingsCommand.js';
+import { settingsContext, type SettingsProfileSummary } from '../lib/settings-form.js';
+import { refreshProfileContext, useProfileContextRevision } from '../lib/profile-context.js';
 
-/** Profile shape returned by GET /api/profiles (T-03.01.01). */
-export interface SwitcherProfile {
-  id: string;
-  profileType: 'INDIVIDUAL' | 'LEGAL';
-  displayName?: string | null;
-  isDefault: boolean;
-  status: 'DRAFT' | 'ACTIVE' | 'PENDING_VERIFICATION' | 'VERIFIED' | 'SUSPENDED';
-  title: string | null;
-  firstName: string | null;
-  lastName: string | null;
-  nationalId: string | null;
-}
+import { profileName, ProfileAvatar, ProfileTypeBadge } from './ProfileIdentity.js';
+import type { ProfileSwitchProgressProps } from './ProfileSwitchProgress.js';
+import type { ProfileChoicesProps } from './ProfileChoices.js';
 
+export type SwitcherProfile = SettingsProfileSummary;
 export interface ProfileSwitchResponse {
   activeProfileId: string | null;
 }
+type Profiles = NonNullable<ReturnType<typeof settingsContext>>;
+const ProfileContext = createContext<{
+  data: Profiles | null;
+  loading: boolean;
+  error: boolean;
+  locked: boolean;
+  load: () => Promise<void>;
+  select: (id: string) => Promise<void>;
+} | null>(null);
 
-interface ProfilesResponse {
-  profiles: SwitcherProfile[];
-  hasDefault: boolean;
-  activeProfileId: string | null;
-}
-
-interface ProfileSwitcherProps {
-  locale?: Locale;
-}
-
-/**
- * ProfileSwitcher (T-03.03.01).
- *
- * Top-of-sidebar control showing the current active profile and letting the
- * user switch between the profiles they can access (as owner or agent).
- *
- * - Fetches the profile list from `GET /api/profiles`.
- * - On switch, calls `POST /api/profiles/switch/:profileId` and, on success,
- *   remounts the app context to clear profile-scoped state without document navigation.
- * - A single already-active profile is shown read-only.
- *
- * The dropdown uses the native `<select>` for reliable RTL + a11y behavior
- * with minimal JS; the current profile is shown as a labeled badge row above
- * the selector.
- */
-export function ProfileSwitcher({ locale = 'fa' }: ProfileSwitcherProps) {
-  const router = useRouter();
-  const [profiles, setProfiles] = useState<SwitcherProfile[] | null>(null);
-  const [activeProfileId, setActiveProfileId] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [switching, setSwitching] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  const isRtl = locale === 'fa';
-
-  async function loadProfiles() {
-    try {
-      const response = await fetch('/api/profiles', {
-        method: 'GET',
-        credentials: 'include',
-        headers: { Accept: 'application/json' },
+/** One current, account-owned directory serves the picker and compact badge. */
+export function ProfileWorkspaceProvider({
+  children,
+  locale,
+}: {
+  children: ReactNode;
+  locale: Locale;
+}) {
+  const actor = useAccountUser(),
+    revision = useProfileContextRevision();
+  const pathname = useLocation({ select: (location) => location.pathname });
+  const identity = JSON.stringify([actor, revision]);
+  const current = useRef(identity);
+  current.current = identity;
+  const alive = useRef(true),
+    generation = useRef(0);
+  const [accepted, setAccepted] = useState<{ identity: string; data: Profiles } | null>(null);
+  const data = accepted?.identity === identity ? accepted.data : null;
+  const latest = useRef(data);
+  latest.current = data;
+  const [loading, setLoading] = useState(true),
+    [error, setError] = useState(false);
+  function permitted(token: string) {
+    return alive.current && current.current === token;
+  }
+  function denied() {
+    latest.current = null;
+    setAccepted(null);
+    setError(true);
+    setLoading(false);
+  }
+  const [Progress, setProgress] = useState<ComponentType<ProfileSwitchProgressProps> | null>(null);
+  const [progressError, setProgressError] = useState(false);
+  const command = useSettingsCommand(identity, denied, () => !!latest.current);
+  useEffect(() => {
+    if (!command.locked || Progress) return;
+    let cancelled = false;
+    setProgressError(false);
+    void import('./ProfileSwitchProgress.js')
+      .then((module) => {
+        if (!cancelled) setProgress(() => module.default);
+      })
+      .catch(() => {
+        if (!cancelled) setProgressError(true);
       });
-      if (response.status === 401) {
-        // Not authenticated — render nothing.
-        setLoading(false);
-        return;
+    return () => {
+      cancelled = true;
+    };
+  }, [command.locked, Progress]);
+  const privateRead = useOwnedProfileRead(
+    identity,
+    { context: 'account', ownerId: actor ?? 'current-session', accountId: actor, revision },
+    permitted,
+    () => command.coordination.denied()
+  );
+  async function read(token: string) {
+    const parsed = settingsContext(await privateRead('/api/profiles', token));
+    if (!parsed || !permitted(token)) throw new Error('Profile directory unavailable');
+    return parsed;
+  }
+  async function load() {
+    const token = identity,
+      request = ++generation.current;
+    setLoading(true);
+    try {
+      const value = await read(token);
+      if (permitted(token) && generation.current === request) {
+        latest.current = value;
+        setAccepted({ identity: token, data: value });
+        setError(false);
       }
-      if (!response.ok) {
-        setLoading(false);
-        return;
-      }
-      const data: ProfilesResponse = await response.json();
-      setProfiles(data.profiles);
-      setActiveProfileId(data.activeProfileId);
-      setLoading(false);
     } catch {
-      setLoading(false);
+      if (permitted(token) && generation.current === request) denied();
+    } finally {
+      if (permitted(token) && generation.current === request) setLoading(false);
     }
   }
-
   useEffect(() => {
+    alive.current = true;
+    latest.current = null;
+    setAccepted(null);
+    return () => {
+      alive.current = false;
+      generation.current++;
+    };
+  }, [identity]);
+  useEffect(() => {
+    if (!command.coordination.isLocked()) void load();
     const refresh = () => {
-      void loadProfiles();
+      if (!command.coordination.isLocked()) void load();
     };
     window.addEventListener('barghsa:profiles-changed', refresh);
     return () => window.removeEventListener('barghsa:profiles-changed', refresh);
-  }, []);
-
-  // Re-run whenever the active profile may have changed externally (e.g.
-  // onboarding completion or a navigation). Keeps the sidebar in sync.
-  useEffect(() => {
-    setLoading(true);
-    loadProfiles();
-  }, [router.state.location.pathname]);
-
-  const activeProfile = useMemo(
-    () => profiles?.find((p) => p.id === activeProfileId) ?? null,
-    [profiles, activeProfileId]
-  );
-
-  const profileName = useMemo(() => {
-    if (!activeProfile) return null;
-    const parts = [activeProfile.title, activeProfile.firstName, activeProfile.lastName].filter(
-      Boolean
-    );
-    return activeProfile.displayName?.trim() || (parts.length > 0 ? parts.join(' ') : null);
-  }, [activeProfile]);
-
-  // Single profile (or none renderable) — no switching needed.
-  if (loading || !profiles || profiles.length === 0) return null;
-  if (profiles.length === 1 && activeProfile) {
-    return (
-      <div
-        className="flex items-center gap-2 rounded-lg border bg-card p-3"
-        dir={isRtl ? 'rtl' : 'ltr'}
-      >
-        <span className="text-sm font-medium text-foreground truncate">
-          {profileName ?? t('dashboard.profile.unnamed', locale)}
-        </span>
-        <TypeBadge profileType={activeProfile?.profileType} locale={locale} />
+  }, [identity, pathname]);
+  async function select(id: string) {
+    if (
+      !data ||
+      loading ||
+      id === data.activeProfileId ||
+      !data.profiles.some((row) => row.id === id) ||
+      !command.coordination.claim('default')
+    )
+      return;
+    const token = identity;
+    await command.submit({
+      owner: 'default',
+      path: '/api/profiles/switch/' + encodeURIComponent(id),
+      method: 'POST',
+      status: 200,
+      keyed: false,
+      receipt: (value) =>
+        !!value &&
+        typeof value === 'object' &&
+        'activeProfileId' in value &&
+        value.activeProfileId === id,
+      confirmation: () => read(token),
+      confirmed: (value) =>
+        !!value &&
+        typeof value === 'object' &&
+        'activeProfileId' in value &&
+        value.activeProfileId === id,
+      accepted: () => {
+        if (permitted(token)) refreshProfileContext();
+      },
+    });
+  }
+  return (
+    <ProfileContext.Provider
+      value={{ data, loading, error, locked: !!command.locked, load, select }}
+    >
+      <div className="contents" inert={!!command.locked}>
+        {children}
       </div>
-    );
-  }
-
-  async function handleSwitch(profileId: string) {
-    if (!profileId || profileId === activeProfileId || switching) return;
-    setSwitching(true);
-    setError(null);
-    try {
-      const response = await fetch(`/api/profiles/switch/${profileId}`, {
-        method: 'POST',
-        credentials: 'include',
-        headers: withCsrf({ 'Content-Type': 'application/json' }),
-      });
-      if (!response.ok) {
-        setError(t('dashboard.profile.switchError', locale));
-        setSwitching(false);
-        return;
-      }
-      const data: ProfileSwitchResponse = await response.json();
-      if (data.activeProfileId !== profileId) {
-        setError(t('dashboard.profile.switchError', locale));
-        return;
-      }
-      refreshProfileContext();
-    } catch {
-      setError(t('dashboard.profile.switchError', locale));
-    } finally {
-      setSwitching(false);
-    }
-  }
-
-  return (
-    <div className="space-y-2" dir={isRtl ? 'rtl' : 'ltr'}>
-      <label
-        htmlFor="profile-switcher"
-        className="flex items-center gap-2 text-sm font-medium text-foreground"
-      >
-        <span className="truncate">{profileName ?? t('dashboard.profile.unnamed', locale)}</span>
-        <TypeBadge profileType={activeProfile?.profileType} locale={locale} />
-      </label>
-
-      <select
-        id="profile-switcher"
-        value={activeProfileId ?? ''}
-        disabled={switching}
-        onChange={(e) => handleSwitch(e.target.value)}
-        className="w-full rounded-md border border-input bg-card text-card-foreground px-3 py-2.5 text-sm text-foreground focus:border-ring focus:outline-none disabled:opacity-50"
-        aria-label={t('dashboard.profile.switchLabel', locale)}
-      >
-        {!activeProfile && (
-          <option value="" disabled>
-            {t('dashboard.profile.choose', locale)}
-          </option>
-        )}
-        {profiles.map((profile) => (
-          <option key={profile.id} value={profile.id}>
-            {formatProfileOption(profile, locale)}
-          </option>
+      {!!command.locked &&
+        (Progress ? (
+          <Progress
+            locale={locale}
+            busy={command.busy}
+            error={command.error}
+            messages={{
+              switching: t('dashboard.profile.switching', locale),
+              uncertain: t('dashboard.profile.uncertain', locale),
+              mismatch: t('dashboard.profile.mismatch', locale),
+              recheck: t('dashboard.profile.recheck', locale),
+              reload: t('dashboard.profile.reloadWorkspace', locale),
+            }}
+            recheck={command.refreshConfirmation}
+          />
+        ) : (
+          <div
+            role={progressError ? 'alert' : 'status'}
+            className="fixed inset-0 z-100 grid place-content-center gap-4 bg-background p-6 text-center"
+            dir={locale === 'fa' ? 'rtl' : 'ltr'}
+          >
+            <p>
+              {t(
+                progressError ? 'dashboard.profile.switchError' : 'dashboard.profile.switching',
+                locale
+              )}
+            </p>
+            {progressError && (
+              <Button onClick={() => window.location.reload()}>
+                {t('dashboard.profile.reloadWorkspace', locale)}
+              </Button>
+            )}
+          </div>
         ))}
-      </select>
-
-      {switching && (
-        <p className="text-xs text-muted-foreground">{t('dashboard.profile.switching', locale)}</p>
-      )}
-      {error && (
-        <p className="text-xs text-destructive" role="alert">
-          {error}
-        </p>
-      )}
-    </div>
+    </ProfileContext.Provider>
   );
 }
 
-function formatProfileOption(profile: SwitcherProfile, locale: Locale): string {
-  const parts = [profile.title, profile.firstName, profile.lastName].filter(Boolean);
-  const name =
-    profile.displayName?.trim() ||
-    (parts.length > 0 ? parts.join(' ') : t('dashboard.profile.unnamed', locale));
-  const type =
-    profile.profileType === 'LEGAL'
-      ? t('dashboard.profile.typeLegal', locale)
-      : t('dashboard.profile.typeIndividual', locale);
-  return `${name} (${type})`;
+/** Visible in compact headers; the same directory/identity owns both presentations. */
+export function ProfileBadge({ locale }: { locale: Locale }) {
+  const workspace = useContext(ProfileContext);
+  const profile = workspace?.data?.profiles.find(
+    (row) => row.id === workspace.data?.activeProfileId
+  );
+  if (!profile) return null;
+  const Icon = profile.profileType === 'LEGAL' ? Building2 : UserRound;
+  return (
+    <span
+      className="flex min-w-0 items-center gap-1"
+      title={profileName(profile, locale)}
+      data-slot="active-profile-badge"
+    >
+      <ProfileAvatar profile={profile} locale={locale} compact />
+      <Icon
+        className="size-4 shrink-0"
+        aria-label={t(
+          profile.profileType === 'LEGAL'
+            ? 'dashboard.profile.typeLegal'
+            : 'dashboard.profile.typeIndividual',
+          locale
+        )}
+      />
+      <span className="max-w-12 truncate text-xs sm:max-w-24" dir="auto">
+        {profileName(profile, locale)}
+      </span>
+    </span>
+  );
 }
 
-function TypeBadge({
-  profileType,
-  locale,
-}: {
-  profileType: SwitcherProfile['profileType'] | undefined;
-  locale: Locale;
-}) {
-  if (!profileType) return null;
-  const isLegal = profileType === 'LEGAL';
+export function ProfileSwitcher({ locale = 'fa' }: { locale?: Locale }) {
+  const workspace = useContext(ProfileContext);
+  const [open, setOpen] = useState(false);
+  const [Choices, setChoices] = useState<ComponentType<ProfileChoicesProps> | null>(null);
+  const [choiceError, setChoiceError] = useState(false);
+  useEffect(() => {
+    if (!open || Choices) return;
+    let cancelled = false;
+    setChoiceError(false);
+    void import('./ProfileChoices.js')
+      .then((module) => {
+        if (!cancelled) setChoices(() => module.default);
+      })
+      .catch(() => {
+        if (!cancelled) setChoiceError(true);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [open, Choices]);
+  if (!workspace) return null;
+  const { data, loading, error, locked } = workspace;
+  const active = data?.profiles.find((row) => row.id === data.activeProfileId);
+  if (!data || !data.profiles.length)
+    return error ? (
+      <div role="alert" className="space-y-2 text-sm">
+        <p>{t('dashboard.profile.switchError', locale)}</p>
+        <Button variant="outline" disabled={loading} onClick={() => void workspace.load()}>
+          {t('dashboard.profile.retry', locale)}
+        </Button>
+      </div>
+    ) : null;
   return (
-    <Badge variant={isLegal ? 'secondary' : 'outline'} className="shrink-0">
-      {isLegal
-        ? t('dashboard.profile.typeLegal', locale)
-        : t('dashboard.profile.typeIndividual', locale)}
-    </Badge>
+    <div dir={locale === 'fa' ? 'rtl' : 'ltr'}>
+      <Popover open={open && !locked} onOpenChange={setOpen}>
+        <PopoverTrigger
+          render={
+            <Button
+              id="profile-switcher"
+              variant="outline"
+              className="h-auto min-h-11 w-full justify-start whitespace-normal p-3 text-start"
+              disabled={locked || loading}
+              aria-label={t('dashboard.profile.switchLabel', locale)}
+            />
+          }
+        >
+          {active && <ProfileAvatar profile={active} locale={locale} />}
+          <span className="min-w-0 flex-1">
+            <span className="block truncate font-medium">
+              {active ? profileName(active, locale) : t('dashboard.profile.choose', locale)}
+            </span>
+            {active && <ProfileTypeBadge profile={active} locale={locale} />}
+          </span>
+          <ChevronDown className="size-4 shrink-0" aria-hidden="true" />
+        </PopoverTrigger>
+        <PopoverContent
+          align="start"
+          className="w-80 max-w-[calc(100vw-2rem)] max-h-(--available-height) overflow-y-auto p-3"
+          dir={locale === 'fa' ? 'rtl' : 'ltr'}
+        >
+          <PopoverTitle>{t('dashboard.profile.switchLabel', locale)}</PopoverTitle>
+          {Choices ? (
+            <Choices
+              data={data}
+              label={t('dashboard.profile.switchLabel', locale)}
+              onSelect={workspace.select}
+              renderProfile={(profile) => (
+                <>
+                  <ProfileAvatar profile={profile} locale={locale} />
+                  <span className="min-w-0 flex-1 space-y-1">
+                    <span className="block break-words font-medium">
+                      {profileName(profile, locale)}
+                    </span>
+                    <span className="flex flex-wrap gap-1">
+                      <ProfileTypeBadge profile={profile} locale={locale} />
+                      <Badge variant="outline">
+                        {t(
+                          profile.status === 'VERIFIED'
+                            ? 'dashboard.profile.verified'
+                            : 'dashboard.profile.unverified',
+                          locale
+                        )}
+                      </Badge>
+                    </span>
+                  </span>
+                  {profile.id === data.activeProfileId && (
+                    <Check className="size-4 shrink-0 text-primary" aria-hidden="true" />
+                  )}
+                </>
+              )}
+            />
+          ) : (
+            <div className="space-y-2">
+              <p role={choiceError ? 'alert' : 'status'}>
+                {t(
+                  choiceError ? 'dashboard.profile.switchError' : 'dashboard.profile.switching',
+                  locale
+                )}
+              </p>
+              {choiceError && (
+                <Button onClick={() => window.location.reload()}>
+                  {t('dashboard.profile.reloadWorkspace', locale)}
+                </Button>
+              )}
+            </div>
+          )}
+          <Link
+            to="/settings/profile"
+            onClick={() => setOpen(false)}
+            className="mt-3 flex min-h-11 items-center border-t pt-3 font-medium underline underline-offset-4"
+          >
+            {t('dashboard.profile.manage', locale)}
+          </Link>
+        </PopoverContent>
+      </Popover>
+    </div>
   );
 }

@@ -4,7 +4,13 @@ import { brandName, useBrandConfig } from '../providers/BrandThemeProvider.js';
 import { useLocale } from '../hooks/useLocale.js';
 
 /** The same mark in every shell; configured logos retain their original colors. */
-export function BrandMark({ inverse = false }: { inverse?: boolean }) {
+export function BrandMark({
+  inverse = false,
+  compact = false,
+}: {
+  inverse?: boolean;
+  compact?: boolean;
+}) {
   const { brandConfig } = useBrandConfig();
   const locale = useLocale();
   return (
@@ -21,7 +27,7 @@ export function BrandMark({ inverse = false }: { inverse?: boolean }) {
           <Zap className="size-5" strokeWidth={1.8} aria-hidden="true" />
         </span>
       )}
-      <span className="truncate text-xl font-semibold tracking-tight">
+      <span className={compact ? 'sr-only' : 'truncate text-xl font-semibold tracking-tight'}>
         {brandName(brandConfig, locale)}
       </span>
     </span>

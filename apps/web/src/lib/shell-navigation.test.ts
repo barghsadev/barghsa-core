@@ -14,11 +14,17 @@ it('selects service tabs and keeps every supplied page reachable exactly once', 
     '/electricity',
     '/invoices',
     '/wallet',
+    '/settings/profile',
     '/contracts',
     '/tickets'
   );
   const { primary, remaining } = mobileNavigation(groups, 'dashboard');
-  expect(primary.map((item) => item.to)).toEqual(['/app', '/electricity', '/invoices', '/wallet']);
+  expect(primary.map((item) => item.to)).toEqual([
+    '/app',
+    '/electricity',
+    '/wallet',
+    '/settings/profile',
+  ]);
   expect(
     [...primary, ...remaining.flatMap((entry) => entry.items)].map((item) => item.to).sort()
   ).toEqual(groups[0]!.items.map((item) => item.to).sort());
@@ -48,7 +54,7 @@ it('deduplicates primary routes shared across navigation groups', () => {
       [...group('/app', '/wallet'), ...group('/wallet', '/invoices')],
       'dashboard'
     ).primary.map((item) => item.to)
-  ).toEqual(['/app', '/invoices', '/wallet']);
+  ).toEqual(['/app', '/wallet', '/invoices']);
 });
 it('matches the longest actual page prefix and respects route boundaries', () => {
   const groups = group('/app', '/electricity', '/electricity/orders', '/invoices');

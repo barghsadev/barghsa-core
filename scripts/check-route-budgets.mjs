@@ -19,6 +19,17 @@ export async function measureRoute(
   const seen = new Set(),
     files = new Set();
   function visit(key) {
+    // Rollup can retain a dynamic entry's name while emitting a hashed facade key.
+    // Resolve that name strictly, then use the same dependency and byte accounting.
+    if (key.startsWith('chunk:')) {
+      const name = key.slice('chunk:'.length);
+      const matches = Object.entries(manifest).filter(
+        ([, entry]) => entry.isDynamicEntry === true && entry.name === name
+      );
+      if (matches.length !== 1)
+        throw new Error(`Expected one dynamic manifest entry named: ${name}`);
+      key = matches[0][0];
+    }
     // Interaction chunks load after the page bootstrap is already present.
     if (key === 'index.html' && !includeBootstrap) return;
     if (seen.has(key)) return;

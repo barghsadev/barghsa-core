@@ -43,6 +43,14 @@ async function openProfileMenu(page: Page) {
   }
 }
 
+async function pickProfile(page: Page, id: string) {
+  await page.locator('#profile-switcher').click();
+  await page
+    .getByRole('radiogroup')
+    .locator('[role=radio][data-profile-id="' + id + '"]')
+    .click();
+}
+
 for (const locale of ['fa', 'en'] as const) {
   test(`profile settings changes the saved default and recovers failed switches (${locale})`, async ({
     page,
@@ -159,7 +167,7 @@ for (const locale of ['fa', 'en'] as const) {
     await expect(page).toHaveURL(/\/settings\/profile$/);
     await openProfileMenu(page);
     const sidebarSelector = page.locator('#profile-switcher');
-    await expect(sidebarSelector).toHaveValue(second);
+    await expect(sidebarSelector).toContainText(second);
     expect(await selector.getAttribute('id')).not.toBe(await sidebarSelector.getAttribute('id'));
     await page.reload();
     await expect(selector).toHaveValue(second);
@@ -186,7 +194,7 @@ for (const locale of ['fa', 'en'] as const) {
     const invitedProfileId = 'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb';
     let accepted = false,
       attempts = 0,
-      active = 'existing';
+      active = '99444444-4444-4444-8444-444444444444';
     await page.route('**/api/invitations/pending', (route) =>
       route.fulfill({
         json: {
@@ -210,7 +218,10 @@ for (const locale of ['fa', 'en'] as const) {
     await page.route('**/api/profiles', (route) =>
       route.fulfill({
         json: {
-          profiles: [profile('existing'), ...(accepted ? [profile(invitedProfileId)] : [])],
+          profiles: [
+            profile('99444444-4444-4444-8444-444444444444'),
+            ...(accepted ? [profile(invitedProfileId)] : []),
+          ],
           activeProfileId: active,
           hasDefault: true,
         },
@@ -283,15 +294,17 @@ for (const locale of ['fa', 'en'] as const) {
       )
     ).toBeVisible();
     await openProfileMenu(page);
-    const selector = page.getByRole('combobox', {
-      name: locale === 'fa' ? 'تغییر پروفایل فعال' : 'Switch active profile',
-    });
-    await expect(selector.locator(`option[value="${invitedProfileId}"]`)).toHaveCount(1);
-    await selector.selectOption(invitedProfileId);
+    const selector = page.locator('#profile-switcher');
+    await selector.click();
+    const invitedChoice = page
+      .getByRole('radiogroup')
+      .locator('[role=radio][data-profile-id="' + invitedProfileId + '"]');
+    await expect(invitedChoice).toHaveCount(1);
+    await invitedChoice.click();
     const menu = page.locator('button[aria-controls="dashboard-navigation"]');
     if (await menu.isVisible()) await expect(menu).toHaveAttribute('aria-expanded', 'false');
     await openProfileMenu(page);
-    await expect(selector).toHaveValue(invitedProfileId);
+    await expect(selector).toContainText(invitedProfileId);
     await expect(page).toHaveURL(/\/app$/);
     expect(attempts).toBe(2);
   });
@@ -311,7 +324,7 @@ for (const locale of ['fa', 'en'] as const) {
     await page.route('**/api/profiles', (route) =>
       route.fulfill({
         json: {
-          profiles: [profile('remaining')],
+          profiles: [profile('99333333-3333-4333-8333-333333333333')],
           activeProfileId: active,
           hasDefault: active !== null,
         },
@@ -329,17 +342,15 @@ for (const locale of ['fa', 'en'] as const) {
         },
       });
     });
-    await page.route('**/api/profiles/switch/remaining', (route) => {
+    await page.route('**/api/profiles/switch/99333333-3333-4333-8333-333333333333', (route) => {
       expect(route.request().method()).toBe('POST');
-      active = 'remaining';
+      active = '99333333-3333-4333-8333-333333333333';
       return route.fulfill({ json: { activeProfileId: active } });
     });
     await page.goto('/dashboard');
     await openProfileMenu(page);
-    const selector = page.getByRole('combobox', {
-      name: locale === 'fa' ? 'تغییر پروفایل فعال' : 'Switch active profile',
-    });
-    await expect(selector).toHaveValue('');
+    const selector = page.locator('#profile-switcher');
+    await expect(selector).toContainText(locale === 'fa' ? 'انتخاب پروفایل' : 'Choose a profile');
     await expect(page.locator('main')).toContainText(locale === 'fa' ? '۱۲۳٬۴۵۶' : '123,456');
     await page.evaluate(() => {
       (window as unknown as Record<string, unknown>).profileSwitchDocument = 'preserved';
@@ -348,7 +359,7 @@ for (const locale of ['fa', 'en'] as const) {
     page.on('request', (request) => {
       if (request.resourceType() === 'document') documentRequests++;
     });
-    await selector.selectOption('remaining');
+    await pickProfile(page, '99333333-3333-4333-8333-333333333333');
     await expect(page.locator('main')).toContainText(locale === 'fa' ? '۹۸۷٬۶۵۴' : '987,654');
     await expect(page.locator('main')).not.toContainText(locale === 'fa' ? '۱۲۳٬۴۵۶' : '123,456');
     await expect(page.locator('#dashboard-navigation select')).toHaveCount(0);
@@ -367,22 +378,31 @@ test('a failed switch keeps the existing selection and reports the error', async
   await page.route('**/api/profiles', (route) =>
     route.fulfill({
       json: {
-        profiles: [profile('first'), profile('second')],
-        activeProfileId: 'first',
+        profiles: [
+          profile('99111111-1111-4111-8111-111111111111'),
+          profile('99222222-2222-4222-8222-222222222222'),
+        ],
+        activeProfileId: '99111111-1111-4111-8111-111111111111',
         hasDefault: true,
       },
     })
   );
-  await page.route('**/api/profiles/switch/second', (route) =>
+  await page.route('**/api/profiles/switch/99222222-2222-4222-8222-222222222222', (route) =>
     route.fulfill({ status: 403, json: { error: 'forbidden' } })
   );
   await page.goto('/dashboard');
   await openProfileMenu(page);
-  await page.locator('#profile-switcher').selectOption('second');
+  await pickProfile(page, '99222222-2222-4222-8222-222222222222');
   await openProfileMenu(page);
-  await expect(page.locator('#profile-switcher')).toHaveValue('first');
-  await expect(page.getByRole('complementary').getByRole('alert')).toHaveText(
-    'تغییر پروفایل با خطا مواجه شد'
+  await expect(
+    page
+      .getByRole('complementary')
+      .getByRole('alert')
+      .getByText('تغییر پروفایل با خطا مواجه شد', { exact: true })
+  ).toBeVisible();
+  await page.getByRole('complementary').getByRole('button').last().click();
+  await expect(page.locator('#profile-switcher')).toContainText(
+    '99111111-1111-4111-8111-111111111111'
   );
 });
 
@@ -392,38 +412,48 @@ test('the initial radio selection submits from the required profile dialog', asy
   await page.route('**/api/profiles', (route) =>
     route.fulfill({
       json: {
-        profiles: [profile('first'), profile('second')],
+        profiles: [
+          profile('99111111-1111-4111-8111-111111111111'),
+          profile('99222222-2222-4222-8222-222222222222'),
+        ],
         activeProfileId: active,
         hasDefault: active !== null,
       },
     })
   );
-  await page.route('**/api/profiles/switch/first', (route) => {
-    active = 'first';
+  await page.route('**/api/profiles/switch/99111111-1111-4111-8111-111111111111', (route) => {
+    active = '99111111-1111-4111-8111-111111111111';
     return route.fulfill({ json: { activeProfileId: active } });
   });
   await page.goto('/dashboard');
   const dialog = page.getByRole('dialog');
   await expect(dialog).toBeVisible();
-  const switched = page.waitForRequest('**/api/profiles/switch/first');
+  const switched = page.waitForRequest(
+    '**/api/profiles/switch/99111111-1111-4111-8111-111111111111'
+  );
   await dialog.getByRole('button').click();
   await switched;
   await expect(dialog).toHaveCount(0);
   await openProfileMenu(page);
-  await expect(page.locator('#profile-switcher')).toHaveValue('first');
+  await expect(page.locator('#profile-switcher')).toContainText(
+    '99111111-1111-4111-8111-111111111111'
+  );
 });
 
 test('switching refreshes another open tab without reloading either document', async ({
   context,
 }) => {
-  let active = 'first';
+  let active = '99111111-1111-4111-8111-111111111111';
   const pages = await Promise.all([context.newPage(), context.newPage()]);
   for (const page of pages) {
     await shell(page);
     await page.route('**/api/profiles', (route) =>
       route.fulfill({
         json: {
-          profiles: [profile('first'), profile('second')],
+          profiles: [
+            profile('99111111-1111-4111-8111-111111111111'),
+            profile('99222222-2222-4222-8222-222222222222'),
+          ],
           activeProfileId: active,
           hasDefault: true,
         },
@@ -433,7 +463,7 @@ test('switching refreshes another open tab without reloading either document', a
       fulfillDashboard(route, {
         json: {
           wallet: {
-            balance: active === 'first' ? 123456 : 987654,
+            balance: active === '99111111-1111-4111-8111-111111111111' ? 123456 : 987654,
             currency: 'IRR',
             lowBalanceWarning: false,
           },
@@ -450,15 +480,17 @@ test('switching refreshes another open tab without reloading either document', a
       (window as unknown as Record<string, unknown>).profileSwitchDocument = 'preserved';
     });
   }
-  await pages[0]!.route('**/api/profiles/switch/second', (route) => {
-    active = 'second';
+  await pages[0]!.route('**/api/profiles/switch/99222222-2222-4222-8222-222222222222', (route) => {
+    active = '99222222-2222-4222-8222-222222222222';
     return route.fulfill({ json: { activeProfileId: active } });
   });
   await openProfileMenu(pages[0]!);
-  await pages[0]!.locator('#profile-switcher').selectOption('second');
+  await pickProfile(pages[0]!, '99222222-2222-4222-8222-222222222222');
   for (const page of pages) {
     await openProfileMenu(page);
-    await expect(page.locator('#profile-switcher')).toHaveValue('second');
+    await expect(page.locator('#profile-switcher')).toContainText(
+      '99222222-2222-4222-8222-222222222222'
+    );
     await expect(page.locator('main')).toContainText('۹۸۷٬۶۵۴');
     await expect(page.locator('main')).not.toContainText('۱۲۳٬۴۵۶');
     expect(
@@ -473,7 +505,7 @@ test('late old-profile responses cannot overwrite the switched page or notificat
   page,
 }) => {
   await shell(page);
-  let active = 'first';
+  let active = '99111111-1111-4111-8111-111111111111';
   let releaseOld!: () => void;
   const oldReleased = new Promise<void>((resolve) => {
     releaseOld = resolve;
@@ -484,7 +516,10 @@ test('late old-profile responses cannot overwrite the switched page or notificat
   await page.route('**/api/profiles', (route) =>
     route.fulfill({
       json: {
-        profiles: [profile('first'), profile('second')],
+        profiles: [
+          profile('99111111-1111-4111-8111-111111111111'),
+          profile('99222222-2222-4222-8222-222222222222'),
+        ],
         activeProfileId: active,
         hasDefault: true,
       },
@@ -492,7 +527,7 @@ test('late old-profile responses cannot overwrite the switched page or notificat
   );
   await page.route('**/api/dashboard{,/**}', async (route) => {
     const requestedProfile = active;
-    if (requestedProfile === 'first') {
+    if (requestedProfile === '99111111-1111-4111-8111-111111111111') {
       oldReads++;
       oldDashboardReads++;
       await oldReleased;
@@ -501,7 +536,7 @@ test('late old-profile responses cannot overwrite the switched page or notificat
     await fulfillDashboard(route, {
       json: {
         wallet: {
-          balance: requestedProfile === 'first' ? 123456 : 987654,
+          balance: requestedProfile === '99111111-1111-4111-8111-111111111111' ? 123456 : 987654,
           currency: 'IRR',
           lowBalanceWarning: false,
         },
@@ -514,16 +549,20 @@ test('late old-profile responses cannot overwrite the switched page or notificat
   });
   await page.route('**/api/v1/notifications**', async (route) => {
     const requestedProfile = active;
-    if (requestedProfile === 'first') {
+    if (requestedProfile === '99111111-1111-4111-8111-111111111111') {
       oldReads++;
       await oldReleased;
     }
     await route.fulfill({
-      json: { data: [], next_cursor: null, unread_count: requestedProfile === 'first' ? 19 : 3 },
+      json: {
+        data: [],
+        next_cursor: null,
+        unread_count: requestedProfile === '99111111-1111-4111-8111-111111111111' ? 19 : 3,
+      },
     });
   });
-  await page.route('**/api/profiles/switch/second', (route) => {
-    active = 'second';
+  await page.route('**/api/profiles/switch/99222222-2222-4222-8222-222222222222', (route) => {
+    active = '99222222-2222-4222-8222-222222222222';
     return route.fulfill({ json: { activeProfileId: active } });
   });
   try {
@@ -531,7 +570,7 @@ test('late old-profile responses cannot overwrite the switched page or notificat
     await expect.poll(() => oldReads).toBeGreaterThanOrEqual(3);
     await expect.poll(() => oldDashboardReads).toBeGreaterThan(0);
     await openProfileMenu(page);
-    await page.locator('#profile-switcher').selectOption('second');
+    await pickProfile(page, '99222222-2222-4222-8222-222222222222');
     await expect(page.locator('main')).toContainText('۹۸۷٬۶۵۴');
     await expect(page.getByTestId('notification-bell').getByRole('status')).toHaveText('۳');
     releaseOld();

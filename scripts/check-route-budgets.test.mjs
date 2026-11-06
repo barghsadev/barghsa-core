@@ -132,3 +132,50 @@ test('interaction code has its own gate and cannot be hidden when imported eager
     await rm(dist, { recursive: true, force: true });
   }
 });
+
+test('named dynamic facades count all dependencies, deduplicate aliases and reject ambiguous or missing entries', async () => {
+  const dist = await mkdtemp(join(tmpdir(), 'barghsa-facade-budget-'));
+  try {
+    const manifest = {
+      'index.html': { file: 'entry.js' },
+      '_hashed-customer.js': {
+        name: 'CustomerProfileWorkspace',
+        isDynamicEntry: true,
+        file: 'customer.js',
+        imports: ['shared'],
+      },
+      shared: { file: 'shared.js' },
+    };
+    for (const [file, content] of Object.entries({
+      'entry.js': 'export const entry=1;',
+      'customer.js': 'export const customer=1;',
+      'shared.js': randomBytes(3000),
+    }))
+      await writeFile(join(dist, file), content);
+    const named = await measureRoute(dist, manifest, ['chunk:CustomerProfileWorkspace']);
+    const direct = await measureRoute(dist, manifest, ['_hashed-customer.js']);
+    assert.deepEqual(named, direct);
+    assert.deepEqual(
+      await measureRoute(dist, manifest, ['chunk:CustomerProfileWorkspace', '_hashed-customer.js']),
+      direct
+    );
+    assert.ok(named.bytes > 3000);
+    await assert.rejects(
+      measureRoute(dist, manifest, ['chunk:Missing']),
+      /Expected one dynamic manifest entry/
+    );
+    manifest.other = { ...manifest['_hashed-customer.js'], file: 'other.js' };
+    await assert.rejects(
+      measureRoute(dist, manifest, ['chunk:CustomerProfileWorkspace']),
+      /Expected one dynamic manifest entry/
+    );
+    delete manifest.other;
+    manifest['_hashed-customer.js'].isDynamicEntry = false;
+    await assert.rejects(
+      measureRoute(dist, manifest, ['chunk:CustomerProfileWorkspace']),
+      /Expected one dynamic manifest entry/
+    );
+  } finally {
+    await rm(dist, { recursive: true, force: true });
+  }
+});

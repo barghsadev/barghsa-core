@@ -645,7 +645,7 @@
 | **T-07.15.01.02** | Build `ProfileBadge` in topbar: compact version showing avatar + type icon + name. Used in topbar when sidebar is collapsed. | S |
 | **T-07.15.01.03** | On profile switch: show a full-page loading state (not jarring), refetch all dashboard/list data for the new profile. Persist the selected profile as default in the backend (so next login restores it). | M |
 | **T-07.15.01.04** | ⚠️ If active profile is unverified and verification is enforced: show a warning banner but allow profile switch to view data. Block only new commercial orders. | M |
-| **T-07.15.01.05** | ⚠️ Profile switching must never expose another profile's data. All API requests include `profileId` header or query param, validated server-side for ownership. | S |
+| **T-07.15.01.05** | ⚠️ Profile switching must never expose another profile's data. Profile APIs use an explicit profile identifier where their contract requires it, or the authenticated user's server-owned active-profile preference. Both paths validate current ownership or active-agent permissions server-side. Captured commands retain target confirmation, revocation and private-data isolation. Owner approved retaining these representations on 2026-11-06. | S |
 
 ---
 
@@ -686,7 +686,7 @@
 |----|------|------------|
 | **T-07.16.02.01** | Define navigation groups and items per role: Customer (Dashboard, Orders, Contracts, Invoices, Wallet, Consultations, Solar, Tickets, Documents, My Profile), Staff (same + CRM, document templates, operations queues), Admin (all staff + Admin Settings with sub-sections). | M |
 | **T-07.16.02.02** | Legal Entity customers see additional items: Agents, Legal Profile details. Individual customers see: Saving Plans, Personal Profile. Both see shared items. | M |
-| **T-07.16.02.03** | ⚠️ Show/hide navigation items based on backend-resolved permissions, not frontend role checks alone. Navigation config fetch at app mount, cached session-long. | S |
+| **T-07.16.02.03** | ⚠️ Show/hide navigation items based on backend-resolved permissions, not frontend role checks alone. Fetch navigation at app mount, reuse the current router context, and refresh authority on navigation and profile/permission changes. Do not retain revoked grants in an immutable session-long cache. Owner approved this retained design on 2026-11-06. | S |
 
 ---
 

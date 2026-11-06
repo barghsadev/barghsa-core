@@ -26,16 +26,18 @@ async function setup(page: Page, locale: 'en' | 'fa', area: 'customer' | 'admin'
       json: {
         profiles: [
           {
-            id: 'profile-1',
+            id: '01900000-0000-7000-8000-000000000001',
             profileType: 'INDIVIDUAL',
             isDefault: true,
             status: 'ACTIVE',
+            title: null,
+            nationalId: null,
             firstName: 'Ari',
             lastName: 'Buyer',
           },
         ],
         hasDefault: true,
-        activeProfileId: 'profile-1',
+        activeProfileId: '01900000-0000-7000-8000-000000000001',
       },
     })
   );
@@ -45,7 +47,7 @@ async function setup(page: Page, locale: 'en' | 'fa', area: 'customer' | 'admin'
   await page.route('**/api/dashboard{,/**}', (route) =>
     fulfillDashboard(route, {
       json: {
-        profile: { id: 'profile-1', name: 'Ari Buyer' },
+        profile: { id: '01900000-0000-7000-8000-000000000001', name: 'Ari Buyer' },
         access: { wallet: true, invoices: true },
         wallet: { balance: '1234500', currency: 'IRR' },
         pendingInvoices: 2,
@@ -57,7 +59,7 @@ async function setup(page: Page, locale: 'en' | 'fa', area: 'customer' | 'admin'
     route.fulfill({
       json: {
         available: area === 'customer',
-        profileId: 'profile-1',
+        profileId: '01900000-0000-7000-8000-000000000001',
         profileName: 'Ari Buyer',
         slotKey: 'individual_chatbot',
       },
@@ -77,14 +79,22 @@ for (const locale of ['en', 'fa'] as const)
     }, info) => {
       await setup(page, locale, area);
       await page.setViewportSize({ width: 390, height: 844 });
+      const dist = process.env['BARGHSA_BROWSER_COVERAGE'] === '1' ? 'dist-coverage' : 'dist';
+      const manifest = JSON.parse(readFileSync(resolve(dist, '.vite/manifest.json'), 'utf8'));
+      const sheetPath = '/' + manifest['src/components/MobileNavigationSheet.tsx'].file;
+      let sheetRequests = 0;
+      page.on('request', (request) => {
+        if (new URL(request.url()).pathname === sheetPath) sheetRequests++;
+      });
       await page.goto(area === 'customer' ? '/invoices' : '/admin/failed-notifications');
       const quick = page.getByRole('navigation', { name: copy('quickNavigation') });
       await expect(quick.getByRole('link')).toHaveCount(4);
       const more = quick.getByRole('button', { name: copy('more'), exact: true });
-      const selected =
-        area === 'customer'
-          ? quick.getByRole('link', { name: t('dashboard.nav.invoices', locale), exact: true })
-          : more;
+      const selected = more;
+      if (area === 'customer') {
+        await expect(quick.locator('a[href="/settings/profile"]')).toBeVisible();
+        await expect(quick.locator('a[href="/wallet"]')).toBeVisible();
+      }
       await expect(selected).toHaveAttribute('aria-current', 'page');
       const barBox = await quick.boundingBox();
       const content = page.locator(area === 'customer' ? '#dashboard-content' : '#admin-content');
@@ -96,8 +106,10 @@ for (const locale of ['en', 'fa'] as const)
           .boundingBox();
         expect(guideBox!.y + guideBox!.height).toBeLessThan(barBox!.y);
       }
+      expect(sheetRequests).toBe(0);
       await more.focus();
       await page.keyboard.press('Enter');
+      await expect.poll(() => sheetRequests).toBe(1);
       const dialog = page.getByRole('dialog', { name: copy('more'), exact: true });
       await expect(dialog).toBeVisible();
       await expect(dialog).toHaveAttribute('data-side', locale === 'fa' ? 'right' : 'left');
@@ -146,9 +158,30 @@ for (const locale of ['en', 'fa'] as const)
       await expect(breadcrumbs.getByLabel(copy('parentPages'))).toBeFocused();
       await page.setViewportSize({ width: 900, height: 820 });
       await expect(quick).toBeVisible();
-      await expect(
-        page.locator(area === 'customer' ? '#dashboard-navigation' : '#admin-navigation')
-      ).toBeHidden();
+      const rail = page.locator(
+        area === 'customer' ? '#dashboard-navigation' : '#admin-navigation'
+      );
+      await page.mouse.move(450, 400);
+      await expect(rail).toBeVisible();
+      await expect.poll(async () => (await rail.boundingBox())!.width).toBe(60);
+      const railTarget = (await rail.getByRole('link').first().boundingBox())!;
+      expect(railTarget.width).toBeGreaterThanOrEqual(44);
+      expect(railTarget.height).toBeGreaterThanOrEqual(44);
+      const menu = page.getByRole('button', { name: copy('menu'), exact: true });
+      await menu.click();
+      await expect(menu).toHaveAttribute('aria-expanded', 'true');
+      await expect.poll(async () => (await rail.boundingBox())!.width).toBeGreaterThan(60);
+      await menu.click();
+      await page.mouse.move(450, 400);
+      await expect.poll(async () => (await rail.boundingBox())!.width).toBe(60);
+      if (await page.evaluate(() => matchMedia('(hover: hover)').matches)) {
+        await rail.hover();
+        await expect.poll(async () => (await rail.boundingBox())!.width).toBeGreaterThan(60);
+        await page.mouse.move(450, 400);
+      }
+      await rail.getByRole('link').first().focus();
+      await expect.poll(async () => (await rail.boundingBox())!.width).toBeGreaterThan(60);
+      await breadcrumbs.getByLabel(copy('parentPages')).focus();
       await more.click();
       await expect(dialog).toBeVisible();
       await page.setViewportSize({ width: 1280, height: 820 });
@@ -160,6 +193,12 @@ for (const locale of ['en', 'fa'] as const)
       await expect(breadcrumbs.getByLabel(copy('parentPages'))).toBeHidden();
       await expect(breadcrumbs.getByRole('link')).toHaveCount(1);
       await page.screenshot({ path: info.outputPath(`navigation-${area}-${locale}-desktop.png`) });
+      for (const width of [320, 375, 390, 414, 768, 1024, 1280, 1920]) {
+        await page.setViewportSize({ width, height: 844 });
+        expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
+          true
+        );
+      }
       await page.setViewportSize({ width: 390, height: 844 });
       await page.goBack();
       await expect(selected).toHaveAttribute('aria-current', 'page');

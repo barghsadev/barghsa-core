@@ -23,11 +23,13 @@ export function ProfileMenu({
   area,
   locale,
   preferences,
+  profileBadge,
   onOpen,
 }: {
   area: 'dashboard' | 'admin';
   locale: 'fa' | 'en';
   preferences?: ReactNode;
+  profileBadge?: ReactNode;
   onOpen?: () => void;
 }) {
   const account = useAsyncData('/api/auth/user', { read: readAccount });
@@ -76,21 +78,27 @@ export function ProfileMenu({
           }
         >
           <span
-            aria-hidden="true"
-            className="flex size-8 items-center justify-center rounded-full bg-muted text-sm font-medium text-foreground"
+            className={profileBadge ? 'flex min-w-0 flex-col items-center gap-0.5' : 'contents'}
           >
-            {user?.username ? (
-              Array.from(user.username).slice(0, 2).join('').toLocaleUpperCase(locale)
-            ) : (
-              <UserRound className="size-4" />
+            {profileBadge ?? (
+              <span
+                aria-hidden="true"
+                className="flex size-8 items-center justify-center rounded-full bg-muted text-sm font-medium text-foreground"
+              >
+                {user?.username ? (
+                  Array.from(user.username).slice(0, 2).join('').toLocaleUpperCase(locale)
+                ) : (
+                  <UserRound className="size-4" />
+                )}
+              </span>
             )}
-          </span>
-          <span
-            data-slot="operating-context-indicator"
-            dir={locale === 'fa' ? 'rtl' : 'ltr'}
-            className="whitespace-nowrap rounded-md border border-current/20 px-2 py-1 text-xs font-semibold"
-          >
-            {shellText(area === 'admin' ? 'staffContext' : 'customerContext', locale)}
+            <span
+              data-slot="operating-context-indicator"
+              dir={locale === 'fa' ? 'rtl' : 'ltr'}
+              className="whitespace-nowrap rounded-md border border-current/20 px-2 py-1 text-xs font-semibold"
+            >
+              {shellText(area === 'admin' ? 'staffContext' : 'customerContext', locale)}
+            </span>
           </span>
         </PopoverTrigger>
         <PopoverContent

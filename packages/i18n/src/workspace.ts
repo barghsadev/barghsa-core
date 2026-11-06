@@ -128,6 +128,15 @@ export const fa: I18nDictionary = {
   'dashboard.profile.typeLegal': 'حقوقی',
   'dashboard.profile.switchLabel': 'تغییر پروفایل فعال',
   'dashboard.profile.switching': 'در حال تغییر پروفایل…',
+  'dashboard.profile.manage': 'مدیریت پروفایل‌ها',
+  'dashboard.profile.retry': 'دریافت دوباره پروفایل‌ها',
+  'dashboard.profile.reloadWorkspace': 'بازخوانی فضای کار',
+  'dashboard.profile.uncertain': 'تغییر پروفایل تأیید نشده است. پیش از ادامه، وضعیت را بررسی کنید.',
+  'dashboard.profile.mismatch':
+    'پروفایل فعال هنوز با انتخاب شما متفاوت است. دوباره بررسی کنید یا فضای کار را بازخوانی کنید.',
+  'dashboard.profile.recheck': 'بررسی پروفایل فعال',
+  'dashboard.profile.verified': 'تأییدشده',
+  'dashboard.profile.unverified': 'تأییدنشده',
   'dashboard.profile.switchError': 'تغییر پروفایل با خطا مواجه شد',
   'dashboard.profile.default.title': 'انتخاب پروفایل پیش‌فرض',
   'dashboard.profile.default.description':
@@ -979,6 +988,15 @@ export const en: I18nDictionary = {
   'dashboard.profile.typeLegal': 'Legal',
   'dashboard.profile.switchLabel': 'Switch active profile',
   'dashboard.profile.switching': 'Switching profile…',
+  'dashboard.profile.manage': 'Manage profiles',
+  'dashboard.profile.retry': 'Reload profiles',
+  'dashboard.profile.reloadWorkspace': 'Reload workspace',
+  'dashboard.profile.uncertain': 'The profile change is unconfirmed. Recheck before continuing.',
+  'dashboard.profile.mismatch':
+    'The active profile still differs from your selection. Recheck or reload the workspace.',
+  'dashboard.profile.recheck': 'Check active profile',
+  'dashboard.profile.verified': 'Verified',
+  'dashboard.profile.unverified': 'Unverified',
   'dashboard.profile.switchError': 'Failed to switch profile',
   'dashboard.profile.default.title': 'Select Default Profile',
   'dashboard.profile.default.description':

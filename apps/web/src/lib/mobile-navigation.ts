@@ -7,7 +7,7 @@ export function mobileNavigation(groups: NavigationGroup[], area: 'dashboard' | 
   ];
   const preferred =
     area === 'dashboard'
-      ? ['/app', '/electricity', '/invoices', '/wallet']
+      ? ['/app', '/electricity', '/wallet', '/settings/profile', '/invoices']
       : ['/app', '/admin/inbox', '/admin/electricity-orders', '/admin/tickets'];
   const ranked = [...all].sort((a, b) => {
     const rank = (to: string) =>

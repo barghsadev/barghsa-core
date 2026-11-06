@@ -1,3 +1,5 @@
+import { lazy, Suspense } from 'react';
+import { RouteSkeleton } from '../components/RouteSkeleton.js';
 import { Outlet, useLocation } from '@tanstack/react-router';
 import {
   LayoutDashboard,
@@ -17,7 +19,6 @@ import {
 import { t, type Locale } from '@barghsa/i18n/workspace';
 import { shellText } from '@barghsa/i18n/shell';
 import { useLocale } from '../hooks/useLocale.js';
-import { ProfileSwitcher } from '../components/ProfileSwitcher.js';
 import { TosBanner } from '../components/TosBanner.js';
 import { InvitationBanner } from '../components/InvitationBanner.js';
 import { OwnershipBanner } from '../components/OwnershipBanner.js';
@@ -26,6 +27,12 @@ import { AppShell, type NavigationGroup } from '../components/AppShell.js';
 import { KnowledgeAssistantLauncher } from '../components/KnowledgeAssistantLauncher.js';
 import { useNavigation } from '../hooks/useNavigation.js';
 import { permittedNavigation } from '../lib/navigation-config.js';
+
+const CustomerProfileWorkspace = lazy(() =>
+  import('../components/CustomerProfileWorkspace.js').then((module) => ({
+    default: module.CustomerProfileWorkspace,
+  }))
+);
 
 export function DashboardLayout({ locale: localeOverride }: { locale?: Locale }) {
   const currentLocale = useLocale();
@@ -76,25 +83,34 @@ export function DashboardLayout({ locale: localeOverride }: { locale?: Locale })
   ];
   const groups = permittedNavigation(candidates, navigation, 'customer');
   return (
-    <AppShell
-      area="dashboard"
-      locale={locale}
-      groups={groups}
-      navigationUnavailable={
-        !navigation || navigation.area !== 'customer' || !navigation.paths.length
-      }
-      profile={<ProfileSwitcher locale={locale} />}
-      actions={<NotificationBell />}
-      banners={
-        <>
-          <TosBanner locale={locale} />
-          <InvitationBanner locale={locale} />
-          <OwnershipBanner />
-        </>
-      }
-    >
-      <Outlet />
-      {pathname !== '/ai' && <KnowledgeAssistantLauncher locale={locale} pathname={pathname} />}
-    </AppShell>
+    <Suspense fallback={<RouteSkeleton />}>
+      <CustomerProfileWorkspace locale={locale}>
+        {(picker, badge) => (
+          <AppShell
+            area="dashboard"
+            profile={picker}
+            profileBadge={badge}
+            locale={locale}
+            groups={groups}
+            navigationUnavailable={
+              !navigation || navigation.area !== 'customer' || !navigation.paths.length
+            }
+            actions={<NotificationBell />}
+            banners={
+              <>
+                <TosBanner locale={locale} />
+                <InvitationBanner locale={locale} />
+                <OwnershipBanner />
+              </>
+            }
+          >
+            <Outlet />
+            {pathname !== '/ai' && (
+              <KnowledgeAssistantLauncher locale={locale} pathname={pathname} />
+            )}
+          </AppShell>
+        )}
+      </CustomerProfileWorkspace>
+    </Suspense>
   );
 }

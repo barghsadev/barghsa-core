@@ -228,7 +228,9 @@
       "index.html",
       "src/routes/_app/app.tsx?tsr-split=component",
       "src/components/VerificationBanner.tsx",
-      "src/components/DefaultProfileModal.tsx"
+      "src/components/DefaultProfileModal.tsx",
+      "chunk:CustomerProfileWorkspace",
+      "src/components/BottomTabBar.tsx"
     ],
     "limitKB": 300
   },
@@ -237,13 +239,19 @@
     "entries": [
       "index.html",
       "src/components/VerificationBanner.tsx",
-      "src/components/DefaultProfileModal.tsx"
+      "src/components/DefaultProfileModal.tsx",
+      "chunk:CustomerProfileWorkspace",
+      "src/components/BottomTabBar.tsx"
     ],
     "limitKB": 255
   },
   {
     "name": "Wallet",
-    "entries": ["src/routes/_app/wallet.tsx?tsr-split=component"],
+    "entries": [
+      "src/routes/_app/wallet.tsx?tsr-split=component",
+      "chunk:CustomerProfileWorkspace",
+      "src/components/BottomTabBar.tsx"
+    ],
     "limitKB": 300
   },
   {
@@ -251,7 +259,8 @@
     "routePrefix": "src/routes/admin/",
     "entries": [
       "src/routes/admin.tsx?tsr-split=component",
-      "src/components/VerificationBanner.tsx"
+      "src/components/VerificationBanner.tsx",
+      "src/components/BottomTabBar.tsx"
     ],
     "limitKB": 500
   },
@@ -260,5 +269,17 @@
     "phase": "interaction",
     "entries": ["src/components/ContractQuantityIncreasePanel.tsx"],
     "limitKB": 80
+  },
+  {
+    "name": "Profile switch controls on demand",
+    "entries": ["src/components/ProfileChoices.tsx", "src/components/ProfileSwitchProgress.tsx"],
+    "phase": "interaction",
+    "limitKB": 15
+  },
+  {
+    "name": "More navigation sheet on demand",
+    "entries": ["src/components/MobileNavigationSheet.tsx"],
+    "phase": "interaction",
+    "limitKB": 35
   }
 ]
