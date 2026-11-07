@@ -1,4 +1,5 @@
 import { test, expect } from './coverage-fixture';
+import { approveRiskConfirmation } from './confirmation-fixture';
 import { en, fa } from '../../../packages/i18n/src/contracts';
 import { t } from '../../../packages/i18n/src/app';
 for (const locale of ['en', 'fa'] as const)
@@ -216,9 +217,12 @@ for (const locale of ['en', 'fa'] as const)
       await expect(
         dialog.getByText(`${w.cancellationInvoice} 1 · ${w.cancellationPaid}`, { exact: true })
       ).toBeVisible();
-      await dialog.getByRole('button', { name: t('team.confirm', locale), exact: true }).click();
+      const confirm = dialog.getByRole('button', { name: t('team.confirm', locale), exact: true });
+      await expect(confirm).toBeDisabled();
+      await approveRiskConfirmation(page, locale, 'financial');
+      await confirm.click();
       await dialog.locator('input[type=password]').fill('Test-password');
-      await dialog.getByRole('button', { name: t('team.confirm', locale), exact: true }).click();
+      await confirm.click();
       await expect(panel.getByText(w.cancellationApprovalNotice, { exact: true })).toBeVisible();
       expect(attempts).toHaveLength(2);
       expect(attempts[0]).toEqual(attempts[1]);
@@ -233,7 +237,9 @@ for (const locale of ['en', 'fa'] as const)
       await panel.getByRole('button', { name: w.cancellationRefresh, exact: true }).click();
       await panel.getByRole('button', { name: w.cancellationConfirm, exact: true }).click();
       await expect(dialog).toContainText(w.cancellationIrreversible);
-      await dialog.getByRole('button', { name: t('team.confirm', locale), exact: true }).click();
+      await expect(confirm).toBeDisabled();
+      await approveRiskConfirmation(page, locale, 'both');
+      await confirm.click();
       await expect(panel.getByText(w.cancellationServiceEnded, { exact: true })).toBeVisible();
       await expect(
         panel.getByText(w['cancellation.refunds_pending'], { exact: true })

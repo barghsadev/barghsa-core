@@ -79,6 +79,10 @@ Before running API or worker suites in parallel, build the exact checkout once a
 set `BARGHSA_TEST_PREBUILT=1` on every consumer. A standalone HTTP test run without
 that flag rebuilds shared outputs in place. Running it alongside coverage can
 remove files that the compiled HTTP process is still loading.
+If another process can rebuild the working checkout, run the API gate from a
+detached worktree with its own dependencies and compiled outputs. Verify those
+outputs before and after the run. A startup failure or a skipped HTTP test still
+invalidates the gate, even when the package coverage counters exceed the floors.
 
 Worker tests rebuild the worker and workspace dependencies before starting a compiled process against an isolated PostgreSQL database migrated by the production command. The process suite exercises health/readiness/metrics, recurring jobs, database outage and recovery, invalid interval defaults, SIGINT/SIGTERM drain, and the forced shutdown deadline. Fixture database controls never target an existing application database. Missing system-actor failures and recovery are asserted explicitly.
 

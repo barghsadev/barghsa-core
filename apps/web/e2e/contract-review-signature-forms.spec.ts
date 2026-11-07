@@ -7,6 +7,7 @@ import { contractText } from '@barghsa/i18n/contracts';
 import { tContractReviewSignature } from '@barghsa/i18n/contract-review-signature';
 import { formatCurrencyIrr } from '@barghsa/i18n/numbers';
 import { test, expect } from './coverage-fixture';
+import { approveRiskConfirmation } from './confirmation-fixture';
 import {
   setupContractReviewSignatures,
   contractId,
@@ -84,6 +85,10 @@ for (const [locale, theme] of [
   const panel = (page: Page) => page.locator('#contract-signature');
   const dialog = (page: Page) => page.getByRole('dialog');
   const confirm = (page: Page) => dialog(page).locator('button[type=submit]');
+  const approveSignatureReview = async (page: Page) => {
+    await expect(confirm(page)).toBeDisabled();
+    await approveRiskConfirmation(page, locale, 'financial');
+  };
   const cancel = (page: Page) =>
     dialog(page).getByRole('button', { name: t('team.cancel', locale), exact: true });
   const original = (page: Page) => page.locator('#signature-original');
@@ -257,6 +262,7 @@ for (const [locale, theme] of [
       originalDocumentId: originalDocument,
       expectedRequestId: null,
     });
+    await approveSignatureReview(page);
     await confirm(page).click();
     await expect(dialog(page)).toHaveCount(0);
     await expect(signed(page)).toBeEnabled();
@@ -265,6 +271,7 @@ for (const [locale, theme] of [
     await acknowledgement(page).check();
     await recordForm(page).locator('button[type=submit]').click();
     await financialDisclosure(page, false, 'approved-signed.png');
+    await approveSignatureReview(page);
     await confirm(page).click();
     await expect(dialog(page)).toHaveCount(0);
     await expect(panel(page).getByRole('status')).toContainText('approved-signed.png');
@@ -283,6 +290,7 @@ for (const [locale, theme] of [
     await original(page).selectOption(amendmentDocument);
     await requestForm(page).locator('button[type=submit]').click();
     await financialDisclosure(page, true, null);
+    await approveSignatureReview(page);
     await confirm(page).click();
     await expect(dialog(page)).toHaveCount(0);
     await expect(signed(page)).toBeEnabled();
@@ -293,6 +301,7 @@ for (const [locale, theme] of [
     state.heldWrite = undefined;
     await recordForm(page).locator('button[type=submit]').click();
     const outcome = await financialDisclosure(page, true, 'approved-amendment-signed.png');
+    await approveSignatureReview(page);
     await inspect(page, outcome, '[role="dialog"]', confirm(page));
     await outcomeCapture(
       page,
@@ -321,6 +330,7 @@ for (const [locale, theme] of [
     await expect(acknowledgement(page)).toBeChecked();
     state.writeMode = 'success';
     await signatureRetry.click();
+    await approveSignatureReview(page);
     await confirm(page).click();
     await expect(dialog(page)).toHaveCount(0);
     expect(state.writes).toHaveLength(count + 1);
@@ -387,6 +397,7 @@ for (const [locale, theme] of [
     state.needsStepUp = true;
     await recordForm(page).locator('button[type=submit]').click();
     const outcome = await financialDisclosure(page, false, 'approved-signed.png');
+    await approveSignatureReview(page);
     await inspect(page, outcome, '[role="dialog"]', confirm(page));
     await outcomeCapture(
       page,
@@ -433,6 +444,7 @@ for (const [locale, theme] of [
     for (const invalid of ['foreign', 'ordered-terms', 'staff-only'] as const) {
       state.heldWrite = undefined;
       await retry.click();
+      await approveSignatureReview(page);
       await confirm(page).click();
       await expect.poll(() => !!state.heldWrite).toBe(true);
       const malformed = structuredClone(receipt) as typeof receipt & {
@@ -450,6 +462,7 @@ for (const [locale, theme] of [
     }
     state.writeMode = 'rejected';
     await retry.click();
+    await approveSignatureReview(page);
     await confirm(page).click();
     await expect(dialog(page).getByRole('alert').first()).toBeVisible();
     await cancel(page).click();
@@ -457,6 +470,7 @@ for (const [locale, theme] of [
     await expect(signed(page)).toBeDisabled();
     state.writeMode = 'success';
     await retry.click();
+    await approveSignatureReview(page);
     await confirm(page).click();
     await expect(dialog(page)).toHaveCount(0);
     await expect(panel(page).getByRole('status')).toContainText('approved-signed.png');

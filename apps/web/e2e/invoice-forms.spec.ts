@@ -2,6 +2,7 @@ import { productionManifest } from './production-manifest';
 import AxeBuilder from '@axe-core/playwright';
 import type { Page } from '@playwright/test';
 import { test, expect } from './coverage-fixture';
+import { approveRiskConfirmation } from './confirmation-fixture';
 import { fullNavigation } from './navigation-fixture';
 import { tManualInvoice as manualText } from '../../../packages/i18n/src/manual-invoice';
 import { tInvoiceCorrections as correctionText } from '../../../packages/i18n/src/invoice-corrections';
@@ -159,7 +160,10 @@ for (const locale of ['fa', 'en'] as const)
       await issue.click();
       const review = page.getByRole('dialog', { name: m('manualReviewTitle') });
       await expect(review).toBeVisible();
-      await review.getByRole('button', { name: m('manualReviewConfirm'), exact: true }).click();
+      const confirm = review.getByRole('button', { name: m('manualReviewConfirm'), exact: true });
+      await expect(confirm).toBeDisabled();
+      await approveRiskConfirmation(page, locale, 'financial');
+      await confirm.click();
       await expect(review).not.toBeVisible();
       await expect(price.first()).toHaveAttribute('aria-invalid', 'true');
       await expect(price.first()).toBeFocused();
@@ -181,7 +185,9 @@ for (const locale of ['fa', 'en'] as const)
       commitStatus = 201;
       await issue.click();
       await expect(review).toBeVisible();
-      await review.getByRole('button', { name: m('manualReviewConfirm'), exact: true }).click();
+      await expect(confirm).toBeDisabled();
+      await approveRiskConfirmation(page, locale, 'financial');
+      await confirm.click();
       await expect(panel.getByRole('status')).toContainText(nextId);
       expect(commands).toHaveLength(2);
       expect(commands[1]?.lines).toEqual([

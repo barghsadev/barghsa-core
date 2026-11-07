@@ -2,6 +2,7 @@ import { t } from '@barghsa/i18n/app';
 import { openHistoryFilters, applyHistoryFilters } from './history-filter-reset';
 import AxeBuilder from '@axe-core/playwright';
 import { test, expect, type Page } from './coverage-fixture';
+import { approveRiskConfirmation } from './confirmation-fixture';
 import { formatCurrencyIrr } from '@barghsa/i18n/numbers';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { createHash } from 'node:crypto';
@@ -357,13 +358,16 @@ for (const locale of ['fa', 'en'] as const)
         fa ? 'موجودی قابل استفاده پس از پرداخت' : 'Available balance after payment'
       );
       await expect(refresh).toBeDisabled();
-      await dialog.getByRole('button', { name: fa ? 'تأیید' : 'Confirm', exact: true }).click();
+      const confirm = dialog.getByRole('button', { name: fa ? 'تأیید' : 'Confirm', exact: true });
+      await expect(confirm).toBeDisabled();
+      await approveRiskConfirmation(page, locale, 'financial');
+      await confirm.click();
       const password = dialog.getByLabel(
         fa ? 'رمز عبور خود را تأیید کنید' : 'Confirm your password'
       );
       await expect(password).toBeFocused();
       await password.fill('test-only');
-      await dialog.getByRole('button', { name: fa ? 'تأیید' : 'Confirm', exact: true }).click();
+      await confirm.click();
       await expect(dialog.getByRole('alert')).toBeVisible();
       await dialog.getByRole('button', { name: fa ? 'انصراف' : 'Cancel', exact: true }).click();
       await expect(dialog).not.toBeVisible();
@@ -374,7 +378,9 @@ for (const locale of ['fa', 'en'] as const)
         })
         .click();
       dialog = page.getByRole('dialog');
-      await dialog.getByRole('button', { name: fa ? 'تأیید' : 'Confirm', exact: true }).click();
+      await expect(confirm).toBeDisabled();
+      await approveRiskConfirmation(page, locale, 'financial');
+      await confirm.click();
       await expect(dialog).not.toBeVisible();
       await expect(panel.getByRole('status')).toContainText(transactionId);
       await expect(panel.getByRole('status')).toContainText(money);

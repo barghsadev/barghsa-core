@@ -1,4 +1,5 @@
 import { test, expect } from './coverage-fixture';
+import { approveRiskConfirmation } from './confirmation-fixture';
 import { en, fa } from '../../../packages/i18n/src/contracts';
 import { t } from '../../../packages/i18n/src/app';
 import { refundDecisionReviewFixture } from './refund-review-fixture';
@@ -156,14 +157,18 @@ for (const locale of ['en', 'fa'] as const)
         path: test.info().outputPath('refund-queue-' + locale + '.png'),
         fullPage: true,
       });
+      const dialog = page.getByRole('dialog');
+      const confirm = dialog.getByRole('button', { name: t('team.confirm', locale), exact: true });
+      const approve = async () => {
+        await expect(confirm).toBeDisabled();
+        await approveRiskConfirmation(page, locale, 'financial');
+        await confirm.click();
+      };
       for (let attempt = 0; attempt < 2; attempt++) {
         await queue
           .getByRole('button', { name: w['cancellation.queue.process'], exact: true })
           .click();
-        await page
-          .getByRole('dialog')
-          .getByRole('button', { name: t('team.confirm', locale), exact: true })
-          .click();
+        await approve();
         if (attempt === 0)
           await expect(
             queue.getByRole('button', { name: w['cancellation.queue.process'], exact: true })
@@ -180,18 +185,12 @@ for (const locale of ['en', 'fa'] as const)
       await queue
         .getByRole('button', { name: w['cancellation.queue.record-transfer'], exact: true })
         .click();
-      await page
-        .getByRole('dialog')
-        .getByRole('button', { name: t('team.confirm', locale), exact: true })
-        .click();
+      await approve();
       await queue
         .getByRole('button', { name: w['cancellation.queue.reconcile'], exact: true })
         .click();
-      await expect(page.getByRole('dialog')).toContainText(w.cancellationQueueReconcileNotice);
-      await page
-        .getByRole('dialog')
-        .getByRole('button', { name: t('team.confirm', locale), exact: true })
-        .click();
+      await expect(dialog).toContainText(w.cancellationQueueReconcileNotice);
+      await approve();
       await expect(queue.getByText(w.cancellationQueueEmpty, { exact: true })).toBeVisible();
     }
   );

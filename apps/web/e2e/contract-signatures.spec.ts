@@ -1,5 +1,6 @@
 import { contractReview, ORIGINAL, SIGNED, REQUEST } from './contract-review-fixture';
 import { test, expect } from './coverage-fixture';
+import { approveRiskConfirmation } from './confirmation-fixture';
 import { en, fa } from '../../../packages/i18n/src/contracts';
 import { t } from '../../../packages/i18n/src/app';
 const ID = '11111111-1111-4111-8111-111111111111',
@@ -173,11 +174,13 @@ for (const locale of ['en', 'fa'] as const)
         .click();
       const panel = page.getByRole('region', { name: words.signatureTitle, exact: true });
       const dialog = page.getByRole('dialog');
-      const confirm = t('team.confirm', locale);
+      const confirm = dialog.getByRole('button', { name: t('team.confirm', locale), exact: true });
       if (staff) {
         await panel.getByLabel(words.approvedOriginal, { exact: true }).selectOption(ORIGINAL);
         await panel.getByRole('button', { name: words.prepareSignature, exact: true }).click();
-        await dialog.getByRole('button', { name: confirm, exact: true }).click();
+        await expect(confirm).toBeDisabled();
+        await approveRiskConfirmation(page, locale, 'financial');
+        await confirm.click();
         await expect(dialog).toHaveCount(0);
       }
       await expect(panel.getByText('original.pdf', { exact: false }).first()).toBeVisible();
@@ -190,9 +193,11 @@ for (const locale of ['en', 'fa'] as const)
       expect(attempts).toHaveLength(0);
       await acknowledgement.check();
       await panel.getByRole('button', { name: words.recordSignature, exact: true }).click();
-      await dialog.getByRole('button', { name: confirm, exact: true }).click();
+      await expect(confirm).toBeDisabled();
+      await approveRiskConfirmation(page, locale, 'financial');
+      await confirm.click();
       await dialog.locator('input[type=password]').fill('Test-password');
-      await dialog.getByRole('button', { name: confirm, exact: true }).click();
+      await confirm.click();
       await expect(dialog).toHaveCount(0);
       expect(attempts).toHaveLength(2);
       expect(attempts[0]).toEqual(attempts[1]);

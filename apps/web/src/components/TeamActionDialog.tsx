@@ -120,6 +120,14 @@ export function TeamActionDialog({
   const [needsOtp, setNeedsOtp] = useState(action?.requiresOtp === true);
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
+  const passwordInput = useRef<HTMLInputElement>(null);
+  const focusPasswordFor = useRef<TeamAction | null>(null);
+  useEffect(() => {
+    const challenged = focusPasswordFor.current;
+    if (!challenged || !needsPassword || busy) return;
+    focusPasswordFor.current = null;
+    if (challenged === action) passwordInput.current?.focus();
+  }, [action, busy, needsPassword]);
 
   const [retryAt, setRetryAt] = useState(0),
     [remaining, setRemaining] = useState(0);
@@ -213,7 +221,10 @@ export function TeamActionDialog({
         (code === ErrorCodes.AUTHZ_STEP_UP_REQUIRED.code || data?.requiresStepUp === true)
       ) {
         if (data?.requiresOtp === true || action.requiresOtp) setNeedsOtp(true);
-        else setNeedsPassword(true);
+        else {
+          focusPasswordFor.current = action;
+          setNeedsPassword(true);
+        }
         return;
       }
       if ((response.status === 401 || response.status === 403) && onDenied) {
@@ -326,6 +337,7 @@ export function TeamActionDialog({
               <div className="space-y-2">
                 <Label htmlFor="team-step-up-password">{t('team.password', locale)}</Label>
                 <Input
+                  ref={passwordInput}
                   id="team-step-up-password"
                   type="password"
                   autoComplete="current-password"
