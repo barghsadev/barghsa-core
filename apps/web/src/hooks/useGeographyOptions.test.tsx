@@ -2,10 +2,14 @@ import { QueryProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import { createRoot } from 'react-dom/client';
 import { expect, it, vi } from 'vitest';
+import { announceReadRetry } from '../lib/read-retry-feedback.js';
 import { AccountUserProvider } from './useAccountUser.js';
 import { useGeographyOptions } from './useGeographyOptions.js';
 
+vi.mock('../lib/read-retry-feedback.js', () => ({ announceReadRetry: vi.fn() }));
+
 for (const invalid of [
+  { network: true },
   { status: 503, data: [] },
   { status: 200, data: {} },
   { status: 200, data: [{ id: 'c', nameFa: 'شهر', nameEn: 'City', provinceId: 'wrong' }] },
@@ -18,12 +22,14 @@ for (const invalid of [
   it(`rejects invalid city catalogues and recovers with an independent retry: ${JSON.stringify(invalid)}`, async () => {
     const host = document.createElement('div');
     const root = createRoot(host);
-    const requests = vi
-      .fn()
-      .mockResolvedValueOnce(Response.json(invalid.data, { status: invalid.status }))
-      .mockResolvedValueOnce(
-        Response.json([{ id: 'c', nameFa: 'شهر', nameEn: 'City', provinceId: 'a' }])
-      );
+    vi.mocked(announceReadRetry).mockClear();
+    const requests = vi.fn();
+    if (invalid.status === undefined)
+      requests.mockRejectedValueOnce(new TypeError('Connection interrupted'));
+    else requests.mockResolvedValueOnce(Response.json(invalid.data, { status: invalid.status }));
+    requests.mockResolvedValueOnce(
+      Response.json([{ id: 'c', nameFa: 'شهر', nameEn: 'City', provinceId: 'a' }])
+    );
     vi.stubGlobal('fetch', requests);
     function Consumer() {
       const state = useGeographyOptions('/provinces/a/cities', 'a');
@@ -50,7 +56,9 @@ for (const invalid of [
         ready: false,
         error: true,
       });
+      expect(announceReadRetry).not.toHaveBeenCalled();
       await act(async () => host.querySelector('button')!.click());
+      expect(announceReadRetry).toHaveBeenCalledTimes(invalid.network ? 1 : 0);
       expect(JSON.parse(host.querySelector('output')!.textContent!)).toEqual({
         options: [{ id: 'c', nameFa: 'شهر', nameEn: 'City', provinceId: 'a' }],
         ready: true,

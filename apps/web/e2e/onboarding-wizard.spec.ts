@@ -1,4 +1,5 @@
 import { t } from '@barghsa/i18n/app';
+import { loadingText } from '@barghsa/i18n/loading-feedback';
 import AxeBuilder from '@axe-core/playwright';
 import { skipToMain } from './critical-accessibility';
 import { test, expect, type Page } from './coverage-fixture';
@@ -172,9 +173,12 @@ for (const locale of ['en', 'fa'] as const)
           ],
         })
       );
-      await page.route(`**/api/geography/provinces/${provinceId}/cities`, (route) =>
-        fail ? route.fulfill({ status: 503, json: {} }) : route.fallback()
-      );
+      await page.route(`**/api/geography/provinces/${provinceId}/cities`, (route) => {
+        if (!fail) return route.fallback();
+        return address === 'personal'
+          ? route.abort('failed')
+          : route.fulfill({ status: 503, json: {} });
+      });
       await page.route(`**/api/geography/provinces/${nextProvince}/cities`, async (route) => {
         requested();
         await held;
@@ -195,12 +199,17 @@ for (const locale of ['en', 'fa'] as const)
       const retry = page.getByTestId(
         address === 'personal' ? 'onboarding-cities-retry' : `onboarding-${address}-cities-retry`
       );
+      const connectionNotice = page
+        .locator('[data-sonner-toast][data-type="info"]')
+        .filter({ hasText: loadingText('connectionRetry', locale) });
       await expect(retry).toBeVisible();
       await expect(city).toBeDisabled();
+      await expect(connectionNotice).toHaveCount(0);
       await full.fill('Retained address draft');
       fail = false;
       await retry.click();
       await expect(city).toBeEnabled();
+      await expect(connectionNotice).toHaveCount(address === 'personal' ? 1 : 0);
       await expect(city).toHaveValue(cityId);
       await expect(full).toHaveValue('Retained address draft');
       await province.selectOption(nextProvince);

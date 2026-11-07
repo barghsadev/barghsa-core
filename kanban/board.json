@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-07T22:01:44+00:00",
-  "source_commit": "9fc0cc42c3b25dc50b1664dc8b276cc0459e3efe",
+  "updated": "2026-11-07T22:07:53+00:00",
+  "source_commit": "caab13d772750315706862392fd30537b7115bdc",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -29874,7 +29874,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-review-preview-deadlines",
-          "release-0.5-required-input-semantics"
+          "release-0.5-required-input-semantics",
+          "release-0.5-geography-retry-feedback"
         ],
         "current_acceptance": {
           "kind": "verified-profile-onboarding-and-persistent-context",
@@ -29898,7 +29899,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "68856b464ec0a88460cbce094b40418f8329d4ccb1ff6b531dcb0af6f2d57e0d"
+              "sha256": "f2d4c1469796b750c60f06cfbe400ba902e9788a27ffea1091ddabb8479a3b63"
             },
             {
               "path": "apps/web/e2e/profile-display-name.spec.ts",
@@ -30498,6 +30499,11 @@
               "batch": "release-0.5-required-input-semantics",
               "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
+            },
+            {
+              "batch": "release-0.5-geography-retry-feedback",
+              "base_commit": "caab13d772750315706862392fd30537b7115bdc",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-geography-retry-feedback/proof.json"
             }
           ]
         }
@@ -30597,7 +30603,8 @@
           "release-0.5-final-rehearsal",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-required-input-semantics"
+          "release-0.5-required-input-semantics",
+          "release-0.5-geography-retry-feedback"
         ],
         "current_acceptance": {
           "kind": "verified-profile-onboarding-and-persistent-context",
@@ -30653,7 +30660,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "68856b464ec0a88460cbce094b40418f8329d4ccb1ff6b531dcb0af6f2d57e0d"
+              "sha256": "f2d4c1469796b750c60f06cfbe400ba902e9788a27ffea1091ddabb8479a3b63"
             },
             {
               "path": "apps/web/e2e/verification-banner.spec.ts",
@@ -31189,6 +31196,11 @@
               "batch": "release-0.5-required-input-semantics",
               "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
+            },
+            {
+              "batch": "release-0.5-geography-retry-feedback",
+              "base_commit": "caab13d772750315706862392fd30537b7115bdc",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-geography-retry-feedback/proof.json"
             }
           ]
         }
@@ -31253,7 +31265,8 @@
           "release-0.5-final-gates",
           "release-0.5-final-rehearsal",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-required-input-semantics"
+          "release-0.5-required-input-semantics",
+          "release-0.5-geography-retry-feedback"
         ],
         "current_acceptance": {
           "kind": "verified-profile-onboarding-and-persistent-context",
@@ -31269,7 +31282,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "68856b464ec0a88460cbce094b40418f8329d4ccb1ff6b531dcb0af6f2d57e0d"
+              "sha256": "f2d4c1469796b750c60f06cfbe400ba902e9788a27ffea1091ddabb8479a3b63"
             },
             {
               "path": "apps/web/src/routes/onboarding/index.tsx",
@@ -31397,6 +31410,11 @@
               "batch": "release-0.5-required-input-semantics",
               "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
+            },
+            {
+              "batch": "release-0.5-geography-retry-feedback",
+              "base_commit": "caab13d772750315706862392fd30537b7115bdc",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-geography-retry-feedback/proof.json"
             }
           ]
         }
@@ -31476,7 +31494,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-required-input-semantics"
+          "release-0.5-required-input-semantics",
+          "release-0.5-geography-retry-feedback"
         ],
         "current_acceptance": {
           "kind": "verified-profile-onboarding-and-persistent-context",
@@ -31500,7 +31519,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "68856b464ec0a88460cbce094b40418f8329d4ccb1ff6b531dcb0af6f2d57e0d"
+              "sha256": "f2d4c1469796b750c60f06cfbe400ba902e9788a27ffea1091ddabb8479a3b63"
             },
             {
               "path": "apps/web/src/lib/profile-digits.ts",
@@ -31646,6 +31665,11 @@
               "batch": "release-0.5-required-input-semantics",
               "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
+            },
+            {
+              "batch": "release-0.5-geography-retry-feedback",
+              "base_commit": "caab13d772750315706862392fd30537b7115bdc",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-geography-retry-feedback/proof.json"
             }
           ]
         }
@@ -31733,7 +31757,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-required-input-semantics"
+          "release-0.5-required-input-semantics",
+          "release-0.5-geography-retry-feedback"
         ],
         "current_acceptance": {
           "kind": "verified-profile-onboarding-and-persistent-context",
@@ -31761,7 +31786,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "68856b464ec0a88460cbce094b40418f8329d4ccb1ff6b531dcb0af6f2d57e0d"
+              "sha256": "f2d4c1469796b750c60f06cfbe400ba902e9788a27ffea1091ddabb8479a3b63"
             },
             {
               "path": "apps/web/src/hooks/useOnboardingDraft.ts",
@@ -31903,6 +31928,11 @@
               "batch": "release-0.5-required-input-semantics",
               "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
+            },
+            {
+              "batch": "release-0.5-geography-retry-feedback",
+              "base_commit": "caab13d772750315706862392fd30537b7115bdc",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-geography-retry-feedback/proof.json"
             }
           ]
         }
@@ -31965,7 +31995,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-rehearsal",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-required-input-semantics"
+          "release-0.5-required-input-semantics",
+          "release-0.5-geography-retry-feedback"
         ],
         "current_acceptance": {
           "kind": "verified-profile-onboarding-and-persistent-context",
@@ -31981,7 +32012,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "68856b464ec0a88460cbce094b40418f8329d4ccb1ff6b531dcb0af6f2d57e0d"
+              "sha256": "f2d4c1469796b750c60f06cfbe400ba902e9788a27ffea1091ddabb8479a3b63"
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
@@ -32105,6 +32136,11 @@
               "batch": "release-0.5-required-input-semantics",
               "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
+            },
+            {
+              "batch": "release-0.5-geography-retry-feedback",
+              "base_commit": "caab13d772750315706862392fd30537b7115bdc",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-geography-retry-feedback/proof.json"
             }
           ]
         }
@@ -32179,7 +32215,8 @@
           "release-0.5-final-rehearsal",
           "release-0.5-route-census-closure",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-required-input-semantics"
+          "release-0.5-required-input-semantics",
+          "release-0.5-geography-retry-feedback"
         ],
         "current_acceptance": {
           "kind": "verified-profile-onboarding-and-persistent-context",
@@ -32195,7 +32232,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "68856b464ec0a88460cbce094b40418f8329d4ccb1ff6b531dcb0af6f2d57e0d"
+              "sha256": "f2d4c1469796b750c60f06cfbe400ba902e9788a27ffea1091ddabb8479a3b63"
             },
             {
               "path": "apps/web/e2e/profile-display-name.spec.ts",
@@ -32402,6 +32439,11 @@
               "batch": "release-0.5-required-input-semantics",
               "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
+            },
+            {
+              "batch": "release-0.5-geography-retry-feedback",
+              "base_commit": "caab13d772750315706862392fd30537b7115bdc",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-geography-retry-feedback/proof.json"
             }
           ]
         }
@@ -32488,7 +32530,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-review-preview-deadlines",
-          "release-0.5-required-input-semantics"
+          "release-0.5-required-input-semantics",
+          "release-0.5-geography-retry-feedback"
         ],
         "current_acceptance": {
           "kind": "verified-profile-onboarding-and-persistent-context",
@@ -32512,7 +32555,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "68856b464ec0a88460cbce094b40418f8329d4ccb1ff6b531dcb0af6f2d57e0d"
+              "sha256": "f2d4c1469796b750c60f06cfbe400ba902e9788a27ffea1091ddabb8479a3b63"
             },
             {
               "path": "apps/web/e2e/profile-display-name.spec.ts",
@@ -33084,6 +33127,11 @@
               "batch": "release-0.5-required-input-semantics",
               "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
+            },
+            {
+              "batch": "release-0.5-geography-retry-feedback",
+              "base_commit": "caab13d772750315706862392fd30537b7115bdc",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-geography-retry-feedback/proof.json"
             }
           ]
         }
@@ -517163,7 +517211,8 @@
           "release-0.5-ownership-transfer-receipt",
           "release-0.5-action-contrast",
           "release-0.5-review-preview-deadlines",
-          "release-0.5-required-input-semantics"
+          "release-0.5-required-input-semantics",
+          "release-0.5-geography-retry-feedback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -517327,7 +517376,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "68856b464ec0a88460cbce094b40418f8329d4ccb1ff6b531dcb0af6f2d57e0d"
+              "sha256": "f2d4c1469796b750c60f06cfbe400ba902e9788a27ffea1091ddabb8479a3b63"
             },
             {
               "path": "apps/web/e2e/order-comment-forms.spec.ts",
@@ -517906,6 +517955,11 @@
               "batch": "release-0.5-required-input-semantics",
               "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
+            },
+            {
+              "batch": "release-0.5-geography-retry-feedback",
+              "base_commit": "caab13d772750315706862392fd30537b7115bdc",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-geography-retry-feedback/proof.json"
             }
           ]
         }
@@ -517979,7 +518033,8 @@
           "release-0.5-ownership-transfer-receipt",
           "release-0.5-action-contrast",
           "release-0.5-review-preview-deadlines",
-          "release-0.5-required-input-semantics"
+          "release-0.5-required-input-semantics",
+          "release-0.5-geography-retry-feedback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -518143,7 +518198,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "68856b464ec0a88460cbce094b40418f8329d4ccb1ff6b531dcb0af6f2d57e0d"
+              "sha256": "f2d4c1469796b750c60f06cfbe400ba902e9788a27ffea1091ddabb8479a3b63"
             },
             {
               "path": "apps/web/e2e/order-comment-forms.spec.ts",
@@ -518722,6 +518777,11 @@
               "batch": "release-0.5-required-input-semantics",
               "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
+            },
+            {
+              "batch": "release-0.5-geography-retry-feedback",
+              "base_commit": "caab13d772750315706862392fd30537b7115bdc",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-geography-retry-feedback/proof.json"
             }
           ]
         }
@@ -519289,7 +519349,8 @@
           "release-0.5-ownership-transfer-receipt",
           "release-0.5-action-contrast",
           "release-0.5-review-preview-deadlines",
-          "release-0.5-required-input-semantics"
+          "release-0.5-required-input-semantics",
+          "release-0.5-geography-retry-feedback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -519453,7 +519514,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "68856b464ec0a88460cbce094b40418f8329d4ccb1ff6b531dcb0af6f2d57e0d"
+              "sha256": "f2d4c1469796b750c60f06cfbe400ba902e9788a27ffea1091ddabb8479a3b63"
             },
             {
               "path": "apps/web/e2e/order-comment-forms.spec.ts",
@@ -520032,6 +520093,11 @@
               "batch": "release-0.5-required-input-semantics",
               "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
+            },
+            {
+              "batch": "release-0.5-geography-retry-feedback",
+              "base_commit": "caab13d772750315706862392fd30537b7115bdc",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-geography-retry-feedback/proof.json"
             }
           ]
         }
@@ -566763,7 +566829,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Ownership transfer creation now confirms a 201 with a valid transfer ID before success feedback. Unconfirmed responses hold confirmation and load the current outgoing transfers. Prior staff consultation and other service command evidence remains recorded. Other CRUD and read feedback adoption is open."
+        "Shared province, city and company-type selectors announce an explicit retry after a network failure. HTTP or malformed replies retain inline recovery. Onboarding, customer address and CRM cases preserve scoped reads, drafts, original retries and receipt checks. Remaining CRUD and read feedback adoption stays open."
       ],
       "owner": null,
       "depends_on": [],
@@ -566792,7 +566858,8 @@
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-owned-staff-solar-review",
           "release-0.5-consultation-staff-command-receipts",
-          "release-0.5-ownership-transfer-receipt"
+          "release-0.5-ownership-transfer-receipt",
+          "release-0.5-geography-retry-feedback"
         ],
         "current_acceptance": null
       }
@@ -663559,7 +663626,8 @@
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-owned-staff-solar-review",
           "release-0.5-saving-conditional-agreement",
-          "release-0.5-required-input-semantics"
+          "release-0.5-required-input-semantics",
+          "release-0.5-geography-retry-feedback"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -663655,7 +663723,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "68856b464ec0a88460cbce094b40418f8329d4ccb1ff6b531dcb0af6f2d57e0d"
+              "sha256": "f2d4c1469796b750c60f06cfbe400ba902e9788a27ffea1091ddabb8479a3b63"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -664164,6 +664232,11 @@
               "batch": "release-0.5-required-input-semantics",
               "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
+            },
+            {
+              "batch": "release-0.5-geography-retry-feedback",
+              "base_commit": "caab13d772750315706862392fd30537b7115bdc",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-geography-retry-feedback/proof.json"
             }
           ]
         }
@@ -664221,7 +664294,8 @@
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-owned-staff-solar-review",
           "release-0.5-saving-conditional-agreement",
-          "release-0.5-required-input-semantics"
+          "release-0.5-required-input-semantics",
+          "release-0.5-geography-retry-feedback"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -664317,7 +664391,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "68856b464ec0a88460cbce094b40418f8329d4ccb1ff6b531dcb0af6f2d57e0d"
+              "sha256": "f2d4c1469796b750c60f06cfbe400ba902e9788a27ffea1091ddabb8479a3b63"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -664826,6 +664900,11 @@
               "batch": "release-0.5-required-input-semantics",
               "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
+            },
+            {
+              "batch": "release-0.5-geography-retry-feedback",
+              "base_commit": "caab13d772750315706862392fd30537b7115bdc",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-geography-retry-feedback/proof.json"
             }
           ]
         }
@@ -664882,7 +664961,8 @@
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-owned-staff-solar-review",
           "release-0.5-saving-conditional-agreement",
-          "release-0.5-required-input-semantics"
+          "release-0.5-required-input-semantics",
+          "release-0.5-geography-retry-feedback"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -664978,7 +665058,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "68856b464ec0a88460cbce094b40418f8329d4ccb1ff6b531dcb0af6f2d57e0d"
+              "sha256": "f2d4c1469796b750c60f06cfbe400ba902e9788a27ffea1091ddabb8479a3b63"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -665487,6 +665567,11 @@
               "batch": "release-0.5-required-input-semantics",
               "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
+            },
+            {
+              "batch": "release-0.5-geography-retry-feedback",
+              "base_commit": "caab13d772750315706862392fd30537b7115bdc",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-geography-retry-feedback/proof.json"
             }
           ]
         }
@@ -665545,7 +665630,8 @@
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-owned-staff-solar-review",
           "release-0.5-saving-conditional-agreement",
-          "release-0.5-required-input-semantics"
+          "release-0.5-required-input-semantics",
+          "release-0.5-geography-retry-feedback"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -665641,7 +665727,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "68856b464ec0a88460cbce094b40418f8329d4ccb1ff6b531dcb0af6f2d57e0d"
+              "sha256": "f2d4c1469796b750c60f06cfbe400ba902e9788a27ffea1091ddabb8479a3b63"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -666150,6 +666236,11 @@
               "batch": "release-0.5-required-input-semantics",
               "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
+            },
+            {
+              "batch": "release-0.5-geography-retry-feedback",
+              "base_commit": "caab13d772750315706862392fd30537b7115bdc",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-geography-retry-feedback/proof.json"
             }
           ]
         }
@@ -666208,7 +666299,8 @@
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-owned-staff-solar-review",
           "release-0.5-saving-conditional-agreement",
-          "release-0.5-required-input-semantics"
+          "release-0.5-required-input-semantics",
+          "release-0.5-geography-retry-feedback"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -666304,7 +666396,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "68856b464ec0a88460cbce094b40418f8329d4ccb1ff6b531dcb0af6f2d57e0d"
+              "sha256": "f2d4c1469796b750c60f06cfbe400ba902e9788a27ffea1091ddabb8479a3b63"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -666813,6 +666905,11 @@
               "batch": "release-0.5-required-input-semantics",
               "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
+            },
+            {
+              "batch": "release-0.5-geography-retry-feedback",
+              "base_commit": "caab13d772750315706862392fd30537b7115bdc",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-geography-retry-feedback/proof.json"
             }
           ]
         }
@@ -666868,7 +666965,8 @@
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-owned-staff-solar-review",
           "release-0.5-saving-conditional-agreement",
-          "release-0.5-required-input-semantics"
+          "release-0.5-required-input-semantics",
+          "release-0.5-geography-retry-feedback"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -666964,7 +667062,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "68856b464ec0a88460cbce094b40418f8329d4ccb1ff6b531dcb0af6f2d57e0d"
+              "sha256": "f2d4c1469796b750c60f06cfbe400ba902e9788a27ffea1091ddabb8479a3b63"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -667473,6 +667571,11 @@
               "batch": "release-0.5-required-input-semantics",
               "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
+            },
+            {
+              "batch": "release-0.5-geography-retry-feedback",
+              "base_commit": "caab13d772750315706862392fd30537b7115bdc",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-geography-retry-feedback/proof.json"
             }
           ]
         }
@@ -667528,7 +667631,8 @@
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-owned-staff-solar-review",
           "release-0.5-saving-conditional-agreement",
-          "release-0.5-required-input-semantics"
+          "release-0.5-required-input-semantics",
+          "release-0.5-geography-retry-feedback"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -667624,7 +667728,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "68856b464ec0a88460cbce094b40418f8329d4ccb1ff6b531dcb0af6f2d57e0d"
+              "sha256": "f2d4c1469796b750c60f06cfbe400ba902e9788a27ffea1091ddabb8479a3b63"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -668133,6 +668237,11 @@
               "batch": "release-0.5-required-input-semantics",
               "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
+            },
+            {
+              "batch": "release-0.5-geography-retry-feedback",
+              "base_commit": "caab13d772750315706862392fd30537b7115bdc",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-geography-retry-feedback/proof.json"
             }
           ]
         }
@@ -668189,7 +668298,8 @@
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-owned-staff-solar-review",
           "release-0.5-saving-conditional-agreement",
-          "release-0.5-required-input-semantics"
+          "release-0.5-required-input-semantics",
+          "release-0.5-geography-retry-feedback"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -668285,7 +668395,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "68856b464ec0a88460cbce094b40418f8329d4ccb1ff6b531dcb0af6f2d57e0d"
+              "sha256": "f2d4c1469796b750c60f06cfbe400ba902e9788a27ffea1091ddabb8479a3b63"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -668794,6 +668904,11 @@
               "batch": "release-0.5-required-input-semantics",
               "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
+            },
+            {
+              "batch": "release-0.5-geography-retry-feedback",
+              "base_commit": "caab13d772750315706862392fd30537b7115bdc",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-geography-retry-feedback/proof.json"
             }
           ]
         }
@@ -668849,7 +668964,8 @@
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-owned-staff-solar-review",
           "release-0.5-saving-conditional-agreement",
-          "release-0.5-required-input-semantics"
+          "release-0.5-required-input-semantics",
+          "release-0.5-geography-retry-feedback"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -668945,7 +669061,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "68856b464ec0a88460cbce094b40418f8329d4ccb1ff6b531dcb0af6f2d57e0d"
+              "sha256": "f2d4c1469796b750c60f06cfbe400ba902e9788a27ffea1091ddabb8479a3b63"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -669454,6 +669570,11 @@
               "batch": "release-0.5-required-input-semantics",
               "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
+            },
+            {
+              "batch": "release-0.5-geography-retry-feedback",
+              "base_commit": "caab13d772750315706862392fd30537b7115bdc",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-geography-retry-feedback/proof.json"
             }
           ]
         }
@@ -669510,7 +669631,8 @@
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-owned-staff-solar-review",
           "release-0.5-saving-conditional-agreement",
-          "release-0.5-required-input-semantics"
+          "release-0.5-required-input-semantics",
+          "release-0.5-geography-retry-feedback"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -669606,7 +669728,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "68856b464ec0a88460cbce094b40418f8329d4ccb1ff6b531dcb0af6f2d57e0d"
+              "sha256": "f2d4c1469796b750c60f06cfbe400ba902e9788a27ffea1091ddabb8479a3b63"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -670115,6 +670237,11 @@
               "batch": "release-0.5-required-input-semantics",
               "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
+            },
+            {
+              "batch": "release-0.5-geography-retry-feedback",
+              "base_commit": "caab13d772750315706862392fd30537b7115bdc",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-geography-retry-feedback/proof.json"
             }
           ]
         }
@@ -690479,7 +690606,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-ownership-transfer-receipt",
-          "release-0.5-required-input-semantics"
+          "release-0.5-required-input-semantics",
+          "release-0.5-geography-retry-feedback"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -690623,7 +690751,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "68856b464ec0a88460cbce094b40418f8329d4ccb1ff6b531dcb0af6f2d57e0d"
+              "sha256": "f2d4c1469796b750c60f06cfbe400ba902e9788a27ffea1091ddabb8479a3b63"
             },
             {
               "path": "apps/web/e2e/team-catalogue-recovery.spec.ts",
@@ -691055,6 +691183,11 @@
               "batch": "release-0.5-required-input-semantics",
               "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
+            },
+            {
+              "batch": "release-0.5-geography-retry-feedback",
+              "base_commit": "caab13d772750315706862392fd30537b7115bdc",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-geography-retry-feedback/proof.json"
             }
           ]
         }
@@ -691103,7 +691236,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-ownership-transfer-receipt",
-          "release-0.5-required-input-semantics"
+          "release-0.5-required-input-semantics",
+          "release-0.5-geography-retry-feedback"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -691247,7 +691381,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "68856b464ec0a88460cbce094b40418f8329d4ccb1ff6b531dcb0af6f2d57e0d"
+              "sha256": "f2d4c1469796b750c60f06cfbe400ba902e9788a27ffea1091ddabb8479a3b63"
             },
             {
               "path": "apps/web/e2e/team-catalogue-recovery.spec.ts",
@@ -691679,6 +691813,11 @@
               "batch": "release-0.5-required-input-semantics",
               "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
+            },
+            {
+              "batch": "release-0.5-geography-retry-feedback",
+              "base_commit": "caab13d772750315706862392fd30537b7115bdc",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-geography-retry-feedback/proof.json"
             }
           ]
         }
@@ -691727,7 +691866,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-ownership-transfer-receipt",
-          "release-0.5-required-input-semantics"
+          "release-0.5-required-input-semantics",
+          "release-0.5-geography-retry-feedback"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -691871,7 +692011,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "68856b464ec0a88460cbce094b40418f8329d4ccb1ff6b531dcb0af6f2d57e0d"
+              "sha256": "f2d4c1469796b750c60f06cfbe400ba902e9788a27ffea1091ddabb8479a3b63"
             },
             {
               "path": "apps/web/e2e/team-catalogue-recovery.spec.ts",
@@ -692303,6 +692443,11 @@
               "batch": "release-0.5-required-input-semantics",
               "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
+            },
+            {
+              "batch": "release-0.5-geography-retry-feedback",
+              "base_commit": "caab13d772750315706862392fd30537b7115bdc",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-geography-retry-feedback/proof.json"
             }
           ]
         }
@@ -692352,7 +692497,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-ownership-transfer-receipt",
-          "release-0.5-required-input-semantics"
+          "release-0.5-required-input-semantics",
+          "release-0.5-geography-retry-feedback"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -692496,7 +692642,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "68856b464ec0a88460cbce094b40418f8329d4ccb1ff6b531dcb0af6f2d57e0d"
+              "sha256": "f2d4c1469796b750c60f06cfbe400ba902e9788a27ffea1091ddabb8479a3b63"
             },
             {
               "path": "apps/web/e2e/team-catalogue-recovery.spec.ts",
@@ -692928,6 +693074,11 @@
               "batch": "release-0.5-required-input-semantics",
               "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
+            },
+            {
+              "batch": "release-0.5-geography-retry-feedback",
+              "base_commit": "caab13d772750315706862392fd30537b7115bdc",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-geography-retry-feedback/proof.json"
             }
           ]
         }
@@ -692976,7 +693127,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-ownership-transfer-receipt",
-          "release-0.5-required-input-semantics"
+          "release-0.5-required-input-semantics",
+          "release-0.5-geography-retry-feedback"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -693120,7 +693272,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "68856b464ec0a88460cbce094b40418f8329d4ccb1ff6b531dcb0af6f2d57e0d"
+              "sha256": "f2d4c1469796b750c60f06cfbe400ba902e9788a27ffea1091ddabb8479a3b63"
             },
             {
               "path": "apps/web/e2e/team-catalogue-recovery.spec.ts",
@@ -693552,6 +693704,11 @@
               "batch": "release-0.5-required-input-semantics",
               "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
+            },
+            {
+              "batch": "release-0.5-geography-retry-feedback",
+              "base_commit": "caab13d772750315706862392fd30537b7115bdc",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-geography-retry-feedback/proof.json"
             }
           ]
         }
@@ -693600,7 +693757,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-ownership-transfer-receipt",
-          "release-0.5-required-input-semantics"
+          "release-0.5-required-input-semantics",
+          "release-0.5-geography-retry-feedback"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -693744,7 +693902,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "68856b464ec0a88460cbce094b40418f8329d4ccb1ff6b531dcb0af6f2d57e0d"
+              "sha256": "f2d4c1469796b750c60f06cfbe400ba902e9788a27ffea1091ddabb8479a3b63"
             },
             {
               "path": "apps/web/e2e/team-catalogue-recovery.spec.ts",
@@ -694176,6 +694334,11 @@
               "batch": "release-0.5-required-input-semantics",
               "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
+            },
+            {
+              "batch": "release-0.5-geography-retry-feedback",
+              "base_commit": "caab13d772750315706862392fd30537b7115bdc",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-geography-retry-feedback/proof.json"
             }
           ]
         }
@@ -694224,7 +694387,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-ownership-transfer-receipt",
-          "release-0.5-required-input-semantics"
+          "release-0.5-required-input-semantics",
+          "release-0.5-geography-retry-feedback"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -694368,7 +694532,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "68856b464ec0a88460cbce094b40418f8329d4ccb1ff6b531dcb0af6f2d57e0d"
+              "sha256": "f2d4c1469796b750c60f06cfbe400ba902e9788a27ffea1091ddabb8479a3b63"
             },
             {
               "path": "apps/web/e2e/team-catalogue-recovery.spec.ts",
@@ -694800,6 +694964,11 @@
               "batch": "release-0.5-required-input-semantics",
               "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
+            },
+            {
+              "batch": "release-0.5-geography-retry-feedback",
+              "base_commit": "caab13d772750315706862392fd30537b7115bdc",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-geography-retry-feedback/proof.json"
             }
           ]
         }
@@ -694849,7 +695018,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-ownership-transfer-receipt",
-          "release-0.5-required-input-semantics"
+          "release-0.5-required-input-semantics",
+          "release-0.5-geography-retry-feedback"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -694993,7 +695163,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "68856b464ec0a88460cbce094b40418f8329d4ccb1ff6b531dcb0af6f2d57e0d"
+              "sha256": "f2d4c1469796b750c60f06cfbe400ba902e9788a27ffea1091ddabb8479a3b63"
             },
             {
               "path": "apps/web/e2e/team-catalogue-recovery.spec.ts",
@@ -695425,6 +695595,11 @@
               "batch": "release-0.5-required-input-semantics",
               "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
+            },
+            {
+              "batch": "release-0.5-geography-retry-feedback",
+              "base_commit": "caab13d772750315706862392fd30537b7115bdc",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-geography-retry-feedback/proof.json"
             }
           ]
         }
@@ -695473,7 +695648,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-ownership-transfer-receipt",
-          "release-0.5-required-input-semantics"
+          "release-0.5-required-input-semantics",
+          "release-0.5-geography-retry-feedback"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -695617,7 +695793,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "68856b464ec0a88460cbce094b40418f8329d4ccb1ff6b531dcb0af6f2d57e0d"
+              "sha256": "f2d4c1469796b750c60f06cfbe400ba902e9788a27ffea1091ddabb8479a3b63"
             },
             {
               "path": "apps/web/e2e/team-catalogue-recovery.spec.ts",
@@ -696049,6 +696225,11 @@
               "batch": "release-0.5-required-input-semantics",
               "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
+            },
+            {
+              "batch": "release-0.5-geography-retry-feedback",
+              "base_commit": "caab13d772750315706862392fd30537b7115bdc",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-geography-retry-feedback/proof.json"
             }
           ]
         }
@@ -696097,7 +696278,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-ownership-transfer-receipt",
-          "release-0.5-required-input-semantics"
+          "release-0.5-required-input-semantics",
+          "release-0.5-geography-retry-feedback"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -696241,7 +696423,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "68856b464ec0a88460cbce094b40418f8329d4ccb1ff6b531dcb0af6f2d57e0d"
+              "sha256": "f2d4c1469796b750c60f06cfbe400ba902e9788a27ffea1091ddabb8479a3b63"
             },
             {
               "path": "apps/web/e2e/team-catalogue-recovery.spec.ts",
@@ -696673,6 +696855,11 @@
               "batch": "release-0.5-required-input-semantics",
               "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
+            },
+            {
+              "batch": "release-0.5-geography-retry-feedback",
+              "base_commit": "caab13d772750315706862392fd30537b7115bdc",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-geography-retry-feedback/proof.json"
             }
           ]
         }
@@ -721238,7 +721425,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Bilingual personal and legal onboarding checks cover native names, required states, validation focus, geography readiness, draft recovery and receipt boundaries. Prior staff deadline and command evidence remains recorded. Remaining conditional UI and command adoption are open."
+        "Native Chromium and mobile Safari cases now verify dependent geography options across personal and legal onboarding, customer and CRM address editors and profile settings. Both languages preserve draft data and ignore stale replies. Remaining conditional route and command adoption stays open."
       ],
       "owner": null,
       "depends_on": [],
@@ -721301,7 +721488,8 @@
           "release-0.5-ownership-transfer-receipt",
           "release-0.5-action-contrast",
           "release-0.5-review-preview-deadlines",
-          "release-0.5-required-input-semantics"
+          "release-0.5-required-input-semantics",
+          "release-0.5-geography-retry-feedback"
         ]
       }
     },
@@ -721385,7 +721573,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "68856b464ec0a88460cbce094b40418f8329d4ccb1ff6b531dcb0af6f2d57e0d"
+              "sha256": "f2d4c1469796b750c60f06cfbe400ba902e9788a27ffea1091ddabb8479a3b63"
             },
             {
               "path": "apps/web/e2e/solar-construction-progress.spec.ts",
@@ -722786,18 +722974,34 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/web/src/hooks/useGeographyOptions.test.tsx",
+              "sha256": "1685d3eb56b6acd5cb6d7b9d21ac128f70da84c0d076b46300e9fe4c55af4948"
+            },
+            {
+              "path": "apps/web/src/hooks/useGeographyOptions.ts",
+              "sha256": "520091b3c30a4f9686760ec8d5691f5f9f7818521c6555efe059ae7ac4333225"
             }
           ],
           "checks": [
             "All official changed-line and branch floors passed on acd15602 with 153 fresh Chromium cases, 723 fresh web unit cases and retained evidence for unchanged source. The separate failed browser group supplied no coverage. The only follow-up implementation-test delta is a solar cancellation assertion, verified in both languages and engines.",
             "The hosted critical WCAG accessibility step passed on acd15602. Targeted Chromium and mobile Safari checks cover current bilingual onboarding, financial and service branches with original safeguards. The linked source and receipts distinguish the actual checks and their scope.",
             "On the verified 573-file production build, a manual keyboard check in English desktop and Persian mobile confirmed first focus on Skip to main content, a single main landmark, then focus and names for username and password. Persian mobile content fits the 390px viewport.",
-            "The production build passed all 98 bundle limits. Cold Chromium transfers for login, register and recovery were 147.86, 149.93 and 147.06 KB gzip, each below 150 KB. The current solar test correction changed no runtime, build configuration or dependency."
+            "The production build passed all 98 bundle limits. Cold Chromium transfers for login, register and recovery were 147.86, 149.93 and 147.06 KB gzip, each below 150 KB. The current solar test correction changed no runtime, build configuration or dependency.",
+            "The geography retry update renewed official coverage, native accessibility, cold authentication transfers and all bundle budgets at the verified source. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-geography-retry-feedback/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
             "This task accepts execution of the accessibility and performance checks and preservation of their numerical and financial assertions at the reviewed source. Product accessibility adoption and live policy gates have separate tasks.",
             "The final release binds this evidence again if measured source or settings change."
+          ],
+          "presentation_renewals": [
+            {
+              "batch": "release-0.5-geography-retry-feedback",
+              "base_commit": "caab13d772750315706862392fd30537b7115bdc",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-geography-retry-feedback/proof.json"
+            }
           ]
         },
         "batches": [
@@ -722861,7 +723065,8 @@
           "release-0.5-review-preview-deadlines",
           "release-0.5-required-input-semantics",
           "release-0.5-onboarding-deadlines-coverage",
-          "release-0.5-performance-evidence-acceptance"
+          "release-0.5-performance-evidence-acceptance",
+          "release-0.5-geography-retry-feedback"
         ]
       }
     },
@@ -787755,6 +787960,78 @@
       "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
       "source_scope_proof_sha256": "d095088e847ec12a606f96d62ffbe94eb3fac74bb6500476edf7fe4206f8da8b",
       "release_disposition": "Accessibility and performance evidence accepted at the verified product source. Other v0.5.0 acceptance gates remain open."
+    },
+    "release-0.5-geography-retry-feedback": {
+      "batch": "release-0.5-geography-retry-feedback",
+      "base_commit": "caab13d772750315706862392fd30537b7115bdc",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.11.01.03",
+        "release-readiness#R-04.01"
+      ],
+      "accepted_task_keys": [],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.11.01.03",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/onboarding-wizard.spec.ts",
+          "sha256": "f2d4c1469796b750c60f06cfbe400ba902e9788a27ffea1091ddabb8479a3b63"
+        },
+        {
+          "path": "apps/web/src/hooks/useGeographyOptions.test.tsx",
+          "sha256": "1685d3eb56b6acd5cb6d7b9d21ac128f70da84c0d076b46300e9fe4c55af4948"
+        },
+        {
+          "path": "apps/web/src/hooks/useGeographyOptions.ts",
+          "sha256": "520091b3c30a4f9686760ec8d5691f5f9f7818521c6555efe059ae7ac4333225"
+        }
+      ],
+      "checks": [
+        "A transport failure produces one localized retry notice only on explicit Retry. HTTP and malformed responses use inline recovery. The shared selector retains its manual read, exact province binding and account cancellation.",
+        "64 distinct production browser cases passed across both languages and engines. 31 affected unit cases passed, including 11 final hook cases. New geography coverage is 100 percent for measured lines and branches. The official checker passed all eight groups using fresh coverage for the sole changed runtime file and retained matching source elsewhere.",
+        "Web typecheck, changed-file lint and formatting, production build, all 98 gzip limits and all three cold authentication transfer checks passed."
+      ],
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-geography-retry-feedback/proof.json",
+      "source_scope_proof_sha256": "d31dae243a64df56790d36e7e37f2636c9e56711cf9571cc14bdde1c28283d26",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-geography-retry-feedback/reviewed.patch",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-geography-retry-feedback/renewed-bindings.json",
+      "renewed_task_keys": [
+        "02-auth-users-admin.md#T-03.01.01",
+        "02-auth-users-admin.md#T-03.01.02",
+        "02-auth-users-admin.md#T-03.02.01",
+        "02-auth-users-admin.md#T-03.02.02",
+        "02-auth-users-admin.md#T-03.02.03",
+        "02-auth-users-admin.md#T-03.02.04",
+        "02-auth-users-admin.md#T-03.03.01",
+        "02-auth-users-admin.md#T-03.03.02",
+        "07-ui-ux-design.md#T-07.05.01.11",
+        "07-ui-ux-design.md#T-07.05.02.01",
+        "07-ui-ux-design.md#T-07.05.02.03",
+        "07-ui-ux-design.md#T-07.22.01.01",
+        "07-ui-ux-design.md#T-07.22.01.02",
+        "07-ui-ux-design.md#T-07.22.01.03",
+        "07-ui-ux-design.md#T-07.22.01.04",
+        "07-ui-ux-design.md#T-07.22.01.05",
+        "07-ui-ux-design.md#T-07.22.02.01",
+        "07-ui-ux-design.md#T-07.22.02.02",
+        "07-ui-ux-design.md#T-07.22.02.03",
+        "07-ui-ux-design.md#T-07.22.02.04",
+        "07-ui-ux-design.md#T-07.22.02.05",
+        "07-ui-ux-design.md#T-07.28.01.01",
+        "07-ui-ux-design.md#T-07.28.01.02",
+        "07-ui-ux-design.md#T-07.28.01.03",
+        "07-ui-ux-design.md#T-07.28.01.04",
+        "07-ui-ux-design.md#T-07.28.01.05",
+        "07-ui-ux-design.md#T-07.29.01.01",
+        "07-ui-ux-design.md#T-07.29.01.02",
+        "07-ui-ux-design.md#T-07.29.01.03",
+        "07-ui-ux-design.md#T-07.29.01.04",
+        "07-ui-ux-design.md#T-07.29.01.05",
+        "release-readiness#R-04.02"
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-geography-retry-feedback",
+      "release_disposition": "Verified geography read recovery and renewed existing gate evidence. Milestone acceptance remains open."
     }
   },
   "historical_improvements": [

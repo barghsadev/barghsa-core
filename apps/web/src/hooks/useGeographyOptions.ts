@@ -1,7 +1,11 @@
 import { useCallback, useId, useRef, useState } from 'react';
 import { useAccountUser } from './useAccountUser.js';
+import { useLocale } from './useLocale.js';
+import { readAsyncResponse } from './useAsyncData.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { queryKeys } from '../lib/query-keys.js';
+import { announceReadRetry } from '../lib/read-retry-feedback.js';
+import { ServerQueryError } from '../lib/server-query-client.js';
 import { useServerDetailQuery } from './useServerQuery.js';
 
 export interface GeographyOption {
@@ -14,7 +18,7 @@ const empty: GeographyOption[] = [];
 
 /** Shared validated read for selectors and display-only address name lookups. */
 export async function loadGeographyOptions(path: string, signal: AbortSignal, provinceId?: string) {
-  const response = await fetch(path, { credentials: 'include', signal });
+  const response = await readAsyncResponse(path, signal);
   if (!response.ok) throw new Error('Geography unavailable');
   const data: unknown = await response.json();
   if (
@@ -41,7 +45,7 @@ export function useGeographyOptions(path: string | null, provinceId?: string) {
   const reader = useId();
   const accountId = useAccountUser();
   const profileRevision = useProfileContextRevision();
-  const retry = useCallback(() => setRevision((value) => value + 1), []);
+  const locale = useLocale();
   const request = JSON.stringify([path, provinceId, revision]);
   const readOwner = useRef({ request, revision: 0 });
   if (readOwner.current.request !== request)
@@ -65,6 +69,11 @@ export function useGeographyOptions(path: string | null, provinceId?: string) {
     manual: true,
     read: (signal) => loadGeographyOptions(path!, signal, provinceId),
   });
+  const retry = useCallback(() => {
+    if (query.error instanceof ServerQueryError && query.error.status === 0)
+      announceReadRetry(locale);
+    setRevision((value) => value + 1);
+  }, [locale, query.error]);
   const loading = path !== null && (query.isPending || query.isFetching);
   const ready = !!path && query.isSuccess && !loading;
   return {
