@@ -18,6 +18,7 @@ import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useManualServerRead } from '../hooks/useServerQuery.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { queryKeys } from '../lib/query-keys.js';
+import { readWithDeadline } from '../lib/server-query-client.js';
 
 import { useWizardForm } from '../hooks/useWizardForm.js';
 import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
@@ -330,9 +331,12 @@ export default function AdminStaffTeamsPage() {
     setRulesError(false);
     void (async () => {
       try {
-        const response = await fetch('/api/admin/config/assignment-rules', {
-          credentials: 'include',
-          signal: controller.signal,
+        const { response, data } = await readWithDeadline(controller.signal, async (signal) => {
+          const response = await fetch('/api/admin/config/assignment-rules', {
+            credentials: 'include',
+            signal,
+          });
+          return { response, data: response.ok ? ((await response.json()) as unknown) : null };
         });
         if (controller.signal.aborted || owner !== denialGeneration.current) return;
         if ([401, 403].includes(response.status)) {
@@ -340,7 +344,6 @@ export default function AdminStaffTeamsPage() {
           return;
         }
         if (!response.ok) throw new Error('Rules unavailable');
-        const data: unknown = await response.json();
         if (!validRouting(data)) throw new Error('Invalid rules');
         if (controller.signal.aborted || owner !== denialGeneration.current || deniedRef.current)
           return;
@@ -378,9 +381,12 @@ export default function AdminStaffTeamsPage() {
     const timer = setTimeout(async () => {
       try {
         const params = new URLSearchParams({ q: search, ...(editing ? { teamId: editing } : {}) });
-        const response = await fetch(`/api/admin/staff-teams/members?${params}`, {
-          credentials: 'include',
-          signal: controller.signal,
+        const { response, data } = await readWithDeadline(controller.signal, async (signal) => {
+          const response = await fetch(`/api/admin/staff-teams/members?${params}`, {
+            credentials: 'include',
+            signal,
+          });
+          return { response, data: response.ok ? ((await response.json()) as unknown) : null };
         });
         if (controller.signal.aborted || owner !== denialGeneration.current) return;
         if ([401, 403].includes(response.status)) {
@@ -388,7 +394,6 @@ export default function AdminStaffTeamsPage() {
           return;
         }
         if (!response.ok) throw new Error('Unavailable');
-        const data: unknown = await response.json();
         if (!validMembers(data)) throw new Error('Invalid members');
         if (controller.signal.aborted || owner !== denialGeneration.current || deniedRef.current)
           return;

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-07T07:58:44+00:00",
-  "source_commit": "0b6a6a6041390e201021c12bf829debe1492d73a",
+  "updated": "2026-11-07T08:02:11+00:00",
+  "source_commit": "7cc237db497473c99d049a9e591ae9475aec6cde",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -33935,7 +33935,8 @@
           "release-0.5-form-conditions-and-command-feedback",
           "release-0.5-safari-main-keyboard",
           "release-0.5-route-landmark-census",
-          "release-0.5-workspace-route-census"
+          "release-0.5-workspace-route-census",
+          "release-0.5-staff-direct-reads"
         ],
         "current_acceptance": {
           "kind": "verified-account-preferences-and-timestamp-consumers",
@@ -34111,7 +34112,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
-              "sha256": "ed8a2cd84c10f3ae60b53801ff4e7b39763bf1e94f601d0a521a0f21cbddf7ab"
+              "sha256": "ccb6a0080feda135d03ea1b4e5219ed9349547da4e19d6be3820df587cea4352"
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
@@ -34323,7 +34324,8 @@
             "Bindings renewed by release-0.5-form-conditions-and-command-feedback: form semantics and receipt-based feedback verified with scoped units, browser journeys and original budgets.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
             "Bindings renewed by release-0.5-route-landmark-census: the detail change is identifier wrapping and bidi isolation only. Existing exact receipt, authority, navigation and draft checks pass with the new populated layout assertions.",
-            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass."
+            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
+            "Bindings renewed by release-0.5-staff-direct-reads: bounded saving and team reads pass exact browser and unit checks with current ownership, retained drafts and protected commands."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/account-preferences-acceptance",
           "limitations": [
@@ -34774,6 +34776,11 @@
               "batch": "release-0.5-workspace-route-census",
               "base_commit": "7cf95f840a7e65c722f95b10e486bd02c435d498",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-workspace-route-census/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-staff-direct-reads",
+              "base_commit": "7cc237db497473c99d049a9e591ae9475aec6cde",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-direct-reads/source-binding.json"
             }
           ]
         },
@@ -60000,7 +60007,8 @@
           "release-0.5-populated-route-presentation",
           "release-0.5-form-conditions-and-command-feedback",
           "release-0.5-safari-main-keyboard",
-          "release-0.5-workspace-route-census"
+          "release-0.5-workspace-route-census",
+          "release-0.5-staff-direct-reads"
         ],
         "current_acceptance": {
           "kind": "accepted-native-brand-theme-application",
@@ -60164,7 +60172,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
-              "sha256": "ed8a2cd84c10f3ae60b53801ff4e7b39763bf1e94f601d0a521a0f21cbddf7ab"
+              "sha256": "ccb6a0080feda135d03ea1b4e5219ed9349547da4e19d6be3820df587cea4352"
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
@@ -60329,7 +60337,8 @@
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
             "Bindings renewed by release-0.5-form-conditions-and-command-feedback: form semantics and receipt-based feedback verified with scoped units, browser journeys and original budgets.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
-            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass."
+            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
+            "Bindings renewed by release-0.5-staff-direct-reads: bounded saving and team reads pass exact browser and unit checks with current ownership, retained drafts and protected commands."
           ],
           "source_renewals": [
             {
@@ -60484,6 +60493,11 @@
               "batch": "release-0.5-workspace-route-census",
               "base_commit": "7cf95f840a7e65c722f95b10e486bd02c435d498",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-workspace-route-census/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-staff-direct-reads",
+              "base_commit": "7cc237db497473c99d049a9e591ae9475aec6cde",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-direct-reads/source-binding.json"
             }
           ]
         },
@@ -352674,7 +352688,8 @@
           "release-0.5-query-and-command-completion",
           "release-0.5-form-and-document-accessibility",
           "release-0.5-required-form-and-action-closure",
-          "release-0.5-workspace-route-census"
+          "release-0.5-workspace-route-census",
+          "release-0.5-staff-direct-reads"
         ],
         "current_acceptance": {
           "kind": "current-saving-cancellation-and-derived-financial-closure-acceptance",
@@ -352930,7 +352945,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "5c6ca7bdab586f44290acb1922c8ae0b3247a31cb5451fdd40b222019855d716"
+              "sha256": "7ef61b1eb9df59f55a7d9adcaad89d1bdbebc7dd8c25d091d9f88199db585a9d"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -353289,7 +353304,8 @@
             "Source bindings renewed by release-0.5-query-and-command-completion: affected owned read, permission, financial review and browser cases pass; writes/CSRF, original budget rules and financial assertions are preserved.",
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
             "Bindings renewed by release-0.5-required-form-and-action-closure: required announcements and a native label target changed; solar and cancellation behavior, current authority, exact command and receipt assertions pass on the matching production build.",
-            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass."
+            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
+            "Bindings renewed by release-0.5-staff-direct-reads: bounded saving and team reads pass exact browser and unit checks with current ownership, retained drafts and protected commands."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/saving-cancellation",
           "limitations": [
@@ -353868,6 +353884,11 @@
               "batch": "release-0.5-workspace-route-census",
               "base_commit": "7cf95f840a7e65c722f95b10e486bd02c435d498",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-workspace-route-census/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-staff-direct-reads",
+              "base_commit": "7cc237db497473c99d049a9e591ae9475aec6cde",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-direct-reads/source-binding.json"
             }
           ]
         }
@@ -353909,7 +353930,8 @@
           "release-0.5-query-and-command-completion",
           "release-0.5-form-and-document-accessibility",
           "release-0.5-required-form-and-action-closure",
-          "release-0.5-workspace-route-census"
+          "release-0.5-workspace-route-census",
+          "release-0.5-staff-direct-reads"
         ],
         "current_acceptance": {
           "kind": "current-saving-cancellation-and-derived-financial-closure-acceptance",
@@ -354165,7 +354187,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "5c6ca7bdab586f44290acb1922c8ae0b3247a31cb5451fdd40b222019855d716"
+              "sha256": "7ef61b1eb9df59f55a7d9adcaad89d1bdbebc7dd8c25d091d9f88199db585a9d"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -354524,7 +354546,8 @@
             "Source bindings renewed by release-0.5-query-and-command-completion: affected owned read, permission, financial review and browser cases pass; writes/CSRF, original budget rules and financial assertions are preserved.",
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
             "Bindings renewed by release-0.5-required-form-and-action-closure: required announcements and a native label target changed; solar and cancellation behavior, current authority, exact command and receipt assertions pass on the matching production build.",
-            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass."
+            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
+            "Bindings renewed by release-0.5-staff-direct-reads: bounded saving and team reads pass exact browser and unit checks with current ownership, retained drafts and protected commands."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/saving-cancellation",
           "limitations": [
@@ -355103,6 +355126,11 @@
               "batch": "release-0.5-workspace-route-census",
               "base_commit": "7cf95f840a7e65c722f95b10e486bd02c435d498",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-workspace-route-census/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-staff-direct-reads",
+              "base_commit": "7cc237db497473c99d049a9e591ae9475aec6cde",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-direct-reads/source-binding.json"
             }
           ]
         }
@@ -355144,7 +355172,8 @@
           "release-0.5-query-and-command-completion",
           "release-0.5-form-and-document-accessibility",
           "release-0.5-required-form-and-action-closure",
-          "release-0.5-workspace-route-census"
+          "release-0.5-workspace-route-census",
+          "release-0.5-staff-direct-reads"
         ],
         "current_acceptance": {
           "kind": "current-saving-cancellation-and-derived-financial-closure-acceptance",
@@ -355400,7 +355429,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "5c6ca7bdab586f44290acb1922c8ae0b3247a31cb5451fdd40b222019855d716"
+              "sha256": "7ef61b1eb9df59f55a7d9adcaad89d1bdbebc7dd8c25d091d9f88199db585a9d"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -355759,7 +355788,8 @@
             "Source bindings renewed by release-0.5-query-and-command-completion: affected owned read, permission, financial review and browser cases pass; writes/CSRF, original budget rules and financial assertions are preserved.",
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
             "Bindings renewed by release-0.5-required-form-and-action-closure: required announcements and a native label target changed; solar and cancellation behavior, current authority, exact command and receipt assertions pass on the matching production build.",
-            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass."
+            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
+            "Bindings renewed by release-0.5-staff-direct-reads: bounded saving and team reads pass exact browser and unit checks with current ownership, retained drafts and protected commands."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/saving-cancellation",
           "limitations": [
@@ -356338,6 +356368,11 @@
               "batch": "release-0.5-workspace-route-census",
               "base_commit": "7cf95f840a7e65c722f95b10e486bd02c435d498",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-workspace-route-census/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-staff-direct-reads",
+              "base_commit": "7cc237db497473c99d049a9e591ae9475aec6cde",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-direct-reads/source-binding.json"
             }
           ]
         }
@@ -356379,7 +356414,8 @@
           "release-0.5-query-and-command-completion",
           "release-0.5-form-and-document-accessibility",
           "release-0.5-required-form-and-action-closure",
-          "release-0.5-workspace-route-census"
+          "release-0.5-workspace-route-census",
+          "release-0.5-staff-direct-reads"
         ],
         "current_acceptance": {
           "kind": "current-saving-cancellation-and-derived-financial-closure-acceptance",
@@ -356635,7 +356671,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "5c6ca7bdab586f44290acb1922c8ae0b3247a31cb5451fdd40b222019855d716"
+              "sha256": "7ef61b1eb9df59f55a7d9adcaad89d1bdbebc7dd8c25d091d9f88199db585a9d"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -356994,7 +357030,8 @@
             "Source bindings renewed by release-0.5-query-and-command-completion: affected owned read, permission, financial review and browser cases pass; writes/CSRF, original budget rules and financial assertions are preserved.",
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
             "Bindings renewed by release-0.5-required-form-and-action-closure: required announcements and a native label target changed; solar and cancellation behavior, current authority, exact command and receipt assertions pass on the matching production build.",
-            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass."
+            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
+            "Bindings renewed by release-0.5-staff-direct-reads: bounded saving and team reads pass exact browser and unit checks with current ownership, retained drafts and protected commands."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/saving-cancellation",
           "limitations": [
@@ -357573,6 +357610,11 @@
               "batch": "release-0.5-workspace-route-census",
               "base_commit": "7cf95f840a7e65c722f95b10e486bd02c435d498",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-workspace-route-census/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-staff-direct-reads",
+              "base_commit": "7cc237db497473c99d049a9e591ae9475aec6cde",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-direct-reads/source-binding.json"
             }
           ]
         }
@@ -357615,7 +357657,8 @@
           "release-0.5-query-and-command-completion",
           "release-0.5-form-and-document-accessibility",
           "release-0.5-required-form-and-action-closure",
-          "release-0.5-workspace-route-census"
+          "release-0.5-workspace-route-census",
+          "release-0.5-staff-direct-reads"
         ],
         "current_acceptance": {
           "kind": "current-saving-cancellation-and-derived-financial-closure-acceptance",
@@ -357871,7 +357914,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "5c6ca7bdab586f44290acb1922c8ae0b3247a31cb5451fdd40b222019855d716"
+              "sha256": "7ef61b1eb9df59f55a7d9adcaad89d1bdbebc7dd8c25d091d9f88199db585a9d"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -358230,7 +358273,8 @@
             "Source bindings renewed by release-0.5-query-and-command-completion: affected owned read, permission, financial review and browser cases pass; writes/CSRF, original budget rules and financial assertions are preserved.",
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
             "Bindings renewed by release-0.5-required-form-and-action-closure: required announcements and a native label target changed; solar and cancellation behavior, current authority, exact command and receipt assertions pass on the matching production build.",
-            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass."
+            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
+            "Bindings renewed by release-0.5-staff-direct-reads: bounded saving and team reads pass exact browser and unit checks with current ownership, retained drafts and protected commands."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/saving-cancellation",
           "limitations": [
@@ -358809,6 +358853,11 @@
               "batch": "release-0.5-workspace-route-census",
               "base_commit": "7cf95f840a7e65c722f95b10e486bd02c435d498",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-workspace-route-census/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-staff-direct-reads",
+              "base_commit": "7cc237db497473c99d049a9e591ae9475aec6cde",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-direct-reads/source-binding.json"
             }
           ]
         }
@@ -358847,7 +358896,8 @@
           "release-0.5-query-and-command-completion",
           "release-0.5-form-and-document-accessibility",
           "release-0.5-route-adoption-matrix",
-          "release-0.5-workspace-route-census"
+          "release-0.5-workspace-route-census",
+          "release-0.5-staff-direct-reads"
         ],
         "current_acceptance": {
           "kind": "current-saving-fulfillment-and-terminal-history-acceptance",
@@ -358915,7 +358965,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "5c6ca7bdab586f44290acb1922c8ae0b3247a31cb5451fdd40b222019855d716"
+              "sha256": "7ef61b1eb9df59f55a7d9adcaad89d1bdbebc7dd8c25d091d9f88199db585a9d"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -359197,7 +359247,8 @@
             "Source bindings renewed by release-0.5-query-and-command-completion: affected owned read, permission, financial review and browser cases pass; writes/CSRF, original budget rules and financial assertions are preserved.",
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
             "Bindings renewed by release-0.5-route-adoption-matrix: the solar document action has a layout-only change, and the affected browser journeys and solar units pass with existing receipt, authority and financial assertions. Saving browser checks preserve their exact draft and refund assertions after the width probe.",
-            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass."
+            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
+            "Bindings renewed by release-0.5-staff-direct-reads: bounded saving and team reads pass exact browser and unit checks with current ownership, retained drafts and protected commands."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/saving-fulfillment",
           "limitations": [
@@ -359620,6 +359671,11 @@
               "batch": "release-0.5-workspace-route-census",
               "base_commit": "7cf95f840a7e65c722f95b10e486bd02c435d498",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-workspace-route-census/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-staff-direct-reads",
+              "base_commit": "7cc237db497473c99d049a9e591ae9475aec6cde",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-direct-reads/source-binding.json"
             }
           ]
         }
@@ -359662,7 +359718,8 @@
           "release-0.5-query-and-command-completion",
           "release-0.5-form-and-document-accessibility",
           "release-0.5-route-adoption-matrix",
-          "release-0.5-workspace-route-census"
+          "release-0.5-workspace-route-census",
+          "release-0.5-staff-direct-reads"
         ],
         "current_acceptance": {
           "kind": "current-saving-fulfillment-and-terminal-history-acceptance",
@@ -359730,7 +359787,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "5c6ca7bdab586f44290acb1922c8ae0b3247a31cb5451fdd40b222019855d716"
+              "sha256": "7ef61b1eb9df59f55a7d9adcaad89d1bdbebc7dd8c25d091d9f88199db585a9d"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -360012,7 +360069,8 @@
             "Source bindings renewed by release-0.5-query-and-command-completion: affected owned read, permission, financial review and browser cases pass; writes/CSRF, original budget rules and financial assertions are preserved.",
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
             "Bindings renewed by release-0.5-route-adoption-matrix: the solar document action has a layout-only change, and the affected browser journeys and solar units pass with existing receipt, authority and financial assertions. Saving browser checks preserve their exact draft and refund assertions after the width probe.",
-            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass."
+            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
+            "Bindings renewed by release-0.5-staff-direct-reads: bounded saving and team reads pass exact browser and unit checks with current ownership, retained drafts and protected commands."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/saving-fulfillment",
           "limitations": [
@@ -360435,6 +360493,11 @@
               "batch": "release-0.5-workspace-route-census",
               "base_commit": "7cf95f840a7e65c722f95b10e486bd02c435d498",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-workspace-route-census/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-staff-direct-reads",
+              "base_commit": "7cc237db497473c99d049a9e591ae9475aec6cde",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-direct-reads/source-binding.json"
             }
           ]
         }
@@ -360473,7 +360536,8 @@
           "release-0.5-query-and-command-completion",
           "release-0.5-form-and-document-accessibility",
           "release-0.5-route-adoption-matrix",
-          "release-0.5-workspace-route-census"
+          "release-0.5-workspace-route-census",
+          "release-0.5-staff-direct-reads"
         ],
         "current_acceptance": {
           "kind": "current-saving-fulfillment-and-terminal-history-acceptance",
@@ -360541,7 +360605,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "5c6ca7bdab586f44290acb1922c8ae0b3247a31cb5451fdd40b222019855d716"
+              "sha256": "7ef61b1eb9df59f55a7d9adcaad89d1bdbebc7dd8c25d091d9f88199db585a9d"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -360823,7 +360887,8 @@
             "Source bindings renewed by release-0.5-query-and-command-completion: affected owned read, permission, financial review and browser cases pass; writes/CSRF, original budget rules and financial assertions are preserved.",
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
             "Bindings renewed by release-0.5-route-adoption-matrix: the solar document action has a layout-only change, and the affected browser journeys and solar units pass with existing receipt, authority and financial assertions. Saving browser checks preserve their exact draft and refund assertions after the width probe.",
-            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass."
+            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
+            "Bindings renewed by release-0.5-staff-direct-reads: bounded saving and team reads pass exact browser and unit checks with current ownership, retained drafts and protected commands."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/saving-fulfillment",
           "limitations": [
@@ -361246,6 +361311,11 @@
               "batch": "release-0.5-workspace-route-census",
               "base_commit": "7cf95f840a7e65c722f95b10e486bd02c435d498",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-workspace-route-census/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-staff-direct-reads",
+              "base_commit": "7cc237db497473c99d049a9e591ae9475aec6cde",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-direct-reads/source-binding.json"
             }
           ]
         }
@@ -361284,7 +361354,8 @@
           "release-0.5-query-and-command-completion",
           "release-0.5-form-and-document-accessibility",
           "release-0.5-route-adoption-matrix",
-          "release-0.5-workspace-route-census"
+          "release-0.5-workspace-route-census",
+          "release-0.5-staff-direct-reads"
         ],
         "current_acceptance": {
           "kind": "current-saving-fulfillment-and-terminal-history-acceptance",
@@ -361352,7 +361423,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "5c6ca7bdab586f44290acb1922c8ae0b3247a31cb5451fdd40b222019855d716"
+              "sha256": "7ef61b1eb9df59f55a7d9adcaad89d1bdbebc7dd8c25d091d9f88199db585a9d"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -361634,7 +361705,8 @@
             "Source bindings renewed by release-0.5-query-and-command-completion: affected owned read, permission, financial review and browser cases pass; writes/CSRF, original budget rules and financial assertions are preserved.",
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
             "Bindings renewed by release-0.5-route-adoption-matrix: the solar document action has a layout-only change, and the affected browser journeys and solar units pass with existing receipt, authority and financial assertions. Saving browser checks preserve their exact draft and refund assertions after the width probe.",
-            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass."
+            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
+            "Bindings renewed by release-0.5-staff-direct-reads: bounded saving and team reads pass exact browser and unit checks with current ownership, retained drafts and protected commands."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/saving-fulfillment",
           "limitations": [
@@ -362057,6 +362129,11 @@
               "batch": "release-0.5-workspace-route-census",
               "base_commit": "7cf95f840a7e65c722f95b10e486bd02c435d498",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-workspace-route-census/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-staff-direct-reads",
+              "base_commit": "7cc237db497473c99d049a9e591ae9475aec6cde",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-direct-reads/source-binding.json"
             }
           ]
         }
@@ -362094,7 +362171,8 @@
           "release-0.5-query-and-command-completion",
           "release-0.5-form-and-document-accessibility",
           "release-0.5-route-adoption-matrix",
-          "release-0.5-workspace-route-census"
+          "release-0.5-workspace-route-census",
+          "release-0.5-staff-direct-reads"
         ],
         "current_acceptance": {
           "kind": "current-saving-fulfillment-and-terminal-history-acceptance",
@@ -362162,7 +362240,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "5c6ca7bdab586f44290acb1922c8ae0b3247a31cb5451fdd40b222019855d716"
+              "sha256": "7ef61b1eb9df59f55a7d9adcaad89d1bdbebc7dd8c25d091d9f88199db585a9d"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -362444,7 +362522,8 @@
             "Source bindings renewed by release-0.5-query-and-command-completion: affected owned read, permission, financial review and browser cases pass; writes/CSRF, original budget rules and financial assertions are preserved.",
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
             "Bindings renewed by release-0.5-route-adoption-matrix: the solar document action has a layout-only change, and the affected browser journeys and solar units pass with existing receipt, authority and financial assertions. Saving browser checks preserve their exact draft and refund assertions after the width probe.",
-            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass."
+            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
+            "Bindings renewed by release-0.5-staff-direct-reads: bounded saving and team reads pass exact browser and unit checks with current ownership, retained drafts and protected commands."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/saving-fulfillment",
           "limitations": [
@@ -362867,6 +362946,11 @@
               "batch": "release-0.5-workspace-route-census",
               "base_commit": "7cf95f840a7e65c722f95b10e486bd02c435d498",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-workspace-route-census/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-staff-direct-reads",
+              "base_commit": "7cc237db497473c99d049a9e591ae9475aec6cde",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-direct-reads/source-binding.json"
             }
           ]
         }
@@ -401114,7 +401198,8 @@
           "release-0.5-route-state-closure",
           "release-0.5-measured-action-targets",
           "release-0.5-critical-accessibility-renewal",
-          "release-0.5-route-landmark-census"
+          "release-0.5-route-landmark-census",
+          "release-0.5-staff-direct-reads"
         ],
         "current_acceptance": {
           "kind": "accepted-all-applicable-order-review-wallet-disclosure",
@@ -401290,7 +401375,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "5c6ca7bdab586f44290acb1922c8ae0b3247a31cb5451fdd40b222019855d716"
+              "sha256": "7ef61b1eb9df59f55a7d9adcaad89d1bdbebc7dd8c25d091d9f88199db585a9d"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -401650,7 +401735,8 @@
             "Bindings renewed by release-0.5-route-state-closure: bounded reads, existing authorization and caller behavior checked with targeted units, browser journeys and original bundle limits.",
             "Bindings renewed by release-0.5-measured-action-targets: target sizing changes pass exact populated route browsers and scoped invoice, saving and customer-history ownership units. Navigation, authority, receipt and money behavior are unchanged.",
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
-            "Bindings renewed by release-0.5-route-landmark-census: the detail change is identifier wrapping and bidi isolation only. Existing exact receipt, authority, navigation and draft checks pass with the new populated layout assertions."
+            "Bindings renewed by release-0.5-route-landmark-census: the detail change is identifier wrapping and bidi isolation only. Existing exact receipt, authority, navigation and draft checks pass with the new populated layout assertions.",
+            "Bindings renewed by release-0.5-staff-direct-reads: bounded saving and team reads pass exact browser and unit checks with current ownership, retained drafts and protected commands."
           ],
           "criterion_result": "All applicable simple/advanced/saving order, electricity detail/revision/increase/price, saving detail/change/staff, consultation intake/offer/fee and solar intake/contract reviews display current available balance with existing wallet online/bank-receipt funding where an exact reviewed charge exceeds balance. Staff access requires current finance authorization; denied/malformed/stale reads never disclose old data or masquerade as zero. Existing authoritative wallet payment and confirmation/retry behavior retained.",
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/wallet-review-disclosure",
@@ -402361,6 +402447,11 @@
               "batch": "release-0.5-route-landmark-census",
               "base_commit": "d72707ba17e05d3f590c84080369963ba2655231",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-landmark-census/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-staff-direct-reads",
+              "base_commit": "7cc237db497473c99d049a9e591ae9475aec6cde",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-direct-reads/source-binding.json"
             }
           ]
         }
@@ -466628,7 +466719,8 @@
           "release-0.5-critical-accessibility-renewal",
           "release-0.5-route-landmark-census",
           "release-0.5-profile-lifecycle-feedback",
-          "release-0.5-solar-guidance-required"
+          "release-0.5-solar-guidance-required",
+          "release-0.5-staff-direct-reads"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -466948,7 +467040,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "5c6ca7bdab586f44290acb1922c8ae0b3247a31cb5451fdd40b222019855d716"
+              "sha256": "7ef61b1eb9df59f55a7d9adcaad89d1bdbebc7dd8c25d091d9f88199db585a9d"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -466968,7 +467060,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
-              "sha256": "ed8a2cd84c10f3ae60b53801ff4e7b39763bf1e94f601d0a521a0f21cbddf7ab"
+              "sha256": "ccb6a0080feda135d03ea1b4e5219ed9349547da4e19d6be3820df587cea4352"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -467226,7 +467318,8 @@
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
             "Bindings renewed by release-0.5-route-landmark-census: the detail change is identifier wrapping and bidi isolation only. Existing exact receipt, authority, navigation and draft checks pass with the new populated layout assertions.",
             "Bindings renewed by release-0.5-profile-lifecycle-feedback: exact lifecycle browsers and units verify timeout, current scope, protected consent, duplicate prevention and receipts after the bounded preview/feedback change.",
-            "Bindings renewed by release-0.5-solar-guidance-required: required announcements match existing staff guidance schemas; exact browser and unit checks preserve protected commands and receipts."
+            "Bindings renewed by release-0.5-solar-guidance-required: required announcements match existing staff guidance schemas; exact browser and unit checks preserve protected commands and receipts.",
+            "Bindings renewed by release-0.5-staff-direct-reads: bounded saving and team reads pass exact browser and unit checks with current ownership, retained drafts and protected commands."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-shared-component-closure",
           "limitations": [
@@ -467352,6 +467445,11 @@
               "batch": "release-0.5-solar-guidance-required",
               "base_commit": "0b6a6a6041390e201021c12bf829debe1492d73a",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-solar-guidance-required/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-staff-direct-reads",
+              "base_commit": "7cc237db497473c99d049a9e591ae9475aec6cde",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-direct-reads/source-binding.json"
             }
           ]
         },
@@ -469316,7 +469414,8 @@
           "release-0.5-critical-accessibility-renewal",
           "release-0.5-route-landmark-census",
           "release-0.5-profile-lifecycle-feedback",
-          "release-0.5-solar-guidance-required"
+          "release-0.5-solar-guidance-required",
+          "release-0.5-staff-direct-reads"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -469364,7 +469463,7 @@
             },
             {
               "path": "apps/web/e2e/staff-directory-recovery.spec.ts",
-              "sha256": "4b4beeb4f1cd11d92f3e051a33ed92da31d998fc3c2a7c321a8906e9e653422c"
+              "sha256": "3e4c7f173f3d6bdeb425227d8bb7011a51cb8539f1c7d3c4f1b277f38430c8a2"
             },
             {
               "path": "apps/web/e2e/staff-invoice-receipt-views.spec.ts",
@@ -469652,7 +469751,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "5c6ca7bdab586f44290acb1922c8ae0b3247a31cb5451fdd40b222019855d716"
+              "sha256": "7ef61b1eb9df59f55a7d9adcaad89d1bdbebc7dd8c25d091d9f88199db585a9d"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -469668,7 +469767,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
-              "sha256": "ed8a2cd84c10f3ae60b53801ff4e7b39763bf1e94f601d0a521a0f21cbddf7ab"
+              "sha256": "ccb6a0080feda135d03ea1b4e5219ed9349547da4e19d6be3820df587cea4352"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -469823,7 +469922,8 @@
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
             "Bindings renewed by release-0.5-route-landmark-census: the detail change is identifier wrapping and bidi isolation only. Existing exact receipt, authority, navigation and draft checks pass with the new populated layout assertions.",
             "Bindings renewed by release-0.5-profile-lifecycle-feedback: exact lifecycle browsers and units verify timeout, current scope, protected consent, duplicate prevention and receipts after the bounded preview/feedback change.",
-            "Bindings renewed by release-0.5-solar-guidance-required: required announcements match existing staff guidance schemas; exact browser and unit checks preserve protected commands and receipts."
+            "Bindings renewed by release-0.5-solar-guidance-required: required announcements match existing staff guidance schemas; exact browser and unit checks preserve protected commands and receipts.",
+            "Bindings renewed by release-0.5-staff-direct-reads: bounded saving and team reads pass exact browser and unit checks with current ownership, retained drafts and protected commands."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-lists-and-receipts",
           "limitations": [
@@ -469904,6 +470004,11 @@
               "batch": "release-0.5-solar-guidance-required",
               "base_commit": "0b6a6a6041390e201021c12bf829debe1492d73a",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-solar-guidance-required/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-staff-direct-reads",
+              "base_commit": "7cc237db497473c99d049a9e591ae9475aec6cde",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-direct-reads/source-binding.json"
             }
           ]
         }
@@ -470017,7 +470122,8 @@
           "release-0.5-critical-accessibility-renewal",
           "release-0.5-route-landmark-census",
           "release-0.5-profile-lifecycle-feedback",
-          "release-0.5-solar-guidance-required"
+          "release-0.5-solar-guidance-required",
+          "release-0.5-staff-direct-reads"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -470065,7 +470171,7 @@
             },
             {
               "path": "apps/web/e2e/staff-directory-recovery.spec.ts",
-              "sha256": "4b4beeb4f1cd11d92f3e051a33ed92da31d998fc3c2a7c321a8906e9e653422c"
+              "sha256": "3e4c7f173f3d6bdeb425227d8bb7011a51cb8539f1c7d3c4f1b277f38430c8a2"
             },
             {
               "path": "apps/web/e2e/staff-invoice-receipt-views.spec.ts",
@@ -470353,7 +470459,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "5c6ca7bdab586f44290acb1922c8ae0b3247a31cb5451fdd40b222019855d716"
+              "sha256": "7ef61b1eb9df59f55a7d9adcaad89d1bdbebc7dd8c25d091d9f88199db585a9d"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -470369,7 +470475,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
-              "sha256": "ed8a2cd84c10f3ae60b53801ff4e7b39763bf1e94f601d0a521a0f21cbddf7ab"
+              "sha256": "ccb6a0080feda135d03ea1b4e5219ed9349547da4e19d6be3820df587cea4352"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -470524,7 +470630,8 @@
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
             "Bindings renewed by release-0.5-route-landmark-census: the detail change is identifier wrapping and bidi isolation only. Existing exact receipt, authority, navigation and draft checks pass with the new populated layout assertions.",
             "Bindings renewed by release-0.5-profile-lifecycle-feedback: exact lifecycle browsers and units verify timeout, current scope, protected consent, duplicate prevention and receipts after the bounded preview/feedback change.",
-            "Bindings renewed by release-0.5-solar-guidance-required: required announcements match existing staff guidance schemas; exact browser and unit checks preserve protected commands and receipts."
+            "Bindings renewed by release-0.5-solar-guidance-required: required announcements match existing staff guidance schemas; exact browser and unit checks preserve protected commands and receipts.",
+            "Bindings renewed by release-0.5-staff-direct-reads: bounded saving and team reads pass exact browser and unit checks with current ownership, retained drafts and protected commands."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-lists-and-receipts",
           "limitations": [
@@ -470605,6 +470712,11 @@
               "batch": "release-0.5-solar-guidance-required",
               "base_commit": "0b6a6a6041390e201021c12bf829debe1492d73a",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-solar-guidance-required/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-staff-direct-reads",
+              "base_commit": "7cc237db497473c99d049a9e591ae9475aec6cde",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-direct-reads/source-binding.json"
             }
           ]
         }
@@ -470659,7 +470771,8 @@
           "release-0.5-critical-accessibility-renewal",
           "release-0.5-route-landmark-census",
           "release-0.5-profile-lifecycle-feedback",
-          "release-0.5-solar-guidance-required"
+          "release-0.5-solar-guidance-required",
+          "release-0.5-staff-direct-reads"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -470707,7 +470820,7 @@
             },
             {
               "path": "apps/web/e2e/staff-directory-recovery.spec.ts",
-              "sha256": "4b4beeb4f1cd11d92f3e051a33ed92da31d998fc3c2a7c321a8906e9e653422c"
+              "sha256": "3e4c7f173f3d6bdeb425227d8bb7011a51cb8539f1c7d3c4f1b277f38430c8a2"
             },
             {
               "path": "apps/web/e2e/staff-invoice-receipt-views.spec.ts",
@@ -470995,7 +471108,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "5c6ca7bdab586f44290acb1922c8ae0b3247a31cb5451fdd40b222019855d716"
+              "sha256": "7ef61b1eb9df59f55a7d9adcaad89d1bdbebc7dd8c25d091d9f88199db585a9d"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -471011,7 +471124,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
-              "sha256": "ed8a2cd84c10f3ae60b53801ff4e7b39763bf1e94f601d0a521a0f21cbddf7ab"
+              "sha256": "ccb6a0080feda135d03ea1b4e5219ed9349547da4e19d6be3820df587cea4352"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -471166,7 +471279,8 @@
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
             "Bindings renewed by release-0.5-route-landmark-census: the detail change is identifier wrapping and bidi isolation only. Existing exact receipt, authority, navigation and draft checks pass with the new populated layout assertions.",
             "Bindings renewed by release-0.5-profile-lifecycle-feedback: exact lifecycle browsers and units verify timeout, current scope, protected consent, duplicate prevention and receipts after the bounded preview/feedback change.",
-            "Bindings renewed by release-0.5-solar-guidance-required: required announcements match existing staff guidance schemas; exact browser and unit checks preserve protected commands and receipts."
+            "Bindings renewed by release-0.5-solar-guidance-required: required announcements match existing staff guidance schemas; exact browser and unit checks preserve protected commands and receipts.",
+            "Bindings renewed by release-0.5-staff-direct-reads: bounded saving and team reads pass exact browser and unit checks with current ownership, retained drafts and protected commands."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-lists-and-receipts",
           "limitations": [
@@ -471247,6 +471361,11 @@
               "batch": "release-0.5-solar-guidance-required",
               "base_commit": "0b6a6a6041390e201021c12bf829debe1492d73a",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-solar-guidance-required/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-staff-direct-reads",
+              "base_commit": "7cc237db497473c99d049a9e591ae9475aec6cde",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-direct-reads/source-binding.json"
             }
           ]
         }
@@ -471358,7 +471477,8 @@
           "release-0.5-required-form-and-action-closure",
           "release-0.5-measured-action-targets",
           "release-0.5-critical-accessibility-renewal",
-          "release-0.5-solar-guidance-required"
+          "release-0.5-solar-guidance-required",
+          "release-0.5-staff-direct-reads"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -471642,7 +471762,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "5c6ca7bdab586f44290acb1922c8ae0b3247a31cb5451fdd40b222019855d716"
+              "sha256": "7ef61b1eb9df59f55a7d9adcaad89d1bdbebc7dd8c25d091d9f88199db585a9d"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -471658,7 +471778,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
-              "sha256": "ed8a2cd84c10f3ae60b53801ff4e7b39763bf1e94f601d0a521a0f21cbddf7ab"
+              "sha256": "ccb6a0080feda135d03ea1b4e5219ed9349547da4e19d6be3820df587cea4352"
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.tsx",
@@ -471831,7 +471951,8 @@
             "Bindings renewed by release-0.5-required-form-and-action-closure: required announcements and a native label target changed; solar and cancellation behavior, current authority, exact command and receipt assertions pass on the matching production build.",
             "Bindings renewed by release-0.5-measured-action-targets: target sizing changes pass exact populated route browsers and scoped invoice, saving and customer-history ownership units. Navigation, authority, receipt and money behavior are unchanged.",
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
-            "Bindings renewed by release-0.5-solar-guidance-required: required announcements match existing staff guidance schemas; exact browser and unit checks preserve protected commands and receipts."
+            "Bindings renewed by release-0.5-solar-guidance-required: required announcements match existing staff guidance schemas; exact browser and unit checks preserve protected commands and receipts.",
+            "Bindings renewed by release-0.5-staff-direct-reads: bounded saving and team reads pass exact browser and unit checks with current ownership, retained drafts and protected commands."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-query-and-command-completion",
           "limitations": [
@@ -471902,6 +472023,11 @@
               "batch": "release-0.5-solar-guidance-required",
               "base_commit": "0b6a6a6041390e201021c12bf829debe1492d73a",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-solar-guidance-required/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-staff-direct-reads",
+              "base_commit": "7cc237db497473c99d049a9e591ae9475aec6cde",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-direct-reads/source-binding.json"
             }
           ]
         }
@@ -483111,7 +483237,8 @@
           "release-0.5-route-state-closure",
           "release-0.5-safari-main-keyboard",
           "release-0.5-measured-action-targets",
-          "release-0.5-critical-accessibility-renewal"
+          "release-0.5-critical-accessibility-renewal",
+          "release-0.5-staff-direct-reads"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -483375,7 +483502,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
-              "sha256": "ed8a2cd84c10f3ae60b53801ff4e7b39763bf1e94f601d0a521a0f21cbddf7ab"
+              "sha256": "ccb6a0080feda135d03ea1b4e5219ed9349547da4e19d6be3820df587cea4352"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -483505,7 +483632,8 @@
             "Bindings renewed by release-0.5-route-state-closure: bounded reads, existing authorization and caller behavior checked with targeted units, browser journeys and original bundle limits.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
             "Bindings renewed by release-0.5-measured-action-targets: target sizing changes pass exact populated route browsers and scoped invoice, saving and customer-history ownership units. Navigation, authority, receipt and money behavior are unchanged.",
-            "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions."
+            "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
+            "Bindings renewed by release-0.5-staff-direct-reads: bounded saving and team reads pass exact browser and unit checks with current ownership, retained drafts and protected commands."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-mobile-lists-and-touch",
           "limitations": [
@@ -483566,6 +483694,11 @@
               "batch": "release-0.5-critical-accessibility-renewal",
               "base_commit": "5f05d6d3244b0e124ae2b56073fa873ee035be03",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-accessibility-renewal/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-staff-direct-reads",
+              "base_commit": "7cc237db497473c99d049a9e591ae9475aec6cde",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-direct-reads/source-binding.json"
             }
           ]
         }
@@ -527093,7 +527226,8 @@
           "release-0.5-safari-main-keyboard",
           "release-0.5-critical-accessibility-renewal",
           "release-0.5-route-landmark-census",
-          "release-0.5-workspace-route-census"
+          "release-0.5-workspace-route-census",
+          "release-0.5-staff-direct-reads"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -527641,7 +527775,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
-              "sha256": "ed8a2cd84c10f3ae60b53801ff4e7b39763bf1e94f601d0a521a0f21cbddf7ab"
+              "sha256": "ccb6a0080feda135d03ea1b4e5219ed9349547da4e19d6be3820df587cea4352"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -528602,7 +528736,8 @@
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
             "Bindings renewed by release-0.5-route-landmark-census: the detail change is identifier wrapping and bidi isolation only. Existing exact receipt, authority, navigation and draft checks pass with the new populated layout assertions.",
-            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass."
+            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
+            "Bindings renewed by release-0.5-staff-direct-reads: bounded saving and team reads pass exact browser and unit checks with current ownership, retained drafts and protected commands."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-recovery-journey",
           "limitations": [
@@ -528688,6 +528823,11 @@
               "batch": "release-0.5-workspace-route-census",
               "base_commit": "7cf95f840a7e65c722f95b10e486bd02c435d498",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-workspace-route-census/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-staff-direct-reads",
+              "base_commit": "7cc237db497473c99d049a9e591ae9475aec6cde",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-direct-reads/source-binding.json"
             }
           ]
         }
@@ -528730,7 +528870,8 @@
           "release-0.5-safari-main-keyboard",
           "release-0.5-critical-accessibility-renewal",
           "release-0.5-route-landmark-census",
-          "release-0.5-workspace-route-census"
+          "release-0.5-workspace-route-census",
+          "release-0.5-staff-direct-reads"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -529278,7 +529419,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
-              "sha256": "ed8a2cd84c10f3ae60b53801ff4e7b39763bf1e94f601d0a521a0f21cbddf7ab"
+              "sha256": "ccb6a0080feda135d03ea1b4e5219ed9349547da4e19d6be3820df587cea4352"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -530239,7 +530380,8 @@
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
             "Bindings renewed by release-0.5-route-landmark-census: the detail change is identifier wrapping and bidi isolation only. Existing exact receipt, authority, navigation and draft checks pass with the new populated layout assertions.",
-            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass."
+            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
+            "Bindings renewed by release-0.5-staff-direct-reads: bounded saving and team reads pass exact browser and unit checks with current ownership, retained drafts and protected commands."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-recovery-journey",
           "limitations": [
@@ -530325,6 +530467,11 @@
               "batch": "release-0.5-workspace-route-census",
               "base_commit": "7cf95f840a7e65c722f95b10e486bd02c435d498",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-workspace-route-census/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-staff-direct-reads",
+              "base_commit": "7cc237db497473c99d049a9e591ae9475aec6cde",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-direct-reads/source-binding.json"
             }
           ]
         }
@@ -530399,7 +530546,8 @@
           "release-0.5-safari-main-keyboard",
           "release-0.5-critical-accessibility-renewal",
           "release-0.5-route-landmark-census",
-          "release-0.5-workspace-route-census"
+          "release-0.5-workspace-route-census",
+          "release-0.5-staff-direct-reads"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -530947,7 +531095,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
-              "sha256": "ed8a2cd84c10f3ae60b53801ff4e7b39763bf1e94f601d0a521a0f21cbddf7ab"
+              "sha256": "ccb6a0080feda135d03ea1b4e5219ed9349547da4e19d6be3820df587cea4352"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -531908,7 +532056,8 @@
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
             "Bindings renewed by release-0.5-route-landmark-census: the detail change is identifier wrapping and bidi isolation only. Existing exact receipt, authority, navigation and draft checks pass with the new populated layout assertions.",
-            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass."
+            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
+            "Bindings renewed by release-0.5-staff-direct-reads: bounded saving and team reads pass exact browser and unit checks with current ownership, retained drafts and protected commands."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-recovery-journey",
           "limitations": [
@@ -531994,6 +532143,11 @@
               "batch": "release-0.5-workspace-route-census",
               "base_commit": "7cf95f840a7e65c722f95b10e486bd02c435d498",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-workspace-route-census/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-staff-direct-reads",
+              "base_commit": "7cc237db497473c99d049a9e591ae9475aec6cde",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-direct-reads/source-binding.json"
             }
           ]
         }
@@ -532036,7 +532190,8 @@
           "release-0.5-safari-main-keyboard",
           "release-0.5-critical-accessibility-renewal",
           "release-0.5-route-landmark-census",
-          "release-0.5-workspace-route-census"
+          "release-0.5-workspace-route-census",
+          "release-0.5-staff-direct-reads"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -532584,7 +532739,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
-              "sha256": "ed8a2cd84c10f3ae60b53801ff4e7b39763bf1e94f601d0a521a0f21cbddf7ab"
+              "sha256": "ccb6a0080feda135d03ea1b4e5219ed9349547da4e19d6be3820df587cea4352"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -533545,7 +533700,8 @@
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
             "Bindings renewed by release-0.5-route-landmark-census: the detail change is identifier wrapping and bidi isolation only. Existing exact receipt, authority, navigation and draft checks pass with the new populated layout assertions.",
-            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass."
+            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
+            "Bindings renewed by release-0.5-staff-direct-reads: bounded saving and team reads pass exact browser and unit checks with current ownership, retained drafts and protected commands."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-recovery-journey",
           "limitations": [
@@ -533631,6 +533787,11 @@
               "batch": "release-0.5-workspace-route-census",
               "base_commit": "7cf95f840a7e65c722f95b10e486bd02c435d498",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-workspace-route-census/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-staff-direct-reads",
+              "base_commit": "7cc237db497473c99d049a9e591ae9475aec6cde",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-direct-reads/source-binding.json"
             }
           ]
         }
@@ -533673,7 +533834,8 @@
           "release-0.5-safari-main-keyboard",
           "release-0.5-critical-accessibility-renewal",
           "release-0.5-route-landmark-census",
-          "release-0.5-workspace-route-census"
+          "release-0.5-workspace-route-census",
+          "release-0.5-staff-direct-reads"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -534221,7 +534383,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
-              "sha256": "ed8a2cd84c10f3ae60b53801ff4e7b39763bf1e94f601d0a521a0f21cbddf7ab"
+              "sha256": "ccb6a0080feda135d03ea1b4e5219ed9349547da4e19d6be3820df587cea4352"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -535182,7 +535344,8 @@
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
             "Bindings renewed by release-0.5-route-landmark-census: the detail change is identifier wrapping and bidi isolation only. Existing exact receipt, authority, navigation and draft checks pass with the new populated layout assertions.",
-            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass."
+            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
+            "Bindings renewed by release-0.5-staff-direct-reads: bounded saving and team reads pass exact browser and unit checks with current ownership, retained drafts and protected commands."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-recovery-journey",
           "limitations": [
@@ -535268,6 +535431,11 @@
               "batch": "release-0.5-workspace-route-census",
               "base_commit": "7cf95f840a7e65c722f95b10e486bd02c435d498",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-workspace-route-census/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-staff-direct-reads",
+              "base_commit": "7cc237db497473c99d049a9e591ae9475aec6cde",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-direct-reads/source-binding.json"
             }
           ]
         }
@@ -535310,7 +535478,8 @@
           "release-0.5-safari-main-keyboard",
           "release-0.5-critical-accessibility-renewal",
           "release-0.5-route-landmark-census",
-          "release-0.5-workspace-route-census"
+          "release-0.5-workspace-route-census",
+          "release-0.5-staff-direct-reads"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -535858,7 +536027,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
-              "sha256": "ed8a2cd84c10f3ae60b53801ff4e7b39763bf1e94f601d0a521a0f21cbddf7ab"
+              "sha256": "ccb6a0080feda135d03ea1b4e5219ed9349547da4e19d6be3820df587cea4352"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -536819,7 +536988,8 @@
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
             "Bindings renewed by release-0.5-route-landmark-census: the detail change is identifier wrapping and bidi isolation only. Existing exact receipt, authority, navigation and draft checks pass with the new populated layout assertions.",
-            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass."
+            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
+            "Bindings renewed by release-0.5-staff-direct-reads: bounded saving and team reads pass exact browser and unit checks with current ownership, retained drafts and protected commands."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-recovery-journey",
           "limitations": [
@@ -536905,6 +537075,11 @@
               "batch": "release-0.5-workspace-route-census",
               "base_commit": "7cf95f840a7e65c722f95b10e486bd02c435d498",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-workspace-route-census/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-staff-direct-reads",
+              "base_commit": "7cc237db497473c99d049a9e591ae9475aec6cde",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-direct-reads/source-binding.json"
             }
           ]
         }
@@ -536947,7 +537122,8 @@
           "release-0.5-safari-main-keyboard",
           "release-0.5-critical-accessibility-renewal",
           "release-0.5-route-landmark-census",
-          "release-0.5-workspace-route-census"
+          "release-0.5-workspace-route-census",
+          "release-0.5-staff-direct-reads"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -537495,7 +537671,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
-              "sha256": "ed8a2cd84c10f3ae60b53801ff4e7b39763bf1e94f601d0a521a0f21cbddf7ab"
+              "sha256": "ccb6a0080feda135d03ea1b4e5219ed9349547da4e19d6be3820df587cea4352"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -538456,7 +538632,8 @@
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
             "Bindings renewed by release-0.5-route-landmark-census: the detail change is identifier wrapping and bidi isolation only. Existing exact receipt, authority, navigation and draft checks pass with the new populated layout assertions.",
-            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass."
+            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
+            "Bindings renewed by release-0.5-staff-direct-reads: bounded saving and team reads pass exact browser and unit checks with current ownership, retained drafts and protected commands."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-recovery-journey",
           "limitations": [
@@ -538542,6 +538719,11 @@
               "batch": "release-0.5-workspace-route-census",
               "base_commit": "7cf95f840a7e65c722f95b10e486bd02c435d498",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-workspace-route-census/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-staff-direct-reads",
+              "base_commit": "7cc237db497473c99d049a9e591ae9475aec6cde",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-direct-reads/source-binding.json"
             }
           ]
         }
@@ -538584,7 +538766,8 @@
           "release-0.5-safari-main-keyboard",
           "release-0.5-critical-accessibility-renewal",
           "release-0.5-route-landmark-census",
-          "release-0.5-workspace-route-census"
+          "release-0.5-workspace-route-census",
+          "release-0.5-staff-direct-reads"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -539132,7 +539315,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
-              "sha256": "ed8a2cd84c10f3ae60b53801ff4e7b39763bf1e94f601d0a521a0f21cbddf7ab"
+              "sha256": "ccb6a0080feda135d03ea1b4e5219ed9349547da4e19d6be3820df587cea4352"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -540093,7 +540276,8 @@
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
             "Bindings renewed by release-0.5-route-landmark-census: the detail change is identifier wrapping and bidi isolation only. Existing exact receipt, authority, navigation and draft checks pass with the new populated layout assertions.",
-            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass."
+            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
+            "Bindings renewed by release-0.5-staff-direct-reads: bounded saving and team reads pass exact browser and unit checks with current ownership, retained drafts and protected commands."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-recovery-journey",
           "limitations": [
@@ -540179,6 +540363,11 @@
               "batch": "release-0.5-workspace-route-census",
               "base_commit": "7cf95f840a7e65c722f95b10e486bd02c435d498",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-workspace-route-census/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-staff-direct-reads",
+              "base_commit": "7cc237db497473c99d049a9e591ae9475aec6cde",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-direct-reads/source-binding.json"
             }
           ]
         }
@@ -540221,7 +540410,8 @@
           "release-0.5-safari-main-keyboard",
           "release-0.5-critical-accessibility-renewal",
           "release-0.5-route-landmark-census",
-          "release-0.5-workspace-route-census"
+          "release-0.5-workspace-route-census",
+          "release-0.5-staff-direct-reads"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -540769,7 +540959,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
-              "sha256": "ed8a2cd84c10f3ae60b53801ff4e7b39763bf1e94f601d0a521a0f21cbddf7ab"
+              "sha256": "ccb6a0080feda135d03ea1b4e5219ed9349547da4e19d6be3820df587cea4352"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -541730,7 +541920,8 @@
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
             "Bindings renewed by release-0.5-route-landmark-census: the detail change is identifier wrapping and bidi isolation only. Existing exact receipt, authority, navigation and draft checks pass with the new populated layout assertions.",
-            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass."
+            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
+            "Bindings renewed by release-0.5-staff-direct-reads: bounded saving and team reads pass exact browser and unit checks with current ownership, retained drafts and protected commands."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-recovery-journey",
           "limitations": [
@@ -541816,6 +542007,11 @@
               "batch": "release-0.5-workspace-route-census",
               "base_commit": "7cf95f840a7e65c722f95b10e486bd02c435d498",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-workspace-route-census/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-staff-direct-reads",
+              "base_commit": "7cc237db497473c99d049a9e591ae9475aec6cde",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-direct-reads/source-binding.json"
             }
           ]
         }
@@ -541858,7 +542054,8 @@
           "release-0.5-safari-main-keyboard",
           "release-0.5-critical-accessibility-renewal",
           "release-0.5-route-landmark-census",
-          "release-0.5-workspace-route-census"
+          "release-0.5-workspace-route-census",
+          "release-0.5-staff-direct-reads"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -542406,7 +542603,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
-              "sha256": "ed8a2cd84c10f3ae60b53801ff4e7b39763bf1e94f601d0a521a0f21cbddf7ab"
+              "sha256": "ccb6a0080feda135d03ea1b4e5219ed9349547da4e19d6be3820df587cea4352"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -543367,7 +543564,8 @@
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
             "Bindings renewed by release-0.5-route-landmark-census: the detail change is identifier wrapping and bidi isolation only. Existing exact receipt, authority, navigation and draft checks pass with the new populated layout assertions.",
-            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass."
+            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
+            "Bindings renewed by release-0.5-staff-direct-reads: bounded saving and team reads pass exact browser and unit checks with current ownership, retained drafts and protected commands."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-recovery-journey",
           "limitations": [
@@ -543453,6 +543651,11 @@
               "batch": "release-0.5-workspace-route-census",
               "base_commit": "7cf95f840a7e65c722f95b10e486bd02c435d498",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-workspace-route-census/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-staff-direct-reads",
+              "base_commit": "7cc237db497473c99d049a9e591ae9475aec6cde",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-direct-reads/source-binding.json"
             }
           ]
         }
@@ -543495,7 +543698,8 @@
           "release-0.5-safari-main-keyboard",
           "release-0.5-critical-accessibility-renewal",
           "release-0.5-route-landmark-census",
-          "release-0.5-workspace-route-census"
+          "release-0.5-workspace-route-census",
+          "release-0.5-staff-direct-reads"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -544043,7 +544247,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
-              "sha256": "ed8a2cd84c10f3ae60b53801ff4e7b39763bf1e94f601d0a521a0f21cbddf7ab"
+              "sha256": "ccb6a0080feda135d03ea1b4e5219ed9349547da4e19d6be3820df587cea4352"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -545004,7 +545208,8 @@
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
             "Bindings renewed by release-0.5-route-landmark-census: the detail change is identifier wrapping and bidi isolation only. Existing exact receipt, authority, navigation and draft checks pass with the new populated layout assertions.",
-            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass."
+            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
+            "Bindings renewed by release-0.5-staff-direct-reads: bounded saving and team reads pass exact browser and unit checks with current ownership, retained drafts and protected commands."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-recovery-journey",
           "limitations": [
@@ -545090,6 +545295,11 @@
               "batch": "release-0.5-workspace-route-census",
               "base_commit": "7cf95f840a7e65c722f95b10e486bd02c435d498",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-workspace-route-census/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-staff-direct-reads",
+              "base_commit": "7cc237db497473c99d049a9e591ae9475aec6cde",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-direct-reads/source-binding.json"
             }
           ]
         }
@@ -545132,7 +545342,8 @@
           "release-0.5-safari-main-keyboard",
           "release-0.5-critical-accessibility-renewal",
           "release-0.5-route-landmark-census",
-          "release-0.5-workspace-route-census"
+          "release-0.5-workspace-route-census",
+          "release-0.5-staff-direct-reads"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -545680,7 +545891,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
-              "sha256": "ed8a2cd84c10f3ae60b53801ff4e7b39763bf1e94f601d0a521a0f21cbddf7ab"
+              "sha256": "ccb6a0080feda135d03ea1b4e5219ed9349547da4e19d6be3820df587cea4352"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -546641,7 +546852,8 @@
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
             "Bindings renewed by release-0.5-route-landmark-census: the detail change is identifier wrapping and bidi isolation only. Existing exact receipt, authority, navigation and draft checks pass with the new populated layout assertions.",
-            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass."
+            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
+            "Bindings renewed by release-0.5-staff-direct-reads: bounded saving and team reads pass exact browser and unit checks with current ownership, retained drafts and protected commands."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-recovery-journey",
           "limitations": [
@@ -546727,6 +546939,11 @@
               "batch": "release-0.5-workspace-route-census",
               "base_commit": "7cf95f840a7e65c722f95b10e486bd02c435d498",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-workspace-route-census/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-staff-direct-reads",
+              "base_commit": "7cc237db497473c99d049a9e591ae9475aec6cde",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-direct-reads/source-binding.json"
             }
           ]
         }
@@ -546769,7 +546986,8 @@
           "release-0.5-safari-main-keyboard",
           "release-0.5-critical-accessibility-renewal",
           "release-0.5-route-landmark-census",
-          "release-0.5-workspace-route-census"
+          "release-0.5-workspace-route-census",
+          "release-0.5-staff-direct-reads"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -547317,7 +547535,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
-              "sha256": "ed8a2cd84c10f3ae60b53801ff4e7b39763bf1e94f601d0a521a0f21cbddf7ab"
+              "sha256": "ccb6a0080feda135d03ea1b4e5219ed9349547da4e19d6be3820df587cea4352"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -548278,7 +548496,8 @@
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
             "Bindings renewed by release-0.5-route-landmark-census: the detail change is identifier wrapping and bidi isolation only. Existing exact receipt, authority, navigation and draft checks pass with the new populated layout assertions.",
-            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass."
+            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
+            "Bindings renewed by release-0.5-staff-direct-reads: bounded saving and team reads pass exact browser and unit checks with current ownership, retained drafts and protected commands."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-recovery-journey",
           "limitations": [
@@ -548364,6 +548583,11 @@
               "batch": "release-0.5-workspace-route-census",
               "base_commit": "7cf95f840a7e65c722f95b10e486bd02c435d498",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-workspace-route-census/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-staff-direct-reads",
+              "base_commit": "7cc237db497473c99d049a9e591ae9475aec6cde",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-direct-reads/source-binding.json"
             }
           ]
         }
@@ -548404,7 +548628,8 @@
           "release-0.5-required-form-and-action-closure",
           "release-0.5-measured-action-targets",
           "release-0.5-critical-accessibility-renewal",
-          "release-0.5-solar-guidance-required"
+          "release-0.5-solar-guidance-required",
+          "release-0.5-staff-direct-reads"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -548688,7 +548913,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "5c6ca7bdab586f44290acb1922c8ae0b3247a31cb5451fdd40b222019855d716"
+              "sha256": "7ef61b1eb9df59f55a7d9adcaad89d1bdbebc7dd8c25d091d9f88199db585a9d"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -548704,7 +548929,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
-              "sha256": "ed8a2cd84c10f3ae60b53801ff4e7b39763bf1e94f601d0a521a0f21cbddf7ab"
+              "sha256": "ccb6a0080feda135d03ea1b4e5219ed9349547da4e19d6be3820df587cea4352"
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.tsx",
@@ -548877,7 +549102,8 @@
             "Bindings renewed by release-0.5-required-form-and-action-closure: required announcements and a native label target changed; solar and cancellation behavior, current authority, exact command and receipt assertions pass on the matching production build.",
             "Bindings renewed by release-0.5-measured-action-targets: target sizing changes pass exact populated route browsers and scoped invoice, saving and customer-history ownership units. Navigation, authority, receipt and money behavior are unchanged.",
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
-            "Bindings renewed by release-0.5-solar-guidance-required: required announcements match existing staff guidance schemas; exact browser and unit checks preserve protected commands and receipts."
+            "Bindings renewed by release-0.5-solar-guidance-required: required announcements match existing staff guidance schemas; exact browser and unit checks preserve protected commands and receipts.",
+            "Bindings renewed by release-0.5-staff-direct-reads: bounded saving and team reads pass exact browser and unit checks with current ownership, retained drafts and protected commands."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-query-and-command-completion",
           "limitations": [
@@ -548948,6 +549174,11 @@
               "batch": "release-0.5-solar-guidance-required",
               "base_commit": "0b6a6a6041390e201021c12bf829debe1492d73a",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-solar-guidance-required/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-staff-direct-reads",
+              "base_commit": "7cc237db497473c99d049a9e591ae9475aec6cde",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-direct-reads/source-binding.json"
             }
           ]
         }
@@ -548990,7 +549221,8 @@
           "release-0.5-safari-main-keyboard",
           "release-0.5-critical-accessibility-renewal",
           "release-0.5-route-landmark-census",
-          "release-0.5-workspace-route-census"
+          "release-0.5-workspace-route-census",
+          "release-0.5-staff-direct-reads"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -549538,7 +549770,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
-              "sha256": "ed8a2cd84c10f3ae60b53801ff4e7b39763bf1e94f601d0a521a0f21cbddf7ab"
+              "sha256": "ccb6a0080feda135d03ea1b4e5219ed9349547da4e19d6be3820df587cea4352"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -550499,7 +550731,8 @@
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
             "Bindings renewed by release-0.5-route-landmark-census: the detail change is identifier wrapping and bidi isolation only. Existing exact receipt, authority, navigation and draft checks pass with the new populated layout assertions.",
-            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass."
+            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
+            "Bindings renewed by release-0.5-staff-direct-reads: bounded saving and team reads pass exact browser and unit checks with current ownership, retained drafts and protected commands."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-recovery-journey",
           "limitations": [
@@ -550585,6 +550818,11 @@
               "batch": "release-0.5-workspace-route-census",
               "base_commit": "7cf95f840a7e65c722f95b10e486bd02c435d498",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-workspace-route-census/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-staff-direct-reads",
+              "base_commit": "7cc237db497473c99d049a9e591ae9475aec6cde",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-direct-reads/source-binding.json"
             }
           ]
         }
@@ -550627,7 +550865,8 @@
           "release-0.5-safari-main-keyboard",
           "release-0.5-critical-accessibility-renewal",
           "release-0.5-route-landmark-census",
-          "release-0.5-workspace-route-census"
+          "release-0.5-workspace-route-census",
+          "release-0.5-staff-direct-reads"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -551175,7 +551414,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
-              "sha256": "ed8a2cd84c10f3ae60b53801ff4e7b39763bf1e94f601d0a521a0f21cbddf7ab"
+              "sha256": "ccb6a0080feda135d03ea1b4e5219ed9349547da4e19d6be3820df587cea4352"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -552136,7 +552375,8 @@
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
             "Bindings renewed by release-0.5-route-landmark-census: the detail change is identifier wrapping and bidi isolation only. Existing exact receipt, authority, navigation and draft checks pass with the new populated layout assertions.",
-            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass."
+            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
+            "Bindings renewed by release-0.5-staff-direct-reads: bounded saving and team reads pass exact browser and unit checks with current ownership, retained drafts and protected commands."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-recovery-journey",
           "limitations": [
@@ -552222,6 +552462,11 @@
               "batch": "release-0.5-workspace-route-census",
               "base_commit": "7cf95f840a7e65c722f95b10e486bd02c435d498",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-workspace-route-census/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-staff-direct-reads",
+              "base_commit": "7cc237db497473c99d049a9e591ae9475aec6cde",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-direct-reads/source-binding.json"
             }
           ]
         }
@@ -552242,7 +552487,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Profile lifecycle and staff closure previews now join the bounded shared reads. Their timeout, disabled writes and fresh retry are verified. Audit remaining direct admin and detail reads for a demonstrated missing timeout or recovery action."
+        "Saving staff queue/detail and team member/routing reads now time out and retry safely, alongside previous profile lifecycle, customer histories and other shared readers. Audit other direct owners, starting with staff terms draft/version and history reads."
       ],
       "owner": null,
       "depends_on": [],
@@ -552253,7 +552498,8 @@
           "release-0.5-notification-recovery-journey",
           "release-0.5-route-fallback-and-announcement",
           "release-0.5-route-state-closure",
-          "release-0.5-profile-lifecycle-feedback"
+          "release-0.5-profile-lifecycle-feedback",
+          "release-0.5-staff-direct-reads"
         ],
         "current_acceptance": null
       }
@@ -586072,7 +586318,8 @@
           "release-0.5-measured-action-targets",
           "release-0.5-critical-accessibility-renewal",
           "release-0.5-workspace-route-census",
-          "release-0.5-solar-guidance-required"
+          "release-0.5-solar-guidance-required",
+          "release-0.5-staff-direct-reads"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -586424,7 +586671,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "5c6ca7bdab586f44290acb1922c8ae0b3247a31cb5451fdd40b222019855d716"
+              "sha256": "7ef61b1eb9df59f55a7d9adcaad89d1bdbebc7dd8c25d091d9f88199db585a9d"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -586444,7 +586691,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
-              "sha256": "ed8a2cd84c10f3ae60b53801ff4e7b39763bf1e94f601d0a521a0f21cbddf7ab"
+              "sha256": "ccb6a0080feda135d03ea1b4e5219ed9349547da4e19d6be3820df587cea4352"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -586839,7 +587086,8 @@
             "Bindings renewed by release-0.5-measured-action-targets: target sizing changes pass exact populated route browsers and scoped invoice, saving and customer-history ownership units. Navigation, authority, receipt and money behavior are unchanged.",
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
-            "Bindings renewed by release-0.5-solar-guidance-required: required announcements match existing staff guidance schemas; exact browser and unit checks preserve protected commands and receipts."
+            "Bindings renewed by release-0.5-solar-guidance-required: required announcements match existing staff guidance schemas; exact browser and unit checks preserve protected commands and receipts.",
+            "Bindings renewed by release-0.5-staff-direct-reads: bounded saving and team reads pass exact browser and unit checks with current ownership, retained drafts and protected commands."
           ],
           "criterion_result": "Existing URL-owned useListQuery parses allowlisted search/sort/filters/page/pageSize, returns API parameters, resets pagination on criteria changes and supports page/cursor variants without duplicate cursor loops.111 query/component cases and representative real production-browser journeys verify refresh, cursor recovery and stable selection.",
           "limitations": [
@@ -586983,6 +587231,11 @@
               "batch": "release-0.5-solar-guidance-required",
               "base_commit": "0b6a6a6041390e201021c12bf829debe1492d73a",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-solar-guidance-required/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-staff-direct-reads",
+              "base_commit": "7cc237db497473c99d049a9e591ae9475aec6cde",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-direct-reads/source-binding.json"
             }
           ]
         }
@@ -587037,7 +587290,8 @@
           "release-0.5-measured-action-targets",
           "release-0.5-critical-accessibility-renewal",
           "release-0.5-workspace-route-census",
-          "release-0.5-solar-guidance-required"
+          "release-0.5-solar-guidance-required",
+          "release-0.5-staff-direct-reads"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -587389,7 +587643,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "5c6ca7bdab586f44290acb1922c8ae0b3247a31cb5451fdd40b222019855d716"
+              "sha256": "7ef61b1eb9df59f55a7d9adcaad89d1bdbebc7dd8c25d091d9f88199db585a9d"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -587409,7 +587663,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
-              "sha256": "ed8a2cd84c10f3ae60b53801ff4e7b39763bf1e94f601d0a521a0f21cbddf7ab"
+              "sha256": "ccb6a0080feda135d03ea1b4e5219ed9349547da4e19d6be3820df587cea4352"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -587804,7 +588058,8 @@
             "Bindings renewed by release-0.5-measured-action-targets: target sizing changes pass exact populated route browsers and scoped invoice, saving and customer-history ownership units. Navigation, authority, receipt and money behavior are unchanged.",
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
-            "Bindings renewed by release-0.5-solar-guidance-required: required announcements match existing staff guidance schemas; exact browser and unit checks preserve protected commands and receipts."
+            "Bindings renewed by release-0.5-solar-guidance-required: required announcements match existing staff guidance schemas; exact browser and unit checks preserve protected commands and receipts.",
+            "Bindings renewed by release-0.5-staff-direct-reads: bounded saving and team reads pass exact browser and unit checks with current ownership, retained drafts and protected commands."
           ],
           "criterion_result": "Existing responsive toolbar slots compose300ms debounced search, permitted sort choices, filter disclosure and authorized creation actions. Shared layout wraps on narrow screens; current controller action/permission ownership is unchanged.",
           "limitations": [
@@ -587948,6 +588203,11 @@
               "batch": "release-0.5-solar-guidance-required",
               "base_commit": "0b6a6a6041390e201021c12bf829debe1492d73a",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-solar-guidance-required/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-staff-direct-reads",
+              "base_commit": "7cc237db497473c99d049a9e591ae9475aec6cde",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-direct-reads/source-binding.json"
             }
           ]
         }
@@ -588002,7 +588262,8 @@
           "release-0.5-measured-action-targets",
           "release-0.5-critical-accessibility-renewal",
           "release-0.5-workspace-route-census",
-          "release-0.5-solar-guidance-required"
+          "release-0.5-solar-guidance-required",
+          "release-0.5-staff-direct-reads"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -588354,7 +588615,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "5c6ca7bdab586f44290acb1922c8ae0b3247a31cb5451fdd40b222019855d716"
+              "sha256": "7ef61b1eb9df59f55a7d9adcaad89d1bdbebc7dd8c25d091d9f88199db585a9d"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -588374,7 +588635,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
-              "sha256": "ed8a2cd84c10f3ae60b53801ff4e7b39763bf1e94f601d0a521a0f21cbddf7ab"
+              "sha256": "ccb6a0080feda135d03ea1b4e5219ed9349547da4e19d6be3820df587cea4352"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -588769,7 +589030,8 @@
             "Bindings renewed by release-0.5-measured-action-targets: target sizing changes pass exact populated route browsers and scoped invoice, saving and customer-history ownership units. Navigation, authority, receipt and money behavior are unchanged.",
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
-            "Bindings renewed by release-0.5-solar-guidance-required: required announcements match existing staff guidance schemas; exact browser and unit checks preserve protected commands and receipts."
+            "Bindings renewed by release-0.5-solar-guidance-required: required announcements match existing staff guidance schemas; exact browser and unit checks preserve protected commands and receipts.",
+            "Bindings renewed by release-0.5-staff-direct-reads: bounded saving and team reads pass exact browser and unit checks with current ownership, retained drafts and protected commands."
           ],
           "criterion_result": "Existing filter panel composes text/select/multi-select/status/date/exact-number controls, active count/chips, explicit drawer Apply/Cancel and clear/reset behavior. Atomic staged validation retains invalid drafts; profile/navigation changes discard obsolete drafts. Clear-all now also disappears from the drawer footer when no filters are applied.",
           "limitations": [
@@ -588913,6 +589175,11 @@
               "batch": "release-0.5-solar-guidance-required",
               "base_commit": "0b6a6a6041390e201021c12bf829debe1492d73a",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-solar-guidance-required/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-staff-direct-reads",
+              "base_commit": "7cc237db497473c99d049a9e591ae9475aec6cde",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-direct-reads/source-binding.json"
             }
           ]
         }
@@ -588970,7 +589237,8 @@
           "release-0.5-measured-action-targets",
           "release-0.5-critical-accessibility-renewal",
           "release-0.5-workspace-route-census",
-          "release-0.5-solar-guidance-required"
+          "release-0.5-solar-guidance-required",
+          "release-0.5-staff-direct-reads"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -589322,7 +589590,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "5c6ca7bdab586f44290acb1922c8ae0b3247a31cb5451fdd40b222019855d716"
+              "sha256": "7ef61b1eb9df59f55a7d9adcaad89d1bdbebc7dd8c25d091d9f88199db585a9d"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -589342,7 +589610,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
-              "sha256": "ed8a2cd84c10f3ae60b53801ff4e7b39763bf1e94f601d0a521a0f21cbddf7ab"
+              "sha256": "ccb6a0080feda135d03ea1b4e5219ed9349547da4e19d6be3820df587cea4352"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -589737,7 +590005,8 @@
             "Bindings renewed by release-0.5-measured-action-targets: target sizing changes pass exact populated route browsers and scoped invoice, saving and customer-history ownership units. Navigation, authority, receipt and money behavior are unchanged.",
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
-            "Bindings renewed by release-0.5-solar-guidance-required: required announcements match existing staff guidance schemas; exact browser and unit checks preserve protected commands and receipts."
+            "Bindings renewed by release-0.5-solar-guidance-required: required announcements match existing staff guidance schemas; exact browser and unit checks preserve protected commands and receipts.",
+            "Bindings renewed by release-0.5-staff-direct-reads: bounded saving and team reads pass exact browser and unit checks with current ownership, retained drafts and protected commands."
           ],
           "criterion_result": "Existing sort dropdown receives each list API contract allowlist and direction choices, retains defaults and native keyboard behavior. Parser rejects unsupported fields; server APIs remain authoritative and unchanged.",
           "limitations": [
@@ -589881,6 +590150,11 @@
               "batch": "release-0.5-solar-guidance-required",
               "base_commit": "0b6a6a6041390e201021c12bf829debe1492d73a",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-solar-guidance-required/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-staff-direct-reads",
+              "base_commit": "7cc237db497473c99d049a9e591ae9475aec6cde",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-direct-reads/source-binding.json"
             }
           ]
         }
@@ -589938,7 +590212,8 @@
           "release-0.5-measured-action-targets",
           "release-0.5-critical-accessibility-renewal",
           "release-0.5-workspace-route-census",
-          "release-0.5-solar-guidance-required"
+          "release-0.5-solar-guidance-required",
+          "release-0.5-staff-direct-reads"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -590290,7 +590565,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "5c6ca7bdab586f44290acb1922c8ae0b3247a31cb5451fdd40b222019855d716"
+              "sha256": "7ef61b1eb9df59f55a7d9adcaad89d1bdbebc7dd8c25d091d9f88199db585a9d"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -590310,7 +590585,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
-              "sha256": "ed8a2cd84c10f3ae60b53801ff4e7b39763bf1e94f601d0a521a0f21cbddf7ab"
+              "sha256": "ccb6a0080feda135d03ea1b4e5219ed9349547da4e19d6be3820df587cea4352"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -590705,7 +590980,8 @@
             "Bindings renewed by release-0.5-measured-action-targets: target sizing changes pass exact populated route browsers and scoped invoice, saving and customer-history ownership units. Navigation, authority, receipt and money behavior are unchanged.",
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
-            "Bindings renewed by release-0.5-solar-guidance-required: required announcements match existing staff guidance schemas; exact browser and unit checks preserve protected commands and receipts."
+            "Bindings renewed by release-0.5-solar-guidance-required: required announcements match existing staff guidance schemas; exact browser and unit checks preserve protected commands and receipts.",
+            "Bindings renewed by release-0.5-staff-direct-reads: bounded saving and team reads pass exact browser and unit checks with current ownership, retained drafts and protected commands."
           ],
           "criterion_result": "Existing view toggle uses account/history-scoped persisted table/card preference, honors md768px defaults and media changes, reacts to storage events, handles unavailable storage and withholds another account scope. Current hook and browser journeys pass.",
           "limitations": [
@@ -590849,6 +591125,11 @@
               "batch": "release-0.5-solar-guidance-required",
               "base_commit": "0b6a6a6041390e201021c12bf829debe1492d73a",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-solar-guidance-required/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-staff-direct-reads",
+              "base_commit": "7cc237db497473c99d049a9e591ae9475aec6cde",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-direct-reads/source-binding.json"
             }
           ]
         }
@@ -590933,7 +591214,8 @@
           "release-0.5-measured-action-targets",
           "release-0.5-critical-accessibility-renewal",
           "release-0.5-workspace-route-census",
-          "release-0.5-solar-guidance-required"
+          "release-0.5-solar-guidance-required",
+          "release-0.5-staff-direct-reads"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -591285,7 +591567,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "5c6ca7bdab586f44290acb1922c8ae0b3247a31cb5451fdd40b222019855d716"
+              "sha256": "7ef61b1eb9df59f55a7d9adcaad89d1bdbebc7dd8c25d091d9f88199db585a9d"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -591305,7 +591587,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
-              "sha256": "ed8a2cd84c10f3ae60b53801ff4e7b39763bf1e94f601d0a521a0f21cbddf7ab"
+              "sha256": "ccb6a0080feda135d03ea1b4e5219ed9349547da4e19d6be3820df587cea4352"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -591700,7 +591982,8 @@
             "Bindings renewed by release-0.5-measured-action-targets: target sizing changes pass exact populated route browsers and scoped invoice, saving and customer-history ownership units. Navigation, authority, receipt and money behavior are unchanged.",
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
-            "Bindings renewed by release-0.5-solar-guidance-required: required announcements match existing staff guidance schemas; exact browser and unit checks preserve protected commands and receipts."
+            "Bindings renewed by release-0.5-solar-guidance-required: required announcements match existing staff guidance schemas; exact browser and unit checks preserve protected commands and receipts.",
+            "Bindings renewed by release-0.5-staff-direct-reads: bounded saving and team reads pass exact browser and unit checks with current ownership, retained drafts and protected commands."
           ],
           "criterion_result": "Existing ListPage compound slots compose toolbar/filter controls, AsyncView content, DataTable/cards and applicable cursor/page pagination across current customer/staff list surfaces. Bound positive inventory includes56 page/component consumers; recovery keeps accepted rows/drafts and separates list/detail retries. Existing operational and domain adapters remain in use.",
           "limitations": [
@@ -591844,6 +592127,11 @@
               "batch": "release-0.5-solar-guidance-required",
               "base_commit": "0b6a6a6041390e201021c12bf829debe1492d73a",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-solar-guidance-required/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-staff-direct-reads",
+              "base_commit": "7cc237db497473c99d049a9e591ae9475aec6cde",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-direct-reads/source-binding.json"
             }
           ]
         }
@@ -591897,7 +592185,8 @@
           "release-0.5-measured-action-targets",
           "release-0.5-critical-accessibility-renewal",
           "release-0.5-workspace-route-census",
-          "release-0.5-solar-guidance-required"
+          "release-0.5-solar-guidance-required",
+          "release-0.5-staff-direct-reads"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -592249,7 +592538,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "5c6ca7bdab586f44290acb1922c8ae0b3247a31cb5451fdd40b222019855d716"
+              "sha256": "7ef61b1eb9df59f55a7d9adcaad89d1bdbebc7dd8c25d091d9f88199db585a9d"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -592269,7 +592558,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
-              "sha256": "ed8a2cd84c10f3ae60b53801ff4e7b39763bf1e94f601d0a521a0f21cbddf7ab"
+              "sha256": "ccb6a0080feda135d03ea1b4e5219ed9349547da4e19d6be3820df587cea4352"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -592664,7 +592953,8 @@
             "Bindings renewed by release-0.5-measured-action-targets: target sizing changes pass exact populated route browsers and scoped invoice, saving and customer-history ownership units. Navigation, authority, receipt and money behavior are unchanged.",
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
-            "Bindings renewed by release-0.5-solar-guidance-required: required announcements match existing staff guidance schemas; exact browser and unit checks preserve protected commands and receipts."
+            "Bindings renewed by release-0.5-solar-guidance-required: required announcements match existing staff guidance schemas; exact browser and unit checks preserve protected commands and receipts.",
+            "Bindings renewed by release-0.5-staff-direct-reads: bounded saving and team reads pass exact browser and unit checks with current ownership, retained drafts and protected commands."
           ],
           "criterion_result": "Existing StatusFilter renders allowlisted multi-select checkboxes and descriptive colored badges, counts applied selections and clears them. It preserves other list criteria and pagination/reset boundaries.",
           "limitations": [
@@ -592808,6 +593098,11 @@
               "batch": "release-0.5-solar-guidance-required",
               "base_commit": "0b6a6a6041390e201021c12bf829debe1492d73a",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-solar-guidance-required/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-staff-direct-reads",
+              "base_commit": "7cc237db497473c99d049a9e591ae9475aec6cde",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-direct-reads/source-binding.json"
             }
           ]
         }
@@ -592861,7 +593156,8 @@
           "release-0.5-measured-action-targets",
           "release-0.5-critical-accessibility-renewal",
           "release-0.5-workspace-route-census",
-          "release-0.5-solar-guidance-required"
+          "release-0.5-solar-guidance-required",
+          "release-0.5-staff-direct-reads"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -593213,7 +593509,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "5c6ca7bdab586f44290acb1922c8ae0b3247a31cb5451fdd40b222019855d716"
+              "sha256": "7ef61b1eb9df59f55a7d9adcaad89d1bdbebc7dd8c25d091d9f88199db585a9d"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -593233,7 +593529,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
-              "sha256": "ed8a2cd84c10f3ae60b53801ff4e7b39763bf1e94f601d0a521a0f21cbddf7ab"
+              "sha256": "ccb6a0080feda135d03ea1b4e5219ed9349547da4e19d6be3820df587cea4352"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -593628,7 +593924,8 @@
             "Bindings renewed by release-0.5-measured-action-targets: target sizing changes pass exact populated route browsers and scoped invoice, saving and customer-history ownership units. Navigation, authority, receipt and money behavior are unchanged.",
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
-            "Bindings renewed by release-0.5-solar-guidance-required: required announcements match existing staff guidance schemas; exact browser and unit checks preserve protected commands and receipts."
+            "Bindings renewed by release-0.5-solar-guidance-required: required announcements match existing staff guidance schemas; exact browser and unit checks preserve protected commands and receipts.",
+            "Bindings renewed by release-0.5-staff-direct-reads: bounded saving and team reads pass exact browser and unit checks with current ownership, retained drafts and protected commands."
           ],
           "criterion_result": "Existing DateRangeFilter offers today/last7/current/previous-month/custom with two localized pickers. Presets follow account timezone and displayed Jalali/Gregorian calendar; validated API bounds remain ISO with exclusive end. Original exact-date and disabled-field assertions retained.",
           "limitations": [
@@ -593772,6 +594069,11 @@
               "batch": "release-0.5-solar-guidance-required",
               "base_commit": "0b6a6a6041390e201021c12bf829debe1492d73a",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-solar-guidance-required/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-staff-direct-reads",
+              "base_commit": "7cc237db497473c99d049a9e591ae9475aec6cde",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-direct-reads/source-binding.json"
             }
           ]
         }
@@ -593826,7 +594128,8 @@
           "release-0.5-measured-action-targets",
           "release-0.5-critical-accessibility-renewal",
           "release-0.5-workspace-route-census",
-          "release-0.5-solar-guidance-required"
+          "release-0.5-solar-guidance-required",
+          "release-0.5-staff-direct-reads"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -594178,7 +594481,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "5c6ca7bdab586f44290acb1922c8ae0b3247a31cb5451fdd40b222019855d716"
+              "sha256": "7ef61b1eb9df59f55a7d9adcaad89d1bdbebc7dd8c25d091d9f88199db585a9d"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -594198,7 +594501,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
-              "sha256": "ed8a2cd84c10f3ae60b53801ff4e7b39763bf1e94f601d0a521a0f21cbddf7ab"
+              "sha256": "ccb6a0080feda135d03ea1b4e5219ed9349547da4e19d6be3820df587cea4352"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -594593,7 +594896,8 @@
             "Bindings renewed by release-0.5-measured-action-targets: target sizing changes pass exact populated route browsers and scoped invoice, saving and customer-history ownership units. Navigation, authority, receipt and money behavior are unchanged.",
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
-            "Bindings renewed by release-0.5-solar-guidance-required: required announcements match existing staff guidance schemas; exact browser and unit checks preserve protected commands and receipts."
+            "Bindings renewed by release-0.5-solar-guidance-required: required announcements match existing staff guidance schemas; exact browser and unit checks preserve protected commands and receipts.",
+            "Bindings renewed by release-0.5-staff-direct-reads: bounded saving and team reads pass exact browser and unit checks with current ownership, retained drafts and protected commands."
           ],
           "criterion_result": "Existing text filter debounces300ms; exact number ranges use caller domain validation and preserve large integer strings; searchable select and chip-based multi-select compose controlled state. Draft Apply validation commits all valid fields once and retains invalid inputs without issuing an unsafe query.",
           "limitations": [
@@ -594737,6 +595041,11 @@
               "batch": "release-0.5-solar-guidance-required",
               "base_commit": "0b6a6a6041390e201021c12bf829debe1492d73a",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-solar-guidance-required/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-staff-direct-reads",
+              "base_commit": "7cc237db497473c99d049a9e591ae9475aec6cde",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-direct-reads/source-binding.json"
             }
           ]
         }
@@ -594809,7 +595118,8 @@
           "release-0.5-measured-action-targets",
           "release-0.5-critical-accessibility-renewal",
           "release-0.5-workspace-route-census",
-          "release-0.5-solar-guidance-required"
+          "release-0.5-solar-guidance-required",
+          "release-0.5-staff-direct-reads"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -595161,7 +595471,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "5c6ca7bdab586f44290acb1922c8ae0b3247a31cb5451fdd40b222019855d716"
+              "sha256": "7ef61b1eb9df59f55a7d9adcaad89d1bdbebc7dd8c25d091d9f88199db585a9d"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -595181,7 +595491,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
-              "sha256": "ed8a2cd84c10f3ae60b53801ff4e7b39763bf1e94f601d0a521a0f21cbddf7ab"
+              "sha256": "ccb6a0080feda135d03ea1b4e5219ed9349547da4e19d6be3820df587cea4352"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -595576,7 +595886,8 @@
             "Bindings renewed by release-0.5-measured-action-targets: target sizing changes pass exact populated route browsers and scoped invoice, saving and customer-history ownership units. Navigation, authority, receipt and money behavior are unchanged.",
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
-            "Bindings renewed by release-0.5-solar-guidance-required: required announcements match existing staff guidance schemas; exact browser and unit checks preserve protected commands and receipts."
+            "Bindings renewed by release-0.5-solar-guidance-required: required announcements match existing staff guidance schemas; exact browser and unit checks preserve protected commands and receipts.",
+            "Bindings renewed by release-0.5-staff-direct-reads: bounded saving and team reads pass exact browser and unit checks with current ownership, retained drafts and protected commands."
           ],
           "criterion_result": "Existing per-list schemas serialize supported filters/sort/page/cursor and selected detail to shareable URL state. Current service, finance, geography, CRM, document and contract browser journeys verify restoration/reset and exact cursor recovery; raw money and permission rules are unchanged.",
           "limitations": [
@@ -595720,6 +596031,11 @@
               "batch": "release-0.5-solar-guidance-required",
               "base_commit": "0b6a6a6041390e201021c12bf829debe1492d73a",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-solar-guidance-required/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-staff-direct-reads",
+              "base_commit": "7cc237db497473c99d049a9e591ae9475aec6cde",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-direct-reads/source-binding.json"
             }
           ]
         }
@@ -595775,7 +596091,8 @@
           "release-0.5-measured-action-targets",
           "release-0.5-critical-accessibility-renewal",
           "release-0.5-workspace-route-census",
-          "release-0.5-solar-guidance-required"
+          "release-0.5-solar-guidance-required",
+          "release-0.5-staff-direct-reads"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -596127,7 +596444,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "5c6ca7bdab586f44290acb1922c8ae0b3247a31cb5451fdd40b222019855d716"
+              "sha256": "7ef61b1eb9df59f55a7d9adcaad89d1bdbebc7dd8c25d091d9f88199db585a9d"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -596147,7 +596464,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
-              "sha256": "ed8a2cd84c10f3ae60b53801ff4e7b39763bf1e94f601d0a521a0f21cbddf7ab"
+              "sha256": "ccb6a0080feda135d03ea1b4e5219ed9349547da4e19d6be3820df587cea4352"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -596542,7 +596859,8 @@
             "Bindings renewed by release-0.5-measured-action-targets: target sizing changes pass exact populated route browsers and scoped invoice, saving and customer-history ownership units. Navigation, authority, receipt and money behavior are unchanged.",
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
-            "Bindings renewed by release-0.5-solar-guidance-required: required announcements match existing staff guidance schemas; exact browser and unit checks preserve protected commands and receipts."
+            "Bindings renewed by release-0.5-solar-guidance-required: required announcements match existing staff guidance schemas; exact browser and unit checks preserve protected commands and receipts.",
+            "Bindings renewed by release-0.5-staff-direct-reads: bounded saving and team reads pass exact browser and unit checks with current ownership, retained drafts and protected commands."
           ],
           "criterion_result": "Clear-all and active badges appear only for applied filters, now including the open drawer footer. New direct drawer test verifies zero/two/zero active-filter transitions; existing focus, pending-debounce cancellation, chips and range-reset assertions remain exact.",
           "limitations": [
@@ -596686,6 +597004,11 @@
               "batch": "release-0.5-solar-guidance-required",
               "base_commit": "0b6a6a6041390e201021c12bf829debe1492d73a",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-solar-guidance-required/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-staff-direct-reads",
+              "base_commit": "7cc237db497473c99d049a9e591ae9475aec6cde",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-direct-reads/source-binding.json"
             }
           ]
         }
@@ -623480,7 +623803,8 @@
           "release-0.5-measured-action-targets",
           "release-0.5-critical-accessibility-renewal",
           "release-0.5-workspace-route-census",
-          "release-0.5-solar-guidance-required"
+          "release-0.5-solar-guidance-required",
+          "release-0.5-staff-direct-reads"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -623832,7 +624156,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "5c6ca7bdab586f44290acb1922c8ae0b3247a31cb5451fdd40b222019855d716"
+              "sha256": "7ef61b1eb9df59f55a7d9adcaad89d1bdbebc7dd8c25d091d9f88199db585a9d"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -623852,7 +624176,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
-              "sha256": "ed8a2cd84c10f3ae60b53801ff4e7b39763bf1e94f601d0a521a0f21cbddf7ab"
+              "sha256": "ccb6a0080feda135d03ea1b4e5219ed9349547da4e19d6be3820df587cea4352"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -624247,7 +624571,8 @@
             "Bindings renewed by release-0.5-measured-action-targets: target sizing changes pass exact populated route browsers and scoped invoice, saving and customer-history ownership units. Navigation, authority, receipt and money behavior are unchanged.",
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
-            "Bindings renewed by release-0.5-solar-guidance-required: required announcements match existing staff guidance schemas; exact browser and unit checks preserve protected commands and receipts."
+            "Bindings renewed by release-0.5-solar-guidance-required: required announcements match existing staff guidance schemas; exact browser and unit checks preserve protected commands and receipts.",
+            "Bindings renewed by release-0.5-staff-direct-reads: bounded saving and team reads pass exact browser and unit checks with current ownership, retained drafts and protected commands."
           ],
           "criterion_result": "Existing repository Base UI DataTable uses semantic table cells/headers, declarative columns/renderers, optional client/server sort, controlled/uncontrolled selection, stable-key expansion, sticky header, horizontal scroll and hover state. Loading blocks operations and retains cross-page controlled selections;25 table/list/filter cases pass.",
           "limitations": [
@@ -624391,6 +624716,11 @@
               "batch": "release-0.5-solar-guidance-required",
               "base_commit": "0b6a6a6041390e201021c12bf829debe1492d73a",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-solar-guidance-required/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-staff-direct-reads",
+              "base_commit": "7cc237db497473c99d049a9e591ae9475aec6cde",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-direct-reads/source-binding.json"
             }
           ]
         }
@@ -624443,7 +624773,8 @@
           "release-0.5-measured-action-targets",
           "release-0.5-critical-accessibility-renewal",
           "release-0.5-workspace-route-census",
-          "release-0.5-solar-guidance-required"
+          "release-0.5-solar-guidance-required",
+          "release-0.5-staff-direct-reads"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -624795,7 +625126,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "5c6ca7bdab586f44290acb1922c8ae0b3247a31cb5451fdd40b222019855d716"
+              "sha256": "7ef61b1eb9df59f55a7d9adcaad89d1bdbebc7dd8c25d091d9f88199db585a9d"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -624815,7 +625146,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
-              "sha256": "ed8a2cd84c10f3ae60b53801ff4e7b39763bf1e94f601d0a521a0f21cbddf7ab"
+              "sha256": "ccb6a0080feda135d03ea1b4e5219ed9349547da4e19d6be3820df587cea4352"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -625210,7 +625541,8 @@
             "Bindings renewed by release-0.5-measured-action-targets: target sizing changes pass exact populated route browsers and scoped invoice, saving and customer-history ownership units. Navigation, authority, receipt and money behavior are unchanged.",
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
-            "Bindings renewed by release-0.5-solar-guidance-required: required announcements match existing staff guidance schemas; exact browser and unit checks preserve protected commands and receipts."
+            "Bindings renewed by release-0.5-solar-guidance-required: required announcements match existing staff guidance schemas; exact browser and unit checks preserve protected commands and receipts.",
+            "Bindings renewed by release-0.5-staff-direct-reads: bounded saving and team reads pass exact browser and unit checks with current ownership, retained drafts and protected commands."
           ],
           "criterion_result": "Existing Text/Number/Date/Status/Action/Currency/Avatar/Link cells remain complete. Exact monetary strings delegate to the owner formatter; locale/numerals and time mode are explicit. Unsafe/executable/credentialed links remain literal text; current formatting and link-safety assertions pass.",
           "limitations": [
@@ -625354,6 +625686,11 @@
               "batch": "release-0.5-solar-guidance-required",
               "base_commit": "0b6a6a6041390e201021c12bf829debe1492d73a",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-solar-guidance-required/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-staff-direct-reads",
+              "base_commit": "7cc237db497473c99d049a9e591ae9475aec6cde",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-direct-reads/source-binding.json"
             }
           ]
         }
@@ -625406,7 +625743,8 @@
           "release-0.5-measured-action-targets",
           "release-0.5-critical-accessibility-renewal",
           "release-0.5-workspace-route-census",
-          "release-0.5-solar-guidance-required"
+          "release-0.5-solar-guidance-required",
+          "release-0.5-staff-direct-reads"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -625758,7 +626096,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "5c6ca7bdab586f44290acb1922c8ae0b3247a31cb5451fdd40b222019855d716"
+              "sha256": "7ef61b1eb9df59f55a7d9adcaad89d1bdbebc7dd8c25d091d9f88199db585a9d"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -625778,7 +626116,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
-              "sha256": "ed8a2cd84c10f3ae60b53801ff4e7b39763bf1e94f601d0a521a0f21cbddf7ab"
+              "sha256": "ccb6a0080feda135d03ea1b4e5219ed9349547da4e19d6be3820df587cea4352"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -626173,7 +626511,8 @@
             "Bindings renewed by release-0.5-measured-action-targets: target sizing changes pass exact populated route browsers and scoped invoice, saving and customer-history ownership units. Navigation, authority, receipt and money behavior are unchanged.",
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
-            "Bindings renewed by release-0.5-solar-guidance-required: required announcements match existing staff guidance schemas; exact browser and unit checks preserve protected commands and receipts."
+            "Bindings renewed by release-0.5-solar-guidance-required: required announcements match existing staff guidance schemas; exact browser and unit checks preserve protected commands and receipts.",
+            "Bindings renewed by release-0.5-staff-direct-reads: bounded saving and team reads pass exact browser and unit checks with current ownership, retained drafts and protected commands."
           ],
           "criterion_result": "Existing CardListView shares row ordering, stable IDs, selection/expansion and loading/empty state with the table. Responsive md switching and owner view preferences preserve requested context, render localized fields and provide usable mobile record actions.",
           "limitations": [
@@ -626317,6 +626656,11 @@
               "batch": "release-0.5-solar-guidance-required",
               "base_commit": "0b6a6a6041390e201021c12bf829debe1492d73a",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-solar-guidance-required/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-staff-direct-reads",
+              "base_commit": "7cc237db497473c99d049a9e591ae9475aec6cde",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-direct-reads/source-binding.json"
             }
           ]
         }
@@ -626369,7 +626713,8 @@
           "release-0.5-measured-action-targets",
           "release-0.5-critical-accessibility-renewal",
           "release-0.5-workspace-route-census",
-          "release-0.5-solar-guidance-required"
+          "release-0.5-solar-guidance-required",
+          "release-0.5-staff-direct-reads"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -626721,7 +627066,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "5c6ca7bdab586f44290acb1922c8ae0b3247a31cb5451fdd40b222019855d716"
+              "sha256": "7ef61b1eb9df59f55a7d9adcaad89d1bdbebc7dd8c25d091d9f88199db585a9d"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -626741,7 +627086,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
-              "sha256": "ed8a2cd84c10f3ae60b53801ff4e7b39763bf1e94f601d0a521a0f21cbddf7ab"
+              "sha256": "ccb6a0080feda135d03ea1b4e5219ed9349547da4e19d6be3820df587cea4352"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -627136,7 +627481,8 @@
             "Bindings renewed by release-0.5-measured-action-targets: target sizing changes pass exact populated route browsers and scoped invoice, saving and customer-history ownership units. Navigation, authority, receipt and money behavior are unchanged.",
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
-            "Bindings renewed by release-0.5-solar-guidance-required: required announcements match existing staff guidance schemas; exact browser and unit checks preserve protected commands and receipts."
+            "Bindings renewed by release-0.5-solar-guidance-required: required announcements match existing staff guidance schemas; exact browser and unit checks preserve protected commands and receipts.",
+            "Bindings renewed by release-0.5-staff-direct-reads: bounded saving and team reads pass exact browser and unit checks with current ownership, retained drafts and protected commands."
           ],
           "criterion_result": "Existing semantic row/column headers, caption, live row count and aria-sort expose table state. Logical sort arrows/Home/End preserve Tab; native controls/menu actions retain Enter/Space behavior and focus. Both browser projects pass FA/EN and light/dark list journeys without relaxing assertions.",
           "limitations": [
@@ -627280,6 +627626,11 @@
               "batch": "release-0.5-solar-guidance-required",
               "base_commit": "0b6a6a6041390e201021c12bf829debe1492d73a",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-solar-guidance-required/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-staff-direct-reads",
+              "base_commit": "7cc237db497473c99d049a9e591ae9475aec6cde",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-direct-reads/source-binding.json"
             }
           ]
         }
@@ -647400,7 +647751,8 @@
           "release-0.5-forms-confirmation-journey",
           "release-0.5-notification-recovery-journey",
           "release-0.5-query-and-command-completion",
-          "release-0.5-form-and-document-accessibility"
+          "release-0.5-form-and-document-accessibility",
+          "release-0.5-staff-direct-reads"
         ],
         "current_acceptance": {
           "kind": "verified-admin-safety-and-team-ui-journeys",
@@ -647460,7 +647812,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
-              "sha256": "ed8a2cd84c10f3ae60b53801ff4e7b39763bf1e94f601d0a521a0f21cbddf7ab"
+              "sha256": "ccb6a0080feda135d03ea1b4e5219ed9349547da4e19d6be3820df587cea4352"
             },
             {
               "path": "apps/web/src/pages/assignment-settings-recovery.test.tsx",
@@ -647499,7 +647851,8 @@
             "Bindings renewed by release-0.5-forms-confirmation-journey: additive confirmation entry/exports, display-only exact IRR/toman, scoped host/risk metadata and guarded explicit approval. Existing81 requests and180 payload/version/idempotency fields AST-identical; backend/shared domain and original budgets unchanged.139 distinct native cases,138 affected full-file web passes, shared control/distribution checks cover the UI delta. Original domain evidence retained for unchanged behavior; adapted test actions explicitly perform the additional approval and preserve assertions.",
             "Bindings renewed by release-0.5-notification-recovery-journey: tested presentation, read-only owned timestamp and additive locale changes. All 71 UI HTTP calls and 96 captured body/review/idempotency fields are unchanged, old feedback labels and original numeric limits are preserved, and affected browser/API/unit and export checks are recorded.",
             "Source bindings renewed by release-0.5-query-and-command-completion: affected owned read, permission, financial review and browser cases pass; writes/CSRF, original budget rules and financial assertions are preserved.",
-            "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only."
+            "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
+            "Bindings renewed by release-0.5-staff-direct-reads: bounded saving and team reads pass exact browser and unit checks with current ownership, retained drafts and protected commands."
           ],
           "criterion_result": "Existing team CRUD, current staff membership, member-bound lead, round-robin/expertise/load strategies and team escalation/fallback routing verified. Read recovery, stale membership/rules, preserved drafts, unverified write/reset, captured step-up, localizations, keyboard and mobile forms pass. Native routing/permission/audit evidence remains current.",
           "limitations": [
@@ -647563,6 +647916,11 @@
               "batch": "release-0.5-form-and-document-accessibility",
               "base_commit": "bc50e458e469d4fae48336f6384692b2a0a93251",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-form-and-document-accessibility/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-staff-direct-reads",
+              "base_commit": "7cc237db497473c99d049a9e591ae9475aec6cde",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-direct-reads/source-binding.json"
             }
           ]
         }
@@ -656650,7 +657008,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "5c6ca7bdab586f44290acb1922c8ae0b3247a31cb5451fdd40b222019855d716"
+              "sha256": "7ef61b1eb9df59f55a7d9adcaad89d1bdbebc7dd8c25d091d9f88199db585a9d"
             },
             {
               "path": "packages/db/drizzle/production/0260_saving_cancellation_financial_closure.sql",
@@ -657987,7 +658345,8 @@
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
             "Bindings renewed by release-0.5-route-landmark-census: the detail change is identifier wrapping and bidi isolation only. Existing exact receipt, authority, navigation and draft checks pass with the new populated layout assertions.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
-            "Bindings renewed by release-0.5-solar-guidance-required: required announcements match existing staff guidance schemas; exact browser and unit checks preserve protected commands and receipts."
+            "Bindings renewed by release-0.5-solar-guidance-required: required announcements match existing staff guidance schemas; exact browser and unit checks preserve protected commands and receipts.",
+            "Bindings renewed by release-0.5-staff-direct-reads: bounded saving and team reads pass exact browser and unit checks with current ownership, retained drafts and protected commands."
           ],
           "limitations": [],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/staff-order-detail-authority",
@@ -659312,6 +659671,11 @@
               "batch": "release-0.5-solar-guidance-required",
               "base_commit": "0b6a6a6041390e201021c12bf829debe1492d73a",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-solar-guidance-required/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-staff-direct-reads",
+              "base_commit": "7cc237db497473c99d049a9e591ae9475aec6cde",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-direct-reads/source-binding.json"
             }
           ]
         },
@@ -659344,7 +659708,8 @@
           "release-0.5-critical-accessibility-renewal",
           "release-0.5-route-landmark-census",
           "release-0.5-workspace-route-census",
-          "release-0.5-solar-guidance-required"
+          "release-0.5-solar-guidance-required",
+          "release-0.5-staff-direct-reads"
         ]
       }
     },
@@ -666822,7 +667187,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Solar document and postal guidance have bilingual accessible required/optional field evidence alongside the existing protected command flow. Complete remaining canonical routes and conditional states across themes, directions and viewport widths."
+        "Saving staff queue/detail and team member/routing recovery have exact bilingual browser evidence. Complete remaining canonical route and conditional states across themes, directions, keyboard and viewport widths."
       ],
       "owner": null,
       "depends_on": [],
@@ -666838,7 +667203,8 @@
           "release-0.5-route-landmark-census",
           "release-0.5-workspace-route-census",
           "release-0.5-profile-lifecycle-feedback",
-          "release-0.5-solar-guidance-required"
+          "release-0.5-solar-guidance-required",
+          "release-0.5-staff-direct-reads"
         ]
       }
     },
@@ -716738,7 +717104,198 @@
         "release-readiness#R-02.02"
       ],
       "failed_attempts_retained": true,
-      "release_disposition": "Verified solar guidance required announcements. Full release gates remain open. No release publication."
+      "release_disposition": "Verified solar guidance required announcements. Full release gates remain open. No release publication.",
+      "push_receipt": {
+        "commit": "7cc237db497473c99d049a9e591ae9475aec6cde",
+        "remote_sha": "7cc237db497473c99d049a9e591ae9475aec6cde",
+        "ref": "refs/heads/main",
+        "verified_at": "2026-11-07T08:00:00+00:00",
+        "method": "GitHub CLI ref readback"
+      }
+    },
+    "release-0.5-staff-direct-reads": {
+      "batch": "release-0.5-staff-direct-reads",
+      "base_commit": "7cc237db497473c99d049a9e591ae9475aec6cde",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "accepted_task_keys": [],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": ".size-limit.json",
+          "sha256": "61a016162937f78da6d71dfb7f9c2b7d4f9b768362a9e543eae80869cb48073d"
+        },
+        {
+          "path": "apps/web/build.mjs",
+          "sha256": "20432f55d9d3090f592a28e79064d99f0066108a3cda87aeebf023583d55c35f"
+        },
+        {
+          "path": "apps/web/e2e/confirmation-fixture.ts",
+          "sha256": "8d842de5577a9f43a5ca0efcf8e6a00e18e6ea1fb53116555fac8cbd7608bb61"
+        },
+        {
+          "path": "apps/web/e2e/coverage-fixture.ts",
+          "sha256": "d2728c203779bb170516ad5cedd445aa4c61d4590fb6ce44bc48cde125281ef2"
+        },
+        {
+          "path": "apps/web/e2e/crm-shell-fixture.ts",
+          "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+        },
+        {
+          "path": "apps/web/e2e/global-setup.ts",
+          "sha256": "26c3a1b7f928e58254e33b57e486ced1882ff07296d41fa619309094a7db9d61"
+        },
+        {
+          "path": "apps/web/e2e/saving-staff-operation-form-fixture.ts",
+          "sha256": "a4ce8aa4de5f2764f984cbe5487cc3ec7d8fd8062dca02f84bfe7e2e347e40ed"
+        },
+        {
+          "path": "apps/web/e2e/saving-staff-operation-forms.spec.ts",
+          "sha256": "0c5f1f2986c55c94f2c03ff6d01f602e273d9519fd67ad2a6ad794df6a13aaab"
+        },
+        {
+          "path": "apps/web/e2e/staff-business-list-recovery.spec.ts",
+          "sha256": "9404eb24043b1b1441e4a214526f7ccdea0f556a3a98a4a2499ead8e10d0c3e4"
+        },
+        {
+          "path": "apps/web/e2e/staff-directory-recovery.spec.ts",
+          "sha256": "3e4c7f173f3d6bdeb425227d8bb7011a51cb8539f1c7d3c4f1b277f38430c8a2"
+        },
+        {
+          "path": "apps/web/e2e/staff-operation-tables.spec.ts",
+          "sha256": "9b2bbca8cf4640b0d2d2072bab38d1596a7b6c4d13690a74d691e6ec238af039"
+        },
+        {
+          "path": "apps/web/package.json",
+          "sha256": "f0b538d3c070cc67a2aed63b66842938bd74a992b66d5ae412057c34fe86e8db"
+        },
+        {
+          "path": "apps/web/playwright.config.ts",
+          "sha256": "ad9a9e23b46599266a7fe0dcfd7185e12e612cdc50c040453533d1fccbea85cf"
+        },
+        {
+          "path": "apps/web/server.js",
+          "sha256": "8f2f2eb0a4a158fe322c1fd4c6f119044d0b0aa61ea71aacc052ba1ba348caab"
+        },
+        {
+          "path": "apps/web/src/lib/server-query-client.ts",
+          "sha256": "8f339009224962a0219dec6d142c856c7b1e142ce7687a8612c622d0440e1617"
+        },
+        {
+          "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
+          "sha256": "7ef61b1eb9df59f55a7d9adcaad89d1bdbebc7dd8c25d091d9f88199db585a9d"
+        },
+        {
+          "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
+          "sha256": "ccb6a0080feda135d03ea1b4e5219ed9349547da4e19d6be3820df587cea4352"
+        },
+        {
+          "path": "apps/web/src/pages/saving-staff-operation-forms.test.tsx",
+          "sha256": "6159c1d9133cd4012b5408175c0fba6edff03edf6f0425be483a01f8c37030e2"
+        },
+        {
+          "path": "apps/web/src/pages/staff-directory-recovery.test.tsx",
+          "sha256": "348f2464d4775cf26a39b72d53234ca7dc61d59e137338b32538a5cfc2558a90"
+        },
+        {
+          "path": "apps/web/src/pages/staff-team-forms.test.tsx",
+          "sha256": "109f5548df5006c23f1e6044b55b036acf2e785df49abf04548cfe68e595669e"
+        },
+        {
+          "path": "apps/web/src/test/staff-business-fixtures.ts",
+          "sha256": "fe7fbad03a169d78d11c48941f9596aa88ef428d5599b8faea6bc01f1b7407b1"
+        },
+        {
+          "path": "apps/web/src/test/staff-directory-fixtures.ts",
+          "sha256": "0ddeb100432a4fa4374ed9b00e4d6a37ee881027d1fdfe4daa69b7a50640550c"
+        },
+        {
+          "path": "package.json",
+          "sha256": "14f5f1be936e9e0f976f40fe7371506701008e7fa53256b80fd0ec9b7f207f1d"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "0b875687ee1d2f32ea8819c9eb58af72f0c0db3796f5e74f82317d4b7ce46251"
+        },
+        {
+          "path": "scripts/check-route-budgets.mjs",
+          "sha256": "4dd831c645a9dbf1e6fd9b0c211b5559e4fc22652373b31525bd4f4aae38186d"
+        },
+        {
+          "path": "scripts/run-production-browser.mjs",
+          "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+        }
+      ],
+      "checks": [
+        "Two baseline native tests held saving detail and assignment rules requests beyond 15 seconds. Neither exposed a retry. Saving queue pagination and selected detail, team member search and assignment rules now use the existing bounded read helper including response body parsing.",
+        "Exact browser cases prove retry of the same cursor and member search, independent team/routing drafts, no implicit command replay, and withdrawal after denial. Existing saving refunds, staff step-up and handover assertions pass.",
+        "24 distinct Chromium and Mobile Safari browser cases, 60 focused units, lint, format, typecheck and all 91 original route budgets pass. The baseline failures remain recorded."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-direct-reads",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-direct-reads/reviewed-source.diff",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-direct-reads/source-binding.json",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-direct-reads/renewed-bindings.json",
+      "renewed_task_keys": [
+        "02-auth-users-admin.md#T-03.03.06",
+        "02-auth-users-admin.md#T-09.01.02",
+        "03-core-business.md#T-03.09.05.01",
+        "03-core-business.md#T-03.09.05.02",
+        "03-core-business.md#T-03.09.05.03",
+        "03-core-business.md#T-03.09.05.04",
+        "03-core-business.md#T-03.09.05.05",
+        "03-core-business.md#T-03.10.01.01",
+        "03-core-business.md#T-03.10.01.02",
+        "03-core-business.md#T-03.10.01.03",
+        "03-core-business.md#T-03.10.01.04",
+        "03-core-business.md#T-03.10.01.05",
+        "03-core-business.md#T-03.90.02",
+        "07-ui-ux-design.md#T-07.01.03.19",
+        "07-ui-ux-design.md#T-07.01.04.02",
+        "07-ui-ux-design.md#T-07.01.04.03",
+        "07-ui-ux-design.md#T-07.01.04.04",
+        "07-ui-ux-design.md#T-07.01.04.05",
+        "07-ui-ux-design.md#T-07.04.01.05",
+        "07-ui-ux-design.md#T-07.11.01.01",
+        "07-ui-ux-design.md#T-07.11.01.02",
+        "07-ui-ux-design.md#T-07.11.01.04",
+        "07-ui-ux-design.md#T-07.11.01.05",
+        "07-ui-ux-design.md#T-07.11.02.01",
+        "07-ui-ux-design.md#T-07.11.02.02",
+        "07-ui-ux-design.md#T-07.11.02.03",
+        "07-ui-ux-design.md#T-07.11.02.04",
+        "07-ui-ux-design.md#T-07.11.02.05",
+        "07-ui-ux-design.md#T-07.12.01.01",
+        "07-ui-ux-design.md#T-07.12.01.02",
+        "07-ui-ux-design.md#T-07.12.01.03",
+        "07-ui-ux-design.md#T-07.12.01.04",
+        "07-ui-ux-design.md#T-07.12.01.05",
+        "07-ui-ux-design.md#T-07.12.01.06",
+        "07-ui-ux-design.md#T-07.12.01.07",
+        "07-ui-ux-design.md#T-07.18.01.01",
+        "07-ui-ux-design.md#T-07.18.01.02",
+        "07-ui-ux-design.md#T-07.18.01.03",
+        "07-ui-ux-design.md#T-07.18.01.04",
+        "07-ui-ux-design.md#T-07.18.01.05",
+        "07-ui-ux-design.md#T-07.18.01.06",
+        "07-ui-ux-design.md#T-07.18.02.01",
+        "07-ui-ux-design.md#T-07.18.02.02",
+        "07-ui-ux-design.md#T-07.18.02.03",
+        "07-ui-ux-design.md#T-07.18.02.04",
+        "07-ui-ux-design.md#T-07.18.02.05",
+        "07-ui-ux-design.md#T-07.24.01.01",
+        "07-ui-ux-design.md#T-07.24.01.02",
+        "07-ui-ux-design.md#T-07.24.01.03",
+        "07-ui-ux-design.md#T-07.24.01.04",
+        "07-ui-ux-design.md#T-07.30.02.16",
+        "release-readiness#R-02.02"
+      ],
+      "failed_attempts_retained": true,
+      "release_disposition": "Verified and closed direct staff saving and team read hangs. No release publication."
     }
   },
   "historical_improvements": [
@@ -716778,17 +717335,17 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.5-staff-direct-reads",
+    "id": "release-0.5-staff-terms-reads",
     "release": "0.5.0",
     "task_keys": [
       "07-ui-ux-design.md#T-07.12.01.08",
       "release-readiness#R-04.01"
     ],
-    "goal": "Audit the remaining direct saving order and staff team reads. Reproduce any unbounded state, then add only safe deadline and explicit retry behavior while preserving current authority and captured commands."
+    "goal": "Audit direct staff terms draft/version/history reads and prove any hanging states with existing fixtures. Close only reproduced missing recovery without changing publication, immutable versions or permissions."
   },
   "launch_forecast": {
     "status": "deadline_at_risk_until_v0_5_and_operational_gates_close",
-    "next_update_after": "v0.5.0 remaining direct staff read evidence",
+    "next_update_after": "v0.5.0 staff terms read evidence",
     "method": "v0.4.0 staging and Telegram receipts verified. 12 v0.5.0 criteria and gates remain, including route diagnostics and required CI merge enforcement decisions. v0.6.0 operations and v0.9.0 four-service rehearsal keep November 9 at risk. Production is not authorized."
   },
   "capabilities": [

@@ -164,7 +164,7 @@ for (const locale of ['en', 'fa'] as const) {
   }, info) => {
     await shell(page, locale);
     let teamStatus = 200,
-      rulesStatus = 503,
+      rulesStatus = 0,
       memberStatus = 200,
       rulesReads = 0;
     const memberQueries: string[] = [];
@@ -173,23 +173,28 @@ for (const locale of ['en', 'fa'] as const) {
     );
     await page.route('**/api/admin/config/assignment-rules', (route) => {
       ++rulesReads;
+      if (rulesStatus === 0) return;
       return route.fulfill(
         rulesStatus === 200 ? { json: staffRoutingRules } : { status: rulesStatus, json: {} }
       );
     });
     await page.route('**/api/admin/staff-teams/members?*', (route) => {
       memberQueries.push(new URL(route.request().url()).search);
+      if (memberStatus === 0) return;
       return route.fulfill(
         memberStatus === 200
           ? { json: { items: [staffMember], selected: [staffMember], hasMore: false } }
           : { status: memberStatus, json: {} }
       );
     });
+    await page.clock.install();
     await page.goto('/admin/staff-teams');
     await page.getByRole('button', { name: g('edit'), exact: true }).click();
     await expect(page.locator('#staff-team-lead')).toHaveValue(staffMember.id);
     await page.locator('#staff-team-description').fill('Keep team explanation');
     await page.locator('#team-ticket').selectOption(staffTeamId);
+    await expect.poll(() => rulesReads).toBe(1);
+    await page.clock.fastForward(15_001);
     rulesStatus = 200;
     await page.getByRole('button', { name: g('rulesRetry'), exact: true }).click();
     await expect(page.getByRole('button', { name: g('rulesRetry'), exact: true })).toHaveCount(0);
@@ -205,8 +210,12 @@ for (const locale of ['en', 'fa'] as const) {
     expect(rulesReads).toBe(reads);
     await expect(page.locator('#staff-team-description')).toHaveValue('Keep team explanation');
     await expect(page.locator('#team-ticket')).toHaveValue(staffTeamId);
-    memberStatus = 503;
+    memberStatus = 0;
     await page.locator('#staff-team-search').fill('finance & review');
+    await expect
+      .poll(() => new URLSearchParams(memberQueries.at(-1)).get('q'))
+      .toBe('finance & review');
+    await page.clock.fastForward(15_001);
     await expect(page.getByRole('button', { name: g('memberRetry'), exact: true })).toBeVisible();
     const failed = memberQueries.at(-1);
     memberStatus = 200;

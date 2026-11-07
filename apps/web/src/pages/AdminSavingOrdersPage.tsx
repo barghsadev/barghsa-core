@@ -1,6 +1,7 @@
 import { confirmationText } from '@barghsa/i18n/confirmation';
 import { useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from '../lib/query-keys.js';
+import { readWithDeadline } from '../lib/server-query-client.js';
 import { OrderWalletBalance } from '../components/OrderWalletBalance.js';
 import { SavingFulfillmentHistory } from '../components/SavingFulfillmentProgress.js';
 import type { SavingFulfillmentEvent } from '../lib/saving-fulfillment.js';
@@ -351,19 +352,20 @@ export default function AdminSavingOrdersPage({ queries }: { queries?: StaffOrde
         staleTime: 0,
         gcTime: 0,
         retry: false,
-        queryFn: async ({ signal }) => {
-          const response = await fetch(`/api/staff/saving/orders?${params}`, {
-            credentials: 'include',
-            signal,
-          });
-          return {
-            ok: response.ok,
-            status: response.status,
-            data: response.ok
-              ? ((await response.json()) as { orders: Order[]; nextAfter: string | null })
-              : null,
-          };
-        },
+        queryFn: ({ signal }) =>
+          readWithDeadline(signal, async (transport) => {
+            const response = await fetch(`/api/staff/saving/orders?${params}`, {
+              credentials: 'include',
+              signal: transport,
+            });
+            return {
+              ok: response.ok,
+              status: response.status,
+              data: response.ok
+                ? ((await response.json()) as { orders: Order[]; nextAfter: string | null })
+                : null,
+            };
+          }),
       })
       .then(async (response) => {
         if (!fresh()) return null;
@@ -448,17 +450,21 @@ export default function AdminSavingOrdersPage({ queries }: { queries?: StaffOrde
         staleTime: 0,
         gcTime: 0,
         retry: false,
-        queryFn: async ({ signal }) => {
-          const response = await fetch(`/api/staff/saving/orders/${encodeURIComponent(selected)}`, {
-            credentials: 'include',
-            signal,
-          });
-          return {
-            ok: response.ok,
-            status: response.status,
-            data: response.ok ? ((await response.json()) as Detail) : null,
-          };
-        },
+        queryFn: ({ signal }) =>
+          readWithDeadline(signal, async (transport) => {
+            const response = await fetch(
+              `/api/staff/saving/orders/${encodeURIComponent(selected)}`,
+              {
+                credentials: 'include',
+                signal: transport,
+              }
+            );
+            return {
+              ok: response.ok,
+              status: response.status,
+              data: response.ok ? ((await response.json()) as Detail) : null,
+            };
+          }),
       })
       .then(async (response) => {
         if (!fresh()) return null;

@@ -76,6 +76,7 @@ for (const locale of ['en', 'fa'] as const) {
       page,
     }, testInfo) => {
       await shell(page, locale);
+      if (name === 'saving') await page.clock.install();
       let detailFail = true,
         pageFail = true,
         denied = false,
@@ -102,6 +103,7 @@ for (const locale of ['en', 'fa'] as const) {
       );
       await page.route(`**${base}/${firstWork}`, (route) => {
         detailReads++;
+        if (name === 'saving' && detailFail) return;
         return detailFail
           ? route.fulfill({ status: 503, json: {} })
           : route.fulfill({
@@ -138,6 +140,10 @@ for (const locale of ['en', 'fa'] as const) {
           ? tConsultation('retry', locale)
           : appText('historyPagination.retry', locale);
       const retry = list.getByRole('button', { name: retryWord, exact: true });
+      if (name === 'saving') {
+        await expect.poll(() => detailReads).toBe(1);
+        await page.clock.fastForward(15_001);
+      }
       await expect(retry).toBeVisible();
       const initialQueueReads = queries.length;
       expect(initialQueueReads).toBeGreaterThan(0);
@@ -166,7 +172,8 @@ for (const locale of ['en', 'fa'] as const) {
       await expect(content).toHaveAttribute('aria-busy', 'true');
       await expect(more).toBeDisabled();
       await expect(content.getByRole('button', { name: /First buyer/ })).toBeVisible();
-      await held!.fulfill({ status: 503, json: {} });
+      if (name === 'saving') await page.clock.fastForward(15_001);
+      else await held!.fulfill({ status: 503, json: {} });
       await expect(content.getByRole('button', { name: retryWord, exact: true })).toBeVisible();
       const failed = queries.at(-1);
       pageFail = false;
