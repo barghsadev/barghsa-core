@@ -221,6 +221,7 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
     fields.setField('documentKeys', JSON.stringify(next));
   };
   const [uploading, setUploading] = useState(false);
+  const documentInput = useRef<HTMLInputElement>(null);
   const uploadInFlight = useRef(false);
   const [uploadError, setUploadError] = useState(false);
   const restoreDraft = useCallback(
@@ -589,7 +590,11 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
       <div className="space-y-2">
         <Label htmlFor={field}>
           {label}
-          {options?.required && <span className="text-destructive ml-0.5">*</span>}
+          {options?.required && (
+            <span aria-hidden="true" className="text-destructive ml-0.5">
+              *
+            </span>
+          )}
         </Label>
         {field === 'representativeFullAddress' ? (
           <>
@@ -1255,16 +1260,23 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
                       <p role="status">{t('onboarding.documents.uploading', locale)}</p>
                     )}
                     {uploadError && (
-                      <p role="alert" className="text-destructive">
+                      <p id="document-upload-error" role="alert" className="text-destructive">
                         {t('onboarding.documents.error', locale)}
                       </p>
                     )}
-                    <p className="mb-2 text-sm text-muted-foreground">
+                    <p id="document-upload-rules" className="mb-2 text-sm text-muted-foreground">
                       {t('onboarding.documents.limit', locale)}
                     </p>
                     <div className="flex items-center justify-center w-full">
-                      <label
-                        htmlFor="document-upload"
+                      <button
+                        type="button"
+                        onClick={() => documentInput.current?.click()}
+                        disabled={submitting || uploading}
+                        aria-describedby={
+                          uploadError
+                            ? 'document-upload-rules document-upload-error'
+                            : 'document-upload-rules'
+                        }
                         onDragOver={(event) => event.preventDefault()}
                         onDrop={(event) => {
                           event.preventDefault();
@@ -1272,24 +1284,24 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
                         }}
                         className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer bg-background hover:bg-muted/50 transition-colors"
                       >
-                        <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                          <UploadIcon className="w-8 h-8 mb-2 text-muted-foreground" />
-                          <p className="text-sm text-muted-foreground">
-                            {isRtl
-                              ? 'برای آپلود کلیک کنید یا فایل را بکشید و رها کنید'
-                              : 'Click or drag and drop to upload'}
-                          </p>
-                        </div>
-                        <input
-                          id="document-upload"
-                          type="file"
-                          multiple
-                          accept=".pdf,.jpg,.jpeg,.png"
-                          className="sr-only"
-                          onChange={handleFileChange}
-                          disabled={submitting || uploading}
+                        <UploadIcon
+                          aria-hidden="true"
+                          className="mb-2 size-8 text-muted-foreground"
                         />
-                      </label>
+                        <span className="text-sm text-muted-foreground">
+                          {t('onboarding.documents.choose', locale)}
+                        </span>
+                      </button>
+                      <input
+                        ref={documentInput}
+                        id="document-upload"
+                        type="file"
+                        hidden
+                        multiple
+                        accept=".pdf,.jpg,.jpeg,.png"
+                        onChange={handleFileChange}
+                        disabled={submitting || uploading}
+                      />
                     </div>
 
                     {documents.length > 0 && (

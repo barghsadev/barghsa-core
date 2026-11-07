@@ -76,6 +76,7 @@ for (const [locale, darkMode] of [
     await page.locator('#template-name').fill('Keep metadata');
     await page.locator('#template-description').fill('Keep explanation');
     const picker = page.getByRole('button', { name: word('chooseFile'), exact: true });
+    await expect(picker).toHaveAccessibleDescription(word('fileHelp'));
     await picker.focus();
     const chooserPromise = page.waitForEvent('filechooser');
     await picker.press('Enter');

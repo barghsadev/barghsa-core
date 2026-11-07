@@ -877,15 +877,25 @@ test('legal document upload reports record failures and keeps successful files a
   await page.goto('/onboarding/legal/profile-one');
   for (let step = 0; step < 3; step++) await wizardNext(page);
   await expect(page.locator('#document-upload')).toBeEnabled();
+  const browse = page.getByRole('button', {
+    name: 'Drop files here or click to browse',
+    exact: true,
+  });
+  await expect(browse).toHaveAccessibleDescription('Up to 5 PDF or image files, 10 MB each.');
   const file = {
     name: 'gazette.pdf',
     mimeType: 'application/pdf',
     buffer: Buffer.from('%PDF-1.7 test document'),
   };
-  await page.locator('#document-upload').setInputFiles(file);
+  const chooser = page.waitForEvent('filechooser');
+  await browse.press('Enter');
+  await (await chooser).setFiles(file);
   await expect(
     page.getByText('Upload failed. Select a valid file and retry.', { exact: true })
   ).toBeVisible();
+  await expect(browse).toHaveAccessibleDescription(
+    /Upload failed\. Select a valid file and retry\./
+  );
   await expect(page.locator('ul').getByText('gazette.pdf', { exact: true })).toHaveCount(0);
   fail = false;
   await page.locator('#document-upload').setInputFiles(file);
@@ -893,7 +903,7 @@ test('legal document upload reports record failures and keeps successful files a
   await expect.poll(() => stored.data.documentKeys).toContain('gazette.pdf');
   await expect(page.getByText('Draft saved', { exact: true })).toBeVisible();
   await page.reload();
-  for (let step = 0; step < 3; step++) await wizardNext(page);
+  await expect(page.getByRole('group', { name: 'Document Upload', exact: true })).toBeVisible();
   await expect(page.locator('ul').getByText('gazette.pdf', { exact: true })).toBeVisible();
   await page.getByRole('button', { name: 'Remove gazette.pdf', exact: true }).click();
   await expect.poll(() => stored.data.documentKeys).toBe('[]');
@@ -1712,7 +1722,8 @@ for (const locale of ['en', 'fa']) {
 
 for (const locale of ['en', 'fa']) {
   test(`email-provider labels identify SMTP and Resend fields (${locale})`, async ({ page }) => {
-    await shell(page, locale);
+    await crmShell(page, locale);
+    await page.route('**/api/admin/sms-providers', (route) => route.fulfill({ json: [] }));
     await page.route('**/api/user/settings/timezone', (route) =>
       route.fulfill({ json: { timezone: 'America/Los_Angeles' } })
     );
@@ -1757,6 +1768,7 @@ for (const locale of ['en', 'fa']) {
     for (const control of await form.locator('input, select').all())
       await expect(control).toHaveAccessibleName(/.+/);
     const host = form.getByLabel(locale === 'fa' ? 'میزبان' : 'Host', { exact: false });
+    await expect(host).toHaveAttribute('aria-required', 'true');
     await form.getByText(locale === 'fa' ? 'میزبان' : 'Host', { exact: false }).click();
     await expect(host).toBeFocused();
     await host.fill('smtp.example.test');
@@ -1769,6 +1781,7 @@ for (const locale of ['en', 'fa']) {
       await expect(control).toHaveAccessibleName(/.+/);
     const key = form.getByLabel(locale === 'fa' ? 'کلید API' : 'API key', { exact: false });
     await expect(key).toHaveAttribute('type', 'password');
+    await expect(key).toHaveAttribute('aria-required', 'true');
     await key.fill('local-fixture-only');
     await expect(key).toHaveValue('local-fixture-only');
   });

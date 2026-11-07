@@ -1,3 +1,5 @@
+import '@testing-library/jest-dom/vitest';
+import { within } from '@testing-library/react';
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -47,6 +49,9 @@ it('exposes only a safe support code and opaque reference in collapsed details',
   expect(details?.textContent).toContain('ROUTE_RENDER_FAILED');
   expect(details?.textContent).toContain('10000000-0000-4000-8000-000000000001');
   expect(container.querySelector('svg')?.getAttribute('aria-hidden')).toBe('true');
+  const alert = within(container).getByRole('alert');
+  expect(within(alert).getByRole('heading', { name: labels.title })).toBeInTheDocument();
+  expect(within(alert).getByRole('button', { name: labels.retryLabel })).toBeInTheDocument();
 });
 
 it.each(['private SQL password', 'x'.repeat(81)])(
@@ -140,6 +145,7 @@ it.each(['Loading page', 'در حال بارگذاری صفحه'])(
   'announces %s with hidden decorative skeletons',
   async (label) => {
     await act(async () => root.render(<PageLoading label={label} />));
+    expect(within(container).getByRole('status', { name: label })).toBeInTheDocument();
     expect(container.querySelector('[role="status"]')?.getAttribute('aria-label')).toBe(label);
     const skeletons = [...container.querySelectorAll('[data-slot="skeleton"]')];
     expect(skeletons).toHaveLength(3);
@@ -162,6 +168,10 @@ it('shows actionable empty-state guidance in RTL and keeps decorative icons out 
     )
   );
   expect(container.querySelector('h2')?.textContent).toBe('فاکتوری وجود ندارد');
+  expect(
+    within(container).getByRole('heading', { name: 'فاکتوری وجود ندارد', level: 2 })
+  ).toBeInTheDocument();
+  expect(within(container).getByRole('button', { name: 'خرید برق' })).toBeInTheDocument();
   expect(container.querySelector('svg')?.closest('[aria-hidden="true"]')).not.toBeNull();
   await act(async () => container.querySelector('button')!.click());
   expect(action).toHaveBeenCalledTimes(1);

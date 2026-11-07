@@ -107,6 +107,10 @@ for (const locale of ['en', 'fa'] as const) {
     const title = page.locator('#document-template-title');
     const details = page.locator('#document-template-description');
     const form = page.getByRole('form', { name: word('edit'), exact: true });
+    await expect(form.getByRole('textbox', { name: word('name'), exact: true })).toHaveAttribute(
+      'aria-required',
+      'true'
+    );
     await title.fill('   ');
     await form.getByRole('button', { name: word('save'), exact: true }).click();
     await expect(title).toHaveAttribute('aria-invalid', 'true');
@@ -163,6 +167,7 @@ for (const locale of ['en', 'fa'] as const) {
     const { word, confirm, save, readFailed } = await setup(page, locale);
     const form = page.getByRole('form', { name: word('publishVersion'), exact: true });
     const upload = page.locator('#document-template-files');
+    await expect(upload).toHaveAccessibleDescription(word('fileHelp'));
     const summary = page.locator('#document-template-summary');
     const retained = form.getByRole('checkbox');
     await retained.uncheck();
@@ -262,7 +267,12 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(summary).toBeEnabled();
     await form.getByRole('button', { name: word('publishVersion'), exact: true }).click();
     await confirm().click();
-    await expect(page.getByText(word('saved'), { exact: true })).toBeVisible();
+    await expect(
+      page
+        .getByTestId('admin-settings-layout')
+        .getByRole('status')
+        .filter({ hasText: word('saved') })
+    ).toBeVisible();
     await expect(summary).toHaveValue('');
     await expect(form.getByRole('checkbox')).toHaveCount(2);
     await expect(page.getByRole('region', { name: word('history'), exact: true })).toContainText(

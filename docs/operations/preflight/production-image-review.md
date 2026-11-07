@@ -27,6 +27,8 @@ API and worker receive provider configuration from an external runtime environme
 
 The full backing-service stack inherited from docker-compose.yml still contains development-oriented credentials and service choices. This check is not a production deployment certification. Before rollout, configure the actual backing services, providers, secrets, backup/restore and migration procedure. Do not restart the other-machine orchestrator as part of this repair.
 
+The registry flags the pinned `@smithy/core` 3.33.3 for an [AWS SDK custom logger redaction bug](https://github.com/aws/aws-sdk-js-v3/issues/8393). The reviewed S3 client configuration does not pass a logger to the SDK, so the reported exposure path is not present there. Recheck this in the candidate image and verify an upgrade to a fixed SDK version with the storage smoke test before production promotion.
+
 ## Historical checkpoint
 
 All three images were rebuilt at `95298723dd5744c5ee457bb700633652bbc6bf92` and the complete disposable runtime exercise passed. Exact tags, image IDs, build logs and check results are in [historical production-image checkpoint](https://github.com/barghsadev/barghsa-core/blob/fcd7678ba742fbbaa7cd0907471f3f2aec86bb82/audit/preflight/production-image-checkpoint.json). The existing test script was executed with its `:f18` tag strings replaced in memory by `:9529872`, leaving historical tags intact. No source behavior changed for the test. All temporary containers and the network were removed and cleanup verified.

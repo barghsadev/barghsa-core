@@ -1369,12 +1369,13 @@ function OwnedManualInvoiceForm({
                   value={password}
                   disabled={acting || unavailable}
                   aria-invalid={Boolean(stepError)}
+                  aria-describedby={stepError ? 'manual-step-password-error' : undefined}
                   onChange={(event) => setPassword(event.target.value)}
                 />
               </Field>
             </FieldGroup>
             {stepError && (
-              <Alert variant="destructive">
+              <Alert id="manual-step-password-error" variant="destructive">
                 <AlertDescription>{text(stepError)}</AlertDescription>
               </Alert>
             )}

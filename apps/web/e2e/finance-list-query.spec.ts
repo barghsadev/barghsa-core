@@ -194,6 +194,7 @@ for (const locale of ['en', 'fa'] as const)
       await id.fill('invalid');
       await ledger.getByRole('button', { name: ledgerWord('search'), exact: true }).click();
       await expect(ledger.getByRole('alert')).toHaveText(ledgerWord('invalidId'));
+      await expect(id).toHaveAccessibleDescription(ledgerWord('invalidId'));
       expect(reads).toHaveLength(count);
       await inspect(
         page,
@@ -296,6 +297,9 @@ for (const locale of ['en', 'fa'] as const)
         .fill('invalid');
       await history.getByRole('button', { name: receiptWord('historyApply'), exact: true }).click();
       await expect(history.getByRole('alert')).toHaveText(receiptWord('historyInvalidInvoice'));
+      await expect(
+        history.getByRole('textbox', { name: receiptWord('invoice'), exact: true })
+      ).toHaveAccessibleDescription(receiptWord('historyInvalidInvoice'));
       expect(reads).toHaveLength(count);
       await inspect(
         page,

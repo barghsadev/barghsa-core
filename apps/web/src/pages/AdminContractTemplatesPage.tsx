@@ -584,10 +584,15 @@ export default function AdminContractTemplatesPage() {
                     }}
                   >
                     <Label htmlFor="template-file">{label('file')}</Label>
-                    <p className="my-2 text-sm text-muted-foreground">{label('fileHelp')}</p>
+                    <p id="template-file-help" className="my-2 text-sm text-muted-foreground">
+                      {label('fileHelp')}
+                    </p>
                     <Button
                       type="button"
                       variant="outline"
+                      aria-describedby={
+                        fileError ? 'template-file-help template-file-error' : 'template-file-help'
+                      }
                       disabled={!!action || editor.pending || uncertain || needsReset}
                       onClick={() => fileInput.current?.click()}
                     >
@@ -606,7 +611,11 @@ export default function AdminContractTemplatesPage() {
                       }}
                     />
                   </div>
-                  {fileError && <p role="alert">{label('fileError')}</p>}
+                  {fileError && (
+                    <p id="template-file-error" role="alert">
+                      {label('fileError')}
+                    </p>
+                  )}
                   {reading && <p role="status">{label('reading')}</p>}
                   {upload && <p className="break-words">{upload.fileName}</p>}
                   <div>

@@ -862,10 +862,16 @@ it('validates staff filters, deduplicates pagination, and recovers list errors',
   await value('#contracts-profile', 'bad');
   await click(en.apply);
   expect(container.textContent).toContain(en.invalidProfile);
+  expect(container.querySelector('#contracts-profile')?.getAttribute('aria-describedby')).toBe(
+    'contracts-profile-error'
+  );
   await value('#contracts-profile', PROFILE);
   await value('#contracts-number', '0');
   await click(en.apply);
   expect(container.textContent).toContain(en.invalidContractNumber);
+  expect(container.querySelector('#contracts-number')?.getAttribute('aria-describedby')).toBe(
+    'contracts-number-error'
+  );
   await value('#contracts-number', '1001');
   await value('#contracts-state', 'Draft');
   await value('#contracts-service', 'electricity');

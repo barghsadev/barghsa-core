@@ -1422,10 +1422,19 @@ function Field({
     <label className="block">
       <span className="block text-sm font-medium text-foreground mb-1">
         {label}
-        {required && <span className="text-destructive"> *</span>}
+        {required && (
+          <span aria-hidden="true" className="text-destructive">
+            {' '}
+            *
+          </span>
+        )}
         {secret && <span className="ml-1 text-xs text-muted-foreground" />}
       </span>
-      {cloneElement(children, { ...binding, id: `email-provider-${binding.name}` })}
+      {cloneElement(children, {
+        ...binding,
+        id: `email-provider-${binding.name}`,
+        'aria-required': required || undefined,
+      })}
       {error && (
         <span id={errorId} role="alert" className="block text-sm text-destructive">
           {error}

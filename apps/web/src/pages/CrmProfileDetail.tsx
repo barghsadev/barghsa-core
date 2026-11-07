@@ -1504,7 +1504,7 @@ function SummaryCard({
     <div className="border border-border rounded-lg p-4 bg-card text-card-foreground shadow-sm">
       <p className="text-sm text-muted-foreground mb-1">{title}</p>
       <p className={`text-2xl font-bold ${colorClass}`}>
-        {icon} {value}
+        <span aria-hidden="true">{icon}</span> {value}
       </p>
     </div>
   );
@@ -1513,7 +1513,7 @@ function SummaryCard({
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div className="border border-border rounded-lg p-4 bg-card text-card-foreground">
-      <h3 className="text-lg font-semibold mb-3 text-foreground">{title}</h3>
+      <h2 className="text-lg font-semibold mb-3 text-foreground">{title}</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-2">
         {children}
       </div>

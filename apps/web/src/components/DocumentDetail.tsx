@@ -393,8 +393,13 @@ function OwnedDocumentDetail({
                 value={reason}
                 onChange={(event) => setReason(event.target.value)}
                 aria-invalid={reasonMissing}
+                aria-describedby={reasonMissing ? 'document-review-reason-error' : undefined}
               />
-              {reasonMissing ? <p role="alert">{word('reasonRequired')}</p> : null}
+              {reasonMissing ? (
+                <p id="document-review-reason-error" role="alert">
+                  {word('reasonRequired')}
+                </p>
+              ) : null}
             </Field>
           ) : null}
           <div className="flex flex-wrap gap-2">

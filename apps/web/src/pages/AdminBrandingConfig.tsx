@@ -847,11 +847,14 @@ export default function AdminBrandingConfig() {
                   id="adminbrandingconfig-field-4"
                   type="file"
                   accept="image/png,image/jpeg,image/webp"
+                  aria-describedby="branding-logo-hint"
                   disabled={action !== null}
                   onChange={(event) => void handleImageUpload(event, 'logo')}
                   className="block w-full text-sm text-muted-foreground file:me-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-muted file:text-foreground hover:file:underline"
                 />
-                <p className="text-xs text-muted-foreground mt-1">{text('logoHint')}</p>
+                <p id="branding-logo-hint" className="text-xs text-muted-foreground mt-1">
+                  {text('logoHint')}
+                </p>
               </div>
 
               {displayedLogo && (

@@ -360,6 +360,9 @@ function OwnedInvoiceLedger({
                     value={idInput}
                     onChange={(event) => setIdInput(event.target.value)}
                     aria-invalid={inputError === 'invalidId'}
+                    aria-describedby={
+                      inputError === 'invalidId' ? 'invoice-ledger-search-error' : undefined
+                    }
                   />
                 </label>
                 <label className="grid min-w-0 flex-1 basis-60 gap-1 text-sm">
@@ -370,6 +373,9 @@ function OwnedInvoiceLedger({
                     value={profileInput}
                     onChange={(event) => setProfileInput(event.target.value)}
                     aria-invalid={inputError === 'invalidProfileId'}
+                    aria-describedby={
+                      inputError === 'invalidProfileId' ? 'invoice-ledger-search-error' : undefined
+                    }
                   />
                 </label>
                 <label className="grid min-w-0 flex-1 basis-60 gap-1 text-sm">
@@ -380,6 +386,9 @@ function OwnedInvoiceLedger({
                     value={orderInput}
                     onChange={(event) => setOrderInput(event.target.value)}
                     aria-invalid={inputError === 'invalidOrderId'}
+                    aria-describedby={
+                      inputError === 'invalidOrderId' ? 'invoice-ledger-search-error' : undefined
+                    }
                   />
                 </label>
                 <button
@@ -393,7 +402,7 @@ function OwnedInvoiceLedger({
           }
         />
         {inputError ? (
-          <p role="alert" className="text-sm text-destructive">
+          <p id="invoice-ledger-search-error" role="alert" className="text-sm text-destructive">
             {word(inputError)}
           </p>
         ) : null}

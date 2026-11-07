@@ -697,6 +697,14 @@ for (const locale of ['fa', 'en'] as const)
         .click();
     await openDetails();
     const panel = page.getByRole('tabpanel');
+    await expect(page.getByRole('main').getByRole('heading', { level: 1 })).toHaveCount(1);
+    await expect(
+      panel.getByRole('heading', {
+        name: locale === 'fa' ? 'اطلاعات شخص حقوقی' : 'Legal Entity Info',
+        exact: true,
+        level: 2,
+      })
+    ).toBeVisible();
     for (const value of [
       'Example Legal Company',
       'reg-42',

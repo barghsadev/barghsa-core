@@ -663,7 +663,7 @@ function OwnedAdminDocumentTemplatesPage({ queries }: { queries?: ListQueryBindi
                     label={word('name')}
                     id="document-template-title"
                     disabled={locked}
-                    inputProps={{ autoFocus: true, maxLength: 200 }}
+                    inputProps={{ autoFocus: true, maxLength: 200, 'aria-required': true }}
                   />
                   <FormTextarea
                     control={metadata.control}
@@ -844,12 +844,18 @@ function OwnedAdminDocumentTemplatesPage({ queries }: { queries?: ListQueryBindi
                                 name={field.name}
                                 ref={field.ref}
                                 onBlur={field.onBlur}
+                                aria-describedby="document-template-file-help"
                                 disabled={locked}
                                 className="block w-full text-sm"
                                 onChange={(event) => selectFiles([...(event.target.files ?? [])])}
                               />
                             </FormControl>
-                            <p className="text-xs text-muted-foreground">{word('fileHelp')}</p>
+                            <p
+                              id="document-template-file-help"
+                              className="text-xs text-muted-foreground"
+                            >
+                              {word('fileHelp')}
+                            </p>
                             {files.length ? (
                               <p className="text-sm" dir="auto">
                                 {files.map((file) => file.name).join(', ')}

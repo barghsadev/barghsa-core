@@ -285,9 +285,9 @@ export function TicketIntakeForm({
                   ))}
                 </NativeSelect>
               ) : name === 'body' ? (
-                <Textarea {...field} disabled={pending} rows={4} />
+                <Textarea {...field} aria-required="true" disabled={pending} rows={4} />
               ) : (
-                <Input {...field} disabled={pending} />
+                <Input {...field} aria-required="true" disabled={pending} />
               )}
             </FormControl>
             <FormMessage />

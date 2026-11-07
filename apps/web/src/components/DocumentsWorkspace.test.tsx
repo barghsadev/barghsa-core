@@ -364,6 +364,9 @@ it('requires a rejection reason and binds the confirmed staff action to the disp
   );
   await click('Reject');
   expect(container.textContent).toContain('Enter a reason');
+  expect(container.querySelector('#document-review-reason')?.getAttribute('aria-describedby')).toBe(
+    'document-review-reason-error'
+  );
   expect(harness.action).toBeNull();
   await value('#document-review-reason', 'Please upload a readable scan');
   await click('Reject');

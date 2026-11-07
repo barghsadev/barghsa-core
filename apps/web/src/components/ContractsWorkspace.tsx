@@ -237,6 +237,7 @@ function Workspace({
                     setFilters({ ...filters, contractNumber: e.target.value.trim() })
                   }
                   aria-invalid={invalidNumber}
+                  aria-describedby={invalidNumber ? 'contracts-number-error' : undefined}
                 />
               </Field>
               <Field>
@@ -247,6 +248,7 @@ function Workspace({
                   value={filters.profileId}
                   onChange={(e) => setFilters({ ...filters, profileId: e.target.value.trim() })}
                   aria-invalid={invalid}
+                  aria-describedby={invalid ? 'contracts-profile-error' : undefined}
                 />
               </Field>
               <Field>
@@ -281,8 +283,16 @@ function Workspace({
               </Field>
             </FieldGroup>
           </fieldset>
-          {invalid ? <p role="alert">{word('invalidProfile')}</p> : null}
-          {invalidNumber ? <p role="alert">{word('invalidContractNumber')}</p> : null}
+          {invalid ? (
+            <p id="contracts-profile-error" role="alert">
+              {word('invalidProfile')}
+            </p>
+          ) : null}
+          {invalidNumber ? (
+            <p id="contracts-number-error" role="alert">
+              {word('invalidContractNumber')}
+            </p>
+          ) : null}
           <Button type="submit" className="self-start" disabled={locked}>
             {word('apply')}
           </Button>

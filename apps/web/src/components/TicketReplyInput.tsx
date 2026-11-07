@@ -421,7 +421,9 @@ export function TicketReplyInput({
                     }}
                   />
                 </FormControl>
-                <FormDescription>{copy('fileHelp')}</FormDescription>
+                <FormDescription>
+                  {documentText('dropFiles', locale)}. {copy('fileHelp')}
+                </FormDescription>
                 <FormMessage />
                 <DynamicFieldArray
                   emptyFocusRef={textarea}

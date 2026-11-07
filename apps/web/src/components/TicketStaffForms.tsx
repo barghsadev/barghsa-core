@@ -344,7 +344,7 @@ export function TicketStaffForms({
                   <FormItem id="ticket-status-reason" className="min-w-0 flex-1 basis-full">
                     <FormLabel>{text('statusReason')}</FormLabel>
                     <FormControl>
-                      <Textarea {...field} rows={2} disabled={locked} />
+                      <Textarea {...field} aria-required="true" rows={2} disabled={locked} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

@@ -204,7 +204,9 @@ for (const staff of [false, true])
       ).not.toBeChecked();
       await editor.getByRole('checkbox', { name: copy('paymentActivity'), exact: true }).check();
       const picker = page.waitForEvent('filechooser');
-      await editor.getByRole('button', { name: copy('choosePhoto'), exact: true }).focus();
+      const browse = editor.getByRole('button', { name: copy('choosePhoto'), exact: true });
+      await expect(browse).toHaveAccessibleDescription(copy('photoHelp'));
+      await browse.focus();
       await page.keyboard.press('Enter');
       await (await picker).setFiles({ name: 'portrait.png', mimeType: 'image/png', buffer: image });
       await editor.getByRole('button', { name: copy('saveAction'), exact: true }).click();

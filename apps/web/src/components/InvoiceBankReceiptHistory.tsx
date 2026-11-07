@@ -186,6 +186,7 @@ function OwnedHistory({ onOpen, revision, binding }: HistoryProps) {
                       setInvalidInvoice(false);
                     }}
                     aria-invalid={invalidInvoice}
+                    aria-describedby={invalidInvoice ? 'receipt-history-invoice-error' : undefined}
                     className="min-h-10 w-72 max-w-full rounded-md border bg-background px-3"
                   />
                 </label>
@@ -207,7 +208,11 @@ function OwnedHistory({ onOpen, revision, binding }: HistoryProps) {
             />
           }
         />
-        {invalidInvoice ? <p role="alert">{word('historyInvalidInvoice')}</p> : null}
+        {invalidInvoice ? (
+          <p id="receipt-history-invoice-error" role="alert">
+            {word('historyInvalidInvoice')}
+          </p>
+        ) : null}
         <ListPage.Content
           loading={loadState === 'loading'}
           error={loadState === 'error' || loadState === 'forbidden'}

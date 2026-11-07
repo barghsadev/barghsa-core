@@ -301,12 +301,15 @@ export function ConversationIdentityDialog({
                   variant="outline"
                   disabled={pending}
                   className="flex-1"
+                  aria-describedby={`${id}-photo-help`}
                   onClick={() => photoInput.current?.click()}
                 >
                   {text('choosePhoto')}
                 </Button>
               </div>
-              <p className="text-xs text-muted-foreground">{text('photoHelp')}</p>
+              <p id={`${id}-photo-help`} className="text-xs text-muted-foreground">
+                {text('photoHelp')}
+              </p>
               {file && (
                 <p dir="auto" className="break-all text-sm">
                   {file.name}

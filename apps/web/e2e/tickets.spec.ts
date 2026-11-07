@@ -544,6 +544,8 @@ for (const locale of ['en', 'fa'])
     await page
       .getByRole('button', { name: locale === 'en' ? 'Create ticket' : 'ایجاد تیکت', exact: true })
       .click();
+    await expect(page.locator('#ticket-subject')).toHaveAttribute('aria-required', 'true');
+    await expect(page.locator('#ticket-body')).toHaveAttribute('aria-required', 'true');
     await page.locator('#ticket-subject').fill(item.subject);
     await page.locator('#ticket-body').fill(item.body);
     await expect(page.locator('#ticket-category')).toHaveValue('general');
