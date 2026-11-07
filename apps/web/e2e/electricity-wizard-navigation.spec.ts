@@ -343,6 +343,50 @@ for (const locale of ['en', 'fa'] as const)
   });
 const button = (page: Page, key: Parameters<typeof t>[0], locale: Locale) =>
   page.getByRole('button', { name: t(key, locale), exact: true });
+
+for (const locale of ['en', 'fa'] as const)
+  for (const mode of ['simple', 'advanced'] as const) {
+    test(`${mode} retries a stalled price preview without submitting (${locale})`, async ({
+      page,
+    }) => {
+      await page.clock.install({ time: new Date('2026-10-02T10:00:00Z') });
+      const state = await fixture(page, mode, locale, 5);
+      const previews: unknown[] = [];
+      await page.route(`**/api/electricity/preview/${mode}`, (route) => {
+        previews.push(route.request().postDataJSON());
+        if (previews.length > 1) return route.fallback();
+      });
+      await page.goto(`${path(mode)}?step=5`);
+      await expect.poll(() => previews.length).toBe(1);
+      const submit = button(page, 'electricity.order.submit', locale);
+      await expect(submit).toBeDisabled();
+      await expect(
+        page.getByRole('status').filter({ hasText: t('electricity.order.previewLoading', locale) })
+      ).toBeVisible();
+      await page.clock.fastForward(15_001);
+      const error = page
+        .getByRole('alert')
+        .filter({ hasText: t('electricity.order.previewUnavailable', locale) });
+      await expect(error).toBeVisible();
+      await expect(error.getByRole('link')).toHaveAttribute('href', '/support');
+      await expect(submit).toBeDisabled();
+      expect(previews).toHaveLength(1);
+      await error
+        .getByRole('button', { name: t('electricity.order.retry', locale), exact: true })
+        .click();
+      await expect.poll(() => previews.length).toBe(2);
+      await expect(page.locator('[data-review-section=address]')).toContainText(
+        address.fullAddress
+      );
+      expect(previews).toEqual([previews[0], previews[0]]);
+      await expect(submit).toBeDisabled();
+      await approveRiskConfirmation(page, locale, 'financial');
+      await expect(submit).toBeEnabled();
+      expect(state.saves).toHaveLength(0);
+      expect(state.orders).toHaveLength(0);
+    });
+  }
+
 async function leave(page: Page, locale: Locale) {
   const menu = page.getByRole('button', { name: locale === 'fa' ? 'فهرست' : 'Menu', exact: true });
   if ((await menu.isVisible()) && (await menu.getAttribute('aria-expanded')) === 'false')

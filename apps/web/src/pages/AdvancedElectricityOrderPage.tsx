@@ -442,17 +442,19 @@ export function AdvancedElectricityOrderPage() {
     const abort = new AbortController();
     const timer = window.setTimeout(() => {
       setQuoteError('');
-      void fetch('/api/electricity/preview/advanced', {
-        method: 'POST',
-        credentials: 'include',
-        signal: abort.signal,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(previewInput),
+      void readWithDeadline(abort.signal, async (signal) => {
+        const response = await fetch('/api/electricity/preview/advanced', {
+          method: 'POST',
+          credentials: 'include',
+          signal,
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(previewInput),
+        });
+        if (!response.ok)
+          throw new ElectricityQuotePreviewError(await electricityQuoteError(response, locale));
+        return response.json() as Promise<Quote>;
       })
-        .then(async (response) => {
-          if (!response.ok)
-            throw new ElectricityQuotePreviewError(await electricityQuoteError(response, locale));
-          const value = (await response.json()) as Quote;
+        .then((value) => {
           if (!abort.signal.aborted) setQuote(value);
         })
         .catch((error: unknown) => {
@@ -891,7 +893,14 @@ export function AdvancedElectricityOrderPage() {
                       </div>
                     );
                   })}
-                  {quoteError && <ElectricityQuoteErrorNotice message={quoteError} />}
+                  {quoteError ? (
+                    <ElectricityQuoteErrorNotice
+                      message={quoteError}
+                      onRetry={() => setQuoteVersion((version) => version + 1)}
+                    />
+                  ) : !quote && validPeriod && quantitiesValid ? (
+                    <p role="status">{t('electricity.order.previewLoading', locale)}</p>
+                  ) : null}
                 </CardContent>
               </Card>
             )}
@@ -951,7 +960,12 @@ export function AdvancedElectricityOrderPage() {
                       />
                     </label>
                   )}
-                  {quoteError && <ElectricityQuoteErrorNotice message={quoteError} />}
+                  {quoteError && (
+                    <ElectricityQuoteErrorNotice
+                      message={quoteError}
+                      onRetry={() => setQuoteVersion((version) => version + 1)}
+                    />
+                  )}
                   {!quote ? (
                     !quoteError && (
                       <p role={validPeriod && quantitiesValid ? 'status' : 'alert'}>

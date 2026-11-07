@@ -375,6 +375,66 @@ async function review(page: Page, mode: Mode, locale: Locale) {
   }
 }
 
+for (const locale of ['en', 'fa'] as const)
+  test(`saving retries stalled duplicate and quote reads without submitting (${locale})`, async ({
+    page,
+  }) => {
+    await page.clock.install({ time: new Date('2026-10-02T10:00:00Z') });
+    const state = await fixture(page, 'saving', locale);
+    const duplicates: unknown[] = [];
+    const quotes: unknown[] = [];
+    await page.route('**/api/saving/orders/duplicate', (route) => {
+      duplicates.push(route.request().postDataJSON());
+      if (duplicates.length > 1) return route.fallback();
+    });
+    await page.route('**/api/saving/orders/quote', (route) => {
+      quotes.push(route.request().postDataJSON());
+      if (quotes.length > 1) return route.fallback();
+    });
+    await open(page, 'saving', locale);
+    const bill = input(page, 'saving', locale);
+    const next = button(page, 'electricity.order.next', locale);
+    await expect.poll(() => duplicates.length).toBe(1);
+    const billBefore = await bill.inputValue();
+    await expect(next).toBeDisabled();
+    await page.clock.fastForward(15_001);
+    const duplicateError = page
+      .getByRole('alert')
+      .filter({ hasText: tSaving('duplicateCheckError', locale) });
+    await expect(duplicateError).toBeVisible();
+    await expect(next).toBeDisabled();
+    expect(duplicates).toHaveLength(1);
+    await duplicateError
+      .getByRole('button', { name: tSaving('retry', locale), exact: true })
+      .click();
+    await expect(next).toBeEnabled();
+    await expect(bill).toHaveValue(billBefore);
+    expect(duplicates).toEqual([duplicates[0], duplicates[0]]);
+    await next.click();
+    await next.click();
+    await page.getByLabel(tSaving('acceptAgreement', locale), { exact: true }).check();
+    await next.click();
+    await expect.poll(() => quotes.length).toBe(1);
+    const submit = page.getByRole('button', { name: tSaving('submit', locale), exact: true });
+    await expect(submit).toBeDisabled();
+    await page.clock.fastForward(15_001);
+    const quoteError = page.getByRole('alert').filter({ hasText: tSaving('quoteError', locale) });
+    await expect(quoteError).toBeVisible();
+    await expect(submit).toBeDisabled();
+    expect(quotes).toHaveLength(1);
+    await quoteError.getByRole('button', { name: tSaving('retry', locale), exact: true }).click();
+    await expect(quoteError).toHaveCount(0);
+    await page.getByLabel(tSaving('submitForReview', locale), { exact: true }).check();
+    await approveRiskConfirmation(page, locale, 'financial');
+    await expect(submit).toBeEnabled();
+    expect(quotes).toEqual([quotes[0], quotes[0]]);
+    expect(quotes[0]).toMatchObject({
+      billIdentifier: billBefore,
+      installationAddressId: address.id,
+    });
+    expect(state.orders).toHaveLength(0);
+  });
+
 for (const mode of ['saving', 'solar'] as const)
   for (const locale of ['en', 'fa'] as const) {
     test(`${mode} links localized field feedback and retains a corrected partial draft (${locale})`, async ({

@@ -14,6 +14,7 @@ interface Props {
   quote: PriceQuote | null;
   quoting: boolean;
   quoteError: string;
+  onRetryQuote: () => void;
   periodLabel: string;
   appliedGiftCode: string;
   activeProfileName: string | null;
@@ -30,6 +31,7 @@ export default function SimpleElectricityReview({
   quote,
   quoting,
   quoteError,
+  onRetryQuote,
   periodLabel,
   appliedGiftCode,
   activeProfileName,
@@ -47,7 +49,7 @@ export default function SimpleElectricityReview({
   const price = quoting ? (
     <p role="status">{copy('previewLoading')}</p>
   ) : quoteError ? (
-    <ElectricityQuoteErrorNotice message={quoteError} />
+    <ElectricityQuoteErrorNotice message={quoteError} onRetry={onRetryQuote} />
   ) : quote ? (
     <>
       {quote.greenRuleApplies && <p>{copy('mandatoryGreen')}</p>}

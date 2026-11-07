@@ -110,10 +110,15 @@ const draftSchema: DraftSchema<Draft> = {
   },
 };
 
-async function postJson<T>(url: string, body: unknown): Promise<T> {
+async function postJson<T>(
+  url: string,
+  body: unknown,
+  signal: AbortSignal | null = null
+): Promise<T> {
   const response = await fetch(url, {
     method: 'POST',
     credentials: 'include',
+    signal,
     headers: withCsrf({ 'Content-Type': 'application/json' }),
     body: JSON.stringify(body),
   });
@@ -510,31 +515,27 @@ function OwnedSavingsOrderPage() {
   }
 
   useEffect(() => {
-    if (step !== 6 || !profileId || !selectedPlan?.agreement || !selectedHardware || !addressId)
-      return;
+    const agreement = selectedPlan?.agreement;
+    if (step !== 6 || !profileId || !agreement || !selectedHardware || !addressId) return;
     const controller = new AbortController();
     setQuote(null);
     setQuoteError(false);
     setQuoting(true);
-    void fetch('/api/saving/orders/quote', {
-      method: 'POST',
-      credentials: 'include',
-      signal: controller.signal,
-      headers: withCsrf({ 'Content-Type': 'application/json' }),
-      body: JSON.stringify({
-        profileId,
-        savingPlanId: planId,
-        hardwareProductId: hardwareId,
-        billIdentifier,
-        installationAddressId: addressId,
-        agreementVersionId: selectedPlan.agreement.versionId,
-        ...(appliedGiftCode ? { giftCode: appliedGiftCode } : {}),
-      }),
-    })
-      .then(async (response) => {
-        if (!response.ok) throw new Error('quote');
-        return response.json() as Promise<Quote>;
-      })
+    void readWithDeadline(controller.signal, (signal) =>
+      postJson<Quote>(
+        '/api/saving/orders/quote',
+        {
+          profileId,
+          savingPlanId: planId,
+          hardwareProductId: hardwareId,
+          billIdentifier,
+          installationAddressId: addressId,
+          agreementVersionId: agreement.versionId,
+          ...(appliedGiftCode ? { giftCode: appliedGiftCode } : {}),
+        },
+        signal
+      )
+    )
       .then((result) => {
         if (!controller.signal.aborted) setQuote(result);
       })
@@ -573,21 +574,17 @@ function OwnedSavingsOrderPage() {
     const controller = new AbortController();
     setDuplicateChecking(true);
     const timer = setTimeout(() => {
-      void fetch('/api/saving/orders/duplicate', {
-        method: 'POST',
-        credentials: 'include',
-        signal: controller.signal,
-        headers: withCsrf({ 'Content-Type': 'application/json' }),
-        body: JSON.stringify({ profileId, savingPlanId: planId, billIdentifier }),
-      })
-        .then(async (response) => {
-          if (!response.ok) throw new Error('duplicate');
-          return response.json() as Promise<{
-            duplicate: boolean;
-            preventActiveDuplicates: boolean;
-            existingOrderId: string | null;
-          }>;
-        })
+      void readWithDeadline(controller.signal, (signal) =>
+        postJson<{
+          duplicate: boolean;
+          preventActiveDuplicates: boolean;
+          existingOrderId: string | null;
+        }>(
+          '/api/saving/orders/duplicate',
+          { profileId, savingPlanId: planId, billIdentifier },
+          signal
+        )
+      )
         .then((result) => {
           if (!controller.signal.aborted) setDuplicate(result);
         })

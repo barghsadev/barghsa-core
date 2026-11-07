@@ -791,23 +791,23 @@ function OwnedSimpleElectricityOrderPage() {
     setQuoteError('');
     setQuoting(true);
     const timer = window.setTimeout(() => {
-      void fetch('/api/electricity/preview/simple', {
-        method: 'POST',
-        credentials: 'include',
-        signal: controller.signal,
-        headers: withCsrf({ 'Content-Type': 'application/json' }),
-        body: JSON.stringify({
-          profileId: activeProfileId,
-          period,
-          totalKwh,
-          ...(appliedGiftCode ? { giftCode: appliedGiftCode } : {}),
-        }),
+      void readWithDeadline(controller.signal, async (signal) => {
+        const response = await fetch('/api/electricity/preview/simple', {
+          method: 'POST',
+          credentials: 'include',
+          signal,
+          headers: withCsrf({ 'Content-Type': 'application/json' }),
+          body: JSON.stringify({
+            profileId: activeProfileId,
+            period,
+            totalKwh,
+            ...(appliedGiftCode ? { giftCode: appliedGiftCode } : {}),
+          }),
+        });
+        if (!response.ok)
+          throw new ElectricityQuotePreviewError(await electricityQuoteError(response, locale));
+        return response.json() as Promise<PriceQuote>;
       })
-        .then(async (response) => {
-          if (!response.ok)
-            throw new ElectricityQuotePreviewError(await electricityQuoteError(response, locale));
-          return response.json() as Promise<PriceQuote>;
-        })
         .then((data) => {
           if (!controller.signal.aborted) setQuote(data);
         })
@@ -2136,6 +2136,7 @@ function OwnedSimpleElectricityOrderPage() {
                   quote={quote}
                   quoting={quoting}
                   quoteError={quoteError}
+                  onRetryQuote={() => setQuoteVersion((version) => version + 1)}
                   periodLabel={
                     quote
                       ? periodDates(
