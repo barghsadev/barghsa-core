@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-07T14:54:08+00:00",
-  "source_commit": "5551ca05908bf4f177b6a4621aadbc85d8fd273a",
+  "updated": "2026-11-07T15:05:44+00:00",
+  "source_commit": "6fdbab7d3a149e6fa4fa612dc205cccad29afeb9",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -88265,7 +88265,8 @@
           "release-0.5-ui-coverage-collection",
           "release-0.5-protected-contract-and-finance",
           "release-0.5-dependency-gate-closure",
-          "release-0.5-final-acceptance"
+          "release-0.5-final-acceptance",
+          "release-0.5-staff-confirmation-fixtures"
         ],
         "current_acceptance": {
           "kind": "verified-admin-financial-controls",
@@ -88429,7 +88430,7 @@
             },
             {
               "path": "apps/web/e2e/approval-queue.spec.ts",
-              "sha256": "65bd78b70eda71886c73ae6e8e5c50e34accd4971cc39011a9e0c2e6b7eab987"
+              "sha256": "c438969f07ad7c2fd844947dc6bb6ca15ca67913e973bfd2d381bfb5c350ac10"
             },
             {
               "path": "apps/web/e2e/approval-reason-forms.spec.ts",
@@ -88437,7 +88438,7 @@
             },
             {
               "path": "apps/web/e2e/approval-threshold.spec.ts",
-              "sha256": "e06e2b137faaa7f1dd11e44dc0143307fb333c96ad7c600387a0745e74710063"
+              "sha256": "239a7d133434ed904a27a783b60fc6a637f82df603ade339b5e11eb430faabc1"
             },
             {
               "path": "apps/web/e2e/limit-settings-forms.spec.ts",
@@ -89530,6 +89531,11 @@
               "batch": "release-0.5-final-acceptance",
               "base_commit": "460fdb3e46b92b3086c95b925a6f4735a21fc2ff",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-final-acceptance/customer-interaction-proof.json"
+            },
+            {
+              "batch": "release-0.5-staff-confirmation-fixtures",
+              "base_commit": "6fdbab7d3a149e6fa4fa612dc205cccad29afeb9",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-exact-command-feedback-renewal/confirmation-fixture-batch-proof.json"
             }
           ]
         }
@@ -89660,7 +89666,8 @@
           "release-0.5-ui-coverage-collection",
           "release-0.5-protected-contract-and-finance",
           "release-0.5-dependency-gate-closure",
-          "release-0.5-final-acceptance"
+          "release-0.5-final-acceptance",
+          "release-0.5-staff-confirmation-fixtures"
         ],
         "current_acceptance": {
           "kind": "verified-admin-financial-controls",
@@ -89824,7 +89831,7 @@
             },
             {
               "path": "apps/web/e2e/approval-queue.spec.ts",
-              "sha256": "65bd78b70eda71886c73ae6e8e5c50e34accd4971cc39011a9e0c2e6b7eab987"
+              "sha256": "c438969f07ad7c2fd844947dc6bb6ca15ca67913e973bfd2d381bfb5c350ac10"
             },
             {
               "path": "apps/web/e2e/approval-reason-forms.spec.ts",
@@ -89832,7 +89839,7 @@
             },
             {
               "path": "apps/web/e2e/approval-threshold.spec.ts",
-              "sha256": "e06e2b137faaa7f1dd11e44dc0143307fb333c96ad7c600387a0745e74710063"
+              "sha256": "239a7d133434ed904a27a783b60fc6a637f82df603ade339b5e11eb430faabc1"
             },
             {
               "path": "apps/web/e2e/limit-settings-forms.spec.ts",
@@ -90925,6 +90932,11 @@
               "batch": "release-0.5-final-acceptance",
               "base_commit": "460fdb3e46b92b3086c95b925a6f4735a21fc2ff",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-final-acceptance/customer-interaction-proof.json"
+            },
+            {
+              "batch": "release-0.5-staff-confirmation-fixtures",
+              "base_commit": "6fdbab7d3a149e6fa4fa612dc205cccad29afeb9",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-exact-command-feedback-renewal/confirmation-fixture-batch-proof.json"
             }
           ]
         }
@@ -96863,7 +96875,8 @@
           "release-0.5-ui-coverage-collection",
           "release-0.5-protected-contract-and-finance",
           "release-0.5-dependency-gate-closure",
-          "release-0.5-final-acceptance"
+          "release-0.5-final-acceptance",
+          "release-0.5-staff-confirmation-fixtures"
         ],
         "current_acceptance": {
           "kind": "verified-admin-financial-controls",
@@ -97027,7 +97040,7 @@
             },
             {
               "path": "apps/web/e2e/approval-queue.spec.ts",
-              "sha256": "65bd78b70eda71886c73ae6e8e5c50e34accd4971cc39011a9e0c2e6b7eab987"
+              "sha256": "c438969f07ad7c2fd844947dc6bb6ca15ca67913e973bfd2d381bfb5c350ac10"
             },
             {
               "path": "apps/web/e2e/approval-reason-forms.spec.ts",
@@ -97035,7 +97048,7 @@
             },
             {
               "path": "apps/web/e2e/approval-threshold.spec.ts",
-              "sha256": "e06e2b137faaa7f1dd11e44dc0143307fb333c96ad7c600387a0745e74710063"
+              "sha256": "239a7d133434ed904a27a783b60fc6a637f82df603ade339b5e11eb430faabc1"
             },
             {
               "path": "apps/web/e2e/limit-settings-forms.spec.ts",
@@ -98128,6 +98141,11 @@
               "batch": "release-0.5-final-acceptance",
               "base_commit": "460fdb3e46b92b3086c95b925a6f4735a21fc2ff",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-final-acceptance/customer-interaction-proof.json"
+            },
+            {
+              "batch": "release-0.5-staff-confirmation-fixtures",
+              "base_commit": "6fdbab7d3a149e6fa4fa612dc205cccad29afeb9",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-exact-command-feedback-renewal/confirmation-fixture-batch-proof.json"
             }
           ]
         }
@@ -100628,7 +100646,8 @@
           "release-0.5-critical-accessibility",
           "release-0.5-form-and-document-accessibility",
           "release-0.5-protected-contract-and-finance",
-          "release-0.5-dependency-gate-closure"
+          "release-0.5-dependency-gate-closure",
+          "release-0.5-staff-confirmation-fixtures"
         ],
         "current_acceptance": {
           "status": "done",
@@ -100724,7 +100743,7 @@
             },
             {
               "path": "apps/web/e2e/knowledge-policy-forms.spec.ts",
-              "sha256": "130ad44daed39043821de21363dd83435dcf05c60a20b13a9edcd387c937f537"
+              "sha256": "d8430735c3610a1e502b6a35fea4cf217243c98e3b9c982840311a3bf94231d7"
             },
             {
               "path": "apps/web/e2e/knowledge-policy-membership.spec.ts",
@@ -100732,7 +100751,7 @@
             },
             {
               "path": "apps/web/e2e/knowledge-bases.spec.ts",
-              "sha256": "ac0f7f7203cef9925806b5163b343d27ab6de3295c892ad07cd37824275a1915"
+              "sha256": "99dea2f63cc2eae8a8777a1f813d077696e5f5fdc48ec7cc8b6766421bd9ea09"
             },
             {
               "path": "packages/db/src/schema/knowledge-bases.ts",
@@ -101031,6 +101050,11 @@
               "batch": "release-0.5-dependency-gate-closure",
               "base_commit": "f7f27566c9a204444bb8790e67267ad7373c3ab7",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-dependency-gate-closure/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-staff-confirmation-fixtures",
+              "base_commit": "6fdbab7d3a149e6fa4fa612dc205cccad29afeb9",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-exact-command-feedback-renewal/confirmation-fixture-batch-proof.json"
             }
           ]
         }
@@ -101256,7 +101280,8 @@
           "release-0.5-critical-accessibility",
           "release-0.5-form-and-document-accessibility",
           "release-0.5-protected-contract-and-finance",
-          "release-0.5-dependency-gate-closure"
+          "release-0.5-dependency-gate-closure",
+          "release-0.5-staff-confirmation-fixtures"
         ],
         "current_acceptance": {
           "status": "done",
@@ -101400,7 +101425,7 @@
             },
             {
               "path": "apps/web/e2e/knowledge-policy-forms.spec.ts",
-              "sha256": "130ad44daed39043821de21363dd83435dcf05c60a20b13a9edcd387c937f537"
+              "sha256": "d8430735c3610a1e502b6a35fea4cf217243c98e3b9c982840311a3bf94231d7"
             },
             {
               "path": "apps/web/e2e/knowledge-policy-membership.spec.ts",
@@ -101575,6 +101600,11 @@
               "batch": "release-0.5-dependency-gate-closure",
               "base_commit": "f7f27566c9a204444bb8790e67267ad7373c3ab7",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-dependency-gate-closure/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-staff-confirmation-fixtures",
+              "base_commit": "6fdbab7d3a149e6fa4fa612dc205cccad29afeb9",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-exact-command-feedback-renewal/confirmation-fixture-batch-proof.json"
             }
           ]
         },
@@ -134046,7 +134076,8 @@
           "release-0.5-populated-route-presentation",
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
-          "release-0.5-final-rehearsal"
+          "release-0.5-final-rehearsal",
+          "release-0.5-staff-confirmation-fixtures"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -134150,7 +134181,7 @@
             },
             {
               "path": "apps/web/e2e/approval-queue.spec.ts",
-              "sha256": "65bd78b70eda71886c73ae6e8e5c50e34accd4971cc39011a9e0c2e6b7eab987"
+              "sha256": "c438969f07ad7c2fd844947dc6bb6ca15ca67913e973bfd2d381bfb5c350ac10"
             },
             {
               "path": "apps/web/e2e/browser-date.ts",
@@ -134722,6 +134753,11 @@
               "batch": "release-0.5-final-rehearsal",
               "base_commit": "dfc9ebe00018c4d59b06f0cae5ca4d06d29523c0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-final-rehearsal/rehearsal-proof.json"
+            },
+            {
+              "batch": "release-0.5-staff-confirmation-fixtures",
+              "base_commit": "6fdbab7d3a149e6fa4fa612dc205cccad29afeb9",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-exact-command-feedback-renewal/confirmation-fixture-batch-proof.json"
             }
           ]
         }
@@ -249798,7 +249834,8 @@
           "release-0.5-coverage-remaining-branches",
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
-          "release-0.5-final-rehearsal"
+          "release-0.5-final-rehearsal",
+          "release-0.5-staff-confirmation-fixtures"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -249902,7 +249939,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-fee-offer-forms.spec.ts",
-              "sha256": "ad3c79053646bc9214aff2b429e079f94c9e3d079ac7d27f4b13d987726e7455"
+              "sha256": "9f78212b976fdb5f7ff57d7aae1ed192014bf101c3cf49793cadae0fbd349a72"
             },
             {
               "path": "apps/web/e2e/consultation-form-fixture.ts",
@@ -249910,7 +249947,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-forms.spec.ts",
-              "sha256": "227f5db7e6577fe91f8a88da26a0964d60e6bb06e337e7d71868db657e2452fc"
+              "sha256": "327eaa5d44a7dc4b856c5addec09668cec1ad4e571282f728c0e1c664c4fb703"
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
@@ -250815,6 +250852,11 @@
               "batch": "release-0.5-final-rehearsal",
               "base_commit": "dfc9ebe00018c4d59b06f0cae5ca4d06d29523c0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-final-rehearsal/rehearsal-proof.json"
+            },
+            {
+              "batch": "release-0.5-staff-confirmation-fixtures",
+              "base_commit": "6fdbab7d3a149e6fa4fa612dc205cccad29afeb9",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-exact-command-feedback-renewal/confirmation-fixture-batch-proof.json"
             }
           ]
         }
@@ -250876,7 +250918,8 @@
           "release-0.5-coverage-remaining-branches",
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
-          "release-0.5-final-rehearsal"
+          "release-0.5-final-rehearsal",
+          "release-0.5-staff-confirmation-fixtures"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -250980,7 +251023,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-fee-offer-forms.spec.ts",
-              "sha256": "ad3c79053646bc9214aff2b429e079f94c9e3d079ac7d27f4b13d987726e7455"
+              "sha256": "9f78212b976fdb5f7ff57d7aae1ed192014bf101c3cf49793cadae0fbd349a72"
             },
             {
               "path": "apps/web/e2e/consultation-form-fixture.ts",
@@ -250988,7 +251031,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-forms.spec.ts",
-              "sha256": "227f5db7e6577fe91f8a88da26a0964d60e6bb06e337e7d71868db657e2452fc"
+              "sha256": "327eaa5d44a7dc4b856c5addec09668cec1ad4e571282f728c0e1c664c4fb703"
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
@@ -251893,6 +251936,11 @@
               "batch": "release-0.5-final-rehearsal",
               "base_commit": "dfc9ebe00018c4d59b06f0cae5ca4d06d29523c0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-final-rehearsal/rehearsal-proof.json"
+            },
+            {
+              "batch": "release-0.5-staff-confirmation-fixtures",
+              "base_commit": "6fdbab7d3a149e6fa4fa612dc205cccad29afeb9",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-exact-command-feedback-renewal/confirmation-fixture-batch-proof.json"
             }
           ]
         }
@@ -251950,7 +251998,8 @@
           "release-0.5-coverage-remaining-branches",
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
-          "release-0.5-final-rehearsal"
+          "release-0.5-final-rehearsal",
+          "release-0.5-staff-confirmation-fixtures"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -252054,7 +252103,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-fee-offer-forms.spec.ts",
-              "sha256": "ad3c79053646bc9214aff2b429e079f94c9e3d079ac7d27f4b13d987726e7455"
+              "sha256": "9f78212b976fdb5f7ff57d7aae1ed192014bf101c3cf49793cadae0fbd349a72"
             },
             {
               "path": "apps/web/e2e/consultation-form-fixture.ts",
@@ -252062,7 +252111,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-forms.spec.ts",
-              "sha256": "227f5db7e6577fe91f8a88da26a0964d60e6bb06e337e7d71868db657e2452fc"
+              "sha256": "327eaa5d44a7dc4b856c5addec09668cec1ad4e571282f728c0e1c664c4fb703"
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
@@ -252967,6 +253016,11 @@
               "batch": "release-0.5-final-rehearsal",
               "base_commit": "dfc9ebe00018c4d59b06f0cae5ca4d06d29523c0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-final-rehearsal/rehearsal-proof.json"
+            },
+            {
+              "batch": "release-0.5-staff-confirmation-fixtures",
+              "base_commit": "6fdbab7d3a149e6fa4fa612dc205cccad29afeb9",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-exact-command-feedback-renewal/confirmation-fixture-batch-proof.json"
             }
           ]
         }
@@ -253023,7 +253077,8 @@
           "release-0.5-coverage-remaining-branches",
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
-          "release-0.5-final-rehearsal"
+          "release-0.5-final-rehearsal",
+          "release-0.5-staff-confirmation-fixtures"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -253127,7 +253182,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-fee-offer-forms.spec.ts",
-              "sha256": "ad3c79053646bc9214aff2b429e079f94c9e3d079ac7d27f4b13d987726e7455"
+              "sha256": "9f78212b976fdb5f7ff57d7aae1ed192014bf101c3cf49793cadae0fbd349a72"
             },
             {
               "path": "apps/web/e2e/consultation-form-fixture.ts",
@@ -253135,7 +253190,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-forms.spec.ts",
-              "sha256": "227f5db7e6577fe91f8a88da26a0964d60e6bb06e337e7d71868db657e2452fc"
+              "sha256": "327eaa5d44a7dc4b856c5addec09668cec1ad4e571282f728c0e1c664c4fb703"
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
@@ -254040,6 +254095,11 @@
               "batch": "release-0.5-final-rehearsal",
               "base_commit": "dfc9ebe00018c4d59b06f0cae5ca4d06d29523c0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-final-rehearsal/rehearsal-proof.json"
+            },
+            {
+              "batch": "release-0.5-staff-confirmation-fixtures",
+              "base_commit": "6fdbab7d3a149e6fa4fa612dc205cccad29afeb9",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-exact-command-feedback-renewal/confirmation-fixture-batch-proof.json"
             }
           ]
         }
@@ -254097,7 +254157,8 @@
           "release-0.5-coverage-remaining-branches",
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
-          "release-0.5-final-rehearsal"
+          "release-0.5-final-rehearsal",
+          "release-0.5-staff-confirmation-fixtures"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -254201,7 +254262,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-fee-offer-forms.spec.ts",
-              "sha256": "ad3c79053646bc9214aff2b429e079f94c9e3d079ac7d27f4b13d987726e7455"
+              "sha256": "9f78212b976fdb5f7ff57d7aae1ed192014bf101c3cf49793cadae0fbd349a72"
             },
             {
               "path": "apps/web/e2e/consultation-form-fixture.ts",
@@ -254209,7 +254270,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-forms.spec.ts",
-              "sha256": "227f5db7e6577fe91f8a88da26a0964d60e6bb06e337e7d71868db657e2452fc"
+              "sha256": "327eaa5d44a7dc4b856c5addec09668cec1ad4e571282f728c0e1c664c4fb703"
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
@@ -255114,6 +255175,11 @@
               "batch": "release-0.5-final-rehearsal",
               "base_commit": "dfc9ebe00018c4d59b06f0cae5ca4d06d29523c0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-final-rehearsal/rehearsal-proof.json"
+            },
+            {
+              "batch": "release-0.5-staff-confirmation-fixtures",
+              "base_commit": "6fdbab7d3a149e6fa4fa612dc205cccad29afeb9",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-exact-command-feedback-renewal/confirmation-fixture-batch-proof.json"
             }
           ]
         }
@@ -255171,7 +255237,8 @@
           "release-0.5-coverage-remaining-branches",
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
-          "release-0.5-final-rehearsal"
+          "release-0.5-final-rehearsal",
+          "release-0.5-staff-confirmation-fixtures"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -255275,7 +255342,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-fee-offer-forms.spec.ts",
-              "sha256": "ad3c79053646bc9214aff2b429e079f94c9e3d079ac7d27f4b13d987726e7455"
+              "sha256": "9f78212b976fdb5f7ff57d7aae1ed192014bf101c3cf49793cadae0fbd349a72"
             },
             {
               "path": "apps/web/e2e/consultation-form-fixture.ts",
@@ -255283,7 +255350,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-forms.spec.ts",
-              "sha256": "227f5db7e6577fe91f8a88da26a0964d60e6bb06e337e7d71868db657e2452fc"
+              "sha256": "327eaa5d44a7dc4b856c5addec09668cec1ad4e571282f728c0e1c664c4fb703"
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
@@ -256188,6 +256255,11 @@
               "batch": "release-0.5-final-rehearsal",
               "base_commit": "dfc9ebe00018c4d59b06f0cae5ca4d06d29523c0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-final-rehearsal/rehearsal-proof.json"
+            },
+            {
+              "batch": "release-0.5-staff-confirmation-fixtures",
+              "base_commit": "6fdbab7d3a149e6fa4fa612dc205cccad29afeb9",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-exact-command-feedback-renewal/confirmation-fixture-batch-proof.json"
             }
           ]
         }
@@ -256250,7 +256322,8 @@
           "release-0.5-coverage-remaining-branches",
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
-          "release-0.5-final-rehearsal"
+          "release-0.5-final-rehearsal",
+          "release-0.5-staff-confirmation-fixtures"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -256354,7 +256427,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-fee-offer-forms.spec.ts",
-              "sha256": "ad3c79053646bc9214aff2b429e079f94c9e3d079ac7d27f4b13d987726e7455"
+              "sha256": "9f78212b976fdb5f7ff57d7aae1ed192014bf101c3cf49793cadae0fbd349a72"
             },
             {
               "path": "apps/web/e2e/consultation-form-fixture.ts",
@@ -256362,7 +256435,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-forms.spec.ts",
-              "sha256": "227f5db7e6577fe91f8a88da26a0964d60e6bb06e337e7d71868db657e2452fc"
+              "sha256": "327eaa5d44a7dc4b856c5addec09668cec1ad4e571282f728c0e1c664c4fb703"
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
@@ -257267,6 +257340,11 @@
               "batch": "release-0.5-final-rehearsal",
               "base_commit": "dfc9ebe00018c4d59b06f0cae5ca4d06d29523c0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-final-rehearsal/rehearsal-proof.json"
+            },
+            {
+              "batch": "release-0.5-staff-confirmation-fixtures",
+              "base_commit": "6fdbab7d3a149e6fa4fa612dc205cccad29afeb9",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-exact-command-feedback-renewal/confirmation-fixture-batch-proof.json"
             }
           ]
         }
@@ -257327,7 +257405,8 @@
           "release-0.5-coverage-remaining-branches",
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
-          "release-0.5-final-rehearsal"
+          "release-0.5-final-rehearsal",
+          "release-0.5-staff-confirmation-fixtures"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -257431,7 +257510,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-fee-offer-forms.spec.ts",
-              "sha256": "ad3c79053646bc9214aff2b429e079f94c9e3d079ac7d27f4b13d987726e7455"
+              "sha256": "9f78212b976fdb5f7ff57d7aae1ed192014bf101c3cf49793cadae0fbd349a72"
             },
             {
               "path": "apps/web/e2e/consultation-form-fixture.ts",
@@ -257439,7 +257518,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-forms.spec.ts",
-              "sha256": "227f5db7e6577fe91f8a88da26a0964d60e6bb06e337e7d71868db657e2452fc"
+              "sha256": "327eaa5d44a7dc4b856c5addec09668cec1ad4e571282f728c0e1c664c4fb703"
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
@@ -258344,6 +258423,11 @@
               "batch": "release-0.5-final-rehearsal",
               "base_commit": "dfc9ebe00018c4d59b06f0cae5ca4d06d29523c0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-final-rehearsal/rehearsal-proof.json"
+            },
+            {
+              "batch": "release-0.5-staff-confirmation-fixtures",
+              "base_commit": "6fdbab7d3a149e6fa4fa612dc205cccad29afeb9",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-exact-command-feedback-renewal/confirmation-fixture-batch-proof.json"
             }
           ]
         }
@@ -258402,7 +258486,8 @@
           "release-0.5-coverage-remaining-branches",
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
-          "release-0.5-final-rehearsal"
+          "release-0.5-final-rehearsal",
+          "release-0.5-staff-confirmation-fixtures"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -258506,7 +258591,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-fee-offer-forms.spec.ts",
-              "sha256": "ad3c79053646bc9214aff2b429e079f94c9e3d079ac7d27f4b13d987726e7455"
+              "sha256": "9f78212b976fdb5f7ff57d7aae1ed192014bf101c3cf49793cadae0fbd349a72"
             },
             {
               "path": "apps/web/e2e/consultation-form-fixture.ts",
@@ -258514,7 +258599,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-forms.spec.ts",
-              "sha256": "227f5db7e6577fe91f8a88da26a0964d60e6bb06e337e7d71868db657e2452fc"
+              "sha256": "327eaa5d44a7dc4b856c5addec09668cec1ad4e571282f728c0e1c664c4fb703"
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
@@ -259419,6 +259504,11 @@
               "batch": "release-0.5-final-rehearsal",
               "base_commit": "dfc9ebe00018c4d59b06f0cae5ca4d06d29523c0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-final-rehearsal/rehearsal-proof.json"
+            },
+            {
+              "batch": "release-0.5-staff-confirmation-fixtures",
+              "base_commit": "6fdbab7d3a149e6fa4fa612dc205cccad29afeb9",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-exact-command-feedback-renewal/confirmation-fixture-batch-proof.json"
             }
           ]
         }
@@ -259480,7 +259570,8 @@
           "release-0.5-coverage-remaining-branches",
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
-          "release-0.5-final-rehearsal"
+          "release-0.5-final-rehearsal",
+          "release-0.5-staff-confirmation-fixtures"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -259584,7 +259675,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-fee-offer-forms.spec.ts",
-              "sha256": "ad3c79053646bc9214aff2b429e079f94c9e3d079ac7d27f4b13d987726e7455"
+              "sha256": "9f78212b976fdb5f7ff57d7aae1ed192014bf101c3cf49793cadae0fbd349a72"
             },
             {
               "path": "apps/web/e2e/consultation-form-fixture.ts",
@@ -259592,7 +259683,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-forms.spec.ts",
-              "sha256": "227f5db7e6577fe91f8a88da26a0964d60e6bb06e337e7d71868db657e2452fc"
+              "sha256": "327eaa5d44a7dc4b856c5addec09668cec1ad4e571282f728c0e1c664c4fb703"
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
@@ -260497,6 +260588,11 @@
               "batch": "release-0.5-final-rehearsal",
               "base_commit": "dfc9ebe00018c4d59b06f0cae5ca4d06d29523c0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-final-rehearsal/rehearsal-proof.json"
+            },
+            {
+              "batch": "release-0.5-staff-confirmation-fixtures",
+              "base_commit": "6fdbab7d3a149e6fa4fa612dc205cccad29afeb9",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-exact-command-feedback-renewal/confirmation-fixture-batch-proof.json"
             }
           ]
         }
@@ -260560,7 +260656,8 @@
           "release-0.5-coverage-remaining-branches",
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
-          "release-0.5-final-rehearsal"
+          "release-0.5-final-rehearsal",
+          "release-0.5-staff-confirmation-fixtures"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -260664,7 +260761,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-fee-offer-forms.spec.ts",
-              "sha256": "ad3c79053646bc9214aff2b429e079f94c9e3d079ac7d27f4b13d987726e7455"
+              "sha256": "9f78212b976fdb5f7ff57d7aae1ed192014bf101c3cf49793cadae0fbd349a72"
             },
             {
               "path": "apps/web/e2e/consultation-form-fixture.ts",
@@ -260672,7 +260769,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-forms.spec.ts",
-              "sha256": "227f5db7e6577fe91f8a88da26a0964d60e6bb06e337e7d71868db657e2452fc"
+              "sha256": "327eaa5d44a7dc4b856c5addec09668cec1ad4e571282f728c0e1c664c4fb703"
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
@@ -261577,6 +261674,11 @@
               "batch": "release-0.5-final-rehearsal",
               "base_commit": "dfc9ebe00018c4d59b06f0cae5ca4d06d29523c0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-final-rehearsal/rehearsal-proof.json"
+            },
+            {
+              "batch": "release-0.5-staff-confirmation-fixtures",
+              "base_commit": "6fdbab7d3a149e6fa4fa612dc205cccad29afeb9",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-exact-command-feedback-renewal/confirmation-fixture-batch-proof.json"
             }
           ]
         }
@@ -261635,7 +261737,8 @@
           "release-0.5-coverage-remaining-branches",
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
-          "release-0.5-final-rehearsal"
+          "release-0.5-final-rehearsal",
+          "release-0.5-staff-confirmation-fixtures"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -261739,7 +261842,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-fee-offer-forms.spec.ts",
-              "sha256": "ad3c79053646bc9214aff2b429e079f94c9e3d079ac7d27f4b13d987726e7455"
+              "sha256": "9f78212b976fdb5f7ff57d7aae1ed192014bf101c3cf49793cadae0fbd349a72"
             },
             {
               "path": "apps/web/e2e/consultation-form-fixture.ts",
@@ -261747,7 +261850,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-forms.spec.ts",
-              "sha256": "227f5db7e6577fe91f8a88da26a0964d60e6bb06e337e7d71868db657e2452fc"
+              "sha256": "327eaa5d44a7dc4b856c5addec09668cec1ad4e571282f728c0e1c664c4fb703"
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
@@ -262652,6 +262755,11 @@
               "batch": "release-0.5-final-rehearsal",
               "base_commit": "dfc9ebe00018c4d59b06f0cae5ca4d06d29523c0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-final-rehearsal/rehearsal-proof.json"
+            },
+            {
+              "batch": "release-0.5-staff-confirmation-fixtures",
+              "base_commit": "6fdbab7d3a149e6fa4fa612dc205cccad29afeb9",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-exact-command-feedback-renewal/confirmation-fixture-batch-proof.json"
             }
           ]
         }
@@ -262709,7 +262817,8 @@
           "release-0.5-coverage-remaining-branches",
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
-          "release-0.5-final-rehearsal"
+          "release-0.5-final-rehearsal",
+          "release-0.5-staff-confirmation-fixtures"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -262813,7 +262922,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-fee-offer-forms.spec.ts",
-              "sha256": "ad3c79053646bc9214aff2b429e079f94c9e3d079ac7d27f4b13d987726e7455"
+              "sha256": "9f78212b976fdb5f7ff57d7aae1ed192014bf101c3cf49793cadae0fbd349a72"
             },
             {
               "path": "apps/web/e2e/consultation-form-fixture.ts",
@@ -262821,7 +262930,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-forms.spec.ts",
-              "sha256": "227f5db7e6577fe91f8a88da26a0964d60e6bb06e337e7d71868db657e2452fc"
+              "sha256": "327eaa5d44a7dc4b856c5addec09668cec1ad4e571282f728c0e1c664c4fb703"
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
@@ -263726,6 +263835,11 @@
               "batch": "release-0.5-final-rehearsal",
               "base_commit": "dfc9ebe00018c4d59b06f0cae5ca4d06d29523c0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-final-rehearsal/rehearsal-proof.json"
+            },
+            {
+              "batch": "release-0.5-staff-confirmation-fixtures",
+              "base_commit": "6fdbab7d3a149e6fa4fa612dc205cccad29afeb9",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-exact-command-feedback-renewal/confirmation-fixture-batch-proof.json"
             }
           ]
         }
@@ -263784,7 +263898,8 @@
           "release-0.5-coverage-remaining-branches",
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
-          "release-0.5-final-rehearsal"
+          "release-0.5-final-rehearsal",
+          "release-0.5-staff-confirmation-fixtures"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -263888,7 +264003,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-fee-offer-forms.spec.ts",
-              "sha256": "ad3c79053646bc9214aff2b429e079f94c9e3d079ac7d27f4b13d987726e7455"
+              "sha256": "9f78212b976fdb5f7ff57d7aae1ed192014bf101c3cf49793cadae0fbd349a72"
             },
             {
               "path": "apps/web/e2e/consultation-form-fixture.ts",
@@ -263896,7 +264011,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-forms.spec.ts",
-              "sha256": "227f5db7e6577fe91f8a88da26a0964d60e6bb06e337e7d71868db657e2452fc"
+              "sha256": "327eaa5d44a7dc4b856c5addec09668cec1ad4e571282f728c0e1c664c4fb703"
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
@@ -264801,6 +264916,11 @@
               "batch": "release-0.5-final-rehearsal",
               "base_commit": "dfc9ebe00018c4d59b06f0cae5ca4d06d29523c0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-final-rehearsal/rehearsal-proof.json"
+            },
+            {
+              "batch": "release-0.5-staff-confirmation-fixtures",
+              "base_commit": "6fdbab7d3a149e6fa4fa612dc205cccad29afeb9",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-exact-command-feedback-renewal/confirmation-fixture-batch-proof.json"
             }
           ]
         }
@@ -264859,7 +264979,8 @@
           "release-0.5-coverage-remaining-branches",
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
-          "release-0.5-final-rehearsal"
+          "release-0.5-final-rehearsal",
+          "release-0.5-staff-confirmation-fixtures"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -264963,7 +265084,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-fee-offer-forms.spec.ts",
-              "sha256": "ad3c79053646bc9214aff2b429e079f94c9e3d079ac7d27f4b13d987726e7455"
+              "sha256": "9f78212b976fdb5f7ff57d7aae1ed192014bf101c3cf49793cadae0fbd349a72"
             },
             {
               "path": "apps/web/e2e/consultation-form-fixture.ts",
@@ -264971,7 +265092,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-forms.spec.ts",
-              "sha256": "227f5db7e6577fe91f8a88da26a0964d60e6bb06e337e7d71868db657e2452fc"
+              "sha256": "327eaa5d44a7dc4b856c5addec09668cec1ad4e571282f728c0e1c664c4fb703"
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
@@ -265876,6 +265997,11 @@
               "batch": "release-0.5-final-rehearsal",
               "base_commit": "dfc9ebe00018c4d59b06f0cae5ca4d06d29523c0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-final-rehearsal/rehearsal-proof.json"
+            },
+            {
+              "batch": "release-0.5-staff-confirmation-fixtures",
+              "base_commit": "6fdbab7d3a149e6fa4fa612dc205cccad29afeb9",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-exact-command-feedback-renewal/confirmation-fixture-batch-proof.json"
             }
           ]
         }
@@ -265935,7 +266061,8 @@
           "release-0.5-coverage-remaining-branches",
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
-          "release-0.5-final-rehearsal"
+          "release-0.5-final-rehearsal",
+          "release-0.5-staff-confirmation-fixtures"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -266039,7 +266166,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-fee-offer-forms.spec.ts",
-              "sha256": "ad3c79053646bc9214aff2b429e079f94c9e3d079ac7d27f4b13d987726e7455"
+              "sha256": "9f78212b976fdb5f7ff57d7aae1ed192014bf101c3cf49793cadae0fbd349a72"
             },
             {
               "path": "apps/web/e2e/consultation-form-fixture.ts",
@@ -266047,7 +266174,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-forms.spec.ts",
-              "sha256": "227f5db7e6577fe91f8a88da26a0964d60e6bb06e337e7d71868db657e2452fc"
+              "sha256": "327eaa5d44a7dc4b856c5addec09668cec1ad4e571282f728c0e1c664c4fb703"
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
@@ -266952,6 +267079,11 @@
               "batch": "release-0.5-final-rehearsal",
               "base_commit": "dfc9ebe00018c4d59b06f0cae5ca4d06d29523c0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-final-rehearsal/rehearsal-proof.json"
+            },
+            {
+              "batch": "release-0.5-staff-confirmation-fixtures",
+              "base_commit": "6fdbab7d3a149e6fa4fa612dc205cccad29afeb9",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-exact-command-feedback-renewal/confirmation-fixture-batch-proof.json"
             }
           ]
         }
@@ -444097,7 +444229,8 @@
           "release-0.5-critical-accessibility",
           "release-0.5-form-and-document-accessibility",
           "release-0.5-protected-contract-and-finance",
-          "release-0.5-dependency-gate-closure"
+          "release-0.5-dependency-gate-closure",
+          "release-0.5-staff-confirmation-fixtures"
         ],
         "current_acceptance": {
           "status": "done",
@@ -444193,7 +444326,7 @@
             },
             {
               "path": "apps/web/e2e/knowledge-policy-forms.spec.ts",
-              "sha256": "130ad44daed39043821de21363dd83435dcf05c60a20b13a9edcd387c937f537"
+              "sha256": "d8430735c3610a1e502b6a35fea4cf217243c98e3b9c982840311a3bf94231d7"
             },
             {
               "path": "apps/web/e2e/knowledge-policy-membership.spec.ts",
@@ -444201,7 +444334,7 @@
             },
             {
               "path": "apps/web/e2e/knowledge-bases.spec.ts",
-              "sha256": "ac0f7f7203cef9925806b5163b343d27ab6de3295c892ad07cd37824275a1915"
+              "sha256": "99dea2f63cc2eae8a8777a1f813d077696e5f5fdc48ec7cc8b6766421bd9ea09"
             },
             {
               "path": "packages/db/src/schema/knowledge-bases.ts",
@@ -444500,6 +444633,11 @@
               "batch": "release-0.5-dependency-gate-closure",
               "base_commit": "f7f27566c9a204444bb8790e67267ad7373c3ab7",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-dependency-gate-closure/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-staff-confirmation-fixtures",
+              "base_commit": "6fdbab7d3a149e6fa4fa612dc205cccad29afeb9",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-exact-command-feedback-renewal/confirmation-fixture-batch-proof.json"
             }
           ]
         }
@@ -444537,7 +444675,8 @@
           "release-0.5-critical-accessibility",
           "release-0.5-form-and-document-accessibility",
           "release-0.5-protected-contract-and-finance",
-          "release-0.5-dependency-gate-closure"
+          "release-0.5-dependency-gate-closure",
+          "release-0.5-staff-confirmation-fixtures"
         ],
         "current_acceptance": {
           "status": "done",
@@ -444633,7 +444772,7 @@
             },
             {
               "path": "apps/web/e2e/knowledge-policy-forms.spec.ts",
-              "sha256": "130ad44daed39043821de21363dd83435dcf05c60a20b13a9edcd387c937f537"
+              "sha256": "d8430735c3610a1e502b6a35fea4cf217243c98e3b9c982840311a3bf94231d7"
             },
             {
               "path": "apps/web/e2e/knowledge-policy-membership.spec.ts",
@@ -444641,7 +444780,7 @@
             },
             {
               "path": "apps/web/e2e/knowledge-bases.spec.ts",
-              "sha256": "ac0f7f7203cef9925806b5163b343d27ab6de3295c892ad07cd37824275a1915"
+              "sha256": "99dea2f63cc2eae8a8777a1f813d077696e5f5fdc48ec7cc8b6766421bd9ea09"
             },
             {
               "path": "packages/db/src/schema/knowledge-bases.ts",
@@ -444940,6 +445079,11 @@
               "batch": "release-0.5-dependency-gate-closure",
               "base_commit": "f7f27566c9a204444bb8790e67267ad7373c3ab7",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-dependency-gate-closure/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-staff-confirmation-fixtures",
+              "base_commit": "6fdbab7d3a149e6fa4fa612dc205cccad29afeb9",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-exact-command-feedback-renewal/confirmation-fixture-batch-proof.json"
             }
           ]
         }
@@ -444979,7 +445123,8 @@
           "release-0.5-critical-accessibility",
           "release-0.5-form-and-document-accessibility",
           "release-0.5-protected-contract-and-finance",
-          "release-0.5-dependency-gate-closure"
+          "release-0.5-dependency-gate-closure",
+          "release-0.5-staff-confirmation-fixtures"
         ],
         "current_acceptance": {
           "status": "done",
@@ -445075,7 +445220,7 @@
             },
             {
               "path": "apps/web/e2e/knowledge-policy-forms.spec.ts",
-              "sha256": "130ad44daed39043821de21363dd83435dcf05c60a20b13a9edcd387c937f537"
+              "sha256": "d8430735c3610a1e502b6a35fea4cf217243c98e3b9c982840311a3bf94231d7"
             },
             {
               "path": "apps/web/e2e/knowledge-policy-membership.spec.ts",
@@ -445083,7 +445228,7 @@
             },
             {
               "path": "apps/web/e2e/knowledge-bases.spec.ts",
-              "sha256": "ac0f7f7203cef9925806b5163b343d27ab6de3295c892ad07cd37824275a1915"
+              "sha256": "99dea2f63cc2eae8a8777a1f813d077696e5f5fdc48ec7cc8b6766421bd9ea09"
             },
             {
               "path": "packages/db/src/schema/knowledge-bases.ts",
@@ -445382,6 +445527,11 @@
               "batch": "release-0.5-dependency-gate-closure",
               "base_commit": "f7f27566c9a204444bb8790e67267ad7373c3ab7",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-dependency-gate-closure/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-staff-confirmation-fixtures",
+              "base_commit": "6fdbab7d3a149e6fa4fa612dc205cccad29afeb9",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-exact-command-feedback-renewal/confirmation-fixture-batch-proof.json"
             }
           ]
         }
@@ -445420,7 +445570,8 @@
           "release-0.5-critical-accessibility",
           "release-0.5-form-and-document-accessibility",
           "release-0.5-protected-contract-and-finance",
-          "release-0.5-dependency-gate-closure"
+          "release-0.5-dependency-gate-closure",
+          "release-0.5-staff-confirmation-fixtures"
         ],
         "current_acceptance": {
           "status": "done",
@@ -445516,7 +445667,7 @@
             },
             {
               "path": "apps/web/e2e/knowledge-policy-forms.spec.ts",
-              "sha256": "130ad44daed39043821de21363dd83435dcf05c60a20b13a9edcd387c937f537"
+              "sha256": "d8430735c3610a1e502b6a35fea4cf217243c98e3b9c982840311a3bf94231d7"
             },
             {
               "path": "apps/web/e2e/knowledge-policy-membership.spec.ts",
@@ -445524,7 +445675,7 @@
             },
             {
               "path": "apps/web/e2e/knowledge-bases.spec.ts",
-              "sha256": "ac0f7f7203cef9925806b5163b343d27ab6de3295c892ad07cd37824275a1915"
+              "sha256": "99dea2f63cc2eae8a8777a1f813d077696e5f5fdc48ec7cc8b6766421bd9ea09"
             },
             {
               "path": "packages/db/src/schema/knowledge-bases.ts",
@@ -445823,6 +445974,11 @@
               "batch": "release-0.5-dependency-gate-closure",
               "base_commit": "f7f27566c9a204444bb8790e67267ad7373c3ab7",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-dependency-gate-closure/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-staff-confirmation-fixtures",
+              "base_commit": "6fdbab7d3a149e6fa4fa612dc205cccad29afeb9",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-exact-command-feedback-renewal/confirmation-fixture-batch-proof.json"
             }
           ]
         }
@@ -445861,7 +446017,8 @@
           "release-0.5-critical-accessibility",
           "release-0.5-form-and-document-accessibility",
           "release-0.5-protected-contract-and-finance",
-          "release-0.5-dependency-gate-closure"
+          "release-0.5-dependency-gate-closure",
+          "release-0.5-staff-confirmation-fixtures"
         ],
         "current_acceptance": {
           "status": "done",
@@ -446005,7 +446162,7 @@
             },
             {
               "path": "apps/web/e2e/knowledge-policy-forms.spec.ts",
-              "sha256": "130ad44daed39043821de21363dd83435dcf05c60a20b13a9edcd387c937f537"
+              "sha256": "d8430735c3610a1e502b6a35fea4cf217243c98e3b9c982840311a3bf94231d7"
             },
             {
               "path": "apps/web/e2e/knowledge-policy-membership.spec.ts",
@@ -446180,6 +446337,11 @@
               "batch": "release-0.5-dependency-gate-closure",
               "base_commit": "f7f27566c9a204444bb8790e67267ad7373c3ab7",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-dependency-gate-closure/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-staff-confirmation-fixtures",
+              "base_commit": "6fdbab7d3a149e6fa4fa612dc205cccad29afeb9",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-exact-command-feedback-renewal/confirmation-fixture-batch-proof.json"
             }
           ]
         },
@@ -446226,7 +446388,8 @@
           "release-0.5-critical-accessibility",
           "release-0.5-form-and-document-accessibility",
           "release-0.5-protected-contract-and-finance",
-          "release-0.5-dependency-gate-closure"
+          "release-0.5-dependency-gate-closure",
+          "release-0.5-staff-confirmation-fixtures"
         ],
         "current_acceptance": {
           "status": "done",
@@ -446370,7 +446533,7 @@
             },
             {
               "path": "apps/web/e2e/knowledge-policy-forms.spec.ts",
-              "sha256": "130ad44daed39043821de21363dd83435dcf05c60a20b13a9edcd387c937f537"
+              "sha256": "d8430735c3610a1e502b6a35fea4cf217243c98e3b9c982840311a3bf94231d7"
             },
             {
               "path": "apps/web/e2e/knowledge-policy-membership.spec.ts",
@@ -446545,6 +446708,11 @@
               "batch": "release-0.5-dependency-gate-closure",
               "base_commit": "f7f27566c9a204444bb8790e67267ad7373c3ab7",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-dependency-gate-closure/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-staff-confirmation-fixtures",
+              "base_commit": "6fdbab7d3a149e6fa4fa612dc205cccad29afeb9",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-exact-command-feedback-renewal/confirmation-fixture-batch-proof.json"
             }
           ]
         },
@@ -446587,7 +446755,8 @@
           "release-0.5-critical-accessibility",
           "release-0.5-form-and-document-accessibility",
           "release-0.5-protected-contract-and-finance",
-          "release-0.5-dependency-gate-closure"
+          "release-0.5-dependency-gate-closure",
+          "release-0.5-staff-confirmation-fixtures"
         ],
         "current_acceptance": {
           "status": "done",
@@ -446731,7 +446900,7 @@
             },
             {
               "path": "apps/web/e2e/knowledge-policy-forms.spec.ts",
-              "sha256": "130ad44daed39043821de21363dd83435dcf05c60a20b13a9edcd387c937f537"
+              "sha256": "d8430735c3610a1e502b6a35fea4cf217243c98e3b9c982840311a3bf94231d7"
             },
             {
               "path": "apps/web/e2e/knowledge-policy-membership.spec.ts",
@@ -446906,6 +447075,11 @@
               "batch": "release-0.5-dependency-gate-closure",
               "base_commit": "f7f27566c9a204444bb8790e67267ad7373c3ab7",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-dependency-gate-closure/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-staff-confirmation-fixtures",
+              "base_commit": "6fdbab7d3a149e6fa4fa612dc205cccad29afeb9",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-exact-command-feedback-renewal/confirmation-fixture-batch-proof.json"
             }
           ]
         },
@@ -506121,7 +506295,8 @@
           "release-0.5-final-gates",
           "release-0.5-final-acceptance",
           "release-0.5-final-rehearsal",
-          "release-0.5-route-census-closure"
+          "release-0.5-route-census-closure",
+          "release-0.5-staff-confirmation-fixtures"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -506165,7 +506340,7 @@
             },
             {
               "path": "apps/web/e2e/approval-queue.spec.ts",
-              "sha256": "65bd78b70eda71886c73ae6e8e5c50e34accd4971cc39011a9e0c2e6b7eab987"
+              "sha256": "c438969f07ad7c2fd844947dc6bb6ca15ca67913e973bfd2d381bfb5c350ac10"
             },
             {
               "path": "apps/web/e2e/chargeback-dashboard.spec.ts",
@@ -506173,11 +506348,11 @@
             },
             {
               "path": "apps/web/e2e/consultation-fee-offer-forms.spec.ts",
-              "sha256": "ad3c79053646bc9214aff2b429e079f94c9e3d079ac7d27f4b13d987726e7455"
+              "sha256": "9f78212b976fdb5f7ff57d7aae1ed192014bf101c3cf49793cadae0fbd349a72"
             },
             {
               "path": "apps/web/e2e/consultation-forms.spec.ts",
-              "sha256": "227f5db7e6577fe91f8a88da26a0964d60e6bb06e337e7d71868db657e2452fc"
+              "sha256": "327eaa5d44a7dc4b856c5addec09668cec1ad4e571282f728c0e1c664c4fb703"
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
@@ -506261,7 +506436,7 @@
             },
             {
               "path": "apps/web/e2e/knowledge-policy-forms.spec.ts",
-              "sha256": "130ad44daed39043821de21363dd83435dcf05c60a20b13a9edcd387c937f537"
+              "sha256": "d8430735c3610a1e502b6a35fea4cf217243c98e3b9c982840311a3bf94231d7"
             },
             {
               "path": "apps/web/e2e/knowledge-policy-membership.spec.ts",
@@ -506759,6 +506934,11 @@
               "batch": "release-0.5-route-census-closure",
               "base_commit": "054e9d662b3f017f4ba07154000ef26ad167ae29",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-census-closure/route-census-proof.json"
+            },
+            {
+              "batch": "release-0.5-staff-confirmation-fixtures",
+              "base_commit": "6fdbab7d3a149e6fa4fa612dc205cccad29afeb9",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-exact-command-feedback-renewal/confirmation-fixture-batch-proof.json"
             }
           ]
         }
@@ -506811,7 +506991,8 @@
           "release-0.5-final-gates",
           "release-0.5-final-acceptance",
           "release-0.5-final-rehearsal",
-          "release-0.5-route-census-closure"
+          "release-0.5-route-census-closure",
+          "release-0.5-staff-confirmation-fixtures"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -506855,7 +507036,7 @@
             },
             {
               "path": "apps/web/e2e/approval-queue.spec.ts",
-              "sha256": "65bd78b70eda71886c73ae6e8e5c50e34accd4971cc39011a9e0c2e6b7eab987"
+              "sha256": "c438969f07ad7c2fd844947dc6bb6ca15ca67913e973bfd2d381bfb5c350ac10"
             },
             {
               "path": "apps/web/e2e/chargeback-dashboard.spec.ts",
@@ -506863,11 +507044,11 @@
             },
             {
               "path": "apps/web/e2e/consultation-fee-offer-forms.spec.ts",
-              "sha256": "ad3c79053646bc9214aff2b429e079f94c9e3d079ac7d27f4b13d987726e7455"
+              "sha256": "9f78212b976fdb5f7ff57d7aae1ed192014bf101c3cf49793cadae0fbd349a72"
             },
             {
               "path": "apps/web/e2e/consultation-forms.spec.ts",
-              "sha256": "227f5db7e6577fe91f8a88da26a0964d60e6bb06e337e7d71868db657e2452fc"
+              "sha256": "327eaa5d44a7dc4b856c5addec09668cec1ad4e571282f728c0e1c664c4fb703"
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
@@ -506951,7 +507132,7 @@
             },
             {
               "path": "apps/web/e2e/knowledge-policy-forms.spec.ts",
-              "sha256": "130ad44daed39043821de21363dd83435dcf05c60a20b13a9edcd387c937f537"
+              "sha256": "d8430735c3610a1e502b6a35fea4cf217243c98e3b9c982840311a3bf94231d7"
             },
             {
               "path": "apps/web/e2e/knowledge-policy-membership.spec.ts",
@@ -507449,6 +507630,11 @@
               "batch": "release-0.5-route-census-closure",
               "base_commit": "054e9d662b3f017f4ba07154000ef26ad167ae29",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-census-closure/route-census-proof.json"
+            },
+            {
+              "batch": "release-0.5-staff-confirmation-fixtures",
+              "base_commit": "6fdbab7d3a149e6fa4fa612dc205cccad29afeb9",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-exact-command-feedback-renewal/confirmation-fixture-batch-proof.json"
             }
           ]
         }
@@ -507923,7 +508109,8 @@
           "release-0.5-final-gates",
           "release-0.5-final-acceptance",
           "release-0.5-final-rehearsal",
-          "release-0.5-route-census-closure"
+          "release-0.5-route-census-closure",
+          "release-0.5-staff-confirmation-fixtures"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -507967,7 +508154,7 @@
             },
             {
               "path": "apps/web/e2e/approval-queue.spec.ts",
-              "sha256": "65bd78b70eda71886c73ae6e8e5c50e34accd4971cc39011a9e0c2e6b7eab987"
+              "sha256": "c438969f07ad7c2fd844947dc6bb6ca15ca67913e973bfd2d381bfb5c350ac10"
             },
             {
               "path": "apps/web/e2e/chargeback-dashboard.spec.ts",
@@ -507975,11 +508162,11 @@
             },
             {
               "path": "apps/web/e2e/consultation-fee-offer-forms.spec.ts",
-              "sha256": "ad3c79053646bc9214aff2b429e079f94c9e3d079ac7d27f4b13d987726e7455"
+              "sha256": "9f78212b976fdb5f7ff57d7aae1ed192014bf101c3cf49793cadae0fbd349a72"
             },
             {
               "path": "apps/web/e2e/consultation-forms.spec.ts",
-              "sha256": "227f5db7e6577fe91f8a88da26a0964d60e6bb06e337e7d71868db657e2452fc"
+              "sha256": "327eaa5d44a7dc4b856c5addec09668cec1ad4e571282f728c0e1c664c4fb703"
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
@@ -508063,7 +508250,7 @@
             },
             {
               "path": "apps/web/e2e/knowledge-policy-forms.spec.ts",
-              "sha256": "130ad44daed39043821de21363dd83435dcf05c60a20b13a9edcd387c937f537"
+              "sha256": "d8430735c3610a1e502b6a35fea4cf217243c98e3b9c982840311a3bf94231d7"
             },
             {
               "path": "apps/web/e2e/knowledge-policy-membership.spec.ts",
@@ -508561,6 +508748,11 @@
               "batch": "release-0.5-route-census-closure",
               "base_commit": "054e9d662b3f017f4ba07154000ef26ad167ae29",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-census-closure/route-census-proof.json"
+            },
+            {
+              "batch": "release-0.5-staff-confirmation-fixtures",
+              "base_commit": "6fdbab7d3a149e6fa4fa612dc205cccad29afeb9",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-exact-command-feedback-renewal/confirmation-fixture-batch-proof.json"
             }
           ]
         }
@@ -676045,7 +676237,8 @@
           "release-0.5-notification-recovery-journey",
           "release-0.5-critical-accessibility",
           "release-0.5-staff-workspace-read-closure",
-          "release-0.5-final-ui-evidence"
+          "release-0.5-final-ui-evidence",
+          "release-0.5-staff-confirmation-fixtures"
         ],
         "current_acceptance": {
           "kind": "accepted-admin-communications-ai-ui",
@@ -676069,7 +676262,7 @@
             },
             {
               "path": "apps/web/e2e/knowledge-policy-forms.spec.ts",
-              "sha256": "130ad44daed39043821de21363dd83435dcf05c60a20b13a9edcd387c937f537"
+              "sha256": "d8430735c3610a1e502b6a35fea4cf217243c98e3b9c982840311a3bf94231d7"
             },
             {
               "path": "apps/web/src/components/AdminAgentTestChat.tsx",
@@ -676189,6 +676382,11 @@
               "batch": "release-0.5-final-ui-evidence",
               "base_commit": "999235279102f13eb7e44fe7b89694a4d4945313",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-final-ui-evidence/layout-proof.json"
+            },
+            {
+              "batch": "release-0.5-staff-confirmation-fixtures",
+              "base_commit": "6fdbab7d3a149e6fa4fa612dc205cccad29afeb9",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-exact-command-feedback-renewal/confirmation-fixture-batch-proof.json"
             }
           ]
         }
@@ -677153,7 +677351,8 @@
           "release-0.5-form-and-document-accessibility",
           "release-0.5-staff-finance-read-recovery",
           "release-0.5-protected-contract-and-finance",
-          "release-0.5-dependency-gate-closure"
+          "release-0.5-dependency-gate-closure",
+          "release-0.5-staff-confirmation-fixtures"
         ],
         "current_acceptance": {
           "kind": "verified-admin-safety-and-team-ui-journeys",
@@ -677161,7 +677360,7 @@
           "source_evidence": [
             {
               "path": "apps/web/e2e/approval-threshold.spec.ts",
-              "sha256": "e06e2b137faaa7f1dd11e44dc0143307fb333c96ad7c600387a0745e74710063"
+              "sha256": "239a7d133434ed904a27a783b60fc6a637f82df603ade339b5e11eb430faabc1"
             },
             {
               "path": "apps/web/e2e/receipt-emergency.spec.ts",
@@ -677344,6 +677543,11 @@
               "batch": "release-0.5-dependency-gate-closure",
               "base_commit": "f7f27566c9a204444bb8790e67267ad7373c3ab7",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-dependency-gate-closure/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-staff-confirmation-fixtures",
+              "base_commit": "6fdbab7d3a149e6fa4fa612dc205cccad29afeb9",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-exact-command-feedback-renewal/confirmation-fixture-batch-proof.json"
             }
           ]
         }
@@ -682836,7 +683040,7 @@
             },
             {
               "path": "apps/web/e2e/approval-queue.spec.ts",
-              "sha256": "65bd78b70eda71886c73ae6e8e5c50e34accd4971cc39011a9e0c2e6b7eab987"
+              "sha256": "c438969f07ad7c2fd844947dc6bb6ca15ca67913e973bfd2d381bfb5c350ac10"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
@@ -686118,6 +686322,11 @@
               "batch": "release-0.5-verified-command-rejection",
               "base_commit": "5551ca05908bf4f177b6a4621aadbc85d8fd273a",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-final-gate-reconciliation/candidate-release-evidence.json"
+            },
+            {
+              "batch": "release-0.5-staff-confirmation-fixtures",
+              "base_commit": "6fdbab7d3a149e6fa4fa612dc205cccad29afeb9",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-exact-command-feedback-renewal/confirmation-fixture-batch-proof.json"
             }
           ]
         },
@@ -686157,7 +686366,8 @@
           "release-0.5-final-acceptance",
           "release-0.5-final-rehearsal",
           "release-0.5-route-census-closure",
-          "release-0.5-verified-command-rejection"
+          "release-0.5-verified-command-rejection",
+          "release-0.5-staff-confirmation-fixtures"
         ]
       }
     },
@@ -686897,7 +687107,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-fee-offer-forms.spec.ts",
-              "sha256": "ad3c79053646bc9214aff2b429e079f94c9e3d079ac7d27f4b13d987726e7455"
+              "sha256": "9f78212b976fdb5f7ff57d7aae1ed192014bf101c3cf49793cadae0fbd349a72"
             },
             {
               "path": "apps/web/e2e/consultation-form-fixture.ts",
@@ -686905,7 +687115,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-forms.spec.ts",
-              "sha256": "227f5db7e6577fe91f8a88da26a0964d60e6bb06e337e7d71868db657e2452fc"
+              "sha256": "327eaa5d44a7dc4b856c5addec09668cec1ad4e571282f728c0e1c664c4fb703"
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
@@ -690632,6 +690842,11 @@
               "batch": "release-0.5-verified-command-rejection",
               "base_commit": "5551ca05908bf4f177b6a4621aadbc85d8fd273a",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-final-gate-reconciliation/candidate-release-evidence.json"
+            },
+            {
+              "batch": "release-0.5-staff-confirmation-fixtures",
+              "base_commit": "6fdbab7d3a149e6fa4fa612dc205cccad29afeb9",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-exact-command-feedback-renewal/confirmation-fixture-batch-proof.json"
             }
           ]
         },
@@ -690679,7 +690894,8 @@
           "release-0.5-final-acceptance",
           "release-0.5-final-rehearsal",
           "release-0.5-route-census-closure",
-          "release-0.5-verified-command-rejection"
+          "release-0.5-verified-command-rejection",
+          "release-0.5-staff-confirmation-fixtures"
         ]
       }
     },
@@ -691919,7 +692135,7 @@
             },
             {
               "path": "apps/web/e2e/knowledge-bases.spec.ts",
-              "sha256": "ac0f7f7203cef9925806b5163b343d27ab6de3295c892ad07cd37824275a1915"
+              "sha256": "99dea2f63cc2eae8a8777a1f813d077696e5f5fdc48ec7cc8b6766421bd9ea09"
             },
             {
               "path": "apps/web/e2e/knowledge-documents.spec.ts",
@@ -691927,7 +692143,7 @@
             },
             {
               "path": "apps/web/e2e/knowledge-policy-forms.spec.ts",
-              "sha256": "130ad44daed39043821de21363dd83435dcf05c60a20b13a9edcd387c937f537"
+              "sha256": "d8430735c3610a1e502b6a35fea4cf217243c98e3b9c982840311a3bf94231d7"
             },
             {
               "path": "apps/web/e2e/knowledge-policy-membership.spec.ts",
@@ -694455,6 +694671,11 @@
               "batch": "release-0.5-route-census-closure",
               "base_commit": "054e9d662b3f017f4ba07154000ef26ad167ae29",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-census-closure/route-census-proof.json"
+            },
+            {
+              "batch": "release-0.5-staff-confirmation-fixtures",
+              "base_commit": "6fdbab7d3a149e6fa4fa612dc205cccad29afeb9",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-exact-command-feedback-renewal/confirmation-fixture-batch-proof.json"
             }
           ]
         },
@@ -694489,7 +694710,8 @@
           "release-0.5-final-gates",
           "release-0.5-final-acceptance",
           "release-0.5-final-rehearsal",
-          "release-0.5-route-census-closure"
+          "release-0.5-route-census-closure",
+          "release-0.5-staff-confirmation-fixtures"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -695734,7 +695956,7 @@
             },
             {
               "path": "apps/web/e2e/knowledge-bases.spec.ts",
-              "sha256": "ac0f7f7203cef9925806b5163b343d27ab6de3295c892ad07cd37824275a1915"
+              "sha256": "99dea2f63cc2eae8a8777a1f813d077696e5f5fdc48ec7cc8b6766421bd9ea09"
             },
             {
               "path": "apps/web/e2e/knowledge-documents.spec.ts",
@@ -695742,7 +695964,7 @@
             },
             {
               "path": "apps/web/e2e/knowledge-policy-forms.spec.ts",
-              "sha256": "130ad44daed39043821de21363dd83435dcf05c60a20b13a9edcd387c937f537"
+              "sha256": "d8430735c3610a1e502b6a35fea4cf217243c98e3b9c982840311a3bf94231d7"
             },
             {
               "path": "apps/web/e2e/knowledge-policy-membership.spec.ts",
@@ -698140,6 +698362,11 @@
               "batch": "release-0.5-route-census-closure",
               "base_commit": "054e9d662b3f017f4ba07154000ef26ad167ae29",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-census-closure/route-census-proof.json"
+            },
+            {
+              "batch": "release-0.5-staff-confirmation-fixtures",
+              "base_commit": "6fdbab7d3a149e6fa4fa612dc205cccad29afeb9",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-exact-command-feedback-renewal/confirmation-fixture-batch-proof.json"
             }
           ]
         },
@@ -698191,7 +698418,8 @@
           "release-0.5-final-gates",
           "release-0.5-final-acceptance",
           "release-0.5-final-rehearsal",
-          "release-0.5-route-census-closure"
+          "release-0.5-route-census-closure",
+          "release-0.5-staff-confirmation-fixtures"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -698367,7 +698595,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "All 93 populated routes have recorded direction and width coverage and both actual themes across source-bound results, with five redirect routes separately identified. The latest native evidence preserves confirmation, ownership, recovery and scoped retry behavior in the affected workflows. Conditional acceptance remains open."
+        "All 93 populated routes have recorded direction and width coverage and both actual themes, with five redirects separately identified. Forty-two affected Chromium and Safari cases now verify the existing confirmation controls in consultation, finance approvals and knowledge administration. Conditional route acceptance remains open."
       ],
       "owner": null,
       "depends_on": [],
@@ -698403,7 +698631,8 @@
           "release-0.5-final-acceptance",
           "release-0.5-final-rehearsal",
           "release-0.5-route-census-closure",
-          "release-0.5-verified-command-rejection"
+          "release-0.5-verified-command-rejection",
+          "release-0.5-staff-confirmation-fixtures"
         ]
       }
     },
@@ -698422,7 +698651,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Hosted fast CI and its critical aXe step passed on the preceding verified SHA. The separate combined run on that SHA mapped 798 passing cases and reported failed; 3 groups were excluded. The follow-up passes all 98 unchanged numeric limits. Renew the exact combined result on the new source before release acceptance."
+        "The last full combined run mapped 798 cases and missed the critical web branch floor. The current follow-up passes all 98 unchanged size limits. Seventy scoped cases mapped on the preceding SHA. Corrected confirmation fixtures passed 42 targeted native cases. The new exact combined coverage result remains required."
       ],
       "owner": null,
       "depends_on": [],
@@ -698455,7 +698684,8 @@
           "release-0.5-final-acceptance",
           "release-0.5-final-rehearsal",
           "release-0.5-route-census-closure",
-          "release-0.5-verified-command-rejection"
+          "release-0.5-verified-command-rejection",
+          "release-0.5-staff-confirmation-fixtures"
         ]
       }
     },
@@ -756273,6 +756503,93 @@
       ],
       "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-final-gate-reconciliation/command-feedback-renewed-bindings.json",
       "release_disposition": "No version, deployment or announcement. Candidate coverage and the pending owner decisions remain required."
+    },
+    "release-0.5-staff-confirmation-fixtures": {
+      "batch": "release-0.5-staff-confirmation-fixtures",
+      "base_commit": "6fdbab7d3a149e6fa4fa612dc205cccad29afeb9",
+      "task_keys": [
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "accepted_task_keys": [],
+      "partial_task_keys": [
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/approval-queue.spec.ts",
+          "sha256": "c438969f07ad7c2fd844947dc6bb6ca15ca67913e973bfd2d381bfb5c350ac10"
+        },
+        {
+          "path": "apps/web/e2e/approval-threshold.spec.ts",
+          "sha256": "239a7d133434ed904a27a783b60fc6a637f82df603ade339b5e11eb430faabc1"
+        },
+        {
+          "path": "apps/web/e2e/consultation-fee-offer-forms.spec.ts",
+          "sha256": "9f78212b976fdb5f7ff57d7aae1ed192014bf101c3cf49793cadae0fbd349a72"
+        },
+        {
+          "path": "apps/web/e2e/consultation-forms.spec.ts",
+          "sha256": "327eaa5d44a7dc4b856c5addec09668cec1ad4e571282f728c0e1c664c4fb703"
+        },
+        {
+          "path": "apps/web/e2e/knowledge-bases.spec.ts",
+          "sha256": "99dea2f63cc2eae8a8777a1f813d077696e5f5fdc48ec7cc8b6766421bd9ea09"
+        },
+        {
+          "path": "apps/web/e2e/knowledge-policy-forms.spec.ts",
+          "sha256": "d8430735c3610a1e502b6a35fea4cf217243c98e3b9c982840311a3bf94231d7"
+        }
+      ],
+      "checks": [
+        "Twelve consultation and thirty approval, threshold and knowledge cases passed in Chromium and mobile Safari. The fixtures exercised the explicit confirmation phrase and financial acknowledgement. Existing amount, receipt, retry, geometry and accessibility assertions passed.",
+        "Prettier, targeted ESLint and diff checks passed. The browser run used the byte-verified production runtime from the preceding SHA. No runtime sources were edited in this batch."
+      ],
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-exact-command-feedback-renewal/confirmation-fixture-batch-proof.json",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-exact-command-feedback-renewal/confirmation-fixture-reviewed.diff",
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-exact-command-feedback-renewal",
+      "renewed_task_keys": [
+        "02-auth-users-admin.md#T-09.07.01",
+        "02-auth-users-admin.md#T-09.07.02",
+        "02-auth-users-admin.md#T-09.10.01",
+        "02-auth-users-admin.md#T-09.11.02",
+        "02-auth-users-admin.md#T-09.11.03",
+        "03-core-business.md#T-03.03.01.01",
+        "03-core-business.md#T-03.03.01.02",
+        "03-core-business.md#T-03.03.01.03",
+        "03-core-business.md#T-03.03.01.04",
+        "03-core-business.md#T-03.03.02.01",
+        "03-core-business.md#T-03.03.02.02",
+        "03-core-business.md#T-03.03.02.03",
+        "03-core-business.md#T-03.03.02.04",
+        "03-core-business.md#T-03.03.02.05",
+        "03-core-business.md#T-03.03.03.01",
+        "03-core-business.md#T-03.03.03.02",
+        "03-core-business.md#T-03.03.03.03",
+        "03-core-business.md#T-03.03.03.04",
+        "03-core-business.md#T-03.03.03.05",
+        "03-core-business.md#T-03.03.03.06",
+        "03-core-business.md#T-03.03.03.07",
+        "04-invoices-wallet-contracts.md#T-04.1.05.03",
+        "05-notifications-documents-ai.md#T-05.17.01",
+        "05-notifications-documents-ai.md#T-05.17.02",
+        "05-notifications-documents-ai.md#T-05.17.03",
+        "05-notifications-documents-ai.md#T-05.17.04",
+        "05-notifications-documents-ai.md#T-05.18.01",
+        "05-notifications-documents-ai.md#T-05.18.02",
+        "05-notifications-documents-ai.md#T-05.18.03",
+        "07-ui-ux-design.md#T-07.05.01.11",
+        "07-ui-ux-design.md#T-07.05.02.01",
+        "07-ui-ux-design.md#T-07.05.02.03",
+        "07-ui-ux-design.md#T-07.30.02.08",
+        "07-ui-ux-design.md#T-07.30.02.13",
+        "release-readiness#R-02.01",
+        "release-readiness#R-02.02",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02"
+      ],
+      "release_disposition": "The exact combined coverage, conditional route evidence and pending owner decisions still gate release."
     }
   },
   "historical_improvements": [

@@ -1,4 +1,5 @@
 import { test, expect, type Page } from './coverage-fixture';
+import { approveRiskConfirmation } from './confirmation-fixture';
 const id = '11111111-1111-4111-8111-111111111111';
 const request = {
   id,
@@ -39,7 +40,7 @@ async function shell(page: Page, locale = 'en') {
     route.fulfill({ json: { thresholdIrR: 100000 } })
   );
 }
-for (const locale of ['fa', 'en']) {
+for (const locale of ['fa', 'en'] as const) {
   test(`approval retains exact amount and request across step-up (${locale})`, async ({ page }) => {
     await shell(page, locale);
     let verified = false,
@@ -71,6 +72,7 @@ for (const locale of ['fa', 'en']) {
       .click();
     const dialog = page.getByRole('dialog');
     await expect(dialog).toContainText(id);
+    await approveRiskConfirmation(page, locale, 'financial');
     await dialog
       .getByRole('button', { name: locale === 'fa' ? 'تأیید' : 'Confirm', exact: true })
       .click();
@@ -113,6 +115,7 @@ test('rejection requires a reason and conflict never reports success', async ({ 
   await expect(page.getByRole('dialog')).toHaveCount(0);
   await page.getByLabel('Reason for rejection').fill('  Evidence does not match  ');
   await page.getByRole('button', { name: 'Reject', exact: true }).click();
+  await approveRiskConfirmation(page, 'en', 'both');
   await page.getByRole('dialog').getByRole('button', { name: 'Confirm', exact: true }).click();
   await expect(page.getByRole('alert')).toContainText('already reviewed');
   await expect(page.getByText('Decision saved.', { exact: false })).toHaveCount(0);
@@ -249,7 +252,7 @@ test('an obsolete pending response cannot replace selected history', async ({ pa
   await expect(page.getByRole('button', { name: 'Approve', exact: true })).toHaveCount(0);
 });
 
-for (const locale of ['fa', 'en'])
+for (const locale of ['fa', 'en'] as const)
   test(`invoice adjustment approval shows exact signed credit and source (${locale})`, async ({
     page,
   }) => {
@@ -293,6 +296,7 @@ for (const locale of ['fa', 'en'])
     await expect(dialog).toContainText(
       locale === 'fa' ? 'فاکتور اصلاحی صادر می‌شود' : 'issues the invoice adjustment'
     );
+    await approveRiskConfirmation(page, locale, 'financial');
     await dialog
       .getByRole('button', { name: locale === 'fa' ? 'تأیید' : 'Confirm', exact: true })
       .click();

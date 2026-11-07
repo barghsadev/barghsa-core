@@ -2,6 +2,7 @@ import AxeBuilder from '@axe-core/playwright';
 import type { Page } from '@playwright/test';
 import { mockOppositeNumerals } from './number-preference-fixture';
 import { test, expect } from './coverage-fixture';
+import { approveRiskConfirmation } from './confirmation-fixture';
 test.use({ viewport: { width: 390, height: 844 } });
 async function mockUnknownApi(page: Page, locale: string) {
   await page.addInitScript((value) => localStorage.setItem('barghsa.locale', value), locale);
@@ -264,6 +265,7 @@ for (const locale of ['en', 'fa'])
         exact: true,
       })
       .click();
+    await approveRiskConfirmation(page, fa ? 'fa' : 'en', 'destructive');
     await page
       .getByRole('dialog')
       .getByRole('button', { name: fa ? 'تأیید' : 'Confirm', exact: true })
@@ -314,6 +316,7 @@ for (const locale of ['en', 'fa'])
     );
     await page.screenshot({ path: `/tmp/kb-groups-${locale}.png`, fullPage: true });
     await remove.click();
+    await approveRiskConfirmation(page, fa ? 'fa' : 'en', 'destructive');
     await page
       .getByRole('dialog')
       .getByRole('button', { name: fa ? 'تأیید' : 'Confirm', exact: true })

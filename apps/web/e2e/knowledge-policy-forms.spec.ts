@@ -1,4 +1,5 @@
 import { test, expect } from './coverage-fixture';
+import { approveRiskConfirmation } from './confirmation-fixture';
 import { setupCatalogueForms } from './catalogue-form-fixture';
 import { cookieResponse } from './cookie-response';
 import { t } from '@barghsa/i18n/admin-ui';
@@ -33,7 +34,8 @@ for (const locale of ['en', 'fa'] as const)
           },
         },
       });
-      const confirm = async () => {
+      const confirm = async (risk?: 'destructive') => {
+        if (risk) await approveRiskConfirmation(page, locale, risk);
         const dialog = page.getByRole('dialog');
         await dialog.locator('button[type=submit]').click();
         await expect(dialog).toHaveCount(0);
@@ -180,7 +182,7 @@ for (const locale of ['en', 'fa'] as const)
       await page.getByRole('checkbox', { name: policyText('requireSources'), exact: true }).check();
       await expect(enabled).not.toBeChecked();
       await button(policyText('save')).click();
-      await confirm();
+      await confirm('destructive');
       await expect(page.locator('#policy-tone')).toHaveCount(0);
       expect(policyWrites[0]).toEqual({
         title: policyEntry.title,
@@ -204,7 +206,7 @@ for (const locale of ['en', 'fa'] as const)
       await requests.fill(locale === 'fa' ? '۱۰' : '10');
       await page.locator('#policy-window-seconds').fill(locale === 'fa' ? '٦٠' : '60');
       await button(policyText('save')).click();
-      await confirm();
+      await confirm('destructive');
       await expect(requests).toBeFocused();
       await expect(requests).toHaveAttribute('aria-invalid', 'true');
       await expect(enabled).not.toBeChecked();
@@ -217,7 +219,7 @@ for (const locale of ['en', 'fa'] as const)
       );
       await page.screenshot({ path: info.outputPath('policy-field-feedback.png'), fullPage: true });
       await button(policyText('save')).click();
-      await confirm();
+      await confirm('destructive');
       await expect(requests).toHaveCount(0);
       expect(policyWrites.slice(1)).toEqual(
         Array(2).fill({

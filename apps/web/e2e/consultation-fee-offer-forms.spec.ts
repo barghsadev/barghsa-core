@@ -1,4 +1,5 @@
 import { productionManifest } from './production-manifest';
+import { approveRiskConfirmation } from './confirmation-fixture';
 import AxeBuilder from '@axe-core/playwright';
 import type { Locator, Page } from '@playwright/test';
 import type { ConsultationPaidFeeReview } from '@barghsa/shared/finance';
@@ -180,6 +181,7 @@ for (const [locale, theme] of [
     await expect(dialog(page)).toContainText(copy('feeReviewIssueOutcome'));
     await expect(dialog(page)).toContainText('Supply assessment');
     await expect(dialog(page)).toContainText('Written energy report');
+    await approveRiskConfirmation(page, locale, 'financial');
     await inspect(page, dialog(page), '[role="dialog"]', confirm(page));
     state.writeMode = 'held';
     state.needsStepUp = true;
@@ -217,12 +219,14 @@ for (const [locale, theme] of [
     expect(state.writes).toHaveLength(2);
     state.writeMode = 'rejected';
     await retry(page).click();
+    await approveRiskConfirmation(page, locale, 'financial');
     await confirm(page).click();
     await expect(cancel(page)).toBeEnabled();
     await cancel(page).click();
     await expect(retry(page)).toBeEnabled();
     state.writeMode = 'success';
     await retry(page).click();
+    await approveRiskConfirmation(page, locale, 'financial');
     await confirm(page).click();
     await expect(retry(page)).toHaveCount(0);
     await expect(submit(page)).toHaveText(copy('adjustPaidFee'));
@@ -261,6 +265,7 @@ for (const [locale, theme] of [
     expect(replacement.body.validUntil).toBe(originalDeadline);
     await expect(dialog(page)).toContainText(copy('feeReviewReplaceOutcome'));
     await expect(dialog(page)).toContainText(oldInvoice!);
+    await approveRiskConfirmation(page, locale, 'financial');
     await inspect(page, dialog(page), '[role="dialog"]', confirm(page));
     await outcomeCapture(
       page,
@@ -279,6 +284,7 @@ for (const [locale, theme] of [
     await expect(retry(page)).toBeVisible();
     state.writeMode = 'success';
     await retry(page).click();
+    await approveRiskConfirmation(page, locale, 'financial');
     await confirm(page).click();
     await expect(retry(page)).toHaveCount(0);
     await expect(reason(page)).toHaveValue('');
@@ -362,6 +368,7 @@ for (const [locale, theme] of [
     await expect(dialog(page)).toContainText('Supply assessment');
     await expect(dialog(page)).toContainText('Written report');
     await expect(dialog(page)).toContainText(originalInvoice);
+    await approveRiskConfirmation(page, locale, 'financial');
     await inspect(page, dialog(page), '[role="dialog"]', confirm(page));
     state.needsStepUp = true;
     state.writeMode = 'held';
@@ -409,6 +416,7 @@ for (const [locale, theme] of [
     expect(state.writes.at(-1)!.raw).toBe(charge.raw);
     state.writeMode = 'success';
     await retry(page).click();
+    await approveRiskConfirmation(page, locale, 'financial');
     await confirm(page).click();
     await expect(retry(page)).toHaveCount(0);
     await expect(submit(page)).toHaveText(copy('adjustPaidFee'));
@@ -447,6 +455,7 @@ for (const [locale, theme] of [
     await expect(dialog(page)).toContainText(
       `${new Intl.NumberFormat(locale).format(400000n)} IRR`
     );
+    await approveRiskConfirmation(page, locale, 'financial');
     await inspect(page, dialog(page), '[role="dialog"]', confirm(page));
     await outcomeCapture(
       page,
@@ -476,6 +485,7 @@ for (const [locale, theme] of [
     // The exact persisted receipt is returned even though the current fee/refund balances moved.
     state.writeMode = 'success';
     await retry(page).click();
+    await approveRiskConfirmation(page, locale, 'financial');
     await confirm(page).click();
     await expect(retry(page)).toHaveCount(0);
     await expect(fee(page)).toHaveValue('300000');

@@ -178,6 +178,8 @@ for (const locale of ['en', 'fa'] as const) {
       });
       await expect(field).toHaveValue('100000');
       await field.fill('-1');
+      await page.evaluate(() => document.fonts.ready.then(() => undefined));
+      await save.scrollIntoViewIfNeeded();
       const beforeFeedback = await save.boundingBox();
       await field.blur();
       await expect(field).toHaveAttribute('aria-invalid', 'true');
@@ -259,9 +261,8 @@ for (const locale of ['en', 'fa'] as const) {
       dialog = page.getByRole('dialog');
       await completeOtp(dialog, locale);
       await expect(dialog).toHaveCount(0);
-      await expect(panel.getByRole('status')).toHaveText(
-        text('admin.receiptThreshold.saved', locale)
-      );
+      const saved = text('admin.receiptThreshold.saved', locale);
+      await expect(panel.getByRole('status').filter({ hasText: saved })).toHaveText(saved);
       await expect(field).toHaveValue('250000');
       await expect(field).toBeEnabled();
       expect(writes).toEqual(Array.from({ length: 5 }, () => ({ threshold_irr: 250000 })));

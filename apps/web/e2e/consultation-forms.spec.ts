@@ -1,4 +1,5 @@
 import { productionManifest } from './production-manifest';
+import { approveRiskConfirmation } from './confirmation-fixture';
 import type { Locator, Page } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import { test, expect } from './coverage-fixture';
@@ -379,6 +380,7 @@ for (const [locale, theme] of settings) {
     state.staffMode = 'success';
     await cancelRequest.click();
     dialog = page.getByRole('dialog', { name: copy('cancel'), exact: true });
+    await approveRiskConfirmation(page, locale, 'destructive');
     await dialog.locator('button[type=submit]').click();
     await dialog.locator('input[type=password]').fill('synthetic-password');
     await dialog.locator('button[type=submit]').click();
