@@ -1186,6 +1186,7 @@ function OwnedSimpleElectricityOrderPage() {
   if (checking) {
     return (
       <div className="flex min-h-[50vh] items-center justify-center">
+        <h1 className="sr-only">{t('electricity.order.title', locale)}</h1>
         <LoadingStatus className="text-muted-foreground">
           {t('electricity.order.checking', locale)}
         </LoadingStatus>
@@ -1199,6 +1200,7 @@ function OwnedSimpleElectricityOrderPage() {
         className="container mx-auto max-w-md space-y-4 p-6"
         dir={locale === 'fa' ? 'rtl' : 'ltr'}
       >
+        <h1 className="sr-only">{t('electricity.order.title', locale)}</h1>
         <p role="alert">
           {t(
             verificationError
@@ -1244,6 +1246,7 @@ function OwnedSimpleElectricityOrderPage() {
         className="container mx-auto max-w-md space-y-4 p-6"
         dir={locale === 'fa' ? 'rtl' : 'ltr'}
       >
+        <h1 className="sr-only">{t('electricity.order.title', locale)}</h1>
         {draftLoading && <SkeletonText lines={2} />}
         <p role={draftError ? 'alert' : 'status'}>
           {t(

@@ -80,6 +80,20 @@ for (const locale of ['en', 'fa'])
       )
     ).toHaveCount(25);
     await checkRoutePresentation(page, test.info(), locale);
+    if (await page.evaluate(() => matchMedia('(pointer: coarse)').matches)) {
+      const controls = page.locator('main').locator('select, summary').filter({ visible: true });
+      const sizes = await controls.evaluateAll((elements) =>
+        elements.map((element) => {
+          const { width, height } = element.getBoundingClientRect();
+          return { width, height };
+        })
+      );
+      expect(sizes.length).toBeGreaterThanOrEqual(5);
+      for (const { width, height } of sizes) {
+        expect(width).toBeGreaterThanOrEqual(44);
+        expect(height).toBeGreaterThanOrEqual(44);
+      }
+    }
     await expect(
       page
         .locator(

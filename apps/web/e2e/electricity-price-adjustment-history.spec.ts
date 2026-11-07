@@ -74,6 +74,17 @@ for (const locale of ['en', 'fa'] as const)
       );
       await expect(records).toHaveCount(3);
       await checkRoutePresentation(page, test.info(), locale);
+      if (await page.evaluate(() => matchMedia('(pointer: coarse)').matches)) {
+        await page.setViewportSize({ width: 320, height: 900 });
+        const invoiceLinks = page.locator('main a[href^="/admin/invoices?invoiceId="]:visible');
+        await expect(invoiceLinks).toHaveCount(2);
+        for (const link of await invoiceLinks.all()) {
+          const { width, height } = (await link.boundingBox())!;
+          expect(width).toBeGreaterThanOrEqual(44);
+          expect(height).toBeGreaterThanOrEqual(44);
+        }
+        await page.setViewportSize({ width: 1280, height: 900 });
+      }
       await expect(content.getByRole('table')).toHaveAccessibleName(
         locale === 'fa' ? 'تاریخچه تعدیل قیمت برق' : 'Electricity price adjustment history'
       );

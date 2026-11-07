@@ -6,7 +6,7 @@ import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useCallback, useState, useEffect, useId, useRef, useMemo } from 'react';
 import { tWorkspace as t } from '@barghsa/i18n/workspace-admin';
 import { TeamActionDialog, type TeamAction } from './TeamActionDialog.js';
-import { LoadingStatus, Button, DateCell, TextCell, ListPage } from '@barghsa/ui';
+import { LoadingStatus, Button, DateCell, TextCell, ListPage, NativeSelect } from '@barghsa/ui';
 import type { Locale } from '@barghsa/i18n/app';
 import { NotificationDeliveryHistory } from './NotificationDeliveryHistory.js';
 
@@ -372,10 +372,9 @@ export default function DeadLetterPanel({
           <div className="flex flex-wrap gap-3">
             <div className="space-y-1">
               <label htmlFor={`${filterId}-status`}>{label('status')}</label>
-              <select
+              <NativeSelect
                 id={`${filterId}-status`}
                 disabled={locked}
-                className="block rounded border p-2"
                 value={status}
                 onChange={(e) => {
                   if (queries) queries.setQuery({ filters: { status: e.target.value || 'all' } });
@@ -391,14 +390,13 @@ export default function DeadLetterPanel({
                     {statusLabel(value, uiLocale)}
                   </option>
                 ))}
-              </select>
+              </NativeSelect>
             </div>
             <div className="space-y-1">
               <label htmlFor={`${filterId}-channel`}>{label('channel')}</label>
-              <select
+              <NativeSelect
                 id={`${filterId}-channel`}
                 disabled={locked}
-                className="block rounded border p-2"
                 value={channel}
                 onChange={(e) => {
                   if (queries) queries.setQuery({ filters: { channel: e.target.value } });
@@ -414,14 +412,13 @@ export default function DeadLetterPanel({
                     {channelLabel(value, uiLocale)}
                   </option>
                 ))}
-              </select>
+              </NativeSelect>
             </div>
             <div className="space-y-1">
               <label htmlFor={`${filterId}-severity`}>{label('severity')}</label>
-              <select
+              <NativeSelect
                 id={`${filterId}-severity`}
                 disabled={locked}
-                className="block rounded border p-2"
                 value={severity}
                 onChange={(e) => {
                   if (queries) queries.setQuery({ filters: { severity: e.target.value } });
@@ -434,7 +431,7 @@ export default function DeadLetterPanel({
                 <option value="">{label('all')}</option>
                 <option value="error">{label('severityError')}</option>
                 <option value="critical">{label('severityCritical')}</option>
-              </select>
+              </NativeSelect>
             </div>
           </div>
         </ListPage.Toolbar>

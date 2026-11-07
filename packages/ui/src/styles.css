@@ -939,6 +939,7 @@
   [data-slot='tabs-trigger'],
   [data-table-sort],
   [data-table-expander],
+  .app-content summary,
   .app-content
     :where(
       button,

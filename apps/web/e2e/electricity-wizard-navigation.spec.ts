@@ -315,11 +315,14 @@ for (const locale of ['en', 'fa'] as const)
     });
     await page.goto('/electricity/advanced?step=2');
     const retry = page.getByRole('button', { name: t('electricity.order.retry', locale) });
+    const heading = page.getByRole('main').getByRole('heading', { level: 1 });
     for (const reads of [() => settingsReads, () => draftReads]) {
       await expect.poll(reads).toBe(1);
+      await expect(heading).toHaveText(t('electricity.advanced.title', locale));
       await expect(field(page, 'advanced')).toHaveCount(0);
       await page.clock.fastForward(15_001);
       await expect(retry).toBeVisible();
+      await expect(heading).toHaveText(t('electricity.advanced.title', locale));
       await expect(field(page, 'advanced')).toHaveCount(0);
       await retry.click();
     }

@@ -58,6 +58,14 @@ for (const locale of ['en', 'fa'] as const)
         await expect(control).toBeVisible();
         expect((await control.boundingBox())!.height).toBeGreaterThanOrEqual(44);
       }
+      if (await page.evaluate(() => matchMedia('(pointer: coarse)').matches)) {
+        const member = page.getByRole('checkbox', { name: staffMember.name, exact: true });
+        const label = member.locator('..');
+        await expect(label).toBeVisible();
+        const { width, height } = (await label.boundingBox())!;
+        expect(width).toBeGreaterThanOrEqual(44);
+        expect(height).toBeGreaterThanOrEqual(44);
+      }
       await page.setViewportSize(viewport);
       const form = page.locator('form').filter({ has: page.locator('#staff-team-name') });
       const name = page.locator('#staff-team-name'),

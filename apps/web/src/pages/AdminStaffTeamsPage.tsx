@@ -750,7 +750,7 @@ export default function AdminStaffTeamsPage() {
                     >
                       <legend>{label('members')}</legend>
                       {visibleMembers.map((member) => (
-                        <label key={member.id} className="flex items-center gap-2">
+                        <label key={member.id} className="touch-label flex items-center gap-2">
                           <input
                             type="checkbox"
                             checked={draft.members.includes(member.id)}

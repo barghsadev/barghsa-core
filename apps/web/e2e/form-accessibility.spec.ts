@@ -144,7 +144,7 @@ async function profileSettingsShell(page: Page, locale = 'en', profileType = 'IN
   );
 }
 
-async function shell(page: Page, locale = 'en') {
+async function shell(page: Page, locale = 'en', profileId = 'profile-one') {
   await page.addInitScript((value) => {
     localStorage.setItem('barghsa.locale', value);
     if (document.documentElement) document.documentElement.lang = value;
@@ -159,7 +159,7 @@ async function shell(page: Page, locale = 'en') {
         userId: 'viewer',
         isStaff: false,
         requiresTosAcceptance: false,
-        navigation: { ...fullNavigation('customer', 'LEGAL'), profileId: 'profile-one' },
+        navigation: { ...fullNavigation('customer', 'LEGAL'), profileId },
       },
     })
   );
@@ -186,18 +186,42 @@ async function shell(page: Page, locale = 'en') {
       json: {
         profiles: [
           {
-            id: 'profile-one',
+            id: profileId,
             profileType: 'LEGAL',
             status: 'ACTIVE',
             title: 'Profile',
             isDefault: true,
           },
         ],
-        activeProfileId: 'profile-one',
+        activeProfileId: profileId,
         hasDefault: true,
       },
     })
   );
+}
+
+const orderAddressProfile = '11111111-1111-4111-8111-111111111111';
+
+async function orderAddressShell(page: Page, locale: string) {
+  await shell(page, locale, orderAddressProfile);
+  await page.route('**/api/profiles/verification-status', (route) =>
+    route.fulfill({
+      json: {
+        activeProfileId: orderAddressProfile,
+        profileStatus: 'ACTIVE',
+        verificationRequired: false,
+        isVerified: false,
+      },
+    })
+  );
+  await page.route('**/api/products/electricity', (route) => route.fulfill({ json: [] }));
+  await page.route('**/api/electricity/drafts/simple?*', (route) => {
+    expect(route.request().method()).toBe('GET');
+    expect(new URL(route.request().url()).searchParams.get('profileId')).toBe(orderAddressProfile);
+    return route.fulfill({
+      json: { currentStep: 4, data: { period: 'next_week', totalKwh: '100', addressId: '' } },
+    });
+  });
 }
 
 for (const locale of ['en', 'fa']) {
@@ -1821,18 +1845,12 @@ for (const locale of ['en', 'fa']) {
 
 for (const locale of ['en', 'fa']) {
   test(`order address fields have labels and label-click focus (${locale})`, async ({ page }) => {
-    await shell(page, locale);
-    await page.route('**/api/profiles/verification-status', (route) =>
-      route.fulfill({
-        json: { activeProfileId: 'profile-one', verificationRequired: false, isVerified: false },
-      })
-    );
-    await page.route('**/api/profiles/profile-one/addresses', (route) =>
+    await orderAddressShell(page, locale);
+    await page.route(`**/api/profiles/${orderAddressProfile}/addresses`, (route) =>
       route.fulfill({ json: { addresses: [] } })
     );
-    await page.route('**/api/products', (route) => route.fulfill({ json: [] }));
     await page.route('**/api/geography/provinces', (route) => route.fulfill({ json: [] }));
-    await page.goto('/electricity/order');
+    await page.goto('/electricity/order?step=4');
     await page
       .getByRole('button', {
         name: locale === 'fa' ? 'افزودن آدرس جدید' : 'Add New Address',
@@ -2275,39 +2293,43 @@ for (const locale of ['en', 'fa']) {
   test(`ordering stays closed on unavailable or malformed verification and supports retry (${locale})`, async ({
     page,
   }) => {
-    await shell(page, locale);
+    await orderAddressShell(page, locale);
     let mode = 'failure';
     let writes = 0;
     await page.route('**/api/profiles/verification-status', (route) => {
       if (mode === 'failure') return route.fulfill({ status: 503, json: {} });
       if (mode === 'unauthorized') return route.fulfill({ status: 401, json: {} });
-      if (mode === 'malformed') return route.fulfill({ json: { activeProfileId: 'profile-one' } });
+      if (mode === 'malformed')
+        return route.fulfill({ json: { activeProfileId: orderAddressProfile } });
       return route.fulfill({
         json: {
-          activeProfileId: mode === 'no-profile' ? null : 'profile-one',
+          activeProfileId: mode === 'no-profile' ? null : orderAddressProfile,
           profileStatus: mode === 'draft' ? 'DRAFT' : mode === 'suspended' ? 'SUSPENDED' : 'ACTIVE',
           verificationRequired: mode === 'unverified',
           isVerified: false,
         },
       });
     });
-    await page.route('**/api/profiles/profile-one/addresses', (route) => {
+    await page.route(`**/api/profiles/${orderAddressProfile}/addresses`, (route) => {
       if (route.request().method() !== 'GET') writes++;
       return route.fulfill({ json: { addresses: [] } });
     });
-    await page.route('**/api/orders', (route) => {
+    await page.route('**/api/electricity/orders/simple', (route) => {
       writes++;
       return route.fulfill({ status: 500, json: {} });
     });
-    await page.route('**/api/products', (route) => route.fulfill({ json: [] }));
     await page.route('**/api/geography/provinces', (route) => route.fulfill({ json: [] }));
-    await page.goto('/electricity/order');
-    const retry = page.getByRole('button', {
+    await page.goto('/electricity/order?step=4');
+    const retry = page.getByRole('main').getByRole('button', {
       name: locale === 'fa' ? 'تلاش دوباره' : 'Try again',
       exact: true,
     });
     for (const next of ['unauthorized', 'malformed', 'no-profile', 'ready']) {
-      await expect(page.getByRole('alert')).toBeVisible();
+      const main = page.getByRole('main');
+      await expect(main.getByRole('alert')).toBeVisible();
+      await expect(main.getByRole('heading', { level: 1 })).toHaveText(
+        locale === 'fa' ? 'ثبت سفارش برق' : 'Place Electricity Order'
+      );
       await expect(
         page.getByRole('button', {
           name: locale === 'fa' ? 'افزودن آدرس جدید' : 'Add New Address',
@@ -2436,16 +2458,10 @@ for (const locale of ['en', 'fa']) {
   test(`ordering distinguishes failed address reads from an empty address book (${locale})`, async ({
     page,
   }) => {
-    await shell(page, locale);
-    await page.route('**/api/profiles/verification-status', (route) =>
-      route.fulfill({
-        json: { activeProfileId: 'profile-one', verificationRequired: false, isVerified: false },
-      })
-    );
-    await page.route('**/api/products', (route) => route.fulfill({ json: [] }));
+    await orderAddressShell(page, locale);
     await page.route('**/api/geography/provinces', (route) => route.fulfill({ json: [] }));
     let reads = 0;
-    await page.route('**/api/profiles/profile-one/addresses', (route) => {
+    await page.route(`**/api/profiles/${orderAddressProfile}/addresses`, (route) => {
       expect(route.request().method()).toBe('GET');
       reads++;
       if (reads === 1) return route.fulfill({ status: 503, json: {} });
@@ -2465,9 +2481,9 @@ for (const locale of ['en', 'fa']) {
         },
       });
     });
-    await page.goto('/electricity/order');
+    await page.goto('/electricity/order?step=4');
     for (let attempt = 0; attempt < 2; attempt++) {
-      const alert = page.getByRole('alert');
+      const alert = page.getByRole('main').getByRole('alert');
       await expect(alert).toContainText(
         locale === 'fa' ? 'بارگذاری آدرس‌های ذخیره‌شده انجام نشد' : 'Could not load saved addresses'
       );
@@ -2481,7 +2497,7 @@ for (const locale of ['en', 'fa']) {
         .getByRole('button', { name: locale === 'fa' ? 'تلاش دوباره' : 'Try again', exact: true })
         .click();
     }
-    await expect(page.getByRole('alert')).toHaveCount(0);
+    await expect(page.getByRole('main').getByRole('alert')).toHaveCount(0);
     await expect(page.getByRole('radio', { name: /Recovered saved address/ })).toBeChecked();
     expect(reads).toBe(3);
   });
@@ -2569,17 +2585,11 @@ for (const locale of ['en', 'fa']) {
   test(`ordering geography failures are retryable and reject cities from another province (${locale})`, async ({
     page,
   }) => {
-    await shell(page, locale);
-    await page.route('**/api/profiles/verification-status', (route) =>
-      route.fulfill({
-        json: { activeProfileId: 'profile-one', verificationRequired: false, isVerified: false },
-      })
-    );
-    await page.route('**/api/profiles/profile-one/addresses', (route) => {
+    await orderAddressShell(page, locale);
+    await page.route(`**/api/profiles/${orderAddressProfile}/addresses`, (route) => {
       expect(route.request().method()).toBe('GET');
       return route.fulfill({ json: { addresses: [] } });
     });
-    await page.route('**/api/products', (route) => route.fulfill({ json: [] }));
     let provinces = 0,
       cities = 0;
     await page.route('**/api/geography/provinces', (route) => {
@@ -2603,7 +2613,7 @@ for (const locale of ['en', 'fa']) {
         ],
       });
     });
-    await page.goto('/electricity/order');
+    await page.goto('/electricity/order?step=4');
     await page
       .getByRole('button', {
         name: locale === 'fa' ? 'افزودن آدرس جدید' : 'Add New Address',
@@ -2613,7 +2623,7 @@ for (const locale of ['en', 'fa']) {
     const province = page.locator('#order-address-province'),
       city = page.locator('#order-address-city');
     for (let attempt = 0; attempt < 2; attempt++) {
-      const alert = page.getByRole('alert');
+      const alert = page.getByRole('main').getByRole('alert');
       await expect(alert).toContainText(
         locale === 'fa' ? 'بارگذاری استان‌ها انجام نشد' : 'Could not load provinces'
       );
@@ -2624,7 +2634,7 @@ for (const locale of ['en', 'fa']) {
     }
     await province.selectOption('province');
     for (let attempt = 0; attempt < 2; attempt++) {
-      const alert = page.getByRole('alert');
+      const alert = page.getByRole('main').getByRole('alert');
       await expect(alert).toContainText(
         locale === 'fa'
           ? 'بارگذاری شهرهای این استان انجام نشد'
@@ -2638,7 +2648,7 @@ for (const locale of ['en', 'fa']) {
     }
     await city.selectOption('city');
     await expect(city).toHaveValue('city');
-    await expect(page.getByRole('alert')).toHaveCount(0);
+    await expect(page.getByRole('main').getByRole('alert')).toHaveCount(0);
     expect(provinces).toBe(3);
     expect(cities).toBe(3);
   });

@@ -613,26 +613,43 @@ export function AdvancedElectricityOrderPage() {
     }
   }
 
-  if (loading) return <LoadingStatus>{t('electricity.order.draftLoading', locale)}</LoadingStatus>;
+  const title = t('electricity.advanced.title', locale);
+  const statusHeading = <h1 className="sr-only">{title}</h1>;
+  if (loading)
+    return (
+      <>
+        {statusHeading}
+        <LoadingStatus>{t('electricity.order.draftLoading', locale)}</LoadingStatus>
+      </>
+    );
   if (loadError || !profileId || !options)
     return (
-      <div role="alert" className="space-y-3">
-        <p>{t('electricity.order.draftLoadFailed', locale)}</p>
-        <Button
-          type="button"
-          variant="outline"
-          onClick={() => {
-            setLoading(true);
-            setLoadError(false);
-            if (profileId && options) setDraftAttempt((current) => current + 1);
-            else setBootstrapAttempt((current) => current + 1);
-          }}
-        >
-          {t('electricity.order.retry', locale)}
-        </Button>
-      </div>
+      <>
+        {statusHeading}
+        <div role="alert" className="space-y-3">
+          <p>{t('electricity.order.draftLoadFailed', locale)}</p>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => {
+              setLoading(true);
+              setLoadError(false);
+              if (profileId && options) setDraftAttempt((current) => current + 1);
+              else setBootstrapAttempt((current) => current + 1);
+            }}
+          >
+            {t('electricity.order.retry', locale)}
+          </Button>
+        </div>
+      </>
     );
-  if (blocked) return <div role="alert">{t('electricity.order.verificationRequired', locale)}</div>;
+  if (blocked)
+    return (
+      <>
+        {statusHeading}
+        <div role="alert">{t('electricity.order.verificationRequired', locale)}</div>
+      </>
+    );
   const steps = [
     t('electricity.advanced.stepDates', locale),
     t('electricity.advanced.stepProducts', locale),
@@ -694,7 +711,7 @@ export function AdvancedElectricityOrderPage() {
         </Suspense>
       )}
       <header>
-        <h1 className="text-2xl font-semibold">{t('electricity.advanced.title', locale)}</h1>
+        <h1 className="text-2xl font-semibold">{title}</h1>
         <p className="text-sm text-muted-foreground">
           {t('electricity.advanced.description', locale)}
         </p>
