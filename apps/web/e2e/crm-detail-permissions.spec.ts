@@ -1059,6 +1059,28 @@ for (const locale of ['fa', 'en'] as const)
       const dialog = page.getByRole('dialog');
       await expect(dialog).toContainText('Customer profile');
       await expect(dialog.getByRole('checkbox')).toHaveCount(3);
+      if (await page.evaluate(() => matchMedia('(pointer: coarse)').matches)) {
+        const viewport = page.viewportSize()!;
+        await page.setViewportSize({ width: 320, height: 568 });
+        await expect(dialog).toHaveCSS('opacity', '1');
+        const position = await dialog.evaluate((node) => {
+          const { top, bottom } = node.getBoundingClientRect();
+          return { top, bottom, viewportHeight: innerHeight };
+        });
+        expect(position.top).toBeGreaterThanOrEqual(0);
+        expect(position.bottom).toBeLessThanOrEqual(position.viewportHeight);
+        const labels = dialog.locator('label').filter({ has: page.getByRole('checkbox') });
+        for (const label of await labels.all()) {
+          const area = await label.boundingBox();
+          expect(area?.width).toBeGreaterThanOrEqual(44);
+          expect(area?.height).toBeGreaterThanOrEqual(44);
+        }
+        const first = dialog.getByRole('checkbox').first();
+        await labels.first().tap({ position: { x: 4, y: 40 } });
+        await expect(first).toBeChecked();
+        await first.uncheck();
+        await page.setViewportSize(viewport);
+      }
       const reason = dialog.getByRole('textbox');
       await reason.fill('  ');
       for (const checkbox of await dialog.getByRole('checkbox').all()) await checkbox.check();

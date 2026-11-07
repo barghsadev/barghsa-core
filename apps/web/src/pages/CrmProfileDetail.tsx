@@ -1641,7 +1641,7 @@ function AdminActionConfirmModal({
         if (!open && !loading) onCancel();
       }}
     >
-      <DialogContent finalFocus={finalFocus}>
+      <DialogContent finalFocus={finalFocus} className="max-h-[calc(100dvh-2rem)] overflow-y-auto">
         <form
           onSubmit={(event) => {
             event.preventDefault();
@@ -1656,13 +1656,13 @@ function AdminActionConfirmModal({
           {checklist && (
             <div className="space-y-3">
               {checklist.map((item) => (
-                <label key={item} className="flex items-start gap-2 text-sm">
+                <label key={item} className="touch-label flex items-center gap-2 text-sm">
                   <input
                     type="checkbox"
                     required
                     checked={checked.includes(item)}
                     disabled={loading}
-                    className="mt-1 shrink-0"
+                    className="shrink-0"
                     onChange={(event) =>
                       setChecked((current) =>
                         event.target.checked
