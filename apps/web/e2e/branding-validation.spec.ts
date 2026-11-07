@@ -14,19 +14,26 @@ const valid = {
   createdAt: '2026-09-01T00:00:00Z',
   updatedAt: '2026-09-01T00:00:00Z',
 };
-for (const locale of ['en', 'fa'])
+for (const locale of ['en', 'fa'] as const)
   test(`appearance rejects malformed reads and preserves edits on invalid save (${locale})`, async ({
     page,
   }) => {
     const fa = locale === 'fa';
-    await crmShell(page, locale as 'en' | 'fa');
+    await crmShell(page, locale);
     await page.route('**/api/admin/branding/configs', (route) => route.fulfill({ json: [valid] }));
     const draftId = '11111111-1111-4111-8111-111111111112';
     let response: unknown = { ...valid, config: { ...config, numberStyle: ['western'] } };
     let saveResponse = 'invalid';
     const writes: unknown[] = [];
-    await page.route('**/api/admin/branding/config', (route) => {
-      if (route.request().method() === 'GET') return route.fulfill({ json: response });
+    let releaseInitialRead!: () => void;
+    const initialRead = new Promise<void>((resolve) => {
+      releaseInitialRead = resolve;
+    });
+    await page.route('**/api/admin/branding/config', async (route) => {
+      if (route.request().method() === 'GET') {
+        await initialRead;
+        return route.fulfill({ json: response });
+      }
       const body = route.request().postDataJSON();
       writes.push(body);
       return route.fulfill({
@@ -58,6 +65,17 @@ for (const locale of ['en', 'fa'])
       });
     });
     await page.goto('/admin/branding');
+    const main = page.getByRole('main');
+    const heading = main.getByRole('heading', { level: 1, name: brandingText('title', locale) });
+    await expect(main.getByRole('status', { name: brandingText('loading', locale) })).toBeVisible();
+    await expect(page.getByRole('main')).toHaveCount(1);
+    await expect(main.getByRole('heading', { level: 1 })).toHaveCount(1);
+    await expect(heading).toBeVisible();
+    releaseInitialRead();
+    await expect(main.getByRole('status', { name: brandingText('loading', locale) })).toHaveCount(
+      0
+    );
+    await expect(heading).toBeVisible();
     const save = page.getByRole('button', {
       name: fa ? 'ذخیره پیش‌نویس' : 'Save Draft',
       exact: true,
@@ -79,7 +97,7 @@ for (const locale of ['en', 'fa'])
       ).toBeVisible();
       await expect(
         page.getByRole('button', {
-          name: brandingText('save', locale as 'en' | 'fa'),
+          name: brandingText('save', locale),
           exact: true,
           disabled: false,
         })
@@ -90,12 +108,12 @@ for (const locale of ['en', 'fa'])
     await refresh.click();
     await page
       .getByRole('button', {
-        name: settingsText('admin.settings.edit', locale as 'en' | 'fa'),
+        name: settingsText('admin.settings.edit', locale),
         exact: true,
       })
       .click();
     const title = page.getByRole('textbox', {
-      name: brandingText('appTitle', locale as 'en' | 'fa'),
+      name: brandingText('appTitle', locale),
       exact: true,
       includeHidden: true,
     });

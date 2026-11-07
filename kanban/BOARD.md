@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-07T22:15:38+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-07T22:25:15+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.4.0**. Next milestone: **v0.5.0**.
 
@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 864 | Accepted with unchanged source bindings. |
+| done | 865 | Accepted with unchanged source bindings. |
 | verify | 470 | Existing work may be complete; inspect evidence before building. |
-| partial | 29 | An earlier review found unmet criteria; reconcile later fixes. |
+| partial | 28 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 5 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
 | blocked | 1 | Named owner or external prerequisite. |
@@ -723,7 +723,7 @@ Customer and admin workflows work on desktop/mobile in both languages and themes
 | `07-ui-ux-design.md#T-07.05.01.04` | done | Recorded batch work | Add `aria-live="polite"` region for dynamic content updates (toast messages, notifications count, form submission status). `aria-live="assertive"` for critical errors (payment failures, session expiry). |
 | `07-ui-ux-design.md#T-07.05.01.05` | partial | Recorded batch work | Ensure all form inputs have programmatically associated labels (`<label htmlFor>` or `aria-label`). Error messages use `aria-describedby` or `aria-errormessage` to link to the input. Required fields use `aria-required="true"`. |
 | `07-ui-ux-design.md#T-07.05.01.06` | done | Recorded batch work | Ensure all images have meaningful `alt` text. Decorative icons use `aria-hidden="true"`. Status icons (success/error/warning) have screen-reader-visible text (visually hidden `sr-only` label). |
-| `07-ui-ux-design.md#T-07.05.01.07` | partial | Recorded batch work | Implement proper heading hierarchy (`h1` → `h2` → `h3` → `h4`) on every page. A single `<h1>` per page. Landmarks: `<header>`, `<nav>`, `<main>`, `<aside>`, `<footer>` with `aria-label` when multiple instances exist. |
+| `07-ui-ux-design.md#T-07.05.01.07` | done | Recorded batch work | Implement proper heading hierarchy (`h1` → `h2` → `h3` → `h4`) on every page. A single `<h1>` per page. Landmarks: `<header>`, `<nav>`, `<main>`, `<aside>`, `<footer>` with `aria-label` when multiple instances exist. |
 | `07-ui-ux-design.md#T-07.05.01.08` | partial | Recorded batch work | Ensure all color combinations pass WCAG AA contrast ratios: normal text ≥ 4.5:1, large text ≥ 3:1, UI components ≥ 3:1. Verify with automated tools. Provide a "high contrast" mode toggle that strengthens all contrast ratios. |
 | `07-ui-ux-design.md#T-07.05.01.09` | done | Recorded batch work | All custom interactive components (select, combobox, date picker, slider, tabs, accordion) must have correct ARIA roles (`combobox`, `listbox`, `option`, `tab`, `tabpanel`, `slider`, `progressbar`) and keyboard interaction patterns from WAI-ARIA Authoring Practices. |
 | `07-ui-ux-design.md#T-07.05.01.10` | done | Recorded batch work | Ensure custom file upload inputs are keyboard accessible and have clear screen-reader instructions. Drop zones must announce "drop files here or click to browse". |

@@ -74,6 +74,15 @@ for (const locale of ['en', 'fa'] as const) {
     const editor = page
       .locator('form')
       .filter({ has: page.locator('#notification-template-eventKey') });
+    const variables = editor.locator('#notification-template-variablesLabel');
+    await variables.fill('name: Recipient');
+    const reference = editor.getByRole('region', {
+      name: t('admin.notifications.variables', locale),
+    });
+    await expect(reference.getByRole('heading', { level: 3 })).toBeVisible();
+    await expect(reference.getByRole('button', { name: '{{name}}', exact: true })).toBeVisible();
+    await variables.clear();
+    await expect(reference).toHaveCount(0);
     await editor.locator('#notification-template-subject').fill(template.subject);
     await editor.locator('#notification-template-bodyTemplate').fill(template.bodyTemplate);
     await editor.locator('button[type=submit]').click();
@@ -172,7 +181,7 @@ for (const operation of ['publish', 'unpublish', 'delete', 'test-send', 'edit'] 
     if (operation === 'publish') {
       await row.getByRole('button', { name: 'Publish', exact: true }).click();
       await page
-        .getByRole('heading', { name: 'Publish Template', exact: true })
+        .getByRole('heading', { level: 2, name: 'Publish Template', exact: true })
         .locator('..')
         .getByRole('button', { name: 'Publish', exact: true })
         .click();

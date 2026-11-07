@@ -1290,8 +1290,14 @@ export default function AdminNotificationsPage({
                           />
                         </div>
                         {parsedVariables.length > 0 && (
-                          <aside className="w-full sm:w-48 shrink-0 border border-border rounded-lg p-3 bg-muted/40">
-                            <h3 className="text-xs font-semibold text-muted-foreground mb-2 uppercase">
+                          <section
+                            aria-labelledby="notification-template-variable-reference"
+                            className="w-full sm:w-48 shrink-0 border border-border rounded-lg p-3 bg-muted/40"
+                          >
+                            <h3
+                              id="notification-template-variable-reference"
+                              className="text-xs font-semibold text-muted-foreground mb-2 uppercase"
+                            >
                               {t('admin.notifications.variables', uiLocale)}
                             </h3>
                             <p className="text-[11px] text-muted-foreground mb-2">
@@ -1324,7 +1330,7 @@ export default function AdminNotificationsPage({
                                 </li>
                               ))}
                             </ul>
-                          </aside>
+                          </section>
                         )}
                       </div>
                       {feedback('bodyTemplate')}
@@ -1511,9 +1517,9 @@ export default function AdminNotificationsPage({
               {/* Publish confirm dialog */}
               {publishId && (
                 <div className="bg-warning-soft border border-warning/20 rounded-lg p-4 space-y-3">
-                  <h3 className="font-semibold">
+                  <h2 className="font-semibold">
                     {t('admin.notifications.publishTitle', uiLocale)}
-                  </h3>
+                  </h2>
                   <p className="text-sm text-muted-foreground">
                     {t('admin.notifications.publishDesc', uiLocale)}
                   </p>

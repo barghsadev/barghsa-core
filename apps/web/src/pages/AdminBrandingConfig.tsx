@@ -358,11 +358,15 @@ export default function AdminBrandingConfig() {
     }
   };
 
+  const heading = <h1 className="text-2xl font-bold text-foreground">{text('title')}</h1>;
   if (loading && !activeConfig) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <LoadingSkeleton label={text('loading')} variant="form" />
-      </div>
+      <>
+        {heading}
+        <div className="mx-auto flex h-64 w-full max-w-md flex-col justify-center">
+          <LoadingSkeleton label={text('loading')} variant="form" />
+        </div>
+      </>
     );
   }
 
@@ -487,7 +491,7 @@ export default function AdminBrandingConfig() {
       </Button>
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">{text('title')}</h1>
+          {heading}
           <p className="text-sm text-muted-foreground mt-1">
             {text('description')}
             {draftInfo && (
