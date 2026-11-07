@@ -5,6 +5,7 @@ import { t, type Locale } from '@barghsa/i18n';
 import { termsHistoryText } from '@barghsa/i18n/terms-history';
 import { formatInTimezone } from '@barghsa/i18n/date-time';
 import { readPublicTosHistory, type PublicTosHistory } from '../lib/public-tos-history.js';
+import { readWithDeadline } from '../lib/server-query-client.js';
 
 /** Only published metadata is loaded; following a version never accepts it. */
 export function PublishedTermsHistory({
@@ -27,13 +28,16 @@ export function PublishedTermsHistory({
     setError(false);
     try {
       const query = history?.nextCursor ? '?before=' + encodeURIComponent(history.nextCursor) : '';
-      const response = await fetch('/api/tos/versions' + query, {
-        credentials: 'omit',
-        cache: 'no-store',
-        signal: controller.signal,
+      const value: unknown = await readWithDeadline(controller.signal, async (signal) => {
+        const response = await fetch('/api/tos/versions' + query, {
+          credentials: 'omit',
+          cache: 'no-store',
+          signal,
+        });
+        if (!response.ok) throw new Error('History unavailable');
+        return response.json();
       });
-      if (!response.ok) throw new Error('History unavailable');
-      const page = readPublicTosHistory(await response.json());
+      const page = readPublicTosHistory(value);
       if (!page) throw new Error('Invalid history');
       if (controller.signal.aborted) return;
       setHistory((previous) => {

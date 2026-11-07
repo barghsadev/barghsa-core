@@ -85,3 +85,85 @@ for (const locale of ['en', 'fa'] as const)
     );
     await page.screenshot({ path: info.outputPath(`public-terms-${locale}.png`) });
   });
+
+for (const locale of ['en', 'fa'] as const)
+  test(`stalled public terms and history resume the same version and cursor (${locale})`, async ({
+    page,
+    context,
+    baseURL,
+  }) => {
+    const id = '00000000-0000-4000-8000-000000000002';
+    const olderId = '00000000-0000-4000-8000-000000000001';
+    const publishedAt = '2026-09-01T00:00:00Z';
+    const currentReads: (string | null)[] = [];
+    const historyReads: (string | null)[] = [];
+    let release!: () => void;
+    const held = new Promise<void>((done) => (release = done));
+    const document = (content: string) => ({
+      id,
+      versionId: 'v2',
+      content,
+      updatedAt: publishedAt,
+      publishedAt,
+    });
+    await context.addCookies([{ name: 'fixture-session', value: 'private', url: baseURL! }]);
+    await page.clock.install();
+    await page.route('**/api/tos/current?*', async (route) => {
+      expect(route.request().method()).toBe('GET');
+      expect((await route.request().allHeaders()).cookie).toBeUndefined();
+      const query = new URL(route.request().url()).searchParams;
+      expect(query.get('locale')).toBe(locale);
+      currentReads.push(query.get('versionId'));
+      if (currentReads.length === 1) {
+        await held;
+        await route.fulfill({ json: document('Obsolete terms response') }).catch(() => {});
+      } else {
+        await route.fulfill({ json: document('Published current terms') });
+      }
+    });
+    await page.route('**/api/tos/versions{,?*}', async (route) => {
+      expect(route.request().method()).toBe('GET');
+      expect((await route.request().allHeaders()).cookie).toBeUndefined();
+      const cursor = new URL(route.request().url()).searchParams.get('before');
+      historyReads.push(cursor);
+      if (historyReads.length === 2) {
+        await held;
+        await route.abort().catch(() => {});
+      } else {
+        await route.fulfill({
+          json: cursor
+            ? { versions: [{ id: olderId, versionId: 'v1', publishedAt }], nextCursor: null }
+            : { versions: [{ id, versionId: 'v2', publishedAt }], nextCursor: id },
+        });
+      }
+    });
+    try {
+      await page.goto(`/terms?lang=${locale}&version=${id}`);
+      const retry = page.getByRole('button', { name: t('tos.page.retry', locale), exact: true });
+      await expect.poll(() => currentReads).toEqual([id]);
+      await expect(page.getByText(t('tos.page.loading', locale), { exact: true })).toBeVisible();
+      await page.clock.fastForward(15_100);
+      await expect(retry).toBeVisible();
+      await expect(page.getByRole('article')).toHaveCount(0);
+      await retry.click();
+      await expect(page.getByRole('article')).toContainText('Published current terms');
+      expect(currentReads).toEqual([id, id]);
+
+      const history = page.locator('details').filter({
+        has: page.getByText(termsHistoryText('history', locale), { exact: true }),
+      });
+      await history.locator('summary').click();
+      await expect(history.getByRole('link', { name: 'v2', exact: true })).toBeVisible();
+      await history.getByRole('button', { name: termsHistoryText('moreVersions', locale) }).click();
+      await expect.poll(() => historyReads).toEqual([null, id]);
+      await page.clock.fastForward(15_100);
+      await expect(history.getByRole('alert')).toHaveText(termsHistoryText('historyError', locale));
+      await expect(history.getByRole('link', { name: 'v2', exact: true })).toBeVisible();
+      await history.getByRole('button', { name: t('tos.page.retry', locale) }).click();
+      await expect(history.getByRole('link', { name: 'v1', exact: true })).toBeVisible();
+      expect(historyReads).toEqual([null, id, id]);
+      await expect(page.getByRole('article')).toContainText('Published current terms');
+    } finally {
+      release();
+    }
+  });

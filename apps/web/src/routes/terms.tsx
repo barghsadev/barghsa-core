@@ -8,6 +8,7 @@ import { t, type Locale } from '@barghsa/i18n';
 import { ArrowLeftIcon, ArrowRightIcon } from 'lucide-react';
 import { brandName, useBrandConfig } from '../providers/BrandThemeProvider.js';
 import { PublishedTermsHistory } from '../components/PublishedTermsHistory.js';
+import { readWithDeadline } from '../lib/server-query-client.js';
 
 const TosContent = lazy(() => import('../components/TosContent.js'));
 
@@ -69,15 +70,15 @@ function TermsPage() {
         setError(false);
         const query = new URLSearchParams({ locale });
         if (version !== undefined) query.set('versionId', version);
-        const res = await fetch(`/api/tos/current?${query}`, {
-          signal: controller.signal,
-          credentials: 'omit',
+        const data: unknown = await readWithDeadline(controller.signal, async (signal) => {
+          const res = await fetch(`/api/tos/current?${query}`, {
+            signal,
+            credentials: 'omit',
+            cache: 'no-store',
+          });
+          if (!res.ok) throw new Error('Terms unavailable');
+          return res.json();
         });
-        if (!res.ok) {
-          if (!cancelled) setError(true);
-          return;
-        }
-        const data: unknown = await res.json();
         if (!isCurrentTos(data)) throw new Error('Invalid terms response');
         if (version !== undefined && data.id?.toLowerCase() !== version.toLowerCase())
           throw new Error('Mismatched terms version');

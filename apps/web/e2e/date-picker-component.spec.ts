@@ -70,6 +70,44 @@ for (const mode of ['single', 'range']) {
   });
 }
 
+for (const [locale, selectedDay] of [
+  ['en', /March 21st/],
+  ['fa', 'شنبه ۱-ام فروردین ۱۴۰۵، انتخاب شده'],
+] as const) {
+  test(`ArrowDown enters the selected calendar day in ${locale}`, async ({ page }) => {
+    await page.goto(`${url}?timezone=Asia%2FTehran&${locale}`);
+    const trigger = page.getByRole('combobox', { name: 'Delivery date' });
+    const dialog = page.getByRole('dialog', { name: 'Delivery date' });
+    const stored = page.getByRole('status', { name: 'Stored value', exact: true });
+    await trigger.press('ArrowDown');
+    await expect(dialog.getByRole('button', { name: selectedDay, exact: true })).toBeFocused();
+    await page.keyboard.press('Escape');
+    await expect(dialog).toBeHidden();
+    await expect(trigger).toBeFocused();
+    await expect(stored).toHaveText('"2026-03-20T21:00:00.000Z"');
+  });
+}
+
+test.describe('touch calendar', () => {
+  test.use({ hasTouch: true });
+
+  test('selects a Persian calendar day by touch and stores Tehran midnight', async ({ page }) => {
+    await page.goto(`${url}?timezone=Asia%2FTehran&fa`);
+    const trigger = page.getByRole('combobox', { name: 'Delivery date' });
+    const dialog = page.getByRole('dialog', { name: 'Delivery date' });
+    await trigger.tap();
+    await expect(
+      dialog.getByRole('button', { name: 'سه‌شنبه ۴-ام فروردین ۱۴۰۵', exact: true })
+    ).toBeDisabled();
+    await dialog.getByRole('button', { name: / ۲-ام فروردین ۱۴۰۵$/ }).tap();
+    await expect(dialog).toBeHidden();
+    await expect(trigger).toContainText('۲ فروردین ۱۴۰۵');
+    await expect(page.getByRole('status', { name: 'Stored value', exact: true })).toHaveText(
+      '"2026-03-21T20:30:00.000Z"'
+    );
+  });
+});
+
 test('date-time picker changes clock format with locale without changing the instant', async ({
   page,
 }) => {

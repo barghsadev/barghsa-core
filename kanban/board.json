@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-07T09:11:53+00:00",
-  "source_commit": "93d5840d54bb0a4754c3169306ede6f167581f44",
+  "updated": "2026-11-07T09:17:58+00:00",
+  "source_commit": "f343e07f2221fd22705be5dd73298287bf963978",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -34030,7 +34030,8 @@
           "release-0.5-staff-direct-reads",
           "release-0.5-staff-finance-read-recovery",
           "release-0.5-ui-coverage-collection",
-          "release-0.5-mapped-coverage-gate"
+          "release-0.5-mapped-coverage-gate",
+          "release-0.5-critical-coverage-closure"
         ],
         "current_acceptance": {
           "kind": "verified-account-preferences-and-timestamp-consumers",
@@ -34302,7 +34303,7 @@
             },
             {
               "path": "apps/web/src/routes/terms.tsx",
-              "sha256": "8da30aa6f440b7a63715fa2e1b9bf604381cb64e9de42bca1ba221d832a9e840"
+              "sha256": "a41882ec50fb68dc05799b781e48b6a8ec7576c51ef75c12e5f04545e6e7b28e"
             },
             {
               "path": "packages/i18n/src/date-time.test.ts",
@@ -34422,7 +34423,8 @@
             "Bindings renewed by release-0.5-staff-direct-reads: bounded saving and team reads pass exact browser and unit checks with current ownership, retained drafts and protected commands.",
             "Bindings renewed by release-0.5-staff-finance-read-recovery: Only staff maintenance and allocation read transport and related test fixtures changed. Scoped browser and unit evidence retains denial, financial review and protected command assertions.",
             "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
-            "Bindings renewed by release-0.5-mapped-coverage-gate: responsive story fixture and affected theme/notice assertions pass on both engines. No application source changed."
+            "Bindings renewed by release-0.5-mapped-coverage-gate: responsive story fixture and affected theme/notice assertions pass on both engines. No application source changed.",
+            "Bindings renewed by release-0.5-critical-coverage-closure: 30 terms/registration and 42 calendar native cases, 35 related units and original bundle budgets pass. Exact public version, consent, read privacy and existing calendar assertions are preserved."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/account-preferences-acceptance",
           "limitations": [
@@ -34893,6 +34895,11 @@
               "batch": "release-0.5-mapped-coverage-gate",
               "base_commit": "de12b6ffa5b1f4dde8bcb01eb96a48e0e5094c4c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-mapped-coverage-gate/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-critical-coverage-closure",
+              "base_commit": "f343e07f2221fd22705be5dd73298287bf963978",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-coverage-closure/source-binding.json"
             }
           ]
         },
@@ -37042,7 +37049,8 @@
           "release-0.5-measured-action-targets",
           "release-0.5-workspace-route-census",
           "release-0.5-staff-terms-reads",
-          "release-0.5-route-matrix-reconciliation"
+          "release-0.5-route-matrix-reconciliation",
+          "release-0.5-critical-coverage-closure"
         ],
         "current_acceptance": {
           "kind": "verified-versioned-terms-commercial-admission-and-receipts",
@@ -37170,7 +37178,7 @@
             },
             {
               "path": "apps/web/src/routes/terms.tsx",
-              "sha256": "8da30aa6f440b7a63715fa2e1b9bf604381cb64e9de42bca1ba221d832a9e840"
+              "sha256": "a41882ec50fb68dc05799b781e48b6a8ec7576c51ef75c12e5f04545e6e7b28e"
             },
             {
               "path": "packages/db/src/schema/tos-acceptances.ts",
@@ -37490,7 +37498,8 @@
             "Bindings renewed by release-0.5-measured-action-targets: target sizing changes pass exact populated route browsers and scoped invoice, saving and customer-history ownership units. Navigation, authority, receipt and money behavior are unchanged.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
             "Bindings renewed by release-0.5-staff-terms-reads: Only wizard read transport and fixture assertions changed; exact electricity and solar browser/unit cases retain current ownership, persisted progress, financial confirmation and command safeguards.",
-            "Bindings renewed by release-0.5-route-matrix-reconciliation: exact populated electricity, saving and solar journeys preserve the underlying captured draft, authority, price, receipt and financial confirmation assertions. Only solar fieldset presentation and test observations changed."
+            "Bindings renewed by release-0.5-route-matrix-reconciliation: exact populated electricity, saving and solar journeys preserve the underlying captured draft, authority, price, receipt and financial confirmation assertions. Only solar fieldset presentation and test observations changed.",
+            "Bindings renewed by release-0.5-critical-coverage-closure: 30 terms/registration and 42 calendar native cases, 35 related units and original bundle budgets pass. Exact public version, consent, read privacy and existing calendar assertions are preserved."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/terms-acceptance",
           "limitations": [
@@ -38188,6 +38197,11 @@
               "batch": "release-0.5-route-matrix-reconciliation",
               "base_commit": "9482df25f6361c4078bb846690f80bd26786cabe",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-matrix-reconciliation/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-critical-coverage-closure",
+              "base_commit": "f343e07f2221fd22705be5dd73298287bf963978",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-coverage-closure/source-binding.json"
             }
           ]
         }
@@ -38296,7 +38310,8 @@
           "release-0.5-measured-action-targets",
           "release-0.5-workspace-route-census",
           "release-0.5-staff-terms-reads",
-          "release-0.5-route-matrix-reconciliation"
+          "release-0.5-route-matrix-reconciliation",
+          "release-0.5-critical-coverage-closure"
         ],
         "current_acceptance": {
           "kind": "verified-versioned-terms-commercial-admission-and-receipts",
@@ -38424,7 +38439,7 @@
             },
             {
               "path": "apps/web/src/routes/terms.tsx",
-              "sha256": "8da30aa6f440b7a63715fa2e1b9bf604381cb64e9de42bca1ba221d832a9e840"
+              "sha256": "a41882ec50fb68dc05799b781e48b6a8ec7576c51ef75c12e5f04545e6e7b28e"
             },
             {
               "path": "packages/db/src/schema/tos-acceptances.ts",
@@ -38744,7 +38759,8 @@
             "Bindings renewed by release-0.5-measured-action-targets: target sizing changes pass exact populated route browsers and scoped invoice, saving and customer-history ownership units. Navigation, authority, receipt and money behavior are unchanged.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
             "Bindings renewed by release-0.5-staff-terms-reads: Only wizard read transport and fixture assertions changed; exact electricity and solar browser/unit cases retain current ownership, persisted progress, financial confirmation and command safeguards.",
-            "Bindings renewed by release-0.5-route-matrix-reconciliation: exact populated electricity, saving and solar journeys preserve the underlying captured draft, authority, price, receipt and financial confirmation assertions. Only solar fieldset presentation and test observations changed."
+            "Bindings renewed by release-0.5-route-matrix-reconciliation: exact populated electricity, saving and solar journeys preserve the underlying captured draft, authority, price, receipt and financial confirmation assertions. Only solar fieldset presentation and test observations changed.",
+            "Bindings renewed by release-0.5-critical-coverage-closure: 30 terms/registration and 42 calendar native cases, 35 related units and original bundle budgets pass. Exact public version, consent, read privacy and existing calendar assertions are preserved."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/terms-acceptance",
           "limitations": [
@@ -39442,6 +39458,11 @@
               "batch": "release-0.5-route-matrix-reconciliation",
               "base_commit": "9482df25f6361c4078bb846690f80bd26786cabe",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-matrix-reconciliation/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-critical-coverage-closure",
+              "base_commit": "f343e07f2221fd22705be5dd73298287bf963978",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-coverage-closure/source-binding.json"
             }
           ]
         }
@@ -39558,7 +39579,8 @@
           "release-0.5-measured-action-targets",
           "release-0.5-workspace-route-census",
           "release-0.5-staff-terms-reads",
-          "release-0.5-route-matrix-reconciliation"
+          "release-0.5-route-matrix-reconciliation",
+          "release-0.5-critical-coverage-closure"
         ],
         "current_acceptance": {
           "kind": "verified-versioned-terms-commercial-admission-and-receipts",
@@ -39686,7 +39708,7 @@
             },
             {
               "path": "apps/web/src/routes/terms.tsx",
-              "sha256": "8da30aa6f440b7a63715fa2e1b9bf604381cb64e9de42bca1ba221d832a9e840"
+              "sha256": "a41882ec50fb68dc05799b781e48b6a8ec7576c51ef75c12e5f04545e6e7b28e"
             },
             {
               "path": "packages/db/src/schema/tos-acceptances.ts",
@@ -40006,7 +40028,8 @@
             "Bindings renewed by release-0.5-measured-action-targets: target sizing changes pass exact populated route browsers and scoped invoice, saving and customer-history ownership units. Navigation, authority, receipt and money behavior are unchanged.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
             "Bindings renewed by release-0.5-staff-terms-reads: Only wizard read transport and fixture assertions changed; exact electricity and solar browser/unit cases retain current ownership, persisted progress, financial confirmation and command safeguards.",
-            "Bindings renewed by release-0.5-route-matrix-reconciliation: exact populated electricity, saving and solar journeys preserve the underlying captured draft, authority, price, receipt and financial confirmation assertions. Only solar fieldset presentation and test observations changed."
+            "Bindings renewed by release-0.5-route-matrix-reconciliation: exact populated electricity, saving and solar journeys preserve the underlying captured draft, authority, price, receipt and financial confirmation assertions. Only solar fieldset presentation and test observations changed.",
+            "Bindings renewed by release-0.5-critical-coverage-closure: 30 terms/registration and 42 calendar native cases, 35 related units and original bundle budgets pass. Exact public version, consent, read privacy and existing calendar assertions are preserved."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/terms-acceptance",
           "limitations": [
@@ -40704,6 +40727,11 @@
               "batch": "release-0.5-route-matrix-reconciliation",
               "base_commit": "9482df25f6361c4078bb846690f80bd26786cabe",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-matrix-reconciliation/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-critical-coverage-closure",
+              "base_commit": "f343e07f2221fd22705be5dd73298287bf963978",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-coverage-closure/source-binding.json"
             }
           ]
         }
@@ -470014,7 +470042,8 @@
           "release-0.5-route-matrix-reconciliation",
           "release-0.5-staff-finance-read-recovery",
           "release-0.5-ui-coverage-collection",
-          "release-0.5-mapped-coverage-gate"
+          "release-0.5-mapped-coverage-gate",
+          "release-0.5-critical-coverage-closure"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -470146,7 +470175,7 @@
             },
             {
               "path": "apps/web/src/components/PublishedTermsHistory.tsx",
-              "sha256": "f1c8381750ab4e52b8731c40f5a8fb6564c6dc7a771820aa10c74cf6010d6c2e"
+              "sha256": "8eae6315b27f1d236743a26c8a40453d60cbcba7a15cf950b7cf1a952d8477bd"
             },
             {
               "path": "apps/web/src/components/ReceiptAttachmentPreview.tsx",
@@ -470522,7 +470551,7 @@
             },
             {
               "path": "apps/web/src/routes/terms.tsx",
-              "sha256": "8da30aa6f440b7a63715fa2e1b9bf604381cb64e9de42bca1ba221d832a9e840"
+              "sha256": "a41882ec50fb68dc05799b781e48b6a8ec7576c51ef75c12e5f04545e6e7b28e"
             },
             {
               "path": "docs/design/design-system.md",
@@ -470618,7 +470647,8 @@
             "Bindings renewed by release-0.5-route-matrix-reconciliation: exact populated electricity, saving and solar journeys preserve the underlying captured draft, authority, price, receipt and financial confirmation assertions. Only solar fieldset presentation and test observations changed.",
             "Bindings renewed by release-0.5-staff-finance-read-recovery: Only staff maintenance and allocation read transport and related test fixtures changed. Scoped browser and unit evidence retains denial, financial review and protected command assertions.",
             "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
-            "Bindings renewed by release-0.5-mapped-coverage-gate: responsive story fixture and affected theme/notice assertions pass on both engines. No application source changed."
+            "Bindings renewed by release-0.5-mapped-coverage-gate: responsive story fixture and affected theme/notice assertions pass on both engines. No application source changed.",
+            "Bindings renewed by release-0.5-critical-coverage-closure: 30 terms/registration and 42 calendar native cases, 35 related units and original bundle budgets pass. Exact public version, consent, read privacy and existing calendar assertions are preserved."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-shared-component-closure",
           "limitations": [
@@ -470774,6 +470804,11 @@
               "batch": "release-0.5-mapped-coverage-gate",
               "base_commit": "de12b6ffa5b1f4dde8bcb01eb96a48e0e5094c4c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-mapped-coverage-gate/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-critical-coverage-closure",
+              "base_commit": "f343e07f2221fd22705be5dd73298287bf963978",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-coverage-closure/source-binding.json"
             }
           ]
         },
@@ -472768,7 +472803,8 @@
           "release-0.5-profile-lifecycle-feedback",
           "release-0.5-solar-guidance-required",
           "release-0.5-staff-direct-reads",
-          "release-0.5-staff-finance-read-recovery"
+          "release-0.5-staff-finance-read-recovery",
+          "release-0.5-critical-coverage-closure"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -472948,7 +472984,7 @@
             },
             {
               "path": "apps/web/src/components/PublishedTermsHistory.tsx",
-              "sha256": "f1c8381750ab4e52b8731c40f5a8fb6564c6dc7a771820aa10c74cf6010d6c2e"
+              "sha256": "8eae6315b27f1d236743a26c8a40453d60cbcba7a15cf950b7cf1a952d8477bd"
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.test.tsx",
@@ -473277,7 +473313,8 @@
             "Bindings renewed by release-0.5-profile-lifecycle-feedback: exact lifecycle browsers and units verify timeout, current scope, protected consent, duplicate prevention and receipts after the bounded preview/feedback change.",
             "Bindings renewed by release-0.5-solar-guidance-required: required announcements match existing staff guidance schemas; exact browser and unit checks preserve protected commands and receipts.",
             "Bindings renewed by release-0.5-staff-direct-reads: bounded saving and team reads pass exact browser and unit checks with current ownership, retained drafts and protected commands.",
-            "Bindings renewed by release-0.5-staff-finance-read-recovery: Only staff maintenance and allocation read transport and related test fixtures changed. Scoped browser and unit evidence retains denial, financial review and protected command assertions."
+            "Bindings renewed by release-0.5-staff-finance-read-recovery: Only staff maintenance and allocation read transport and related test fixtures changed. Scoped browser and unit evidence retains denial, financial review and protected command assertions.",
+            "Bindings renewed by release-0.5-critical-coverage-closure: 30 terms/registration and 42 calendar native cases, 35 related units and original bundle budgets pass. Exact public version, consent, read privacy and existing calendar assertions are preserved."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-lists-and-receipts",
           "limitations": [
@@ -473368,6 +473405,11 @@
               "batch": "release-0.5-staff-finance-read-recovery",
               "base_commit": "1f5456b370991593241795249d8924378333989f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-finance-read-recovery/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-critical-coverage-closure",
+              "base_commit": "f343e07f2221fd22705be5dd73298287bf963978",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-coverage-closure/source-binding.json"
             }
           ]
         }
@@ -473483,7 +473525,8 @@
           "release-0.5-profile-lifecycle-feedback",
           "release-0.5-solar-guidance-required",
           "release-0.5-staff-direct-reads",
-          "release-0.5-staff-finance-read-recovery"
+          "release-0.5-staff-finance-read-recovery",
+          "release-0.5-critical-coverage-closure"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -473663,7 +473706,7 @@
             },
             {
               "path": "apps/web/src/components/PublishedTermsHistory.tsx",
-              "sha256": "f1c8381750ab4e52b8731c40f5a8fb6564c6dc7a771820aa10c74cf6010d6c2e"
+              "sha256": "8eae6315b27f1d236743a26c8a40453d60cbcba7a15cf950b7cf1a952d8477bd"
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.test.tsx",
@@ -473992,7 +474035,8 @@
             "Bindings renewed by release-0.5-profile-lifecycle-feedback: exact lifecycle browsers and units verify timeout, current scope, protected consent, duplicate prevention and receipts after the bounded preview/feedback change.",
             "Bindings renewed by release-0.5-solar-guidance-required: required announcements match existing staff guidance schemas; exact browser and unit checks preserve protected commands and receipts.",
             "Bindings renewed by release-0.5-staff-direct-reads: bounded saving and team reads pass exact browser and unit checks with current ownership, retained drafts and protected commands.",
-            "Bindings renewed by release-0.5-staff-finance-read-recovery: Only staff maintenance and allocation read transport and related test fixtures changed. Scoped browser and unit evidence retains denial, financial review and protected command assertions."
+            "Bindings renewed by release-0.5-staff-finance-read-recovery: Only staff maintenance and allocation read transport and related test fixtures changed. Scoped browser and unit evidence retains denial, financial review and protected command assertions.",
+            "Bindings renewed by release-0.5-critical-coverage-closure: 30 terms/registration and 42 calendar native cases, 35 related units and original bundle budgets pass. Exact public version, consent, read privacy and existing calendar assertions are preserved."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-lists-and-receipts",
           "limitations": [
@@ -474083,6 +474127,11 @@
               "batch": "release-0.5-staff-finance-read-recovery",
               "base_commit": "1f5456b370991593241795249d8924378333989f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-finance-read-recovery/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-critical-coverage-closure",
+              "base_commit": "f343e07f2221fd22705be5dd73298287bf963978",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-coverage-closure/source-binding.json"
             }
           ]
         }
@@ -474139,7 +474188,8 @@
           "release-0.5-profile-lifecycle-feedback",
           "release-0.5-solar-guidance-required",
           "release-0.5-staff-direct-reads",
-          "release-0.5-staff-finance-read-recovery"
+          "release-0.5-staff-finance-read-recovery",
+          "release-0.5-critical-coverage-closure"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -474319,7 +474369,7 @@
             },
             {
               "path": "apps/web/src/components/PublishedTermsHistory.tsx",
-              "sha256": "f1c8381750ab4e52b8731c40f5a8fb6564c6dc7a771820aa10c74cf6010d6c2e"
+              "sha256": "8eae6315b27f1d236743a26c8a40453d60cbcba7a15cf950b7cf1a952d8477bd"
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.test.tsx",
@@ -474648,7 +474698,8 @@
             "Bindings renewed by release-0.5-profile-lifecycle-feedback: exact lifecycle browsers and units verify timeout, current scope, protected consent, duplicate prevention and receipts after the bounded preview/feedback change.",
             "Bindings renewed by release-0.5-solar-guidance-required: required announcements match existing staff guidance schemas; exact browser and unit checks preserve protected commands and receipts.",
             "Bindings renewed by release-0.5-staff-direct-reads: bounded saving and team reads pass exact browser and unit checks with current ownership, retained drafts and protected commands.",
-            "Bindings renewed by release-0.5-staff-finance-read-recovery: Only staff maintenance and allocation read transport and related test fixtures changed. Scoped browser and unit evidence retains denial, financial review and protected command assertions."
+            "Bindings renewed by release-0.5-staff-finance-read-recovery: Only staff maintenance and allocation read transport and related test fixtures changed. Scoped browser and unit evidence retains denial, financial review and protected command assertions.",
+            "Bindings renewed by release-0.5-critical-coverage-closure: 30 terms/registration and 42 calendar native cases, 35 related units and original bundle budgets pass. Exact public version, consent, read privacy and existing calendar assertions are preserved."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-lists-and-receipts",
           "limitations": [
@@ -474739,6 +474790,11 @@
               "batch": "release-0.5-staff-finance-read-recovery",
               "base_commit": "1f5456b370991593241795249d8924378333989f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-finance-read-recovery/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-critical-coverage-closure",
+              "base_commit": "f343e07f2221fd22705be5dd73298287bf963978",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-coverage-closure/source-binding.json"
             }
           ]
         }
@@ -482966,7 +483022,8 @@
           "release-0.5-focus-and-contrast",
           "release-0.5-form-and-document-accessibility",
           "release-0.5-safari-main-keyboard",
-          "release-0.5-workspace-route-census"
+          "release-0.5-workspace-route-census",
+          "release-0.5-critical-coverage-closure"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -483082,7 +483139,7 @@
             },
             {
               "path": "apps/web/src/routes/terms.tsx",
-              "sha256": "8da30aa6f440b7a63715fa2e1b9bf604381cb64e9de42bca1ba221d832a9e840"
+              "sha256": "a41882ec50fb68dc05799b781e48b6a8ec7576c51ef75c12e5f04545e6e7b28e"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -483405,7 +483462,8 @@
             "Bindings renewed by release-0.5-focus-and-contrast: reviewed theme-only styles, native focus behavior and persistent bell announcement. Preserved date bounds, permission flows and requests; affected unit and browser tests and unchanged budgets passed.",
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
-            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass."
+            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
+            "Bindings renewed by release-0.5-critical-coverage-closure: 30 terms/registration and 42 calendar native cases, 35 related units and original bundle budgets pass. Exact public version, consent, read privacy and existing calendar assertions are preserved."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-language-calendar-journey",
           "limitations": [
@@ -483456,6 +483514,11 @@
               "batch": "release-0.5-workspace-route-census",
               "base_commit": "7cf95f840a7e65c722f95b10e486bd02c435d498",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-workspace-route-census/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-critical-coverage-closure",
+              "base_commit": "f343e07f2221fd22705be5dd73298287bf963978",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-coverage-closure/source-binding.json"
             }
           ]
         },
@@ -483497,7 +483560,8 @@
           "release-0.5-focus-and-contrast",
           "release-0.5-form-and-document-accessibility",
           "release-0.5-safari-main-keyboard",
-          "release-0.5-workspace-route-census"
+          "release-0.5-workspace-route-census",
+          "release-0.5-critical-coverage-closure"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -483613,7 +483677,7 @@
             },
             {
               "path": "apps/web/src/routes/terms.tsx",
-              "sha256": "8da30aa6f440b7a63715fa2e1b9bf604381cb64e9de42bca1ba221d832a9e840"
+              "sha256": "a41882ec50fb68dc05799b781e48b6a8ec7576c51ef75c12e5f04545e6e7b28e"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -483936,7 +484000,8 @@
             "Bindings renewed by release-0.5-focus-and-contrast: reviewed theme-only styles, native focus behavior and persistent bell announcement. Preserved date bounds, permission flows and requests; affected unit and browser tests and unchanged budgets passed.",
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
-            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass."
+            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
+            "Bindings renewed by release-0.5-critical-coverage-closure: 30 terms/registration and 42 calendar native cases, 35 related units and original bundle budgets pass. Exact public version, consent, read privacy and existing calendar assertions are preserved."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-language-calendar-journey",
           "limitations": [
@@ -483987,6 +484052,11 @@
               "batch": "release-0.5-workspace-route-census",
               "base_commit": "7cf95f840a7e65c722f95b10e486bd02c435d498",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-workspace-route-census/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-critical-coverage-closure",
+              "base_commit": "f343e07f2221fd22705be5dd73298287bf963978",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-coverage-closure/source-binding.json"
             }
           ]
         },
@@ -484028,7 +484098,8 @@
           "release-0.5-focus-and-contrast",
           "release-0.5-form-and-document-accessibility",
           "release-0.5-safari-main-keyboard",
-          "release-0.5-workspace-route-census"
+          "release-0.5-workspace-route-census",
+          "release-0.5-critical-coverage-closure"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -484144,7 +484215,7 @@
             },
             {
               "path": "apps/web/src/routes/terms.tsx",
-              "sha256": "8da30aa6f440b7a63715fa2e1b9bf604381cb64e9de42bca1ba221d832a9e840"
+              "sha256": "a41882ec50fb68dc05799b781e48b6a8ec7576c51ef75c12e5f04545e6e7b28e"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -484467,7 +484538,8 @@
             "Bindings renewed by release-0.5-focus-and-contrast: reviewed theme-only styles, native focus behavior and persistent bell announcement. Preserved date bounds, permission flows and requests; affected unit and browser tests and unchanged budgets passed.",
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
-            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass."
+            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
+            "Bindings renewed by release-0.5-critical-coverage-closure: 30 terms/registration and 42 calendar native cases, 35 related units and original bundle budgets pass. Exact public version, consent, read privacy and existing calendar assertions are preserved."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-language-calendar-journey",
           "limitations": [
@@ -484518,6 +484590,11 @@
               "batch": "release-0.5-workspace-route-census",
               "base_commit": "7cf95f840a7e65c722f95b10e486bd02c435d498",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-workspace-route-census/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-critical-coverage-closure",
+              "base_commit": "f343e07f2221fd22705be5dd73298287bf963978",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-coverage-closure/source-binding.json"
             }
           ]
         },
@@ -484594,7 +484671,8 @@
           "release-0.5-form-and-document-accessibility",
           "release-0.5-workspace-route-census",
           "release-0.5-staff-terms-reads",
-          "release-0.5-route-matrix-reconciliation"
+          "release-0.5-route-matrix-reconciliation",
+          "release-0.5-critical-coverage-closure"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -484618,7 +484696,7 @@
             },
             {
               "path": "apps/web/e2e/date-picker-component.spec.ts",
-              "sha256": "52131736fdd10a1c670b57d39ee83b0cbc9624603cb55881ea098434d23ad3cf"
+              "sha256": "d1a17a2515cf72c1eafd9edb221103c480eca4f0c71fe94ebdbbad5d088e604d"
             },
             {
               "path": "apps/web/e2e/electricity-simple-journey.spec.ts",
@@ -484833,7 +484911,8 @@
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
             "Bindings renewed by release-0.5-staff-terms-reads: Only wizard read transport and fixture assertions changed; exact electricity and solar browser/unit cases retain current ownership, persisted progress, financial confirmation and command safeguards.",
-            "Bindings renewed by release-0.5-route-matrix-reconciliation: exact populated electricity, saving and solar journeys preserve the underlying captured draft, authority, price, receipt and financial confirmation assertions. Only solar fieldset presentation and test observations changed."
+            "Bindings renewed by release-0.5-route-matrix-reconciliation: exact populated electricity, saving and solar journeys preserve the underlying captured draft, authority, price, receipt and financial confirmation assertions. Only solar fieldset presentation and test observations changed.",
+            "Bindings renewed by release-0.5-critical-coverage-closure: 30 terms/registration and 42 calendar native cases, 35 related units and original bundle budgets pass. Exact public version, consent, read privacy and existing calendar assertions are preserved."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-language-calendar-journey",
           "limitations": [
@@ -484884,6 +484963,11 @@
               "batch": "release-0.5-route-matrix-reconciliation",
               "base_commit": "9482df25f6361c4078bb846690f80bd26786cabe",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-matrix-reconciliation/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-critical-coverage-closure",
+              "base_commit": "f343e07f2221fd22705be5dd73298287bf963978",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-coverage-closure/source-binding.json"
             }
           ]
         },
@@ -484927,7 +485011,8 @@
           "release-0.5-form-and-document-accessibility",
           "release-0.5-workspace-route-census",
           "release-0.5-staff-terms-reads",
-          "release-0.5-route-matrix-reconciliation"
+          "release-0.5-route-matrix-reconciliation",
+          "release-0.5-critical-coverage-closure"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -484951,7 +485036,7 @@
             },
             {
               "path": "apps/web/e2e/date-picker-component.spec.ts",
-              "sha256": "52131736fdd10a1c670b57d39ee83b0cbc9624603cb55881ea098434d23ad3cf"
+              "sha256": "d1a17a2515cf72c1eafd9edb221103c480eca4f0c71fe94ebdbbad5d088e604d"
             },
             {
               "path": "apps/web/e2e/electricity-simple-journey.spec.ts",
@@ -485166,7 +485251,8 @@
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
             "Bindings renewed by release-0.5-staff-terms-reads: Only wizard read transport and fixture assertions changed; exact electricity and solar browser/unit cases retain current ownership, persisted progress, financial confirmation and command safeguards.",
-            "Bindings renewed by release-0.5-route-matrix-reconciliation: exact populated electricity, saving and solar journeys preserve the underlying captured draft, authority, price, receipt and financial confirmation assertions. Only solar fieldset presentation and test observations changed."
+            "Bindings renewed by release-0.5-route-matrix-reconciliation: exact populated electricity, saving and solar journeys preserve the underlying captured draft, authority, price, receipt and financial confirmation assertions. Only solar fieldset presentation and test observations changed.",
+            "Bindings renewed by release-0.5-critical-coverage-closure: 30 terms/registration and 42 calendar native cases, 35 related units and original bundle budgets pass. Exact public version, consent, read privacy and existing calendar assertions are preserved."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-language-calendar-journey",
           "limitations": [
@@ -485217,6 +485303,11 @@
               "batch": "release-0.5-route-matrix-reconciliation",
               "base_commit": "9482df25f6361c4078bb846690f80bd26786cabe",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-matrix-reconciliation/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-critical-coverage-closure",
+              "base_commit": "f343e07f2221fd22705be5dd73298287bf963978",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-coverage-closure/source-binding.json"
             }
           ]
         },
@@ -485258,7 +485349,8 @@
           "release-0.5-form-and-document-accessibility",
           "release-0.5-workspace-route-census",
           "release-0.5-staff-terms-reads",
-          "release-0.5-route-matrix-reconciliation"
+          "release-0.5-route-matrix-reconciliation",
+          "release-0.5-critical-coverage-closure"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -485282,7 +485374,7 @@
             },
             {
               "path": "apps/web/e2e/date-picker-component.spec.ts",
-              "sha256": "52131736fdd10a1c670b57d39ee83b0cbc9624603cb55881ea098434d23ad3cf"
+              "sha256": "d1a17a2515cf72c1eafd9edb221103c480eca4f0c71fe94ebdbbad5d088e604d"
             },
             {
               "path": "apps/web/e2e/electricity-simple-journey.spec.ts",
@@ -485497,7 +485589,8 @@
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
             "Bindings renewed by release-0.5-staff-terms-reads: Only wizard read transport and fixture assertions changed; exact electricity and solar browser/unit cases retain current ownership, persisted progress, financial confirmation and command safeguards.",
-            "Bindings renewed by release-0.5-route-matrix-reconciliation: exact populated electricity, saving and solar journeys preserve the underlying captured draft, authority, price, receipt and financial confirmation assertions. Only solar fieldset presentation and test observations changed."
+            "Bindings renewed by release-0.5-route-matrix-reconciliation: exact populated electricity, saving and solar journeys preserve the underlying captured draft, authority, price, receipt and financial confirmation assertions. Only solar fieldset presentation and test observations changed.",
+            "Bindings renewed by release-0.5-critical-coverage-closure: 30 terms/registration and 42 calendar native cases, 35 related units and original bundle budgets pass. Exact public version, consent, read privacy and existing calendar assertions are preserved."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-language-calendar-journey",
           "limitations": [
@@ -485548,6 +485641,11 @@
               "batch": "release-0.5-route-matrix-reconciliation",
               "base_commit": "9482df25f6361c4078bb846690f80bd26786cabe",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-matrix-reconciliation/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-critical-coverage-closure",
+              "base_commit": "f343e07f2221fd22705be5dd73298287bf963978",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-coverage-closure/source-binding.json"
             }
           ]
         },
@@ -485589,7 +485687,8 @@
           "release-0.5-form-and-document-accessibility",
           "release-0.5-workspace-route-census",
           "release-0.5-staff-terms-reads",
-          "release-0.5-route-matrix-reconciliation"
+          "release-0.5-route-matrix-reconciliation",
+          "release-0.5-critical-coverage-closure"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -485613,7 +485712,7 @@
             },
             {
               "path": "apps/web/e2e/date-picker-component.spec.ts",
-              "sha256": "52131736fdd10a1c670b57d39ee83b0cbc9624603cb55881ea098434d23ad3cf"
+              "sha256": "d1a17a2515cf72c1eafd9edb221103c480eca4f0c71fe94ebdbbad5d088e604d"
             },
             {
               "path": "apps/web/e2e/electricity-simple-journey.spec.ts",
@@ -485828,7 +485927,8 @@
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
             "Bindings renewed by release-0.5-staff-terms-reads: Only wizard read transport and fixture assertions changed; exact electricity and solar browser/unit cases retain current ownership, persisted progress, financial confirmation and command safeguards.",
-            "Bindings renewed by release-0.5-route-matrix-reconciliation: exact populated electricity, saving and solar journeys preserve the underlying captured draft, authority, price, receipt and financial confirmation assertions. Only solar fieldset presentation and test observations changed."
+            "Bindings renewed by release-0.5-route-matrix-reconciliation: exact populated electricity, saving and solar journeys preserve the underlying captured draft, authority, price, receipt and financial confirmation assertions. Only solar fieldset presentation and test observations changed.",
+            "Bindings renewed by release-0.5-critical-coverage-closure: 30 terms/registration and 42 calendar native cases, 35 related units and original bundle budgets pass. Exact public version, consent, read privacy and existing calendar assertions are preserved."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-language-calendar-journey",
           "limitations": [
@@ -485879,6 +485979,11 @@
               "batch": "release-0.5-route-matrix-reconciliation",
               "base_commit": "9482df25f6361c4078bb846690f80bd26786cabe",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-matrix-reconciliation/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-critical-coverage-closure",
+              "base_commit": "f343e07f2221fd22705be5dd73298287bf963978",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-coverage-closure/source-binding.json"
             }
           ]
         },
@@ -487373,7 +487478,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Existing audited wizard controls pass coarse pointer checks at eight widths. Global acceptance still needs the remaining secondary controls and native picker states listed by the recorded observations; measured subsets are not full touch coverage."
+        "English/Persian calendar keyboard and Persian touch activation pass on Chromium and Mobile Safari in the product viewport. Existing audited wizard controls pass at eight widths. Measure remaining secondary controls and native picker states, including 320px, before global acceptance."
       ],
       "owner": null,
       "depends_on": [],
@@ -487387,7 +487492,8 @@
           "release-0.5-required-form-and-action-closure",
           "release-0.5-measured-action-targets",
           "release-0.5-critical-accessibility-renewal",
-          "release-0.5-route-matrix-reconciliation"
+          "release-0.5-route-matrix-reconciliation",
+          "release-0.5-critical-coverage-closure"
         ],
         "current_acceptance": null
       }
@@ -489551,7 +489657,8 @@
           "release-0.5-route-state-closure",
           "release-0.5-safari-main-keyboard",
           "release-0.5-route-adoption-matrix",
-          "release-0.5-critical-accessibility-renewal"
+          "release-0.5-critical-accessibility-renewal",
+          "release-0.5-critical-coverage-closure"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -489731,7 +489838,7 @@
             },
             {
               "path": "apps/web/src/routes/terms.tsx",
-              "sha256": "8da30aa6f440b7a63715fa2e1b9bf604381cb64e9de42bca1ba221d832a9e840"
+              "sha256": "a41882ec50fb68dc05799b781e48b6a8ec7576c51ef75c12e5f04545e6e7b28e"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -489795,7 +489902,8 @@
             "Bindings renewed by release-0.5-route-state-closure: bounded reads, existing authorization and caller behavior checked with targeted units, browser journeys and original bundle limits.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
             "Bindings renewed by release-0.5-route-adoption-matrix: the solar document action has a layout-only change, and the affected browser journeys and solar units pass with existing receipt, authority and financial assertions. Saving browser checks preserve their exact draft and refund assertions after the width probe.",
-            "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions."
+            "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
+            "Bindings renewed by release-0.5-critical-coverage-closure: 30 terms/registration and 42 calendar native cases, 35 related units and original bundle budgets pass. Exact public version, consent, read privacy and existing calendar assertions are preserved."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-fallback-and-announcement",
           "limitations": [
@@ -489841,6 +489949,11 @@
               "batch": "release-0.5-critical-accessibility-renewal",
               "base_commit": "5f05d6d3244b0e124ae2b56073fa873ee035be03",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-accessibility-renewal/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-critical-coverage-closure",
+              "base_commit": "f343e07f2221fd22705be5dd73298287bf963978",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-coverage-closure/source-binding.json"
             }
           ]
         }
@@ -489879,7 +489992,8 @@
           "release-0.5-route-adoption-matrix",
           "release-0.5-critical-accessibility-renewal",
           "release-0.5-staff-finance-read-recovery",
-          "release-0.5-coverage-remaining-branches"
+          "release-0.5-coverage-remaining-branches",
+          "release-0.5-critical-coverage-closure"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -489915,7 +490029,7 @@
             },
             {
               "path": "apps/web/e2e/date-picker-component.spec.ts",
-              "sha256": "52131736fdd10a1c670b57d39ee83b0cbc9624603cb55881ea098434d23ad3cf"
+              "sha256": "d1a17a2515cf72c1eafd9edb221103c480eca4f0c71fe94ebdbbad5d088e604d"
             },
             {
               "path": "apps/web/e2e/fixtures/date-picker/main.tsx",
@@ -490103,7 +490217,8 @@
             "Bindings renewed by release-0.5-route-adoption-matrix: the solar document action has a layout-only change, and the affected browser journeys and solar units pass with existing receipt, authority and financial assertions. Saving browser checks preserve their exact draft and refund assertions after the width probe.",
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
             "Bindings renewed by release-0.5-staff-finance-read-recovery: Only staff maintenance and allocation read transport and related test fixtures changed. Scoped browser and unit evidence retains denial, financial review and protected command assertions.",
-            "Bindings renewed by release-0.5-coverage-remaining-branches: normal manifest behavior and all 27 test assertion bodies are preserved, and exact protected admin and consultation fixture checks pass. No production source changed."
+            "Bindings renewed by release-0.5-coverage-remaining-branches: normal manifest behavior and all 27 test assertion bodies are preserved, and exact protected admin and consultation fixture checks pass. No production source changed.",
+            "Bindings renewed by release-0.5-critical-coverage-closure: 30 terms/registration and 42 calendar native cases, 35 related units and original bundle budgets pass. Exact public version, consent, read privacy and existing calendar assertions are preserved."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-focus-and-contrast",
           "limitations": [
@@ -490164,6 +490279,11 @@
               "batch": "release-0.5-coverage-remaining-branches",
               "base_commit": "5acf1ae93ea5e0fbf7e79b7e12fac33db9591af9",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-coverage-remaining-branches/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-critical-coverage-closure",
+              "base_commit": "f343e07f2221fd22705be5dd73298287bf963978",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-coverage-closure/source-binding.json"
             }
           ]
         }
@@ -490202,7 +490322,8 @@
           "release-0.5-route-adoption-matrix",
           "release-0.5-critical-accessibility-renewal",
           "release-0.5-staff-finance-read-recovery",
-          "release-0.5-coverage-remaining-branches"
+          "release-0.5-coverage-remaining-branches",
+          "release-0.5-critical-coverage-closure"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -490238,7 +490359,7 @@
             },
             {
               "path": "apps/web/e2e/date-picker-component.spec.ts",
-              "sha256": "52131736fdd10a1c670b57d39ee83b0cbc9624603cb55881ea098434d23ad3cf"
+              "sha256": "d1a17a2515cf72c1eafd9edb221103c480eca4f0c71fe94ebdbbad5d088e604d"
             },
             {
               "path": "apps/web/e2e/fixtures/date-picker/main.tsx",
@@ -490426,7 +490547,8 @@
             "Bindings renewed by release-0.5-route-adoption-matrix: the solar document action has a layout-only change, and the affected browser journeys and solar units pass with existing receipt, authority and financial assertions. Saving browser checks preserve their exact draft and refund assertions after the width probe.",
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
             "Bindings renewed by release-0.5-staff-finance-read-recovery: Only staff maintenance and allocation read transport and related test fixtures changed. Scoped browser and unit evidence retains denial, financial review and protected command assertions.",
-            "Bindings renewed by release-0.5-coverage-remaining-branches: normal manifest behavior and all 27 test assertion bodies are preserved, and exact protected admin and consultation fixture checks pass. No production source changed."
+            "Bindings renewed by release-0.5-coverage-remaining-branches: normal manifest behavior and all 27 test assertion bodies are preserved, and exact protected admin and consultation fixture checks pass. No production source changed.",
+            "Bindings renewed by release-0.5-critical-coverage-closure: 30 terms/registration and 42 calendar native cases, 35 related units and original bundle budgets pass. Exact public version, consent, read privacy and existing calendar assertions are preserved."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-focus-and-contrast",
           "limitations": [
@@ -490487,6 +490609,11 @@
               "batch": "release-0.5-coverage-remaining-branches",
               "base_commit": "5acf1ae93ea5e0fbf7e79b7e12fac33db9591af9",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-coverage-remaining-branches/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-critical-coverage-closure",
+              "base_commit": "f343e07f2221fd22705be5dd73298287bf963978",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-coverage-closure/source-binding.json"
             }
           ]
         }
@@ -490523,7 +490650,8 @@
           "release-0.5-route-state-closure",
           "release-0.5-safari-main-keyboard",
           "release-0.5-route-adoption-matrix",
-          "release-0.5-critical-accessibility-renewal"
+          "release-0.5-critical-accessibility-renewal",
+          "release-0.5-critical-coverage-closure"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -490703,7 +490831,7 @@
             },
             {
               "path": "apps/web/src/routes/terms.tsx",
-              "sha256": "8da30aa6f440b7a63715fa2e1b9bf604381cb64e9de42bca1ba221d832a9e840"
+              "sha256": "a41882ec50fb68dc05799b781e48b6a8ec7576c51ef75c12e5f04545e6e7b28e"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -490767,7 +490895,8 @@
             "Bindings renewed by release-0.5-route-state-closure: bounded reads, existing authorization and caller behavior checked with targeted units, browser journeys and original bundle limits.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
             "Bindings renewed by release-0.5-route-adoption-matrix: the solar document action has a layout-only change, and the affected browser journeys and solar units pass with existing receipt, authority and financial assertions. Saving browser checks preserve their exact draft and refund assertions after the width probe.",
-            "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions."
+            "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
+            "Bindings renewed by release-0.5-critical-coverage-closure: 30 terms/registration and 42 calendar native cases, 35 related units and original bundle budgets pass. Exact public version, consent, read privacy and existing calendar assertions are preserved."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-fallback-and-announcement",
           "limitations": [
@@ -490813,6 +490942,11 @@
               "batch": "release-0.5-critical-accessibility-renewal",
               "base_commit": "5f05d6d3244b0e124ae2b56073fa873ee035be03",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-accessibility-renewal/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-critical-coverage-closure",
+              "base_commit": "f343e07f2221fd22705be5dd73298287bf963978",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-coverage-closure/source-binding.json"
             }
           ]
         }
@@ -491320,7 +491454,8 @@
           "release-0.5-route-adoption-matrix",
           "release-0.5-critical-accessibility-renewal",
           "release-0.5-staff-finance-read-recovery",
-          "release-0.5-coverage-remaining-branches"
+          "release-0.5-coverage-remaining-branches",
+          "release-0.5-critical-coverage-closure"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -491356,7 +491491,7 @@
             },
             {
               "path": "apps/web/e2e/date-picker-component.spec.ts",
-              "sha256": "52131736fdd10a1c670b57d39ee83b0cbc9624603cb55881ea098434d23ad3cf"
+              "sha256": "d1a17a2515cf72c1eafd9edb221103c480eca4f0c71fe94ebdbbad5d088e604d"
             },
             {
               "path": "apps/web/e2e/fixtures/date-picker/main.tsx",
@@ -491544,7 +491679,8 @@
             "Bindings renewed by release-0.5-route-adoption-matrix: the solar document action has a layout-only change, and the affected browser journeys and solar units pass with existing receipt, authority and financial assertions. Saving browser checks preserve their exact draft and refund assertions after the width probe.",
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
             "Bindings renewed by release-0.5-staff-finance-read-recovery: Only staff maintenance and allocation read transport and related test fixtures changed. Scoped browser and unit evidence retains denial, financial review and protected command assertions.",
-            "Bindings renewed by release-0.5-coverage-remaining-branches: normal manifest behavior and all 27 test assertion bodies are preserved, and exact protected admin and consultation fixture checks pass. No production source changed."
+            "Bindings renewed by release-0.5-coverage-remaining-branches: normal manifest behavior and all 27 test assertion bodies are preserved, and exact protected admin and consultation fixture checks pass. No production source changed.",
+            "Bindings renewed by release-0.5-critical-coverage-closure: 30 terms/registration and 42 calendar native cases, 35 related units and original bundle budgets pass. Exact public version, consent, read privacy and existing calendar assertions are preserved."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-focus-and-contrast",
           "limitations": [
@@ -491605,6 +491741,11 @@
               "batch": "release-0.5-coverage-remaining-branches",
               "base_commit": "5acf1ae93ea5e0fbf7e79b7e12fac33db9591af9",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-coverage-remaining-branches/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-critical-coverage-closure",
+              "base_commit": "f343e07f2221fd22705be5dd73298287bf963978",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-coverage-closure/source-binding.json"
             }
           ]
         }
@@ -492018,7 +492159,8 @@
           "release-0.5-critical-accessibility-renewal",
           "release-0.5-route-landmark-census",
           "release-0.5-profile-lifecycle-feedback",
-          "release-0.5-coverage-remaining-branches"
+          "release-0.5-coverage-remaining-branches",
+          "release-0.5-critical-coverage-closure"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -492422,7 +492564,7 @@
             },
             {
               "path": "apps/web/src/routes/terms.tsx",
-              "sha256": "8da30aa6f440b7a63715fa2e1b9bf604381cb64e9de42bca1ba221d832a9e840"
+              "sha256": "a41882ec50fb68dc05799b781e48b6a8ec7576c51ef75c12e5f04545e6e7b28e"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -492508,7 +492650,8 @@
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
             "Bindings renewed by release-0.5-route-landmark-census: the detail change is identifier wrapping and bidi isolation only. Existing exact receipt, authority, navigation and draft checks pass with the new populated layout assertions.",
             "Bindings renewed by release-0.5-profile-lifecycle-feedback: exact lifecycle browsers and units verify timeout, current scope, protected consent, duplicate prevention and receipts after the bounded preview/feedback change.",
-            "Bindings renewed by release-0.5-coverage-remaining-branches: normal manifest behavior and all 27 test assertion bodies are preserved, and exact protected admin and consultation fixture checks pass. No production source changed."
+            "Bindings renewed by release-0.5-coverage-remaining-branches: normal manifest behavior and all 27 test assertion bodies are preserved, and exact protected admin and consultation fixture checks pass. No production source changed.",
+            "Bindings renewed by release-0.5-critical-coverage-closure: 30 terms/registration and 42 calendar native cases, 35 related units and original bundle budgets pass. Exact public version, consent, read privacy and existing calendar assertions are preserved."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-accessibility",
           "limitations": [
@@ -492584,6 +492727,11 @@
               "batch": "release-0.5-coverage-remaining-branches",
               "base_commit": "5acf1ae93ea5e0fbf7e79b7e12fac33db9591af9",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-coverage-remaining-branches/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-critical-coverage-closure",
+              "base_commit": "f343e07f2221fd22705be5dd73298287bf963978",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-coverage-closure/source-binding.json"
             }
           ]
         }
@@ -492624,7 +492772,8 @@
           "release-0.5-critical-accessibility-renewal",
           "release-0.5-route-landmark-census",
           "release-0.5-profile-lifecycle-feedback",
-          "release-0.5-coverage-remaining-branches"
+          "release-0.5-coverage-remaining-branches",
+          "release-0.5-critical-coverage-closure"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -493028,7 +493177,7 @@
             },
             {
               "path": "apps/web/src/routes/terms.tsx",
-              "sha256": "8da30aa6f440b7a63715fa2e1b9bf604381cb64e9de42bca1ba221d832a9e840"
+              "sha256": "a41882ec50fb68dc05799b781e48b6a8ec7576c51ef75c12e5f04545e6e7b28e"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -493114,7 +493263,8 @@
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
             "Bindings renewed by release-0.5-route-landmark-census: the detail change is identifier wrapping and bidi isolation only. Existing exact receipt, authority, navigation and draft checks pass with the new populated layout assertions.",
             "Bindings renewed by release-0.5-profile-lifecycle-feedback: exact lifecycle browsers and units verify timeout, current scope, protected consent, duplicate prevention and receipts after the bounded preview/feedback change.",
-            "Bindings renewed by release-0.5-coverage-remaining-branches: normal manifest behavior and all 27 test assertion bodies are preserved, and exact protected admin and consultation fixture checks pass. No production source changed."
+            "Bindings renewed by release-0.5-coverage-remaining-branches: normal manifest behavior and all 27 test assertion bodies are preserved, and exact protected admin and consultation fixture checks pass. No production source changed.",
+            "Bindings renewed by release-0.5-critical-coverage-closure: 30 terms/registration and 42 calendar native cases, 35 related units and original bundle budgets pass. Exact public version, consent, read privacy and existing calendar assertions are preserved."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-accessibility",
           "limitations": [
@@ -493190,6 +493340,11 @@
               "batch": "release-0.5-coverage-remaining-branches",
               "base_commit": "5acf1ae93ea5e0fbf7e79b7e12fac33db9591af9",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-coverage-remaining-branches/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-critical-coverage-closure",
+              "base_commit": "f343e07f2221fd22705be5dd73298287bf963978",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-coverage-closure/source-binding.json"
             }
           ]
         }
@@ -493603,7 +493758,8 @@
           "release-0.5-critical-accessibility-renewal",
           "release-0.5-route-landmark-census",
           "release-0.5-profile-lifecycle-feedback",
-          "release-0.5-coverage-remaining-branches"
+          "release-0.5-coverage-remaining-branches",
+          "release-0.5-critical-coverage-closure"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -494007,7 +494163,7 @@
             },
             {
               "path": "apps/web/src/routes/terms.tsx",
-              "sha256": "8da30aa6f440b7a63715fa2e1b9bf604381cb64e9de42bca1ba221d832a9e840"
+              "sha256": "a41882ec50fb68dc05799b781e48b6a8ec7576c51ef75c12e5f04545e6e7b28e"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -494093,7 +494249,8 @@
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
             "Bindings renewed by release-0.5-route-landmark-census: the detail change is identifier wrapping and bidi isolation only. Existing exact receipt, authority, navigation and draft checks pass with the new populated layout assertions.",
             "Bindings renewed by release-0.5-profile-lifecycle-feedback: exact lifecycle browsers and units verify timeout, current scope, protected consent, duplicate prevention and receipts after the bounded preview/feedback change.",
-            "Bindings renewed by release-0.5-coverage-remaining-branches: normal manifest behavior and all 27 test assertion bodies are preserved, and exact protected admin and consultation fixture checks pass. No production source changed."
+            "Bindings renewed by release-0.5-coverage-remaining-branches: normal manifest behavior and all 27 test assertion bodies are preserved, and exact protected admin and consultation fixture checks pass. No production source changed.",
+            "Bindings renewed by release-0.5-critical-coverage-closure: 30 terms/registration and 42 calendar native cases, 35 related units and original bundle budgets pass. Exact public version, consent, read privacy and existing calendar assertions are preserved."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-accessibility",
           "limitations": [
@@ -494169,6 +494326,11 @@
               "batch": "release-0.5-coverage-remaining-branches",
               "base_commit": "5acf1ae93ea5e0fbf7e79b7e12fac33db9591af9",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-coverage-remaining-branches/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-critical-coverage-closure",
+              "base_commit": "f343e07f2221fd22705be5dd73298287bf963978",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-coverage-closure/source-binding.json"
             }
           ]
         }
@@ -509933,7 +510095,8 @@
           "release-0.5-form-and-document-accessibility",
           "release-0.5-workspace-route-census",
           "release-0.5-staff-terms-reads",
-          "release-0.5-route-matrix-reconciliation"
+          "release-0.5-route-matrix-reconciliation",
+          "release-0.5-critical-coverage-closure"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -509957,7 +510120,7 @@
             },
             {
               "path": "apps/web/e2e/date-picker-component.spec.ts",
-              "sha256": "52131736fdd10a1c670b57d39ee83b0cbc9624603cb55881ea098434d23ad3cf"
+              "sha256": "d1a17a2515cf72c1eafd9edb221103c480eca4f0c71fe94ebdbbad5d088e604d"
             },
             {
               "path": "apps/web/e2e/electricity-simple-journey.spec.ts",
@@ -510172,7 +510335,8 @@
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
             "Bindings renewed by release-0.5-staff-terms-reads: Only wizard read transport and fixture assertions changed; exact electricity and solar browser/unit cases retain current ownership, persisted progress, financial confirmation and command safeguards.",
-            "Bindings renewed by release-0.5-route-matrix-reconciliation: exact populated electricity, saving and solar journeys preserve the underlying captured draft, authority, price, receipt and financial confirmation assertions. Only solar fieldset presentation and test observations changed."
+            "Bindings renewed by release-0.5-route-matrix-reconciliation: exact populated electricity, saving and solar journeys preserve the underlying captured draft, authority, price, receipt and financial confirmation assertions. Only solar fieldset presentation and test observations changed.",
+            "Bindings renewed by release-0.5-critical-coverage-closure: 30 terms/registration and 42 calendar native cases, 35 related units and original bundle budgets pass. Exact public version, consent, read privacy and existing calendar assertions are preserved."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-language-calendar-journey",
           "limitations": [
@@ -510223,6 +510387,11 @@
               "batch": "release-0.5-route-matrix-reconciliation",
               "base_commit": "9482df25f6361c4078bb846690f80bd26786cabe",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-matrix-reconciliation/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-critical-coverage-closure",
+              "base_commit": "f343e07f2221fd22705be5dd73298287bf963978",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-coverage-closure/source-binding.json"
             }
           ]
         },
@@ -510264,7 +510433,8 @@
           "release-0.5-form-and-document-accessibility",
           "release-0.5-workspace-route-census",
           "release-0.5-staff-terms-reads",
-          "release-0.5-route-matrix-reconciliation"
+          "release-0.5-route-matrix-reconciliation",
+          "release-0.5-critical-coverage-closure"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -510288,7 +510458,7 @@
             },
             {
               "path": "apps/web/e2e/date-picker-component.spec.ts",
-              "sha256": "52131736fdd10a1c670b57d39ee83b0cbc9624603cb55881ea098434d23ad3cf"
+              "sha256": "d1a17a2515cf72c1eafd9edb221103c480eca4f0c71fe94ebdbbad5d088e604d"
             },
             {
               "path": "apps/web/e2e/electricity-simple-journey.spec.ts",
@@ -510503,7 +510673,8 @@
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
             "Bindings renewed by release-0.5-staff-terms-reads: Only wizard read transport and fixture assertions changed; exact electricity and solar browser/unit cases retain current ownership, persisted progress, financial confirmation and command safeguards.",
-            "Bindings renewed by release-0.5-route-matrix-reconciliation: exact populated electricity, saving and solar journeys preserve the underlying captured draft, authority, price, receipt and financial confirmation assertions. Only solar fieldset presentation and test observations changed."
+            "Bindings renewed by release-0.5-route-matrix-reconciliation: exact populated electricity, saving and solar journeys preserve the underlying captured draft, authority, price, receipt and financial confirmation assertions. Only solar fieldset presentation and test observations changed.",
+            "Bindings renewed by release-0.5-critical-coverage-closure: 30 terms/registration and 42 calendar native cases, 35 related units and original bundle budgets pass. Exact public version, consent, read privacy and existing calendar assertions are preserved."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-language-calendar-journey",
           "limitations": [
@@ -510554,6 +510725,11 @@
               "batch": "release-0.5-route-matrix-reconciliation",
               "base_commit": "9482df25f6361c4078bb846690f80bd26786cabe",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-matrix-reconciliation/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-critical-coverage-closure",
+              "base_commit": "f343e07f2221fd22705be5dd73298287bf963978",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-coverage-closure/source-binding.json"
             }
           ]
         },
@@ -510595,7 +510771,8 @@
           "release-0.5-form-and-document-accessibility",
           "release-0.5-workspace-route-census",
           "release-0.5-staff-terms-reads",
-          "release-0.5-route-matrix-reconciliation"
+          "release-0.5-route-matrix-reconciliation",
+          "release-0.5-critical-coverage-closure"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -510619,7 +510796,7 @@
             },
             {
               "path": "apps/web/e2e/date-picker-component.spec.ts",
-              "sha256": "52131736fdd10a1c670b57d39ee83b0cbc9624603cb55881ea098434d23ad3cf"
+              "sha256": "d1a17a2515cf72c1eafd9edb221103c480eca4f0c71fe94ebdbbad5d088e604d"
             },
             {
               "path": "apps/web/e2e/electricity-simple-journey.spec.ts",
@@ -510834,7 +511011,8 @@
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
             "Bindings renewed by release-0.5-staff-terms-reads: Only wizard read transport and fixture assertions changed; exact electricity and solar browser/unit cases retain current ownership, persisted progress, financial confirmation and command safeguards.",
-            "Bindings renewed by release-0.5-route-matrix-reconciliation: exact populated electricity, saving and solar journeys preserve the underlying captured draft, authority, price, receipt and financial confirmation assertions. Only solar fieldset presentation and test observations changed."
+            "Bindings renewed by release-0.5-route-matrix-reconciliation: exact populated electricity, saving and solar journeys preserve the underlying captured draft, authority, price, receipt and financial confirmation assertions. Only solar fieldset presentation and test observations changed.",
+            "Bindings renewed by release-0.5-critical-coverage-closure: 30 terms/registration and 42 calendar native cases, 35 related units and original bundle budgets pass. Exact public version, consent, read privacy and existing calendar assertions are preserved."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-language-calendar-journey",
           "limitations": [
@@ -510885,6 +511063,11 @@
               "batch": "release-0.5-route-matrix-reconciliation",
               "base_commit": "9482df25f6361c4078bb846690f80bd26786cabe",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-matrix-reconciliation/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-critical-coverage-closure",
+              "base_commit": "f343e07f2221fd22705be5dd73298287bf963978",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-coverage-closure/source-binding.json"
             }
           ]
         },
@@ -510926,7 +511109,8 @@
           "release-0.5-form-and-document-accessibility",
           "release-0.5-workspace-route-census",
           "release-0.5-staff-terms-reads",
-          "release-0.5-route-matrix-reconciliation"
+          "release-0.5-route-matrix-reconciliation",
+          "release-0.5-critical-coverage-closure"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -510950,7 +511134,7 @@
             },
             {
               "path": "apps/web/e2e/date-picker-component.spec.ts",
-              "sha256": "52131736fdd10a1c670b57d39ee83b0cbc9624603cb55881ea098434d23ad3cf"
+              "sha256": "d1a17a2515cf72c1eafd9edb221103c480eca4f0c71fe94ebdbbad5d088e604d"
             },
             {
               "path": "apps/web/e2e/electricity-simple-journey.spec.ts",
@@ -511165,7 +511349,8 @@
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
             "Bindings renewed by release-0.5-staff-terms-reads: Only wizard read transport and fixture assertions changed; exact electricity and solar browser/unit cases retain current ownership, persisted progress, financial confirmation and command safeguards.",
-            "Bindings renewed by release-0.5-route-matrix-reconciliation: exact populated electricity, saving and solar journeys preserve the underlying captured draft, authority, price, receipt and financial confirmation assertions. Only solar fieldset presentation and test observations changed."
+            "Bindings renewed by release-0.5-route-matrix-reconciliation: exact populated electricity, saving and solar journeys preserve the underlying captured draft, authority, price, receipt and financial confirmation assertions. Only solar fieldset presentation and test observations changed.",
+            "Bindings renewed by release-0.5-critical-coverage-closure: 30 terms/registration and 42 calendar native cases, 35 related units and original bundle budgets pass. Exact public version, consent, read privacy and existing calendar assertions are preserved."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-language-calendar-journey",
           "limitations": [
@@ -511216,6 +511401,11 @@
               "batch": "release-0.5-route-matrix-reconciliation",
               "base_commit": "9482df25f6361c4078bb846690f80bd26786cabe",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-matrix-reconciliation/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-critical-coverage-closure",
+              "base_commit": "f343e07f2221fd22705be5dd73298287bf963978",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-coverage-closure/source-binding.json"
             }
           ]
         },
@@ -511262,7 +511452,8 @@
           "release-0.5-form-and-document-accessibility",
           "release-0.5-workspace-route-census",
           "release-0.5-staff-terms-reads",
-          "release-0.5-route-matrix-reconciliation"
+          "release-0.5-route-matrix-reconciliation",
+          "release-0.5-critical-coverage-closure"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -511286,7 +511477,7 @@
             },
             {
               "path": "apps/web/e2e/date-picker-component.spec.ts",
-              "sha256": "52131736fdd10a1c670b57d39ee83b0cbc9624603cb55881ea098434d23ad3cf"
+              "sha256": "d1a17a2515cf72c1eafd9edb221103c480eca4f0c71fe94ebdbbad5d088e604d"
             },
             {
               "path": "apps/web/e2e/electricity-simple-journey.spec.ts",
@@ -511501,7 +511692,8 @@
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
             "Bindings renewed by release-0.5-staff-terms-reads: Only wizard read transport and fixture assertions changed; exact electricity and solar browser/unit cases retain current ownership, persisted progress, financial confirmation and command safeguards.",
-            "Bindings renewed by release-0.5-route-matrix-reconciliation: exact populated electricity, saving and solar journeys preserve the underlying captured draft, authority, price, receipt and financial confirmation assertions. Only solar fieldset presentation and test observations changed."
+            "Bindings renewed by release-0.5-route-matrix-reconciliation: exact populated electricity, saving and solar journeys preserve the underlying captured draft, authority, price, receipt and financial confirmation assertions. Only solar fieldset presentation and test observations changed.",
+            "Bindings renewed by release-0.5-critical-coverage-closure: 30 terms/registration and 42 calendar native cases, 35 related units and original bundle budgets pass. Exact public version, consent, read privacy and existing calendar assertions are preserved."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-language-calendar-journey",
           "limitations": [
@@ -511552,6 +511744,11 @@
               "batch": "release-0.5-route-matrix-reconciliation",
               "base_commit": "9482df25f6361c4078bb846690f80bd26786cabe",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-matrix-reconciliation/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-critical-coverage-closure",
+              "base_commit": "f343e07f2221fd22705be5dd73298287bf963978",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-coverage-closure/source-binding.json"
             }
           ]
         },
@@ -511599,7 +511796,8 @@
           "release-0.5-form-and-document-accessibility",
           "release-0.5-workspace-route-census",
           "release-0.5-staff-terms-reads",
-          "release-0.5-route-matrix-reconciliation"
+          "release-0.5-route-matrix-reconciliation",
+          "release-0.5-critical-coverage-closure"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -511623,7 +511821,7 @@
             },
             {
               "path": "apps/web/e2e/date-picker-component.spec.ts",
-              "sha256": "52131736fdd10a1c670b57d39ee83b0cbc9624603cb55881ea098434d23ad3cf"
+              "sha256": "d1a17a2515cf72c1eafd9edb221103c480eca4f0c71fe94ebdbbad5d088e604d"
             },
             {
               "path": "apps/web/e2e/electricity-simple-journey.spec.ts",
@@ -511838,7 +512036,8 @@
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
             "Bindings renewed by release-0.5-staff-terms-reads: Only wizard read transport and fixture assertions changed; exact electricity and solar browser/unit cases retain current ownership, persisted progress, financial confirmation and command safeguards.",
-            "Bindings renewed by release-0.5-route-matrix-reconciliation: exact populated electricity, saving and solar journeys preserve the underlying captured draft, authority, price, receipt and financial confirmation assertions. Only solar fieldset presentation and test observations changed."
+            "Bindings renewed by release-0.5-route-matrix-reconciliation: exact populated electricity, saving and solar journeys preserve the underlying captured draft, authority, price, receipt and financial confirmation assertions. Only solar fieldset presentation and test observations changed.",
+            "Bindings renewed by release-0.5-critical-coverage-closure: 30 terms/registration and 42 calendar native cases, 35 related units and original bundle budgets pass. Exact public version, consent, read privacy and existing calendar assertions are preserved."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-language-calendar-journey",
           "limitations": [
@@ -511889,6 +512088,11 @@
               "batch": "release-0.5-route-matrix-reconciliation",
               "base_commit": "9482df25f6361c4078bb846690f80bd26786cabe",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-matrix-reconciliation/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-critical-coverage-closure",
+              "base_commit": "f343e07f2221fd22705be5dd73298287bf963978",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-coverage-closure/source-binding.json"
             }
           ]
         },
@@ -511930,7 +512134,8 @@
           "release-0.5-form-and-document-accessibility",
           "release-0.5-workspace-route-census",
           "release-0.5-staff-terms-reads",
-          "release-0.5-route-matrix-reconciliation"
+          "release-0.5-route-matrix-reconciliation",
+          "release-0.5-critical-coverage-closure"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -511954,7 +512159,7 @@
             },
             {
               "path": "apps/web/e2e/date-picker-component.spec.ts",
-              "sha256": "52131736fdd10a1c670b57d39ee83b0cbc9624603cb55881ea098434d23ad3cf"
+              "sha256": "d1a17a2515cf72c1eafd9edb221103c480eca4f0c71fe94ebdbbad5d088e604d"
             },
             {
               "path": "apps/web/e2e/electricity-simple-journey.spec.ts",
@@ -512169,7 +512374,8 @@
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
             "Bindings renewed by release-0.5-staff-terms-reads: Only wizard read transport and fixture assertions changed; exact electricity and solar browser/unit cases retain current ownership, persisted progress, financial confirmation and command safeguards.",
-            "Bindings renewed by release-0.5-route-matrix-reconciliation: exact populated electricity, saving and solar journeys preserve the underlying captured draft, authority, price, receipt and financial confirmation assertions. Only solar fieldset presentation and test observations changed."
+            "Bindings renewed by release-0.5-route-matrix-reconciliation: exact populated electricity, saving and solar journeys preserve the underlying captured draft, authority, price, receipt and financial confirmation assertions. Only solar fieldset presentation and test observations changed.",
+            "Bindings renewed by release-0.5-critical-coverage-closure: 30 terms/registration and 42 calendar native cases, 35 related units and original bundle budgets pass. Exact public version, consent, read privacy and existing calendar assertions are preserved."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-language-calendar-journey",
           "limitations": [
@@ -512220,6 +512426,11 @@
               "batch": "release-0.5-route-matrix-reconciliation",
               "base_commit": "9482df25f6361c4078bb846690f80bd26786cabe",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-matrix-reconciliation/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-critical-coverage-closure",
+              "base_commit": "f343e07f2221fd22705be5dd73298287bf963978",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-coverage-closure/source-binding.json"
             }
           ]
         },
@@ -512261,7 +512472,8 @@
           "release-0.5-form-and-document-accessibility",
           "release-0.5-workspace-route-census",
           "release-0.5-staff-terms-reads",
-          "release-0.5-route-matrix-reconciliation"
+          "release-0.5-route-matrix-reconciliation",
+          "release-0.5-critical-coverage-closure"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -512285,7 +512497,7 @@
             },
             {
               "path": "apps/web/e2e/date-picker-component.spec.ts",
-              "sha256": "52131736fdd10a1c670b57d39ee83b0cbc9624603cb55881ea098434d23ad3cf"
+              "sha256": "d1a17a2515cf72c1eafd9edb221103c480eca4f0c71fe94ebdbbad5d088e604d"
             },
             {
               "path": "apps/web/e2e/electricity-simple-journey.spec.ts",
@@ -512500,7 +512712,8 @@
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
             "Bindings renewed by release-0.5-staff-terms-reads: Only wizard read transport and fixture assertions changed; exact electricity and solar browser/unit cases retain current ownership, persisted progress, financial confirmation and command safeguards.",
-            "Bindings renewed by release-0.5-route-matrix-reconciliation: exact populated electricity, saving and solar journeys preserve the underlying captured draft, authority, price, receipt and financial confirmation assertions. Only solar fieldset presentation and test observations changed."
+            "Bindings renewed by release-0.5-route-matrix-reconciliation: exact populated electricity, saving and solar journeys preserve the underlying captured draft, authority, price, receipt and financial confirmation assertions. Only solar fieldset presentation and test observations changed.",
+            "Bindings renewed by release-0.5-critical-coverage-closure: 30 terms/registration and 42 calendar native cases, 35 related units and original bundle budgets pass. Exact public version, consent, read privacy and existing calendar assertions are preserved."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-language-calendar-journey",
           "limitations": [
@@ -512551,6 +512764,11 @@
               "batch": "release-0.5-route-matrix-reconciliation",
               "base_commit": "9482df25f6361c4078bb846690f80bd26786cabe",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-matrix-reconciliation/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-critical-coverage-closure",
+              "base_commit": "f343e07f2221fd22705be5dd73298287bf963978",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-coverage-closure/source-binding.json"
             }
           ]
         },
@@ -512593,7 +512811,8 @@
           "release-0.5-form-and-document-accessibility",
           "release-0.5-workspace-route-census",
           "release-0.5-staff-terms-reads",
-          "release-0.5-route-matrix-reconciliation"
+          "release-0.5-route-matrix-reconciliation",
+          "release-0.5-critical-coverage-closure"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -512617,7 +512836,7 @@
             },
             {
               "path": "apps/web/e2e/date-picker-component.spec.ts",
-              "sha256": "52131736fdd10a1c670b57d39ee83b0cbc9624603cb55881ea098434d23ad3cf"
+              "sha256": "d1a17a2515cf72c1eafd9edb221103c480eca4f0c71fe94ebdbbad5d088e604d"
             },
             {
               "path": "apps/web/e2e/electricity-simple-journey.spec.ts",
@@ -512832,7 +513051,8 @@
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
             "Bindings renewed by release-0.5-staff-terms-reads: Only wizard read transport and fixture assertions changed; exact electricity and solar browser/unit cases retain current ownership, persisted progress, financial confirmation and command safeguards.",
-            "Bindings renewed by release-0.5-route-matrix-reconciliation: exact populated electricity, saving and solar journeys preserve the underlying captured draft, authority, price, receipt and financial confirmation assertions. Only solar fieldset presentation and test observations changed."
+            "Bindings renewed by release-0.5-route-matrix-reconciliation: exact populated electricity, saving and solar journeys preserve the underlying captured draft, authority, price, receipt and financial confirmation assertions. Only solar fieldset presentation and test observations changed.",
+            "Bindings renewed by release-0.5-critical-coverage-closure: 30 terms/registration and 42 calendar native cases, 35 related units and original bundle budgets pass. Exact public version, consent, read privacy and existing calendar assertions are preserved."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-language-calendar-journey",
           "limitations": [
@@ -512883,6 +513103,11 @@
               "batch": "release-0.5-route-matrix-reconciliation",
               "base_commit": "9482df25f6361c4078bb846690f80bd26786cabe",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-matrix-reconciliation/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-critical-coverage-closure",
+              "base_commit": "f343e07f2221fd22705be5dd73298287bf963978",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-coverage-closure/source-binding.json"
             }
           ]
         },
@@ -512926,7 +513151,8 @@
           "release-0.5-form-and-document-accessibility",
           "release-0.5-workspace-route-census",
           "release-0.5-staff-terms-reads",
-          "release-0.5-route-matrix-reconciliation"
+          "release-0.5-route-matrix-reconciliation",
+          "release-0.5-critical-coverage-closure"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -512950,7 +513176,7 @@
             },
             {
               "path": "apps/web/e2e/date-picker-component.spec.ts",
-              "sha256": "52131736fdd10a1c670b57d39ee83b0cbc9624603cb55881ea098434d23ad3cf"
+              "sha256": "d1a17a2515cf72c1eafd9edb221103c480eca4f0c71fe94ebdbbad5d088e604d"
             },
             {
               "path": "apps/web/e2e/electricity-simple-journey.spec.ts",
@@ -513165,7 +513391,8 @@
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
             "Bindings renewed by release-0.5-staff-terms-reads: Only wizard read transport and fixture assertions changed; exact electricity and solar browser/unit cases retain current ownership, persisted progress, financial confirmation and command safeguards.",
-            "Bindings renewed by release-0.5-route-matrix-reconciliation: exact populated electricity, saving and solar journeys preserve the underlying captured draft, authority, price, receipt and financial confirmation assertions. Only solar fieldset presentation and test observations changed."
+            "Bindings renewed by release-0.5-route-matrix-reconciliation: exact populated electricity, saving and solar journeys preserve the underlying captured draft, authority, price, receipt and financial confirmation assertions. Only solar fieldset presentation and test observations changed.",
+            "Bindings renewed by release-0.5-critical-coverage-closure: 30 terms/registration and 42 calendar native cases, 35 related units and original bundle budgets pass. Exact public version, consent, read privacy and existing calendar assertions are preserved."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-language-calendar-journey",
           "limitations": [
@@ -513216,6 +513443,11 @@
               "batch": "release-0.5-route-matrix-reconciliation",
               "base_commit": "9482df25f6361c4078bb846690f80bd26786cabe",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-matrix-reconciliation/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-critical-coverage-closure",
+              "base_commit": "f343e07f2221fd22705be5dd73298287bf963978",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-coverage-closure/source-binding.json"
             }
           ]
         },
@@ -513257,7 +513489,8 @@
           "release-0.5-form-and-document-accessibility",
           "release-0.5-workspace-route-census",
           "release-0.5-staff-terms-reads",
-          "release-0.5-route-matrix-reconciliation"
+          "release-0.5-route-matrix-reconciliation",
+          "release-0.5-critical-coverage-closure"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -513281,7 +513514,7 @@
             },
             {
               "path": "apps/web/e2e/date-picker-component.spec.ts",
-              "sha256": "52131736fdd10a1c670b57d39ee83b0cbc9624603cb55881ea098434d23ad3cf"
+              "sha256": "d1a17a2515cf72c1eafd9edb221103c480eca4f0c71fe94ebdbbad5d088e604d"
             },
             {
               "path": "apps/web/e2e/electricity-simple-journey.spec.ts",
@@ -513496,7 +513729,8 @@
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
             "Bindings renewed by release-0.5-staff-terms-reads: Only wizard read transport and fixture assertions changed; exact electricity and solar browser/unit cases retain current ownership, persisted progress, financial confirmation and command safeguards.",
-            "Bindings renewed by release-0.5-route-matrix-reconciliation: exact populated electricity, saving and solar journeys preserve the underlying captured draft, authority, price, receipt and financial confirmation assertions. Only solar fieldset presentation and test observations changed."
+            "Bindings renewed by release-0.5-route-matrix-reconciliation: exact populated electricity, saving and solar journeys preserve the underlying captured draft, authority, price, receipt and financial confirmation assertions. Only solar fieldset presentation and test observations changed.",
+            "Bindings renewed by release-0.5-critical-coverage-closure: 30 terms/registration and 42 calendar native cases, 35 related units and original bundle budgets pass. Exact public version, consent, read privacy and existing calendar assertions are preserved."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-language-calendar-journey",
           "limitations": [
@@ -513547,6 +513781,11 @@
               "batch": "release-0.5-route-matrix-reconciliation",
               "base_commit": "9482df25f6361c4078bb846690f80bd26786cabe",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-matrix-reconciliation/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-critical-coverage-closure",
+              "base_commit": "f343e07f2221fd22705be5dd73298287bf963978",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-coverage-closure/source-binding.json"
             }
           ]
         },
@@ -513589,7 +513828,8 @@
           "release-0.5-form-and-document-accessibility",
           "release-0.5-workspace-route-census",
           "release-0.5-staff-terms-reads",
-          "release-0.5-route-matrix-reconciliation"
+          "release-0.5-route-matrix-reconciliation",
+          "release-0.5-critical-coverage-closure"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -513613,7 +513853,7 @@
             },
             {
               "path": "apps/web/e2e/date-picker-component.spec.ts",
-              "sha256": "52131736fdd10a1c670b57d39ee83b0cbc9624603cb55881ea098434d23ad3cf"
+              "sha256": "d1a17a2515cf72c1eafd9edb221103c480eca4f0c71fe94ebdbbad5d088e604d"
             },
             {
               "path": "apps/web/e2e/electricity-simple-journey.spec.ts",
@@ -513828,7 +514068,8 @@
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
             "Bindings renewed by release-0.5-staff-terms-reads: Only wizard read transport and fixture assertions changed; exact electricity and solar browser/unit cases retain current ownership, persisted progress, financial confirmation and command safeguards.",
-            "Bindings renewed by release-0.5-route-matrix-reconciliation: exact populated electricity, saving and solar journeys preserve the underlying captured draft, authority, price, receipt and financial confirmation assertions. Only solar fieldset presentation and test observations changed."
+            "Bindings renewed by release-0.5-route-matrix-reconciliation: exact populated electricity, saving and solar journeys preserve the underlying captured draft, authority, price, receipt and financial confirmation assertions. Only solar fieldset presentation and test observations changed.",
+            "Bindings renewed by release-0.5-critical-coverage-closure: 30 terms/registration and 42 calendar native cases, 35 related units and original bundle budgets pass. Exact public version, consent, read privacy and existing calendar assertions are preserved."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-language-calendar-journey",
           "limitations": [
@@ -513879,6 +514120,11 @@
               "batch": "release-0.5-route-matrix-reconciliation",
               "base_commit": "9482df25f6361c4078bb846690f80bd26786cabe",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-matrix-reconciliation/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-critical-coverage-closure",
+              "base_commit": "f343e07f2221fd22705be5dd73298287bf963978",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-coverage-closure/source-binding.json"
             }
           ]
         },
@@ -557344,7 +557590,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "The maintenance settings refresh and staff wallet allocation review now time out and retry the same scope with existing write safeguards. Document templates were already bounded. Finish any remaining direct reads and all required state adoption."
+        "Current public terms and published-history pagination now time out and retry the exact version or cursor without exposing credentials or clearing the valid page. Maintenance, staff wallet allocation and document template checks remain accepted in their scope. Finish remaining direct reads and all required state adoption."
       ],
       "owner": null,
       "depends_on": [],
@@ -557358,7 +557604,8 @@
           "release-0.5-profile-lifecycle-feedback",
           "release-0.5-staff-direct-reads",
           "release-0.5-staff-terms-reads",
-          "release-0.5-staff-finance-read-recovery"
+          "release-0.5-staff-finance-read-recovery",
+          "release-0.5-critical-coverage-closure"
         ],
         "current_acceptance": null
       }
@@ -568485,7 +568732,8 @@
           "release-0.5-ci-workflow",
           "release-0.5-critical-accessibility-renewal",
           "release-0.5-workspace-route-census",
-          "release-0.5-ui-coverage-collection"
+          "release-0.5-ui-coverage-collection",
+          "release-0.5-critical-coverage-closure"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -568733,7 +568981,7 @@
             },
             {
               "path": "apps/web/e2e/public-terms-history.spec.ts",
-              "sha256": "1dfb2f3187112a2bea2be1079bd5092da65cd1be3f2e677ce7aa1543e367ed55"
+              "sha256": "005cd20123125efec3cf299bc3b1da620c27883d9a098f84e831476235ff5ec0"
             },
             {
               "path": "apps/web/e2e/registration-native-forms.spec.ts",
@@ -568797,7 +569045,7 @@
             },
             {
               "path": "apps/web/src/components/PublishedTermsHistory.tsx",
-              "sha256": "f1c8381750ab4e52b8731c40f5a8fb6564c6dc7a771820aa10c74cf6010d6c2e"
+              "sha256": "8eae6315b27f1d236743a26c8a40453d60cbcba7a15cf950b7cf1a952d8477bd"
             },
             {
               "path": "apps/web/src/components/StepUpAuthGate.test.tsx",
@@ -568949,7 +569197,7 @@
             },
             {
               "path": "apps/web/src/routes/terms.tsx",
-              "sha256": "8da30aa6f440b7a63715fa2e1b9bf604381cb64e9de42bca1ba221d832a9e840"
+              "sha256": "a41882ec50fb68dc05799b781e48b6a8ec7576c51ef75c12e5f04545e6e7b28e"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -569081,7 +569329,8 @@
             "Bindings renewed by release-0.5-ci-workflow: motion preserves opacity and finance/authority behavior; exact fast accessibility cases, motion checks and original transfer budgets passed.",
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
-            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed."
+            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
+            "Bindings renewed by release-0.5-critical-coverage-closure: 30 terms/registration and 42 calendar native cases, 35 related units and original bundle budgets pass. Exact public version, consent, read privacy and existing calendar assertions are preserved."
           ],
           "criterion_result": "PasswordField retains four visual segments and an accessible numeric progress estimate, gray empty/red weak/orange fair/yellow strong/green very strong states, hidden empty idle feedback, visible focused or nonempty feedback, reserved layout space and reduced-motion-aware slide/fade transitions. Final FA/EN component and production browser checks include blur, empty, loading, stale input, download failure and recovery.",
           "limitations": [
@@ -569187,6 +569436,11 @@
               "batch": "release-0.5-ui-coverage-collection",
               "base_commit": "a68236ce5a764e7d1eb686fcfa00e07553df2bc0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ui-coverage-collection/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-critical-coverage-closure",
+              "base_commit": "f343e07f2221fd22705be5dd73298287bf963978",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-coverage-closure/source-binding.json"
             }
           ]
         }
@@ -569225,7 +569479,8 @@
           "release-0.5-ci-workflow",
           "release-0.5-critical-accessibility-renewal",
           "release-0.5-workspace-route-census",
-          "release-0.5-ui-coverage-collection"
+          "release-0.5-ui-coverage-collection",
+          "release-0.5-critical-coverage-closure"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -569473,7 +569728,7 @@
             },
             {
               "path": "apps/web/e2e/public-terms-history.spec.ts",
-              "sha256": "1dfb2f3187112a2bea2be1079bd5092da65cd1be3f2e677ce7aa1543e367ed55"
+              "sha256": "005cd20123125efec3cf299bc3b1da620c27883d9a098f84e831476235ff5ec0"
             },
             {
               "path": "apps/web/e2e/registration-native-forms.spec.ts",
@@ -569537,7 +569792,7 @@
             },
             {
               "path": "apps/web/src/components/PublishedTermsHistory.tsx",
-              "sha256": "f1c8381750ab4e52b8731c40f5a8fb6564c6dc7a771820aa10c74cf6010d6c2e"
+              "sha256": "8eae6315b27f1d236743a26c8a40453d60cbcba7a15cf950b7cf1a952d8477bd"
             },
             {
               "path": "apps/web/src/components/StepUpAuthGate.test.tsx",
@@ -569689,7 +569944,7 @@
             },
             {
               "path": "apps/web/src/routes/terms.tsx",
-              "sha256": "8da30aa6f440b7a63715fa2e1b9bf604381cb64e9de42bca1ba221d832a9e840"
+              "sha256": "a41882ec50fb68dc05799b781e48b6a8ec7576c51ef75c12e5f04545e6e7b28e"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -569821,7 +570076,8 @@
             "Bindings renewed by release-0.5-ci-workflow: motion preserves opacity and finance/authority behavior; exact fast accessibility cases, motion checks and original transfer budgets passed.",
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
-            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed."
+            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
+            "Bindings renewed by release-0.5-critical-coverage-closure: 30 terms/registration and 42 calendar native cases, 35 related units and original bundle budgets pass. Exact public version, consent, read privacy and existing calendar assertions are preserved."
           ],
           "criterion_result": "Owner approved local zxcvbn on2026-11-06 with all required UI. Original estimator factory, 0–4 score mapping and all ten original predictable/long-password assertions remain exact. No third-party request or password transmission; the interaction-only estimator and localized feedback preserve original initial/interaction budgets.",
           "limitations": [
@@ -569927,6 +570183,11 @@
               "batch": "release-0.5-ui-coverage-collection",
               "base_commit": "a68236ce5a764e7d1eb686fcfa00e07553df2bc0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ui-coverage-collection/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-critical-coverage-closure",
+              "base_commit": "f343e07f2221fd22705be5dd73298287bf963978",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-coverage-closure/source-binding.json"
             }
           ]
         }
@@ -569965,7 +570226,8 @@
           "release-0.5-ci-workflow",
           "release-0.5-critical-accessibility-renewal",
           "release-0.5-workspace-route-census",
-          "release-0.5-ui-coverage-collection"
+          "release-0.5-ui-coverage-collection",
+          "release-0.5-critical-coverage-closure"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -570213,7 +570475,7 @@
             },
             {
               "path": "apps/web/e2e/public-terms-history.spec.ts",
-              "sha256": "1dfb2f3187112a2bea2be1079bd5092da65cd1be3f2e677ce7aa1543e367ed55"
+              "sha256": "005cd20123125efec3cf299bc3b1da620c27883d9a098f84e831476235ff5ec0"
             },
             {
               "path": "apps/web/e2e/registration-native-forms.spec.ts",
@@ -570277,7 +570539,7 @@
             },
             {
               "path": "apps/web/src/components/PublishedTermsHistory.tsx",
-              "sha256": "f1c8381750ab4e52b8731c40f5a8fb6564c6dc7a771820aa10c74cf6010d6c2e"
+              "sha256": "8eae6315b27f1d236743a26c8a40453d60cbcba7a15cf950b7cf1a952d8477bd"
             },
             {
               "path": "apps/web/src/components/StepUpAuthGate.test.tsx",
@@ -570429,7 +570691,7 @@
             },
             {
               "path": "apps/web/src/routes/terms.tsx",
-              "sha256": "8da30aa6f440b7a63715fa2e1b9bf604381cb64e9de42bca1ba221d832a9e840"
+              "sha256": "a41882ec50fb68dc05799b781e48b6a8ec7576c51ef75c12e5f04545e6e7b28e"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -570561,7 +570823,8 @@
             "Bindings renewed by release-0.5-ci-workflow: motion preserves opacity and finance/authority behavior; exact fast accessibility cases, motion checks and original transfer budgets passed.",
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
-            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed."
+            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
+            "Bindings renewed by release-0.5-critical-coverage-closure: 30 terms/registration and 42 calendar native cases, 35 related units and original bundle budgets pass. Exact public version, consent, read privacy and existing calendar assertions are preserved."
           ],
           "criterion_result": "All five exact Persian/English display labels and level-specific improvement hints are verified independently against fixed expected strings, numeric scores and distinct segment colors. Locale and input own the current assessment; stale results cannot replace it.",
           "limitations": [
@@ -570667,6 +570930,11 @@
               "batch": "release-0.5-ui-coverage-collection",
               "base_commit": "a68236ce5a764e7d1eb686fcfa00e07553df2bc0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ui-coverage-collection/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-critical-coverage-closure",
+              "base_commit": "f343e07f2221fd22705be5dd73298287bf963978",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-coverage-closure/source-binding.json"
             }
           ]
         }
@@ -570705,7 +570973,8 @@
           "release-0.5-ci-workflow",
           "release-0.5-critical-accessibility-renewal",
           "release-0.5-workspace-route-census",
-          "release-0.5-ui-coverage-collection"
+          "release-0.5-ui-coverage-collection",
+          "release-0.5-critical-coverage-closure"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -570953,7 +571222,7 @@
             },
             {
               "path": "apps/web/e2e/public-terms-history.spec.ts",
-              "sha256": "1dfb2f3187112a2bea2be1079bd5092da65cd1be3f2e677ce7aa1543e367ed55"
+              "sha256": "005cd20123125efec3cf299bc3b1da620c27883d9a098f84e831476235ff5ec0"
             },
             {
               "path": "apps/web/e2e/registration-native-forms.spec.ts",
@@ -571017,7 +571286,7 @@
             },
             {
               "path": "apps/web/src/components/PublishedTermsHistory.tsx",
-              "sha256": "f1c8381750ab4e52b8731c40f5a8fb6564c6dc7a771820aa10c74cf6010d6c2e"
+              "sha256": "8eae6315b27f1d236743a26c8a40453d60cbcba7a15cf950b7cf1a952d8477bd"
             },
             {
               "path": "apps/web/src/components/StepUpAuthGate.test.tsx",
@@ -571169,7 +571438,7 @@
             },
             {
               "path": "apps/web/src/routes/terms.tsx",
-              "sha256": "8da30aa6f440b7a63715fa2e1b9bf604381cb64e9de42bca1ba221d832a9e840"
+              "sha256": "a41882ec50fb68dc05799b781e48b6a8ec7576c51ef75c12e5f04545e6e7b28e"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -571301,7 +571570,8 @@
             "Bindings renewed by release-0.5-ci-workflow: motion preserves opacity and finance/authority behavior; exact fast accessibility cases, motion checks and original transfer budgets passed.",
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
-            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed."
+            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
+            "Bindings renewed by release-0.5-critical-coverage-closure: 30 terms/registration and 42 calendar native cases, 35 related units and original bundle budgets pass. Exact public version, consent, read privacy and existing calendar assertions are preserved."
           ],
           "criterion_result": "Meter remains informational. Existing minimum-password function/backend validation unchanged; a predictable password meeting the minimum remains submittable with valid current consent. Original strength and backend password-policy assertions retained.",
           "limitations": [
@@ -571407,6 +571677,11 @@
               "batch": "release-0.5-ui-coverage-collection",
               "base_commit": "a68236ce5a764e7d1eb686fcfa00e07553df2bc0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ui-coverage-collection/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-critical-coverage-closure",
+              "base_commit": "f343e07f2221fd22705be5dd73298287bf963978",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-coverage-closure/source-binding.json"
             }
           ]
         }
@@ -571445,7 +571720,8 @@
           "release-0.5-ci-workflow",
           "release-0.5-critical-accessibility-renewal",
           "release-0.5-workspace-route-census",
-          "release-0.5-ui-coverage-collection"
+          "release-0.5-ui-coverage-collection",
+          "release-0.5-critical-coverage-closure"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -571693,7 +571969,7 @@
             },
             {
               "path": "apps/web/e2e/public-terms-history.spec.ts",
-              "sha256": "1dfb2f3187112a2bea2be1079bd5092da65cd1be3f2e677ce7aa1543e367ed55"
+              "sha256": "005cd20123125efec3cf299bc3b1da620c27883d9a098f84e831476235ff5ec0"
             },
             {
               "path": "apps/web/e2e/registration-native-forms.spec.ts",
@@ -571757,7 +572033,7 @@
             },
             {
               "path": "apps/web/src/components/PublishedTermsHistory.tsx",
-              "sha256": "f1c8381750ab4e52b8731c40f5a8fb6564c6dc7a771820aa10c74cf6010d6c2e"
+              "sha256": "8eae6315b27f1d236743a26c8a40453d60cbcba7a15cf950b7cf1a952d8477bd"
             },
             {
               "path": "apps/web/src/components/StepUpAuthGate.test.tsx",
@@ -571909,7 +572185,7 @@
             },
             {
               "path": "apps/web/src/routes/terms.tsx",
-              "sha256": "8da30aa6f440b7a63715fa2e1b9bf604381cb64e9de42bca1ba221d832a9e840"
+              "sha256": "a41882ec50fb68dc05799b781e48b6a8ec7576c51ef75c12e5f04545e6e7b28e"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -572041,7 +572317,8 @@
             "Bindings renewed by release-0.5-ci-workflow: motion preserves opacity and finance/authority behavior; exact fast accessibility cases, motion checks and original transfer budgets passed.",
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
-            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed."
+            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
+            "Bindings renewed by release-0.5-critical-coverage-closure: 30 terms/registration and 42 calendar native cases, 35 related units and original bundle budgets pass. Exact public version, consent, read privacy and existing calendar assertions are preserved."
           ],
           "criterion_result": "Existing trailing visibility toggle is type=button, switches password/text with aria-pressed and retains its accessible localized label. It does not submit forms or force estimator loading when disabled for login.",
           "limitations": [
@@ -572147,6 +572424,11 @@
               "batch": "release-0.5-ui-coverage-collection",
               "base_commit": "a68236ce5a764e7d1eb686fcfa00e07553df2bc0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ui-coverage-collection/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-critical-coverage-closure",
+              "base_commit": "f343e07f2221fd22705be5dd73298287bf963978",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-coverage-closure/source-binding.json"
             }
           ]
         }
@@ -582652,7 +582934,8 @@
           "release-0.5-ci-workflow",
           "release-0.5-critical-accessibility-renewal",
           "release-0.5-workspace-route-census",
-          "release-0.5-ui-coverage-collection"
+          "release-0.5-ui-coverage-collection",
+          "release-0.5-critical-coverage-closure"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -582900,7 +583183,7 @@
             },
             {
               "path": "apps/web/e2e/public-terms-history.spec.ts",
-              "sha256": "1dfb2f3187112a2bea2be1079bd5092da65cd1be3f2e677ce7aa1543e367ed55"
+              "sha256": "005cd20123125efec3cf299bc3b1da620c27883d9a098f84e831476235ff5ec0"
             },
             {
               "path": "apps/web/e2e/registration-native-forms.spec.ts",
@@ -582964,7 +583247,7 @@
             },
             {
               "path": "apps/web/src/components/PublishedTermsHistory.tsx",
-              "sha256": "f1c8381750ab4e52b8731c40f5a8fb6564c6dc7a771820aa10c74cf6010d6c2e"
+              "sha256": "8eae6315b27f1d236743a26c8a40453d60cbcba7a15cf950b7cf1a952d8477bd"
             },
             {
               "path": "apps/web/src/components/StepUpAuthGate.test.tsx",
@@ -583116,7 +583399,7 @@
             },
             {
               "path": "apps/web/src/routes/terms.tsx",
-              "sha256": "8da30aa6f440b7a63715fa2e1b9bf604381cb64e9de42bca1ba221d832a9e840"
+              "sha256": "a41882ec50fb68dc05799b781e48b6a8ec7576c51ef75c12e5f04545e6e7b28e"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -583248,7 +583531,8 @@
             "Bindings renewed by release-0.5-ci-workflow: motion preserves opacity and finance/authority behavior; exact fast accessibility cases, motion checks and original transfer budgets passed.",
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
-            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed."
+            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
+            "Bindings renewed by release-0.5-critical-coverage-closure: 30 terms/registration and 42 calendar native cases, 35 related units and original bundle budgets pass. Exact public version, consent, read privacy and existing calendar assertions are preserved."
           ],
           "criterion_result": "Existing AuthLayout uses two equal desktop columns, configured local brand/title/slogan, three localized value propositions with icons, centered constrained forms and root version. Reviewed desktop FA/EN captures and theme/keyboard/axe checks retain this layout.",
           "limitations": [
@@ -583354,6 +583638,11 @@
               "batch": "release-0.5-ui-coverage-collection",
               "base_commit": "a68236ce5a764e7d1eb686fcfa00e07553df2bc0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ui-coverage-collection/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-critical-coverage-closure",
+              "base_commit": "f343e07f2221fd22705be5dd73298287bf963978",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-coverage-closure/source-binding.json"
             }
           ]
         }
@@ -583392,7 +583681,8 @@
           "release-0.5-ci-workflow",
           "release-0.5-critical-accessibility-renewal",
           "release-0.5-workspace-route-census",
-          "release-0.5-ui-coverage-collection"
+          "release-0.5-ui-coverage-collection",
+          "release-0.5-critical-coverage-closure"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -583640,7 +583930,7 @@
             },
             {
               "path": "apps/web/e2e/public-terms-history.spec.ts",
-              "sha256": "1dfb2f3187112a2bea2be1079bd5092da65cd1be3f2e677ce7aa1543e367ed55"
+              "sha256": "005cd20123125efec3cf299bc3b1da620c27883d9a098f84e831476235ff5ec0"
             },
             {
               "path": "apps/web/e2e/registration-native-forms.spec.ts",
@@ -583704,7 +583994,7 @@
             },
             {
               "path": "apps/web/src/components/PublishedTermsHistory.tsx",
-              "sha256": "f1c8381750ab4e52b8731c40f5a8fb6564c6dc7a771820aa10c74cf6010d6c2e"
+              "sha256": "8eae6315b27f1d236743a26c8a40453d60cbcba7a15cf950b7cf1a952d8477bd"
             },
             {
               "path": "apps/web/src/components/StepUpAuthGate.test.tsx",
@@ -583856,7 +584146,7 @@
             },
             {
               "path": "apps/web/src/routes/terms.tsx",
-              "sha256": "8da30aa6f440b7a63715fa2e1b9bf604381cb64e9de42bca1ba221d832a9e840"
+              "sha256": "a41882ec50fb68dc05799b781e48b6a8ec7576c51ef75c12e5f04545e6e7b28e"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -583988,7 +584278,8 @@
             "Bindings renewed by release-0.5-ci-workflow: motion preserves opacity and finance/authority behavior; exact fast accessibility cases, motion checks and original transfer budgets passed.",
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
-            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed."
+            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
+            "Bindings renewed by release-0.5-critical-coverage-closure: 30 terms/registration and 42 calendar native cases, 35 related units and original bundle budgets pass. Exact public version, consent, read privacy and existing calendar assertions are preserved."
           ],
           "criterion_result": "Existing mobile layout stacks a compact linked brand above full-width constrained forms and hides desktop propositions. Final MobileChrome FA/EN light/dark screenshots, no-horizontal-overflow and touch/keyboard/auth journey checks passed.",
           "limitations": [
@@ -584094,6 +584385,11 @@
               "batch": "release-0.5-ui-coverage-collection",
               "base_commit": "a68236ce5a764e7d1eb686fcfa00e07553df2bc0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ui-coverage-collection/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-critical-coverage-closure",
+              "base_commit": "f343e07f2221fd22705be5dd73298287bf963978",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-coverage-closure/source-binding.json"
             }
           ]
         }
@@ -584132,7 +584428,8 @@
           "release-0.5-ci-workflow",
           "release-0.5-critical-accessibility-renewal",
           "release-0.5-workspace-route-census",
-          "release-0.5-ui-coverage-collection"
+          "release-0.5-ui-coverage-collection",
+          "release-0.5-critical-coverage-closure"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -584380,7 +584677,7 @@
             },
             {
               "path": "apps/web/e2e/public-terms-history.spec.ts",
-              "sha256": "1dfb2f3187112a2bea2be1079bd5092da65cd1be3f2e677ce7aa1543e367ed55"
+              "sha256": "005cd20123125efec3cf299bc3b1da620c27883d9a098f84e831476235ff5ec0"
             },
             {
               "path": "apps/web/e2e/registration-native-forms.spec.ts",
@@ -584444,7 +584741,7 @@
             },
             {
               "path": "apps/web/src/components/PublishedTermsHistory.tsx",
-              "sha256": "f1c8381750ab4e52b8731c40f5a8fb6564c6dc7a771820aa10c74cf6010d6c2e"
+              "sha256": "8eae6315b27f1d236743a26c8a40453d60cbcba7a15cf950b7cf1a952d8477bd"
             },
             {
               "path": "apps/web/src/components/StepUpAuthGate.test.tsx",
@@ -584596,7 +584893,7 @@
             },
             {
               "path": "apps/web/src/routes/terms.tsx",
-              "sha256": "8da30aa6f440b7a63715fa2e1b9bf604381cb64e9de42bca1ba221d832a9e840"
+              "sha256": "a41882ec50fb68dc05799b781e48b6a8ec7576c51ef75c12e5f04545e6e7b28e"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -584728,7 +585025,8 @@
             "Bindings renewed by release-0.5-ci-workflow: motion preserves opacity and finance/authority behavior; exact fast accessibility cases, motion checks and original transfer budgets passed.",
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
-            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed."
+            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
+            "Bindings renewed by release-0.5-critical-coverage-closure: 30 terms/registration and 42 calendar native cases, 35 related units and original bundle budgets pass. Exact public version, consent, read privacy and existing calendar assertions are preserved."
           ],
           "criterion_result": "Separate public auth entry and nested layout render no AppShell, sidebar/topbar/bottom tabs or account data. Delayed current-session and expired-session tests verify forms never render before the entry decision and private dashboard/profile/admin/financial reads do not occur for guests.",
           "limitations": [
@@ -584834,6 +585132,11 @@
               "batch": "release-0.5-ui-coverage-collection",
               "base_commit": "a68236ce5a764e7d1eb686fcfa00e07553df2bc0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ui-coverage-collection/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-critical-coverage-closure",
+              "base_commit": "f343e07f2221fd22705be5dd73298287bf963978",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-coverage-closure/source-binding.json"
             }
           ]
         }
@@ -584872,7 +585175,8 @@
           "release-0.5-ci-workflow",
           "release-0.5-critical-accessibility-renewal",
           "release-0.5-workspace-route-census",
-          "release-0.5-ui-coverage-collection"
+          "release-0.5-ui-coverage-collection",
+          "release-0.5-critical-coverage-closure"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -585120,7 +585424,7 @@
             },
             {
               "path": "apps/web/e2e/public-terms-history.spec.ts",
-              "sha256": "1dfb2f3187112a2bea2be1079bd5092da65cd1be3f2e677ce7aa1543e367ed55"
+              "sha256": "005cd20123125efec3cf299bc3b1da620c27883d9a098f84e831476235ff5ec0"
             },
             {
               "path": "apps/web/e2e/registration-native-forms.spec.ts",
@@ -585184,7 +585488,7 @@
             },
             {
               "path": "apps/web/src/components/PublishedTermsHistory.tsx",
-              "sha256": "f1c8381750ab4e52b8731c40f5a8fb6564c6dc7a771820aa10c74cf6010d6c2e"
+              "sha256": "8eae6315b27f1d236743a26c8a40453d60cbcba7a15cf950b7cf1a952d8477bd"
             },
             {
               "path": "apps/web/src/components/StepUpAuthGate.test.tsx",
@@ -585336,7 +585640,7 @@
             },
             {
               "path": "apps/web/src/routes/terms.tsx",
-              "sha256": "8da30aa6f440b7a63715fa2e1b9bf604381cb64e9de42bca1ba221d832a9e840"
+              "sha256": "a41882ec50fb68dc05799b781e48b6a8ec7576c51ef75c12e5f04545e6e7b28e"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -585468,7 +585772,8 @@
             "Bindings renewed by release-0.5-ci-workflow: motion preserves opacity and finance/authority behavior; exact fast accessibility cases, motion checks and original transfer budgets passed.",
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
-            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed."
+            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
+            "Bindings renewed by release-0.5-critical-coverage-closure: 30 terms/registration and 42 calendar native cases, 35 related units and original bundle budgets pass. Exact public version, consent, read privacy and existing calendar assertions are preserved."
           ],
           "criterion_result": "Existing language switch stays at the directional trailing edge before login/registration and updates lang/dir immediately without losing form state. Chosen language survives reload and later visits in an English browser; current FA/EN journeys and localized errors remain valid.",
           "limitations": [
@@ -585574,6 +585879,11 @@
               "batch": "release-0.5-ui-coverage-collection",
               "base_commit": "a68236ce5a764e7d1eb686fcfa00e07553df2bc0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ui-coverage-collection/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-critical-coverage-closure",
+              "base_commit": "f343e07f2221fd22705be5dd73298287bf963978",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-coverage-closure/source-binding.json"
             }
           ]
         }
@@ -585612,7 +585922,8 @@
           "release-0.5-ci-workflow",
           "release-0.5-critical-accessibility-renewal",
           "release-0.5-workspace-route-census",
-          "release-0.5-ui-coverage-collection"
+          "release-0.5-ui-coverage-collection",
+          "release-0.5-critical-coverage-closure"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -585860,7 +586171,7 @@
             },
             {
               "path": "apps/web/e2e/public-terms-history.spec.ts",
-              "sha256": "1dfb2f3187112a2bea2be1079bd5092da65cd1be3f2e677ce7aa1543e367ed55"
+              "sha256": "005cd20123125efec3cf299bc3b1da620c27883d9a098f84e831476235ff5ec0"
             },
             {
               "path": "apps/web/e2e/registration-native-forms.spec.ts",
@@ -585924,7 +586235,7 @@
             },
             {
               "path": "apps/web/src/components/PublishedTermsHistory.tsx",
-              "sha256": "f1c8381750ab4e52b8731c40f5a8fb6564c6dc7a771820aa10c74cf6010d6c2e"
+              "sha256": "8eae6315b27f1d236743a26c8a40453d60cbcba7a15cf950b7cf1a952d8477bd"
             },
             {
               "path": "apps/web/src/components/StepUpAuthGate.test.tsx",
@@ -586076,7 +586387,7 @@
             },
             {
               "path": "apps/web/src/routes/terms.tsx",
-              "sha256": "8da30aa6f440b7a63715fa2e1b9bf604381cb64e9de42bca1ba221d832a9e840"
+              "sha256": "a41882ec50fb68dc05799b781e48b6a8ec7576c51ef75c12e5f04545e6e7b28e"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -586208,7 +586519,8 @@
             "Bindings renewed by release-0.5-ci-workflow: motion preserves opacity and finance/authority behavior; exact fast accessibility cases, motion checks and original transfer budgets passed.",
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
-            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed."
+            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
+            "Bindings renewed by release-0.5-critical-coverage-closure: 30 terms/registration and 42 calendar native cases, 35 related units and original bundle budgets pass. Exact public version, consent, read privacy and existing calendar assertions are preserved."
           ],
           "criterion_result": "New current uncached session check precedes auth forms. Signed-in visitors to login/register/register-verify/forgot-password/activation enter canonical /app with unchanged role/terms/profile/onboarding gates; expired sessions retain public form access. Desktop/mobile tests cover delayed ownership and no private content flash.",
           "limitations": [
@@ -586314,6 +586626,11 @@
               "batch": "release-0.5-ui-coverage-collection",
               "base_commit": "a68236ce5a764e7d1eb686fcfa00e07553df2bc0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ui-coverage-collection/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-critical-coverage-closure",
+              "base_commit": "f343e07f2221fd22705be5dd73298287bf963978",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-coverage-closure/source-binding.json"
             }
           ]
         }
@@ -586352,7 +586669,8 @@
           "release-0.5-ci-workflow",
           "release-0.5-critical-accessibility-renewal",
           "release-0.5-workspace-route-census",
-          "release-0.5-ui-coverage-collection"
+          "release-0.5-ui-coverage-collection",
+          "release-0.5-critical-coverage-closure"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -586600,7 +586918,7 @@
             },
             {
               "path": "apps/web/e2e/public-terms-history.spec.ts",
-              "sha256": "1dfb2f3187112a2bea2be1079bd5092da65cd1be3f2e677ce7aa1543e367ed55"
+              "sha256": "005cd20123125efec3cf299bc3b1da620c27883d9a098f84e831476235ff5ec0"
             },
             {
               "path": "apps/web/e2e/registration-native-forms.spec.ts",
@@ -586664,7 +586982,7 @@
             },
             {
               "path": "apps/web/src/components/PublishedTermsHistory.tsx",
-              "sha256": "f1c8381750ab4e52b8731c40f5a8fb6564c6dc7a771820aa10c74cf6010d6c2e"
+              "sha256": "8eae6315b27f1d236743a26c8a40453d60cbcba7a15cf950b7cf1a952d8477bd"
             },
             {
               "path": "apps/web/src/components/StepUpAuthGate.test.tsx",
@@ -586816,7 +587134,7 @@
             },
             {
               "path": "apps/web/src/routes/terms.tsx",
-              "sha256": "8da30aa6f440b7a63715fa2e1b9bf604381cb64e9de42bca1ba221d832a9e840"
+              "sha256": "a41882ec50fb68dc05799b781e48b6a8ec7576c51ef75c12e5f04545e6e7b28e"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -586948,7 +587266,8 @@
             "Bindings renewed by release-0.5-ci-workflow: motion preserves opacity and finance/authority behavior; exact fast accessibility cases, motion checks and original transfer budgets passed.",
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
-            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed."
+            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
+            "Bindings renewed by release-0.5-critical-coverage-closure: 30 terms/registration and 42 calendar native cases, 35 related units and original bundle budgets pass. Exact public version, consent, read privacy and existing calendar assertions are preserved."
           ],
           "criterion_result": "Existing login accepts normalized email/mobile and preserves raw password, explicit errors/restart for uncertain results, current CSRF, captured requests and disabled states. Visibility, recovery/registration links, conditional OTP/trust-device stage, light/dark/FA/EN/keyboard/a11y and successful ownership handoff verified. Duplicate link-prompt copy corrected.",
           "limitations": [
@@ -587054,6 +587373,11 @@
               "batch": "release-0.5-ui-coverage-collection",
               "base_commit": "a68236ce5a764e7d1eb686fcfa00e07553df2bc0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ui-coverage-collection/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-critical-coverage-closure",
+              "base_commit": "f343e07f2221fd22705be5dd73298287bf963978",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-coverage-closure/source-binding.json"
             }
           ]
         }
@@ -587092,7 +587416,8 @@
           "release-0.5-ci-workflow",
           "release-0.5-critical-accessibility-renewal",
           "release-0.5-workspace-route-census",
-          "release-0.5-ui-coverage-collection"
+          "release-0.5-ui-coverage-collection",
+          "release-0.5-critical-coverage-closure"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -587340,7 +587665,7 @@
             },
             {
               "path": "apps/web/e2e/public-terms-history.spec.ts",
-              "sha256": "1dfb2f3187112a2bea2be1079bd5092da65cd1be3f2e677ce7aa1543e367ed55"
+              "sha256": "005cd20123125efec3cf299bc3b1da620c27883d9a098f84e831476235ff5ec0"
             },
             {
               "path": "apps/web/e2e/registration-native-forms.spec.ts",
@@ -587404,7 +587729,7 @@
             },
             {
               "path": "apps/web/src/components/PublishedTermsHistory.tsx",
-              "sha256": "f1c8381750ab4e52b8731c40f5a8fb6564c6dc7a771820aa10c74cf6010d6c2e"
+              "sha256": "8eae6315b27f1d236743a26c8a40453d60cbcba7a15cf950b7cf1a952d8477bd"
             },
             {
               "path": "apps/web/src/components/StepUpAuthGate.test.tsx",
@@ -587556,7 +587881,7 @@
             },
             {
               "path": "apps/web/src/routes/terms.tsx",
-              "sha256": "8da30aa6f440b7a63715fa2e1b9bf604381cb64e9de42bca1ba221d832a9e840"
+              "sha256": "a41882ec50fb68dc05799b781e48b6a8ec7576c51ef75c12e5f04545e6e7b28e"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -587688,7 +588013,8 @@
             "Bindings renewed by release-0.5-ci-workflow: motion preserves opacity and finance/authority behavior; exact fast accessibility cases, motion checks and original transfer budgets passed.",
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
-            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed."
+            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
+            "Bindings renewed by release-0.5-critical-coverage-closure: 30 terms/registration and 42 calendar native cases, 35 related units and original bundle budgets pass. Exact public version, consent, read privacy and existing calendar assertions are preserved."
           ],
           "criterion_result": "Existing registration keeps current immutable terms receipt, acceptance checkbox/exact link, username/password minimum and local meter, login/recovery links and subsequent owned OTP stage. Rejected/uncertain starts cannot duplicate or silently switch a captured submission; native and browser consent/security assertions remain intact.",
           "limitations": [
@@ -587794,6 +588120,11 @@
               "batch": "release-0.5-ui-coverage-collection",
               "base_commit": "a68236ce5a764e7d1eb686fcfa00e07553df2bc0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ui-coverage-collection/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-critical-coverage-closure",
+              "base_commit": "f343e07f2221fd22705be5dd73298287bf963978",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-coverage-closure/source-binding.json"
             }
           ]
         }
@@ -587832,7 +588163,8 @@
           "release-0.5-ci-workflow",
           "release-0.5-critical-accessibility-renewal",
           "release-0.5-workspace-route-census",
-          "release-0.5-ui-coverage-collection"
+          "release-0.5-ui-coverage-collection",
+          "release-0.5-critical-coverage-closure"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -588080,7 +588412,7 @@
             },
             {
               "path": "apps/web/e2e/public-terms-history.spec.ts",
-              "sha256": "1dfb2f3187112a2bea2be1079bd5092da65cd1be3f2e677ce7aa1543e367ed55"
+              "sha256": "005cd20123125efec3cf299bc3b1da620c27883d9a098f84e831476235ff5ec0"
             },
             {
               "path": "apps/web/e2e/registration-native-forms.spec.ts",
@@ -588144,7 +588476,7 @@
             },
             {
               "path": "apps/web/src/components/PublishedTermsHistory.tsx",
-              "sha256": "f1c8381750ab4e52b8731c40f5a8fb6564c6dc7a771820aa10c74cf6010d6c2e"
+              "sha256": "8eae6315b27f1d236743a26c8a40453d60cbcba7a15cf950b7cf1a952d8477bd"
             },
             {
               "path": "apps/web/src/components/StepUpAuthGate.test.tsx",
@@ -588296,7 +588628,7 @@
             },
             {
               "path": "apps/web/src/routes/terms.tsx",
-              "sha256": "8da30aa6f440b7a63715fa2e1b9bf604381cb64e9de42bca1ba221d832a9e840"
+              "sha256": "a41882ec50fb68dc05799b781e48b6a8ec7576c51ef75c12e5f04545e6e7b28e"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -588428,7 +588760,8 @@
             "Bindings renewed by release-0.5-ci-workflow: motion preserves opacity and finance/authority behavior; exact fast accessibility cases, motion checks and original transfer budgets passed.",
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
-            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed."
+            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
+            "Bindings renewed by release-0.5-critical-coverage-closure: 30 terms/registration and 42 calendar native cases, 35 related units and original bundle budgets pass. Exact public version, consent, read privacy and existing calendar assertions are preserved."
           ],
           "criterion_result": "Existing password recovery keeps generic start, owned OTP/reset capability, confirm/new-password meter, validation/cooldown, safe rejected-value retention, captured uncertain outcomes and accepted success redirect/toast to login. No automatic retry of possibly consumed reset authority.",
           "limitations": [
@@ -588534,6 +588867,11 @@
               "batch": "release-0.5-ui-coverage-collection",
               "base_commit": "a68236ce5a764e7d1eb686fcfa00e07553df2bc0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ui-coverage-collection/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-critical-coverage-closure",
+              "base_commit": "f343e07f2221fd22705be5dd73298287bf963978",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-coverage-closure/source-binding.json"
             }
           ]
         }
@@ -588572,7 +588910,8 @@
           "release-0.5-ci-workflow",
           "release-0.5-critical-accessibility-renewal",
           "release-0.5-workspace-route-census",
-          "release-0.5-ui-coverage-collection"
+          "release-0.5-ui-coverage-collection",
+          "release-0.5-critical-coverage-closure"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -588820,7 +589159,7 @@
             },
             {
               "path": "apps/web/e2e/public-terms-history.spec.ts",
-              "sha256": "1dfb2f3187112a2bea2be1079bd5092da65cd1be3f2e677ce7aa1543e367ed55"
+              "sha256": "005cd20123125efec3cf299bc3b1da620c27883d9a098f84e831476235ff5ec0"
             },
             {
               "path": "apps/web/e2e/registration-native-forms.spec.ts",
@@ -588884,7 +589223,7 @@
             },
             {
               "path": "apps/web/src/components/PublishedTermsHistory.tsx",
-              "sha256": "f1c8381750ab4e52b8731c40f5a8fb6564c6dc7a771820aa10c74cf6010d6c2e"
+              "sha256": "8eae6315b27f1d236743a26c8a40453d60cbcba7a15cf950b7cf1a952d8477bd"
             },
             {
               "path": "apps/web/src/components/StepUpAuthGate.test.tsx",
@@ -589036,7 +589375,7 @@
             },
             {
               "path": "apps/web/src/routes/terms.tsx",
-              "sha256": "8da30aa6f440b7a63715fa2e1b9bf604381cb64e9de42bca1ba221d832a9e840"
+              "sha256": "a41882ec50fb68dc05799b781e48b6a8ec7576c51ef75c12e5f04545e6e7b28e"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -589168,7 +589507,8 @@
             "Bindings renewed by release-0.5-ci-workflow: motion preserves opacity and finance/authority behavior; exact fast accessibility cases, motion checks and original transfer budgets passed.",
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
-            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed."
+            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
+            "Bindings renewed by release-0.5-critical-coverage-closure: 30 terms/registration and 42 calendar native cases, 35 related units and original bundle budgets pass. Exact public version, consent, read privacy and existing calendar assertions are preserved."
           ],
           "criterion_result": "Existing OtpInput preserves six digits, autofocus/advance, paste/backspace, numeric-keyboard normalization, LTR digit order in RTL and60-second resend. Registration auto-completion and explicit login Verify/trust opt-in remain distinct. Component, native and production browser checks preserve code/expiry/cooldown/uncertain-result safeguards.",
           "limitations": [
@@ -589274,6 +589614,11 @@
               "batch": "release-0.5-ui-coverage-collection",
               "base_commit": "a68236ce5a764e7d1eb686fcfa00e07553df2bc0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ui-coverage-collection/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-critical-coverage-closure",
+              "base_commit": "f343e07f2221fd22705be5dd73298287bf963978",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-coverage-closure/source-binding.json"
             }
           ]
         }
@@ -589312,7 +589657,8 @@
           "release-0.5-ci-workflow",
           "release-0.5-critical-accessibility-renewal",
           "release-0.5-workspace-route-census",
-          "release-0.5-ui-coverage-collection"
+          "release-0.5-ui-coverage-collection",
+          "release-0.5-critical-coverage-closure"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -589560,7 +589906,7 @@
             },
             {
               "path": "apps/web/e2e/public-terms-history.spec.ts",
-              "sha256": "1dfb2f3187112a2bea2be1079bd5092da65cd1be3f2e677ce7aa1543e367ed55"
+              "sha256": "005cd20123125efec3cf299bc3b1da620c27883d9a098f84e831476235ff5ec0"
             },
             {
               "path": "apps/web/e2e/registration-native-forms.spec.ts",
@@ -589624,7 +589970,7 @@
             },
             {
               "path": "apps/web/src/components/PublishedTermsHistory.tsx",
-              "sha256": "f1c8381750ab4e52b8731c40f5a8fb6564c6dc7a771820aa10c74cf6010d6c2e"
+              "sha256": "8eae6315b27f1d236743a26c8a40453d60cbcba7a15cf950b7cf1a952d8477bd"
             },
             {
               "path": "apps/web/src/components/StepUpAuthGate.test.tsx",
@@ -589776,7 +590122,7 @@
             },
             {
               "path": "apps/web/src/routes/terms.tsx",
-              "sha256": "8da30aa6f440b7a63715fa2e1b9bf604381cb64e9de42bca1ba221d832a9e840"
+              "sha256": "a41882ec50fb68dc05799b781e48b6a8ec7576c51ef75c12e5f04545e6e7b28e"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -589908,7 +590254,8 @@
             "Bindings renewed by release-0.5-ci-workflow: motion preserves opacity and finance/authority behavior; exact fast accessibility cases, motion checks and original transfer budgets passed.",
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
-            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed."
+            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
+            "Bindings renewed by release-0.5-critical-coverage-closure: 30 terms/registration and 42 calendar native cases, 35 related units and original bundle budgets pass. Exact public version, consent, read privacy and existing calendar assertions are preserved."
           ],
           "criterion_result": "Existing required-change stage remains in the public login layout, requires confirmation and minimum-valid password, shows meter, emits success toast, clears accepted credential/grant state and returns to login. Native tests retain one-use grant, old-session revocation and pre-session ownership/security safeguards.",
           "limitations": [
@@ -590014,6 +590361,11 @@
               "batch": "release-0.5-ui-coverage-collection",
               "base_commit": "a68236ce5a764e7d1eb686fcfa00e07553df2bc0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ui-coverage-collection/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-critical-coverage-closure",
+              "base_commit": "f343e07f2221fd22705be5dd73298287bf963978",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-coverage-closure/source-binding.json"
             }
           ]
         }
@@ -590052,7 +590404,8 @@
           "release-0.5-ci-workflow",
           "release-0.5-critical-accessibility-renewal",
           "release-0.5-workspace-route-census",
-          "release-0.5-ui-coverage-collection"
+          "release-0.5-ui-coverage-collection",
+          "release-0.5-critical-coverage-closure"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -590300,7 +590653,7 @@
             },
             {
               "path": "apps/web/e2e/public-terms-history.spec.ts",
-              "sha256": "1dfb2f3187112a2bea2be1079bd5092da65cd1be3f2e677ce7aa1543e367ed55"
+              "sha256": "005cd20123125efec3cf299bc3b1da620c27883d9a098f84e831476235ff5ec0"
             },
             {
               "path": "apps/web/e2e/registration-native-forms.spec.ts",
@@ -590364,7 +590717,7 @@
             },
             {
               "path": "apps/web/src/components/PublishedTermsHistory.tsx",
-              "sha256": "f1c8381750ab4e52b8731c40f5a8fb6564c6dc7a771820aa10c74cf6010d6c2e"
+              "sha256": "8eae6315b27f1d236743a26c8a40453d60cbcba7a15cf950b7cf1a952d8477bd"
             },
             {
               "path": "apps/web/src/components/StepUpAuthGate.test.tsx",
@@ -590516,7 +590869,7 @@
             },
             {
               "path": "apps/web/src/routes/terms.tsx",
-              "sha256": "8da30aa6f440b7a63715fa2e1b9bf604381cb64e9de42bca1ba221d832a9e840"
+              "sha256": "a41882ec50fb68dc05799b781e48b6a8ec7576c51ef75c12e5f04545e6e7b28e"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -590648,7 +591001,8 @@
             "Bindings renewed by release-0.5-ci-workflow: motion preserves opacity and finance/authority behavior; exact fast accessibility cases, motion checks and original transfer budgets passed.",
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
-            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed."
+            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
+            "Bindings renewed by release-0.5-critical-coverage-closure: 30 terms/registration and 42 calendar native cases, 35 related units and original bundle budgets pass. Exact public version, consent, read privacy and existing calendar assertions are preserved."
           ],
           "criterion_result": "Existing terms content/date/language/exact-version reader now includes public published-version history with20-row keyset pagination, immutable IDs/public labels/publication times only, draft/unknown cursor equivalence and malformed/repeated cursor400. History retry preserves document/prior rows and exact cursor; viewing creates zero acceptances. Existing current-version commercial guards and acceptance receipts unchanged.",
           "limitations": [
@@ -590754,6 +591108,11 @@
               "batch": "release-0.5-ui-coverage-collection",
               "base_commit": "a68236ce5a764e7d1eb686fcfa00e07553df2bc0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ui-coverage-collection/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-critical-coverage-closure",
+              "base_commit": "f343e07f2221fd22705be5dd73298287bf963978",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-coverage-closure/source-binding.json"
             }
           ]
         }
@@ -590792,7 +591151,8 @@
           "release-0.5-ci-workflow",
           "release-0.5-critical-accessibility-renewal",
           "release-0.5-workspace-route-census",
-          "release-0.5-ui-coverage-collection"
+          "release-0.5-ui-coverage-collection",
+          "release-0.5-critical-coverage-closure"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -591040,7 +591400,7 @@
             },
             {
               "path": "apps/web/e2e/public-terms-history.spec.ts",
-              "sha256": "1dfb2f3187112a2bea2be1079bd5092da65cd1be3f2e677ce7aa1543e367ed55"
+              "sha256": "005cd20123125efec3cf299bc3b1da620c27883d9a098f84e831476235ff5ec0"
             },
             {
               "path": "apps/web/e2e/registration-native-forms.spec.ts",
@@ -591104,7 +591464,7 @@
             },
             {
               "path": "apps/web/src/components/PublishedTermsHistory.tsx",
-              "sha256": "f1c8381750ab4e52b8731c40f5a8fb6564c6dc7a771820aa10c74cf6010d6c2e"
+              "sha256": "8eae6315b27f1d236743a26c8a40453d60cbcba7a15cf950b7cf1a952d8477bd"
             },
             {
               "path": "apps/web/src/components/StepUpAuthGate.test.tsx",
@@ -591256,7 +591616,7 @@
             },
             {
               "path": "apps/web/src/routes/terms.tsx",
-              "sha256": "8da30aa6f440b7a63715fa2e1b9bf604381cb64e9de42bca1ba221d832a9e840"
+              "sha256": "a41882ec50fb68dc05799b781e48b6a8ec7576c51ef75c12e5f04545e6e7b28e"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -591388,7 +591748,8 @@
             "Bindings renewed by release-0.5-ci-workflow: motion preserves opacity and finance/authority behavior; exact fast accessibility cases, motion checks and original transfer budgets passed.",
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
-            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed."
+            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
+            "Bindings renewed by release-0.5-critical-coverage-closure: 30 terms/registration and 42 calendar native cases, 35 related units and original bundle budgets pass. Exact public version, consent, read privacy and existing calendar assertions are preserved."
           ],
           "criterion_result": "Six OTP page messages now use conditional delivery wording with the same masked destinations. Existing generic start and backend challenge/registration/reset response boundaries unchanged; no provider acceptance claim or account-existence disclosure added. Actual OTP delivery remains on the protected contact path, not general inbox.",
           "limitations": [
@@ -591494,6 +591855,11 @@
               "batch": "release-0.5-ui-coverage-collection",
               "base_commit": "a68236ce5a764e7d1eb686fcfa00e07553df2bc0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ui-coverage-collection/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-critical-coverage-closure",
+              "base_commit": "f343e07f2221fd22705be5dd73298287bf963978",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-coverage-closure/source-binding.json"
             }
           ]
         }
@@ -673562,7 +673928,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "The 55 admin browser cases now have clean mapped evidence and the ten failed API files pass in a focused run. Renew full API coverage using prebuilt sources; close the measured web, shared UI and critical i18n floor deficits and the remaining complex manual accessibility states."
+        "Public terms and calendar native regressions pass with original bundle budgets; the exact API gate is still running. Collect clean changed-source coverage for critical journeys and close the measured web/shared/translation deficits and remaining manual accessibility states."
       ],
       "owner": null,
       "depends_on": [],
@@ -673577,7 +673943,8 @@
           "release-0.5-ui-coverage-collection",
           "release-0.5-mapped-coverage-gate",
           "release-0.5-coverage-remaining-branches",
-          "release-0.5-admin-coverage-proof"
+          "release-0.5-admin-coverage-proof",
+          "release-0.5-critical-coverage-closure"
         ]
       }
     },
@@ -725748,7 +726115,161 @@
         "release-readiness#R-03.02"
       ],
       "failed_attempts_retained": true,
-      "release_disposition": "Mapped corrected admin coverage, restored API release fixtures, and retained the unresolved gate. No release publication."
+      "release_disposition": "Mapped corrected admin coverage, restored API release fixtures, and retained the unresolved gate. No release publication.",
+      "push_receipt": {
+        "repository": "barghsadev/barghsa-core",
+        "ref": "refs/heads/main",
+        "commit": "f343e07f2221fd22705be5dd73298287bf963978",
+        "remote_sha": "f343e07f2221fd22705be5dd73298287bf963978",
+        "verified_at": "2026-11-07T09:12:34+00:00"
+      }
+    },
+    "release-0.5-critical-coverage-closure": {
+      "batch": "release-0.5-critical-coverage-closure",
+      "base_commit": "f343e07f2221fd22705be5dd73298287bf963978",
+      "task_keys": [
+        "release-readiness#R-04.02",
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "07-ui-ux-design.md#T-07.04.01.06"
+      ],
+      "accepted_task_keys": [],
+      "partial_task_keys": [
+        "release-readiness#R-04.02",
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "07-ui-ux-design.md#T-07.04.01.06"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/coverage-fixture.ts",
+          "sha256": "d2728c203779bb170516ad5cedd445aa4c61d4590fb6ce44bc48cde125281ef2"
+        },
+        {
+          "path": "apps/web/e2e/date-picker-component.spec.ts",
+          "sha256": "d1a17a2515cf72c1eafd9edb221103c480eca4f0c71fe94ebdbbad5d088e604d"
+        },
+        {
+          "path": "apps/web/e2e/fixtures/date-picker/index.html",
+          "sha256": "30ea7c1e3906b5b69357f04ae29ec939981c8ee4e30ca242dcdc482123149943"
+        },
+        {
+          "path": "apps/web/e2e/fixtures/date-picker/main.tsx",
+          "sha256": "6d572f53e345650f19121dbd6ff702b22ce881e0edbc7cecef576dab37f3f111"
+        },
+        {
+          "path": "apps/web/e2e/public-terms-history.spec.ts",
+          "sha256": "005cd20123125efec3cf299bc3b1da620c27883d9a098f84e831476235ff5ec0"
+        },
+        {
+          "path": "apps/web/e2e/registration-consent.spec.ts",
+          "sha256": "dad6aa4eab174279595d85d620dcb52aca9ee4a89659364accfa60b962d0b71b"
+        },
+        {
+          "path": "apps/web/src/components/PublishedTermsHistory.tsx",
+          "sha256": "8eae6315b27f1d236743a26c8a40453d60cbcba7a15cf950b7cf1a952d8477bd"
+        },
+        {
+          "path": "apps/web/src/hooks/useServerQuery.test.tsx",
+          "sha256": "bc67512f820dfdbf4d86f2214988083789502dd13b0ed2e0ccd3258d7c7df87f"
+        },
+        {
+          "path": "apps/web/src/lib/public-tos-history.ts",
+          "sha256": "c0a986503dd8263d573f62e74ead099663817807db7121ac3a1eb4064e139ba7"
+        },
+        {
+          "path": "apps/web/src/lib/server-query-client.ts",
+          "sha256": "8f339009224962a0219dec6d142c856c7b1e142ce7687a8612c622d0440e1617"
+        },
+        {
+          "path": "apps/web/src/routes/terms.tsx",
+          "sha256": "a41882ec50fb68dc05799b781e48b6a8ec7576c51ef75c12e5f04545e6e7b28e"
+        },
+        {
+          "path": "apps/web/vite.config.ts",
+          "sha256": "63a0eb5705c84063b819514ddf5747477e6b125137dbb70ea12b02327d6b92bf"
+        },
+        {
+          "path": "packages/ui/src/components/base-ui/date-picker.tsx",
+          "sha256": "fcee76ab02866f55d028f4a7e37250384f424bf03df52010e9068b2deb935593"
+        },
+        {
+          "path": "packages/ui/src/components/ui/calendar.tsx",
+          "sha256": "6ec34d32f8be0d49d7a55f963206194802a168fb9e14adcdfca48d2742fcc69f"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "0b875687ee1d2f32ea8819c9eb58af72f0c0db3796f5e74f82317d4b7ce46251"
+        },
+        {
+          "path": "scripts/check-route-budgets.mjs",
+          "sha256": "4dd831c645a9dbf1e6fd9b0c211b5559e4fc22652373b31525bd4f4aae38186d"
+        }
+      ],
+      "checks": [
+        "Before repair, both public terms locales kept loading past the existing 15-second standard. The current document and history now use the shared deadline through JSON parsing. The immutable version and original pagination cursor are preserved on retry; public requests remain GET with no credentials or browser cache, and prior valid history remains visible.",
+        "30 terms and registration browser cases pass on Chromium and Mobile Safari, with original consent, exact version, unsafe-markup, recovery and bilingual checks. 35 related units, formatting, lint, web typecheck and all 91 original bundle budgets pass.",
+        "42 native calendar cases pass on Chromium and Mobile Safari, including English/Persian ArrowDown focus and Escape return, real Persian touch selection, stored Tehran midnight, disabled dates, and the existing clock/range checks. The browser fixture viewport now matches the product. This scope does not certify touch target measurements across the app.",
+        "The full API gate is rerunning from one prebuild with 4,327 compiled files hashed. The earlier failed run remains diagnostic. The instrumented web output is freshly built and hashed for the next clean browser group; no full source gate has been accepted yet."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-coverage-closure",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-coverage-closure/reviewed-source.diff",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-coverage-closure/source-binding.json",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-coverage-closure/renewed-bindings.json",
+      "renewed_task_keys": [
+        "02-auth-users-admin.md#T-03.03.06",
+        "02-auth-users-admin.md#T-04.01.01",
+        "02-auth-users-admin.md#T-04.01.02",
+        "02-auth-users-admin.md#T-04.01.03",
+        "07-ui-ux-design.md#T-07.01.03.19",
+        "07-ui-ux-design.md#T-07.01.04.02",
+        "07-ui-ux-design.md#T-07.01.04.03",
+        "07-ui-ux-design.md#T-07.01.04.04",
+        "07-ui-ux-design.md#T-07.03.01.04",
+        "07-ui-ux-design.md#T-07.03.01.05",
+        "07-ui-ux-design.md#T-07.03.01.06",
+        "07-ui-ux-design.md#T-07.03.02.01",
+        "07-ui-ux-design.md#T-07.03.02.02",
+        "07-ui-ux-design.md#T-07.03.02.03",
+        "07-ui-ux-design.md#T-07.03.02.04",
+        "07-ui-ux-design.md#T-07.05.01.01",
+        "07-ui-ux-design.md#T-07.05.01.02",
+        "07-ui-ux-design.md#T-07.05.01.03",
+        "07-ui-ux-design.md#T-07.05.01.04",
+        "07-ui-ux-design.md#T-07.05.01.09",
+        "07-ui-ux-design.md#T-07.05.01.11",
+        "07-ui-ux-design.md#T-07.05.02.01",
+        "07-ui-ux-design.md#T-07.05.02.03",
+        "07-ui-ux-design.md#T-07.09.01.01",
+        "07-ui-ux-design.md#T-07.09.01.02",
+        "07-ui-ux-design.md#T-07.09.01.03",
+        "07-ui-ux-design.md#T-07.09.01.04",
+        "07-ui-ux-design.md#T-07.09.01.05",
+        "07-ui-ux-design.md#T-07.09.02.01",
+        "07-ui-ux-design.md#T-07.09.02.02",
+        "07-ui-ux-design.md#T-07.09.02.03",
+        "07-ui-ux-design.md#T-07.09.02.04",
+        "07-ui-ux-design.md#T-07.09.02.05",
+        "07-ui-ux-design.md#T-07.09.02.06",
+        "07-ui-ux-design.md#T-07.09.02.07",
+        "07-ui-ux-design.md#T-07.14.01.01",
+        "07-ui-ux-design.md#T-07.14.01.02",
+        "07-ui-ux-design.md#T-07.14.01.03",
+        "07-ui-ux-design.md#T-07.14.01.04",
+        "07-ui-ux-design.md#T-07.14.01.05",
+        "07-ui-ux-design.md#T-07.17.01.01",
+        "07-ui-ux-design.md#T-07.17.01.02",
+        "07-ui-ux-design.md#T-07.17.01.03",
+        "07-ui-ux-design.md#T-07.17.01.04",
+        "07-ui-ux-design.md#T-07.17.01.05",
+        "07-ui-ux-design.md#T-07.17.02.01",
+        "07-ui-ux-design.md#T-07.17.02.02",
+        "07-ui-ux-design.md#T-07.17.02.03",
+        "07-ui-ux-design.md#T-07.17.02.04",
+        "07-ui-ux-design.md#T-07.17.02.05",
+        "07-ui-ux-design.md#T-07.17.02.06",
+        "07-ui-ux-design.md#T-07.17.02.07"
+      ],
+      "failed_attempts_retained": true,
+      "release_disposition": "Repaired public terms read recovery and renewed native calendar evidence. No release publication."
     }
   },
   "historical_improvements": [
@@ -725788,18 +726309,18 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.5-critical-coverage-closure",
+    "id": "release-0.5-critical-journey-evidence",
     "release": "0.5.0",
     "task_keys": [
       "release-readiness#R-04.02",
-      "07-ui-ux-design.md#T-07.05.01.08",
-      "07-ui-ux-design.md#T-07.04.01.06"
+      "07-ui-ux-design.md#T-07.04.01.06",
+      "07-ui-ux-design.md#T-07.05.01.08"
     ],
-    "goal": "Renew the full API gate with immutable prebuilt dependencies; verify the remaining core UI keyboard, touch and recovery behavior and collect changed-source coverage against v0.4.0."
+    "goal": "Map clean coverage for the repaired public/legal and calendar paths plus independent core electricity, contract and financial journeys. Verify actual narrow calendar control geometry and continue the exact API gate."
   },
   "launch_forecast": {
     "status": "deadline_at_risk_until_v0_5_and_operational_gates_close",
-    "next_update_after": "v0.5.0 exact API and critical browser gate reconciliation",
+    "next_update_after": "v0.5.0 core journey coverage and exact API proof",
     "method": "v0.4.0 staging and Telegram receipts verified. v0.5.0 remains unaccepted: coverage diagnostics are below unchanged web/UI/i18n floors, required route/manual states and two owner decisions remain. v0.6.0 operations and v0.9.0 four-service rehearsal keep November 9 at risk. Production is not authorized."
   },
   "capabilities": [
