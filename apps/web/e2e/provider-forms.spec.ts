@@ -1,6 +1,7 @@
 import { test, expect } from './coverage-fixture';
 import { setupCatalogueForms } from './catalogue-form-fixture';
 import { providerText, smsProviderText } from '@barghsa/i18n/providers';
+import { providerFormText } from '@barghsa/i18n/provider-forms';
 import AxeBuilder from '@axe-core/playwright';
 test.use({ viewport: { width: 390, height: 844 } });
 for (const locale of ['en', 'fa'] as const)
@@ -91,10 +92,22 @@ for (const locale of ['en', 'fa'] as const)
         .getByRole('button', { name: emailText('update'), exact: true })
         .click();
       const port = page.locator('#email-provider-port');
+      await expect(port).toHaveAttribute('aria-required', 'true');
+      await expect(page.locator('#email-provider-transport')).toHaveAttribute(
+        'aria-required',
+        'true'
+      );
+      const emailLabel = page.locator('#email-provider-label');
+      await expect(emailLabel).toHaveAttribute('aria-required', 'true');
+      await expect(emailLabel).toHaveAccessibleName(emailText('label'));
       await port.fill('0');
       await page.locator('form button[type=submit]').click();
       await expect(port).toBeFocused();
       await expect(port).toHaveAttribute('aria-invalid', 'true');
+      await expect(port).toHaveAccessibleName(emailText('field.port'));
+      const portFeedback = providerFormText('port', locale);
+      await expect(page.getByRole('alert').filter({ hasText: portFeedback })).toBeVisible();
+      await expect(port).toHaveAccessibleDescription(portFeedback);
       expect(emailWrites).toHaveLength(0);
       await port.fill('465');
       await page.locator('#email-provider-label').fill('Local email');
@@ -115,16 +128,20 @@ for (const locale of ['en', 'fa'] as const)
       const text = (key: Parameters<typeof smsProviderText>[0]) => smsProviderText(key, locale);
       await page.getByRole('button', { name: text('edit'), exact: true }).click();
       await expect(page.locator('#sms-key')).toHaveValue('');
+      await expect(page.locator('#sms-key')).not.toHaveAttribute('aria-required', 'true');
       const timeout = page.locator('#sms-timeout');
+      await expect(timeout).toHaveAttribute('aria-required', 'true');
       await timeout.fill('301');
       await page.locator('form button[type=submit]').click();
       await expect(timeout).toBeFocused();
       expect(smsWrites).toHaveLength(0);
       await timeout.fill('25');
       const mapping = page.getByRole('textbox', { name: `${text('template')} 1`, exact: true });
+      await expect(mapping).toHaveAttribute('aria-required', 'true');
       await mapping.fill('0');
       await page.locator('form button[type=submit]').click();
       const event = page.getByRole('combobox', { name: `${text('event')} 1`, exact: true });
+      await expect(event).toHaveAttribute('aria-required', 'true');
       await expect(event).toBeFocused();
       await expect(event).toHaveAttribute('aria-invalid', 'true');
       expect(smsWrites).toHaveLength(0);

@@ -525,6 +525,7 @@ function OwnedAiModelsPage({
                         autoFocus={key === 'title'}
                         type={key === 'baseUrl' ? 'url' : 'text'}
                         required
+                        aria-required="true"
                         maxLength={key === 'title' ? 120 : key === 'baseUrl' ? 500 : 200}
                         value={draft[key]}
                         dir={key === 'title' ? 'auto' : 'ltr'}
@@ -542,6 +543,7 @@ function OwnedAiModelsPage({
                     <select
                       {...modelForm.bind('providerType')}
                       id="ai-model-provider"
+                      aria-required="true"
                       className="w-full rounded border bg-background p-2"
                       value={draft.providerType}
                       onChange={(event) =>
@@ -568,6 +570,7 @@ function OwnedAiModelsPage({
                       <select
                         {...modelForm.bind('tokenChoice')}
                         id="ai-model-token-choice"
+                        aria-required="true"
                         className="w-full rounded border bg-background p-2"
                         value={draft.tokenChoice}
                         onChange={(event) => {
@@ -594,6 +597,7 @@ function OwnedAiModelsPage({
                       <Input
                         {...modelForm.bind('apiToken')}
                         id="ai-model-token"
+                        aria-required={!!draft.masked || undefined}
                         type="password"
                         autoComplete="new-password"
                         maxLength={4000}
@@ -628,6 +632,7 @@ function OwnedAiModelsPage({
                         max={4096}
                         step={1}
                         required
+                        aria-required="true"
                         value={draft.maxTokens}
                         onChange={(event) => modelForm.field('maxTokens')[1](event.target.value)}
                       />
@@ -647,6 +652,7 @@ function OwnedAiModelsPage({
                         max={2}
                         step="any"
                         required
+                        aria-required="true"
                         value={draft.temperature}
                         onChange={(event) => modelForm.field('temperature')[1](event.target.value)}
                       />
@@ -715,6 +721,9 @@ function OwnedAiModelsPage({
                           max={max}
                           step={step}
                           required={key === 'inputPriceUsd' || key === 'outputPriceUsd'}
+                          aria-required={
+                            key === 'inputPriceUsd' || key === 'outputPriceUsd' || undefined
+                          }
                           value={budgetDraft[key]}
                           onChange={(event) => budgetForm.field(key)[1](event.target.value)}
                         />

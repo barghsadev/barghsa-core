@@ -671,6 +671,7 @@ export default function AdminSmsProvidersPage() {
                     value={editor[key]}
                     onChange={(e) => field(key, e.target.value)}
                     required
+                    aria-required="true"
                     type={['timeout', 'throughput', 'credit'].includes(key) ? 'number' : 'text'}
                     {...(key === 'timeout'
                       ? { min: 1, max: 300 }
@@ -696,6 +697,7 @@ export default function AdminSmsProvidersPage() {
                   autoComplete="new-password"
                   value={editor.key}
                   required={!editor.keyConfigured}
+                  aria-required={!editor.keyConfigured || undefined}
                   maxLength={1024}
                   onChange={(e) => field('key', e.target.value)}
                   aria-describedby={[form.bind('key')['aria-describedby'], 'sms-key-hint']
@@ -763,12 +765,14 @@ export default function AdminSmsProvidersPage() {
                           value={m.event}
                           maxLength={128}
                           required
+                          aria-required="true"
                           onChange={(e) => changeMapping(m.id, { event: e.target.value })}
                         />
                       </td>
                       <td className="p-2">
                         <select
                           aria-label={`${text('language')} ${index + 1}`}
+                          aria-required="true"
                           value={m.locale}
                           className="border rounded bg-background p-2"
                           onChange={(e) =>
@@ -787,6 +791,7 @@ export default function AdminSmsProvidersPage() {
                           maxLength={128}
                           inputMode="numeric"
                           required
+                          aria-required="true"
                           onChange={(e) => changeMapping(m.id, { template: e.target.value })}
                         />
                       </td>
@@ -814,6 +819,7 @@ export default function AdminSmsProvidersPage() {
                               value={v.internal}
                               maxLength={255}
                               required
+                              aria-required="true"
                               onChange={(e) =>
                                 changeMapping(m.id, {
                                   variables: m.variables.map((x) =>
@@ -828,6 +834,7 @@ export default function AdminSmsProvidersPage() {
                               value={v.parameter}
                               maxLength={255}
                               required
+                              aria-required="true"
                               onChange={(e) =>
                                 changeMapping(m.id, {
                                   variables: m.variables.map((x) =>

@@ -4,6 +4,7 @@ import { t } from '@barghsa/i18n/admin-ui';
 import { setupCatalogueForms } from './catalogue-form-fixture';
 import { cookieResponse } from './cookie-response';
 import { aiModel } from '../src/test/ai-catalogue-fixtures';
+import { approveRiskConfirmation } from './confirmation-fixture';
 for (const locale of ['en', 'fa'] as const)
   test(`AI model form retries captured input after password verification (${locale})`, async ({
     page,
@@ -99,6 +100,7 @@ for (const locale of ['en', 'fa'] as const)
     let present = true,
       invalid = true,
       inUse = true;
+    let deletes = 0;
     const edits: unknown[] = [];
     const model = {
       id: '01900000-0000-7000-8000-000000000001',
@@ -131,6 +133,8 @@ for (const locale of ['en', 'fa'] as const)
           return route.fulfill({ status: 400, json: { error: 'VALIDATION:PARSE:ZOD_ERROR' } });
         return route.fulfill({ json: model });
       }
+      expect(route.request().method()).toBe('DELETE');
+      deletes++;
       if (inUse) return route.fulfill({ status: 409, json: { error: 'AI_MODEL_IN_USE' } });
       present = false;
       return route.fulfill({ status: 204 });
@@ -175,12 +179,17 @@ for (const locale of ['en', 'fa'] as const)
     await expect(page.getByText('<script>provider reply</script>', { exact: true })).toBeVisible();
     await readable();
     await page.getByRole('button', { name: label('delete'), exact: true }).click();
+    await expect(confirm()).toBeDisabled();
+    expect(deletes).toBe(0);
+    await approveRiskConfirmation(page, locale, 'destructive');
     await confirm().click();
     await expect(page.getByRole('dialog').getByRole('alert')).toHaveText(label('inUse'));
+    expect(deletes).toBe(1);
     inUse = false;
     await confirm().click();
     await expect(page.getByRole('dialog')).toHaveCount(0);
     await expect(page.getByText(label('empty'), { exact: true })).toBeVisible();
+    expect(deletes).toBe(2);
   });
 
 for (const locale of ['en', 'fa'] as const)

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-07T23:03:08+00:00",
-  "source_commit": "a82b62f1b8af6b93e15150e842c3c5282d86d275",
+  "updated": "2026-11-07T23:13:39+00:00",
+  "source_commit": "80198dedfdc0abd8dfc90246442f76e1bca351b9",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -35463,7 +35463,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
+              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
@@ -63152,7 +63152,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
+              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
@@ -66560,7 +66560,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
+              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -77274,7 +77274,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
+              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -77859,7 +77859,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
+              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -78611,7 +78611,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
+              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -79193,7 +79193,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
+              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -79778,7 +79778,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
+              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -82048,7 +82048,7 @@
             },
             {
               "path": "apps/web/e2e/provider-forms.spec.ts",
-              "sha256": "137b659fc7b1da4507a98f6f01f7c3049f95f110ce7529f0e043a1c3c43c2e34"
+              "sha256": "16de6d2ce8a172eade8a305549c24911ca55b64f3a216bf3b7c4f6bb6a44ae34"
             },
             {
               "path": "apps/web/src/components/CustomerCorrectionsPanel.tsx",
@@ -82072,7 +82072,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
+              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
             },
             {
               "path": "apps/web/src/pages/AdminFailedNotificationsPage.tsx",
@@ -82997,7 +82997,7 @@
             },
             {
               "path": "apps/web/e2e/provider-forms.spec.ts",
-              "sha256": "137b659fc7b1da4507a98f6f01f7c3049f95f110ce7529f0e043a1c3c43c2e34"
+              "sha256": "16de6d2ce8a172eade8a305549c24911ca55b64f3a216bf3b7c4f6bb6a44ae34"
             },
             {
               "path": "apps/web/src/components/CustomerCorrectionsPanel.tsx",
@@ -83021,7 +83021,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
+              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
             },
             {
               "path": "apps/web/src/pages/AdminFailedNotificationsPage.tsx",
@@ -83946,7 +83946,7 @@
             },
             {
               "path": "apps/web/e2e/provider-forms.spec.ts",
-              "sha256": "137b659fc7b1da4507a98f6f01f7c3049f95f110ce7529f0e043a1c3c43c2e34"
+              "sha256": "16de6d2ce8a172eade8a305549c24911ca55b64f3a216bf3b7c4f6bb6a44ae34"
             },
             {
               "path": "apps/web/src/components/CustomerCorrectionsPanel.tsx",
@@ -83970,7 +83970,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
+              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
             },
             {
               "path": "apps/web/src/pages/AdminFailedNotificationsPage.tsx",
@@ -84896,7 +84896,7 @@
             },
             {
               "path": "apps/web/e2e/provider-forms.spec.ts",
-              "sha256": "137b659fc7b1da4507a98f6f01f7c3049f95f110ce7529f0e043a1c3c43c2e34"
+              "sha256": "16de6d2ce8a172eade8a305549c24911ca55b64f3a216bf3b7c4f6bb6a44ae34"
             },
             {
               "path": "apps/web/src/components/CustomerCorrectionsPanel.tsx",
@@ -84920,7 +84920,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
+              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
             },
             {
               "path": "apps/web/src/pages/AdminFailedNotificationsPage.tsx",
@@ -85845,7 +85845,7 @@
             },
             {
               "path": "apps/web/e2e/provider-forms.spec.ts",
-              "sha256": "137b659fc7b1da4507a98f6f01f7c3049f95f110ce7529f0e043a1c3c43c2e34"
+              "sha256": "16de6d2ce8a172eade8a305549c24911ca55b64f3a216bf3b7c4f6bb6a44ae34"
             },
             {
               "path": "apps/web/src/components/CustomerCorrectionsPanel.tsx",
@@ -85869,7 +85869,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
+              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
             },
             {
               "path": "apps/web/src/pages/AdminFailedNotificationsPage.tsx",
@@ -86767,7 +86767,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
+              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
             },
             {
               "path": "apps/web/src/pages/AdminFailedNotificationsPage.tsx",
@@ -87520,7 +87520,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
+              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
             },
             {
               "path": "apps/web/src/pages/AdminFailedNotificationsPage.tsx",
@@ -88158,7 +88158,7 @@
             },
             {
               "path": "apps/web/e2e/provider-forms.spec.ts",
-              "sha256": "137b659fc7b1da4507a98f6f01f7c3049f95f110ce7529f0e043a1c3c43c2e34"
+              "sha256": "16de6d2ce8a172eade8a305549c24911ca55b64f3a216bf3b7c4f6bb6a44ae34"
             },
             {
               "path": "apps/web/src/components/CustomerCorrectionsPanel.tsx",
@@ -88182,7 +88182,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
+              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
             },
             {
               "path": "apps/web/src/pages/AdminFailedNotificationsPage.tsx",
@@ -88903,7 +88903,7 @@
             },
             {
               "path": "apps/web/e2e/sms-provider-settings.spec.ts",
-              "sha256": "7cebc8277125ce5a16ac6441a72ef279c82437eb3e58b97fcccac8feaa9e06cc"
+              "sha256": "ba31b08e97c2172c3e38c8ebe46c2973c4a2faa361c23c3f8c196fa3eea3a036"
             },
             {
               "path": "apps/web/src/lib/email-providers-api.ts",
@@ -88923,7 +88923,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "ba9a51c6a469ad87060e6b42b09ba78fe6a5bb140adf81d3741a2876adfe15c1"
+              "sha256": "da6a6f1ead9f8e587d108c6d5148f70012328f1207bf9bac0f6fc55b729ef027"
             },
             {
               "path": "apps/web/src/routes/admin/providers.tsx",
@@ -101878,7 +101878,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "89ab1d4c75e910d2d9b7fc247cf7d5f03c78327a39e5ef1cd2a260cd906b6091"
+              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
             },
             {
               "path": "apps/web/src/components/AiModelRecordTable.tsx",
@@ -101902,11 +101902,11 @@
             },
             {
               "path": "apps/web/e2e/ai-models.spec.ts",
-              "sha256": "2f84dd86531cc2d6e066d0fd5245aaf7ad4491d7ce18e74f67a5cf1a10c2e35d"
+              "sha256": "e86cf06fd6381f207ab52e91f8383860917f067a840573c6999c285ab42d8101"
             },
             {
               "path": "apps/web/e2e/ai-model-forms.spec.ts",
-              "sha256": "0898110144431ebf53ed6a70a066f6b5f07cb7738f4a18131e3b4eae14338d59"
+              "sha256": "ece36f39cae1aa1fe0b94e09efd0e5d03172cfc33ac402f715426e8a975eb357"
             },
             {
               "path": "apps/web/src/test/ai-catalogue-fixtures.ts",
@@ -131125,7 +131125,7 @@
             },
             {
               "path": "apps/web/e2e/sms-provider-settings.spec.ts",
-              "sha256": "7cebc8277125ce5a16ac6441a72ef279c82437eb3e58b97fcccac8feaa9e06cc"
+              "sha256": "ba31b08e97c2172c3e38c8ebe46c2973c4a2faa361c23c3f8c196fa3eea3a036"
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.test.tsx",
@@ -131157,7 +131157,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "ba9a51c6a469ad87060e6b42b09ba78fe6a5bb140adf81d3741a2876adfe15c1"
+              "sha256": "da6a6f1ead9f8e587d108c6d5148f70012328f1207bf9bac0f6fc55b729ef027"
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
@@ -133321,7 +133321,7 @@
             },
             {
               "path": "apps/web/e2e/sms-provider-settings.spec.ts",
-              "sha256": "7cebc8277125ce5a16ac6441a72ef279c82437eb3e58b97fcccac8feaa9e06cc"
+              "sha256": "ba31b08e97c2172c3e38c8ebe46c2973c4a2faa361c23c3f8c196fa3eea3a036"
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.test.tsx",
@@ -133353,7 +133353,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "ba9a51c6a469ad87060e6b42b09ba78fe6a5bb140adf81d3741a2876adfe15c1"
+              "sha256": "da6a6f1ead9f8e587d108c6d5148f70012328f1207bf9bac0f6fc55b729ef027"
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
@@ -434689,7 +434689,7 @@
             },
             {
               "path": "apps/web/e2e/sms-provider-settings.spec.ts",
-              "sha256": "7cebc8277125ce5a16ac6441a72ef279c82437eb3e58b97fcccac8feaa9e06cc"
+              "sha256": "ba31b08e97c2172c3e38c8ebe46c2973c4a2faa361c23c3f8c196fa3eea3a036"
             },
             {
               "path": "apps/web/src/lib/email-providers-api.ts",
@@ -434709,7 +434709,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "ba9a51c6a469ad87060e6b42b09ba78fe6a5bb140adf81d3741a2876adfe15c1"
+              "sha256": "da6a6f1ead9f8e587d108c6d5148f70012328f1207bf9bac0f6fc55b729ef027"
             },
             {
               "path": "apps/web/src/routes/admin/providers.tsx",
@@ -435126,7 +435126,7 @@
             },
             {
               "path": "apps/web/e2e/sms-provider-settings.spec.ts",
-              "sha256": "7cebc8277125ce5a16ac6441a72ef279c82437eb3e58b97fcccac8feaa9e06cc"
+              "sha256": "ba31b08e97c2172c3e38c8ebe46c2973c4a2faa361c23c3f8c196fa3eea3a036"
             },
             {
               "path": "apps/web/src/lib/email-providers-api.ts",
@@ -435146,7 +435146,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "ba9a51c6a469ad87060e6b42b09ba78fe6a5bb140adf81d3741a2876adfe15c1"
+              "sha256": "da6a6f1ead9f8e587d108c6d5148f70012328f1207bf9bac0f6fc55b729ef027"
             },
             {
               "path": "apps/web/src/routes/admin/providers.tsx",
@@ -435562,7 +435562,7 @@
             },
             {
               "path": "apps/web/e2e/sms-provider-settings.spec.ts",
-              "sha256": "7cebc8277125ce5a16ac6441a72ef279c82437eb3e58b97fcccac8feaa9e06cc"
+              "sha256": "ba31b08e97c2172c3e38c8ebe46c2973c4a2faa361c23c3f8c196fa3eea3a036"
             },
             {
               "path": "apps/web/src/lib/email-providers-api.ts",
@@ -435582,7 +435582,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "ba9a51c6a469ad87060e6b42b09ba78fe6a5bb140adf81d3741a2876adfe15c1"
+              "sha256": "da6a6f1ead9f8e587d108c6d5148f70012328f1207bf9bac0f6fc55b729ef027"
             },
             {
               "path": "apps/web/src/routes/admin/providers.tsx",
@@ -435997,7 +435997,7 @@
             },
             {
               "path": "apps/web/e2e/sms-provider-settings.spec.ts",
-              "sha256": "7cebc8277125ce5a16ac6441a72ef279c82437eb3e58b97fcccac8feaa9e06cc"
+              "sha256": "ba31b08e97c2172c3e38c8ebe46c2973c4a2faa361c23c3f8c196fa3eea3a036"
             },
             {
               "path": "apps/web/src/lib/email-providers-api.ts",
@@ -436017,7 +436017,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "ba9a51c6a469ad87060e6b42b09ba78fe6a5bb140adf81d3741a2876adfe15c1"
+              "sha256": "da6a6f1ead9f8e587d108c6d5148f70012328f1207bf9bac0f6fc55b729ef027"
             },
             {
               "path": "apps/web/src/routes/admin/providers.tsx",
@@ -436514,11 +436514,11 @@
             },
             {
               "path": "apps/web/e2e/provider-forms.spec.ts",
-              "sha256": "137b659fc7b1da4507a98f6f01f7c3049f95f110ce7529f0e043a1c3c43c2e34"
+              "sha256": "16de6d2ce8a172eade8a305549c24911ca55b64f3a216bf3b7c4f6bb6a44ae34"
             },
             {
               "path": "apps/web/e2e/sms-provider-settings.spec.ts",
-              "sha256": "7cebc8277125ce5a16ac6441a72ef279c82437eb3e58b97fcccac8feaa9e06cc"
+              "sha256": "ba31b08e97c2172c3e38c8ebe46c2973c4a2faa361c23c3f8c196fa3eea3a036"
             },
             {
               "path": "apps/web/src/hooks/useCatalogueResource.ts",
@@ -436550,7 +436550,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "ba9a51c6a469ad87060e6b42b09ba78fe6a5bb140adf81d3741a2876adfe15c1"
+              "sha256": "da6a6f1ead9f8e587d108c6d5148f70012328f1207bf9bac0f6fc55b729ef027"
             },
             {
               "path": "apps/web/src/pages/delivery-provider-recovery.test.tsx",
@@ -437036,7 +437036,7 @@
             },
             {
               "path": "apps/web/e2e/sms-provider-settings.spec.ts",
-              "sha256": "7cebc8277125ce5a16ac6441a72ef279c82437eb3e58b97fcccac8feaa9e06cc"
+              "sha256": "ba31b08e97c2172c3e38c8ebe46c2973c4a2faa361c23c3f8c196fa3eea3a036"
             },
             {
               "path": "apps/web/src/components/ProviderAlertHistory.tsx",
@@ -437402,7 +437402,7 @@
             },
             {
               "path": "apps/web/e2e/sms-provider-settings.spec.ts",
-              "sha256": "7cebc8277125ce5a16ac6441a72ef279c82437eb3e58b97fcccac8feaa9e06cc"
+              "sha256": "ba31b08e97c2172c3e38c8ebe46c2973c4a2faa361c23c3f8c196fa3eea3a036"
             },
             {
               "path": "apps/web/src/components/ProviderAlertHistory.tsx",
@@ -437502,11 +437502,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
+              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "ba9a51c6a469ad87060e6b42b09ba78fe6a5bb140adf81d3741a2876adfe15c1"
+              "sha256": "da6a6f1ead9f8e587d108c6d5148f70012328f1207bf9bac0f6fc55b729ef027"
             },
             {
               "path": "apps/web/src/pages/delivery-provider-recovery.test.tsx",
@@ -437946,7 +437946,7 @@
             },
             {
               "path": "apps/web/e2e/sms-provider-settings.spec.ts",
-              "sha256": "7cebc8277125ce5a16ac6441a72ef279c82437eb3e58b97fcccac8feaa9e06cc"
+              "sha256": "ba31b08e97c2172c3e38c8ebe46c2973c4a2faa361c23c3f8c196fa3eea3a036"
             },
             {
               "path": "apps/web/src/components/ProviderAlertHistory.tsx",
@@ -438309,7 +438309,7 @@
             },
             {
               "path": "apps/web/e2e/sms-provider-settings.spec.ts",
-              "sha256": "7cebc8277125ce5a16ac6441a72ef279c82437eb3e58b97fcccac8feaa9e06cc"
+              "sha256": "ba31b08e97c2172c3e38c8ebe46c2973c4a2faa361c23c3f8c196fa3eea3a036"
             },
             {
               "path": "apps/web/src/components/ProviderAlertHistory.tsx",
@@ -438672,7 +438672,7 @@
             },
             {
               "path": "apps/web/e2e/sms-provider-settings.spec.ts",
-              "sha256": "7cebc8277125ce5a16ac6441a72ef279c82437eb3e58b97fcccac8feaa9e06cc"
+              "sha256": "ba31b08e97c2172c3e38c8ebe46c2973c4a2faa361c23c3f8c196fa3eea3a036"
             },
             {
               "path": "apps/web/src/components/ProviderAlertHistory.tsx",
@@ -439458,7 +439458,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.tsx",
-              "sha256": "0d491c742f7053e5d21b4c581a9746ef317db28de031292fbf9d0f9a9e839c76"
+              "sha256": "1b0e886a9d60e9e5cc2a14c3c9d5ece6ac5103dd67c073b6efad18933f4c28d4"
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.test.tsx",
@@ -439474,7 +439474,7 @@
             },
             {
               "path": "apps/web/e2e/storage-policy-forms.spec.ts",
-              "sha256": "f7533a1e03d1926649f2607942a5ef2f12aaec56da5c26881f04116b15fa60e5"
+              "sha256": "fbf7236507119aa8be55567e23fbf079ce6f5afb0341463409afa83b70dc7089"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -439739,7 +439739,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.tsx",
-              "sha256": "0d491c742f7053e5d21b4c581a9746ef317db28de031292fbf9d0f9a9e839c76"
+              "sha256": "1b0e886a9d60e9e5cc2a14c3c9d5ece6ac5103dd67c073b6efad18933f4c28d4"
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.test.tsx",
@@ -439755,7 +439755,7 @@
             },
             {
               "path": "apps/web/e2e/storage-policy-forms.spec.ts",
-              "sha256": "f7533a1e03d1926649f2607942a5ef2f12aaec56da5c26881f04116b15fa60e5"
+              "sha256": "fbf7236507119aa8be55567e23fbf079ce6f5afb0341463409afa83b70dc7089"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -449881,7 +449881,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "89ab1d4c75e910d2d9b7fc247cf7d5f03c78327a39e5ef1cd2a260cd906b6091"
+              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
             },
             {
               "path": "apps/web/src/components/AiModelRecordTable.tsx",
@@ -449905,11 +449905,11 @@
             },
             {
               "path": "apps/web/e2e/ai-models.spec.ts",
-              "sha256": "2f84dd86531cc2d6e066d0fd5245aaf7ad4491d7ce18e74f67a5cf1a10c2e35d"
+              "sha256": "e86cf06fd6381f207ab52e91f8383860917f067a840573c6999c285ab42d8101"
             },
             {
               "path": "apps/web/e2e/ai-model-forms.spec.ts",
-              "sha256": "0898110144431ebf53ed6a70a066f6b5f07cb7738f4a18131e3b4eae14338d59"
+              "sha256": "ece36f39cae1aa1fe0b94e09efd0e5d03172cfc33ac402f715426e8a975eb357"
             },
             {
               "path": "apps/web/src/test/ai-catalogue-fixtures.ts",
@@ -450361,7 +450361,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "89ab1d4c75e910d2d9b7fc247cf7d5f03c78327a39e5ef1cd2a260cd906b6091"
+              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
             },
             {
               "path": "apps/web/src/components/AiModelRecordTable.tsx",
@@ -450385,11 +450385,11 @@
             },
             {
               "path": "apps/web/e2e/ai-models.spec.ts",
-              "sha256": "2f84dd86531cc2d6e066d0fd5245aaf7ad4491d7ce18e74f67a5cf1a10c2e35d"
+              "sha256": "e86cf06fd6381f207ab52e91f8383860917f067a840573c6999c285ab42d8101"
             },
             {
               "path": "apps/web/e2e/ai-model-forms.spec.ts",
-              "sha256": "0898110144431ebf53ed6a70a066f6b5f07cb7738f4a18131e3b4eae14338d59"
+              "sha256": "ece36f39cae1aa1fe0b94e09efd0e5d03172cfc33ac402f715426e8a975eb357"
             },
             {
               "path": "apps/web/src/test/ai-catalogue-fixtures.ts",
@@ -450843,7 +450843,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "89ab1d4c75e910d2d9b7fc247cf7d5f03c78327a39e5ef1cd2a260cd906b6091"
+              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
             },
             {
               "path": "apps/web/src/components/AiModelRecordTable.tsx",
@@ -450867,11 +450867,11 @@
             },
             {
               "path": "apps/web/e2e/ai-models.spec.ts",
-              "sha256": "2f84dd86531cc2d6e066d0fd5245aaf7ad4491d7ce18e74f67a5cf1a10c2e35d"
+              "sha256": "e86cf06fd6381f207ab52e91f8383860917f067a840573c6999c285ab42d8101"
             },
             {
               "path": "apps/web/e2e/ai-model-forms.spec.ts",
-              "sha256": "0898110144431ebf53ed6a70a066f6b5f07cb7738f4a18131e3b4eae14338d59"
+              "sha256": "ece36f39cae1aa1fe0b94e09efd0e5d03172cfc33ac402f715426e8a975eb357"
             },
             {
               "path": "apps/web/src/test/ai-catalogue-fixtures.ts",
@@ -451323,7 +451323,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "89ab1d4c75e910d2d9b7fc247cf7d5f03c78327a39e5ef1cd2a260cd906b6091"
+              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
             },
             {
               "path": "apps/web/src/components/AiModelRecordTable.tsx",
@@ -451347,11 +451347,11 @@
             },
             {
               "path": "apps/web/e2e/ai-models.spec.ts",
-              "sha256": "2f84dd86531cc2d6e066d0fd5245aaf7ad4491d7ce18e74f67a5cf1a10c2e35d"
+              "sha256": "e86cf06fd6381f207ab52e91f8383860917f067a840573c6999c285ab42d8101"
             },
             {
               "path": "apps/web/e2e/ai-model-forms.spec.ts",
-              "sha256": "0898110144431ebf53ed6a70a066f6b5f07cb7738f4a18131e3b4eae14338d59"
+              "sha256": "ece36f39cae1aa1fe0b94e09efd0e5d03172cfc33ac402f715426e8a975eb357"
             },
             {
               "path": "apps/web/src/test/ai-catalogue-fixtures.ts",
@@ -487006,7 +487006,7 @@
             },
             {
               "path": "apps/web/e2e/sms-provider-settings.spec.ts",
-              "sha256": "7cebc8277125ce5a16ac6441a72ef279c82437eb3e58b97fcccac8feaa9e06cc"
+              "sha256": "ba31b08e97c2172c3e38c8ebe46c2973c4a2faa361c23c3f8c196fa3eea3a036"
             },
             {
               "path": "apps/web/e2e/ui-interaction.spec.ts",
@@ -487248,7 +487248,7 @@
             },
             {
               "path": "apps/web/e2e/sms-provider-settings.spec.ts",
-              "sha256": "7cebc8277125ce5a16ac6441a72ef279c82437eb3e58b97fcccac8feaa9e06cc"
+              "sha256": "ba31b08e97c2172c3e38c8ebe46c2973c4a2faa361c23c3f8c196fa3eea3a036"
             },
             {
               "path": "apps/web/e2e/ui-interaction.spec.ts",
@@ -487490,7 +487490,7 @@
             },
             {
               "path": "apps/web/e2e/sms-provider-settings.spec.ts",
-              "sha256": "7cebc8277125ce5a16ac6441a72ef279c82437eb3e58b97fcccac8feaa9e06cc"
+              "sha256": "ba31b08e97c2172c3e38c8ebe46c2973c4a2faa361c23c3f8c196fa3eea3a036"
             },
             {
               "path": "apps/web/e2e/ui-interaction.spec.ts",
@@ -491102,7 +491102,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "89ab1d4c75e910d2d9b7fc247cf7d5f03c78327a39e5ef1cd2a260cd906b6091"
+              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -491154,7 +491154,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
+              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
@@ -491194,7 +491194,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "ba9a51c6a469ad87060e6b42b09ba78fe6a5bb140adf81d3741a2876adfe15c1"
+              "sha256": "da6a6f1ead9f8e587d108c6d5148f70012328f1207bf9bac0f6fc55b729ef027"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -491218,7 +491218,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.tsx",
-              "sha256": "0d491c742f7053e5d21b4c581a9746ef317db28de031292fbf9d0f9a9e839c76"
+              "sha256": "1b0e886a9d60e9e5cc2a14c3c9d5ece6ac5103dd67c073b6efad18933f4c28d4"
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
@@ -494289,7 +494289,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "89ab1d4c75e910d2d9b7fc247cf7d5f03c78327a39e5ef1cd2a260cd906b6091"
+              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
@@ -495171,7 +495171,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "89ab1d4c75e910d2d9b7fc247cf7d5f03c78327a39e5ef1cd2a260cd906b6091"
+              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
@@ -495994,7 +495994,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "89ab1d4c75e910d2d9b7fc247cf7d5f03c78327a39e5ef1cd2a260cd906b6091"
+              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
@@ -496886,7 +496886,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.tsx",
-              "sha256": "0d491c742f7053e5d21b4c581a9746ef317db28de031292fbf9d0f9a9e839c76"
+              "sha256": "1b0e886a9d60e9e5cc2a14c3c9d5ece6ac5103dd67c073b6efad18933f4c28d4"
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
@@ -508230,7 +508230,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
+              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -511463,7 +511463,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "89ab1d4c75e910d2d9b7fc247cf7d5f03c78327a39e5ef1cd2a260cd906b6091"
+              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -511503,7 +511503,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
+              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
@@ -511535,7 +511535,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "ba9a51c6a469ad87060e6b42b09ba78fe6a5bb140adf81d3741a2876adfe15c1"
+              "sha256": "da6a6f1ead9f8e587d108c6d5148f70012328f1207bf9bac0f6fc55b729ef027"
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
@@ -512181,7 +512181,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
+              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
@@ -512225,7 +512225,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.tsx",
-              "sha256": "0d491c742f7053e5d21b4c581a9746ef317db28de031292fbf9d0f9a9e839c76"
+              "sha256": "1b0e886a9d60e9e5cc2a14c3c9d5ece6ac5103dd67c073b6efad18933f4c28d4"
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
@@ -516704,7 +516704,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Inline electricity address validation now associates missing-value messages with the controls and focuses the first correctable input. The two stale locale cases now pass with current fixtures and their original duplicate, scope and receipt checks. Staff provider settings and other conditional forms remain open."
+        "Staff email, SMS, storage and AI model settings expose the updated field requirements and linked feedback. Saving checkout hardware and agreement acknowledgements and invoice bank receipt fields still lack required-state semantics. Other conditional forms remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -516725,7 +516725,8 @@
           "release-0.5-signature-target-and-fields",
           "release-0.5-solar-consultation-required",
           "release-0.5-electricity-required-fields",
-          "release-0.5-electricity-address-validation"
+          "release-0.5-electricity-address-validation",
+          "release-0.5-provider-required-fields"
         ],
         "current_acceptance": null
       }
@@ -516966,7 +516967,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
+              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
             },
             {
               "path": "apps/web/src/pages/CrmCorrectionsPage.tsx",
@@ -517428,7 +517429,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
+              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -518287,7 +518288,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
+              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
             },
             {
               "path": "apps/web/src/pages/CrmCorrectionsPage.tsx",
@@ -518661,7 +518662,7 @@
             },
             {
               "path": "apps/web/e2e/ai-model-forms.spec.ts",
-              "sha256": "0898110144431ebf53ed6a70a066f6b5f07cb7738f4a18131e3b4eae14338d59"
+              "sha256": "ece36f39cae1aa1fe0b94e09efd0e5d03172cfc33ac402f715426e8a975eb357"
             },
             {
               "path": "apps/web/e2e/approval-queue.spec.ts",
@@ -519489,7 +519490,7 @@
             },
             {
               "path": "apps/web/e2e/ai-model-forms.spec.ts",
-              "sha256": "0898110144431ebf53ed6a70a066f6b5f07cb7738f4a18131e3b4eae14338d59"
+              "sha256": "ece36f39cae1aa1fe0b94e09efd0e5d03172cfc33ac402f715426e8a975eb357"
             },
             {
               "path": "apps/web/e2e/approval-queue.spec.ts",
@@ -520443,7 +520444,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
+              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
             },
             {
               "path": "apps/web/src/pages/CrmCorrectionsPage.tsx",
@@ -520817,7 +520818,7 @@
             },
             {
               "path": "apps/web/e2e/ai-model-forms.spec.ts",
-              "sha256": "0898110144431ebf53ed6a70a066f6b5f07cb7738f4a18131e3b4eae14338d59"
+              "sha256": "ece36f39cae1aa1fe0b94e09efd0e5d03172cfc33ac402f715426e8a975eb357"
             },
             {
               "path": "apps/web/e2e/approval-queue.spec.ts",
@@ -545090,7 +545091,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "89ab1d4c75e910d2d9b7fc247cf7d5f03c78327a39e5ef1cd2a260cd906b6091"
+              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -545130,7 +545131,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
+              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
             },
             {
               "path": "apps/web/src/pages/AdminGeographyDialog.tsx",
@@ -545158,7 +545159,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "ba9a51c6a469ad87060e6b42b09ba78fe6a5bb140adf81d3741a2876adfe15c1"
+              "sha256": "da6a6f1ead9f8e587d108c6d5148f70012328f1207bf9bac0f6fc55b729ef027"
             },
             {
               "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
@@ -546955,7 +546956,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "89ab1d4c75e910d2d9b7fc247cf7d5f03c78327a39e5ef1cd2a260cd906b6091"
+              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -546995,7 +546996,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
+              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
             },
             {
               "path": "apps/web/src/pages/AdminGeographyDialog.tsx",
@@ -547023,7 +547024,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "ba9a51c6a469ad87060e6b42b09ba78fe6a5bb140adf81d3741a2876adfe15c1"
+              "sha256": "da6a6f1ead9f8e587d108c6d5148f70012328f1207bf9bac0f6fc55b729ef027"
             },
             {
               "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
@@ -548821,7 +548822,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "89ab1d4c75e910d2d9b7fc247cf7d5f03c78327a39e5ef1cd2a260cd906b6091"
+              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -548861,7 +548862,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
+              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
             },
             {
               "path": "apps/web/src/pages/AdminGeographyDialog.tsx",
@@ -548889,7 +548890,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "ba9a51c6a469ad87060e6b42b09ba78fe6a5bb140adf81d3741a2876adfe15c1"
+              "sha256": "da6a6f1ead9f8e587d108c6d5148f70012328f1207bf9bac0f6fc55b729ef027"
             },
             {
               "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
@@ -550656,7 +550657,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "89ab1d4c75e910d2d9b7fc247cf7d5f03c78327a39e5ef1cd2a260cd906b6091"
+              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -550696,7 +550697,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
+              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
             },
             {
               "path": "apps/web/src/pages/AdminGeographyDialog.tsx",
@@ -550724,7 +550725,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "ba9a51c6a469ad87060e6b42b09ba78fe6a5bb140adf81d3741a2876adfe15c1"
+              "sha256": "da6a6f1ead9f8e587d108c6d5148f70012328f1207bf9bac0f6fc55b729ef027"
             },
             {
               "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
@@ -552517,7 +552518,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "89ab1d4c75e910d2d9b7fc247cf7d5f03c78327a39e5ef1cd2a260cd906b6091"
+              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -552557,7 +552558,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
+              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
             },
             {
               "path": "apps/web/src/pages/AdminGeographyDialog.tsx",
@@ -552585,7 +552586,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "ba9a51c6a469ad87060e6b42b09ba78fe6a5bb140adf81d3741a2876adfe15c1"
+              "sha256": "da6a6f1ead9f8e587d108c6d5148f70012328f1207bf9bac0f6fc55b729ef027"
             },
             {
               "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
@@ -554387,7 +554388,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "89ab1d4c75e910d2d9b7fc247cf7d5f03c78327a39e5ef1cd2a260cd906b6091"
+              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -554427,7 +554428,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
+              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
             },
             {
               "path": "apps/web/src/pages/AdminGeographyDialog.tsx",
@@ -554455,7 +554456,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "ba9a51c6a469ad87060e6b42b09ba78fe6a5bb140adf81d3741a2876adfe15c1"
+              "sha256": "da6a6f1ead9f8e587d108c6d5148f70012328f1207bf9bac0f6fc55b729ef027"
             },
             {
               "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
@@ -556230,7 +556231,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "89ab1d4c75e910d2d9b7fc247cf7d5f03c78327a39e5ef1cd2a260cd906b6091"
+              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -556270,7 +556271,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
+              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
             },
             {
               "path": "apps/web/src/pages/AdminGeographyDialog.tsx",
@@ -556298,7 +556299,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "ba9a51c6a469ad87060e6b42b09ba78fe6a5bb140adf81d3741a2876adfe15c1"
+              "sha256": "da6a6f1ead9f8e587d108c6d5148f70012328f1207bf9bac0f6fc55b729ef027"
             },
             {
               "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
@@ -558037,7 +558038,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "89ab1d4c75e910d2d9b7fc247cf7d5f03c78327a39e5ef1cd2a260cd906b6091"
+              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -558077,7 +558078,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
+              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
             },
             {
               "path": "apps/web/src/pages/AdminGeographyDialog.tsx",
@@ -558105,7 +558106,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "ba9a51c6a469ad87060e6b42b09ba78fe6a5bb140adf81d3741a2876adfe15c1"
+              "sha256": "da6a6f1ead9f8e587d108c6d5148f70012328f1207bf9bac0f6fc55b729ef027"
             },
             {
               "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
@@ -559844,7 +559845,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "89ab1d4c75e910d2d9b7fc247cf7d5f03c78327a39e5ef1cd2a260cd906b6091"
+              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -559884,7 +559885,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
+              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
             },
             {
               "path": "apps/web/src/pages/AdminGeographyDialog.tsx",
@@ -559912,7 +559913,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "ba9a51c6a469ad87060e6b42b09ba78fe6a5bb140adf81d3741a2876adfe15c1"
+              "sha256": "da6a6f1ead9f8e587d108c6d5148f70012328f1207bf9bac0f6fc55b729ef027"
             },
             {
               "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
@@ -561652,7 +561653,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "89ab1d4c75e910d2d9b7fc247cf7d5f03c78327a39e5ef1cd2a260cd906b6091"
+              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -561692,7 +561693,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
+              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
             },
             {
               "path": "apps/web/src/pages/AdminGeographyDialog.tsx",
@@ -561720,7 +561721,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "ba9a51c6a469ad87060e6b42b09ba78fe6a5bb140adf81d3741a2876adfe15c1"
+              "sha256": "da6a6f1ead9f8e587d108c6d5148f70012328f1207bf9bac0f6fc55b729ef027"
             },
             {
               "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
@@ -563459,7 +563460,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "89ab1d4c75e910d2d9b7fc247cf7d5f03c78327a39e5ef1cd2a260cd906b6091"
+              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -563499,7 +563500,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
+              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
             },
             {
               "path": "apps/web/src/pages/AdminGeographyDialog.tsx",
@@ -563527,7 +563528,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "ba9a51c6a469ad87060e6b42b09ba78fe6a5bb140adf81d3741a2876adfe15c1"
+              "sha256": "da6a6f1ead9f8e587d108c6d5148f70012328f1207bf9bac0f6fc55b729ef027"
             },
             {
               "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
@@ -565296,7 +565297,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "89ab1d4c75e910d2d9b7fc247cf7d5f03c78327a39e5ef1cd2a260cd906b6091"
+              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -565356,7 +565357,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "ba9a51c6a469ad87060e6b42b09ba78fe6a5bb140adf81d3741a2876adfe15c1"
+              "sha256": "da6a6f1ead9f8e587d108c6d5148f70012328f1207bf9bac0f6fc55b729ef027"
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
@@ -567190,7 +567191,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "89ab1d4c75e910d2d9b7fc247cf7d5f03c78327a39e5ef1cd2a260cd906b6091"
+              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -567250,7 +567251,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "ba9a51c6a469ad87060e6b42b09ba78fe6a5bb140adf81d3741a2876adfe15c1"
+              "sha256": "da6a6f1ead9f8e587d108c6d5148f70012328f1207bf9bac0f6fc55b729ef027"
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
@@ -569134,7 +569135,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "89ab1d4c75e910d2d9b7fc247cf7d5f03c78327a39e5ef1cd2a260cd906b6091"
+              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -569194,7 +569195,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "ba9a51c6a469ad87060e6b42b09ba78fe6a5bb140adf81d3741a2876adfe15c1"
+              "sha256": "da6a6f1ead9f8e587d108c6d5148f70012328f1207bf9bac0f6fc55b729ef027"
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
@@ -571028,7 +571029,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "89ab1d4c75e910d2d9b7fc247cf7d5f03c78327a39e5ef1cd2a260cd906b6091"
+              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -571088,7 +571089,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "ba9a51c6a469ad87060e6b42b09ba78fe6a5bb140adf81d3741a2876adfe15c1"
+              "sha256": "da6a6f1ead9f8e587d108c6d5148f70012328f1207bf9bac0f6fc55b729ef027"
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
@@ -572922,7 +572923,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "89ab1d4c75e910d2d9b7fc247cf7d5f03c78327a39e5ef1cd2a260cd906b6091"
+              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -572982,7 +572983,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "ba9a51c6a469ad87060e6b42b09ba78fe6a5bb140adf81d3741a2876adfe15c1"
+              "sha256": "da6a6f1ead9f8e587d108c6d5148f70012328f1207bf9bac0f6fc55b729ef027"
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
@@ -574816,7 +574817,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "89ab1d4c75e910d2d9b7fc247cf7d5f03c78327a39e5ef1cd2a260cd906b6091"
+              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -574876,7 +574877,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "ba9a51c6a469ad87060e6b42b09ba78fe6a5bb140adf81d3741a2876adfe15c1"
+              "sha256": "da6a6f1ead9f8e587d108c6d5148f70012328f1207bf9bac0f6fc55b729ef027"
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
@@ -576710,7 +576711,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "89ab1d4c75e910d2d9b7fc247cf7d5f03c78327a39e5ef1cd2a260cd906b6091"
+              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -576770,7 +576771,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "ba9a51c6a469ad87060e6b42b09ba78fe6a5bb140adf81d3741a2876adfe15c1"
+              "sha256": "da6a6f1ead9f8e587d108c6d5148f70012328f1207bf9bac0f6fc55b729ef027"
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
@@ -578604,7 +578605,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "89ab1d4c75e910d2d9b7fc247cf7d5f03c78327a39e5ef1cd2a260cd906b6091"
+              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -578664,7 +578665,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "ba9a51c6a469ad87060e6b42b09ba78fe6a5bb140adf81d3741a2876adfe15c1"
+              "sha256": "da6a6f1ead9f8e587d108c6d5148f70012328f1207bf9bac0f6fc55b729ef027"
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
@@ -580498,7 +580499,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "89ab1d4c75e910d2d9b7fc247cf7d5f03c78327a39e5ef1cd2a260cd906b6091"
+              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -580558,7 +580559,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "ba9a51c6a469ad87060e6b42b09ba78fe6a5bb140adf81d3741a2876adfe15c1"
+              "sha256": "da6a6f1ead9f8e587d108c6d5148f70012328f1207bf9bac0f6fc55b729ef027"
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
@@ -582392,7 +582393,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "89ab1d4c75e910d2d9b7fc247cf7d5f03c78327a39e5ef1cd2a260cd906b6091"
+              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -582452,7 +582453,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "ba9a51c6a469ad87060e6b42b09ba78fe6a5bb140adf81d3741a2876adfe15c1"
+              "sha256": "da6a6f1ead9f8e587d108c6d5148f70012328f1207bf9bac0f6fc55b729ef027"
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
@@ -584286,7 +584287,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "89ab1d4c75e910d2d9b7fc247cf7d5f03c78327a39e5ef1cd2a260cd906b6091"
+              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -584346,7 +584347,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "ba9a51c6a469ad87060e6b42b09ba78fe6a5bb140adf81d3741a2876adfe15c1"
+              "sha256": "da6a6f1ead9f8e587d108c6d5148f70012328f1207bf9bac0f6fc55b729ef027"
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
@@ -586180,7 +586181,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "89ab1d4c75e910d2d9b7fc247cf7d5f03c78327a39e5ef1cd2a260cd906b6091"
+              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -586240,7 +586241,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "ba9a51c6a469ad87060e6b42b09ba78fe6a5bb140adf81d3741a2876adfe15c1"
+              "sha256": "da6a6f1ead9f8e587d108c6d5148f70012328f1207bf9bac0f6fc55b729ef027"
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
@@ -588074,7 +588075,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "89ab1d4c75e910d2d9b7fc247cf7d5f03c78327a39e5ef1cd2a260cd906b6091"
+              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -588134,7 +588135,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "ba9a51c6a469ad87060e6b42b09ba78fe6a5bb140adf81d3741a2876adfe15c1"
+              "sha256": "da6a6f1ead9f8e587d108c6d5148f70012328f1207bf9bac0f6fc55b729ef027"
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
@@ -589769,7 +589770,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.tsx",
-              "sha256": "0d491c742f7053e5d21b4c581a9746ef317db28de031292fbf9d0f9a9e839c76"
+              "sha256": "1b0e886a9d60e9e5cc2a14c3c9d5ece6ac5103dd67c073b6efad18933f4c28d4"
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
@@ -590707,7 +590708,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "89ab1d4c75e910d2d9b7fc247cf7d5f03c78327a39e5ef1cd2a260cd906b6091"
+              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -590767,7 +590768,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "ba9a51c6a469ad87060e6b42b09ba78fe6a5bb140adf81d3741a2876adfe15c1"
+              "sha256": "da6a6f1ead9f8e587d108c6d5148f70012328f1207bf9bac0f6fc55b729ef027"
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
@@ -592601,7 +592602,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "89ab1d4c75e910d2d9b7fc247cf7d5f03c78327a39e5ef1cd2a260cd906b6091"
+              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -592661,7 +592662,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "ba9a51c6a469ad87060e6b42b09ba78fe6a5bb140adf81d3741a2876adfe15c1"
+              "sha256": "da6a6f1ead9f8e587d108c6d5148f70012328f1207bf9bac0f6fc55b729ef027"
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
@@ -594547,7 +594548,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "89ab1d4c75e910d2d9b7fc247cf7d5f03c78327a39e5ef1cd2a260cd906b6091"
+              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -594587,7 +594588,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
+              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
             },
             {
               "path": "apps/web/src/pages/AdminGeographyDialog.tsx",
@@ -594615,7 +594616,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "ba9a51c6a469ad87060e6b42b09ba78fe6a5bb140adf81d3741a2876adfe15c1"
+              "sha256": "da6a6f1ead9f8e587d108c6d5148f70012328f1207bf9bac0f6fc55b729ef027"
             },
             {
               "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
@@ -596350,7 +596351,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "89ab1d4c75e910d2d9b7fc247cf7d5f03c78327a39e5ef1cd2a260cd906b6091"
+              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -596390,7 +596391,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
+              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
             },
             {
               "path": "apps/web/src/pages/AdminGeographyDialog.tsx",
@@ -596418,7 +596419,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "ba9a51c6a469ad87060e6b42b09ba78fe6a5bb140adf81d3741a2876adfe15c1"
+              "sha256": "da6a6f1ead9f8e587d108c6d5148f70012328f1207bf9bac0f6fc55b729ef027"
             },
             {
               "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
@@ -598153,7 +598154,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "89ab1d4c75e910d2d9b7fc247cf7d5f03c78327a39e5ef1cd2a260cd906b6091"
+              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -598193,7 +598194,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
+              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
             },
             {
               "path": "apps/web/src/pages/AdminGeographyDialog.tsx",
@@ -598221,7 +598222,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "ba9a51c6a469ad87060e6b42b09ba78fe6a5bb140adf81d3741a2876adfe15c1"
+              "sha256": "da6a6f1ead9f8e587d108c6d5148f70012328f1207bf9bac0f6fc55b729ef027"
             },
             {
               "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
@@ -599956,7 +599957,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "89ab1d4c75e910d2d9b7fc247cf7d5f03c78327a39e5ef1cd2a260cd906b6091"
+              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -599996,7 +599997,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
+              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
             },
             {
               "path": "apps/web/src/pages/AdminGeographyDialog.tsx",
@@ -600024,7 +600025,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "ba9a51c6a469ad87060e6b42b09ba78fe6a5bb140adf81d3741a2876adfe15c1"
+              "sha256": "da6a6f1ead9f8e587d108c6d5148f70012328f1207bf9bac0f6fc55b729ef027"
             },
             {
               "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
@@ -601759,7 +601760,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "89ab1d4c75e910d2d9b7fc247cf7d5f03c78327a39e5ef1cd2a260cd906b6091"
+              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -601799,7 +601800,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
+              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
             },
             {
               "path": "apps/web/src/pages/AdminGeographyDialog.tsx",
@@ -601827,7 +601828,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "ba9a51c6a469ad87060e6b42b09ba78fe6a5bb140adf81d3741a2876adfe15c1"
+              "sha256": "da6a6f1ead9f8e587d108c6d5148f70012328f1207bf9bac0f6fc55b729ef027"
             },
             {
               "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
@@ -603562,7 +603563,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "89ab1d4c75e910d2d9b7fc247cf7d5f03c78327a39e5ef1cd2a260cd906b6091"
+              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -603602,7 +603603,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
+              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
             },
             {
               "path": "apps/web/src/pages/AdminGeographyDialog.tsx",
@@ -603630,7 +603631,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "ba9a51c6a469ad87060e6b42b09ba78fe6a5bb140adf81d3741a2876adfe15c1"
+              "sha256": "da6a6f1ead9f8e587d108c6d5148f70012328f1207bf9bac0f6fc55b729ef027"
             },
             {
               "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
@@ -605365,7 +605366,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "89ab1d4c75e910d2d9b7fc247cf7d5f03c78327a39e5ef1cd2a260cd906b6091"
+              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -605405,7 +605406,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
+              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
             },
             {
               "path": "apps/web/src/pages/AdminGeographyDialog.tsx",
@@ -605433,7 +605434,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "ba9a51c6a469ad87060e6b42b09ba78fe6a5bb140adf81d3741a2876adfe15c1"
+              "sha256": "da6a6f1ead9f8e587d108c6d5148f70012328f1207bf9bac0f6fc55b729ef027"
             },
             {
               "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
@@ -633031,7 +633032,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "89ab1d4c75e910d2d9b7fc247cf7d5f03c78327a39e5ef1cd2a260cd906b6091"
+              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -633075,7 +633076,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
+              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
@@ -633111,7 +633112,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "ba9a51c6a469ad87060e6b42b09ba78fe6a5bb140adf81d3741a2876adfe15c1"
+              "sha256": "da6a6f1ead9f8e587d108c6d5148f70012328f1207bf9bac0f6fc55b729ef027"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -634155,7 +634156,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "89ab1d4c75e910d2d9b7fc247cf7d5f03c78327a39e5ef1cd2a260cd906b6091"
+              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -634199,7 +634200,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
+              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
@@ -634235,7 +634236,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "ba9a51c6a469ad87060e6b42b09ba78fe6a5bb140adf81d3741a2876adfe15c1"
+              "sha256": "da6a6f1ead9f8e587d108c6d5148f70012328f1207bf9bac0f6fc55b729ef027"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -635279,7 +635280,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "89ab1d4c75e910d2d9b7fc247cf7d5f03c78327a39e5ef1cd2a260cd906b6091"
+              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -635323,7 +635324,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
+              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
@@ -635359,7 +635360,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "ba9a51c6a469ad87060e6b42b09ba78fe6a5bb140adf81d3741a2876adfe15c1"
+              "sha256": "da6a6f1ead9f8e587d108c6d5148f70012328f1207bf9bac0f6fc55b729ef027"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -636406,7 +636407,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "89ab1d4c75e910d2d9b7fc247cf7d5f03c78327a39e5ef1cd2a260cd906b6091"
+              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -636450,7 +636451,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
+              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
@@ -636486,7 +636487,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "ba9a51c6a469ad87060e6b42b09ba78fe6a5bb140adf81d3741a2876adfe15c1"
+              "sha256": "da6a6f1ead9f8e587d108c6d5148f70012328f1207bf9bac0f6fc55b729ef027"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -637533,7 +637534,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "89ab1d4c75e910d2d9b7fc247cf7d5f03c78327a39e5ef1cd2a260cd906b6091"
+              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -637577,7 +637578,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
+              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
@@ -637613,7 +637614,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "ba9a51c6a469ad87060e6b42b09ba78fe6a5bb140adf81d3741a2876adfe15c1"
+              "sha256": "da6a6f1ead9f8e587d108c6d5148f70012328f1207bf9bac0f6fc55b729ef027"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -638687,7 +638688,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "89ab1d4c75e910d2d9b7fc247cf7d5f03c78327a39e5ef1cd2a260cd906b6091"
+              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -638731,7 +638732,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
+              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
@@ -638767,7 +638768,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "ba9a51c6a469ad87060e6b42b09ba78fe6a5bb140adf81d3741a2876adfe15c1"
+              "sha256": "da6a6f1ead9f8e587d108c6d5148f70012328f1207bf9bac0f6fc55b729ef027"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -639810,7 +639811,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "89ab1d4c75e910d2d9b7fc247cf7d5f03c78327a39e5ef1cd2a260cd906b6091"
+              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -639854,7 +639855,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
+              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
@@ -639890,7 +639891,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "ba9a51c6a469ad87060e6b42b09ba78fe6a5bb140adf81d3741a2876adfe15c1"
+              "sha256": "da6a6f1ead9f8e587d108c6d5148f70012328f1207bf9bac0f6fc55b729ef027"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -640933,7 +640934,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "89ab1d4c75e910d2d9b7fc247cf7d5f03c78327a39e5ef1cd2a260cd906b6091"
+              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -640977,7 +640978,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
+              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
@@ -641013,7 +641014,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "ba9a51c6a469ad87060e6b42b09ba78fe6a5bb140adf81d3741a2876adfe15c1"
+              "sha256": "da6a6f1ead9f8e587d108c6d5148f70012328f1207bf9bac0f6fc55b729ef027"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -642057,7 +642058,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "89ab1d4c75e910d2d9b7fc247cf7d5f03c78327a39e5ef1cd2a260cd906b6091"
+              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -642101,7 +642102,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
+              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
@@ -642137,7 +642138,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "ba9a51c6a469ad87060e6b42b09ba78fe6a5bb140adf81d3741a2876adfe15c1"
+              "sha256": "da6a6f1ead9f8e587d108c6d5148f70012328f1207bf9bac0f6fc55b729ef027"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -643199,7 +643200,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "89ab1d4c75e910d2d9b7fc247cf7d5f03c78327a39e5ef1cd2a260cd906b6091"
+              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -643243,7 +643244,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
+              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
@@ -643279,7 +643280,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "ba9a51c6a469ad87060e6b42b09ba78fe6a5bb140adf81d3741a2876adfe15c1"
+              "sha256": "da6a6f1ead9f8e587d108c6d5148f70012328f1207bf9bac0f6fc55b729ef027"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -644324,7 +644325,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "89ab1d4c75e910d2d9b7fc247cf7d5f03c78327a39e5ef1cd2a260cd906b6091"
+              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -644368,7 +644369,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
+              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
@@ -644404,7 +644405,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "ba9a51c6a469ad87060e6b42b09ba78fe6a5bb140adf81d3741a2876adfe15c1"
+              "sha256": "da6a6f1ead9f8e587d108c6d5148f70012328f1207bf9bac0f6fc55b729ef027"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -675824,7 +675825,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "89ab1d4c75e910d2d9b7fc247cf7d5f03c78327a39e5ef1cd2a260cd906b6091"
+              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -675868,7 +675869,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
+              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
@@ -675904,7 +675905,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "ba9a51c6a469ad87060e6b42b09ba78fe6a5bb140adf81d3741a2876adfe15c1"
+              "sha256": "da6a6f1ead9f8e587d108c6d5148f70012328f1207bf9bac0f6fc55b729ef027"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -676946,7 +676947,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "89ab1d4c75e910d2d9b7fc247cf7d5f03c78327a39e5ef1cd2a260cd906b6091"
+              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -676990,7 +676991,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
+              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
@@ -677026,7 +677027,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "ba9a51c6a469ad87060e6b42b09ba78fe6a5bb140adf81d3741a2876adfe15c1"
+              "sha256": "da6a6f1ead9f8e587d108c6d5148f70012328f1207bf9bac0f6fc55b729ef027"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -678068,7 +678069,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "89ab1d4c75e910d2d9b7fc247cf7d5f03c78327a39e5ef1cd2a260cd906b6091"
+              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -678112,7 +678113,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
+              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
@@ -678148,7 +678149,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "ba9a51c6a469ad87060e6b42b09ba78fe6a5bb140adf81d3741a2876adfe15c1"
+              "sha256": "da6a6f1ead9f8e587d108c6d5148f70012328f1207bf9bac0f6fc55b729ef027"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -679190,7 +679191,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "89ab1d4c75e910d2d9b7fc247cf7d5f03c78327a39e5ef1cd2a260cd906b6091"
+              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -679234,7 +679235,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
+              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
@@ -679270,7 +679271,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "ba9a51c6a469ad87060e6b42b09ba78fe6a5bb140adf81d3741a2876adfe15c1"
+              "sha256": "da6a6f1ead9f8e587d108c6d5148f70012328f1207bf9bac0f6fc55b729ef027"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -699656,11 +699657,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
+              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "ba9a51c6a469ad87060e6b42b09ba78fe6a5bb140adf81d3741a2876adfe15c1"
+              "sha256": "da6a6f1ead9f8e587d108c6d5148f70012328f1207bf9bac0f6fc55b729ef027"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -700544,7 +700545,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
+              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
             },
             {
               "path": "apps/web/src/pages/delivery-provider-recovery.test.tsx",
@@ -700638,7 +700639,7 @@
           "source_evidence": [
             {
               "path": "apps/web/e2e/sms-provider-settings.spec.ts",
-              "sha256": "7cebc8277125ce5a16ac6441a72ef279c82437eb3e58b97fcccac8feaa9e06cc"
+              "sha256": "ba31b08e97c2172c3e38c8ebe46c2973c4a2faa361c23c3f8c196fa3eea3a036"
             },
             {
               "path": "apps/web/src/pages/AdminDeliveryProvidersPage.tsx",
@@ -700646,7 +700647,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "ba9a51c6a469ad87060e6b42b09ba78fe6a5bb140adf81d3741a2876adfe15c1"
+              "sha256": "da6a6f1ead9f8e587d108c6d5148f70012328f1207bf9bac0f6fc55b729ef027"
             },
             {
               "path": "apps/web/src/pages/delivery-provider-recovery.test.tsx",
@@ -700746,7 +700747,7 @@
             },
             {
               "path": "apps/web/e2e/ai-model-forms.spec.ts",
-              "sha256": "0898110144431ebf53ed6a70a066f6b5f07cb7738f4a18131e3b4eae14338d59"
+              "sha256": "ece36f39cae1aa1fe0b94e09efd0e5d03172cfc33ac402f715426e8a975eb357"
             },
             {
               "path": "apps/web/e2e/ai-settings-navigation.spec.ts",
@@ -700778,7 +700779,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "89ab1d4c75e910d2d9b7fc247cf7d5f03c78327a39e5ef1cd2a260cd906b6091"
+              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -701658,7 +701659,7 @@
           "source_evidence": [
             {
               "path": "apps/web/e2e/storage-policy-forms.spec.ts",
-              "sha256": "f7533a1e03d1926649f2607942a5ef2f12aaec56da5c26881f04116b15fa60e5"
+              "sha256": "fbf7236507119aa8be55567e23fbf079ce6f5afb0341463409afa83b70dc7089"
             },
             {
               "path": "apps/web/e2e/upload-policies.spec.ts",
@@ -707675,7 +707676,7 @@
             },
             {
               "path": "apps/web/e2e/sms-provider-settings.spec.ts",
-              "sha256": "7cebc8277125ce5a16ac6441a72ef279c82437eb3e58b97fcccac8feaa9e06cc"
+              "sha256": "ba31b08e97c2172c3e38c8ebe46c2973c4a2faa361c23c3f8c196fa3eea3a036"
             },
             {
               "path": "apps/web/src/lib/sms-providers-api.ts",
@@ -707683,7 +707684,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "ba9a51c6a469ad87060e6b42b09ba78fe6a5bb140adf81d3741a2876adfe15c1"
+              "sha256": "da6a6f1ead9f8e587d108c6d5148f70012328f1207bf9bac0f6fc55b729ef027"
             },
             {
               "path": "apps/worker/src/notifications/sms-transport.ts",
@@ -716926,11 +716927,11 @@
             },
             {
               "path": "apps/web/e2e/ai-model-forms.spec.ts",
-              "sha256": "0898110144431ebf53ed6a70a066f6b5f07cb7738f4a18131e3b4eae14338d59"
+              "sha256": "ece36f39cae1aa1fe0b94e09efd0e5d03172cfc33ac402f715426e8a975eb357"
             },
             {
               "path": "apps/web/e2e/ai-models.spec.ts",
-              "sha256": "2f84dd86531cc2d6e066d0fd5245aaf7ad4491d7ce18e74f67a5cf1a10c2e35d"
+              "sha256": "e86cf06fd6381f207ab52e91f8383860917f067a840573c6999c285ab42d8101"
             },
             {
               "path": "apps/web/e2e/ai-policies.spec.ts",
@@ -717074,7 +717075,7 @@
             },
             {
               "path": "apps/web/e2e/provider-forms.spec.ts",
-              "sha256": "137b659fc7b1da4507a98f6f01f7c3049f95f110ce7529f0e043a1c3c43c2e34"
+              "sha256": "16de6d2ce8a172eade8a305549c24911ca55b64f3a216bf3b7c4f6bb6a44ae34"
             },
             {
               "path": "apps/web/e2e/public-knowledge.spec.ts",
@@ -717082,7 +717083,7 @@
             },
             {
               "path": "apps/web/e2e/sms-provider-settings.spec.ts",
-              "sha256": "7cebc8277125ce5a16ac6441a72ef279c82437eb3e58b97fcccac8feaa9e06cc"
+              "sha256": "ba31b08e97c2172c3e38c8ebe46c2973c4a2faa361c23c3f8c196fa3eea3a036"
             },
             {
               "path": "apps/web/e2e/staff-knowledge.spec.ts",
@@ -717094,7 +717095,7 @@
             },
             {
               "path": "apps/web/e2e/storage-policy-forms.spec.ts",
-              "sha256": "f7533a1e03d1926649f2607942a5ef2f12aaec56da5c26881f04116b15fa60e5"
+              "sha256": "fbf7236507119aa8be55567e23fbf079ce6f5afb0341463409afa83b70dc7089"
             },
             {
               "path": "apps/web/e2e/ticket-forms-fixture.ts",
@@ -717510,7 +717511,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "89ab1d4c75e910d2d9b7fc247cf7d5f03c78327a39e5ef1cd2a260cd906b6091"
+              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -717530,7 +717531,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
+              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
             },
             {
               "path": "apps/web/src/pages/AdminFailedNotificationsPage.tsx",
@@ -717546,7 +717547,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "ba9a51c6a469ad87060e6b42b09ba78fe6a5bb140adf81d3741a2876adfe15c1"
+              "sha256": "da6a6f1ead9f8e587d108c6d5148f70012328f1207bf9bac0f6fc55b729ef027"
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.test.tsx",
@@ -717554,7 +717555,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.tsx",
-              "sha256": "0d491c742f7053e5d21b4c581a9746ef317db28de031292fbf9d0f9a9e839c76"
+              "sha256": "1b0e886a9d60e9e5cc2a14c3c9d5ece6ac5103dd67c073b6efad18933f4c28d4"
             },
             {
               "path": "apps/web/src/pages/NotificationCenterPage.tsx",
@@ -720807,11 +720808,11 @@
             },
             {
               "path": "apps/web/e2e/ai-model-forms.spec.ts",
-              "sha256": "0898110144431ebf53ed6a70a066f6b5f07cb7738f4a18131e3b4eae14338d59"
+              "sha256": "ece36f39cae1aa1fe0b94e09efd0e5d03172cfc33ac402f715426e8a975eb357"
             },
             {
               "path": "apps/web/e2e/ai-models.spec.ts",
-              "sha256": "2f84dd86531cc2d6e066d0fd5245aaf7ad4491d7ce18e74f67a5cf1a10c2e35d"
+              "sha256": "e86cf06fd6381f207ab52e91f8383860917f067a840573c6999c285ab42d8101"
             },
             {
               "path": "apps/web/e2e/ai-policies.spec.ts",
@@ -720955,11 +720956,11 @@
             },
             {
               "path": "apps/web/e2e/provider-forms.spec.ts",
-              "sha256": "137b659fc7b1da4507a98f6f01f7c3049f95f110ce7529f0e043a1c3c43c2e34"
+              "sha256": "16de6d2ce8a172eade8a305549c24911ca55b64f3a216bf3b7c4f6bb6a44ae34"
             },
             {
               "path": "apps/web/e2e/sms-provider-settings.spec.ts",
-              "sha256": "7cebc8277125ce5a16ac6441a72ef279c82437eb3e58b97fcccac8feaa9e06cc"
+              "sha256": "ba31b08e97c2172c3e38c8ebe46c2973c4a2faa361c23c3f8c196fa3eea3a036"
             },
             {
               "path": "apps/web/e2e/storage-config.spec.ts",
@@ -720967,7 +720968,7 @@
             },
             {
               "path": "apps/web/e2e/storage-policy-forms.spec.ts",
-              "sha256": "f7533a1e03d1926649f2607942a5ef2f12aaec56da5c26881f04116b15fa60e5"
+              "sha256": "fbf7236507119aa8be55567e23fbf079ce6f5afb0341463409afa83b70dc7089"
             },
             {
               "path": "apps/web/e2e/ticket-forms-fixture.ts",
@@ -721375,7 +721376,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "89ab1d4c75e910d2d9b7fc247cf7d5f03c78327a39e5ef1cd2a260cd906b6091"
+              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -721395,7 +721396,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
+              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
             },
             {
               "path": "apps/web/src/pages/AdminFailedNotificationsPage.tsx",
@@ -721411,7 +721412,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "ba9a51c6a469ad87060e6b42b09ba78fe6a5bb140adf81d3741a2876adfe15c1"
+              "sha256": "da6a6f1ead9f8e587d108c6d5148f70012328f1207bf9bac0f6fc55b729ef027"
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.test.tsx",
@@ -721419,7 +721420,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.tsx",
-              "sha256": "0d491c742f7053e5d21b4c581a9746ef317db28de031292fbf9d0f9a9e839c76"
+              "sha256": "1b0e886a9d60e9e5cc2a14c3c9d5ece6ac5103dd67c073b6efad18933f4c28d4"
             },
             {
               "path": "apps/web/src/pages/NotificationCenterPage.tsx",
@@ -723590,7 +723591,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Current electricity address validation and protected save behavior pass in Persian and English on Chromium and mobile Safari. Other conditional form, contrast, command feedback and route state verification remains open."
+        "Staff provider and storage/model form semantics pass in English and Persian across desktop Chromium and mobile Safari. Remaining conditional form, contrast, command feedback and route state verification is open."
       ],
       "owner": null,
       "depends_on": [],
@@ -723661,7 +723662,8 @@
           "release-0.5-signature-target-and-fields",
           "release-0.5-solar-consultation-required",
           "release-0.5-electricity-required-fields",
-          "release-0.5-electricity-address-validation"
+          "release-0.5-electricity-address-validation",
+          "release-0.5-provider-required-fields"
         ]
       }
     },
@@ -724553,7 +724555,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
-              "sha256": "89ab1d4c75e910d2d9b7fc247cf7d5f03c78327a39e5ef1cd2a260cd906b6091"
+              "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
             },
             {
               "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
@@ -724617,7 +724619,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
+              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
@@ -724669,7 +724671,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
-              "sha256": "ba9a51c6a469ad87060e6b42b09ba78fe6a5bb140adf81d3741a2876adfe15c1"
+              "sha256": "da6a6f1ead9f8e587d108c6d5148f70012328f1207bf9bac0f6fc55b729ef027"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -724693,7 +724695,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.tsx",
-              "sha256": "0d491c742f7053e5d21b4c581a9746ef317db28de031292fbf9d0f9a9e839c76"
+              "sha256": "1b0e886a9d60e9e5cc2a14c3c9d5ece6ac5103dd67c073b6efad18933f4c28d4"
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
@@ -725172,7 +725174,8 @@
             "Signature label and required semantics passed the exact source coverage and production performance checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-signature-target-and-fields/proof.json",
             "Solar and consultation intake semantics passed current source coverage, production size and cold authentication checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-solar-consultation-required/proof.json",
             "Electricity checkout semantics passed current source coverage, production size and cold authentication checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-required-fields/proof.json",
-            "Inline electricity address validation passed current source coverage, production size and cold authentication checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-address-validation/proof.json"
+            "Inline electricity address validation passed current source coverage, production size and cold authentication checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-address-validation/proof.json",
+            "Provider form semantics passed current source coverage, production size and cold authentication checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-provider-required-fields/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -791214,6 +791217,70 @@
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-address-validation/reviewed.patch",
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-address-validation",
       "release_disposition": "Inline electricity address validation and fixture recovery recorded. Other v0.5.0 criteria remain open."
+    },
+    "release-0.5-provider-required-fields": {
+      "batch": "release-0.5-provider-required-fields",
+      "base_commit": "80198dedfdc0abd8dfc90246442f76e1bca351b9",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.05.01.05",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.05.01.05",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/ai-model-forms.spec.ts",
+          "sha256": "ece36f39cae1aa1fe0b94e09efd0e5d03172cfc33ac402f715426e8a975eb357"
+        },
+        {
+          "path": "apps/web/e2e/ai-models.spec.ts",
+          "sha256": "e86cf06fd6381f207ab52e91f8383860917f067a840573c6999c285ab42d8101"
+        },
+        {
+          "path": "apps/web/e2e/provider-forms.spec.ts",
+          "sha256": "16de6d2ce8a172eade8a305549c24911ca55b64f3a216bf3b7c4f6bb6a44ae34"
+        },
+        {
+          "path": "apps/web/e2e/sms-provider-settings.spec.ts",
+          "sha256": "ba31b08e97c2172c3e38c8ebe46c2973c4a2faa361c23c3f8c196fa3eea3a036"
+        },
+        {
+          "path": "apps/web/e2e/storage-policy-forms.spec.ts",
+          "sha256": "fbf7236507119aa8be55567e23fbf079ce6f5afb0341463409afa83b70dc7089"
+        },
+        {
+          "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
+          "sha256": "d2de792e73df5f62a0084b714119718942c70358374f17d60616ec0a6ced0c57"
+        },
+        {
+          "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
+          "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
+        },
+        {
+          "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
+          "sha256": "da6a6f1ead9f8e587d108c6d5148f70012328f1207bf9bac0f6fc55b729ef027"
+        },
+        {
+          "path": "apps/web/src/pages/AdminStorageConfig.tsx",
+          "sha256": "1b0e886a9d60e9e5cc2a14c3c9d5ece6ac5103dd67c073b6efad18933f4c28d4"
+        }
+      ],
+      "checks": [
+        "Email provider labels keep the same accessible name when linked validation appears. Required markers are decorative. SMS fields and mapping values expose their required state, and the API key is marked required only when a saved key is absent.",
+        "Storage region, bucket and cleanup interval and AI model required controls expose their existing validation requirements. A replacement token is required when replacing a stored token. Optional model budget limits and the default storage endpoint keep their existing optional status.",
+        "32 production browser cases and 482 unit cases passed. The supplemental staff boundary and provider recovery suites exercised the uncovered branches. The 73-case Chromium run maps email, SMS and model sources. Exact unit coverage supplies the storage source because the browser collector mapped its route but did not emit a separate storage component entry. Protected credential handling, write-only fields, exact request and receipt checks and step-up remain covered.",
+        "The two older model deletion tests now authorize the destructive action explicitly. They check zero requests before the phrase, the in-use response after one request and the matching successful retry. The first run and its two timeouts remain archived.",
+        "The production build, all eight coverage groups, scoped formatting, lint and typecheck, 98 bundle budgets and three measured cold authentication transfers passed."
+      ],
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-provider-required-fields/proof.json",
+      "source_scope_proof_sha256": "aea24a672765f0f6ed885f7bdf93b4a5f931a9cacb9fbc0fcde50606e58e856f",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-provider-required-fields/renewed-bindings.json",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-provider-required-fields/reviewed.patch",
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-provider-required-fields",
+      "release_disposition": "Staff provider form semantics and verification recorded. Other v0.5.0 criteria remain open."
     }
   },
   "historical_improvements": [

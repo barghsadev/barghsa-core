@@ -366,6 +366,7 @@ export default function AdminStorageConfig() {
                     autoComplete="off"
                     spellCheck={false}
                     required={field === 'region' || field === 'bucket'}
+                    aria-required={field === 'region' || field === 'bucket' || undefined}
                     maxLength={
                       field.includes('Endpoint') || field === 'endpoint'
                         ? 2048
@@ -505,6 +506,7 @@ export default function AdminStorageConfig() {
               min={1}
               max={168}
               required
+              aria-required="true"
               value={hours}
               onChange={(event) => cleanupForm.field('hours')[1](event.target.value)}
             />

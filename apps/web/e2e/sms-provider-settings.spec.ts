@@ -301,6 +301,7 @@ for (const locale of ['en', 'fa'] as const) {
     await page.getByRole('tab', { name: 'SMS.ir', exact: true }).click();
     const panel = page.locator('section[aria-labelledby="sms-title"]');
     await panel.getByRole('button', { name: text('new'), exact: true }).click();
+    await expect(page.locator('#sms-key')).toHaveAttribute('aria-required', 'true');
     await page.locator('#sms-label').fill('Created SMS');
     await page.locator('#sms-sender').fill('3001');
     await page.locator('#sms-key').fill('new-test-secret');

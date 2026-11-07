@@ -81,6 +81,8 @@ for (const locale of ['en', 'fa'] as const)
       const max = page.locator('#ai-model-max-tokens'),
         base = page.locator('#ai-model-baseUrl'),
         choice = page.locator('#ai-model-token-choice');
+      for (const field of [max, base, choice, page.locator('#ai-model-provider')])
+        await expect(field).toHaveAttribute('aria-required', 'true');
       await max.fill('1.5');
       await button('save').click();
       await expect(max).toBeFocused();
@@ -91,6 +93,7 @@ for (const locale of ['en', 'fa'] as const)
       await button('save').click();
       await expect(choice).toBeFocused();
       await choice.selectOption('replace');
+      await expect(page.locator('#ai-model-token')).toHaveAttribute('aria-required', 'true');
       await page.locator('#ai-model-token').fill('private-new-token');
       await button('save').click();
       await confirm();
@@ -120,6 +123,9 @@ for (const locale of ['en', 'fa'] as const)
       await expect(page.locator('#ai-model-token')).toHaveCount(0);
       await button('budgetEdit').click();
       const cost = page.locator('#ai-model-monthlyCostUsd');
+      await expect(cost).not.toHaveAttribute('aria-required', 'true');
+      for (const id of ['inputPriceUsd', 'outputPriceUsd'])
+        await expect(page.locator(`#ai-model-${id}`)).toHaveAttribute('aria-required', 'true');
       await cost.fill('0.0000001');
       await button('budgetSave').click();
       await expect(cost).toBeFocused();

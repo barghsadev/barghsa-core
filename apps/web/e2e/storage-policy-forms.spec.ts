@@ -75,6 +75,9 @@ for (const locale of ['en', 'fa'] as const)
       await page.goto('/admin/storage');
       const bucket = page.locator('#storage-bucket'),
         secret = page.locator('#storage-secret');
+      for (const id of ['storage-bucket', 'storage-region', 'storage-cleanup-hours'])
+        await expect(page.locator(`#${id}`)).toHaveAttribute('aria-required', 'true');
+      await expect(page.locator('#storage-endpoint')).not.toHaveAttribute('aria-required', 'true');
       if (await page.evaluate(() => matchMedia('(pointer: coarse)').matches)) {
         for (const id of ['storage-path-style', 'storage-clear-secret']) {
           const label = page.locator(`label[for="${id}"]`);

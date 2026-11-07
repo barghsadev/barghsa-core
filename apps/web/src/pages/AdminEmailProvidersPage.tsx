@@ -920,7 +920,9 @@ export default function AdminEmailProvidersPage() {
                 className="block text-sm font-medium text-foreground mb-1"
               >
                 {providerText('admin.providers.label', uiLocale)}{' '}
-                <span className="text-destructive">*</span>
+                <span aria-hidden="true" className="text-destructive">
+                  *
+                </span>
               </label>
               <input
                 {...editor.bind('label')}
@@ -930,6 +932,7 @@ export default function AdminEmailProvidersPage() {
                 onChange={(e) => setLabel(e.target.value)}
                 className="w-full border border-input rounded px-3 py-2"
                 required
+                aria-required="true"
               />
               {editor.errors.label && (
                 <p id={editor.errorId('label')} role="alert" className="text-sm text-destructive">
@@ -944,10 +947,13 @@ export default function AdminEmailProvidersPage() {
                 className="block text-sm font-medium text-foreground mb-1"
               >
                 {providerText('admin.providers.transport', uiLocale)}{' '}
-                <span className="text-destructive">*</span>
+                <span aria-hidden="true" className="text-destructive">
+                  *
+                </span>
               </label>
               <select
                 id="email-provider-transport"
+                aria-required="true"
                 value={transport}
                 onChange={(e) => handleTransportChange(e.target.value as Transport)}
                 className="w-full border border-input rounded px-3 py-2"
@@ -1418,9 +1424,10 @@ function Field({
   error?: string | undefined;
   errorId: string;
 }) {
+  const id = `email-provider-${binding.name}`;
   return (
-    <label className="block">
-      <span className="block text-sm font-medium text-foreground mb-1">
+    <div className="block">
+      <label htmlFor={id} className="block text-sm font-medium text-foreground mb-1">
         {label}
         {required && (
           <span aria-hidden="true" className="text-destructive">
@@ -1429,10 +1436,10 @@ function Field({
           </span>
         )}
         {secret && <span className="ml-1 text-xs text-muted-foreground" />}
-      </span>
+      </label>
       {cloneElement(children, {
         ...binding,
-        id: `email-provider-${binding.name}`,
+        id,
         'aria-required': required || undefined,
       })}
       {error && (
@@ -1440,6 +1447,6 @@ function Field({
           {error}
         </span>
       )}
-    </label>
+    </div>
   );
 }
