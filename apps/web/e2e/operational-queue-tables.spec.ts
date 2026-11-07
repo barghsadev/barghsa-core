@@ -74,8 +74,19 @@ for (const locale of ['en', 'fa'] as const) {
       await card.locator('summary').focus();
       await page.keyboard.press('Space');
       await expect(details).toHaveAttribute('open', '');
-      if (kind === 'jobs') await card.getByRole('checkbox').check();
-      else {
+      if (kind === 'jobs') {
+        const checkbox = card.getByRole('checkbox');
+        if (await page.evaluate(() => matchMedia('(pointer: coarse)').matches)) {
+          const target = checkbox.locator('..');
+          const { width, height } = (await target.boundingBox())!;
+          expect(width).toBeGreaterThanOrEqual(44);
+          expect(height).toBeGreaterThanOrEqual(44);
+          await target.click({ position: { x: 3, y: 22 } });
+          await expect(checkbox).toBeChecked();
+        } else {
+          await checkbox.check();
+        }
+      } else {
         await expect(details.locator('pre')).toContainText('***');
         await expect(details).toContainText('ab...yz');
       }

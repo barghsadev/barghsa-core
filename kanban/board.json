@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-07T17:19:55+00:00",
-  "source_commit": "e65ef2058f98eaa3c7b514c395ff7a2c9e2aaa3f",
+  "updated": "2026-11-07T17:26:16+00:00",
+  "source_commit": "a23e77940836461988a4643eb61abb9df0746996",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -34978,7 +34978,8 @@
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-native-staff-control-targets"
+          "release-0.5-native-staff-control-targets",
+          "release-0.5-operational-queue-touch"
         ],
         "current_acceptance": {
           "kind": "verified-account-preferences-and-timestamp-consumers",
@@ -35134,7 +35135,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
-              "sha256": "002040d2163bd452282a8986762461f7a2f71ad5ca578302668e02534d4947f9"
+              "sha256": "aeddf8ef3271f8703083e89f581e895b4a41d2f6882308275b3babc898ed5866"
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
@@ -35914,6 +35915,11 @@
               "batch": "release-0.5-native-staff-control-targets",
               "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
+            },
+            {
+              "batch": "release-0.5-operational-queue-touch",
+              "base_commit": "a23e77940836461988a4643eb61abb9df0746996",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-operational-queue-touch/operational-queue-touch-proof.json"
             }
           ]
         },
@@ -62208,7 +62214,8 @@
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-native-staff-control-targets"
+          "release-0.5-native-staff-control-targets",
+          "release-0.5-operational-queue-touch"
         ],
         "current_acceptance": {
           "kind": "accepted-native-brand-theme-application",
@@ -62356,7 +62363,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
-              "sha256": "002040d2163bd452282a8986762461f7a2f71ad5ca578302668e02534d4947f9"
+              "sha256": "aeddf8ef3271f8703083e89f581e895b4a41d2f6882308275b3babc898ed5866"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -62778,6 +62785,11 @@
               "batch": "release-0.5-native-staff-control-targets",
               "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
+            },
+            {
+              "batch": "release-0.5-operational-queue-touch",
+              "base_commit": "a23e77940836461988a4643eb61abb9df0746996",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-operational-queue-touch/operational-queue-touch-proof.json"
             }
           ]
         },
@@ -96634,7 +96646,8 @@
           "release-0.5-critical-accessibility",
           "release-0.5-final-ui-evidence",
           "release-0.5-final-rehearsal",
-          "release-0.5-native-staff-touch-and-electricity-recovery"
+          "release-0.5-native-staff-touch-and-electricity-recovery",
+          "release-0.5-operational-queue-touch"
         ],
         "current_acceptance": {
           "kind": "verified-operational-queues-and-worker-exhaustion",
@@ -96706,7 +96719,7 @@
             },
             {
               "path": "apps/web/e2e/operational-queue-tables.spec.ts",
-              "sha256": "1a6f08ee59c0445f058762c29133d22e7bef6216a1a7169f7dbefd7221f12581"
+              "sha256": "528f52decdd413dad99811ec4cf0ed5898ead621a076d3fd8ed62c3f982d7892"
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
@@ -96944,6 +96957,11 @@
               "batch": "release-0.5-native-staff-touch-and-electricity-recovery",
               "base_commit": "e28bf7ac30a3a6b2605edd7b9b98afaa34a47119",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-exact-confirmation-gate/native-ui-batch-receipt.json"
+            },
+            {
+              "batch": "release-0.5-operational-queue-touch",
+              "base_commit": "a23e77940836461988a4643eb61abb9df0746996",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-operational-queue-touch/operational-queue-touch-proof.json"
             }
           ]
         }
@@ -97026,7 +97044,8 @@
           "release-0.5-critical-accessibility",
           "release-0.5-final-ui-evidence",
           "release-0.5-final-rehearsal",
-          "release-0.5-native-staff-touch-and-electricity-recovery"
+          "release-0.5-native-staff-touch-and-electricity-recovery",
+          "release-0.5-operational-queue-touch"
         ],
         "current_acceptance": {
           "kind": "verified-operational-queues-and-worker-exhaustion",
@@ -97098,7 +97117,7 @@
             },
             {
               "path": "apps/web/e2e/operational-queue-tables.spec.ts",
-              "sha256": "1a6f08ee59c0445f058762c29133d22e7bef6216a1a7169f7dbefd7221f12581"
+              "sha256": "528f52decdd413dad99811ec4cf0ed5898ead621a076d3fd8ed62c3f982d7892"
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
@@ -97336,6 +97355,11 @@
               "batch": "release-0.5-native-staff-touch-and-electricity-recovery",
               "base_commit": "e28bf7ac30a3a6b2605edd7b9b98afaa34a47119",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-exact-confirmation-gate/native-ui-batch-receipt.json"
+            },
+            {
+              "batch": "release-0.5-operational-queue-touch",
+              "base_commit": "a23e77940836461988a4643eb61abb9df0746996",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-operational-queue-touch/operational-queue-touch-proof.json"
             }
           ]
         }
@@ -485115,7 +485139,8 @@
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-confirmed-electricity-feedback",
           "release-0.5-native-staff-control-targets",
-          "release-0.5-saving-address-response-feedback"
+          "release-0.5-saving-address-response-feedback",
+          "release-0.5-operational-queue-touch"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -485403,7 +485428,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
-              "sha256": "002040d2163bd452282a8986762461f7a2f71ad5ca578302668e02534d4947f9"
+              "sha256": "aeddf8ef3271f8703083e89f581e895b4a41d2f6882308275b3babc898ed5866"
             },
             {
               "path": "apps/web/src/pages/AdminGeographyPage.tsx",
@@ -485976,6 +486001,11 @@
               "batch": "release-0.5-saving-address-response-feedback",
               "base_commit": "e65ef2058f98eaa3c7b514c395ff7a2c9e2aaa3f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-response-feedback/saving-address-response-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-operational-queue-touch",
+              "base_commit": "a23e77940836461988a4643eb61abb9df0746996",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-operational-queue-touch/operational-queue-touch-proof.json"
             }
           ]
         },
@@ -490453,7 +490483,8 @@
           "release-0.5-verified-command-rejection",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-native-staff-control-targets"
+          "release-0.5-native-staff-control-targets",
+          "release-0.5-operational-queue-touch"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -490733,7 +490764,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
-              "sha256": "002040d2163bd452282a8986762461f7a2f71ad5ca578302668e02534d4947f9"
+              "sha256": "aeddf8ef3271f8703083e89f581e895b4a41d2f6882308275b3babc898ed5866"
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
@@ -491083,6 +491114,11 @@
               "batch": "release-0.5-native-staff-control-targets",
               "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
+            },
+            {
+              "batch": "release-0.5-operational-queue-touch",
+              "base_commit": "a23e77940836461988a4643eb61abb9df0746996",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-operational-queue-touch/operational-queue-touch-proof.json"
             }
           ]
         }
@@ -503947,7 +503983,8 @@
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-native-staff-control-targets"
+          "release-0.5-native-staff-control-targets",
+          "release-0.5-operational-queue-touch"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -504179,7 +504216,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
-              "sha256": "002040d2163bd452282a8986762461f7a2f71ad5ca578302668e02534d4947f9"
+              "sha256": "aeddf8ef3271f8703083e89f581e895b4a41d2f6882308275b3babc898ed5866"
             },
             {
               "path": "apps/web/src/pages/AdminGeographyPage.tsx",
@@ -504470,6 +504507,11 @@
               "batch": "release-0.5-native-staff-control-targets",
               "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
+            },
+            {
+              "batch": "release-0.5-operational-queue-touch",
+              "base_commit": "a23e77940836461988a4643eb61abb9df0746996",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-operational-queue-touch/operational-queue-touch-proof.json"
             }
           ]
         }
@@ -504490,7 +504532,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Native electricity rule sliders measured 16 CSS pixels high. The rules, storage, maintenance and CRM forms also had short native checkbox labels. Sliders and associated label targets now meet 44 by 44 CSS pixels in the targeted Safari states. Review remaining conditional targets."
+        "The failed-job selector was 12 by 12 CSS pixels in Safari, without a larger associated label. The current candidate uses the shared 44px label target. Tapping the label edge selects the same job and retains selection through responsive changes. Review remaining conditional targets at final source."
       ],
       "owner": null,
       "depends_on": [],
@@ -504516,7 +504558,8 @@
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-native-staff-control-targets"
+          "release-0.5-native-staff-control-targets",
+          "release-0.5-operational-queue-touch"
         ],
         "current_acceptance": null
       }
@@ -506787,7 +506830,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "The preceding full 2,976-cell populated width matrix remains recorded. The current geometry recheck confirmed and repaired one AI navigation overlap at 768px. The 320px staff electricity pricing table reveals its VAT column by keyboard in both languages and engines without document overflow. Other painted text signals and conditional route states still require triage."
+        "All 100 previously flagged text cells in failed jobs, failed notifications, staff electricity orders, documents and saving were rechecked at the preceding SHA. The visible range geometry reported no overlap or clipping when closed disclosure bodies were excluded. Renew the populated width matrix on the current source before closing."
       ],
       "owner": null,
       "depends_on": [],
@@ -506814,7 +506857,8 @@
           "release-0.5-final-rehearsal",
           "release-0.5-route-census-closure",
           "release-0.5-native-staff-control-targets",
-          "release-0.5-ai-tab-intrinsic-widths"
+          "release-0.5-ai-tab-intrinsic-widths",
+          "release-0.5-operational-queue-touch"
         ],
         "current_acceptance": null
       }
@@ -576984,7 +577028,8 @@
           "release-0.5-verified-command-rejection",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-native-staff-control-targets"
+          "release-0.5-native-staff-control-targets",
+          "release-0.5-operational-queue-touch"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -577264,7 +577309,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
-              "sha256": "002040d2163bd452282a8986762461f7a2f71ad5ca578302668e02534d4947f9"
+              "sha256": "aeddf8ef3271f8703083e89f581e895b4a41d2f6882308275b3babc898ed5866"
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
@@ -577614,6 +577659,11 @@
               "batch": "release-0.5-native-staff-control-targets",
               "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
+            },
+            {
+              "batch": "release-0.5-operational-queue-touch",
+              "base_commit": "a23e77940836461988a4643eb61abb9df0746996",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-operational-queue-touch/operational-queue-touch-proof.json"
             }
           ]
         }
@@ -618366,7 +618416,8 @@
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-native-staff-control-targets"
+          "release-0.5-native-staff-control-targets",
+          "release-0.5-operational-queue-touch"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -618690,7 +618741,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
-              "sha256": "002040d2163bd452282a8986762461f7a2f71ad5ca578302668e02534d4947f9"
+              "sha256": "aeddf8ef3271f8703083e89f581e895b4a41d2f6882308275b3babc898ed5866"
             },
             {
               "path": "apps/web/src/pages/AdminGeographyPage.tsx",
@@ -619351,6 +619402,11 @@
               "batch": "release-0.5-native-staff-control-targets",
               "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
+            },
+            {
+              "batch": "release-0.5-operational-queue-touch",
+              "base_commit": "a23e77940836461988a4643eb61abb9df0746996",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-operational-queue-touch/operational-queue-touch-proof.json"
             }
           ]
         }
@@ -619418,7 +619474,8 @@
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-native-staff-control-targets"
+          "release-0.5-native-staff-control-targets",
+          "release-0.5-operational-queue-touch"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -619742,7 +619799,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
-              "sha256": "002040d2163bd452282a8986762461f7a2f71ad5ca578302668e02534d4947f9"
+              "sha256": "aeddf8ef3271f8703083e89f581e895b4a41d2f6882308275b3babc898ed5866"
             },
             {
               "path": "apps/web/src/pages/AdminGeographyPage.tsx",
@@ -620403,6 +620460,11 @@
               "batch": "release-0.5-native-staff-control-targets",
               "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
+            },
+            {
+              "batch": "release-0.5-operational-queue-touch",
+              "base_commit": "a23e77940836461988a4643eb61abb9df0746996",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-operational-queue-touch/operational-queue-touch-proof.json"
             }
           ]
         }
@@ -620470,7 +620532,8 @@
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-native-staff-control-targets"
+          "release-0.5-native-staff-control-targets",
+          "release-0.5-operational-queue-touch"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -620794,7 +620857,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
-              "sha256": "002040d2163bd452282a8986762461f7a2f71ad5ca578302668e02534d4947f9"
+              "sha256": "aeddf8ef3271f8703083e89f581e895b4a41d2f6882308275b3babc898ed5866"
             },
             {
               "path": "apps/web/src/pages/AdminGeographyPage.tsx",
@@ -621455,6 +621518,11 @@
               "batch": "release-0.5-native-staff-control-targets",
               "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
+            },
+            {
+              "batch": "release-0.5-operational-queue-touch",
+              "base_commit": "a23e77940836461988a4643eb61abb9df0746996",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-operational-queue-touch/operational-queue-touch-proof.json"
             }
           ]
         }
@@ -621525,7 +621593,8 @@
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-native-staff-control-targets"
+          "release-0.5-native-staff-control-targets",
+          "release-0.5-operational-queue-touch"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -621849,7 +621918,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
-              "sha256": "002040d2163bd452282a8986762461f7a2f71ad5ca578302668e02534d4947f9"
+              "sha256": "aeddf8ef3271f8703083e89f581e895b4a41d2f6882308275b3babc898ed5866"
             },
             {
               "path": "apps/web/src/pages/AdminGeographyPage.tsx",
@@ -622510,6 +622579,11 @@
               "batch": "release-0.5-native-staff-control-targets",
               "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
+            },
+            {
+              "batch": "release-0.5-operational-queue-touch",
+              "base_commit": "a23e77940836461988a4643eb61abb9df0746996",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-operational-queue-touch/operational-queue-touch-proof.json"
             }
           ]
         }
@@ -622580,7 +622654,8 @@
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-native-staff-control-targets"
+          "release-0.5-native-staff-control-targets",
+          "release-0.5-operational-queue-touch"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -622904,7 +622979,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
-              "sha256": "002040d2163bd452282a8986762461f7a2f71ad5ca578302668e02534d4947f9"
+              "sha256": "aeddf8ef3271f8703083e89f581e895b4a41d2f6882308275b3babc898ed5866"
             },
             {
               "path": "apps/web/src/pages/AdminGeographyPage.tsx",
@@ -623565,6 +623640,11 @@
               "batch": "release-0.5-native-staff-control-targets",
               "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
+            },
+            {
+              "batch": "release-0.5-operational-queue-touch",
+              "base_commit": "a23e77940836461988a4643eb61abb9df0746996",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-operational-queue-touch/operational-queue-touch-proof.json"
             }
           ]
         }
@@ -623662,7 +623742,8 @@
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-native-staff-control-targets"
+          "release-0.5-native-staff-control-targets",
+          "release-0.5-operational-queue-touch"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -623986,7 +624067,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
-              "sha256": "002040d2163bd452282a8986762461f7a2f71ad5ca578302668e02534d4947f9"
+              "sha256": "aeddf8ef3271f8703083e89f581e895b4a41d2f6882308275b3babc898ed5866"
             },
             {
               "path": "apps/web/src/pages/AdminGeographyPage.tsx",
@@ -624647,6 +624728,11 @@
               "batch": "release-0.5-native-staff-control-targets",
               "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
+            },
+            {
+              "batch": "release-0.5-operational-queue-touch",
+              "base_commit": "a23e77940836461988a4643eb61abb9df0746996",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-operational-queue-touch/operational-queue-touch-proof.json"
             }
           ]
         }
@@ -624713,7 +624799,8 @@
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-native-staff-control-targets"
+          "release-0.5-native-staff-control-targets",
+          "release-0.5-operational-queue-touch"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -625037,7 +625124,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
-              "sha256": "002040d2163bd452282a8986762461f7a2f71ad5ca578302668e02534d4947f9"
+              "sha256": "aeddf8ef3271f8703083e89f581e895b4a41d2f6882308275b3babc898ed5866"
             },
             {
               "path": "apps/web/src/pages/AdminGeographyPage.tsx",
@@ -625698,6 +625785,11 @@
               "batch": "release-0.5-native-staff-control-targets",
               "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
+            },
+            {
+              "batch": "release-0.5-operational-queue-touch",
+              "base_commit": "a23e77940836461988a4643eb61abb9df0746996",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-operational-queue-touch/operational-queue-touch-proof.json"
             }
           ]
         }
@@ -625764,7 +625856,8 @@
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-native-staff-control-targets"
+          "release-0.5-native-staff-control-targets",
+          "release-0.5-operational-queue-touch"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -626088,7 +626181,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
-              "sha256": "002040d2163bd452282a8986762461f7a2f71ad5ca578302668e02534d4947f9"
+              "sha256": "aeddf8ef3271f8703083e89f581e895b4a41d2f6882308275b3babc898ed5866"
             },
             {
               "path": "apps/web/src/pages/AdminGeographyPage.tsx",
@@ -626749,6 +626842,11 @@
               "batch": "release-0.5-native-staff-control-targets",
               "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
+            },
+            {
+              "batch": "release-0.5-operational-queue-touch",
+              "base_commit": "a23e77940836461988a4643eb61abb9df0746996",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-operational-queue-touch/operational-queue-touch-proof.json"
             }
           ]
         }
@@ -626816,7 +626914,8 @@
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-native-staff-control-targets"
+          "release-0.5-native-staff-control-targets",
+          "release-0.5-operational-queue-touch"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -627140,7 +627239,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
-              "sha256": "002040d2163bd452282a8986762461f7a2f71ad5ca578302668e02534d4947f9"
+              "sha256": "aeddf8ef3271f8703083e89f581e895b4a41d2f6882308275b3babc898ed5866"
             },
             {
               "path": "apps/web/src/pages/AdminGeographyPage.tsx",
@@ -627801,6 +627900,11 @@
               "batch": "release-0.5-native-staff-control-targets",
               "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
+            },
+            {
+              "batch": "release-0.5-operational-queue-touch",
+              "base_commit": "a23e77940836461988a4643eb61abb9df0746996",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-operational-queue-touch/operational-queue-touch-proof.json"
             }
           ]
         }
@@ -627886,7 +627990,8 @@
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-native-staff-control-targets"
+          "release-0.5-native-staff-control-targets",
+          "release-0.5-operational-queue-touch"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -628210,7 +628315,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
-              "sha256": "002040d2163bd452282a8986762461f7a2f71ad5ca578302668e02534d4947f9"
+              "sha256": "aeddf8ef3271f8703083e89f581e895b4a41d2f6882308275b3babc898ed5866"
             },
             {
               "path": "apps/web/src/pages/AdminGeographyPage.tsx",
@@ -628871,6 +628976,11 @@
               "batch": "release-0.5-native-staff-control-targets",
               "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
+            },
+            {
+              "batch": "release-0.5-operational-queue-touch",
+              "base_commit": "a23e77940836461988a4643eb61abb9df0746996",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-operational-queue-touch/operational-queue-touch-proof.json"
             }
           ]
         }
@@ -628939,7 +629049,8 @@
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-native-staff-control-targets"
+          "release-0.5-native-staff-control-targets",
+          "release-0.5-operational-queue-touch"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -629263,7 +629374,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
-              "sha256": "002040d2163bd452282a8986762461f7a2f71ad5ca578302668e02534d4947f9"
+              "sha256": "aeddf8ef3271f8703083e89f581e895b4a41d2f6882308275b3babc898ed5866"
             },
             {
               "path": "apps/web/src/pages/AdminGeographyPage.tsx",
@@ -629924,6 +630035,11 @@
               "batch": "release-0.5-native-staff-control-targets",
               "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
+            },
+            {
+              "batch": "release-0.5-operational-queue-touch",
+              "base_commit": "a23e77940836461988a4643eb61abb9df0746996",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-operational-queue-touch/operational-queue-touch-proof.json"
             }
           ]
         }
@@ -659245,7 +659361,8 @@
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-native-staff-control-targets"
+          "release-0.5-native-staff-control-targets",
+          "release-0.5-operational-queue-touch"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -659569,7 +659686,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
-              "sha256": "002040d2163bd452282a8986762461f7a2f71ad5ca578302668e02534d4947f9"
+              "sha256": "aeddf8ef3271f8703083e89f581e895b4a41d2f6882308275b3babc898ed5866"
             },
             {
               "path": "apps/web/src/pages/AdminGeographyPage.tsx",
@@ -660230,6 +660347,11 @@
               "batch": "release-0.5-native-staff-control-targets",
               "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
+            },
+            {
+              "batch": "release-0.5-operational-queue-touch",
+              "base_commit": "a23e77940836461988a4643eb61abb9df0746996",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-operational-queue-touch/operational-queue-touch-proof.json"
             }
           ]
         }
@@ -660295,7 +660417,8 @@
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-native-staff-control-targets"
+          "release-0.5-native-staff-control-targets",
+          "release-0.5-operational-queue-touch"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -660619,7 +660742,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
-              "sha256": "002040d2163bd452282a8986762461f7a2f71ad5ca578302668e02534d4947f9"
+              "sha256": "aeddf8ef3271f8703083e89f581e895b4a41d2f6882308275b3babc898ed5866"
             },
             {
               "path": "apps/web/src/pages/AdminGeographyPage.tsx",
@@ -661280,6 +661403,11 @@
               "batch": "release-0.5-native-staff-control-targets",
               "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
+            },
+            {
+              "batch": "release-0.5-operational-queue-touch",
+              "base_commit": "a23e77940836461988a4643eb61abb9df0746996",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-operational-queue-touch/operational-queue-touch-proof.json"
             }
           ]
         }
@@ -661345,7 +661473,8 @@
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-native-staff-control-targets"
+          "release-0.5-native-staff-control-targets",
+          "release-0.5-operational-queue-touch"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -661669,7 +661798,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
-              "sha256": "002040d2163bd452282a8986762461f7a2f71ad5ca578302668e02534d4947f9"
+              "sha256": "aeddf8ef3271f8703083e89f581e895b4a41d2f6882308275b3babc898ed5866"
             },
             {
               "path": "apps/web/src/pages/AdminGeographyPage.tsx",
@@ -662330,6 +662459,11 @@
               "batch": "release-0.5-native-staff-control-targets",
               "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
+            },
+            {
+              "batch": "release-0.5-operational-queue-touch",
+              "base_commit": "a23e77940836461988a4643eb61abb9df0746996",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-operational-queue-touch/operational-queue-touch-proof.json"
             }
           ]
         }
@@ -662395,7 +662529,8 @@
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-native-staff-control-targets"
+          "release-0.5-native-staff-control-targets",
+          "release-0.5-operational-queue-touch"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -662719,7 +662854,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
-              "sha256": "002040d2163bd452282a8986762461f7a2f71ad5ca578302668e02534d4947f9"
+              "sha256": "aeddf8ef3271f8703083e89f581e895b4a41d2f6882308275b3babc898ed5866"
             },
             {
               "path": "apps/web/src/pages/AdminGeographyPage.tsx",
@@ -663380,6 +663515,11 @@
               "batch": "release-0.5-native-staff-control-targets",
               "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
+            },
+            {
+              "batch": "release-0.5-operational-queue-touch",
+              "base_commit": "a23e77940836461988a4643eb61abb9df0746996",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-operational-queue-touch/operational-queue-touch-proof.json"
             }
           ]
         }
@@ -705721,7 +705861,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "The populated width matrix, staff controls and AI navigation repair are recorded. Current scoped native checks cover profile/address settings, invoice issuance, and saving order and address feedback. Conditional UI and other command adoption remain open."
+        "The preceding source has a 2,976-cell populated width matrix and source-bound follow-up for all 100 text cells flagged after earlier repairs. The current failed-job selection uses a measured 44px hit area. Conditional UI and command coverage remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -705765,7 +705905,8 @@
           "release-0.5-native-staff-control-targets",
           "release-0.5-settings-response-feedback",
           "release-0.5-invoice-response-feedback",
-          "release-0.5-saving-address-response-feedback"
+          "release-0.5-saving-address-response-feedback",
+          "release-0.5-operational-queue-touch"
         ]
       }
     },
@@ -705784,7 +705925,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "The saving address candidate passed 30 unit cases, 40 Chromium and Safari cases and all 98 production gzip limits. Electricity ordering was 254.91 KB gzip against 255 KB. Complete combined and accessibility gates against the final release source."
+        "Current queue touch passed 27 unit cases, 52 Chromium and Safari cases and all 98 gzip limits. Electricity ordering was 254.97 KB gzip against 255 KB. Complete final source combined coverage and accessibility gates."
       ],
       "owner": null,
       "depends_on": [],
@@ -705827,7 +705968,8 @@
           "release-0.5-ai-tab-intrinsic-widths",
           "release-0.5-settings-response-feedback",
           "release-0.5-invoice-response-feedback",
-          "release-0.5-saving-address-response-feedback"
+          "release-0.5-saving-address-response-feedback",
+          "release-0.5-operational-queue-touch"
         ]
       }
     },
@@ -765438,7 +765580,75 @@
       ],
       "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-response-feedback/saving-address-feedback-renewed-bindings.json",
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-response-feedback",
-      "release_disposition": "Final conditional, combined and owner policy gates remain open."
+      "release_disposition": "Final conditional, combined and owner policy gates remain open.",
+      "push_receipt": {
+        "local_sha": "a23e77940836461988a4643eb61abb9df0746996",
+        "remote_sha": "a23e77940836461988a4643eb61abb9df0746996",
+        "verified_at": "2026-11-07T17:20:06+00:00"
+      }
+    },
+    "release-0.5-operational-queue-touch": {
+      "batch": "release-0.5-operational-queue-touch",
+      "base_commit": "a23e77940836461988a4643eb61abb9df0746996",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.04.01.06",
+        "07-ui-ux-design.md#T-07.04.02.04",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "accepted_task_keys": [],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.04.01.06",
+        "07-ui-ux-design.md#T-07.04.02.04",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/operational-queue-tables.spec.ts",
+          "sha256": "528f52decdd413dad99811ec4cf0ed5898ead621a076d3fd8ed62c3f982d7892"
+        },
+        {
+          "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
+          "sha256": "aeddf8ef3271f8703083e89f581e895b4a41d2f6882308275b3babc898ed5866"
+        }
+      ],
+      "checks": [
+        "A direct Safari probe found the isolated 12 by 12 native checkbox. The current label target passes 44 by 44 measurement and an edge click. The protected queue selection, action, retry and access-denial journeys passed.",
+        "27 unit cases, 52 Chromium and Safari cases, production build, format, changed-file lint, web typecheck and all 98 gzip limits passed.",
+        "A separate 16-case replay addressed 100 previous text geometry flags. Fourteen cases passed initially and the current saving fixture passed the other two. The old fixture failure on an ambiguous toast selector remains recorded."
+      ],
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-operational-queue-touch/operational-queue-touch-proof.json",
+      "source_scope_proof_sha256": "f117347bef744a032405feb8cfb2b8c6de04155c4ae922f5d5543ea675f168c8",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-operational-queue-touch/operational-queue-touch.patch",
+      "renewed_task_keys": [
+        "02-auth-users-admin.md#T-03.03.06",
+        "02-auth-users-admin.md#T-09.01.02",
+        "02-auth-users-admin.md#T-09.09.02",
+        "02-auth-users-admin.md#T-09.09.03",
+        "07-ui-ux-design.md#T-07.01.03.19",
+        "07-ui-ux-design.md#T-07.01.04.05",
+        "07-ui-ux-design.md#T-07.04.01.05",
+        "07-ui-ux-design.md#T-07.12.01.05",
+        "07-ui-ux-design.md#T-07.18.01.01",
+        "07-ui-ux-design.md#T-07.18.01.02",
+        "07-ui-ux-design.md#T-07.18.01.03",
+        "07-ui-ux-design.md#T-07.18.01.04",
+        "07-ui-ux-design.md#T-07.18.01.05",
+        "07-ui-ux-design.md#T-07.18.01.06",
+        "07-ui-ux-design.md#T-07.18.02.01",
+        "07-ui-ux-design.md#T-07.18.02.02",
+        "07-ui-ux-design.md#T-07.18.02.03",
+        "07-ui-ux-design.md#T-07.18.02.04",
+        "07-ui-ux-design.md#T-07.18.02.05",
+        "07-ui-ux-design.md#T-07.24.01.01",
+        "07-ui-ux-design.md#T-07.24.01.02",
+        "07-ui-ux-design.md#T-07.24.01.03",
+        "07-ui-ux-design.md#T-07.24.01.04"
+      ],
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-operational-queue-touch/operational-touch-renewed-bindings.json",
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-operational-queue-touch",
+      "release_disposition": "Final width, conditional, combined and owner policy gates remain open."
     }
   },
   "historical_improvements": [

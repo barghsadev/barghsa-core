@@ -407,19 +407,21 @@ export default function AdminFailedJobsPage({ queries }: { queries?: ListQueryBi
               renderSelection={(job) => (
                 <>
                   {access.data?.canRetry && ['failed', 'dead_letter'].includes(job.status) && (
-                    <input
-                      type="checkbox"
-                      disabled={!!action || locked || !queue.canRetry}
-                      aria-label={label('selectJob').replace('{type}', jobName(job.jobType))}
-                      checked={selected.includes(job.id)}
-                      onChange={(event) =>
-                        setSelected((current) =>
-                          event.target.checked
-                            ? [...current, job.id]
-                            : current.filter((id) => id !== job.id)
-                        )
-                      }
-                    />
+                    <label className="touch-label inline-flex items-center justify-center">
+                      <input
+                        type="checkbox"
+                        disabled={!!action || locked || !queue.canRetry}
+                        aria-label={label('selectJob').replace('{type}', jobName(job.jobType))}
+                        checked={selected.includes(job.id)}
+                        onChange={(event) =>
+                          setSelected((current) =>
+                            event.target.checked
+                              ? [...current, job.id]
+                              : current.filter((id) => id !== job.id)
+                          )
+                        }
+                      />
+                    </label>
                   )}
                 </>
               )}
