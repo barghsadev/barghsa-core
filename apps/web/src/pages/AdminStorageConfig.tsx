@@ -430,7 +430,9 @@ export default function AdminStorageConfig() {
                         setNotice(null);
                       }}
                     />
-                    <Label htmlFor="storage-clear-secret">{label('clearSecret')}</Label>
+                    <Label className="touch-label" htmlFor="storage-clear-secret">
+                      {label('clearSecret')}
+                    </Label>
                   </div>
                 )}
               </div>
@@ -443,7 +445,9 @@ export default function AdminStorageConfig() {
                 checked={draft.forcePathStyle}
                 onChange={(event) => configForm.field('forcePathStyle')[1](event.target.checked)}
               />
-              <Label htmlFor="storage-path-style">{label('forcePathStyle')}</Label>
+              <Label className="touch-label" htmlFor="storage-path-style">
+                {label('forcePathStyle')}
+              </Label>
             </div>
             <p className="text-sm text-muted-foreground">{label('endpointHelp')}</p>
             <CatalogueFieldFeedback

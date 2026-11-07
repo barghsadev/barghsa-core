@@ -70,6 +70,13 @@ for (const locale of ['en', 'fa'])
       name: locale === 'fa' ? 'فقط کارکنان' : 'Staff only',
     });
     // URL navigation commits asynchronously; assert the settled controlled value.
+    if (await page.evaluate(() => matchMedia('(pointer: coarse)').matches)) {
+      const { width, height } = await staffOnly.evaluate((input: HTMLInputElement) =>
+        input.labels![0]!.getBoundingClientRect().toJSON()
+      );
+      expect(width).toBeGreaterThanOrEqual(44);
+      expect(height).toBeGreaterThanOrEqual(44);
+    }
     await staffOnly.click();
     await expect(staffOnly).toBeChecked();
     await expect.poll(() => requests.at(-1)!.searchParams.get('staffOnly')).toBe('true');

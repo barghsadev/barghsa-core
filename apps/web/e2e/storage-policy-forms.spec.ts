@@ -75,6 +75,15 @@ for (const locale of ['en', 'fa'] as const)
       await page.goto('/admin/storage');
       const bucket = page.locator('#storage-bucket'),
         secret = page.locator('#storage-secret');
+      if (await page.evaluate(() => matchMedia('(pointer: coarse)').matches)) {
+        for (const id of ['storage-path-style', 'storage-clear-secret']) {
+          const label = page.locator(`label[for="${id}"]`);
+          await expect(label).toBeVisible();
+          const { height, width } = (await label.boundingBox())!;
+          expect(height).toBeGreaterThanOrEqual(44);
+          expect(width).toBeGreaterThanOrEqual(44);
+        }
+      }
       await secret.fill('retained-secret');
       await bucket.fill(' ');
       await page.getByRole('button', { name: storage('save'), exact: true }).click();

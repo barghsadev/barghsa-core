@@ -490,7 +490,7 @@ function OwnedCrmProfileList({ query }: { query?: ListQueryBinding } = {}) {
             />
           </div>
         ))}
-        <Label className="flex items-center gap-2">
+        <Label className="touch-label flex items-center gap-2">
           <input
             type="checkbox"
             checked={filters.staffOnly}

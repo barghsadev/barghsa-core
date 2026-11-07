@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-07T16:36:59+00:00",
-  "source_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
+  "updated": "2026-11-07T16:51:53+00:00",
+  "source_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -34977,7 +34977,8 @@
           "release-0.5-verified-command-rejection",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": {
           "kind": "verified-account-preferences-and-timestamp-consumers",
@@ -35125,7 +35126,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityRulesPage.tsx",
-              "sha256": "104ae805db972374f6af7cbae60488b09e57f6954aab91e41685b6098399936a"
+              "sha256": "87908439a544820ec2f0134f64cc1f35f396dec5132e56347402ffdc647059f4"
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
@@ -35908,6 +35909,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         },
@@ -42132,7 +42138,8 @@
           "release-0.5-critical-accessibility",
           "release-0.5-form-and-document-accessibility",
           "release-0.5-dependency-gate-closure",
-          "release-0.5-final-gates"
+          "release-0.5-final-gates",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": {
           "kind": "current-crm-criterion-and-boundary-verification",
@@ -42168,7 +42175,7 @@
             },
             {
               "path": "apps/web/e2e/crm-list.spec.ts",
-              "sha256": "3ce848936ced39bac5aa31c0ec2ee813aa350a6d1e22e51501174622ba92be8f"
+              "sha256": "6e45d20195e3deb2d35d20f79410169bf13eb6b327adc8652b8c75ffd837e11c"
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
@@ -42192,7 +42199,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileList.tsx",
-              "sha256": "2ed7e9256cd951790fd4cf95392758fee5cecd8813d5f8880f8ca4cfa1c2e67b"
+              "sha256": "fb30dc041234234c50f4516924132c294d9d556a529e175b249f02de8b5c3fc4"
             },
             {
               "path": "apps/web/src/routeTree.gen.ts",
@@ -42436,6 +42443,11 @@
               "batch": "release-0.5-final-gates",
               "base_commit": "9005d5f06a01a1024fb2b6f94d809f893823d90a",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-final-gates/route-read-proof.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         }
@@ -42535,7 +42547,8 @@
           "release-0.5-critical-accessibility",
           "release-0.5-form-and-document-accessibility",
           "release-0.5-dependency-gate-closure",
-          "release-0.5-final-gates"
+          "release-0.5-final-gates",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": {
           "kind": "current-crm-criterion-and-boundary-verification",
@@ -42563,7 +42576,7 @@
             },
             {
               "path": "apps/web/e2e/crm-list.spec.ts",
-              "sha256": "3ce848936ced39bac5aa31c0ec2ee813aa350a6d1e22e51501174622ba92be8f"
+              "sha256": "6e45d20195e3deb2d35d20f79410169bf13eb6b327adc8652b8c75ffd837e11c"
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
@@ -42587,7 +42600,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileList.tsx",
-              "sha256": "2ed7e9256cd951790fd4cf95392758fee5cecd8813d5f8880f8ca4cfa1c2e67b"
+              "sha256": "fb30dc041234234c50f4516924132c294d9d556a529e175b249f02de8b5c3fc4"
             },
             {
               "path": "packages/i18n/src/crm.ts",
@@ -42713,6 +42726,11 @@
               "batch": "release-0.5-final-gates",
               "base_commit": "9005d5f06a01a1024fb2b6f94d809f893823d90a",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-final-gates/route-read-proof.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         }
@@ -62153,7 +62171,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": {
           "kind": "accepted-native-brand-theme-application",
@@ -62293,7 +62312,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityRulesPage.tsx",
-              "sha256": "104ae805db972374f6af7cbae60488b09e57f6954aab91e41685b6098399936a"
+              "sha256": "87908439a544820ec2f0134f64cc1f35f396dec5132e56347402ffdc647059f4"
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
@@ -62718,6 +62737,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         },
@@ -98705,7 +98729,8 @@
           "release-0.5-critical-accessibility",
           "release-0.5-form-and-document-accessibility",
           "release-0.5-coverage-remaining-branches",
-          "release-0.5-final-acceptance"
+          "release-0.5-final-acceptance",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": {
           "kind": "verified-green-activation-submission-and-template-consumers",
@@ -98865,7 +98890,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-settings-forms.spec.ts",
-              "sha256": "e511cdc655dbb9ac621e9ae5ab28816b4dd62f0c76c0c7e8ecaff97e93d43b11"
+              "sha256": "e107c7d15d6c67f9e96107023389cadf9fe7ba8598f05e27ebae94851c12bd2d"
             },
             {
               "path": "apps/web/e2e/green-rules.spec.ts",
@@ -98913,7 +98938,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityRulesPage.tsx",
-              "sha256": "104ae805db972374f6af7cbae60488b09e57f6954aab91e41685b6098399936a"
+              "sha256": "87908439a544820ec2f0134f64cc1f35f396dec5132e56347402ffdc647059f4"
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
@@ -99421,6 +99446,11 @@
               "batch": "release-0.5-final-acceptance",
               "base_commit": "460fdb3e46b92b3086c95b925a6f4735a21fc2ff",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-final-acceptance/customer-interaction-proof.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         }
@@ -99543,7 +99573,8 @@
           "release-0.5-critical-accessibility",
           "release-0.5-form-and-document-accessibility",
           "release-0.5-coverage-remaining-branches",
-          "release-0.5-final-acceptance"
+          "release-0.5-final-acceptance",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": {
           "kind": "verified-green-activation-submission-and-template-consumers",
@@ -99703,7 +99734,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-settings-forms.spec.ts",
-              "sha256": "e511cdc655dbb9ac621e9ae5ab28816b4dd62f0c76c0c7e8ecaff97e93d43b11"
+              "sha256": "e107c7d15d6c67f9e96107023389cadf9fe7ba8598f05e27ebae94851c12bd2d"
             },
             {
               "path": "apps/web/e2e/green-rules.spec.ts",
@@ -99751,7 +99782,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityRulesPage.tsx",
-              "sha256": "104ae805db972374f6af7cbae60488b09e57f6954aab91e41685b6098399936a"
+              "sha256": "87908439a544820ec2f0134f64cc1f35f396dec5132e56347402ffdc647059f4"
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
@@ -100259,6 +100290,11 @@
               "batch": "release-0.5-final-acceptance",
               "base_commit": "460fdb3e46b92b3086c95b925a6f4735a21fc2ff",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-final-acceptance/customer-interaction-proof.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         }
@@ -106597,7 +106633,8 @@
           "release-0.5-critical-accessibility",
           "release-0.5-form-and-document-accessibility",
           "release-0.5-coverage-remaining-branches",
-          "release-0.5-final-acceptance"
+          "release-0.5-final-acceptance",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": {
           "kind": "verified-green-activation-submission-and-template-consumers",
@@ -106757,7 +106794,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-settings-forms.spec.ts",
-              "sha256": "e511cdc655dbb9ac621e9ae5ab28816b4dd62f0c76c0c7e8ecaff97e93d43b11"
+              "sha256": "e107c7d15d6c67f9e96107023389cadf9fe7ba8598f05e27ebae94851c12bd2d"
             },
             {
               "path": "apps/web/e2e/green-rules.spec.ts",
@@ -106805,7 +106842,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityRulesPage.tsx",
-              "sha256": "104ae805db972374f6af7cbae60488b09e57f6954aab91e41685b6098399936a"
+              "sha256": "87908439a544820ec2f0134f64cc1f35f396dec5132e56347402ffdc647059f4"
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
@@ -107313,6 +107350,11 @@
               "batch": "release-0.5-final-acceptance",
               "base_commit": "460fdb3e46b92b3086c95b925a6f4735a21fc2ff",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-final-acceptance/customer-interaction-proof.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         }
@@ -268050,7 +268092,8 @@
           "release-0.5-coverage-remaining-branches",
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
-          "release-0.5-confirmed-electricity-feedback"
+          "release-0.5-confirmed-electricity-feedback",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -268166,7 +268209,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-settings-forms.spec.ts",
-              "sha256": "e511cdc655dbb9ac621e9ae5ab28816b4dd62f0c76c0c7e8ecaff97e93d43b11"
+              "sha256": "e107c7d15d6c67f9e96107023389cadf9fe7ba8598f05e27ebae94851c12bd2d"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -268190,7 +268233,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityRulesPage.tsx",
-              "sha256": "104ae805db972374f6af7cbae60488b09e57f6954aab91e41685b6098399936a"
+              "sha256": "87908439a544820ec2f0134f64cc1f35f396dec5132e56347402ffdc647059f4"
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
@@ -268957,6 +269000,11 @@
               "batch": "release-0.5-confirmed-electricity-feedback",
               "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         }
@@ -269005,7 +269053,8 @@
           "release-0.5-coverage-remaining-branches",
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
-          "release-0.5-confirmed-electricity-feedback"
+          "release-0.5-confirmed-electricity-feedback",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -269121,7 +269170,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-settings-forms.spec.ts",
-              "sha256": "e511cdc655dbb9ac621e9ae5ab28816b4dd62f0c76c0c7e8ecaff97e93d43b11"
+              "sha256": "e107c7d15d6c67f9e96107023389cadf9fe7ba8598f05e27ebae94851c12bd2d"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -269145,7 +269194,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityRulesPage.tsx",
-              "sha256": "104ae805db972374f6af7cbae60488b09e57f6954aab91e41685b6098399936a"
+              "sha256": "87908439a544820ec2f0134f64cc1f35f396dec5132e56347402ffdc647059f4"
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
@@ -269912,6 +269961,11 @@
               "batch": "release-0.5-confirmed-electricity-feedback",
               "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         }
@@ -269960,7 +270014,8 @@
           "release-0.5-coverage-remaining-branches",
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
-          "release-0.5-confirmed-electricity-feedback"
+          "release-0.5-confirmed-electricity-feedback",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -270076,7 +270131,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-settings-forms.spec.ts",
-              "sha256": "e511cdc655dbb9ac621e9ae5ab28816b4dd62f0c76c0c7e8ecaff97e93d43b11"
+              "sha256": "e107c7d15d6c67f9e96107023389cadf9fe7ba8598f05e27ebae94851c12bd2d"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -270100,7 +270155,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityRulesPage.tsx",
-              "sha256": "104ae805db972374f6af7cbae60488b09e57f6954aab91e41685b6098399936a"
+              "sha256": "87908439a544820ec2f0134f64cc1f35f396dec5132e56347402ffdc647059f4"
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
@@ -270867,6 +270922,11 @@
               "batch": "release-0.5-confirmed-electricity-feedback",
               "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         }
@@ -270915,7 +270975,8 @@
           "release-0.5-coverage-remaining-branches",
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
-          "release-0.5-confirmed-electricity-feedback"
+          "release-0.5-confirmed-electricity-feedback",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -271031,7 +271092,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-settings-forms.spec.ts",
-              "sha256": "e511cdc655dbb9ac621e9ae5ab28816b4dd62f0c76c0c7e8ecaff97e93d43b11"
+              "sha256": "e107c7d15d6c67f9e96107023389cadf9fe7ba8598f05e27ebae94851c12bd2d"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -271055,7 +271116,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityRulesPage.tsx",
-              "sha256": "104ae805db972374f6af7cbae60488b09e57f6954aab91e41685b6098399936a"
+              "sha256": "87908439a544820ec2f0134f64cc1f35f396dec5132e56347402ffdc647059f4"
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
@@ -271822,6 +271883,11 @@
               "batch": "release-0.5-confirmed-electricity-feedback",
               "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         }
@@ -271870,7 +271936,8 @@
           "release-0.5-coverage-remaining-branches",
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
-          "release-0.5-confirmed-electricity-feedback"
+          "release-0.5-confirmed-electricity-feedback",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -271986,7 +272053,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-settings-forms.spec.ts",
-              "sha256": "e511cdc655dbb9ac621e9ae5ab28816b4dd62f0c76c0c7e8ecaff97e93d43b11"
+              "sha256": "e107c7d15d6c67f9e96107023389cadf9fe7ba8598f05e27ebae94851c12bd2d"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -272010,7 +272077,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityRulesPage.tsx",
-              "sha256": "104ae805db972374f6af7cbae60488b09e57f6954aab91e41685b6098399936a"
+              "sha256": "87908439a544820ec2f0134f64cc1f35f396dec5132e56347402ffdc647059f4"
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
@@ -272777,6 +272844,11 @@
               "batch": "release-0.5-confirmed-electricity-feedback",
               "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         }
@@ -272825,7 +272897,8 @@
           "release-0.5-coverage-remaining-branches",
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
-          "release-0.5-confirmed-electricity-feedback"
+          "release-0.5-confirmed-electricity-feedback",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -272941,7 +273014,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-settings-forms.spec.ts",
-              "sha256": "e511cdc655dbb9ac621e9ae5ab28816b4dd62f0c76c0c7e8ecaff97e93d43b11"
+              "sha256": "e107c7d15d6c67f9e96107023389cadf9fe7ba8598f05e27ebae94851c12bd2d"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -272965,7 +273038,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityRulesPage.tsx",
-              "sha256": "104ae805db972374f6af7cbae60488b09e57f6954aab91e41685b6098399936a"
+              "sha256": "87908439a544820ec2f0134f64cc1f35f396dec5132e56347402ffdc647059f4"
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
@@ -273732,6 +273805,11 @@
               "batch": "release-0.5-confirmed-electricity-feedback",
               "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         }
@@ -273780,7 +273858,8 @@
           "release-0.5-coverage-remaining-branches",
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
-          "release-0.5-confirmed-electricity-feedback"
+          "release-0.5-confirmed-electricity-feedback",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -273896,7 +273975,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-settings-forms.spec.ts",
-              "sha256": "e511cdc655dbb9ac621e9ae5ab28816b4dd62f0c76c0c7e8ecaff97e93d43b11"
+              "sha256": "e107c7d15d6c67f9e96107023389cadf9fe7ba8598f05e27ebae94851c12bd2d"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -273920,7 +273999,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityRulesPage.tsx",
-              "sha256": "104ae805db972374f6af7cbae60488b09e57f6954aab91e41685b6098399936a"
+              "sha256": "87908439a544820ec2f0134f64cc1f35f396dec5132e56347402ffdc647059f4"
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
@@ -274687,6 +274766,11 @@
               "batch": "release-0.5-confirmed-electricity-feedback",
               "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         }
@@ -274735,7 +274819,8 @@
           "release-0.5-coverage-remaining-branches",
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
-          "release-0.5-confirmed-electricity-feedback"
+          "release-0.5-confirmed-electricity-feedback",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -274851,7 +274936,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-settings-forms.spec.ts",
-              "sha256": "e511cdc655dbb9ac621e9ae5ab28816b4dd62f0c76c0c7e8ecaff97e93d43b11"
+              "sha256": "e107c7d15d6c67f9e96107023389cadf9fe7ba8598f05e27ebae94851c12bd2d"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -274875,7 +274960,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityRulesPage.tsx",
-              "sha256": "104ae805db972374f6af7cbae60488b09e57f6954aab91e41685b6098399936a"
+              "sha256": "87908439a544820ec2f0134f64cc1f35f396dec5132e56347402ffdc647059f4"
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
@@ -275642,6 +275727,11 @@
               "batch": "release-0.5-confirmed-electricity-feedback",
               "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         }
@@ -275690,7 +275780,8 @@
           "release-0.5-coverage-remaining-branches",
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
-          "release-0.5-confirmed-electricity-feedback"
+          "release-0.5-confirmed-electricity-feedback",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -275806,7 +275897,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-settings-forms.spec.ts",
-              "sha256": "e511cdc655dbb9ac621e9ae5ab28816b4dd62f0c76c0c7e8ecaff97e93d43b11"
+              "sha256": "e107c7d15d6c67f9e96107023389cadf9fe7ba8598f05e27ebae94851c12bd2d"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -275830,7 +275921,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityRulesPage.tsx",
-              "sha256": "104ae805db972374f6af7cbae60488b09e57f6954aab91e41685b6098399936a"
+              "sha256": "87908439a544820ec2f0134f64cc1f35f396dec5132e56347402ffdc647059f4"
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
@@ -276597,6 +276688,11 @@
               "batch": "release-0.5-confirmed-electricity-feedback",
               "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         }
@@ -276645,7 +276741,8 @@
           "release-0.5-coverage-remaining-branches",
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
-          "release-0.5-confirmed-electricity-feedback"
+          "release-0.5-confirmed-electricity-feedback",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -276761,7 +276858,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-settings-forms.spec.ts",
-              "sha256": "e511cdc655dbb9ac621e9ae5ab28816b4dd62f0c76c0c7e8ecaff97e93d43b11"
+              "sha256": "e107c7d15d6c67f9e96107023389cadf9fe7ba8598f05e27ebae94851c12bd2d"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -276785,7 +276882,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityRulesPage.tsx",
-              "sha256": "104ae805db972374f6af7cbae60488b09e57f6954aab91e41685b6098399936a"
+              "sha256": "87908439a544820ec2f0134f64cc1f35f396dec5132e56347402ffdc647059f4"
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
@@ -277552,6 +277649,11 @@
               "batch": "release-0.5-confirmed-electricity-feedback",
               "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         }
@@ -277600,7 +277702,8 @@
           "release-0.5-coverage-remaining-branches",
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
-          "release-0.5-confirmed-electricity-feedback"
+          "release-0.5-confirmed-electricity-feedback",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -277716,7 +277819,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-settings-forms.spec.ts",
-              "sha256": "e511cdc655dbb9ac621e9ae5ab28816b4dd62f0c76c0c7e8ecaff97e93d43b11"
+              "sha256": "e107c7d15d6c67f9e96107023389cadf9fe7ba8598f05e27ebae94851c12bd2d"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -277740,7 +277843,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityRulesPage.tsx",
-              "sha256": "104ae805db972374f6af7cbae60488b09e57f6954aab91e41685b6098399936a"
+              "sha256": "87908439a544820ec2f0134f64cc1f35f396dec5132e56347402ffdc647059f4"
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
@@ -278507,6 +278610,11 @@
               "batch": "release-0.5-confirmed-electricity-feedback",
               "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         }
@@ -278555,7 +278663,8 @@
           "release-0.5-coverage-remaining-branches",
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
-          "release-0.5-confirmed-electricity-feedback"
+          "release-0.5-confirmed-electricity-feedback",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -278671,7 +278780,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-settings-forms.spec.ts",
-              "sha256": "e511cdc655dbb9ac621e9ae5ab28816b4dd62f0c76c0c7e8ecaff97e93d43b11"
+              "sha256": "e107c7d15d6c67f9e96107023389cadf9fe7ba8598f05e27ebae94851c12bd2d"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -278695,7 +278804,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityRulesPage.tsx",
-              "sha256": "104ae805db972374f6af7cbae60488b09e57f6954aab91e41685b6098399936a"
+              "sha256": "87908439a544820ec2f0134f64cc1f35f396dec5132e56347402ffdc647059f4"
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
@@ -279462,6 +279571,11 @@
               "batch": "release-0.5-confirmed-electricity-feedback",
               "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         }
@@ -279511,7 +279625,8 @@
           "release-0.5-coverage-remaining-branches",
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
-          "release-0.5-confirmed-electricity-feedback"
+          "release-0.5-confirmed-electricity-feedback",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -279627,7 +279742,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-settings-forms.spec.ts",
-              "sha256": "e511cdc655dbb9ac621e9ae5ab28816b4dd62f0c76c0c7e8ecaff97e93d43b11"
+              "sha256": "e107c7d15d6c67f9e96107023389cadf9fe7ba8598f05e27ebae94851c12bd2d"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -279651,7 +279766,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityRulesPage.tsx",
-              "sha256": "104ae805db972374f6af7cbae60488b09e57f6954aab91e41685b6098399936a"
+              "sha256": "87908439a544820ec2f0134f64cc1f35f396dec5132e56347402ffdc647059f4"
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
@@ -280418,6 +280533,11 @@
               "batch": "release-0.5-confirmed-electricity-feedback",
               "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         }
@@ -280466,7 +280586,8 @@
           "release-0.5-coverage-remaining-branches",
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
-          "release-0.5-confirmed-electricity-feedback"
+          "release-0.5-confirmed-electricity-feedback",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -280582,7 +280703,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-settings-forms.spec.ts",
-              "sha256": "e511cdc655dbb9ac621e9ae5ab28816b4dd62f0c76c0c7e8ecaff97e93d43b11"
+              "sha256": "e107c7d15d6c67f9e96107023389cadf9fe7ba8598f05e27ebae94851c12bd2d"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -280606,7 +280727,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityRulesPage.tsx",
-              "sha256": "104ae805db972374f6af7cbae60488b09e57f6954aab91e41685b6098399936a"
+              "sha256": "87908439a544820ec2f0134f64cc1f35f396dec5132e56347402ffdc647059f4"
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
@@ -281373,6 +281494,11 @@
               "batch": "release-0.5-confirmed-electricity-feedback",
               "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         }
@@ -281421,7 +281547,8 @@
           "release-0.5-coverage-remaining-branches",
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
-          "release-0.5-confirmed-electricity-feedback"
+          "release-0.5-confirmed-electricity-feedback",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -281537,7 +281664,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-settings-forms.spec.ts",
-              "sha256": "e511cdc655dbb9ac621e9ae5ab28816b4dd62f0c76c0c7e8ecaff97e93d43b11"
+              "sha256": "e107c7d15d6c67f9e96107023389cadf9fe7ba8598f05e27ebae94851c12bd2d"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -281561,7 +281688,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityRulesPage.tsx",
-              "sha256": "104ae805db972374f6af7cbae60488b09e57f6954aab91e41685b6098399936a"
+              "sha256": "87908439a544820ec2f0134f64cc1f35f396dec5132e56347402ffdc647059f4"
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
@@ -282328,6 +282455,11 @@
               "batch": "release-0.5-confirmed-electricity-feedback",
               "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         }
@@ -282376,7 +282508,8 @@
           "release-0.5-coverage-remaining-branches",
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
-          "release-0.5-confirmed-electricity-feedback"
+          "release-0.5-confirmed-electricity-feedback",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -282492,7 +282625,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-settings-forms.spec.ts",
-              "sha256": "e511cdc655dbb9ac621e9ae5ab28816b4dd62f0c76c0c7e8ecaff97e93d43b11"
+              "sha256": "e107c7d15d6c67f9e96107023389cadf9fe7ba8598f05e27ebae94851c12bd2d"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -282516,7 +282649,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityRulesPage.tsx",
-              "sha256": "104ae805db972374f6af7cbae60488b09e57f6954aab91e41685b6098399936a"
+              "sha256": "87908439a544820ec2f0134f64cc1f35f396dec5132e56347402ffdc647059f4"
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
@@ -283283,6 +283416,11 @@
               "batch": "release-0.5-confirmed-electricity-feedback",
               "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         }
@@ -283331,7 +283469,8 @@
           "release-0.5-coverage-remaining-branches",
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
-          "release-0.5-confirmed-electricity-feedback"
+          "release-0.5-confirmed-electricity-feedback",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -283447,7 +283586,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-settings-forms.spec.ts",
-              "sha256": "e511cdc655dbb9ac621e9ae5ab28816b4dd62f0c76c0c7e8ecaff97e93d43b11"
+              "sha256": "e107c7d15d6c67f9e96107023389cadf9fe7ba8598f05e27ebae94851c12bd2d"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -283471,7 +283610,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityRulesPage.tsx",
-              "sha256": "104ae805db972374f6af7cbae60488b09e57f6954aab91e41685b6098399936a"
+              "sha256": "87908439a544820ec2f0134f64cc1f35f396dec5132e56347402ffdc647059f4"
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
@@ -284238,6 +284377,11 @@
               "batch": "release-0.5-confirmed-electricity-feedback",
               "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         }
@@ -433909,7 +434053,8 @@
           "release-0.5-language-calendar-journey",
           "release-0.5-query-and-command-completion",
           "release-0.5-form-and-document-accessibility",
-          "release-0.5-dependency-gate-closure"
+          "release-0.5-dependency-gate-closure",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": {
           "status": "done",
@@ -433997,7 +434142,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.tsx",
-              "sha256": "16b3d50567804a7381a15d714ad666a3e3c446bbb975b96546d432af196df6c4"
+              "sha256": "0d491c742f7053e5d21b4c581a9746ef317db28de031292fbf9d0f9a9e839c76"
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.test.tsx",
@@ -434013,7 +434158,7 @@
             },
             {
               "path": "apps/web/e2e/storage-policy-forms.spec.ts",
-              "sha256": "7d511b84b45fad49f4dab5f53cb8c09c45b5efa880e6af2e94180d4e0351ee7b"
+              "sha256": "f7533a1e03d1926649f2607942a5ef2f12aaec56da5c26881f04116b15fa60e5"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -434150,6 +434295,11 @@
               "batch": "release-0.5-dependency-gate-closure",
               "base_commit": "f7f27566c9a204444bb8790e67267ad7373c3ab7",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-dependency-gate-closure/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         }
@@ -434184,7 +434334,8 @@
           "release-0.5-language-calendar-journey",
           "release-0.5-query-and-command-completion",
           "release-0.5-form-and-document-accessibility",
-          "release-0.5-dependency-gate-closure"
+          "release-0.5-dependency-gate-closure",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": {
           "status": "done",
@@ -434272,7 +434423,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.tsx",
-              "sha256": "16b3d50567804a7381a15d714ad666a3e3c446bbb975b96546d432af196df6c4"
+              "sha256": "0d491c742f7053e5d21b4c581a9746ef317db28de031292fbf9d0f9a9e839c76"
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.test.tsx",
@@ -434288,7 +434439,7 @@
             },
             {
               "path": "apps/web/e2e/storage-policy-forms.spec.ts",
-              "sha256": "7d511b84b45fad49f4dab5f53cb8c09c45b5efa880e6af2e94180d4e0351ee7b"
+              "sha256": "f7533a1e03d1926649f2607942a5ef2f12aaec56da5c26881f04116b15fa60e5"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -434396,6 +434547,11 @@
               "batch": "release-0.5-dependency-gate-closure",
               "base_commit": "f7f27566c9a204444bb8790e67267ad7373c3ab7",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-dependency-gate-closure/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         }
@@ -484579,7 +484735,8 @@
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-confirmed-electricity-feedback"
+          "release-0.5-confirmed-electricity-feedback",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -484859,7 +485016,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityRulesPage.tsx",
-              "sha256": "104ae805db972374f6af7cbae60488b09e57f6954aab91e41685b6098399936a"
+              "sha256": "87908439a544820ec2f0134f64cc1f35f396dec5132e56347402ffdc647059f4"
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
@@ -484883,7 +485040,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
-              "sha256": "69cef388cc9232bf07efd16f0ee69637c2f33a025d03aa7f9125a45cd1e6be6a"
+              "sha256": "7f8796a5235ec91d8f03a2092b7fee1bbb70239e4a1d65addeb8599a70563dd9"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -484927,7 +485084,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.tsx",
-              "sha256": "16b3d50567804a7381a15d714ad666a3e3c446bbb975b96546d432af196df6c4"
+              "sha256": "0d491c742f7053e5d21b4c581a9746ef317db28de031292fbf9d0f9a9e839c76"
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
@@ -484979,7 +485136,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileList.tsx",
-              "sha256": "2ed7e9256cd951790fd4cf95392758fee5cecd8813d5f8880f8ca4cfa1c2e67b"
+              "sha256": "fb30dc041234234c50f4516924132c294d9d556a529e175b249f02de8b5c3fc4"
             },
             {
               "path": "apps/web/src/pages/ElectricityIncreasePanel.tsx",
@@ -485430,6 +485587,11 @@
               "batch": "release-0.5-confirmed-electricity-feedback",
               "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         },
@@ -487538,7 +487700,8 @@
           "release-0.5-final-rehearsal",
           "release-0.5-route-census-closure",
           "release-0.5-native-staff-touch-and-electricity-recovery",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -487854,7 +488017,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityRulesPage.tsx",
-              "sha256": "104ae805db972374f6af7cbae60488b09e57f6954aab91e41685b6098399936a"
+              "sha256": "87908439a544820ec2f0134f64cc1f35f396dec5132e56347402ffdc647059f4"
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
@@ -487926,7 +488089,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileList.tsx",
-              "sha256": "2ed7e9256cd951790fd4cf95392758fee5cecd8813d5f8880f8ca4cfa1c2e67b"
+              "sha256": "fb30dc041234234c50f4516924132c294d9d556a529e175b249f02de8b5c3fc4"
             },
             {
               "path": "apps/web/src/pages/ElectricityIncreasePanel.tsx",
@@ -488214,6 +488377,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         }
@@ -488342,7 +488510,8 @@
           "release-0.5-final-rehearsal",
           "release-0.5-route-census-closure",
           "release-0.5-native-staff-touch-and-electricity-recovery",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -488658,7 +488827,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityRulesPage.tsx",
-              "sha256": "104ae805db972374f6af7cbae60488b09e57f6954aab91e41685b6098399936a"
+              "sha256": "87908439a544820ec2f0134f64cc1f35f396dec5132e56347402ffdc647059f4"
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
@@ -488730,7 +488899,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileList.tsx",
-              "sha256": "2ed7e9256cd951790fd4cf95392758fee5cecd8813d5f8880f8ca4cfa1c2e67b"
+              "sha256": "fb30dc041234234c50f4516924132c294d9d556a529e175b249f02de8b5c3fc4"
             },
             {
               "path": "apps/web/src/pages/ElectricityIncreasePanel.tsx",
@@ -489018,6 +489187,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         }
@@ -489087,7 +489261,8 @@
           "release-0.5-final-rehearsal",
           "release-0.5-route-census-closure",
           "release-0.5-native-staff-touch-and-electricity-recovery",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -489403,7 +489578,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityRulesPage.tsx",
-              "sha256": "104ae805db972374f6af7cbae60488b09e57f6954aab91e41685b6098399936a"
+              "sha256": "87908439a544820ec2f0134f64cc1f35f396dec5132e56347402ffdc647059f4"
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
@@ -489475,7 +489650,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileList.tsx",
-              "sha256": "2ed7e9256cd951790fd4cf95392758fee5cecd8813d5f8880f8ca4cfa1c2e67b"
+              "sha256": "fb30dc041234234c50f4516924132c294d9d556a529e175b249f02de8b5c3fc4"
             },
             {
               "path": "apps/web/src/pages/ElectricityIncreasePanel.tsx",
@@ -489763,6 +489938,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         }
@@ -489888,7 +490068,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-verified-command-rejection",
           "release-0.5-native-staff-touch-and-electricity-recovery",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -490192,7 +490373,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.tsx",
-              "sha256": "16b3d50567804a7381a15d714ad666a3e3c446bbb975b96546d432af196df6c4"
+              "sha256": "0d491c742f7053e5d21b4c581a9746ef317db28de031292fbf9d0f9a9e839c76"
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
@@ -490513,6 +490694,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         }
@@ -503375,7 +503561,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -503399,7 +503586,7 @@
             },
             {
               "path": "apps/web/e2e/crm-list.spec.ts",
-              "sha256": "3ce848936ced39bac5aa31c0ec2ee813aa350a6d1e22e51501174622ba92be8f"
+              "sha256": "6e45d20195e3deb2d35d20f79410169bf13eb6b327adc8652b8c75ffd837e11c"
             },
             {
               "path": "apps/web/e2e/crm-recovery.spec.ts",
@@ -503671,7 +503858,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileList.tsx",
-              "sha256": "2ed7e9256cd951790fd4cf95392758fee5cecd8813d5f8880f8ca4cfa1c2e67b"
+              "sha256": "fb30dc041234234c50f4516924132c294d9d556a529e175b249f02de8b5c3fc4"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrdersPage.tsx",
@@ -503893,6 +504080,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         }
@@ -503913,7 +504105,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Safari native single-row selectors and dependent address selectors now have an explicit 44px minimum target. Plain contract and terms actions receive the same floor. The targeted touch regressions and 13-route Safari repeat passed. Remaining unsampled conditional controls are open."
+        "Native electricity rule sliders measured 16 CSS pixels high. The rules, storage, maintenance and CRM forms also had short native checkbox labels. Sliders and associated label targets now meet 44 by 44 CSS pixels in the targeted Safari states. Review remaining conditional targets."
       ],
       "owner": null,
       "depends_on": [],
@@ -503938,7 +504130,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": null
       }
@@ -506209,7 +506402,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "The census now contains all eight required widths in both native engines and both directions for the 93 populated route views, plus five redirect routes. Finish remaining conditional layout evidence at accepted source."
+        "A 332-case replay on the preceding pushed source covered 2,976 populated route, engine, direction and width cells across 93 routes, after a strict separate recheck of the sole failing case. The staff invoice control showed a WebKit subpixel measurement in the initial run and 44 CSS pixels, 132 physical pixels and successful edge hit tests on recheck. Finish text geometry triage and conditional presentation evidence at the final candidate."
       ],
       "owner": null,
       "depends_on": [],
@@ -506234,7 +506427,8 @@
           "release-0.5-final-gates",
           "release-0.5-final-acceptance",
           "release-0.5-final-rehearsal",
-          "release-0.5-route-census-closure"
+          "release-0.5-route-census-closure",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": null
       }
@@ -509244,7 +509438,8 @@
           "release-0.5-staff-confirmation-fixtures",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -509336,7 +509531,7 @@
             },
             {
               "path": "apps/web/e2e/crm-list.spec.ts",
-              "sha256": "3ce848936ced39bac5aa31c0ec2ee813aa350a6d1e22e51501174622ba92be8f"
+              "sha256": "6e45d20195e3deb2d35d20f79410169bf13eb6b327adc8652b8c75ffd837e11c"
             },
             {
               "path": "apps/web/e2e/customer-service-history-views.spec.ts",
@@ -509360,7 +509555,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-settings-forms.spec.ts",
-              "sha256": "e511cdc655dbb9ac621e9ae5ab28816b4dd62f0c76c0c7e8ecaff97e93d43b11"
+              "sha256": "e107c7d15d6c67f9e96107023389cadf9fe7ba8598f05e27ebae94851c12bd2d"
             },
             {
               "path": "apps/web/e2e/failed-jobs.spec.ts",
@@ -509902,6 +510097,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         }
@@ -509958,7 +510158,8 @@
           "release-0.5-staff-confirmation-fixtures",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -510050,7 +510251,7 @@
             },
             {
               "path": "apps/web/e2e/crm-list.spec.ts",
-              "sha256": "3ce848936ced39bac5aa31c0ec2ee813aa350a6d1e22e51501174622ba92be8f"
+              "sha256": "6e45d20195e3deb2d35d20f79410169bf13eb6b327adc8652b8c75ffd837e11c"
             },
             {
               "path": "apps/web/e2e/customer-service-history-views.spec.ts",
@@ -510074,7 +510275,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-settings-forms.spec.ts",
-              "sha256": "e511cdc655dbb9ac621e9ae5ab28816b4dd62f0c76c0c7e8ecaff97e93d43b11"
+              "sha256": "e107c7d15d6c67f9e96107023389cadf9fe7ba8598f05e27ebae94851c12bd2d"
             },
             {
               "path": "apps/web/e2e/failed-jobs.spec.ts",
@@ -510616,6 +510817,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         }
@@ -511112,7 +511318,8 @@
           "release-0.5-staff-confirmation-fixtures",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -511204,7 +511411,7 @@
             },
             {
               "path": "apps/web/e2e/crm-list.spec.ts",
-              "sha256": "3ce848936ced39bac5aa31c0ec2ee813aa350a6d1e22e51501174622ba92be8f"
+              "sha256": "6e45d20195e3deb2d35d20f79410169bf13eb6b327adc8652b8c75ffd837e11c"
             },
             {
               "path": "apps/web/e2e/customer-service-history-views.spec.ts",
@@ -511228,7 +511435,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-settings-forms.spec.ts",
-              "sha256": "e511cdc655dbb9ac621e9ae5ab28816b4dd62f0c76c0c7e8ecaff97e93d43b11"
+              "sha256": "e107c7d15d6c67f9e96107023389cadf9fe7ba8598f05e27ebae94851c12bd2d"
             },
             {
               "path": "apps/web/e2e/failed-jobs.spec.ts",
@@ -511770,6 +511977,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         }
@@ -533684,7 +533896,8 @@
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-confirmed-electricity-feedback"
+          "release-0.5-confirmed-electricity-feedback",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -534192,7 +534405,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
-              "sha256": "69cef388cc9232bf07efd16f0ee69637c2f33a025d03aa7f9125a45cd1e6be6a"
+              "sha256": "7f8796a5235ec91d8f03a2092b7fee1bbb70239e4a1d65addeb8599a70563dd9"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -535306,6 +535519,11 @@
               "batch": "release-0.5-confirmed-electricity-feedback",
               "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         },
@@ -535441,7 +535659,8 @@
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-confirmed-electricity-feedback"
+          "release-0.5-confirmed-electricity-feedback",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -535949,7 +536168,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
-              "sha256": "69cef388cc9232bf07efd16f0ee69637c2f33a025d03aa7f9125a45cd1e6be6a"
+              "sha256": "7f8796a5235ec91d8f03a2092b7fee1bbb70239e4a1d65addeb8599a70563dd9"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -537063,6 +537282,11 @@
               "batch": "release-0.5-confirmed-electricity-feedback",
               "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         },
@@ -537199,7 +537423,8 @@
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-confirmed-electricity-feedback"
+          "release-0.5-confirmed-electricity-feedback",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -537707,7 +537932,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
-              "sha256": "69cef388cc9232bf07efd16f0ee69637c2f33a025d03aa7f9125a45cd1e6be6a"
+              "sha256": "7f8796a5235ec91d8f03a2092b7fee1bbb70239e4a1d65addeb8599a70563dd9"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -538821,6 +539046,11 @@
               "batch": "release-0.5-confirmed-electricity-feedback",
               "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         },
@@ -538926,7 +539156,8 @@
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-confirmed-electricity-feedback"
+          "release-0.5-confirmed-electricity-feedback",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -539434,7 +539665,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
-              "sha256": "69cef388cc9232bf07efd16f0ee69637c2f33a025d03aa7f9125a45cd1e6be6a"
+              "sha256": "7f8796a5235ec91d8f03a2092b7fee1bbb70239e4a1d65addeb8599a70563dd9"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -540548,6 +540779,11 @@
               "batch": "release-0.5-confirmed-electricity-feedback",
               "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         },
@@ -540679,7 +540915,8 @@
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-confirmed-electricity-feedback"
+          "release-0.5-confirmed-electricity-feedback",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -541187,7 +541424,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
-              "sha256": "69cef388cc9232bf07efd16f0ee69637c2f33a025d03aa7f9125a45cd1e6be6a"
+              "sha256": "7f8796a5235ec91d8f03a2092b7fee1bbb70239e4a1d65addeb8599a70563dd9"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -542301,6 +542538,11 @@
               "batch": "release-0.5-confirmed-electricity-feedback",
               "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         },
@@ -542441,7 +542683,8 @@
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-confirmed-electricity-feedback"
+          "release-0.5-confirmed-electricity-feedback",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -542949,7 +543192,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
-              "sha256": "69cef388cc9232bf07efd16f0ee69637c2f33a025d03aa7f9125a45cd1e6be6a"
+              "sha256": "7f8796a5235ec91d8f03a2092b7fee1bbb70239e4a1d65addeb8599a70563dd9"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -544063,6 +544306,11 @@
               "batch": "release-0.5-confirmed-electricity-feedback",
               "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         },
@@ -544176,7 +544424,8 @@
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-confirmed-electricity-feedback"
+          "release-0.5-confirmed-electricity-feedback",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -544684,7 +544933,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
-              "sha256": "69cef388cc9232bf07efd16f0ee69637c2f33a025d03aa7f9125a45cd1e6be6a"
+              "sha256": "7f8796a5235ec91d8f03a2092b7fee1bbb70239e4a1d65addeb8599a70563dd9"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -545798,6 +546047,11 @@
               "batch": "release-0.5-confirmed-electricity-feedback",
               "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         },
@@ -545875,7 +546129,8 @@
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-confirmed-electricity-feedback"
+          "release-0.5-confirmed-electricity-feedback",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -546383,7 +546638,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
-              "sha256": "69cef388cc9232bf07efd16f0ee69637c2f33a025d03aa7f9125a45cd1e6be6a"
+              "sha256": "7f8796a5235ec91d8f03a2092b7fee1bbb70239e4a1d65addeb8599a70563dd9"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -547497,6 +547752,11 @@
               "batch": "release-0.5-confirmed-electricity-feedback",
               "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         },
@@ -547574,7 +547834,8 @@
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-confirmed-electricity-feedback"
+          "release-0.5-confirmed-electricity-feedback",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -548082,7 +548343,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
-              "sha256": "69cef388cc9232bf07efd16f0ee69637c2f33a025d03aa7f9125a45cd1e6be6a"
+              "sha256": "7f8796a5235ec91d8f03a2092b7fee1bbb70239e4a1d65addeb8599a70563dd9"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -549196,6 +549457,11 @@
               "batch": "release-0.5-confirmed-electricity-feedback",
               "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         },
@@ -549274,7 +549540,8 @@
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-confirmed-electricity-feedback"
+          "release-0.5-confirmed-electricity-feedback",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -549782,7 +550049,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
-              "sha256": "69cef388cc9232bf07efd16f0ee69637c2f33a025d03aa7f9125a45cd1e6be6a"
+              "sha256": "7f8796a5235ec91d8f03a2092b7fee1bbb70239e4a1d65addeb8599a70563dd9"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -550896,6 +551163,11 @@
               "batch": "release-0.5-confirmed-electricity-feedback",
               "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         },
@@ -550973,7 +551245,8 @@
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-confirmed-electricity-feedback"
+          "release-0.5-confirmed-electricity-feedback",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -551481,7 +551754,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
-              "sha256": "69cef388cc9232bf07efd16f0ee69637c2f33a025d03aa7f9125a45cd1e6be6a"
+              "sha256": "7f8796a5235ec91d8f03a2092b7fee1bbb70239e4a1d65addeb8599a70563dd9"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -552595,6 +552868,11 @@
               "batch": "release-0.5-confirmed-electricity-feedback",
               "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         },
@@ -552665,7 +552943,8 @@
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-confirmed-electricity-feedback"
+          "release-0.5-confirmed-electricity-feedback",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -553201,7 +553480,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
-              "sha256": "69cef388cc9232bf07efd16f0ee69637c2f33a025d03aa7f9125a45cd1e6be6a"
+              "sha256": "7f8796a5235ec91d8f03a2092b7fee1bbb70239e4a1d65addeb8599a70563dd9"
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
@@ -554381,6 +554660,11 @@
               "batch": "release-0.5-confirmed-electricity-feedback",
               "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         }
@@ -554445,7 +554729,8 @@
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-confirmed-electricity-feedback"
+          "release-0.5-confirmed-electricity-feedback",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -554981,7 +555266,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
-              "sha256": "69cef388cc9232bf07efd16f0ee69637c2f33a025d03aa7f9125a45cd1e6be6a"
+              "sha256": "7f8796a5235ec91d8f03a2092b7fee1bbb70239e4a1d65addeb8599a70563dd9"
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
@@ -556161,6 +556446,11 @@
               "batch": "release-0.5-confirmed-electricity-feedback",
               "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         }
@@ -556266,7 +556556,8 @@
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-confirmed-electricity-feedback"
+          "release-0.5-confirmed-electricity-feedback",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -556802,7 +557093,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
-              "sha256": "69cef388cc9232bf07efd16f0ee69637c2f33a025d03aa7f9125a45cd1e6be6a"
+              "sha256": "7f8796a5235ec91d8f03a2092b7fee1bbb70239e4a1d65addeb8599a70563dd9"
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
@@ -557982,6 +558273,11 @@
               "batch": "release-0.5-confirmed-electricity-feedback",
               "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         }
@@ -558046,7 +558342,8 @@
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-confirmed-electricity-feedback"
+          "release-0.5-confirmed-electricity-feedback",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -558582,7 +558879,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
-              "sha256": "69cef388cc9232bf07efd16f0ee69637c2f33a025d03aa7f9125a45cd1e6be6a"
+              "sha256": "7f8796a5235ec91d8f03a2092b7fee1bbb70239e4a1d65addeb8599a70563dd9"
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
@@ -559762,6 +560059,11 @@
               "batch": "release-0.5-confirmed-electricity-feedback",
               "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         }
@@ -559826,7 +560128,8 @@
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-confirmed-electricity-feedback"
+          "release-0.5-confirmed-electricity-feedback",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -560362,7 +560665,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
-              "sha256": "69cef388cc9232bf07efd16f0ee69637c2f33a025d03aa7f9125a45cd1e6be6a"
+              "sha256": "7f8796a5235ec91d8f03a2092b7fee1bbb70239e4a1d65addeb8599a70563dd9"
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
@@ -561542,6 +561845,11 @@
               "batch": "release-0.5-confirmed-electricity-feedback",
               "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         }
@@ -561606,7 +561914,8 @@
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-confirmed-electricity-feedback"
+          "release-0.5-confirmed-electricity-feedback",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -562142,7 +562451,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
-              "sha256": "69cef388cc9232bf07efd16f0ee69637c2f33a025d03aa7f9125a45cd1e6be6a"
+              "sha256": "7f8796a5235ec91d8f03a2092b7fee1bbb70239e4a1d65addeb8599a70563dd9"
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
@@ -563322,6 +563631,11 @@
               "batch": "release-0.5-confirmed-electricity-feedback",
               "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         }
@@ -563386,7 +563700,8 @@
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-confirmed-electricity-feedback"
+          "release-0.5-confirmed-electricity-feedback",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -563922,7 +564237,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
-              "sha256": "69cef388cc9232bf07efd16f0ee69637c2f33a025d03aa7f9125a45cd1e6be6a"
+              "sha256": "7f8796a5235ec91d8f03a2092b7fee1bbb70239e4a1d65addeb8599a70563dd9"
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
@@ -565102,6 +565417,11 @@
               "batch": "release-0.5-confirmed-electricity-feedback",
               "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         }
@@ -565166,7 +565486,8 @@
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-confirmed-electricity-feedback"
+          "release-0.5-confirmed-electricity-feedback",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -565702,7 +566023,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
-              "sha256": "69cef388cc9232bf07efd16f0ee69637c2f33a025d03aa7f9125a45cd1e6be6a"
+              "sha256": "7f8796a5235ec91d8f03a2092b7fee1bbb70239e4a1d65addeb8599a70563dd9"
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
@@ -566882,6 +567203,11 @@
               "batch": "release-0.5-confirmed-electricity-feedback",
               "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         }
@@ -566946,7 +567272,8 @@
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-confirmed-electricity-feedback"
+          "release-0.5-confirmed-electricity-feedback",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -567482,7 +567809,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
-              "sha256": "69cef388cc9232bf07efd16f0ee69637c2f33a025d03aa7f9125a45cd1e6be6a"
+              "sha256": "7f8796a5235ec91d8f03a2092b7fee1bbb70239e4a1d65addeb8599a70563dd9"
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
@@ -568662,6 +568989,11 @@
               "batch": "release-0.5-confirmed-electricity-feedback",
               "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         }
@@ -568726,7 +569058,8 @@
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-confirmed-electricity-feedback"
+          "release-0.5-confirmed-electricity-feedback",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -569262,7 +569595,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
-              "sha256": "69cef388cc9232bf07efd16f0ee69637c2f33a025d03aa7f9125a45cd1e6be6a"
+              "sha256": "7f8796a5235ec91d8f03a2092b7fee1bbb70239e4a1d65addeb8599a70563dd9"
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
@@ -570442,6 +570775,11 @@
               "batch": "release-0.5-confirmed-electricity-feedback",
               "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         }
@@ -570506,7 +570844,8 @@
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-confirmed-electricity-feedback"
+          "release-0.5-confirmed-electricity-feedback",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -571042,7 +571381,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
-              "sha256": "69cef388cc9232bf07efd16f0ee69637c2f33a025d03aa7f9125a45cd1e6be6a"
+              "sha256": "7f8796a5235ec91d8f03a2092b7fee1bbb70239e4a1d65addeb8599a70563dd9"
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
@@ -572222,6 +572561,11 @@
               "batch": "release-0.5-confirmed-electricity-feedback",
               "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         }
@@ -572286,7 +572630,8 @@
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-confirmed-electricity-feedback"
+          "release-0.5-confirmed-electricity-feedback",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -572822,7 +573167,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
-              "sha256": "69cef388cc9232bf07efd16f0ee69637c2f33a025d03aa7f9125a45cd1e6be6a"
+              "sha256": "7f8796a5235ec91d8f03a2092b7fee1bbb70239e4a1d65addeb8599a70563dd9"
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
@@ -574002,6 +574347,11 @@
               "batch": "release-0.5-confirmed-electricity-feedback",
               "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         }
@@ -574066,7 +574416,8 @@
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-confirmed-electricity-feedback"
+          "release-0.5-confirmed-electricity-feedback",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -574602,7 +574953,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
-              "sha256": "69cef388cc9232bf07efd16f0ee69637c2f33a025d03aa7f9125a45cd1e6be6a"
+              "sha256": "7f8796a5235ec91d8f03a2092b7fee1bbb70239e4a1d65addeb8599a70563dd9"
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
@@ -575782,6 +576133,11 @@
               "batch": "release-0.5-confirmed-electricity-feedback",
               "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         }
@@ -575836,7 +576192,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-verified-command-rejection",
           "release-0.5-native-staff-touch-and-electricity-recovery",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -576140,7 +576497,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.tsx",
-              "sha256": "16b3d50567804a7381a15d714ad666a3e3c446bbb975b96546d432af196df6c4"
+              "sha256": "0d491c742f7053e5d21b4c581a9746ef317db28de031292fbf9d0f9a9e839c76"
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
@@ -576461,6 +576818,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         }
@@ -576525,7 +576887,8 @@
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-confirmed-electricity-feedback"
+          "release-0.5-confirmed-electricity-feedback",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -577061,7 +577424,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
-              "sha256": "69cef388cc9232bf07efd16f0ee69637c2f33a025d03aa7f9125a45cd1e6be6a"
+              "sha256": "7f8796a5235ec91d8f03a2092b7fee1bbb70239e4a1d65addeb8599a70563dd9"
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
@@ -578241,6 +578604,11 @@
               "batch": "release-0.5-confirmed-electricity-feedback",
               "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         }
@@ -578305,7 +578673,8 @@
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-confirmed-electricity-feedback"
+          "release-0.5-confirmed-electricity-feedback",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -578841,7 +579210,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
-              "sha256": "69cef388cc9232bf07efd16f0ee69637c2f33a025d03aa7f9125a45cd1e6be6a"
+              "sha256": "7f8796a5235ec91d8f03a2092b7fee1bbb70239e4a1d65addeb8599a70563dd9"
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
@@ -580021,6 +580390,11 @@
               "batch": "release-0.5-confirmed-electricity-feedback",
               "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         }
@@ -580159,7 +580533,8 @@
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-confirmed-electricity-feedback"
+          "release-0.5-confirmed-electricity-feedback",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -580667,7 +581042,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
-              "sha256": "69cef388cc9232bf07efd16f0ee69637c2f33a025d03aa7f9125a45cd1e6be6a"
+              "sha256": "7f8796a5235ec91d8f03a2092b7fee1bbb70239e4a1d65addeb8599a70563dd9"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -581781,6 +582156,11 @@
               "batch": "release-0.5-confirmed-electricity-feedback",
               "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         },
@@ -581854,7 +582234,8 @@
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-confirmed-electricity-feedback"
+          "release-0.5-confirmed-electricity-feedback",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -582362,7 +582743,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
-              "sha256": "69cef388cc9232bf07efd16f0ee69637c2f33a025d03aa7f9125a45cd1e6be6a"
+              "sha256": "7f8796a5235ec91d8f03a2092b7fee1bbb70239e4a1d65addeb8599a70563dd9"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -583476,6 +583857,11 @@
               "batch": "release-0.5-confirmed-electricity-feedback",
               "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         },
@@ -583549,7 +583935,8 @@
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-confirmed-electricity-feedback"
+          "release-0.5-confirmed-electricity-feedback",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -584057,7 +584444,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
-              "sha256": "69cef388cc9232bf07efd16f0ee69637c2f33a025d03aa7f9125a45cd1e6be6a"
+              "sha256": "7f8796a5235ec91d8f03a2092b7fee1bbb70239e4a1d65addeb8599a70563dd9"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -585171,6 +585558,11 @@
               "batch": "release-0.5-confirmed-electricity-feedback",
               "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         },
@@ -585244,7 +585636,8 @@
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-confirmed-electricity-feedback"
+          "release-0.5-confirmed-electricity-feedback",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -585752,7 +586145,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
-              "sha256": "69cef388cc9232bf07efd16f0ee69637c2f33a025d03aa7f9125a45cd1e6be6a"
+              "sha256": "7f8796a5235ec91d8f03a2092b7fee1bbb70239e4a1d65addeb8599a70563dd9"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -586866,6 +587259,11 @@
               "batch": "release-0.5-confirmed-electricity-feedback",
               "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         },
@@ -586939,7 +587337,8 @@
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-confirmed-electricity-feedback"
+          "release-0.5-confirmed-electricity-feedback",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -587447,7 +587846,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
-              "sha256": "69cef388cc9232bf07efd16f0ee69637c2f33a025d03aa7f9125a45cd1e6be6a"
+              "sha256": "7f8796a5235ec91d8f03a2092b7fee1bbb70239e4a1d65addeb8599a70563dd9"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -588561,6 +588960,11 @@
               "batch": "release-0.5-confirmed-electricity-feedback",
               "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         },
@@ -588634,7 +589038,8 @@
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-confirmed-electricity-feedback"
+          "release-0.5-confirmed-electricity-feedback",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -589142,7 +589547,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
-              "sha256": "69cef388cc9232bf07efd16f0ee69637c2f33a025d03aa7f9125a45cd1e6be6a"
+              "sha256": "7f8796a5235ec91d8f03a2092b7fee1bbb70239e4a1d65addeb8599a70563dd9"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -590256,6 +590661,11 @@
               "batch": "release-0.5-confirmed-electricity-feedback",
               "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         },
@@ -590329,7 +590739,8 @@
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-confirmed-electricity-feedback"
+          "release-0.5-confirmed-electricity-feedback",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -590837,7 +591248,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
-              "sha256": "69cef388cc9232bf07efd16f0ee69637c2f33a025d03aa7f9125a45cd1e6be6a"
+              "sha256": "7f8796a5235ec91d8f03a2092b7fee1bbb70239e4a1d65addeb8599a70563dd9"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -591951,6 +592362,11 @@
               "batch": "release-0.5-confirmed-electricity-feedback",
               "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         },
@@ -617038,7 +617454,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -617446,7 +617863,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileList.tsx",
-              "sha256": "2ed7e9256cd951790fd4cf95392758fee5cecd8813d5f8880f8ca4cfa1c2e67b"
+              "sha256": "fb30dc041234234c50f4516924132c294d9d556a529e175b249f02de8b5c3fc4"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrdersPage.tsx",
@@ -618018,6 +618435,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         }
@@ -618084,7 +618506,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -618492,7 +618915,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileList.tsx",
-              "sha256": "2ed7e9256cd951790fd4cf95392758fee5cecd8813d5f8880f8ca4cfa1c2e67b"
+              "sha256": "fb30dc041234234c50f4516924132c294d9d556a529e175b249f02de8b5c3fc4"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrdersPage.tsx",
@@ -619064,6 +619487,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         }
@@ -619130,7 +619558,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -619538,7 +619967,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileList.tsx",
-              "sha256": "2ed7e9256cd951790fd4cf95392758fee5cecd8813d5f8880f8ca4cfa1c2e67b"
+              "sha256": "fb30dc041234234c50f4516924132c294d9d556a529e175b249f02de8b5c3fc4"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrdersPage.tsx",
@@ -620110,6 +620539,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         }
@@ -620179,7 +620613,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -620587,7 +621022,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileList.tsx",
-              "sha256": "2ed7e9256cd951790fd4cf95392758fee5cecd8813d5f8880f8ca4cfa1c2e67b"
+              "sha256": "fb30dc041234234c50f4516924132c294d9d556a529e175b249f02de8b5c3fc4"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrdersPage.tsx",
@@ -621159,6 +621594,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         }
@@ -621228,7 +621668,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -621636,7 +622077,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileList.tsx",
-              "sha256": "2ed7e9256cd951790fd4cf95392758fee5cecd8813d5f8880f8ca4cfa1c2e67b"
+              "sha256": "fb30dc041234234c50f4516924132c294d9d556a529e175b249f02de8b5c3fc4"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrdersPage.tsx",
@@ -622208,6 +622649,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         }
@@ -622304,7 +622750,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -622712,7 +623159,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileList.tsx",
-              "sha256": "2ed7e9256cd951790fd4cf95392758fee5cecd8813d5f8880f8ca4cfa1c2e67b"
+              "sha256": "fb30dc041234234c50f4516924132c294d9d556a529e175b249f02de8b5c3fc4"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrdersPage.tsx",
@@ -623284,6 +623731,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         }
@@ -623349,7 +623801,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -623757,7 +624210,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileList.tsx",
-              "sha256": "2ed7e9256cd951790fd4cf95392758fee5cecd8813d5f8880f8ca4cfa1c2e67b"
+              "sha256": "fb30dc041234234c50f4516924132c294d9d556a529e175b249f02de8b5c3fc4"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrdersPage.tsx",
@@ -624329,6 +624782,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         }
@@ -624394,7 +624852,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -624802,7 +625261,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileList.tsx",
-              "sha256": "2ed7e9256cd951790fd4cf95392758fee5cecd8813d5f8880f8ca4cfa1c2e67b"
+              "sha256": "fb30dc041234234c50f4516924132c294d9d556a529e175b249f02de8b5c3fc4"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrdersPage.tsx",
@@ -625374,6 +625833,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         }
@@ -625440,7 +625904,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -625848,7 +626313,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileList.tsx",
-              "sha256": "2ed7e9256cd951790fd4cf95392758fee5cecd8813d5f8880f8ca4cfa1c2e67b"
+              "sha256": "fb30dc041234234c50f4516924132c294d9d556a529e175b249f02de8b5c3fc4"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrdersPage.tsx",
@@ -626420,6 +626885,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         }
@@ -626504,7 +626974,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -626912,7 +627383,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileList.tsx",
-              "sha256": "2ed7e9256cd951790fd4cf95392758fee5cecd8813d5f8880f8ca4cfa1c2e67b"
+              "sha256": "fb30dc041234234c50f4516924132c294d9d556a529e175b249f02de8b5c3fc4"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrdersPage.tsx",
@@ -627484,6 +627955,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         }
@@ -627551,7 +628027,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -627959,7 +628436,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileList.tsx",
-              "sha256": "2ed7e9256cd951790fd4cf95392758fee5cecd8813d5f8880f8ca4cfa1c2e67b"
+              "sha256": "fb30dc041234234c50f4516924132c294d9d556a529e175b249f02de8b5c3fc4"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrdersPage.tsx",
@@ -628531,6 +629008,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         }
@@ -648346,7 +648828,8 @@
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-confirmed-electricity-feedback"
+          "release-0.5-confirmed-electricity-feedback",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -648586,7 +649069,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityRulesPage.tsx",
-              "sha256": "104ae805db972374f6af7cbae60488b09e57f6954aab91e41685b6098399936a"
+              "sha256": "87908439a544820ec2f0134f64cc1f35f396dec5132e56347402ffdc647059f4"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -648916,6 +649399,11 @@
               "batch": "release-0.5-confirmed-electricity-feedback",
               "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         }
@@ -648966,7 +649454,8 @@
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-confirmed-electricity-feedback"
+          "release-0.5-confirmed-electricity-feedback",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -649206,7 +649695,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityRulesPage.tsx",
-              "sha256": "104ae805db972374f6af7cbae60488b09e57f6954aab91e41685b6098399936a"
+              "sha256": "87908439a544820ec2f0134f64cc1f35f396dec5132e56347402ffdc647059f4"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -649536,6 +650025,11 @@
               "batch": "release-0.5-confirmed-electricity-feedback",
               "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         }
@@ -649585,7 +650079,8 @@
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-confirmed-electricity-feedback"
+          "release-0.5-confirmed-electricity-feedback",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -649825,7 +650320,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityRulesPage.tsx",
-              "sha256": "104ae805db972374f6af7cbae60488b09e57f6954aab91e41685b6098399936a"
+              "sha256": "87908439a544820ec2f0134f64cc1f35f396dec5132e56347402ffdc647059f4"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -650155,6 +650650,11 @@
               "batch": "release-0.5-confirmed-electricity-feedback",
               "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         }
@@ -650206,7 +650706,8 @@
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-confirmed-electricity-feedback"
+          "release-0.5-confirmed-electricity-feedback",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -650446,7 +650947,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityRulesPage.tsx",
-              "sha256": "104ae805db972374f6af7cbae60488b09e57f6954aab91e41685b6098399936a"
+              "sha256": "87908439a544820ec2f0134f64cc1f35f396dec5132e56347402ffdc647059f4"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -650776,6 +651277,11 @@
               "batch": "release-0.5-confirmed-electricity-feedback",
               "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         }
@@ -650827,7 +651333,8 @@
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-confirmed-electricity-feedback"
+          "release-0.5-confirmed-electricity-feedback",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -651067,7 +651574,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityRulesPage.tsx",
-              "sha256": "104ae805db972374f6af7cbae60488b09e57f6954aab91e41685b6098399936a"
+              "sha256": "87908439a544820ec2f0134f64cc1f35f396dec5132e56347402ffdc647059f4"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -651397,6 +651904,11 @@
               "batch": "release-0.5-confirmed-electricity-feedback",
               "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         }
@@ -651445,7 +651957,8 @@
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-confirmed-electricity-feedback"
+          "release-0.5-confirmed-electricity-feedback",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -651685,7 +652198,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityRulesPage.tsx",
-              "sha256": "104ae805db972374f6af7cbae60488b09e57f6954aab91e41685b6098399936a"
+              "sha256": "87908439a544820ec2f0134f64cc1f35f396dec5132e56347402ffdc647059f4"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -652015,6 +652528,11 @@
               "batch": "release-0.5-confirmed-electricity-feedback",
               "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         }
@@ -652063,7 +652581,8 @@
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-confirmed-electricity-feedback"
+          "release-0.5-confirmed-electricity-feedback",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -652303,7 +652822,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityRulesPage.tsx",
-              "sha256": "104ae805db972374f6af7cbae60488b09e57f6954aab91e41685b6098399936a"
+              "sha256": "87908439a544820ec2f0134f64cc1f35f396dec5132e56347402ffdc647059f4"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -652633,6 +653152,11 @@
               "batch": "release-0.5-confirmed-electricity-feedback",
               "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         }
@@ -652682,7 +653206,8 @@
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-confirmed-electricity-feedback"
+          "release-0.5-confirmed-electricity-feedback",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -652922,7 +653447,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityRulesPage.tsx",
-              "sha256": "104ae805db972374f6af7cbae60488b09e57f6954aab91e41685b6098399936a"
+              "sha256": "87908439a544820ec2f0134f64cc1f35f396dec5132e56347402ffdc647059f4"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -653252,6 +653777,11 @@
               "batch": "release-0.5-confirmed-electricity-feedback",
               "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         }
@@ -653300,7 +653830,8 @@
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-confirmed-electricity-feedback"
+          "release-0.5-confirmed-electricity-feedback",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -653540,7 +654071,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityRulesPage.tsx",
-              "sha256": "104ae805db972374f6af7cbae60488b09e57f6954aab91e41685b6098399936a"
+              "sha256": "87908439a544820ec2f0134f64cc1f35f396dec5132e56347402ffdc647059f4"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -653870,6 +654401,11 @@
               "batch": "release-0.5-confirmed-electricity-feedback",
               "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         }
@@ -653919,7 +654455,8 @@
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-confirmed-electricity-feedback"
+          "release-0.5-confirmed-electricity-feedback",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -654159,7 +654696,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityRulesPage.tsx",
-              "sha256": "104ae805db972374f6af7cbae60488b09e57f6954aab91e41685b6098399936a"
+              "sha256": "87908439a544820ec2f0134f64cc1f35f396dec5132e56347402ffdc647059f4"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -654489,6 +655026,11 @@
               "batch": "release-0.5-confirmed-electricity-feedback",
               "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         }
@@ -657731,7 +658273,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -658139,7 +658682,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileList.tsx",
-              "sha256": "2ed7e9256cd951790fd4cf95392758fee5cecd8813d5f8880f8ca4cfa1c2e67b"
+              "sha256": "fb30dc041234234c50f4516924132c294d9d556a529e175b249f02de8b5c3fc4"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrdersPage.tsx",
@@ -658711,6 +659254,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         }
@@ -658775,7 +659323,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -659183,7 +659732,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileList.tsx",
-              "sha256": "2ed7e9256cd951790fd4cf95392758fee5cecd8813d5f8880f8ca4cfa1c2e67b"
+              "sha256": "fb30dc041234234c50f4516924132c294d9d556a529e175b249f02de8b5c3fc4"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrdersPage.tsx",
@@ -659755,6 +660304,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         }
@@ -659819,7 +660373,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -660227,7 +660782,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileList.tsx",
-              "sha256": "2ed7e9256cd951790fd4cf95392758fee5cecd8813d5f8880f8ca4cfa1c2e67b"
+              "sha256": "fb30dc041234234c50f4516924132c294d9d556a529e175b249f02de8b5c3fc4"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrdersPage.tsx",
@@ -660799,6 +661354,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         }
@@ -660863,7 +661423,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -661271,7 +661832,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileList.tsx",
-              "sha256": "2ed7e9256cd951790fd4cf95392758fee5cecd8813d5f8880f8ca4cfa1c2e67b"
+              "sha256": "fb30dc041234234c50f4516924132c294d9d556a529e175b249f02de8b5c3fc4"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrdersPage.tsx",
@@ -661843,6 +662404,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         }
@@ -681823,7 +682389,8 @@
           "release-0.5-coverage-remaining-branches",
           "release-0.5-protected-contract-and-finance",
           "release-0.5-dependency-gate-closure",
-          "release-0.5-final-ui-evidence"
+          "release-0.5-final-ui-evidence",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": {
           "kind": "verified-financial-admin-ui-journeys",
@@ -681839,7 +682406,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-settings-forms.spec.ts",
-              "sha256": "e511cdc655dbb9ac621e9ae5ab28816b4dd62f0c76c0c7e8ecaff97e93d43b11"
+              "sha256": "e107c7d15d6c67f9e96107023389cadf9fe7ba8598f05e27ebae94851c12bd2d"
             },
             {
               "path": "apps/web/e2e/limit-settings-forms.spec.ts",
@@ -681903,7 +682470,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityRulesPage.tsx",
-              "sha256": "104ae805db972374f6af7cbae60488b09e57f6954aab91e41685b6098399936a"
+              "sha256": "87908439a544820ec2f0134f64cc1f35f396dec5132e56347402ffdc647059f4"
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
@@ -682029,6 +682596,11 @@
               "batch": "release-0.5-final-ui-evidence",
               "base_commit": "999235279102f13eb7e44fe7b89694a4d4945313",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-final-ui-evidence/layout-proof.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         }
@@ -682542,7 +683114,8 @@
           "release-0.5-staff-lists-and-receipts",
           "release-0.5-form-and-document-accessibility",
           "release-0.5-protected-contract-and-finance",
-          "release-0.5-dependency-gate-closure"
+          "release-0.5-dependency-gate-closure",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_acceptance": {
           "kind": "verified-admin-safety-and-team-ui-journeys",
@@ -682550,7 +683123,7 @@
           "source_evidence": [
             {
               "path": "apps/web/e2e/storage-policy-forms.spec.ts",
-              "sha256": "7d511b84b45fad49f4dab5f53cb8c09c45b5efa880e6af2e94180d4e0351ee7b"
+              "sha256": "f7533a1e03d1926649f2607942a5ef2f12aaec56da5c26881f04116b15fa60e5"
             },
             {
               "path": "apps/web/e2e/upload-policies.spec.ts",
@@ -682711,6 +683284,11 @@
               "batch": "release-0.5-dependency-gate-closure",
               "base_commit": "f7f27566c9a204444bb8790e67267ad7373c3ab7",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-dependency-gate-closure/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         }
@@ -692860,7 +693438,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-settings-forms.spec.ts",
-              "sha256": "e511cdc655dbb9ac621e9ae5ab28816b4dd62f0c76c0c7e8ecaff97e93d43b11"
+              "sha256": "e107c7d15d6c67f9e96107023389cadf9fe7ba8598f05e27ebae94851c12bd2d"
             },
             {
               "path": "apps/web/src/lib/electricity-quote-error.test.ts",
@@ -692880,7 +693458,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminElectricityRulesPage.tsx",
-              "sha256": "104ae805db972374f6af7cbae60488b09e57f6954aab91e41685b6098399936a"
+              "sha256": "87908439a544820ec2f0134f64cc1f35f396dec5132e56347402ffdc647059f4"
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
@@ -696336,6 +696914,11 @@
               "batch": "release-0.5-confirmed-electricity-feedback",
               "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         },
@@ -696388,7 +696971,8 @@
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-confirmed-electricity-feedback"
+          "release-0.5-confirmed-electricity-feedback",
+          "release-0.5-native-staff-control-targets"
         ]
       }
     },
@@ -697712,7 +698296,7 @@
             },
             {
               "path": "apps/web/e2e/storage-policy-forms.spec.ts",
-              "sha256": "7d511b84b45fad49f4dab5f53cb8c09c45b5efa880e6af2e94180d4e0351ee7b"
+              "sha256": "f7533a1e03d1926649f2607942a5ef2f12aaec56da5c26881f04116b15fa60e5"
             },
             {
               "path": "apps/web/e2e/ticket-forms-fixture.ts",
@@ -698172,7 +698756,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.tsx",
-              "sha256": "16b3d50567804a7381a15d714ad666a3e3c446bbb975b96546d432af196df6c4"
+              "sha256": "0d491c742f7053e5d21b4c581a9746ef317db28de031292fbf9d0f9a9e839c76"
             },
             {
               "path": "apps/web/src/pages/NotificationCenterPage.tsx",
@@ -700179,6 +700763,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         },
@@ -700216,7 +700805,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-staff-confirmation-fixtures",
           "release-0.5-native-staff-touch-and-electricity-recovery",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-native-staff-control-targets"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -701537,7 +702127,7 @@
             },
             {
               "path": "apps/web/e2e/storage-policy-forms.spec.ts",
-              "sha256": "7d511b84b45fad49f4dab5f53cb8c09c45b5efa880e6af2e94180d4e0351ee7b"
+              "sha256": "f7533a1e03d1926649f2607942a5ef2f12aaec56da5c26881f04116b15fa60e5"
             },
             {
               "path": "apps/web/e2e/ticket-forms-fixture.ts",
@@ -701989,7 +702579,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.tsx",
-              "sha256": "16b3d50567804a7381a15d714ad666a3e3c446bbb975b96546d432af196df6c4"
+              "sha256": "0d491c742f7053e5d21b4c581a9746ef317db28de031292fbf9d0f9a9e839c76"
             },
             {
               "path": "apps/web/src/pages/NotificationCenterPage.tsx",
@@ -703882,6 +704472,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-native-staff-control-targets",
+              "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
             }
           ]
         },
@@ -703936,7 +704531,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-staff-confirmation-fixtures",
           "release-0.5-native-staff-touch-and-electricity-recovery",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-native-staff-control-targets"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -704112,7 +704708,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "All 93 populated routes and five redirects have route-level records. Prior source-bound evidence covers 74 conditional cases across 15 routes. The current native touch and saved-setup recovery fixes passed focused checks. Remaining conditional states and shared command feedback are open."
+        "The preceding pushed source has a complete populated width matrix across 93 routes in Chromium and Safari. Existing receipt, denial and financial assertions ran with the layout cases. Four affected staff forms pass targeted checks after enlarging their native controls. Remaining conditional UI adoption and shared command feedback are open."
       ],
       "owner": null,
       "depends_on": [],
@@ -704152,7 +704748,8 @@
           "release-0.5-staff-confirmation-fixtures",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-native-staff-control-targets"
         ]
       }
     },
@@ -704171,7 +704768,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "The preceding exact source mapped 1,036 passing browser cases. Combined coverage passed and critical web branches were 20,565/24,164 (85.11%). The isolated advanced electricity feedback change passed its related units, native journeys and all 98 bundle limits. Final candidate coverage and presentation gates remain required."
+        "The staff control candidate passed 47 focused unit cases, 68 Chromium and Safari cases and all 98 gzip limits. Electricity ordering measured 254.93 KB gzip against the 255 KB limit. The exact combined gate passed at a24ab647 with 1,036 mapped cases and 85.11% critical web branches. Renew combined evidence on final release sources."
       ],
       "owner": null,
       "depends_on": [],
@@ -704209,7 +704806,8 @@
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-confirmed-electricity-feedback"
+          "release-0.5-confirmed-electricity-feedback",
+          "release-0.5-native-staff-control-targets"
         ]
       }
     },
@@ -763293,7 +763891,176 @@
         "release-readiness#R-02.02"
       ],
       "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-renewed-source-bindings.json",
-      "release_disposition": "No version or staging release until effective v0.5.0 criteria are accepted."
+      "release_disposition": "No version or staging release until effective v0.5.0 criteria are accepted.",
+      "push_receipt": {
+        "local_sha": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+        "remote_sha": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+        "verified_at": "2026-11-07T16:37:11+00:00"
+      }
+    },
+    "release-0.5-native-staff-control-targets": {
+      "batch": "release-0.5-native-staff-control-targets",
+      "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.04.01.06",
+        "07-ui-ux-design.md#T-07.04.02.04",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "accepted_task_keys": [],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.04.01.06",
+        "07-ui-ux-design.md#T-07.04.02.04",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/crm-list.spec.ts",
+          "sha256": "6e45d20195e3deb2d35d20f79410169bf13eb6b327adc8652b8c75ffd837e11c"
+        },
+        {
+          "path": "apps/web/e2e/electricity-settings-forms.spec.ts",
+          "sha256": "e107c7d15d6c67f9e96107023389cadf9fe7ba8598f05e27ebae94851c12bd2d"
+        },
+        {
+          "path": "apps/web/e2e/maintenance-forms.spec.ts",
+          "sha256": "6e6c4d58cab90c4ec09623a2f1cc0b436aede0ebdf7428d252a6d661da9e0a3f"
+        },
+        {
+          "path": "apps/web/e2e/storage-policy-forms.spec.ts",
+          "sha256": "f7533a1e03d1926649f2607942a5ef2f12aaec56da5c26881f04116b15fa60e5"
+        },
+        {
+          "path": "apps/web/src/pages/AdminElectricityRulesPage.tsx",
+          "sha256": "87908439a544820ec2f0134f64cc1f35f396dec5132e56347402ffdc647059f4"
+        },
+        {
+          "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
+          "sha256": "7f8796a5235ec91d8f03a2092b7fee1bbb70239e4a1d65addeb8599a70563dd9"
+        },
+        {
+          "path": "apps/web/src/pages/AdminStorageConfig.tsx",
+          "sha256": "0d491c742f7053e5d21b4c581a9746ef317db28de031292fbf9d0f9a9e839c76"
+        },
+        {
+          "path": "apps/web/src/pages/CrmProfileList.tsx",
+          "sha256": "fb30dc041234234c50f4516924132c294d9d556a529e175b249f02de8b5c3fc4"
+        }
+      ],
+      "checks": [
+        "The native replay selected 332 distinct browser cases across 73 fixture files. It passed 331 cases and retained one WebKit size failure at 43.9999847 CSS pixels. A separate replay passed the full original assertions and direct hit tests at both edges, with a computed 44px minimum and a 132-pixel physical target. This supplied the remaining 16 cells of the 2,976-cell populated matrix.",
+        "The four changed staff forms passed 47 focused unit cases and 68 browser cases in Chromium and Safari. Existing permissions, stored values, review safeguards and retry assertions ran. Production build, format, changed-file lint, web typecheck and all 98 size limits passed."
+      ],
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json",
+      "source_scope_proof_sha256": "b543c4b1e70157f41bff589ddb2bab7e62086d0f017696020899445905d71e20",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-control-targets.patch",
+      "width_replay_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/layout-measured-cells.json",
+      "width_replay_evidence_sha256": "fa74ea16b881ce228a210b89ea0b9e6e0b12e43aec68db507dfec28bf001344f",
+      "renewed_task_keys": [
+        "02-auth-users-admin.md#T-03.03.06",
+        "02-auth-users-admin.md#T-05.01.01",
+        "02-auth-users-admin.md#T-05.01.02",
+        "02-auth-users-admin.md#T-09.01.02",
+        "02-auth-users-admin.md#T-09.10.02",
+        "02-auth-users-admin.md#T-09.10.03",
+        "02-auth-users-admin.md#T-09.12.04",
+        "03-core-business.md#T-03.04.01.01",
+        "03-core-business.md#T-03.04.01.02",
+        "03-core-business.md#T-03.04.01.03",
+        "03-core-business.md#T-03.04.01.04",
+        "03-core-business.md#T-03.04.01.05",
+        "03-core-business.md#T-03.04.02.01",
+        "03-core-business.md#T-03.04.02.02",
+        "03-core-business.md#T-03.04.02.03",
+        "03-core-business.md#T-03.04.02.04",
+        "03-core-business.md#T-03.04.03.01",
+        "03-core-business.md#T-03.04.03.02",
+        "03-core-business.md#T-03.04.03.03",
+        "03-core-business.md#T-03.04.03.04",
+        "03-core-business.md#T-03.04.04.01",
+        "03-core-business.md#T-03.04.04.02",
+        "03-core-business.md#T-03.04.04.03",
+        "03-core-business.md#T-03.04.04.04",
+        "05-notifications-documents-ai.md#T-05.09.03",
+        "05-notifications-documents-ai.md#T-05.09.04",
+        "07-ui-ux-design.md#T-07.01.03.19",
+        "07-ui-ux-design.md#T-07.01.04.02",
+        "07-ui-ux-design.md#T-07.01.04.03",
+        "07-ui-ux-design.md#T-07.01.04.04",
+        "07-ui-ux-design.md#T-07.01.04.05",
+        "07-ui-ux-design.md#T-07.04.01.05",
+        "07-ui-ux-design.md#T-07.05.01.11",
+        "07-ui-ux-design.md#T-07.05.02.01",
+        "07-ui-ux-design.md#T-07.05.02.03",
+        "07-ui-ux-design.md#T-07.10.01.01",
+        "07-ui-ux-design.md#T-07.10.01.02",
+        "07-ui-ux-design.md#T-07.10.01.03",
+        "07-ui-ux-design.md#T-07.10.01.04",
+        "07-ui-ux-design.md#T-07.10.01.05",
+        "07-ui-ux-design.md#T-07.10.01.06",
+        "07-ui-ux-design.md#T-07.10.02.01",
+        "07-ui-ux-design.md#T-07.10.02.02",
+        "07-ui-ux-design.md#T-07.10.02.03",
+        "07-ui-ux-design.md#T-07.10.02.04",
+        "07-ui-ux-design.md#T-07.10.02.05",
+        "07-ui-ux-design.md#T-07.11.01.01",
+        "07-ui-ux-design.md#T-07.11.01.02",
+        "07-ui-ux-design.md#T-07.11.01.04",
+        "07-ui-ux-design.md#T-07.11.01.05",
+        "07-ui-ux-design.md#T-07.11.02.01",
+        "07-ui-ux-design.md#T-07.11.02.02",
+        "07-ui-ux-design.md#T-07.11.02.03",
+        "07-ui-ux-design.md#T-07.11.02.04",
+        "07-ui-ux-design.md#T-07.11.02.05",
+        "07-ui-ux-design.md#T-07.12.01.01",
+        "07-ui-ux-design.md#T-07.12.01.02",
+        "07-ui-ux-design.md#T-07.12.01.03",
+        "07-ui-ux-design.md#T-07.12.01.04",
+        "07-ui-ux-design.md#T-07.12.01.05",
+        "07-ui-ux-design.md#T-07.12.01.06",
+        "07-ui-ux-design.md#T-07.12.01.07",
+        "07-ui-ux-design.md#T-07.13.01.01",
+        "07-ui-ux-design.md#T-07.13.01.02",
+        "07-ui-ux-design.md#T-07.13.01.03",
+        "07-ui-ux-design.md#T-07.13.01.04",
+        "07-ui-ux-design.md#T-07.13.01.05",
+        "07-ui-ux-design.md#T-07.13.01.06",
+        "07-ui-ux-design.md#T-07.13.01.07",
+        "07-ui-ux-design.md#T-07.18.01.01",
+        "07-ui-ux-design.md#T-07.18.01.02",
+        "07-ui-ux-design.md#T-07.18.01.03",
+        "07-ui-ux-design.md#T-07.18.01.04",
+        "07-ui-ux-design.md#T-07.18.01.05",
+        "07-ui-ux-design.md#T-07.18.01.06",
+        "07-ui-ux-design.md#T-07.18.02.01",
+        "07-ui-ux-design.md#T-07.18.02.02",
+        "07-ui-ux-design.md#T-07.18.02.03",
+        "07-ui-ux-design.md#T-07.18.02.04",
+        "07-ui-ux-design.md#T-07.18.02.05",
+        "07-ui-ux-design.md#T-07.22.01.01",
+        "07-ui-ux-design.md#T-07.22.01.02",
+        "07-ui-ux-design.md#T-07.22.01.03",
+        "07-ui-ux-design.md#T-07.22.01.04",
+        "07-ui-ux-design.md#T-07.22.01.05",
+        "07-ui-ux-design.md#T-07.22.02.01",
+        "07-ui-ux-design.md#T-07.22.02.02",
+        "07-ui-ux-design.md#T-07.22.02.03",
+        "07-ui-ux-design.md#T-07.22.02.04",
+        "07-ui-ux-design.md#T-07.22.02.05",
+        "07-ui-ux-design.md#T-07.24.01.01",
+        "07-ui-ux-design.md#T-07.24.01.02",
+        "07-ui-ux-design.md#T-07.24.01.03",
+        "07-ui-ux-design.md#T-07.24.01.04",
+        "07-ui-ux-design.md#T-07.30.02.09",
+        "07-ui-ux-design.md#T-07.30.02.12",
+        "release-readiness#R-02.02",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02"
+      ],
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-control-renewed-bindings.json",
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout",
+      "release_disposition": "No release. Text and conditional evidence, final coverage and the owner dispositions remain open."
     }
   },
   "historical_improvements": [

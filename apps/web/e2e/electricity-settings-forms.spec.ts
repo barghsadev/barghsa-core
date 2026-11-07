@@ -124,6 +124,18 @@ for (const locale of ['en', 'fa'] as const)
           exact: true,
         });
       await expect(ttl).toHaveValue('7');
+      if (await page.evaluate(() => matchMedia('(pointer: coarse)').matches)) {
+        for (const mode of ['simpleOrder', 'advancedOrder']) {
+          const range = page.locator('#' + mode + '-share');
+          const toggle = page.locator(`label[for="${mode}-enabled"]`);
+          for (const target of [range, toggle]) {
+            await expect(target).toBeVisible();
+            const { height, width } = (await target.boundingBox())!;
+            expect(height).toBeGreaterThanOrEqual(44);
+            expect(width).toBeGreaterThanOrEqual(44);
+          }
+        }
+      }
       await expect(page.locator('html')).toHaveAttribute('dir', locale === 'fa' ? 'rtl' : 'ltr');
       await expect(page.locator('html')).toHaveClass(dark ? /dark/ : /^(?!.*dark).*$/);
       await simple.fill('1e3');

@@ -129,7 +129,10 @@ function GreenEditor({
                     </p>
                   )}
                   <div>
-                    <label className="flex items-center gap-2" htmlFor={`${mode}-enabled`}>
+                    <label
+                      className="touch-label flex items-center gap-2"
+                      htmlFor={`${mode}-enabled`}
+                    >
                       <input
                         id={`${mode}-enabled`}
                         type="checkbox"
@@ -160,7 +163,7 @@ function GreenEditor({
                     <input
                       id={`${mode}-share`}
                       {...editor.bind(`${prefix}Share`)}
-                      className="w-full"
+                      className="w-full pointer-coarse:h-[44px]"
                       type="range"
                       min={0}
                       max={100}

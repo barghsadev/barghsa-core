@@ -129,6 +129,15 @@ for (const locale of ['en', 'fa'] as const) {
     page,
   }, info) => {
     const { word, confirmPause, save, row } = await setup(page, locale);
+    if (await page.evaluate(() => matchMedia('(pointer: coarse)').matches)) {
+      const active = page.getByRole('checkbox', { name: word('active'), exact: true });
+      await expect(active).toBeVisible();
+      const { width, height } = await active.evaluate((input: HTMLInputElement) =>
+        input.labels![0]!.getBoundingClientRect().toJSON()
+      );
+      expect(width).toBeGreaterThanOrEqual(44);
+      expect(height).toBeGreaterThanOrEqual(44);
+    }
     await checkRoutePresentation(page, info, locale);
     const writes: Record<string, unknown>[] = [];
     let release!: () => void;

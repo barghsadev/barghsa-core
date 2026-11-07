@@ -330,7 +330,7 @@ export default function AdminMaintenancePage() {
                 name="active"
                 render={({ field }) => (
                   <FormItem>
-                    <label className="flex items-center gap-2">
+                    <label className="touch-label flex items-center gap-2">
                       <FormControl>
                         <input
                           type="checkbox"
