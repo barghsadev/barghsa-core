@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-07T19:54:35+00:00",
-  "source_commit": "adcd42ca9ef2cf48acbae6368d92749970029e65",
+  "updated": "2026-11-07T20:06:28+00:00",
+  "source_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -472893,7 +472893,8 @@
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-conditional-native-choices",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-component-direction-matrix"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -472913,7 +472914,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "b0a5ba1348adbae56c43debd41ec086ba3d6937993d9091b694b976c6f1f9ec1"
+              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -473708,6 +473709,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-component-direction-matrix",
+              "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
           ]
         }
@@ -473980,7 +473986,8 @@
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-conditional-native-choices",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-component-direction-matrix"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -473996,7 +474003,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "b0a5ba1348adbae56c43debd41ec086ba3d6937993d9091b694b976c6f1f9ec1"
+              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
@@ -474440,7 +474447,7 @@
             },
             {
               "path": "packages/ui/stories/feedback.stories.tsx",
-              "sha256": "91df7e0a18e3e23a17dddf5eff3a1ab9d9d9c39bf4c820c1ee0813d0898f37a4"
+              "sha256": "781720f6d0ffc174c7b0ece1f3d289aee44ec603d407e0588799696a735fb269"
             },
             {
               "path": "packages/ui/stories/forms.stories.tsx",
@@ -474657,6 +474664,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-component-direction-matrix",
+              "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
           ]
         },
@@ -474828,7 +474840,8 @@
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-conditional-native-choices",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-component-direction-matrix"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -474844,7 +474857,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "b0a5ba1348adbae56c43debd41ec086ba3d6937993d9091b694b976c6f1f9ec1"
+              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
@@ -475288,7 +475301,7 @@
             },
             {
               "path": "packages/ui/stories/feedback.stories.tsx",
-              "sha256": "91df7e0a18e3e23a17dddf5eff3a1ab9d9d9c39bf4c820c1ee0813d0898f37a4"
+              "sha256": "781720f6d0ffc174c7b0ece1f3d289aee44ec603d407e0588799696a735fb269"
             },
             {
               "path": "packages/ui/stories/forms.stories.tsx",
@@ -475505,6 +475518,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-component-direction-matrix",
+              "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
           ]
         },
@@ -475560,7 +475578,8 @@
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-conditional-native-choices",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-component-direction-matrix"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -475580,7 +475599,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "b0a5ba1348adbae56c43debd41ec086ba3d6937993d9091b694b976c6f1f9ec1"
+              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -476375,6 +476394,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-component-direction-matrix",
+              "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
           ]
         }
@@ -476427,7 +476451,8 @@
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-conditional-native-choices",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-component-direction-matrix"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -476443,7 +476468,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "b0a5ba1348adbae56c43debd41ec086ba3d6937993d9091b694b976c6f1f9ec1"
+              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
@@ -476887,7 +476912,7 @@
             },
             {
               "path": "packages/ui/stories/feedback.stories.tsx",
-              "sha256": "91df7e0a18e3e23a17dddf5eff3a1ab9d9d9c39bf4c820c1ee0813d0898f37a4"
+              "sha256": "781720f6d0ffc174c7b0ece1f3d289aee44ec603d407e0588799696a735fb269"
             },
             {
               "path": "packages/ui/stories/forms.stories.tsx",
@@ -477104,6 +477129,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-component-direction-matrix",
+              "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
           ]
         },
@@ -477161,7 +477191,8 @@
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-conditional-native-choices",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-component-direction-matrix"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -477181,7 +477212,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "b0a5ba1348adbae56c43debd41ec086ba3d6937993d9091b694b976c6f1f9ec1"
+              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -477976,6 +478007,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-component-direction-matrix",
+              "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
           ]
         }
@@ -478028,7 +478064,8 @@
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-conditional-native-choices",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-component-direction-matrix"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -478044,7 +478081,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "b0a5ba1348adbae56c43debd41ec086ba3d6937993d9091b694b976c6f1f9ec1"
+              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
@@ -478488,7 +478525,7 @@
             },
             {
               "path": "packages/ui/stories/feedback.stories.tsx",
-              "sha256": "91df7e0a18e3e23a17dddf5eff3a1ab9d9d9c39bf4c820c1ee0813d0898f37a4"
+              "sha256": "781720f6d0ffc174c7b0ece1f3d289aee44ec603d407e0588799696a735fb269"
             },
             {
               "path": "packages/ui/stories/forms.stories.tsx",
@@ -478705,6 +478742,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-component-direction-matrix",
+              "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
           ]
         },
@@ -478765,7 +478807,8 @@
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-conditional-native-choices",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-component-direction-matrix"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -478781,7 +478824,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "b0a5ba1348adbae56c43debd41ec086ba3d6937993d9091b694b976c6f1f9ec1"
+              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
@@ -479225,7 +479268,7 @@
             },
             {
               "path": "packages/ui/stories/feedback.stories.tsx",
-              "sha256": "91df7e0a18e3e23a17dddf5eff3a1ab9d9d9c39bf4c820c1ee0813d0898f37a4"
+              "sha256": "781720f6d0ffc174c7b0ece1f3d289aee44ec603d407e0588799696a735fb269"
             },
             {
               "path": "packages/ui/stories/forms.stories.tsx",
@@ -479442,6 +479485,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-component-direction-matrix",
+              "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
           ]
         },
@@ -479501,7 +479549,8 @@
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-conditional-native-choices",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-component-direction-matrix"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -479517,7 +479566,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "b0a5ba1348adbae56c43debd41ec086ba3d6937993d9091b694b976c6f1f9ec1"
+              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
@@ -479744,6 +479793,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-component-direction-matrix",
+              "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
           ]
         },
@@ -479804,7 +479858,8 @@
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-conditional-native-choices",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-component-direction-matrix"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -479820,7 +479875,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "b0a5ba1348adbae56c43debd41ec086ba3d6937993d9091b694b976c6f1f9ec1"
+              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
             },
             {
               "path": "apps/web/e2e/online-payment-return.spec.ts",
@@ -480338,6 +480393,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-component-direction-matrix",
+              "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
           ]
         }
@@ -480390,7 +480450,8 @@
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-conditional-native-choices",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-component-direction-matrix"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -480406,7 +480467,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "b0a5ba1348adbae56c43debd41ec086ba3d6937993d9091b694b976c6f1f9ec1"
+              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
             },
             {
               "path": "apps/web/e2e/online-payment-return.spec.ts",
@@ -480924,6 +480985,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-component-direction-matrix",
+              "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
           ]
         }
@@ -480976,7 +481042,8 @@
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-conditional-native-choices",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-component-direction-matrix"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -480992,7 +481059,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "b0a5ba1348adbae56c43debd41ec086ba3d6937993d9091b694b976c6f1f9ec1"
+              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
             },
             {
               "path": "apps/web/e2e/online-payment-return.spec.ts",
@@ -481510,6 +481577,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-component-direction-matrix",
+              "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
           ]
         }
@@ -481562,7 +481634,8 @@
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-conditional-native-choices",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-component-direction-matrix"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -481578,7 +481651,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "b0a5ba1348adbae56c43debd41ec086ba3d6937993d9091b694b976c6f1f9ec1"
+              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
             },
             {
               "path": "apps/web/e2e/online-payment-return.spec.ts",
@@ -482096,6 +482169,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-component-direction-matrix",
+              "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
           ]
         }
@@ -482142,7 +482220,8 @@
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-conditional-native-choices",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-component-direction-matrix"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -482150,7 +482229,7 @@
           "source_evidence": [
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "b0a5ba1348adbae56c43debd41ec086ba3d6937993d9091b694b976c6f1f9ec1"
+              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -482410,6 +482489,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-component-direction-matrix",
+              "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
           ]
         }
@@ -482456,7 +482540,8 @@
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-conditional-native-choices",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-component-direction-matrix"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -482464,7 +482549,7 @@
           "source_evidence": [
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "b0a5ba1348adbae56c43debd41ec086ba3d6937993d9091b694b976c6f1f9ec1"
+              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -482724,6 +482809,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-component-direction-matrix",
+              "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
           ]
         }
@@ -482770,7 +482860,8 @@
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-conditional-native-choices",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-component-direction-matrix"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -482778,7 +482869,7 @@
           "source_evidence": [
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "b0a5ba1348adbae56c43debd41ec086ba3d6937993d9091b694b976c6f1f9ec1"
+              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -483038,6 +483129,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-component-direction-matrix",
+              "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
           ]
         }
@@ -483084,7 +483180,8 @@
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-conditional-native-choices",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-component-direction-matrix"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -483092,7 +483189,7 @@
           "source_evidence": [
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "b0a5ba1348adbae56c43debd41ec086ba3d6937993d9091b694b976c6f1f9ec1"
+              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -483352,6 +483449,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-component-direction-matrix",
+              "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
           ]
         }
@@ -483403,7 +483505,8 @@
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-conditional-native-choices",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-component-direction-matrix"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -483419,7 +483522,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "b0a5ba1348adbae56c43debd41ec086ba3d6937993d9091b694b976c6f1f9ec1"
+              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
@@ -483650,6 +483753,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-component-direction-matrix",
+              "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
           ]
         },
@@ -485924,7 +486032,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-ui-evidence",
           "release-0.5-verified-command-rejection",
-          "release-0.5-settings-response-feedback"
+          "release-0.5-settings-response-feedback",
+          "release-0.5-component-direction-matrix"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -486004,7 +486113,7 @@
             },
             {
               "path": "packages/ui/stories/feedback.stories.tsx",
-              "sha256": "91df7e0a18e3e23a17dddf5eff3a1ab9d9d9c39bf4c820c1ee0813d0898f37a4"
+              "sha256": "781720f6d0ffc174c7b0ece1f3d289aee44ec603d407e0588799696a735fb269"
             }
           ],
           "checks": [
@@ -486232,6 +486341,11 @@
               "batch": "release-0.5-settings-response-feedback",
               "base_commit": "8c419ffe7a5a4d5b06d5ca4299d64499902fa8bb",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-settings-response-feedback/scoped-settings-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-component-direction-matrix",
+              "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
           ]
         }
@@ -486272,7 +486386,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-ui-evidence",
           "release-0.5-verified-command-rejection",
-          "release-0.5-settings-response-feedback"
+          "release-0.5-settings-response-feedback",
+          "release-0.5-component-direction-matrix"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -486352,7 +486467,7 @@
             },
             {
               "path": "packages/ui/stories/feedback.stories.tsx",
-              "sha256": "91df7e0a18e3e23a17dddf5eff3a1ab9d9d9c39bf4c820c1ee0813d0898f37a4"
+              "sha256": "781720f6d0ffc174c7b0ece1f3d289aee44ec603d407e0588799696a735fb269"
             }
           ],
           "checks": [
@@ -486580,6 +486695,11 @@
               "batch": "release-0.5-settings-response-feedback",
               "base_commit": "8c419ffe7a5a4d5b06d5ca4299d64499902fa8bb",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-settings-response-feedback/scoped-settings-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-component-direction-matrix",
+              "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
           ]
         }
@@ -487181,7 +487301,8 @@
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-conditional-native-choices",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-component-direction-matrix"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -487205,7 +487326,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "b0a5ba1348adbae56c43debd41ec086ba3d6937993d9091b694b976c6f1f9ec1"
+              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
             },
             {
               "path": "apps/web/e2e/profile-picker.spec.ts",
@@ -487456,6 +487577,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-component-direction-matrix",
+              "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
           ]
         },
@@ -487549,7 +487675,8 @@
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-owned-staff-solar-review",
           "release-0.5-essential-control-contrast",
-          "release-0.5-consultation-staff-command-receipts"
+          "release-0.5-consultation-staff-command-receipts",
+          "release-0.5-component-direction-matrix"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -487565,7 +487692,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "b0a5ba1348adbae56c43debd41ec086ba3d6937993d9091b694b976c6f1f9ec1"
+              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
             },
             {
               "path": "apps/web/e2e/shared-loading-adoption.spec.ts",
@@ -488460,6 +488587,11 @@
               "batch": "release-0.5-consultation-staff-command-receipts",
               "base_commit": "adcd42ca9ef2cf48acbae6368d92749970029e65",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-staff-command-receipts/proof.json"
+            },
+            {
+              "batch": "release-0.5-component-direction-matrix",
+              "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
           ]
         },
@@ -488520,7 +488652,8 @@
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-conditional-native-choices",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-component-direction-matrix"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -488536,7 +488669,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "b0a5ba1348adbae56c43debd41ec086ba3d6937993d9091b694b976c6f1f9ec1"
+              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
@@ -488777,6 +488910,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-component-direction-matrix",
+              "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
           ]
         },
@@ -504231,7 +504369,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "The 93 populated route baseline remains recorded. The current solar review displays English contract terms with their original direction inside Persian UI. Remaining component-only and conditional direction evidence is open."
+        "All 70 published component stories now pass explicit RTL/LTR direction and 320/1280px surface/document geometry in both themes on the final Chromium story build. Selected Safari cases and prior 93 populated product route evidence remain recorded. Remaining conditional product direction evidence is open."
       ],
       "owner": null,
       "depends_on": [],
@@ -504254,7 +504392,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-ai-tab-intrinsic-widths",
           "release-0.5-responsive-width-acceptance",
-          "release-0.5-conditional-native-choices"
+          "release-0.5-conditional-native-choices",
+          "release-0.5-component-direction-matrix"
         ],
         "current_acceptance": null
       }
@@ -504300,7 +504439,8 @@
           "release-0.5-verified-command-rejection",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-profile-picker-preload-recovery",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-component-direction-matrix"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -504348,7 +504488,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "b0a5ba1348adbae56c43debd41ec086ba3d6937993d9091b694b976c6f1f9ec1"
+              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
             },
             {
               "path": "apps/web/e2e/language-before-paint.spec.ts",
@@ -504646,6 +504786,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-component-direction-matrix",
+              "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
           ]
         },
@@ -504699,7 +504844,8 @@
           "release-0.5-verified-command-rejection",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-profile-picker-preload-recovery",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-component-direction-matrix"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -504747,7 +504893,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "b0a5ba1348adbae56c43debd41ec086ba3d6937993d9091b694b976c6f1f9ec1"
+              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
             },
             {
               "path": "apps/web/e2e/language-before-paint.spec.ts",
@@ -505045,6 +505191,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-component-direction-matrix",
+              "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
           ]
         },
@@ -505096,7 +505247,8 @@
           "release-0.5-verified-command-rejection",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-profile-picker-preload-recovery",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-component-direction-matrix"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -505144,7 +505296,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "b0a5ba1348adbae56c43debd41ec086ba3d6937993d9091b694b976c6f1f9ec1"
+              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
             },
             {
               "path": "apps/web/e2e/language-before-paint.spec.ts",
@@ -505442,6 +505594,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-component-direction-matrix",
+              "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
           ]
         },
@@ -505493,7 +505650,8 @@
           "release-0.5-verified-command-rejection",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-profile-picker-preload-recovery",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-component-direction-matrix"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -505541,7 +505699,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "b0a5ba1348adbae56c43debd41ec086ba3d6937993d9091b694b976c6f1f9ec1"
+              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
             },
             {
               "path": "apps/web/e2e/language-before-paint.spec.ts",
@@ -505839,6 +505997,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-component-direction-matrix",
+              "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
           ]
         },
@@ -505890,7 +506053,8 @@
           "release-0.5-profile-picker-preload-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-solar-and-consultation-feedback",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-component-direction-matrix"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -505910,7 +506074,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "b0a5ba1348adbae56c43debd41ec086ba3d6937993d9091b694b976c6f1f9ec1"
+              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
             },
             {
               "path": "apps/web/e2e/reconciliation-tables.spec.ts",
@@ -506149,6 +506313,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-component-direction-matrix",
+              "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
           ]
         }
@@ -506194,7 +506363,8 @@
           "release-0.5-profile-picker-preload-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-solar-and-consultation-feedback",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-component-direction-matrix"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -506214,7 +506384,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "b0a5ba1348adbae56c43debd41ec086ba3d6937993d9091b694b976c6f1f9ec1"
+              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
             },
             {
               "path": "apps/web/e2e/reconciliation-tables.spec.ts",
@@ -506453,6 +506623,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-component-direction-matrix",
+              "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
           ]
         }
@@ -506498,7 +506673,8 @@
           "release-0.5-profile-picker-preload-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-solar-and-consultation-feedback",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-component-direction-matrix"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -506518,7 +506694,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "b0a5ba1348adbae56c43debd41ec086ba3d6937993d9091b694b976c6f1f9ec1"
+              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
             },
             {
               "path": "apps/web/e2e/reconciliation-tables.spec.ts",
@@ -506757,6 +506933,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-component-direction-matrix",
+              "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
           ]
         }
@@ -506802,7 +506983,8 @@
           "release-0.5-profile-picker-preload-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-solar-and-consultation-feedback",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-component-direction-matrix"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -506822,7 +507004,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "b0a5ba1348adbae56c43debd41ec086ba3d6937993d9091b694b976c6f1f9ec1"
+              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
             },
             {
               "path": "apps/web/e2e/reconciliation-tables.spec.ts",
@@ -507061,6 +507243,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-component-direction-matrix",
+              "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
           ]
         }
@@ -510692,7 +510879,8 @@
           "release-0.5-profile-picker-preload-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-solar-and-consultation-feedback",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-component-direction-matrix"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -510744,7 +510932,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "b0a5ba1348adbae56c43debd41ec086ba3d6937993d9091b694b976c6f1f9ec1"
+              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
@@ -511065,6 +511253,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-component-direction-matrix",
+              "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
           ]
         }
@@ -511119,7 +511312,8 @@
           "release-0.5-profile-picker-preload-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-solar-and-consultation-feedback",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-component-direction-matrix"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -511171,7 +511365,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "b0a5ba1348adbae56c43debd41ec086ba3d6937993d9091b694b976c6f1f9ec1"
+              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
@@ -511492,6 +511686,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-component-direction-matrix",
+              "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
           ]
         }
@@ -511993,7 +512192,8 @@
           "release-0.5-crm-archive-touch-targets",
           "release-0.5-profile-picker-preload-recovery",
           "release-0.5-conditional-native-choices",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-component-direction-matrix"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -512061,7 +512261,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "b0a5ba1348adbae56c43debd41ec086ba3d6937993d9091b694b976c6f1f9ec1"
+              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
             },
             {
               "path": "apps/web/e2e/tickets.spec.ts",
@@ -512420,6 +512620,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-component-direction-matrix",
+              "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
           ]
         }
@@ -512555,7 +512760,8 @@
           "release-0.5-profile-picker-preload-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-solar-and-consultation-feedback",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-component-direction-matrix"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -512607,7 +512813,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "b0a5ba1348adbae56c43debd41ec086ba3d6937993d9091b694b976c6f1f9ec1"
+              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
@@ -512928,6 +513134,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-component-direction-matrix",
+              "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
           ]
         }
@@ -512977,7 +513188,8 @@
           "release-0.5-crm-archive-touch-targets",
           "release-0.5-profile-picker-preload-recovery",
           "release-0.5-conditional-native-choices",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-component-direction-matrix"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -513045,7 +513257,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "b0a5ba1348adbae56c43debd41ec086ba3d6937993d9091b694b976c6f1f9ec1"
+              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
             },
             {
               "path": "apps/web/e2e/tickets.spec.ts",
@@ -513404,6 +513616,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-component-direction-matrix",
+              "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
           ]
         }
@@ -513471,7 +513688,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-essential-control-contrast",
-          "release-0.5-consultation-staff-command-receipts"
+          "release-0.5-consultation-staff-command-receipts",
+          "release-0.5-component-direction-matrix"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -513623,7 +513841,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "b0a5ba1348adbae56c43debd41ec086ba3d6937993d9091b694b976c6f1f9ec1"
+              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
@@ -514184,6 +514402,11 @@
               "batch": "release-0.5-consultation-staff-command-receipts",
               "base_commit": "adcd42ca9ef2cf48acbae6368d92749970029e65",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-staff-command-receipts/proof.json"
+            },
+            {
+              "batch": "release-0.5-component-direction-matrix",
+              "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
           ]
         }
@@ -514251,7 +514474,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-essential-control-contrast",
-          "release-0.5-consultation-staff-command-receipts"
+          "release-0.5-consultation-staff-command-receipts",
+          "release-0.5-component-direction-matrix"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -514403,7 +514627,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "b0a5ba1348adbae56c43debd41ec086ba3d6937993d9091b694b976c6f1f9ec1"
+              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
@@ -514964,6 +515188,11 @@
               "batch": "release-0.5-consultation-staff-command-receipts",
               "base_commit": "adcd42ca9ef2cf48acbae6368d92749970029e65",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-staff-command-receipts/proof.json"
+            },
+            {
+              "batch": "release-0.5-component-direction-matrix",
+              "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
           ]
         }
@@ -515013,7 +515242,8 @@
           "release-0.5-crm-archive-touch-targets",
           "release-0.5-profile-picker-preload-recovery",
           "release-0.5-conditional-native-choices",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-component-direction-matrix"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -515081,7 +515311,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "b0a5ba1348adbae56c43debd41ec086ba3d6937993d9091b694b976c6f1f9ec1"
+              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
             },
             {
               "path": "apps/web/e2e/tickets.spec.ts",
@@ -515440,6 +515670,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-component-direction-matrix",
+              "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
           ]
         }
@@ -515507,7 +515742,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-essential-control-contrast",
-          "release-0.5-consultation-staff-command-receipts"
+          "release-0.5-consultation-staff-command-receipts",
+          "release-0.5-component-direction-matrix"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -515659,7 +515895,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "b0a5ba1348adbae56c43debd41ec086ba3d6937993d9091b694b976c6f1f9ec1"
+              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
@@ -516220,6 +516456,11 @@
               "batch": "release-0.5-consultation-staff-command-receipts",
               "base_commit": "adcd42ca9ef2cf48acbae6368d92749970029e65",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-staff-command-receipts/proof.json"
+            },
+            {
+              "batch": "release-0.5-component-direction-matrix",
+              "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
           ]
         }
@@ -516308,7 +516549,8 @@
           "release-0.5-profile-picker-preload-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-solar-and-consultation-feedback",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-component-direction-matrix"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -516376,7 +516618,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "b0a5ba1348adbae56c43debd41ec086ba3d6937993d9091b694b976c6f1f9ec1"
+              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
             },
             {
               "path": "apps/web/e2e/notification-brand-preview.spec.ts",
@@ -517134,6 +517376,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-component-direction-matrix",
+              "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
           ]
         },
@@ -517197,7 +517444,8 @@
           "release-0.5-profile-picker-preload-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-solar-and-consultation-feedback",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-component-direction-matrix"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -517265,7 +517513,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "b0a5ba1348adbae56c43debd41ec086ba3d6937993d9091b694b976c6f1f9ec1"
+              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
             },
             {
               "path": "apps/web/e2e/notification-brand-preview.spec.ts",
@@ -518023,6 +518271,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-component-direction-matrix",
+              "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
           ]
         },
@@ -518086,7 +518339,8 @@
           "release-0.5-profile-picker-preload-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-solar-and-consultation-feedback",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-component-direction-matrix"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -518154,7 +518408,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "b0a5ba1348adbae56c43debd41ec086ba3d6937993d9091b694b976c6f1f9ec1"
+              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
             },
             {
               "path": "apps/web/e2e/notification-brand-preview.spec.ts",
@@ -518912,6 +519166,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-component-direction-matrix",
+              "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
           ]
         },
@@ -518975,7 +519234,8 @@
           "release-0.5-profile-picker-preload-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-solar-and-consultation-feedback",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-component-direction-matrix"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -519043,7 +519303,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "b0a5ba1348adbae56c43debd41ec086ba3d6937993d9091b694b976c6f1f9ec1"
+              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
             },
             {
               "path": "apps/web/e2e/notification-brand-preview.spec.ts",
@@ -519801,6 +520061,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-component-direction-matrix",
+              "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
           ]
         },
@@ -519864,7 +520129,8 @@
           "release-0.5-profile-picker-preload-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-solar-and-consultation-feedback",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-component-direction-matrix"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -519932,7 +520198,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "b0a5ba1348adbae56c43debd41ec086ba3d6937993d9091b694b976c6f1f9ec1"
+              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
             },
             {
               "path": "apps/web/e2e/notification-brand-preview.spec.ts",
@@ -520690,6 +520956,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-component-direction-matrix",
+              "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
           ]
         },
@@ -520753,7 +521024,8 @@
           "release-0.5-profile-picker-preload-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-solar-and-consultation-feedback",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-component-direction-matrix"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -520821,7 +521093,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "b0a5ba1348adbae56c43debd41ec086ba3d6937993d9091b694b976c6f1f9ec1"
+              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
             },
             {
               "path": "apps/web/e2e/notification-brand-preview.spec.ts",
@@ -521579,6 +521851,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-component-direction-matrix",
+              "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
           ]
         },
@@ -521642,7 +521919,8 @@
           "release-0.5-profile-picker-preload-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-solar-and-consultation-feedback",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-component-direction-matrix"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -521710,7 +521988,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "b0a5ba1348adbae56c43debd41ec086ba3d6937993d9091b694b976c6f1f9ec1"
+              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
             },
             {
               "path": "apps/web/e2e/notification-brand-preview.spec.ts",
@@ -522468,6 +522746,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-component-direction-matrix",
+              "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
           ]
         },
@@ -522531,7 +522814,8 @@
           "release-0.5-profile-picker-preload-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-solar-and-consultation-feedback",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-component-direction-matrix"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -522599,7 +522883,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "b0a5ba1348adbae56c43debd41ec086ba3d6937993d9091b694b976c6f1f9ec1"
+              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
             },
             {
               "path": "apps/web/e2e/notification-brand-preview.spec.ts",
@@ -523357,6 +523641,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-component-direction-matrix",
+              "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
           ]
         },
@@ -523420,7 +523709,8 @@
           "release-0.5-profile-picker-preload-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-solar-and-consultation-feedback",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-component-direction-matrix"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -523488,7 +523778,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "b0a5ba1348adbae56c43debd41ec086ba3d6937993d9091b694b976c6f1f9ec1"
+              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
             },
             {
               "path": "apps/web/e2e/notification-brand-preview.spec.ts",
@@ -524246,6 +524536,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-component-direction-matrix",
+              "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
           ]
         },
@@ -524309,7 +524604,8 @@
           "release-0.5-profile-picker-preload-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-solar-and-consultation-feedback",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-component-direction-matrix"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -524377,7 +524673,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "b0a5ba1348adbae56c43debd41ec086ba3d6937993d9091b694b976c6f1f9ec1"
+              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
             },
             {
               "path": "apps/web/e2e/notification-brand-preview.spec.ts",
@@ -525135,6 +525431,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-component-direction-matrix",
+              "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
           ]
         },
@@ -525198,7 +525499,8 @@
           "release-0.5-profile-picker-preload-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-solar-and-consultation-feedback",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-component-direction-matrix"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -525266,7 +525568,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "b0a5ba1348adbae56c43debd41ec086ba3d6937993d9091b694b976c6f1f9ec1"
+              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
             },
             {
               "path": "apps/web/e2e/notification-brand-preview.spec.ts",
@@ -526024,6 +526326,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-component-direction-matrix",
+              "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
           ]
         },
@@ -526087,7 +526394,8 @@
           "release-0.5-profile-picker-preload-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-solar-and-consultation-feedback",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-component-direction-matrix"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -526155,7 +526463,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "b0a5ba1348adbae56c43debd41ec086ba3d6937993d9091b694b976c6f1f9ec1"
+              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
             },
             {
               "path": "apps/web/e2e/notification-brand-preview.spec.ts",
@@ -526913,6 +527221,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-component-direction-matrix",
+              "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
           ]
         },
@@ -526976,7 +527289,8 @@
           "release-0.5-profile-picker-preload-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-solar-and-consultation-feedback",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-component-direction-matrix"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -527044,7 +527358,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "b0a5ba1348adbae56c43debd41ec086ba3d6937993d9091b694b976c6f1f9ec1"
+              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
             },
             {
               "path": "apps/web/e2e/notification-brand-preview.spec.ts",
@@ -527802,6 +528116,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-component-direction-matrix",
+              "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
           ]
         },
@@ -527865,7 +528184,8 @@
           "release-0.5-profile-picker-preload-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-solar-and-consultation-feedback",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-component-direction-matrix"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -527933,7 +528253,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "b0a5ba1348adbae56c43debd41ec086ba3d6937993d9091b694b976c6f1f9ec1"
+              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
             },
             {
               "path": "apps/web/e2e/notification-brand-preview.spec.ts",
@@ -528691,6 +529011,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-component-direction-matrix",
+              "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
           ]
         },
@@ -528754,7 +529079,8 @@
           "release-0.5-profile-picker-preload-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-solar-and-consultation-feedback",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-component-direction-matrix"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -528822,7 +529148,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "b0a5ba1348adbae56c43debd41ec086ba3d6937993d9091b694b976c6f1f9ec1"
+              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
             },
             {
               "path": "apps/web/e2e/notification-brand-preview.spec.ts",
@@ -529580,6 +529906,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-component-direction-matrix",
+              "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
           ]
         },
@@ -529643,7 +529974,8 @@
           "release-0.5-profile-picker-preload-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-solar-and-consultation-feedback",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-component-direction-matrix"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -529711,7 +530043,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "b0a5ba1348adbae56c43debd41ec086ba3d6937993d9091b694b976c6f1f9ec1"
+              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
             },
             {
               "path": "apps/web/e2e/notification-brand-preview.spec.ts",
@@ -530469,6 +530801,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-component-direction-matrix",
+              "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
           ]
         },
@@ -530532,7 +530869,8 @@
           "release-0.5-profile-picker-preload-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-solar-and-consultation-feedback",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-component-direction-matrix"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -530600,7 +530938,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "b0a5ba1348adbae56c43debd41ec086ba3d6937993d9091b694b976c6f1f9ec1"
+              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
             },
             {
               "path": "apps/web/e2e/notification-brand-preview.spec.ts",
@@ -531358,6 +531696,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-component-direction-matrix",
+              "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
           ]
         },
@@ -531421,7 +531764,8 @@
           "release-0.5-profile-picker-preload-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-solar-and-consultation-feedback",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-component-direction-matrix"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -531489,7 +531833,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "b0a5ba1348adbae56c43debd41ec086ba3d6937993d9091b694b976c6f1f9ec1"
+              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
             },
             {
               "path": "apps/web/e2e/notification-brand-preview.spec.ts",
@@ -532247,6 +532591,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-component-direction-matrix",
+              "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
           ]
         },
@@ -532310,7 +532659,8 @@
           "release-0.5-profile-picker-preload-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-solar-and-consultation-feedback",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-component-direction-matrix"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -532378,7 +532728,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "b0a5ba1348adbae56c43debd41ec086ba3d6937993d9091b694b976c6f1f9ec1"
+              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
             },
             {
               "path": "apps/web/e2e/notification-brand-preview.spec.ts",
@@ -533136,6 +533486,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-component-direction-matrix",
+              "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
           ]
         },
@@ -533199,7 +533554,8 @@
           "release-0.5-profile-picker-preload-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-solar-and-consultation-feedback",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-component-direction-matrix"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -533267,7 +533623,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "b0a5ba1348adbae56c43debd41ec086ba3d6937993d9091b694b976c6f1f9ec1"
+              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
             },
             {
               "path": "apps/web/e2e/notification-brand-preview.spec.ts",
@@ -534025,6 +534381,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-component-direction-matrix",
+              "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
           ]
         },
@@ -534076,7 +534437,8 @@
           "release-0.5-verified-command-rejection",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-profile-picker-preload-recovery",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-component-direction-matrix"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -534124,7 +534486,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "b0a5ba1348adbae56c43debd41ec086ba3d6937993d9091b694b976c6f1f9ec1"
+              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
             },
             {
               "path": "apps/web/e2e/language-before-paint.spec.ts",
@@ -534422,6 +534784,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-component-direction-matrix",
+              "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
           ]
         },
@@ -534473,7 +534840,8 @@
           "release-0.5-verified-command-rejection",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-profile-picker-preload-recovery",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-component-direction-matrix"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -534521,7 +534889,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "b0a5ba1348adbae56c43debd41ec086ba3d6937993d9091b694b976c6f1f9ec1"
+              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
             },
             {
               "path": "apps/web/e2e/language-before-paint.spec.ts",
@@ -534819,6 +535187,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-component-direction-matrix",
+              "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
           ]
         },
@@ -534870,7 +535243,8 @@
           "release-0.5-verified-command-rejection",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-profile-picker-preload-recovery",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-component-direction-matrix"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -534918,7 +535292,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "b0a5ba1348adbae56c43debd41ec086ba3d6937993d9091b694b976c6f1f9ec1"
+              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
             },
             {
               "path": "apps/web/e2e/language-before-paint.spec.ts",
@@ -535216,6 +535590,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-component-direction-matrix",
+              "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
           ]
         },
@@ -535267,7 +535646,8 @@
           "release-0.5-verified-command-rejection",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-profile-picker-preload-recovery",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-component-direction-matrix"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -535315,7 +535695,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "b0a5ba1348adbae56c43debd41ec086ba3d6937993d9091b694b976c6f1f9ec1"
+              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
             },
             {
               "path": "apps/web/e2e/language-before-paint.spec.ts",
@@ -535613,6 +535993,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-component-direction-matrix",
+              "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
           ]
         },
@@ -535669,7 +536054,8 @@
           "release-0.5-verified-command-rejection",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-profile-picker-preload-recovery",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-component-direction-matrix"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -535717,7 +536103,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "b0a5ba1348adbae56c43debd41ec086ba3d6937993d9091b694b976c6f1f9ec1"
+              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
             },
             {
               "path": "apps/web/e2e/language-before-paint.spec.ts",
@@ -536015,6 +536401,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-component-direction-matrix",
+              "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
           ]
         },
@@ -536072,7 +536463,8 @@
           "release-0.5-verified-command-rejection",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-profile-picker-preload-recovery",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-component-direction-matrix"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -536120,7 +536512,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "b0a5ba1348adbae56c43debd41ec086ba3d6937993d9091b694b976c6f1f9ec1"
+              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
             },
             {
               "path": "apps/web/e2e/language-before-paint.spec.ts",
@@ -536418,6 +536810,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-component-direction-matrix",
+              "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
           ]
         },
@@ -536469,7 +536866,8 @@
           "release-0.5-verified-command-rejection",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-profile-picker-preload-recovery",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-component-direction-matrix"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -536517,7 +536915,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "b0a5ba1348adbae56c43debd41ec086ba3d6937993d9091b694b976c6f1f9ec1"
+              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
             },
             {
               "path": "apps/web/e2e/language-before-paint.spec.ts",
@@ -536815,6 +537213,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-component-direction-matrix",
+              "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
           ]
         },
@@ -536866,7 +537269,8 @@
           "release-0.5-verified-command-rejection",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-profile-picker-preload-recovery",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-component-direction-matrix"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -536914,7 +537318,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "b0a5ba1348adbae56c43debd41ec086ba3d6937993d9091b694b976c6f1f9ec1"
+              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
             },
             {
               "path": "apps/web/e2e/language-before-paint.spec.ts",
@@ -537212,6 +537616,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-component-direction-matrix",
+              "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
           ]
         },
@@ -537264,7 +537673,8 @@
           "release-0.5-verified-command-rejection",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-profile-picker-preload-recovery",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-component-direction-matrix"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -537312,7 +537722,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "b0a5ba1348adbae56c43debd41ec086ba3d6937993d9091b694b976c6f1f9ec1"
+              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
             },
             {
               "path": "apps/web/e2e/language-before-paint.spec.ts",
@@ -537610,6 +538020,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-component-direction-matrix",
+              "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
           ]
         },
@@ -537663,7 +538078,8 @@
           "release-0.5-verified-command-rejection",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-profile-picker-preload-recovery",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-component-direction-matrix"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -537711,7 +538127,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "b0a5ba1348adbae56c43debd41ec086ba3d6937993d9091b694b976c6f1f9ec1"
+              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
             },
             {
               "path": "apps/web/e2e/language-before-paint.spec.ts",
@@ -538009,6 +538425,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-component-direction-matrix",
+              "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
           ]
         },
@@ -538060,7 +538481,8 @@
           "release-0.5-verified-command-rejection",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-profile-picker-preload-recovery",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-component-direction-matrix"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -538108,7 +538530,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "b0a5ba1348adbae56c43debd41ec086ba3d6937993d9091b694b976c6f1f9ec1"
+              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
             },
             {
               "path": "apps/web/e2e/language-before-paint.spec.ts",
@@ -538406,6 +538828,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-component-direction-matrix",
+              "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
           ]
         },
@@ -538458,7 +538885,8 @@
           "release-0.5-verified-command-rejection",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-profile-picker-preload-recovery",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-component-direction-matrix"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -538506,7 +538934,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "b0a5ba1348adbae56c43debd41ec086ba3d6937993d9091b694b976c6f1f9ec1"
+              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
             },
             {
               "path": "apps/web/e2e/language-before-paint.spec.ts",
@@ -538804,6 +539232,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-component-direction-matrix",
+              "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
           ]
         },
@@ -714791,7 +715224,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "The staff consultation command batch passed 32 distinct Chromium/mobile Safari cases, 55 related web unit tests and all 98 bundle limits. Official combined coverage remains bound to dd9c6d87. Final candidate coverage and remaining accessibility gates are open."
+        "The current component catalogue passed 280 Chromium locale/theme cases at both widths, plus 65 additional distinct Chromium and mobile Safari interaction and surface cases. The previous product application and UI runtime bytes match. Official combined coverage remains bound to dd9c6d87. Final candidate coverage and remaining accessibility gates are open."
       ],
       "owner": null,
       "depends_on": [],
@@ -714848,7 +715281,8 @@
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-owned-staff-solar-review",
           "release-0.5-essential-control-contrast",
-          "release-0.5-consultation-staff-command-receipts"
+          "release-0.5-consultation-staff-command-receipts",
+          "release-0.5-component-direction-matrix"
         ]
       }
     },
@@ -776686,6 +777120,114 @@
       ],
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-staff-command-receipts",
       "release_disposition": "Remaining conditional UI and final candidate gates are open."
+    },
+    "release-0.5-component-direction-matrix": {
+      "batch": "release-0.5-component-direction-matrix",
+      "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.03.01.07",
+        "release-readiness#R-04.02"
+      ],
+      "accepted_task_keys": [],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.03.01.07",
+        "release-readiness#R-04.02"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/ladle-components.spec.ts",
+          "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
+        },
+        {
+          "path": "packages/ui/stories/feedback.stories.tsx",
+          "sha256": "781720f6d0ffc174c7b0ece1f3d289aee44ec603d407e0588799696a735fb269"
+        }
+      ],
+      "checks": [
+        "All 70 published component stories pass explicit document and computed component direction in Persian and English. Each of 280 Chromium locale/theme cases verifies both 320px and 1280px viewports without document or surface horizontal overflow.",
+        "The textarea example now wraps its action buttons and retains its existing draft, reset, focus and accessible description behavior. The keyboard select continues to select the second option by ArrowDown and Enter and restores trigger focus.",
+        "345 distinct final Chromium and mobile Safari browser cases, story typecheck/build, formatting and changed-file lint passed. Prior product application and UI runtime artifacts match; no product application rebuild was needed."
+      ],
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json",
+      "source_scope_proof_sha256": "2575bd53cde957fd03fbe471e5edf62f1f185d5901f75d37df9c30d2426aed6d",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/reviewed.patch",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/renewed-bindings.json",
+      "renewed_task_keys": [
+        "07-ui-ux-design.md#T-07.01.01.01",
+        "07-ui-ux-design.md#T-07.01.01.02",
+        "07-ui-ux-design.md#T-07.01.01.03",
+        "07-ui-ux-design.md#T-07.01.01.04",
+        "07-ui-ux-design.md#T-07.01.01.05",
+        "07-ui-ux-design.md#T-07.01.01.06",
+        "07-ui-ux-design.md#T-07.01.01.07",
+        "07-ui-ux-design.md#T-07.01.01.08",
+        "07-ui-ux-design.md#T-07.01.02.01",
+        "07-ui-ux-design.md#T-07.01.02.02",
+        "07-ui-ux-design.md#T-07.01.02.03",
+        "07-ui-ux-design.md#T-07.01.02.04",
+        "07-ui-ux-design.md#T-07.01.02.05",
+        "07-ui-ux-design.md#T-07.01.03.01",
+        "07-ui-ux-design.md#T-07.01.03.02",
+        "07-ui-ux-design.md#T-07.01.03.03",
+        "07-ui-ux-design.md#T-07.01.03.04",
+        "07-ui-ux-design.md#T-07.01.03.05",
+        "07-ui-ux-design.md#T-07.01.03.14",
+        "07-ui-ux-design.md#T-07.01.03.15",
+        "07-ui-ux-design.md#T-07.01.03.18",
+        "07-ui-ux-design.md#T-07.01.03.19",
+        "07-ui-ux-design.md#T-07.01.03.20",
+        "07-ui-ux-design.md#T-07.03.02.01",
+        "07-ui-ux-design.md#T-07.03.02.02",
+        "07-ui-ux-design.md#T-07.03.02.03",
+        "07-ui-ux-design.md#T-07.03.02.04",
+        "07-ui-ux-design.md#T-07.04.01.01",
+        "07-ui-ux-design.md#T-07.04.01.02",
+        "07-ui-ux-design.md#T-07.04.01.03",
+        "07-ui-ux-design.md#T-07.04.01.04",
+        "07-ui-ux-design.md#T-07.05.01.02",
+        "07-ui-ux-design.md#T-07.05.01.03",
+        "07-ui-ux-design.md#T-07.05.01.06",
+        "07-ui-ux-design.md#T-07.05.01.09",
+        "07-ui-ux-design.md#T-07.05.01.10",
+        "07-ui-ux-design.md#T-07.05.01.11",
+        "07-ui-ux-design.md#T-07.05.02.01",
+        "07-ui-ux-design.md#T-07.05.02.02",
+        "07-ui-ux-design.md#T-07.05.02.03",
+        "07-ui-ux-design.md#T-07.06.01.01",
+        "07-ui-ux-design.md#T-07.06.01.02",
+        "07-ui-ux-design.md#T-07.06.01.03",
+        "07-ui-ux-design.md#T-07.06.01.04",
+        "07-ui-ux-design.md#T-07.06.01.05",
+        "07-ui-ux-design.md#T-07.07.01.01",
+        "07-ui-ux-design.md#T-07.07.01.02",
+        "07-ui-ux-design.md#T-07.07.01.03",
+        "07-ui-ux-design.md#T-07.07.01.04",
+        "07-ui-ux-design.md#T-07.07.01.05",
+        "07-ui-ux-design.md#T-07.07.01.06",
+        "07-ui-ux-design.md#T-07.08.01.01",
+        "07-ui-ux-design.md#T-07.08.01.02",
+        "07-ui-ux-design.md#T-07.08.01.03",
+        "07-ui-ux-design.md#T-07.08.01.04",
+        "07-ui-ux-design.md#T-07.08.01.05",
+        "07-ui-ux-design.md#T-07.08.01.06",
+        "07-ui-ux-design.md#T-07.08.02.01",
+        "07-ui-ux-design.md#T-07.08.02.02",
+        "07-ui-ux-design.md#T-07.08.02.03",
+        "07-ui-ux-design.md#T-07.09.01.01",
+        "07-ui-ux-design.md#T-07.09.01.02",
+        "07-ui-ux-design.md#T-07.09.01.03",
+        "07-ui-ux-design.md#T-07.09.01.04",
+        "07-ui-ux-design.md#T-07.09.01.05",
+        "07-ui-ux-design.md#T-07.09.02.01",
+        "07-ui-ux-design.md#T-07.09.02.02",
+        "07-ui-ux-design.md#T-07.09.02.03",
+        "07-ui-ux-design.md#T-07.09.02.04",
+        "07-ui-ux-design.md#T-07.09.02.05",
+        "07-ui-ux-design.md#T-07.09.02.06",
+        "07-ui-ux-design.md#T-07.09.02.07"
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix",
+      "release_disposition": "Component catalogue direction evidence is complete for the published story inventory. Conditional product routes and candidate gates remain open."
     }
   },
   "historical_improvements": [

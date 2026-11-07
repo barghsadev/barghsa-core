@@ -53,7 +53,7 @@ export const Textareas: Story = () => {
       </p>
       <UI.Textarea disabled defaultValue="sample" aria-label={text('غیرفعال', 'Disabled')} />
       <UI.Textarea readOnly value="sample" aria-label={text('فقط خواندنی', 'Read-only')} />
-      <div className="flex gap-3">
+      <div className="flex flex-wrap gap-3">
         <UI.Button type="reset" variant="outline">
           {text('بازنشانی', 'Reset')}
         </UI.Button>

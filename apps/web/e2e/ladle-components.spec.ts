@@ -68,7 +68,9 @@ for (const rtl of [false, true]) {
     await select.press('Enter');
     await expect(page.getByRole('listbox')).toBeVisible();
     await expect(page.getByRole('option', { name: copy('غیرفعال', 'Disabled') })).toBeDisabled();
+    await expect(page.getByRole('option', { name: copy('گزینه یک', 'Option one') })).toBeFocused();
     await page.keyboard.press('ArrowDown');
+    await expect(page.getByRole('option', { name: copy('گزینه دو', 'Option two') })).toBeFocused();
     await page.keyboard.press('Enter');
     await expect(select).toContainText(copy('گزینه دو', 'Option two'));
     await expect(select).toBeFocused();
@@ -149,9 +151,8 @@ for (const story of Object.keys(meta.stories)) {
       test(
         'catalogue ' + story + ' ' + (rtl ? 'fa' : 'en') + ' ' + theme,
         async ({ page }, info) => {
-          await page.setViewportSize(
-            rtl ? { width: 390, height: 844 } : { width: 1280, height: 960 }
-          );
+          const viewport = rtl ? { width: 390, height: 844 } : { width: 1280, height: 960 };
+          await page.setViewportSize(viewport);
           const errors: string[] = [];
           const external: string[] = [];
           page.on('pageerror', (error) => errors.push(error.message));
@@ -183,6 +184,8 @@ for (const story of Object.keys(meta.stories)) {
           await expect(surface).toHaveCSS('font-family', /Vazirmatn/);
           expect(loadedFaces.every((face) => face.status === 'loaded')).toBe(true);
           expect(await page.evaluate(() => document.documentElement.lang)).toBe(rtl ? 'fa' : 'en');
+          await expect(page.locator('html')).toHaveAttribute('dir', rtl ? 'rtl' : 'ltr');
+          await expect(surface).toHaveCSS('direction', rtl ? 'rtl' : 'ltr');
           expect(
             await page.evaluate(() => document.documentElement.classList.contains('dark'))
           ).toBe(theme === 'dark');
@@ -208,6 +211,21 @@ for (const story of Object.keys(meta.stories)) {
           expect(
             await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)
           ).toBe(true);
+          for (const width of [320, 1280]) {
+            await page.setViewportSize({ width, height: viewport.height });
+            const geometry = await surface.evaluate((node) => ({
+              viewport: innerWidth,
+              document: document.documentElement.scrollWidth,
+              surface: node.scrollWidth,
+              available: node.clientWidth,
+            }));
+            expect(geometry.viewport).toBe(width);
+            expect(geometry.document, `document width at ${width}px`).toBeLessThanOrEqual(width);
+            expect(geometry.surface, `component surface at ${width}px`).toBeLessThanOrEqual(
+              geometry.available
+            );
+          }
+          await page.setViewportSize(viewport);
           if (story === 'primitives--responsive-layout') {
             const container = surface.locator('[data-slot=responsive-container]');
             const stack = container.locator('[data-slot=stack]');
