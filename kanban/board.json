@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-07T19:45:16+00:00",
-  "source_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
+  "updated": "2026-11-07T19:54:35+00:00",
+  "source_commit": "adcd42ca9ef2cf48acbae6368d92749970029e65",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -55791,7 +55791,8 @@
           "release-0.5-final-ui-evidence",
           "release-0.5-final-rehearsal",
           "release-0.5-verified-command-rejection",
-          "release-0.5-native-staff-touch-and-electricity-recovery"
+          "release-0.5-native-staff-touch-and-electricity-recovery",
+          "release-0.5-consultation-staff-command-receipts"
         ],
         "current_acceptance": {
           "kind": "verified-support-assignment-targets-and-escalation-episodes",
@@ -55959,7 +55960,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-assignment-context.spec.ts",
-              "sha256": "8b11da8abd90c5e57a128e498d5a70a4209ad21676c243869a74f70e5c5ed897"
+              "sha256": "f32c2e77684a632522e3122068c3633d912216a65e05dfc4942565577be3a63d"
             },
             {
               "path": "apps/web/e2e/service-settings-forms.spec.ts",
@@ -56729,6 +56730,11 @@
               "batch": "release-0.5-native-staff-touch-and-electricity-recovery",
               "base_commit": "e28bf7ac30a3a6b2605edd7b9b98afaa34a47119",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-exact-confirmation-gate/native-ui-batch-receipt.json"
+            },
+            {
+              "batch": "release-0.5-consultation-staff-command-receipts",
+              "base_commit": "adcd42ca9ef2cf48acbae6368d92749970029e65",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-staff-command-receipts/proof.json"
             }
           ]
         }
@@ -56890,7 +56896,8 @@
           "release-0.5-final-ui-evidence",
           "release-0.5-final-rehearsal",
           "release-0.5-verified-command-rejection",
-          "release-0.5-native-staff-touch-and-electricity-recovery"
+          "release-0.5-native-staff-touch-and-electricity-recovery",
+          "release-0.5-consultation-staff-command-receipts"
         ],
         "current_acceptance": {
           "kind": "verified-support-assignment-targets-and-escalation-episodes",
@@ -57058,7 +57065,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-assignment-context.spec.ts",
-              "sha256": "8b11da8abd90c5e57a128e498d5a70a4209ad21676c243869a74f70e5c5ed897"
+              "sha256": "f32c2e77684a632522e3122068c3633d912216a65e05dfc4942565577be3a63d"
             },
             {
               "path": "apps/web/e2e/service-settings-forms.spec.ts",
@@ -57828,6 +57835,11 @@
               "batch": "release-0.5-native-staff-touch-and-electricity-recovery",
               "base_commit": "e28bf7ac30a3a6b2605edd7b9b98afaa34a47119",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-exact-confirmation-gate/native-ui-batch-receipt.json"
+            },
+            {
+              "batch": "release-0.5-consultation-staff-command-receipts",
+              "base_commit": "adcd42ca9ef2cf48acbae6368d92749970029e65",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-staff-command-receipts/proof.json"
             }
           ]
         }
@@ -57989,7 +58001,8 @@
           "release-0.5-final-ui-evidence",
           "release-0.5-final-rehearsal",
           "release-0.5-verified-command-rejection",
-          "release-0.5-native-staff-touch-and-electricity-recovery"
+          "release-0.5-native-staff-touch-and-electricity-recovery",
+          "release-0.5-consultation-staff-command-receipts"
         ],
         "current_acceptance": {
           "kind": "verified-support-assignment-targets-and-escalation-episodes",
@@ -58157,7 +58170,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-assignment-context.spec.ts",
-              "sha256": "8b11da8abd90c5e57a128e498d5a70a4209ad21676c243869a74f70e5c5ed897"
+              "sha256": "f32c2e77684a632522e3122068c3633d912216a65e05dfc4942565577be3a63d"
             },
             {
               "path": "apps/web/e2e/service-settings-forms.spec.ts",
@@ -58927,6 +58940,11 @@
               "batch": "release-0.5-native-staff-touch-and-electricity-recovery",
               "base_commit": "e28bf7ac30a3a6b2605edd7b9b98afaa34a47119",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-exact-confirmation-gate/native-ui-batch-receipt.json"
+            },
+            {
+              "batch": "release-0.5-consultation-staff-command-receipts",
+              "base_commit": "adcd42ca9ef2cf48acbae6368d92749970029e65",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-staff-command-receipts/proof.json"
             }
           ]
         }
@@ -91913,7 +91931,8 @@
           "release-0.5-final-ui-evidence",
           "release-0.5-final-rehearsal",
           "release-0.5-verified-command-rejection",
-          "release-0.5-native-staff-touch-and-electricity-recovery"
+          "release-0.5-native-staff-touch-and-electricity-recovery",
+          "release-0.5-consultation-staff-command-receipts"
         ],
         "current_acceptance": {
           "kind": "verified-support-assignment-targets-and-escalation-episodes",
@@ -92081,7 +92100,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-assignment-context.spec.ts",
-              "sha256": "8b11da8abd90c5e57a128e498d5a70a4209ad21676c243869a74f70e5c5ed897"
+              "sha256": "f32c2e77684a632522e3122068c3633d912216a65e05dfc4942565577be3a63d"
             },
             {
               "path": "apps/web/e2e/service-settings-forms.spec.ts",
@@ -92851,6 +92870,11 @@
               "batch": "release-0.5-native-staff-touch-and-electricity-recovery",
               "base_commit": "e28bf7ac30a3a6b2605edd7b9b98afaa34a47119",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-exact-confirmation-gate/native-ui-batch-receipt.json"
+            },
+            {
+              "batch": "release-0.5-consultation-staff-command-receipts",
+              "base_commit": "adcd42ca9ef2cf48acbae6368d92749970029e65",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-staff-command-receipts/proof.json"
             }
           ]
         }
@@ -92944,7 +92968,8 @@
           "release-0.5-final-ui-evidence",
           "release-0.5-final-rehearsal",
           "release-0.5-verified-command-rejection",
-          "release-0.5-native-staff-touch-and-electricity-recovery"
+          "release-0.5-native-staff-touch-and-electricity-recovery",
+          "release-0.5-consultation-staff-command-receipts"
         ],
         "current_acceptance": {
           "kind": "verified-support-assignment-targets-and-escalation-episodes",
@@ -93112,7 +93137,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-assignment-context.spec.ts",
-              "sha256": "8b11da8abd90c5e57a128e498d5a70a4209ad21676c243869a74f70e5c5ed897"
+              "sha256": "f32c2e77684a632522e3122068c3633d912216a65e05dfc4942565577be3a63d"
             },
             {
               "path": "apps/web/e2e/service-settings-forms.spec.ts",
@@ -93882,6 +93907,11 @@
               "batch": "release-0.5-native-staff-touch-and-electricity-recovery",
               "base_commit": "e28bf7ac30a3a6b2605edd7b9b98afaa34a47119",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-exact-confirmation-gate/native-ui-batch-receipt.json"
+            },
+            {
+              "batch": "release-0.5-consultation-staff-command-receipts",
+              "base_commit": "adcd42ca9ef2cf48acbae6368d92749970029e65",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-staff-command-receipts/proof.json"
             }
           ]
         }
@@ -93981,7 +94011,8 @@
           "release-0.5-final-ui-evidence",
           "release-0.5-final-rehearsal",
           "release-0.5-verified-command-rejection",
-          "release-0.5-native-staff-touch-and-electricity-recovery"
+          "release-0.5-native-staff-touch-and-electricity-recovery",
+          "release-0.5-consultation-staff-command-receipts"
         ],
         "current_acceptance": {
           "kind": "verified-support-assignment-targets-and-escalation-episodes",
@@ -94149,7 +94180,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-assignment-context.spec.ts",
-              "sha256": "8b11da8abd90c5e57a128e498d5a70a4209ad21676c243869a74f70e5c5ed897"
+              "sha256": "f32c2e77684a632522e3122068c3633d912216a65e05dfc4942565577be3a63d"
             },
             {
               "path": "apps/web/e2e/service-settings-forms.spec.ts",
@@ -94919,6 +94950,11 @@
               "batch": "release-0.5-native-staff-touch-and-electricity-recovery",
               "base_commit": "e28bf7ac30a3a6b2605edd7b9b98afaa34a47119",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-exact-confirmation-gate/native-ui-batch-receipt.json"
+            },
+            {
+              "batch": "release-0.5-consultation-staff-command-receipts",
+              "base_commit": "adcd42ca9ef2cf48acbae6368d92749970029e65",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-staff-command-receipts/proof.json"
             }
           ]
         }
@@ -193891,7 +193927,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
           "release-0.5-responsive-width-acceptance",
-          "release-0.5-owned-solar-and-consultation-feedback"
+          "release-0.5-owned-solar-and-consultation-feedback",
+          "release-0.5-consultation-staff-command-receipts"
         ],
         "current_acceptance": {
           "kind": "validated-immutable-business-acting-context-and-cross-surface-isolation",
@@ -194051,7 +194088,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-assignment-context.spec.ts",
-              "sha256": "8b11da8abd90c5e57a128e498d5a70a4209ad21676c243869a74f70e5c5ed897"
+              "sha256": "f32c2e77684a632522e3122068c3633d912216a65e05dfc4942565577be3a63d"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -194171,7 +194208,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "985a54a6aa32cdb180c28c5b1fe52d492455fd5f80e0f164e16fa844978abfdf"
+              "sha256": "7e41c80c3b65a7e699601fc9c6ee3d7ace6c9085a1a99c3ea4d80cd6e0f7970f"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -195742,6 +195779,11 @@
               "batch": "release-0.5-owned-solar-and-consultation-feedback",
               "base_commit": "f239f203fcc8f74f8fbf9b44652aef6264030aa8",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-owned-solar-and-consultation-feedback/proof.json"
+            },
+            {
+              "batch": "release-0.5-consultation-staff-command-receipts",
+              "base_commit": "adcd42ca9ef2cf48acbae6368d92749970029e65",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-staff-command-receipts/proof.json"
             }
           ]
         }
@@ -195799,7 +195841,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
           "release-0.5-responsive-width-acceptance",
-          "release-0.5-owned-solar-and-consultation-feedback"
+          "release-0.5-owned-solar-and-consultation-feedback",
+          "release-0.5-consultation-staff-command-receipts"
         ],
         "current_acceptance": {
           "kind": "validated-immutable-business-acting-context-and-cross-surface-isolation",
@@ -195959,7 +196002,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-assignment-context.spec.ts",
-              "sha256": "8b11da8abd90c5e57a128e498d5a70a4209ad21676c243869a74f70e5c5ed897"
+              "sha256": "f32c2e77684a632522e3122068c3633d912216a65e05dfc4942565577be3a63d"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -196079,7 +196122,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "985a54a6aa32cdb180c28c5b1fe52d492455fd5f80e0f164e16fa844978abfdf"
+              "sha256": "7e41c80c3b65a7e699601fc9c6ee3d7ace6c9085a1a99c3ea4d80cd6e0f7970f"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -197650,6 +197693,11 @@
               "batch": "release-0.5-owned-solar-and-consultation-feedback",
               "base_commit": "f239f203fcc8f74f8fbf9b44652aef6264030aa8",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-owned-solar-and-consultation-feedback/proof.json"
+            },
+            {
+              "batch": "release-0.5-consultation-staff-command-receipts",
+              "base_commit": "adcd42ca9ef2cf48acbae6368d92749970029e65",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-staff-command-receipts/proof.json"
             }
           ]
         }
@@ -251479,7 +251527,8 @@
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-solar-and-consultation-feedback",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-consultation-staff-command-receipts"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -251571,7 +251620,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-assignment-context.spec.ts",
-              "sha256": "8b11da8abd90c5e57a128e498d5a70a4209ad21676c243869a74f70e5c5ed897"
+              "sha256": "f32c2e77684a632522e3122068c3633d912216a65e05dfc4942565577be3a63d"
             },
             {
               "path": "apps/web/e2e/consultation-catalogue-eligibility.spec.ts",
@@ -251595,7 +251644,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
-              "sha256": "b2980c5535cb895f881fe5c8fec71367c417a736fd89a3df6319825844e9b080"
+              "sha256": "ea24e7d943b8725b6600438cd1434b4b0fe4da5cab80c83f756192d94f207daa"
             },
             {
               "path": "apps/web/e2e/consultation-paid-resolution-form-fixture.ts",
@@ -251671,7 +251720,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "985a54a6aa32cdb180c28c5b1fe52d492455fd5f80e0f164e16fa844978abfdf"
+              "sha256": "7e41c80c3b65a7e699601fc9c6ee3d7ace6c9085a1a99c3ea4d80cd6e0f7970f"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -252531,6 +252580,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-consultation-staff-command-receipts",
+              "base_commit": "adcd42ca9ef2cf48acbae6368d92749970029e65",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-staff-command-receipts/proof.json"
             }
           ]
         }
@@ -252599,7 +252653,8 @@
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-solar-and-consultation-feedback",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-consultation-staff-command-receipts"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -252691,7 +252746,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-assignment-context.spec.ts",
-              "sha256": "8b11da8abd90c5e57a128e498d5a70a4209ad21676c243869a74f70e5c5ed897"
+              "sha256": "f32c2e77684a632522e3122068c3633d912216a65e05dfc4942565577be3a63d"
             },
             {
               "path": "apps/web/e2e/consultation-catalogue-eligibility.spec.ts",
@@ -252715,7 +252770,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
-              "sha256": "b2980c5535cb895f881fe5c8fec71367c417a736fd89a3df6319825844e9b080"
+              "sha256": "ea24e7d943b8725b6600438cd1434b4b0fe4da5cab80c83f756192d94f207daa"
             },
             {
               "path": "apps/web/e2e/consultation-paid-resolution-form-fixture.ts",
@@ -252791,7 +252846,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "985a54a6aa32cdb180c28c5b1fe52d492455fd5f80e0f164e16fa844978abfdf"
+              "sha256": "7e41c80c3b65a7e699601fc9c6ee3d7ace6c9085a1a99c3ea4d80cd6e0f7970f"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -253651,6 +253706,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-consultation-staff-command-receipts",
+              "base_commit": "adcd42ca9ef2cf48acbae6368d92749970029e65",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-staff-command-receipts/proof.json"
             }
           ]
         }
@@ -253715,7 +253775,8 @@
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-solar-and-consultation-feedback",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-consultation-staff-command-receipts"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -253807,7 +253868,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-assignment-context.spec.ts",
-              "sha256": "8b11da8abd90c5e57a128e498d5a70a4209ad21676c243869a74f70e5c5ed897"
+              "sha256": "f32c2e77684a632522e3122068c3633d912216a65e05dfc4942565577be3a63d"
             },
             {
               "path": "apps/web/e2e/consultation-catalogue-eligibility.spec.ts",
@@ -253831,7 +253892,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
-              "sha256": "b2980c5535cb895f881fe5c8fec71367c417a736fd89a3df6319825844e9b080"
+              "sha256": "ea24e7d943b8725b6600438cd1434b4b0fe4da5cab80c83f756192d94f207daa"
             },
             {
               "path": "apps/web/e2e/consultation-paid-resolution-form-fixture.ts",
@@ -253907,7 +253968,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "985a54a6aa32cdb180c28c5b1fe52d492455fd5f80e0f164e16fa844978abfdf"
+              "sha256": "7e41c80c3b65a7e699601fc9c6ee3d7ace6c9085a1a99c3ea4d80cd6e0f7970f"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -254767,6 +254828,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-consultation-staff-command-receipts",
+              "base_commit": "adcd42ca9ef2cf48acbae6368d92749970029e65",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-staff-command-receipts/proof.json"
             }
           ]
         }
@@ -254830,7 +254896,8 @@
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-solar-and-consultation-feedback",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-consultation-staff-command-receipts"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -254922,7 +254989,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-assignment-context.spec.ts",
-              "sha256": "8b11da8abd90c5e57a128e498d5a70a4209ad21676c243869a74f70e5c5ed897"
+              "sha256": "f32c2e77684a632522e3122068c3633d912216a65e05dfc4942565577be3a63d"
             },
             {
               "path": "apps/web/e2e/consultation-catalogue-eligibility.spec.ts",
@@ -254946,7 +255013,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
-              "sha256": "b2980c5535cb895f881fe5c8fec71367c417a736fd89a3df6319825844e9b080"
+              "sha256": "ea24e7d943b8725b6600438cd1434b4b0fe4da5cab80c83f756192d94f207daa"
             },
             {
               "path": "apps/web/e2e/consultation-paid-resolution-form-fixture.ts",
@@ -255022,7 +255089,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "985a54a6aa32cdb180c28c5b1fe52d492455fd5f80e0f164e16fa844978abfdf"
+              "sha256": "7e41c80c3b65a7e699601fc9c6ee3d7ace6c9085a1a99c3ea4d80cd6e0f7970f"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -255882,6 +255949,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-consultation-staff-command-receipts",
+              "base_commit": "adcd42ca9ef2cf48acbae6368d92749970029e65",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-staff-command-receipts/proof.json"
             }
           ]
         }
@@ -255946,7 +256018,8 @@
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-solar-and-consultation-feedback",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-consultation-staff-command-receipts"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -256038,7 +256111,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-assignment-context.spec.ts",
-              "sha256": "8b11da8abd90c5e57a128e498d5a70a4209ad21676c243869a74f70e5c5ed897"
+              "sha256": "f32c2e77684a632522e3122068c3633d912216a65e05dfc4942565577be3a63d"
             },
             {
               "path": "apps/web/e2e/consultation-catalogue-eligibility.spec.ts",
@@ -256062,7 +256135,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
-              "sha256": "b2980c5535cb895f881fe5c8fec71367c417a736fd89a3df6319825844e9b080"
+              "sha256": "ea24e7d943b8725b6600438cd1434b4b0fe4da5cab80c83f756192d94f207daa"
             },
             {
               "path": "apps/web/e2e/consultation-paid-resolution-form-fixture.ts",
@@ -256138,7 +256211,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "985a54a6aa32cdb180c28c5b1fe52d492455fd5f80e0f164e16fa844978abfdf"
+              "sha256": "7e41c80c3b65a7e699601fc9c6ee3d7ace6c9085a1a99c3ea4d80cd6e0f7970f"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -256998,6 +257071,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-consultation-staff-command-receipts",
+              "base_commit": "adcd42ca9ef2cf48acbae6368d92749970029e65",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-staff-command-receipts/proof.json"
             }
           ]
         }
@@ -257062,7 +257140,8 @@
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-solar-and-consultation-feedback",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-consultation-staff-command-receipts"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -257154,7 +257233,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-assignment-context.spec.ts",
-              "sha256": "8b11da8abd90c5e57a128e498d5a70a4209ad21676c243869a74f70e5c5ed897"
+              "sha256": "f32c2e77684a632522e3122068c3633d912216a65e05dfc4942565577be3a63d"
             },
             {
               "path": "apps/web/e2e/consultation-catalogue-eligibility.spec.ts",
@@ -257178,7 +257257,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
-              "sha256": "b2980c5535cb895f881fe5c8fec71367c417a736fd89a3df6319825844e9b080"
+              "sha256": "ea24e7d943b8725b6600438cd1434b4b0fe4da5cab80c83f756192d94f207daa"
             },
             {
               "path": "apps/web/e2e/consultation-paid-resolution-form-fixture.ts",
@@ -257254,7 +257333,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "985a54a6aa32cdb180c28c5b1fe52d492455fd5f80e0f164e16fa844978abfdf"
+              "sha256": "7e41c80c3b65a7e699601fc9c6ee3d7ace6c9085a1a99c3ea4d80cd6e0f7970f"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -258114,6 +258193,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-consultation-staff-command-receipts",
+              "base_commit": "adcd42ca9ef2cf48acbae6368d92749970029e65",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-staff-command-receipts/proof.json"
             }
           ]
         }
@@ -258183,7 +258267,8 @@
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-solar-and-consultation-feedback",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-consultation-staff-command-receipts"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -258275,7 +258360,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-assignment-context.spec.ts",
-              "sha256": "8b11da8abd90c5e57a128e498d5a70a4209ad21676c243869a74f70e5c5ed897"
+              "sha256": "f32c2e77684a632522e3122068c3633d912216a65e05dfc4942565577be3a63d"
             },
             {
               "path": "apps/web/e2e/consultation-catalogue-eligibility.spec.ts",
@@ -258299,7 +258384,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
-              "sha256": "b2980c5535cb895f881fe5c8fec71367c417a736fd89a3df6319825844e9b080"
+              "sha256": "ea24e7d943b8725b6600438cd1434b4b0fe4da5cab80c83f756192d94f207daa"
             },
             {
               "path": "apps/web/e2e/consultation-paid-resolution-form-fixture.ts",
@@ -258375,7 +258460,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "985a54a6aa32cdb180c28c5b1fe52d492455fd5f80e0f164e16fa844978abfdf"
+              "sha256": "7e41c80c3b65a7e699601fc9c6ee3d7ace6c9085a1a99c3ea4d80cd6e0f7970f"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -259235,6 +259320,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-consultation-staff-command-receipts",
+              "base_commit": "adcd42ca9ef2cf48acbae6368d92749970029e65",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-staff-command-receipts/proof.json"
             }
           ]
         }
@@ -259302,7 +259392,8 @@
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-solar-and-consultation-feedback",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-consultation-staff-command-receipts"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -259394,7 +259485,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-assignment-context.spec.ts",
-              "sha256": "8b11da8abd90c5e57a128e498d5a70a4209ad21676c243869a74f70e5c5ed897"
+              "sha256": "f32c2e77684a632522e3122068c3633d912216a65e05dfc4942565577be3a63d"
             },
             {
               "path": "apps/web/e2e/consultation-catalogue-eligibility.spec.ts",
@@ -259418,7 +259509,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
-              "sha256": "b2980c5535cb895f881fe5c8fec71367c417a736fd89a3df6319825844e9b080"
+              "sha256": "ea24e7d943b8725b6600438cd1434b4b0fe4da5cab80c83f756192d94f207daa"
             },
             {
               "path": "apps/web/e2e/consultation-paid-resolution-form-fixture.ts",
@@ -259494,7 +259585,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "985a54a6aa32cdb180c28c5b1fe52d492455fd5f80e0f164e16fa844978abfdf"
+              "sha256": "7e41c80c3b65a7e699601fc9c6ee3d7ace6c9085a1a99c3ea4d80cd6e0f7970f"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -260354,6 +260445,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-consultation-staff-command-receipts",
+              "base_commit": "adcd42ca9ef2cf48acbae6368d92749970029e65",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-staff-command-receipts/proof.json"
             }
           ]
         }
@@ -260419,7 +260515,8 @@
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-solar-and-consultation-feedback",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-consultation-staff-command-receipts"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -260511,7 +260608,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-assignment-context.spec.ts",
-              "sha256": "8b11da8abd90c5e57a128e498d5a70a4209ad21676c243869a74f70e5c5ed897"
+              "sha256": "f32c2e77684a632522e3122068c3633d912216a65e05dfc4942565577be3a63d"
             },
             {
               "path": "apps/web/e2e/consultation-catalogue-eligibility.spec.ts",
@@ -260535,7 +260632,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
-              "sha256": "b2980c5535cb895f881fe5c8fec71367c417a736fd89a3df6319825844e9b080"
+              "sha256": "ea24e7d943b8725b6600438cd1434b4b0fe4da5cab80c83f756192d94f207daa"
             },
             {
               "path": "apps/web/e2e/consultation-paid-resolution-form-fixture.ts",
@@ -260611,7 +260708,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "985a54a6aa32cdb180c28c5b1fe52d492455fd5f80e0f164e16fa844978abfdf"
+              "sha256": "7e41c80c3b65a7e699601fc9c6ee3d7ace6c9085a1a99c3ea4d80cd6e0f7970f"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -261471,6 +261568,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-consultation-staff-command-receipts",
+              "base_commit": "adcd42ca9ef2cf48acbae6368d92749970029e65",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-staff-command-receipts/proof.json"
             }
           ]
         }
@@ -261539,7 +261641,8 @@
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-solar-and-consultation-feedback",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-consultation-staff-command-receipts"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -261631,7 +261734,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-assignment-context.spec.ts",
-              "sha256": "8b11da8abd90c5e57a128e498d5a70a4209ad21676c243869a74f70e5c5ed897"
+              "sha256": "f32c2e77684a632522e3122068c3633d912216a65e05dfc4942565577be3a63d"
             },
             {
               "path": "apps/web/e2e/consultation-catalogue-eligibility.spec.ts",
@@ -261655,7 +261758,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
-              "sha256": "b2980c5535cb895f881fe5c8fec71367c417a736fd89a3df6319825844e9b080"
+              "sha256": "ea24e7d943b8725b6600438cd1434b4b0fe4da5cab80c83f756192d94f207daa"
             },
             {
               "path": "apps/web/e2e/consultation-paid-resolution-form-fixture.ts",
@@ -261731,7 +261834,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "985a54a6aa32cdb180c28c5b1fe52d492455fd5f80e0f164e16fa844978abfdf"
+              "sha256": "7e41c80c3b65a7e699601fc9c6ee3d7ace6c9085a1a99c3ea4d80cd6e0f7970f"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -262591,6 +262694,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-consultation-staff-command-receipts",
+              "base_commit": "adcd42ca9ef2cf48acbae6368d92749970029e65",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-staff-command-receipts/proof.json"
             }
           ]
         }
@@ -262661,7 +262769,8 @@
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-solar-and-consultation-feedback",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-consultation-staff-command-receipts"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -262753,7 +262862,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-assignment-context.spec.ts",
-              "sha256": "8b11da8abd90c5e57a128e498d5a70a4209ad21676c243869a74f70e5c5ed897"
+              "sha256": "f32c2e77684a632522e3122068c3633d912216a65e05dfc4942565577be3a63d"
             },
             {
               "path": "apps/web/e2e/consultation-catalogue-eligibility.spec.ts",
@@ -262777,7 +262886,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
-              "sha256": "b2980c5535cb895f881fe5c8fec71367c417a736fd89a3df6319825844e9b080"
+              "sha256": "ea24e7d943b8725b6600438cd1434b4b0fe4da5cab80c83f756192d94f207daa"
             },
             {
               "path": "apps/web/e2e/consultation-paid-resolution-form-fixture.ts",
@@ -262853,7 +262962,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "985a54a6aa32cdb180c28c5b1fe52d492455fd5f80e0f164e16fa844978abfdf"
+              "sha256": "7e41c80c3b65a7e699601fc9c6ee3d7ace6c9085a1a99c3ea4d80cd6e0f7970f"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -263713,6 +263822,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-consultation-staff-command-receipts",
+              "base_commit": "adcd42ca9ef2cf48acbae6368d92749970029e65",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-staff-command-receipts/proof.json"
             }
           ]
         }
@@ -263778,7 +263892,8 @@
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-solar-and-consultation-feedback",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-consultation-staff-command-receipts"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -263870,7 +263985,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-assignment-context.spec.ts",
-              "sha256": "8b11da8abd90c5e57a128e498d5a70a4209ad21676c243869a74f70e5c5ed897"
+              "sha256": "f32c2e77684a632522e3122068c3633d912216a65e05dfc4942565577be3a63d"
             },
             {
               "path": "apps/web/e2e/consultation-catalogue-eligibility.spec.ts",
@@ -263894,7 +264009,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
-              "sha256": "b2980c5535cb895f881fe5c8fec71367c417a736fd89a3df6319825844e9b080"
+              "sha256": "ea24e7d943b8725b6600438cd1434b4b0fe4da5cab80c83f756192d94f207daa"
             },
             {
               "path": "apps/web/e2e/consultation-paid-resolution-form-fixture.ts",
@@ -263970,7 +264085,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "985a54a6aa32cdb180c28c5b1fe52d492455fd5f80e0f164e16fa844978abfdf"
+              "sha256": "7e41c80c3b65a7e699601fc9c6ee3d7ace6c9085a1a99c3ea4d80cd6e0f7970f"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -264830,6 +264945,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-consultation-staff-command-receipts",
+              "base_commit": "adcd42ca9ef2cf48acbae6368d92749970029e65",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-staff-command-receipts/proof.json"
             }
           ]
         }
@@ -264894,7 +265014,8 @@
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-solar-and-consultation-feedback",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-consultation-staff-command-receipts"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -264986,7 +265107,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-assignment-context.spec.ts",
-              "sha256": "8b11da8abd90c5e57a128e498d5a70a4209ad21676c243869a74f70e5c5ed897"
+              "sha256": "f32c2e77684a632522e3122068c3633d912216a65e05dfc4942565577be3a63d"
             },
             {
               "path": "apps/web/e2e/consultation-catalogue-eligibility.spec.ts",
@@ -265010,7 +265131,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
-              "sha256": "b2980c5535cb895f881fe5c8fec71367c417a736fd89a3df6319825844e9b080"
+              "sha256": "ea24e7d943b8725b6600438cd1434b4b0fe4da5cab80c83f756192d94f207daa"
             },
             {
               "path": "apps/web/e2e/consultation-paid-resolution-form-fixture.ts",
@@ -265086,7 +265207,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "985a54a6aa32cdb180c28c5b1fe52d492455fd5f80e0f164e16fa844978abfdf"
+              "sha256": "7e41c80c3b65a7e699601fc9c6ee3d7ace6c9085a1a99c3ea4d80cd6e0f7970f"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -265946,6 +266067,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-consultation-staff-command-receipts",
+              "base_commit": "adcd42ca9ef2cf48acbae6368d92749970029e65",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-staff-command-receipts/proof.json"
             }
           ]
         }
@@ -266011,7 +266137,8 @@
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-solar-and-consultation-feedback",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-consultation-staff-command-receipts"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -266103,7 +266230,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-assignment-context.spec.ts",
-              "sha256": "8b11da8abd90c5e57a128e498d5a70a4209ad21676c243869a74f70e5c5ed897"
+              "sha256": "f32c2e77684a632522e3122068c3633d912216a65e05dfc4942565577be3a63d"
             },
             {
               "path": "apps/web/e2e/consultation-catalogue-eligibility.spec.ts",
@@ -266127,7 +266254,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
-              "sha256": "b2980c5535cb895f881fe5c8fec71367c417a736fd89a3df6319825844e9b080"
+              "sha256": "ea24e7d943b8725b6600438cd1434b4b0fe4da5cab80c83f756192d94f207daa"
             },
             {
               "path": "apps/web/e2e/consultation-paid-resolution-form-fixture.ts",
@@ -266203,7 +266330,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "985a54a6aa32cdb180c28c5b1fe52d492455fd5f80e0f164e16fa844978abfdf"
+              "sha256": "7e41c80c3b65a7e699601fc9c6ee3d7ace6c9085a1a99c3ea4d80cd6e0f7970f"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -267063,6 +267190,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-consultation-staff-command-receipts",
+              "base_commit": "adcd42ca9ef2cf48acbae6368d92749970029e65",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-staff-command-receipts/proof.json"
             }
           ]
         }
@@ -267128,7 +267260,8 @@
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-solar-and-consultation-feedback",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-consultation-staff-command-receipts"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -267220,7 +267353,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-assignment-context.spec.ts",
-              "sha256": "8b11da8abd90c5e57a128e498d5a70a4209ad21676c243869a74f70e5c5ed897"
+              "sha256": "f32c2e77684a632522e3122068c3633d912216a65e05dfc4942565577be3a63d"
             },
             {
               "path": "apps/web/e2e/consultation-catalogue-eligibility.spec.ts",
@@ -267244,7 +267377,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
-              "sha256": "b2980c5535cb895f881fe5c8fec71367c417a736fd89a3df6319825844e9b080"
+              "sha256": "ea24e7d943b8725b6600438cd1434b4b0fe4da5cab80c83f756192d94f207daa"
             },
             {
               "path": "apps/web/e2e/consultation-paid-resolution-form-fixture.ts",
@@ -267320,7 +267453,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "985a54a6aa32cdb180c28c5b1fe52d492455fd5f80e0f164e16fa844978abfdf"
+              "sha256": "7e41c80c3b65a7e699601fc9c6ee3d7ace6c9085a1a99c3ea4d80cd6e0f7970f"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -268180,6 +268313,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-consultation-staff-command-receipts",
+              "base_commit": "adcd42ca9ef2cf48acbae6368d92749970029e65",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-staff-command-receipts/proof.json"
             }
           ]
         }
@@ -268246,7 +268384,8 @@
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-solar-and-consultation-feedback",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-consultation-staff-command-receipts"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -268338,7 +268477,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-assignment-context.spec.ts",
-              "sha256": "8b11da8abd90c5e57a128e498d5a70a4209ad21676c243869a74f70e5c5ed897"
+              "sha256": "f32c2e77684a632522e3122068c3633d912216a65e05dfc4942565577be3a63d"
             },
             {
               "path": "apps/web/e2e/consultation-catalogue-eligibility.spec.ts",
@@ -268362,7 +268501,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
-              "sha256": "b2980c5535cb895f881fe5c8fec71367c417a736fd89a3df6319825844e9b080"
+              "sha256": "ea24e7d943b8725b6600438cd1434b4b0fe4da5cab80c83f756192d94f207daa"
             },
             {
               "path": "apps/web/e2e/consultation-paid-resolution-form-fixture.ts",
@@ -268438,7 +268577,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "985a54a6aa32cdb180c28c5b1fe52d492455fd5f80e0f164e16fa844978abfdf"
+              "sha256": "7e41c80c3b65a7e699601fc9c6ee3d7ace6c9085a1a99c3ea4d80cd6e0f7970f"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -269298,6 +269437,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-consultation-staff-command-receipts",
+              "base_commit": "adcd42ca9ef2cf48acbae6368d92749970029e65",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-staff-command-receipts/proof.json"
             }
           ]
         }
@@ -418291,7 +418435,8 @@
           "release-0.5-saving-address-response-feedback",
           "release-0.5-saving-address-field-errors",
           "release-0.5-conditional-native-choices",
-          "release-0.5-owned-solar-and-consultation-feedback"
+          "release-0.5-owned-solar-and-consultation-feedback",
+          "release-0.5-consultation-staff-command-receipts"
         ],
         "current_acceptance": {
           "kind": "accepted-all-applicable-order-review-wallet-disclosure",
@@ -418451,7 +418596,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "985a54a6aa32cdb180c28c5b1fe52d492455fd5f80e0f164e16fa844978abfdf"
+              "sha256": "7e41c80c3b65a7e699601fc9c6ee3d7ace6c9085a1a99c3ea4d80cd6e0f7970f"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityIncreasesPage.tsx",
@@ -419632,6 +419777,11 @@
               "batch": "release-0.5-owned-solar-and-consultation-feedback",
               "base_commit": "f239f203fcc8f74f8fbf9b44652aef6264030aa8",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-owned-solar-and-consultation-feedback/proof.json"
+            },
+            {
+              "batch": "release-0.5-consultation-staff-command-receipts",
+              "base_commit": "adcd42ca9ef2cf48acbae6368d92749970029e65",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-staff-command-receipts/proof.json"
             }
           ]
         }
@@ -487398,7 +487548,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-owned-staff-solar-review",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-consultation-staff-command-receipts"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -487654,7 +487805,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "985a54a6aa32cdb180c28c5b1fe52d492455fd5f80e0f164e16fa844978abfdf"
+              "sha256": "7e41c80c3b65a7e699601fc9c6ee3d7ace6c9085a1a99c3ea4d80cd6e0f7970f"
             },
             {
               "path": "apps/web/src/pages/AdminContractTemplatesPage.tsx",
@@ -488304,6 +488455,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-consultation-staff-command-receipts",
+              "base_commit": "adcd42ca9ef2cf48acbae6368d92749970029e65",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-staff-command-receipts/proof.json"
             }
           ]
         },
@@ -492949,7 +493105,8 @@
           "release-0.5-profile-picker-preload-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-solar-and-consultation-feedback",
-          "release-0.5-owned-staff-solar-review"
+          "release-0.5-owned-staff-solar-review",
+          "release-0.5-consultation-staff-command-receipts"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -493205,7 +493362,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "985a54a6aa32cdb180c28c5b1fe52d492455fd5f80e0f164e16fa844978abfdf"
+              "sha256": "7e41c80c3b65a7e699601fc9c6ee3d7ace6c9085a1a99c3ea4d80cd6e0f7970f"
             },
             {
               "path": "apps/web/src/pages/AdminContractLimitsPage.tsx",
@@ -493609,6 +493766,11 @@
               "batch": "release-0.5-owned-staff-solar-review",
               "base_commit": "66fbdb5875909634a4d638578dcbed2b3f548790",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-owned-staff-solar-review/proof.json"
+            },
+            {
+              "batch": "release-0.5-consultation-staff-command-receipts",
+              "base_commit": "adcd42ca9ef2cf48acbae6368d92749970029e65",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-staff-command-receipts/proof.json"
             }
           ]
         }
@@ -506956,7 +507118,8 @@
           "release-0.5-profile-picker-preload-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-solar-and-consultation-feedback",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-consultation-staff-command-receipts"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -507160,7 +507323,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "985a54a6aa32cdb180c28c5b1fe52d492455fd5f80e0f164e16fa844978abfdf"
+              "sha256": "7e41c80c3b65a7e699601fc9c6ee3d7ace6c9085a1a99c3ea4d80cd6e0f7970f"
             },
             {
               "path": "apps/web/src/pages/AdminContractTemplatesPage.tsx",
@@ -507514,6 +507677,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-consultation-staff-command-receipts",
+              "base_commit": "adcd42ca9ef2cf48acbae6368d92749970029e65",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-staff-command-receipts/proof.json"
             }
           ]
         }
@@ -513302,7 +513470,8 @@
           "release-0.5-profile-picker-preload-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-solar-and-consultation-feedback",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-consultation-staff-command-receipts"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -513362,7 +513531,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
-              "sha256": "b2980c5535cb895f881fe5c8fec71367c417a736fd89a3df6319825844e9b080"
+              "sha256": "ea24e7d943b8725b6600438cd1434b4b0fe4da5cab80c83f756192d94f207daa"
             },
             {
               "path": "apps/web/e2e/consultation-paid-resolution-forms.spec.ts",
@@ -513638,7 +513807,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "985a54a6aa32cdb180c28c5b1fe52d492455fd5f80e0f164e16fa844978abfdf"
+              "sha256": "7e41c80c3b65a7e699601fc9c6ee3d7ace6c9085a1a99c3ea4d80cd6e0f7970f"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrdersPage.tsx",
@@ -514010,6 +514179,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-consultation-staff-command-receipts",
+              "base_commit": "adcd42ca9ef2cf48acbae6368d92749970029e65",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-staff-command-receipts/proof.json"
             }
           ]
         }
@@ -514076,7 +514250,8 @@
           "release-0.5-profile-picker-preload-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-solar-and-consultation-feedback",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-consultation-staff-command-receipts"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -514136,7 +514311,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
-              "sha256": "b2980c5535cb895f881fe5c8fec71367c417a736fd89a3df6319825844e9b080"
+              "sha256": "ea24e7d943b8725b6600438cd1434b4b0fe4da5cab80c83f756192d94f207daa"
             },
             {
               "path": "apps/web/e2e/consultation-paid-resolution-forms.spec.ts",
@@ -514412,7 +514587,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "985a54a6aa32cdb180c28c5b1fe52d492455fd5f80e0f164e16fa844978abfdf"
+              "sha256": "7e41c80c3b65a7e699601fc9c6ee3d7ace6c9085a1a99c3ea4d80cd6e0f7970f"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrdersPage.tsx",
@@ -514784,6 +514959,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-consultation-staff-command-receipts",
+              "base_commit": "adcd42ca9ef2cf48acbae6368d92749970029e65",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-staff-command-receipts/proof.json"
             }
           ]
         }
@@ -515326,7 +515506,8 @@
           "release-0.5-profile-picker-preload-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-solar-and-consultation-feedback",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-consultation-staff-command-receipts"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -515386,7 +515567,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
-              "sha256": "b2980c5535cb895f881fe5c8fec71367c417a736fd89a3df6319825844e9b080"
+              "sha256": "ea24e7d943b8725b6600438cd1434b4b0fe4da5cab80c83f756192d94f207daa"
             },
             {
               "path": "apps/web/e2e/consultation-paid-resolution-forms.spec.ts",
@@ -515662,7 +515843,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "985a54a6aa32cdb180c28c5b1fe52d492455fd5f80e0f164e16fa844978abfdf"
+              "sha256": "7e41c80c3b65a7e699601fc9c6ee3d7ace6c9085a1a99c3ea4d80cd6e0f7970f"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrdersPage.tsx",
@@ -516034,6 +516215,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-consultation-staff-command-receipts",
+              "base_commit": "adcd42ca9ef2cf48acbae6368d92749970029e65",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-staff-command-receipts/proof.json"
             }
           ]
         }
@@ -538705,7 +538891,8 @@
           "release-0.5-profile-picker-preload-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-staff-solar-review",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-consultation-staff-command-receipts"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -539173,7 +539360,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "985a54a6aa32cdb180c28c5b1fe52d492455fd5f80e0f164e16fa844978abfdf"
+              "sha256": "7e41c80c3b65a7e699601fc9c6ee3d7ace6c9085a1a99c3ea4d80cd6e0f7970f"
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
@@ -540382,6 +540569,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-consultation-staff-command-receipts",
+              "base_commit": "adcd42ca9ef2cf48acbae6368d92749970029e65",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-staff-command-receipts/proof.json"
             }
           ]
         },
@@ -540528,7 +540720,8 @@
           "release-0.5-profile-picker-preload-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-staff-solar-review",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-consultation-staff-command-receipts"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -540996,7 +541189,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "985a54a6aa32cdb180c28c5b1fe52d492455fd5f80e0f164e16fa844978abfdf"
+              "sha256": "7e41c80c3b65a7e699601fc9c6ee3d7ace6c9085a1a99c3ea4d80cd6e0f7970f"
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
@@ -542205,6 +542398,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-consultation-staff-command-receipts",
+              "base_commit": "adcd42ca9ef2cf48acbae6368d92749970029e65",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-staff-command-receipts/proof.json"
             }
           ]
         },
@@ -542352,7 +542550,8 @@
           "release-0.5-profile-picker-preload-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-staff-solar-review",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-consultation-staff-command-receipts"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -542820,7 +543019,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "985a54a6aa32cdb180c28c5b1fe52d492455fd5f80e0f164e16fa844978abfdf"
+              "sha256": "7e41c80c3b65a7e699601fc9c6ee3d7ace6c9085a1a99c3ea4d80cd6e0f7970f"
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
@@ -544029,6 +544228,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-consultation-staff-command-receipts",
+              "base_commit": "adcd42ca9ef2cf48acbae6368d92749970029e65",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-staff-command-receipts/proof.json"
             }
           ]
         },
@@ -544145,7 +544349,8 @@
           "release-0.5-profile-picker-preload-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-staff-solar-review",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-consultation-staff-command-receipts"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -544613,7 +544818,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "985a54a6aa32cdb180c28c5b1fe52d492455fd5f80e0f164e16fa844978abfdf"
+              "sha256": "7e41c80c3b65a7e699601fc9c6ee3d7ace6c9085a1a99c3ea4d80cd6e0f7970f"
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
@@ -545822,6 +546027,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-consultation-staff-command-receipts",
+              "base_commit": "adcd42ca9ef2cf48acbae6368d92749970029e65",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-staff-command-receipts/proof.json"
             }
           ]
         },
@@ -545964,7 +546174,8 @@
           "release-0.5-profile-picker-preload-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-staff-solar-review",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-consultation-staff-command-receipts"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -546432,7 +546643,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "985a54a6aa32cdb180c28c5b1fe52d492455fd5f80e0f164e16fa844978abfdf"
+              "sha256": "7e41c80c3b65a7e699601fc9c6ee3d7ace6c9085a1a99c3ea4d80cd6e0f7970f"
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
@@ -547641,6 +547852,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-consultation-staff-command-receipts",
+              "base_commit": "adcd42ca9ef2cf48acbae6368d92749970029e65",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-staff-command-receipts/proof.json"
             }
           ]
         },
@@ -547792,7 +548008,8 @@
           "release-0.5-profile-picker-preload-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-staff-solar-review",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-consultation-staff-command-receipts"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -548260,7 +548477,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "985a54a6aa32cdb180c28c5b1fe52d492455fd5f80e0f164e16fa844978abfdf"
+              "sha256": "7e41c80c3b65a7e699601fc9c6ee3d7ace6c9085a1a99c3ea4d80cd6e0f7970f"
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
@@ -549469,6 +549686,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-consultation-staff-command-receipts",
+              "base_commit": "adcd42ca9ef2cf48acbae6368d92749970029e65",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-staff-command-receipts/proof.json"
             }
           ]
         },
@@ -549593,7 +549815,8 @@
           "release-0.5-profile-picker-preload-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-staff-solar-review",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-consultation-staff-command-receipts"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -550061,7 +550284,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "985a54a6aa32cdb180c28c5b1fe52d492455fd5f80e0f164e16fa844978abfdf"
+              "sha256": "7e41c80c3b65a7e699601fc9c6ee3d7ace6c9085a1a99c3ea4d80cd6e0f7970f"
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
@@ -551270,6 +551493,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-consultation-staff-command-receipts",
+              "base_commit": "adcd42ca9ef2cf48acbae6368d92749970029e65",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-staff-command-receipts/proof.json"
             }
           ]
         },
@@ -551358,7 +551586,8 @@
           "release-0.5-profile-picker-preload-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-staff-solar-review",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-consultation-staff-command-receipts"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -551826,7 +552055,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "985a54a6aa32cdb180c28c5b1fe52d492455fd5f80e0f164e16fa844978abfdf"
+              "sha256": "7e41c80c3b65a7e699601fc9c6ee3d7ace6c9085a1a99c3ea4d80cd6e0f7970f"
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
@@ -553035,6 +553264,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-consultation-staff-command-receipts",
+              "base_commit": "adcd42ca9ef2cf48acbae6368d92749970029e65",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-staff-command-receipts/proof.json"
             }
           ]
         },
@@ -553123,7 +553357,8 @@
           "release-0.5-profile-picker-preload-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-staff-solar-review",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-consultation-staff-command-receipts"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -553591,7 +553826,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "985a54a6aa32cdb180c28c5b1fe52d492455fd5f80e0f164e16fa844978abfdf"
+              "sha256": "7e41c80c3b65a7e699601fc9c6ee3d7ace6c9085a1a99c3ea4d80cd6e0f7970f"
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
@@ -554800,6 +555035,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-consultation-staff-command-receipts",
+              "base_commit": "adcd42ca9ef2cf48acbae6368d92749970029e65",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-staff-command-receipts/proof.json"
             }
           ]
         },
@@ -554889,7 +555129,8 @@
           "release-0.5-profile-picker-preload-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-staff-solar-review",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-consultation-staff-command-receipts"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -555357,7 +555598,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "985a54a6aa32cdb180c28c5b1fe52d492455fd5f80e0f164e16fa844978abfdf"
+              "sha256": "7e41c80c3b65a7e699601fc9c6ee3d7ace6c9085a1a99c3ea4d80cd6e0f7970f"
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
@@ -556566,6 +556807,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-consultation-staff-command-receipts",
+              "base_commit": "adcd42ca9ef2cf48acbae6368d92749970029e65",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-staff-command-receipts/proof.json"
             }
           ]
         },
@@ -556654,7 +556900,8 @@
           "release-0.5-profile-picker-preload-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-staff-solar-review",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-consultation-staff-command-receipts"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -557122,7 +557369,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "985a54a6aa32cdb180c28c5b1fe52d492455fd5f80e0f164e16fa844978abfdf"
+              "sha256": "7e41c80c3b65a7e699601fc9c6ee3d7ace6c9085a1a99c3ea4d80cd6e0f7970f"
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
@@ -558331,6 +558578,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-consultation-staff-command-receipts",
+              "base_commit": "adcd42ca9ef2cf48acbae6368d92749970029e65",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-staff-command-receipts/proof.json"
             }
           ]
         },
@@ -562073,7 +562325,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Owned solar document, consultation intake and dashboard feedback is verified. Staff solar file and set decisions now require their captured receipt and announce the confirmed outcome. Unknown decisions hold the draft and block resubmission until the same request has been checked. Named invoice, profile and order evidence remains recorded. Other CRUD and read feedback adoption is open."
+        "Staff consultation review and self/team assignment now announce exact saved outcomes. A misleading success response holds commands until a fresh owned read confirms the operation. Existing solar, consultation intake, dashboard, invoice, profile and order evidence remains recorded. Other CRUD and read feedback adoption is open."
       ],
       "owner": null,
       "depends_on": [],
@@ -562100,7 +562352,8 @@
           "release-0.5-saving-address-response-feedback",
           "release-0.5-owned-read-retry-feedback",
           "release-0.5-owned-solar-and-consultation-feedback",
-          "release-0.5-owned-staff-solar-review"
+          "release-0.5-owned-staff-solar-review",
+          "release-0.5-consultation-staff-command-receipts"
         ],
         "current_acceptance": null
       }
@@ -582599,7 +582852,8 @@
           "release-0.5-profile-picker-preload-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-solar-and-consultation-feedback",
-          "release-0.5-owned-staff-solar-review"
+          "release-0.5-owned-staff-solar-review",
+          "release-0.5-consultation-staff-command-receipts"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -582855,7 +583109,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "985a54a6aa32cdb180c28c5b1fe52d492455fd5f80e0f164e16fa844978abfdf"
+              "sha256": "7e41c80c3b65a7e699601fc9c6ee3d7ace6c9085a1a99c3ea4d80cd6e0f7970f"
             },
             {
               "path": "apps/web/src/pages/AdminContractLimitsPage.tsx",
@@ -583259,6 +583513,11 @@
               "batch": "release-0.5-owned-staff-solar-review",
               "base_commit": "66fbdb5875909634a4d638578dcbed2b3f548790",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-owned-staff-solar-review/proof.json"
+            },
+            {
+              "batch": "release-0.5-consultation-staff-command-receipts",
+              "base_commit": "adcd42ca9ef2cf48acbae6368d92749970029e65",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-staff-command-receipts/proof.json"
             }
           ]
         }
@@ -586995,7 +587254,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Staff solar document review now rejects wrong-request reads and presents a fresh owned recovery after an unconfirmed decision. Customer solar guidance, the shared loading heading and Safari profile picker retain their verified recovery. Remaining conditional states are open."
+        "Staff consultation review and assignment now expose read-only recovery for ambiguous writes. Recovery rejects another profile and cannot release the hold from a wrong-team snapshot. Previously verified solar and shared recovery evidence remains recorded. Remaining conditional states are open."
       ],
       "owner": null,
       "depends_on": [],
@@ -587023,7 +587282,8 @@
           "release-0.5-profile-picker-preload-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-solar-and-consultation-feedback",
-          "release-0.5-owned-staff-solar-review"
+          "release-0.5-owned-staff-solar-review",
+          "release-0.5-consultation-staff-command-receipts"
         ],
         "current_acceptance": null
       }
@@ -587130,7 +587390,8 @@
           "release-0.5-profile-picker-preload-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-staff-solar-review",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-consultation-staff-command-receipts"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -587598,7 +587859,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "985a54a6aa32cdb180c28c5b1fe52d492455fd5f80e0f164e16fa844978abfdf"
+              "sha256": "7e41c80c3b65a7e699601fc9c6ee3d7ace6c9085a1a99c3ea4d80cd6e0f7970f"
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
@@ -588807,6 +589068,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-consultation-staff-command-receipts",
+              "base_commit": "adcd42ca9ef2cf48acbae6368d92749970029e65",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-staff-command-receipts/proof.json"
             }
           ]
         },
@@ -588891,7 +589157,8 @@
           "release-0.5-profile-picker-preload-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-staff-solar-review",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-consultation-staff-command-receipts"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -589359,7 +589626,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "985a54a6aa32cdb180c28c5b1fe52d492455fd5f80e0f164e16fa844978abfdf"
+              "sha256": "7e41c80c3b65a7e699601fc9c6ee3d7ace6c9085a1a99c3ea4d80cd6e0f7970f"
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
@@ -590568,6 +590835,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-consultation-staff-command-receipts",
+              "base_commit": "adcd42ca9ef2cf48acbae6368d92749970029e65",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-staff-command-receipts/proof.json"
             }
           ]
         },
@@ -590652,7 +590924,8 @@
           "release-0.5-profile-picker-preload-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-staff-solar-review",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-consultation-staff-command-receipts"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -591120,7 +591393,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "985a54a6aa32cdb180c28c5b1fe52d492455fd5f80e0f164e16fa844978abfdf"
+              "sha256": "7e41c80c3b65a7e699601fc9c6ee3d7ace6c9085a1a99c3ea4d80cd6e0f7970f"
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
@@ -592329,6 +592602,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-consultation-staff-command-receipts",
+              "base_commit": "adcd42ca9ef2cf48acbae6368d92749970029e65",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-staff-command-receipts/proof.json"
             }
           ]
         },
@@ -592413,7 +592691,8 @@
           "release-0.5-profile-picker-preload-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-staff-solar-review",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-consultation-staff-command-receipts"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -592881,7 +593160,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "985a54a6aa32cdb180c28c5b1fe52d492455fd5f80e0f164e16fa844978abfdf"
+              "sha256": "7e41c80c3b65a7e699601fc9c6ee3d7ace6c9085a1a99c3ea4d80cd6e0f7970f"
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
@@ -594090,6 +594369,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-consultation-staff-command-receipts",
+              "base_commit": "adcd42ca9ef2cf48acbae6368d92749970029e65",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-staff-command-receipts/proof.json"
             }
           ]
         },
@@ -594174,7 +594458,8 @@
           "release-0.5-profile-picker-preload-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-staff-solar-review",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-consultation-staff-command-receipts"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -594642,7 +594927,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "985a54a6aa32cdb180c28c5b1fe52d492455fd5f80e0f164e16fa844978abfdf"
+              "sha256": "7e41c80c3b65a7e699601fc9c6ee3d7ace6c9085a1a99c3ea4d80cd6e0f7970f"
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
@@ -595851,6 +596136,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-consultation-staff-command-receipts",
+              "base_commit": "adcd42ca9ef2cf48acbae6368d92749970029e65",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-staff-command-receipts/proof.json"
             }
           ]
         },
@@ -595935,7 +596225,8 @@
           "release-0.5-profile-picker-preload-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-staff-solar-review",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-consultation-staff-command-receipts"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -596403,7 +596694,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "985a54a6aa32cdb180c28c5b1fe52d492455fd5f80e0f164e16fa844978abfdf"
+              "sha256": "7e41c80c3b65a7e699601fc9c6ee3d7ace6c9085a1a99c3ea4d80cd6e0f7970f"
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
@@ -597612,6 +597903,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-consultation-staff-command-receipts",
+              "base_commit": "adcd42ca9ef2cf48acbae6368d92749970029e65",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-staff-command-receipts/proof.json"
             }
           ]
         },
@@ -597696,7 +597992,8 @@
           "release-0.5-profile-picker-preload-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-staff-solar-review",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-consultation-staff-command-receipts"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -598164,7 +598461,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "985a54a6aa32cdb180c28c5b1fe52d492455fd5f80e0f164e16fa844978abfdf"
+              "sha256": "7e41c80c3b65a7e699601fc9c6ee3d7ace6c9085a1a99c3ea4d80cd6e0f7970f"
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
@@ -599373,6 +599670,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-consultation-staff-command-receipts",
+              "base_commit": "adcd42ca9ef2cf48acbae6368d92749970029e65",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-staff-command-receipts/proof.json"
             }
           ]
         },
@@ -625121,7 +625423,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-owned-staff-solar-review",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-consultation-staff-command-receipts"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -625417,7 +625720,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "985a54a6aa32cdb180c28c5b1fe52d492455fd5f80e0f164e16fa844978abfdf"
+              "sha256": "7e41c80c3b65a7e699601fc9c6ee3d7ace6c9085a1a99c3ea4d80cd6e0f7970f"
             },
             {
               "path": "apps/web/src/pages/AdminContractTemplatesPage.tsx",
@@ -626136,6 +626439,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-consultation-staff-command-receipts",
+              "base_commit": "adcd42ca9ef2cf48acbae6368d92749970029e65",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-staff-command-receipts/proof.json"
             }
           ]
         }
@@ -626209,7 +626517,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-owned-staff-solar-review",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-consultation-staff-command-receipts"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -626505,7 +626814,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "985a54a6aa32cdb180c28c5b1fe52d492455fd5f80e0f164e16fa844978abfdf"
+              "sha256": "7e41c80c3b65a7e699601fc9c6ee3d7ace6c9085a1a99c3ea4d80cd6e0f7970f"
             },
             {
               "path": "apps/web/src/pages/AdminContractTemplatesPage.tsx",
@@ -627224,6 +627533,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-consultation-staff-command-receipts",
+              "base_commit": "adcd42ca9ef2cf48acbae6368d92749970029e65",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-staff-command-receipts/proof.json"
             }
           ]
         }
@@ -627297,7 +627611,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-owned-staff-solar-review",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-consultation-staff-command-receipts"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -627593,7 +627908,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "985a54a6aa32cdb180c28c5b1fe52d492455fd5f80e0f164e16fa844978abfdf"
+              "sha256": "7e41c80c3b65a7e699601fc9c6ee3d7ace6c9085a1a99c3ea4d80cd6e0f7970f"
             },
             {
               "path": "apps/web/src/pages/AdminContractTemplatesPage.tsx",
@@ -628312,6 +628627,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-consultation-staff-command-receipts",
+              "base_commit": "adcd42ca9ef2cf48acbae6368d92749970029e65",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-staff-command-receipts/proof.json"
             }
           ]
         }
@@ -628388,7 +628708,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-owned-staff-solar-review",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-consultation-staff-command-receipts"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -628684,7 +629005,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "985a54a6aa32cdb180c28c5b1fe52d492455fd5f80e0f164e16fa844978abfdf"
+              "sha256": "7e41c80c3b65a7e699601fc9c6ee3d7ace6c9085a1a99c3ea4d80cd6e0f7970f"
             },
             {
               "path": "apps/web/src/pages/AdminContractTemplatesPage.tsx",
@@ -629403,6 +629724,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-consultation-staff-command-receipts",
+              "base_commit": "adcd42ca9ef2cf48acbae6368d92749970029e65",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-staff-command-receipts/proof.json"
             }
           ]
         }
@@ -629479,7 +629805,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-owned-staff-solar-review",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-consultation-staff-command-receipts"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -629775,7 +630102,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "985a54a6aa32cdb180c28c5b1fe52d492455fd5f80e0f164e16fa844978abfdf"
+              "sha256": "7e41c80c3b65a7e699601fc9c6ee3d7ace6c9085a1a99c3ea4d80cd6e0f7970f"
             },
             {
               "path": "apps/web/src/pages/AdminContractTemplatesPage.tsx",
@@ -630494,6 +630821,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-consultation-staff-command-receipts",
+              "base_commit": "adcd42ca9ef2cf48acbae6368d92749970029e65",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-staff-command-receipts/proof.json"
             }
           ]
         }
@@ -630597,7 +630929,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-owned-staff-solar-review",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-consultation-staff-command-receipts"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -630893,7 +631226,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "985a54a6aa32cdb180c28c5b1fe52d492455fd5f80e0f164e16fa844978abfdf"
+              "sha256": "7e41c80c3b65a7e699601fc9c6ee3d7ace6c9085a1a99c3ea4d80cd6e0f7970f"
             },
             {
               "path": "apps/web/src/pages/AdminContractTemplatesPage.tsx",
@@ -631612,6 +631945,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-consultation-staff-command-receipts",
+              "base_commit": "adcd42ca9ef2cf48acbae6368d92749970029e65",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-staff-command-receipts/proof.json"
             }
           ]
         }
@@ -631684,7 +632022,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-owned-staff-solar-review",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-consultation-staff-command-receipts"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -631980,7 +632319,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "985a54a6aa32cdb180c28c5b1fe52d492455fd5f80e0f164e16fa844978abfdf"
+              "sha256": "7e41c80c3b65a7e699601fc9c6ee3d7ace6c9085a1a99c3ea4d80cd6e0f7970f"
             },
             {
               "path": "apps/web/src/pages/AdminContractTemplatesPage.tsx",
@@ -632699,6 +633038,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-consultation-staff-command-receipts",
+              "base_commit": "adcd42ca9ef2cf48acbae6368d92749970029e65",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-staff-command-receipts/proof.json"
             }
           ]
         }
@@ -632771,7 +633115,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-owned-staff-solar-review",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-consultation-staff-command-receipts"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -633067,7 +633412,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "985a54a6aa32cdb180c28c5b1fe52d492455fd5f80e0f164e16fa844978abfdf"
+              "sha256": "7e41c80c3b65a7e699601fc9c6ee3d7ace6c9085a1a99c3ea4d80cd6e0f7970f"
             },
             {
               "path": "apps/web/src/pages/AdminContractTemplatesPage.tsx",
@@ -633786,6 +634131,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-consultation-staff-command-receipts",
+              "base_commit": "adcd42ca9ef2cf48acbae6368d92749970029e65",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-staff-command-receipts/proof.json"
             }
           ]
         }
@@ -633859,7 +634209,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-owned-staff-solar-review",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-consultation-staff-command-receipts"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -634155,7 +634506,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "985a54a6aa32cdb180c28c5b1fe52d492455fd5f80e0f164e16fa844978abfdf"
+              "sha256": "7e41c80c3b65a7e699601fc9c6ee3d7ace6c9085a1a99c3ea4d80cd6e0f7970f"
             },
             {
               "path": "apps/web/src/pages/AdminContractTemplatesPage.tsx",
@@ -634874,6 +635225,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-consultation-staff-command-receipts",
+              "base_commit": "adcd42ca9ef2cf48acbae6368d92749970029e65",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-staff-command-receipts/proof.json"
             }
           ]
         }
@@ -634965,7 +635321,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-owned-staff-solar-review",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-consultation-staff-command-receipts"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -635261,7 +635618,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "985a54a6aa32cdb180c28c5b1fe52d492455fd5f80e0f164e16fa844978abfdf"
+              "sha256": "7e41c80c3b65a7e699601fc9c6ee3d7ace6c9085a1a99c3ea4d80cd6e0f7970f"
             },
             {
               "path": "apps/web/src/pages/AdminContractTemplatesPage.tsx",
@@ -635980,6 +636337,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-consultation-staff-command-receipts",
+              "base_commit": "adcd42ca9ef2cf48acbae6368d92749970029e65",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-staff-command-receipts/proof.json"
             }
           ]
         }
@@ -636054,7 +636416,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-owned-staff-solar-review",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-consultation-staff-command-receipts"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -636350,7 +636713,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "985a54a6aa32cdb180c28c5b1fe52d492455fd5f80e0f164e16fa844978abfdf"
+              "sha256": "7e41c80c3b65a7e699601fc9c6ee3d7ace6c9085a1a99c3ea4d80cd6e0f7970f"
             },
             {
               "path": "apps/web/src/pages/AdminContractTemplatesPage.tsx",
@@ -637069,6 +637432,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-consultation-staff-command-receipts",
+              "base_commit": "adcd42ca9ef2cf48acbae6368d92749970029e65",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-staff-command-receipts/proof.json"
             }
           ]
         }
@@ -667062,7 +667430,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-owned-staff-solar-review",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-consultation-staff-command-receipts"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -667358,7 +667727,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "985a54a6aa32cdb180c28c5b1fe52d492455fd5f80e0f164e16fa844978abfdf"
+              "sha256": "7e41c80c3b65a7e699601fc9c6ee3d7ace6c9085a1a99c3ea4d80cd6e0f7970f"
             },
             {
               "path": "apps/web/src/pages/AdminContractTemplatesPage.tsx",
@@ -668077,6 +668446,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-consultation-staff-command-receipts",
+              "base_commit": "adcd42ca9ef2cf48acbae6368d92749970029e65",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-staff-command-receipts/proof.json"
             }
           ]
         }
@@ -668148,7 +668522,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-owned-staff-solar-review",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-consultation-staff-command-receipts"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -668444,7 +668819,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "985a54a6aa32cdb180c28c5b1fe52d492455fd5f80e0f164e16fa844978abfdf"
+              "sha256": "7e41c80c3b65a7e699601fc9c6ee3d7ace6c9085a1a99c3ea4d80cd6e0f7970f"
             },
             {
               "path": "apps/web/src/pages/AdminContractTemplatesPage.tsx",
@@ -669163,6 +669538,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-consultation-staff-command-receipts",
+              "base_commit": "adcd42ca9ef2cf48acbae6368d92749970029e65",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-staff-command-receipts/proof.json"
             }
           ]
         }
@@ -669234,7 +669614,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-owned-staff-solar-review",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-consultation-staff-command-receipts"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -669530,7 +669911,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "985a54a6aa32cdb180c28c5b1fe52d492455fd5f80e0f164e16fa844978abfdf"
+              "sha256": "7e41c80c3b65a7e699601fc9c6ee3d7ace6c9085a1a99c3ea4d80cd6e0f7970f"
             },
             {
               "path": "apps/web/src/pages/AdminContractTemplatesPage.tsx",
@@ -670249,6 +670630,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-consultation-staff-command-receipts",
+              "base_commit": "adcd42ca9ef2cf48acbae6368d92749970029e65",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-staff-command-receipts/proof.json"
             }
           ]
         }
@@ -670320,7 +670706,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-owned-staff-solar-review",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-consultation-staff-command-receipts"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -670616,7 +671003,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "985a54a6aa32cdb180c28c5b1fe52d492455fd5f80e0f164e16fa844978abfdf"
+              "sha256": "7e41c80c3b65a7e699601fc9c6ee3d7ace6c9085a1a99c3ea4d80cd6e0f7970f"
             },
             {
               "path": "apps/web/src/pages/AdminContractTemplatesPage.tsx",
@@ -671335,6 +671722,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-consultation-staff-command-receipts",
+              "base_commit": "adcd42ca9ef2cf48acbae6368d92749970029e65",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-staff-command-receipts/proof.json"
             }
           ]
         }
@@ -674796,7 +675188,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-owned-staff-solar-review",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-consultation-staff-command-receipts"
         ],
         "current_acceptance": {
           "kind": "verified-financial-and-fulfillment-status-journeys",
@@ -675128,7 +675521,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "985a54a6aa32cdb180c28c5b1fe52d492455fd5f80e0f164e16fa844978abfdf"
+              "sha256": "7e41c80c3b65a7e699601fc9c6ee3d7ace6c9085a1a99c3ea4d80cd6e0f7970f"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
@@ -675544,6 +675937,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-consultation-staff-command-receipts",
+              "base_commit": "adcd42ca9ef2cf48acbae6368d92749970029e65",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-staff-command-receipts/proof.json"
             }
           ]
         }
@@ -675607,7 +676005,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-owned-staff-solar-review",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-consultation-staff-command-receipts"
         ],
         "current_acceptance": {
           "kind": "verified-financial-and-fulfillment-status-journeys",
@@ -675939,7 +676338,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "985a54a6aa32cdb180c28c5b1fe52d492455fd5f80e0f164e16fa844978abfdf"
+              "sha256": "7e41c80c3b65a7e699601fc9c6ee3d7ace6c9085a1a99c3ea4d80cd6e0f7970f"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
@@ -676355,6 +676754,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-consultation-staff-command-receipts",
+              "base_commit": "adcd42ca9ef2cf48acbae6368d92749970029e65",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-staff-command-receipts/proof.json"
             }
           ]
         }
@@ -676420,7 +676824,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-owned-staff-solar-review",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-consultation-staff-command-receipts"
         ],
         "current_acceptance": {
           "kind": "verified-financial-and-fulfillment-status-journeys",
@@ -676752,7 +677157,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "985a54a6aa32cdb180c28c5b1fe52d492455fd5f80e0f164e16fa844978abfdf"
+              "sha256": "7e41c80c3b65a7e699601fc9c6ee3d7ace6c9085a1a99c3ea4d80cd6e0f7970f"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
@@ -677168,6 +677573,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-consultation-staff-command-receipts",
+              "base_commit": "adcd42ca9ef2cf48acbae6368d92749970029e65",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-staff-command-receipts/proof.json"
             }
           ]
         }
@@ -677231,7 +677641,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-owned-staff-solar-review",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-consultation-staff-command-receipts"
         ],
         "current_acceptance": {
           "kind": "verified-financial-and-fulfillment-status-journeys",
@@ -677563,7 +677974,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "985a54a6aa32cdb180c28c5b1fe52d492455fd5f80e0f164e16fa844978abfdf"
+              "sha256": "7e41c80c3b65a7e699601fc9c6ee3d7ace6c9085a1a99c3ea4d80cd6e0f7970f"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
@@ -677979,6 +678390,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-consultation-staff-command-receipts",
+              "base_commit": "adcd42ca9ef2cf48acbae6368d92749970029e65",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-staff-command-receipts/proof.json"
             }
           ]
         }
@@ -678042,7 +678458,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-owned-staff-solar-review",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-consultation-staff-command-receipts"
         ],
         "current_acceptance": {
           "kind": "verified-financial-and-fulfillment-status-journeys",
@@ -678374,7 +678791,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "985a54a6aa32cdb180c28c5b1fe52d492455fd5f80e0f164e16fa844978abfdf"
+              "sha256": "7e41c80c3b65a7e699601fc9c6ee3d7ace6c9085a1a99c3ea4d80cd6e0f7970f"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
@@ -678790,6 +679207,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-consultation-staff-command-receipts",
+              "base_commit": "adcd42ca9ef2cf48acbae6368d92749970029e65",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-staff-command-receipts/proof.json"
             }
           ]
         }
@@ -678857,7 +679279,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-owned-staff-solar-review",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-consultation-staff-command-receipts"
         ],
         "current_acceptance": {
           "kind": "verified-financial-and-fulfillment-status-journeys",
@@ -679189,7 +679612,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "985a54a6aa32cdb180c28c5b1fe52d492455fd5f80e0f164e16fa844978abfdf"
+              "sha256": "7e41c80c3b65a7e699601fc9c6ee3d7ace6c9085a1a99c3ea4d80cd6e0f7970f"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
@@ -679605,6 +680028,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-consultation-staff-command-receipts",
+              "base_commit": "adcd42ca9ef2cf48acbae6368d92749970029e65",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-staff-command-receipts/proof.json"
             }
           ]
         }
@@ -679672,7 +680100,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-owned-staff-solar-review",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-consultation-staff-command-receipts"
         ],
         "current_acceptance": {
           "kind": "verified-financial-and-fulfillment-status-journeys",
@@ -680004,7 +680433,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "985a54a6aa32cdb180c28c5b1fe52d492455fd5f80e0f164e16fa844978abfdf"
+              "sha256": "7e41c80c3b65a7e699601fc9c6ee3d7ace6c9085a1a99c3ea4d80cd6e0f7970f"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
@@ -680420,6 +680849,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-consultation-staff-command-receipts",
+              "base_commit": "adcd42ca9ef2cf48acbae6368d92749970029e65",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-staff-command-receipts/proof.json"
             }
           ]
         }
@@ -680483,7 +680917,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-owned-staff-solar-review",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-consultation-staff-command-receipts"
         ],
         "current_acceptance": {
           "kind": "verified-financial-and-fulfillment-status-journeys",
@@ -680815,7 +681250,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "985a54a6aa32cdb180c28c5b1fe52d492455fd5f80e0f164e16fa844978abfdf"
+              "sha256": "7e41c80c3b65a7e699601fc9c6ee3d7ace6c9085a1a99c3ea4d80cd6e0f7970f"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
@@ -681231,6 +681666,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-consultation-staff-command-receipts",
+              "base_commit": "adcd42ca9ef2cf48acbae6368d92749970029e65",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-staff-command-receipts/proof.json"
             }
           ]
         }
@@ -681294,7 +681734,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-owned-staff-solar-review",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-consultation-staff-command-receipts"
         ],
         "current_acceptance": {
           "kind": "verified-financial-and-fulfillment-status-journeys",
@@ -681626,7 +682067,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "985a54a6aa32cdb180c28c5b1fe52d492455fd5f80e0f164e16fa844978abfdf"
+              "sha256": "7e41c80c3b65a7e699601fc9c6ee3d7ace6c9085a1a99c3ea4d80cd6e0f7970f"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
@@ -682042,6 +682483,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-consultation-staff-command-receipts",
+              "base_commit": "adcd42ca9ef2cf48acbae6368d92749970029e65",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-staff-command-receipts/proof.json"
             }
           ]
         }
@@ -682106,7 +682552,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-owned-staff-solar-review",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-consultation-staff-command-receipts"
         ],
         "current_acceptance": {
           "kind": "verified-financial-and-fulfillment-status-journeys",
@@ -682438,7 +682885,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "985a54a6aa32cdb180c28c5b1fe52d492455fd5f80e0f164e16fa844978abfdf"
+              "sha256": "7e41c80c3b65a7e699601fc9c6ee3d7ace6c9085a1a99c3ea4d80cd6e0f7970f"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
@@ -682854,6 +683301,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-consultation-staff-command-receipts",
+              "base_commit": "adcd42ca9ef2cf48acbae6368d92749970029e65",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-staff-command-receipts/proof.json"
             }
           ]
         }
@@ -682923,7 +683375,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-owned-staff-solar-review",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-consultation-staff-command-receipts"
         ],
         "current_acceptance": {
           "kind": "verified-financial-and-fulfillment-status-journeys",
@@ -683255,7 +683708,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "985a54a6aa32cdb180c28c5b1fe52d492455fd5f80e0f164e16fa844978abfdf"
+              "sha256": "7e41c80c3b65a7e699601fc9c6ee3d7ace6c9085a1a99c3ea4d80cd6e0f7970f"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
@@ -683671,6 +684124,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-consultation-staff-command-receipts",
+              "base_commit": "adcd42ca9ef2cf48acbae6368d92749970029e65",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-staff-command-receipts/proof.json"
             }
           ]
         }
@@ -694545,7 +695003,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
-              "sha256": "b2980c5535cb895f881fe5c8fec71367c417a736fd89a3df6319825844e9b080"
+              "sha256": "ea24e7d943b8725b6600438cd1434b4b0fe4da5cab80c83f756192d94f207daa"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -695629,6 +696087,11 @@
               "batch": "release-0.5-owned-staff-solar-review",
               "base_commit": "66fbdb5875909634a4d638578dcbed2b3f548790",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-owned-staff-solar-review/proof.json"
+            },
+            {
+              "batch": "release-0.5-consultation-staff-command-receipts",
+              "base_commit": "adcd42ca9ef2cf48acbae6368d92749970029e65",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-staff-command-receipts/proof.json"
             }
           ]
         },
@@ -695678,7 +696141,8 @@
           "release-0.5-saving-address-field-errors",
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-solar-and-consultation-feedback",
-          "release-0.5-owned-staff-solar-review"
+          "release-0.5-owned-staff-solar-review",
+          "release-0.5-consultation-staff-command-receipts"
         ],
         "inspection": {
           "wallet_history": "R-01.02 accepted separately.",
@@ -696591,7 +697055,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
-              "sha256": "b2980c5535cb895f881fe5c8fec71367c417a736fd89a3df6319825844e9b080"
+              "sha256": "ea24e7d943b8725b6600438cd1434b4b0fe4da5cab80c83f756192d94f207daa"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -697668,6 +698132,11 @@
               "batch": "release-0.5-owned-staff-solar-review",
               "base_commit": "66fbdb5875909634a4d638578dcbed2b3f548790",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-owned-staff-solar-review/proof.json"
+            },
+            {
+              "batch": "release-0.5-consultation-staff-command-receipts",
+              "base_commit": "adcd42ca9ef2cf48acbae6368d92749970029e65",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-staff-command-receipts/proof.json"
             }
           ]
         },
@@ -697713,7 +698182,8 @@
           "release-0.5-saving-address-field-errors",
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-solar-and-consultation-feedback",
-          "release-0.5-owned-staff-solar-review"
+          "release-0.5-owned-staff-solar-review",
+          "release-0.5-consultation-staff-command-receipts"
         ]
       }
     },
@@ -702050,7 +702520,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-assignment-context.spec.ts",
-              "sha256": "8b11da8abd90c5e57a128e498d5a70a4209ad21676c243869a74f70e5c5ed897"
+              "sha256": "f32c2e77684a632522e3122068c3633d912216a65e05dfc4942565577be3a63d"
             },
             {
               "path": "apps/web/e2e/service-settings-forms.spec.ts",
@@ -702614,7 +703084,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
-              "sha256": "b2980c5535cb895f881fe5c8fec71367c417a736fd89a3df6319825844e9b080"
+              "sha256": "ea24e7d943b8725b6600438cd1434b4b0fe4da5cab80c83f756192d94f207daa"
             },
             {
               "path": "apps/web/e2e/consultation-paid-resolution-form-fixture.ts",
@@ -702686,7 +703156,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "985a54a6aa32cdb180c28c5b1fe52d492455fd5f80e0f164e16fa844978abfdf"
+              "sha256": "7e41c80c3b65a7e699601fc9c6ee3d7ace6c9085a1a99c3ea4d80cd6e0f7970f"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -706397,6 +706867,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-consultation-staff-command-receipts",
+              "base_commit": "adcd42ca9ef2cf48acbae6368d92749970029e65",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-staff-command-receipts/proof.json"
             }
           ]
         },
@@ -706456,7 +706931,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-owned-staff-solar-review",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-consultation-staff-command-receipts"
         ]
       }
     },
@@ -714240,7 +714716,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Staff solar document review now verifies reviewed file and set outcomes, preserves drafts on uncertainty, and reconciles the same request before releasing the hold. Conditional UI and remaining command adoption are open."
+        "Staff consultation starts review and assigns to self or team with owned receipt confirmation. Ambiguity holds commands until the captured state is verified by a new read. Conditional UI and remaining command adoption are open."
       ],
       "owner": null,
       "depends_on": [],
@@ -714295,7 +714771,8 @@
           "release-0.5-profile-picker-preload-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-solar-and-consultation-feedback",
-          "release-0.5-owned-staff-solar-review"
+          "release-0.5-owned-staff-solar-review",
+          "release-0.5-consultation-staff-command-receipts"
         ]
       }
     },
@@ -714314,7 +714791,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "The scoped contrast and terms/account batch passed 162 distinct Chromium/mobile Safari cases, 204 UI/web unit tests, eight package distribution checks and all 98 bundle limits. Official combined coverage remains bound to dd9c6d87. Final candidate coverage and remaining accessibility gates are open."
+        "The staff consultation command batch passed 32 distinct Chromium/mobile Safari cases, 55 related web unit tests and all 98 bundle limits. Official combined coverage remains bound to dd9c6d87. Final candidate coverage and remaining accessibility gates are open."
       ],
       "owner": null,
       "depends_on": [],
@@ -714370,7 +714847,8 @@
           "release-0.5-main-exact-source-coverage",
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-owned-staff-solar-review",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-consultation-staff-command-receipts"
         ]
       }
     },
@@ -776084,6 +776562,130 @@
       ],
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast",
       "release_disposition": "Remaining conditional color and release-candidate gates are open."
+    },
+    "release-0.5-consultation-staff-command-receipts": {
+      "batch": "release-0.5-consultation-staff-command-receipts",
+      "base_commit": "adcd42ca9ef2cf48acbae6368d92749970029e65",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.11.01.03",
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "accepted_task_keys": [],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.11.01.03",
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/consultation-assignment-context.spec.ts",
+          "sha256": "f32c2e77684a632522e3122068c3633d912216a65e05dfc4942565577be3a63d"
+        },
+        {
+          "path": "apps/web/e2e/consultation-journey.spec.ts",
+          "sha256": "ea24e7d943b8725b6600438cd1434b4b0fe4da5cab80c83f756192d94f207daa"
+        },
+        {
+          "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
+          "sha256": "7e41c80c3b65a7e699601fc9c6ee3d7ace6c9085a1a99c3ea4d80cd6e0f7970f"
+        }
+      ],
+      "checks": [
+        "Review requires the captured request and expected status. Assignment also verifies the exact owner and team. The existing service keeps team assignment in the current status and promotes a self-assigned submitted request to under review.",
+        "An incorrect HTTP success stays unconfirmed. A fresh exact request, profile and appended staff history can recover the result; assignment also requires current matching target state. Wrong-profile and wrong-team reads preserve the hold and no mutation is replayed.",
+        "The production browser journey confirms review and self assignment, offer, customer decision, payment handoff and staff completion. Existing protected fee, paid resolution, reason, permission and step-up checks passed.",
+        "32 distinct browser cases, 55 unit cases, formatting, lint, typecheck, production build and all 98 existing route/interaction bundle limits passed."
+      ],
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-staff-command-receipts/proof.json",
+      "source_scope_proof_sha256": "bb0032e938fd67ff961b7f42c220dac89168d53b6a859979143b35a50254464b",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-staff-command-receipts/reviewed.patch",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-staff-command-receipts/renewed-bindings.json",
+      "renewed_task_keys": [
+        "02-auth-users-admin.md#T-06.01.01",
+        "02-auth-users-admin.md#T-06.01.02",
+        "02-auth-users-admin.md#T-06.01.03",
+        "02-auth-users-admin.md#T-09.08.01",
+        "02-auth-users-admin.md#T-09.08.02",
+        "02-auth-users-admin.md#T-09.08.03",
+        "02-auth-users-admin.md#T-11.02.01",
+        "02-auth-users-admin.md#T-11.02.02",
+        "03-core-business.md#T-03.03.01.01",
+        "03-core-business.md#T-03.03.01.02",
+        "03-core-business.md#T-03.03.01.03",
+        "03-core-business.md#T-03.03.01.04",
+        "03-core-business.md#T-03.03.02.01",
+        "03-core-business.md#T-03.03.02.02",
+        "03-core-business.md#T-03.03.02.03",
+        "03-core-business.md#T-03.03.02.04",
+        "03-core-business.md#T-03.03.02.05",
+        "03-core-business.md#T-03.03.03.01",
+        "03-core-business.md#T-03.03.03.02",
+        "03-core-business.md#T-03.03.03.03",
+        "03-core-business.md#T-03.03.03.04",
+        "03-core-business.md#T-03.03.03.05",
+        "03-core-business.md#T-03.03.03.06",
+        "03-core-business.md#T-03.03.03.07",
+        "03-core-business.md#T-03.90.02",
+        "07-ui-ux-design.md#T-07.01.03.19",
+        "07-ui-ux-design.md#T-07.01.04.05",
+        "07-ui-ux-design.md#T-07.04.01.05",
+        "07-ui-ux-design.md#T-07.05.01.11",
+        "07-ui-ux-design.md#T-07.05.02.01",
+        "07-ui-ux-design.md#T-07.05.02.03",
+        "07-ui-ux-design.md#T-07.10.01.01",
+        "07-ui-ux-design.md#T-07.10.01.02",
+        "07-ui-ux-design.md#T-07.10.01.03",
+        "07-ui-ux-design.md#T-07.10.01.04",
+        "07-ui-ux-design.md#T-07.10.01.05",
+        "07-ui-ux-design.md#T-07.10.01.06",
+        "07-ui-ux-design.md#T-07.10.02.01",
+        "07-ui-ux-design.md#T-07.10.02.02",
+        "07-ui-ux-design.md#T-07.10.02.03",
+        "07-ui-ux-design.md#T-07.10.02.04",
+        "07-ui-ux-design.md#T-07.10.02.05",
+        "07-ui-ux-design.md#T-07.12.01.05",
+        "07-ui-ux-design.md#T-07.13.01.01",
+        "07-ui-ux-design.md#T-07.13.01.02",
+        "07-ui-ux-design.md#T-07.13.01.03",
+        "07-ui-ux-design.md#T-07.13.01.04",
+        "07-ui-ux-design.md#T-07.13.01.05",
+        "07-ui-ux-design.md#T-07.13.01.06",
+        "07-ui-ux-design.md#T-07.13.01.07",
+        "07-ui-ux-design.md#T-07.18.01.01",
+        "07-ui-ux-design.md#T-07.18.01.02",
+        "07-ui-ux-design.md#T-07.18.01.03",
+        "07-ui-ux-design.md#T-07.18.01.04",
+        "07-ui-ux-design.md#T-07.18.01.05",
+        "07-ui-ux-design.md#T-07.18.01.06",
+        "07-ui-ux-design.md#T-07.18.02.01",
+        "07-ui-ux-design.md#T-07.18.02.02",
+        "07-ui-ux-design.md#T-07.18.02.03",
+        "07-ui-ux-design.md#T-07.18.02.04",
+        "07-ui-ux-design.md#T-07.18.02.05",
+        "07-ui-ux-design.md#T-07.24.01.01",
+        "07-ui-ux-design.md#T-07.24.01.02",
+        "07-ui-ux-design.md#T-07.24.01.03",
+        "07-ui-ux-design.md#T-07.24.01.04",
+        "07-ui-ux-design.md#T-07.26.01.01",
+        "07-ui-ux-design.md#T-07.26.01.02",
+        "07-ui-ux-design.md#T-07.26.01.03",
+        "07-ui-ux-design.md#T-07.26.01.04",
+        "07-ui-ux-design.md#T-07.27.01.01",
+        "07-ui-ux-design.md#T-07.27.01.02",
+        "07-ui-ux-design.md#T-07.27.01.03",
+        "07-ui-ux-design.md#T-07.27.01.04",
+        "07-ui-ux-design.md#T-07.27.01.05",
+        "07-ui-ux-design.md#T-07.27.01.06",
+        "07-ui-ux-design.md#T-07.27.01.07",
+        "release-readiness#R-01.01",
+        "release-readiness#R-01.04",
+        "release-readiness#R-02.02"
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-staff-command-receipts",
+      "release_disposition": "Remaining conditional UI and final candidate gates are open."
     }
   },
   "historical_improvements": [

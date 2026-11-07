@@ -1,4 +1,5 @@
 import { t } from '@barghsa/i18n/app';
+import { confirmationText } from '@barghsa/i18n/confirmation';
 import AxeBuilder from '@axe-core/playwright';
 import { test, expect } from './coverage-fixture';
 import { setupCatalogueForms } from './catalogue-form-fixture';
@@ -27,6 +28,7 @@ for (const locale of ['en', 'fa'] as const)
         denied = false,
         selectedDetailReceipts = 0;
       let detailReceiptsAtAssignment: number | null = null;
+      let recovery: 'wrong-profile' | 'wrong-team' | 'exact' = 'exact';
       const writes: unknown[] = [];
       await page.route('**/api/admin/consultations/teams', (route) =>
         route.fulfill({ json: { teams: [{ name: 'Operations Team' }] } })
@@ -38,9 +40,24 @@ for (const locale of ['en', 'fa'] as const)
         const request = requests.find((item) =>
           new URL(route.request().url()).pathname.endsWith(`/requests/${item.id}`)
         );
+        const body = request && consultationContextDetail(request);
+        if (request?.id === selectedId && body && detailReceiptsAtAssignment !== null) {
+          if (recovery === 'wrong-profile') body.request.profile_id = requests[1]!.id;
+          if (recovery === 'wrong-team') body.request.staff_team = 'Energy Team';
+          body.history = [
+            ...body.history,
+            {
+              status: 'submitted',
+              actor_type: 'staff',
+              actor_name: null,
+              reason: 'Assigned to team Operations Team',
+              created_at: '2026-09-24T10:00:00.000Z',
+            },
+          ];
+        }
         await route.fulfill({
           status: request ? 200 : 404,
-          json: request ? consultationContextDetail(request) : {},
+          json: body ?? {},
         });
         if (request?.id === selectedId && route.request().method() === 'GET')
           selectedDetailReceipts += 1;
@@ -56,9 +73,15 @@ for (const locale of ['en', 'fa'] as const)
           staff_owner_id: null,
           staff_owner_name: null,
           staff_team: 'Operations Team',
-          status: 'under_review',
         };
-        return route.fulfill({ json: { status: 'under_review' } });
+        return route.fulfill({
+          json: {
+            requestId: selectedId,
+            status: 'submitted',
+            staffOwnerId: null,
+            staffTeam: theme === 'dark' ? 'Energy Team' : 'Operations Team',
+          },
+        });
       });
       await page.route('**/api/auth/step-up', (route) => {
         verified = true;
@@ -150,6 +173,31 @@ for (const locale of ['en', 'fa'] as const)
       await dialog.locator('button[type=submit]').click();
       await dialog.locator('input[type=password]').fill('synthetic-password');
       await dialog.locator('button[type=submit]').click();
+      const notice = page.getByText(confirmationText('recorded', locale), { exact: true });
+      if (theme === 'dark') {
+        const unresolved = page.getByText(copy('actionUnconfirmed'), { exact: true });
+        await expect(unresolved).toBeVisible();
+        await expect(notice).toHaveCount(0);
+        await expect(dialog.locator('button[type=submit]')).toBeDisabled();
+        await dialog.getByRole('button', { name: t('team.cancel', locale), exact: true }).click();
+        const retry = page
+          .getByRole('alert')
+          .filter({ hasText: copy('actionUnconfirmed') })
+          .getByRole('button', { name: copy('retry'), exact: true });
+        for (const mode of ['wrong-profile', 'wrong-team', 'exact'] as const) {
+          recovery = mode;
+          const before = selectedDetailReceipts;
+          await retry.click();
+          await expect.poll(() => selectedDetailReceipts).toBeGreaterThan(before);
+          if (mode !== 'exact') {
+            await expect(unresolved).toBeVisible();
+            await expect(notice).toHaveCount(0);
+          }
+          expect(writes).toHaveLength(2);
+        }
+        await expect(unresolved).toHaveCount(0);
+      }
+      await expect(notice).toBeVisible();
       await expect(dialog).toHaveCount(0);
       expect(detailReceiptsAtAssignment).not.toBeNull();
       await expect.poll(() => selectedDetailReceipts).toBeGreaterThan(detailReceiptsAtAssignment!);

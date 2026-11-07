@@ -1,5 +1,6 @@
 import { tConsultation as consultationCopy } from '@barghsa/i18n/consultation';
 import { t as appCopy } from '@barghsa/i18n/app';
+import { confirmationText } from '@barghsa/i18n/confirmation';
 import { fullNavigation } from './navigation-fixture';
 import { approveRiskConfirmation } from './confirmation-fixture';
 import AxeBuilder from '@axe-core/playwright';
@@ -30,6 +31,8 @@ for (const locale of ['en', 'fa'] as const)
     let submitted = false;
     let acceptedAt: string | null = null;
     let invoiceState = 'Unpaid';
+    let staffOwnerId: string | null = null;
+    let reviewWrites = 0;
     let operatingContext: 'customer' | 'staff' = 'customer';
     let quotedFee: unknown = null;
     let offer: { fee: string; scope: string; deliverables: string; validUntil: string } | null =
@@ -63,7 +66,7 @@ for (const locale of ['en', 'fa'] as const)
       ...customerRequest(),
       profile_id: profileId,
       profile_name: 'Buyer Example',
-      staff_owner_id: null,
+      staff_owner_id: staffOwnerId,
       priority: 'normal',
       uncovered_credit: '0',
     });
@@ -137,10 +140,24 @@ for (const locale of ['en', 'fa'] as const)
       route.fulfill({ json: { request: staffRequest(), history } })
     );
     await page.route(`**/api/admin/consultations/requests/${requestId}/review`, (route) => {
+      reviewWrites++;
       expect(status).toBe('submitted');
       status = 'under_review';
       history.push({ status, actor_type: 'staff', reason: null, created_at: submittedAt });
-      return route.fulfill({ json: { requestId, status } });
+      return route.fulfill({
+        json: { requestId: locale === 'fa' ? productId : requestId, status },
+      });
+    });
+    await page.route(`**/api/admin/consultations/requests/${requestId}/assign`, (route) => {
+      expect(route.request().postDataJSON()).toEqual({ assignTo: 'self' });
+      staffOwnerId = 'buyer';
+      history.push({
+        status,
+        actor_type: 'staff',
+        reason: 'Assigned to staff',
+        created_at: submittedAt,
+      });
+      return route.fulfill({ json: { requestId, status, staffOwnerId, staffTeam: null } });
     });
     await page.route(`**/api/admin/consultations/requests/${requestId}/fee-review`, (route) => {
       const input = route.request().postDataJSON() as Record<string, string>;
@@ -256,10 +273,40 @@ for (const locale of ['en', 'fa'] as const)
     ).toBeVisible();
     await page.getByRole('button', { name: new RegExp(`${title[locale]}.*Buyer Example`) }).click();
     await page.getByRole('button', { name: consultationCopy('startReview', locale) }).click();
-    await page
-      .getByRole('dialog')
-      .getByRole('button', { name: appCopy('team.confirm', locale) })
-      .click();
+    const reviewDialog = page.getByRole('dialog', {
+      name: consultationCopy('startReview', locale),
+    });
+    const reviewConfirm = reviewDialog.getByRole('button', {
+      name: appCopy('team.confirm', locale),
+    });
+    await reviewConfirm.click();
+    const recorded = page
+      .locator('[data-sonner-toast][data-type="success"]')
+      .filter({ hasText: confirmationText('recorded', locale) });
+    if (locale === 'fa') {
+      const unresolved = page.locator('[role="alert"]').filter({
+        hasText: consultationCopy('actionUnconfirmed', locale),
+      });
+      await expect(unresolved).toBeVisible();
+      await expect(reviewConfirm).toBeDisabled();
+      await expect(recorded).toHaveCount(0);
+      await reviewDialog.getByRole('button', { name: appCopy('team.cancel', locale) }).click();
+      await unresolved.getByRole('button', { name: consultationCopy('retry', locale) }).click();
+      await expect(unresolved).toHaveCount(0);
+    }
+    await expect(recorded).toBeVisible();
+    await expect(reviewDialog).toHaveCount(0);
+    expect(reviewWrites).toBe(1);
+    const assignSelf = consultationCopy('assignSelf', locale);
+    await page.getByRole('button', { name: assignSelf, exact: true }).click();
+    const assignDialog = page.getByRole('dialog', { name: assignSelf, exact: true });
+    await assignDialog.getByRole('button', { name: appCopy('team.confirm', locale) }).click();
+    await expect(assignDialog).toHaveCount(0);
+    await expect(
+      page
+        .getByRole('region', { name: consultationCopy('details', locale), exact: true })
+        .locator('[data-slot=consultation-assignment]')
+    ).toContainText(consultationCopy('assignedStaff', locale));
     await expect(
       page.getByRole('button', { name: consultationCopy('issueFee', locale) })
     ).toBeVisible();

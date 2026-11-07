@@ -68,6 +68,7 @@ import { staffOrderId } from '../lib/staff-order-list-query.js';
 import type { ConsultationListQuery } from '../lib/support-list-query.js';
 import { consultationReceipt, type ConsultationReasonDraft } from '../lib/consultation-form.js';
 import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
+import { toast } from '../lib/toast-api.js';
 
 interface RequestRow {
   id: string;
@@ -135,14 +136,23 @@ interface ResolutionCommand {
   uncertain: boolean;
   rejected: boolean;
 }
-interface ReasonCommand {
+interface StaffCommandSource {
   requestId: string;
   profileId: string;
-  reason: string;
   expectedStatus: string;
   history: Detail['history'];
-  paid: boolean;
 }
+type StaffCommand = StaffCommandSource &
+  (
+    | { kind: 'reason'; reason: string; paid: boolean }
+    | { kind: 'review'; reason: null }
+    | {
+        kind: 'assignment';
+        reason: string;
+        staffOwnerId: string | null;
+        staffTeam: string | null;
+      }
+  );
 function validHistory(value: unknown): value is Detail['history'] {
   return (
     Array.isArray(value) &&
@@ -162,12 +172,21 @@ function validHistory(value: unknown): value is Detail['history'] {
     )
   );
 }
-function savedReason(detail: Detail, command: ReasonCommand) {
+function matchedStaffCommand(result: unknown, command: StaffCommand) {
+  if (!consultationReceipt(result, command.requestId, command.expectedStatus)) return false;
+  if (command.kind !== 'assignment') return true;
+  const receipt = result as { staffOwnerId?: unknown; staffTeam?: unknown };
+  return receipt.staffOwnerId === command.staffOwnerId && receipt.staffTeam === command.staffTeam;
+}
+function savedStaffCommand(detail: Detail, command: StaffCommand) {
   const stable = (event: Detail['history'][number]) =>
     JSON.stringify([event.status, event.actor_type, event.reason, event.created_at]);
   return (
     detail.request.id === command.requestId &&
     detail.request.profile_id === command.profileId &&
+    (command.kind !== 'assignment' ||
+      (detail.request.staff_owner_id === command.staffOwnerId &&
+        detail.request.staff_team === command.staffTeam)) &&
     Array.isArray(detail.history) &&
     detail.history.length > command.history.length &&
     command.history.every((event, index) => {
@@ -466,8 +485,8 @@ function OwnedAdminConsultationsPage({ queries }: { queries?: ConsultationListQu
   const actionRef = useRef<TeamAction | null>(null);
   const actionScope = useRef(workScope);
   const actionGeneration = useRef(0);
-  const reasonCommand = useRef<ReasonCommand | null>(null);
-  const recoveringReason = useRef<ReasonCommand | null>(null);
+  const staffCommand = useRef<StaffCommand | null>(null);
+  const recoveringCommand = useRef<StaffCommand | null>(null);
   const unconfirmedRef = useRef(false);
   const [unconfirmed, setUnconfirmed] = useState(false);
   const preparingRef = useRef(false);
@@ -497,13 +516,14 @@ function OwnedAdminConsultationsPage({ queries }: { queries?: ConsultationListQu
       commandPendingRef.current ||
       !!feeCommand.current ||
       !!resolutionCommand.current ||
+      (recoveringCommand.current !== null && recoveringCommand.current.kind !== 'reason') ||
       (reasonPaidRef.current && preparingRef.current)
     );
   }
   function clearAction() {
     actionRef.current = null;
     setAction(null);
-    reasonCommand.current = null;
+    staffCommand.current = null;
     setFeeReview(null);
     setPaidFeeReview(null);
     setResolutionReview(null);
@@ -521,7 +541,7 @@ function OwnedAdminConsultationsPage({ queries }: { queries?: ConsultationListQu
     setResolutionUncertain(false);
     feeForm.reset(emptyConsultationFee);
     invalidateFeeReads();
-    recoveringReason.current = null;
+    recoveringCommand.current = null;
     unconfirmedRef.current = false;
     setUnconfirmed(false);
     setAccepted(null);
@@ -670,11 +690,11 @@ function OwnedAdminConsultationsPage({ queries }: { queries?: ConsultationListQu
     feeForm.reset(emptyConsultationFee);
     clearAction();
     preparingRef.current = false;
-    reasonCommand.current = null;
+    staffCommand.current = null;
     reasonForm.reset({ reason: '' });
     reasonPaidRef.current = false;
     setReasonPaid(false);
-    recoveringReason.current = null;
+    recoveringCommand.current = null;
     unconfirmedRef.current = false;
     setUnconfirmed(false);
     setTeam('');
@@ -706,7 +726,7 @@ function OwnedAdminConsultationsPage({ queries }: { queries?: ConsultationListQu
     detailAbort.current = controller;
     const capturedRead = readGeneration.current;
     const capturedGeneration = work.current.generation;
-    const recoveryAtRead = recoveringReason.current;
+    const recoveryAtRead = recoveringCommand.current;
     setDetail(null);
     void readStaff(
       'consultations',
@@ -720,6 +740,7 @@ function OwnedAdminConsultationsPage({ queries }: { queries?: ConsultationListQu
         if (
           result?.request?.id !== selectedId ||
           typeof result.request.profile_id !== 'string' ||
+          (recoveryAtRead && result.request.profile_id !== recoveryAtRead.profileId) ||
           !validHistory(result.history)
         )
           throw new Error('detail');
@@ -733,17 +754,21 @@ function OwnedAdminConsultationsPage({ queries }: { queries?: ConsultationListQu
         ) {
           detailScope.current = workScope;
           setDetail(result);
-          const command = recoveringReason.current;
+          const command = recoveringCommand.current;
           if (
             command &&
             command === recoveryAtRead &&
             !commandPendingRef.current &&
-            savedReason(result, command)
+            savedStaffCommand(result, command)
           ) {
-            recoveringReason.current = null;
+            recoveringCommand.current = null;
             unconfirmedRef.current = false;
             setUnconfirmed(false);
-            reasonForm.reset({ reason: '' });
+            if (command.kind === 'reason') reasonForm.reset({ reason: '' });
+            else {
+              toast.success(confirmationText('recorded', locale));
+              setListRevision((value) => value + 1);
+            }
           }
           if (!offerDirty.current) {
             setFee(result.request.fee ?? '');
@@ -781,9 +806,36 @@ function OwnedAdminConsultationsPage({ queries }: { queries?: ConsultationListQu
     }
   }, [detail, time.status, time.timezone]);
 
-  function prepare(path: string, title: string, body: Record<string, unknown> = {}) {
-    if (busy()) return;
-    propose(path, title, body);
+  function prepareStaffWork(intent: 'review' | 'self' | 'team', title: string) {
+    if (!detail || busy() || work.current.scope !== workScope) return;
+    const teamName = team.trim();
+    if ((intent === 'self' && !actor) || (intent === 'team' && !teamName)) return;
+    const source: StaffCommandSource = {
+      requestId: detail.request.id,
+      profileId: detail.request.profile_id,
+      expectedStatus:
+        intent === 'review' || (intent === 'self' && detail.request.status === 'submitted')
+          ? 'under_review'
+          : detail.request.status,
+      history: detail.history.map((event) => ({ ...event })),
+    };
+    if (intent === 'review') {
+      staffCommand.current = { ...source, kind: 'review', reason: null };
+      propose('review', title);
+    } else {
+      staffCommand.current = {
+        ...source,
+        kind: 'assignment',
+        staffOwnerId: intent === 'self' ? actor : null,
+        staffTeam: intent === 'team' ? teamName : null,
+        reason: intent === 'team' ? `Assigned to team ${teamName}` : 'Assigned to staff',
+      };
+      propose(
+        'assign',
+        title,
+        intent === 'team' ? { assignTo: 'team', team: teamName } : { assignTo: 'self' }
+      );
+    }
   }
   function propose(path: string, title: string, body: Record<string, unknown> = {}) {
     if (
@@ -800,6 +852,7 @@ function OwnedAdminConsultationsPage({ queries }: { queries?: ConsultationListQu
       description: `${detail?.request.profile_name ?? ''} · ${title}`,
       path: `/api/admin/consultations/requests/${selectedId}/${path}`,
       method: 'POST',
+      ...(staffCommand.current?.kind !== 'reason' ? { successStatus: 200 } : {}),
       body,
       forbiddenMessage: copy('actionError'),
     };
@@ -830,7 +883,8 @@ function OwnedAdminConsultationsPage({ queries }: { queries?: ConsultationListQu
         )
           return;
         const reason = draft.reason.trim();
-        reasonCommand.current = {
+        staffCommand.current = {
+          kind: 'reason',
           requestId: captured.request.id,
           profileId: captured.request.profile_id,
           reason,
@@ -1706,15 +1760,15 @@ function OwnedAdminConsultationsPage({ queries }: { queries?: ConsultationListQu
                 <div className="flex flex-wrap gap-2">
                   <Button
                     variant="outline"
-                    disabled={editorLocked || unconfirmed}
-                    onClick={() => prepare('assign', copy('assignSelf'), { assignTo: 'self' })}
+                    disabled={!actor || editorLocked || unconfirmed}
+                    onClick={() => prepareStaffWork('self', copy('assignSelf'))}
                   >
                     {copy('assignSelf')}
                   </Button>
                   {current.status === 'submitted' && (
                     <Button
                       disabled={editorLocked || unconfirmed}
-                      onClick={() => prepare('review', copy('startReview'))}
+                      onClick={() => prepareStaffWork('review', copy('startReview'))}
                     >
                       {copy('startReview')}
                     </Button>
@@ -1741,9 +1795,7 @@ function OwnedAdminConsultationsPage({ queries }: { queries?: ConsultationListQu
                   <Button
                     variant="outline"
                     disabled={!team.trim() || editorLocked || unconfirmed}
-                    onClick={() =>
-                      prepare('assign', copy('assignTeam'), { assignTo: 'team', team: team.trim() })
-                    }
+                    onClick={() => prepareStaffWork('team', copy('assignTeam'))}
                   >
                     {copy('assignTeam')}
                   </Button>
@@ -1919,7 +1971,7 @@ function OwnedAdminConsultationsPage({ queries }: { queries?: ConsultationListQu
           onValidationError={(fields) =>
             currentAction() &&
             !resolutionCommand.current &&
-            !!reasonCommand.current &&
+            staffCommand.current?.kind === 'reason' &&
             fields.length > 0 &&
             fields.every((field) => field === 'reason') &&
             reasonFields(fields)
@@ -1934,8 +1986,9 @@ function OwnedAdminConsultationsPage({ queries }: { queries?: ConsultationListQu
               resolutionUnknown(resolutionCommand.current);
               return;
             }
-            if (!reasonCommand.current || reasonCommand.current.paid) return;
-            recoveringReason.current = reasonCommand.current;
+            const command = staffCommand.current;
+            if (!command || (command.kind === 'reason' && command.paid)) return;
+            recoveringCommand.current = command;
             unconfirmedRef.current = true;
             setUnconfirmed(true);
           }}
@@ -2211,16 +2264,16 @@ function OwnedAdminConsultationsPage({ queries }: { queries?: ConsultationListQu
                 (feeReview ?? paidFeeReview ?? resolutionReview)?.hash
             )
               throw new Error('Consultation fee confirmation did not match the review');
-            const command = reasonCommand.current;
+            const command = staffCommand.current;
             if (
               command &&
-              !command.paid &&
-              !consultationReceipt(result, command.requestId, command.expectedStatus)
+              !(command.kind === 'reason' && command.paid) &&
+              !matchedStaffCommand(result, command)
             )
-              throw new Error('Consultation reason receipt did not match');
+              throw new Error('Consultation staff receipt did not match');
             if (command) {
-              reasonForm.reset({ reason: '' });
-              recoveringReason.current = null;
+              if (command.kind === 'reason') reasonForm.reset({ reason: '' });
+              recoveringCommand.current = null;
               unconfirmedRef.current = false;
               setUnconfirmed(false);
             } else if (feeReview || paidFeeReview) {
@@ -2232,7 +2285,10 @@ function OwnedAdminConsultationsPage({ queries }: { queries?: ConsultationListQu
             setResolutionReview(null);
             clearAction();
             refresh();
-            return (command && !command.paid) || feeReview || paidFeeReview || resolutionReview
+            return (command && !(command.kind === 'reason' && command.paid)) ||
+              feeReview ||
+              paidFeeReview ||
+              resolutionReview
               ? confirmationText('recorded', locale)
               : undefined;
           }}
