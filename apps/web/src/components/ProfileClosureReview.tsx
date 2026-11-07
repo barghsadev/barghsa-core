@@ -1,4 +1,4 @@
-import { toast } from '../lib/toast-api.js';
+import { sendToast, toast } from '../lib/toast-api.js';
 import { confirmationText } from '@barghsa/i18n/confirmation';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { LoadingStatus, Button, Input } from '@barghsa/ui';
@@ -15,6 +15,7 @@ import { t } from '@barghsa/i18n/app';
 import { lifecycleFormText } from '@barghsa/i18n/profile-lifecycle-forms';
 import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useTicketFormFeedback } from '../hooks/useTicketFormFeedback.js';
+import { readWithDeadline } from '../lib/server-query-client.js';
 import { withCsrf } from '../lib/csrf.js';
 import { securityStepUpReceipt } from '../lib/security-settings-form.js';
 import {
@@ -55,8 +56,9 @@ function ClosureReview({
   const [preview, setPreview] = useState<ClosurePreview | null>(null);
   const [loading, setLoading] = useState(true),
     [busy, setBusy] = useState(false);
-  const [error, setError] = useState<'' | 'failure' | 'unknown' | 'changed'>('');
+  const [error, setError] = useState<'' | 'failure' | 'unknown' | 'changed' | 'read'>('');
   const [pending, setPending] = useState<ClosurePreview | null>(null);
+  const read = useRef<AbortController | null>(null);
   const inFlight = useRef(false),
     held = useRef(false),
     alive = useRef(true),
@@ -109,36 +111,46 @@ function ClosureReview({
     release();
     onCompleted();
   }
-  async function refresh(signal?: AbortSignal) {
+  async function refresh() {
     if (!permitted() || coordination?.isLocked('closure')) return;
+    read.current?.abort();
+    const controller = new AbortController();
+    read.current = controller;
+    const { signal } = controller;
     setLoading(true);
     try {
-      const response = await fetch(`/api/staff/tickets/${ticketId}/closure-preview`, {
-        credentials: 'include',
-        ...(signal ? { signal } : {}),
+      const data = await readWithDeadline(signal, async (transport) => {
+        const response = await fetch(`/api/staff/tickets/${ticketId}/closure-preview`, {
+          credentials: 'include',
+          signal: transport,
+        });
+        if (!permitted() || transport.aborted || denied(response)) return null;
+        if (response.status !== 200) throw new Error('Preview unavailable');
+        const parsed = closurePreview(await response.json(), ticketId);
+        if (!parsed) throw new Error('Invalid closure preview');
+        return parsed;
       });
-      if (!permitted() || signal?.aborted || denied(response)) return;
-      if (response.status !== 200) throw new Error('Preview unavailable');
-      const data = closurePreview(await response.json(), ticketId);
-      if (!permitted() || signal?.aborted) return;
-      if (!data) throw new Error('Invalid closure preview');
+      if (!permitted() || signal.aborted || !data) return;
       setPreview(data);
       setError('');
       version.current = data.previewVersion;
       form.reset({ ...form.getValues(), confirmed: false });
     } catch {
-      if (!signal?.aborted && permitted()) setError('failure');
+      if (!signal.aborted && permitted()) {
+        setPreview(null);
+        setError('read');
+      }
     } finally {
-      if (!signal?.aborted && permitted()) setLoading(false);
+      if (read.current === controller) read.current = null;
+      if (!signal.aborted && permitted()) setLoading(false);
     }
   }
   useEffect(() => {
     alive.current = true;
-    const controller = new AbortController();
-    void refresh(controller.signal);
+    void refresh();
     return () => {
       alive.current = false;
-      controller.abort();
+      read.current?.abort();
       if (held.current) release();
     };
   }, []);
@@ -214,6 +226,7 @@ function ClosureReview({
         if (writing && !settled) {
           setPending(source);
           setError('unknown');
+          if (!pending) sendToast('warning', copy('uncertain'));
         } else setError(pending ? 'unknown' : 'failure');
       }
     } finally {
@@ -290,7 +303,9 @@ function ClosureReview({
               ? copy('uncertain')
               : error === 'changed'
                 ? copy('changed')
-                : label('failure')}
+                : error === 'read'
+                  ? t('settings.privacy.error', locale)
+                  : label('failure')}
           </p>
         )}
         {pending && (
@@ -301,6 +316,11 @@ function ClosureReview({
             onClick={() => void retry()}
           >
             {copy('retry')}
+          </Button>
+        )}
+        {error === 'read' && !loading && (
+          <Button type="button" variant="outline" onClick={() => void reviewRefresh()}>
+            {label('refresh')}
           </Button>
         )}
         {preview && !loading && (

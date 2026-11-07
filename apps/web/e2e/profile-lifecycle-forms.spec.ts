@@ -18,7 +18,10 @@ import {
 } from '../src/components/profile-lifecycle-test-fixture';
 import { t } from '@barghsa/i18n/app';
 import { lifecycleFormText } from '@barghsa/i18n/profile-lifecycle-forms';
+import { confirmationText } from '@barghsa/i18n/confirmation';
 const rawPassword = [' Raw synthetic ', '12A '].join('');
+const warning = (page: Page) => page.locator('[data-sonner-toast][data-type=warning]');
+const success = (page: Page) => page.locator('[data-sonner-toast][data-type=success]');
 async function capture(page: Page, owner: Locator, path: string) {
   await owner.scrollIntoViewIfNeeded();
   const box = await owner.boundingBox();
@@ -51,7 +54,11 @@ for (const locale of ['en', 'fa'] as const) {
     await setupTicketForms(page, locale, false);
     const value = { ...actualLifecyclePreview(), profileId },
       writes: Record<string, unknown>[] = [];
-    await page.route('**/api/tickets/lifecycle-preview', (r) => r.fulfill({ json: value }));
+    let previews = 0;
+    await page.route('**/api/tickets/lifecycle-preview', (r) => {
+      if (++previews === 1) return;
+      return r.fulfill({ json: value });
+    });
     await page.route('**/api/tickets/lifecycle-requests', async (r) => {
       const body = r.request().postDataJSON() as Record<string, unknown>;
       writes.push(body);
@@ -71,8 +78,16 @@ for (const locale of ['en', 'fa'] as const) {
         json: { ticketId, profileId, type: 'closure', created: false },
       });
     });
+    await page.clock.install();
     await page.goto('/settings/privacy');
     const owner = page.locator('[data-slot=profile-lifecycle]');
+    await expect.poll(() => previews).toBe(1);
+    await page.clock.fastForward(15_001);
+    await expect(owner.getByRole('alert')).toContainText(t('settings.privacy.error', locale));
+    expect(writes).toHaveLength(0);
+    await owner
+      .getByRole('button', { name: lifecycleFormText('refresh', locale), exact: true })
+      .click();
     await expect(
       owner.getByText(t('settings.privacy.blocker.activeOrder', locale), { exact: true })
     ).toBeVisible();
@@ -87,6 +102,8 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(
       owner.getByText(lifecycleFormText('uncertain', locale), { exact: true })
     ).toBeVisible();
+    await expect(warning(page)).toHaveText(lifecycleFormText('uncertain', locale));
+    await expect(success(page)).toHaveCount(0);
     await expect(closure).toBeDisabled();
     await closure.dispatchEvent('click');
     await expect(
@@ -97,6 +114,7 @@ for (const locale of ['en', 'fa'] as const) {
       .getByRole('button', { name: lifecycleFormText('retry', locale), exact: true })
       .click();
     await expect(owner.locator(`a[href="/tickets?ticketId=${ticketId}"]`)).toBeVisible();
+    await expect(success(page)).toHaveText(confirmationText('recorded', locale));
     expect(writes).toHaveLength(2);
     expect(writes[1]).toEqual(writes[0]);
     expect(writes[0]).toMatchObject({ type: 'closure', locale });
@@ -118,7 +136,7 @@ for (const locale of ['en', 'fa'] as const) {
       });
     });
     await page.route(`**/api/tickets/lifecycle-requests/${ticketId}/export`, (r) => {
-      if (++exports === 1) return r.fulfill({ status: 503, json: {} });
+      if (++exports <= 2) return r.fulfill({ status: 503, json: {} });
       value.requests = [
         {
           ticketId,
@@ -154,14 +172,24 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(
       owner.getByText(lifecycleFormText('uncertain', locale), { exact: true })
     ).toBeVisible();
+    await expect(warning(page)).toHaveText(lifecycleFormText('uncertain', locale));
+    await expect(success(page)).toHaveCount(0);
+    const retry = owner.getByRole('button', {
+      name: lifecycleFormText('retry', locale),
+      exact: true,
+    });
+    await retry.click();
+    await expect.poll(() => exports).toBe(2);
+    await expect(retry).toBeEnabled();
+    await expect(warning(page)).toHaveCount(1);
+    await expect(success(page)).toHaveCount(0);
     await capture(page, owner, info.outputPath('export-unconfirmed.png'));
-    await owner
-      .getByRole('button', { name: lifecycleFormText('retry', locale), exact: true })
-      .click();
+    await retry.click();
     await expect(owner.locator(`a[href="/tickets?ticketId=${ticketId}"]`)).toBeVisible();
     await expect(owner.getByRole('progressbar')).toBeVisible();
     expect(creates).toBe(1);
-    expect(exports).toBe(2);
+    expect(exports).toBe(3);
+    await expect(success(page)).toHaveText(confirmationText('recorded', locale));
     await quality(page, 'profile-lifecycle');
     await capture(page, owner, info.outputPath('export-queued.png'));
   });
@@ -171,14 +199,24 @@ for (const locale of ['en', 'fa'] as const) {
     const f = await setupTicketForms(page, locale, true);
     let reads = 0;
     const value = { ...actualClosurePreview(), ticketId, profileId, ownerUserId: customerActor };
-    await page.route(`**/api/staff/tickets/${ticketId}/closure-preview`, (r) =>
-      r.fulfill({
-        json: { ...value, previewVersion: ++reads === 1 ? 'a'.repeat(64) : 'b'.repeat(64) },
-      })
-    );
+    await page.route(`**/api/staff/tickets/${ticketId}/closure-preview`, (r) => {
+      if (++reads === 1) return;
+      return r.fulfill({
+        json: { ...value, previewVersion: reads === 2 ? 'a'.repeat(64) : 'b'.repeat(64) },
+      });
+    });
+    await page.clock.install();
     await page.goto('/admin/tickets?ticketId=' + ticketId);
     const owner = page.locator('[data-slot=profile-closure-review]'),
       form = owner.locator('form');
+    await expect.poll(() => reads).toBe(1);
+    await page.clock.fastForward(15_001);
+    await expect(owner.getByRole('alert')).toContainText(t('settings.privacy.error', locale));
+    await expect(form).toHaveCount(0);
+    expect(f.state.closureWrites).toBe(0);
+    await owner
+      .getByRole('button', { name: t('tickets.closure.refresh', locale), exact: true })
+      .click();
     await owner
       .getByRole('button', { name: t('tickets.closure.execute', locale), exact: true })
       .click();
@@ -257,6 +295,8 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(
       owner.getByText(lifecycleFormText('uncertain', locale), { exact: true })
     ).toBeVisible();
+    await expect(warning(page)).toHaveText(lifecycleFormText('uncertain', locale));
+    await expect(success(page)).toHaveCount(0);
     const status = page.locator('[data-slot=ticket-status-form]');
     await expect(status.locator('button[type=submit]')).toBeDisabled();
     await status.dispatchEvent('submit');
@@ -277,6 +317,7 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(
       page.locator('article').getByText(t('tickets.closed', locale), { exact: true })
     ).toBeVisible();
+    await expect(success(page)).toHaveText(confirmationText('recorded', locale));
     expect(writes).toHaveLength(2);
     expect(writes[1]).toEqual(writes[0]);
     expect(writes[0]).toEqual({ previewVersion: 'a'.repeat(64), confirmation: 'CLOSE_PROFILE' });

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-07T07:51:02+00:00",
-  "source_commit": "7cf95f840a7e65c722f95b10e486bd02c435d498",
+  "updated": "2026-11-07T07:55:41+00:00",
+  "source_commit": "11dd72829ed7b2083caa7bc4ff64f08eb86b491c",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -183403,7 +183403,8 @@
           "release-0.5-critical-accessibility",
           "release-0.5-route-fallback-and-announcement",
           "release-0.5-form-and-document-accessibility",
-          "release-0.5-workspace-route-census"
+          "release-0.5-workspace-route-census",
+          "release-0.5-profile-lifecycle-feedback"
         ],
         "current_acceptance": {
           "kind": "verified-profile-request-export-and-staff-creation-with-explicit-partial-boundaries",
@@ -183419,11 +183420,11 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "72b449bcc9056b9722cf62729052b024f00718c0a1fc98db359d58647d8328dc"
+              "sha256": "db48f88a6e054d5c64ff64b7311b521f9d06bbc833b2191978e4b21eb48c381a"
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
-              "sha256": "07a09cc8acd0091933cadcc4c1878dc57239d6a547102f32da215f433dcacc54"
+              "sha256": "235877c130ff01a40b1535c36f5303b9c7896201be12c4b67a41cdd571d88d33"
             },
             {
               "path": "apps/web/src/components/jobs/JobProgress.tsx",
@@ -183455,7 +183456,7 @@
             },
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
-              "sha256": "c68416f811aba1dfb6f57f24b88ad7c1c1c2452a577626a582b35e18a5a9b02d"
+              "sha256": "93a35600f3e64446c57ab7d296c33ba543ca601cb69a8e743582ab33caad3dba"
             },
             {
               "path": "apps/web/e2e/operating-context.spec.ts",
@@ -183782,7 +183783,8 @@
             "Bindings renewed by release-0.5-critical-accessibility: audited canonical landmarks, retained command calls and validated auth-entry authority. Exact targeted unit/browser and original performance evidence passes.",
             "Bindings renewed by release-0.5-route-fallback-and-announcement: verified route landmarks, terminal notice, timeout without retries, preserved authority/financial actions and equivalent shell CSS. Affected browser/unit and original budgets passed.",
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
-            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass."
+            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
+            "Bindings renewed by release-0.5-profile-lifecycle-feedback: exact lifecycle browsers and units verify timeout, current scope, protected consent, duplicate prevention and receipts after the bounded preview/feedback change."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/account-lifecycle-context-acceptance",
           "limitations": [
@@ -184247,6 +184249,11 @@
               "batch": "release-0.5-workspace-route-census",
               "base_commit": "7cf95f840a7e65c722f95b10e486bd02c435d498",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-workspace-route-census/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-profile-lifecycle-feedback",
+              "base_commit": "11dd72829ed7b2083caa7bc4ff64f08eb86b491c",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-profile-lifecycle-feedback/source-binding.json"
             }
           ]
         }
@@ -184289,7 +184296,8 @@
           "release-0.5-critical-accessibility",
           "release-0.5-route-fallback-and-announcement",
           "release-0.5-form-and-document-accessibility",
-          "release-0.5-workspace-route-census"
+          "release-0.5-workspace-route-census",
+          "release-0.5-profile-lifecycle-feedback"
         ],
         "current_acceptance": {
           "kind": "verified-profile-request-export-and-staff-creation-with-explicit-partial-boundaries",
@@ -184305,11 +184313,11 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "72b449bcc9056b9722cf62729052b024f00718c0a1fc98db359d58647d8328dc"
+              "sha256": "db48f88a6e054d5c64ff64b7311b521f9d06bbc833b2191978e4b21eb48c381a"
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
-              "sha256": "07a09cc8acd0091933cadcc4c1878dc57239d6a547102f32da215f433dcacc54"
+              "sha256": "235877c130ff01a40b1535c36f5303b9c7896201be12c4b67a41cdd571d88d33"
             },
             {
               "path": "apps/web/src/components/jobs/JobProgress.tsx",
@@ -184341,7 +184349,7 @@
             },
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
-              "sha256": "c68416f811aba1dfb6f57f24b88ad7c1c1c2452a577626a582b35e18a5a9b02d"
+              "sha256": "93a35600f3e64446c57ab7d296c33ba543ca601cb69a8e743582ab33caad3dba"
             },
             {
               "path": "apps/web/e2e/operating-context.spec.ts",
@@ -184668,7 +184676,8 @@
             "Bindings renewed by release-0.5-critical-accessibility: audited canonical landmarks, retained command calls and validated auth-entry authority. Exact targeted unit/browser and original performance evidence passes.",
             "Bindings renewed by release-0.5-route-fallback-and-announcement: verified route landmarks, terminal notice, timeout without retries, preserved authority/financial actions and equivalent shell CSS. Affected browser/unit and original budgets passed.",
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
-            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass."
+            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
+            "Bindings renewed by release-0.5-profile-lifecycle-feedback: exact lifecycle browsers and units verify timeout, current scope, protected consent, duplicate prevention and receipts after the bounded preview/feedback change."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/account-lifecycle-context-acceptance",
           "limitations": [
@@ -185133,6 +185142,11 @@
               "batch": "release-0.5-workspace-route-census",
               "base_commit": "7cf95f840a7e65c722f95b10e486bd02c435d498",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-workspace-route-census/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-profile-lifecycle-feedback",
+              "base_commit": "11dd72829ed7b2083caa7bc4ff64f08eb86b491c",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-profile-lifecycle-feedback/source-binding.json"
             }
           ]
         }
@@ -185175,7 +185189,8 @@
           "release-0.5-critical-accessibility",
           "release-0.5-route-fallback-and-announcement",
           "release-0.5-form-and-document-accessibility",
-          "release-0.5-workspace-route-census"
+          "release-0.5-workspace-route-census",
+          "release-0.5-profile-lifecycle-feedback"
         ],
         "current_acceptance": {
           "kind": "verified-profile-closure-preview-expiry-ownership-retention-and-support",
@@ -185291,7 +185306,7 @@
             },
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
-              "sha256": "c68416f811aba1dfb6f57f24b88ad7c1c1c2452a577626a582b35e18a5a9b02d"
+              "sha256": "93a35600f3e64446c57ab7d296c33ba543ca601cb69a8e743582ab33caad3dba"
             },
             {
               "path": "apps/web/e2e/ticket-forms-fixture.ts",
@@ -185315,7 +185330,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
-              "sha256": "07a09cc8acd0091933cadcc4c1878dc57239d6a547102f32da215f433dcacc54"
+              "sha256": "235877c130ff01a40b1535c36f5303b9c7896201be12c4b67a41cdd571d88d33"
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.test.tsx",
@@ -185323,7 +185338,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "72b449bcc9056b9722cf62729052b024f00718c0a1fc98db359d58647d8328dc"
+              "sha256": "db48f88a6e054d5c64ff64b7311b521f9d06bbc833b2191978e4b21eb48c381a"
             },
             {
               "path": "apps/web/src/components/ProfileMenu.tsx",
@@ -185600,7 +185615,8 @@
             "Bindings renewed by release-0.5-critical-accessibility: audited canonical landmarks, retained command calls and validated auth-entry authority. Exact targeted unit/browser and original performance evidence passes.",
             "Bindings renewed by release-0.5-route-fallback-and-announcement: verified route landmarks, terminal notice, timeout without retries, preserved authority/financial actions and equivalent shell CSS. Affected browser/unit and original budgets passed.",
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
-            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass."
+            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
+            "Bindings renewed by release-0.5-profile-lifecycle-feedback: exact lifecycle browsers and units verify timeout, current scope, protected consent, duplicate prevention and receipts after the bounded preview/feedback change."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/closure-completion-acceptance",
           "limitations": [
@@ -186144,6 +186160,11 @@
               "batch": "release-0.5-workspace-route-census",
               "base_commit": "7cf95f840a7e65c722f95b10e486bd02c435d498",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-workspace-route-census/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-profile-lifecycle-feedback",
+              "base_commit": "11dd72829ed7b2083caa7bc4ff64f08eb86b491c",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-profile-lifecycle-feedback/source-binding.json"
             }
           ]
         }
@@ -186196,7 +186217,8 @@
           "release-0.5-form-and-document-accessibility",
           "release-0.5-measured-action-targets",
           "release-0.5-route-landmark-census",
-          "release-0.5-workspace-route-census"
+          "release-0.5-workspace-route-census",
+          "release-0.5-profile-lifecycle-feedback"
         ],
         "current_acceptance": {
           "kind": "validated-immutable-business-acting-context-and-cross-surface-isolation",
@@ -186372,7 +186394,7 @@
             },
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
-              "sha256": "c68416f811aba1dfb6f57f24b88ad7c1c1c2452a577626a582b35e18a5a9b02d"
+              "sha256": "93a35600f3e64446c57ab7d296c33ba543ca601cb69a8e743582ab33caad3dba"
             },
             {
               "path": "apps/web/e2e/saving-fulfillment-history.spec.ts",
@@ -186408,7 +186430,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
-              "sha256": "07a09cc8acd0091933cadcc4c1878dc57239d6a547102f32da215f433dcacc54"
+              "sha256": "235877c130ff01a40b1535c36f5303b9c7896201be12c4b67a41cdd571d88d33"
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.test.tsx",
@@ -186416,7 +186438,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "72b449bcc9056b9722cf62729052b024f00718c0a1fc98db359d58647d8328dc"
+              "sha256": "db48f88a6e054d5c64ff64b7311b521f9d06bbc833b2191978e4b21eb48c381a"
             },
             {
               "path": "apps/web/src/components/ProfileMenu.tsx",
@@ -187025,7 +187047,8 @@
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
             "Bindings renewed by release-0.5-measured-action-targets: target sizing changes pass exact populated route browsers and scoped invoice, saving and customer-history ownership units. Navigation, authority, receipt and money behavior are unchanged.",
             "Bindings renewed by release-0.5-route-landmark-census: the detail change is identifier wrapping and bidi isolation only. Existing exact receipt, authority, navigation and draft checks pass with the new populated layout assertions.",
-            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass."
+            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
+            "Bindings renewed by release-0.5-profile-lifecycle-feedback: exact lifecycle browsers and units verify timeout, current scope, protected consent, duplicate prevention and receipts after the bounded preview/feedback change."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/business-history-context-acceptance",
           "reused_external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/account-lifecycle-context-acceptance",
@@ -188019,6 +188042,11 @@
               "batch": "release-0.5-workspace-route-census",
               "base_commit": "7cf95f840a7e65c722f95b10e486bd02c435d498",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-workspace-route-census/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-profile-lifecycle-feedback",
+              "base_commit": "11dd72829ed7b2083caa7bc4ff64f08eb86b491c",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-profile-lifecycle-feedback/source-binding.json"
             }
           ]
         }
@@ -188071,7 +188099,8 @@
           "release-0.5-form-and-document-accessibility",
           "release-0.5-measured-action-targets",
           "release-0.5-route-landmark-census",
-          "release-0.5-workspace-route-census"
+          "release-0.5-workspace-route-census",
+          "release-0.5-profile-lifecycle-feedback"
         ],
         "current_acceptance": {
           "kind": "validated-immutable-business-acting-context-and-cross-surface-isolation",
@@ -188247,7 +188276,7 @@
             },
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
-              "sha256": "c68416f811aba1dfb6f57f24b88ad7c1c1c2452a577626a582b35e18a5a9b02d"
+              "sha256": "93a35600f3e64446c57ab7d296c33ba543ca601cb69a8e743582ab33caad3dba"
             },
             {
               "path": "apps/web/e2e/saving-fulfillment-history.spec.ts",
@@ -188283,7 +188312,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
-              "sha256": "07a09cc8acd0091933cadcc4c1878dc57239d6a547102f32da215f433dcacc54"
+              "sha256": "235877c130ff01a40b1535c36f5303b9c7896201be12c4b67a41cdd571d88d33"
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.test.tsx",
@@ -188291,7 +188320,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "72b449bcc9056b9722cf62729052b024f00718c0a1fc98db359d58647d8328dc"
+              "sha256": "db48f88a6e054d5c64ff64b7311b521f9d06bbc833b2191978e4b21eb48c381a"
             },
             {
               "path": "apps/web/src/components/ProfileMenu.tsx",
@@ -188900,7 +188929,8 @@
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
             "Bindings renewed by release-0.5-measured-action-targets: target sizing changes pass exact populated route browsers and scoped invoice, saving and customer-history ownership units. Navigation, authority, receipt and money behavior are unchanged.",
             "Bindings renewed by release-0.5-route-landmark-census: the detail change is identifier wrapping and bidi isolation only. Existing exact receipt, authority, navigation and draft checks pass with the new populated layout assertions.",
-            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass."
+            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
+            "Bindings renewed by release-0.5-profile-lifecycle-feedback: exact lifecycle browsers and units verify timeout, current scope, protected consent, duplicate prevention and receipts after the bounded preview/feedback change."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/business-history-context-acceptance",
           "reused_external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/account-lifecycle-context-acceptance",
@@ -189894,6 +189924,11 @@
               "batch": "release-0.5-workspace-route-census",
               "base_commit": "7cf95f840a7e65c722f95b10e486bd02c435d498",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-workspace-route-census/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-profile-lifecycle-feedback",
+              "base_commit": "11dd72829ed7b2083caa7bc4ff64f08eb86b491c",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-profile-lifecycle-feedback/source-binding.json"
             }
           ]
         }
@@ -189935,7 +189970,8 @@
           "release-0.5-critical-accessibility",
           "release-0.5-route-fallback-and-announcement",
           "release-0.5-form-and-document-accessibility",
-          "release-0.5-workspace-route-census"
+          "release-0.5-workspace-route-census",
+          "release-0.5-profile-lifecycle-feedback"
         ],
         "current_acceptance": {
           "kind": "verified-profile-request-export-and-staff-creation-with-explicit-partial-boundaries",
@@ -189951,11 +189987,11 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "72b449bcc9056b9722cf62729052b024f00718c0a1fc98db359d58647d8328dc"
+              "sha256": "db48f88a6e054d5c64ff64b7311b521f9d06bbc833b2191978e4b21eb48c381a"
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
-              "sha256": "07a09cc8acd0091933cadcc4c1878dc57239d6a547102f32da215f433dcacc54"
+              "sha256": "235877c130ff01a40b1535c36f5303b9c7896201be12c4b67a41cdd571d88d33"
             },
             {
               "path": "apps/web/src/components/jobs/JobProgress.tsx",
@@ -189987,7 +190023,7 @@
             },
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
-              "sha256": "c68416f811aba1dfb6f57f24b88ad7c1c1c2452a577626a582b35e18a5a9b02d"
+              "sha256": "93a35600f3e64446c57ab7d296c33ba543ca601cb69a8e743582ab33caad3dba"
             },
             {
               "path": "apps/web/e2e/operating-context.spec.ts",
@@ -190314,7 +190350,8 @@
             "Bindings renewed by release-0.5-critical-accessibility: audited canonical landmarks, retained command calls and validated auth-entry authority. Exact targeted unit/browser and original performance evidence passes.",
             "Bindings renewed by release-0.5-route-fallback-and-announcement: verified route landmarks, terminal notice, timeout without retries, preserved authority/financial actions and equivalent shell CSS. Affected browser/unit and original budgets passed.",
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
-            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass."
+            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
+            "Bindings renewed by release-0.5-profile-lifecycle-feedback: exact lifecycle browsers and units verify timeout, current scope, protected consent, duplicate prevention and receipts after the bounded preview/feedback change."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/account-lifecycle-context-acceptance",
           "limitations": [
@@ -190779,6 +190816,11 @@
               "batch": "release-0.5-workspace-route-census",
               "base_commit": "7cf95f840a7e65c722f95b10e486bd02c435d498",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-workspace-route-census/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-profile-lifecycle-feedback",
+              "base_commit": "11dd72829ed7b2083caa7bc4ff64f08eb86b491c",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-profile-lifecycle-feedback/source-binding.json"
             }
           ]
         }
@@ -442098,7 +442140,8 @@
           "release-0.5-language-calendar-journey",
           "release-0.5-staff-lists-and-receipts",
           "release-0.5-critical-accessibility",
-          "release-0.5-form-and-document-accessibility"
+          "release-0.5-form-and-document-accessibility",
+          "release-0.5-profile-lifecycle-feedback"
         ],
         "current_acceptance": {
           "status": "done",
@@ -442158,7 +442201,7 @@
             },
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
-              "sha256": "c68416f811aba1dfb6f57f24b88ad7c1c1c2452a577626a582b35e18a5a9b02d"
+              "sha256": "93a35600f3e64446c57ab7d296c33ba543ca601cb69a8e743582ab33caad3dba"
             },
             {
               "path": "apps/web/e2e/ticket-forms-fixture.ts",
@@ -442166,7 +442209,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "72b449bcc9056b9722cf62729052b024f00718c0a1fc98db359d58647d8328dc"
+              "sha256": "db48f88a6e054d5c64ff64b7311b521f9d06bbc833b2191978e4b21eb48c381a"
             },
             {
               "path": "apps/web/src/components/jobs/JobProgress.test.tsx",
@@ -442258,7 +442301,8 @@
             "Current binding renewed by release-0.5-language-calendar-journey: additive exact locked calendar imports/export, native language detection/label and directional presentation, server-offered MonthPicker and documented retained representation. Existing domain bodies/guards/actions and package exports remain;125 distinct native browser cases,33 related units,8 distribution checks and91 unchanged budgets cover affected behavior. Prior domain evidence reused for unchanged sources only.",
             "Bindings renewed by release-0.5-staff-lists-and-receipts: scoped query and confirmed receipt behavior with the original assertions, write payloads, CSRF and budgets. Current targeted unit and native results are recorded.",
             "Bindings renewed by release-0.5-critical-accessibility: audited canonical landmarks, retained command calls and validated auth-entry authority. Exact targeted unit/browser and original performance evidence passes.",
-            "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only."
+            "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
+            "Bindings renewed by release-0.5-profile-lifecycle-feedback: exact lifecycle browsers and units verify timeout, current scope, protected consent, duplicate prevention and receipts after the bounded preview/feedback change."
           ],
           "limitations": [],
           "operational_limits": [
@@ -442380,6 +442424,11 @@
               "batch": "release-0.5-form-and-document-accessibility",
               "base_commit": "bc50e458e469d4fae48336f6384692b2a0a93251",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-form-and-document-accessibility/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-profile-lifecycle-feedback",
+              "base_commit": "11dd72829ed7b2083caa7bc4ff64f08eb86b491c",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-profile-lifecycle-feedback/source-binding.json"
             }
           ]
         }
@@ -442412,7 +442461,8 @@
           "release-0.5-language-calendar-journey",
           "release-0.5-staff-lists-and-receipts",
           "release-0.5-critical-accessibility",
-          "release-0.5-form-and-document-accessibility"
+          "release-0.5-form-and-document-accessibility",
+          "release-0.5-profile-lifecycle-feedback"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -442472,7 +442522,7 @@
             },
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
-              "sha256": "c68416f811aba1dfb6f57f24b88ad7c1c1c2452a577626a582b35e18a5a9b02d"
+              "sha256": "93a35600f3e64446c57ab7d296c33ba543ca601cb69a8e743582ab33caad3dba"
             },
             {
               "path": "apps/web/e2e/ticket-forms-fixture.ts",
@@ -442480,7 +442530,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "72b449bcc9056b9722cf62729052b024f00718c0a1fc98db359d58647d8328dc"
+              "sha256": "db48f88a6e054d5c64ff64b7311b521f9d06bbc833b2191978e4b21eb48c381a"
             },
             {
               "path": "apps/web/src/components/jobs/JobProgress.test.tsx",
@@ -442588,7 +442638,8 @@
             "Current binding renewed by release-0.5-language-calendar-journey: additive exact locked calendar imports/export, native language detection/label and directional presentation, server-offered MonthPicker and documented retained representation. Existing domain bodies/guards/actions and package exports remain;125 distinct native browser cases,33 related units,8 distribution checks and91 unchanged budgets cover affected behavior. Prior domain evidence reused for unchanged sources only.",
             "Bindings renewed by release-0.5-staff-lists-and-receipts: scoped query and confirmed receipt behavior with the original assertions, write payloads, CSRF and budgets. Current targeted unit and native results are recorded.",
             "Bindings renewed by release-0.5-critical-accessibility: audited canonical landmarks, retained command calls and validated auth-entry authority. Exact targeted unit/browser and original performance evidence passes.",
-            "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only."
+            "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
+            "Bindings renewed by release-0.5-profile-lifecycle-feedback: exact lifecycle browsers and units verify timeout, current scope, protected consent, duplicate prevention and receipts after the bounded preview/feedback change."
           ],
           "limitations": [],
           "operational_limits": [
@@ -442718,6 +442769,11 @@
               "batch": "release-0.5-form-and-document-accessibility",
               "base_commit": "bc50e458e469d4fae48336f6384692b2a0a93251",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-form-and-document-accessibility/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-profile-lifecycle-feedback",
+              "base_commit": "11dd72829ed7b2083caa7bc4ff64f08eb86b491c",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-profile-lifecycle-feedback/source-binding.json"
             }
           ]
         }
@@ -442750,7 +442806,8 @@
           "release-0.5-language-calendar-journey",
           "release-0.5-staff-lists-and-receipts",
           "release-0.5-critical-accessibility",
-          "release-0.5-form-and-document-accessibility"
+          "release-0.5-form-and-document-accessibility",
+          "release-0.5-profile-lifecycle-feedback"
         ],
         "current_acceptance": {
           "status": "done",
@@ -442810,7 +442867,7 @@
             },
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
-              "sha256": "c68416f811aba1dfb6f57f24b88ad7c1c1c2452a577626a582b35e18a5a9b02d"
+              "sha256": "93a35600f3e64446c57ab7d296c33ba543ca601cb69a8e743582ab33caad3dba"
             },
             {
               "path": "apps/web/e2e/ticket-forms-fixture.ts",
@@ -442818,7 +442875,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "72b449bcc9056b9722cf62729052b024f00718c0a1fc98db359d58647d8328dc"
+              "sha256": "db48f88a6e054d5c64ff64b7311b521f9d06bbc833b2191978e4b21eb48c381a"
             },
             {
               "path": "apps/web/src/components/jobs/JobProgress.test.tsx",
@@ -442910,7 +442967,8 @@
             "Current binding renewed by release-0.5-language-calendar-journey: additive exact locked calendar imports/export, native language detection/label and directional presentation, server-offered MonthPicker and documented retained representation. Existing domain bodies/guards/actions and package exports remain;125 distinct native browser cases,33 related units,8 distribution checks and91 unchanged budgets cover affected behavior. Prior domain evidence reused for unchanged sources only.",
             "Bindings renewed by release-0.5-staff-lists-and-receipts: scoped query and confirmed receipt behavior with the original assertions, write payloads, CSRF and budgets. Current targeted unit and native results are recorded.",
             "Bindings renewed by release-0.5-critical-accessibility: audited canonical landmarks, retained command calls and validated auth-entry authority. Exact targeted unit/browser and original performance evidence passes.",
-            "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only."
+            "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
+            "Bindings renewed by release-0.5-profile-lifecycle-feedback: exact lifecycle browsers and units verify timeout, current scope, protected consent, duplicate prevention and receipts after the bounded preview/feedback change."
           ],
           "limitations": [],
           "operational_limits": [
@@ -443032,6 +443090,11 @@
               "batch": "release-0.5-form-and-document-accessibility",
               "base_commit": "bc50e458e469d4fae48336f6384692b2a0a93251",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-form-and-document-accessibility/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-profile-lifecycle-feedback",
+              "base_commit": "11dd72829ed7b2083caa7bc4ff64f08eb86b491c",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-profile-lifecycle-feedback/source-binding.json"
             }
           ]
         }
@@ -443065,7 +443128,8 @@
           "release-0.5-language-calendar-journey",
           "release-0.5-staff-lists-and-receipts",
           "release-0.5-critical-accessibility",
-          "release-0.5-form-and-document-accessibility"
+          "release-0.5-form-and-document-accessibility",
+          "release-0.5-profile-lifecycle-feedback"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -443125,7 +443189,7 @@
             },
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
-              "sha256": "c68416f811aba1dfb6f57f24b88ad7c1c1c2452a577626a582b35e18a5a9b02d"
+              "sha256": "93a35600f3e64446c57ab7d296c33ba543ca601cb69a8e743582ab33caad3dba"
             },
             {
               "path": "apps/web/e2e/ticket-forms-fixture.ts",
@@ -443133,7 +443197,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "72b449bcc9056b9722cf62729052b024f00718c0a1fc98db359d58647d8328dc"
+              "sha256": "db48f88a6e054d5c64ff64b7311b521f9d06bbc833b2191978e4b21eb48c381a"
             },
             {
               "path": "apps/web/src/components/jobs/JobProgress.test.tsx",
@@ -443241,7 +443305,8 @@
             "Current binding renewed by release-0.5-language-calendar-journey: additive exact locked calendar imports/export, native language detection/label and directional presentation, server-offered MonthPicker and documented retained representation. Existing domain bodies/guards/actions and package exports remain;125 distinct native browser cases,33 related units,8 distribution checks and91 unchanged budgets cover affected behavior. Prior domain evidence reused for unchanged sources only.",
             "Bindings renewed by release-0.5-staff-lists-and-receipts: scoped query and confirmed receipt behavior with the original assertions, write payloads, CSRF and budgets. Current targeted unit and native results are recorded.",
             "Bindings renewed by release-0.5-critical-accessibility: audited canonical landmarks, retained command calls and validated auth-entry authority. Exact targeted unit/browser and original performance evidence passes.",
-            "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only."
+            "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
+            "Bindings renewed by release-0.5-profile-lifecycle-feedback: exact lifecycle browsers and units verify timeout, current scope, protected consent, duplicate prevention and receipts after the bounded preview/feedback change."
           ],
           "limitations": [],
           "operational_limits": [
@@ -443371,6 +443436,11 @@
               "batch": "release-0.5-form-and-document-accessibility",
               "base_commit": "bc50e458e469d4fae48336f6384692b2a0a93251",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-form-and-document-accessibility/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-profile-lifecycle-feedback",
+              "base_commit": "11dd72829ed7b2083caa7bc4ff64f08eb86b491c",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-profile-lifecycle-feedback/source-binding.json"
             }
           ]
         }
@@ -466423,7 +466493,8 @@
           "release-0.5-required-form-and-action-closure",
           "release-0.5-measured-action-targets",
           "release-0.5-critical-accessibility-renewal",
-          "release-0.5-route-landmark-census"
+          "release-0.5-route-landmark-census",
+          "release-0.5-profile-lifecycle-feedback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -466539,7 +466610,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
-              "sha256": "07a09cc8acd0091933cadcc4c1878dc57239d6a547102f32da215f433dcacc54"
+              "sha256": "235877c130ff01a40b1535c36f5303b9c7896201be12c4b67a41cdd571d88d33"
             },
             {
               "path": "apps/web/src/components/ProfileIdentity.tsx",
@@ -466547,7 +466618,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "72b449bcc9056b9722cf62729052b024f00718c0a1fc98db359d58647d8328dc"
+              "sha256": "db48f88a6e054d5c64ff64b7311b521f9d06bbc833b2191978e4b21eb48c381a"
             },
             {
               "path": "apps/web/src/components/ProfileMenu.tsx",
@@ -467019,7 +467090,8 @@
             "Bindings renewed by release-0.5-required-form-and-action-closure: required announcements and a native label target changed; solar and cancellation behavior, current authority, exact command and receipt assertions pass on the matching production build.",
             "Bindings renewed by release-0.5-measured-action-targets: target sizing changes pass exact populated route browsers and scoped invoice, saving and customer-history ownership units. Navigation, authority, receipt and money behavior are unchanged.",
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
-            "Bindings renewed by release-0.5-route-landmark-census: the detail change is identifier wrapping and bidi isolation only. Existing exact receipt, authority, navigation and draft checks pass with the new populated layout assertions."
+            "Bindings renewed by release-0.5-route-landmark-census: the detail change is identifier wrapping and bidi isolation only. Existing exact receipt, authority, navigation and draft checks pass with the new populated layout assertions.",
+            "Bindings renewed by release-0.5-profile-lifecycle-feedback: exact lifecycle browsers and units verify timeout, current scope, protected consent, duplicate prevention and receipts after the bounded preview/feedback change."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-shared-component-closure",
           "limitations": [
@@ -467135,6 +467207,11 @@
               "batch": "release-0.5-route-landmark-census",
               "base_commit": "d72707ba17e05d3f590c84080369963ba2655231",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-landmark-census/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-profile-lifecycle-feedback",
+              "base_commit": "11dd72829ed7b2083caa7bc4ff64f08eb86b491c",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-profile-lifecycle-feedback/source-binding.json"
             }
           ]
         },
@@ -469097,7 +469174,8 @@
           "release-0.5-required-form-and-action-closure",
           "release-0.5-measured-action-targets",
           "release-0.5-critical-accessibility-renewal",
-          "release-0.5-route-landmark-census"
+          "release-0.5-route-landmark-census",
+          "release-0.5-profile-lifecycle-feedback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -469141,7 +469219,7 @@
             },
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
-              "sha256": "c68416f811aba1dfb6f57f24b88ad7c1c1c2452a577626a582b35e18a5a9b02d"
+              "sha256": "93a35600f3e64446c57ab7d296c33ba543ca601cb69a8e743582ab33caad3dba"
             },
             {
               "path": "apps/web/e2e/staff-directory-recovery.spec.ts",
@@ -469265,7 +469343,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
-              "sha256": "07a09cc8acd0091933cadcc4c1878dc57239d6a547102f32da215f433dcacc54"
+              "sha256": "235877c130ff01a40b1535c36f5303b9c7896201be12c4b67a41cdd571d88d33"
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.test.tsx",
@@ -469273,7 +469351,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "72b449bcc9056b9722cf62729052b024f00718c0a1fc98db359d58647d8328dc"
+              "sha256": "db48f88a6e054d5c64ff64b7311b521f9d06bbc833b2191978e4b21eb48c381a"
             },
             {
               "path": "apps/web/src/components/PublishedTermsHistory.tsx",
@@ -469602,7 +469680,8 @@
             "Bindings renewed by release-0.5-required-form-and-action-closure: required announcements and a native label target changed; solar and cancellation behavior, current authority, exact command and receipt assertions pass on the matching production build.",
             "Bindings renewed by release-0.5-measured-action-targets: target sizing changes pass exact populated route browsers and scoped invoice, saving and customer-history ownership units. Navigation, authority, receipt and money behavior are unchanged.",
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
-            "Bindings renewed by release-0.5-route-landmark-census: the detail change is identifier wrapping and bidi isolation only. Existing exact receipt, authority, navigation and draft checks pass with the new populated layout assertions."
+            "Bindings renewed by release-0.5-route-landmark-census: the detail change is identifier wrapping and bidi isolation only. Existing exact receipt, authority, navigation and draft checks pass with the new populated layout assertions.",
+            "Bindings renewed by release-0.5-profile-lifecycle-feedback: exact lifecycle browsers and units verify timeout, current scope, protected consent, duplicate prevention and receipts after the bounded preview/feedback change."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-lists-and-receipts",
           "limitations": [
@@ -469673,6 +469752,11 @@
               "batch": "release-0.5-route-landmark-census",
               "base_commit": "d72707ba17e05d3f590c84080369963ba2655231",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-landmark-census/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-profile-lifecycle-feedback",
+              "base_commit": "11dd72829ed7b2083caa7bc4ff64f08eb86b491c",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-profile-lifecycle-feedback/source-binding.json"
             }
           ]
         }
@@ -469784,7 +469868,8 @@
           "release-0.5-required-form-and-action-closure",
           "release-0.5-measured-action-targets",
           "release-0.5-critical-accessibility-renewal",
-          "release-0.5-route-landmark-census"
+          "release-0.5-route-landmark-census",
+          "release-0.5-profile-lifecycle-feedback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -469828,7 +469913,7 @@
             },
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
-              "sha256": "c68416f811aba1dfb6f57f24b88ad7c1c1c2452a577626a582b35e18a5a9b02d"
+              "sha256": "93a35600f3e64446c57ab7d296c33ba543ca601cb69a8e743582ab33caad3dba"
             },
             {
               "path": "apps/web/e2e/staff-directory-recovery.spec.ts",
@@ -469952,7 +470037,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
-              "sha256": "07a09cc8acd0091933cadcc4c1878dc57239d6a547102f32da215f433dcacc54"
+              "sha256": "235877c130ff01a40b1535c36f5303b9c7896201be12c4b67a41cdd571d88d33"
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.test.tsx",
@@ -469960,7 +470045,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "72b449bcc9056b9722cf62729052b024f00718c0a1fc98db359d58647d8328dc"
+              "sha256": "db48f88a6e054d5c64ff64b7311b521f9d06bbc833b2191978e4b21eb48c381a"
             },
             {
               "path": "apps/web/src/components/PublishedTermsHistory.tsx",
@@ -470289,7 +470374,8 @@
             "Bindings renewed by release-0.5-required-form-and-action-closure: required announcements and a native label target changed; solar and cancellation behavior, current authority, exact command and receipt assertions pass on the matching production build.",
             "Bindings renewed by release-0.5-measured-action-targets: target sizing changes pass exact populated route browsers and scoped invoice, saving and customer-history ownership units. Navigation, authority, receipt and money behavior are unchanged.",
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
-            "Bindings renewed by release-0.5-route-landmark-census: the detail change is identifier wrapping and bidi isolation only. Existing exact receipt, authority, navigation and draft checks pass with the new populated layout assertions."
+            "Bindings renewed by release-0.5-route-landmark-census: the detail change is identifier wrapping and bidi isolation only. Existing exact receipt, authority, navigation and draft checks pass with the new populated layout assertions.",
+            "Bindings renewed by release-0.5-profile-lifecycle-feedback: exact lifecycle browsers and units verify timeout, current scope, protected consent, duplicate prevention and receipts after the bounded preview/feedback change."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-lists-and-receipts",
           "limitations": [
@@ -470360,6 +470446,11 @@
               "batch": "release-0.5-route-landmark-census",
               "base_commit": "d72707ba17e05d3f590c84080369963ba2655231",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-landmark-census/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-profile-lifecycle-feedback",
+              "base_commit": "11dd72829ed7b2083caa7bc4ff64f08eb86b491c",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-profile-lifecycle-feedback/source-binding.json"
             }
           ]
         }
@@ -470412,7 +470503,8 @@
           "release-0.5-required-form-and-action-closure",
           "release-0.5-measured-action-targets",
           "release-0.5-critical-accessibility-renewal",
-          "release-0.5-route-landmark-census"
+          "release-0.5-route-landmark-census",
+          "release-0.5-profile-lifecycle-feedback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -470456,7 +470548,7 @@
             },
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
-              "sha256": "c68416f811aba1dfb6f57f24b88ad7c1c1c2452a577626a582b35e18a5a9b02d"
+              "sha256": "93a35600f3e64446c57ab7d296c33ba543ca601cb69a8e743582ab33caad3dba"
             },
             {
               "path": "apps/web/e2e/staff-directory-recovery.spec.ts",
@@ -470580,7 +470672,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
-              "sha256": "07a09cc8acd0091933cadcc4c1878dc57239d6a547102f32da215f433dcacc54"
+              "sha256": "235877c130ff01a40b1535c36f5303b9c7896201be12c4b67a41cdd571d88d33"
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.test.tsx",
@@ -470588,7 +470680,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "72b449bcc9056b9722cf62729052b024f00718c0a1fc98db359d58647d8328dc"
+              "sha256": "db48f88a6e054d5c64ff64b7311b521f9d06bbc833b2191978e4b21eb48c381a"
             },
             {
               "path": "apps/web/src/components/PublishedTermsHistory.tsx",
@@ -470917,7 +471009,8 @@
             "Bindings renewed by release-0.5-required-form-and-action-closure: required announcements and a native label target changed; solar and cancellation behavior, current authority, exact command and receipt assertions pass on the matching production build.",
             "Bindings renewed by release-0.5-measured-action-targets: target sizing changes pass exact populated route browsers and scoped invoice, saving and customer-history ownership units. Navigation, authority, receipt and money behavior are unchanged.",
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
-            "Bindings renewed by release-0.5-route-landmark-census: the detail change is identifier wrapping and bidi isolation only. Existing exact receipt, authority, navigation and draft checks pass with the new populated layout assertions."
+            "Bindings renewed by release-0.5-route-landmark-census: the detail change is identifier wrapping and bidi isolation only. Existing exact receipt, authority, navigation and draft checks pass with the new populated layout assertions.",
+            "Bindings renewed by release-0.5-profile-lifecycle-feedback: exact lifecycle browsers and units verify timeout, current scope, protected consent, duplicate prevention and receipts after the bounded preview/feedback change."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-lists-and-receipts",
           "limitations": [
@@ -470988,6 +471081,11 @@
               "batch": "release-0.5-route-landmark-census",
               "base_commit": "d72707ba17e05d3f590c84080369963ba2655231",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-landmark-census/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-profile-lifecycle-feedback",
+              "base_commit": "11dd72829ed7b2083caa7bc4ff64f08eb86b491c",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-profile-lifecycle-feedback/source-binding.json"
             }
           ]
         }
@@ -483379,7 +483477,8 @@
           "release-0.5-route-state-closure",
           "release-0.5-safari-main-keyboard",
           "release-0.5-critical-accessibility-renewal",
-          "release-0.5-workspace-route-census"
+          "release-0.5-workspace-route-census",
+          "release-0.5-profile-lifecycle-feedback"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -483591,7 +483690,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
-              "sha256": "07a09cc8acd0091933cadcc4c1878dc57239d6a547102f32da215f433dcacc54"
+              "sha256": "235877c130ff01a40b1535c36f5303b9c7896201be12c4b67a41cdd571d88d33"
             },
             {
               "path": "apps/web/src/components/ProfileIdentity.tsx",
@@ -483603,7 +483702,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "72b449bcc9056b9722cf62729052b024f00718c0a1fc98db359d58647d8328dc"
+              "sha256": "db48f88a6e054d5c64ff64b7311b521f9d06bbc833b2191978e4b21eb48c381a"
             },
             {
               "path": "apps/web/src/components/ProfileMenu.tsx",
@@ -483883,7 +483982,8 @@
             "Bindings renewed by release-0.5-route-state-closure: bounded reads, existing authorization and caller behavior checked with targeted units, browser journeys and original bundle limits.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
-            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass."
+            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
+            "Bindings renewed by release-0.5-profile-lifecycle-feedback: exact lifecycle browsers and units verify timeout, current scope, protected consent, duplicate prevention and receipts after the bounded preview/feedback change."
           ],
           "criterion_result": "Customer primary tabs are Home/Electricity orders/Wallet/Profile plus More when authorized; staff tabs prioritize actual operation grants. All granted remaining pages remain reachable exactly once. Native server grants and client allowlist prevent manufacturing missing links. Initial compact bar, deferred More/error fallback and exact active-page markers verified in FA/EN and both browser projects.",
           "limitations": [
@@ -484016,6 +484116,11 @@
               "batch": "release-0.5-workspace-route-census",
               "base_commit": "7cf95f840a7e65c722f95b10e486bd02c435d498",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-workspace-route-census/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-profile-lifecycle-feedback",
+              "base_commit": "11dd72829ed7b2083caa7bc4ff64f08eb86b491c",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-profile-lifecycle-feedback/source-binding.json"
             }
           ]
         }
@@ -484063,7 +484168,8 @@
           "release-0.5-route-state-closure",
           "release-0.5-safari-main-keyboard",
           "release-0.5-critical-accessibility-renewal",
-          "release-0.5-workspace-route-census"
+          "release-0.5-workspace-route-census",
+          "release-0.5-profile-lifecycle-feedback"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -484275,7 +484381,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
-              "sha256": "07a09cc8acd0091933cadcc4c1878dc57239d6a547102f32da215f433dcacc54"
+              "sha256": "235877c130ff01a40b1535c36f5303b9c7896201be12c4b67a41cdd571d88d33"
             },
             {
               "path": "apps/web/src/components/ProfileIdentity.tsx",
@@ -484287,7 +484393,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "72b449bcc9056b9722cf62729052b024f00718c0a1fc98db359d58647d8328dc"
+              "sha256": "db48f88a6e054d5c64ff64b7311b521f9d06bbc833b2191978e4b21eb48c381a"
             },
             {
               "path": "apps/web/src/components/ProfileMenu.tsx",
@@ -484567,7 +484673,8 @@
             "Bindings renewed by release-0.5-route-state-closure: bounded reads, existing authorization and caller behavior checked with targeted units, browser journeys and original bundle limits.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
-            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass."
+            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
+            "Bindings renewed by release-0.5-profile-lifecycle-feedback: exact lifecycle browsers and units verify timeout, current scope, protected consent, duplicate prevention and receipts after the bounded preview/feedback change."
           ],
           "criterion_result": "Compact topbar retains linked brand icon, hamburger, notification bell and account avatar/profile identity with the required operating-context marker. Theme/language and secondary account actions remain in the account menu. Eight-width no-overflow, permission/context and keyboard checks pass.",
           "limitations": [
@@ -484700,6 +484807,11 @@
               "batch": "release-0.5-workspace-route-census",
               "base_commit": "7cf95f840a7e65c722f95b10e486bd02c435d498",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-workspace-route-census/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-profile-lifecycle-feedback",
+              "base_commit": "11dd72829ed7b2083caa7bc4ff64f08eb86b491c",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-profile-lifecycle-feedback/source-binding.json"
             }
           ]
         }
@@ -484746,7 +484858,8 @@
           "release-0.5-route-state-closure",
           "release-0.5-safari-main-keyboard",
           "release-0.5-critical-accessibility-renewal",
-          "release-0.5-workspace-route-census"
+          "release-0.5-workspace-route-census",
+          "release-0.5-profile-lifecycle-feedback"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -484958,7 +485071,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
-              "sha256": "07a09cc8acd0091933cadcc4c1878dc57239d6a547102f32da215f433dcacc54"
+              "sha256": "235877c130ff01a40b1535c36f5303b9c7896201be12c4b67a41cdd571d88d33"
             },
             {
               "path": "apps/web/src/components/ProfileIdentity.tsx",
@@ -484970,7 +485083,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "72b449bcc9056b9722cf62729052b024f00718c0a1fc98db359d58647d8328dc"
+              "sha256": "db48f88a6e054d5c64ff64b7311b521f9d06bbc833b2191978e4b21eb48c381a"
             },
             {
               "path": "apps/web/src/components/ProfileMenu.tsx",
@@ -485250,7 +485363,8 @@
             "Bindings renewed by release-0.5-route-state-closure: bounded reads, existing authorization and caller behavior checked with targeted units, browser journeys and original bundle limits.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
-            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass."
+            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
+            "Bindings renewed by release-0.5-profile-lifecycle-feedback: exact lifecycle browsers and units verify timeout, current scope, protected consent, duplicate prevention and receipts after the bounded preview/feedback change."
           ],
           "criterion_result": "Tablet768–1023px uses a60px rail with accessible labels and at least44x44 targets. It expands by tap/menu, keyboard focus and hover on hover-capable devices. Phone drawer and full desktop sidebar remain available; current page and focus/More recovery are retained.",
           "limitations": [
@@ -485383,6 +485497,11 @@
               "batch": "release-0.5-workspace-route-census",
               "base_commit": "7cf95f840a7e65c722f95b10e486bd02c435d498",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-workspace-route-census/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-profile-lifecycle-feedback",
+              "base_commit": "11dd72829ed7b2083caa7bc4ff64f08eb86b491c",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-profile-lifecycle-feedback/source-binding.json"
             }
           ]
         }
@@ -487872,7 +487991,8 @@
           "release-0.5-route-adoption-matrix",
           "release-0.5-measured-action-targets",
           "release-0.5-critical-accessibility-renewal",
-          "release-0.5-route-landmark-census"
+          "release-0.5-route-landmark-census",
+          "release-0.5-profile-lifecycle-feedback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -488160,7 +488280,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "72b449bcc9056b9722cf62729052b024f00718c0a1fc98db359d58647d8328dc"
+              "sha256": "db48f88a6e054d5c64ff64b7311b521f9d06bbc833b2191978e4b21eb48c381a"
             },
             {
               "path": "apps/web/src/components/RecoveryContactForm.tsx",
@@ -488360,7 +488480,8 @@
             "Bindings renewed by release-0.5-route-adoption-matrix: the solar document action has a layout-only change, and the affected browser journeys and solar units pass with existing receipt, authority and financial assertions. Saving browser checks preserve their exact draft and refund assertions after the width probe.",
             "Bindings renewed by release-0.5-measured-action-targets: target sizing changes pass exact populated route browsers and scoped invoice, saving and customer-history ownership units. Navigation, authority, receipt and money behavior are unchanged.",
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
-            "Bindings renewed by release-0.5-route-landmark-census: the detail change is identifier wrapping and bidi isolation only. Existing exact receipt, authority, navigation and draft checks pass with the new populated layout assertions."
+            "Bindings renewed by release-0.5-route-landmark-census: the detail change is identifier wrapping and bidi isolation only. Existing exact receipt, authority, navigation and draft checks pass with the new populated layout assertions.",
+            "Bindings renewed by release-0.5-profile-lifecycle-feedback: exact lifecycle browsers and units verify timeout, current scope, protected consent, duplicate prevention and receipts after the bounded preview/feedback change."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-accessibility",
           "limitations": [
@@ -488426,6 +488547,11 @@
               "batch": "release-0.5-route-landmark-census",
               "base_commit": "d72707ba17e05d3f590c84080369963ba2655231",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-landmark-census/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-profile-lifecycle-feedback",
+              "base_commit": "11dd72829ed7b2083caa7bc4ff64f08eb86b491c",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-profile-lifecycle-feedback/source-binding.json"
             }
           ]
         }
@@ -488464,7 +488590,8 @@
           "release-0.5-route-adoption-matrix",
           "release-0.5-measured-action-targets",
           "release-0.5-critical-accessibility-renewal",
-          "release-0.5-route-landmark-census"
+          "release-0.5-route-landmark-census",
+          "release-0.5-profile-lifecycle-feedback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -488752,7 +488879,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "72b449bcc9056b9722cf62729052b024f00718c0a1fc98db359d58647d8328dc"
+              "sha256": "db48f88a6e054d5c64ff64b7311b521f9d06bbc833b2191978e4b21eb48c381a"
             },
             {
               "path": "apps/web/src/components/RecoveryContactForm.tsx",
@@ -488952,7 +489079,8 @@
             "Bindings renewed by release-0.5-route-adoption-matrix: the solar document action has a layout-only change, and the affected browser journeys and solar units pass with existing receipt, authority and financial assertions. Saving browser checks preserve their exact draft and refund assertions after the width probe.",
             "Bindings renewed by release-0.5-measured-action-targets: target sizing changes pass exact populated route browsers and scoped invoice, saving and customer-history ownership units. Navigation, authority, receipt and money behavior are unchanged.",
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
-            "Bindings renewed by release-0.5-route-landmark-census: the detail change is identifier wrapping and bidi isolation only. Existing exact receipt, authority, navigation and draft checks pass with the new populated layout assertions."
+            "Bindings renewed by release-0.5-route-landmark-census: the detail change is identifier wrapping and bidi isolation only. Existing exact receipt, authority, navigation and draft checks pass with the new populated layout assertions.",
+            "Bindings renewed by release-0.5-profile-lifecycle-feedback: exact lifecycle browsers and units verify timeout, current scope, protected consent, duplicate prevention and receipts after the bounded preview/feedback change."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-accessibility",
           "limitations": [
@@ -489018,6 +489146,11 @@
               "batch": "release-0.5-route-landmark-census",
               "base_commit": "d72707ba17e05d3f590c84080369963ba2655231",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-landmark-census/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-profile-lifecycle-feedback",
+              "base_commit": "11dd72829ed7b2083caa7bc4ff64f08eb86b491c",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-profile-lifecycle-feedback/source-binding.json"
             }
           ]
         }
@@ -489429,7 +489562,8 @@
           "release-0.5-route-adoption-matrix",
           "release-0.5-measured-action-targets",
           "release-0.5-critical-accessibility-renewal",
-          "release-0.5-route-landmark-census"
+          "release-0.5-route-landmark-census",
+          "release-0.5-profile-lifecycle-feedback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -489717,7 +489851,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "72b449bcc9056b9722cf62729052b024f00718c0a1fc98db359d58647d8328dc"
+              "sha256": "db48f88a6e054d5c64ff64b7311b521f9d06bbc833b2191978e4b21eb48c381a"
             },
             {
               "path": "apps/web/src/components/RecoveryContactForm.tsx",
@@ -489917,7 +490051,8 @@
             "Bindings renewed by release-0.5-route-adoption-matrix: the solar document action has a layout-only change, and the affected browser journeys and solar units pass with existing receipt, authority and financial assertions. Saving browser checks preserve their exact draft and refund assertions after the width probe.",
             "Bindings renewed by release-0.5-measured-action-targets: target sizing changes pass exact populated route browsers and scoped invoice, saving and customer-history ownership units. Navigation, authority, receipt and money behavior are unchanged.",
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
-            "Bindings renewed by release-0.5-route-landmark-census: the detail change is identifier wrapping and bidi isolation only. Existing exact receipt, authority, navigation and draft checks pass with the new populated layout assertions."
+            "Bindings renewed by release-0.5-route-landmark-census: the detail change is identifier wrapping and bidi isolation only. Existing exact receipt, authority, navigation and draft checks pass with the new populated layout assertions.",
+            "Bindings renewed by release-0.5-profile-lifecycle-feedback: exact lifecycle browsers and units verify timeout, current scope, protected consent, duplicate prevention and receipts after the bounded preview/feedback change."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-accessibility",
           "limitations": [
@@ -489983,6 +490118,11 @@
               "batch": "release-0.5-route-landmark-census",
               "base_commit": "d72707ba17e05d3f590c84080369963ba2655231",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-landmark-census/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-profile-lifecycle-feedback",
+              "base_commit": "11dd72829ed7b2083caa7bc4ff64f08eb86b491c",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-profile-lifecycle-feedback/source-binding.json"
             }
           ]
         }
@@ -529959,7 +530099,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Verified standalone customer ticket creation and profile verification decisions, including uncertain and stale receipts. Review remaining direct command owners, including profile lifecycle request/export and staff closure, for safe error/unknown feedback. Preserve the existing captured commands and single success notifications."
+        "Profile closure request, export and staff closure now announce uncertain results once and confirm only validated current receipts. Audit any remaining direct command owners for missing safe status/error feedback; preserve captured command replay and current authority."
       ],
       "owner": null,
       "depends_on": [],
@@ -529970,7 +530110,8 @@
           "release-0.5-notification-recovery-journey",
           "release-0.5-query-and-command-completion",
           "release-0.5-staff-lists-and-receipts",
-          "release-0.5-form-conditions-and-command-feedback"
+          "release-0.5-form-conditions-and-command-feedback",
+          "release-0.5-profile-lifecycle-feedback"
         ],
         "current_acceptance": null
       }
@@ -551848,7 +551989,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Shared queries and the named consultation, ticket and receipt reads are bounded. Six populated customer histories, the wallet, and independent dashboard widgets now have exact timeout, retry and empty-state evidence. Audit remaining bespoke list/detail and staff reads and repair any resource that still hangs or renders no recovery."
+        "Profile lifecycle and staff closure previews now join the bounded shared reads. Their timeout, disabled writes and fresh retry are verified. Audit remaining direct admin and detail reads for a demonstrated missing timeout or recovery action."
       ],
       "owner": null,
       "depends_on": [],
@@ -551858,7 +551999,8 @@
         "batches": [
           "release-0.5-notification-recovery-journey",
           "release-0.5-route-fallback-and-announcement",
-          "release-0.5-route-state-closure"
+          "release-0.5-route-state-closure",
+          "release-0.5-profile-lifecycle-feedback"
         ],
         "current_acceptance": null
       }
@@ -566462,7 +566604,8 @@
           "release-0.5-route-state-closure",
           "release-0.5-safari-main-keyboard",
           "release-0.5-critical-accessibility-renewal",
-          "release-0.5-workspace-route-census"
+          "release-0.5-workspace-route-census",
+          "release-0.5-profile-lifecycle-feedback"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -566674,7 +566817,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
-              "sha256": "07a09cc8acd0091933cadcc4c1878dc57239d6a547102f32da215f433dcacc54"
+              "sha256": "235877c130ff01a40b1535c36f5303b9c7896201be12c4b67a41cdd571d88d33"
             },
             {
               "path": "apps/web/src/components/ProfileIdentity.tsx",
@@ -566686,7 +566829,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "72b449bcc9056b9722cf62729052b024f00718c0a1fc98db359d58647d8328dc"
+              "sha256": "db48f88a6e054d5c64ff64b7311b521f9d06bbc833b2191978e4b21eb48c381a"
             },
             {
               "path": "apps/web/src/components/ProfileMenu.tsx",
@@ -566966,7 +567109,8 @@
             "Bindings renewed by release-0.5-route-state-closure: bounded reads, existing authorization and caller behavior checked with targeted units, browser journeys and original bundle limits.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
-            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass."
+            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
+            "Bindings renewed by release-0.5-profile-lifecycle-feedback: exact lifecycle browsers and units verify timeout, current scope, protected consent, duplicate prevention and receipts after the bounded preview/feedback change."
           ],
           "criterion_result": "Rich profile dropdown shows active initials/name/type, current accessible choices with avatar/name/type/verification badges, checked selection and profile-management link. Fresh account/revision-owned reads use the existing strict parser and cancel obsolete reads. Lazy-choice failure preserves context and offers explicit reload; no POST occurs during this failure.",
           "limitations": [
@@ -567099,6 +567243,11 @@
               "batch": "release-0.5-workspace-route-census",
               "base_commit": "7cf95f840a7e65c722f95b10e486bd02c435d498",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-workspace-route-census/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-profile-lifecycle-feedback",
+              "base_commit": "11dd72829ed7b2083caa7bc4ff64f08eb86b491c",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-profile-lifecycle-feedback/source-binding.json"
             }
           ]
         }
@@ -567145,7 +567294,8 @@
           "release-0.5-route-state-closure",
           "release-0.5-safari-main-keyboard",
           "release-0.5-critical-accessibility-renewal",
-          "release-0.5-workspace-route-census"
+          "release-0.5-workspace-route-census",
+          "release-0.5-profile-lifecycle-feedback"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -567357,7 +567507,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
-              "sha256": "07a09cc8acd0091933cadcc4c1878dc57239d6a547102f32da215f433dcacc54"
+              "sha256": "235877c130ff01a40b1535c36f5303b9c7896201be12c4b67a41cdd571d88d33"
             },
             {
               "path": "apps/web/src/components/ProfileIdentity.tsx",
@@ -567369,7 +567519,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "72b449bcc9056b9722cf62729052b024f00718c0a1fc98db359d58647d8328dc"
+              "sha256": "db48f88a6e054d5c64ff64b7311b521f9d06bbc833b2191978e4b21eb48c381a"
             },
             {
               "path": "apps/web/src/components/ProfileMenu.tsx",
@@ -567649,7 +567799,8 @@
             "Bindings renewed by release-0.5-route-state-closure: bounded reads, existing authorization and caller behavior checked with targeted units, browser journeys and original bundle limits.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
-            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass."
+            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
+            "Bindings renewed by release-0.5-profile-lifecycle-feedback: exact lifecycle browsers and units verify timeout, current scope, protected consent, duplicate prevention and receipts after the bounded preview/feedback change."
           ],
           "criterion_result": "Compact ProfileBadge uses the same account-owned directory as the picker, shows current initials/type icon/name, truncates safely with full-name title and preserves the separate visible customer/staff marker. Missing/unavailable profile metadata is withheld rather than borrowing another scope.",
           "limitations": [
@@ -567782,6 +567933,11 @@
               "batch": "release-0.5-workspace-route-census",
               "base_commit": "7cf95f840a7e65c722f95b10e486bd02c435d498",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-workspace-route-census/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-profile-lifecycle-feedback",
+              "base_commit": "11dd72829ed7b2083caa7bc4ff64f08eb86b491c",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-profile-lifecycle-feedback/source-binding.json"
             }
           ]
         }
@@ -567828,7 +567984,8 @@
           "release-0.5-route-state-closure",
           "release-0.5-safari-main-keyboard",
           "release-0.5-critical-accessibility-renewal",
-          "release-0.5-workspace-route-census"
+          "release-0.5-workspace-route-census",
+          "release-0.5-profile-lifecycle-feedback"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -568040,7 +568197,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
-              "sha256": "07a09cc8acd0091933cadcc4c1878dc57239d6a547102f32da215f433dcacc54"
+              "sha256": "235877c130ff01a40b1535c36f5303b9c7896201be12c4b67a41cdd571d88d33"
             },
             {
               "path": "apps/web/src/components/ProfileIdentity.tsx",
@@ -568052,7 +568209,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "72b449bcc9056b9722cf62729052b024f00718c0a1fc98db359d58647d8328dc"
+              "sha256": "db48f88a6e054d5c64ff64b7311b521f9d06bbc833b2191978e4b21eb48c381a"
             },
             {
               "path": "apps/web/src/components/ProfileMenu.tsx",
@@ -568332,7 +568489,8 @@
             "Bindings renewed by release-0.5-route-state-closure: bounded reads, existing authorization and caller behavior checked with targeted units, browser journeys and original bundle limits.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
-            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass."
+            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
+            "Bindings renewed by release-0.5-profile-lifecycle-feedback: exact lifecycle browsers and units verify timeout, current scope, protected consent, duplicate prevention and receipts after the bounded preview/feedback change."
           ],
           "criterion_result": "A captured, target-bound switch blocks the workspace with a full-page non-dismissible loading/recovery view, including inert fallback before modal code loads. Exact response plus fresh current directory must confirm the target. Unknown replies hold without replay, recheck usesGET only, accepted changes persist backend preference and reset private queries/requests/tabs. Existing default-setting and invitation CSRF tests retained.",
           "limitations": [
@@ -568465,6 +568623,11 @@
               "batch": "release-0.5-workspace-route-census",
               "base_commit": "7cf95f840a7e65c722f95b10e486bd02c435d498",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-workspace-route-census/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-profile-lifecycle-feedback",
+              "base_commit": "11dd72829ed7b2083caa7bc4ff64f08eb86b491c",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-profile-lifecycle-feedback/source-binding.json"
             }
           ]
         }
@@ -568511,7 +568674,8 @@
           "release-0.5-route-state-closure",
           "release-0.5-safari-main-keyboard",
           "release-0.5-critical-accessibility-renewal",
-          "release-0.5-workspace-route-census"
+          "release-0.5-workspace-route-census",
+          "release-0.5-profile-lifecycle-feedback"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -568723,7 +568887,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
-              "sha256": "07a09cc8acd0091933cadcc4c1878dc57239d6a547102f32da215f433dcacc54"
+              "sha256": "235877c130ff01a40b1535c36f5303b9c7896201be12c4b67a41cdd571d88d33"
             },
             {
               "path": "apps/web/src/components/ProfileIdentity.tsx",
@@ -568735,7 +568899,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "72b449bcc9056b9722cf62729052b024f00718c0a1fc98db359d58647d8328dc"
+              "sha256": "db48f88a6e054d5c64ff64b7311b521f9d06bbc833b2191978e4b21eb48c381a"
             },
             {
               "path": "apps/web/src/components/ProfileMenu.tsx",
@@ -569015,7 +569179,8 @@
             "Bindings renewed by release-0.5-route-state-closure: bounded reads, existing authorization and caller behavior checked with targeted units, browser journeys and original bundle limits.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
-            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass."
+            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
+            "Bindings renewed by release-0.5-profile-lifecycle-feedback: exact lifecycle browsers and units verify timeout, current scope, protected consent, duplicate prevention and receipts after the bounded preview/feedback change."
           ],
           "criterion_result": "Unverified profiles can be selected/read while existing verification banner and server commercial-order guards remain authoritative. Status badges expose verified/unverified without granting permissions. Native profile verification/context cases and existing verification sources retained; no commercial gate changed.",
           "limitations": [
@@ -569148,6 +569313,11 @@
               "batch": "release-0.5-workspace-route-census",
               "base_commit": "7cf95f840a7e65c722f95b10e486bd02c435d498",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-workspace-route-census/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-profile-lifecycle-feedback",
+              "base_commit": "11dd72829ed7b2083caa7bc4ff64f08eb86b491c",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-profile-lifecycle-feedback/source-binding.json"
             }
           ]
         }
@@ -569198,7 +569368,8 @@
           "release-0.5-route-state-closure",
           "release-0.5-safari-main-keyboard",
           "release-0.5-critical-accessibility-renewal",
-          "release-0.5-workspace-route-census"
+          "release-0.5-workspace-route-census",
+          "release-0.5-profile-lifecycle-feedback"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -569410,7 +569581,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
-              "sha256": "07a09cc8acd0091933cadcc4c1878dc57239d6a547102f32da215f433dcacc54"
+              "sha256": "235877c130ff01a40b1535c36f5303b9c7896201be12c4b67a41cdd571d88d33"
             },
             {
               "path": "apps/web/src/components/ProfileIdentity.tsx",
@@ -569422,7 +569593,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "72b449bcc9056b9722cf62729052b024f00718c0a1fc98db359d58647d8328dc"
+              "sha256": "db48f88a6e054d5c64ff64b7311b521f9d06bbc833b2191978e4b21eb48c381a"
             },
             {
               "path": "apps/web/src/components/ProfileMenu.tsx",
@@ -569702,7 +569873,8 @@
             "Bindings renewed by release-0.5-route-state-closure: bounded reads, existing authorization and caller behavior checked with targeted units, browser journeys and original bundle limits.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
-            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass."
+            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
+            "Bindings renewed by release-0.5-profile-lifecycle-feedback: exact lifecycle browsers and units verify timeout, current scope, protected consent, duplicate prevention and receipts after the bounded preview/feedback change."
           ],
           "criterion_result": "Owner approved on2026-11-06 the existing explicit-ID or server-owned active-preference representation. Current ownership/active-agent checks, exact target receipt plus fresh confirmation, old-response suppression and cross-tab reset verified. Native foreign/suspended/agent contexts and late old wallet/notification values remain isolated; no profile header migration or financial-rule change.",
           "limitations": [
@@ -569835,6 +570007,11 @@
               "batch": "release-0.5-workspace-route-census",
               "base_commit": "7cf95f840a7e65c722f95b10e486bd02c435d498",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-workspace-route-census/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-profile-lifecycle-feedback",
+              "base_commit": "11dd72829ed7b2083caa7bc4ff64f08eb86b491c",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-profile-lifecycle-feedback/source-binding.json"
             }
           ]
         }
@@ -569881,7 +570058,8 @@
           "release-0.5-route-state-closure",
           "release-0.5-safari-main-keyboard",
           "release-0.5-critical-accessibility-renewal",
-          "release-0.5-workspace-route-census"
+          "release-0.5-workspace-route-census",
+          "release-0.5-profile-lifecycle-feedback"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -570093,7 +570271,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
-              "sha256": "07a09cc8acd0091933cadcc4c1878dc57239d6a547102f32da215f433dcacc54"
+              "sha256": "235877c130ff01a40b1535c36f5303b9c7896201be12c4b67a41cdd571d88d33"
             },
             {
               "path": "apps/web/src/components/ProfileIdentity.tsx",
@@ -570105,7 +570283,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "72b449bcc9056b9722cf62729052b024f00718c0a1fc98db359d58647d8328dc"
+              "sha256": "db48f88a6e054d5c64ff64b7311b521f9d06bbc833b2191978e4b21eb48c381a"
             },
             {
               "path": "apps/web/src/components/ProfileMenu.tsx",
@@ -570385,7 +570563,8 @@
             "Bindings renewed by release-0.5-route-state-closure: bounded reads, existing authorization and caller behavior checked with targeted units, browser journeys and original bundle limits.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
-            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass."
+            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
+            "Bindings renewed by release-0.5-profile-lifecycle-feedback: exact lifecycle browsers and units verify timeout, current scope, protected consent, duplicate prevention and receipts after the bounded preview/feedback change."
           ],
           "criterion_result": "AppShell retains shared directional flex layout, existing sidebar/topbar CSS variables, scrollable bounded main content, skip link and account banners. Desktop sidebar and responsive rail/phone surfaces verified; event/media/Escape logic retained byte-exact.",
           "limitations": [
@@ -570518,6 +570697,11 @@
               "batch": "release-0.5-workspace-route-census",
               "base_commit": "7cf95f840a7e65c722f95b10e486bd02c435d498",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-workspace-route-census/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-profile-lifecycle-feedback",
+              "base_commit": "11dd72829ed7b2083caa7bc4ff64f08eb86b491c",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-profile-lifecycle-feedback/source-binding.json"
             }
           ]
         }
@@ -570564,7 +570748,8 @@
           "release-0.5-route-state-closure",
           "release-0.5-safari-main-keyboard",
           "release-0.5-critical-accessibility-renewal",
-          "release-0.5-workspace-route-census"
+          "release-0.5-workspace-route-census",
+          "release-0.5-profile-lifecycle-feedback"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -570776,7 +570961,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
-              "sha256": "07a09cc8acd0091933cadcc4c1878dc57239d6a547102f32da215f433dcacc54"
+              "sha256": "235877c130ff01a40b1535c36f5303b9c7896201be12c4b67a41cdd571d88d33"
             },
             {
               "path": "apps/web/src/components/ProfileIdentity.tsx",
@@ -570788,7 +570973,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "72b449bcc9056b9722cf62729052b024f00718c0a1fc98db359d58647d8328dc"
+              "sha256": "db48f88a6e054d5c64ff64b7311b521f9d06bbc833b2191978e4b21eb48c381a"
             },
             {
               "path": "apps/web/src/components/ProfileMenu.tsx",
@@ -571068,7 +571253,8 @@
             "Bindings renewed by release-0.5-route-state-closure: bounded reads, existing authorization and caller behavior checked with targeted units, browser journeys and original bundle limits.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
-            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass."
+            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
+            "Bindings renewed by release-0.5-profile-lifecycle-feedback: exact lifecycle browsers and units verify timeout, current scope, protected consent, duplicate prevention and receipts after the bounded preview/feedback change."
           ],
           "criterion_result": "Sidebar now includes brand at its head, profile picker below when expanded, grouped permitted links, directional icons, active marker and responsive expansion. Labels remain accessible in collapsed mode. Administrative links reflect actual backend grants rather than a frontend role-name assumption.",
           "limitations": [
@@ -571201,6 +571387,11 @@
               "batch": "release-0.5-workspace-route-census",
               "base_commit": "7cf95f840a7e65c722f95b10e486bd02c435d498",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-workspace-route-census/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-profile-lifecycle-feedback",
+              "base_commit": "11dd72829ed7b2083caa7bc4ff64f08eb86b491c",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-profile-lifecycle-feedback/source-binding.json"
             }
           ]
         }
@@ -571248,7 +571439,8 @@
           "release-0.5-route-state-closure",
           "release-0.5-safari-main-keyboard",
           "release-0.5-critical-accessibility-renewal",
-          "release-0.5-workspace-route-census"
+          "release-0.5-workspace-route-census",
+          "release-0.5-profile-lifecycle-feedback"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -571460,7 +571652,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
-              "sha256": "07a09cc8acd0091933cadcc4c1878dc57239d6a547102f32da215f433dcacc54"
+              "sha256": "235877c130ff01a40b1535c36f5303b9c7896201be12c4b67a41cdd571d88d33"
             },
             {
               "path": "apps/web/src/components/ProfileIdentity.tsx",
@@ -571472,7 +571664,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "72b449bcc9056b9722cf62729052b024f00718c0a1fc98db359d58647d8328dc"
+              "sha256": "db48f88a6e054d5c64ff64b7311b521f9d06bbc833b2191978e4b21eb48c381a"
             },
             {
               "path": "apps/web/src/components/ProfileMenu.tsx",
@@ -571752,7 +571944,8 @@
             "Bindings renewed by release-0.5-route-state-closure: bounded reads, existing authorization and caller behavior checked with targeted units, browser journeys and original bundle limits.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
-            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass."
+            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
+            "Bindings renewed by release-0.5-profile-lifecycle-feedback: exact lifecycle browsers and units verify timeout, current scope, protected consent, duplicate prevention and receipts after the bounded preview/feedback change."
           ],
           "criterion_result": "Topbar retains language/theme controls, current notification bell and account popover, with compact preferences in that popover. Current profile identity is supplied through a customer-only slot; staff does not fetch customer profile authority. Root auth BrandMark default rendering remains exact and login light/dark FA/EN checks pass.",
           "limitations": [
@@ -571885,6 +572078,11 @@
               "batch": "release-0.5-workspace-route-census",
               "base_commit": "7cf95f840a7e65c722f95b10e486bd02c435d498",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-workspace-route-census/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-profile-lifecycle-feedback",
+              "base_commit": "11dd72829ed7b2083caa7bc4ff64f08eb86b491c",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-profile-lifecycle-feedback/source-binding.json"
             }
           ]
         }
@@ -571932,7 +572130,8 @@
           "release-0.5-route-state-closure",
           "release-0.5-safari-main-keyboard",
           "release-0.5-critical-accessibility-renewal",
-          "release-0.5-workspace-route-census"
+          "release-0.5-workspace-route-census",
+          "release-0.5-profile-lifecycle-feedback"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -572144,7 +572343,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
-              "sha256": "07a09cc8acd0091933cadcc4c1878dc57239d6a547102f32da215f433dcacc54"
+              "sha256": "235877c130ff01a40b1535c36f5303b9c7896201be12c4b67a41cdd571d88d33"
             },
             {
               "path": "apps/web/src/components/ProfileIdentity.tsx",
@@ -572156,7 +572355,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "72b449bcc9056b9722cf62729052b024f00718c0a1fc98db359d58647d8328dc"
+              "sha256": "db48f88a6e054d5c64ff64b7311b521f9d06bbc833b2191978e4b21eb48c381a"
             },
             {
               "path": "apps/web/src/components/ProfileMenu.tsx",
@@ -572436,7 +572635,8 @@
             "Bindings renewed by release-0.5-route-state-closure: bounded reads, existing authorization and caller behavior checked with targeted units, browser journeys and original bundle limits.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
-            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass."
+            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
+            "Bindings renewed by release-0.5-profile-lifecycle-feedback: exact lifecycle browsers and units verify timeout, current scope, protected consent, duplicate prevention and receipts after the bounded preview/feedback change."
           ],
           "criterion_result": "ProfileMenu keeps current account avatar/name/email/mobile, My Profile/settings/logout, explicit operating-context indicator and authorized staff/customer switch. Current authority/error recovery and session CSRF/one-context behavior remain unchanged; native and both browser contexts pass.",
           "limitations": [
@@ -572569,6 +572769,11 @@
               "batch": "release-0.5-workspace-route-census",
               "base_commit": "7cf95f840a7e65c722f95b10e486bd02c435d498",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-workspace-route-census/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-profile-lifecycle-feedback",
+              "base_commit": "11dd72829ed7b2083caa7bc4ff64f08eb86b491c",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-profile-lifecycle-feedback/source-binding.json"
             }
           ]
         }
@@ -572616,7 +572821,8 @@
           "release-0.5-route-state-closure",
           "release-0.5-safari-main-keyboard",
           "release-0.5-critical-accessibility-renewal",
-          "release-0.5-workspace-route-census"
+          "release-0.5-workspace-route-census",
+          "release-0.5-profile-lifecycle-feedback"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -572828,7 +573034,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
-              "sha256": "07a09cc8acd0091933cadcc4c1878dc57239d6a547102f32da215f433dcacc54"
+              "sha256": "235877c130ff01a40b1535c36f5303b9c7896201be12c4b67a41cdd571d88d33"
             },
             {
               "path": "apps/web/src/components/ProfileIdentity.tsx",
@@ -572840,7 +573046,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "72b449bcc9056b9722cf62729052b024f00718c0a1fc98db359d58647d8328dc"
+              "sha256": "db48f88a6e054d5c64ff64b7311b521f9d06bbc833b2191978e4b21eb48c381a"
             },
             {
               "path": "apps/web/src/components/ProfileMenu.tsx",
@@ -573120,7 +573326,8 @@
             "Bindings renewed by release-0.5-route-state-closure: bounded reads, existing authorization and caller behavior checked with targeted units, browser journeys and original bundle limits.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
-            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass."
+            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
+            "Bindings renewed by release-0.5-profile-lifecycle-feedback: exact lifecycle browsers and units verify timeout, current scope, protected consent, duplicate prevention and receipts after the bounded preview/feedback change."
           ],
           "criterion_result": "Bottom bar shows up to four granted primary destinations plus More, reflects the true active route, preserves every remaining granted link, closes on navigation/desktop transition and restores focus. Phone/desktop/keyboard/RTL and failed bar/sheet recovery pass. Its initial payload remains counted under original page limits.",
           "limitations": [
@@ -573253,6 +573460,11 @@
               "batch": "release-0.5-workspace-route-census",
               "base_commit": "7cf95f840a7e65c722f95b10e486bd02c435d498",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-workspace-route-census/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-profile-lifecycle-feedback",
+              "base_commit": "11dd72829ed7b2083caa7bc4ff64f08eb86b491c",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-profile-lifecycle-feedback/source-binding.json"
             }
           ]
         }
@@ -573300,7 +573512,8 @@
           "release-0.5-route-state-closure",
           "release-0.5-safari-main-keyboard",
           "release-0.5-critical-accessibility-renewal",
-          "release-0.5-workspace-route-census"
+          "release-0.5-workspace-route-census",
+          "release-0.5-profile-lifecycle-feedback"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -573512,7 +573725,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
-              "sha256": "07a09cc8acd0091933cadcc4c1878dc57239d6a547102f32da215f433dcacc54"
+              "sha256": "235877c130ff01a40b1535c36f5303b9c7896201be12c4b67a41cdd571d88d33"
             },
             {
               "path": "apps/web/src/components/ProfileIdentity.tsx",
@@ -573524,7 +573737,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "72b449bcc9056b9722cf62729052b024f00718c0a1fc98db359d58647d8328dc"
+              "sha256": "db48f88a6e054d5c64ff64b7311b521f9d06bbc833b2191978e4b21eb48c381a"
             },
             {
               "path": "apps/web/src/components/ProfileMenu.tsx",
@@ -573804,7 +574017,8 @@
             "Bindings renewed by release-0.5-route-state-closure: bounded reads, existing authorization and caller behavior checked with targeted units, browser journeys and original bundle limits.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
-            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass."
+            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
+            "Bindings renewed by release-0.5-profile-lifecycle-feedback: exact lifecycle browsers and units verify timeout, current scope, protected consent, duplicate prevention and receipts after the bounded preview/feedback change."
           ],
           "criterion_result": "Existing BreadcrumbBar keeps current route/path, localized root and safe detail label, collapsed parent disclosure, Escape/focus restoration and true list-return links. Raw record IDs never appear as breadcrumb labels. Real route/consent recovery tests retained across both projects.",
           "limitations": [
@@ -573937,6 +574151,11 @@
               "batch": "release-0.5-workspace-route-census",
               "base_commit": "7cf95f840a7e65c722f95b10e486bd02c435d498",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-workspace-route-census/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-profile-lifecycle-feedback",
+              "base_commit": "11dd72829ed7b2083caa7bc4ff64f08eb86b491c",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-profile-lifecycle-feedback/source-binding.json"
             }
           ]
         }
@@ -573984,7 +574203,8 @@
           "release-0.5-route-state-closure",
           "release-0.5-safari-main-keyboard",
           "release-0.5-critical-accessibility-renewal",
-          "release-0.5-workspace-route-census"
+          "release-0.5-workspace-route-census",
+          "release-0.5-profile-lifecycle-feedback"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -574196,7 +574416,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
-              "sha256": "07a09cc8acd0091933cadcc4c1878dc57239d6a547102f32da215f433dcacc54"
+              "sha256": "235877c130ff01a40b1535c36f5303b9c7896201be12c4b67a41cdd571d88d33"
             },
             {
               "path": "apps/web/src/components/ProfileIdentity.tsx",
@@ -574208,7 +574428,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "72b449bcc9056b9722cf62729052b024f00718c0a1fc98db359d58647d8328dc"
+              "sha256": "db48f88a6e054d5c64ff64b7311b521f9d06bbc833b2191978e4b21eb48c381a"
             },
             {
               "path": "apps/web/src/components/ProfileMenu.tsx",
@@ -574488,7 +574708,8 @@
             "Bindings renewed by release-0.5-route-state-closure: bounded reads, existing authorization and caller behavior checked with targeted units, browser journeys and original bundle limits.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
-            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass."
+            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
+            "Bindings renewed by release-0.5-profile-lifecycle-feedback: exact lifecycle browsers and units verify timeout, current scope, protected consent, duplicate prevention and receipts after the bounded preview/feedback change."
           ],
           "criterion_result": "Navigation is resolved from current server grants and profile type. Client local labels/icons only filter known routes from that configuration; missing or wrong-area configuration fails closed and can refresh. Native per-permission/operating-context tests and restricted-menu browser cases pass.",
           "limitations": [
@@ -574621,6 +574842,11 @@
               "batch": "release-0.5-workspace-route-census",
               "base_commit": "7cf95f840a7e65c722f95b10e486bd02c435d498",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-workspace-route-census/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-profile-lifecycle-feedback",
+              "base_commit": "11dd72829ed7b2083caa7bc4ff64f08eb86b491c",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-profile-lifecycle-feedback/source-binding.json"
             }
           ]
         }
@@ -574668,7 +574894,8 @@
           "release-0.5-route-state-closure",
           "release-0.5-safari-main-keyboard",
           "release-0.5-critical-accessibility-renewal",
-          "release-0.5-workspace-route-census"
+          "release-0.5-workspace-route-census",
+          "release-0.5-profile-lifecycle-feedback"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -574880,7 +575107,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
-              "sha256": "07a09cc8acd0091933cadcc4c1878dc57239d6a547102f32da215f433dcacc54"
+              "sha256": "235877c130ff01a40b1535c36f5303b9c7896201be12c4b67a41cdd571d88d33"
             },
             {
               "path": "apps/web/src/components/ProfileIdentity.tsx",
@@ -574892,7 +575119,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "72b449bcc9056b9722cf62729052b024f00718c0a1fc98db359d58647d8328dc"
+              "sha256": "db48f88a6e054d5c64ff64b7311b521f9d06bbc833b2191978e4b21eb48c381a"
             },
             {
               "path": "apps/web/src/components/ProfileMenu.tsx",
@@ -575172,7 +575399,8 @@
             "Bindings renewed by release-0.5-route-state-closure: bounded reads, existing authorization and caller behavior checked with targeted units, browser journeys and original bundle limits.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
-            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass."
+            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
+            "Bindings renewed by release-0.5-profile-lifecycle-feedback: exact lifecycle browsers and units verify timeout, current scope, protected consent, duplicate prevention and receipts after the bounded preview/feedback change."
           ],
           "criterion_result": "Customer service/account destinations and staff operations/settings groups remain backend-filtered, including all four services, CRM, document templates and finance/administration where granted. Personal customer work and staff operations retain their explicit authorized operating-context boundary.",
           "limitations": [
@@ -575305,6 +575533,11 @@
               "batch": "release-0.5-workspace-route-census",
               "base_commit": "7cf95f840a7e65c722f95b10e486bd02c435d498",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-workspace-route-census/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-profile-lifecycle-feedback",
+              "base_commit": "11dd72829ed7b2083caa7bc4ff64f08eb86b491c",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-profile-lifecycle-feedback/source-binding.json"
             }
           ]
         }
@@ -575352,7 +575585,8 @@
           "release-0.5-route-state-closure",
           "release-0.5-safari-main-keyboard",
           "release-0.5-critical-accessibility-renewal",
-          "release-0.5-workspace-route-census"
+          "release-0.5-workspace-route-census",
+          "release-0.5-profile-lifecycle-feedback"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -575564,7 +575798,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
-              "sha256": "07a09cc8acd0091933cadcc4c1878dc57239d6a547102f32da215f433dcacc54"
+              "sha256": "235877c130ff01a40b1535c36f5303b9c7896201be12c4b67a41cdd571d88d33"
             },
             {
               "path": "apps/web/src/components/ProfileIdentity.tsx",
@@ -575576,7 +575810,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "72b449bcc9056b9722cf62729052b024f00718c0a1fc98db359d58647d8328dc"
+              "sha256": "db48f88a6e054d5c64ff64b7311b521f9d06bbc833b2191978e4b21eb48c381a"
             },
             {
               "path": "apps/web/src/components/ProfileMenu.tsx",
@@ -575856,7 +576090,8 @@
             "Bindings renewed by release-0.5-route-state-closure: bounded reads, existing authorization and caller behavior checked with targeted units, browser journeys and original bundle limits.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
-            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass."
+            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
+            "Bindings renewed by release-0.5-profile-lifecycle-feedback: exact lifecycle browsers and units verify timeout, current scope, protected consent, duplicate prevention and receipts after the bounded preview/feedback change."
           ],
           "criterion_result": "Legal profiles expose legal-profile/team/agent routes only with corresponding current grants; Individual profiles expose personal-profile/saving routes. Shared service links retain their own server permission boundaries. Current backend navigation tests and FA/EN customer/staff menu checks pass.",
           "limitations": [
@@ -575989,6 +576224,11 @@
               "batch": "release-0.5-workspace-route-census",
               "base_commit": "7cf95f840a7e65c722f95b10e486bd02c435d498",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-workspace-route-census/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-profile-lifecycle-feedback",
+              "base_commit": "11dd72829ed7b2083caa7bc4ff64f08eb86b491c",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-profile-lifecycle-feedback/source-binding.json"
             }
           ]
         }
@@ -576036,7 +576276,8 @@
           "release-0.5-route-state-closure",
           "release-0.5-safari-main-keyboard",
           "release-0.5-critical-accessibility-renewal",
-          "release-0.5-workspace-route-census"
+          "release-0.5-workspace-route-census",
+          "release-0.5-profile-lifecycle-feedback"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -576248,7 +576489,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
-              "sha256": "07a09cc8acd0091933cadcc4c1878dc57239d6a547102f32da215f433dcacc54"
+              "sha256": "235877c130ff01a40b1535c36f5303b9c7896201be12c4b67a41cdd571d88d33"
             },
             {
               "path": "apps/web/src/components/ProfileIdentity.tsx",
@@ -576260,7 +576501,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "72b449bcc9056b9722cf62729052b024f00718c0a1fc98db359d58647d8328dc"
+              "sha256": "db48f88a6e054d5c64ff64b7311b521f9d06bbc833b2191978e4b21eb48c381a"
             },
             {
               "path": "apps/web/src/components/ProfileMenu.tsx",
@@ -576540,7 +576781,8 @@
             "Bindings renewed by release-0.5-route-state-closure: bounded reads, existing authorization and caller behavior checked with targeted units, browser journeys and original bundle limits.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
-            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass."
+            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
+            "Bindings renewed by release-0.5-profile-lifecycle-feedback: exact lifecycle browsers and units verify timeout, current scope, protected consent, duplicate prevention and receipts after the bounded preview/feedback change."
           ],
           "criterion_result": "Owner approved current router-context reuse with fresh authority on navigation/profile/permission changes instead of immutable session-long grants. Existing current-session/navigation parsers/providers and backend permission resolution remain byte-exact. Revocation, restricted configuration and context change tests pass.",
           "limitations": [
@@ -576673,6 +576915,11 @@
               "batch": "release-0.5-workspace-route-census",
               "base_commit": "7cf95f840a7e65c722f95b10e486bd02c435d498",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-workspace-route-census/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-profile-lifecycle-feedback",
+              "base_commit": "11dd72829ed7b2083caa7bc4ff64f08eb86b491c",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-profile-lifecycle-feedback/source-binding.json"
             }
           ]
         }
@@ -659948,7 +660195,7 @@
             },
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
-              "sha256": "c68416f811aba1dfb6f57f24b88ad7c1c1c2452a577626a582b35e18a5a9b02d"
+              "sha256": "93a35600f3e64446c57ab7d296c33ba543ca601cb69a8e743582ab33caad3dba"
             },
             {
               "path": "apps/web/e2e/provider-forms.spec.ts",
@@ -660120,7 +660367,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "72b449bcc9056b9722cf62729052b024f00718c0a1fc98db359d58647d8328dc"
+              "sha256": "db48f88a6e054d5c64ff64b7311b521f9d06bbc833b2191978e4b21eb48c381a"
             },
             {
               "path": "apps/web/src/components/ProviderAlertHistory.tsx",
@@ -661754,7 +662001,8 @@
             "Bindings renewed by release-0.5-route-fallback-and-announcement: verified route landmarks, terminal notice, timeout without retries, preserved authority/financial actions and equivalent shell CSS. Affected browser/unit and original budgets passed.",
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
             "Bindings renewed by release-0.5-ci-workflow: motion preserves opacity and finance/authority behavior; exact fast accessibility cases, motion checks and original transfer budgets passed.",
-            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass."
+            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
+            "Bindings renewed by release-0.5-profile-lifecycle-feedback: exact lifecycle browsers and units verify timeout, current scope, protected consent, duplicate prevention and receipts after the bounded preview/feedback change."
           ],
           "limitations": [],
           "operational_limits": [
@@ -662328,6 +662576,11 @@
               "batch": "release-0.5-workspace-route-census",
               "base_commit": "7cf95f840a7e65c722f95b10e486bd02c435d498",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-workspace-route-census/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-profile-lifecycle-feedback",
+              "base_commit": "11dd72829ed7b2083caa7bc4ff64f08eb86b491c",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-profile-lifecycle-feedback/source-binding.json"
             }
           ]
         },
@@ -662346,7 +662599,8 @@
           "release-0.5-route-fallback-and-announcement",
           "release-0.5-form-and-document-accessibility",
           "release-0.5-ci-workflow",
-          "release-0.5-workspace-route-census"
+          "release-0.5-workspace-route-census",
+          "release-0.5-profile-lifecycle-feedback"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -663651,7 +663905,7 @@
             },
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
-              "sha256": "c68416f811aba1dfb6f57f24b88ad7c1c1c2452a577626a582b35e18a5a9b02d"
+              "sha256": "93a35600f3e64446c57ab7d296c33ba543ca601cb69a8e743582ab33caad3dba"
             },
             {
               "path": "apps/web/e2e/provider-forms.spec.ts",
@@ -663815,7 +664069,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "72b449bcc9056b9722cf62729052b024f00718c0a1fc98db359d58647d8328dc"
+              "sha256": "db48f88a6e054d5c64ff64b7311b521f9d06bbc833b2191978e4b21eb48c381a"
             },
             {
               "path": "apps/web/src/components/ProviderAlertHistory.tsx",
@@ -665454,7 +665708,8 @@
             "Bindings renewed by release-0.5-route-fallback-and-announcement: verified route landmarks, terminal notice, timeout without retries, preserved authority/financial actions and equivalent shell CSS. Affected browser/unit and original budgets passed.",
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
             "Bindings renewed by release-0.5-ci-workflow: motion preserves opacity and finance/authority behavior; exact fast accessibility cases, motion checks and original transfer budgets passed.",
-            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass."
+            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
+            "Bindings renewed by release-0.5-profile-lifecycle-feedback: exact lifecycle browsers and units verify timeout, current scope, protected consent, duplicate prevention and receipts after the bounded preview/feedback change."
           ],
           "limitations": [
             "Current staging is v0.3.0/2ac708c11225a1239156787cddfdd3ab094fb8f8, API/web/worker healthy and Redis/object storage readiness verified. After effective v0.4.0 criteria are accepted, deploy its immutable candidate and verify actual AI routing, slot isolation and notification/storage operations. Earlier v0.1.29/forced-TLS warning description is stale and does not dispatch a rebuild.",
@@ -665901,6 +666156,11 @@
               "batch": "release-0.5-workspace-route-census",
               "base_commit": "7cf95f840a7e65c722f95b10e486bd02c435d498",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-workspace-route-census/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-profile-lifecycle-feedback",
+              "base_commit": "11dd72829ed7b2083caa7bc4ff64f08eb86b491c",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-profile-lifecycle-feedback/source-binding.json"
             }
           ]
         },
@@ -665936,7 +666196,8 @@
           "release-0.5-route-fallback-and-announcement",
           "release-0.5-form-and-document-accessibility",
           "release-0.5-ci-workflow",
-          "release-0.5-workspace-route-census"
+          "release-0.5-workspace-route-census",
+          "release-0.5-profile-lifecycle-feedback"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -666112,7 +666373,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "The four service histories/details, scoped staff queues, wallet, invoices, contracts, Charts and Videos have named route evidence. Complete remaining route and conditional states across directions and themes, keyboard, filters, forms and stale scope."
+        "Profile privacy and staff closure now have exact bilingual recovery, authority, consent and receipt browser evidence. Remaining route and conditional states across themes, directions and viewport widths still require verification."
       ],
       "owner": null,
       "depends_on": [],
@@ -666126,7 +666387,8 @@
           "release-0.5-measured-action-targets",
           "release-0.5-critical-accessibility-renewal",
           "release-0.5-route-landmark-census",
-          "release-0.5-workspace-route-census"
+          "release-0.5-workspace-route-census",
+          "release-0.5-profile-lifecycle-feedback"
         ]
       }
     },
@@ -715671,7 +715933,176 @@
         "release-readiness#R-03.01",
         "release-readiness#R-03.02"
       ],
-      "release_disposition": "Localized and verified two existing workspace routes. Broader adoption and release gates remain open. No release publication."
+      "release_disposition": "Localized and verified two existing workspace routes. Broader adoption and release gates remain open. No release publication.",
+      "push_receipt": {
+        "commit": "11dd72829ed7b2083caa7bc4ff64f08eb86b491c",
+        "remote_sha": "11dd72829ed7b2083caa7bc4ff64f08eb86b491c",
+        "ref": "refs/heads/main",
+        "verified_at": "2026-11-07T07:54:01+00:00",
+        "method": "GitHub CLI ref readback"
+      }
+    },
+    "release-0.5-profile-lifecycle-feedback": {
+      "batch": "release-0.5-profile-lifecycle-feedback",
+      "base_commit": "11dd72829ed7b2083caa7bc4ff64f08eb86b491c",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.11.01.03",
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "accepted_task_keys": [],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.11.01.03",
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": ".size-limit.json",
+          "sha256": "61a016162937f78da6d71dfb7f9c2b7d4f9b768362a9e543eae80869cb48073d"
+        },
+        {
+          "path": "apps/web/build.mjs",
+          "sha256": "20432f55d9d3090f592a28e79064d99f0066108a3cda87aeebf023583d55c35f"
+        },
+        {
+          "path": "apps/web/e2e/coverage-fixture.ts",
+          "sha256": "d2728c203779bb170516ad5cedd445aa4c61d4590fb6ce44bc48cde125281ef2"
+        },
+        {
+          "path": "apps/web/e2e/global-setup.ts",
+          "sha256": "26c3a1b7f928e58254e33b57e486ced1882ff07296d41fa619309094a7db9d61"
+        },
+        {
+          "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
+          "sha256": "93a35600f3e64446c57ab7d296c33ba543ca601cb69a8e743582ab33caad3dba"
+        },
+        {
+          "path": "apps/web/e2e/ticket-forms-fixture.ts",
+          "sha256": "cb301f1c98f59499b3bc3204f0648bb2ec925b9a14dd0ef3baf48594737dd2b6"
+        },
+        {
+          "path": "apps/web/package.json",
+          "sha256": "f0b538d3c070cc67a2aed63b66842938bd74a992b66d5ae412057c34fe86e8db"
+        },
+        {
+          "path": "apps/web/playwright.config.ts",
+          "sha256": "ad9a9e23b46599266a7fe0dcfd7185e12e612cdc50c040453533d1fccbea85cf"
+        },
+        {
+          "path": "apps/web/server.js",
+          "sha256": "8f2f2eb0a4a158fe322c1fd4c6f119044d0b0aa61ea71aacc052ba1ba348caab"
+        },
+        {
+          "path": "apps/web/src/components/ProfileClosureReview.test.tsx",
+          "sha256": "c701bff73764ef6bf4795856cff93042f0fd198ce4af33fa0c358fb670c35467"
+        },
+        {
+          "path": "apps/web/src/components/ProfileClosureReview.tsx",
+          "sha256": "235877c130ff01a40b1535c36f5303b9c7896201be12c4b67a41cdd571d88d33"
+        },
+        {
+          "path": "apps/web/src/components/ProfileLifecyclePanel.test.tsx",
+          "sha256": "4cbe2f639a2438bcc2b54c9c404e299c259607ff6e99827bfd051fdbcc379cf1"
+        },
+        {
+          "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
+          "sha256": "db48f88a6e054d5c64ff64b7311b521f9d06bbc833b2191978e4b21eb48c381a"
+        },
+        {
+          "path": "apps/web/src/components/profile-lifecycle-query.test.tsx",
+          "sha256": "f4032c72ebbab454ae051e2b0e75012e7b24818f5c44e1639d1d5a874184726b"
+        },
+        {
+          "path": "apps/web/src/components/profile-lifecycle-test-fixture.ts",
+          "sha256": "0632db7007eac560883c9a204df2f6b9eacf894df07f46a1dc319c3715ca257a"
+        },
+        {
+          "path": "apps/web/src/hooks/useTicketCommand.ts",
+          "sha256": "d40c56a578efebe6b7888159be945b40b3266e711df38b1ffe226197830bcb72"
+        },
+        {
+          "path": "apps/web/src/lib/profile-lifecycle-form.test.ts",
+          "sha256": "27c45df620c000944240ae078136a45952d36bd4f2d2ca3052162f8ddd636d6a"
+        },
+        {
+          "path": "apps/web/src/lib/profile-lifecycle-form.ts",
+          "sha256": "015735107b504174b47b000b65ef8d1966719e133e0e6a6684a4ae9938e1f028"
+        },
+        {
+          "path": "apps/web/src/lib/server-query-client.ts",
+          "sha256": "8f339009224962a0219dec6d142c856c7b1e142ce7687a8612c622d0440e1617"
+        },
+        {
+          "path": "apps/web/src/lib/toast-api.ts",
+          "sha256": "19bb9d7b3de334e1b002e5759b9a581354885611c69d8d59297230d9a4d254bd"
+        },
+        {
+          "path": "package.json",
+          "sha256": "14f5f1be936e9e0f976f40fe7371506701008e7fa53256b80fd0ec9b7f207f1d"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "0b875687ee1d2f32ea8819c9eb58af72f0c0db3796f5e74f82317d4b7ce46251"
+        },
+        {
+          "path": "scripts/check-route-budgets.mjs",
+          "sha256": "4dd831c645a9dbf1e6fd9b0c211b5559e4fc22652373b31525bd4f4aae38186d"
+        },
+        {
+          "path": "scripts/run-production-browser.mjs",
+          "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+        }
+      ],
+      "checks": [
+        "The customer lifecycle preview and staff closure review now use the existing 15-second read deadline. Real browser timeouts show a retry, issue no write and recover on a fresh read. The staff form stays unavailable without a current preview, and refreshed consent still resets.",
+        "Uncertain customer requests, export jobs and staff closure commands announce one warning per capture. Successful notices still require a current, matching receipt; the exact original body, ticket/job scope, existing step-up and closure verification remain intact. Two consecutive export failures prove no duplicate warning and no premature success.",
+        "28 exact lifecycle browsers on Chromium and Mobile Safari, 31 focused units, web typecheck, lint, formatting and all 91 original route budgets pass. Original blockers, ownership and replay assertions remain active."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-profile-lifecycle-feedback",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-profile-lifecycle-feedback/reviewed-source.diff",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-profile-lifecycle-feedback/source-binding.json",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-profile-lifecycle-feedback/renewed-bindings.json",
+      "renewed_task_keys": [
+        "02-auth-users-admin.md#T-11.01.01",
+        "02-auth-users-admin.md#T-11.01.02",
+        "02-auth-users-admin.md#T-11.01.03",
+        "02-auth-users-admin.md#T-11.02.01",
+        "02-auth-users-admin.md#T-11.02.02",
+        "02-auth-users-admin.md#T-11.03.01",
+        "05-notifications-documents-ai.md#T-05.24.01",
+        "05-notifications-documents-ai.md#T-05.24.02",
+        "05-notifications-documents-ai.md#T-05.24.03",
+        "05-notifications-documents-ai.md#T-05.24.04",
+        "07-ui-ux-design.md#T-07.01.03.19",
+        "07-ui-ux-design.md#T-07.01.04.02",
+        "07-ui-ux-design.md#T-07.01.04.03",
+        "07-ui-ux-design.md#T-07.01.04.04",
+        "07-ui-ux-design.md#T-07.04.02.01",
+        "07-ui-ux-design.md#T-07.04.02.02",
+        "07-ui-ux-design.md#T-07.04.02.03",
+        "07-ui-ux-design.md#T-07.05.01.11",
+        "07-ui-ux-design.md#T-07.05.02.01",
+        "07-ui-ux-design.md#T-07.05.02.03",
+        "07-ui-ux-design.md#T-07.15.01.01",
+        "07-ui-ux-design.md#T-07.15.01.02",
+        "07-ui-ux-design.md#T-07.15.01.03",
+        "07-ui-ux-design.md#T-07.15.01.04",
+        "07-ui-ux-design.md#T-07.15.01.05",
+        "07-ui-ux-design.md#T-07.16.01.01",
+        "07-ui-ux-design.md#T-07.16.01.02",
+        "07-ui-ux-design.md#T-07.16.01.03",
+        "07-ui-ux-design.md#T-07.16.01.04",
+        "07-ui-ux-design.md#T-07.16.01.05",
+        "07-ui-ux-design.md#T-07.16.01.06",
+        "07-ui-ux-design.md#T-07.16.01.07",
+        "07-ui-ux-design.md#T-07.16.02.01",
+        "07-ui-ux-design.md#T-07.16.02.02",
+        "07-ui-ux-design.md#T-07.16.02.03",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02"
+      ],
+      "release_disposition": "Closed demonstrated lifecycle timeout and uncertain-feedback gaps. Broader release acceptance remains open. No release publication."
     }
   },
   "historical_improvements": [
@@ -715711,18 +716142,17 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.5-profile-lifecycle-feedback",
+    "id": "release-0.5-solar-guidance-required",
     "release": "0.5.0",
     "task_keys": [
-      "07-ui-ux-design.md#T-07.11.01.03",
-      "07-ui-ux-design.md#T-07.12.01.08",
+      "07-ui-ux-design.md#T-07.05.01.05",
       "release-readiness#R-04.01"
     ],
-    "goal": "Finish demonstrated profile lifecycle request/export and staff closure feedback gaps. Verify safe uncertain receipts, bounded reads and current authority before changing any domain operation."
+    "goal": "Complete the measured missing required announcements for admin solar document and postal guidance in both languages. Keep optional paired suggestions and existing command/receipt boundaries."
   },
   "launch_forecast": {
     "status": "deadline_at_risk_until_v0_5_and_operational_gates_close",
-    "next_update_after": "v0.5.0 profile lifecycle feedback evidence",
+    "next_update_after": "v0.5.0 solar guidance required fields",
     "method": "v0.4.0 staging and Telegram receipts verified. 12 v0.5.0 criteria and gates remain, including route diagnostics and required CI merge enforcement decisions. v0.6.0 operations and v0.9.0 four-service rehearsal keep November 9 at risk. Production is not authorized."
   },
   "capabilities": [

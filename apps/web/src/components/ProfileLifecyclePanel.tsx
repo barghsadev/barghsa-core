@@ -1,7 +1,8 @@
-import { toast } from '../lib/toast-api.js';
+import { sendToast, toast } from '../lib/toast-api.js';
 import { confirmationText } from '@barghsa/i18n/confirmation';
 import { useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from '../lib/query-keys.js';
+import { readWithDeadline } from '../lib/server-query-client.js';
 import { useEffect, useId, useRef, useState } from 'react';
 import { LoadingStatus, Card, CardContent, Button } from '@barghsa/ui';
 import { t } from '@barghsa/i18n/app';
@@ -40,6 +41,7 @@ interface Command {
   ticketId: string | null;
   jobId: string | null;
   stage: 'request' | 'export' | 'read';
+  warned?: boolean;
 }
 function LifecyclePanel({ authorized }: { authorized: () => boolean }) {
   const client = useQueryClient();
@@ -86,13 +88,14 @@ function LifecyclePanel({ authorized }: { authorized: () => boolean }) {
         staleTime: 0,
         gcTime: 0,
         retry: false,
-        queryFn: async ({ signal: querySignal }) => {
-          const response = await fetch('/api/tickets/lifecycle-preview', {
-            credentials: 'include',
-            signal: querySignal,
-          });
-          return { response, raw: response.ok ? ((await response.json()) as unknown) : null };
-        },
+        queryFn: ({ signal: querySignal }) =>
+          readWithDeadline(querySignal, async (transport) => {
+            const response = await fetch('/api/tickets/lifecycle-preview', {
+              credentials: 'include',
+              signal: transport,
+            });
+            return { response, raw: response.ok ? ((await response.json()) as unknown) : null };
+          }),
       });
       if (controller.signal.aborted || readSequence.current !== attempt) return null;
       if (!permitted() || signal?.aborted) return null;
@@ -187,6 +190,10 @@ function LifecyclePanel({ authorized }: { authorized: () => boolean }) {
       if (permitted()) {
         setPending(true);
         setSubmitError(true);
+        if (!captured.warned) {
+          captured.warned = true;
+          sendToast('warning', lifecycleFormText('uncertain', locale));
+        }
       }
     } finally {
       busy.current = false;

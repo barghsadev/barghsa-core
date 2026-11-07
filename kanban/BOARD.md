@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-07T07:51:02+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-07T07:55:41+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.4.0**. Next milestone: **v0.5.0**.
 
@@ -39,10 +39,9 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Finish demonstrated profile lifecycle request/export and staff closure feedback gaps. Verify safe uncertain receipts, bounded reads and current authority before changing any domain operation.
+Complete the measured missing required announcements for admin solar document and postal guidance in both languages. Keep optional paired suggestions and existing command/receipt boundaries.
 
-- `07-ui-ux-design.md#T-07.11.01.03`: Create an API response interceptor that auto-shows toasts for: successful CRUD operations ("Invoice created", "Profile updated", "Order submitted"), API errors (error message from API), network failures ("Connection lost. Retrying...").
-- `07-ui-ux-design.md#T-07.12.01.08`: Every list page, detail page, dashboard widget, and admin page must implement the loading/empty/error pattern. No view renders a blank white page or infinite spinner.
+- `07-ui-ux-design.md#T-07.05.01.05`: Ensure all form inputs have programmatically associated labels (`<label htmlFor>` or `aria-label`). Error messages use `aria-describedby` or `aria-errormessage` to link to the input. Required fields use `aria-required="true"`.
 - `release-readiness#R-04.01`: Verify full customer and admin UI adoption
 
 ## v0.2.0: Complete customer journeys
