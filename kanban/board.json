@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-07T21:45:24+00:00",
-  "source_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
+  "updated": "2026-11-07T21:55:06+00:00",
+  "source_commit": "acd15602c422662a93c63f477d7e229fd0ce604d",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -194908,7 +194908,8 @@
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-consultation-staff-command-receipts",
           "release-0.5-solar-guidance-ready",
-          "release-0.5-review-preview-deadlines"
+          "release-0.5-review-preview-deadlines",
+          "release-0.5-onboarding-deadlines-coverage"
         ],
         "current_acceptance": {
           "kind": "validated-immutable-business-acting-context-and-cross-surface-isolation",
@@ -195092,7 +195093,7 @@
             },
             {
               "path": "apps/web/e2e/solar-construction-progress.spec.ts",
-              "sha256": "8d0a5e8c053c51fdf9fedf4d798f7b7400e80f3b55f5c56e57fd5b4979220a08"
+              "sha256": "4a95d913b53e07345de8f24a25bdcbfeddd87c90c7653bc28b5e2ed13c5f5b5d"
             },
             {
               "path": "apps/web/e2e/status-timelines.spec.ts",
@@ -196774,6 +196775,11 @@
               "batch": "release-0.5-review-preview-deadlines",
               "base_commit": "da098d1244ba0ec10ccdd0b199f87474757fb3fb",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-review-preview-deadlines/proof.json"
+            },
+            {
+              "batch": "release-0.5-onboarding-deadlines-coverage",
+              "base_commit": "acd15602c422662a93c63f477d7e229fd0ce604d",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-onboarding-deadlines-coverage/coverage-and-cancellation-proof.json"
             }
           ]
         }
@@ -196834,7 +196840,8 @@
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-consultation-staff-command-receipts",
           "release-0.5-solar-guidance-ready",
-          "release-0.5-review-preview-deadlines"
+          "release-0.5-review-preview-deadlines",
+          "release-0.5-onboarding-deadlines-coverage"
         ],
         "current_acceptance": {
           "kind": "validated-immutable-business-acting-context-and-cross-surface-isolation",
@@ -197018,7 +197025,7 @@
             },
             {
               "path": "apps/web/e2e/solar-construction-progress.spec.ts",
-              "sha256": "8d0a5e8c053c51fdf9fedf4d798f7b7400e80f3b55f5c56e57fd5b4979220a08"
+              "sha256": "4a95d913b53e07345de8f24a25bdcbfeddd87c90c7653bc28b5e2ed13c5f5b5d"
             },
             {
               "path": "apps/web/e2e/status-timelines.spec.ts",
@@ -198700,6 +198707,11 @@
               "batch": "release-0.5-review-preview-deadlines",
               "base_commit": "da098d1244ba0ec10ccdd0b199f87474757fb3fb",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-review-preview-deadlines/proof.json"
+            },
+            {
+              "batch": "release-0.5-onboarding-deadlines-coverage",
+              "base_commit": "acd15602c422662a93c63f477d7e229fd0ce604d",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-onboarding-deadlines-coverage/coverage-and-cancellation-proof.json"
             }
           ]
         }
@@ -520040,7 +520052,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "The strict fast accessibility workflow is on main and workflow scope is active. The da098d12 hosted step passed. On b811d149 the hosted login test was flaky when it could traverse the loading page. The updated test waits for the real form and preserves the keyboard and axe assertions. Hosted verification of this correction and the owner merge-policy decision remain open."
+        "The fast CI critical accessibility step passed on acd15602 after the login test waited for the loaded form. The workflow credential is verified. Main has no required merge check. The separate owner merge-policy decision and treatment of noncritical assertions remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -520052,7 +520064,8 @@
           "release-0.5-ci-workflow",
           "release-0.5-conditional-native-choices",
           "release-0.5-main-exact-source-coverage",
-          "release-0.5-required-input-semantics"
+          "release-0.5-required-input-semantics",
+          "release-0.5-onboarding-deadlines-coverage"
         ],
         "current_acceptance": null
       }
@@ -592004,7 +592017,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Eleven owned reads and seven staff preview callers now use the existing deadline. Five stalled staff screens leave loading without replay. Solar and electricity preview timeouts retain drafts, ignore late replies and reopen review only on explicit retry. Other conditional loading, empty, error and recovery paths remain open."
+        "The two locale cases for solar construction now verify that changing selection cancels the stale preview, while no stale dialog or denied private detail is shown. The older fixture expected a response after the new cancellation. It passed in both supported browser engines with all denial assertions retained. Other conditional loading, empty, error and recovery paths remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -592038,7 +592051,8 @@
           "release-0.5-solar-guidance-ready",
           "release-0.5-stale-route-recovery",
           "release-0.5-ownership-transfer-receipt",
-          "release-0.5-review-preview-deadlines"
+          "release-0.5-review-preview-deadlines",
+          "release-0.5-onboarding-deadlines-coverage"
         ],
         "current_acceptance": null
       }
@@ -681279,7 +681293,8 @@
           "release-0.5-essential-control-contrast",
           "release-0.5-consultation-staff-command-receipts",
           "release-0.5-solar-guidance-ready",
-          "release-0.5-review-preview-deadlines"
+          "release-0.5-review-preview-deadlines",
+          "release-0.5-onboarding-deadlines-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-financial-and-fulfillment-status-journeys",
@@ -681363,7 +681378,7 @@
             },
             {
               "path": "apps/web/e2e/solar-construction-progress.spec.ts",
-              "sha256": "8d0a5e8c053c51fdf9fedf4d798f7b7400e80f3b55f5c56e57fd5b4979220a08"
+              "sha256": "4a95d913b53e07345de8f24a25bdcbfeddd87c90c7653bc28b5e2ed13c5f5b5d"
             },
             {
               "path": "apps/web/e2e/solar-operation-form-fixture.ts",
@@ -682042,6 +682057,11 @@
               "batch": "release-0.5-review-preview-deadlines",
               "base_commit": "da098d1244ba0ec10ccdd0b199f87474757fb3fb",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-review-preview-deadlines/proof.json"
+            },
+            {
+              "batch": "release-0.5-onboarding-deadlines-coverage",
+              "base_commit": "acd15602c422662a93c63f477d7e229fd0ce604d",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-onboarding-deadlines-coverage/coverage-and-cancellation-proof.json"
             }
           ]
         }
@@ -682108,7 +682128,8 @@
           "release-0.5-essential-control-contrast",
           "release-0.5-consultation-staff-command-receipts",
           "release-0.5-solar-guidance-ready",
-          "release-0.5-review-preview-deadlines"
+          "release-0.5-review-preview-deadlines",
+          "release-0.5-onboarding-deadlines-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-financial-and-fulfillment-status-journeys",
@@ -682192,7 +682213,7 @@
             },
             {
               "path": "apps/web/e2e/solar-construction-progress.spec.ts",
-              "sha256": "8d0a5e8c053c51fdf9fedf4d798f7b7400e80f3b55f5c56e57fd5b4979220a08"
+              "sha256": "4a95d913b53e07345de8f24a25bdcbfeddd87c90c7653bc28b5e2ed13c5f5b5d"
             },
             {
               "path": "apps/web/e2e/solar-operation-form-fixture.ts",
@@ -682871,6 +682892,11 @@
               "batch": "release-0.5-review-preview-deadlines",
               "base_commit": "da098d1244ba0ec10ccdd0b199f87474757fb3fb",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-review-preview-deadlines/proof.json"
+            },
+            {
+              "batch": "release-0.5-onboarding-deadlines-coverage",
+              "base_commit": "acd15602c422662a93c63f477d7e229fd0ce604d",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-onboarding-deadlines-coverage/coverage-and-cancellation-proof.json"
             }
           ]
         }
@@ -682939,7 +682965,8 @@
           "release-0.5-essential-control-contrast",
           "release-0.5-consultation-staff-command-receipts",
           "release-0.5-solar-guidance-ready",
-          "release-0.5-review-preview-deadlines"
+          "release-0.5-review-preview-deadlines",
+          "release-0.5-onboarding-deadlines-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-financial-and-fulfillment-status-journeys",
@@ -683023,7 +683050,7 @@
             },
             {
               "path": "apps/web/e2e/solar-construction-progress.spec.ts",
-              "sha256": "8d0a5e8c053c51fdf9fedf4d798f7b7400e80f3b55f5c56e57fd5b4979220a08"
+              "sha256": "4a95d913b53e07345de8f24a25bdcbfeddd87c90c7653bc28b5e2ed13c5f5b5d"
             },
             {
               "path": "apps/web/e2e/solar-operation-form-fixture.ts",
@@ -683702,6 +683729,11 @@
               "batch": "release-0.5-review-preview-deadlines",
               "base_commit": "da098d1244ba0ec10ccdd0b199f87474757fb3fb",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-review-preview-deadlines/proof.json"
+            },
+            {
+              "batch": "release-0.5-onboarding-deadlines-coverage",
+              "base_commit": "acd15602c422662a93c63f477d7e229fd0ce604d",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-onboarding-deadlines-coverage/coverage-and-cancellation-proof.json"
             }
           ]
         }
@@ -683768,7 +683800,8 @@
           "release-0.5-essential-control-contrast",
           "release-0.5-consultation-staff-command-receipts",
           "release-0.5-solar-guidance-ready",
-          "release-0.5-review-preview-deadlines"
+          "release-0.5-review-preview-deadlines",
+          "release-0.5-onboarding-deadlines-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-financial-and-fulfillment-status-journeys",
@@ -683852,7 +683885,7 @@
             },
             {
               "path": "apps/web/e2e/solar-construction-progress.spec.ts",
-              "sha256": "8d0a5e8c053c51fdf9fedf4d798f7b7400e80f3b55f5c56e57fd5b4979220a08"
+              "sha256": "4a95d913b53e07345de8f24a25bdcbfeddd87c90c7653bc28b5e2ed13c5f5b5d"
             },
             {
               "path": "apps/web/e2e/solar-operation-form-fixture.ts",
@@ -684531,6 +684564,11 @@
               "batch": "release-0.5-review-preview-deadlines",
               "base_commit": "da098d1244ba0ec10ccdd0b199f87474757fb3fb",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-review-preview-deadlines/proof.json"
+            },
+            {
+              "batch": "release-0.5-onboarding-deadlines-coverage",
+              "base_commit": "acd15602c422662a93c63f477d7e229fd0ce604d",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-onboarding-deadlines-coverage/coverage-and-cancellation-proof.json"
             }
           ]
         }
@@ -684597,7 +684635,8 @@
           "release-0.5-essential-control-contrast",
           "release-0.5-consultation-staff-command-receipts",
           "release-0.5-solar-guidance-ready",
-          "release-0.5-review-preview-deadlines"
+          "release-0.5-review-preview-deadlines",
+          "release-0.5-onboarding-deadlines-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-financial-and-fulfillment-status-journeys",
@@ -684681,7 +684720,7 @@
             },
             {
               "path": "apps/web/e2e/solar-construction-progress.spec.ts",
-              "sha256": "8d0a5e8c053c51fdf9fedf4d798f7b7400e80f3b55f5c56e57fd5b4979220a08"
+              "sha256": "4a95d913b53e07345de8f24a25bdcbfeddd87c90c7653bc28b5e2ed13c5f5b5d"
             },
             {
               "path": "apps/web/e2e/solar-operation-form-fixture.ts",
@@ -685360,6 +685399,11 @@
               "batch": "release-0.5-review-preview-deadlines",
               "base_commit": "da098d1244ba0ec10ccdd0b199f87474757fb3fb",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-review-preview-deadlines/proof.json"
+            },
+            {
+              "batch": "release-0.5-onboarding-deadlines-coverage",
+              "base_commit": "acd15602c422662a93c63f477d7e229fd0ce604d",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-onboarding-deadlines-coverage/coverage-and-cancellation-proof.json"
             }
           ]
         }
@@ -685430,7 +685474,8 @@
           "release-0.5-essential-control-contrast",
           "release-0.5-consultation-staff-command-receipts",
           "release-0.5-solar-guidance-ready",
-          "release-0.5-review-preview-deadlines"
+          "release-0.5-review-preview-deadlines",
+          "release-0.5-onboarding-deadlines-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-financial-and-fulfillment-status-journeys",
@@ -685514,7 +685559,7 @@
             },
             {
               "path": "apps/web/e2e/solar-construction-progress.spec.ts",
-              "sha256": "8d0a5e8c053c51fdf9fedf4d798f7b7400e80f3b55f5c56e57fd5b4979220a08"
+              "sha256": "4a95d913b53e07345de8f24a25bdcbfeddd87c90c7653bc28b5e2ed13c5f5b5d"
             },
             {
               "path": "apps/web/e2e/solar-operation-form-fixture.ts",
@@ -686193,6 +686238,11 @@
               "batch": "release-0.5-review-preview-deadlines",
               "base_commit": "da098d1244ba0ec10ccdd0b199f87474757fb3fb",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-review-preview-deadlines/proof.json"
+            },
+            {
+              "batch": "release-0.5-onboarding-deadlines-coverage",
+              "base_commit": "acd15602c422662a93c63f477d7e229fd0ce604d",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-onboarding-deadlines-coverage/coverage-and-cancellation-proof.json"
             }
           ]
         }
@@ -686263,7 +686313,8 @@
           "release-0.5-essential-control-contrast",
           "release-0.5-consultation-staff-command-receipts",
           "release-0.5-solar-guidance-ready",
-          "release-0.5-review-preview-deadlines"
+          "release-0.5-review-preview-deadlines",
+          "release-0.5-onboarding-deadlines-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-financial-and-fulfillment-status-journeys",
@@ -686347,7 +686398,7 @@
             },
             {
               "path": "apps/web/e2e/solar-construction-progress.spec.ts",
-              "sha256": "8d0a5e8c053c51fdf9fedf4d798f7b7400e80f3b55f5c56e57fd5b4979220a08"
+              "sha256": "4a95d913b53e07345de8f24a25bdcbfeddd87c90c7653bc28b5e2ed13c5f5b5d"
             },
             {
               "path": "apps/web/e2e/solar-operation-form-fixture.ts",
@@ -687026,6 +687077,11 @@
               "batch": "release-0.5-review-preview-deadlines",
               "base_commit": "da098d1244ba0ec10ccdd0b199f87474757fb3fb",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-review-preview-deadlines/proof.json"
+            },
+            {
+              "batch": "release-0.5-onboarding-deadlines-coverage",
+              "base_commit": "acd15602c422662a93c63f477d7e229fd0ce604d",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-onboarding-deadlines-coverage/coverage-and-cancellation-proof.json"
             }
           ]
         }
@@ -687092,7 +687148,8 @@
           "release-0.5-essential-control-contrast",
           "release-0.5-consultation-staff-command-receipts",
           "release-0.5-solar-guidance-ready",
-          "release-0.5-review-preview-deadlines"
+          "release-0.5-review-preview-deadlines",
+          "release-0.5-onboarding-deadlines-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-financial-and-fulfillment-status-journeys",
@@ -687176,7 +687233,7 @@
             },
             {
               "path": "apps/web/e2e/solar-construction-progress.spec.ts",
-              "sha256": "8d0a5e8c053c51fdf9fedf4d798f7b7400e80f3b55f5c56e57fd5b4979220a08"
+              "sha256": "4a95d913b53e07345de8f24a25bdcbfeddd87c90c7653bc28b5e2ed13c5f5b5d"
             },
             {
               "path": "apps/web/e2e/solar-operation-form-fixture.ts",
@@ -687855,6 +687912,11 @@
               "batch": "release-0.5-review-preview-deadlines",
               "base_commit": "da098d1244ba0ec10ccdd0b199f87474757fb3fb",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-review-preview-deadlines/proof.json"
+            },
+            {
+              "batch": "release-0.5-onboarding-deadlines-coverage",
+              "base_commit": "acd15602c422662a93c63f477d7e229fd0ce604d",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-onboarding-deadlines-coverage/coverage-and-cancellation-proof.json"
             }
           ]
         }
@@ -687921,7 +687983,8 @@
           "release-0.5-essential-control-contrast",
           "release-0.5-consultation-staff-command-receipts",
           "release-0.5-solar-guidance-ready",
-          "release-0.5-review-preview-deadlines"
+          "release-0.5-review-preview-deadlines",
+          "release-0.5-onboarding-deadlines-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-financial-and-fulfillment-status-journeys",
@@ -688005,7 +688068,7 @@
             },
             {
               "path": "apps/web/e2e/solar-construction-progress.spec.ts",
-              "sha256": "8d0a5e8c053c51fdf9fedf4d798f7b7400e80f3b55f5c56e57fd5b4979220a08"
+              "sha256": "4a95d913b53e07345de8f24a25bdcbfeddd87c90c7653bc28b5e2ed13c5f5b5d"
             },
             {
               "path": "apps/web/e2e/solar-operation-form-fixture.ts",
@@ -688684,6 +688747,11 @@
               "batch": "release-0.5-review-preview-deadlines",
               "base_commit": "da098d1244ba0ec10ccdd0b199f87474757fb3fb",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-review-preview-deadlines/proof.json"
+            },
+            {
+              "batch": "release-0.5-onboarding-deadlines-coverage",
+              "base_commit": "acd15602c422662a93c63f477d7e229fd0ce604d",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-onboarding-deadlines-coverage/coverage-and-cancellation-proof.json"
             }
           ]
         }
@@ -688751,7 +688819,8 @@
           "release-0.5-essential-control-contrast",
           "release-0.5-consultation-staff-command-receipts",
           "release-0.5-solar-guidance-ready",
-          "release-0.5-review-preview-deadlines"
+          "release-0.5-review-preview-deadlines",
+          "release-0.5-onboarding-deadlines-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-financial-and-fulfillment-status-journeys",
@@ -688835,7 +688904,7 @@
             },
             {
               "path": "apps/web/e2e/solar-construction-progress.spec.ts",
-              "sha256": "8d0a5e8c053c51fdf9fedf4d798f7b7400e80f3b55f5c56e57fd5b4979220a08"
+              "sha256": "4a95d913b53e07345de8f24a25bdcbfeddd87c90c7653bc28b5e2ed13c5f5b5d"
             },
             {
               "path": "apps/web/e2e/solar-operation-form-fixture.ts",
@@ -689514,6 +689583,11 @@
               "batch": "release-0.5-review-preview-deadlines",
               "base_commit": "da098d1244ba0ec10ccdd0b199f87474757fb3fb",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-review-preview-deadlines/proof.json"
+            },
+            {
+              "batch": "release-0.5-onboarding-deadlines-coverage",
+              "base_commit": "acd15602c422662a93c63f477d7e229fd0ce604d",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-onboarding-deadlines-coverage/coverage-and-cancellation-proof.json"
             }
           ]
         }
@@ -689586,7 +689660,8 @@
           "release-0.5-essential-control-contrast",
           "release-0.5-consultation-staff-command-receipts",
           "release-0.5-solar-guidance-ready",
-          "release-0.5-review-preview-deadlines"
+          "release-0.5-review-preview-deadlines",
+          "release-0.5-onboarding-deadlines-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-financial-and-fulfillment-status-journeys",
@@ -689670,7 +689745,7 @@
             },
             {
               "path": "apps/web/e2e/solar-construction-progress.spec.ts",
-              "sha256": "8d0a5e8c053c51fdf9fedf4d798f7b7400e80f3b55f5c56e57fd5b4979220a08"
+              "sha256": "4a95d913b53e07345de8f24a25bdcbfeddd87c90c7653bc28b5e2ed13c5f5b5d"
             },
             {
               "path": "apps/web/e2e/solar-operation-form-fixture.ts",
@@ -690349,6 +690424,11 @@
               "batch": "release-0.5-review-preview-deadlines",
               "base_commit": "da098d1244ba0ec10ccdd0b199f87474757fb3fb",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-review-preview-deadlines/proof.json"
+            },
+            {
+              "batch": "release-0.5-onboarding-deadlines-coverage",
+              "base_commit": "acd15602c422662a93c63f477d7e229fd0ce604d",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-onboarding-deadlines-coverage/coverage-and-cancellation-proof.json"
             }
           ]
         }
@@ -721240,7 +721320,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "The combined da098d12 gate passed all configured floors with 1,145 distinct Chromium cases across 53 groups and source-bound unit reports. The onboarding batch passed 118 browser cases, 38 unit cases and all 98 bundle limits. The separate login keyboard run passed 24 executions across eight browser, locale and theme combinations. Final candidate coverage and outstanding accessibility gates remain open."
+        "The acd15602 checker passed every coverage floor after collecting 153 current Chromium cases and 723 current web unit cases for 19 changed files, retaining source-bound predecessor evidence for unchanged files. The separate staff browser group had two obsolete solar preview expectations and supplied no coverage. The two corrected tests passed in both Chromium and mobile Safari. All 98 bundle limits and the three cold authentication transfer limits passed. Outstanding accessibility acceptance and final release binding remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -721305,7 +721385,8 @@
           "release-0.5-ownership-transfer-receipt",
           "release-0.5-action-contrast",
           "release-0.5-review-preview-deadlines",
-          "release-0.5-required-input-semantics"
+          "release-0.5-required-input-semantics",
+          "release-0.5-onboarding-deadlines-coverage"
         ]
       }
     },
@@ -784668,6 +784749,54 @@
       ],
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics",
       "release_disposition": "Scoped evidence renewed. Final candidate coverage and outstanding acceptance gates remain open."
+    },
+    "release-0.5-onboarding-deadlines-coverage": {
+      "batch": "release-0.5-onboarding-deadlines-coverage",
+      "base_commit": "acd15602c422662a93c63f477d7e229fd0ce604d",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.05.02.04",
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.02"
+      ],
+      "accepted_task_keys": [],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.05.02.04",
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.02"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/solar-construction-progress.spec.ts",
+          "sha256": "4a95d913b53e07345de8f24a25bdcbfeddd87c90c7653bc28b5e2ed13c5f5b5d"
+        }
+      ],
+      "checks": [
+        "The official changed-code checker passed every floor on acd15602. Source-bound predecessor coverage remains intact for unchanged files, and all 19 changed files use current reports. The initial current candidate failed the critical web branch floor before the existing staff and saving unit suites were included.",
+        "153 distinct current Chromium browser cases and 723 web unit cases contributed measured current coverage. A separate 70-case run recorded 68 passes and two failures caused by an obsolete response expectation. No coverage from that run was included.",
+        "The two corrected solar construction cases passed in Chromium and mobile Safari in both languages. Tests verify the exact request is cancelled, the draft is withdrawn, no stale dialog opens and denied private detail stays hidden. This test correction changed no application source.",
+        "The GitHub fast critical accessibility step passed on acd15602, all 98 bundle limits passed, and all three measured cold authentication routes stayed below 150 KB gzip."
+      ],
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-onboarding-deadlines-coverage/coverage-and-cancellation-proof.json",
+      "source_scope_proof_sha256": "765f695a1a74f38b80895017bc5a50710230f79f1953bf958db2c21dc489b8e3",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-onboarding-deadlines-coverage/reviewed-solar-cancellation.patch",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-onboarding-deadlines-coverage/renewed-bindings.json",
+      "renewed_task_keys": [
+        "02-auth-users-admin.md#T-11.02.01",
+        "02-auth-users-admin.md#T-11.02.02",
+        "07-ui-ux-design.md#T-07.26.01.01",
+        "07-ui-ux-design.md#T-07.26.01.02",
+        "07-ui-ux-design.md#T-07.26.01.03",
+        "07-ui-ux-design.md#T-07.26.01.04",
+        "07-ui-ux-design.md#T-07.27.01.01",
+        "07-ui-ux-design.md#T-07.27.01.02",
+        "07-ui-ux-design.md#T-07.27.01.03",
+        "07-ui-ux-design.md#T-07.27.01.04",
+        "07-ui-ux-design.md#T-07.27.01.05",
+        "07-ui-ux-design.md#T-07.27.01.06",
+        "07-ui-ux-design.md#T-07.27.01.07"
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-onboarding-deadlines-coverage",
+      "release_disposition": "Current combined coverage and cold transfer limits pass. The test correction preserves selection and denial assertions. Milestone acceptance remains open."
     }
   },
   "historical_improvements": [

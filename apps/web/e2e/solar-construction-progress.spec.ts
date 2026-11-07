@@ -323,14 +323,14 @@ for (const locale of ['en', 'fa'] as const) {
     );
     await page.goto(`/admin/solar-construction?requestId=${constructionRequest}`);
     await page.getByLabel(copy('constructionNote'), { exact: true }).fill('Private draft');
-    const reviewed = page.waitForRequest((url) => url.url().endsWith('/review'));
+    const reviewed = page.waitForRequest((request) => request.url().endsWith('/review'));
     await page.getByRole('button', { name: copy('constructionReview'), exact: true }).click();
-    await reviewed;
+    const preview = await reviewed;
+    const cancelled = page.waitForEvent('requestfailed', (request) => request === preview);
     await page.getByRole('button', { name: /702/ }).click();
     await expect(page.getByLabel(copy('constructionNote'), { exact: true })).toHaveValue('');
-    const latePreview = page.waitForResponse((response) => response.url().endsWith('/review'));
+    await cancelled;
     releasePreview();
-    await (await latePreview).finished();
     await expect(page.getByRole('dialog')).toHaveCount(0);
     holdDetail = true;
     const requested = page.waitForRequest(
