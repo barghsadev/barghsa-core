@@ -509,7 +509,6 @@ function ChangeWorkspace(props: Props & { scope: string; currentScope: RefObject
                   )}
                 />
               </div>
-              <ConfirmationFields gate={financialGate} disabled={busy || frozen} />
               {!frozen && (
                 <Link
                   to="/settings/addresses"

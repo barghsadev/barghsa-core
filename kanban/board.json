@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-07T10:02:39+00:00",
-  "source_commit": "530220a18494c614f95a31f2c2c826f6d0f17af9",
+  "updated": "2026-11-07T10:13:46+00:00",
+  "source_commit": "60a3c439724c1024f58f0a1680492a932e70e7aa",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -405050,7 +405050,8 @@
           "release-0.5-route-landmark-census",
           "release-0.5-staff-direct-reads",
           "release-0.5-staff-terms-reads",
-          "release-0.5-route-matrix-reconciliation"
+          "release-0.5-route-matrix-reconciliation",
+          "release-0.5-critical-branch-evidence"
         ],
         "current_acceptance": {
           "kind": "accepted-all-applicable-order-review-wallet-disclosure",
@@ -405194,7 +405195,7 @@
             },
             {
               "path": "apps/web/src/components/SavingOrderChangePanel.tsx",
-              "sha256": "cf4fb8ee218d601b45270c4286ba3b48d8e0e539a045574997afc73706d7ff64"
+              "sha256": "c6a12852b2521c8eff444abdf407112f5d1f04394fa13f248f71461fd3261824"
             },
             {
               "path": "apps/web/src/components/SimpleElectricityReview.tsx",
@@ -405589,7 +405590,8 @@
             "Bindings renewed by release-0.5-route-landmark-census: the detail change is identifier wrapping and bidi isolation only. Existing exact receipt, authority, navigation and draft checks pass with the new populated layout assertions.",
             "Bindings renewed by release-0.5-staff-direct-reads: bounded saving and team reads pass exact browser and unit checks with current ownership, retained drafts and protected commands.",
             "Bindings renewed by release-0.5-staff-terms-reads: Only wizard read transport and fixture assertions changed; exact electricity and solar browser/unit cases retain current ownership, persisted progress, financial confirmation and command safeguards.",
-            "Bindings renewed by release-0.5-route-matrix-reconciliation: exact populated electricity, saving and solar journeys preserve the underlying captured draft, authority, price, receipt and financial confirmation assertions. Only solar fieldset presentation and test observations changed."
+            "Bindings renewed by release-0.5-route-matrix-reconciliation: exact populated electricity, saving and solar journeys preserve the underlying captured draft, authority, price, receipt and financial confirmation assertions. Only solar fieldset presentation and test observations changed.",
+            "Bindings renewed by release-0.5-critical-branch-evidence: one acknowledgment belongs to the reviewed saving quote. Eight native browser and 52 unit cases passed, preserving exact money, retry and access-loss assertions."
           ],
           "criterion_result": "All applicable simple/advanced/saving order, electricity detail/revision/increase/price, saving detail/change/staff, consultation intake/offer/fee and solar intake/contract reviews display current available balance with existing wallet online/bank-receipt funding where an exact reviewed charge exceeds balance. Staff access requires current finance authorization; denied/malformed/stale reads never disclose old data or masquerade as zero. Existing authoritative wallet payment and confirmation/retry behavior retained.",
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/wallet-review-disclosure",
@@ -406315,6 +406317,11 @@
               "batch": "release-0.5-route-matrix-reconciliation",
               "base_commit": "9482df25f6361c4078bb846690f80bd26786cabe",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-matrix-reconciliation/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-critical-branch-evidence",
+              "base_commit": "60a3c439724c1024f58f0a1680492a932e70e7aa",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-branch-evidence/source-binding.json"
             }
           ]
         }
@@ -471206,7 +471213,8 @@
           "release-0.5-ui-coverage-collection",
           "release-0.5-mapped-coverage-gate",
           "release-0.5-critical-coverage-closure",
-          "release-0.5-staff-workspace-read-closure"
+          "release-0.5-staff-workspace-read-closure",
+          "release-0.5-critical-branch-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -471358,7 +471366,7 @@
             },
             {
               "path": "apps/web/src/components/SavingOrderChangePanel.tsx",
-              "sha256": "cf4fb8ee218d601b45270c4286ba3b48d8e0e539a045574997afc73706d7ff64"
+              "sha256": "c6a12852b2521c8eff444abdf407112f5d1f04394fa13f248f71461fd3261824"
             },
             {
               "path": "apps/web/src/components/SavingOrderComments.tsx",
@@ -471812,7 +471820,8 @@
             "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
             "Bindings renewed by release-0.5-mapped-coverage-gate: responsive story fixture and affected theme/notice assertions pass on both engines. No application source changed.",
             "Bindings renewed by release-0.5-critical-coverage-closure: 30 terms/registration and 42 calendar native cases, 35 related units and original bundle budgets pass. Exact public version, consent, read privacy and existing calendar assertions are preserved.",
-            "Bindings renewed by release-0.5-staff-workspace-read-closure: the bounded model and agent reads retain current authority and recover on the exact staff route. 44 distinct native cases and 53 related unit tests passed, including unchanged slot guard assertions."
+            "Bindings renewed by release-0.5-staff-workspace-read-closure: the bounded model and agent reads retain current authority and recover on the exact staff route. 44 distinct native cases and 53 related unit tests passed, including unchanged slot guard assertions.",
+            "Bindings renewed by release-0.5-critical-branch-evidence: one acknowledgment belongs to the reviewed saving quote. Eight native browser and 52 unit cases passed, preserving exact money, retry and access-loss assertions."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-shared-component-closure",
           "limitations": [
@@ -471978,6 +471987,11 @@
               "batch": "release-0.5-staff-workspace-read-closure",
               "base_commit": "530220a18494c614f95a31f2c2c826f6d0f17af9",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-workspace-read-closure/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-critical-branch-evidence",
+              "base_commit": "60a3c439724c1024f58f0a1680492a932e70e7aa",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-branch-evidence/source-binding.json"
             }
           ]
         },
@@ -473989,7 +474003,8 @@
           "release-0.5-staff-finance-read-recovery",
           "release-0.5-critical-coverage-closure",
           "release-0.5-protected-contract-and-finance",
-          "release-0.5-staff-workspace-read-closure"
+          "release-0.5-staff-workspace-read-closure",
+          "release-0.5-critical-branch-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -474185,7 +474200,7 @@
             },
             {
               "path": "apps/web/src/components/SavingOrderChangePanel.tsx",
-              "sha256": "cf4fb8ee218d601b45270c4286ba3b48d8e0e539a045574997afc73706d7ff64"
+              "sha256": "c6a12852b2521c8eff444abdf407112f5d1f04394fa13f248f71461fd3261824"
             },
             {
               "path": "apps/web/src/components/SolarPostalPanel.tsx",
@@ -474501,7 +474516,8 @@
             "Bindings renewed by release-0.5-staff-finance-read-recovery: Only staff maintenance and allocation read transport and related test fixtures changed. Scoped browser and unit evidence retains denial, financial review and protected command assertions.",
             "Bindings renewed by release-0.5-critical-coverage-closure: 30 terms/registration and 42 calendar native cases, 35 related units and original bundle budgets pass. Exact public version, consent, read privacy and existing calendar assertions are preserved.",
             "Bindings renewed by release-0.5-protected-contract-and-finance: protected fixtures retain all financial, privacy and replay assertions; dynamic password focus is verified on both engines, with unchanged initial focus and gates. Related units and original budgets pass.",
-            "Bindings renewed by release-0.5-staff-workspace-read-closure: the bounded model and agent reads retain current authority and recover on the exact staff route. 44 distinct native cases and 53 related unit tests passed, including unchanged slot guard assertions."
+            "Bindings renewed by release-0.5-staff-workspace-read-closure: the bounded model and agent reads retain current authority and recover on the exact staff route. 44 distinct native cases and 53 related unit tests passed, including unchanged slot guard assertions.",
+            "Bindings renewed by release-0.5-critical-branch-evidence: one acknowledgment belongs to the reviewed saving quote. Eight native browser and 52 unit cases passed, preserving exact money, retry and access-loss assertions."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-lists-and-receipts",
           "limitations": [
@@ -474607,6 +474623,11 @@
               "batch": "release-0.5-staff-workspace-read-closure",
               "base_commit": "530220a18494c614f95a31f2c2c826f6d0f17af9",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-workspace-read-closure/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-critical-branch-evidence",
+              "base_commit": "60a3c439724c1024f58f0a1680492a932e70e7aa",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-branch-evidence/source-binding.json"
             }
           ]
         }
@@ -474725,7 +474746,8 @@
           "release-0.5-staff-finance-read-recovery",
           "release-0.5-critical-coverage-closure",
           "release-0.5-protected-contract-and-finance",
-          "release-0.5-staff-workspace-read-closure"
+          "release-0.5-staff-workspace-read-closure",
+          "release-0.5-critical-branch-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -474921,7 +474943,7 @@
             },
             {
               "path": "apps/web/src/components/SavingOrderChangePanel.tsx",
-              "sha256": "cf4fb8ee218d601b45270c4286ba3b48d8e0e539a045574997afc73706d7ff64"
+              "sha256": "c6a12852b2521c8eff444abdf407112f5d1f04394fa13f248f71461fd3261824"
             },
             {
               "path": "apps/web/src/components/SolarPostalPanel.tsx",
@@ -475237,7 +475259,8 @@
             "Bindings renewed by release-0.5-staff-finance-read-recovery: Only staff maintenance and allocation read transport and related test fixtures changed. Scoped browser and unit evidence retains denial, financial review and protected command assertions.",
             "Bindings renewed by release-0.5-critical-coverage-closure: 30 terms/registration and 42 calendar native cases, 35 related units and original bundle budgets pass. Exact public version, consent, read privacy and existing calendar assertions are preserved.",
             "Bindings renewed by release-0.5-protected-contract-and-finance: protected fixtures retain all financial, privacy and replay assertions; dynamic password focus is verified on both engines, with unchanged initial focus and gates. Related units and original budgets pass.",
-            "Bindings renewed by release-0.5-staff-workspace-read-closure: the bounded model and agent reads retain current authority and recover on the exact staff route. 44 distinct native cases and 53 related unit tests passed, including unchanged slot guard assertions."
+            "Bindings renewed by release-0.5-staff-workspace-read-closure: the bounded model and agent reads retain current authority and recover on the exact staff route. 44 distinct native cases and 53 related unit tests passed, including unchanged slot guard assertions.",
+            "Bindings renewed by release-0.5-critical-branch-evidence: one acknowledgment belongs to the reviewed saving quote. Eight native browser and 52 unit cases passed, preserving exact money, retry and access-loss assertions."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-lists-and-receipts",
           "limitations": [
@@ -475343,6 +475366,11 @@
               "batch": "release-0.5-staff-workspace-read-closure",
               "base_commit": "530220a18494c614f95a31f2c2c826f6d0f17af9",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-workspace-read-closure/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-critical-branch-evidence",
+              "base_commit": "60a3c439724c1024f58f0a1680492a932e70e7aa",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-branch-evidence/source-binding.json"
             }
           ]
         }
@@ -475402,7 +475430,8 @@
           "release-0.5-staff-finance-read-recovery",
           "release-0.5-critical-coverage-closure",
           "release-0.5-protected-contract-and-finance",
-          "release-0.5-staff-workspace-read-closure"
+          "release-0.5-staff-workspace-read-closure",
+          "release-0.5-critical-branch-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -475598,7 +475627,7 @@
             },
             {
               "path": "apps/web/src/components/SavingOrderChangePanel.tsx",
-              "sha256": "cf4fb8ee218d601b45270c4286ba3b48d8e0e539a045574997afc73706d7ff64"
+              "sha256": "c6a12852b2521c8eff444abdf407112f5d1f04394fa13f248f71461fd3261824"
             },
             {
               "path": "apps/web/src/components/SolarPostalPanel.tsx",
@@ -475914,7 +475943,8 @@
             "Bindings renewed by release-0.5-staff-finance-read-recovery: Only staff maintenance and allocation read transport and related test fixtures changed. Scoped browser and unit evidence retains denial, financial review and protected command assertions.",
             "Bindings renewed by release-0.5-critical-coverage-closure: 30 terms/registration and 42 calendar native cases, 35 related units and original bundle budgets pass. Exact public version, consent, read privacy and existing calendar assertions are preserved.",
             "Bindings renewed by release-0.5-protected-contract-and-finance: protected fixtures retain all financial, privacy and replay assertions; dynamic password focus is verified on both engines, with unchanged initial focus and gates. Related units and original budgets pass.",
-            "Bindings renewed by release-0.5-staff-workspace-read-closure: the bounded model and agent reads retain current authority and recover on the exact staff route. 44 distinct native cases and 53 related unit tests passed, including unchanged slot guard assertions."
+            "Bindings renewed by release-0.5-staff-workspace-read-closure: the bounded model and agent reads retain current authority and recover on the exact staff route. 44 distinct native cases and 53 related unit tests passed, including unchanged slot guard assertions.",
+            "Bindings renewed by release-0.5-critical-branch-evidence: one acknowledgment belongs to the reviewed saving quote. Eight native browser and 52 unit cases passed, preserving exact money, retry and access-loss assertions."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-lists-and-receipts",
           "limitations": [
@@ -476020,6 +476050,11 @@
               "batch": "release-0.5-staff-workspace-read-closure",
               "base_commit": "530220a18494c614f95a31f2c2c826f6d0f17af9",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-workspace-read-closure/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-critical-branch-evidence",
+              "base_commit": "60a3c439724c1024f58f0a1680492a932e70e7aa",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-branch-evidence/source-binding.json"
             }
           ]
         }
@@ -516022,7 +516057,8 @@
           "release-0.5-staff-finance-read-recovery",
           "release-0.5-critical-journey-evidence",
           "release-0.5-protected-contract-and-finance",
-          "release-0.5-staff-workspace-read-closure"
+          "release-0.5-staff-workspace-read-closure",
+          "release-0.5-critical-branch-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -516254,7 +516290,7 @@
             },
             {
               "path": "apps/web/src/components/SavingOrderChangePanel.tsx",
-              "sha256": "cf4fb8ee218d601b45270c4286ba3b48d8e0e539a045574997afc73706d7ff64"
+              "sha256": "c6a12852b2521c8eff444abdf407112f5d1f04394fa13f248f71461fd3261824"
             },
             {
               "path": "apps/web/src/components/SavingStaffOperationForm.tsx",
@@ -517429,7 +517465,8 @@
             "Bindings renewed by release-0.5-staff-finance-read-recovery: Only staff maintenance and allocation read transport and related test fixtures changed. Scoped browser and unit evidence retains denial, financial review and protected command assertions.",
             "Bindings renewed by release-0.5-critical-journey-evidence: narrow calendar sizing only; 58 native calendar/localization cases, 12 coarse-input measurements, the original bundle budgets and exact financial/date values are preserved.",
             "Bindings renewed by release-0.5-protected-contract-and-finance: protected fixtures retain all financial, privacy and replay assertions; dynamic password focus is verified on both engines, with unchanged initial focus and gates. Related units and original budgets pass.",
-            "Bindings renewed by release-0.5-staff-workspace-read-closure: the bounded model and agent reads retain current authority and recover on the exact staff route. 44 distinct native cases and 53 related unit tests passed, including unchanged slot guard assertions."
+            "Bindings renewed by release-0.5-staff-workspace-read-closure: the bounded model and agent reads retain current authority and recover on the exact staff route. 44 distinct native cases and 53 related unit tests passed, including unchanged slot guard assertions.",
+            "Bindings renewed by release-0.5-critical-branch-evidence: one acknowledgment belongs to the reviewed saving quote. Eight native browser and 52 unit cases passed, preserving exact money, retry and access-loss assertions."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -517565,6 +517602,11 @@
               "batch": "release-0.5-staff-workspace-read-closure",
               "base_commit": "530220a18494c614f95a31f2c2c826f6d0f17af9",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-workspace-read-closure/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-critical-branch-evidence",
+              "base_commit": "60a3c439724c1024f58f0a1680492a932e70e7aa",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-branch-evidence/source-binding.json"
             }
           ]
         },
@@ -517685,7 +517727,8 @@
           "release-0.5-staff-finance-read-recovery",
           "release-0.5-critical-journey-evidence",
           "release-0.5-protected-contract-and-finance",
-          "release-0.5-staff-workspace-read-closure"
+          "release-0.5-staff-workspace-read-closure",
+          "release-0.5-critical-branch-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -517917,7 +517960,7 @@
             },
             {
               "path": "apps/web/src/components/SavingOrderChangePanel.tsx",
-              "sha256": "cf4fb8ee218d601b45270c4286ba3b48d8e0e539a045574997afc73706d7ff64"
+              "sha256": "c6a12852b2521c8eff444abdf407112f5d1f04394fa13f248f71461fd3261824"
             },
             {
               "path": "apps/web/src/components/SavingStaffOperationForm.tsx",
@@ -519092,7 +519135,8 @@
             "Bindings renewed by release-0.5-staff-finance-read-recovery: Only staff maintenance and allocation read transport and related test fixtures changed. Scoped browser and unit evidence retains denial, financial review and protected command assertions.",
             "Bindings renewed by release-0.5-critical-journey-evidence: narrow calendar sizing only; 58 native calendar/localization cases, 12 coarse-input measurements, the original bundle budgets and exact financial/date values are preserved.",
             "Bindings renewed by release-0.5-protected-contract-and-finance: protected fixtures retain all financial, privacy and replay assertions; dynamic password focus is verified on both engines, with unchanged initial focus and gates. Related units and original budgets pass.",
-            "Bindings renewed by release-0.5-staff-workspace-read-closure: the bounded model and agent reads retain current authority and recover on the exact staff route. 44 distinct native cases and 53 related unit tests passed, including unchanged slot guard assertions."
+            "Bindings renewed by release-0.5-staff-workspace-read-closure: the bounded model and agent reads retain current authority and recover on the exact staff route. 44 distinct native cases and 53 related unit tests passed, including unchanged slot guard assertions.",
+            "Bindings renewed by release-0.5-critical-branch-evidence: one acknowledgment belongs to the reviewed saving quote. Eight native browser and 52 unit cases passed, preserving exact money, retry and access-loss assertions."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -519228,6 +519272,11 @@
               "batch": "release-0.5-staff-workspace-read-closure",
               "base_commit": "530220a18494c614f95a31f2c2c826f6d0f17af9",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-workspace-read-closure/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-critical-branch-evidence",
+              "base_commit": "60a3c439724c1024f58f0a1680492a932e70e7aa",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-branch-evidence/source-binding.json"
             }
           ]
         },
@@ -519349,7 +519398,8 @@
           "release-0.5-staff-finance-read-recovery",
           "release-0.5-critical-journey-evidence",
           "release-0.5-protected-contract-and-finance",
-          "release-0.5-staff-workspace-read-closure"
+          "release-0.5-staff-workspace-read-closure",
+          "release-0.5-critical-branch-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -519581,7 +519631,7 @@
             },
             {
               "path": "apps/web/src/components/SavingOrderChangePanel.tsx",
-              "sha256": "cf4fb8ee218d601b45270c4286ba3b48d8e0e539a045574997afc73706d7ff64"
+              "sha256": "c6a12852b2521c8eff444abdf407112f5d1f04394fa13f248f71461fd3261824"
             },
             {
               "path": "apps/web/src/components/SavingStaffOperationForm.tsx",
@@ -520756,7 +520806,8 @@
             "Bindings renewed by release-0.5-staff-finance-read-recovery: Only staff maintenance and allocation read transport and related test fixtures changed. Scoped browser and unit evidence retains denial, financial review and protected command assertions.",
             "Bindings renewed by release-0.5-critical-journey-evidence: narrow calendar sizing only; 58 native calendar/localization cases, 12 coarse-input measurements, the original bundle budgets and exact financial/date values are preserved.",
             "Bindings renewed by release-0.5-protected-contract-and-finance: protected fixtures retain all financial, privacy and replay assertions; dynamic password focus is verified on both engines, with unchanged initial focus and gates. Related units and original budgets pass.",
-            "Bindings renewed by release-0.5-staff-workspace-read-closure: the bounded model and agent reads retain current authority and recover on the exact staff route. 44 distinct native cases and 53 related unit tests passed, including unchanged slot guard assertions."
+            "Bindings renewed by release-0.5-staff-workspace-read-closure: the bounded model and agent reads retain current authority and recover on the exact staff route. 44 distinct native cases and 53 related unit tests passed, including unchanged slot guard assertions.",
+            "Bindings renewed by release-0.5-critical-branch-evidence: one acknowledgment belongs to the reviewed saving quote. Eight native browser and 52 unit cases passed, preserving exact money, retry and access-loss assertions."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -520892,6 +520943,11 @@
               "batch": "release-0.5-staff-workspace-read-closure",
               "base_commit": "530220a18494c614f95a31f2c2c826f6d0f17af9",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-workspace-read-closure/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-critical-branch-evidence",
+              "base_commit": "60a3c439724c1024f58f0a1680492a932e70e7aa",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-branch-evidence/source-binding.json"
             }
           ]
         },
@@ -520982,7 +521038,8 @@
           "release-0.5-staff-finance-read-recovery",
           "release-0.5-critical-journey-evidence",
           "release-0.5-protected-contract-and-finance",
-          "release-0.5-staff-workspace-read-closure"
+          "release-0.5-staff-workspace-read-closure",
+          "release-0.5-critical-branch-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -521214,7 +521271,7 @@
             },
             {
               "path": "apps/web/src/components/SavingOrderChangePanel.tsx",
-              "sha256": "cf4fb8ee218d601b45270c4286ba3b48d8e0e539a045574997afc73706d7ff64"
+              "sha256": "c6a12852b2521c8eff444abdf407112f5d1f04394fa13f248f71461fd3261824"
             },
             {
               "path": "apps/web/src/components/SavingStaffOperationForm.tsx",
@@ -522389,7 +522446,8 @@
             "Bindings renewed by release-0.5-staff-finance-read-recovery: Only staff maintenance and allocation read transport and related test fixtures changed. Scoped browser and unit evidence retains denial, financial review and protected command assertions.",
             "Bindings renewed by release-0.5-critical-journey-evidence: narrow calendar sizing only; 58 native calendar/localization cases, 12 coarse-input measurements, the original bundle budgets and exact financial/date values are preserved.",
             "Bindings renewed by release-0.5-protected-contract-and-finance: protected fixtures retain all financial, privacy and replay assertions; dynamic password focus is verified on both engines, with unchanged initial focus and gates. Related units and original budgets pass.",
-            "Bindings renewed by release-0.5-staff-workspace-read-closure: the bounded model and agent reads retain current authority and recover on the exact staff route. 44 distinct native cases and 53 related unit tests passed, including unchanged slot guard assertions."
+            "Bindings renewed by release-0.5-staff-workspace-read-closure: the bounded model and agent reads retain current authority and recover on the exact staff route. 44 distinct native cases and 53 related unit tests passed, including unchanged slot guard assertions.",
+            "Bindings renewed by release-0.5-critical-branch-evidence: one acknowledgment belongs to the reviewed saving quote. Eight native browser and 52 unit cases passed, preserving exact money, retry and access-loss assertions."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -522525,6 +522583,11 @@
               "batch": "release-0.5-staff-workspace-read-closure",
               "base_commit": "530220a18494c614f95a31f2c2c826f6d0f17af9",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-workspace-read-closure/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-critical-branch-evidence",
+              "base_commit": "60a3c439724c1024f58f0a1680492a932e70e7aa",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-branch-evidence/source-binding.json"
             }
           ]
         },
@@ -522641,7 +522704,8 @@
           "release-0.5-staff-finance-read-recovery",
           "release-0.5-critical-journey-evidence",
           "release-0.5-protected-contract-and-finance",
-          "release-0.5-staff-workspace-read-closure"
+          "release-0.5-staff-workspace-read-closure",
+          "release-0.5-critical-branch-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -522873,7 +522937,7 @@
             },
             {
               "path": "apps/web/src/components/SavingOrderChangePanel.tsx",
-              "sha256": "cf4fb8ee218d601b45270c4286ba3b48d8e0e539a045574997afc73706d7ff64"
+              "sha256": "c6a12852b2521c8eff444abdf407112f5d1f04394fa13f248f71461fd3261824"
             },
             {
               "path": "apps/web/src/components/SavingStaffOperationForm.tsx",
@@ -524048,7 +524112,8 @@
             "Bindings renewed by release-0.5-staff-finance-read-recovery: Only staff maintenance and allocation read transport and related test fixtures changed. Scoped browser and unit evidence retains denial, financial review and protected command assertions.",
             "Bindings renewed by release-0.5-critical-journey-evidence: narrow calendar sizing only; 58 native calendar/localization cases, 12 coarse-input measurements, the original bundle budgets and exact financial/date values are preserved.",
             "Bindings renewed by release-0.5-protected-contract-and-finance: protected fixtures retain all financial, privacy and replay assertions; dynamic password focus is verified on both engines, with unchanged initial focus and gates. Related units and original budgets pass.",
-            "Bindings renewed by release-0.5-staff-workspace-read-closure: the bounded model and agent reads retain current authority and recover on the exact staff route. 44 distinct native cases and 53 related unit tests passed, including unchanged slot guard assertions."
+            "Bindings renewed by release-0.5-staff-workspace-read-closure: the bounded model and agent reads retain current authority and recover on the exact staff route. 44 distinct native cases and 53 related unit tests passed, including unchanged slot guard assertions.",
+            "Bindings renewed by release-0.5-critical-branch-evidence: one acknowledgment belongs to the reviewed saving quote. Eight native browser and 52 unit cases passed, preserving exact money, retry and access-loss assertions."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -524184,6 +524249,11 @@
               "batch": "release-0.5-staff-workspace-read-closure",
               "base_commit": "530220a18494c614f95a31f2c2c826f6d0f17af9",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-workspace-read-closure/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-critical-branch-evidence",
+              "base_commit": "60a3c439724c1024f58f0a1680492a932e70e7aa",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-branch-evidence/source-binding.json"
             }
           ]
         },
@@ -524309,7 +524379,8 @@
           "release-0.5-staff-finance-read-recovery",
           "release-0.5-critical-journey-evidence",
           "release-0.5-protected-contract-and-finance",
-          "release-0.5-staff-workspace-read-closure"
+          "release-0.5-staff-workspace-read-closure",
+          "release-0.5-critical-branch-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -524541,7 +524612,7 @@
             },
             {
               "path": "apps/web/src/components/SavingOrderChangePanel.tsx",
-              "sha256": "cf4fb8ee218d601b45270c4286ba3b48d8e0e539a045574997afc73706d7ff64"
+              "sha256": "c6a12852b2521c8eff444abdf407112f5d1f04394fa13f248f71461fd3261824"
             },
             {
               "path": "apps/web/src/components/SavingStaffOperationForm.tsx",
@@ -525716,7 +525787,8 @@
             "Bindings renewed by release-0.5-staff-finance-read-recovery: Only staff maintenance and allocation read transport and related test fixtures changed. Scoped browser and unit evidence retains denial, financial review and protected command assertions.",
             "Bindings renewed by release-0.5-critical-journey-evidence: narrow calendar sizing only; 58 native calendar/localization cases, 12 coarse-input measurements, the original bundle budgets and exact financial/date values are preserved.",
             "Bindings renewed by release-0.5-protected-contract-and-finance: protected fixtures retain all financial, privacy and replay assertions; dynamic password focus is verified on both engines, with unchanged initial focus and gates. Related units and original budgets pass.",
-            "Bindings renewed by release-0.5-staff-workspace-read-closure: the bounded model and agent reads retain current authority and recover on the exact staff route. 44 distinct native cases and 53 related unit tests passed, including unchanged slot guard assertions."
+            "Bindings renewed by release-0.5-staff-workspace-read-closure: the bounded model and agent reads retain current authority and recover on the exact staff route. 44 distinct native cases and 53 related unit tests passed, including unchanged slot guard assertions.",
+            "Bindings renewed by release-0.5-critical-branch-evidence: one acknowledgment belongs to the reviewed saving quote. Eight native browser and 52 unit cases passed, preserving exact money, retry and access-loss assertions."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -525852,6 +525924,11 @@
               "batch": "release-0.5-staff-workspace-read-closure",
               "base_commit": "530220a18494c614f95a31f2c2c826f6d0f17af9",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-workspace-read-closure/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-critical-branch-evidence",
+              "base_commit": "60a3c439724c1024f58f0a1680492a932e70e7aa",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-branch-evidence/source-binding.json"
             }
           ]
         },
@@ -525950,7 +526027,8 @@
           "release-0.5-staff-finance-read-recovery",
           "release-0.5-critical-journey-evidence",
           "release-0.5-protected-contract-and-finance",
-          "release-0.5-staff-workspace-read-closure"
+          "release-0.5-staff-workspace-read-closure",
+          "release-0.5-critical-branch-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -526182,7 +526260,7 @@
             },
             {
               "path": "apps/web/src/components/SavingOrderChangePanel.tsx",
-              "sha256": "cf4fb8ee218d601b45270c4286ba3b48d8e0e539a045574997afc73706d7ff64"
+              "sha256": "c6a12852b2521c8eff444abdf407112f5d1f04394fa13f248f71461fd3261824"
             },
             {
               "path": "apps/web/src/components/SavingStaffOperationForm.tsx",
@@ -527357,7 +527435,8 @@
             "Bindings renewed by release-0.5-staff-finance-read-recovery: Only staff maintenance and allocation read transport and related test fixtures changed. Scoped browser and unit evidence retains denial, financial review and protected command assertions.",
             "Bindings renewed by release-0.5-critical-journey-evidence: narrow calendar sizing only; 58 native calendar/localization cases, 12 coarse-input measurements, the original bundle budgets and exact financial/date values are preserved.",
             "Bindings renewed by release-0.5-protected-contract-and-finance: protected fixtures retain all financial, privacy and replay assertions; dynamic password focus is verified on both engines, with unchanged initial focus and gates. Related units and original budgets pass.",
-            "Bindings renewed by release-0.5-staff-workspace-read-closure: the bounded model and agent reads retain current authority and recover on the exact staff route. 44 distinct native cases and 53 related unit tests passed, including unchanged slot guard assertions."
+            "Bindings renewed by release-0.5-staff-workspace-read-closure: the bounded model and agent reads retain current authority and recover on the exact staff route. 44 distinct native cases and 53 related unit tests passed, including unchanged slot guard assertions.",
+            "Bindings renewed by release-0.5-critical-branch-evidence: one acknowledgment belongs to the reviewed saving quote. Eight native browser and 52 unit cases passed, preserving exact money, retry and access-loss assertions."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -527493,6 +527572,11 @@
               "batch": "release-0.5-staff-workspace-read-closure",
               "base_commit": "530220a18494c614f95a31f2c2c826f6d0f17af9",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-workspace-read-closure/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-critical-branch-evidence",
+              "base_commit": "60a3c439724c1024f58f0a1680492a932e70e7aa",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-branch-evidence/source-binding.json"
             }
           ]
         },
@@ -527555,7 +527639,8 @@
           "release-0.5-staff-finance-read-recovery",
           "release-0.5-critical-journey-evidence",
           "release-0.5-protected-contract-and-finance",
-          "release-0.5-staff-workspace-read-closure"
+          "release-0.5-staff-workspace-read-closure",
+          "release-0.5-critical-branch-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -527787,7 +527872,7 @@
             },
             {
               "path": "apps/web/src/components/SavingOrderChangePanel.tsx",
-              "sha256": "cf4fb8ee218d601b45270c4286ba3b48d8e0e539a045574997afc73706d7ff64"
+              "sha256": "c6a12852b2521c8eff444abdf407112f5d1f04394fa13f248f71461fd3261824"
             },
             {
               "path": "apps/web/src/components/SavingStaffOperationForm.tsx",
@@ -528962,7 +529047,8 @@
             "Bindings renewed by release-0.5-staff-finance-read-recovery: Only staff maintenance and allocation read transport and related test fixtures changed. Scoped browser and unit evidence retains denial, financial review and protected command assertions.",
             "Bindings renewed by release-0.5-critical-journey-evidence: narrow calendar sizing only; 58 native calendar/localization cases, 12 coarse-input measurements, the original bundle budgets and exact financial/date values are preserved.",
             "Bindings renewed by release-0.5-protected-contract-and-finance: protected fixtures retain all financial, privacy and replay assertions; dynamic password focus is verified on both engines, with unchanged initial focus and gates. Related units and original budgets pass.",
-            "Bindings renewed by release-0.5-staff-workspace-read-closure: the bounded model and agent reads retain current authority and recover on the exact staff route. 44 distinct native cases and 53 related unit tests passed, including unchanged slot guard assertions."
+            "Bindings renewed by release-0.5-staff-workspace-read-closure: the bounded model and agent reads retain current authority and recover on the exact staff route. 44 distinct native cases and 53 related unit tests passed, including unchanged slot guard assertions.",
+            "Bindings renewed by release-0.5-critical-branch-evidence: one acknowledgment belongs to the reviewed saving quote. Eight native browser and 52 unit cases passed, preserving exact money, retry and access-loss assertions."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -529098,6 +529184,11 @@
               "batch": "release-0.5-staff-workspace-read-closure",
               "base_commit": "530220a18494c614f95a31f2c2c826f6d0f17af9",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-workspace-read-closure/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-critical-branch-evidence",
+              "base_commit": "60a3c439724c1024f58f0a1680492a932e70e7aa",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-branch-evidence/source-binding.json"
             }
           ]
         },
@@ -529160,7 +529251,8 @@
           "release-0.5-staff-finance-read-recovery",
           "release-0.5-critical-journey-evidence",
           "release-0.5-protected-contract-and-finance",
-          "release-0.5-staff-workspace-read-closure"
+          "release-0.5-staff-workspace-read-closure",
+          "release-0.5-critical-branch-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -529392,7 +529484,7 @@
             },
             {
               "path": "apps/web/src/components/SavingOrderChangePanel.tsx",
-              "sha256": "cf4fb8ee218d601b45270c4286ba3b48d8e0e539a045574997afc73706d7ff64"
+              "sha256": "c6a12852b2521c8eff444abdf407112f5d1f04394fa13f248f71461fd3261824"
             },
             {
               "path": "apps/web/src/components/SavingStaffOperationForm.tsx",
@@ -530567,7 +530659,8 @@
             "Bindings renewed by release-0.5-staff-finance-read-recovery: Only staff maintenance and allocation read transport and related test fixtures changed. Scoped browser and unit evidence retains denial, financial review and protected command assertions.",
             "Bindings renewed by release-0.5-critical-journey-evidence: narrow calendar sizing only; 58 native calendar/localization cases, 12 coarse-input measurements, the original bundle budgets and exact financial/date values are preserved.",
             "Bindings renewed by release-0.5-protected-contract-and-finance: protected fixtures retain all financial, privacy and replay assertions; dynamic password focus is verified on both engines, with unchanged initial focus and gates. Related units and original budgets pass.",
-            "Bindings renewed by release-0.5-staff-workspace-read-closure: the bounded model and agent reads retain current authority and recover on the exact staff route. 44 distinct native cases and 53 related unit tests passed, including unchanged slot guard assertions."
+            "Bindings renewed by release-0.5-staff-workspace-read-closure: the bounded model and agent reads retain current authority and recover on the exact staff route. 44 distinct native cases and 53 related unit tests passed, including unchanged slot guard assertions.",
+            "Bindings renewed by release-0.5-critical-branch-evidence: one acknowledgment belongs to the reviewed saving quote. Eight native browser and 52 unit cases passed, preserving exact money, retry and access-loss assertions."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -530703,6 +530796,11 @@
               "batch": "release-0.5-staff-workspace-read-closure",
               "base_commit": "530220a18494c614f95a31f2c2c826f6d0f17af9",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-workspace-read-closure/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-critical-branch-evidence",
+              "base_commit": "60a3c439724c1024f58f0a1680492a932e70e7aa",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-branch-evidence/source-binding.json"
             }
           ]
         },
@@ -530766,7 +530864,8 @@
           "release-0.5-staff-finance-read-recovery",
           "release-0.5-critical-journey-evidence",
           "release-0.5-protected-contract-and-finance",
-          "release-0.5-staff-workspace-read-closure"
+          "release-0.5-staff-workspace-read-closure",
+          "release-0.5-critical-branch-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -530998,7 +531097,7 @@
             },
             {
               "path": "apps/web/src/components/SavingOrderChangePanel.tsx",
-              "sha256": "cf4fb8ee218d601b45270c4286ba3b48d8e0e539a045574997afc73706d7ff64"
+              "sha256": "c6a12852b2521c8eff444abdf407112f5d1f04394fa13f248f71461fd3261824"
             },
             {
               "path": "apps/web/src/components/SavingStaffOperationForm.tsx",
@@ -532173,7 +532272,8 @@
             "Bindings renewed by release-0.5-staff-finance-read-recovery: Only staff maintenance and allocation read transport and related test fixtures changed. Scoped browser and unit evidence retains denial, financial review and protected command assertions.",
             "Bindings renewed by release-0.5-critical-journey-evidence: narrow calendar sizing only; 58 native calendar/localization cases, 12 coarse-input measurements, the original bundle budgets and exact financial/date values are preserved.",
             "Bindings renewed by release-0.5-protected-contract-and-finance: protected fixtures retain all financial, privacy and replay assertions; dynamic password focus is verified on both engines, with unchanged initial focus and gates. Related units and original budgets pass.",
-            "Bindings renewed by release-0.5-staff-workspace-read-closure: the bounded model and agent reads retain current authority and recover on the exact staff route. 44 distinct native cases and 53 related unit tests passed, including unchanged slot guard assertions."
+            "Bindings renewed by release-0.5-staff-workspace-read-closure: the bounded model and agent reads retain current authority and recover on the exact staff route. 44 distinct native cases and 53 related unit tests passed, including unchanged slot guard assertions.",
+            "Bindings renewed by release-0.5-critical-branch-evidence: one acknowledgment belongs to the reviewed saving quote. Eight native browser and 52 unit cases passed, preserving exact money, retry and access-loss assertions."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -532309,6 +532409,11 @@
               "batch": "release-0.5-staff-workspace-read-closure",
               "base_commit": "530220a18494c614f95a31f2c2c826f6d0f17af9",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-workspace-read-closure/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-critical-branch-evidence",
+              "base_commit": "60a3c439724c1024f58f0a1680492a932e70e7aa",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-branch-evidence/source-binding.json"
             }
           ]
         },
@@ -532371,7 +532476,8 @@
           "release-0.5-staff-finance-read-recovery",
           "release-0.5-critical-journey-evidence",
           "release-0.5-protected-contract-and-finance",
-          "release-0.5-staff-workspace-read-closure"
+          "release-0.5-staff-workspace-read-closure",
+          "release-0.5-critical-branch-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -532603,7 +532709,7 @@
             },
             {
               "path": "apps/web/src/components/SavingOrderChangePanel.tsx",
-              "sha256": "cf4fb8ee218d601b45270c4286ba3b48d8e0e539a045574997afc73706d7ff64"
+              "sha256": "c6a12852b2521c8eff444abdf407112f5d1f04394fa13f248f71461fd3261824"
             },
             {
               "path": "apps/web/src/components/SavingStaffOperationForm.tsx",
@@ -533778,7 +533884,8 @@
             "Bindings renewed by release-0.5-staff-finance-read-recovery: Only staff maintenance and allocation read transport and related test fixtures changed. Scoped browser and unit evidence retains denial, financial review and protected command assertions.",
             "Bindings renewed by release-0.5-critical-journey-evidence: narrow calendar sizing only; 58 native calendar/localization cases, 12 coarse-input measurements, the original bundle budgets and exact financial/date values are preserved.",
             "Bindings renewed by release-0.5-protected-contract-and-finance: protected fixtures retain all financial, privacy and replay assertions; dynamic password focus is verified on both engines, with unchanged initial focus and gates. Related units and original budgets pass.",
-            "Bindings renewed by release-0.5-staff-workspace-read-closure: the bounded model and agent reads retain current authority and recover on the exact staff route. 44 distinct native cases and 53 related unit tests passed, including unchanged slot guard assertions."
+            "Bindings renewed by release-0.5-staff-workspace-read-closure: the bounded model and agent reads retain current authority and recover on the exact staff route. 44 distinct native cases and 53 related unit tests passed, including unchanged slot guard assertions.",
+            "Bindings renewed by release-0.5-critical-branch-evidence: one acknowledgment belongs to the reviewed saving quote. Eight native browser and 52 unit cases passed, preserving exact money, retry and access-loss assertions."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -533914,6 +534021,11 @@
               "batch": "release-0.5-staff-workspace-read-closure",
               "base_commit": "530220a18494c614f95a31f2c2c826f6d0f17af9",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-workspace-read-closure/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-critical-branch-evidence",
+              "base_commit": "60a3c439724c1024f58f0a1680492a932e70e7aa",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-branch-evidence/source-binding.json"
             }
           ]
         },
@@ -537326,7 +537438,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Profile closure request, export and staff closure now announce uncertain results once and confirm only validated current receipts. Audit any remaining direct command owners for missing safe status/error feedback; preserve captured command replay and current authority."
+        "The verification and OTP settings browser tests exposed two success toasts for one validated OTP settings save, from SettingsFormSection and CommandFeedback. Retain persistent owned feedback and a single scoped toast; complete remaining command feedback audits."
       ],
       "owner": null,
       "depends_on": [],
@@ -537338,7 +537450,8 @@
           "release-0.5-query-and-command-completion",
           "release-0.5-staff-lists-and-receipts",
           "release-0.5-form-conditions-and-command-feedback",
-          "release-0.5-profile-lifecycle-feedback"
+          "release-0.5-profile-lifecycle-feedback",
+          "release-0.5-critical-branch-evidence"
         ],
         "current_acceptance": null
       }
@@ -560076,7 +560189,8 @@
           "release-0.5-staff-finance-read-recovery",
           "release-0.5-critical-journey-evidence",
           "release-0.5-protected-contract-and-finance",
-          "release-0.5-staff-workspace-read-closure"
+          "release-0.5-staff-workspace-read-closure",
+          "release-0.5-critical-branch-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -560308,7 +560422,7 @@
             },
             {
               "path": "apps/web/src/components/SavingOrderChangePanel.tsx",
-              "sha256": "cf4fb8ee218d601b45270c4286ba3b48d8e0e539a045574997afc73706d7ff64"
+              "sha256": "c6a12852b2521c8eff444abdf407112f5d1f04394fa13f248f71461fd3261824"
             },
             {
               "path": "apps/web/src/components/SavingStaffOperationForm.tsx",
@@ -561483,7 +561597,8 @@
             "Bindings renewed by release-0.5-staff-finance-read-recovery: Only staff maintenance and allocation read transport and related test fixtures changed. Scoped browser and unit evidence retains denial, financial review and protected command assertions.",
             "Bindings renewed by release-0.5-critical-journey-evidence: narrow calendar sizing only; 58 native calendar/localization cases, 12 coarse-input measurements, the original bundle budgets and exact financial/date values are preserved.",
             "Bindings renewed by release-0.5-protected-contract-and-finance: protected fixtures retain all financial, privacy and replay assertions; dynamic password focus is verified on both engines, with unchanged initial focus and gates. Related units and original budgets pass.",
-            "Bindings renewed by release-0.5-staff-workspace-read-closure: the bounded model and agent reads retain current authority and recover on the exact staff route. 44 distinct native cases and 53 related unit tests passed, including unchanged slot guard assertions."
+            "Bindings renewed by release-0.5-staff-workspace-read-closure: the bounded model and agent reads retain current authority and recover on the exact staff route. 44 distinct native cases and 53 related unit tests passed, including unchanged slot guard assertions.",
+            "Bindings renewed by release-0.5-critical-branch-evidence: one acknowledgment belongs to the reviewed saving quote. Eight native browser and 52 unit cases passed, preserving exact money, retry and access-loss assertions."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -561619,6 +561734,11 @@
               "batch": "release-0.5-staff-workspace-read-closure",
               "base_commit": "530220a18494c614f95a31f2c2c826f6d0f17af9",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-workspace-read-closure/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-critical-branch-evidence",
+              "base_commit": "60a3c439724c1024f58f0a1680492a932e70e7aa",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-branch-evidence/source-binding.json"
             }
           ]
         },
@@ -561677,7 +561797,8 @@
           "release-0.5-staff-finance-read-recovery",
           "release-0.5-critical-journey-evidence",
           "release-0.5-protected-contract-and-finance",
-          "release-0.5-staff-workspace-read-closure"
+          "release-0.5-staff-workspace-read-closure",
+          "release-0.5-critical-branch-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -561909,7 +562030,7 @@
             },
             {
               "path": "apps/web/src/components/SavingOrderChangePanel.tsx",
-              "sha256": "cf4fb8ee218d601b45270c4286ba3b48d8e0e539a045574997afc73706d7ff64"
+              "sha256": "c6a12852b2521c8eff444abdf407112f5d1f04394fa13f248f71461fd3261824"
             },
             {
               "path": "apps/web/src/components/SavingStaffOperationForm.tsx",
@@ -563084,7 +563205,8 @@
             "Bindings renewed by release-0.5-staff-finance-read-recovery: Only staff maintenance and allocation read transport and related test fixtures changed. Scoped browser and unit evidence retains denial, financial review and protected command assertions.",
             "Bindings renewed by release-0.5-critical-journey-evidence: narrow calendar sizing only; 58 native calendar/localization cases, 12 coarse-input measurements, the original bundle budgets and exact financial/date values are preserved.",
             "Bindings renewed by release-0.5-protected-contract-and-finance: protected fixtures retain all financial, privacy and replay assertions; dynamic password focus is verified on both engines, with unchanged initial focus and gates. Related units and original budgets pass.",
-            "Bindings renewed by release-0.5-staff-workspace-read-closure: the bounded model and agent reads retain current authority and recover on the exact staff route. 44 distinct native cases and 53 related unit tests passed, including unchanged slot guard assertions."
+            "Bindings renewed by release-0.5-staff-workspace-read-closure: the bounded model and agent reads retain current authority and recover on the exact staff route. 44 distinct native cases and 53 related unit tests passed, including unchanged slot guard assertions.",
+            "Bindings renewed by release-0.5-critical-branch-evidence: one acknowledgment belongs to the reviewed saving quote. Eight native browser and 52 unit cases passed, preserving exact money, retry and access-loss assertions."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -563220,6 +563342,11 @@
               "batch": "release-0.5-staff-workspace-read-closure",
               "base_commit": "530220a18494c614f95a31f2c2c826f6d0f17af9",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-workspace-read-closure/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-critical-branch-evidence",
+              "base_commit": "60a3c439724c1024f58f0a1680492a932e70e7aa",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-branch-evidence/source-binding.json"
             }
           ]
         },
@@ -563278,7 +563405,8 @@
           "release-0.5-staff-finance-read-recovery",
           "release-0.5-critical-journey-evidence",
           "release-0.5-protected-contract-and-finance",
-          "release-0.5-staff-workspace-read-closure"
+          "release-0.5-staff-workspace-read-closure",
+          "release-0.5-critical-branch-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -563510,7 +563638,7 @@
             },
             {
               "path": "apps/web/src/components/SavingOrderChangePanel.tsx",
-              "sha256": "cf4fb8ee218d601b45270c4286ba3b48d8e0e539a045574997afc73706d7ff64"
+              "sha256": "c6a12852b2521c8eff444abdf407112f5d1f04394fa13f248f71461fd3261824"
             },
             {
               "path": "apps/web/src/components/SavingStaffOperationForm.tsx",
@@ -564685,7 +564813,8 @@
             "Bindings renewed by release-0.5-staff-finance-read-recovery: Only staff maintenance and allocation read transport and related test fixtures changed. Scoped browser and unit evidence retains denial, financial review and protected command assertions.",
             "Bindings renewed by release-0.5-critical-journey-evidence: narrow calendar sizing only; 58 native calendar/localization cases, 12 coarse-input measurements, the original bundle budgets and exact financial/date values are preserved.",
             "Bindings renewed by release-0.5-protected-contract-and-finance: protected fixtures retain all financial, privacy and replay assertions; dynamic password focus is verified on both engines, with unchanged initial focus and gates. Related units and original budgets pass.",
-            "Bindings renewed by release-0.5-staff-workspace-read-closure: the bounded model and agent reads retain current authority and recover on the exact staff route. 44 distinct native cases and 53 related unit tests passed, including unchanged slot guard assertions."
+            "Bindings renewed by release-0.5-staff-workspace-read-closure: the bounded model and agent reads retain current authority and recover on the exact staff route. 44 distinct native cases and 53 related unit tests passed, including unchanged slot guard assertions.",
+            "Bindings renewed by release-0.5-critical-branch-evidence: one acknowledgment belongs to the reviewed saving quote. Eight native browser and 52 unit cases passed, preserving exact money, retry and access-loss assertions."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -564821,6 +564950,11 @@
               "batch": "release-0.5-staff-workspace-read-closure",
               "base_commit": "530220a18494c614f95a31f2c2c826f6d0f17af9",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-workspace-read-closure/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-critical-branch-evidence",
+              "base_commit": "60a3c439724c1024f58f0a1680492a932e70e7aa",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-branch-evidence/source-binding.json"
             }
           ]
         },
@@ -564879,7 +565013,8 @@
           "release-0.5-staff-finance-read-recovery",
           "release-0.5-critical-journey-evidence",
           "release-0.5-protected-contract-and-finance",
-          "release-0.5-staff-workspace-read-closure"
+          "release-0.5-staff-workspace-read-closure",
+          "release-0.5-critical-branch-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -565111,7 +565246,7 @@
             },
             {
               "path": "apps/web/src/components/SavingOrderChangePanel.tsx",
-              "sha256": "cf4fb8ee218d601b45270c4286ba3b48d8e0e539a045574997afc73706d7ff64"
+              "sha256": "c6a12852b2521c8eff444abdf407112f5d1f04394fa13f248f71461fd3261824"
             },
             {
               "path": "apps/web/src/components/SavingStaffOperationForm.tsx",
@@ -566286,7 +566421,8 @@
             "Bindings renewed by release-0.5-staff-finance-read-recovery: Only staff maintenance and allocation read transport and related test fixtures changed. Scoped browser and unit evidence retains denial, financial review and protected command assertions.",
             "Bindings renewed by release-0.5-critical-journey-evidence: narrow calendar sizing only; 58 native calendar/localization cases, 12 coarse-input measurements, the original bundle budgets and exact financial/date values are preserved.",
             "Bindings renewed by release-0.5-protected-contract-and-finance: protected fixtures retain all financial, privacy and replay assertions; dynamic password focus is verified on both engines, with unchanged initial focus and gates. Related units and original budgets pass.",
-            "Bindings renewed by release-0.5-staff-workspace-read-closure: the bounded model and agent reads retain current authority and recover on the exact staff route. 44 distinct native cases and 53 related unit tests passed, including unchanged slot guard assertions."
+            "Bindings renewed by release-0.5-staff-workspace-read-closure: the bounded model and agent reads retain current authority and recover on the exact staff route. 44 distinct native cases and 53 related unit tests passed, including unchanged slot guard assertions.",
+            "Bindings renewed by release-0.5-critical-branch-evidence: one acknowledgment belongs to the reviewed saving quote. Eight native browser and 52 unit cases passed, preserving exact money, retry and access-loss assertions."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -566422,6 +566558,11 @@
               "batch": "release-0.5-staff-workspace-read-closure",
               "base_commit": "530220a18494c614f95a31f2c2c826f6d0f17af9",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-workspace-read-closure/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-critical-branch-evidence",
+              "base_commit": "60a3c439724c1024f58f0a1680492a932e70e7aa",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-branch-evidence/source-binding.json"
             }
           ]
         },
@@ -566480,7 +566621,8 @@
           "release-0.5-staff-finance-read-recovery",
           "release-0.5-critical-journey-evidence",
           "release-0.5-protected-contract-and-finance",
-          "release-0.5-staff-workspace-read-closure"
+          "release-0.5-staff-workspace-read-closure",
+          "release-0.5-critical-branch-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -566712,7 +566854,7 @@
             },
             {
               "path": "apps/web/src/components/SavingOrderChangePanel.tsx",
-              "sha256": "cf4fb8ee218d601b45270c4286ba3b48d8e0e539a045574997afc73706d7ff64"
+              "sha256": "c6a12852b2521c8eff444abdf407112f5d1f04394fa13f248f71461fd3261824"
             },
             {
               "path": "apps/web/src/components/SavingStaffOperationForm.tsx",
@@ -567887,7 +568029,8 @@
             "Bindings renewed by release-0.5-staff-finance-read-recovery: Only staff maintenance and allocation read transport and related test fixtures changed. Scoped browser and unit evidence retains denial, financial review and protected command assertions.",
             "Bindings renewed by release-0.5-critical-journey-evidence: narrow calendar sizing only; 58 native calendar/localization cases, 12 coarse-input measurements, the original bundle budgets and exact financial/date values are preserved.",
             "Bindings renewed by release-0.5-protected-contract-and-finance: protected fixtures retain all financial, privacy and replay assertions; dynamic password focus is verified on both engines, with unchanged initial focus and gates. Related units and original budgets pass.",
-            "Bindings renewed by release-0.5-staff-workspace-read-closure: the bounded model and agent reads retain current authority and recover on the exact staff route. 44 distinct native cases and 53 related unit tests passed, including unchanged slot guard assertions."
+            "Bindings renewed by release-0.5-staff-workspace-read-closure: the bounded model and agent reads retain current authority and recover on the exact staff route. 44 distinct native cases and 53 related unit tests passed, including unchanged slot guard assertions.",
+            "Bindings renewed by release-0.5-critical-branch-evidence: one acknowledgment belongs to the reviewed saving quote. Eight native browser and 52 unit cases passed, preserving exact money, retry and access-loss assertions."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -568023,6 +568166,11 @@
               "batch": "release-0.5-staff-workspace-read-closure",
               "base_commit": "530220a18494c614f95a31f2c2c826f6d0f17af9",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-workspace-read-closure/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-critical-branch-evidence",
+              "base_commit": "60a3c439724c1024f58f0a1680492a932e70e7aa",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-branch-evidence/source-binding.json"
             }
           ]
         },
@@ -568081,7 +568229,8 @@
           "release-0.5-staff-finance-read-recovery",
           "release-0.5-critical-journey-evidence",
           "release-0.5-protected-contract-and-finance",
-          "release-0.5-staff-workspace-read-closure"
+          "release-0.5-staff-workspace-read-closure",
+          "release-0.5-critical-branch-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -568313,7 +568462,7 @@
             },
             {
               "path": "apps/web/src/components/SavingOrderChangePanel.tsx",
-              "sha256": "cf4fb8ee218d601b45270c4286ba3b48d8e0e539a045574997afc73706d7ff64"
+              "sha256": "c6a12852b2521c8eff444abdf407112f5d1f04394fa13f248f71461fd3261824"
             },
             {
               "path": "apps/web/src/components/SavingStaffOperationForm.tsx",
@@ -569488,7 +569637,8 @@
             "Bindings renewed by release-0.5-staff-finance-read-recovery: Only staff maintenance and allocation read transport and related test fixtures changed. Scoped browser and unit evidence retains denial, financial review and protected command assertions.",
             "Bindings renewed by release-0.5-critical-journey-evidence: narrow calendar sizing only; 58 native calendar/localization cases, 12 coarse-input measurements, the original bundle budgets and exact financial/date values are preserved.",
             "Bindings renewed by release-0.5-protected-contract-and-finance: protected fixtures retain all financial, privacy and replay assertions; dynamic password focus is verified on both engines, with unchanged initial focus and gates. Related units and original budgets pass.",
-            "Bindings renewed by release-0.5-staff-workspace-read-closure: the bounded model and agent reads retain current authority and recover on the exact staff route. 44 distinct native cases and 53 related unit tests passed, including unchanged slot guard assertions."
+            "Bindings renewed by release-0.5-staff-workspace-read-closure: the bounded model and agent reads retain current authority and recover on the exact staff route. 44 distinct native cases and 53 related unit tests passed, including unchanged slot guard assertions.",
+            "Bindings renewed by release-0.5-critical-branch-evidence: one acknowledgment belongs to the reviewed saving quote. Eight native browser and 52 unit cases passed, preserving exact money, retry and access-loss assertions."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -569624,6 +569774,11 @@
               "batch": "release-0.5-staff-workspace-read-closure",
               "base_commit": "530220a18494c614f95a31f2c2c826f6d0f17af9",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-workspace-read-closure/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-critical-branch-evidence",
+              "base_commit": "60a3c439724c1024f58f0a1680492a932e70e7aa",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-branch-evidence/source-binding.json"
             }
           ]
         },
@@ -569682,7 +569837,8 @@
           "release-0.5-staff-finance-read-recovery",
           "release-0.5-critical-journey-evidence",
           "release-0.5-protected-contract-and-finance",
-          "release-0.5-staff-workspace-read-closure"
+          "release-0.5-staff-workspace-read-closure",
+          "release-0.5-critical-branch-evidence"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -569914,7 +570070,7 @@
             },
             {
               "path": "apps/web/src/components/SavingOrderChangePanel.tsx",
-              "sha256": "cf4fb8ee218d601b45270c4286ba3b48d8e0e539a045574997afc73706d7ff64"
+              "sha256": "c6a12852b2521c8eff444abdf407112f5d1f04394fa13f248f71461fd3261824"
             },
             {
               "path": "apps/web/src/components/SavingStaffOperationForm.tsx",
@@ -571089,7 +571245,8 @@
             "Bindings renewed by release-0.5-staff-finance-read-recovery: Only staff maintenance and allocation read transport and related test fixtures changed. Scoped browser and unit evidence retains denial, financial review and protected command assertions.",
             "Bindings renewed by release-0.5-critical-journey-evidence: narrow calendar sizing only; 58 native calendar/localization cases, 12 coarse-input measurements, the original bundle budgets and exact financial/date values are preserved.",
             "Bindings renewed by release-0.5-protected-contract-and-finance: protected fixtures retain all financial, privacy and replay assertions; dynamic password focus is verified on both engines, with unchanged initial focus and gates. Related units and original budgets pass.",
-            "Bindings renewed by release-0.5-staff-workspace-read-closure: the bounded model and agent reads retain current authority and recover on the exact staff route. 44 distinct native cases and 53 related unit tests passed, including unchanged slot guard assertions."
+            "Bindings renewed by release-0.5-staff-workspace-read-closure: the bounded model and agent reads retain current authority and recover on the exact staff route. 44 distinct native cases and 53 related unit tests passed, including unchanged slot guard assertions.",
+            "Bindings renewed by release-0.5-critical-branch-evidence: one acknowledgment belongs to the reviewed saving quote. Eight native browser and 52 unit cases passed, preserving exact money, retry and access-loss assertions."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -571225,6 +571382,11 @@
               "batch": "release-0.5-staff-workspace-read-closure",
               "base_commit": "530220a18494c614f95a31f2c2c826f6d0f17af9",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-workspace-read-closure/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-critical-branch-evidence",
+              "base_commit": "60a3c439724c1024f58f0a1680492a932e70e7aa",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-branch-evidence/source-binding.json"
             }
           ]
         },
@@ -677133,7 +677295,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Staff model and agent reads now time out, keep unavailable controls disabled, and recover on the exact staff route in both locales and engines. Reconcile remaining product routes and states against the manual route matrix."
+        "Customer saving changes now display one acknowledgment inside the owned quote, with exact confirmation, retry and permission withdrawal verified in both languages and engines. Reconcile remaining staff/promotion acceptance failures and the manual route matrix."
       ],
       "owner": null,
       "depends_on": [],
@@ -677157,7 +677319,8 @@
           "release-0.5-protected-journey-proof",
           "release-0.5-protected-contract-and-finance",
           "release-0.5-contract-finance-coverage",
-          "release-0.5-staff-workspace-read-closure"
+          "release-0.5-staff-workspace-read-closure",
+          "release-0.5-critical-branch-evidence"
         ]
       }
     },
@@ -677176,7 +677339,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "42 staff-finance and 44 workspace Chromium cases map cleanly, and the isolated full API suite and API changed coverage floors passed. The web diagnostic still misses the critical branch floor; complete remaining web branch and manual evidence at final source."
+        "52 further browser cases map cleanly at 60a3c439, but the critical web branch diagnostic is 19966/24432 against the unchanged 85% floor. Repair demonstrated failing staff/promotion journeys, then renew final source coverage and remaining manual checks. Hosted dependency advisories and historical scan disposition remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -677197,7 +677360,8 @@
           "release-0.5-protected-journey-proof",
           "release-0.5-protected-contract-and-finance",
           "release-0.5-contract-finance-coverage",
-          "release-0.5-staff-workspace-read-closure"
+          "release-0.5-staff-workspace-read-closure",
+          "release-0.5-critical-branch-evidence"
         ]
       }
     },
@@ -730448,7 +730612,120 @@
         "release-readiness#R-03.02"
       ],
       "failed_attempts_retained": true,
-      "release_disposition": "Recorded staff workspace and isolated API checks, corrected bounded staff AI reads. No release publication."
+      "release_disposition": "Recorded staff workspace and isolated API checks, corrected bounded staff AI reads. No release publication.",
+      "push_receipt": {
+        "commit": "60a3c439724c1024f58f0a1680492a932e70e7aa",
+        "remote_sha": "60a3c439724c1024f58f0a1680492a932e70e7aa",
+        "verified_at": "2026-11-07T10:03:15+00:00",
+        "ref": "refs/heads/main"
+      }
+    },
+    "release-0.5-critical-branch-evidence": {
+      "batch": "release-0.5-critical-branch-evidence",
+      "base_commit": "60a3c439724c1024f58f0a1680492a932e70e7aa",
+      "task_keys": [
+        "release-readiness#R-04.02",
+        "release-readiness#R-04.01",
+        "07-ui-ux-design.md#T-07.11.01.03"
+      ],
+      "accepted_task_keys": [],
+      "partial_task_keys": [
+        "release-readiness#R-04.02",
+        "release-readiness#R-04.01",
+        "07-ui-ux-design.md#T-07.11.01.03"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/coverage-fixture.ts",
+          "sha256": "d2728c203779bb170516ad5cedd445aa4c61d4590fb6ce44bc48cde125281ef2"
+        },
+        {
+          "path": "apps/web/e2e/saving-change-address-form-fixture.ts",
+          "sha256": "cb6481eeec981a79fc67eca356844782a6dc156f824ea6ccab188970016fa873"
+        },
+        {
+          "path": "apps/web/e2e/saving-change-address-forms.spec.ts",
+          "sha256": "4bdc18b2799bebc0e8eaf71d6cb7596c7f0243bef369ab4927a97eac27118465"
+        },
+        {
+          "path": "apps/web/src/components/SavingOrderChangePanel.test.tsx",
+          "sha256": "da0f3c07fadd53da31ab4ccab04bc4d21a56898ce6ce6b7c0b8813adcec1d5da"
+        },
+        {
+          "path": "apps/web/src/components/SavingOrderChangePanel.tsx",
+          "sha256": "c6a12852b2521c8eff444abdf407112f5d1f04394fa13f248f71461fd3261824"
+        },
+        {
+          "path": "apps/web/src/components/saving-change-query.test.tsx",
+          "sha256": "203e3a15db8dac95825423e6c975ba05babe3b4ed3859e810c1c13d6f82a0cb5"
+        },
+        {
+          "path": "apps/web/src/hooks/useRiskConfirmation.ts",
+          "sha256": "4c80aac980bd368019b3fec8fd19d7feefd44f1c97dd6b109d73224452f0b1d7"
+        },
+        {
+          "path": "apps/web/src/lib/saving-change-form.test.ts",
+          "sha256": "2e9e3e2a7421445ac0329301e925bf0a3bcc31a95938d86b91daec3c179ec429"
+        },
+        {
+          "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
+          "sha256": "6afb6535ee0dfe006468cc7cc255b5e4de10fcc22986b3ede8c8326aa47b61fc"
+        },
+        {
+          "path": "apps/web/src/pages/saving-change-source-context.test.tsx",
+          "sha256": "539a72660867cd300993c34b3d0318ac2e24e6a3773d8c5509b8d36b87f943e7"
+        },
+        {
+          "path": "apps/web/vite.config.ts",
+          "sha256": "63a0eb5705c84063b819514ddf5747477e6b125137dbb70ea12b02327d6b92bf"
+        },
+        {
+          "path": "packages/ui/src/components/ui/confirmation-gate.tsx",
+          "sha256": "06aab9fda02d3b329a263c33c29be0b9250a82bc02b6a4e5abe4c9c9f6f4c5e8"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "0b875687ee1d2f32ea8819c9eb58af72f0c0db3796f5e74f82317d4b7ce46251"
+        }
+      ],
+      "checks": [
+        "52 distinct Chromium cases pass and map cleanly at exact 60a3c439: AI 22, maintenance 8, saving operations 4, saving prerequisites 1, customer payment return 4 and verification 13. The mixed-source web diagnostic meets ordinary and critical line floors and the ordinary branch floor; critical branches remain 19966/24432 versus 85%. Isolated API data normalized only for its worktree paths continues to pass both API floors.",
+        "The prior customer saving form showed an acknowledgment before the quote and two after the quote, reproduced in four locale/engine observations. The quote now shows exactly one unchecked acknowledgment; before it, no confirmation is available and no write is sent. Geometry checks target actual controls including the role=checkbox, excluding the hidden 1px compatibility input that produced the false negative.",
+        "All eight final saving browser cases and 52 related unit tests passed. English and Persian, Chromium and mobile Safari retain exact quote digest, idempotency body, rejection recovery, owned focus and authorization withdrawal. Targeted lint, formatting, typecheck, production build and all 91 bundle budgets passed.",
+        "Initial supplemental groups retained 13 failed staff/promotion cases with no mapped report: current typed confirmations or a stale whole-page status locator. A duplicate OTP settings toast was verified in both languages: SettingsFormSection and CommandFeedback each dispatch after the same validated response. Fix the duplicate and run the exact failures next.",
+        "Hosted 530220a1 audit reported 2 critical and 18 high advisories. Its five historical secret findings were exact source hashes, ordinary test prose and a standard test nonce. A proposed fingerprint-only ignore passed a redacted full-history scan while the synthetic credential still failed detection as expected. The proposed ignore has not been applied; dependency advisories remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-branch-evidence",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-branch-evidence/reviewed-source.diff",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-branch-evidence/source-binding.json",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-branch-evidence/renewed-bindings.json",
+      "renewed_task_keys": [
+        "03-core-business.md#T-03.90.02",
+        "07-ui-ux-design.md#T-07.01.03.19",
+        "07-ui-ux-design.md#T-07.01.04.02",
+        "07-ui-ux-design.md#T-07.01.04.03",
+        "07-ui-ux-design.md#T-07.01.04.04",
+        "07-ui-ux-design.md#T-07.10.01.01",
+        "07-ui-ux-design.md#T-07.10.01.02",
+        "07-ui-ux-design.md#T-07.10.01.03",
+        "07-ui-ux-design.md#T-07.10.01.04",
+        "07-ui-ux-design.md#T-07.10.01.05",
+        "07-ui-ux-design.md#T-07.10.01.06",
+        "07-ui-ux-design.md#T-07.10.02.01",
+        "07-ui-ux-design.md#T-07.10.02.02",
+        "07-ui-ux-design.md#T-07.10.02.03",
+        "07-ui-ux-design.md#T-07.10.02.04",
+        "07-ui-ux-design.md#T-07.10.02.05",
+        "07-ui-ux-design.md#T-07.13.01.01",
+        "07-ui-ux-design.md#T-07.13.01.02",
+        "07-ui-ux-design.md#T-07.13.01.03",
+        "07-ui-ux-design.md#T-07.13.01.04",
+        "07-ui-ux-design.md#T-07.13.01.05",
+        "07-ui-ux-design.md#T-07.13.01.06",
+        "07-ui-ux-design.md#T-07.13.01.07"
+      ],
+      "failed_attempts_retained": true,
+      "release_disposition": "Corrected customer saving confirmation and recorded coverage and staff acceptance failures. No release publication."
     }
   },
   "historical_improvements": [
@@ -730488,18 +730765,18 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.5-critical-branch-evidence",
+    "id": "release-0.5-protected-staff-browser-closure",
     "release": "0.5.0",
     "task_keys": [
       "release-readiness#R-04.02",
       "release-readiness#R-04.01",
-      "07-ui-ux-design.md#T-07.12.01.08"
+      "07-ui-ux-design.md#T-07.11.01.03"
     ],
-    "goal": "Map exact passing AI, saving and maintenance journey reports; identify remaining critical web branch and manual acceptance gaps from current sources."
+    "goal": "Correct duplicate OTP settings feedback, prove protected staff and promotion commands with current confirmations, then renew exact failing cases and source coverage."
   },
   "launch_forecast": {
     "status": "deadline_at_risk_until_v0_5_and_operational_gates_close",
-    "next_update_after": "v0.5.0 critical web branch and manual acceptance reconciliation",
+    "next_update_after": "v0.5.0 protected staff journey and coverage closure",
     "method": "v0.4.0 staging and Telegram receipts verified. v0.5.0 remains unaccepted: coverage diagnostics are below unchanged web/UI/i18n floors, required route/manual states and two owner decisions remain. v0.6.0 operations and v0.9.0 four-service rehearsal keep November 9 at risk. Production is not authorized."
   },
   "capabilities": [

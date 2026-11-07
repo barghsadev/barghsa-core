@@ -6,6 +6,7 @@ import { tSaving } from '@barghsa/i18n/saving';
 import { tSavingStaffReview } from '@barghsa/i18n/saving-staff-review';
 import { tSavingChange } from '@barghsa/i18n/saving-change';
 import { test, expect } from './coverage-fixture';
+import { confirmationText } from '@barghsa/i18n/confirmation';
 import {
   setupSavingChangeAddressForms,
   savingChangeOrder,
@@ -33,7 +34,9 @@ async function inspect(page: Page, region: Locator, selector: string, hover: Loc
   expect(await page.evaluate(() => document.activeElement?.id)).toBe(focus);
   expect((await new AxeBuilder({ page }).include(selector).analyze()).violations).toEqual([]);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
-  for (const field of await region.locator('input,select,textarea,button').all()) {
+  for (const field of await region
+    .locator('input:not([aria-hidden=true]),select,textarea,button,[role=checkbox]')
+    .all()) {
     const box = await field.boundingBox();
     if (box) {
       expect(box.x).toBeGreaterThanOrEqual(0);
@@ -68,11 +71,16 @@ for (const [locale, theme] of [
     await page.goto(`/savings/orders/${savingChangeOrder}`);
     const panel = page.getByTestId('saving-change-panel');
     const form = panel.getByTestId('saving-change-form');
+    const acknowledge = panel.getByRole('checkbox', {
+      name: confirmationText('acknowledge', locale),
+      exact: true,
+    });
     const hardware = page.locator('#saving-change-hardware');
     const address = page.locator('#saving-change-address');
     const preview = () => form.getByRole('button', { name: copy('previewChange'), exact: true });
     await expect(hardware).toHaveValue(currentHardware);
     await expect(address).toHaveValue(currentAddress);
+    await expect(acknowledge).toHaveCount(0);
     await expect(hardware.locator(`option[value="${unavailableHardware}"]`)).toBeDisabled();
     await preview().click();
     await expect(form.locator('button[type=submit]')).toBeDisabled();
@@ -106,6 +114,12 @@ for (const [locale, theme] of [
     await expect(quote).toContainText('Replacement installation address');
     await expect(quote).toContainText(copy('retainedDiscount'));
     const confirm = panel.getByRole('button', { name: copy('confirmChange'), exact: true });
+    await expect(acknowledge).toHaveCount(1);
+    await expect(acknowledge).not.toBeChecked();
+    await expect(confirm).toBeDisabled();
+    expect(state.customerWrites).toEqual([]);
+    await acknowledge.check();
+    await expect(confirm).toBeEnabled();
     await inspect(page, panel, '[data-testid="saving-change-panel"]', confirm);
     await quote.screenshot({ path: info.outputPath(`saving-change-quote-${locale}-${theme}.png`) });
     state.customerWriteMode = 'held';
