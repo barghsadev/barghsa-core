@@ -53,6 +53,96 @@ test.afterAll(async () => {
   server?.closeAllConnections();
   await new Promise<void>((done) => server?.close(() => done()));
 });
+
+for (const rtl of [false, true]) {
+  test(`shared controls expose keyboard roles and values (${rtl ? 'fa' : 'en'})`, async ({
+    page,
+  }) => {
+    const copy = (fa: string, en: string) => (rtl ? fa : en);
+    const visit = (story: string) =>
+      page.goto(
+        `${origin}/?story=${story}&rtl=${rtl}&theme=${rtl ? 'dark' : 'light'}&mode=preview`
+      );
+    await visit('overlays--custom-select');
+    const select = page.getByRole('combobox', { name: copy('انتخاب گزینه', 'Choose option') });
+    await select.press('Enter');
+    await expect(page.getByRole('listbox')).toBeVisible();
+    await expect(page.getByRole('option', { name: copy('غیرفعال', 'Disabled') })).toBeDisabled();
+    await page.keyboard.press('ArrowDown');
+    await page.keyboard.press('Enter');
+    await expect(select).toContainText(copy('گزینه دو', 'Option two'));
+    await expect(select).toBeFocused();
+
+    await visit('widgets--choices');
+    const city = page.getByRole('combobox', { name: copy('شهر', 'City'), exact: true });
+    await city.fill(copy('شیراز', 'Shiraz'));
+    await expect(page.getByRole('listbox').getByRole('option')).toHaveCount(1);
+    await city.press('ArrowDown');
+    await city.press('Enter');
+    await expect(city).toHaveValue(copy('شیراز', 'Shiraz'));
+    await expect(page.getByRole('listbox')).toHaveCount(0);
+
+    await visit('widgets--dates');
+    const date = page.getByRole('combobox', { name: copy('تاریخ', 'Date'), exact: true });
+    await date.press('Enter');
+    const calendar = page.getByRole('grid');
+    await expect(calendar).toBeVisible();
+    const activeDay = () =>
+      calendar.evaluate((node) => {
+        const day = document.activeElement;
+        return node.contains(day) ? day?.getAttribute('aria-label') : null;
+      });
+    await expect.poll(activeDay).toBeTruthy();
+    const firstDay = await activeDay();
+    await page.keyboard.press('ArrowDown');
+    await expect.poll(activeDay).not.toBe(firstDay);
+    await expect.poll(activeDay).toBeTruthy();
+    await page.keyboard.press('Enter');
+    await expect(calendar).toHaveCount(0);
+    await expect(date).toBeFocused();
+    await expect(date).not.toHaveText(copy('انتخاب تاریخ', 'Select date'));
+    await date.press('ArrowDown');
+    await expect(calendar).toBeVisible();
+    await expect.poll(activeDay).toBeTruthy();
+    await page.keyboard.press('Escape');
+    await expect(calendar).toHaveCount(0);
+    await expect(date).toBeFocused();
+
+    await visit('widgets--sliders');
+    const slider = page.getByRole('slider', { name: copy('درصد', 'Percentage'), exact: true });
+    await expect(slider).toHaveAttribute('aria-valuenow', '35');
+    await slider.press('ArrowUp');
+    await expect(slider).toHaveAttribute('aria-valuenow', '40');
+
+    await visit('overlays--tabs');
+    const tabs = page.getByRole('tablist', { name: 'default horizontal', exact: true });
+    await tabs
+      .getByRole('tab', { name: 'One', exact: true })
+      .press(rtl ? 'ArrowLeft' : 'ArrowRight');
+    const next = tabs.getByRole('tab', { name: 'Two', exact: true });
+    await expect(next).toBeFocused();
+    await next.press('Enter');
+    await expect(next).toHaveAttribute('aria-selected', 'true');
+    const panel = await next.getAttribute('aria-controls');
+    await expect(page.locator(`[id="${panel}"][role=tabpanel]`)).toHaveText('Two');
+
+    await visit('controls--accordions');
+    const accordion = page.getByRole('region', { name: 'single', exact: true });
+    const settings = accordion.getByRole('button', { name: copy('تنظیمات', 'Settings') });
+    await expect(settings).toHaveAttribute('aria-expanded', 'false');
+    await settings.press('Space');
+    await expect(settings).toHaveAttribute('aria-expanded', 'true');
+    await expect(
+      accordion.getByRole('button', { name: copy('پرسش‌های رایج', 'FAQ') })
+    ).toHaveAttribute('aria-expanded', 'false');
+
+    await visit('controls--progress-states');
+    await expect(
+      page.getByRole('progressbar', { name: copy('بارگذاری سند', 'Document upload') })
+    ).toHaveAttribute('aria-valuenow', '65');
+  });
+}
+
 for (const story of Object.keys(meta.stories)) {
   for (const rtl of [false, true]) {
     for (const theme of ['light', 'dark']) {
@@ -310,6 +400,12 @@ for (const rtl of [false, true]) {
           await trigger.press('Enter');
           const dialog = page.getByRole('dialog');
           await expect(dialog).toHaveCSS('opacity', '1');
+          for (const key of ['Tab', 'Tab', 'Tab', 'Shift+Tab', 'Shift+Tab', 'Shift+Tab']) {
+            await page.keyboard.press(key);
+            await expect
+              .poll(() => dialog.evaluate((node) => node.contains(document.activeElement)))
+              .toBe(true);
+          }
           const rectangle = await dialog.boundingBox(),
             width = rtl ? 390 : 1280,
             height = rtl ? 844 : 960;

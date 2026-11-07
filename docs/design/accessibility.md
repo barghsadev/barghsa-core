@@ -19,3 +19,8 @@ in shared UI or in the page. Fix confirmed defects. Where automation cannot
 evaluate the result, record the manual check and its result, for example the
 contrast of text over a gradient. An exception needs a specific rule, scope,
 reason and owner approval.
+
+The high contrast switch in account settings applies to the current browser.
+It strengthens text, form controls and focus outlines in both light and dark
+themes, and does not send an account setting change. The shared stylesheet
+also keeps a visible focus outline when the operating system forces colors.

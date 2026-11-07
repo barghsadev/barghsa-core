@@ -175,19 +175,18 @@ export function NotificationBell({
       <PopoverTrigger
         data-testid="notification-bell"
         aria-label={bellAria}
-        className="relative inline-flex size-11 items-center justify-center rounded-lg border border-border bg-card text-card-foreground text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+        className="barghsa-notification-trigger"
       >
         <BellIcon className="h-5 w-5" aria-hidden="true" />
         {unreadCount > 0 && (
-          <span
-            key={unreadCount}
-            className="barghsa-notification-count absolute -top-1 -end-1 inline-flex min-w-4 items-center justify-center rounded-full bg-destructive px-1 text-[10px] font-semibold leading-4 text-destructive-foreground"
-            role="status"
-          >
+          <span key={unreadCount} className="barghsa-notification-count" aria-hidden="true">
             {badgeLabel}
           </span>
         )}
       </PopoverTrigger>
+      <span className="sr-only" role="status" aria-atomic="true">
+        {bellAria}
+      </span>
 
       <PopoverContent align="start" className="w-96 max-w-[90vw]" data-testid="notification-panel">
         {open && (

@@ -24,6 +24,7 @@ import {
 } from '../../../hooks/usePreferenceSettingsForm.js';
 import { PreferenceSettingsStatus } from '../../../components/PreferenceSettingsStatus.js';
 import { PreferenceSwitch } from '../../../components/PreferenceSwitch.js';
+import { HighContrastPreference } from '../../../components/HighContrastPreference.js';
 import { AnalyticsConsentSettings } from '../../../providers/AnalyticsConsentProvider.js';
 import {
   notificationSettings,
@@ -119,6 +120,7 @@ function SettingsIndexPage() {
         {time.notice}
       </fieldset>
       <h1 className="text-2xl font-bold mb-6">{t('dashboard.nav.settings', locale)}</h1>
+      <HighContrastPreference />
       {/* Settings navigation links */}
       <Card>
         <CardContent className="pt-6 space-y-2">

@@ -8,10 +8,78 @@ import { t } from '@barghsa/i18n/app';
 import { timezoneText } from '@barghsa/i18n/timezone';
 import { shellText } from '@barghsa/i18n/shell';
 import { tPreferenceSettingsForms as copy } from '@barghsa/i18n/preference-settings-forms';
+import { scanCriticalMain } from './critical-accessibility';
 type Locale = 'en' | 'fa';
 const profileId = '10000000-0000-4000-8000-000000000002';
 const action = (page: Page, locale: Locale, key: string) =>
   page.getByRole('button', { name: copy(key, locale), exact: true });
+
+for (const locale of ['en', 'fa'] as const) {
+  test(`high contrast stays on this browser and strengthens visible controls (${locale})`, async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 320, height: 844 });
+    const state = await setup(page, locale);
+    await page.goto('/settings');
+    const contrast = page.getByRole('switch', {
+      name: locale === 'fa' ? 'کنتراست بالا' : 'High contrast',
+      exact: true,
+    });
+    await expect(contrast).not.toBeChecked();
+    await contrast.press('Space');
+    await expect(contrast).toBeChecked();
+    await expect(contrast).toHaveCSS('outline-width', '2px');
+    await expect(contrast).toHaveCSS('outline-offset', '2px');
+    await expect(page.locator('html')).toHaveAttribute('data-contrast', 'more');
+    const ratios = await page.evaluate(() => {
+      const style = getComputedStyle(document.documentElement);
+      function lightness(name: string) {
+        const value = style.getPropertyValue(name).trim();
+        const hex =
+          value.length === 4
+            ? value.slice(1).replace(/./g, (digit) => digit + digit)
+            : value.slice(1);
+        const colors = [0, 2, 4].map((start) => {
+          const n = parseInt(hex.slice(start, start + 2), 16) / 255;
+          return n <= 0.04045 ? n / 12.92 : ((n + 0.055) / 1.055) ** 2.4;
+        });
+        return colors[0]! * 0.2126 + colors[1]! * 0.7152 + colors[2]! * 0.0722;
+      }
+      const ratio = (a: string, b: string) => {
+        const x = lightness(a),
+          y = lightness(b);
+        return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05);
+      };
+      return {
+        text: ratio('--foreground', '--background'),
+        secondaryText: ratio('--muted-foreground', '--card'),
+        primaryAction: ratio('--primary', '--primary-foreground'),
+        boundary: ratio('--border', '--background'),
+      };
+    });
+    expect(ratios.text).toBeGreaterThanOrEqual(7);
+    expect(ratios.secondaryText).toBeGreaterThanOrEqual(7);
+    expect(ratios.primaryAction).toBeGreaterThanOrEqual(7);
+    expect(ratios.boundary).toBeGreaterThanOrEqual(3);
+    await scanCriticalMain(page);
+    await page.reload();
+    await expect(contrast).toBeChecked();
+    await contrast.press('Space');
+    await expect(contrast).not.toBeChecked();
+    await expect(page.locator('html')).not.toHaveAttribute('data-contrast', 'more');
+    await expect(contrast).toHaveCSS('outline-width', '2px');
+    await expect(contrast).toHaveCSS('outline-offset', '2px');
+    expect(state.writes).toEqual([]);
+    await page.emulateMedia({ forcedColors: 'active' });
+    await contrast.focus();
+    await expect(contrast).toHaveCSS('outline-style', 'solid');
+    await expect(contrast).toHaveCSS('outline-width', '2px');
+    expect(
+      await page.getByRole('main').evaluate((node) => node.scrollWidth - node.clientWidth)
+    ).toBeLessThanOrEqual(1);
+  });
+}
+
 async function setup(page: Page, locale: Locale) {
   await setupCatalogueForms(page, locale, locale === 'fa');
   await page.route('**/api/auth/user', (route) =>

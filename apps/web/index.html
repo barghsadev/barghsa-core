@@ -42,6 +42,8 @@
         try {
           preference = localStorage.getItem('barghsa.theme.v1');
           policy = localStorage.getItem('barghsa.theme-policy.v1');
+          if (localStorage.getItem('barghsa.contrast') === 'more')
+            document.documentElement.dataset.contrast = 'more';
         } catch {}
         const mode =
           policy === 'light' || policy === 'dark'

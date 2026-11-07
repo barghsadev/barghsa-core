@@ -392,8 +392,8 @@
   --destructive: var(--palette-danger-600);
   --destructive-foreground: hsl(0 0% 100%);
   --border: var(--palette-neutral-300);
-  --input: var(--palette-neutral-400);
-  --ring: var(--primary);
+  --input: color-mix(in srgb, var(--palette-neutral-400) 80%, var(--palette-neutral-500));
+  --ring: var(--foreground);
   --success: var(--palette-success-600);
   --success-soft: var(--palette-success-100);
   --warning: var(--palette-warning-600);
@@ -591,6 +591,65 @@
   --brand-panel-muted: hsl(134.117647 16.190476% 79.411765%);
 }
 
+:root[data-contrast='more'] {
+  --background: #fff;
+  --foreground: #101712;
+  --card: #fff;
+  --popover: #fff;
+  --muted: #eef3ef;
+  --muted-foreground: #25332b;
+  --border: #495d51;
+  --input: var(--border);
+  --primary: #103c26 !important;
+  --primary-foreground: #fff !important;
+  --brand-primary-text-light: var(--primary) !important;
+  --ring: #103c26 !important;
+  --secondary: #eef4ef !important;
+  --secondary-foreground: var(--foreground) !important;
+  --accent: #dcece2 !important;
+  --accent-foreground: var(--foreground) !important;
+  --destructive: #8d1124;
+  --destructive-foreground: #fff;
+  --success: #124626;
+  --warning: #613512;
+  --info: #173c72;
+  --purple: #43245e;
+  --sidebar: #eef3ef;
+  --sidebar-foreground: #101712;
+  --sidebar-active: #cddcd2;
+  --sidebar-active-foreground: #101712;
+  --brand-panel: #102c20;
+  --brand-panel-foreground: #fff;
+  --brand-panel-muted: #dff2e6;
+}
+
+:root.dark[data-contrast='more'] {
+  --background: #090f0c;
+  --foreground: #f8fffb;
+  --card: #101914;
+  --popover: #101914;
+  --muted: #1d2a22;
+  --muted-foreground: #e5f2e9;
+  --border: #a8bfb0;
+  --primary: #b8f7d1 !important;
+  --primary-foreground: #101712 !important;
+  --brand-primary-text-dark: var(--primary) !important;
+  --ring: #b8f7d1 !important;
+  --secondary: #1b2d22 !important;
+  --accent: #253d2e !important;
+  --destructive: #ffc3cb;
+  --destructive-foreground: #101712;
+  --success: #a9f6c1;
+  --warning: #ffe1a7;
+  --info: #b9daff;
+  --purple: #e5d1ff;
+  --sidebar: #101914;
+  --sidebar-foreground: #f8fffb;
+  --sidebar-active: #293d32;
+  --sidebar-active-foreground: #f8fffb;
+  --brand-panel: #0b1c12;
+}
+
 @layer base {
   * {
     @apply border-border;
@@ -643,12 +702,25 @@
 /* Native links/buttons may have shadow utilities; retain a visible keyboard ring.
    Shared controls own their composite focus styling through data-slot. */
 :is(button, a[href], input, textarea, select, [tabindex]):not([data-slot]):focus-visible {
-  /* Transparent outlines remain visible when forced colors suppress shadows. */
-  outline: 2px solid transparent;
-  outline-offset: 2px;
   box-shadow:
     0 0 0 2px var(--background),
     0 0 0 4px var(--foreground);
+}
+
+:is(button, a[href], input, textarea, select, summary, [tabindex]):focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+:is(button, a[href], input, textarea, select):where(.border-border) {
+  border-color: var(--input);
+}
+
+@media (forced-colors: active) {
+  :is(button, a[href], input, textarea, select, summary, [tabindex]):focus-visible {
+    outline: 2px solid Highlight;
+    outline-offset: 2px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1011,7 +1083,12 @@ body:has([role='dialog'][data-open]) [data-sonner-toaster] {
   pointer-events: none;
 }
 
+.barghsa-notification-trigger {
+  @apply relative inline-flex size-11 items-center justify-center rounded-lg border border-input bg-card text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2;
+}
+
 .barghsa-notification-count {
+  @apply absolute -top-1 -end-1 inline-flex min-w-4 items-center justify-center rounded-full bg-destructive px-1 text-[10px] font-semibold leading-4 text-destructive-foreground;
   animation: barghsa-scale-in var(--duration-fast) var(--ease-out);
 }
 

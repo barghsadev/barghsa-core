@@ -195,6 +195,12 @@ for (const context of ['customer', 'staff'] as const)
         await current.click();
         await expect(current).toBeEnabled();
         const bell = page.getByTestId('notification-bell');
+        const unread = page.locator('[data-testid=notification-bell] + [role=status]');
+        await expect(unread).toHaveRole('status');
+        await expect(unread).toHaveAttribute('aria-atomic', 'true');
+        await expect(unread).toHaveText((await bell.getAttribute('aria-label'))!);
+        const previousCount = await unread.textContent();
+        const liveRegion = await unread.elementHandle();
         await bell.click();
         const panel = page.getByTestId('notification-panel');
         await expect(panel.getByRole('button', { name: /Bell notice/ })).toBeVisible();
@@ -235,7 +241,10 @@ for (const context of ['customer', 'staff'] as const)
         denied = true;
         await main.getByRole('button', { name: text('refresh'), exact: true }).click();
         await expect(current).toHaveCount(0);
-        await expect(bell.getByRole('status')).toHaveCount(0);
+        await expect(bell.locator('.barghsa-notification-count')).toHaveCount(0);
+        await expect(unread).not.toHaveText(previousCount!);
+        await expect(unread).toHaveText((await bell.getAttribute('aria-label'))!);
+        expect(await liveRegion!.evaluate((node) => node.isConnected)).toBe(true);
         await bell.click();
         await expect(panel.getByRole('button', { name: /Bell notice/ })).toHaveCount(0);
         await expect(panel.getByRole('alert')).toContainText(text('error.denied'));

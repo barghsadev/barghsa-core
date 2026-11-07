@@ -78,6 +78,7 @@ function DatePicker({
 }: DatePickerProps & Omit<React.ComponentProps<typeof Popover>, 'children'>) {
   const [open, setOpen] = React.useState(false);
   const errorId = React.useId();
+  const popup = React.useRef<HTMLDivElement>(null);
   const jalali = locale ? locale === 'fa' : (jalaliOverride ?? true);
   const numerals = numeralOverride ?? (jalali ? 'arabext' : 'latn');
   const prompt = placeholder ?? (jalali ? 'انتخاب تاریخ' : 'Select date');
@@ -197,6 +198,12 @@ function DatePicker({
             onBlur={() => {
               if (!open) onBlur?.();
             }}
+            onKeyDown={(event) => {
+              if (!event.defaultPrevented && !open && event.key === 'ArrowDown') {
+                event.preventDefault();
+                event.currentTarget.click();
+              }
+            }}
             aria-label={label ?? prompt}
             aria-haspopup="dialog"
             aria-invalid={error ? true : (triggerProps?.['aria-invalid'] ?? false)}
@@ -230,6 +237,12 @@ function DatePicker({
         </span>
       )}
       <PopoverContent
+        ref={popup}
+        initialFocus={(type) =>
+          type === 'touch'
+            ? true
+            : (popup.current?.querySelector<HTMLElement>('button[data-day][tabindex="0"]') ?? true)
+        }
         className="w-auto p-0"
         align="start"
         aria-label={label ?? prompt}
