@@ -9,6 +9,8 @@ import { useListView } from '../hooks/useListView.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
 import { getProfileContextRevision, useProfileContextRevision } from '../lib/profile-context.js';
+import { queryKeys } from '../lib/query-keys.js';
+import { useManualServerRead } from '../hooks/useServerQuery.js';
 
 interface Page {
   transactions: WalletTransaction[];
@@ -132,7 +134,9 @@ function HistoryPage({
   const page = accepted.criteria === criteria ? accepted.page : null;
   const [attempt, setAttempt] = useState(0);
   const cursor = binding.query.cursor;
+  const accountId = useAccountUser();
   const revision = useProfileContextRevision();
+  const readPage = useManualServerRead();
   const requestScope = JSON.stringify([criteria, cursor, attempt, revision]);
   const currentRequest = useRef(requestScope);
   currentRequest.current = requestScope;
@@ -155,36 +159,41 @@ function HistoryPage({
     params.set('limit', '25');
     if (cursor) params.set('cursor', cursor);
     const endpoint = staff ? '/api/admin/reconciliation/wallets' : '/api/wallet';
-    void fetch(`${endpoint}/${encodeURIComponent(profileId)}/transactions?${params}`, {
-      credentials: 'include',
-      signal: controller.signal,
-    })
-      .then(async (response) => {
-        if (!current()) return;
-        if (!response.ok) {
-          if ([401, 403, 404].includes(response.status)) {
-            setAccepted({ criteria, page: null });
-            setRead({ scope: requestScope, status: 'denied' });
-            return;
-          }
-          throw new Error('History unavailable');
+    const key = queryKeys.wallet.list(
+      { context: staff ? 'staff' : 'customer', ownerId: profileId, accountId, revision },
+      params
+    );
+    void readPage(key, controller.signal, async (signal) => {
+      const response = await fetch(
+        `${endpoint}/${encodeURIComponent(profileId)}/transactions?${params}`,
+        {
+          credentials: 'include',
+          signal,
         }
-        const data = (await response.json()) as Page & { profileId?: string };
+      );
+      if (!response.ok) {
+        if ([401, 403, 404].includes(response.status)) return null;
+        throw new Error('History unavailable');
+      }
+      const data = (await response.json()) as Page & { profileId?: string };
+      if (
+        !Array.isArray(data.transactions) ||
+        (staff && data.profileId !== profileId) ||
+        !(data.nextCursor === null || typeof data.nextCursor === 'string')
+      )
+        throw new Error('Invalid history');
+      return data;
+    })
+      .then((data) => {
         if (!current()) return;
-        if (
-          !Array.isArray(data.transactions) ||
-          (staff && data.profileId !== profileId) ||
-          !(data.nextCursor === null || typeof data.nextCursor === 'string')
-        )
-          throw new Error('Invalid history');
         setAccepted({ criteria, page: data });
-        setRead({ scope: requestScope, status: 'ready' });
+        setRead({ scope: requestScope, status: data ? 'ready' : 'denied' });
       })
       .catch(() => {
         if (current()) setRead({ scope: requestScope, status: 'error' });
       });
     return () => controller.abort();
-  }, [requestScope]);
+  }, [requestScope, readPage, accountId]);
   return (
     <>
       <ListPage.Content

@@ -1,3 +1,4 @@
+import { confirmationText } from '@barghsa/i18n/confirmation';
 import { useOwnedStaffServiceRead } from '../hooks/useOwnedStaffServiceRead.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { ElectricityRejectionPanel } from '../components/ElectricityRejectionPanel.js';
@@ -1539,6 +1540,7 @@ function OwnedAdminElectricityOrdersPage({ queries }: { queries?: StaffOrderList
               throw new Error('Unconfirmed decision');
             form.reset({ reason: '' });
             refreshQueue();
+            return confirmationText('recorded', locale);
           }}
         />
       ) : null}

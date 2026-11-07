@@ -228,7 +228,7 @@ it('cancels an old post-action CRM read without changing the replacement staff v
   try {
     const { props, ack } = await queued(view);
     phase = 'pending';
-    let settled!: Promise<void>;
+    let settled!: ReturnType<typeof props.onSuccess>;
     await act(async () => {
       settled = props.onSuccess(ack);
     });

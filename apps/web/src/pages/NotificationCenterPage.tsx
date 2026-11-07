@@ -21,8 +21,21 @@ import { useTimezone } from '../hooks/useTimezone.js';
 import { notificationFeedback } from '@barghsa/i18n/notification-feedback';
 import { notificationDateGroups } from '../lib/notification-date-groups.js';
 import { sendToast } from '../lib/toast-api.js';
+import { useAccountUser } from '../hooks/useAccountUser.js';
+import { useManualServerRead } from '../hooks/useServerQuery.js';
+import { useProfileContextRevision } from '../lib/profile-context.js';
+import { queryKeys } from '../lib/query-keys.js';
 
 const PAGE_SIZE = 20;
+type InboxProps = { operatingContext?: 'staff' | 'customer'; queries?: ListQueryBinding };
+
+export function NotificationCenterPage(props: InboxProps) {
+  const accountId = useAccountUser();
+  const revision = useProfileContextRevision();
+  return (
+    <OwnedInbox key={JSON.stringify([props.operatingContext, accountId, revision])} {...props} />
+  );
+}
 
 /**
  * Notification center page (E-05, T-05.02.03).
@@ -32,14 +45,11 @@ const PAGE_SIZE = 20;
  * read on click and navigates to its linked record when one is set. Shows a
  * loading skeleton, an empty state, and a load-more footer. RTL-aware.
  */
-export function NotificationCenterPage({
-  operatingContext = 'customer',
-  queries,
-}: {
-  operatingContext?: 'staff' | 'customer';
-  queries?: ListQueryBinding;
-}) {
+function OwnedInbox({ operatingContext = 'customer', queries }: InboxProps) {
   const locale = useLocale();
+  const accountId = useAccountUser();
+  const revision = useProfileContextRevision();
+  const readPage = useManualServerRead();
   const zone = useTimezone();
   const [now, setNow] = useState(Date.now);
   useEffect(() => {
@@ -66,6 +76,7 @@ export function NotificationCenterPage({
     requestVersion = useRef(0);
   const failedCursor = useRef<string | undefined>(undefined),
     cursors = useRef(new Set<string>());
+  const readController = useRef<AbortController | null>(null);
   const key = `${operatingContext}:${filter}`;
   const scope = JSON.stringify([key, cursor]);
   const liveKey = useRef(scope);
@@ -75,6 +86,7 @@ export function NotificationCenterPage({
   const failedAppend = useRef(false);
   const clearDenied = useCallback(() => {
     requestVersion.current++;
+    readController.current?.abort();
     writing.current = false;
     setItems([]);
     setNextCursor(null);
@@ -94,11 +106,22 @@ export function NotificationCenterPage({
     async (cursor?: string, append = !!cursor) => {
       if (writing.current) return;
       const version = ++requestVersion.current;
+      readController.current?.abort();
+      const controller = new AbortController();
+      readController.current = controller;
       setLoading(!cursor);
       setLoadingMore(!!cursor);
       const current = () => requestVersion.current === version && liveKey.current === scope;
       try {
-        const page = await fetchNotifications(cursor, filter, PAGE_SIZE);
+        const params = new URLSearchParams({ filter, limit: String(PAGE_SIZE) });
+        if (cursor) params.set('cursor', cursor);
+        const queryKey = queryKeys.notifications.list(
+          { context: operatingContext, accountId, ownerId: accountId ?? 'session', revision },
+          params
+        );
+        const page = await readPage(queryKey, controller.signal, (signal) =>
+          fetchNotifications(cursor, filter, PAGE_SIZE, signal)
+        );
         if (!current()) return;
         if (
           page.next_cursor &&
@@ -127,13 +150,14 @@ export function NotificationCenterPage({
           setError('read');
         }
       } finally {
+        if (readController.current === controller) readController.current = null;
         if (current()) {
           setLoading(false);
           setLoadingMore(false);
         }
       }
     },
-    [filter, key, scope, deny]
+    [filter, key, scope, deny, readPage, accountId, revision, operatingContext]
   );
   useEffect(() => {
     const intended = intendedNavigation.current;
@@ -154,6 +178,7 @@ export function NotificationCenterPage({
     void load(cursor, retaining ? intended.append : false);
     return () => {
       requestVersion.current++;
+      readController.current?.abort();
       writing.current = false;
     };
   }, [load]);

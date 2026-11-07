@@ -1,3 +1,4 @@
+import { approveRiskConfirmation } from './confirmation-fixture';
 import { readFile } from 'node:fs/promises';
 import AxeBuilder from '@axe-core/playwright';
 import type { Locator, Page } from '@playwright/test';
@@ -113,15 +114,18 @@ for (const [locale, theme] of [
     await expect(page.getByRole('dialog')).toContainText(
       copy('staffReviewOutcome.publish_contract')
     );
+    await approveRiskConfirmation(page, locale, 'financial');
     await inspect(page, page.getByRole('dialog'), '[role="dialog"]', confirm(page));
     state.decisionWriteMode = 'held';
     state.needsStepUp = true;
+    await approveRiskConfirmation(page, locale, 'financial');
     await confirm(page).click();
     const password = page
       .getByRole('dialog')
       .getByLabel(t('team.password', locale), { exact: true });
     await expect(password).toBeVisible();
     await password.fill('Saving-form-proof-42!');
+    await approveRiskConfirmation(page, locale, 'financial');
     await confirm(page).click();
     await expect.poll(() => !!state.heldWrite).toBe(true);
     expect(state.stepUp.requests).toEqual([{ password: 'Saving-form-proof-42!' }]);
@@ -154,12 +158,14 @@ for (const [locale, theme] of [
     expect(state.decisionWrites).toHaveLength(2);
     state.decisionWriteMode = 'rejected';
     await retry(page).click();
+    await approveRiskConfirmation(page, locale, 'financial');
     await confirm(page).click();
     await cancel(page).click();
     await expect(retry(page)).toBeEnabled();
     await expect(note).toHaveValue(unused);
     state.decisionWriteMode = 'success';
     await retry(page).click();
+    await approveRiskConfirmation(page, locale, 'financial');
     await confirm(page).click();
     await expect(retry(page)).toHaveCount(0);
     await expect(note).toHaveValue(unused);
@@ -197,6 +203,7 @@ for (const [locale, theme] of [
     );
     state.decisionWriteMode = 'held';
     state.heldWrite = undefined;
+    await approveRiskConfirmation(page, locale, 'both');
     await confirm(page).click();
     await expect.poll(() => !!state.heldWrite).toBe(true);
     const rejection = state.decisionWrites.at(-1)!;
@@ -217,6 +224,7 @@ for (const [locale, theme] of [
     await expect(note).toBeDisabled();
     state.decisionWriteMode = 'success';
     await retry(page).click();
+    await approveRiskConfirmation(page, locale, 'both');
     await confirm(page).click();
     await expect(retry(page)).toHaveCount(0);
     await expect(note).toHaveValue('');
@@ -279,8 +287,10 @@ for (const [locale, theme] of [
     state.stageMode = 'success';
     await submit().click();
     await expect(page.getByRole('dialog')).toContainText(copy('staffStageReviewTitle'));
+    await approveRiskConfirmation(page, locale, 'financial');
     await inspect(page, page.getByRole('dialog'), '[role="dialog"]', confirm(page));
     state.stageWriteMode = 'held';
+    await approveRiskConfirmation(page, locale, 'financial');
     await confirm(page).click();
     await expect.poll(() => !!state.heldWrite).toBe(true);
     const captured = state.stageWrites.at(-1)!;
@@ -316,16 +326,19 @@ for (const [locale, theme] of [
     expect(state.stageWrites).toHaveLength(1);
     state.stageWriteMode = 'malformed';
     await retry(page).click();
+    await approveRiskConfirmation(page, locale, 'financial');
     await confirm(page).click();
     await expect(retry(page)).toBeVisible();
     state.stageWriteMode = 'rejected';
     await retry(page).click();
+    await approveRiskConfirmation(page, locale, 'financial');
     await confirm(page).click();
     await cancel(page).click();
     await expect(retry(page)).toBeEnabled();
     await expect(note).toHaveValue('  Delivery handover recorded  ');
     state.stageWriteMode = 'success';
     await retry(page).click();
+    await approveRiskConfirmation(page, locale, 'financial');
     await confirm(page).click();
     await expect(retry(page)).toHaveCount(0);
     await expect(note).toHaveValue('');

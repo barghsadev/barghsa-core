@@ -1,3 +1,4 @@
+import { approveVisibleConfirmation } from '../test/confirmation.js';
 import { QueryProvider } from '../test/query-provider.js';
 import { act, type ReactNode } from 'react';
 import { createRoot } from 'react-dom/client';
@@ -216,6 +217,7 @@ it('shows the locked saving decision and submits its exact review hash', async (
     const confirm = [
       ...document.body.querySelectorAll<HTMLButtonElement>('[role="dialog"] button'),
     ].find((button) => button.textContent?.includes('Confirm'));
+    await approveVisibleConfirmation();
     await act(async () => confirm!.click());
     const mutation = fetchMock.mock.calls.find(([url]) => url.endsWith('/approve'));
     expect(mutation).toBeDefined();
@@ -367,6 +369,7 @@ it('previews a fulfillment transition and submits its exact review hash', async 
     const confirm = [
       ...document.body.querySelectorAll<HTMLButtonElement>('[role="dialog"] button'),
     ].find((button) => button.textContent?.includes('Confirm'));
+    await approveVisibleConfirmation();
     await act(async () => confirm!.click());
     const mutation = fetchMock.mock.calls.find(([url]) => url === path);
     expect(mutation).toBeDefined();
@@ -645,6 +648,7 @@ it('confirms exact saving amendments and unpaid upgrade cancellation', async () 
     const confirm = [
       ...document.body.querySelectorAll<HTMLButtonElement>('[role="dialog"] button'),
     ].find((button) => button.textContent?.includes('Confirm'));
+    await approveVisibleConfirmation();
     await act(async () => confirm!.click());
     const mutation = fetchMock.mock.calls.find(([url]) => url.endsWith('/amend-hardware'));
     expect(mutation).toBeDefined();
@@ -689,6 +693,7 @@ it('confirms exact saving amendments and unpaid upgrade cancellation', async () 
     const confirmCancel = [
       ...document.body.querySelectorAll<HTMLButtonElement>('[role="dialog"] button'),
     ].find((button) => button.textContent?.includes('Confirm'));
+    await approveVisibleConfirmation();
     await act(async () => confirmCancel!.click());
     const cancellationMutation = fetchMock.mock.calls.find(([url]) =>
       url.endsWith('/cancel-hardware-upgrade')
@@ -738,6 +743,7 @@ it('confirms exact saving amendments and unpaid upgrade cancellation', async () 
     const confirmAddress = [
       ...document.body.querySelectorAll<HTMLButtonElement>('[role="dialog"] button'),
     ].find((button) => button.textContent?.includes('Confirm'));
+    await approveVisibleConfirmation();
     await act(async () => confirmAddress!.click());
     const addressMutation = fetchMock.mock.calls.find(([url]) => url.endsWith('/amend-address'));
     expect(JSON.parse((addressMutation![1] as RequestInit).body as string)).toMatchObject({

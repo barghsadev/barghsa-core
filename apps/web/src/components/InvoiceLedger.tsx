@@ -10,6 +10,10 @@ import { isInvoiceUuid } from '../lib/due-at-override.js';
 import type { ListQueryBinding } from '../hooks/useListQuery.js';
 import { decodeFinanceCursor, encodeFinanceCursor } from '../lib/finance-list-query.js';
 import { formatInvoiceServicePeriod } from '../lib/invoice-service-period.js';
+import { useAccountUser } from '../hooks/useAccountUser.js';
+import { useProfileContextRevision } from '../lib/profile-context.js';
+import { useManualServerRead } from '../hooks/useServerQuery.js';
+import { queryKeys } from '../lib/query-keys.js';
 
 interface InvoiceRow {
   invoiceId: string;
@@ -81,19 +85,35 @@ async function getJson<T>(path: string, signal: AbortSignal): Promise<T> {
   return (await response.json()) as T;
 }
 
-export function InvoiceLedger({
-  onSelectForDueAt,
-  onSelectForRefund,
-  onOpenReceipt,
-  initialInvoiceId = '',
-  query,
-}: {
+type InvoiceLedgerProps = {
   onSelectForDueAt: (invoiceId: string) => void;
   onSelectForRefund?: (invoiceId: string) => void;
   onOpenReceipt: (receiptId: string, state: string) => void;
   initialInvoiceId?: string;
   query?: ListQueryBinding;
-}) {
+};
+
+export function InvoiceLedger(props: InvoiceLedgerProps) {
+  const accountId = useAccountUser();
+  const revision = useProfileContextRevision();
+  return <OwnedInvoiceLedger key={JSON.stringify([accountId, revision])} {...props} />;
+}
+
+function OwnedInvoiceLedger({
+  onSelectForDueAt,
+  onSelectForRefund,
+  onOpenReceipt,
+  initialInvoiceId = '',
+  query,
+}: InvoiceLedgerProps) {
+  const accountId = useAccountUser();
+  const authority = {
+    context: 'staff' as const,
+    ownerId: accountId ?? 'staff-session',
+    accountId,
+    revision: useProfileContextRevision(),
+  };
+  const read = useManualServerRead();
   const deepLinkId =
     query?.query.filters.invoiceId ?? (isInvoiceUuid(initialInvoiceId) ? initialInvoiceId : '');
   const locale = useLocale();
@@ -160,7 +180,10 @@ export function InvoiceLedger({
       params.set('beforeId', cursor.beforeId);
     }
     setStatus('loading');
-    void getJson<Page>(`${base}${params.size ? `?${params}` : ''}`, controller.signal)
+    const path = `${base}${params.size ? `?${params}` : ''}`;
+    params.set('endpoint', base);
+    const key = queryKeys.invoices.list(authority, params);
+    void read(key, controller.signal, (signal) => getJson<Page>(path, signal))
       .then((page) => {
         if (controller.signal.aborted) return;
         setAccepted((current) => {
@@ -195,14 +218,17 @@ export function InvoiceLedger({
         }
       });
     return () => controller.abort();
-  }, [state, invoiceId, profileId, orderId, cursorKey, criteria, revision]);
+  }, [state, invoiceId, profileId, orderId, cursorKey, criteria, revision, read]);
 
   useEffect(() => {
     if (!selectedId) return;
     const controller = new AbortController();
     setDetail(null);
     setDetailStatus('loading');
-    void getJson<InvoiceDetail>(`${base}/${encodeURIComponent(selectedId)}`, controller.signal)
+    const path = `${base}/${encodeURIComponent(selectedId)}`;
+    void read(queryKeys.invoices.detail(authority, path), controller.signal, (signal) =>
+      getJson<InvoiceDetail>(path, signal)
+    )
       .then((value) => {
         if (!controller.signal.aborted) {
           setDetail(value);
@@ -213,7 +239,7 @@ export function InvoiceLedger({
         if (!controller.signal.aborted) setDetailStatus('error');
       });
     return () => controller.abort();
-  }, [selectedId, detailRevision]);
+  }, [selectedId, detailRevision, read]);
 
   function lookup(event: FormEvent) {
     event.preventDefault();

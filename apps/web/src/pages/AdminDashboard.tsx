@@ -14,6 +14,7 @@ import { dashboardText } from '@barghsa/i18n/dashboard';
 import { Button } from '@barghsa/ui';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { staffDashboardReader, useStaffDashboardData } from '../hooks/useStaffDashboardData.js';
+import { localizedAsyncReadError } from '../hooks/useAsyncData.js';
 
 interface PendingVerificationProfile {
   id: string;
@@ -201,7 +202,12 @@ function ChargebackWarning() {
   // A stale zero is not evidence that finance has no unresolved exceptions.
   const widgetResource =
     resource.status === 'ready' && resource.refreshError && resource.data.count === 0
-      ? { status: 'error' as const, data: null, retry: resource.retry }
+      ? {
+          status: 'error' as const,
+          data: null,
+          retry: resource.retry,
+          error: localizedAsyncReadError(null, locale),
+        }
       : resource;
   return (
     <DashboardWidget

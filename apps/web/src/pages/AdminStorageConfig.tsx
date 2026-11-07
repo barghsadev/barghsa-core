@@ -1,3 +1,4 @@
+import { confirmationText } from '@barghsa/i18n/confirmation';
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
 import { t } from '@barghsa/i18n/admin-ui';
 import { storagePolicyFormText } from '@barghsa/i18n/storage-policy-forms';
@@ -582,6 +583,7 @@ export default function AdminStorageConfig() {
             }
             setNotice('saved');
             closeAction();
+            return confirmationText('recorded', locale);
           }}
         />
       )}

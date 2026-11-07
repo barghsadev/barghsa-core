@@ -25,6 +25,10 @@ import { OperationalQueueTable } from '../components/OperationalQueueTable.js';
 import { withCsrf } from '../lib/csrf.js';
 import { useState, useEffect, useCallback, useRef, lazy, Suspense } from 'react';
 import { useCatalogueScope } from '../hooks/useCatalogueResource.js';
+import { useAccountUser } from '../hooks/useAccountUser.js';
+import { useManualServerRead } from '../hooks/useServerQuery.js';
+import { useProfileContextRevision } from '../lib/profile-context.js';
+import { queryKeys } from '../lib/query-keys.js';
 import type { FormEvent } from 'react';
 
 const TosRichText = lazy(() => import('./TosRichText.js'));
@@ -68,6 +72,9 @@ import { isVersion, type TosVersion } from '../lib/content-catalogues.js';
  * Read-only version detail view shows full Persian and English content.
  */
 export default function AdminTosPage() {
+  const accountId = useAccountUser();
+  const profileRevision = useProfileContextRevision();
+  const read = useManualServerRead();
   const time = useAccountTime();
   const locale = useLocale();
   const text = adminTosText(locale);
@@ -90,6 +97,8 @@ export default function AdminTosPage() {
   const [uncertainSave, setUncertainSave] = useState(false);
 
   const historyRequest = useRef(0);
+  const historyController = useRef<AbortController | null>(null);
+  const draftController = useRef<AbortController | null>(null);
   const mounted = useRef(false);
   const publishBaseline = useRef<string | null>(null);
   const saveInFlight = useRef(false);
@@ -146,6 +155,8 @@ export default function AdminTosPage() {
     setPublishing(false);
     setDiscarding(false);
     historyRequest.current++;
+    historyController.current?.abort();
+    draftController.current?.abort();
     editorGeneration.current++;
     publishGeneration.current++;
     setVersions([]);
@@ -169,6 +180,7 @@ export default function AdminTosPage() {
     mounted.current = true;
     return () => {
       mounted.current = false;
+      draftController.current?.abort();
       editorGeneration.current++;
       publishGeneration.current++;
     };
@@ -185,29 +197,47 @@ export default function AdminTosPage() {
     }
     const epoch = scope.version,
       request = ++historyRequest.current;
+    historyController.current?.abort();
+    const controller = new AbortController();
+    historyController.current = controller;
     const current = () =>
-      mounted.current && scope.live.current === epoch && request === historyRequest.current;
+      mounted.current &&
+      scope.live.current === epoch &&
+      request === historyRequest.current &&
+      !controller.signal.aborted;
     try {
       setLoading(true);
       setHistoryReady(false);
       setError(null);
-      const res = await fetch('/api/admin/tos/versions');
+      const path = '/api/admin/tos/versions';
+      const key = queryKeys.catalogue.list(
+        {
+          context: 'staff',
+          ownerId: accountId ?? scope.identity,
+          accountId,
+          revision: profileRevision,
+        },
+        new URLSearchParams({ endpoint: path, permission: String(epoch) })
+      );
+      const data = await read(key, controller.signal, async (signal) => {
+        const res = await fetch(path, { signal });
+        if (res.status === 401 || res.status === 403) return null;
+        if (!res.ok) throw new TosUiError('historyFailed', res.status);
+        const value: unknown = await res.json();
+        if (
+          !Array.isArray(value) ||
+          !value.every(isVersion) ||
+          new Set(value.map((v) => v.id)).size !== value.length ||
+          value.filter((v) => v.status === 'draft').length > 1 ||
+          value.filter((v) => v.isActive).length > 1
+        )
+          throw new TosUiError('invalidHistory');
+        return value;
+      });
       if (!current()) return;
-      if (res.status === 401 || res.status === 403) {
+      if (!data) {
         scope.deny();
         return;
-      }
-      if (!res.ok) throw new TosUiError('historyFailed', res.status);
-      const data: unknown = await res.json();
-      if (!current()) return;
-      if (
-        !Array.isArray(data) ||
-        !data.every(isVersion) ||
-        new Set(data.map((v) => v.id)).size !== data.length ||
-        data.filter((v) => v.status === 'draft').length > 1 ||
-        data.filter((v) => v.isActive).length > 1
-      ) {
-        throw new TosUiError('invalidHistory');
       }
       const edited = currentEditor.current;
       if (
@@ -245,13 +275,27 @@ export default function AdminTosPage() {
       if (current()) setError(displayError(err, 'historyFailed'));
     } finally {
       if (current()) setLoading(false);
+      if (historyController.current === controller) historyController.current = null;
     }
-  }, [scope.denied, scope.version, scope.live, scope.deny, resetEditorBusy, editor.isPending]);
+  }, [
+    scope.denied,
+    scope.version,
+    scope.live,
+    scope.deny,
+    scope.identity,
+    resetEditorBusy,
+    editor.isPending,
+    read,
+    accountId,
+    profileRevision,
+  ]);
 
   useEffect(() => {
     void fetchVersions();
     return () => {
       historyRequest.current++;
+      historyController.current?.abort();
+      draftController.current?.abort();
     };
   }, [fetchVersions]);
 
@@ -467,22 +511,38 @@ export default function AdminTosPage() {
     if (!editId || saveInFlight.current || scope.denied || loading) return;
     const epoch = scope.version,
       generation = editorGeneration.current;
+    const controller = new AbortController();
+    draftController.current?.abort();
+    draftController.current = controller;
     const current = () =>
       mounted.current && scope.live.current === epoch && generation === editorGeneration.current;
     const token = ++busyTokens.current.save;
     saveInFlight.current = true;
     setSaving(true);
     try {
-      const response = await fetch(`/api/admin/tos/versions/${editId}`);
+      const path = `/api/admin/tos/versions/${editId}`;
+      const key = queryKeys.catalogue.detail(
+        {
+          context: 'staff',
+          ownerId: accountId ?? scope.identity,
+          accountId,
+          revision: profileRevision,
+        },
+        JSON.stringify([path, epoch])
+      );
+      const result = await read(key, controller.signal, async (signal) => {
+        const response = await fetch(path, { signal });
+        if (response.status === 401 || response.status === 403) return null;
+        const value: unknown = await response.json();
+        if (!response.ok || !isVersion(value) || value.id !== editId || !value.revision)
+          throw new TosUiError('unconfirmedWrite');
+        return value;
+      });
       if (!current()) return;
-      if (response.status === 401 || response.status === 403) {
+      if (!result) {
         scope.deny();
         return;
       }
-      const result: unknown = await response.json();
-      if (!current()) return;
-      if (!response.ok || !isVersion(result) || result.id !== editId || !result.revision)
-        throw new TosUiError('unconfirmedWrite');
       if (result.status !== 'draft') {
         setShowEditor(false);
         await fetchVersions();
@@ -493,6 +553,7 @@ export default function AdminTosPage() {
     } catch (error) {
       if (current()) setError(displayError(error, 'historyFailed'));
     } finally {
+      if (draftController.current === controller) draftController.current = null;
       if (token === busyTokens.current.save) {
         saveInFlight.current = false;
         setSaving(false);

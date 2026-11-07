@@ -14,6 +14,10 @@ import {
 } from '@barghsa/shared/admin';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import { useLocale } from '../hooks/useLocale.js';
+import { useAccountUser } from '../hooks/useAccountUser.js';
+import { useManualServerRead } from '../hooks/useServerQuery.js';
+import { useProfileContextRevision } from '../lib/profile-context.js';
+import { queryKeys } from '../lib/query-keys.js';
 
 import { useWizardForm } from '../hooks/useWizardForm.js';
 import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
@@ -45,6 +49,10 @@ import {
 
 export default function AdminStaffTeamsPage() {
   const locale = useLocale();
+  const accountId = useAccountUser();
+  const profileRevision = useProfileContextRevision();
+  const read = useManualServerRead();
+  const teamRequest = useRef<AbortController | null>(null);
   const numbers = useNumberFormatting(locale);
   const label = (key: string) => t(`admin.teams.${key}`, locale);
   const [teams, setTeams] = useState<Team[]>([]);
@@ -153,6 +161,7 @@ export default function AdminStaffTeamsPage() {
   }
   function denyAccess() {
     ++denialGeneration.current;
+    teamRequest.current?.abort();
     deniedRef.current = true;
     setDenied(true);
     setLoading(false);
@@ -246,19 +255,35 @@ export default function AdminStaffTeamsPage() {
   const load = useCallback(async () => {
     const current = ++generation.current,
       owner = denialGeneration.current;
+    teamRequest.current?.abort();
+    const controller = new AbortController();
+    teamRequest.current = controller;
     setLoading(true);
     setError(false);
     try {
-      const response = await fetch('/api/admin/staff-teams', { credentials: 'include' });
+      const path = '/api/admin/staff-teams';
+      const key = queryKeys.catalogue.list(
+        {
+          context: 'staff',
+          ownerId: accountId ?? 'staff-session',
+          accountId,
+          revision: profileRevision,
+        },
+        new URLSearchParams({ endpoint: path, permission: String(owner) })
+      );
+      const data = await read(key, controller.signal, async (signal) => {
+        const response = await fetch(path, { credentials: 'include', signal });
+        if ([401, 403].includes(response.status)) return null;
+        if (!response.ok) throw new Error('Teams unavailable');
+        const value: unknown = await response.json();
+        if (!validTeams(value)) throw new Error('Invalid teams');
+        return value;
+      });
       if (current !== generation.current || owner !== denialGeneration.current) return;
-      if ([401, 403].includes(response.status)) {
+      if (!data) {
         denyAccess();
         return;
       }
-      if (!response.ok) throw new Error('Teams unavailable');
-      const data: unknown = await response.json();
-      if (!validTeams(data)) throw new Error('Invalid teams');
-      if (current !== generation.current || owner !== denialGeneration.current) return;
       const selected = editedTeam.current;
       const fresh = selected ? data.find((team) => team.id === selected.id) : null;
       if (selected && (!fresh || teamBasis(fresh) !== teamBasis(selected))) {
@@ -288,12 +313,14 @@ export default function AdminStaffTeamsPage() {
       if (current === generation.current && owner === denialGeneration.current) setError(true);
     } finally {
       if (current === generation.current && owner === denialGeneration.current) setLoading(false);
+      if (teamRequest.current === controller) teamRequest.current = null;
     }
-  }, []);
+  }, [accountId, profileRevision, read]);
   useEffect(() => {
     void load();
     return () => {
       ++generation.current;
+      teamRequest.current?.abort();
     };
   }, [load]);
   useEffect(() => {

@@ -1,3 +1,4 @@
+import { confirmationText } from '@barghsa/i18n/confirmation';
 import { useOwnedStaffServiceRead } from '../hooks/useOwnedStaffServiceRead.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { OrderWalletBalance } from '../components/OrderWalletBalance.js';
@@ -1178,6 +1179,7 @@ function OwnedAdminElectricityIncreasesPage({ queries }: { queries?: ListQueryBi
               return next;
             });
             setRevision((value) => value + 1);
+            return confirmationText('recorded', locale);
           }}
         />
       ) : null}

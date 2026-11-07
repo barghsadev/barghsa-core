@@ -1,3 +1,4 @@
+import { confirmationText } from '@barghsa/i18n/confirmation';
 import { useOwnedContractRead } from '../hooks/useOwnedContractRead.js';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { Alert, AlertDescription, Button, NativeSelect, PageLoading } from '@barghsa/ui';
@@ -784,6 +785,7 @@ export function ContractSignaturePanel({
             setData(view);
             callbacks.current.onStatus?.(view);
             callbacks.current.onChanged();
+            return confirmationText('recorded', locale);
           }}
         />
       ) : null}

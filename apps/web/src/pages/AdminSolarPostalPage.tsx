@@ -1,3 +1,4 @@
+import { confirmationText } from '@barghsa/i18n/confirmation';
 import { useOwnedStaffServiceRead } from '../hooks/useOwnedStaffServiceRead.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
@@ -1191,6 +1192,7 @@ function AdminSolarPostalWorkspace({ queries }: { queries?: ListQueryBinding } =
               refresh();
               reasonForm.reset({ reason: '' });
             }
+            return confirmationText('recorded', locale);
           }}
         />
       )}

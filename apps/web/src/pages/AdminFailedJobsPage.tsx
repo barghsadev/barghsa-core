@@ -1,3 +1,4 @@
+import { confirmationText } from '@barghsa/i18n/confirmation';
 import { OperationalQueueTable, QueueRecordDetails } from '../components/OperationalQueueTable.js';
 import { OperationalCommandReview } from '../components/OperationalCommandReview.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
@@ -631,6 +632,7 @@ export default function AdminFailedJobsPage({ queries }: { queries?: ListQueryBi
             savedTrigger.current = action.trigger;
             setSelected([]);
             queue.refresh();
+            return count > 0 ? confirmationText('recorded', locale) : undefined;
           }}
         />
       )}

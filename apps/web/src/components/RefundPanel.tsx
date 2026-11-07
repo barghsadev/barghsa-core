@@ -19,6 +19,7 @@ import { normalizeProfileDigits } from '../lib/profile-digits.js';
 import { documentRequest, DocumentRequestError } from '../lib/documents.js';
 import { requestRefundReview, RefundReviewError } from '../lib/refund-review.js';
 import { validRefundReceipt } from '../lib/refund-receipt.js';
+import { toast } from '../lib/toast-api.js';
 import {
   useRefundLookupForm,
   useRefundRequestForm,
@@ -659,6 +660,7 @@ function RefundWorkspace({ destination, selectedInvoiceId = '' }: PanelProps) {
             if (!live.current || current.current !== action) return;
             const tools = actionTools.current;
             if (!tools?.receipt(result)) throw new Error('Refund acknowledgement mismatch');
+            toast.success(contractText('refundUpdateRecorded', locale));
             tools.reset();
             close();
             refresh();

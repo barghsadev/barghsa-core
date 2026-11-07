@@ -1,7 +1,16 @@
-import { act } from 'react';
+import { act, type ComponentProps } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
-import { InvoiceLedger } from './InvoiceLedger.js';
+import { InvoiceLedger as StaffInvoiceLedger } from './InvoiceLedger.js';
+import { QueryProvider } from '../test/query-provider.js';
+
+function InvoiceLedger(props: ComponentProps<typeof StaffInvoiceLedger>) {
+  return (
+    <QueryProvider>
+      <StaffInvoiceLedger {...props} />
+    </QueryProvider>
+  );
+}
 
 const ID = '11111111-1111-7111-8111-111111111111';
 const PROFILE = '22222222-2222-7222-8222-222222222222';

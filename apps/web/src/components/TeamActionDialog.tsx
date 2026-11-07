@@ -27,7 +27,8 @@ import {
 import { useLocale } from '../hooks/useLocale.js';
 import { withCsrf } from '../lib/csrf.js';
 import { StepUpAuthGate } from './StepUpAuthGate.js';
-import { useCommandFeedback } from '../hooks/useCommandFeedback.js';
+import { getProfileContextRevision } from '../lib/profile-context.js';
+import { sendToast } from '../lib/toast-api.js';
 
 export interface TeamAction {
   title: string;
@@ -70,7 +71,8 @@ export function TeamActionDialog({
     }
 ) & {
   onClose: () => void;
-  onSuccess: (result: unknown) => Promise<void>;
+  /** Return localized feedback only after validating the receipt for the current command. */
+  onSuccess: (result: unknown) => Promise<void | string>;
   finalFocus?: ComponentProps<typeof DialogContent>['finalFocus'];
   focusConfirmation?: boolean;
   summary?: ReactNode;
@@ -118,7 +120,6 @@ export function TeamActionDialog({
   const [needsOtp, setNeedsOtp] = useState(action?.requiresOtp === true);
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
-  useCommandFeedback({ error, operation: action?.path });
 
   const [retryAt, setRetryAt] = useState(0),
     [remaining, setRemaining] = useState(0);
@@ -147,10 +148,23 @@ export function TeamActionDialog({
     event?.preventDefault();
     if (needsOtp && !otpVerified) return;
     if (!canConfirm.current || inFlight.current || retryAt > Date.now()) return;
+    const profileRevision = getProfileContextRevision();
     inFlight.current = true;
     setBusy(true);
     onPendingChange?.(true);
     setError(null);
+    const owned = () =>
+      mounted.current &&
+      currentAction.current === action &&
+      getProfileContextRevision() === profileRevision;
+    const showError = (message: string, uncertain = false) => {
+      setError(message);
+      if (owned())
+        sendToast(
+          uncertain ? 'warning' : 'error',
+          uncertain ? confirmationText('unconfirmed', locale) : message
+        );
+    };
     let commandSent = false;
     try {
       if (!otpVerified && (needsPassword || !action)) {
@@ -160,11 +174,11 @@ export function TeamActionDialog({
           headers: withCsrf({ 'Content-Type': 'application/json' }),
           body: JSON.stringify({ password }),
         });
-        if (!mounted.current || !canConfirm.current || currentAction.current !== action) return;
+        if (!owned() || !canConfirm.current) return;
         setPassword('');
         if (rateLimited(verified)) return;
         if (!verified.ok) {
-          setError(t('team.passwordError', locale));
+          showError(t('team.passwordError', locale));
           return;
         }
         setNeedsPassword(false);
@@ -192,7 +206,7 @@ export function TeamActionDialog({
         ...(requestBody === undefined ? {} : { body: requestBody }),
       });
       const data = await response.json().catch(() => null);
-      if (!mounted.current || currentAction.current !== action) return;
+      if (!owned()) return;
       const code = typeof data?.error === 'string' ? data.error : data?.error?.code;
       if (
         response.status === 403 &&
@@ -219,32 +233,39 @@ export function TeamActionDialog({
           onClose();
           return;
         }
-        const mappedMessage = action.errorMessages?.[code];
-        setError(
+        const mappedMessage =
+          typeof code === 'string' &&
+          action.errorMessages &&
+          Object.hasOwn(action.errorMessages, code)
+            ? action.errorMessages[code]
+            : undefined;
+        showError(
           (typeof mappedMessage === 'function' ? mappedMessage(data) : mappedMessage) ??
             (response.status === 409
               ? (action.conflictMessage ?? t('team.conflict', locale))
               : response.status === 403
                 ? (action.forbiddenMessage ?? t('team.forbidden', locale))
-                : t('team.error', locale))
+                : t('team.error', locale)),
+          response.status >= 500
         );
         return;
       }
       if (action.successStatus !== undefined && response.status !== action.successStatus) {
         onUnconfirmed?.();
-        setError(t('team.error', locale));
+        showError(t('team.error', locale), true);
         return;
       }
       if (action.signsOut || data?.sessionRevoked === true) {
         window.location.assign('/login');
         return;
       }
-      await onSuccess(data);
-      if (mounted.current && currentAction.current === action) onClose();
+      const message = await onSuccess(data);
+      if (message && getProfileContextRevision() === profileRevision) sendToast('success', message);
+      if (owned()) onClose();
     } catch {
-      if (mounted.current && currentAction.current === action) {
+      if (owned()) {
         if (commandSent) onUnconfirmed?.();
-        setError(t('team.error', locale));
+        showError(t('team.error', locale), commandSent);
       }
     } finally {
       inFlight.current = false;

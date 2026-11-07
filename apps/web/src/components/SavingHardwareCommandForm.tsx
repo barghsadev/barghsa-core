@@ -1,3 +1,4 @@
+import { confirmationText } from '@barghsa/i18n/confirmation';
 import { useOwnedFinancialRead } from '../hooks/useOwnedFinancialRead.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
@@ -524,6 +525,7 @@ function OwnedSavingHardwareCommandForm({
             form.reset({ hardwareProductId: form.getValues('hardwareProductId'), reason: '' });
             release();
             onSuccess();
+            return confirmationText('recorded', locale);
           }}
         />
       )}

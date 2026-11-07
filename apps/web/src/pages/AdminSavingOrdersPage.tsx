@@ -1,3 +1,4 @@
+import { confirmationText } from '@barghsa/i18n/confirmation';
 import { useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from '../lib/query-keys.js';
 import { OrderWalletBalance } from '../components/OrderWalletBalance.js';
@@ -1539,6 +1540,7 @@ function PaidSavingAddressForm({
             form.reset({ addressId: command.review.data.replacementAddressId, reason: '' });
             release();
             onSuccess();
+            return confirmationText('recorded', locale);
           }}
         />
       )}

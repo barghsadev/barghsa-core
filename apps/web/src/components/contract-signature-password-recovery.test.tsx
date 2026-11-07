@@ -1,3 +1,4 @@
+import { approveVisibleConfirmation } from '../test/confirmation.js';
 import { QueryProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import { createRoot } from 'react-dom/client';
@@ -88,6 +89,7 @@ it('actual password step-up and unknown recovery resend the same immutable comma
     await act(async () => button('Record signed copy').click());
     await act(async () => vi.dynamicImportSettled());
     await vi.waitFor(() => expect(document.querySelector('[role=dialog]')).not.toBeNull());
+    await approveVisibleConfirmation();
     await act(async () =>
       document
         .querySelector<HTMLFormElement>('[role=dialog] form')!
@@ -102,6 +104,7 @@ it('actual password step-up and unknown recovery resend the same immutable comma
       );
       password.dispatchEvent(new Event('input', { bubbles: true }));
     });
+    await approveVisibleConfirmation();
     await act(async () =>
       document
         .querySelector<HTMLFormElement>('[role=dialog] form')!
@@ -114,6 +117,7 @@ it('actual password step-up and unknown recovery resend the same immutable comma
     await act(async () =>
       host.querySelector<HTMLButtonElement>('[data-testid=contract-signature-retry]')!.click()
     );
+    await approveVisibleConfirmation();
     await act(async () =>
       document
         .querySelector<HTMLFormElement>('[role=dialog] form')!

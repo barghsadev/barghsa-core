@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { ErrorCodes } from '@barghsa/shared/errors';
+import { toast } from '../lib/toast-api.js';
 import type { TeamAction } from '../components/TeamActionDialog.js';
 import {
   contractFormRejection,
@@ -27,6 +28,7 @@ export function useContractAuthoringCommand({
   onDenied,
   onFields,
   error,
+  success,
 }: {
   scope: string;
   coordination?: ContractFormCoordination | undefined;
@@ -35,9 +37,19 @@ export function useContractAuthoringCommand({
   onDenied?: (() => void) | undefined;
   onFields: (fields: unknown[]) => boolean;
   error: string;
+  success: string;
 }) {
-  const current = useRef({ scope, coordination, onLocked, onSaved, onDenied, onFields, error });
-  current.current = { scope, coordination, onLocked, onSaved, onDenied, onFields, error };
+  const current = useRef({
+    scope,
+    coordination,
+    onLocked,
+    onSaved,
+    onDenied,
+    onFields,
+    error,
+    success,
+  });
+  current.current = { scope, coordination, onLocked, onSaved, onDenied, onFields, error, success };
   const owner = useRef<object>({}),
     alive = useRef(true),
     claiming = useRef(false);
@@ -203,6 +215,7 @@ export function useContractAuthoringCommand({
             setAction(null);
             setUncertain(false);
             release();
+            toast.success(current.current.success);
             current.current.onSaved(result.id);
           },
         }

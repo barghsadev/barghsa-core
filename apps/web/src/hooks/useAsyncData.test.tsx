@@ -49,11 +49,48 @@ describe('useAsyncData', () => {
       )
     );
     expect(resource.status).toBe('error');
+    expect(resource).toMatchObject({ error: { code: 'READ_UNAVAILABLE' } });
     expect(other).toMatchObject({ status: 'ready', data: 'order' });
     await act(async () => resource.retry());
     expect(resource).toMatchObject({ status: 'ready', data: 'invoice' });
     expect(fetcher.mock.calls.filter(([url]) => url === '/other')).toHaveLength(1);
     expect(fetcher.mock.calls.filter(([url]) => url === '/resource')).toHaveLength(2);
+  });
+
+  it('keeps raw errors private and translates a denial without another read', async () => {
+    const lang = document.documentElement.lang;
+    const fetcher = vi.fn(async () => response({ message: 'private account detail' }, 403));
+    vi.stubGlobal('fetch', fetcher);
+    try {
+      document.documentElement.lang = 'en';
+      await act(async () =>
+        root.render(
+          <QueryProvider>
+            <Example />
+          </QueryProvider>
+        )
+      );
+      expect(resource).toMatchObject({
+        status: 'error',
+        data: null,
+        error: {
+          code: 'READ_DENIED',
+          message: 'Could not load this information. Try again.',
+        },
+      });
+      await act(async () => {
+        document.documentElement.lang = 'fa';
+      });
+      expect(resource).toMatchObject({
+        error: {
+          code: 'READ_DENIED',
+          message: 'بارگذاری اطلاعات ناموفق بود. دوباره تلاش کنید.',
+        },
+      });
+      expect(fetcher).toHaveBeenCalledTimes(2);
+    } finally {
+      document.documentElement.lang = lang;
+    }
   });
 
   it('clears loaded profile data immediately and ignores an aborted late response', async () => {

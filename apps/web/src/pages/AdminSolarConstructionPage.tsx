@@ -1,3 +1,4 @@
+import { confirmationText } from '@barghsa/i18n/confirmation';
 import { useOwnedStaffServiceRead } from '../hooks/useOwnedStaffServiceRead.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
@@ -693,6 +694,7 @@ function OwnedAdminSolarConstructionPage({
             form.reset({ note: '' });
             setSaveError(false);
             setQueueRevision((v) => v + 1);
+            return confirmationText('recorded', locale);
           }}
           summary={
             <div className="space-y-2 rounded-md border p-4">

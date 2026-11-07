@@ -4,13 +4,14 @@ import { confirmationText } from '@barghsa/i18n/confirmation';
 export async function approveRiskConfirmation(
   page: Page,
   locale: 'en' | 'fa',
-  kind: 'financial' | 'destructive'
+  kind: 'financial' | 'destructive' | 'both'
 ) {
-  if (kind === 'financial') {
+  if (kind !== 'destructive') {
     await page
       .getByRole('checkbox', { name: confirmationText('acknowledge', locale), exact: true })
       .check();
-  } else {
+  }
+  if (kind !== 'financial') {
     await page
       .getByLabel(confirmationText('typePhrase', locale), { exact: true })
       .fill(confirmationText('phrase', locale));

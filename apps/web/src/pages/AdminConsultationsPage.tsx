@@ -1,3 +1,4 @@
+import { confirmationText } from '@barghsa/i18n/confirmation';
 import { useOwnedFinancialRead } from '../hooks/useOwnedFinancialRead.js';
 import { useOwnedStaffServiceRead } from '../hooks/useOwnedStaffServiceRead.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
@@ -2187,7 +2188,7 @@ function OwnedAdminConsultationsPage({ queries }: { queries?: ConsultationListQu
               setPaidFeeReview(null);
               clearAction();
               refresh();
-              return;
+              return confirmationText('recorded', locale);
             }
             const resolutionCaptured = resolutionCommand.current;
             if (resolutionCaptured) {
@@ -2202,7 +2203,7 @@ function OwnedAdminConsultationsPage({ queries }: { queries?: ConsultationListQu
               offerDirty.current = true;
               clearAction();
               refresh();
-              return;
+              return confirmationText('recorded', locale);
             }
             if (
               (feeReview || paidFeeReview || resolutionReview) &&
@@ -2231,6 +2232,9 @@ function OwnedAdminConsultationsPage({ queries }: { queries?: ConsultationListQu
             setResolutionReview(null);
             clearAction();
             refresh();
+            return (command && !command.paid) || feeReview || paidFeeReview || resolutionReview
+              ? confirmationText('recorded', locale)
+              : undefined;
           }}
         />
       )}

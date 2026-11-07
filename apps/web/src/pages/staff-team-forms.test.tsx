@@ -1,4 +1,5 @@
 import { act } from 'react';
+import { QueryComponentProvider } from '../test/query-provider.js';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import Page from './AdminStaffTeamsPage.js';
@@ -82,7 +83,13 @@ afterEach(async () => {
 });
 const input = (id: string) => host.querySelector<HTMLInputElement>(id)!;
 async function mount() {
-  await act(async () => root.render(<Page />));
+  await act(async () =>
+    root.render(
+      <QueryComponentProvider>
+        <Page />
+      </QueryComponentProvider>
+    )
+  );
   await vi.waitFor(async () => {
     await act(async () => {});
     expect(host.textContent).toContain(staffMember.name);

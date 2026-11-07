@@ -1,3 +1,4 @@
+import { confirmationText } from '@barghsa/i18n/confirmation';
 import { useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from '../lib/query-keys.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
@@ -639,6 +640,7 @@ function OwnedSolarPostalTrackingEditor({
             detailRef.current = { ...value, canEdit: proposal.snapshot.canEdit === true };
             setDetail(detailRef.current);
             callbacks.current.onSaved();
+            return confirmationText('recorded', locale);
           }}
           summary={
             <FinancialReviewSummary

@@ -1,3 +1,4 @@
+import { approveRiskConfirmation } from './confirmation-fixture';
 import { readFile } from 'node:fs/promises';
 import AxeBuilder from '@axe-core/playwright';
 import type { Locator, Page } from '@playwright/test';
@@ -123,6 +124,7 @@ for (const [locale, theme] of [
     const field = dialog(page).getByLabel(t('team.password', locale), { exact: true });
     await expect(field).toBeVisible();
     await field.fill('Consultation-resolution-proof-42!');
+    await approveRiskConfirmation(page, locale, 'both');
     await confirm(page).click();
   }
   async function financialSummary(page: Page, review: ConsultationPaidResolutionReview) {
@@ -220,6 +222,7 @@ for (const [locale, theme] of [
     ]);
     expect(quoted.data.cancelInvoiceId).toBe(locale === 'en' ? closureUnpaidCharge : null);
     await financialSummary(page, quoted);
+    await approveRiskConfirmation(page, locale, 'both');
     await inspect(page, dialog(page), '[role="dialog"]', confirm(page));
     await outcomeCapture(
       page,
@@ -228,6 +231,7 @@ for (const [locale, theme] of [
     );
     state.writeMode = 'held';
     state.shell.needsStepUp = true;
+    await approveRiskConfirmation(page, locale, 'both');
     await confirm(page).click();
     await password(page);
     await expect.poll(() => !!state.heldWrite).toBe(true);
@@ -294,6 +298,7 @@ for (const [locale, theme] of [
     ]) {
       state.heldWrite = undefined;
       await retry(page).click();
+      await approveRiskConfirmation(page, locale, 'both');
       await confirm(page).click();
       await expect.poll(() => !!state.heldWrite).toBe(true);
       await state.heldWrite!.fulfill({ json: jsonbOrder(malformed) });
@@ -302,12 +307,14 @@ for (const [locale, theme] of [
     }
     state.writeMode = 'owned';
     await retry(page).click();
+    await approveRiskConfirmation(page, locale, 'both');
     await confirm(page).click();
     await expect(cancel(page)).toBeEnabled();
     await cancel(page).click();
     await expect(retry(page)).toBeEnabled();
     state.writeMode = 'success';
     await retry(page).click();
+    await approveRiskConfirmation(page, locale, 'both');
     await confirm(page).click();
     await expect(retry(page)).toHaveCount(0);
     await expect(reason(page)).toHaveValue('');
@@ -398,6 +405,7 @@ for (const [locale, theme] of [
       [recoveryOriginal, '150000', '450000'],
     ]);
     await financialSummary(page, quoted);
+    await approveRiskConfirmation(page, locale, 'both');
     await inspect(page, dialog(page), '[role="dialog"]', confirm(page));
     await outcomeCapture(
       page,
@@ -406,6 +414,7 @@ for (const [locale, theme] of [
     );
     state.writeMode = 'held';
     state.shell.needsStepUp = true;
+    await approveRiskConfirmation(page, locale, 'both');
     await confirm(page).click();
     await password(page);
     await expect.poll(() => !!state.heldWrite).toBe(true);
@@ -459,6 +468,7 @@ for (const [locale, theme] of [
     ]) {
       state.heldWrite = undefined;
       await retry(page).click();
+      await approveRiskConfirmation(page, locale, 'both');
       await confirm(page).click();
       await expect.poll(() => !!state.heldWrite).toBe(true);
       await state.heldWrite!.fulfill({ json: jsonbOrder(malformed) });
@@ -467,12 +477,14 @@ for (const [locale, theme] of [
     }
     state.writeMode = 'rejected';
     await retry(page).click();
+    await approveRiskConfirmation(page, locale, 'both');
     await confirm(page).click();
     await expect(cancel(page)).toBeEnabled();
     await cancel(page).click();
     await expect(retry(page)).toBeEnabled();
     state.writeMode = 'success';
     await retry(page).click();
+    await approveRiskConfirmation(page, locale, 'both');
     await confirm(page).click();
     await expect(retry(page)).toHaveCount(0);
     await expect(reason(page)).toHaveValue('');

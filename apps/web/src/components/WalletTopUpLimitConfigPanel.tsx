@@ -1,3 +1,4 @@
+import { confirmationText } from '@barghsa/i18n/confirmation';
 import { tWalletLimit as t } from '@barghsa/i18n/wallet-limit';
 import { Alert, Button, Input, Label } from '@barghsa/ui';
 import { useLocale } from '../hooks/useLocale.js';
@@ -171,6 +172,7 @@ export default function WalletTopUpLimitConfigPanel(props: CatalogueEditorProps 
             editor.resource.accept(result as WalletLimitSetting);
             editor.complete();
             editor.resource.retry();
+            return confirmationText('recorded', locale);
           }}
         />
       )}

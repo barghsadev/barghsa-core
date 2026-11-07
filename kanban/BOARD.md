@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-07T03:12:00+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-07T04:10:11+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.4.0**. Next milestone: **v0.5.0**.
 
@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 840 | Accepted with unchanged source bindings. |
+| done | 842 | Accepted with unchanged source bindings. |
 | verify | 493 | Existing work may be complete; inspect evidence before building. |
-| partial | 28 | An earlier review found unmet criteria; reconcile later fixes. |
+| partial | 26 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 7 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
 | blocked | 1 | Named owner or external prerequisite. |
@@ -39,14 +39,12 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Close the captured query/read and confirmed CRUD feedback criteria. Inspect current helpers and callers; add only demonstrated missing error metadata, receipt announcements, query key adoption or cancellation proof. Preserve every owner, financial, idempotency, uncertain and no-polling safeguard. Continue v0.5.0 independently of the pending route telemetry decision.
+Finish remaining scoped list/detail adoption and confirmed command feedback. Reuse the existing manual/read hooks and guarded receipt checks, preserve privacy and money safeguards, and stay in v0.5.0. The pending route telemetry decision does not block this work.
 
 - `07-ui-ux-design.md#T-07.01.04.02`: Define shared query key factory conventions: `queryKeys.profiles.all`, `queryKeys.orders.list(filters)`, `queryKeys.orders.detail(id)`, `queryKeys.invoices.list(filters)`, `queryKeys.wallet.balance`, etc. All list and detail queries use the factory pattern for consistent invalidation. Document in `packages/ui` README.
 - `07-ui-ux-design.md#T-07.01.04.03`: Create `useServerListQuery` hook: wraps `useQuery` with cursor/offset pagination params, filter/sort/search serialization, and `keepPreviousData: true` to prevent layout shift during pagination. Shared by all list pages. Create `useServerDetailQuery(id)` for single-entity fetches.
 - `07-ui-ux-design.md#T-07.01.04.04`: Create `useServerMutation` hook: wraps `useMutation` with automatic toast on success/error, `onSettled` invalidation via query key factory, and optimistic updates only for low-risk actions (mark notification read, toggle boolean preference). Never optimistic for payments, wallet, orders, contracts.
-- `07-ui-ux-design.md#T-07.01.04.05`: Set up query cancellation: abort in-flight queries on unmount (via `AbortController`). Ensure financial/wallet queries have `refetchInterval: false` or long intervals — never auto-refresh balance without user action.
 - `07-ui-ux-design.md#T-07.11.01.03`: Create an API response interceptor that auto-shows toasts for: successful CRUD operations ("Invoice created", "Profile updated", "Order submitted"), API errors (error message from API), network failures ("Connection lost. Retrying...").
-- `07-ui-ux-design.md#T-07.12.01.05`: Create `useAsyncData<T>(fetcher, deps)` hook: returns `{ data, loading, error, refetch }`. Handles: initial fetch, re-fetch on dependency change, abort on unmount, error transform (localized message + code).
 
 ## v0.2.0: Complete customer journeys
 
@@ -684,7 +682,7 @@ Customer and admin workflows work on desktop/mobile in both languages and themes
 | `07-ui-ux-design.md#T-07.01.04.02` | partial | Recorded batch work | Define shared query key factory conventions: `queryKeys.profiles.all`, `queryKeys.orders.list(filters)`, `queryKeys.orders.detail(id)`, `queryKeys.invoices.list(filters)`, `queryKeys.wallet.balance`, etc. All list and detail queries use the factory pattern for consistent invalidation. Document in `packages/ui` README. |
 | `07-ui-ux-design.md#T-07.01.04.03` | partial | Recorded batch work | Create `useServerListQuery` hook: wraps `useQuery` with cursor/offset pagination params, filter/sort/search serialization, and `keepPreviousData: true` to prevent layout shift during pagination. Shared by all list pages. Create `useServerDetailQuery(id)` for single-entity fetches. |
 | `07-ui-ux-design.md#T-07.01.04.04` | partial | Recorded batch work | Create `useServerMutation` hook: wraps `useMutation` with automatic toast on success/error, `onSettled` invalidation via query key factory, and optimistic updates only for low-risk actions (mark notification read, toggle boolean preference). Never optimistic for payments, wallet, orders, contracts. |
-| `07-ui-ux-design.md#T-07.01.04.05` | partial | Recorded batch work | Set up query cancellation: abort in-flight queries on unmount (via `AbortController`). Ensure financial/wallet queries have `refetchInterval: false` or long intervals — never auto-refresh balance without user action. |
+| `07-ui-ux-design.md#T-07.01.04.05` | done | Recorded batch work | Set up query cancellation: abort in-flight queries on unmount (via `AbortController`). Ensure financial/wallet queries have `refetchInterval: false` or long intervals — never auto-refresh balance without user action. |
 | `07-ui-ux-design.md#T-07.01.04.06` | done | Recorded batch work | Configure `@tanstack/react-query-devtools` in development mode only. Never expose query cache, stale data, or retry attempts in production. Devtools toggle bound to `process.env.NODE_ENV`. |
 | `07-ui-ux-design.md#T-07.02.01.01` | done | Recorded batch work | Define global color palette tokens in the existing shared `packages/ui/src/styles.css`: neutral gray scale (`50–950`), brand primary (`50–950`), brand secondary, success (green), warning (amber), danger (red), info (blue). Each scale has light and dark values. |
 | `07-ui-ux-design.md#T-07.02.01.02` | done | Recorded batch work | Define semantic CSS variables mapped from palette: `--background`, `--foreground`, `--card`, `--card-foreground`, `--popover`, `--popover-foreground`, `--primary`, `--primary-foreground`, `--secondary`, `--secondary-foreground`, `--muted`, `--muted-foreground`, `--accent`, `--accent-foreground`, `--destructive`, `--destructive-foreground`, `--border`, `--input`, `--ring`, `--radius`, `--shadow-sm` through `--shadow-2xl`. |
@@ -790,7 +788,7 @@ Customer and admin workflows work on desktop/mobile in both languages and themes
 | `07-ui-ux-design.md#T-07.12.01.02` | done | Recorded batch work | Create `ErrorState` component: icon (sad face, broken connection, warning), error title (i18n), error description, retry button ("Try again"), optional "Contact support" link with pre-filled correlation ID. Error details in collapsible section for debugging (safe, no stack traces). |
 | `07-ui-ux-design.md#T-07.12.01.03` | done | Recorded batch work | Create `EmptyState` component: icon (empty box, search icon, document icon), title ("No items yet", "No results found"), description (helpful message), action button ("Create first order", "Clear filters", "Browse products"), optional illustration. |
 | `07-ui-ux-design.md#T-07.12.01.04` | done | Recorded batch work | Create `LoadingSkeleton` variants for common patterns: `PageSkeleton` (full page shimmer), `TableSkeleton` (5 row shimmer), `CardGridSkeleton` (6 card shimmers in grid), `FormSkeleton` (input + button shimmers), `DetailSkeleton` (header + body shimmers). |
-| `07-ui-ux-design.md#T-07.12.01.05` | partial | Recorded batch work | Create `useAsyncData<T>(fetcher, deps)` hook: returns `{ data, loading, error, refetch }`. Handles: initial fetch, re-fetch on dependency change, abort on unmount, error transform (localized message + code). |
+| `07-ui-ux-design.md#T-07.12.01.05` | done | Recorded batch work | Create `useAsyncData<T>(fetcher, deps)` hook: returns `{ data, loading, error, refetch }`. Handles: initial fetch, re-fetch on dependency change, abort on unmount, error transform (localized message + code). |
 | `07-ui-ux-design.md#T-07.12.01.06` | done | Recorded batch work | Build `WaitingForBarghsa` state component: shown when an action is awaiting Barghsa staff. Displays: "Waiting for Barghsa", submission timestamp, latest update/status, expected response time, related ticket/comment link. Used on: order pages awaiting review, verification pending, contract awaiting signature, document awaiting review. See README no-dead-end principle. |
 | `07-ui-ux-design.md#T-07.12.01.07` | done | Recorded batch work | Build `NoDeadEndBanner` component: appears on any page whose underlying data cannot be loaded or written due to dependency/service failure. Shows: current state, what happened, next available action (Retry / Contact support), responsible team, help link. Applied to: external-provider outages, missing prerequisite data, admin-disabled features. Never leaves a customer on a disabled screen without explanation. |
 | `07-ui-ux-design.md#T-07.12.01.08` | partial | Recorded batch work | Every list page, detail page, dashboard widget, and admin page must implement the loading/empty/error pattern. No view renders a blank white page or infinite spinner. |

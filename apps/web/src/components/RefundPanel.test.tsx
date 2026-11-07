@@ -5,6 +5,7 @@ import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { t } from '@barghsa/i18n/admin-ui';
 import { en } from '@barghsa/i18n/contracts';
 import { RefundPanel } from './RefundPanel.js';
+import { toast } from '../lib/toast-api.js';
 import {
   refundDecisionReviewFixture,
   refundReviewFixture,
@@ -277,9 +278,11 @@ it('clears private drafts and invoice data after denied review', async () => {
   expect(host.querySelector<HTMLInputElement>('#wallet-refund-invoice')?.value).toBe('');
 });
 it('requires a matching request receipt before clearing drafts', async () => {
+  using announcement = vi.spyOn(toast, 'success').mockImplementation(() => {});
   await requestDraft();
   await click(word('request'));
   await expect(h.success!({ ...row(), invoiceId: refundId })).rejects.toThrow('acknowledgement');
+  expect(announcement).not.toHaveBeenCalled();
   await click('Dismiss');
   expect(host.querySelector<HTMLInputElement>('#wallet-refund-reason')?.value).toBe(
     '  Raw request reason  '
@@ -297,6 +300,7 @@ it('maps confirmation fields only for the captured request', async () => {
   expect(host.querySelector<HTMLInputElement>('#wallet-refund-amount')?.value).toBe('۴۰');
 });
 it('approval ignores the unsubmitted rejection draft and preserves the new request', async () => {
+  using announcement = vi.spyOn(toast, 'success').mockImplementation(() => {});
   showRow = true;
   await requestDraft();
   await input('wallet-refund-reason-' + refundId, '  Companion rejection  ');
@@ -305,6 +309,7 @@ it('approval ignores the unsubmitted rejection draft and preserves the new reque
   expect(h.invalid!(['reason'])).toBe(false);
   rowState = 'Approved';
   await act(async () => h.success!(row()));
+  expect(announcement).toHaveBeenCalledExactlyOnceWith('Refund update recorded');
   expect(host.querySelector<HTMLInputElement>('#wallet-refund-amount')?.value).toBe('۴۰');
   expect(host.querySelector<HTMLInputElement>('#wallet-refund-reason')?.value).toBe(
     '  Raw request reason  '

@@ -1,3 +1,4 @@
+import { approveRiskConfirmation } from './confirmation-fixture';
 import { readFile } from 'node:fs/promises';
 import AxeBuilder from '@axe-core/playwright';
 import type { Locator, Page } from '@playwright/test';
@@ -292,6 +293,7 @@ for (const [locale, theme] of [
       await expect(dialog).toContainText(contractText('prerequisite.signature', locale));
       await expect(dialog).toContainText(contractText('mandatoryRequirement', locale));
 
+      await approveRiskConfirmation(page, locale, 'financial');
       await inspect(page, dialog, '[role="dialog"]', confirm());
       await outcomeCapture(
         page,
@@ -300,10 +302,12 @@ for (const [locale, theme] of [
       );
       state.needsStepUp = true;
       state.writeMode = 'held';
+      await approveRiskConfirmation(page, locale, 'financial');
       await confirm().click();
       const password = dialog.getByLabel(t('team.password', locale), { exact: true });
       await expect(password).toBeVisible();
       await password.fill('Solar-contract-proof-42!');
+      await approveRiskConfirmation(page, locale, 'financial');
       await confirm().click();
       await expect.poll(() => !!state.heldWrite).toBe(true);
       const command = state.writes.at(-1)!;
@@ -359,6 +363,7 @@ for (const [locale, theme] of [
       ]) {
         state.heldWrite = undefined;
         await retry.click();
+        await approveRiskConfirmation(page, locale, 'financial');
         await confirm().click();
         await expect.poll(() => !!state.heldWrite).toBe(true);
         await state.heldWrite!.fulfill({ json: jsonbOrder(malformed) });
@@ -367,12 +372,14 @@ for (const [locale, theme] of [
       }
       state.writeMode = 'owned';
       await retry.click();
+      await approveRiskConfirmation(page, locale, 'financial');
       await confirm().click();
       await expect(cancel()).toBeEnabled();
       await cancel().click();
       await expect(retry).toBeEnabled();
       state.writeMode = 'success';
       await retry.click();
+      await approveRiskConfirmation(page, locale, 'financial');
       await confirm().click();
       await expect(form).toHaveCount(0);
       await expect(page.getByText(copy('solarContractCreated'), { exact: false })).toBeVisible();

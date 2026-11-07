@@ -40,7 +40,7 @@ function OwnedContractFinancialReviewDialog({
   contractId: string;
   time: ReturnType<typeof useAccountTime>;
   onClose: () => void;
-  onSuccess: (result: unknown) => Promise<void>;
+  onSuccess: (result: unknown) => Promise<void | string>;
 }) {
   const locale = useLocale();
   const actor = useAccountUser();
@@ -153,7 +153,7 @@ function OwnedContractFinancialReviewDialog({
         );
         if (!review || !sameContractEvidence(returned, review))
           throw new Error('Missing confirmed contract review');
-        await onSuccess(result);
+        return onSuccess(result);
       }}
     />
   );

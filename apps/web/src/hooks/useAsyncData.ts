@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useId, useMemo, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
+import { loadingText } from '@barghsa/i18n/loading-feedback';
 import { useAccountUser } from './useAccountUser.js';
+import { useLocale } from './useLocale.js';
 import { useServerDetailQuery } from './useServerQuery.js';
 import { queryKeys } from '../lib/query-keys.js';
 import { financialQueryResources, ServerQueryError } from '../lib/server-query-client.js';
@@ -21,8 +23,27 @@ const transports = new WeakMap<object, AbortController>();
 
 export type AsyncData<T> =
   | { status: 'loading'; data: null; retry: () => void }
-  | { status: 'error'; data: null; retry: () => void }
+  | { status: 'error'; data: null; retry: () => void; error: AsyncReadError }
   | { status: 'ready'; data: T; retry: () => void; refreshError?: boolean };
+
+type ReadErrorCode = 'READ_DENIED' | 'READ_UNAVAILABLE' | 'READ_FAILED';
+interface AsyncReadError {
+  code: ReadErrorCode;
+  message: string;
+}
+
+function readErrorCode(error: unknown): ReadErrorCode {
+  if (error instanceof ServerQueryError) {
+    if (error.status === 401 || error.status === 403) return 'READ_DENIED';
+    if (error.status === 429 || error.status >= 500) return 'READ_UNAVAILABLE';
+  }
+  return 'READ_FAILED';
+}
+
+export function localizedAsyncReadError(error: unknown, locale: 'en' | 'fa'): AsyncReadError {
+  const code = readErrorCode(error);
+  return { code, message: loadingText('readError', locale) };
+}
 
 /** Isolate a resource's retry and discard old responses immediately on profile changes. */
 export function useAsyncData<T>(
@@ -37,6 +58,7 @@ export function useAsyncData<T>(
     retainDataOnRefreshError?: boolean;
   } = {}
 ): AsyncData<T> {
+  const locale = useLocale();
   const profileRevision = useProfileContextRevision();
   const accountId = useAccountUser();
   const identity = useId();
@@ -46,13 +68,13 @@ export function useAsyncData<T>(
   const scope = JSON.stringify([ownerId, accountId, profileRevision, url]);
   const key = JSON.stringify([scope, attempt === 0 ? 0 : [identity, attempt]]);
   const request = JSON.stringify([url, attempt === 0 ? 0 : [identity, attempt], parserKey(read)]);
-  const [result, setResult] = useState<{
-    key: string;
-    scope: string;
-    refreshError?: boolean;
-    status: 'ready' | 'error';
-    data?: T;
-  } | null>(null);
+  const [result, setResult] = useState<
+    | ({ key: string; scope: string } & (
+        | { status: 'ready'; data: T; refreshError?: boolean }
+        | { status: 'error'; code: ReadErrorCode }
+      ))
+    | null
+  >(null);
   const retry = useCallback(() => setAttempt((value) => value + 1), []);
 
   const queryKey = useMemo(
@@ -110,7 +132,7 @@ export function useAsyncData<T>(
       setResult((previous) =>
         retainDataOnRefreshError && previous?.scope === scope && previous.status === 'ready'
           ? { ...previous, key, refreshError: true }
-          : { key, scope, status: 'error' }
+          : { key, scope, status: 'error', code: readErrorCode(query.error) }
       );
   }, [
     key,
@@ -121,6 +143,7 @@ export function useAsyncData<T>(
     query.isSuccess,
     query.isError,
     query.data,
+    query.error,
     query.dataUpdatedAt,
     query.errorUpdatedAt,
   ]);
@@ -130,10 +153,16 @@ export function useAsyncData<T>(
     !(retainDataOnRefreshError && result?.scope === scope && result.status === 'ready')
   )
     return { status: 'loading', data: null, retry };
-  if (result.status === 'error') return { status: 'error', data: null, retry };
+  if (result.status === 'error')
+    return {
+      status: 'error',
+      data: null,
+      retry,
+      error: { code: result.code, message: loadingText('readError', locale) },
+    };
   return {
     status: 'ready',
-    data: result.data as T,
+    data: result.data,
     retry,
     refreshError: result.refreshError === true,
   };

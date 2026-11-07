@@ -6,6 +6,8 @@ Show persistent feedback beside the work it describes. Toasts supplement that fe
 
 Intercept results after the domain has validated the receipt and checked the captured owner. `useServerMutation` already does this for its consumers. `useCommandFeedback` and `CommandFeedback` use the existing verified success/error state in the remaining forms. Do not infer completion from a global `fetch` interceptor or a successful HTTP status. Malformed receipts and lost financial responses keep their original reconciliation holds.
 
+For an action with a shared confirmation dialog, its receipt handler can return a localized success message after the receipt matches the reviewed command. Returning nothing leaves feedback to the caller. The dialog suppresses feedback for a retired profile and warns when a request was sent but its outcome is unconfirmed. The warning asks the user to check current status; it does not schedule a retry. A recorded refund or approval is described as an update until the actual terminal state is known.
+
 The feedback scope includes account, profile revision, language and the supplied operation. A scope change disarms announcements until the caller clears the old result. Repeated renders do not announce the same occurrence again. Keep private state retirement and current-owner checks in the domain controller as well.
 
 `useToast` supports localized keys or domain-localized strings, all four severities, and a promise helper. Pass a validated operation promise. Its rejection still reaches the caller; it does not retry the operation. Only the latest operation owns the persistent progress notice, and a profile-context dismissal prevents a late result from restoring old content.

@@ -1,3 +1,4 @@
+import { confirmationText } from '@barghsa/i18n/confirmation';
 import { useOwnedContractRead } from '../hooks/useOwnedContractRead.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
@@ -359,6 +360,7 @@ function RequestWorkspace({
             draft.form.reset({ reason: '', preferredDestination: 'wallet' });
             setReload((n) => n + 1);
             onChanged();
+            return confirmationText('recorded', locale);
           }}
         />
       ) : null}

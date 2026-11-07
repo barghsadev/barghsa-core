@@ -1,3 +1,4 @@
+import { approveRiskConfirmation } from './confirmation-fixture';
 import { readFile } from 'node:fs/promises';
 import AxeBuilder from '@axe-core/playwright';
 import type { Locator, Page } from '@playwright/test';
@@ -228,6 +229,7 @@ for (const [locale, theme] of [
     });
     let dialog = page.getByRole('dialog');
     await expect(dialog).toContainText(staffText('reviewTitle'));
+    await approveRiskConfirmation(page, locale, 'financial');
     await dialog.locator('button[type=submit]').click();
     await expect.poll(() => !!state.decisionWriteRoute).toBe(true);
     const approvalCommand = state.decisionWrites[0]!;
@@ -260,6 +262,7 @@ for (const [locale, theme] of [
     state.decisionWriteMode = 'success';
     await retry.click();
     dialog = page.getByRole('dialog');
+    await approveRiskConfirmation(page, locale, 'financial');
     await dialog.locator('button[type=submit]').click();
     await expect(dialog).toHaveCount(0);
     await expect(date).toHaveCount(0);
@@ -288,6 +291,7 @@ for (const [locale, theme] of [
     dialog = page.getByRole('dialog');
     await expect(dialog).toContainText('Rejection <script> explanation');
     await expect(dialog.locator('script')).toHaveCount(0);
+    await approveRiskConfirmation(page, locale, 'both');
     await dialog.locator('button[type=submit]').click();
     await expect(dialog).toHaveCount(0);
     await expect(reason).toHaveCount(0);

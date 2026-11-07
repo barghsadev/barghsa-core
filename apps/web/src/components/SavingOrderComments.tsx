@@ -1,3 +1,4 @@
+import { confirmationText } from '@barghsa/i18n/confirmation';
 import { useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from '../lib/query-keys.js';
 import { useEffect, useId, useRef, useState, type RefObject } from 'react';
@@ -550,6 +551,7 @@ function CommentWorkspace({
             form.reset(emptyDraft);
             setCursor(null);
             setRevision((value) => value + 1);
+            return confirmationText('recorded', locale);
           }}
         />
       )}

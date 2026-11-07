@@ -7,6 +7,7 @@ import { RefundDecisionControls, type RefundDecisionDraft } from './RefundDecisi
 import { RefundFormAlert } from './RefundFormFeedback.js';
 import { requestRefundReview, RefundReviewError } from '../lib/refund-review.js';
 import { validRefundReceipt } from '../lib/refund-receipt.js';
+import { toast } from '../lib/toast-api.js';
 import type { RefundDecisionValues, RefundOperation } from '../hooks/useRefundForm.js';
 import { t } from '@barghsa/i18n/workspace';
 import { useAccountUser } from '../hooks/useAccountUser.js';
@@ -410,6 +411,7 @@ function OwnedContractRefundQueue() {
             const tools = actionTools.current;
             if (!tools?.receipt(result))
               throw new Error('Refund obligation acknowledgement mismatch');
+            toast.success(word('refundUpdateRecorded'));
             tools.reset();
             clearAction();
             refresh();

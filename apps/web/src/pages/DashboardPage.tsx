@@ -24,7 +24,7 @@ import { LatestOrdersWidget, type RecentOrder } from '../components/LatestOrders
 import { ActiveContractsWidget, type ActiveContract } from '../components/ActiveContractsWidget.js';
 import { DashboardLayout } from '../components/dashboard/DashboardLayout.js';
 import { DashboardWidget } from '../components/dashboard/DashboardWidget.js';
-import { useAsyncData, type AsyncData } from '../hooks/useAsyncData.js';
+import { localizedAsyncReadError, useAsyncData, type AsyncData } from '../hooks/useAsyncData.js';
 import { useServerDetailQuery } from '../hooks/useServerQuery.js';
 import { queryKeys } from '../lib/query-keys.js';
 import { ServerQueryError } from '../lib/server-query-client.js';
@@ -39,6 +39,7 @@ interface DashboardContext {
 type WidgetKey = 'wallet' | 'status' | 'invoices' | 'orders' | 'contracts';
 
 function useWidget<T>(widget: WidgetKey, profileId: string): AsyncData<T> {
+  const locale = useLocale();
   const revision = useProfileContextRevision();
   const accountId = useAccountUser();
   const scope = { context: 'customer' as const, ownerId: profileId, revision, accountId };
@@ -65,7 +66,12 @@ function useWidget<T>(widget: WidgetKey, profileId: string): AsyncData<T> {
     resource.data.profileId !== profileId ||
     resource.data.data == null
   )
-    return { status: 'error', data: null, retry };
+    return {
+      status: 'error',
+      data: null,
+      retry,
+      error: localizedAsyncReadError(resource.error, locale),
+    };
   return { status: 'ready', data: resource.data.data, retry };
 }
 

@@ -19,7 +19,7 @@ export type ServerQueryKey = readonly [
 export function serverListParams(params: URLSearchParams) {
   const criteria = new URLSearchParams(params),
     pagination = new URLSearchParams();
-  for (const name of ['cursor', 'before', 'offset', 'page']) {
+  for (const name of ['cursor', 'before', 'beforeAt', 'beforeId', 'offset', 'page']) {
     for (const value of criteria.getAll(name)) pagination.append(name, value);
     criteria.delete(name);
   }
@@ -68,6 +68,7 @@ export const queryKeys = {
   invoices: resourceKeys('invoices'),
   contracts: resourceKeys('contracts'),
   documents: resourceKeys('documents'),
+  notifications: resourceKeys('notifications'),
   consultations: resourceKeys('consultations'),
   dashboard: resourceKeys('dashboard'),
   catalogue: resourceKeys('catalogue'),

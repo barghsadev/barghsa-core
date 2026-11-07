@@ -1,3 +1,4 @@
+import { confirmationText } from '@barghsa/i18n/confirmation';
 import { tWalletReceipts as t } from '@barghsa/i18n/wallet-receipts';
 import { Alert, Button, Input, Label } from '@barghsa/ui';
 import { useLocale } from '../hooks/useLocale.js';
@@ -144,6 +145,7 @@ export default function DualApprovalThresholdPanel(props: CatalogueEditorProps =
             editor.resource.accept(result as ThresholdSetting);
             editor.complete();
             editor.resource.retry();
+            return confirmationText('recorded', locale);
           }}
         />
       )}

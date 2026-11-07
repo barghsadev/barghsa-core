@@ -1,3 +1,4 @@
+import { confirmationText } from '@barghsa/i18n/confirmation';
 import { useOwnedStaffServiceRead } from '../hooks/useOwnedStaffServiceRead.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
@@ -1004,10 +1005,12 @@ function OwnedAdminSolarDocumentsPage({ queries }: { queries?: SolarDocumentQuer
               guidanceForm.reset(solarGuidanceDraft(expected));
               setGuidanceUnconfirmed(false);
               invalidateReview();
+              return confirmationText('recorded', locale);
             } else {
               documentForm.reset({ reason: '' });
               setPreview(null);
               refresh();
+              return;
             }
           }}
         />

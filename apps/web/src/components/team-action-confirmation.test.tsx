@@ -2,6 +2,8 @@ import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { TeamActionDialog, type TeamAction } from './TeamActionDialog.js';
+import { connectToast, toast } from '../lib/toast-api.js';
+import { refreshProfileContext } from '../lib/profile-context.js';
 vi.mock('../hooks/useLocale.js', () => ({ useLocale: () => 'en' }));
 vi.mock('../hooks/useNumberFormatting.js', () => ({
   useNumberFormatting: () => ({ number: String }),
@@ -127,3 +129,65 @@ it('gates OTP continuation and resets approval on a changed review', async () =>
   await act(async () => button('Verify OTP').click());
   expect(fetch).toHaveBeenCalledTimes(1);
 });
+
+it.each(['matched', 'unconfirmed', 'retired'] as const)(
+  'reports only a current verified command result (%s)',
+  async (outcome) => {
+    toast.dismiss();
+    const success = vi.fn(),
+      warning = vi.fn();
+    const disconnect = connectToast({
+      success,
+      warning,
+      error: vi.fn(),
+      info: vi.fn(),
+      loading: vi.fn(),
+      dismiss: vi.fn(),
+    });
+    try {
+      let finish!: (value: Response) => void;
+      const fetch = vi.fn(
+        () =>
+          new Promise<Response>((resolve) => {
+            finish = resolve;
+          })
+      );
+      vi.stubGlobal('fetch', fetch);
+      const accepted = vi.fn(async (receipt: unknown) => {
+        if ((receipt as { id?: string }).id !== 'expected') throw new Error('private mismatch');
+        return 'Update recorded';
+      });
+      const uncertain = vi.fn();
+      await act(async () =>
+        root.render(
+          <TeamActionDialog
+            action={command}
+            onClose={() => {}}
+            onSuccess={accepted}
+            onUnconfirmed={uncertain}
+          />
+        )
+      );
+      await approve();
+      await act(async () => button('Confirm').click());
+      if (outcome === 'retired') await act(async () => refreshProfileContext());
+      await act(async () =>
+        finish(Response.json({ id: outcome === 'unconfirmed' ? 'other' : 'expected' }))
+      );
+      expect(fetch).toHaveBeenCalledOnce();
+      if (outcome === 'retired') expect(accepted).not.toHaveBeenCalled();
+      if (outcome === 'matched') expect(success).toHaveBeenCalledWith('Update recorded', undefined);
+      else expect(success).not.toHaveBeenCalled();
+      if (outcome === 'unconfirmed') {
+        expect(uncertain).toHaveBeenCalledOnce();
+        expect(warning).toHaveBeenCalledWith(
+          'The outcome is unconfirmed. Check the current status before trying again.',
+          undefined
+        );
+      } else expect(warning).not.toHaveBeenCalled();
+    } finally {
+      disconnect();
+      toast.dismiss();
+    }
+  }
+);

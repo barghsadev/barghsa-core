@@ -1,3 +1,4 @@
+import { confirmationText } from '@barghsa/i18n/confirmation';
 import { useFinancialFormatting } from '../hooks/useFinancialFormatting.js';
 import { useOwnedContractRead } from '../hooks/useOwnedContractRead.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
@@ -592,6 +593,7 @@ function OwnedCancellationEditor({
               setDiscard(false);
               draft.form.reset({ reason: '', custom: false, lines: draft.form.getValues('lines') });
             }
+            return confirmationText('recorded', locale);
           }}
         />
       ) : null}

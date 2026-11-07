@@ -145,12 +145,14 @@ async function responseCount(response: Response): Promise<number> {
 export async function fetchNotifications(
   cursor?: string,
   filter: NotificationFilter = 'all',
-  limit = 20
+  limit = 20,
+  signal?: AbortSignal
 ): Promise<NotificationPage> {
   const params = new URLSearchParams({ filter, limit: String(limit) });
   if (cursor) params.set('cursor', cursor);
   const res = await fetch(`/api/v1/notifications?${params.toString()}`, {
     credentials: 'include',
+    ...(signal ? { signal } : {}),
   });
   const body = await responseJson(res);
   if (

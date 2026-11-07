@@ -178,6 +178,7 @@ function Editor({
     },
     onFields: showFields,
     error: word('error'),
+    success: word('statusHistoryUnknown'),
     onDenied: () => {
       setWithdrawn(true);
       form.reset();

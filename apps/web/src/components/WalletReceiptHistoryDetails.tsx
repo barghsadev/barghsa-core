@@ -31,7 +31,7 @@ export function WalletReceiptHistoryDetails({
       onToggle={(event) => onOpenChange?.(event.currentTarget.open)}
       className="rounded-lg border border-border bg-background px-3 py-2 text-sm"
     >
-      <summary className="cursor-pointer rounded font-medium text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
+      <summary className="cursor-pointer rounded font-medium text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
         {word('details')}
       </summary>
       <div className="space-y-4 pt-4">
@@ -76,7 +76,7 @@ export function WalletReceiptHistoryDetails({
           href={`/api/wallet/${encodeURIComponent(profileId)}/bank-receipt-top-ups/${encodeURIComponent(receiptId)}/attachment`}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-block text-primary underline underline-offset-4"
+          className="inline-block text-foreground underline underline-offset-4"
         >
           {appText('invoices.activity.viewReceiptAttachment', locale)}
         </a>

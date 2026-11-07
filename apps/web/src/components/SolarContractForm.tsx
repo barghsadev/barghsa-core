@@ -28,6 +28,7 @@ import { tSolarContract } from '@barghsa/i18n/solar-contract';
 import { contractText } from '@barghsa/i18n/contracts';
 import { formatCurrencyIrr } from '@barghsa/i18n/numbers';
 import { ErrorCodes } from '@barghsa/shared/errors';
+import { toast } from '../lib/toast-api.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
@@ -711,6 +712,7 @@ function OwnedSolarContractForm({
               setUnconfirmed(false);
               release();
               form.reset(emptySolarContract());
+              toast.success(copy('status_contract_created'));
               callbacks.current.onCreated(receipt.contractId);
             }}
             summary={

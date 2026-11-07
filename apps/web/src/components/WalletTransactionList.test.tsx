@@ -1,12 +1,21 @@
-import { act, useState } from 'react';
+import { act, useState, type ComponentProps } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { tWalletReceipts as receiptText } from '@barghsa/i18n/wallet-receipts';
-import { WalletTransactionList } from './WalletTransactionList.js';
+import { WalletTransactionList as WalletHistory } from './WalletTransactionList.js';
+import { QueryComponentProvider } from '../test/query-provider.js';
 import { AccountUserProvider } from '../hooks/useAccountUser.js';
 import { refreshProfileContext } from '../lib/profile-context.js';
 import { useListQuery } from '../hooks/useListQuery.js';
 import { walletHistoryQueryOptions } from '../lib/wallet-history-query.js';
+
+function WalletTransactionList(props: ComponentProps<typeof WalletHistory>) {
+  return (
+    <QueryComponentProvider>
+      <WalletHistory {...props} />
+    </QueryComponentProvider>
+  );
+}
 
 let currentLocale: 'en' | 'fa' = 'en';
 vi.mock('../hooks/useLocale.js', () => ({ useLocale: () => currentLocale }));

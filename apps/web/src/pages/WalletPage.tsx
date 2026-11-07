@@ -1,6 +1,6 @@
 import { useOwnedFinancialRead } from '../hooks/useOwnedFinancialRead.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
-import { useQueryClient } from '@tanstack/react-query';
+import { useManualServerRead } from '../hooks/useServerQuery.js';
 import { queryKeys, type ServerQueryKey } from '../lib/query-keys.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
 import { Skeleton, Alert, AlertDescription } from '@barghsa/ui';
@@ -55,6 +55,26 @@ interface WalletBalance {
   configVersion?: number;
 }
 
+async function walletReadPacket(path: string, signal: AbortSignal) {
+  const response = await fetch(path, { credentials: 'include', signal });
+  return {
+    ok: response.ok,
+    status: response.status,
+    data: response.ok ? ((await response.json()) as unknown) : null,
+  };
+}
+
+function walletBalance(data: unknown): WalletBalance | null {
+  const balance = data as WalletBalance | null;
+  return balance &&
+    typeof balance.balance === 'string' &&
+    /^[0-9]+$/.test(balance.balance) &&
+    typeof balance.currency === 'string' &&
+    balance.currency.trim()
+    ? balance
+    : null;
+}
+
 /** Advertised per-transaction ceiling, or `null` when GET did not return a valid limit. */
 function advertisedOnlineTopUpLimit(wallet: WalletBalance | null): number | null {
   if (!wallet || !isValidWalletTopUpLimit(wallet.onlineTopUpLimit)) return null;
@@ -99,8 +119,7 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
   const actor = useAccountUser();
   const profileRevision = useProfileContextRevision();
   const reader = useId();
-  const client = useQueryClient();
-  const loadSequence = useRef(0);
+  const readWallet = useManualServerRead();
   const loadRequest = useRef<AbortController | null>(null);
   const receiptFileInput = useRef<HTMLInputElement>(null);
   const locale = useLocale();
@@ -184,31 +203,11 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
     loadRequest.current?.abort();
     const controller = new AbortController();
     loadRequest.current = controller;
-    const attempt = JSON.stringify([reader, ++loadSequence.current]);
     const current = () =>
       mounted.current && loadRequest.current === controller && !controller.signal.aborted;
-    const read = async (key: ServerQueryKey, path: string) => {
+    const read = (key: ServerQueryKey, path: string) => {
       if (!current()) throw new Error('Abandoned wallet read');
-      const abort = () => void client.cancelQueries({ queryKey: key, exact: true });
-      controller.signal.addEventListener('abort', abort, { once: true });
-      try {
-        return await client.fetchQuery({
-          queryKey: key,
-          staleTime: 0,
-          gcTime: 0,
-          retry: false,
-          queryFn: async ({ signal }) => {
-            const response = await fetch(path, { credentials: 'include', signal });
-            return {
-              ok: response.ok,
-              status: response.status,
-              data: response.ok ? ((await response.json()) as unknown) : null,
-            };
-          },
-        });
-      } finally {
-        controller.signal.removeEventListener('abort', abort);
-      }
+      return readWallet(key, controller.signal, (signal) => walletReadPacket(path, signal));
     };
     const withdraw = () => {
       setWallet(null);
@@ -227,7 +226,7 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
             accountId: actor,
             revision: profileRevision,
           },
-          attempt
+          '/api/profiles'
         ),
         '/api/profiles'
       );
@@ -254,15 +253,12 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
       }
       setProfileId(profileData.activeProfileId);
       const walletRes = await read(
-        queryKeys.wallet.balance(
-          {
-            context: 'customer',
-            ownerId: profileData.activeProfileId,
-            accountId: actor,
-            revision: profileRevision,
-          },
-          attempt
-        ),
+        queryKeys.wallet.balance({
+          context: 'customer',
+          ownerId: profileData.activeProfileId,
+          accountId: actor,
+          revision: profileRevision,
+        }),
         `/api/wallet/${profileData.activeProfileId}`
       );
       if (!current()) return;
@@ -271,14 +267,8 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
         setError('load');
         return;
       }
-      const walletData = walletRes.data as WalletBalance | null;
-      if (
-        !walletData ||
-        typeof walletData.balance !== 'string' ||
-        !/^[0-9]+$/.test(walletData.balance) ||
-        typeof walletData.currency !== 'string' ||
-        !walletData.currency.trim()
-      ) {
+      const walletData = walletBalance(walletRes.data);
+      if (!walletData) {
         withdraw();
         throw new Error('Invalid wallet balance');
       }
@@ -291,7 +281,7 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
         loadRequest.current = null;
       }
     }
-  }, [actor, profileRevision, reader, client]);
+  }, [actor, profileRevision, reader, readWallet]);
 
   useEffect(() => {
     void load();
@@ -491,35 +481,16 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
       loadRequest.current = refresh;
       const ownsRead = () =>
         mounted.current && loadRequest.current === refresh && !refresh.signal.aborted;
-      const key = queryKeys.wallet.balance(
-        {
-          context: 'customer',
-          ownerId: receiptReview.data.profileId,
-          accountId: actor,
-          revision: profileRevision,
-        },
-        JSON.stringify([reader, 'receipt-confirmation', ++loadSequence.current])
-      );
-      const cancel = () => void client.cancelQueries({ queryKey: key, exact: true });
-      refresh.signal.addEventListener('abort', cancel, { once: true });
+      const key = queryKeys.wallet.balance({
+        context: 'customer',
+        ownerId: receiptReview.data.profileId,
+        accountId: actor,
+        revision: profileRevision,
+      });
       try {
-        const walletRes = await client.fetchQuery({
-          queryKey: key,
-          staleTime: 0,
-          gcTime: 0,
-          retry: false,
-          queryFn: async ({ signal }) => {
-            const response = await fetch(`/api/wallet/${receiptReview.data.profileId}`, {
-              credentials: 'include',
-              signal,
-            });
-            return {
-              ok: response.ok,
-              status: response.status,
-              data: response.ok ? ((await response.json()) as unknown) : null,
-            };
-          },
-        });
+        const walletRes = await readWallet(key, refresh.signal, (signal) =>
+          walletReadPacket(`/api/wallet/${receiptReview.data.profileId}`, signal)
+        );
         if (!current() || !ownsRead()) return;
         if (!walletRes.ok) {
           if ([401, 403, 404].includes(walletRes.status)) {
@@ -530,14 +501,8 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
           setError('load');
           return;
         }
-        const nextWallet = walletRes.data as WalletBalance | null;
-        if (
-          !nextWallet ||
-          typeof nextWallet.balance !== 'string' ||
-          !/^[0-9]+$/.test(nextWallet.balance) ||
-          typeof nextWallet.currency !== 'string' ||
-          !nextWallet.currency.trim()
-        ) {
+        const nextWallet = walletBalance(walletRes.data);
+        if (!nextWallet) {
           setWallet(null);
           setError('load');
           return;
@@ -546,7 +511,6 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
       } catch {
         if (current() && ownsRead()) setError('load');
       } finally {
-        refresh.signal.removeEventListener('abort', cancel);
         if (mounted.current && loadRequest.current === refresh) {
           setLoading(false);
           loadRequest.current = null;

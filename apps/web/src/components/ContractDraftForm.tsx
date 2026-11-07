@@ -108,6 +108,7 @@ export default function DraftForm({
     onSaved,
     onFields: showFields,
     error: word('error'),
+    success: word(existing ? 'timeline.contract.version_created' : 'timeline.contract.created'),
     onDenied: () => {
       setWithdrawn(true);
       form.reset();

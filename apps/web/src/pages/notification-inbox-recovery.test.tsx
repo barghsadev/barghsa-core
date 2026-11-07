@@ -52,6 +52,25 @@ function arrange(
   );
   return calls;
 }
+it('aborts the old inbox request when the operating context changes', async () => {
+  let deliverOld!: (value: Response) => void;
+  let read = 0;
+  const calls = arrange(() =>
+    ++read === 1
+      ? new Promise<Response>((resolve) => {
+          deliverOld = resolve;
+        })
+      : reply({ ...page(), data: [item('Current staff notice')] })
+  );
+  await render('customer');
+  const signal = calls.mock.calls[0]?.[1]?.signal;
+  expect(signal?.aborted).toBe(false);
+  await render('staff');
+  expect(signal?.aborted).toBe(true);
+  await act(async () => deliverOld(reply({ ...page(), data: [item('Retired customer notice')] })));
+  expect(host.textContent).toContain('Current staff notice');
+  expect(host.textContent).not.toContain('Retired customer notice');
+});
 it('failed next-page retry retains accepted rows and repeats the exact cursor, with unique merged rows', async () => {
   let failed = true;
   const calls = arrange((url) =>
