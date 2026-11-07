@@ -103,6 +103,11 @@ export default defineConfig(({ mode }) => {
       // Route-level CSS/JS splitting — each route gets its own chunk
       // autoCodeSplitting in TanStack Router handles actual per-route lazy loading
       inlineDynamicImports: false,
+      modulePreload: {
+        // A failed modulepreload can survive a document reload in WebKit (bug 270357).
+        resolveDependencies: (file, dependencies) =>
+          file.startsWith('assets/p-') ? [] : dependencies,
+      },
       // Content-hash filenames for CDN immutability (CDN-ready)
       assetsDir: 'assets',
       cssCodeSplit: true,
@@ -113,7 +118,10 @@ export default defineConfig(({ mode }) => {
           manualChunks: undefined, // let TanStack Router handle route-based splitting
           entryFileNames: 'assets/[name]-[hash].js',
           // Short URLs reduce the shared preload map as the route inventory grows.
-          chunkFileNames: 'assets/c-[hash].js',
+          chunkFileNames: ({ facadeModuleId }) =>
+            facadeModuleId?.endsWith('/src/components/ProfileChoices.tsx')
+              ? 'assets/p-[hash].js'
+              : 'assets/c-[hash].js',
           assetFileNames: 'assets/[name]-[hash][extname]',
         },
       },

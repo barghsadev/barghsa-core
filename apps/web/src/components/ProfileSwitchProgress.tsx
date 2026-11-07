@@ -19,7 +19,7 @@ export default function ProfileSwitchProgress({
       <DialogContent
         size="fullscreen"
         showCloseButton={false}
-        className="place-content-center text-center data-open:animate-none data-closed:animate-none"
+        className="h-auto max-h-none place-content-center text-center data-open:animate-none data-closed:animate-none"
         dir={locale === 'fa' ? 'rtl' : 'ltr'}
       >
         <DialogTitle>{switching}</DialogTitle>
