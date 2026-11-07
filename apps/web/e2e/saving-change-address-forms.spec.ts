@@ -113,6 +113,13 @@ for (const [locale, theme] of [
     const quote = panel.getByTestId('saving-change-quote');
     await expect(quote).toContainText('Replacement installation address');
     await expect(quote).toContainText(copy('retainedDiscount'));
+    const terms = quote.locator('summary').filter({ hasText: 'Accepted saving terms' });
+    await terms.click();
+    await expect(quote.getByText('Saving agreement body.', { exact: true })).toHaveCSS(
+      'direction',
+      'ltr'
+    );
+    await terms.click();
     const confirm = panel.getByRole('button', { name: copy('confirmChange'), exact: true });
     await expect(acknowledge).toHaveCount(1);
     await expect(acknowledge).not.toBeChecked();

@@ -580,8 +580,12 @@ function ChangeWorkspace(props: Props & { scope: string; currentScope: RefObject
               scopeKey={quote.reviewDigest}
             />
             <details>
-              <summary>{quote.agreement.title}</summary>
-              <p className="whitespace-pre-wrap">{quote.agreement.body}</p>
+              <summary className="cursor-pointer wrap-anywhere">
+                <bdi>{quote.agreement.title}</bdi>
+              </summary>
+              <p dir="auto" className="whitespace-pre-wrap wrap-anywhere">
+                {quote.agreement.body}
+              </p>
             </details>
             <ConfirmationFields gate={financialGate} disabled={busy || frozen} />
             {!frozen && (

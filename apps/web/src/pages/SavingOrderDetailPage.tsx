@@ -119,7 +119,9 @@ export function SavingOrderDetailPage() {
         signal,
       });
       if (!response.ok) throw new Error('order');
-      return response.json() as Promise<Detail>;
+      const result = (await response.json()) as Detail | null;
+      if (!result || result.id !== orderId) throw new Error('order');
+      return result;
     },
   });
   useEffect(() => {

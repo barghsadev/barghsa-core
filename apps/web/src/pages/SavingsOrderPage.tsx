@@ -1184,8 +1184,13 @@ function OwnedSavingsOrderPage() {
                   )}
                   {step === 5 && (
                     <section className="space-y-4">
-                      <h2 className="text-xl font-semibold">{selectedPlan?.agreement?.title}</h2>
-                      <div className="max-h-80 overflow-y-auto whitespace-pre-wrap rounded-md border bg-muted/30 p-4 text-sm">
+                      <h2 dir="auto" className="text-xl font-semibold wrap-anywhere">
+                        {selectedPlan?.agreement?.title}
+                      </h2>
+                      <div
+                        dir="auto"
+                        className="max-h-80 overflow-y-auto whitespace-pre-wrap rounded-md border bg-muted/30 p-4 text-sm wrap-anywhere"
+                      >
                         {selectedPlan?.agreement?.body}
                       </div>
                       <label className="touch-label flex items-center gap-2">
@@ -1282,11 +1287,11 @@ function OwnedSavingsOrderPage() {
                             step: 5,
                             content: (
                               <div className="space-y-2 text-sm">
-                                <p className="font-medium">
-                                  <bdi>{quote?.agreement?.title}</bdi>
+                                <p dir="auto" className="font-medium wrap-anywhere">
+                                  {quote?.agreement?.title}
                                 </p>
-                                <p className="whitespace-pre-wrap break-words">
-                                  <bdi>{quote?.agreement?.body}</bdi>
+                                <p dir="auto" className="whitespace-pre-wrap wrap-anywhere">
+                                  {quote?.agreement?.body}
                                 </p>
                               </div>
                             ),

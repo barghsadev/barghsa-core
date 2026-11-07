@@ -161,10 +161,12 @@ export function SavingsPage() {
                   </section>
                   {plan.agreement ? (
                     <details className="rounded-md border p-3">
-                      <summary className="cursor-pointer font-medium pointer-coarse:min-h-11 pointer-coarse:py-2">
-                        {copy('agreement')}: {plan.agreement.title}
+                      <summary className="cursor-pointer font-medium wrap-anywhere pointer-coarse:min-h-11 pointer-coarse:py-2">
+                        {copy('agreement')}: <bdi>{plan.agreement.title}</bdi>
                       </summary>
-                      <p className="mt-3 whitespace-pre-wrap text-sm">{plan.agreement.body}</p>
+                      <p dir="auto" className="mt-3 whitespace-pre-wrap wrap-anywhere text-sm">
+                        {plan.agreement.body}
+                      </p>
                     </details>
                   ) : (
                     <p className="text-sm text-muted-foreground">{copy('noAgreement')}</p>

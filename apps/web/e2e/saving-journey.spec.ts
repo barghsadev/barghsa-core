@@ -2,7 +2,7 @@ import { tSaving as savingCopy } from '@barghsa/i18n/saving';
 import { contractText as contractCopy } from '@barghsa/i18n/contracts';
 import { tSavingStaffReview as savingReviewCopy } from '@barghsa/i18n/saving-staff-review';
 import { t as appCopy } from '@barghsa/i18n/app';
-import { test, expect } from './coverage-fixture';
+import { test, expect, type Page } from './coverage-fixture';
 import { approveRiskConfirmation } from './confirmation-fixture';
 import { checkRoutePresentation } from './route-presentation';
 
@@ -25,6 +25,25 @@ const stageNames = [
   'process_completion',
 ];
 
+async function checkAgreementPresentation(page: Page, text: string, direction: 'rtl' | 'ltr') {
+  const original = page.viewportSize()!;
+  try {
+    await page.setViewportSize({ width: 320, height: original.height });
+    const agreement = page.getByText(text, { exact: true });
+    await expect(agreement).toBeVisible();
+    expect(await agreement.textContent()).toBe(text);
+    await expect(agreement).toHaveCSS('direction', direction);
+    expect(
+      await agreement.evaluate((node) => ({
+        agreementFits: node.scrollWidth <= node.clientWidth,
+        pageFits: document.documentElement.scrollWidth <= innerWidth,
+      }))
+    ).toEqual({ agreementFits: true, pageFits: true });
+  } finally {
+    await page.setViewportSize(original);
+  }
+}
+
 for (const locale of ['en', 'fa'] as const)
   test(`customer saves a saving order, submits the reviewed quote, and tracks fulfillment (${locale})`, async ({
     page,
@@ -39,6 +58,23 @@ for (const locale of ['en', 'fa'] as const)
     let invoiceState = 'Unpaid';
     let contractState = 'AwaitingCustomerAcceptance';
     let operatingContext: 'customer' | 'staff' = 'customer';
+    let detailReads = 0;
+    let releaseFirstDetail!: () => void;
+    const firstDetail = new Promise<void>((resolve) => {
+      releaseFirstDetail = resolve;
+    });
+    const termsDirection = locale === 'fa' ? 'ltr' : 'rtl';
+    const termsTitle = locale === 'fa' ? 'Accepted terms' : 'شرایط پذیرفته‌شده';
+    const termsReference = 'SAVING-REFERENCE-'.repeat(12);
+    const termsBody =
+      locale === 'fa'
+        ? `The customer accepts this plan.\n${termsReference}`
+        : `لورم ایپسوم، شرایط صرفه‌جویی انرژی\n${termsReference}`;
+    const quotedTermsBody =
+      locale === 'fa'
+        ? `The quoted agreement body.\n${termsReference}`
+        : `لورم ایپسوم، شرایط استعلام‌شده\nThe quoted agreement body.\n${termsReference}`;
+    const acceptedTerms = `${termsTitle}\n${termsBody}`;
 
     await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
     await page.route('**/api/auth/user', (route) =>
@@ -96,8 +132,8 @@ for (const locale of ['en', 'fa'] as const)
               ],
               agreement: {
                 versionId: agreementVersionId,
-                title: 'Accepted terms',
-                body: 'The customer accepts this plan.',
+                title: termsTitle,
+                body: termsBody,
               },
             },
           ],
@@ -180,7 +216,7 @@ for (const locale of ['en', 'fa'] as const)
           agreement: {
             versionId: agreementVersionId,
             title: 'Quoted terms',
-            body: 'The quoted agreement body.',
+            body: quotedTermsBody,
           },
           subtotalIrR: '300000',
           discountIrR: '0',
@@ -261,10 +297,12 @@ for (const locale of ['en', 'fa'] as const)
             },
       });
     });
-    await page.route(`**/api/saving/orders/${savingOrderId}`, (route) =>
-      route.fulfill({
+    await page.route(`**/api/saving/orders/${savingOrderId}`, async (route) => {
+      const wrongOrder = ++detailReads === 1;
+      if (wrongOrder) await firstDetail;
+      return route.fulfill({
         json: {
-          id: savingOrderId,
+          id: wrongOrder ? olderOrderId : savingOrderId,
           order_id: parentOrderId,
           profile_id: profileId,
           saving_plan_id: planId,
@@ -278,7 +316,11 @@ for (const locale of ['en', 'fa'] as const)
           submitted_at: submittedAt,
           address_snapshot: { full_address: 'Saving Street', postal_code: '1234567890' },
           pricing_snapshot: {
-            plan: { title: { en: 'Home saving plan', fa: 'طرح صرفه‌جویی خانه' } },
+            plan: {
+              title: wrongOrder
+                ? { en: 'PRIVATE_OTHER_SAVING_ORDER', fa: 'PRIVATE_OTHER_SAVING_ORDER' }
+                : { en: 'Home saving plan', fa: 'طرح صرفه‌جویی خانه' },
+            },
             hardware: { title: { en: 'Efficient device', fa: 'دستگاه کم‌مصرف' } },
             subtotalIrR: '300000',
             discountIrR: '0',
@@ -286,7 +328,7 @@ for (const locale of ['en', 'fa'] as const)
             totalIrR: '300000',
           },
           verification_result: { status: 'verified' },
-          agreement_snapshot: 'Accepted terms\nThe customer accepts this plan.',
+          agreement_snapshot: acceptedTerms,
           agreement_updated: false,
           contract_version_id: null,
           contract_id: approved ? contractId : null,
@@ -312,8 +354,8 @@ for (const locale of ['en', 'fa'] as const)
           hardwareAmendments: [],
           hardwareUpgrades: [],
         },
-      })
-    );
+      });
+    });
     const staffPricingSnapshot = {
       plan: { title: { en: 'Home saving plan', fa: 'طرح صرفه‌جویی خانه' } },
       lines: [
@@ -482,6 +524,10 @@ for (const locale of ['en', 'fa'] as const)
       })
     ).toBeVisible();
     await checkRoutePresentation(page, info, locale);
+    const catalogueAgreement = page.locator('summary').filter({ hasText: termsTitle });
+    await catalogueAgreement.click();
+    await checkAgreementPresentation(page, termsBody, termsDirection);
+    await catalogueAgreement.click();
     await page.getByRole('link', { name: savingCopy('startOrder', locale) }).click();
     const next = page.getByRole('button', { name: savingCopy('next', locale), exact: true });
     await page
@@ -577,6 +623,7 @@ for (const locale of ['en', 'fa'] as const)
     expect(addressWrites[2]).toEqual(addressWrites[1]);
     await expect(page.locator(`input[name=addressId][value="${addressId}"]`)).toBeChecked();
     await next.click();
+    await checkAgreementPresentation(page, termsBody, termsDirection);
     await page.getByRole('checkbox', { name: savingCopy('acceptAgreement', locale) }).check();
     await next.click();
     await expect(page.getByText(`${savingCopy('walletBalance', locale)}:`)).toContainText(
@@ -597,6 +644,7 @@ for (const locale of ['en', 'fa'] as const)
       locale === 'fa' ? 'دستگاه استعلام‌شده' : 'Quoted efficient device'
     );
     await expect(financialReview).toContainText('The quoted agreement body.');
+    await checkAgreementPresentation(page, quotedTermsBody, termsDirection);
     await checkRoutePresentation(page, info, locale);
     await page.getByRole('checkbox', { name: savingCopy('submitForReview', locale) }).check();
     const submit = page.getByRole('button', { name: savingCopy('submit', locale), exact: true });
@@ -612,6 +660,22 @@ for (const locale of ['en', 'fa'] as const)
     await expect(submit).toBeEnabled();
     await submit.click();
     await expect(page).toHaveURL(new RegExp(`/savings/orders/${savingOrderId}$`));
+    const detail = page.getByRole('main');
+    try {
+      await expect(detail.getByRole('heading', { level: 1 })).toHaveText(
+        savingCopy('orderDetail', locale)
+      );
+      await expect(detail.getByText(savingCopy('loading', locale), { exact: true })).toBeVisible();
+    } finally {
+      releaseFirstDetail();
+    }
+    await expect(
+      detail.getByRole('alert').filter({ hasText: savingCopy('error', locale) })
+    ).toBeVisible();
+    await expect(detail.getByText('PRIVATE_OTHER_SAVING_ORDER')).toHaveCount(0);
+    expect(detailReads).toBe(1);
+    await detail.getByRole('button', { name: savingCopy('retry', locale), exact: true }).click();
+    await expect.poll(() => detailReads).toBe(2);
     await expect(page.locator(`time[datetime="${submittedAt}"]`).first()).toHaveText(
       new Intl.DateTimeFormat(locale, {
         timeZone: 'Pacific/Kiritimati',
@@ -626,6 +690,12 @@ for (const locale of ['en', 'fa'] as const)
     await expect(page.getByRole('list', { name: savingCopy('fulfillment', locale) })).toContainText(
       savingCopy('request_confirmation', locale)
     );
+    const savedAgreement = detail
+      .locator('summary')
+      .filter({ hasText: savingCopy('acceptedAgreement', locale) });
+    await savedAgreement.click();
+    await checkAgreementPresentation(page, acceptedTerms, termsDirection);
+    await savedAgreement.click();
     expect(drafts).toHaveLength(5);
     expect(submissions).toHaveLength(2);
     expect(submissions[1]).toEqual(submissions[0]);
