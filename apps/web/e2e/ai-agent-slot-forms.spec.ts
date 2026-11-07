@@ -1,4 +1,5 @@
 import { test, expect } from './coverage-fixture';
+import { approveRiskConfirmation } from './confirmation-fixture';
 import { setupCatalogueForms } from './catalogue-form-fixture';
 import { cookieResponse } from './cookie-response';
 import { aiDetail, aiOptions, aiAgent } from '../src/test/ai-catalogue-fixtures';
@@ -221,6 +222,8 @@ for (const locale of ['en', 'fa'] as const)
       await expect(website).toHaveValue(otherAssignmentAgent.id);
       await individual.selectOption('');
       await saveSlot.click();
+      await expect(page.getByRole('dialog').locator('button[type=submit]')).toBeDisabled();
+      await approveRiskConfirmation(page, locale, 'destructive');
       await confirm();
       await expect(individual).toHaveValue('');
       expect(slotWrites).toEqual([

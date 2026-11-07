@@ -1,6 +1,7 @@
 import { CommandFeedback } from '../components/CommandFeedback.js';
 import { useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from '../lib/query-keys.js';
+import { readWithDeadline } from '../lib/server-query-client.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { CatalogueRecordTable } from '../components/CatalogueRecordTable.js';
@@ -254,14 +255,15 @@ function OwnedAiAgentsPage({
           staleTime: 0,
           gcTime: 0,
           retry: false,
-          queryFn: async ({ signal }) => {
-            const response = await fetch(path, { signal });
-            return {
-              status: response.status,
-              ok: response.ok,
-              value: response.ok ? await response.json() : null,
-            };
-          },
+          queryFn: ({ signal }) =>
+            readWithDeadline(signal, async (transport) => {
+              const response = await fetch(path, { signal: transport });
+              return {
+                status: response.status,
+                ok: response.ok,
+                value: response.ok ? await response.json() : null,
+              };
+            }),
         });
         if (controller.signal.aborted) throw new Error('Obsolete');
         if (response.status === 401 || response.status === 403) {

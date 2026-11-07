@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-07T09:51:35+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-07T10:02:39+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.4.0**. Next milestone: **v0.5.0**.
 
@@ -39,7 +39,7 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Map clean complete staff-finance and workspace groups, fix demonstrated AI model/agent read deadlines using existing owned read behavior, and record isolated API evidence.
+Map exact passing AI, saving and maintenance journey reports; identify remaining critical web branch and manual acceptance gaps from current sources.
 
 - `release-readiness#R-04.02`: Renew accessibility and performance evidence
 - `release-readiness#R-04.01`: Verify full customer and admin UI adoption

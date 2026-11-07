@@ -231,3 +231,53 @@ for (const locale of ['en', 'fa'] as const)
       );
       await page.screenshot({ path: info.outputPath('slot-table.png'), fullPage: true });
     });
+
+for (const locale of ['en', 'fa'] as const) {
+  for (const [routeName, namespace] of [
+    ['ai-models', 'aiModels'],
+    ['agents', 'agents'],
+  ] as const) {
+    test(`stalled AI ${routeName} reads retry the same staff route (${locale})`, async ({
+      page,
+    }) => {
+      await setupCatalogueForms(page, locale, false);
+      await page.route('**/api/admin/agents/options', (route) =>
+        route.fulfill({ json: aiOptions })
+      );
+      await page.clock.install();
+      const path = `/api/admin/${routeName}`;
+      const label = (key: string) => t(`admin.${namespace}.${key}`, locale);
+      const reads: string[] = [];
+      let release!: () => void;
+      const held = new Promise<void>((done) => (release = done));
+      await page.route(`**${path}`, async (route) => {
+        expect(route.request().method()).toBe('GET');
+        reads.push(new URL(route.request().url()).pathname);
+        if (reads.length === 1) {
+          await held;
+          await route.abort().catch(() => {});
+          return;
+        }
+        await route.fulfill({ json: [] });
+      });
+      try {
+        await page.goto(`/admin/${routeName}`);
+        const main = page.getByRole('main');
+        const add = main.getByRole('button', { name: label('add'), exact: true });
+        await expect.poll(() => reads).toEqual([path]);
+        await expect(main.getByText(label('loading'), { exact: true })).toBeVisible();
+        await expect(add).toBeDisabled();
+        await page.clock.fastForward(15_100);
+        await expect(main.getByRole('alert').filter({ hasText: label('error') })).toBeVisible();
+        expect(reads).toEqual([path]);
+        await expect(add).toBeDisabled();
+        await main.getByRole('button', { name: label('retry'), exact: true }).click();
+        await expect(main.getByText(label('empty'), { exact: true })).toBeVisible();
+        await expect(add).toBeEnabled();
+        expect(reads).toEqual([path, path]);
+      } finally {
+        release();
+      }
+    });
+  }
+}
