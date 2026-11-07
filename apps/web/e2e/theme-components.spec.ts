@@ -496,13 +496,14 @@ for (const locale of ['fa', 'en'] as const) {
     const color = async () =>
       page.evaluate(() => {
         const probe = document.createElement('span');
-        probe.style.backgroundColor = 'var(--popover)';
+        probe.style.backgroundColor = 'var(--success-soft)';
         document.body.append(probe);
         const color = getComputedStyle(probe).backgroundColor;
         probe.remove();
         return color;
       });
     await expect(toast).toBeVisible();
+    await expect(toast).toHaveAttribute('data-type', 'success');
     await expect(host).toHaveAttribute('data-sonner-theme', 'dark');
     await expect(toast).toHaveCSS('background-color', await color());
     await expect(toast).toHaveCSS('font-family', /Vazirmatn/);

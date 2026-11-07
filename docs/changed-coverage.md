@@ -32,8 +32,8 @@ line or branch set adds no artificial hits or failures.
 The browser job builds a separate `dist-coverage` directory with hidden source maps.
 Normal production output stays in `dist` without maps. Chromium collects V8 ranges
 through the shared test fixture. Collection verifies the executed JavaScript against
-the built asset before mapping it back to workspace source, including the shared
-and i18n packages' intermediate TypeScript maps. Missing maps or records
+the built asset before mapping it back to workspace source, including the UI,
+shared and i18n packages' intermediate TypeScript maps. Missing maps or records
 fail; source-map failure never becomes zero reported flakes or successful coverage.
 Every record captures the tested revision and whether the checkout was dirty. The
 merge rejects stale revisions and dirty runs. Unit coverage is retained for source
@@ -67,7 +67,9 @@ python3 scripts/check-changed-coverage.py --base origin/main --report /tmp/chang
 
 ## Compiled worker process coverage
 
-API and worker coverage use `scripts/process-v8-provider.mjs` to merge child-process V8 execution with the package unit report. The API maps `dist/src`; the worker maps `dist`. Both require the emitted source map for every included compiled module. The shared collector participates in Turbo cache inputs. Raw records are retained under the package coverage directory in `process-v8`.
+API and worker coverage use `scripts/process-v8-provider.mjs` to merge child-process V8 execution with the package unit report. The API maps `dist/src`; the worker maps `dist`. Both require the emitted source map for every included compiled module. The shared collector participates in Turbo cache inputs.
+
+Process records are retained under `coverage/process-v8`. After an API fixture exits, it retains every V8 range for compiled API modules and removes the dependency ranges the provider already excludes. This keeps long coverage runs from accumulating full dependency traces. An interrupted run still cannot satisfy the gate.
 
 Worker tests rebuild the worker and workspace dependencies before starting a compiled process against an isolated PostgreSQL database migrated by the production command. The process suite exercises health/readiness/metrics, recurring jobs, database outage and recovery, invalid interval defaults, SIGINT/SIGTERM drain, and the forced shutdown deadline. Fixture database controls never target an existing application database. Missing system-actor failures and recovery are asserted explicitly.
 

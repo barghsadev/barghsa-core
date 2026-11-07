@@ -1,6 +1,8 @@
 import { fork, type ChildProcess } from 'node:child_process';
 import { randomUUID } from 'node:crypto';
-import { resolve } from 'node:path';
+import { mkdir, readFile, readdir, rm, writeFile } from 'node:fs/promises';
+import { resolve, sep } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { Pool } from 'pg';
 import { runMigrations } from '../../../../packages/db/src/migrate';
 
@@ -16,6 +18,8 @@ export async function startHttpFixture(
 ) {
   const database = `test_http_${randomUUID().replaceAll('-', '')}`;
   const management = new Pool({ connectionString: testDatabaseUrl });
+  const coverageDirectory = process.env.BARGHSA_HTTP_COVERAGE_DIR;
+  const rawCoverage = coverageDirectory ? resolve(coverageDirectory, database) : undefined;
   let created = false;
   let child: ChildProcess | undefined;
   let aiWorker: ChildProcess | undefined;
@@ -53,6 +57,26 @@ export async function startHttpFixture(
     } finally {
       await management.end();
     }
+    if (child && rawCoverage && coverageDirectory) {
+      // Keep exactly the compiled API entries the coverage provider merges.
+      // A separate raw directory also captures subprocesses of this fixture.
+      const compiledRoot = resolve(__dirname, '../../dist/src') + sep;
+      for (const name of await readdir(rawCoverage)) {
+        if (!name.endsWith('.json')) continue;
+        const { result } = JSON.parse(await readFile(resolve(rawCoverage, name), 'utf8')) as {
+          result: { url: string }[];
+        };
+        const included = result.filter(
+          ({ url }) => url.startsWith('file:') && fileURLToPath(url).startsWith(compiledRoot)
+        );
+        await writeFile(
+          resolve(coverageDirectory, `${database}-${name}`),
+          JSON.stringify({ result: included }),
+          { flag: 'wx' }
+        );
+      }
+      await rm(rawCoverage, { recursive: true });
+    }
   }
 
   try {
@@ -76,13 +100,12 @@ export async function startHttpFixture(
         throw new Error(`Production migration failed: ${JSON.stringify(migration)}`);
     }
     pool = new Pool({ connectionString: url.toString(), max: poolMax });
+    if (rawCoverage) await mkdir(rawCoverage, { recursive: true });
     child = fork(resolve(__dirname, '../../scripts/http-test-server.cjs'), [], {
       silent: true,
       env: {
         ...process.env,
-        ...(process.env.BARGHSA_HTTP_COVERAGE_DIR
-          ? { NODE_V8_COVERAGE: process.env.BARGHSA_HTTP_COVERAGE_DIR }
-          : {}),
+        ...(rawCoverage ? { NODE_V8_COVERAGE: rawCoverage } : {}),
         DATABASE_URL: url.toString(),
         PGDIRECT_URL: url.toString(),
         NODE_ENV: 'test',

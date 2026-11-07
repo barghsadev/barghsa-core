@@ -23,10 +23,12 @@ beforeEach(async () => {
     [await argon2.hash(password)]
   );
   const csrf = randomUUID();
+  // A recent verification should not depend on the API and database clocks
+  // agreeing at the same instant. The expiry races set their own timestamps.
   await http.pool.query(
     `INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline,step_up_verified_at)
-     VALUES ($1,'otp-admin',$2,$3,NOW()+INTERVAL '1 day',NOW()+INTERVAL '30 minutes',NOW()),
-            ($4,'otp-customer',$2,$5,NOW()+INTERVAL '1 day',NOW()+INTERVAL '30 minutes',NOW())`,
+     VALUES ($1,'otp-admin',$2,$3,NOW()+INTERVAL '1 day',NOW()+INTERVAL '30 minutes',NOW()-INTERVAL '5 seconds'),
+            ($4,'otp-customer',$2,$5,NOW()+INTERVAL '1 day',NOW()+INTERVAL '30 minutes',NOW()-INTERVAL '5 seconds')`,
     [sessionId, csrf, randomUUID(), randomUUID(), randomUUID()]
   );
   adminHeaders = { Cookie: `barghsa_session=${sessionId}`, 'X-CSRF-Token': csrf };
@@ -90,7 +92,7 @@ it('requires current admin permissions, CSRF and recent password confirmation', 
 it('rejects invalid bounds, fractional values and missing versions without changing settings', async () => {
   for (const ttlSeconds of [59, 901, 1.5, '300', null]) {
     const invalid = await update({ ttlSeconds, expectedVersion: 0 });
-    expect(invalid.status).toBe(400);
+    expect(invalid.status, await invalid.clone().text()).toBe(400);
     expect(await invalid.json()).toMatchObject({
       error: { code: 'VALIDATION:INPUT:INVALID', fields: ['ttlSeconds'] },
     });
@@ -170,6 +172,12 @@ it('persists a versioned audit and applies the lifetime to issuance and resend w
       "SELECT user_id,metadata::jsonb AS metadata,correlation_id FROM audit_log WHERE metadata::jsonb->>'entity'='auth_otp'"
     )
   ).rows;
+  const stepUpVerifiedAt = (
+    await http.pool.query<{ step_up_verified_at: Date }>(
+      'SELECT step_up_verified_at FROM sessions WHERE session_id=$1',
+      [sessionId]
+    )
+  ).rows[0]!.step_up_verified_at.toISOString();
   expect(audit).toEqual([
     {
       user_id: 'otp-admin',
@@ -178,6 +186,8 @@ it('persists a versioned audit and applies the lifetime to issuance and resend w
         entity: 'auth_otp',
         previous: { ttlSeconds: 300, version: 0 },
         current: { ttlSeconds: 120, version: 1 },
+        stepUpVerified: true,
+        stepUpVerifiedAt,
       },
     },
   ]);
