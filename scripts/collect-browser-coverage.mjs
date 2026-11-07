@@ -151,7 +151,7 @@ export async function collectBrowserCoverage({
       const path = fileURLToPath(source);
       if (!path.startsWith(resolve(root) + sep)) return null;
       const relative = path.slice(resolve(root).length + 1);
-      if (/^packages\/(i18n|shared)\/dist\/.+\.js$/.test(relative))
+      if (/^packages\/(ui|i18n|shared)\/dist\/.+\.js$/.test(relative))
         return JSON.parse(readFileSync(path + '.map', 'utf8'));
       if (sourcePattern.test(relative) && context.content == null)
         context.content = readFileSync(path, 'utf8');

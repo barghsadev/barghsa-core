@@ -250,28 +250,30 @@ test('rejects failed, flaky, skipped, empty or malformed browser summaries', asy
   });
 });
 
-test('chains workspace package maps to TypeScript and rejects missing intermediate maps', async () => {
-  await fixture(async (options) => {
-    const source = join(options.root, 'packages/i18n/src/sample.ts');
-    const compiled = join(options.root, 'packages/i18n/dist/sample.js');
-    await mkdir(join(options.root, 'packages/i18n/src'), { recursive: true });
-    await mkdir(join(options.root, 'packages/i18n/dist'), { recursive: true });
-    await writeFile(source, options.entries[0].source);
-    await writeFile(compiled, options.entries[0].source);
-    const map = JSON.parse(await readFile(options.asset + '.map', 'utf8'));
-    await writeFile(compiled + '.map', JSON.stringify({ ...map, sources: ['../src/sample.ts'] }));
-    await writeFile(
-      options.asset + '.map',
-      JSON.stringify({ ...map, sources: [pathToFileURL(compiled).href] })
-    );
-    const report = await collectBrowserCoverage(options);
-    assert.ok(report.coverage[source]);
-    assert.equal(report.coverage[compiled], undefined);
-    await rm(compiled + '.map');
-    await assert.rejects(collectBrowserCoverage(options));
-    assert.equal(JSON.parse(await readFile(options.output, 'utf8')).status, 'invalid');
+for (const name of ['i18n', 'ui']) {
+  test(`chains ${name} package maps to TypeScript and rejects missing intermediate maps`, async () => {
+    await fixture(async (options) => {
+      const source = join(options.root, `packages/${name}/src/sample.ts`);
+      const compiled = join(options.root, `packages/${name}/dist/sample.js`);
+      await mkdir(join(options.root, `packages/${name}/src`), { recursive: true });
+      await mkdir(join(options.root, `packages/${name}/dist`), { recursive: true });
+      await writeFile(source, options.entries[0].source);
+      await writeFile(compiled, options.entries[0].source);
+      const map = JSON.parse(await readFile(options.asset + '.map', 'utf8'));
+      await writeFile(compiled + '.map', JSON.stringify({ ...map, sources: ['../src/sample.ts'] }));
+      await writeFile(
+        options.asset + '.map',
+        JSON.stringify({ ...map, sources: [pathToFileURL(compiled).href] })
+      );
+      const report = await collectBrowserCoverage(options);
+      assert.ok(report.coverage[source]);
+      assert.equal(report.coverage[compiled], undefined);
+      await rm(compiled + '.map');
+      await assert.rejects(collectBrowserCoverage(options));
+      assert.equal(JSON.parse(await readFile(options.output, 'utf8')).status, 'invalid');
+    });
   });
-});
+}
 
 async function componentFixture(options) {
   const directory = 'component-calendar-fixture';

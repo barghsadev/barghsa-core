@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-07T08:32:24+00:00",
-  "source_commit": "1f5456b370991593241795249d8924378333989f",
+  "updated": "2026-11-07T08:35:16+00:00",
+  "source_commit": "5941486b0b8ba39a85bbeb4878138a77d22bdf5e",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -29698,7 +29698,8 @@
           "release-0.5-notification-recovery-journey",
           "release-0.5-critical-accessibility",
           "release-0.5-route-fallback-and-announcement",
-          "release-0.5-form-and-document-accessibility"
+          "release-0.5-form-and-document-accessibility",
+          "release-0.5-coverage-deficits"
         ],
         "current_acceptance": {
           "kind": "verified-profile-onboarding-and-persistent-context",
@@ -29714,7 +29715,7 @@
             },
             {
               "path": "apps/api/src/orders/order-access-http.integration.test.ts",
-              "sha256": "ea8f0b4b9f3dd624a631399a079026504aed9630ae9fb6f805c9a08f1deefdd1"
+              "sha256": "30c3a597f865f5da49df9ee67b38ffd53d175ad2a46dcc57e1e8846b605864f1"
             },
             {
               "path": "apps/api/src/orders/orders.controller.test.ts",
@@ -29952,7 +29953,8 @@
             "Bindings renewed by release-0.5-notification-recovery-journey: tested presentation, read-only owned timestamp and additive locale changes. All 71 UI HTTP calls and 96 captured body/review/idempotency fields are unchanged, old feedback labels and original numeric limits are preserved, and affected browser/API/unit and export checks are recorded.",
             "Bindings renewed by release-0.5-critical-accessibility: audited canonical landmarks, retained command calls and validated auth-entry authority. Exact targeted unit/browser and original performance evidence passes.",
             "Bindings renewed by release-0.5-route-fallback-and-announcement: verified route landmarks, terminal notice, timeout without retries, preserved authority/financial actions and equivalent shell CSS. Affected browser/unit and original budgets passed.",
-            "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only."
+            "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
+            "Bindings renewed by release-0.5-coverage-deficits: exact DB blocker evidence and original post-lock status/persistence assertions pass. Coverage mapper follows existing package source maps and rejects missing intermediates."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/profile-onboarding-acceptance",
           "limitations": [
@@ -30245,6 +30247,11 @@
               "batch": "release-0.5-form-and-document-accessibility",
               "base_commit": "bc50e458e469d4fae48336f6384692b2a0a93251",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-form-and-document-accessibility/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-coverage-deficits",
+              "base_commit": "5941486b0b8ba39a85bbeb4878138a77d22bdf5e",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-coverage-deficits/source-binding.json"
             }
           ]
         }
@@ -65281,7 +65288,8 @@
           "release-0.5-staff-lists-and-receipts",
           "release-0.5-mobile-lists-and-touch",
           "release-0.5-form-and-document-accessibility",
-          "release-0.5-workspace-route-census"
+          "release-0.5-workspace-route-census",
+          "release-0.5-coverage-deficits"
         ],
         "current_acceptance": {
           "kind": "accepted-durable-native-business-producers",
@@ -65725,7 +65733,7 @@
             },
             {
               "path": "apps/api/src/orders/order-access-http.integration.test.ts",
-              "sha256": "ea8f0b4b9f3dd624a631399a079026504aed9630ae9fb6f805c9a08f1deefdd1"
+              "sha256": "30c3a597f865f5da49df9ee67b38ffd53d175ad2a46dcc57e1e8846b605864f1"
             },
             {
               "path": "apps/api/src/orders/orders.service.test.ts",
@@ -66451,7 +66459,8 @@
             "Bindings renewed by release-0.5-staff-lists-and-receipts: scoped query and confirmed receipt behavior with the original assertions, write payloads, CSRF and budgets. Current targeted unit and native results are recorded.",
             "Bindings renewed by release-0.5-mobile-lists-and-touch: layout-only card rendering and coarse pointer sizing, with exact action/read ownership and original assertions preserved. Current targeted native and unit evidence passes.",
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
-            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass."
+            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
+            "Bindings renewed by release-0.5-coverage-deficits: exact DB blocker evidence and original post-lock status/persistence assertions pass. Coverage mapper follows existing package source maps and rejects missing intermediates."
           ],
           "limitations": [],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/database-native-active-inbox-templates",
@@ -67541,6 +67550,11 @@
               "batch": "release-0.5-workspace-route-census",
               "base_commit": "7cf95f840a7e65c722f95b10e486bd02c435d498",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-workspace-route-census/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-coverage-deficits",
+              "base_commit": "5941486b0b8ba39a85bbeb4878138a77d22bdf5e",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-coverage-deficits/source-binding.json"
             }
           ]
         },
@@ -231894,7 +231908,8 @@
           "release-0.5-language-calendar-journey",
           "release-0.5-forms-confirmation-journey",
           "release-0.5-notification-recovery-journey",
-          "release-0.5-workspace-route-census"
+          "release-0.5-workspace-route-census",
+          "release-0.5-coverage-deficits"
         ],
         "current_acceptance": {
           "kind": "verified-promotions-vat-with-owner-approved-representations-and-repaired-gaps",
@@ -231942,7 +231957,7 @@
             },
             {
               "path": "apps/api/src/orders/order-access-http.integration.test.ts",
-              "sha256": "ea8f0b4b9f3dd624a631399a079026504aed9630ae9fb6f805c9a08f1deefdd1"
+              "sha256": "30c3a597f865f5da49df9ee67b38ffd53d175ad2a46dcc57e1e8846b605864f1"
             },
             {
               "path": "apps/api/src/orders/orders.service.test.ts",
@@ -232326,7 +232341,8 @@
             "Current binding renewed by release-0.5-language-calendar-journey: additive exact locked calendar imports/export, native language detection/label and directional presentation, server-offered MonthPicker and documented retained representation. Existing domain bodies/guards/actions and package exports remain;125 distinct native browser cases,33 related units,8 distribution checks and91 unchanged budgets cover affected behavior. Prior domain evidence reused for unchanged sources only.",
             "Bindings renewed by release-0.5-forms-confirmation-journey: additive confirmation entry/exports, display-only exact IRR/toman, scoped host/risk metadata and guarded explicit approval. Existing81 requests and180 payload/version/idempotency fields AST-identical; backend/shared domain and original budgets unchanged.139 distinct native cases,138 affected full-file web passes, shared control/distribution checks cover the UI delta. Original domain evidence retained for unchanged behavior; adapted test actions explicitly perform the additional approval and preserve assertions.",
             "Bindings renewed by release-0.5-notification-recovery-journey: tested presentation, read-only owned timestamp and additive locale changes. All 71 UI HTTP calls and 96 captured body/review/idempotency fields are unchanged, old feedback labels and original numeric limits are preserved, and affected browser/API/unit and export checks are recorded.",
-            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass."
+            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
+            "Bindings renewed by release-0.5-coverage-deficits: exact DB blocker evidence and original post-lock status/persistence assertions pass. Coverage mapper follows existing package source maps and rejects missing intermediates."
           ],
           "criteria": [
             "Owned active-profile preview checks availability, dates, scopes, limits and full-order minimum. Mixed category cart uses matching line subtotal; inconsistent sums fail. Authoritative electricity preview samples database time after lock waits."
@@ -232856,6 +232872,11 @@
               "batch": "release-0.5-workspace-route-census",
               "base_commit": "7cf95f840a7e65c722f95b10e486bd02c435d498",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-workspace-route-census/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-coverage-deficits",
+              "base_commit": "5941486b0b8ba39a85bbeb4878138a77d22bdf5e",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-coverage-deficits/source-binding.json"
             }
           ]
         }
@@ -232893,7 +232914,8 @@
           "release-0.5-language-calendar-journey",
           "release-0.5-forms-confirmation-journey",
           "release-0.5-notification-recovery-journey",
-          "release-0.5-workspace-route-census"
+          "release-0.5-workspace-route-census",
+          "release-0.5-coverage-deficits"
         ],
         "current_acceptance": {
           "kind": "verified-promotions-vat-with-owner-approved-representations-and-repaired-gaps",
@@ -232941,7 +232963,7 @@
             },
             {
               "path": "apps/api/src/orders/order-access-http.integration.test.ts",
-              "sha256": "ea8f0b4b9f3dd624a631399a079026504aed9630ae9fb6f805c9a08f1deefdd1"
+              "sha256": "30c3a597f865f5da49df9ee67b38ffd53d175ad2a46dcc57e1e8846b605864f1"
             },
             {
               "path": "apps/api/src/orders/orders.service.test.ts",
@@ -233325,7 +233347,8 @@
             "Current binding renewed by release-0.5-language-calendar-journey: additive exact locked calendar imports/export, native language detection/label and directional presentation, server-offered MonthPicker and documented retained representation. Existing domain bodies/guards/actions and package exports remain;125 distinct native browser cases,33 related units,8 distribution checks and91 unchanged budgets cover affected behavior. Prior domain evidence reused for unchanged sources only.",
             "Bindings renewed by release-0.5-forms-confirmation-journey: additive confirmation entry/exports, display-only exact IRR/toman, scoped host/risk metadata and guarded explicit approval. Existing81 requests and180 payload/version/idempotency fields AST-identical; backend/shared domain and original budgets unchanged.139 distinct native cases,138 affected full-file web passes, shared control/distribution checks cover the UI delta. Original domain evidence retained for unchanged behavior; adapted test actions explicitly perform the additional approval and preserve assertions.",
             "Bindings renewed by release-0.5-notification-recovery-journey: tested presentation, read-only owned timestamp and additive locale changes. All 71 UI HTTP calls and 96 captured body/review/idempotency fields are unchanged, old feedback labels and original numeric limits are preserved, and affected browser/API/unit and export checks are recorded.",
-            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass."
+            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
+            "Bindings renewed by release-0.5-coverage-deficits: exact DB blocker evidence and original post-lock status/persistence assertions pass. Coverage mapper follows existing package source maps and rejects missing intermediates."
           ],
           "criteria": [
             "Repeated public previews leave redemption count at zero. No reservation/write in preview; server submission rechecks availability independently."
@@ -233855,6 +233878,11 @@
               "batch": "release-0.5-workspace-route-census",
               "base_commit": "7cf95f840a7e65c722f95b10e486bd02c435d498",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-workspace-route-census/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-coverage-deficits",
+              "base_commit": "5941486b0b8ba39a85bbeb4878138a77d22bdf5e",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-coverage-deficits/source-binding.json"
             }
           ]
         }
@@ -233891,7 +233919,8 @@
           "release-0.5-language-calendar-journey",
           "release-0.5-forms-confirmation-journey",
           "release-0.5-notification-recovery-journey",
-          "release-0.5-workspace-route-census"
+          "release-0.5-workspace-route-census",
+          "release-0.5-coverage-deficits"
         ],
         "current_acceptance": {
           "kind": "verified-promotions-vat-with-owner-approved-representations-and-repaired-gaps",
@@ -233939,7 +233968,7 @@
             },
             {
               "path": "apps/api/src/orders/order-access-http.integration.test.ts",
-              "sha256": "ea8f0b4b9f3dd624a631399a079026504aed9630ae9fb6f805c9a08f1deefdd1"
+              "sha256": "30c3a597f865f5da49df9ee67b38ffd53d175ad2a46dcc57e1e8846b605864f1"
             },
             {
               "path": "apps/api/src/orders/orders.service.test.ts",
@@ -234323,7 +234352,8 @@
             "Current binding renewed by release-0.5-language-calendar-journey: additive exact locked calendar imports/export, native language detection/label and directional presentation, server-offered MonthPicker and documented retained representation. Existing domain bodies/guards/actions and package exports remain;125 distinct native browser cases,33 related units,8 distribution checks and91 unchanged budgets cover affected behavior. Prior domain evidence reused for unchanged sources only.",
             "Bindings renewed by release-0.5-forms-confirmation-journey: additive confirmation entry/exports, display-only exact IRR/toman, scoped host/risk metadata and guarded explicit approval. Existing81 requests and180 payload/version/idempotency fields AST-identical; backend/shared domain and original budgets unchanged.139 distinct native cases,138 affected full-file web passes, shared control/distribution checks cover the UI delta. Original domain evidence retained for unchanged behavior; adapted test actions explicitly perform the additional approval and preserve assertions.",
             "Bindings renewed by release-0.5-notification-recovery-journey: tested presentation, read-only owned timestamp and additive locale changes. All 71 UI HTTP calls and 96 captured body/review/idempotency fields are unchanged, old feedback labels and original numeric limits are preserved, and affected browser/API/unit and export checks are recorded.",
-            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass."
+            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
+            "Bindings renewed by release-0.5-coverage-deficits: exact DB blocker evidence and original post-lock status/persistence assertions pass. Coverage mapper follows existing package source maps and rejects missing intermediates."
           ],
           "criteria": [
             "Promotion row lock serializes consumed-ledger total/profile counts. Cross-profile concurrent submissions yield one success and one limit rejection with one order/redemption."
@@ -234853,6 +234883,11 @@
               "batch": "release-0.5-workspace-route-census",
               "base_commit": "7cf95f840a7e65c722f95b10e486bd02c435d498",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-workspace-route-census/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-coverage-deficits",
+              "base_commit": "5941486b0b8ba39a85bbeb4878138a77d22bdf5e",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-coverage-deficits/source-binding.json"
             }
           ]
         }
@@ -234889,7 +234924,8 @@
           "release-0.5-language-calendar-journey",
           "release-0.5-forms-confirmation-journey",
           "release-0.5-notification-recovery-journey",
-          "release-0.5-workspace-route-census"
+          "release-0.5-workspace-route-census",
+          "release-0.5-coverage-deficits"
         ],
         "current_acceptance": {
           "kind": "verified-promotions-vat-with-owner-approved-representations-and-repaired-gaps",
@@ -234937,7 +234973,7 @@
             },
             {
               "path": "apps/api/src/orders/order-access-http.integration.test.ts",
-              "sha256": "ea8f0b4b9f3dd624a631399a079026504aed9630ae9fb6f805c9a08f1deefdd1"
+              "sha256": "30c3a597f865f5da49df9ee67b38ffd53d175ad2a46dcc57e1e8846b605864f1"
             },
             {
               "path": "apps/api/src/orders/orders.service.test.ts",
@@ -235321,7 +235357,8 @@
             "Current binding renewed by release-0.5-language-calendar-journey: additive exact locked calendar imports/export, native language detection/label and directional presentation, server-offered MonthPicker and documented retained representation. Existing domain bodies/guards/actions and package exports remain;125 distinct native browser cases,33 related units,8 distribution checks and91 unchanged budgets cover affected behavior. Prior domain evidence reused for unchanged sources only.",
             "Bindings renewed by release-0.5-forms-confirmation-journey: additive confirmation entry/exports, display-only exact IRR/toman, scoped host/risk metadata and guarded explicit approval. Existing81 requests and180 payload/version/idempotency fields AST-identical; backend/shared domain and original budgets unchanged.139 distinct native cases,138 affected full-file web passes, shared control/distribution checks cover the UI delta. Original domain evidence retained for unchanged behavior; adapted test actions explicitly perform the additional approval and preserve assertions.",
             "Bindings renewed by release-0.5-notification-recovery-journey: tested presentation, read-only owned timestamp and additive locale changes. All 71 UI HTTP calls and 96 captured body/review/idempotency fields are unchanged, old feedback labels and original numeric limits are preserved, and affected browser/API/unit and export checks are recorded.",
-            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass."
+            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
+            "Bindings renewed by release-0.5-coverage-deficits: exact DB blocker evidence and original post-lock status/persistence assertions pass. Coverage mapper follows existing package source maps and rejects missing intermediates."
           ],
           "criteria": [
             "Failed/stale-reviewed and expired-session submissions roll back order/redemption/audit changes; winning slot remains usable and unrelated work is preserved."
@@ -235851,6 +235888,11 @@
               "batch": "release-0.5-workspace-route-census",
               "base_commit": "7cf95f840a7e65c722f95b10e486bd02c435d498",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-workspace-route-census/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-coverage-deficits",
+              "base_commit": "5941486b0b8ba39a85bbeb4878138a77d22bdf5e",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-coverage-deficits/source-binding.json"
             }
           ]
         }
@@ -235887,7 +235929,8 @@
           "release-0.5-language-calendar-journey",
           "release-0.5-forms-confirmation-journey",
           "release-0.5-notification-recovery-journey",
-          "release-0.5-workspace-route-census"
+          "release-0.5-workspace-route-census",
+          "release-0.5-coverage-deficits"
         ],
         "current_acceptance": {
           "kind": "verified-promotions-vat-with-owner-approved-representations-and-repaired-gaps",
@@ -235935,7 +235978,7 @@
             },
             {
               "path": "apps/api/src/orders/order-access-http.integration.test.ts",
-              "sha256": "ea8f0b4b9f3dd624a631399a079026504aed9630ae9fb6f805c9a08f1deefdd1"
+              "sha256": "30c3a597f865f5da49df9ee67b38ffd53d175ad2a46dcc57e1e8846b605864f1"
             },
             {
               "path": "apps/api/src/orders/orders.service.test.ts",
@@ -236319,7 +236362,8 @@
             "Current binding renewed by release-0.5-language-calendar-journey: additive exact locked calendar imports/export, native language detection/label and directional presentation, server-offered MonthPicker and documented retained representation. Existing domain bodies/guards/actions and package exports remain;125 distinct native browser cases,33 related units,8 distribution checks and91 unchanged budgets cover affected behavior. Prior domain evidence reused for unchanged sources only.",
             "Bindings renewed by release-0.5-forms-confirmation-journey: additive confirmation entry/exports, display-only exact IRR/toman, scoped host/risk metadata and guarded explicit approval. Existing81 requests and180 payload/version/idempotency fields AST-identical; backend/shared domain and original budgets unchanged.139 distinct native cases,138 affected full-file web passes, shared control/distribution checks cover the UI delta. Original domain evidence retained for unchanged behavior; adapted test actions explicitly perform the additional approval and preserve assertions.",
             "Bindings renewed by release-0.5-notification-recovery-journey: tested presentation, read-only owned timestamp and additive locale changes. All 71 UI HTTP calls and 96 captured body/review/idempotency fields are unchanged, old feedback labels and original numeric limits are preserved, and affected browser/API/unit and export checks are recorded.",
-            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass."
+            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
+            "Bindings renewed by release-0.5-coverage-deficits: exact DB blocker evidence and original post-lock status/persistence assertions pass. Coverage mapper follows existing package source maps and rejects missing intermediates."
           ],
           "criteria": [
             "Backend derives eligible lines from locked canonical products and authoritative prices, checks the submitted review digest and computes/redeems exact matching discount in the same transaction. Category changes invalidate stale reviews; completed commands replay exact receipts."
@@ -236849,6 +236893,11 @@
               "batch": "release-0.5-workspace-route-census",
               "base_commit": "7cf95f840a7e65c722f95b10e486bd02c435d498",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-workspace-route-census/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-coverage-deficits",
+              "base_commit": "5941486b0b8ba39a85bbeb4878138a77d22bdf5e",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-coverage-deficits/source-binding.json"
             }
           ]
         }
@@ -236885,7 +236934,8 @@
           "release-0.5-language-calendar-journey",
           "release-0.5-forms-confirmation-journey",
           "release-0.5-notification-recovery-journey",
-          "release-0.5-workspace-route-census"
+          "release-0.5-workspace-route-census",
+          "release-0.5-coverage-deficits"
         ],
         "current_acceptance": {
           "kind": "verified-promotions-vat-with-owner-approved-representations-and-repaired-gaps",
@@ -236933,7 +236983,7 @@
             },
             {
               "path": "apps/api/src/orders/order-access-http.integration.test.ts",
-              "sha256": "ea8f0b4b9f3dd624a631399a079026504aed9630ae9fb6f805c9a08f1deefdd1"
+              "sha256": "30c3a597f865f5da49df9ee67b38ffd53d175ad2a46dcc57e1e8846b605864f1"
             },
             {
               "path": "apps/api/src/orders/orders.service.test.ts",
@@ -237317,7 +237367,8 @@
             "Current binding renewed by release-0.5-language-calendar-journey: additive exact locked calendar imports/export, native language detection/label and directional presentation, server-offered MonthPicker and documented retained representation. Existing domain bodies/guards/actions and package exports remain;125 distinct native browser cases,33 related units,8 distribution checks and91 unchanged budgets cover affected behavior. Prior domain evidence reused for unchanged sources only.",
             "Bindings renewed by release-0.5-forms-confirmation-journey: additive confirmation entry/exports, display-only exact IRR/toman, scoped host/risk metadata and guarded explicit approval. Existing81 requests and180 payload/version/idempotency fields AST-identical; backend/shared domain and original budgets unchanged.139 distinct native cases,138 affected full-file web passes, shared control/distribution checks cover the UI delta. Original domain evidence retained for unchanged behavior; adapted test actions explicitly perform the additional approval and preserve assertions.",
             "Bindings renewed by release-0.5-notification-recovery-journey: tested presentation, read-only owned timestamp and additive locale changes. All 71 UI HTTP calls and 96 captured body/review/idempotency fields are unchanged, old feedback labels and original numeric limits are preserved, and affected browser/API/unit and export checks are recorded.",
-            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass."
+            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
+            "Bindings renewed by release-0.5-coverage-deficits: exact DB blocker evidence and original post-lock status/persistence assertions pass. Coverage mapper follows existing package source maps and rejects missing intermediates."
           ],
           "criteria": [
             "Fixed gifts cap to eligible subtotal; percentages use only matching base and retain their cap. Remainder IRR stays on matching lines; per-line VAT uses discounted net. Real invoices freeze identical matching/unmatched values."
@@ -237847,6 +237898,11 @@
               "batch": "release-0.5-workspace-route-census",
               "base_commit": "7cf95f840a7e65c722f95b10e486bd02c435d498",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-workspace-route-census/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-coverage-deficits",
+              "base_commit": "5941486b0b8ba39a85bbeb4878138a77d22bdf5e",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-coverage-deficits/source-binding.json"
             }
           ]
         }
@@ -237885,7 +237941,8 @@
           "release-0.5-language-calendar-journey",
           "release-0.5-forms-confirmation-journey",
           "release-0.5-notification-recovery-journey",
-          "release-0.5-workspace-route-census"
+          "release-0.5-workspace-route-census",
+          "release-0.5-coverage-deficits"
         ],
         "current_acceptance": {
           "kind": "verified-promotions-vat-with-owner-approved-representations-and-repaired-gaps",
@@ -237941,7 +237998,7 @@
             },
             {
               "path": "apps/api/src/orders/order-access-http.integration.test.ts",
-              "sha256": "ea8f0b4b9f3dd624a631399a079026504aed9630ae9fb6f805c9a08f1deefdd1"
+              "sha256": "30c3a597f865f5da49df9ee67b38ffd53d175ad2a46dcc57e1e8846b605864f1"
             },
             {
               "path": "apps/api/src/orders/orders.service.test.ts",
@@ -238322,7 +238379,8 @@
             "Current binding renewed by release-0.5-language-calendar-journey: additive exact locked calendar imports/export, native language detection/label and directional presentation, server-offered MonthPicker and documented retained representation. Existing domain bodies/guards/actions and package exports remain;125 distinct native browser cases,33 related units,8 distribution checks and91 unchanged budgets cover affected behavior. Prior domain evidence reused for unchanged sources only.",
             "Bindings renewed by release-0.5-forms-confirmation-journey: additive confirmation entry/exports, display-only exact IRR/toman, scoped host/risk metadata and guarded explicit approval. Existing81 requests and180 payload/version/idempotency fields AST-identical; backend/shared domain and original budgets unchanged.139 distinct native cases,138 affected full-file web passes, shared control/distribution checks cover the UI delta. Original domain evidence retained for unchanged behavior; adapted test actions explicitly perform the additional approval and preserve assertions.",
             "Bindings renewed by release-0.5-notification-recovery-journey: tested presentation, read-only owned timestamp and additive locale changes. All 71 UI HTTP calls and 96 captured body/review/idempotency fields are unchanged, old feedback labels and original numeric limits are preserved, and affected browser/API/unit and export checks are recorded.",
-            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass."
+            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
+            "Bindings renewed by release-0.5-coverage-deficits: exact DB blocker evidence and original post-lock status/persistence assertions pass. Coverage mapper follows existing package source maps and rejects missing intermediates."
           ],
           "criteria": [
             "Unpaid restoration uses policy-conditioned consumed-to-released update in cancellation transaction. Enabled/disabled policy and replacement behavior retain exact counts/history; restored slot can be redeemed again."
@@ -238862,6 +238920,11 @@
               "batch": "release-0.5-workspace-route-census",
               "base_commit": "7cf95f840a7e65c722f95b10e486bd02c435d498",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-workspace-route-census/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-coverage-deficits",
+              "base_commit": "5941486b0b8ba39a85bbeb4878138a77d22bdf5e",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-coverage-deficits/source-binding.json"
             }
           ]
         }
@@ -238899,7 +238962,8 @@
           "release-0.5-language-calendar-journey",
           "release-0.5-forms-confirmation-journey",
           "release-0.5-notification-recovery-journey",
-          "release-0.5-workspace-route-census"
+          "release-0.5-workspace-route-census",
+          "release-0.5-coverage-deficits"
         ],
         "current_acceptance": {
           "kind": "verified-promotions-vat-with-owner-approved-representations-and-repaired-gaps",
@@ -238955,7 +239019,7 @@
             },
             {
               "path": "apps/api/src/orders/order-access-http.integration.test.ts",
-              "sha256": "ea8f0b4b9f3dd624a631399a079026504aed9630ae9fb6f805c9a08f1deefdd1"
+              "sha256": "30c3a597f865f5da49df9ee67b38ffd53d175ad2a46dcc57e1e8846b605864f1"
             },
             {
               "path": "apps/api/src/orders/orders.service.test.ts",
@@ -239336,7 +239400,8 @@
             "Current binding renewed by release-0.5-language-calendar-journey: additive exact locked calendar imports/export, native language detection/label and directional presentation, server-offered MonthPicker and documented retained representation. Existing domain bodies/guards/actions and package exports remain;125 distinct native browser cases,33 related units,8 distribution checks and91 unchanged budgets cover affected behavior. Prior domain evidence reused for unchanged sources only.",
             "Bindings renewed by release-0.5-forms-confirmation-journey: additive confirmation entry/exports, display-only exact IRR/toman, scoped host/risk metadata and guarded explicit approval. Existing81 requests and180 payload/version/idempotency fields AST-identical; backend/shared domain and original budgets unchanged.139 distinct native cases,138 affected full-file web passes, shared control/distribution checks cover the UI delta. Original domain evidence retained for unchanged behavior; adapted test actions explicitly perform the additional approval and preserve assertions.",
             "Bindings renewed by release-0.5-notification-recovery-journey: tested presentation, read-only owned timestamp and additive locale changes. All 71 UI HTTP calls and 96 captured body/review/idempotency fields are unchanged, old feedback labels and original numeric limits are preserved, and affected browser/API/unit and export checks are recorded.",
-            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass."
+            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
+            "Bindings renewed by release-0.5-coverage-deficits: exact DB blocker evidence and original post-lock status/persistence assertions pass. Coverage mapper follows existing package source maps and rejects missing intermediates."
           ],
           "criteria": [
             "Existing paid cancellation integration checks verify restore_after_payment false/true. No paid restoration without both enabled cancellation policy and explicit paid opt-in."
@@ -239876,6 +239941,11 @@
               "batch": "release-0.5-workspace-route-census",
               "base_commit": "7cf95f840a7e65c722f95b10e486bd02c435d498",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-workspace-route-census/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-coverage-deficits",
+              "base_commit": "5941486b0b8ba39a85bbeb4878138a77d22bdf5e",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-coverage-deficits/source-binding.json"
             }
           ]
         }
@@ -239914,7 +239984,8 @@
           "release-0.5-language-calendar-journey",
           "release-0.5-forms-confirmation-journey",
           "release-0.5-notification-recovery-journey",
-          "release-0.5-workspace-route-census"
+          "release-0.5-workspace-route-census",
+          "release-0.5-coverage-deficits"
         ],
         "current_acceptance": {
           "kind": "verified-promotions-vat-with-owner-approved-representations-and-repaired-gaps",
@@ -239970,7 +240041,7 @@
             },
             {
               "path": "apps/api/src/orders/order-access-http.integration.test.ts",
-              "sha256": "ea8f0b4b9f3dd624a631399a079026504aed9630ae9fb6f805c9a08f1deefdd1"
+              "sha256": "30c3a597f865f5da49df9ee67b38ffd53d175ad2a46dcc57e1e8846b605864f1"
             },
             {
               "path": "apps/api/src/orders/orders.service.test.ts",
@@ -240351,7 +240422,8 @@
             "Current binding renewed by release-0.5-language-calendar-journey: additive exact locked calendar imports/export, native language detection/label and directional presentation, server-offered MonthPicker and documented retained representation. Existing domain bodies/guards/actions and package exports remain;125 distinct native browser cases,33 related units,8 distribution checks and91 unchanged budgets cover affected behavior. Prior domain evidence reused for unchanged sources only.",
             "Bindings renewed by release-0.5-forms-confirmation-journey: additive confirmation entry/exports, display-only exact IRR/toman, scoped host/risk metadata and guarded explicit approval. Existing81 requests and180 payload/version/idempotency fields AST-identical; backend/shared domain and original budgets unchanged.139 distinct native cases,138 affected full-file web passes, shared control/distribution checks cover the UI delta. Original domain evidence retained for unchanged behavior; adapted test actions explicitly perform the additional approval and preserve assertions.",
             "Bindings renewed by release-0.5-notification-recovery-journey: tested presentation, read-only owned timestamp and additive locale changes. All 71 UI HTTP calls and 96 captured body/review/idempotency fields are unchanged, old feedback labels and original numeric limits are preserved, and affected browser/API/unit and export checks are recorded.",
-            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass."
+            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
+            "Bindings renewed by release-0.5-coverage-deficits: exact DB blocker evidence and original post-lock status/persistence assertions pass. Coverage mapper follows existing package source maps and rejects missing intermediates."
           ],
           "criteria": [
             "Consumed-only restoration cannot release twice. Repeated cancellation preserves the first restored_at exactly and no duplicate usage is returned; command receipt/state guards retained."
@@ -240891,6 +240963,11 @@
               "batch": "release-0.5-workspace-route-census",
               "base_commit": "7cf95f840a7e65c722f95b10e486bd02c435d498",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-workspace-route-census/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-coverage-deficits",
+              "base_commit": "5941486b0b8ba39a85bbeb4878138a77d22bdf5e",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-coverage-deficits/source-binding.json"
             }
           ]
         }
@@ -663081,7 +663158,7 @@
             },
             {
               "path": "apps/api/src/orders/order-access-http.integration.test.ts",
-              "sha256": "ea8f0b4b9f3dd624a631399a079026504aed9630ae9fb6f805c9a08f1deefdd1"
+              "sha256": "30c3a597f865f5da49df9ee67b38ffd53d175ad2a46dcc57e1e8846b605864f1"
             },
             {
               "path": "apps/api/src/orders/order-actor-lock.integration.test.ts",
@@ -665496,7 +665573,8 @@
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
             "Bindings renewed by release-0.5-ci-workflow: motion preserves opacity and finance/authority behavior; exact fast accessibility cases, motion checks and original transfer budgets passed.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
-            "Bindings renewed by release-0.5-profile-lifecycle-feedback: exact lifecycle browsers and units verify timeout, current scope, protected consent, duplicate prevention and receipts after the bounded preview/feedback change."
+            "Bindings renewed by release-0.5-profile-lifecycle-feedback: exact lifecycle browsers and units verify timeout, current scope, protected consent, duplicate prevention and receipts after the bounded preview/feedback change.",
+            "Bindings renewed by release-0.5-coverage-deficits: exact DB blocker evidence and original post-lock status/persistence assertions pass. Coverage mapper follows existing package source maps and rejects missing intermediates."
           ],
           "limitations": [],
           "operational_limits": [
@@ -666075,6 +666153,11 @@
               "batch": "release-0.5-profile-lifecycle-feedback",
               "base_commit": "11dd72829ed7b2083caa7bc4ff64f08eb86b491c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-profile-lifecycle-feedback/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-coverage-deficits",
+              "base_commit": "5941486b0b8ba39a85bbeb4878138a77d22bdf5e",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-coverage-deficits/source-binding.json"
             }
           ]
         },
@@ -666094,7 +666177,8 @@
           "release-0.5-form-and-document-accessibility",
           "release-0.5-ci-workflow",
           "release-0.5-workspace-route-census",
-          "release-0.5-profile-lifecycle-feedback"
+          "release-0.5-profile-lifecycle-feedback",
+          "release-0.5-coverage-deficits"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -666795,7 +666879,7 @@
             },
             {
               "path": "apps/api/src/orders/order-access-http.integration.test.ts",
-              "sha256": "ea8f0b4b9f3dd624a631399a079026504aed9630ae9fb6f805c9a08f1deefdd1"
+              "sha256": "30c3a597f865f5da49df9ee67b38ffd53d175ad2a46dcc57e1e8846b605864f1"
             },
             {
               "path": "apps/api/src/orders/order-actor-lock.integration.test.ts",
@@ -669203,7 +669287,8 @@
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
             "Bindings renewed by release-0.5-ci-workflow: motion preserves opacity and finance/authority behavior; exact fast accessibility cases, motion checks and original transfer budgets passed.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
-            "Bindings renewed by release-0.5-profile-lifecycle-feedback: exact lifecycle browsers and units verify timeout, current scope, protected consent, duplicate prevention and receipts after the bounded preview/feedback change."
+            "Bindings renewed by release-0.5-profile-lifecycle-feedback: exact lifecycle browsers and units verify timeout, current scope, protected consent, duplicate prevention and receipts after the bounded preview/feedback change.",
+            "Bindings renewed by release-0.5-coverage-deficits: exact DB blocker evidence and original post-lock status/persistence assertions pass. Coverage mapper follows existing package source maps and rejects missing intermediates."
           ],
           "limitations": [
             "Current staging is v0.3.0/2ac708c11225a1239156787cddfdd3ab094fb8f8, API/web/worker healthy and Redis/object storage readiness verified. After effective v0.4.0 criteria are accepted, deploy its immutable candidate and verify actual AI routing, slot isolation and notification/storage operations. Earlier v0.1.29/forced-TLS warning description is stale and does not dispatch a rebuild.",
@@ -669655,6 +669740,11 @@
               "batch": "release-0.5-profile-lifecycle-feedback",
               "base_commit": "11dd72829ed7b2083caa7bc4ff64f08eb86b491c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-profile-lifecycle-feedback/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-coverage-deficits",
+              "base_commit": "5941486b0b8ba39a85bbeb4878138a77d22bdf5e",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-coverage-deficits/source-binding.json"
             }
           ]
         },
@@ -669691,7 +669781,8 @@
           "release-0.5-form-and-document-accessibility",
           "release-0.5-ci-workflow",
           "release-0.5-workspace-route-census",
-          "release-0.5-profile-lifecycle-feedback"
+          "release-0.5-profile-lifecycle-feedback",
+          "release-0.5-coverage-deficits"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -669906,7 +669997,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "All 5296 web unit tests now pass. Scoped browser coverage still leaves web, UI and critical i18n below their original thresholds; the independent API source report and remaining complex manual evidence are pending. Use exact measured deficits to select more coverage cases."
+        "UI coverage mapping now follows the actual distributed source maps. The four focused database order lock races pass after restoring accurate blocking proof. Collect the next clean browser source report and assess the unchanged aggregate floors, remaining API checks and complex manual evidence."
       ],
       "owner": null,
       "depends_on": [],
@@ -669916,7 +670007,8 @@
           "release-0.5-critical-accessibility-renewal",
           "release-0.5-route-matrix-reconciliation",
           "release-0.5-source-coverage-gate",
-          "release-0.5-staff-finance-read-recovery"
+          "release-0.5-staff-finance-read-recovery",
+          "release-0.5-coverage-deficits"
         ]
       }
     },
@@ -720902,7 +720994,121 @@
         "release-readiness#R-02.01"
       ],
       "failed_attempts_retained": true,
-      "release_disposition": "Verified staff read recovery and measured release coverage deficits. No release publication."
+      "release_disposition": "Verified staff read recovery and measured release coverage deficits. No release publication.",
+      "push_receipt": {
+        "commit": "5941486b0b8ba39a85bbeb4878138a77d22bdf5e",
+        "remote_sha": "5941486b0b8ba39a85bbeb4878138a77d22bdf5e",
+        "ref": "refs/heads/main",
+        "verified_at": "2026-11-07T08:32:59+00:00",
+        "method": "GitHub CLI API read after authenticated HTTPS Git push"
+      }
+    },
+    "release-0.5-coverage-deficits": {
+      "batch": "release-0.5-coverage-deficits",
+      "base_commit": "5941486b0b8ba39a85bbeb4878138a77d22bdf5e",
+      "task_keys": [
+        "release-readiness#R-04.02"
+      ],
+      "accepted_task_keys": [],
+      "partial_task_keys": [
+        "release-readiness#R-04.02"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/orders/order-access-http.integration.test.ts",
+          "sha256": "30c3a597f865f5da49df9ee67b38ffd53d175ad2a46dcc57e1e8846b605864f1"
+        },
+        {
+          "path": "apps/api/src/orders/orders.service.ts",
+          "sha256": "22c6aef1fc109cedb37c0df86da4b2df55b0f5d507448b674942f86c547b1427"
+        },
+        {
+          "path": "apps/api/src/test/build-http-app.ts",
+          "sha256": "316df2e398f44063465dae16ebc2decbf88b4c64b95be47c3bd3735c0158a8b0"
+        },
+        {
+          "path": "apps/api/src/test/http-fixture.ts",
+          "sha256": "69acb9cdf03c028f400447c82c4bb2accb402862fe4182e70452b5c4d4f21b08"
+        },
+        {
+          "path": "apps/api/src/test/postgres-setup.ts",
+          "sha256": "a6203929fcdfceb3371ea2660f15d85a1b13ef13ef75196ffa14c93ab040c793"
+        },
+        {
+          "path": "apps/api/vitest.config.ts",
+          "sha256": "fa9646bd82f6265c4fccd81b03382a46b375d457f8bad5c9e6f1867fc46e38f5"
+        },
+        {
+          "path": "apps/web/build.mjs",
+          "sha256": "20432f55d9d3090f592a28e79064d99f0066108a3cda87aeebf023583d55c35f"
+        },
+        {
+          "path": "apps/web/vite.config.ts",
+          "sha256": "63a0eb5705c84063b819514ddf5747477e6b125137dbb70ea12b02327d6b92bf"
+        },
+        {
+          "path": "packages/ui/tsup.config.ts",
+          "sha256": "554b9e1fa06809085999433ad9959cc79e7e7aff29d66cb421c8f39df39a407c"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "0b875687ee1d2f32ea8819c9eb58af72f0c0db3796f5e74f82317d4b7ce46251"
+        },
+        {
+          "path": "scripts/align-process-coverage.mjs",
+          "sha256": "e50b60d231ffead9ea74415ca92786d3edd3a3e887e54ae93cd360d421268516"
+        },
+        {
+          "path": "scripts/align-process-coverage.test.mjs",
+          "sha256": "daf8633a70ac8aac023e25ae0f51c8d38d9ecb77f064311db87d6fb1e0c17e81"
+        },
+        {
+          "path": "scripts/browser-coverage.test.mjs",
+          "sha256": "950f3539e9db6d5cacb0a8e412de4112af35d06a4c47b0beca4605b3560f0f27"
+        },
+        {
+          "path": "scripts/check-changed-coverage.py",
+          "sha256": "721aa5763bb62336c0e4c454b8e36e2f15ff1e14bf4b0136c7c7946424bbd736"
+        },
+        {
+          "path": "scripts/collect-browser-coverage.mjs",
+          "sha256": "f3446ae4ad567716f8b618a4a3c93f9a62cb148bc6dd7405be955f80d8f5bfaa"
+        },
+        {
+          "path": "scripts/conservative-branch-coverage.mjs",
+          "sha256": "fb4e4026439684c2a34c90636c820e6a9ab15936d95cae48e08e8a7d80223f5d"
+        },
+        {
+          "path": "scripts/merge-browser-coverage.mjs",
+          "sha256": "19fcc8cef996c4e0ddedb872cfe643c2cb755e5a23df3086ddc01d72c87caa75"
+        }
+      ],
+      "checks": [
+        "Existing coverage proved the browser collector returned no UI coverage. The previous clean web build contains 69 Vite source references to 57 distinct UI dist intermediates, all with TypeScript source maps. The collector now follows the UI maps using the same exact source validation and conservative counters as other packages. The test also refuses missing UI intermediates.",
+        "The running API coverage attempt exposed three order-access race tests that looked for the obsolete projection without verified_at. The fixture now proves the specific request is blocked by its own transaction on the same profile or settings lock. All four focused database race assertions pass, including original 404/403, retained order state and no unauthorized creation. No product authorization or database policy changed.",
+        "23 mapper and branch alignment checks, four exact HTTP race checks, lint, format and API typecheck pass. Final full coverage is still open; the original failed API cases and pending full run are recorded separately from these scoped passes."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-coverage-deficits",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-coverage-deficits/reviewed-source.diff",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-coverage-deficits/source-binding.json",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-coverage-deficits/renewed-bindings.json",
+      "renewed_task_keys": [
+        "02-auth-users-admin.md#T-03.01.02",
+        "05-notifications-documents-ai.md#T-05.01.02",
+        "03-core-business.md#T-03.02.03.01",
+        "03-core-business.md#T-03.02.03.02",
+        "03-core-business.md#T-03.02.03.03",
+        "03-core-business.md#T-03.02.03.04",
+        "03-core-business.md#T-03.02.03.05",
+        "03-core-business.md#T-03.02.03.06",
+        "03-core-business.md#T-03.02.04.01",
+        "03-core-business.md#T-03.02.04.02",
+        "03-core-business.md#T-03.02.04.03",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02"
+      ],
+      "failed_attempts_retained": true,
+      "release_disposition": "Repaired coverage collection and obsolete database race fixture. No release publication."
     }
   },
   "historical_improvements": [
@@ -720942,17 +721148,17 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.5-coverage-deficits",
+    "id": "release-0.5-ui-coverage-collection",
     "release": "0.5.0",
     "task_keys": [
       "release-readiness#R-04.02",
       "07-ui-ux-design.md#T-07.05.01.08"
     ],
-    "goal": "Exercise the measured shared UI and launch route coverage deficits with existing component and production browser fixtures, then run exact source checks for remaining uncovered behavior. Preserve branch floors and manual contrast evidence."
+    "goal": "Collect and validate real browser source reports with the corrected UI mapping, starting with changed launch route and shared component behavior. Diagnose concrete remaining coverage and contrast gaps without adjusting any thresholds."
   },
   "launch_forecast": {
     "status": "deadline_at_risk_until_v0_5_and_operational_gates_close",
-    "next_update_after": "v0.5.0 actual shared UI and changed-source coverage gaps",
+    "next_update_after": "v0.5.0 mapped UI report and measured remaining source floors",
     "method": "v0.4.0 staging and Telegram receipts verified. v0.5.0 remains unaccepted: coverage diagnostics are below unchanged web/UI/i18n floors, required route/manual states and two owner decisions remain. v0.6.0 operations and v0.9.0 four-service rehearsal keep November 9 at risk. Production is not authorized."
   },
   "capabilities": [

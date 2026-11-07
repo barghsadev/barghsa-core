@@ -6,6 +6,7 @@ import {
 } from '../test/electricity-status-notification-proof.js';
 import { beforeEach, afterEach, expect, it } from 'vitest';
 import { randomUUID } from 'node:crypto';
+import type { PoolClient } from 'pg';
 import { startHttpFixture } from '../test/http-fixture.js';
 import { DEFAULT_GREEN_ELECTRICITY_CONFIG } from '@barghsa/shared/finance';
 import { ElectricityCalculationService } from '../electricity/electricity-calculation.service.js';
@@ -100,6 +101,18 @@ async function create(actor = 'owner') {
   const response = await request(actor, 'POST', '', body);
   expect(response.status, http.logs()).toBe(201);
   return ((await response.json()) as { id: string }).id;
+}
+async function expectBlockedQuery(blocker: PoolClient, queryPattern: string) {
+  const { rows } = await blocker.query<{ pid: number }>('SELECT pg_backend_pid() AS pid');
+  await expect
+    .poll(async () => {
+      const waiting = await http.pool.query<{ count: number }>(
+        'SELECT count(*)::int AS count FROM pg_stat_activity WHERE datname=current_database() AND $1=ANY(pg_blocking_pids(pid)) AND query LIKE $2',
+        [rows[0]!.pid, queryPattern]
+      );
+      return waiting.rows[0]!.count;
+    })
+    .toBe(1);
 }
 it('captures current rules for each new draft and protects submitted snapshots', async () => {
   const catalogueResponse = await fetch(`${http.base}/api/products/electricity`);
@@ -333,17 +346,7 @@ for (const action of ['create', 'cancel']) {
         action === 'create'
           ? request('manager', 'POST', '', body)
           : request('manager', 'POST', `/${id}/cancel`);
-      await expect
-        .poll(async () =>
-          Number(
-            (
-              await http.pool.query(
-                "SELECT count(*) FROM pg_stat_activity WHERE datname=current_database() AND wait_event_type='Lock' AND query LIKE '%SELECT id,user_id,profile_type,status FROM profiles%'"
-              )
-            ).rows[0].count
-          )
-        )
-        .toBe(1);
+      await expectBlockedQuery(client, '%FROM profiles%FOR SHARE');
       await client.query('COMMIT');
       expect((await pending).status).toBe(404);
       expect((await http.pool.query('SELECT status FROM orders')).rows).toEqual(
@@ -475,21 +478,8 @@ it.each(['profile', 'policy'])(
         );
       pending = request('owner', 'POST', '', body);
       const queryPattern =
-        change === 'profile'
-          ? '%SELECT id,user_id,profile_type,status FROM profiles%'
-          : 'LOCK TABLE app_config IN SHARE MODE';
-      await expect
-        .poll(async () =>
-          Number(
-            (
-              await http.pool.query(
-                "SELECT count(*) FROM pg_stat_activity WHERE datname=current_database() AND wait_event_type='Lock' AND query LIKE $1",
-                [queryPattern]
-              )
-            ).rows[0].count
-          )
-        )
-        .toBe(1);
+        change === 'profile' ? '%FROM profiles%FOR SHARE' : 'LOCK TABLE app_config IN SHARE MODE';
+      await expectBlockedQuery(blocker, queryPattern);
       await blocker.query('COMMIT');
       expect((await pending).status).toBe(403);
       expect((await http.pool.query('SELECT id FROM orders')).rows).toHaveLength(0);
