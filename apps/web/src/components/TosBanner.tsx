@@ -332,7 +332,7 @@ function OwnedTosBanner({ locale = 'fa' }: TosBannerProps) {
           className="sm:max-w-lg max-h-[80vh] flex flex-col"
           closeLabel={t('tos.modal.close', locale)}
         >
-          <DialogHeader>
+          <DialogHeader className="pointer-coarse:pe-[2.75rem]">
             <DialogTitle>{t('tos.modal.title', locale)}</DialogTitle>
             {currentTos && (
               <DialogDescription>

@@ -2,6 +2,7 @@ import { readWithDeadline } from '../lib/server-query-client.js';
 import {
   DEFAULT_BRAND_CONFIG,
   BRAND_SURFACES,
+  MUTED_TEXT_COLORS,
   brandName,
   brandColor,
   getContrastForeground,
@@ -48,8 +49,6 @@ import {
 interface BrandThemeContextValue {
   brandConfig: BrandConfig;
   loading: boolean;
-  userMode: 'light' | 'dark' | null;
-  setUserMode: (mode: 'light' | 'dark' | null) => void;
   theme: ThemeMode;
   setTheme: (mode: ThemeMode) => void;
   resolvedTheme: ResolvedTheme;
@@ -60,8 +59,6 @@ interface BrandThemeContextValue {
 const BrandThemeContext = createContext<BrandThemeContextValue>({
   brandConfig: DEFAULT_BRAND_CONFIG,
   loading: true,
-  userMode: null,
-  setUserMode: () => {},
   theme: 'system',
   setTheme: () => {},
   resolvedTheme: 'light',
@@ -98,11 +95,6 @@ export function BrandThemeProvider({ children }: { children: ReactNode }) {
     storeTheme(THEME_STORAGE_KEY, mode);
     setThemeState(mode);
   }, []);
-  const setUserMode = useCallback(
-    (mode: 'light' | 'dark' | null) => setTheme(mode ?? 'system'),
-    [setTheme]
-  );
-  const userMode = theme === 'system' ? null : theme;
   const resolvedTheme = resolveTheme(themePolicy, theme, systemDark);
   const systemTheme: ResolvedTheme = systemDark ? 'dark' : 'light';
   useEffect(() => {
@@ -132,25 +124,26 @@ export function BrandThemeProvider({ children }: { children: ReactNode }) {
       ]),
       '--brand-light-background',
       '--brand-dark-background',
+      '--brand-canvas-text',
       '--brand-primary-text-light',
       '--brand-primary-text-dark',
       '--app-font',
       '--radius',
       '--spacing',
     ];
-    const previous = properties.map((name) => ({
-      name,
-      value: root.style.getPropertyValue(name),
-      priority: root.style.getPropertyPriority(name),
-    }));
+    const previous = properties.map(
+      (name) =>
+        [name, root.style.getPropertyValue(name), root.style.getPropertyPriority(name)] as const
+    );
     const title = document.title,
       dark = root.classList.contains('dark');
     const originalIcon = document.querySelector<HTMLLinkElement>('link[rel="icon"]');
     const originalHref = originalIcon?.getAttribute('href') ?? null;
     let activeConfig: BrandConfig | null = null;
-    const localeObserver = new MutationObserver(() => {
+    const updateTitle = () => {
       if (activeConfig) document.title = brandName(activeConfig, root.lang === 'en' ? 'en' : 'fa');
-    });
+    };
+    const localeObserver = new MutationObserver(updateTitle);
     localeObserver.observe(root, { attributes: true, attributeFilter: ['lang'] });
     let icon = originalIcon,
       request: AbortController | null = null;
@@ -176,7 +169,7 @@ export function BrandThemeProvider({ children }: { children: ReactNode }) {
       );
       root.style.setProperty('--radius', `${config.borderRadiusRem}rem`);
       root.style.setProperty('--spacing', `${0.25 * config.spacingScale}rem`);
-      document.title = brandName(config, root.lang === 'en' ? 'en' : 'fa');
+      updateTitle();
       if (config.faviconUrl) {
         if (!icon) {
           icon = document.createElement('link');
@@ -206,19 +199,13 @@ export function BrandThemeProvider({ children }: { children: ReactNode }) {
         if (!current.signal.aborted) setLoading(false);
       }
     };
-    const refresh = () => {
-      void load();
-    };
-    refresh();
-    window.addEventListener('barghsa:branding-activated', refresh);
+    void load();
+    window.addEventListener('barghsa:branding-activated', load);
     return () => {
       request?.abort();
       localeObserver.disconnect();
-      window.removeEventListener('barghsa:branding-activated', refresh);
-      for (const { name, value, priority } of previous) {
-        if (value) root.style.setProperty(name, value, priority);
-        else root.style.removeProperty(name);
-      }
+      window.removeEventListener('barghsa:branding-activated', load);
+      for (const [name, value, priority] of previous) root.style.setProperty(name, value, priority);
       document.title = title;
       root.classList.toggle('dark', dark);
       resetIcon();
@@ -226,21 +213,26 @@ export function BrandThemeProvider({ children }: { children: ReactNode }) {
   }, []);
   useEffect(() => {
     const root = document.documentElement;
-    root.classList.toggle('dark', resolvedTheme === 'dark');
+    const dark = resolvedTheme === 'dark';
+    root.classList.toggle('dark', dark);
+    const muted = MUTED_TEXT_COLORS[dark ? 1 : 0];
+    const canvas = dark ? brandConfig.darkBackgroundColor : brandConfig.backgroundColor;
     root.style.setProperty(
-      '--brand-primary-text-light',
-      getBrandTextColor(brandConfig.primaryColor, [
-        brandConfig.backgroundColor,
-        ...BRAND_SURFACES.light,
-      ])
+      '--brand-canvas-text',
+      getBrandTextColor(muted, [canvas]) === muted ? '' : 'var(--foreground)'
     );
-    root.style.setProperty(
-      '--brand-primary-text-dark',
-      getBrandTextColor(brandColor(brandConfig, 'primary', 'dark'), [
-        brandConfig.darkBackgroundColor,
-        ...BRAND_SURFACES.dark,
-      ])
-    );
+    for (const [mode, background] of [
+      ['light', brandConfig.backgroundColor],
+      ['dark', brandConfig.darkBackgroundColor],
+    ] as const) {
+      root.style.setProperty(
+        `--brand-primary-text-${mode}`,
+        getBrandTextColor(brandColor(brandConfig, 'primary', mode), [
+          background,
+          ...BRAND_SURFACES[mode],
+        ])
+      );
+    }
     for (const color of ['primary', 'secondary', 'accent'] as const) {
       const background = brandColor(brandConfig, color, resolvedTheme);
       const foreground = getContrastForeground(background);
@@ -254,25 +246,13 @@ export function BrandThemeProvider({ children }: { children: ReactNode }) {
     () => ({
       brandConfig,
       loading,
-      userMode,
-      setUserMode,
       theme,
       setTheme,
       resolvedTheme,
       themePolicy,
       systemTheme,
     }),
-    [
-      brandConfig,
-      loading,
-      userMode,
-      setUserMode,
-      theme,
-      setTheme,
-      resolvedTheme,
-      themePolicy,
-      systemTheme,
-    ]
+    [brandConfig, loading, theme, setTheme, resolvedTheme, themePolicy, systemTheme]
   );
   return <BrandThemeContext.Provider value={value}>{children}</BrandThemeContext.Provider>;
 }

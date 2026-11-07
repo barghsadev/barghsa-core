@@ -106,6 +106,12 @@ for (const locale of ['en', 'fa'] as const) {
       const header = page.getByRole('banner');
       for (const width of [320, 375, 390, 414, 768, 1024, 1280, 1920]) {
         await page.setViewportSize({ width, height: 1000 });
+        await page.evaluate(
+          () =>
+            new Promise<void>((resolve) =>
+              requestAnimationFrame(() => requestAnimationFrame(() => resolve()))
+            )
+        );
         await expect(menu).toBeVisible();
         const controls = header.locator('a:visible, button:visible, select:visible');
         const boxes = await controls.evaluateAll((elements) =>
@@ -216,8 +222,19 @@ for (const locale of ['en', 'fa'] as const) {
       // Settle the logout document before starting the next protected navigation.
       await expect(page.locator('script[type="module"][src^="/auth/assets/"]')).toHaveCount(1);
       await page.waitForLoadState('load');
-      // The guard redirects this document to the separate authentication entry.
-      await page.goto('/app', { waitUntil: 'commit' });
+      // The guard can replace the protected navigation before WebKit reports its commit.
+      await Promise.all([
+        page.waitForRequest(
+          (request) => request.isNavigationRequest() && new URL(request.url()).pathname === '/app'
+        ),
+        page.waitForEvent(
+          'framenavigated',
+          (frame) => frame === page.mainFrame() && new URL(frame.url()).pathname === '/login'
+        ),
+        page.evaluate(() => {
+          requestAnimationFrame(() => window.location.assign('/app'));
+        }),
+      ]);
       await expect(page).toHaveURL(/\/login$/);
       await expect(page.locator('script[type="module"][src^="/auth/assets/"]')).toHaveCount(1);
     });

@@ -57,6 +57,7 @@ export const BRAND_SURFACES = {
 
 /** Text colors are checked against active brand surfaces before becoming CSS tokens. */
 export const DANGER_TEXT_COLORS = ['#a42c35', '#ffafb2'] as const;
+export const MUTED_TEXT_COLORS = ['#5f6e65', '#afc0b2'] as const;
 
 export function brandName(config: BrandConfig, locale: 'fa' | 'en'): string {
   return locale === 'fa' ? config.appTitleFa : config.appTitle;

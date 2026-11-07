@@ -78,6 +78,12 @@
   }
 }
 
+@layer utilities {
+  .text-destructive {
+    color: var(--danger-text);
+  }
+}
+
 @theme inline {
   --color-brand-50: var(--palette-primary-50);
   --color-brand-100: var(--palette-primary-100);
@@ -190,6 +196,7 @@
   --color-purple: var(--purple);
   --color-purple-soft: var(--purple-soft);
   --color-danger-soft: var(--danger-soft);
+  --color-danger-soft-hover: color-mix(in srgb, var(--danger-soft) 92%, var(--destructive));
   --color-sidebar: var(--sidebar);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar-active: var(--sidebar-active);
@@ -386,13 +393,14 @@
   --secondary: hsl(140 20.930233% 91.568627%);
   --secondary-foreground: hsl(162 34.482759% 22.745098%);
   --muted: var(--palette-neutral-200);
-  --muted-foreground: var(--palette-neutral-500);
+  --muted-foreground: var(--brand-canvas-text, var(--palette-neutral-500));
   --accent: hsl(140 20.930233% 91.568627%);
   --accent-foreground: hsl(162 34.482759% 22.745098%);
   --destructive: var(--palette-danger-600);
+  --danger-text: var(--brand-canvas-text, var(--destructive));
   --destructive-foreground: hsl(0 0% 100%);
   --border: var(--palette-neutral-300);
-  --input: color-mix(in srgb, var(--palette-neutral-400) 80%, var(--palette-neutral-500));
+  --input: color-mix(in srgb, var(--palette-neutral-600), var(--foreground));
   --ring: var(--foreground);
   --success: var(--palette-success-600);
   --success-soft: var(--palette-success-100);
@@ -566,13 +574,13 @@
   --secondary: hsl(144.545455 18.333333% 23.529412%);
   --secondary-foreground: hsl(128.571429 25% 89.019608%);
   --muted: var(--palette-neutral-200);
-  --muted-foreground: var(--palette-neutral-500);
+  --muted-foreground: var(--brand-canvas-text, var(--palette-neutral-500));
   --accent: hsl(144.545455 18.333333% 23.529412%);
   --accent-foreground: hsl(128.571429 25% 89.019608%);
   --destructive: var(--palette-danger-600);
   --destructive-foreground: hsl(347.5 30.769231% 15.294118%);
   --border: var(--palette-neutral-300);
-  --input: var(--palette-neutral-400);
+  --input: var(--palette-neutral-600);
   --success: var(--palette-success-600);
   --success-soft: var(--palette-success-100);
   --warning: var(--palette-warning-600);
@@ -599,7 +607,7 @@
   --muted: #eef3ef;
   --muted-foreground: #25332b;
   --border: #495d51;
-  --input: var(--border);
+  --input: var(--foreground);
   --primary: #103c26 !important;
   --primary-foreground: #fff !important;
   --brand-primary-text-light: var(--primary) !important;
@@ -609,6 +617,7 @@
   --accent: #dcece2 !important;
   --accent-foreground: var(--foreground) !important;
   --destructive: #8d1124;
+  --danger-text: var(--destructive);
   --destructive-foreground: #fff;
   --success: #124626;
   --warning: #613512;
@@ -648,6 +657,19 @@
   --sidebar-active: #293d32;
   --sidebar-active-foreground: #f8fffb;
   --brand-panel: #0b1c12;
+}
+
+:where(
+    input,
+    textarea,
+    select,
+    [role='combobox'],
+    [role='checkbox'],
+    [role='radio'],
+    [role='switch']
+  )[aria-invalid='true']:not(:focus-visible) {
+  /* The invalid boundary must remain visible over a configurable canvas. */
+  border-color: color-mix(in srgb, var(--destructive), var(--foreground));
 }
 
 @layer base {

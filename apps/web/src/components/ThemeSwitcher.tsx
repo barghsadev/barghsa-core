@@ -18,7 +18,7 @@ function readMode(value: unknown): ThemeMode | undefined {
 /** Keep account preference writes authoritative; published administrator policy wins. */
 export function ThemeSwitcher() {
   const locale = useLocale();
-  const { userMode, setUserMode, themePolicy, loading, resolvedTheme } = useBrandConfig();
+  const { theme, setTheme, themePolicy, loading, resolvedTheme } = useBrandConfig();
   const managed = themePolicy !== 'system';
   const descriptionId = useId();
   const [ready, setReady] = useState(false);
@@ -37,7 +37,7 @@ export function ThemeSwitcher() {
           if (mode === undefined) throw new Error();
           return mode;
         });
-        if (!request.signal.aborted) setUserMode(mode);
+        if (!request.signal.aborted) setTheme(mode ?? 'system');
       } catch {
         // Keep the admin default when the preference is unavailable.
       } finally {
@@ -48,7 +48,7 @@ export function ThemeSwitcher() {
       request.abort();
       saveRequest.current?.abort();
     };
-  }, [setUserMode]);
+  }, [setTheme]);
 
   const update = async (mode: ThemeMode) => {
     const request = new AbortController();
@@ -63,7 +63,7 @@ export function ThemeSwitcher() {
         body: JSON.stringify({ mode }),
       });
       if (!response.ok || readMode(await response.json()) !== mode) throw new Error();
-      if (!request.signal.aborted) setUserMode(mode);
+      if (!request.signal.aborted) setTheme(mode ?? 'system');
     } catch {
       if (!request.signal.aborted) setError(true);
     } finally {
@@ -72,7 +72,7 @@ export function ThemeSwitcher() {
     }
   };
 
-  const shownMode = managed ? themePolicy : userMode;
+  const shownMode = managed ? themePolicy : theme;
   const Icon = resolvedTheme === 'dark' ? Moon : Sun;
   return (
     <label className="inline-flex max-w-full flex-wrap items-center gap-1.5 text-sm">
@@ -80,7 +80,7 @@ export function ThemeSwitcher() {
       <span className="sr-only">{shellText('theme', locale)}</span>
       <NativeSelect
         aria-label={shellText('theme', locale)}
-        value={shownMode ?? 'default'}
+        value={shownMode === 'system' ? 'default' : shownMode}
         aria-describedby={managed ? descriptionId : undefined}
         disabled={!ready || saving || loading || managed}
         onChange={(event) =>

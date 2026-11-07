@@ -8,6 +8,7 @@ import { mkdtemp, mkdir, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import type { Locator } from '@playwright/test';
+import { measureControlContrast } from './control-contrast';
 
 // Build the real shared component outside the product routes and production output.
 test.use({ timezoneId: 'UTC' });
@@ -46,6 +47,118 @@ test.afterAll(async () => {
   if (outDir && !process.env['BARGHSA_BROWSER_COVERAGE_DIR'])
     await rm(outDir, { recursive: true, force: true });
 });
+
+for (const locale of ['en', 'fa'] as const)
+  for (const darkMode of [false, true])
+    test(`essential control contrast meets 3:1 (${locale}, dark=${darkMode})`, async ({
+      page,
+    }, info) => {
+      await page.emulateMedia({ reducedMotion: 'reduce' });
+      const base = {
+        appTitle: 'Control contrast',
+        appTitleFa: 'کنتراست کنترل‌ها',
+        supportEmail: 'support@example.test',
+        supportPhone: '02126658042',
+        supportMobile: '09002550292',
+        slogan: '',
+        primaryColor: '#156558',
+        secondaryColor: '#64748b',
+        accentColor: '#f59e0b',
+        logoUrl: null,
+        faviconUrl: null,
+        darkMode,
+      };
+      const edge = darkMode ? '#6b6b6b' : '#999999';
+      let palette: typeof base & { backgroundColor?: string; darkBackgroundColor?: string } = base;
+      await page.route('**/api/public/branding/config', (route) =>
+        route.fulfill({ json: palette })
+      );
+      const rows: Array<{ palette: string; high: boolean; cue: string; ratio: number }> = [];
+      const textFailures: Array<{ palette: string; high: boolean; nodes: unknown[] }> = [];
+      for (const variant of ['default', 'brand-limit'] as const) {
+        if (variant === 'brand-limit')
+          palette = {
+            ...base,
+            primaryColor: edge,
+            backgroundColor: '#999999',
+            darkBackgroundColor: '#6b6b6b',
+          };
+        for (const high of [false, true]) {
+          await page.goto(`${url}?${locale}`);
+          await expect
+            .poll(() =>
+              page.locator('html').evaluate((node) => node.style.getPropertyValue('--primary'))
+            )
+            .toBe(palette.primaryColor);
+          await page.locator('html').evaluate((node, value) => {
+            if (value) node.dataset.contrast = 'more';
+          }, high);
+          const text = await new AxeBuilder({ page })
+            .include('main')
+            .withRules(['color-contrast'])
+            .analyze();
+          const nodes = text.violations.flatMap((item) =>
+            item.nodes.map(({ target, failureSummary }) => ({ target, failureSummary }))
+          );
+          textFailures.push({ palette: variant, high, nodes });
+          expect.soft(nodes, `${variant}, high=${high}, text contrast`).toEqual([]);
+          const measure = async (
+            cue: string,
+            control: Locator,
+            kind: 'boundary' | 'indicator' | 'focus',
+            indicator?: string
+          ) => {
+            const ratio = await measureControlContrast(control, kind, indicator);
+            rows.push({ palette: variant, high, cue, ratio });
+            expect.soft(ratio, `${variant}, high=${high}, ${cue}`).toBeGreaterThanOrEqual(3);
+          };
+          const input = page.getByRole('textbox', { name: 'Name', exact: true });
+          const checkbox = page.getByRole('checkbox', { name: 'Consent', exact: true });
+          const toggle = page.getByRole('switch', { name: 'Alerts', exact: true });
+          const radio = page.getByRole('radio', { name: 'SMS', exact: true });
+          for (const name of ['Name', 'Invalid name', 'Notes'])
+            await measure(name, page.getByRole('textbox', { name, exact: true }), 'boundary');
+          for (const name of ['Category', 'Native category'])
+            await measure(name, page.getByRole('combobox', { name, exact: true }), 'boundary');
+          await measure('unchecked checkbox', checkbox, 'boundary');
+          await measure('unselected radio', radio, 'boundary');
+          await measure('off switch track', toggle, 'boundary');
+          await measure('off switch thumb', toggle, 'indicator', '[data-slot=switch-thumb]');
+          await measure(
+            'slider track',
+            page.locator('[data-slot=slider-track]').first(),
+            'boundary'
+          );
+          await checkbox.press('Space');
+          await expect(checkbox).toBeChecked();
+          await measure(
+            'checkbox checkmark',
+            checkbox,
+            'indicator',
+            '[data-slot=checkbox-indicator] svg'
+          );
+          await measure(
+            'radio selection dot',
+            page.getByRole('radio', { name: 'Email', exact: true }),
+            'indicator',
+            '[data-slot=radio-group-indicator] span'
+          );
+          await toggle.press('Space');
+          await expect(toggle).toBeChecked();
+          await toggle.evaluate((element) => (element as HTMLElement).blur());
+          await measure('on switch track', toggle, 'boundary');
+          await measure('on switch thumb', toggle, 'indicator', '[data-slot=switch-thumb]');
+          await page.keyboard.press('Tab');
+          await input.focus();
+          await expect(input).toBeFocused();
+          await measure('input focus', input, 'focus');
+        }
+      }
+      await info.attach('essential-control-contrast', {
+        body: JSON.stringify({ locale, darkMode, rows, textFailures }),
+        contentType: 'application/json',
+      });
+    });
 
 for (const locale of ['en', 'fa'] as const) {
   test(`responsive layout wraps long records and retains independent spacing (${locale})`, async ({
