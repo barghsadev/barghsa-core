@@ -18,7 +18,14 @@ import {
   type AriaAttributes,
 } from 'react';
 import { t } from '@barghsa/i18n/app';
-import { Button, DependentSelect, Input, Textarea, DateTimePicker } from '@barghsa/ui';
+import {
+  Button,
+  DependentSelect,
+  Input,
+  Textarea,
+  DateTimePicker,
+  NativeSelect,
+} from '@barghsa/ui';
 import { useGeographyOptions } from '../hooks/useGeographyOptions.js';
 import { GeographyLoadError } from '../components/GeographyLoadError.js';
 import { useLocale } from '../hooks/useLocale.js';
@@ -778,9 +785,9 @@ export function ElectricityOrderRevisionForm({
                   <FormItem id="revision-period">
                     <FormLabel>{t('electricity.order.period.selection', locale)}</FormLabel>
                     <FormControl>
-                      <select
+                      <NativeSelect
                         {...field}
-                        className="w-full rounded-md border bg-background p-2"
+                        className="w-full"
                         disabled={locked || !periods.length}
                       >
                         {periods.map((option) => (
@@ -788,7 +795,7 @@ export function ElectricityOrderRevisionForm({
                             {t(periodLabels[option.key], locale)}
                           </option>
                         ))}
-                      </select>
+                      </NativeSelect>
                     </FormControl>
                     {message('period')}
                   </FormItem>
@@ -818,9 +825,9 @@ export function ElectricityOrderRevisionForm({
                 <FormItem id="revision-province">
                   <FormLabel>{t('electricity.order.revision.province', locale)}</FormLabel>
                   <FormControl>
-                    <select
+                    <NativeSelect
                       {...field}
-                      className="w-full rounded-md border bg-background p-2"
+                      className="w-full"
                       disabled={locked || !provinceOptions.ready}
                       onChange={(event) => {
                         field.onChange(event);
@@ -842,7 +849,7 @@ export function ElectricityOrderRevisionForm({
                           {locale === 'fa' ? place.nameFa : place.nameEn}
                         </option>
                       ))}
-                    </select>
+                    </NativeSelect>
                   </FormControl>
                   {message('provinceId')}
                 </FormItem>
@@ -857,7 +864,7 @@ export function ElectricityOrderRevisionForm({
                   <FormControl>
                     <DependentSelect
                       {...field}
-                      className="w-full rounded-md border bg-background p-2"
+                      className="w-full rounded-md border bg-background p-2 pointer-coarse:h-11"
                       disabled={locked}
                       dependencyValue={provinceId}
                       ready={cityOptions.ready}

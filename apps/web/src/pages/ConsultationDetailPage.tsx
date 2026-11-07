@@ -476,7 +476,7 @@ export function ConsultationDetailPage() {
       className="mx-auto max-w-3xl space-y-6 px-4 py-8"
       dir={locale === 'fa' ? 'rtl' : 'ltr'}
     >
-      <Link to="/consultations" className="text-sm text-primary underline">
+      <Link to="/consultations" className="touch-action text-sm text-primary underline">
         {copy('back')}
       </Link>
       <h1 className="text-3xl font-semibold">{copy('details')}</h1>

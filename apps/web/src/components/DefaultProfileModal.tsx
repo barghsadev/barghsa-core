@@ -1,11 +1,11 @@
-import { readWithDeadline } from '../lib/server-query-client.js';
-import { useQueryClient } from '@tanstack/react-query';
+import { useServerDetailQuery } from '../hooks/useServerQuery.js';
 import { queryKeys } from '../lib/query-keys.js';
-import { refreshProfileContext, useProfileContextRevision } from '../lib/profile-context.js';
-import { withCsrf } from '../lib/csrf.js';
-import { useEffect, useId, useRef, useState } from 'react';
+import { getProfileContextRevision, useProfileContextRevision } from '../lib/profile-context.js';
+import { sendToast } from '../lib/toast-api.js';
+import { useId, useLayoutEffect, useRef, useState } from 'react';
 import { t } from '@barghsa/i18n/workspace';
 import { useLocale } from '../hooks/useLocale.js';
+import type { SwitcherProfile } from './ProfileSwitcher.js';
 import {
   Dialog,
   DialogContent,
@@ -18,18 +18,8 @@ import { Button } from '@barghsa/ui';
 import { RadioGroup, RadioGroupItem } from '@barghsa/ui';
 import { Label } from '@barghsa/ui';
 
-/** Profile shape returned by GET /api/profiles (T-03.01.01). */
-interface ProfileBrief {
-  id: string;
-  profileType: 'INDIVIDUAL' | 'LEGAL';
-  displayName?: string | null;
-  title: string | null;
-  firstName: string | null;
-  lastName: string | null;
-}
-
 interface ProfilesResponse {
-  profiles: ProfileBrief[];
+  profiles: SwitcherProfile[];
   hasDefault: boolean;
   activeProfileId: string | null;
 }
@@ -66,127 +56,69 @@ function OwnedDefaultProfileModal({
   accountId: string | null;
   revision: number;
 }) {
-  const client = useQueryClient();
   const reader = useId();
-  const sequence = useRef(0);
-  const [profiles, setProfiles] = useState<ProfileBrief[] | null>(null);
-  const [hasDefault, setHasDefault] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const pending = useRef<AbortController | null>(null);
+  useLayoutEffect(() => () => pending.current?.abort(), []);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [setting, setSetting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
   const locale = useLocale();
   const isRtl = locale === 'fa';
-
-  useEffect(() => {
-    const controller = new AbortController();
-    const key = queryKeys.profiles.authority(
+  const profileQuery = useServerDetailQuery<ProfilesResponse>({
+    queryKey: queryKeys.profiles.authority(
       { context: 'account', ownerId: accountId ?? 'current-session', accountId, revision },
-      JSON.stringify([reader, 'default-profile-options', ++sequence.current])
-    );
-    const cancel = () => void client.cancelQueries({ queryKey: key, exact: true });
-    controller.signal.addEventListener('abort', cancel, { once: true });
-
-    async function fetchProfiles() {
-      try {
-        const response = await client.fetchQuery({
-          queryKey: key,
-          staleTime: 0,
-          gcTime: 0,
-          retry: false,
-          queryFn: ({ signal: ownerSignal }) =>
-            readWithDeadline(ownerSignal, async (signal) => {
-              const response = await fetch('/api/profiles', {
-                method: 'GET',
-                credentials: 'include',
-                signal,
-                headers: { Accept: 'application/json' },
-              });
-              return {
-                ok: response.ok,
-                status: response.status,
-                data: response.ok ? ((await response.json()) as ProfilesResponse) : null,
-              };
-            }),
-        });
-
-        // Not authenticated — no modal
-        if (response.status === 401) {
-          if (!controller.signal.aborted) setLoading(false);
-          return;
-        }
-
-        if (!response.ok) {
-          if (!controller.signal.aborted) setLoading(false);
-          return;
-        }
-
-        const data = response.data;
-        if (!data) throw new Error('Invalid profiles');
-        if (!controller.signal.aborted) {
-          setProfiles(data.profiles);
-          setHasDefault(data.hasDefault);
-          setLoading(false);
-        }
-      } catch {
-        if (!controller.signal.aborted) setLoading(false);
-      }
-    }
-
-    fetchProfiles();
-
-    return () => {
-      controller.abort();
-      controller.signal.removeEventListener('abort', cancel);
-    };
-  }, [client, accountId, revision, reader]);
-
-  // Don't render anything while loading or if we have no data.
-  if (loading || !profiles) return null;
-
-  // Only show the modal when the user has multiple profiles and no default.
-  if (hasDefault || profiles.length <= 1) return null;
+      reader
+    ),
+    manual: true,
+    read: async (signal) => {
+      const response = await fetch('/api/profiles', {
+        credentials: 'include',
+        signal,
+        headers: { Accept: 'application/json' },
+      });
+      if (!response.ok) throw new Error();
+      return response.json();
+    },
+  });
+  const profiles = profileQuery.data?.profiles;
+  if (!Array.isArray(profiles) || profileQuery.data?.hasDefault || profiles.length <= 1)
+    return null;
 
   async function handleSetDefault() {
-    if (!resolvedSelected || setting) return;
+    if (!resolvedSelected || pending.current) return;
+    const target = resolvedSelected;
+    const request = new AbortController();
+    pending.current = request;
+    const owns = () => !request.signal.aborted && getProfileContextRevision() === revision;
     setSetting(true);
     setError(null);
 
     try {
-      const response = await fetch(`/api/profiles/switch/${resolvedSelected}`, {
-        method: 'POST',
-        credentials: 'include',
-        headers: withCsrf({ 'Content-Type': 'application/json' }),
-      });
-
-      if (response.ok) {
-        const result: { activeProfileId: string | null } = await response.json();
-        if (result.activeProfileId !== resolvedSelected) {
-          setSetting(false);
-          setError(t('dashboard.profile.switchError', locale));
-          return;
-        }
-        refreshProfileContext();
-      } else {
-        setSetting(false);
-        setError(t('dashboard.profile.switchError', locale));
-      }
+      const { saveDefaultProfile } = await import('../lib/default-profile-command.js');
+      await saveDefaultProfile(target, revision, locale, request.signal);
     } catch {
-      setSetting(false);
-      setError(t('dashboard.profile.switchError', locale));
+      if (owns()) {
+        const message = t('dashboard.profile.switchError', locale);
+        setError(message);
+        sendToast('error', message);
+      }
+    } finally {
+      if (owns()) setSetting(false);
+      pending.current = null;
     }
   }
 
-  function formatProfileName(profile: ProfileBrief): string {
-    const parts = [profile.title, profile.firstName, profile.lastName].filter(Boolean);
+  function formatProfileName(profile: SwitcherProfile): string {
     const name =
       profile.displayName?.trim() ||
-      (parts.length > 0 ? parts.join(' ') : t('dashboard.profile.unnamed', locale));
-    const type =
+      [profile.title, profile.firstName, profile.lastName].filter(Boolean).join(' ') ||
+      t('dashboard.profile.unnamed', locale);
+    const type = t(
       profile.profileType === 'LEGAL'
-        ? t('dashboard.profile.typeLegal', locale)
-        : t('dashboard.profile.typeIndividual', locale);
+        ? 'dashboard.profile.typeLegal'
+        : 'dashboard.profile.typeIndividual',
+      locale
+    );
     return `${name} (${type})`;
   }
 

@@ -722,7 +722,7 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
       <header>
         <Link
           to="/electricity/orders"
-          className="text-sm text-primary underline underline-offset-4"
+          className="touch-action text-sm text-primary underline underline-offset-4"
         >
           {t('electricity.order.detail.back', locale)}
         </Link>
@@ -1039,7 +1039,10 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
                   )}
                 </p>
               ) : null}
-              <Link to="/tickets" className="text-primary underline underline-offset-4">
+              <Link
+                to="/tickets"
+                className="touch-action text-primary underline underline-offset-4"
+              >
                 {t('electricity.order.detail.help', locale)}
               </Link>
             </CardContent>
@@ -1213,7 +1216,7 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
               <Link
                 to="/contracts"
                 search={{ contractId: detail.contractId }}
-                className="max-w-full rounded-md border px-4 py-2 text-sm text-primary underline underline-offset-4 [overflow-wrap:anywhere]"
+                className="touch-action max-w-full rounded-md border px-4 py-2 text-sm text-primary underline underline-offset-4 [overflow-wrap:anywhere]"
               >
                 {t('electricity.order.success.contract', locale)}: <bdi>{detail.contractId}</bdi>
               </Link>
@@ -1225,7 +1228,7 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
             <Link
               to="/invoices/$invoiceId"
               params={{ invoiceId: detail.invoiceId }}
-              className="max-w-full rounded-md border px-4 py-2 text-sm text-primary underline underline-offset-4 [overflow-wrap:anywhere]"
+              className="touch-action max-w-full rounded-md border px-4 py-2 text-sm text-primary underline underline-offset-4 [overflow-wrap:anywhere]"
             >
               {t('electricity.order.financialReviewLink', locale)}: <bdi>{detail.invoiceId}</bdi>
             </Link>

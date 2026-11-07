@@ -127,6 +127,14 @@ function SessionDetails({
   );
 }
 
+function revokeTriggerKey(operation: SecurityOperation) {
+  return operation.kind === 'session'
+    ? 'session:' + operation.target.sessionId
+    : operation.kind === 'trust'
+      ? 'trust:' + operation.target.id
+      : 'others';
+}
+
 function SettingsSecurityPage() {
   const time = useAccountTime(),
     locale = useLocale();
@@ -134,6 +142,7 @@ function SettingsSecurityPage() {
     lists = useSecuritySettingsLists(scope);
   const [selected, setSelected] = useState<SecurityOperation | null>(null);
   const [confirmed, setConfirmed] = useState(false);
+  const revokeTriggers = useRef(new Map<string, HTMLButtonElement>());
   const finalFocus = useRef<HTMLElement | null>(null),
     sessionsHeading = useRef<HTMLHeadingElement>(null),
     devicesHeading = useRef<HTMLHeadingElement>(null);
@@ -146,6 +155,10 @@ function SettingsSecurityPage() {
     sessions = ready ? lists.data.sessions : [];
   const current = sessions.find((v) => v.isCurrentSession),
     others = sessions.filter((v) => !v.isCurrentSession);
+  function trackRevokeTrigger(key: string, node: HTMLButtonElement | null) {
+    if (node) revokeTriggers.current.set(key, node);
+    else revokeTriggers.current.delete(key);
+  }
   function choose(operation: SecurityOperation, trigger: HTMLElement) {
     if (!scope.isCurrent() || scope.isLocked()) return;
     finalFocus.current = trigger;
@@ -255,6 +268,7 @@ function SettingsSecurityPage() {
                     variant="outline"
                     size="sm"
                     disabled={scope.locked}
+                    ref={(node) => trackRevokeTrigger('session:' + session.sessionId, node)}
                     onClick={(event) =>
                       choose({ kind: 'session', target: session }, event.currentTarget)
                     }
@@ -274,6 +288,7 @@ function SettingsSecurityPage() {
                   variant="destructive"
                   className="w-full gap-2 whitespace-normal bg-red-700 text-white hover:bg-red-800 dark:bg-red-700 dark:text-white dark:hover:bg-red-800"
                   disabled={scope.locked}
+                  ref={(node) => trackRevokeTrigger('others', node)}
                   onClick={(event) => choose({ kind: 'others' }, event.currentTarget)}
                 >
                   <ShieldAlertIcon className="h-4 w-4 shrink-0" />
@@ -299,6 +314,7 @@ function SettingsSecurityPage() {
             heading={devicesHeading}
             refresh={() => void refresh('devices')}
             choose={(target, trigger) => choose({ kind: 'trust', target }, trigger)}
+            trackRevokeTrigger={(id, node) => trackRevokeTrigger('trust:' + id, node)}
           />
           {selected && (
             <SecurityRevocationDialog
@@ -316,7 +332,14 @@ function SettingsSecurityPage() {
               operation={selected}
               locale={locale}
               finalFocus={finalFocus}
-              close={() => setSelected(null)}
+              close={() => {
+                // Reconciling a lost response can replace the list DOM while
+                // the same session or device is still eligible.
+                finalFocus.current =
+                  revokeTriggers.current.get(revokeTriggerKey(selected)) ??
+                  (selected.kind === 'trust' ? devicesHeading.current : sessionsHeading.current);
+                setSelected(null);
+              }}
               done={() => {
                 finalFocus.current =
                   selected.kind === 'trust' ? devicesHeading.current : sessionsHeading.current;

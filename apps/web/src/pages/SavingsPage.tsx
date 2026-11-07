@@ -161,7 +161,7 @@ export function SavingsPage() {
                   </section>
                   {plan.agreement ? (
                     <details className="rounded-md border p-3">
-                      <summary className="cursor-pointer font-medium">
+                      <summary className="cursor-pointer font-medium pointer-coarse:min-h-11 pointer-coarse:py-2">
                         {copy('agreement')}: {plan.agreement.title}
                       </summary>
                       <p className="mt-3 whitespace-pre-wrap text-sm">{plan.agreement.body}</p>
@@ -172,7 +172,7 @@ export function SavingsPage() {
                   {plan.available && (
                     <Link
                       to="/savings/order"
-                      className="inline-flex min-h-10 items-center rounded-md bg-primary px-4 text-primary-foreground hover:bg-primary/90"
+                      className="touch-action inline-flex min-h-11 items-center rounded-md bg-primary px-4 text-primary-foreground hover:bg-primary/90"
                     >
                       {copy('startOrder')}
                     </Link>
@@ -185,7 +185,7 @@ export function SavingsPage() {
       </ListPage>
       <Link
         to="/savings/orders"
-        className="inline-block text-sm font-medium text-primary underline-offset-4 hover:underline"
+        className="touch-action inline-block text-sm font-medium text-primary underline-offset-4 hover:underline"
       >
         {copy('orders')}
       </Link>

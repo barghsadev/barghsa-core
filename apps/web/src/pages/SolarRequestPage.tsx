@@ -8,7 +8,7 @@ import { readWithDeadline } from '../lib/server-query-client.js';
 import { StepReviewPage } from '../components/StepReviewPage.js';
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate } from '@tanstack/react-router';
-import { LoadingStatus, Button, Card, CardContent, Input, Label } from '@barghsa/ui';
+import { LoadingStatus, Button, Card, CardContent, Input, Label, NativeSelect } from '@barghsa/ui';
 import { t } from '@barghsa/i18n/app';
 import { ValidatedFormWizard } from '../components/ValidatedFormWizard.js';
 import { useWizardForm } from '../hooks/useWizardForm.js';
@@ -542,7 +542,7 @@ export function SolarRequestPage() {
         </Suspense>
       )}
       <div className="space-y-2">
-        <Link to="/solar/requests" className="text-sm text-primary underline">
+        <Link to="/solar/requests" className="touch-action text-sm text-primary underline">
           {copy('myRequests')}
         </Link>
         <h1 className="text-3xl font-semibold">{copy('title')}</h1>
@@ -696,10 +696,11 @@ export function SolarRequestPage() {
                     <CardContent className="space-y-4 pt-6">
                       {buildingType === 'building_apartment' ? (
                         <>
-                          <label className="block space-y-1">
-                            <span>{copy('propertyForm')}</span>
-                            <select
-                              className="w-full rounded-md border bg-background p-2"
+                          <div className="space-y-1">
+                            <Label htmlFor="solar-property-form">{copy('propertyForm')}</Label>
+                            <NativeSelect
+                              id="solar-property-form"
+                              className="w-full"
                               {...fields.bind('propertyForm')}
                               value={propertyForm}
                               onChange={(e) =>
@@ -708,12 +709,15 @@ export function SolarRequestPage() {
                             >
                               <option value="apartment">{copy('apartment')}</option>
                               <option value="villa">{copy('villa')}</option>
-                            </select>
-                          </label>
-                          <label className="block space-y-1">
-                            <span>{copy('structuralFrame')}</span>
-                            <select
-                              className="w-full rounded-md border bg-background p-2"
+                            </NativeSelect>
+                          </div>
+                          <div className="space-y-1">
+                            <Label htmlFor="solar-structural-frame">
+                              {copy('structuralFrame')}
+                            </Label>
+                            <NativeSelect
+                              id="solar-structural-frame"
+                              className="w-full"
                               {...fields.bind('structuralFrame')}
                               value={structuralFrame}
                               onChange={(e) =>
@@ -725,8 +729,8 @@ export function SolarRequestPage() {
                                   {copy(item)}
                                 </option>
                               ))}
-                            </select>
-                          </label>
+                            </NativeSelect>
+                          </div>
                           <div>
                             <Label htmlFor="solar-completion">{copy('completionDate')}</Label>
                             <Input
@@ -762,10 +766,11 @@ export function SolarRequestPage() {
                         </>
                       ) : (
                         <>
-                          <label className="block space-y-1">
-                            <span>{copy('siteCategory')}</span>
-                            <select
-                              className="w-full rounded-md border bg-background p-2"
+                          <div className="space-y-1">
+                            <Label htmlFor="solar-site-category">{copy('siteCategory')}</Label>
+                            <NativeSelect
+                              id="solar-site-category"
+                              className="w-full"
                               {...fields.bind('siteCategory')}
                               value={siteCategory}
                               onChange={(e) =>
@@ -777,12 +782,15 @@ export function SolarRequestPage() {
                                   {copy(item)}
                                 </option>
                               ))}
-                            </select>
-                          </label>
-                          <label className="block space-y-1">
-                            <span>{copy('installationSurface')}</span>
-                            <select
-                              className="w-full rounded-md border bg-background p-2"
+                            </NativeSelect>
+                          </div>
+                          <div className="space-y-1">
+                            <Label htmlFor="solar-installation-surface">
+                              {copy('installationSurface')}
+                            </Label>
+                            <NativeSelect
+                              id="solar-installation-surface"
+                              className="w-full"
                               {...fields.bind('installationSurface')}
                               value={installationSurface}
                               onChange={(e) =>
@@ -794,8 +802,8 @@ export function SolarRequestPage() {
                                   {copy(item)}
                                 </option>
                               ))}
-                            </select>
-                          </label>
+                            </NativeSelect>
+                          </div>
                           <div>
                             <Label htmlFor="solar-area">{copy('usableArea')}</Label>
                             <Input
@@ -810,10 +818,11 @@ export function SolarRequestPage() {
                               required
                             />
                           </div>
-                          <label className="block space-y-1">
-                            <span>{copy('relationship')}</span>
-                            <select
-                              className="w-full rounded-md border bg-background p-2"
+                          <div className="space-y-1">
+                            <Label htmlFor="solar-site-relationship">{copy('relationship')}</Label>
+                            <NativeSelect
+                              id="solar-site-relationship"
+                              className="w-full"
                               {...fields.bind('siteRelationship')}
                               value={siteRelationship}
                               onChange={(e) =>
@@ -827,8 +836,8 @@ export function SolarRequestPage() {
                                   )}
                                 </option>
                               ))}
-                            </select>
-                          </label>
+                            </NativeSelect>
+                          </div>
                           <label className="block space-y-1">
                             <span>{copy('description')}</span>
                             <textarea
@@ -841,10 +850,11 @@ export function SolarRequestPage() {
                           </label>
                         </>
                       )}
-                      <label className="block space-y-1">
-                        <span>{copy('address')}</span>
-                        <select
-                          className="w-full rounded-md border bg-background p-2"
+                      <div className="space-y-1">
+                        <Label htmlFor="solar-site-address-id">{copy('address')}</Label>
+                        <NativeSelect
+                          id="solar-site-address-id"
+                          className="w-full"
                           {...fields.bind('siteAddressId')}
                           value={siteAddressId}
                           onChange={(e) => setSiteAddressId(e.target.value)}
@@ -856,8 +866,8 @@ export function SolarRequestPage() {
                               {address.fullAddress}
                             </option>
                           ))}
-                        </select>
-                      </label>
+                        </NativeSelect>
+                      </div>
                       <Link
                         className="inline-flex min-h-11 items-center text-sm underline"
                         to="/settings/addresses"

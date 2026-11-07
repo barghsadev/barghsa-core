@@ -729,7 +729,7 @@ function OwnedSavingsOrderPage() {
         </Suspense>
       )}
       <header className="space-y-2">
-        <Link to="/savings" className="text-sm text-primary hover:underline">
+        <Link to="/savings" className="touch-action text-sm text-primary hover:underline">
           {copy('title')}
         </Link>
         <h1 className="text-3xl font-semibold">{copy('orderTitle')}</h1>
@@ -922,7 +922,7 @@ function OwnedSavingsOrderPage() {
                           </span>
                         </label>
                       ))}
-                      <label className="flex gap-2">
+                      <label className="touch-label flex items-center gap-2">
                         <input
                           type="checkbox"
                           {...fields.bind('hardwareConfirmed')}
@@ -1002,7 +1002,7 @@ function OwnedSavingsOrderPage() {
                             </Link>
                           )}
                           {!duplicate.preventActiveDuplicates && (
-                            <label className="mt-3 flex items-start gap-2">
+                            <label className="touch-label mt-3 flex items-center gap-2">
                               <input
                                 type="checkbox"
                                 {...fields.bind('duplicateAcknowledged')}
@@ -1150,7 +1150,7 @@ function OwnedSavingsOrderPage() {
                       <div className="max-h-80 overflow-y-auto whitespace-pre-wrap rounded-md border bg-muted/30 p-4 text-sm">
                         {selectedPlan?.agreement?.body}
                       </div>
-                      <label className="flex gap-2">
+                      <label className="touch-label flex items-center gap-2">
                         <input
                           type="checkbox"
                           {...fields.bind('agreementAccepted')}
@@ -1329,7 +1329,7 @@ function OwnedSavingsOrderPage() {
                       {quote && (
                         <WalletFundingPrompt balance={walletBalance} total={quote.totalIrR} />
                       )}
-                      <label className="flex gap-2">
+                      <label className="touch-label flex items-center gap-2">
                         <input
                           type="checkbox"
                           {...fields.bind('submitForReview')}

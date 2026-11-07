@@ -60,11 +60,11 @@ export function WorkflowStatusBanner({
               <span>{t('workflow.nextAction', locale)}:</span>
               {actionHref ? (
                 actionHref.startsWith('#') ? (
-                  <a href={actionHref} className="underline">
+                  <a href={actionHref} className="touch-action underline">
                     {nextAction}
                   </a>
                 ) : (
-                  <Link to={actionHref} className="underline">
+                  <Link to={actionHref} className="touch-action underline">
                     {nextAction}
                   </Link>
                 )
@@ -92,14 +92,14 @@ export function WorkflowStatusBanner({
               {actionHref ? (
                 actionHref.startsWith('#') ? (
                   <a
-                    className="font-medium text-primary underline underline-offset-4"
+                    className="touch-action font-medium text-primary underline underline-offset-4"
                     href={actionHref}
                   >
                     {nextAction}
                   </a>
                 ) : (
                   <Link
-                    className="font-medium text-primary underline underline-offset-4"
+                    className="touch-action font-medium text-primary underline underline-offset-4"
                     to={actionHref}
                   >
                     {nextAction}

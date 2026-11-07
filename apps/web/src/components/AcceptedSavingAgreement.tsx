@@ -17,7 +17,7 @@ export function AcceptedSavingAgreement({
         </p>
       )}
       <details className="rounded-md border p-4">
-        <summary className="cursor-pointer font-medium">
+        <summary className="cursor-pointer font-medium pointer-coarse:min-h-11 pointer-coarse:py-2">
           {tSaving('acceptedAgreement', locale)}
         </summary>
         <p className="mt-3 whitespace-pre-wrap text-sm">{snapshot}</p>

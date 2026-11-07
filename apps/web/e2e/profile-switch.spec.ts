@@ -1,3 +1,4 @@
+import { productionManifest } from './production-manifest';
 import { fullNavigation } from './navigation-fixture';
 import { fulfillDashboard } from './dashboard-fixture';
 import { cookieResponse } from './cookie-response';
@@ -408,6 +409,12 @@ test('a failed switch keeps the existing selection and reports the error', async
 
 test('the initial radio selection submits from the required profile dialog', async ({ page }) => {
   await shell(page);
+  const entry = (await productionManifest())['src/lib/default-profile-command.ts'];
+  expect(entry).toBeDefined();
+  let commandLoads = 0;
+  page.on('request', (request) => {
+    if (new URL(request.url()).pathname === '/' + entry!.file) commandLoads++;
+  });
   let active: string | null = null;
   await page.route('**/api/profiles', (route) =>
     route.fulfill({
@@ -428,12 +435,18 @@ test('the initial radio selection submits from the required profile dialog', asy
   await page.goto('/dashboard');
   const dialog = page.getByRole('dialog');
   await expect(dialog).toBeVisible();
+  const locale = (await page.locator('html').getAttribute('lang')) === 'en' ? 'en' : 'fa';
+  const saved = page.getByText(t('dashboard.profile.default.saved', locale), { exact: true });
+  await expect(saved).toHaveCount(0);
+  expect(commandLoads).toBe(0);
   const switched = page.waitForRequest(
     '**/api/profiles/switch/99111111-1111-4111-8111-111111111111'
   );
   await dialog.getByRole('button').click();
   await switched;
+  expect(commandLoads).toBe(1);
   await expect(dialog).toHaveCount(0);
+  await expect(saved).toBeVisible();
   await openProfileMenu(page);
   await expect(page.locator('#profile-switcher')).toContainText(
     '99111111-1111-4111-8111-111111111111'

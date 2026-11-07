@@ -1,3 +1,5 @@
+import { approveRiskConfirmation } from './confirmation-fixture';
+import { securitySettingsText } from '@barghsa/i18n/security-settings-forms';
 import { notificationTemplate } from '../src/test/content-catalogue-fixtures';
 import { fullNavigation } from './navigation-fixture';
 import { settingsProfileFixture, settingsProfileId } from './settings-profile-fixture';
@@ -1370,9 +1372,13 @@ for (const locale of ['en', 'fa']) {
     await expect(singleDialog).toHaveCount(0);
     await expect(single).toBeFocused();
     await single.press('Enter');
-    await singleDialog
-      .getByRole('button', { name: locale === 'fa' ? 'قطع دسترسی' : 'Revoke', exact: true })
-      .click();
+    const singleSubmit = singleDialog.getByRole('button', {
+      name: locale === 'fa' ? 'قطع دسترسی' : 'Revoke',
+      exact: true,
+    });
+    await expect(singleSubmit).toBeDisabled();
+    await approveRiskConfirmation(page, locale, 'destructive');
+    await singleSubmit.click();
     await expect.poll(() => singleWrites).toBe(1);
     await page.keyboard.press('Escape');
     await expect(singleDialog).toBeVisible();
@@ -1380,7 +1386,20 @@ for (const locale of ['en', 'fa']) {
       singleDialog.getByRole('button', { name: locale === 'fa' ? 'انصراف' : 'Cancel', exact: true })
     ).toBeDisabled();
     finishSingle!();
-    await expect(singleDialog.getByRole('alert')).toBeVisible();
+    await expect(singleDialog.getByRole('alert')).toHaveText(
+      securitySettingsText('uncertain', locale)
+    );
+    await expect(singleSubmit).toBeDisabled();
+    await singleDialog
+      .getByRole('button', { name: securitySettingsText('check', locale), exact: true })
+      .click();
+    await expect(singleDialog.getByRole('alert')).toHaveText(
+      securitySettingsText('stillPresent', locale)
+    );
+    expect(singleWrites).toBe(1);
+    await singleDialog
+      .getByRole('button', { name: securitySettingsText('restart', locale), exact: true })
+      .click();
     await expect(
       singleDialog.getByRole('button', {
         name: locale === 'fa' ? 'قطع دسترسی' : 'Revoke',
@@ -1404,7 +1423,10 @@ for (const locale of ['en', 'fa']) {
         .poll(() => dialog.evaluate((node) => node.contains(document.activeElement)))
         .toBe(true);
     }
-    await dialog.getByRole('button', { name, exact: true }).click();
+    const allSubmit = dialog.getByRole('button', { name, exact: true });
+    await expect(allSubmit).toBeDisabled();
+    await approveRiskConfirmation(page, locale, 'destructive');
+    await allSubmit.click();
     await expect.poll(() => writes).toBe(1);
     await expect(dialog).toContainText(
       locale === 'fa' ? 'در حال قطع دسترسی همه نشست‌های دیگر…' : 'Revoking all other sessions…'
@@ -1416,9 +1438,19 @@ for (const locale of ['en', 'fa']) {
       dialog.getByRole('button', { name: locale === 'fa' ? 'انصراف' : 'Cancel', exact: true })
     ).toBeDisabled();
     finish!();
-    await expect(dialog.getByRole('alert')).toContainText(
-      locale === 'fa' ? 'خطا در قطع دسترسی' : 'Failed to revoke'
+    await expect(dialog.getByRole('alert')).toHaveText(securitySettingsText('uncertain', locale));
+    await expect(allSubmit).toBeDisabled();
+    await expect(password).toBeDisabled();
+    await dialog
+      .getByRole('button', { name: securitySettingsText('check', locale), exact: true })
+      .click();
+    await expect(dialog.getByRole('alert')).toHaveText(
+      securitySettingsText('stillPresent', locale)
     );
+    expect(writes).toBe(1);
+    await dialog
+      .getByRole('button', { name: securitySettingsText('restart', locale), exact: true })
+      .click();
     await expect(password).toBeEnabled();
     await page.keyboard.press('Escape');
     await expect(dialog).toHaveCount(0);

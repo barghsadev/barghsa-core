@@ -73,6 +73,12 @@ Quarantine records live in a file at `scripts/quarantine-registry.json`. Each re
 }
 ```
 
+### Diagnose Before Quarantining
+
+A fixture that never completes a required confirmation is a deterministic failure. Assert that the action is blocked, complete the real typed or financial confirmation, and retain the exact request and receipt assertions. After an uncertain write, check current state before allowing a retry and assert that the check did not send the write again.
+
+Calculate locale-sensitive date expectations in the browser being tested. When checking whether a revealed control is fully visible, compare all four intersection edges in physical pixels before rerunning the contrast scan. This avoids treating Safari's fractional edge rounding as a clipped control.
+
 ### Adding a Test to Quarantine
 
 1. Confirm the test is genuinely flaky (not a deterministic failure from a code change).

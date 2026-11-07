@@ -1,3 +1,4 @@
+import { approveRiskConfirmation } from './confirmation-fixture';
 import AxeBuilder from '@axe-core/playwright';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { t } from '@barghsa/i18n/admin-ui';
@@ -146,6 +147,8 @@ for (const linked of [false, true]) {
         if (!linked) await expect(companion).toBeDisabled();
         const confirm = () =>
           dialog.getByRole('button', { name: appText('team.confirm', locale), exact: true });
+        await expect(confirm()).toBeDisabled();
+        await approveRiskConfirmation(page, locale, 'both');
         await confirm().evaluate((node: HTMLButtonElement) => {
           node.click();
           node.click();
@@ -194,6 +197,8 @@ for (const linked of [false, true]) {
         mode = 'mixed';
         await reject.click();
         await expect(dialog).toBeVisible();
+        await expect(confirm()).toBeDisabled();
+        await approveRiskConfirmation(page, locale, 'both');
         await confirm().click();
         await expect(dialog.getByRole('alert')).toHaveText(appText('team.error', locale));
         await expect(field).toHaveValue(raw);
@@ -245,7 +250,12 @@ for (const linked of [false, true]) {
       await field.fill('Private reason');
       if (!linked) await page.locator(`#reason-${second}`).fill('Private companion');
       await region.getByRole('button', { name: 'Reject', exact: true }).first().click();
-      await page.getByRole('dialog').getByRole('button', { name: 'Confirm', exact: true }).click();
+      const confirm = page
+        .getByRole('dialog')
+        .getByRole('button', { name: 'Confirm', exact: true });
+      await expect(confirm).toBeDisabled();
+      await approveRiskConfirmation(page, 'en', 'both');
+      await confirm.click();
       await expect(page.getByRole('dialog')).toHaveCount(0);
       await expect(field).toHaveCount(0);
       await expect(page.getByText('Private reason')).toHaveCount(0);

@@ -14,6 +14,7 @@ export function TrustedDevices({
   heading,
   refresh,
   choose,
+  trackRevokeTrigger,
 }: {
   locale: Locale;
   formatTimestamp: (value: string) => string;
@@ -23,6 +24,7 @@ export function TrustedDevices({
   heading: RefObject<HTMLHeadingElement | null>;
   refresh: () => void;
   choose: (target: TrustedDevice, trigger: HTMLElement) => void;
+  trackRevokeTrigger?: (id: string, node: HTMLButtonElement | null) => void;
 }) {
   const text = (key: TrustedDeviceTextKey) => trustedDeviceText(key, locale);
   const devices = lists.ready('devices') ? lists.data.devices : [];
@@ -84,6 +86,7 @@ export function TrustedDevices({
               variant="outline"
               size="sm"
               disabled={scope.locked}
+              ref={(node) => trackRevokeTrigger?.(device.id, node)}
               onClick={(event) => {
                 if (scope.isCurrent() && !scope.isLocked()) choose(device, event.currentTarget);
               }}

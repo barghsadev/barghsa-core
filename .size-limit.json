@@ -311,6 +311,12 @@
     "limitKB": 15
   },
   {
+    "name": "Default profile save on demand",
+    "entries": ["src/lib/default-profile-command.ts"],
+    "phase": "interaction",
+    "limitKB": 5
+  },
+  {
     "name": "More navigation sheet on demand",
     "entries": ["src/components/MobileNavigationSheet.tsx"],
     "phase": "interaction",
