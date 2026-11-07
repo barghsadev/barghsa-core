@@ -4,6 +4,8 @@ import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { beforeEach, afterEach, expect, it, vi } from 'vitest';
 import ManualInvoiceForm from './ManualInvoiceForm.js';
+import { toast } from '../lib/toast-api.js';
+import { tManualInvoice } from '@barghsa/i18n/manual-invoice';
 import {
   manualInvoiceReviewFixture,
   type ManualReviewCommand,
@@ -135,6 +137,7 @@ it('validates blank fields on submit and preserves localized input through corre
 it.each(['lineDescription0', 'lineQuantity0', 'lineUnitPrice0', 'lineVatRate0'])(
   'maps owned review %s without clearing companions',
   async (field) => {
+    const feedback = vi.spyOn(toast, 'error').mockImplementation(() => {});
     await mount();
     await fill();
     reviewStatus = 400;
@@ -147,6 +150,9 @@ it.each(['lineDescription0', 'lineQuantity0', 'lineUnitPrice0', 'lineVatRate0'])
       lineVatRate0: 'vat',
     }[field]!;
     await vi.waitFor(() => expect(input(name).getAttribute('aria-invalid')).toBe('true'));
+    expect(feedback).toHaveBeenCalledExactlyOnceWith(
+      tManualInvoice('admin.manualInvoice.invalid', 'en')
+    );
     expect(input('price').value).toBe('۴۰');
     expect(input('description').value).toBe('  Service  ');
     expect(commits).toHaveLength(0);
@@ -191,6 +197,7 @@ it('retains the customer and raw rows after a failed unchanged search and recove
   await issue();
 });
 it('maps confirmation feedback back to the enabled row and preserves raw draft', async () => {
+  const feedback = vi.spyOn(toast, 'error').mockImplementation(() => {});
   await mount();
   await fill();
   await issue();
@@ -201,6 +208,9 @@ it('maps confirmation feedback back to the enabled row and preserves raw draft',
   expect(input('price').disabled).toBe(false);
   expect(input('price').value).toBe('۴۰');
   expect(document.querySelector('[role=dialog]')).toBeNull();
+  expect(feedback).toHaveBeenCalledExactlyOnceWith(
+    tManualInvoice('admin.manualInvoice.invalid', 'en')
+  );
 });
 it('keeps mixed or protected confirmation errors generic', async () => {
   await mount();

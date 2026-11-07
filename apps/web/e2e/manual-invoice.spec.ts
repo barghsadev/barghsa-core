@@ -2,6 +2,7 @@ import { approveRiskConfirmation } from './confirmation-fixture';
 import AxeBuilder from '@axe-core/playwright';
 import { test, expect } from './coverage-fixture';
 import { formatCurrencyIrr } from '@barghsa/i18n/numbers';
+import { tManualInvoice } from '@barghsa/i18n/manual-invoice';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { fullNavigation } from './navigation-fixture';
 
@@ -70,6 +71,7 @@ for (const locale of ['fa', 'en'] as const)
       );
       const reviewHash = 'a'.repeat(64);
       const previews: Array<Record<string, unknown>> = [];
+      const rejectedReviews: unknown[] = [];
       await page.route('**/api/admin/invoices/manual/review', (route) => {
         expect(route.request().headers()['x-csrf-token']).toBe('manual-csrf');
         const draft = route.request().postDataJSON() as {
@@ -83,6 +85,19 @@ for (const locale of ['fa', 'en'] as const)
             isTaxable: boolean;
           }>;
         };
+        if (!rejectedReviews.length) {
+          rejectedReviews.push(draft);
+          return route.fulfill({
+            status: 400,
+            json: {
+              error: {
+                code: ErrorCodes.VALIDATION_INPUT_INVALID.code,
+                fields: ['lineUnitPrice0'],
+                message: 'private-manual-validation-copy',
+              },
+            },
+          });
+        }
         previews.push(draft);
         return route.fulfill({
           status: 201,
@@ -225,6 +240,19 @@ for (const locale of ['fa', 'en'] as const)
       expect(scan.violations).toEqual([]);
       expect(scan.incomplete.filter((item) => item.id === 'color-contrast')).toEqual([]);
       await issue.click();
+      await expect(price.first()).toHaveAttribute('aria-invalid', 'true');
+      await expect(price.first()).toBeFocused();
+      await expect(
+        page.locator('[data-sonner-toast][data-type="error"]').filter({
+          hasText: tManualInvoice('admin.manualInvoice.invalid', locale),
+        })
+      ).toHaveCount(1);
+      await expect(page.locator('body')).not.toContainText('private-manual-validation-copy');
+      expect(rejectedReviews).toHaveLength(1);
+      expect(requests).toHaveLength(0);
+      await price.first().fill('101');
+      await price.first().fill('100');
+      await issue.click();
       const reviewDialog = page.getByRole('dialog', {
         name: fa ? 'بررسی مالی پیش از صدور فاکتور' : 'Financial review before issuing',
       });
@@ -265,6 +293,11 @@ for (const locale of ['fa', 'en'] as const)
         .click();
       await expect(panel.getByRole('status')).toContainText(invoiceId);
       await expect(panel.getByRole('status')).toContainText(total);
+      await expect(
+        page.locator('[data-sonner-toast][data-type="success"]').filter({
+          hasText: tManualInvoice('admin.manualInvoice.created', locale),
+        })
+      ).toHaveCount(1);
       expect(verificationRequests).toBe(1);
       expect(previews).toHaveLength(1);
       expect(requests).toHaveLength(3);

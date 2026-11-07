@@ -1,4 +1,6 @@
 import { useCommandFeedback } from '../hooks/useCommandFeedback.js';
+import { inputErrorFields } from '../lib/input-error-fields.js';
+import { toast } from '../lib/toast-api.js';
 import { ConfirmationFields } from '@barghsa/ui';
 import { useRiskConfirmation } from '../hooks/useRiskConfirmation.js';
 import { useOwnedInvoiceReview } from '../hooks/useOwnedInvoiceReview.js';
@@ -333,14 +335,11 @@ function OwnedManualInvoiceForm({
     setReplacementReview(null);
     setManualReview(null);
   }
-  function publicFields(status: number, value: unknown): unknown[] | null {
-    if (status !== 400 || !value || typeof value !== 'object') return null;
-    const error = (value as { error?: unknown }).error;
-    if (!error || typeof error !== 'object') return null;
-    const item = error as { code?: unknown; fields?: unknown };
-    return item.code === 'VALIDATION:INPUT:INVALID' && Array.isArray(item.fields)
-      ? item.fields
-      : null;
+  function reportPublicFields(status: number, value: unknown) {
+    const { fields } = inputErrorFields(value, status);
+    if (!fields || !draft.applyServerErrors(fields, submittedLineIds.current)) return false;
+    toast.error(text('invalid'));
+    return true;
   }
   function denyWork() {
     unlock();
@@ -410,12 +409,7 @@ function OwnedManualInvoiceForm({
           denyWork();
           return 'error';
         }
-        const fields = publicFields(response.status, data);
-        if (
-          !uncertain.current &&
-          fields &&
-          draft.applyServerErrors(fields, submittedLineIds.current)
-        ) {
+        if (!uncertain.current && reportPublicFields(response.status, data)) {
           setError(null);
           unlock();
           return 'error';
@@ -538,8 +532,7 @@ function OwnedManualInvoiceForm({
             denyWork();
             return;
           }
-          const fields = publicFields(response.status, value);
-          if (!(fields && draft.applyServerErrors(fields, submittedLineIds.current)))
+          if (!reportPublicFields(response.status, value))
             setError(
               response.status === 409
                 ? 'conflict'

@@ -1,3 +1,4 @@
+import { approveRiskConfirmation } from './confirmation-fixture';
 import AxeBuilder from '@axe-core/playwright';
 import { test, expect } from './coverage-fixture';
 import { formatCurrencyIrr } from '@barghsa/i18n/numbers';
@@ -338,9 +339,12 @@ for (const locale of ['fa', 'en'] as const)
             await expect(review).toContainText(
               formatCurrencyIrr(25000n, locale, { numberStyle: fa ? 'persian' : 'western' })
             );
-            await review
-              .getByRole('button', { name: correctionText('reviewConfirm', locale) })
-              .click();
+            const confirm = review.getByRole('button', {
+              name: correctionText('reviewConfirm', locale),
+            });
+            await expect(confirm).toBeDisabled();
+            await approveRiskConfirmation(page, locale, 'financial');
+            await confirm.click();
           } else {
             const review = page.getByRole('dialog', {
               name: correctionText('replacementReviewTitle', locale),
@@ -348,9 +352,12 @@ for (const locale of ['fa', 'en'] as const)
             await expect(review).toContainText(
               formatCurrencyIrr(5506n, locale, { numberStyle: fa ? 'persian' : 'western' })
             );
-            await review
-              .getByRole('button', { name: correctionText('replacementReviewConfirm', locale) })
-              .click();
+            const confirm = review.getByRole('button', {
+              name: correctionText('replacementReviewConfirm', locale),
+            });
+            await expect(confirm).toBeDisabled();
+            await approveRiskConfirmation(page, locale, 'financial');
+            await confirm.click();
           }
           const dialog = page.getByRole('dialog', {
             name: fa ? 'تأیید هویت برای اصلاح فاکتور' : 'Verify invoice correction',
@@ -362,6 +369,7 @@ for (const locale of ['fa', 'en'] as const)
           const password = dialog.getByLabel(fa ? 'رمز عبور' : 'Password', { exact: true });
           await expect(password).toBeFocused();
           await password.fill('test-only');
+          await approveRiskConfirmation(page, locale, 'financial');
           await dialog
             .getByRole('button', { name: fa ? 'تأیید و اصلاح' : 'Verify and correct', exact: true })
             .click();

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-07T17:09:54+00:00",
-  "source_commit": "8c419ffe7a5a4d5b06d5ca4299d64499902fa8bb",
+  "updated": "2026-11-07T17:15:18+00:00",
+  "source_commit": "a27bfb6aca1393b091d9e63d4ce00ad7a2eae457",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -112979,7 +112979,8 @@
           "release-0.5-workspace-route-census",
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
-          "release-0.5-verified-command-rejection"
+          "release-0.5-verified-command-rejection",
+          "release-0.5-invoice-response-feedback"
         ],
         "current_acceptance": {
           "kind": "current-invoice-core-and-origin-boundary-verification",
@@ -113095,15 +113096,15 @@
             },
             {
               "path": "apps/web/e2e/manual-invoice.spec.ts",
-              "sha256": "01a5c23ea548e7a3e3ba62bddf1477480ff7654b2cc7307965d7750cb43ba1ed"
+              "sha256": "bbe3704042000cca9aaa2e52270d7a6f588ca5d9086b6fd99bd483ab5d943f70"
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.test.tsx",
-              "sha256": "abb2c3982d121d6de23cc5c88de4a6b76df614452c4c5a6102e9eaef7069c4ba"
+              "sha256": "e4d0f3f13582847e959a642360089561b7c1d7657538394d8ddef962ee397c37"
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "2e494a28f511bdedce850ee36fcf7b1bea985a2c6da11ae95994af43a2a49d2f"
+              "sha256": "8574d79e67a5eb5369d64f24cfa443ae3b4925c9e37ed750bb2defc9b6adeaa2"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -114029,6 +114030,11 @@
               "batch": "release-0.5-verified-command-rejection",
               "base_commit": "5551ca05908bf4f177b6a4621aadbc85d8fd273a",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-final-gate-reconciliation/candidate-release-evidence.json"
+            },
+            {
+              "batch": "release-0.5-invoice-response-feedback",
+              "base_commit": "a27bfb6aca1393b091d9e63d4ce00ad7a2eae457",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-response-feedback/invoice-response-feedback-proof.json"
             }
           ]
         }
@@ -114238,7 +114244,8 @@
           "release-0.5-workspace-route-census",
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
-          "release-0.5-verified-command-rejection"
+          "release-0.5-verified-command-rejection",
+          "release-0.5-invoice-response-feedback"
         ],
         "current_acceptance": {
           "kind": "current-invoice-core-and-origin-boundary-verification",
@@ -114354,15 +114361,15 @@
             },
             {
               "path": "apps/web/e2e/manual-invoice.spec.ts",
-              "sha256": "01a5c23ea548e7a3e3ba62bddf1477480ff7654b2cc7307965d7750cb43ba1ed"
+              "sha256": "bbe3704042000cca9aaa2e52270d7a6f588ca5d9086b6fd99bd483ab5d943f70"
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.test.tsx",
-              "sha256": "abb2c3982d121d6de23cc5c88de4a6b76df614452c4c5a6102e9eaef7069c4ba"
+              "sha256": "e4d0f3f13582847e959a642360089561b7c1d7657538394d8ddef962ee397c37"
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "2e494a28f511bdedce850ee36fcf7b1bea985a2c6da11ae95994af43a2a49d2f"
+              "sha256": "8574d79e67a5eb5369d64f24cfa443ae3b4925c9e37ed750bb2defc9b6adeaa2"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -115289,6 +115296,11 @@
               "batch": "release-0.5-verified-command-rejection",
               "base_commit": "5551ca05908bf4f177b6a4621aadbc85d8fd273a",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-final-gate-reconciliation/candidate-release-evidence.json"
+            },
+            {
+              "batch": "release-0.5-invoice-response-feedback",
+              "base_commit": "a27bfb6aca1393b091d9e63d4ce00ad7a2eae457",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-response-feedback/invoice-response-feedback-proof.json"
             }
           ]
         }
@@ -115487,7 +115499,8 @@
         "batches": [
           "release-0.3-invoice-core",
           "release-0.3-owner-approved-financial-closure",
-          "release-0.5-verified-command-rejection"
+          "release-0.5-verified-command-rejection",
+          "release-0.5-invoice-response-feedback"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.3.0-financial-closure",
@@ -115579,7 +115592,7 @@
             },
             {
               "path": "apps/web/e2e/manual-invoice.spec.ts",
-              "sha256": "01a5c23ea548e7a3e3ba62bddf1477480ff7654b2cc7307965d7750cb43ba1ed"
+              "sha256": "bbe3704042000cca9aaa2e52270d7a6f588ca5d9086b6fd99bd483ab5d943f70"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.tsx",
@@ -115702,6 +115715,11 @@
               "batch": "release-0.5-verified-command-rejection",
               "base_commit": "5551ca05908bf4f177b6a4621aadbc85d8fd273a",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-final-gate-reconciliation/candidate-release-evidence.json"
+            },
+            {
+              "batch": "release-0.5-invoice-response-feedback",
+              "base_commit": "a27bfb6aca1393b091d9e63d4ce00ad7a2eae457",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-response-feedback/invoice-response-feedback-proof.json"
             }
           ]
         },
@@ -116073,7 +116091,8 @@
           "release-0.5-workspace-route-census",
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
-          "release-0.5-verified-command-rejection"
+          "release-0.5-verified-command-rejection",
+          "release-0.5-invoice-response-feedback"
         ],
         "current_acceptance": {
           "kind": "current-invoice-core-and-origin-boundary-verification",
@@ -116189,15 +116208,15 @@
             },
             {
               "path": "apps/web/e2e/manual-invoice.spec.ts",
-              "sha256": "01a5c23ea548e7a3e3ba62bddf1477480ff7654b2cc7307965d7750cb43ba1ed"
+              "sha256": "bbe3704042000cca9aaa2e52270d7a6f588ca5d9086b6fd99bd483ab5d943f70"
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.test.tsx",
-              "sha256": "abb2c3982d121d6de23cc5c88de4a6b76df614452c4c5a6102e9eaef7069c4ba"
+              "sha256": "e4d0f3f13582847e959a642360089561b7c1d7657538394d8ddef962ee397c37"
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "2e494a28f511bdedce850ee36fcf7b1bea985a2c6da11ae95994af43a2a49d2f"
+              "sha256": "8574d79e67a5eb5369d64f24cfa443ae3b4925c9e37ed750bb2defc9b6adeaa2"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -117123,6 +117142,11 @@
               "batch": "release-0.5-verified-command-rejection",
               "base_commit": "5551ca05908bf4f177b6a4621aadbc85d8fd273a",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-final-gate-reconciliation/candidate-release-evidence.json"
+            },
+            {
+              "batch": "release-0.5-invoice-response-feedback",
+              "base_commit": "a27bfb6aca1393b091d9e63d4ce00ad7a2eae457",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-response-feedback/invoice-response-feedback-proof.json"
             }
           ]
         }
@@ -117331,7 +117355,8 @@
           "release-0.5-workspace-route-census",
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
-          "release-0.5-verified-command-rejection"
+          "release-0.5-verified-command-rejection",
+          "release-0.5-invoice-response-feedback"
         ],
         "current_acceptance": {
           "kind": "current-invoice-core-and-origin-boundary-verification",
@@ -117447,15 +117472,15 @@
             },
             {
               "path": "apps/web/e2e/manual-invoice.spec.ts",
-              "sha256": "01a5c23ea548e7a3e3ba62bddf1477480ff7654b2cc7307965d7750cb43ba1ed"
+              "sha256": "bbe3704042000cca9aaa2e52270d7a6f588ca5d9086b6fd99bd483ab5d943f70"
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.test.tsx",
-              "sha256": "abb2c3982d121d6de23cc5c88de4a6b76df614452c4c5a6102e9eaef7069c4ba"
+              "sha256": "e4d0f3f13582847e959a642360089561b7c1d7657538394d8ddef962ee397c37"
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "2e494a28f511bdedce850ee36fcf7b1bea985a2c6da11ae95994af43a2a49d2f"
+              "sha256": "8574d79e67a5eb5369d64f24cfa443ae3b4925c9e37ed750bb2defc9b6adeaa2"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -118382,6 +118407,11 @@
               "batch": "release-0.5-verified-command-rejection",
               "base_commit": "5551ca05908bf4f177b6a4621aadbc85d8fd273a",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-final-gate-reconciliation/candidate-release-evidence.json"
+            },
+            {
+              "batch": "release-0.5-invoice-response-feedback",
+              "base_commit": "a27bfb6aca1393b091d9e63d4ce00ad7a2eae457",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-response-feedback/invoice-response-feedback-proof.json"
             }
           ]
         }
@@ -118590,7 +118620,8 @@
           "release-0.5-workspace-route-census",
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
-          "release-0.5-verified-command-rejection"
+          "release-0.5-verified-command-rejection",
+          "release-0.5-invoice-response-feedback"
         ],
         "current_acceptance": {
           "kind": "current-invoice-core-and-origin-boundary-verification",
@@ -118706,15 +118737,15 @@
             },
             {
               "path": "apps/web/e2e/manual-invoice.spec.ts",
-              "sha256": "01a5c23ea548e7a3e3ba62bddf1477480ff7654b2cc7307965d7750cb43ba1ed"
+              "sha256": "bbe3704042000cca9aaa2e52270d7a6f588ca5d9086b6fd99bd483ab5d943f70"
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.test.tsx",
-              "sha256": "abb2c3982d121d6de23cc5c88de4a6b76df614452c4c5a6102e9eaef7069c4ba"
+              "sha256": "e4d0f3f13582847e959a642360089561b7c1d7657538394d8ddef962ee397c37"
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "2e494a28f511bdedce850ee36fcf7b1bea985a2c6da11ae95994af43a2a49d2f"
+              "sha256": "8574d79e67a5eb5369d64f24cfa443ae3b4925c9e37ed750bb2defc9b6adeaa2"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -119640,6 +119671,11 @@
               "batch": "release-0.5-verified-command-rejection",
               "base_commit": "5551ca05908bf4f177b6a4621aadbc85d8fd273a",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-final-gate-reconciliation/candidate-release-evidence.json"
+            },
+            {
+              "batch": "release-0.5-invoice-response-feedback",
+              "base_commit": "a27bfb6aca1393b091d9e63d4ce00ad7a2eae457",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-response-feedback/invoice-response-feedback-proof.json"
             }
           ]
         }
@@ -119848,7 +119884,8 @@
           "release-0.5-workspace-route-census",
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
-          "release-0.5-verified-command-rejection"
+          "release-0.5-verified-command-rejection",
+          "release-0.5-invoice-response-feedback"
         ],
         "current_acceptance": {
           "kind": "current-invoice-core-and-origin-boundary-verification",
@@ -119964,15 +120001,15 @@
             },
             {
               "path": "apps/web/e2e/manual-invoice.spec.ts",
-              "sha256": "01a5c23ea548e7a3e3ba62bddf1477480ff7654b2cc7307965d7750cb43ba1ed"
+              "sha256": "bbe3704042000cca9aaa2e52270d7a6f588ca5d9086b6fd99bd483ab5d943f70"
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.test.tsx",
-              "sha256": "abb2c3982d121d6de23cc5c88de4a6b76df614452c4c5a6102e9eaef7069c4ba"
+              "sha256": "e4d0f3f13582847e959a642360089561b7c1d7657538394d8ddef962ee397c37"
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "2e494a28f511bdedce850ee36fcf7b1bea985a2c6da11ae95994af43a2a49d2f"
+              "sha256": "8574d79e67a5eb5369d64f24cfa443ae3b4925c9e37ed750bb2defc9b6adeaa2"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -120898,6 +120935,11 @@
               "batch": "release-0.5-verified-command-rejection",
               "base_commit": "5551ca05908bf4f177b6a4621aadbc85d8fd273a",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-final-gate-reconciliation/candidate-release-evidence.json"
+            },
+            {
+              "batch": "release-0.5-invoice-response-feedback",
+              "base_commit": "a27bfb6aca1393b091d9e63d4ce00ad7a2eae457",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-response-feedback/invoice-response-feedback-proof.json"
             }
           ]
         }
@@ -121116,7 +121158,8 @@
           "release-0.5-workspace-route-census",
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
-          "release-0.5-verified-command-rejection"
+          "release-0.5-verified-command-rejection",
+          "release-0.5-invoice-response-feedback"
         ],
         "current_acceptance": {
           "kind": "current-invoice-core-and-origin-boundary-verification",
@@ -121240,15 +121283,15 @@
             },
             {
               "path": "apps/web/e2e/manual-invoice.spec.ts",
-              "sha256": "01a5c23ea548e7a3e3ba62bddf1477480ff7654b2cc7307965d7750cb43ba1ed"
+              "sha256": "bbe3704042000cca9aaa2e52270d7a6f588ca5d9086b6fd99bd483ab5d943f70"
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.test.tsx",
-              "sha256": "abb2c3982d121d6de23cc5c88de4a6b76df614452c4c5a6102e9eaef7069c4ba"
+              "sha256": "e4d0f3f13582847e959a642360089561b7c1d7657538394d8ddef962ee397c37"
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "2e494a28f511bdedce850ee36fcf7b1bea985a2c6da11ae95994af43a2a49d2f"
+              "sha256": "8574d79e67a5eb5369d64f24cfa443ae3b4925c9e37ed750bb2defc9b6adeaa2"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -122174,6 +122217,11 @@
               "batch": "release-0.5-verified-command-rejection",
               "base_commit": "5551ca05908bf4f177b6a4621aadbc85d8fd273a",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-final-gate-reconciliation/candidate-release-evidence.json"
+            },
+            {
+              "batch": "release-0.5-invoice-response-feedback",
+              "base_commit": "a27bfb6aca1393b091d9e63d4ce00ad7a2eae457",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-response-feedback/invoice-response-feedback-proof.json"
             }
           ]
         }
@@ -122382,7 +122430,8 @@
           "release-0.5-workspace-route-census",
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
-          "release-0.5-verified-command-rejection"
+          "release-0.5-verified-command-rejection",
+          "release-0.5-invoice-response-feedback"
         ],
         "current_acceptance": {
           "kind": "current-invoice-core-and-origin-boundary-verification",
@@ -122498,15 +122547,15 @@
             },
             {
               "path": "apps/web/e2e/manual-invoice.spec.ts",
-              "sha256": "01a5c23ea548e7a3e3ba62bddf1477480ff7654b2cc7307965d7750cb43ba1ed"
+              "sha256": "bbe3704042000cca9aaa2e52270d7a6f588ca5d9086b6fd99bd483ab5d943f70"
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.test.tsx",
-              "sha256": "abb2c3982d121d6de23cc5c88de4a6b76df614452c4c5a6102e9eaef7069c4ba"
+              "sha256": "e4d0f3f13582847e959a642360089561b7c1d7657538394d8ddef962ee397c37"
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "2e494a28f511bdedce850ee36fcf7b1bea985a2c6da11ae95994af43a2a49d2f"
+              "sha256": "8574d79e67a5eb5369d64f24cfa443ae3b4925c9e37ed750bb2defc9b6adeaa2"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -123432,6 +123481,11 @@
               "batch": "release-0.5-verified-command-rejection",
               "base_commit": "5551ca05908bf4f177b6a4621aadbc85d8fd273a",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-final-gate-reconciliation/candidate-release-evidence.json"
+            },
+            {
+              "batch": "release-0.5-invoice-response-feedback",
+              "base_commit": "a27bfb6aca1393b091d9e63d4ce00ad7a2eae457",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-response-feedback/invoice-response-feedback-proof.json"
             }
           ]
         }
@@ -123633,7 +123687,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-gates",
           "release-0.5-final-acceptance",
-          "release-0.5-final-rehearsal"
+          "release-0.5-final-rehearsal",
+          "release-0.5-invoice-response-feedback"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -123753,7 +123808,7 @@
             },
             {
               "path": "apps/web/e2e/invoice-corrections.spec.ts",
-              "sha256": "1ff1a034cc4dd147e4cdba54c3046eb6cfe6ecb47da225fc889a26b61130240d"
+              "sha256": "dda46448d56144f30cacdbae493113b774650bb0fad0fcd9a3fba6128faa8906"
             },
             {
               "path": "apps/web/e2e/invoice-customer-deadline.spec.ts",
@@ -124413,6 +124468,11 @@
               "batch": "release-0.5-final-rehearsal",
               "base_commit": "dfc9ebe00018c4d59b06f0cae5ca4d06d29523c0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-final-rehearsal/rehearsal-proof.json"
+            },
+            {
+              "batch": "release-0.5-invoice-response-feedback",
+              "base_commit": "a27bfb6aca1393b091d9e63d4ce00ad7a2eae457",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-response-feedback/invoice-response-feedback-proof.json"
             }
           ]
         }
@@ -124613,7 +124673,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-gates",
           "release-0.5-final-acceptance",
-          "release-0.5-final-rehearsal"
+          "release-0.5-final-rehearsal",
+          "release-0.5-invoice-response-feedback"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -124733,7 +124794,7 @@
             },
             {
               "path": "apps/web/e2e/invoice-corrections.spec.ts",
-              "sha256": "1ff1a034cc4dd147e4cdba54c3046eb6cfe6ecb47da225fc889a26b61130240d"
+              "sha256": "dda46448d56144f30cacdbae493113b774650bb0fad0fcd9a3fba6128faa8906"
             },
             {
               "path": "apps/web/e2e/invoice-customer-deadline.spec.ts",
@@ -125393,6 +125454,11 @@
               "batch": "release-0.5-final-rehearsal",
               "base_commit": "dfc9ebe00018c4d59b06f0cae5ca4d06d29523c0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-final-rehearsal/rehearsal-proof.json"
+            },
+            {
+              "batch": "release-0.5-invoice-response-feedback",
+              "base_commit": "a27bfb6aca1393b091d9e63d4ce00ad7a2eae457",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-response-feedback/invoice-response-feedback-proof.json"
             }
           ]
         }
@@ -125593,7 +125659,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-gates",
           "release-0.5-final-acceptance",
-          "release-0.5-final-rehearsal"
+          "release-0.5-final-rehearsal",
+          "release-0.5-invoice-response-feedback"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -125713,7 +125780,7 @@
             },
             {
               "path": "apps/web/e2e/invoice-corrections.spec.ts",
-              "sha256": "1ff1a034cc4dd147e4cdba54c3046eb6cfe6ecb47da225fc889a26b61130240d"
+              "sha256": "dda46448d56144f30cacdbae493113b774650bb0fad0fcd9a3fba6128faa8906"
             },
             {
               "path": "apps/web/e2e/invoice-customer-deadline.spec.ts",
@@ -126373,6 +126440,11 @@
               "batch": "release-0.5-final-rehearsal",
               "base_commit": "dfc9ebe00018c4d59b06f0cae5ca4d06d29523c0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-final-rehearsal/rehearsal-proof.json"
+            },
+            {
+              "batch": "release-0.5-invoice-response-feedback",
+              "base_commit": "a27bfb6aca1393b091d9e63d4ce00ad7a2eae457",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-response-feedback/invoice-response-feedback-proof.json"
             }
           ]
         }
@@ -126573,7 +126645,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-gates",
           "release-0.5-final-acceptance",
-          "release-0.5-final-rehearsal"
+          "release-0.5-final-rehearsal",
+          "release-0.5-invoice-response-feedback"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -126693,7 +126766,7 @@
             },
             {
               "path": "apps/web/e2e/invoice-corrections.spec.ts",
-              "sha256": "1ff1a034cc4dd147e4cdba54c3046eb6cfe6ecb47da225fc889a26b61130240d"
+              "sha256": "dda46448d56144f30cacdbae493113b774650bb0fad0fcd9a3fba6128faa8906"
             },
             {
               "path": "apps/web/e2e/invoice-customer-deadline.spec.ts",
@@ -127353,6 +127426,11 @@
               "batch": "release-0.5-final-rehearsal",
               "base_commit": "dfc9ebe00018c4d59b06f0cae5ca4d06d29523c0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-final-rehearsal/rehearsal-proof.json"
+            },
+            {
+              "batch": "release-0.5-invoice-response-feedback",
+              "base_commit": "a27bfb6aca1393b091d9e63d4ce00ad7a2eae457",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-response-feedback/invoice-response-feedback-proof.json"
             }
           ]
         }
@@ -127553,7 +127631,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-gates",
           "release-0.5-final-acceptance",
-          "release-0.5-final-rehearsal"
+          "release-0.5-final-rehearsal",
+          "release-0.5-invoice-response-feedback"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -127673,7 +127752,7 @@
             },
             {
               "path": "apps/web/e2e/invoice-corrections.spec.ts",
-              "sha256": "1ff1a034cc4dd147e4cdba54c3046eb6cfe6ecb47da225fc889a26b61130240d"
+              "sha256": "dda46448d56144f30cacdbae493113b774650bb0fad0fcd9a3fba6128faa8906"
             },
             {
               "path": "apps/web/e2e/invoice-customer-deadline.spec.ts",
@@ -128333,6 +128412,11 @@
               "batch": "release-0.5-final-rehearsal",
               "base_commit": "dfc9ebe00018c4d59b06f0cae5ca4d06d29523c0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-final-rehearsal/rehearsal-proof.json"
+            },
+            {
+              "batch": "release-0.5-invoice-response-feedback",
+              "base_commit": "a27bfb6aca1393b091d9e63d4ce00ad7a2eae457",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-response-feedback/invoice-response-feedback-proof.json"
             }
           ]
         }
@@ -128533,7 +128617,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-gates",
           "release-0.5-final-acceptance",
-          "release-0.5-final-rehearsal"
+          "release-0.5-final-rehearsal",
+          "release-0.5-invoice-response-feedback"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -128653,7 +128738,7 @@
             },
             {
               "path": "apps/web/e2e/invoice-corrections.spec.ts",
-              "sha256": "1ff1a034cc4dd147e4cdba54c3046eb6cfe6ecb47da225fc889a26b61130240d"
+              "sha256": "dda46448d56144f30cacdbae493113b774650bb0fad0fcd9a3fba6128faa8906"
             },
             {
               "path": "apps/web/e2e/invoice-customer-deadline.spec.ts",
@@ -129313,6 +129398,11 @@
               "batch": "release-0.5-final-rehearsal",
               "base_commit": "dfc9ebe00018c4d59b06f0cae5ca4d06d29523c0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-final-rehearsal/rehearsal-proof.json"
+            },
+            {
+              "batch": "release-0.5-invoice-response-feedback",
+              "base_commit": "a27bfb6aca1393b091d9e63d4ce00ad7a2eae457",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-response-feedback/invoice-response-feedback-proof.json"
             }
           ]
         }
@@ -129597,7 +129687,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-gates",
           "release-0.5-final-acceptance",
-          "release-0.5-final-rehearsal"
+          "release-0.5-final-rehearsal",
+          "release-0.5-invoice-response-feedback"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -129729,7 +129820,7 @@
             },
             {
               "path": "apps/web/e2e/invoice-corrections.spec.ts",
-              "sha256": "1ff1a034cc4dd147e4cdba54c3046eb6cfe6ecb47da225fc889a26b61130240d"
+              "sha256": "dda46448d56144f30cacdbae493113b774650bb0fad0fcd9a3fba6128faa8906"
             },
             {
               "path": "apps/web/e2e/invoice-customer-deadline.spec.ts",
@@ -130505,6 +130596,11 @@
               "batch": "release-0.5-final-rehearsal",
               "base_commit": "dfc9ebe00018c4d59b06f0cae5ca4d06d29523c0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-final-rehearsal/rehearsal-proof.json"
+            },
+            {
+              "batch": "release-0.5-invoice-response-feedback",
+              "base_commit": "a27bfb6aca1393b091d9e63d4ce00ad7a2eae457",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-response-feedback/invoice-response-feedback-proof.json"
             }
           ]
         }
@@ -130705,7 +130801,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-gates",
           "release-0.5-final-acceptance",
-          "release-0.5-final-rehearsal"
+          "release-0.5-final-rehearsal",
+          "release-0.5-invoice-response-feedback"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -130825,7 +130922,7 @@
             },
             {
               "path": "apps/web/e2e/invoice-corrections.spec.ts",
-              "sha256": "1ff1a034cc4dd147e4cdba54c3046eb6cfe6ecb47da225fc889a26b61130240d"
+              "sha256": "dda46448d56144f30cacdbae493113b774650bb0fad0fcd9a3fba6128faa8906"
             },
             {
               "path": "apps/web/e2e/invoice-customer-deadline.spec.ts",
@@ -131485,6 +131582,11 @@
               "batch": "release-0.5-final-rehearsal",
               "base_commit": "dfc9ebe00018c4d59b06f0cae5ca4d06d29523c0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-final-rehearsal/rehearsal-proof.json"
+            },
+            {
+              "batch": "release-0.5-invoice-response-feedback",
+              "base_commit": "a27bfb6aca1393b091d9e63d4ce00ad7a2eae457",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-response-feedback/invoice-response-feedback-proof.json"
             }
           ]
         }
@@ -131769,7 +131871,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-gates",
           "release-0.5-final-acceptance",
-          "release-0.5-final-rehearsal"
+          "release-0.5-final-rehearsal",
+          "release-0.5-invoice-response-feedback"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -131901,7 +132004,7 @@
             },
             {
               "path": "apps/web/e2e/invoice-corrections.spec.ts",
-              "sha256": "1ff1a034cc4dd147e4cdba54c3046eb6cfe6ecb47da225fc889a26b61130240d"
+              "sha256": "dda46448d56144f30cacdbae493113b774650bb0fad0fcd9a3fba6128faa8906"
             },
             {
               "path": "apps/web/e2e/invoice-customer-deadline.spec.ts",
@@ -132677,6 +132780,11 @@
               "batch": "release-0.5-final-rehearsal",
               "base_commit": "dfc9ebe00018c4d59b06f0cae5ca4d06d29523c0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-final-rehearsal/rehearsal-proof.json"
+            },
+            {
+              "batch": "release-0.5-invoice-response-feedback",
+              "base_commit": "a27bfb6aca1393b091d9e63d4ce00ad7a2eae457",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-response-feedback/invoice-response-feedback-proof.json"
             }
           ]
         }
@@ -132877,7 +132985,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-gates",
           "release-0.5-final-acceptance",
-          "release-0.5-final-rehearsal"
+          "release-0.5-final-rehearsal",
+          "release-0.5-invoice-response-feedback"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -132997,7 +133106,7 @@
             },
             {
               "path": "apps/web/e2e/invoice-corrections.spec.ts",
-              "sha256": "1ff1a034cc4dd147e4cdba54c3046eb6cfe6ecb47da225fc889a26b61130240d"
+              "sha256": "dda46448d56144f30cacdbae493113b774650bb0fad0fcd9a3fba6128faa8906"
             },
             {
               "path": "apps/web/e2e/invoice-customer-deadline.spec.ts",
@@ -133657,6 +133766,11 @@
               "batch": "release-0.5-final-rehearsal",
               "base_commit": "dfc9ebe00018c4d59b06f0cae5ca4d06d29523c0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-final-rehearsal/rehearsal-proof.json"
+            },
+            {
+              "batch": "release-0.5-invoice-response-feedback",
+              "base_commit": "a27bfb6aca1393b091d9e63d4ce00ad7a2eae457",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-response-feedback/invoice-response-feedback-proof.json"
             }
           ]
         }
@@ -133857,7 +133971,8 @@
           "release-0.5-populated-route-presentation",
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
-          "release-0.5-final-rehearsal"
+          "release-0.5-final-rehearsal",
+          "release-0.5-invoice-response-feedback"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -133957,7 +134072,7 @@
             },
             {
               "path": "apps/web/e2e/invoice-corrections.spec.ts",
-              "sha256": "1ff1a034cc4dd147e4cdba54c3046eb6cfe6ecb47da225fc889a26b61130240d"
+              "sha256": "dda46448d56144f30cacdbae493113b774650bb0fad0fcd9a3fba6128faa8906"
             },
             {
               "path": "apps/web/e2e/invoice-customer-deadline.spec.ts",
@@ -134478,6 +134593,11 @@
               "batch": "release-0.5-final-rehearsal",
               "base_commit": "dfc9ebe00018c4d59b06f0cae5ca4d06d29523c0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-final-rehearsal/rehearsal-proof.json"
+            },
+            {
+              "batch": "release-0.5-invoice-response-feedback",
+              "base_commit": "a27bfb6aca1393b091d9e63d4ce00ad7a2eae457",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-response-feedback/invoice-response-feedback-proof.json"
             }
           ]
         }
@@ -134611,7 +134731,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
           "release-0.5-final-rehearsal",
-          "release-0.5-staff-confirmation-fixtures"
+          "release-0.5-staff-confirmation-fixtures",
+          "release-0.5-invoice-response-feedback"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -134723,7 +134844,7 @@
             },
             {
               "path": "apps/web/e2e/invoice-corrections.spec.ts",
-              "sha256": "1ff1a034cc4dd147e4cdba54c3046eb6cfe6ecb47da225fc889a26b61130240d"
+              "sha256": "dda46448d56144f30cacdbae493113b774650bb0fad0fcd9a3fba6128faa8906"
             },
             {
               "path": "apps/web/e2e/invoice-customer-deadline.spec.ts",
@@ -135292,6 +135413,11 @@
               "batch": "release-0.5-staff-confirmation-fixtures",
               "base_commit": "6fdbab7d3a149e6fa4fa612dc205cccad29afeb9",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-exact-command-feedback-renewal/confirmation-fixture-batch-proof.json"
+            },
+            {
+              "batch": "release-0.5-invoice-response-feedback",
+              "base_commit": "a27bfb6aca1393b091d9e63d4ce00ad7a2eae457",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-response-feedback/invoice-response-feedback-proof.json"
             }
           ]
         }
@@ -135384,7 +135510,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-gates",
           "release-0.5-final-acceptance",
-          "release-0.5-final-rehearsal"
+          "release-0.5-final-rehearsal",
+          "release-0.5-invoice-response-feedback"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -135468,7 +135595,7 @@
             },
             {
               "path": "apps/web/e2e/invoice-corrections.spec.ts",
-              "sha256": "1ff1a034cc4dd147e4cdba54c3046eb6cfe6ecb47da225fc889a26b61130240d"
+              "sha256": "dda46448d56144f30cacdbae493113b774650bb0fad0fcd9a3fba6128faa8906"
             },
             {
               "path": "apps/web/e2e/invoice-customer-deadline.spec.ts",
@@ -136019,6 +136146,11 @@
               "batch": "release-0.5-final-rehearsal",
               "base_commit": "dfc9ebe00018c4d59b06f0cae5ca4d06d29523c0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-final-rehearsal/rehearsal-proof.json"
+            },
+            {
+              "batch": "release-0.5-invoice-response-feedback",
+              "base_commit": "a27bfb6aca1393b091d9e63d4ce00ad7a2eae457",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-response-feedback/invoice-response-feedback-proof.json"
             }
           ]
         }
@@ -508145,7 +508277,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-invoice-response-feedback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -508277,7 +508410,7 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "2e494a28f511bdedce850ee36fcf7b1bea985a2c6da11ae95994af43a2a49d2f"
+              "sha256": "8574d79e67a5eb5369d64f24cfa443ae3b4925c9e37ed750bb2defc9b6adeaa2"
             },
             {
               "path": "apps/web/src/components/ProfileVerificationReview.tsx",
@@ -508542,6 +508675,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-invoice-response-feedback",
+              "base_commit": "a27bfb6aca1393b091d9e63d4ce00ad7a2eae457",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-response-feedback/invoice-response-feedback-proof.json"
             }
           ]
         }
@@ -509059,7 +509197,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-invoice-response-feedback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -509191,7 +509330,7 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "2e494a28f511bdedce850ee36fcf7b1bea985a2c6da11ae95994af43a2a49d2f"
+              "sha256": "8574d79e67a5eb5369d64f24cfa443ae3b4925c9e37ed750bb2defc9b6adeaa2"
             },
             {
               "path": "apps/web/src/components/ProfileVerificationReview.tsx",
@@ -509456,6 +509595,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-invoice-response-feedback",
+              "base_commit": "a27bfb6aca1393b091d9e63d4ce00ad7a2eae457",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-response-feedback/invoice-response-feedback-proof.json"
             }
           ]
         }
@@ -510951,7 +511095,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-invoice-response-feedback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -511083,7 +511228,7 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "2e494a28f511bdedce850ee36fcf7b1bea985a2c6da11ae95994af43a2a49d2f"
+              "sha256": "8574d79e67a5eb5369d64f24cfa443ae3b4925c9e37ed750bb2defc9b6adeaa2"
             },
             {
               "path": "apps/web/src/components/ProfileVerificationReview.tsx",
@@ -511348,6 +511493,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-invoice-response-feedback",
+              "base_commit": "a27bfb6aca1393b091d9e63d4ce00ad7a2eae457",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-response-feedback/invoice-response-feedback-proof.json"
             }
           ]
         }
@@ -533989,7 +534139,8 @@
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-confirmed-electricity-feedback",
-          "release-0.5-native-staff-control-targets"
+          "release-0.5-native-staff-control-targets",
+          "release-0.5-invoice-response-feedback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -534185,11 +534336,11 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.test.tsx",
-              "sha256": "abb2c3982d121d6de23cc5c88de4a6b76df614452c4c5a6102e9eaef7069c4ba"
+              "sha256": "e4d0f3f13582847e959a642360089561b7c1d7657538394d8ddef962ee397c37"
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "2e494a28f511bdedce850ee36fcf7b1bea985a2c6da11ae95994af43a2a49d2f"
+              "sha256": "8574d79e67a5eb5369d64f24cfa443ae3b4925c9e37ed750bb2defc9b6adeaa2"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -535616,6 +535767,11 @@
               "batch": "release-0.5-native-staff-control-targets",
               "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
+            },
+            {
+              "batch": "release-0.5-invoice-response-feedback",
+              "base_commit": "a27bfb6aca1393b091d9e63d4ce00ad7a2eae457",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-response-feedback/invoice-response-feedback-proof.json"
             }
           ]
         },
@@ -535752,7 +535908,8 @@
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-confirmed-electricity-feedback",
-          "release-0.5-native-staff-control-targets"
+          "release-0.5-native-staff-control-targets",
+          "release-0.5-invoice-response-feedback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -535948,11 +536105,11 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.test.tsx",
-              "sha256": "abb2c3982d121d6de23cc5c88de4a6b76df614452c4c5a6102e9eaef7069c4ba"
+              "sha256": "e4d0f3f13582847e959a642360089561b7c1d7657538394d8ddef962ee397c37"
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "2e494a28f511bdedce850ee36fcf7b1bea985a2c6da11ae95994af43a2a49d2f"
+              "sha256": "8574d79e67a5eb5369d64f24cfa443ae3b4925c9e37ed750bb2defc9b6adeaa2"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -537379,6 +537536,11 @@
               "batch": "release-0.5-native-staff-control-targets",
               "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
+            },
+            {
+              "batch": "release-0.5-invoice-response-feedback",
+              "base_commit": "a27bfb6aca1393b091d9e63d4ce00ad7a2eae457",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-response-feedback/invoice-response-feedback-proof.json"
             }
           ]
         },
@@ -537516,7 +537678,8 @@
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-confirmed-electricity-feedback",
-          "release-0.5-native-staff-control-targets"
+          "release-0.5-native-staff-control-targets",
+          "release-0.5-invoice-response-feedback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -537712,11 +537875,11 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.test.tsx",
-              "sha256": "abb2c3982d121d6de23cc5c88de4a6b76df614452c4c5a6102e9eaef7069c4ba"
+              "sha256": "e4d0f3f13582847e959a642360089561b7c1d7657538394d8ddef962ee397c37"
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "2e494a28f511bdedce850ee36fcf7b1bea985a2c6da11ae95994af43a2a49d2f"
+              "sha256": "8574d79e67a5eb5369d64f24cfa443ae3b4925c9e37ed750bb2defc9b6adeaa2"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -539143,6 +539306,11 @@
               "batch": "release-0.5-native-staff-control-targets",
               "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
+            },
+            {
+              "batch": "release-0.5-invoice-response-feedback",
+              "base_commit": "a27bfb6aca1393b091d9e63d4ce00ad7a2eae457",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-response-feedback/invoice-response-feedback-proof.json"
             }
           ]
         },
@@ -539249,7 +539417,8 @@
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-confirmed-electricity-feedback",
-          "release-0.5-native-staff-control-targets"
+          "release-0.5-native-staff-control-targets",
+          "release-0.5-invoice-response-feedback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -539445,11 +539614,11 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.test.tsx",
-              "sha256": "abb2c3982d121d6de23cc5c88de4a6b76df614452c4c5a6102e9eaef7069c4ba"
+              "sha256": "e4d0f3f13582847e959a642360089561b7c1d7657538394d8ddef962ee397c37"
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "2e494a28f511bdedce850ee36fcf7b1bea985a2c6da11ae95994af43a2a49d2f"
+              "sha256": "8574d79e67a5eb5369d64f24cfa443ae3b4925c9e37ed750bb2defc9b6adeaa2"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -540876,6 +541045,11 @@
               "batch": "release-0.5-native-staff-control-targets",
               "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
+            },
+            {
+              "batch": "release-0.5-invoice-response-feedback",
+              "base_commit": "a27bfb6aca1393b091d9e63d4ce00ad7a2eae457",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-response-feedback/invoice-response-feedback-proof.json"
             }
           ]
         },
@@ -541008,7 +541182,8 @@
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-confirmed-electricity-feedback",
-          "release-0.5-native-staff-control-targets"
+          "release-0.5-native-staff-control-targets",
+          "release-0.5-invoice-response-feedback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -541204,11 +541379,11 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.test.tsx",
-              "sha256": "abb2c3982d121d6de23cc5c88de4a6b76df614452c4c5a6102e9eaef7069c4ba"
+              "sha256": "e4d0f3f13582847e959a642360089561b7c1d7657538394d8ddef962ee397c37"
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "2e494a28f511bdedce850ee36fcf7b1bea985a2c6da11ae95994af43a2a49d2f"
+              "sha256": "8574d79e67a5eb5369d64f24cfa443ae3b4925c9e37ed750bb2defc9b6adeaa2"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -542635,6 +542810,11 @@
               "batch": "release-0.5-native-staff-control-targets",
               "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
+            },
+            {
+              "batch": "release-0.5-invoice-response-feedback",
+              "base_commit": "a27bfb6aca1393b091d9e63d4ce00ad7a2eae457",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-response-feedback/invoice-response-feedback-proof.json"
             }
           ]
         },
@@ -542776,7 +542956,8 @@
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-confirmed-electricity-feedback",
-          "release-0.5-native-staff-control-targets"
+          "release-0.5-native-staff-control-targets",
+          "release-0.5-invoice-response-feedback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -542972,11 +543153,11 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.test.tsx",
-              "sha256": "abb2c3982d121d6de23cc5c88de4a6b76df614452c4c5a6102e9eaef7069c4ba"
+              "sha256": "e4d0f3f13582847e959a642360089561b7c1d7657538394d8ddef962ee397c37"
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "2e494a28f511bdedce850ee36fcf7b1bea985a2c6da11ae95994af43a2a49d2f"
+              "sha256": "8574d79e67a5eb5369d64f24cfa443ae3b4925c9e37ed750bb2defc9b6adeaa2"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -544403,6 +544584,11 @@
               "batch": "release-0.5-native-staff-control-targets",
               "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
+            },
+            {
+              "batch": "release-0.5-invoice-response-feedback",
+              "base_commit": "a27bfb6aca1393b091d9e63d4ce00ad7a2eae457",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-response-feedback/invoice-response-feedback-proof.json"
             }
           ]
         },
@@ -544517,7 +544703,8 @@
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-confirmed-electricity-feedback",
-          "release-0.5-native-staff-control-targets"
+          "release-0.5-native-staff-control-targets",
+          "release-0.5-invoice-response-feedback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -544713,11 +544900,11 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.test.tsx",
-              "sha256": "abb2c3982d121d6de23cc5c88de4a6b76df614452c4c5a6102e9eaef7069c4ba"
+              "sha256": "e4d0f3f13582847e959a642360089561b7c1d7657538394d8ddef962ee397c37"
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "2e494a28f511bdedce850ee36fcf7b1bea985a2c6da11ae95994af43a2a49d2f"
+              "sha256": "8574d79e67a5eb5369d64f24cfa443ae3b4925c9e37ed750bb2defc9b6adeaa2"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -546144,6 +546331,11 @@
               "batch": "release-0.5-native-staff-control-targets",
               "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
+            },
+            {
+              "batch": "release-0.5-invoice-response-feedback",
+              "base_commit": "a27bfb6aca1393b091d9e63d4ce00ad7a2eae457",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-response-feedback/invoice-response-feedback-proof.json"
             }
           ]
         },
@@ -546222,7 +546414,8 @@
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-confirmed-electricity-feedback",
-          "release-0.5-native-staff-control-targets"
+          "release-0.5-native-staff-control-targets",
+          "release-0.5-invoice-response-feedback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -546418,11 +546611,11 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.test.tsx",
-              "sha256": "abb2c3982d121d6de23cc5c88de4a6b76df614452c4c5a6102e9eaef7069c4ba"
+              "sha256": "e4d0f3f13582847e959a642360089561b7c1d7657538394d8ddef962ee397c37"
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "2e494a28f511bdedce850ee36fcf7b1bea985a2c6da11ae95994af43a2a49d2f"
+              "sha256": "8574d79e67a5eb5369d64f24cfa443ae3b4925c9e37ed750bb2defc9b6adeaa2"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -547849,6 +548042,11 @@
               "batch": "release-0.5-native-staff-control-targets",
               "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
+            },
+            {
+              "batch": "release-0.5-invoice-response-feedback",
+              "base_commit": "a27bfb6aca1393b091d9e63d4ce00ad7a2eae457",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-response-feedback/invoice-response-feedback-proof.json"
             }
           ]
         },
@@ -547927,7 +548125,8 @@
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-confirmed-electricity-feedback",
-          "release-0.5-native-staff-control-targets"
+          "release-0.5-native-staff-control-targets",
+          "release-0.5-invoice-response-feedback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -548123,11 +548322,11 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.test.tsx",
-              "sha256": "abb2c3982d121d6de23cc5c88de4a6b76df614452c4c5a6102e9eaef7069c4ba"
+              "sha256": "e4d0f3f13582847e959a642360089561b7c1d7657538394d8ddef962ee397c37"
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "2e494a28f511bdedce850ee36fcf7b1bea985a2c6da11ae95994af43a2a49d2f"
+              "sha256": "8574d79e67a5eb5369d64f24cfa443ae3b4925c9e37ed750bb2defc9b6adeaa2"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -549554,6 +549753,11 @@
               "batch": "release-0.5-native-staff-control-targets",
               "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
+            },
+            {
+              "batch": "release-0.5-invoice-response-feedback",
+              "base_commit": "a27bfb6aca1393b091d9e63d4ce00ad7a2eae457",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-response-feedback/invoice-response-feedback-proof.json"
             }
           ]
         },
@@ -549633,7 +549837,8 @@
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-confirmed-electricity-feedback",
-          "release-0.5-native-staff-control-targets"
+          "release-0.5-native-staff-control-targets",
+          "release-0.5-invoice-response-feedback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -549829,11 +550034,11 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.test.tsx",
-              "sha256": "abb2c3982d121d6de23cc5c88de4a6b76df614452c4c5a6102e9eaef7069c4ba"
+              "sha256": "e4d0f3f13582847e959a642360089561b7c1d7657538394d8ddef962ee397c37"
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "2e494a28f511bdedce850ee36fcf7b1bea985a2c6da11ae95994af43a2a49d2f"
+              "sha256": "8574d79e67a5eb5369d64f24cfa443ae3b4925c9e37ed750bb2defc9b6adeaa2"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -551260,6 +551465,11 @@
               "batch": "release-0.5-native-staff-control-targets",
               "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
+            },
+            {
+              "batch": "release-0.5-invoice-response-feedback",
+              "base_commit": "a27bfb6aca1393b091d9e63d4ce00ad7a2eae457",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-response-feedback/invoice-response-feedback-proof.json"
             }
           ]
         },
@@ -551338,7 +551548,8 @@
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-confirmed-electricity-feedback",
-          "release-0.5-native-staff-control-targets"
+          "release-0.5-native-staff-control-targets",
+          "release-0.5-invoice-response-feedback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -551534,11 +551745,11 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.test.tsx",
-              "sha256": "abb2c3982d121d6de23cc5c88de4a6b76df614452c4c5a6102e9eaef7069c4ba"
+              "sha256": "e4d0f3f13582847e959a642360089561b7c1d7657538394d8ddef962ee397c37"
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "2e494a28f511bdedce850ee36fcf7b1bea985a2c6da11ae95994af43a2a49d2f"
+              "sha256": "8574d79e67a5eb5369d64f24cfa443ae3b4925c9e37ed750bb2defc9b6adeaa2"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -552965,6 +553176,11 @@
               "batch": "release-0.5-native-staff-control-targets",
               "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
+            },
+            {
+              "batch": "release-0.5-invoice-response-feedback",
+              "base_commit": "a27bfb6aca1393b091d9e63d4ce00ad7a2eae457",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-response-feedback/invoice-response-feedback-proof.json"
             }
           ]
         },
@@ -553037,7 +553253,8 @@
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-confirmed-electricity-feedback",
           "release-0.5-native-staff-control-targets",
-          "release-0.5-settings-response-feedback"
+          "release-0.5-settings-response-feedback",
+          "release-0.5-invoice-response-feedback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -553209,11 +553426,11 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.test.tsx",
-              "sha256": "abb2c3982d121d6de23cc5c88de4a6b76df614452c4c5a6102e9eaef7069c4ba"
+              "sha256": "e4d0f3f13582847e959a642360089561b7c1d7657538394d8ddef962ee397c37"
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "2e494a28f511bdedce850ee36fcf7b1bea985a2c6da11ae95994af43a2a49d2f"
+              "sha256": "8574d79e67a5eb5369d64f24cfa443ae3b4925c9e37ed750bb2defc9b6adeaa2"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -554763,6 +554980,11 @@
               "batch": "release-0.5-settings-response-feedback",
               "base_commit": "8c419ffe7a5a4d5b06d5ca4299d64499902fa8bb",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-settings-response-feedback/scoped-settings-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-invoice-response-feedback",
+              "base_commit": "a27bfb6aca1393b091d9e63d4ce00ad7a2eae457",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-response-feedback/invoice-response-feedback-proof.json"
             }
           ]
         }
@@ -554829,7 +555051,8 @@
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-confirmed-electricity-feedback",
           "release-0.5-native-staff-control-targets",
-          "release-0.5-settings-response-feedback"
+          "release-0.5-settings-response-feedback",
+          "release-0.5-invoice-response-feedback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -555001,11 +555224,11 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.test.tsx",
-              "sha256": "abb2c3982d121d6de23cc5c88de4a6b76df614452c4c5a6102e9eaef7069c4ba"
+              "sha256": "e4d0f3f13582847e959a642360089561b7c1d7657538394d8ddef962ee397c37"
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "2e494a28f511bdedce850ee36fcf7b1bea985a2c6da11ae95994af43a2a49d2f"
+              "sha256": "8574d79e67a5eb5369d64f24cfa443ae3b4925c9e37ed750bb2defc9b6adeaa2"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -556555,6 +556778,11 @@
               "batch": "release-0.5-settings-response-feedback",
               "base_commit": "8c419ffe7a5a4d5b06d5ca4299d64499902fa8bb",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-settings-response-feedback/scoped-settings-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-invoice-response-feedback",
+              "base_commit": "a27bfb6aca1393b091d9e63d4ce00ad7a2eae457",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-response-feedback/invoice-response-feedback-proof.json"
             }
           ]
         }
@@ -556575,7 +556803,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Profile and saved-address editors now automatically show localized feedback for validated server field rejection and unconfirmed commands. The shared observer accepts the first new result from an already-clear account scope and suppresses stale carryover. Valid success receipts, private-response filtering, exact retries and the confirmation read are verified. Manual-invoice owned field rejection and remaining command adoption are still open."
+        "Named profile updates, order submissions and manual invoice issuance have receipt-bound feedback. Manual invoice review and commit now use the shared input-error decoder and announce safe localized feedback only for owned fields. The end-to-end review rejection keeps the captured rows and hides the raw private API copy, then confirms the original amount through the existing step-up and exact retry. Saving wizard address feedback and remaining CRUD adoption still need evidence."
       ],
       "owner": null,
       "depends_on": [],
@@ -556597,7 +556825,8 @@
           "release-0.5-verified-command-rejection",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-confirmed-electricity-feedback",
-          "release-0.5-settings-response-feedback"
+          "release-0.5-settings-response-feedback",
+          "release-0.5-invoice-response-feedback"
         ],
         "current_acceptance": null
       }
@@ -556663,7 +556892,8 @@
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-confirmed-electricity-feedback",
           "release-0.5-native-staff-control-targets",
-          "release-0.5-settings-response-feedback"
+          "release-0.5-settings-response-feedback",
+          "release-0.5-invoice-response-feedback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -556835,11 +557065,11 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.test.tsx",
-              "sha256": "abb2c3982d121d6de23cc5c88de4a6b76df614452c4c5a6102e9eaef7069c4ba"
+              "sha256": "e4d0f3f13582847e959a642360089561b7c1d7657538394d8ddef962ee397c37"
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "2e494a28f511bdedce850ee36fcf7b1bea985a2c6da11ae95994af43a2a49d2f"
+              "sha256": "8574d79e67a5eb5369d64f24cfa443ae3b4925c9e37ed750bb2defc9b6adeaa2"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -558389,6 +558619,11 @@
               "batch": "release-0.5-settings-response-feedback",
               "base_commit": "8c419ffe7a5a4d5b06d5ca4299d64499902fa8bb",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-settings-response-feedback/scoped-settings-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-invoice-response-feedback",
+              "base_commit": "a27bfb6aca1393b091d9e63d4ce00ad7a2eae457",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-response-feedback/invoice-response-feedback-proof.json"
             }
           ]
         }
@@ -558455,7 +558690,8 @@
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-confirmed-electricity-feedback",
           "release-0.5-native-staff-control-targets",
-          "release-0.5-settings-response-feedback"
+          "release-0.5-settings-response-feedback",
+          "release-0.5-invoice-response-feedback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -558627,11 +558863,11 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.test.tsx",
-              "sha256": "abb2c3982d121d6de23cc5c88de4a6b76df614452c4c5a6102e9eaef7069c4ba"
+              "sha256": "e4d0f3f13582847e959a642360089561b7c1d7657538394d8ddef962ee397c37"
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "2e494a28f511bdedce850ee36fcf7b1bea985a2c6da11ae95994af43a2a49d2f"
+              "sha256": "8574d79e67a5eb5369d64f24cfa443ae3b4925c9e37ed750bb2defc9b6adeaa2"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -560181,6 +560417,11 @@
               "batch": "release-0.5-settings-response-feedback",
               "base_commit": "8c419ffe7a5a4d5b06d5ca4299d64499902fa8bb",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-settings-response-feedback/scoped-settings-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-invoice-response-feedback",
+              "base_commit": "a27bfb6aca1393b091d9e63d4ce00ad7a2eae457",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-response-feedback/invoice-response-feedback-proof.json"
             }
           ]
         }
@@ -560247,7 +560488,8 @@
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-confirmed-electricity-feedback",
           "release-0.5-native-staff-control-targets",
-          "release-0.5-settings-response-feedback"
+          "release-0.5-settings-response-feedback",
+          "release-0.5-invoice-response-feedback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -560419,11 +560661,11 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.test.tsx",
-              "sha256": "abb2c3982d121d6de23cc5c88de4a6b76df614452c4c5a6102e9eaef7069c4ba"
+              "sha256": "e4d0f3f13582847e959a642360089561b7c1d7657538394d8ddef962ee397c37"
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "2e494a28f511bdedce850ee36fcf7b1bea985a2c6da11ae95994af43a2a49d2f"
+              "sha256": "8574d79e67a5eb5369d64f24cfa443ae3b4925c9e37ed750bb2defc9b6adeaa2"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -561973,6 +562215,11 @@
               "batch": "release-0.5-settings-response-feedback",
               "base_commit": "8c419ffe7a5a4d5b06d5ca4299d64499902fa8bb",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-settings-response-feedback/scoped-settings-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-invoice-response-feedback",
+              "base_commit": "a27bfb6aca1393b091d9e63d4ce00ad7a2eae457",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-response-feedback/invoice-response-feedback-proof.json"
             }
           ]
         }
@@ -562039,7 +562286,8 @@
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-confirmed-electricity-feedback",
           "release-0.5-native-staff-control-targets",
-          "release-0.5-settings-response-feedback"
+          "release-0.5-settings-response-feedback",
+          "release-0.5-invoice-response-feedback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -562211,11 +562459,11 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.test.tsx",
-              "sha256": "abb2c3982d121d6de23cc5c88de4a6b76df614452c4c5a6102e9eaef7069c4ba"
+              "sha256": "e4d0f3f13582847e959a642360089561b7c1d7657538394d8ddef962ee397c37"
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "2e494a28f511bdedce850ee36fcf7b1bea985a2c6da11ae95994af43a2a49d2f"
+              "sha256": "8574d79e67a5eb5369d64f24cfa443ae3b4925c9e37ed750bb2defc9b6adeaa2"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -563765,6 +564013,11 @@
               "batch": "release-0.5-settings-response-feedback",
               "base_commit": "8c419ffe7a5a4d5b06d5ca4299d64499902fa8bb",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-settings-response-feedback/scoped-settings-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-invoice-response-feedback",
+              "base_commit": "a27bfb6aca1393b091d9e63d4ce00ad7a2eae457",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-response-feedback/invoice-response-feedback-proof.json"
             }
           ]
         }
@@ -563831,7 +564084,8 @@
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-confirmed-electricity-feedback",
           "release-0.5-native-staff-control-targets",
-          "release-0.5-settings-response-feedback"
+          "release-0.5-settings-response-feedback",
+          "release-0.5-invoice-response-feedback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -564003,11 +564257,11 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.test.tsx",
-              "sha256": "abb2c3982d121d6de23cc5c88de4a6b76df614452c4c5a6102e9eaef7069c4ba"
+              "sha256": "e4d0f3f13582847e959a642360089561b7c1d7657538394d8ddef962ee397c37"
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "2e494a28f511bdedce850ee36fcf7b1bea985a2c6da11ae95994af43a2a49d2f"
+              "sha256": "8574d79e67a5eb5369d64f24cfa443ae3b4925c9e37ed750bb2defc9b6adeaa2"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -565557,6 +565811,11 @@
               "batch": "release-0.5-settings-response-feedback",
               "base_commit": "8c419ffe7a5a4d5b06d5ca4299d64499902fa8bb",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-settings-response-feedback/scoped-settings-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-invoice-response-feedback",
+              "base_commit": "a27bfb6aca1393b091d9e63d4ce00ad7a2eae457",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-response-feedback/invoice-response-feedback-proof.json"
             }
           ]
         }
@@ -565623,7 +565882,8 @@
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-confirmed-electricity-feedback",
           "release-0.5-native-staff-control-targets",
-          "release-0.5-settings-response-feedback"
+          "release-0.5-settings-response-feedback",
+          "release-0.5-invoice-response-feedback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -565795,11 +566055,11 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.test.tsx",
-              "sha256": "abb2c3982d121d6de23cc5c88de4a6b76df614452c4c5a6102e9eaef7069c4ba"
+              "sha256": "e4d0f3f13582847e959a642360089561b7c1d7657538394d8ddef962ee397c37"
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "2e494a28f511bdedce850ee36fcf7b1bea985a2c6da11ae95994af43a2a49d2f"
+              "sha256": "8574d79e67a5eb5369d64f24cfa443ae3b4925c9e37ed750bb2defc9b6adeaa2"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -567349,6 +567609,11 @@
               "batch": "release-0.5-settings-response-feedback",
               "base_commit": "8c419ffe7a5a4d5b06d5ca4299d64499902fa8bb",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-settings-response-feedback/scoped-settings-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-invoice-response-feedback",
+              "base_commit": "a27bfb6aca1393b091d9e63d4ce00ad7a2eae457",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-response-feedback/invoice-response-feedback-proof.json"
             }
           ]
         }
@@ -567415,7 +567680,8 @@
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-confirmed-electricity-feedback",
           "release-0.5-native-staff-control-targets",
-          "release-0.5-settings-response-feedback"
+          "release-0.5-settings-response-feedback",
+          "release-0.5-invoice-response-feedback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -567587,11 +567853,11 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.test.tsx",
-              "sha256": "abb2c3982d121d6de23cc5c88de4a6b76df614452c4c5a6102e9eaef7069c4ba"
+              "sha256": "e4d0f3f13582847e959a642360089561b7c1d7657538394d8ddef962ee397c37"
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "2e494a28f511bdedce850ee36fcf7b1bea985a2c6da11ae95994af43a2a49d2f"
+              "sha256": "8574d79e67a5eb5369d64f24cfa443ae3b4925c9e37ed750bb2defc9b6adeaa2"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -569141,6 +569407,11 @@
               "batch": "release-0.5-settings-response-feedback",
               "base_commit": "8c419ffe7a5a4d5b06d5ca4299d64499902fa8bb",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-settings-response-feedback/scoped-settings-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-invoice-response-feedback",
+              "base_commit": "a27bfb6aca1393b091d9e63d4ce00ad7a2eae457",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-response-feedback/invoice-response-feedback-proof.json"
             }
           ]
         }
@@ -569207,7 +569478,8 @@
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-confirmed-electricity-feedback",
           "release-0.5-native-staff-control-targets",
-          "release-0.5-settings-response-feedback"
+          "release-0.5-settings-response-feedback",
+          "release-0.5-invoice-response-feedback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -569379,11 +569651,11 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.test.tsx",
-              "sha256": "abb2c3982d121d6de23cc5c88de4a6b76df614452c4c5a6102e9eaef7069c4ba"
+              "sha256": "e4d0f3f13582847e959a642360089561b7c1d7657538394d8ddef962ee397c37"
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "2e494a28f511bdedce850ee36fcf7b1bea985a2c6da11ae95994af43a2a49d2f"
+              "sha256": "8574d79e67a5eb5369d64f24cfa443ae3b4925c9e37ed750bb2defc9b6adeaa2"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -570933,6 +571205,11 @@
               "batch": "release-0.5-settings-response-feedback",
               "base_commit": "8c419ffe7a5a4d5b06d5ca4299d64499902fa8bb",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-settings-response-feedback/scoped-settings-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-invoice-response-feedback",
+              "base_commit": "a27bfb6aca1393b091d9e63d4ce00ad7a2eae457",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-response-feedback/invoice-response-feedback-proof.json"
             }
           ]
         }
@@ -570999,7 +571276,8 @@
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-confirmed-electricity-feedback",
           "release-0.5-native-staff-control-targets",
-          "release-0.5-settings-response-feedback"
+          "release-0.5-settings-response-feedback",
+          "release-0.5-invoice-response-feedback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -571171,11 +571449,11 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.test.tsx",
-              "sha256": "abb2c3982d121d6de23cc5c88de4a6b76df614452c4c5a6102e9eaef7069c4ba"
+              "sha256": "e4d0f3f13582847e959a642360089561b7c1d7657538394d8ddef962ee397c37"
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "2e494a28f511bdedce850ee36fcf7b1bea985a2c6da11ae95994af43a2a49d2f"
+              "sha256": "8574d79e67a5eb5369d64f24cfa443ae3b4925c9e37ed750bb2defc9b6adeaa2"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -572725,6 +573003,11 @@
               "batch": "release-0.5-settings-response-feedback",
               "base_commit": "8c419ffe7a5a4d5b06d5ca4299d64499902fa8bb",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-settings-response-feedback/scoped-settings-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-invoice-response-feedback",
+              "base_commit": "a27bfb6aca1393b091d9e63d4ce00ad7a2eae457",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-response-feedback/invoice-response-feedback-proof.json"
             }
           ]
         }
@@ -572791,7 +573074,8 @@
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-confirmed-electricity-feedback",
           "release-0.5-native-staff-control-targets",
-          "release-0.5-settings-response-feedback"
+          "release-0.5-settings-response-feedback",
+          "release-0.5-invoice-response-feedback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -572963,11 +573247,11 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.test.tsx",
-              "sha256": "abb2c3982d121d6de23cc5c88de4a6b76df614452c4c5a6102e9eaef7069c4ba"
+              "sha256": "e4d0f3f13582847e959a642360089561b7c1d7657538394d8ddef962ee397c37"
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "2e494a28f511bdedce850ee36fcf7b1bea985a2c6da11ae95994af43a2a49d2f"
+              "sha256": "8574d79e67a5eb5369d64f24cfa443ae3b4925c9e37ed750bb2defc9b6adeaa2"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -574517,6 +574801,11 @@
               "batch": "release-0.5-settings-response-feedback",
               "base_commit": "8c419ffe7a5a4d5b06d5ca4299d64499902fa8bb",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-settings-response-feedback/scoped-settings-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-invoice-response-feedback",
+              "base_commit": "a27bfb6aca1393b091d9e63d4ce00ad7a2eae457",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-response-feedback/invoice-response-feedback-proof.json"
             }
           ]
         }
@@ -574583,7 +574872,8 @@
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-confirmed-electricity-feedback",
           "release-0.5-native-staff-control-targets",
-          "release-0.5-settings-response-feedback"
+          "release-0.5-settings-response-feedback",
+          "release-0.5-invoice-response-feedback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -574755,11 +575045,11 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.test.tsx",
-              "sha256": "abb2c3982d121d6de23cc5c88de4a6b76df614452c4c5a6102e9eaef7069c4ba"
+              "sha256": "e4d0f3f13582847e959a642360089561b7c1d7657538394d8ddef962ee397c37"
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "2e494a28f511bdedce850ee36fcf7b1bea985a2c6da11ae95994af43a2a49d2f"
+              "sha256": "8574d79e67a5eb5369d64f24cfa443ae3b4925c9e37ed750bb2defc9b6adeaa2"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -576309,6 +576599,11 @@
               "batch": "release-0.5-settings-response-feedback",
               "base_commit": "8c419ffe7a5a4d5b06d5ca4299d64499902fa8bb",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-settings-response-feedback/scoped-settings-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-invoice-response-feedback",
+              "base_commit": "a27bfb6aca1393b091d9e63d4ce00ad7a2eae457",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-response-feedback/invoice-response-feedback-proof.json"
             }
           ]
         }
@@ -577060,7 +577355,8 @@
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-confirmed-electricity-feedback",
           "release-0.5-native-staff-control-targets",
-          "release-0.5-settings-response-feedback"
+          "release-0.5-settings-response-feedback",
+          "release-0.5-invoice-response-feedback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -577232,11 +577528,11 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.test.tsx",
-              "sha256": "abb2c3982d121d6de23cc5c88de4a6b76df614452c4c5a6102e9eaef7069c4ba"
+              "sha256": "e4d0f3f13582847e959a642360089561b7c1d7657538394d8ddef962ee397c37"
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "2e494a28f511bdedce850ee36fcf7b1bea985a2c6da11ae95994af43a2a49d2f"
+              "sha256": "8574d79e67a5eb5369d64f24cfa443ae3b4925c9e37ed750bb2defc9b6adeaa2"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -578786,6 +579082,11 @@
               "batch": "release-0.5-settings-response-feedback",
               "base_commit": "8c419ffe7a5a4d5b06d5ca4299d64499902fa8bb",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-settings-response-feedback/scoped-settings-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-invoice-response-feedback",
+              "base_commit": "a27bfb6aca1393b091d9e63d4ce00ad7a2eae457",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-response-feedback/invoice-response-feedback-proof.json"
             }
           ]
         }
@@ -578852,7 +579153,8 @@
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-confirmed-electricity-feedback",
           "release-0.5-native-staff-control-targets",
-          "release-0.5-settings-response-feedback"
+          "release-0.5-settings-response-feedback",
+          "release-0.5-invoice-response-feedback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -579024,11 +579326,11 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.test.tsx",
-              "sha256": "abb2c3982d121d6de23cc5c88de4a6b76df614452c4c5a6102e9eaef7069c4ba"
+              "sha256": "e4d0f3f13582847e959a642360089561b7c1d7657538394d8ddef962ee397c37"
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "2e494a28f511bdedce850ee36fcf7b1bea985a2c6da11ae95994af43a2a49d2f"
+              "sha256": "8574d79e67a5eb5369d64f24cfa443ae3b4925c9e37ed750bb2defc9b6adeaa2"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -580578,6 +580880,11 @@
               "batch": "release-0.5-settings-response-feedback",
               "base_commit": "8c419ffe7a5a4d5b06d5ca4299d64499902fa8bb",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-settings-response-feedback/scoped-settings-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-invoice-response-feedback",
+              "base_commit": "a27bfb6aca1393b091d9e63d4ce00ad7a2eae457",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-response-feedback/invoice-response-feedback-proof.json"
             }
           ]
         }
@@ -580717,7 +581024,8 @@
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-confirmed-electricity-feedback",
-          "release-0.5-native-staff-control-targets"
+          "release-0.5-native-staff-control-targets",
+          "release-0.5-invoice-response-feedback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -580913,11 +581221,11 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.test.tsx",
-              "sha256": "abb2c3982d121d6de23cc5c88de4a6b76df614452c4c5a6102e9eaef7069c4ba"
+              "sha256": "e4d0f3f13582847e959a642360089561b7c1d7657538394d8ddef962ee397c37"
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "2e494a28f511bdedce850ee36fcf7b1bea985a2c6da11ae95994af43a2a49d2f"
+              "sha256": "8574d79e67a5eb5369d64f24cfa443ae3b4925c9e37ed750bb2defc9b6adeaa2"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -582344,6 +582652,11 @@
               "batch": "release-0.5-native-staff-control-targets",
               "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
+            },
+            {
+              "batch": "release-0.5-invoice-response-feedback",
+              "base_commit": "a27bfb6aca1393b091d9e63d4ce00ad7a2eae457",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-response-feedback/invoice-response-feedback-proof.json"
             }
           ]
         },
@@ -582418,7 +582731,8 @@
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-confirmed-electricity-feedback",
-          "release-0.5-native-staff-control-targets"
+          "release-0.5-native-staff-control-targets",
+          "release-0.5-invoice-response-feedback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -582614,11 +582928,11 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.test.tsx",
-              "sha256": "abb2c3982d121d6de23cc5c88de4a6b76df614452c4c5a6102e9eaef7069c4ba"
+              "sha256": "e4d0f3f13582847e959a642360089561b7c1d7657538394d8ddef962ee397c37"
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "2e494a28f511bdedce850ee36fcf7b1bea985a2c6da11ae95994af43a2a49d2f"
+              "sha256": "8574d79e67a5eb5369d64f24cfa443ae3b4925c9e37ed750bb2defc9b6adeaa2"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -584045,6 +584359,11 @@
               "batch": "release-0.5-native-staff-control-targets",
               "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
+            },
+            {
+              "batch": "release-0.5-invoice-response-feedback",
+              "base_commit": "a27bfb6aca1393b091d9e63d4ce00ad7a2eae457",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-response-feedback/invoice-response-feedback-proof.json"
             }
           ]
         },
@@ -584119,7 +584438,8 @@
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-confirmed-electricity-feedback",
-          "release-0.5-native-staff-control-targets"
+          "release-0.5-native-staff-control-targets",
+          "release-0.5-invoice-response-feedback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -584315,11 +584635,11 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.test.tsx",
-              "sha256": "abb2c3982d121d6de23cc5c88de4a6b76df614452c4c5a6102e9eaef7069c4ba"
+              "sha256": "e4d0f3f13582847e959a642360089561b7c1d7657538394d8ddef962ee397c37"
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "2e494a28f511bdedce850ee36fcf7b1bea985a2c6da11ae95994af43a2a49d2f"
+              "sha256": "8574d79e67a5eb5369d64f24cfa443ae3b4925c9e37ed750bb2defc9b6adeaa2"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -585746,6 +586066,11 @@
               "batch": "release-0.5-native-staff-control-targets",
               "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
+            },
+            {
+              "batch": "release-0.5-invoice-response-feedback",
+              "base_commit": "a27bfb6aca1393b091d9e63d4ce00ad7a2eae457",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-response-feedback/invoice-response-feedback-proof.json"
             }
           ]
         },
@@ -585820,7 +586145,8 @@
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-confirmed-electricity-feedback",
-          "release-0.5-native-staff-control-targets"
+          "release-0.5-native-staff-control-targets",
+          "release-0.5-invoice-response-feedback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -586016,11 +586342,11 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.test.tsx",
-              "sha256": "abb2c3982d121d6de23cc5c88de4a6b76df614452c4c5a6102e9eaef7069c4ba"
+              "sha256": "e4d0f3f13582847e959a642360089561b7c1d7657538394d8ddef962ee397c37"
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "2e494a28f511bdedce850ee36fcf7b1bea985a2c6da11ae95994af43a2a49d2f"
+              "sha256": "8574d79e67a5eb5369d64f24cfa443ae3b4925c9e37ed750bb2defc9b6adeaa2"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -587447,6 +587773,11 @@
               "batch": "release-0.5-native-staff-control-targets",
               "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
+            },
+            {
+              "batch": "release-0.5-invoice-response-feedback",
+              "base_commit": "a27bfb6aca1393b091d9e63d4ce00ad7a2eae457",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-response-feedback/invoice-response-feedback-proof.json"
             }
           ]
         },
@@ -587521,7 +587852,8 @@
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-confirmed-electricity-feedback",
-          "release-0.5-native-staff-control-targets"
+          "release-0.5-native-staff-control-targets",
+          "release-0.5-invoice-response-feedback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -587717,11 +588049,11 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.test.tsx",
-              "sha256": "abb2c3982d121d6de23cc5c88de4a6b76df614452c4c5a6102e9eaef7069c4ba"
+              "sha256": "e4d0f3f13582847e959a642360089561b7c1d7657538394d8ddef962ee397c37"
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "2e494a28f511bdedce850ee36fcf7b1bea985a2c6da11ae95994af43a2a49d2f"
+              "sha256": "8574d79e67a5eb5369d64f24cfa443ae3b4925c9e37ed750bb2defc9b6adeaa2"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -589148,6 +589480,11 @@
               "batch": "release-0.5-native-staff-control-targets",
               "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
+            },
+            {
+              "batch": "release-0.5-invoice-response-feedback",
+              "base_commit": "a27bfb6aca1393b091d9e63d4ce00ad7a2eae457",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-response-feedback/invoice-response-feedback-proof.json"
             }
           ]
         },
@@ -589222,7 +589559,8 @@
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-confirmed-electricity-feedback",
-          "release-0.5-native-staff-control-targets"
+          "release-0.5-native-staff-control-targets",
+          "release-0.5-invoice-response-feedback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -589418,11 +589756,11 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.test.tsx",
-              "sha256": "abb2c3982d121d6de23cc5c88de4a6b76df614452c4c5a6102e9eaef7069c4ba"
+              "sha256": "e4d0f3f13582847e959a642360089561b7c1d7657538394d8ddef962ee397c37"
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "2e494a28f511bdedce850ee36fcf7b1bea985a2c6da11ae95994af43a2a49d2f"
+              "sha256": "8574d79e67a5eb5369d64f24cfa443ae3b4925c9e37ed750bb2defc9b6adeaa2"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -590849,6 +591187,11 @@
               "batch": "release-0.5-native-staff-control-targets",
               "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
+            },
+            {
+              "batch": "release-0.5-invoice-response-feedback",
+              "base_commit": "a27bfb6aca1393b091d9e63d4ce00ad7a2eae457",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-response-feedback/invoice-response-feedback-proof.json"
             }
           ]
         },
@@ -590923,7 +591266,8 @@
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-confirmed-electricity-feedback",
-          "release-0.5-native-staff-control-targets"
+          "release-0.5-native-staff-control-targets",
+          "release-0.5-invoice-response-feedback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -591119,11 +591463,11 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.test.tsx",
-              "sha256": "abb2c3982d121d6de23cc5c88de4a6b76df614452c4c5a6102e9eaef7069c4ba"
+              "sha256": "e4d0f3f13582847e959a642360089561b7c1d7657538394d8ddef962ee397c37"
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "2e494a28f511bdedce850ee36fcf7b1bea985a2c6da11ae95994af43a2a49d2f"
+              "sha256": "8574d79e67a5eb5369d64f24cfa443ae3b4925c9e37ed750bb2defc9b6adeaa2"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -592550,6 +592894,11 @@
               "batch": "release-0.5-native-staff-control-targets",
               "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
+            },
+            {
+              "batch": "release-0.5-invoice-response-feedback",
+              "base_commit": "a27bfb6aca1393b091d9e63d4ce00ad7a2eae457",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-response-feedback/invoice-response-feedback-proof.json"
             }
           ]
         },
@@ -688762,15 +689111,15 @@
             },
             {
               "path": "apps/web/e2e/manual-invoice.spec.ts",
-              "sha256": "01a5c23ea548e7a3e3ba62bddf1477480ff7654b2cc7307965d7750cb43ba1ed"
+              "sha256": "bbe3704042000cca9aaa2e52270d7a6f588ca5d9086b6fd99bd483ab5d943f70"
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.test.tsx",
-              "sha256": "abb2c3982d121d6de23cc5c88de4a6b76df614452c4c5a6102e9eaef7069c4ba"
+              "sha256": "e4d0f3f13582847e959a642360089561b7c1d7657538394d8ddef962ee397c37"
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "2e494a28f511bdedce850ee36fcf7b1bea985a2c6da11ae95994af43a2a49d2f"
+              "sha256": "8574d79e67a5eb5369d64f24cfa443ae3b4925c9e37ed750bb2defc9b6adeaa2"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -688942,7 +689291,7 @@
             },
             {
               "path": "apps/web/e2e/invoice-corrections.spec.ts",
-              "sha256": "1ff1a034cc4dd147e4cdba54c3046eb6cfe6ecb47da225fc889a26b61130240d"
+              "sha256": "dda46448d56144f30cacdbae493113b774650bb0fad0fcd9a3fba6128faa8906"
             },
             {
               "path": "apps/web/e2e/invoice-customer-deadline.spec.ts",
@@ -692560,6 +692909,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-invoice-response-feedback",
+              "base_commit": "a27bfb6aca1393b091d9e63d4ce00ad7a2eae457",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-response-feedback/invoice-response-feedback-proof.json"
             }
           ]
         },
@@ -692603,7 +692957,8 @@
           "release-0.5-staff-confirmation-fixtures",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-invoice-response-feedback"
         ]
       }
     },
@@ -704909,7 +705264,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "The 2,976-cell populated width matrix, native staff controls and AI navigation repair are recorded. Profile, address, invoice, wallet and saving cases now provide scoped command feedback evidence. Remaining text, conditional UI and shared command adoption still gate acceptance."
+        "The populated layout matrix, native staff controls and AI navigation repair are recorded. The new source confirms feedback across current profile/address editors, manual invoice and scoped order journeys. Remaining text, conditional UI and other command adoption are open."
       ],
       "owner": null,
       "depends_on": [],
@@ -704951,7 +705306,8 @@
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-native-staff-control-targets",
-          "release-0.5-settings-response-feedback"
+          "release-0.5-settings-response-feedback",
+          "release-0.5-invoice-response-feedback"
         ]
       }
     },
@@ -704970,7 +705326,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Current command feedback passed 22 scoped units, 40 Chromium and Safari cases and all 98 production gzip limits. Electricity ordering was 254.89 KB gzip against 255 KB. The exact earlier combined gate at a24ab647 passed with 1,036 browser cases and 85.11% critical web branches. Renew combined checks on final release sources."
+        "The manual invoice feedback candidate passed 25 unit cases, 32 native browser cases and all 98 production gzip limits. Electricity ordering was 254.91 KB gzip against 255 KB. Final combined evidence and candidate accessibility acceptance remain required."
       ],
       "owner": null,
       "depends_on": [],
@@ -705011,7 +705367,8 @@
           "release-0.5-confirmed-electricity-feedback",
           "release-0.5-native-staff-control-targets",
           "release-0.5-ai-tab-intrinsic-widths",
-          "release-0.5-settings-response-feedback"
+          "release-0.5-settings-response-feedback",
+          "release-0.5-invoice-response-feedback"
         ]
       }
     },
@@ -764395,7 +764752,116 @@
       ],
       "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-settings-response-feedback/settings-feedback-renewed-bindings.json",
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-settings-response-feedback",
-      "release_disposition": "Final candidate and owner policy gates remain open."
+      "release_disposition": "Final candidate and owner policy gates remain open.",
+      "push_receipt": {
+        "local_sha": "a27bfb6aca1393b091d9e63d4ce00ad7a2eae457",
+        "remote_sha": "a27bfb6aca1393b091d9e63d4ce00ad7a2eae457",
+        "verified_at": "2026-11-07T17:10:06+00:00"
+      }
+    },
+    "release-0.5-invoice-response-feedback": {
+      "batch": "release-0.5-invoice-response-feedback",
+      "base_commit": "a27bfb6aca1393b091d9e63d4ce00ad7a2eae457",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.11.01.03",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "accepted_task_keys": [],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.11.01.03",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/invoice-corrections.spec.ts",
+          "sha256": "dda46448d56144f30cacdbae493113b774650bb0fad0fcd9a3fba6128faa8906"
+        },
+        {
+          "path": "apps/web/e2e/manual-invoice.spec.ts",
+          "sha256": "bbe3704042000cca9aaa2e52270d7a6f588ca5d9086b6fd99bd483ab5d943f70"
+        },
+        {
+          "path": "apps/web/src/components/ManualInvoiceForm.test.tsx",
+          "sha256": "e4d0f3f13582847e959a642360089561b7c1d7657538394d8ddef962ee397c37"
+        },
+        {
+          "path": "apps/web/src/components/ManualInvoiceForm.tsx",
+          "sha256": "8574d79e67a5eb5369d64f24cfa443ae3b4925c9e37ed750bb2defc9b6adeaa2"
+        }
+      ],
+      "checks": [
+        "Verified public validation response and owned form fields before showing a localized error. Review rejection restores field focus and allows correction before any issue command. An approved receipt produces a success toast while the original amount and request-body assertions remain in force.",
+        "25 affected unit cases and 32 Chromium and Safari cases passed across the two bound reports. Eight manual invoice cases passed in the first run. Its older correction fixture left the required financial confirmation unchecked. The obsolete run was stopped after 10 failures, with two interrupted and 12 unrun correction cases. All 24 corrected cases passed on the same compiled assets, with the original financial assertions and an explicit disabled-before-acknowledgement check. Production build, format, changed-file lint, web typecheck and all 98 gzip limits passed."
+      ],
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-response-feedback/invoice-response-feedback-proof.json",
+      "source_scope_proof_sha256": "92f27ae1d102eba5c5d2b36dc972c04d2dcb35335b2b4c6369d623231409c2f3",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-response-feedback/invoice-response-feedback.patch",
+      "renewed_task_keys": [
+        "04-invoices-wallet-contracts.md#T-04.1.02.01",
+        "04-invoices-wallet-contracts.md#T-04.1.02.02",
+        "04-invoices-wallet-contracts.md#T-04.1.02.03",
+        "04-invoices-wallet-contracts.md#T-04.1.02.04",
+        "04-invoices-wallet-contracts.md#T-04.1.02.05",
+        "04-invoices-wallet-contracts.md#T-04.1.02.06",
+        "04-invoices-wallet-contracts.md#T-04.1.02.07",
+        "04-invoices-wallet-contracts.md#T-04.1.02.08",
+        "04-invoices-wallet-contracts.md#T-04.1.02.09",
+        "04-invoices-wallet-contracts.md#T-04.1.03.01",
+        "04-invoices-wallet-contracts.md#T-04.1.03.02",
+        "04-invoices-wallet-contracts.md#T-04.1.03.03",
+        "04-invoices-wallet-contracts.md#T-04.1.03.04",
+        "04-invoices-wallet-contracts.md#T-04.1.04.01",
+        "04-invoices-wallet-contracts.md#T-04.1.04.02",
+        "04-invoices-wallet-contracts.md#T-04.1.04.03",
+        "04-invoices-wallet-contracts.md#T-04.1.04.04",
+        "04-invoices-wallet-contracts.md#T-04.1.04.05",
+        "04-invoices-wallet-contracts.md#T-04.1.04.06",
+        "04-invoices-wallet-contracts.md#T-04.1.05.02",
+        "04-invoices-wallet-contracts.md#T-04.1.05.03",
+        "04-invoices-wallet-contracts.md#T-04.1.05.04",
+        "07-ui-ux-design.md#T-07.05.01.06",
+        "07-ui-ux-design.md#T-07.05.01.10",
+        "07-ui-ux-design.md#T-07.05.02.02",
+        "07-ui-ux-design.md#T-07.10.01.01",
+        "07-ui-ux-design.md#T-07.10.01.02",
+        "07-ui-ux-design.md#T-07.10.01.03",
+        "07-ui-ux-design.md#T-07.10.01.04",
+        "07-ui-ux-design.md#T-07.10.01.05",
+        "07-ui-ux-design.md#T-07.10.01.06",
+        "07-ui-ux-design.md#T-07.10.02.01",
+        "07-ui-ux-design.md#T-07.10.02.02",
+        "07-ui-ux-design.md#T-07.10.02.03",
+        "07-ui-ux-design.md#T-07.10.02.04",
+        "07-ui-ux-design.md#T-07.10.02.05",
+        "07-ui-ux-design.md#T-07.11.01.01",
+        "07-ui-ux-design.md#T-07.11.01.02",
+        "07-ui-ux-design.md#T-07.11.01.04",
+        "07-ui-ux-design.md#T-07.11.01.05",
+        "07-ui-ux-design.md#T-07.11.02.01",
+        "07-ui-ux-design.md#T-07.11.02.02",
+        "07-ui-ux-design.md#T-07.11.02.03",
+        "07-ui-ux-design.md#T-07.11.02.04",
+        "07-ui-ux-design.md#T-07.11.02.05",
+        "07-ui-ux-design.md#T-07.12.01.01",
+        "07-ui-ux-design.md#T-07.12.01.02",
+        "07-ui-ux-design.md#T-07.12.01.03",
+        "07-ui-ux-design.md#T-07.12.01.04",
+        "07-ui-ux-design.md#T-07.12.01.06",
+        "07-ui-ux-design.md#T-07.12.01.07",
+        "07-ui-ux-design.md#T-07.13.01.01",
+        "07-ui-ux-design.md#T-07.13.01.02",
+        "07-ui-ux-design.md#T-07.13.01.03",
+        "07-ui-ux-design.md#T-07.13.01.04",
+        "07-ui-ux-design.md#T-07.13.01.05",
+        "07-ui-ux-design.md#T-07.13.01.06",
+        "07-ui-ux-design.md#T-07.13.01.07",
+        "release-readiness#R-02.01"
+      ],
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-response-feedback/invoice-feedback-renewed-bindings.json",
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-response-feedback",
+      "release_disposition": "No v0.5.0 release until remaining effective criteria and owner decisions are accepted."
     }
   },
   "historical_improvements": [
