@@ -4,6 +4,7 @@ import AxeBuilder from '@axe-core/playwright';
 import { test, expect, type Page } from './coverage-fixture';
 import { t } from '@barghsa/i18n/app';
 import { fullNavigation } from './navigation-fixture';
+import { checkRoutePresentation } from './route-presentation';
 
 type Mode = 'simple' | 'advanced';
 type Locale = 'en' | 'fa';
@@ -585,7 +586,7 @@ for (const locale of ['en', 'fa'] as const)
   for (const mode of ['simple', 'advanced'] as const) {
     test(`${mode} final review keeps inputs read-only and preserves review on failed edits (${locale})`, async ({
       page,
-    }) => {
+    }, info) => {
       const state = await fixture(page, mode, locale, 5);
       await page.goto(`${path(mode)}?step=5`);
       const sections = page.locator('[data-review-section]');
@@ -594,6 +595,7 @@ for (const locale of ['en', 'fa'] as const)
       await expect(page.locator('[data-review-section=address]')).toContainText(
         address.fullAddress
       );
+      await checkRoutePresentation(page, info, locale);
       const quantity = page.locator(
         `[data-review-section=${mode === 'simple' ? 'quantity' : 'products'}]`
       );
@@ -608,6 +610,7 @@ for (const locale of ['en', 'fa'] as const)
       await quantity.getByRole('button').click();
       await expect(page).toHaveURL(/step=2$/);
       await expect(field(page, mode)).toHaveValue('100');
+      await checkRoutePresentation(page, info, locale);
       await field(page, mode).fill('120');
       await button(page, 'electricity.order.next', locale).click();
       await button(page, 'electricity.order.next', locale).click();

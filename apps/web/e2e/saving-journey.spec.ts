@@ -3,6 +3,8 @@ import { contractText as contractCopy } from '@barghsa/i18n/contracts';
 import { tSavingStaffReview as savingReviewCopy } from '@barghsa/i18n/saving-staff-review';
 import { t as appCopy } from '@barghsa/i18n/app';
 import { test, expect } from './coverage-fixture';
+import { approveRiskConfirmation } from './confirmation-fixture';
+import { checkRoutePresentation } from './route-presentation';
 
 const profileId = '11111111-1111-4111-8111-111111111111';
 const planId = '22222222-2222-4222-8222-222222222222';
@@ -26,7 +28,7 @@ const stageNames = [
 for (const locale of ['en', 'fa'] as const)
   test(`customer saves a saving order, submits the reviewed quote, and tracks fulfillment (${locale})`, async ({
     page,
-  }) => {
+  }, info) => {
     test.setTimeout(60_000);
     const drafts: Array<Record<string, unknown>> = [];
     const submissions: Array<Record<string, unknown>> = [];
@@ -463,6 +465,7 @@ for (const locale of ['en', 'fa'] as const)
         name: locale === 'fa' ? 'طرح صرفه‌جویی خانه' : 'Home saving plan',
       })
     ).toBeVisible();
+    await checkRoutePresentation(page, info, locale);
     await page.getByRole('link', { name: savingCopy('startOrder', locale) }).click();
     const next = page.getByRole('button', { name: savingCopy('next', locale), exact: true });
     await page
@@ -533,8 +536,12 @@ for (const locale of ['en', 'fa'] as const)
       locale === 'fa' ? 'دستگاه استعلام‌شده' : 'Quoted efficient device'
     );
     await expect(financialReview).toContainText('The quoted agreement body.');
+    await checkRoutePresentation(page, info, locale);
     await page.getByRole('checkbox', { name: savingCopy('submitForReview', locale) }).check();
-    await page.getByRole('button', { name: savingCopy('submit', locale), exact: true }).click();
+    const submit = page.getByRole('button', { name: savingCopy('submit', locale), exact: true });
+    await expect(submit).toBeDisabled();
+    await approveRiskConfirmation(page, locale, 'financial');
+    await submit.click();
     await expect(page).toHaveURL(new RegExp(`/savings/orders/${savingOrderId}$`));
     await expect(page.locator(`time[datetime="${submittedAt}"]`).first()).toHaveText(
       new Intl.DateTimeFormat(locale, {
@@ -573,10 +580,12 @@ for (const locale of ['en', 'fa'] as const)
       savingReviewCopy('staffReviewOutcome.publish_contract', locale)
     );
     await expect(page.getByRole('dialog')).toContainText('The customer accepts this plan.');
-    await page
+    const approve = page
       .getByRole('dialog')
-      .getByRole('button', { name: appCopy('team.confirm', locale) })
-      .click();
+      .getByRole('button', { name: appCopy('team.confirm', locale), exact: true });
+    await expect(approve).toBeDisabled();
+    await approveRiskConfirmation(page, locale, 'financial');
+    await approve.click();
     await page
       .getByRole('button', { name: savingCopy('fulfillment', locale), exact: true })
       .click();

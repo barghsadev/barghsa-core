@@ -663,8 +663,11 @@ export function SolarRequestPage() {
             >
               {step === 1 && (
                 <>
-                  <fieldset className="grid gap-3 sm:grid-cols-2">
-                    <legend className="mb-3 font-semibold">{copy('instruction')}</legend>
+                  <fieldset className="grid min-w-0 gap-3 sm:grid-cols-2">
+                    <legend className="sr-only">{copy('instruction')}</legend>
+                    <p aria-hidden="true" className="break-words font-semibold sm:col-span-2">
+                      {copy('instruction')}
+                    </p>
                     {(['building_apartment', 'non_household'] as const).map((type) => (
                       <label
                         key={type}
