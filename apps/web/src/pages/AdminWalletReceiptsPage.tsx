@@ -46,6 +46,7 @@ import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useStaffQueryRead } from '../hooks/useStaffQueryRead.js';
 import { useCommandFeedback } from '../hooks/useCommandFeedback.js';
 import { serverListParams } from '../lib/query-keys.js';
+import { readWithDeadline } from '../lib/server-query-client.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import WalletTopUpLimitConfigPanel from '../components/WalletTopUpLimitConfigPanel.js';
 
@@ -509,17 +510,21 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
       setAllocationLoading(false);
       return;
     }
-    let cancelled = false;
+    const controller = new AbortController();
     const owner = workGeneration.current;
     setAllocationError(null);
     setAllocationLoading(true);
     void (async () => {
       try {
-        const res = await fetch(
-          `/api/admin/wallet/bank-receipt-top-ups/${selected.transactionId}/review${trimmed ? `?invoiceId=${encodeURIComponent(trimmed)}` : ''}`
-        );
-        const data: unknown = await res.json().catch(() => null);
-        if (cancelled || owner !== workGeneration.current || accessDenied.current) return;
+        const [res, data] = await readWithDeadline(controller.signal, async (signal) => {
+          const response = await fetch(
+            `/api/admin/wallet/bank-receipt-top-ups/${selected.transactionId}/review${trimmed ? `?invoiceId=${encodeURIComponent(trimmed)}` : ''}`,
+            { signal }
+          );
+          return [response, (await response.json().catch(() => null)) as unknown] as const;
+        });
+        if (controller.signal.aborted || owner !== workGeneration.current || accessDenied.current)
+          return;
         if ([401, 403].includes(res.status)) {
           denyAccess();
           return;
@@ -563,16 +568,15 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
             : null
         );
       } catch {
-        if (!cancelled && owner === workGeneration.current) {
+        if (!controller.signal.aborted && owner === workGeneration.current) {
           setAllocationError(t('admin.walletReceipts.review.error', locale));
         }
       } finally {
-        if (!cancelled && owner === workGeneration.current) setAllocationLoading(false);
+        if (!controller.signal.aborted && owner === workGeneration.current)
+          setAllocationLoading(false);
       }
     })();
-    return () => {
-      cancelled = true;
-    };
+    return () => controller.abort();
   }, [invoiceId, selected, locale, reviewRevision]);
 
   useEffect(() => {

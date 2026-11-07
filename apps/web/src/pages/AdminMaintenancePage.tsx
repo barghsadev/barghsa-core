@@ -16,6 +16,7 @@ import { tMaintenance } from '@barghsa/i18n/maintenance';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
+import { readWithDeadline } from '../lib/server-query-client.js';
 import {
   isMaintenanceList,
   maintenanceDraft,
@@ -89,12 +90,14 @@ export default function AdminMaintenancePage() {
     const controller = new AbortController();
     reading.current = true;
     setState('loading');
-    void fetch('/api/admin/maintenance', { credentials: 'include', signal: controller.signal })
-      .then(async (response) => {
-        if (!response.ok)
-          throw new Error([401, 403].includes(response.status) ? 'denied' : 'error');
-        const result: unknown = await response.json();
-        if (!isMaintenanceList(result)) throw new Error('error');
+    void readWithDeadline(controller.signal, async (signal) => {
+      const response = await fetch('/api/admin/maintenance', { credentials: 'include', signal });
+      if (!response.ok) throw new Error([401, 403].includes(response.status) ? 'denied' : 'error');
+      const result: unknown = await response.json();
+      if (!isMaintenanceList(result)) throw new Error('error');
+      return result;
+    })
+      .then((result) => {
         if (!controller.signal.aborted) {
           reading.current = false;
           setSettings(result);

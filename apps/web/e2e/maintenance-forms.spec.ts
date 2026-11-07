@@ -1,5 +1,6 @@
 import { test, expect, type Page } from './coverage-fixture';
 import { crmShell } from './crm-shell-fixture';
+import { approveRiskConfirmation } from './confirmation-fixture';
 import { tMaintenance } from '@barghsa/i18n/maintenance';
 import { t } from '@barghsa/i18n/admin-ui';
 import AxeBuilder from '@axe-core/playwright';
@@ -67,6 +68,11 @@ async function setup(page: Page, locale: 'en' | 'fa') {
   const word = (key: string) => tMaintenance(key, locale);
   const confirm = () =>
     page.getByRole('dialog').getByRole('button', { name: t('team.confirm', locale), exact: true });
+  const confirmPause = async () => {
+    await expect(confirm()).toBeDisabled();
+    await approveRiskConfirmation(page, locale, 'destructive');
+    await confirm().click();
+  };
   await page.goto('/admin/maintenance');
   await expect(page.getByRole('heading', { name: word('adminTitle'), exact: true })).toBeVisible();
   await expect(
@@ -79,6 +85,7 @@ async function setup(page: Page, locale: 'en' | 'fa') {
   return {
     word,
     confirm,
+    confirmPause,
     save: (value: MaintenanceSetting) => {
       current = value;
     },
@@ -120,7 +127,7 @@ for (const locale of ['en', 'fa'] as const) {
   test(`maintenance validates raw fields and owns an account-zone save (${locale})`, async ({
     page,
   }, info) => {
-    const { word, confirm, save, row } = await setup(page, locale);
+    const { word, confirmPause, save, row } = await setup(page, locale);
     const writes: Record<string, unknown>[] = [];
     let release!: () => void;
     const pending = new Promise<void>((resolve) => {
@@ -170,7 +177,7 @@ for (const locale of ['en', 'fa'] as const) {
       page.getByRole('button', { name: word('manage'), includeHidden: true }).first()
     ).toBeDisabled();
     await inspect(page, locale, info.project.name, 'confirmation');
-    await confirm().click();
+    await confirmPause();
     await expect.poll(() => writes.length).toBe(1);
     await dialog.locator('form').evaluate((form: HTMLFormElement) => {
       form.requestSubmit();
@@ -185,13 +192,20 @@ for (const locale of ['en', 'fa'] as const) {
       expectedVersion: 1,
     });
     release();
-    await expect(page.getByText(word('saved'), { exact: true })).toBeVisible();
+    await expect(
+      page
+        .getByTestId('admin-settings-layout')
+        .getByRole('status')
+        .filter({
+          hasText: word('saved'),
+        })
+    ).toHaveText(word('saved'));
     await expect(fa).toHaveCount(0);
   });
   test(`maintenance preserves server feedback and requires review after an unknown save (${locale})`, async ({
     page,
   }, info) => {
-    const { word, confirm, row, save, read } = await setup(page, locale);
+    const { word, confirm, confirmPause, row, save, read } = await setup(page, locale);
     const writes: Record<string, unknown>[] = [];
     await page.route('**/api/admin/maintenance/electricity_checkout', async (route) => {
       const body = route.request().postDataJSON();
@@ -217,13 +231,13 @@ for (const locale of ['en', 'fa'] as const) {
     const owner = page.getByLabel(word('owner'), { exact: true });
     await owner.fill('  Revised Operations  ');
     await page.getByRole('button', { name: word('save'), exact: true }).click();
-    await confirm().click();
+    await confirmPause();
     await expect(page.getByRole('dialog')).toHaveCount(0);
     await expect(owner).toBeFocused();
     await expect(owner).toHaveValue('  Revised Operations  ');
     await expect(owner).toHaveAttribute('aria-invalid', 'true');
     await page.getByRole('button', { name: word('save'), exact: true }).click();
-    await confirm().click();
+    await confirmPause();
     await expect(page.getByText(word('unconfirmed'), { exact: true })).toBeVisible();
     await expect(page.getByText(word('loadError'), { exact: true })).toBeVisible();
     await expect(owner).toHaveValue('  Revised Operations  ');
@@ -245,7 +259,14 @@ for (const locale of ['en', 'fa'] as const) {
     await page.getByRole('checkbox', { name: word('active'), exact: true }).uncheck();
     await page.getByRole('button', { name: word('save'), exact: true }).click();
     await confirm().click();
-    await expect(page.getByText(word('saved'), { exact: true })).toBeVisible();
+    await expect(
+      page
+        .getByTestId('admin-settings-layout')
+        .getByRole('status')
+        .filter({
+          hasText: word('saved'),
+        })
+    ).toHaveText(word('saved'));
     expect(writes[2]).toEqual({
       active: false,
       reason: null,
@@ -283,5 +304,35 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(page.getByText(word('denied'), { exact: true })).toBeVisible();
     await expect(owner).toHaveCount(0);
     await expect(page.getByText('Other operator')).toHaveCount(0);
+  });
+
+  test(`maintenance retries a stalled refresh without writing the retained draft (${locale})`, async ({
+    page,
+  }) => {
+    await page.clock.install();
+    const { word } = await setup(page, locale);
+    let reads = 0;
+    let writes = 0;
+    await page.route('**/api/admin/maintenance', (route) => {
+      if (++reads > 1) return route.fallback();
+    });
+    await page.route('**/api/admin/maintenance/electricity_checkout', (route) => {
+      writes++;
+      return route.fulfill({ status: 500 });
+    });
+    const owner = page.getByLabel(word('owner'), { exact: true });
+    const refresh = page.getByRole('button', { name: word('refresh'), exact: true });
+    await owner.fill('Keep this private draft');
+    await refresh.click();
+    await expect.poll(() => reads).toBe(1);
+    await page.clock.fastForward(15_001);
+    await expect(page.getByText(word('loadError'), { exact: true })).toBeVisible();
+    await expect(owner).toBeDisabled();
+    await expect(owner).toHaveValue('Keep this private draft');
+    await refresh.click();
+    await expect(owner).toBeEnabled();
+    await expect(owner).toHaveValue('Keep this private draft');
+    expect(reads).toBe(2);
+    expect(writes).toBe(0);
   });
 }

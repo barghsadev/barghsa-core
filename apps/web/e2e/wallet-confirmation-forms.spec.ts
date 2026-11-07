@@ -68,6 +68,52 @@ async function shell(page: Page, locale: 'en' | 'fa', darkMode: boolean, emergen
   );
 }
 
+for (const locale of ['en', 'fa'] as const)
+  test(`wallet retries a stalled allocation review without approving it (${locale})`, async ({
+    page,
+  }) => {
+    await page.clock.install();
+    await shell(page, locale, false, false);
+    const reviewed: Array<string | null> = [];
+    let writes = 0;
+    await page.route(`**${base}/${receiptId}/review*`, (route) => {
+      const invoice = new URL(route.request().url()).searchParams.get('invoiceId');
+      reviewed.push(invoice);
+      if (invoice && reviewed.length === 2) return;
+      return route.fulfill({ json: bankReceiptReview(receiptId, invoice, profileId) });
+    });
+    await page.route(`**${base}/${receiptId}/confirm`, (route) => {
+      writes++;
+      return route.fulfill({ status: 500 });
+    });
+    await page.goto('/admin/wallet-receipts');
+    const confirm = page.getByTestId('wallet-receipt-confirm');
+    const invoice = page.locator('#apply-invoice-id');
+    const rejection = page.locator('#reject-reason');
+    await expect(confirm).toBeEnabled();
+    await rejection.fill('Keep this separate draft');
+    const input = ` ${invoiceId.toUpperCase()} `;
+    await invoice.fill(input);
+    await expect.poll(() => reviewed).toEqual([null, invoiceId]);
+    await expect(confirm).toBeDisabled();
+    await page.clock.fastForward(15_001);
+    await expect(
+      page.getByRole('alert').filter({ hasText: text('admin.walletReceipts.review.error', locale) })
+    ).toBeVisible();
+    await expect(confirm).toBeDisabled();
+    await page
+      .getByRole('button', {
+        name: text('admin.walletReceipts.review.refresh', locale),
+        exact: true,
+      })
+      .click();
+    await expect(confirm).toBeEnabled();
+    await expect(invoice).toHaveValue(input);
+    await expect(rejection).toHaveValue('Keep this separate draft');
+    expect(reviewed).toEqual([null, invoiceId, invoiceId]);
+    expect(writes).toBe(0);
+  });
+
 for (const emergency of [false, true]) {
   for (const locale of ['en', 'fa'] as const) {
     for (const darkMode of [false, true]) {
