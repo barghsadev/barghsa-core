@@ -1,6 +1,7 @@
 import AxeBuilder from '@axe-core/playwright';
 import { test, expect, type Page } from './coverage-fixture';
 import { fullNavigation } from './navigation-fixture';
+import { measureControlContrast } from './control-contrast';
 
 async function authenticatedShell(page: Page) {
   await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
@@ -130,6 +131,7 @@ test('the available verification action has readable text in both themes', async
   );
   await page.goto('/tickets');
   const verify = page.getByRole('button', { name: /^(تأیید خودکار|Auto-verify)$/ });
+  const dismiss = page.getByRole('button', { name: /^(بستن|Dismiss)$/ });
   await expect(verify).toBeEnabled();
   for (const dark of [false, true]) {
     await page.evaluate((mode) => document.documentElement.classList.toggle('dark', mode), dark);
@@ -141,6 +143,23 @@ test('the available verification action has readable text in both themes', async
           .analyze()
       ).violations
     ).toEqual([]);
+    for (const high of [false, true]) {
+      await page.locator('html').evaluate((root, enabled) => {
+        if (enabled) root.dataset.contrast = 'more';
+        else delete root.dataset.contrast;
+      }, high);
+      const scope = `verification dismiss, dark=${dark}, high=${high}`;
+      expect
+        .soft(await measureControlContrast(dismiss, 'text'), `${scope}, rest`)
+        .toBeGreaterThanOrEqual(4.5);
+      await dismiss.hover();
+      expect(await dismiss.evaluate((element) => element.matches(':hover'))).toBe(true);
+      expect
+        .soft(await measureControlContrast(dismiss, 'text'), `${scope}, hover`)
+        .toBeGreaterThanOrEqual(4.5);
+      await page.mouse.move(0, 0);
+    }
+    await page.locator('html').evaluate((root) => delete root.dataset.contrast);
   }
 });
 

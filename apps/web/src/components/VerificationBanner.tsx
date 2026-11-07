@@ -288,7 +288,7 @@ function OwnedVerificationBanner({
           )}
           <button
             onClick={() => setDismissed(bannerKey)}
-            className="text-warning hover:text-amber-800"
+            className="text-warning hover:underline"
             aria-label={t('verification.banner.dismiss', locale)}
           >
             ✕

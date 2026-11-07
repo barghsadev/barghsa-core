@@ -5,7 +5,9 @@ import AxeBuilder from '@axe-core/playwright';
 import { test, expect, type Locator } from './coverage-fixture';
 import { tSaving } from '@barghsa/i18n/saving';
 import { providerText } from '@barghsa/i18n/providers';
+import { t } from '@barghsa/i18n/admin-ui';
 import { measureControlContrast } from './control-contrast';
+import { approveRiskConfirmation } from './confirmation-fixture';
 
 const pages = [
   '/dashboard',
@@ -103,11 +105,34 @@ for (const locale of ['en', 'fa'] as const)
         lastTestStatus: 'passed',
         maskedConfig: { from_email: 'mail@example.test' },
       };
+      const disabled = { ...provider, id: 'theme-disabled-email', status: 'disabled' };
+      const restored = {
+        ...provider,
+        id: 'theme-restored-email',
+        label: 'Restored provider',
+        status: 'active',
+      };
+      let rollbackAttempts = 0;
+      await page.route(`**/api/admin/email-providers/${disabled.id}/rollback`, (route) => {
+        expect(route.request().method()).toBe('POST');
+        rollbackAttempts++;
+        return rollbackAttempts === 1
+          ? route.fulfill({ status: 400, json: {} })
+          : route.fulfill({ json: restored });
+      });
       await page.route('**/api/admin/email-providers', (route) =>
         route.fulfill({
           json: [
             provider,
-            { ...provider, id: 'theme-active-email', label: 'Active provider', status: 'active' },
+            disabled,
+            rollbackAttempts >= 2
+              ? restored
+              : {
+                  ...provider,
+                  id: 'theme-active-email',
+                  label: 'Active provider',
+                  status: 'active',
+                },
           ],
         })
       );
@@ -162,6 +187,47 @@ for (const locale of ['en', 'fa'] as const)
             })
           );
       }
+
+      const rollback = async () => {
+        await page
+          .getByRole('button', {
+            name: providerText('admin.providers.rollback', locale),
+            exact: true,
+          })
+          .click();
+        const confirm = page
+          .getByRole('dialog')
+          .getByRole('button', { name: t('team.confirm', locale), exact: true });
+        await expect(confirm).toBeDisabled();
+        await approveRiskConfirmation(page, locale, 'destructive');
+        await confirm.click();
+      };
+      for (const [kind, label] of [
+        ['error', t('admin.notifications.dismissError', locale)],
+        ['notice', providerText('admin.providers.dismissNotice', locale)],
+      ]) {
+        await rollback();
+        const dismiss = page.getByRole('button', { name: label, exact: true });
+        await expect(dismiss).toBeVisible();
+        for (const high of [false, true]) {
+          await setHighContrast(high);
+          expect
+            .soft(await measureControlContrast(dismiss, 'text'), `${kind} at rest, high=${high}`)
+            .toBeGreaterThanOrEqual(4.5);
+          await dismiss.hover();
+          expect(await dismiss.evaluate((element) => element.matches(':hover'))).toBe(true);
+          expect
+            .soft(await measureControlContrast(dismiss, 'text'), `${kind} hovered, high=${high}`)
+            .toBeGreaterThanOrEqual(4.5);
+          await page.mouse.move(0, 0);
+        }
+        await dismiss.click();
+        await expect(dismiss).toHaveCount(0);
+      }
+      await expect(
+        page.getByText(restored.label, { exact: true }).filter({ visible: true })
+      ).toBeVisible();
+      expect(rollbackAttempts).toBe(2);
     });
 
 for (const locale of ['en', 'fa'] as const)

@@ -848,7 +848,7 @@ export default function AdminEmailProvidersPage() {
           {error}
           <button
             onClick={() => setError(null)}
-            className="absolute top-2 end-2 text-destructive hover:text-red-700"
+            className="absolute top-2 end-2 text-destructive hover:underline"
             aria-label={t('admin.notifications.dismissError', uiLocale)}
           >
             ✕
@@ -861,7 +861,7 @@ export default function AdminEmailProvidersPage() {
           {notice}
           <button
             onClick={() => setNotice(null)}
-            className="absolute top-2 end-2 text-success hover:text-green-700"
+            className="absolute top-2 end-2 text-success hover:underline"
             aria-label={providerText('admin.providers.dismissNotice', uiLocale)}
           >
             ✕

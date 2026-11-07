@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-07T23:34:31+00:00",
-  "source_commit": "3e98734f2bf6cc80de4a3fea20620b63beec165b",
+  "updated": "2026-11-07T23:41:53+00:00",
+  "source_commit": "63ea95eee009b4b54c9a9157c9b3f1ffeffe7225",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -30664,11 +30664,11 @@
             },
             {
               "path": "apps/web/e2e/verification-banner.spec.ts",
-              "sha256": "55f874cbc26e0d7e87f831971eaf4cb9f85e996d67357c613bad40331f591601"
+              "sha256": "d4d4881781d88bfbfdf68d762b55b556e534565268c94cb5327a6d9acd3527a3"
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "6f209cdd3460982f97c19fe0034168031a1365688503b29466ced8da242bdd99"
+              "sha256": "ca21efe49d15fc41fc6d366c51da3cb0e7eb7a745812ecb6009d9faafd69b331"
             },
             {
               "path": "apps/web/src/routes/_app/electricity/order.tsx",
@@ -35323,7 +35323,7 @@
             },
             {
               "path": "apps/web/e2e/consumer-theme.spec.ts",
-              "sha256": "41edf8cca123d3f0dd3beeaf2e21c76788747ed5140015ee7f153d07d9e5af7b"
+              "sha256": "96288e2df66975e3fbee97910bd679079b2a0256feac43cf33db45850cd95faa"
             },
             {
               "path": "apps/web/e2e/direction-component.spec.ts",
@@ -35463,7 +35463,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
+              "sha256": "6873870b711e5de43db58e996e918cb52efee03bc0de04dcc0d68c95fa38b5d4"
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
@@ -60038,7 +60038,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "6f209cdd3460982f97c19fe0034168031a1365688503b29466ced8da242bdd99"
+              "sha256": "ca21efe49d15fc41fc6d366c51da3cb0e7eb7a745812ecb6009d9faafd69b331"
             },
             {
               "path": "apps/web/src/components/NotificationBell.tsx",
@@ -63028,7 +63028,7 @@
             },
             {
               "path": "apps/web/e2e/consumer-theme.spec.ts",
-              "sha256": "41edf8cca123d3f0dd3beeaf2e21c76788747ed5140015ee7f153d07d9e5af7b"
+              "sha256": "96288e2df66975e3fbee97910bd679079b2a0256feac43cf33db45850cd95faa"
             },
             {
               "path": "apps/web/e2e/direction-component.spec.ts",
@@ -63152,7 +63152,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
+              "sha256": "6873870b711e5de43db58e996e918cb52efee03bc0de04dcc0d68c95fa38b5d4"
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
@@ -66560,7 +66560,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
+              "sha256": "6873870b711e5de43db58e996e918cb52efee03bc0de04dcc0d68c95fa38b5d4"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -77274,7 +77274,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
+              "sha256": "6873870b711e5de43db58e996e918cb52efee03bc0de04dcc0d68c95fa38b5d4"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -77859,7 +77859,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
+              "sha256": "6873870b711e5de43db58e996e918cb52efee03bc0de04dcc0d68c95fa38b5d4"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -78611,7 +78611,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
+              "sha256": "6873870b711e5de43db58e996e918cb52efee03bc0de04dcc0d68c95fa38b5d4"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -79193,7 +79193,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
+              "sha256": "6873870b711e5de43db58e996e918cb52efee03bc0de04dcc0d68c95fa38b5d4"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -79778,7 +79778,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
+              "sha256": "6873870b711e5de43db58e996e918cb52efee03bc0de04dcc0d68c95fa38b5d4"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -82072,7 +82072,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
+              "sha256": "6873870b711e5de43db58e996e918cb52efee03bc0de04dcc0d68c95fa38b5d4"
             },
             {
               "path": "apps/web/src/pages/AdminFailedNotificationsPage.tsx",
@@ -83021,7 +83021,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
+              "sha256": "6873870b711e5de43db58e996e918cb52efee03bc0de04dcc0d68c95fa38b5d4"
             },
             {
               "path": "apps/web/src/pages/AdminFailedNotificationsPage.tsx",
@@ -83970,7 +83970,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
+              "sha256": "6873870b711e5de43db58e996e918cb52efee03bc0de04dcc0d68c95fa38b5d4"
             },
             {
               "path": "apps/web/src/pages/AdminFailedNotificationsPage.tsx",
@@ -84920,7 +84920,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
+              "sha256": "6873870b711e5de43db58e996e918cb52efee03bc0de04dcc0d68c95fa38b5d4"
             },
             {
               "path": "apps/web/src/pages/AdminFailedNotificationsPage.tsx",
@@ -85869,7 +85869,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
+              "sha256": "6873870b711e5de43db58e996e918cb52efee03bc0de04dcc0d68c95fa38b5d4"
             },
             {
               "path": "apps/web/src/pages/AdminFailedNotificationsPage.tsx",
@@ -86767,7 +86767,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
+              "sha256": "6873870b711e5de43db58e996e918cb52efee03bc0de04dcc0d68c95fa38b5d4"
             },
             {
               "path": "apps/web/src/pages/AdminFailedNotificationsPage.tsx",
@@ -87520,7 +87520,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
+              "sha256": "6873870b711e5de43db58e996e918cb52efee03bc0de04dcc0d68c95fa38b5d4"
             },
             {
               "path": "apps/web/src/pages/AdminFailedNotificationsPage.tsx",
@@ -88182,7 +88182,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
+              "sha256": "6873870b711e5de43db58e996e918cb52efee03bc0de04dcc0d68c95fa38b5d4"
             },
             {
               "path": "apps/web/src/pages/AdminFailedNotificationsPage.tsx",
@@ -437502,7 +437502,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
+              "sha256": "6873870b711e5de43db58e996e918cb52efee03bc0de04dcc0d68c95fa38b5d4"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -491154,7 +491154,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
+              "sha256": "6873870b711e5de43db58e996e918cb52efee03bc0de04dcc0d68c95fa38b5d4"
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
@@ -492913,7 +492913,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "6f209cdd3460982f97c19fe0034168031a1365688503b29466ced8da242bdd99"
+              "sha256": "ca21efe49d15fc41fc6d366c51da3cb0e7eb7a745812ecb6009d9faafd69b331"
             },
             {
               "path": "apps/web/src/components/VersionedSettingsCard.tsx",
@@ -497730,7 +497730,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "6f209cdd3460982f97c19fe0034168031a1365688503b29466ced8da242bdd99"
+              "sha256": "ca21efe49d15fc41fc6d366c51da3cb0e7eb7a745812ecb6009d9faafd69b331"
             },
             {
               "path": "apps/web/src/components/VersionedSettingsCard.tsx",
@@ -498846,7 +498846,7 @@
             },
             {
               "path": "apps/web/e2e/consumer-theme.spec.ts",
-              "sha256": "41edf8cca123d3f0dd3beeaf2e21c76788747ed5140015ee7f153d07d9e5af7b"
+              "sha256": "96288e2df66975e3fbee97910bd679079b2a0256feac43cf33db45850cd95faa"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -499390,7 +499390,7 @@
             },
             {
               "path": "apps/web/e2e/consumer-theme.spec.ts",
-              "sha256": "41edf8cca123d3f0dd3beeaf2e21c76788747ed5140015ee7f153d07d9e5af7b"
+              "sha256": "96288e2df66975e3fbee97910bd679079b2a0256feac43cf33db45850cd95faa"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -499934,7 +499934,7 @@
             },
             {
               "path": "apps/web/e2e/consumer-theme.spec.ts",
-              "sha256": "41edf8cca123d3f0dd3beeaf2e21c76788747ed5140015ee7f153d07d9e5af7b"
+              "sha256": "96288e2df66975e3fbee97910bd679079b2a0256feac43cf33db45850cd95faa"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -500478,7 +500478,7 @@
             },
             {
               "path": "apps/web/e2e/consumer-theme.spec.ts",
-              "sha256": "41edf8cca123d3f0dd3beeaf2e21c76788747ed5140015ee7f153d07d9e5af7b"
+              "sha256": "96288e2df66975e3fbee97910bd679079b2a0256feac43cf33db45850cd95faa"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -501022,7 +501022,7 @@
             },
             {
               "path": "apps/web/e2e/consumer-theme.spec.ts",
-              "sha256": "41edf8cca123d3f0dd3beeaf2e21c76788747ed5140015ee7f153d07d9e5af7b"
+              "sha256": "96288e2df66975e3fbee97910bd679079b2a0256feac43cf33db45850cd95faa"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -501566,7 +501566,7 @@
             },
             {
               "path": "apps/web/e2e/consumer-theme.spec.ts",
-              "sha256": "41edf8cca123d3f0dd3beeaf2e21c76788747ed5140015ee7f153d07d9e5af7b"
+              "sha256": "96288e2df66975e3fbee97910bd679079b2a0256feac43cf33db45850cd95faa"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -502110,7 +502110,7 @@
             },
             {
               "path": "apps/web/e2e/consumer-theme.spec.ts",
-              "sha256": "41edf8cca123d3f0dd3beeaf2e21c76788747ed5140015ee7f153d07d9e5af7b"
+              "sha256": "96288e2df66975e3fbee97910bd679079b2a0256feac43cf33db45850cd95faa"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -502654,7 +502654,7 @@
             },
             {
               "path": "apps/web/e2e/consumer-theme.spec.ts",
-              "sha256": "41edf8cca123d3f0dd3beeaf2e21c76788747ed5140015ee7f153d07d9e5af7b"
+              "sha256": "96288e2df66975e3fbee97910bd679079b2a0256feac43cf33db45850cd95faa"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -503198,7 +503198,7 @@
             },
             {
               "path": "apps/web/e2e/consumer-theme.spec.ts",
-              "sha256": "41edf8cca123d3f0dd3beeaf2e21c76788747ed5140015ee7f153d07d9e5af7b"
+              "sha256": "96288e2df66975e3fbee97910bd679079b2a0256feac43cf33db45850cd95faa"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -503742,7 +503742,7 @@
             },
             {
               "path": "apps/web/e2e/consumer-theme.spec.ts",
-              "sha256": "41edf8cca123d3f0dd3beeaf2e21c76788747ed5140015ee7f153d07d9e5af7b"
+              "sha256": "96288e2df66975e3fbee97910bd679079b2a0256feac43cf33db45850cd95faa"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -504286,7 +504286,7 @@
             },
             {
               "path": "apps/web/e2e/consumer-theme.spec.ts",
-              "sha256": "41edf8cca123d3f0dd3beeaf2e21c76788747ed5140015ee7f153d07d9e5af7b"
+              "sha256": "96288e2df66975e3fbee97910bd679079b2a0256feac43cf33db45850cd95faa"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -504830,7 +504830,7 @@
             },
             {
               "path": "apps/web/e2e/consumer-theme.spec.ts",
-              "sha256": "41edf8cca123d3f0dd3beeaf2e21c76788747ed5140015ee7f153d07d9e5af7b"
+              "sha256": "96288e2df66975e3fbee97910bd679079b2a0256feac43cf33db45850cd95faa"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -505374,7 +505374,7 @@
             },
             {
               "path": "apps/web/e2e/consumer-theme.spec.ts",
-              "sha256": "41edf8cca123d3f0dd3beeaf2e21c76788747ed5140015ee7f153d07d9e5af7b"
+              "sha256": "96288e2df66975e3fbee97910bd679079b2a0256feac43cf33db45850cd95faa"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -505918,7 +505918,7 @@
             },
             {
               "path": "apps/web/e2e/consumer-theme.spec.ts",
-              "sha256": "41edf8cca123d3f0dd3beeaf2e21c76788747ed5140015ee7f153d07d9e5af7b"
+              "sha256": "96288e2df66975e3fbee97910bd679079b2a0256feac43cf33db45850cd95faa"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -508230,7 +508230,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
+              "sha256": "6873870b711e5de43db58e996e918cb52efee03bc0de04dcc0d68c95fa38b5d4"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -511503,7 +511503,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
+              "sha256": "6873870b711e5de43db58e996e918cb52efee03bc0de04dcc0d68c95fa38b5d4"
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
@@ -512181,7 +512181,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
+              "sha256": "6873870b711e5de43db58e996e918cb52efee03bc0de04dcc0d68c95fa38b5d4"
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
@@ -512720,7 +512720,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "6f209cdd3460982f97c19fe0034168031a1365688503b29466ced8da242bdd99"
+              "sha256": "ca21efe49d15fc41fc6d366c51da3cb0e7eb7a745812ecb6009d9faafd69b331"
             },
             {
               "path": "apps/web/src/hooks/useAccountUser.tsx",
@@ -513519,7 +513519,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "6f209cdd3460982f97c19fe0034168031a1365688503b29466ced8da242bdd99"
+              "sha256": "ca21efe49d15fc41fc6d366c51da3cb0e7eb7a745812ecb6009d9faafd69b331"
             },
             {
               "path": "apps/web/src/hooks/useAccountUser.tsx",
@@ -514317,7 +514317,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "6f209cdd3460982f97c19fe0034168031a1365688503b29466ced8da242bdd99"
+              "sha256": "ca21efe49d15fc41fc6d366c51da3cb0e7eb7a745812ecb6009d9faafd69b331"
             },
             {
               "path": "apps/web/src/hooks/useAccountUser.tsx",
@@ -515066,7 +515066,7 @@
             },
             {
               "path": "apps/web/e2e/verification-banner.spec.ts",
-              "sha256": "55f874cbc26e0d7e87f831971eaf4cb9f85e996d67357c613bad40331f591601"
+              "sha256": "d4d4881781d88bfbfdf68d762b55b556e534565268c94cb5327a6d9acd3527a3"
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
@@ -515114,7 +515114,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "6f209cdd3460982f97c19fe0034168031a1365688503b29466ced8da242bdd99"
+              "sha256": "ca21efe49d15fc41fc6d366c51da3cb0e7eb7a745812ecb6009d9faafd69b331"
             },
             {
               "path": "apps/web/src/components/route-states.test.tsx",
@@ -515550,7 +515550,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "6f209cdd3460982f97c19fe0034168031a1365688503b29466ced8da242bdd99"
+              "sha256": "ca21efe49d15fc41fc6d366c51da3cb0e7eb7a745812ecb6009d9faafd69b331"
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
@@ -515989,7 +515989,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "6f209cdd3460982f97c19fe0034168031a1365688503b29466ced8da242bdd99"
+              "sha256": "ca21efe49d15fc41fc6d366c51da3cb0e7eb7a745812ecb6009d9faafd69b331"
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
@@ -516372,7 +516372,7 @@
             },
             {
               "path": "apps/web/e2e/verification-banner.spec.ts",
-              "sha256": "55f874cbc26e0d7e87f831971eaf4cb9f85e996d67357c613bad40331f591601"
+              "sha256": "d4d4881781d88bfbfdf68d762b55b556e534565268c94cb5327a6d9acd3527a3"
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
@@ -516420,7 +516420,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "6f209cdd3460982f97c19fe0034168031a1365688503b29466ced8da242bdd99"
+              "sha256": "ca21efe49d15fc41fc6d366c51da3cb0e7eb7a745812ecb6009d9faafd69b331"
             },
             {
               "path": "apps/web/src/components/route-states.test.tsx",
@@ -516969,7 +516969,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
+              "sha256": "6873870b711e5de43db58e996e918cb52efee03bc0de04dcc0d68c95fa38b5d4"
             },
             {
               "path": "apps/web/src/pages/CrmCorrectionsPage.tsx",
@@ -517431,7 +517431,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
+              "sha256": "6873870b711e5de43db58e996e918cb52efee03bc0de04dcc0d68c95fa38b5d4"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -517590,7 +517590,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "The terms editor saved links, active formatting label and active border now meet their contrast floors in both themes and in high contrast. The current pre-fix route diagnostic observed 15 populated routes and left automated findings where text was partially obscured or overlapped. Complete targeted measurements for those findings and the other route and conditional states before acceptance."
+        "Terms editor and verification and email-provider dismiss states have current direct contrast measurements. The 15-route diagnostic still has unmeasured conditional states and automated findings where text was partially obscured or overlapped. Complete those and other missing route and control states before acceptance."
       ],
       "owner": null,
       "depends_on": [],
@@ -517612,7 +517612,8 @@
           "release-0.5-responsive-width-acceptance",
           "release-0.5-essential-control-contrast",
           "release-0.5-action-contrast",
-          "release-0.5-route-contrast-matrix"
+          "release-0.5-route-contrast-matrix",
+          "release-0.5-banner-dismiss-contrast"
         ],
         "current_acceptance": null
       }
@@ -517783,7 +517784,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "6f209cdd3460982f97c19fe0034168031a1365688503b29466ced8da242bdd99"
+              "sha256": "ca21efe49d15fc41fc6d366c51da3cb0e7eb7a745812ecb6009d9faafd69b331"
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
@@ -518291,7 +518292,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
+              "sha256": "6873870b711e5de43db58e996e918cb52efee03bc0de04dcc0d68c95fa38b5d4"
             },
             {
               "path": "apps/web/src/pages/CrmCorrectionsPage.tsx",
@@ -518693,7 +518694,7 @@
             },
             {
               "path": "apps/web/e2e/consumer-theme.spec.ts",
-              "sha256": "41edf8cca123d3f0dd3beeaf2e21c76788747ed5140015ee7f153d07d9e5af7b"
+              "sha256": "96288e2df66975e3fbee97910bd679079b2a0256feac43cf33db45850cd95faa"
             },
             {
               "path": "apps/web/e2e/contract-authoring-forms.spec.ts",
@@ -519521,7 +519522,7 @@
             },
             {
               "path": "apps/web/e2e/consumer-theme.spec.ts",
-              "sha256": "41edf8cca123d3f0dd3beeaf2e21c76788747ed5140015ee7f153d07d9e5af7b"
+              "sha256": "96288e2df66975e3fbee97910bd679079b2a0256feac43cf33db45850cd95faa"
             },
             {
               "path": "apps/web/e2e/contract-authoring-forms.spec.ts",
@@ -520447,7 +520448,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
+              "sha256": "6873870b711e5de43db58e996e918cb52efee03bc0de04dcc0d68c95fa38b5d4"
             },
             {
               "path": "apps/web/src/pages/CrmCorrectionsPage.tsx",
@@ -520849,7 +520850,7 @@
             },
             {
               "path": "apps/web/e2e/consumer-theme.spec.ts",
-              "sha256": "41edf8cca123d3f0dd3beeaf2e21c76788747ed5140015ee7f153d07d9e5af7b"
+              "sha256": "96288e2df66975e3fbee97910bd679079b2a0256feac43cf33db45850cd95faa"
             },
             {
               "path": "apps/web/e2e/contract-authoring-forms.spec.ts",
@@ -545134,7 +545135,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
+              "sha256": "6873870b711e5de43db58e996e918cb52efee03bc0de04dcc0d68c95fa38b5d4"
             },
             {
               "path": "apps/web/src/pages/AdminGeographyDialog.tsx",
@@ -546999,7 +547000,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
+              "sha256": "6873870b711e5de43db58e996e918cb52efee03bc0de04dcc0d68c95fa38b5d4"
             },
             {
               "path": "apps/web/src/pages/AdminGeographyDialog.tsx",
@@ -548865,7 +548866,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
+              "sha256": "6873870b711e5de43db58e996e918cb52efee03bc0de04dcc0d68c95fa38b5d4"
             },
             {
               "path": "apps/web/src/pages/AdminGeographyDialog.tsx",
@@ -550700,7 +550701,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
+              "sha256": "6873870b711e5de43db58e996e918cb52efee03bc0de04dcc0d68c95fa38b5d4"
             },
             {
               "path": "apps/web/src/pages/AdminGeographyDialog.tsx",
@@ -552561,7 +552562,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
+              "sha256": "6873870b711e5de43db58e996e918cb52efee03bc0de04dcc0d68c95fa38b5d4"
             },
             {
               "path": "apps/web/src/pages/AdminGeographyDialog.tsx",
@@ -554431,7 +554432,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
+              "sha256": "6873870b711e5de43db58e996e918cb52efee03bc0de04dcc0d68c95fa38b5d4"
             },
             {
               "path": "apps/web/src/pages/AdminGeographyDialog.tsx",
@@ -556274,7 +556275,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
+              "sha256": "6873870b711e5de43db58e996e918cb52efee03bc0de04dcc0d68c95fa38b5d4"
             },
             {
               "path": "apps/web/src/pages/AdminGeographyDialog.tsx",
@@ -558081,7 +558082,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
+              "sha256": "6873870b711e5de43db58e996e918cb52efee03bc0de04dcc0d68c95fa38b5d4"
             },
             {
               "path": "apps/web/src/pages/AdminGeographyDialog.tsx",
@@ -559888,7 +559889,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
+              "sha256": "6873870b711e5de43db58e996e918cb52efee03bc0de04dcc0d68c95fa38b5d4"
             },
             {
               "path": "apps/web/src/pages/AdminGeographyDialog.tsx",
@@ -561696,7 +561697,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
+              "sha256": "6873870b711e5de43db58e996e918cb52efee03bc0de04dcc0d68c95fa38b5d4"
             },
             {
               "path": "apps/web/src/pages/AdminGeographyDialog.tsx",
@@ -563503,7 +563504,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
+              "sha256": "6873870b711e5de43db58e996e918cb52efee03bc0de04dcc0d68c95fa38b5d4"
             },
             {
               "path": "apps/web/src/pages/AdminGeographyDialog.tsx",
@@ -565076,7 +565077,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "6f209cdd3460982f97c19fe0034168031a1365688503b29466ced8da242bdd99"
+              "sha256": "ca21efe49d15fc41fc6d366c51da3cb0e7eb7a745812ecb6009d9faafd69b331"
             },
             {
               "path": "apps/web/src/components/VerificationPolicySettings.tsx",
@@ -566970,7 +566971,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "6f209cdd3460982f97c19fe0034168031a1365688503b29466ced8da242bdd99"
+              "sha256": "ca21efe49d15fc41fc6d366c51da3cb0e7eb7a745812ecb6009d9faafd69b331"
             },
             {
               "path": "apps/web/src/components/VerificationPolicySettings.tsx",
@@ -568914,7 +568915,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "6f209cdd3460982f97c19fe0034168031a1365688503b29466ced8da242bdd99"
+              "sha256": "ca21efe49d15fc41fc6d366c51da3cb0e7eb7a745812ecb6009d9faafd69b331"
             },
             {
               "path": "apps/web/src/components/VerificationPolicySettings.tsx",
@@ -570808,7 +570809,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "6f209cdd3460982f97c19fe0034168031a1365688503b29466ced8da242bdd99"
+              "sha256": "ca21efe49d15fc41fc6d366c51da3cb0e7eb7a745812ecb6009d9faafd69b331"
             },
             {
               "path": "apps/web/src/components/VerificationPolicySettings.tsx",
@@ -572702,7 +572703,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "6f209cdd3460982f97c19fe0034168031a1365688503b29466ced8da242bdd99"
+              "sha256": "ca21efe49d15fc41fc6d366c51da3cb0e7eb7a745812ecb6009d9faafd69b331"
             },
             {
               "path": "apps/web/src/components/VerificationPolicySettings.tsx",
@@ -574596,7 +574597,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "6f209cdd3460982f97c19fe0034168031a1365688503b29466ced8da242bdd99"
+              "sha256": "ca21efe49d15fc41fc6d366c51da3cb0e7eb7a745812ecb6009d9faafd69b331"
             },
             {
               "path": "apps/web/src/components/VerificationPolicySettings.tsx",
@@ -576490,7 +576491,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "6f209cdd3460982f97c19fe0034168031a1365688503b29466ced8da242bdd99"
+              "sha256": "ca21efe49d15fc41fc6d366c51da3cb0e7eb7a745812ecb6009d9faafd69b331"
             },
             {
               "path": "apps/web/src/components/VerificationPolicySettings.tsx",
@@ -578384,7 +578385,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "6f209cdd3460982f97c19fe0034168031a1365688503b29466ced8da242bdd99"
+              "sha256": "ca21efe49d15fc41fc6d366c51da3cb0e7eb7a745812ecb6009d9faafd69b331"
             },
             {
               "path": "apps/web/src/components/VerificationPolicySettings.tsx",
@@ -580278,7 +580279,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "6f209cdd3460982f97c19fe0034168031a1365688503b29466ced8da242bdd99"
+              "sha256": "ca21efe49d15fc41fc6d366c51da3cb0e7eb7a745812ecb6009d9faafd69b331"
             },
             {
               "path": "apps/web/src/components/VerificationPolicySettings.tsx",
@@ -582172,7 +582173,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "6f209cdd3460982f97c19fe0034168031a1365688503b29466ced8da242bdd99"
+              "sha256": "ca21efe49d15fc41fc6d366c51da3cb0e7eb7a745812ecb6009d9faafd69b331"
             },
             {
               "path": "apps/web/src/components/VerificationPolicySettings.tsx",
@@ -584066,7 +584067,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "6f209cdd3460982f97c19fe0034168031a1365688503b29466ced8da242bdd99"
+              "sha256": "ca21efe49d15fc41fc6d366c51da3cb0e7eb7a745812ecb6009d9faafd69b331"
             },
             {
               "path": "apps/web/src/components/VerificationPolicySettings.tsx",
@@ -585960,7 +585961,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "6f209cdd3460982f97c19fe0034168031a1365688503b29466ced8da242bdd99"
+              "sha256": "ca21efe49d15fc41fc6d366c51da3cb0e7eb7a745812ecb6009d9faafd69b331"
             },
             {
               "path": "apps/web/src/components/VerificationPolicySettings.tsx",
@@ -587854,7 +587855,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "6f209cdd3460982f97c19fe0034168031a1365688503b29466ced8da242bdd99"
+              "sha256": "ca21efe49d15fc41fc6d366c51da3cb0e7eb7a745812ecb6009d9faafd69b331"
             },
             {
               "path": "apps/web/src/components/VerificationPolicySettings.tsx",
@@ -590487,7 +590488,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "6f209cdd3460982f97c19fe0034168031a1365688503b29466ced8da242bdd99"
+              "sha256": "ca21efe49d15fc41fc6d366c51da3cb0e7eb7a745812ecb6009d9faafd69b331"
             },
             {
               "path": "apps/web/src/components/VerificationPolicySettings.tsx",
@@ -592381,7 +592382,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "6f209cdd3460982f97c19fe0034168031a1365688503b29466ced8da242bdd99"
+              "sha256": "ca21efe49d15fc41fc6d366c51da3cb0e7eb7a745812ecb6009d9faafd69b331"
             },
             {
               "path": "apps/web/src/components/VerificationPolicySettings.tsx",
@@ -594591,7 +594592,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
+              "sha256": "6873870b711e5de43db58e996e918cb52efee03bc0de04dcc0d68c95fa38b5d4"
             },
             {
               "path": "apps/web/src/pages/AdminGeographyDialog.tsx",
@@ -596394,7 +596395,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
+              "sha256": "6873870b711e5de43db58e996e918cb52efee03bc0de04dcc0d68c95fa38b5d4"
             },
             {
               "path": "apps/web/src/pages/AdminGeographyDialog.tsx",
@@ -598197,7 +598198,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
+              "sha256": "6873870b711e5de43db58e996e918cb52efee03bc0de04dcc0d68c95fa38b5d4"
             },
             {
               "path": "apps/web/src/pages/AdminGeographyDialog.tsx",
@@ -600000,7 +600001,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
+              "sha256": "6873870b711e5de43db58e996e918cb52efee03bc0de04dcc0d68c95fa38b5d4"
             },
             {
               "path": "apps/web/src/pages/AdminGeographyDialog.tsx",
@@ -601803,7 +601804,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
+              "sha256": "6873870b711e5de43db58e996e918cb52efee03bc0de04dcc0d68c95fa38b5d4"
             },
             {
               "path": "apps/web/src/pages/AdminGeographyDialog.tsx",
@@ -603606,7 +603607,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
+              "sha256": "6873870b711e5de43db58e996e918cb52efee03bc0de04dcc0d68c95fa38b5d4"
             },
             {
               "path": "apps/web/src/pages/AdminGeographyDialog.tsx",
@@ -605409,7 +605410,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
+              "sha256": "6873870b711e5de43db58e996e918cb52efee03bc0de04dcc0d68c95fa38b5d4"
             },
             {
               "path": "apps/web/src/pages/AdminGeographyDialog.tsx",
@@ -611094,7 +611095,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "6f209cdd3460982f97c19fe0034168031a1365688503b29466ced8da242bdd99"
+              "sha256": "ca21efe49d15fc41fc6d366c51da3cb0e7eb7a745812ecb6009d9faafd69b331"
             },
             {
               "path": "apps/web/src/hooks/useAccountUser.tsx",
@@ -611892,7 +611893,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "6f209cdd3460982f97c19fe0034168031a1365688503b29466ced8da242bdd99"
+              "sha256": "ca21efe49d15fc41fc6d366c51da3cb0e7eb7a745812ecb6009d9faafd69b331"
             },
             {
               "path": "apps/web/src/hooks/useAccountUser.tsx",
@@ -612690,7 +612691,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "6f209cdd3460982f97c19fe0034168031a1365688503b29466ced8da242bdd99"
+              "sha256": "ca21efe49d15fc41fc6d366c51da3cb0e7eb7a745812ecb6009d9faafd69b331"
             },
             {
               "path": "apps/web/src/hooks/useAccountUser.tsx",
@@ -613488,7 +613489,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "6f209cdd3460982f97c19fe0034168031a1365688503b29466ced8da242bdd99"
+              "sha256": "ca21efe49d15fc41fc6d366c51da3cb0e7eb7a745812ecb6009d9faafd69b331"
             },
             {
               "path": "apps/web/src/hooks/useAccountUser.tsx",
@@ -614290,7 +614291,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "6f209cdd3460982f97c19fe0034168031a1365688503b29466ced8da242bdd99"
+              "sha256": "ca21efe49d15fc41fc6d366c51da3cb0e7eb7a745812ecb6009d9faafd69b331"
             },
             {
               "path": "apps/web/src/hooks/useAccountUser.tsx",
@@ -615088,7 +615089,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "6f209cdd3460982f97c19fe0034168031a1365688503b29466ced8da242bdd99"
+              "sha256": "ca21efe49d15fc41fc6d366c51da3cb0e7eb7a745812ecb6009d9faafd69b331"
             },
             {
               "path": "apps/web/src/hooks/useAccountUser.tsx",
@@ -615886,7 +615887,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "6f209cdd3460982f97c19fe0034168031a1365688503b29466ced8da242bdd99"
+              "sha256": "ca21efe49d15fc41fc6d366c51da3cb0e7eb7a745812ecb6009d9faafd69b331"
             },
             {
               "path": "apps/web/src/hooks/useAccountUser.tsx",
@@ -616685,7 +616686,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "6f209cdd3460982f97c19fe0034168031a1365688503b29466ced8da242bdd99"
+              "sha256": "ca21efe49d15fc41fc6d366c51da3cb0e7eb7a745812ecb6009d9faafd69b331"
             },
             {
               "path": "apps/web/src/hooks/useAccountUser.tsx",
@@ -617484,7 +617485,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "6f209cdd3460982f97c19fe0034168031a1365688503b29466ced8da242bdd99"
+              "sha256": "ca21efe49d15fc41fc6d366c51da3cb0e7eb7a745812ecb6009d9faafd69b331"
             },
             {
               "path": "apps/web/src/hooks/useAccountUser.tsx",
@@ -618283,7 +618284,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "6f209cdd3460982f97c19fe0034168031a1365688503b29466ced8da242bdd99"
+              "sha256": "ca21efe49d15fc41fc6d366c51da3cb0e7eb7a745812ecb6009d9faafd69b331"
             },
             {
               "path": "apps/web/src/hooks/useAccountUser.tsx",
@@ -619082,7 +619083,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "6f209cdd3460982f97c19fe0034168031a1365688503b29466ced8da242bdd99"
+              "sha256": "ca21efe49d15fc41fc6d366c51da3cb0e7eb7a745812ecb6009d9faafd69b331"
             },
             {
               "path": "apps/web/src/hooks/useAccountUser.tsx",
@@ -619881,7 +619882,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "6f209cdd3460982f97c19fe0034168031a1365688503b29466ced8da242bdd99"
+              "sha256": "ca21efe49d15fc41fc6d366c51da3cb0e7eb7a745812ecb6009d9faafd69b331"
             },
             {
               "path": "apps/web/src/hooks/useAccountUser.tsx",
@@ -620680,7 +620681,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "6f209cdd3460982f97c19fe0034168031a1365688503b29466ced8da242bdd99"
+              "sha256": "ca21efe49d15fc41fc6d366c51da3cb0e7eb7a745812ecb6009d9faafd69b331"
             },
             {
               "path": "apps/web/src/hooks/useAccountUser.tsx",
@@ -621479,7 +621480,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "6f209cdd3460982f97c19fe0034168031a1365688503b29466ced8da242bdd99"
+              "sha256": "ca21efe49d15fc41fc6d366c51da3cb0e7eb7a745812ecb6009d9faafd69b331"
             },
             {
               "path": "apps/web/src/hooks/useAccountUser.tsx",
@@ -622278,7 +622279,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "6f209cdd3460982f97c19fe0034168031a1365688503b29466ced8da242bdd99"
+              "sha256": "ca21efe49d15fc41fc6d366c51da3cb0e7eb7a745812ecb6009d9faafd69b331"
             },
             {
               "path": "apps/web/src/hooks/useAccountUser.tsx",
@@ -633079,7 +633080,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
+              "sha256": "6873870b711e5de43db58e996e918cb52efee03bc0de04dcc0d68c95fa38b5d4"
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
@@ -634203,7 +634204,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
+              "sha256": "6873870b711e5de43db58e996e918cb52efee03bc0de04dcc0d68c95fa38b5d4"
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
@@ -635327,7 +635328,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
+              "sha256": "6873870b711e5de43db58e996e918cb52efee03bc0de04dcc0d68c95fa38b5d4"
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
@@ -636454,7 +636455,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
+              "sha256": "6873870b711e5de43db58e996e918cb52efee03bc0de04dcc0d68c95fa38b5d4"
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
@@ -637581,7 +637582,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
+              "sha256": "6873870b711e5de43db58e996e918cb52efee03bc0de04dcc0d68c95fa38b5d4"
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
@@ -638735,7 +638736,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
+              "sha256": "6873870b711e5de43db58e996e918cb52efee03bc0de04dcc0d68c95fa38b5d4"
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
@@ -639858,7 +639859,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
+              "sha256": "6873870b711e5de43db58e996e918cb52efee03bc0de04dcc0d68c95fa38b5d4"
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
@@ -640981,7 +640982,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
+              "sha256": "6873870b711e5de43db58e996e918cb52efee03bc0de04dcc0d68c95fa38b5d4"
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
@@ -642105,7 +642106,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
+              "sha256": "6873870b711e5de43db58e996e918cb52efee03bc0de04dcc0d68c95fa38b5d4"
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
@@ -643247,7 +643248,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
+              "sha256": "6873870b711e5de43db58e996e918cb52efee03bc0de04dcc0d68c95fa38b5d4"
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
@@ -644372,7 +644373,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
+              "sha256": "6873870b711e5de43db58e996e918cb52efee03bc0de04dcc0d68c95fa38b5d4"
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
@@ -675872,7 +675873,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
+              "sha256": "6873870b711e5de43db58e996e918cb52efee03bc0de04dcc0d68c95fa38b5d4"
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
@@ -676994,7 +676995,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
+              "sha256": "6873870b711e5de43db58e996e918cb52efee03bc0de04dcc0d68c95fa38b5d4"
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
@@ -678116,7 +678117,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
+              "sha256": "6873870b711e5de43db58e996e918cb52efee03bc0de04dcc0d68c95fa38b5d4"
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
@@ -679238,7 +679239,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
+              "sha256": "6873870b711e5de43db58e996e918cb52efee03bc0de04dcc0d68c95fa38b5d4"
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
@@ -699660,7 +699661,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
+              "sha256": "6873870b711e5de43db58e996e918cb52efee03bc0de04dcc0d68c95fa38b5d4"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -700548,7 +700549,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
+              "sha256": "6873870b711e5de43db58e996e918cb52efee03bc0de04dcc0d68c95fa38b5d4"
             },
             {
               "path": "apps/web/src/pages/delivery-provider-recovery.test.tsx",
@@ -717534,7 +717535,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
+              "sha256": "6873870b711e5de43db58e996e918cb52efee03bc0de04dcc0d68c95fa38b5d4"
             },
             {
               "path": "apps/web/src/pages/AdminFailedNotificationsPage.tsx",
@@ -721399,7 +721400,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
+              "sha256": "6873870b711e5de43db58e996e918cb52efee03bc0de04dcc0d68c95fa38b5d4"
             },
             {
               "path": "apps/web/src/pages/AdminFailedNotificationsPage.tsx",
@@ -723594,7 +723595,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Current terms-editor link and formatting contrast is verified in Persian and English in both browsers. Remaining native and conditional forms, route contrast, command feedback and route state verification are open."
+        "Verification and email-provider status dismiss controls meet the text contrast floor at rest and on hover. Relevant provider confirmation and verification notice flows pass. Remaining native and conditional forms, route contrast, command feedback and route state verification stay open."
       ],
       "owner": null,
       "depends_on": [],
@@ -723669,7 +723670,8 @@
           "release-0.5-provider-required-fields",
           "release-0.5-saving-receipt-required",
           "release-0.5-onboarding-required",
-          "release-0.5-route-contrast-matrix"
+          "release-0.5-route-contrast-matrix",
+          "release-0.5-banner-dismiss-contrast"
         ]
       }
     },
@@ -724269,7 +724271,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "6f209cdd3460982f97c19fe0034168031a1365688503b29466ced8da242bdd99"
+              "sha256": "ca21efe49d15fc41fc6d366c51da3cb0e7eb7a745812ecb6009d9faafd69b331"
             },
             {
               "path": "apps/web/src/components/VerificationPolicySettings.tsx",
@@ -724625,7 +724627,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "599252698b6891573d2e369e790a896704224e616f0fbabe4874e83fa2bbac8a"
+              "sha256": "6873870b711e5de43db58e996e918cb52efee03bc0de04dcc0d68c95fa38b5d4"
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
@@ -725192,7 +725194,8 @@
             "Provider form semantics passed current source coverage, production size and cold authentication checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-provider-required-fields/proof.json",
             "Saving and bank receipt form semantics passed current source coverage, production size and cold authentication checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-receipt-required/proof.json",
             "Individual and legal onboarding form semantics passed current source coverage, production size and cold authentication checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-onboarding-required/proof.json",
-            "Terms editor contrast passed current source coverage, production size and cold authentication checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-contrast-matrix/proof.json"
+            "Terms editor contrast passed current source coverage, production size and cold authentication checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-contrast-matrix/proof.json",
+            "Status banner dismiss contrast passed current source coverage, production size and cold authentication checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-banner-dismiss-contrast/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -791418,6 +791421,49 @@
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-contrast-matrix/reviewed.patch",
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-contrast-matrix",
       "release_disposition": "Terms editor contrast recorded, with unresolved route observations preserved. Other v0.5.0 criteria remain open."
+    },
+    "release-0.5-banner-dismiss-contrast": {
+      "batch": "release-0.5-banner-dismiss-contrast",
+      "base_commit": "63ea95eee009b4b54c9a9157c9b3f1ffeffe7225",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.05.01.08",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.05.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/consumer-theme.spec.ts",
+          "sha256": "96288e2df66975e3fbee97910bd679079b2a0256feac43cf33db45850cd95faa"
+        },
+        {
+          "path": "apps/web/e2e/verification-banner.spec.ts",
+          "sha256": "d4d4881781d88bfbfdf68d762b55b556e534565268c94cb5327a6d9acd3527a3"
+        },
+        {
+          "path": "apps/web/src/components/VerificationBanner.tsx",
+          "sha256": "ca21efe49d15fc41fc6d366c51da3cb0e7eb7a745812ecb6009d9faafd69b331"
+        },
+        {
+          "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
+          "sha256": "6873870b711e5de43db58e996e918cb52efee03bc0de04dcc0d68c95fa38b5d4"
+        }
+      ],
+      "checks": [
+        "Verification warning and email provider rollback error and success dismiss controls retain their semantic foreground on hover. Dark mode previously measured 1.69:1, 1.96:1 and 2.35:1. Current direct measurements pass 4.5:1 at rest and on hover in light and dark and in high contrast.",
+        "63 affected Chromium and Mobile Safari cases passed. Provider cases retain destructive acknowledgement, two exact rollback attempts, accepted distinct active-version receipt, dismissal, secret handling and scope recovery. Verification cases retain keyboard dismissal, localization, pending state and withdrawal of obsolete private notices.",
+        "74 related unit cases passed. A scoped supplemental run measured 32 cases, including cases from the earlier run. All eight coverage groups passed with current maps for both affected components. The production build, 98 bundle budgets, three cold authentication transfers, scoped lint, format and typecheck passed.",
+        "The first provider contrast fixture lacked the confirmation phrase, and a subsequent pre-fix receipt found both responsive rows. The final fixture uses the existing destructive confirmation and asserts the visible row. The first coverage collection hit a local disk-write failure and supplied no evidence. Verified compressed archives retained the earlier raw browser receipts before the scoped run succeeded."
+      ],
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-banner-dismiss-contrast/proof.json",
+      "source_scope_proof_sha256": "a989cac9343f9c2544e4d32b3b9743310358fbca3b7d9ef84ed888c7416e83ba",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-banner-dismiss-contrast/renewed-bindings.json",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-banner-dismiss-contrast/reviewed.patch",
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-banner-dismiss-contrast",
+      "release_disposition": "Status banner dismiss contrast recorded, with wider route verification still open. Other v0.5.0 criteria remain open."
     }
   },
   "historical_improvements": [
