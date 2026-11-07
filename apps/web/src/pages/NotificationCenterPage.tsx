@@ -23,7 +23,8 @@ import { notificationDateGroups } from '../lib/notification-date-groups.js';
 import { sendToast } from '../lib/toast-api.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useManualServerRead } from '../hooks/useServerQuery.js';
-import { useProfileContextRevision } from '../lib/profile-context.js';
+import { useServerMutation } from '../hooks/useServerMutation.js';
+import { getProfileContextRevision, useProfileContextRevision } from '../lib/profile-context.js';
 import { queryKeys } from '../lib/query-keys.js';
 
 const PAGE_SIZE = 20;
@@ -81,6 +82,25 @@ function OwnedInbox({ operatingContext = 'customer', queries }: InboxProps) {
   const scope = JSON.stringify([key, cursor]);
   const liveKey = useRef(scope);
   liveKey.current = scope;
+  const authority = {
+    context: operatingContext,
+    accountId,
+    ownerId: accountId ?? 'session',
+    revision,
+  };
+  const inboxKey = queryKeys.notifications.all(authority);
+  const readMark = useServerMutation<number, { version: number; id: string | null }>({
+    mutationKey: inboxKey,
+    write: ({ id }) => (id ? markOneRead(id) : markAllRead()),
+    isCurrent: (command) =>
+      !!command &&
+      requestVersion.current === command.version &&
+      liveKey.current === scope &&
+      getProfileContextRevision() === revision,
+    invalidate: [inboxKey],
+    successMessage: () => undefined,
+    errorMessage: () => undefined,
+  });
   const acceptedScope = useRef<string | null>(null);
   const intendedNavigation = useRef<{ scope: string; append: boolean } | null>(null);
   const failedAppend = useRef(false);
@@ -115,10 +135,7 @@ function OwnedInbox({ operatingContext = 'customer', queries }: InboxProps) {
       try {
         const params = new URLSearchParams({ filter, limit: String(PAGE_SIZE) });
         if (cursor) params.set('cursor', cursor);
-        const queryKey = queryKeys.notifications.list(
-          { context: operatingContext, accountId, ownerId: accountId ?? 'session', revision },
-          params
-        );
+        const queryKey = queryKeys.notifications.list(authority, params);
         const page = await readPage(queryKey, controller.signal, (signal) =>
           fetchNotifications(cursor, filter, PAGE_SIZE, signal)
         );
@@ -217,11 +234,9 @@ function OwnedInbox({ operatingContext = 'customer', queries }: InboxProps) {
       )
     );
     try {
-      const count = item
-        ? item.isRead
-          ? unreadCount
-          : await markOneRead(item.id)
-        : await markAllRead();
+      const count = item?.isRead
+        ? unreadCount
+        : await readMark.mutateAsync({ id: item?.id ?? null, version });
       if (!current()) return;
       setUnreadCount(count);
       if (filter === 'unread' && count === 0) setNextCursor(null);

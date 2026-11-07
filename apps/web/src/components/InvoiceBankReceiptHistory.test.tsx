@@ -1,9 +1,18 @@
-import { act, useState } from 'react';
+import { act, useState, type ComponentProps } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
-import { InvoiceBankReceiptHistory } from './InvoiceBankReceiptHistory.js';
+import { InvoiceBankReceiptHistory as History } from './InvoiceBankReceiptHistory.js';
+import { QueryComponentProvider } from '../test/query-provider.js';
 import { useListQuery } from '../hooks/useListQuery.js';
 import { invoiceReceiptQueryOptions } from '../lib/finance-list-query.js';
+
+function InvoiceBankReceiptHistory(props: ComponentProps<typeof History>) {
+  return (
+    <QueryComponentProvider>
+      <History {...props} />
+    </QueryComponentProvider>
+  );
+}
 
 const first = '11111111-1111-7111-8111-111111111111';
 const older = '22222222-2222-7222-8222-222222222222';

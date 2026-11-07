@@ -23,6 +23,7 @@ import {
 } from '@barghsa/ui';
 import { tWorkspace as adminText } from '@barghsa/i18n/workspace-admin';
 import { t as appText } from '@barghsa/i18n/workspace';
+import { confirmationText } from '@barghsa/i18n/confirmation';
 import { BANK_RECEIPT_REJECT_REASON_MAX_LENGTH } from '@barghsa/shared/finance/browser';
 import type { BankReceiptConfirmationReview } from '@barghsa/shared/finance';
 import { useLocale } from '../hooks/useLocale.js';
@@ -61,6 +62,27 @@ interface Receipt {
   requiresDualApproval: boolean;
   dualApprovalPending: boolean;
   statusHistory?: InvoiceReceiptActivity['statusHistory'];
+}
+type ReceiptAction = TeamAction & {
+  kind: 'confirm' | 'reject';
+  target: Pick<Receipt, 'receiptId' | 'invoiceId' | 'profileId' | 'amount'>;
+  reason?: string;
+};
+
+function matchesReceiptDecision(value: unknown, action: ReceiptAction) {
+  if (!value || typeof value !== 'object') return false;
+  const receipt = value as Partial<Receipt>;
+  if (
+    receipt.receiptId !== action.target.receiptId ||
+    receipt.invoiceId !== action.target.invoiceId ||
+    receipt.profileId !== action.target.profileId ||
+    receipt.amount !== action.target.amount
+  )
+    return false;
+  return action.kind === 'reject'
+    ? receipt.state === 'Rejected' && receipt.rejectionReason === action.reason
+    : receipt.state === 'Confirmed' ||
+        (receipt.state === 'UnderReview' && receipt.dualApprovalPending === true);
 }
 
 interface Allocation {
@@ -117,7 +139,7 @@ function OwnedInvoiceBankReceiptQueue({
   const queueParams = receiptQueueParams(queueBinding);
   const queueScopeRef = useRef(queueParams);
   const [nextCursor, setNextCursor] = useState<FinanceCursor | null>(null);
-  const actionRef = useRef<TeamAction | null>(null);
+  const actionRef = useRef<ReceiptAction | null>(null);
   const reviewGeneration = useRef(0);
   const reviewController = useRef<AbortController | null>(null);
   const locale = useLocale();
@@ -148,7 +170,7 @@ function OwnedInvoiceBankReceiptQueue({
   const rejection = useReceiptRejectionForm('invoice');
   const [reason, setReason] = rejection.field('reason');
   const rejectionBusy = rejection.form.formState.isSubmitting;
-  const [action, setAction] = useState<TeamAction | null>(null);
+  const [action, setAction] = useState<ReceiptAction | null>(null);
   const [financialReview, setFinancialReview] = useState<BankReceiptConfirmationReview | null>(
     null
   );
@@ -323,7 +345,15 @@ function OwnedInvoiceBankReceiptQueue({
         return;
       }
     }
-    const proposal: TeamAction = {
+    const proposal: ReceiptAction = {
+      kind,
+      target: {
+        receiptId: detail.receiptId,
+        invoiceId: detail.invoiceId,
+        profileId: detail.profileId,
+        amount: detail.amount,
+      },
+      ...(kind === 'reject' ? { reason: reasonText } : {}),
       risk: kind === 'confirm' ? 'financial' : 'both',
       title: word(kind),
       description: kind === 'confirm' ? word('confirmNotice') : word('rejectNotice'),
@@ -712,13 +742,24 @@ function OwnedInvoiceBankReceiptQueue({
             setAction(null);
             setFinancialReview(null);
           }}
-          onSuccess={async () => {
+          onUnconfirmed={() => {
             if (actionRef.current !== action) return;
+            actionRef.current = null;
+            setAction(null);
+            setDetail(null);
+            setAllocation(null);
+            refresh();
+          }}
+          onSuccess={async (result) => {
+            if (actionRef.current !== action) return;
+            if (!matchesReceiptDecision(result, action))
+              throw new Error('Receipt decision mismatch');
             actionRef.current = null;
             setAction(null);
             setFinancialReview(null);
             rejection.form.reset({ reason: '' });
             refresh();
+            return confirmationText('recorded', locale);
           }}
         />
       ) : null}

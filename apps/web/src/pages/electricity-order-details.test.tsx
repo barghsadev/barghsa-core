@@ -78,7 +78,7 @@ it('reviews the exact cancellation refund before submitting its hash', async () 
             : url.endsWith('/cancel-review')
               ? review
               : url.endsWith('/cancel')
-                ? { status: 'cancelled' }
+                ? { orderId, status: 'cancelled', refundId: 'f1000000-0000-4000-8000-000000000001' }
                 : url.includes('/comments')
                   ? { comments: [], nextBefore: null }
                   : detail

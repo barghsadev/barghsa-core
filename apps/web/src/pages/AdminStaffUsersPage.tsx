@@ -19,6 +19,8 @@ import {
 } from '@barghsa/ui';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import { useLocale } from '../hooks/useLocale.js';
+import { staffQueryJson, useStaffQueryRead } from '../hooks/useStaffQueryRead.js';
+import { ServerQueryError } from '../lib/server-query-client.js';
 import { useWizardForm } from '../hooks/useWizardForm.js';
 import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
 import {
@@ -69,6 +71,9 @@ const blank = () => ({
 const staffBasis = (staff: Staff) => JSON.stringify({ ...staff, lastLoginAt: null });
 
 export default function AdminStaffUsersPage({ queries }: { queries?: ListQueryBinding } = {}) {
+  const read = useStaffQueryRead('profiles');
+  const deniedRead = (failure: unknown) =>
+    failure instanceof ServerQueryError && [401, 403].includes(failure.status);
   const time = useAccountTime();
   const locale = useLocale();
   const numbers = useNumberFormatting(locale);
@@ -205,14 +210,13 @@ export default function AdminStaffUsersPage({ queries }: { queries?: ListQueryBi
     setAccessError(false);
     void (async () => {
       try {
-        const response = await fetch('/api/admin/staff-access', { signal: controller.signal });
-        if (controller.signal.aborted) return;
-        if ([401, 403].includes(response.status)) {
-          denyAccess();
-          return;
-        }
-        if (!response.ok) throw new Error('Access unavailable');
-        const next = (await response.json()) as Access;
+        const next = (await read(
+          '/api/admin/staff-access',
+          'detail',
+          controller.signal,
+          staffQueryJson,
+          accessRevision
+        )) as Access;
         if (controller.signal.aborted) return;
         if (
           !next ||
@@ -260,8 +264,11 @@ export default function AdminStaffUsersPage({ queries }: { queries?: ListQueryBi
         accessRef.current = next;
         setAccess(next);
         setAccessVersion((v) => v + 1);
-      } catch {
-        if (!controller.signal.aborted) setAccessError(true);
+      } catch (failure) {
+        if (!controller.signal.aborted) {
+          if (deniedRead(failure)) denyAccess();
+          else setAccessError(true);
+        }
       } finally {
         if (!controller.signal.aborted) {
           setAccessLoading(false);
@@ -270,7 +277,7 @@ export default function AdminStaffUsersPage({ queries }: { queries?: ListQueryBi
       }
     })();
     return () => controller.abort();
-  }, [accessRevision]);
+  }, [accessRevision, read]);
   useEffect(() => {
     if (accessLoading || accessError || !access?.canView) return;
     const controller = new AbortController();
@@ -278,16 +285,13 @@ export default function AdminStaffUsersPage({ queries }: { queries?: ListQueryBi
     setError(false);
     void (async () => {
       try {
-        const response = await fetch(`/api/admin/staff?limit=25&offset=${offset}`, {
-          signal: controller.signal,
-        });
-        if (controller.signal.aborted || !accessRef.current) return;
-        if ([401, 403].includes(response.status)) {
-          denyAccess();
-          return;
-        }
-        if (!response.ok) throw new Error('List unavailable');
-        const data = (await response.json()) as StaffList;
+        const data = (await read(
+          `/api/admin/staff?limit=25&offset=${offset}`,
+          'list',
+          controller.signal,
+          staffQueryJson,
+          accessVersion
+        )) as StaffList;
         if (!data || !Array.isArray(data.items) || !Number.isInteger(data.total) || data.total < 0)
           throw new Error('Invalid staff list');
         if (controller.signal.aborted || !accessRef.current) return;
@@ -313,14 +317,17 @@ export default function AdminStaffUsersPage({ queries }: { queries?: ListQueryBi
           clearAction();
         rowsRef.current = data.items;
         setList(data);
-      } catch {
-        if (!controller.signal.aborted) setError(true);
+      } catch (failure) {
+        if (!controller.signal.aborted && accessRef.current) {
+          if (deniedRead(failure)) denyAccess();
+          else setError(true);
+        }
       } finally {
         if (!controller.signal.aborted) setLoading(false);
       }
     })();
     return () => controller.abort();
-  }, [offset, listRevision, accessVersion, accessLoading, accessError, access?.canView]);
+  }, [offset, listRevision, accessVersion, accessLoading, accessError, access?.canView, read]);
   useEffect(() => {
     if (accessLoading || accessError) return;
     if (!access?.canCreate && !access?.canEditRoles) {
@@ -334,24 +341,24 @@ export default function AdminStaffUsersPage({ queries }: { queries?: ListQueryBi
     setOptionsError(false);
     void (async () => {
       try {
-        const response = await fetch('/api/admin/staff-role-options', {
-          signal: controller.signal,
-        });
-        if (controller.signal.aborted || !accessRef.current) return;
-        if ([401, 403].includes(response.status)) {
-          denyAccess();
-          return;
-        }
-        if (!response.ok) throw new Error('Role options unavailable');
-        const data = (await response.json()) as Role[];
+        const data = (await read(
+          '/api/admin/staff-role-options',
+          'list',
+          controller.signal,
+          staffQueryJson,
+          accessVersion
+        )) as Role[];
         if (!Array.isArray(data)) throw new Error('Invalid role options');
         if (controller.signal.aborted || !accessRef.current) return;
         if (rolesRef.current.length && JSON.stringify(data) !== JSON.stringify(rolesRef.current))
           clearAction();
         rolesRef.current = data;
         setRoles(data);
-      } catch {
-        if (!controller.signal.aborted) setOptionsError(true);
+      } catch (failure) {
+        if (!controller.signal.aborted && accessRef.current) {
+          if (deniedRead(failure)) denyAccess();
+          else setOptionsError(true);
+        }
       } finally {
         if (!controller.signal.aborted) setOptionsLoading(false);
       }
@@ -364,6 +371,7 @@ export default function AdminStaffUsersPage({ queries }: { queries?: ListQueryBi
     accessError,
     access?.canCreate,
     access?.canEditRoles,
+    read,
   ]);
   const load = async () => {
     setListRevision((v) => v + 1);

@@ -1,4 +1,7 @@
 import { ConfirmationFields } from '@barghsa/ui';
+import { confirmationText } from '@barghsa/i18n/confirmation';
+import { toast } from '../lib/toast-api.js';
+import { isInvoiceUuid } from '../lib/invoice-uuid.js';
 import { useRiskConfirmation } from '../hooks/useRiskConfirmation.js';
 import { useQueryClient } from '@tanstack/react-query';
 import { useServerDetailQuery } from '../hooks/useServerQuery.js';
@@ -551,6 +554,7 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
       setUnconfirmedCorrection(false);
       correctionLock.release('address');
       correctionForm.reset({ ...correctionForm.getValues(), responseNote: '' });
+      toast.success(confirmationText('recorded', locale));
       reloadDetail();
     } catch {
       if (attempt === capturedCorrection.current && attempt.generation === generation.current) {
@@ -659,6 +663,18 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
         return;
       }
       if (!response.ok) throw new Error('Cancellation failed');
+      const receipt: unknown = await response.json().catch(() => null);
+      if (token !== generation.current) return;
+      if (
+        !correctionRecord(receipt) ||
+        receipt.orderId !== orderId ||
+        receipt.status !== 'cancelled' ||
+        (cancelReview.data.refundAmount === '0'
+          ? receipt.refundId !== null
+          : typeof receipt.refundId !== 'string' || !isInvoiceUuid(receipt.refundId))
+      )
+        throw new Error('Cancellation receipt mismatch');
+      toast.success(confirmationText('recorded', locale));
       setCancelReview(null);
       setCancelKey(crypto.randomUUID());
       reloadDetail();

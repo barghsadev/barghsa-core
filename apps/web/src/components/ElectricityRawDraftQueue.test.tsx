@@ -1,4 +1,5 @@
 import { approveVisibleConfirmation } from '../test/confirmation.js';
+import { QueryComponentProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -217,7 +218,13 @@ afterEach(async () => {
   vi.restoreAllMocks();
 });
 async function open() {
-  await act(async () => root.render(<ElectricityRawDraftQueue />));
+  await act(async () =>
+    root.render(
+      <QueryComponentProvider>
+        <ElectricityRawDraftQueue />
+      </QueryComponentProvider>
+    )
+  );
   await act(async () => {
     const details = container.querySelector('details')!;
     details.open = true;
@@ -312,7 +319,13 @@ it('withdraws a pending preview when the current actor changes', async () => {
   await open();
   await review();
   state.actor = 'different-reviewer';
-  await act(async () => root.render(<ElectricityRawDraftQueue />));
+  await act(async () =>
+    root.render(
+      <QueryComponentProvider>
+        <ElectricityRawDraftQueue />
+      </QueryComponentProvider>
+    )
+  );
   await act(async () => resolve(json(preview())));
   expect(document.body.querySelector('[role=dialog]')).toBeNull();
   expect(container.querySelector('textarea')).toBeNull();

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useId, useState } from 'react';
 import {
   LoadingStatus,
   Button,
@@ -14,6 +14,10 @@ import type { Locale } from '@barghsa/i18n/app';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import type { ListQueryBinding } from '../hooks/useListQuery.js';
+import { useAccountUser } from '../hooks/useAccountUser.js';
+import { useServerListQuery } from '../hooks/useServerQuery.js';
+import { useProfileContextRevision } from '../lib/profile-context.js';
+import { queryKeys } from '../lib/query-keys.js';
 
 interface DeliveryAttempt {
   id: string;
@@ -81,13 +85,12 @@ export function NotificationDeliveryHistory({
   const label = (key: string) => t(`admin.notifications.history.${key}`, locale);
   const numbers = useNumberFormatting(locale);
   const time = useAccountTime(locale);
-  const [rows, setRows] = useState<DeliveryAttempt[]>([]);
+  const accountId = useAccountUser();
+  const profileRevision = useProfileContextRevision();
+  const reader = useId();
   const [localOffset, setOffset] = useState(0);
   const offset = queries ? (queries.query.page - 1) * 25 : localOffset;
   const [revision, setRevision] = useState(0);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
-  const [hasMore, setHasMore] = useState(false);
   const [localFilters, setFilters] = useState<Filters>({
     notificationId: '',
     channel: '',
@@ -108,44 +111,38 @@ export function NotificationDeliveryHistory({
       `admin.notifications.deadLetter.channel${channel === 'email' ? 'Email' : channel === 'sms' ? 'Sms' : 'InApp'}`,
       locale
     );
-  useEffect(() => {
-    const controller = new AbortController();
-    setLoading(true);
-    setError(false);
-    setRows([]);
-    setHasMore(false);
-    void (async () => {
-      try {
-        const applied = { notificationId, channel, status };
-        const query = new URLSearchParams({
-          limit: '26',
-          offset: String(offset),
-        });
-        for (const [key, value] of Object.entries(applied)) if (value) query.set(key, value);
-        const response = await fetch(`/api/admin/notifications/delivery-logs?${query}`, {
-          signal: controller.signal,
-        });
-        if (!response.ok) throw new Error('History unavailable');
-        const result: unknown = await response.json();
-        if (
-          !Array.isArray(result) ||
-          result.length > 26 ||
-          !result.every((item): item is DeliveryAttempt => isAttempt(item, applied)) ||
-          new Set(result.map((item) => item.id)).size !== result.length
-        )
-          throw new Error('Invalid history');
-        if (!controller.signal.aborted) {
-          setRows(result.slice(0, 25));
-          setHasMore(result.length > 25);
-        }
-      } catch {
-        if (!controller.signal.aborted) setError(true);
-      } finally {
-        if (!controller.signal.aborted) setLoading(false);
-      }
-    })();
-    return () => controller.abort();
-  }, [notificationId, channel, status, offset, revision]);
+  const applied = { notificationId, channel, status };
+  const params = new URLSearchParams({ limit: '26', offset: String(offset) });
+  for (const [key, value] of Object.entries(applied)) if (value) params.set(key, value);
+  const path = '/api/admin/notifications/delivery-logs';
+  const keyParams = new URLSearchParams(params);
+  keyParams.set('endpoint', path);
+  keyParams.set('reader', reader);
+  const delivery = useServerListQuery({
+    queryKey: queryKeys.notifications.list(
+      { context: 'staff', ownerId: accountId ?? reader, accountId, revision: profileRevision },
+      keyParams,
+      revision
+    ),
+    manual: true,
+    read: async (signal) => {
+      const response = await fetch(`${path}?${params}`, { signal });
+      if (!response.ok) throw new Error('History unavailable');
+      const result: unknown = await response.json();
+      if (
+        !Array.isArray(result) ||
+        result.length > 26 ||
+        !result.every((item): item is DeliveryAttempt => isAttempt(item, applied)) ||
+        new Set(result.map((item) => item.id)).size !== result.length
+      )
+        throw new Error('Invalid history');
+      return result;
+    },
+  });
+  const loading = delivery.isPending || delivery.isFetching;
+  const error = delivery.isError;
+  const rows = delivery.data?.slice(0, 25) ?? [];
+  const hasMore = (delivery.data?.length ?? 0) > 25;
 
   return (
     <Dialog
@@ -236,7 +233,10 @@ export function NotificationDeliveryHistory({
         )}
         {time.notice}
         <p className="text-sm">{label('attemptHelp')}</p>
-        {loading ? (
+        {loading && rows.length > 0 && (
+          <LoadingStatus>{t('admin.notifications.loading', locale)}</LoadingStatus>
+        )}
+        {loading && rows.length === 0 ? (
           <LoadingStatus>{t('admin.notifications.loading', locale)}</LoadingStatus>
         ) : error ? (
           <div role="alert">
@@ -248,8 +248,14 @@ export function NotificationDeliveryHistory({
         ) : rows.length === 0 ? (
           <p>{label('empty')}</p>
         ) : (
-          // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- Keyboard users must be able to scroll this region.
-          <div className="overflow-x-auto" tabIndex={0} role="region" aria-label={label('title')}>
+          <div
+            className="overflow-x-auto"
+            // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- Keyboard users must be able to scroll this region.
+            tabIndex={0}
+            role="region"
+            aria-label={label('title')}
+            aria-busy={loading}
+          >
             <table className="w-full text-sm text-start" aria-label={label('title')}>
               <thead>
                 <tr>

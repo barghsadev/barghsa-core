@@ -60,6 +60,10 @@ An error result also carries an allowlisted code and localized message. Language
 
 Use `useManualServerRead` for workflows that own a cursor window, explicit retry or action lock. It runs one fresh read under the same scoped key factory, uses the caller’s cancellation signal, and avoids cached results, polling and background retries. The inbox, wallet transaction history, staff invoice ledger, terms history and staff team list use it while retaining their accepted pagination and permission behavior.
 
+Staff lists and detail controllers that need to interpret a response status or pagination header use `useStaffQueryRead`. Their keys include the endpoint, account and profile revision, filters, page and relevant permission epoch. Previous rows may stay visible within the same criteria while the new page loads. Commands require the accepted current page, and denied reads clear private data. The public terms disclosure remains a credential-free, no-store read outside the signed-in query client.
+
+The inbox keeps its reversible read-mark projection local. `useServerMutation` sends the captured command and invalidates only its current owner. If a newer command or permission event retires that generation, the old reply has no effect. Financial and contract actions never apply optimistic state.
+
 Query notifications use microtasks, so completed validated replies update views without waiting for a timer tick. This preserves timely warning recovery while keeping batching, retry limits, financial manual policy and observer cancellation.
 
 Calendar and timestamp conventions are documented in [the localization design](../../docs/design/localisation.md). `MonthPicker` reuses `NativeSelect` for caller-owned permitted months and localized labels; it never generates service periods. App-level `DateDisplay`, `DateTimeDisplay`, `RelativeTime` and `useCalendar` reuse the locale and accepted account timezone. Keep explicit UTC instants and backend-reviewed financial ranges unchanged when changing language.

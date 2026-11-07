@@ -1,4 +1,6 @@
 import { useQueryClient } from '@tanstack/react-query';
+import { confirmationText } from '@barghsa/i18n/confirmation';
+import { toast } from '../lib/toast-api.js';
 import { queryKeys } from '../lib/query-keys.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
@@ -376,6 +378,7 @@ function OwnedSolarPostalPanel({ requestId, profileId }: { requestId: string; pr
           throw new Error('receipt');
         }
         accept(saved, editGeneration.current);
+        toast.success(confirmationText('recorded', locale));
       } catch {
         if (capturedGeneration === generation.current) {
           setError(true);

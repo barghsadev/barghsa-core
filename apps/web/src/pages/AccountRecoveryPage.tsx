@@ -1,3 +1,4 @@
+import { confirmationText } from '@barghsa/i18n/confirmation';
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
 import { Button, Input, Label } from '@barghsa/ui';
 import { t } from '@barghsa/i18n/recovery';
@@ -385,6 +386,7 @@ function RecoveryWorkflow({ actor }: { actor: string | null }) {
             setSelectedId(result.id);
             setAction(null);
             read.retry();
+            return confirmationText('recorded', locale);
           }}
         />
       )}

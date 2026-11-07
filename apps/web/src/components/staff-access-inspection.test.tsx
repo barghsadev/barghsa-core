@@ -3,6 +3,7 @@ import { createRoot, type Root } from 'react-dom/client';
 import { beforeEach, afterEach, expect, it, vi } from 'vitest';
 import { StaffEffectivePermissions } from './StaffEffectivePermissions.js';
 import Roles from '../pages/AdminRolesPage.js';
+import { QueryComponentProvider } from '../test/query-provider.js';
 import Staff from '../pages/AdminStaffUsersPage.js';
 import { catalogueRole, effectivePermissions } from '../test/policy-catalogue-fixtures.js';
 import { staffAccess, staffRoles, staffUser } from '../test/staff-directory-fixtures.js';
@@ -143,7 +144,13 @@ it('compares granted and ungranted module permissions across roles without enabl
       ])
     )
   );
-  await act(async () => root.render(<Roles />));
+  await act(async () =>
+    root.render(
+      <QueryComponentProvider>
+        <Roles />
+      </QueryComponentProvider>
+    )
+  );
   const select = document.querySelector<HTMLSelectElement>('#role-module')!;
   await act(async () => {
     select.value = 'finance';
@@ -176,7 +183,13 @@ it.each([true, false])(
       return response({});
     });
     vi.stubGlobal('fetch', fetcher);
-    await act(async () => root.render(<Staff />));
+    await act(async () =>
+      root.render(
+        <QueryComponentProvider>
+          <Staff />
+        </QueryComponentProvider>
+      )
+    );
     const button = [...host.querySelectorAll('button')].find(
       (item) => item.textContent === 'View effective permissions'
     );

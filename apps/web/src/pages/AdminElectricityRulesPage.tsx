@@ -1,3 +1,4 @@
+import { confirmationText } from '@barghsa/i18n/confirmation';
 import { useCallback, useEffect, useState } from 'react';
 import { t } from '@barghsa/i18n/admin-ui';
 import { LoadingStatus, Alert, Button, Input, Label } from '@barghsa/ui';
@@ -216,6 +217,7 @@ function GreenEditor({
             editor.complete();
             editor.resource.retry();
             onChanged();
+            return confirmationText('recorded', locale);
           }}
         />
       )}
@@ -322,6 +324,7 @@ function RetentionEditor({ label, ...props }: CatalogueEditorProps & { label: Co
             editor.resource.accept(result as RetentionSetting);
             editor.complete();
             editor.resource.retry();
+            return confirmationText('recorded', locale);
           }}
         />
       )}
@@ -443,6 +446,7 @@ function TemplateEditor({ label, ...props }: CatalogueEditorProps & { label: Cop
             editor.resource.accept(result as TemplateSetting);
             editor.complete();
             editor.resource.retry();
+            return confirmationText('recorded', locale);
           }}
         />
       )}

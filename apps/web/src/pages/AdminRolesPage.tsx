@@ -4,6 +4,8 @@ import type { FormEvent } from 'react';
 import { LoadingStatus, Alert, Button, DataTable, Label, ListPage, TextCell } from '@barghsa/ui';
 import { t } from '@barghsa/i18n/admin-ui';
 import { useLocale } from '../hooks/useLocale.js';
+import { staffQueryJson, useStaffQueryRead } from '../hooks/useStaffQueryRead.js';
+import { ServerQueryError } from '../lib/server-query-client.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import {
   groupPermissions,
@@ -59,6 +61,7 @@ function validRoles(value: unknown): value is StaffRole[] {
 }
 
 export default function AdminRolesPage({ queries }: { queries?: ListQueryBinding } = {}) {
+  const read = useStaffQueryRead('profiles');
   const locale = useLocale();
   const { numberStyle } = useNumberFormatting(locale);
   const roleText = (id: string, field: 'name' | 'description', fallback: string) => {
@@ -135,24 +138,20 @@ export default function AdminRolesPage({ queries }: { queries?: ListQueryBinding
     setIsError(false);
     void (async () => {
       try {
-        const res = await fetch('/api/admin/roles', { signal: request.signal });
-        if (request.signal.aborted) return;
-        if (res.status === 401 || res.status === 403) {
-          deny();
-          return;
-        }
-        if (!res.ok) throw new Error('roles');
-        const json: unknown = await res.json();
+        const json = await read('/api/admin/roles', 'list', request.signal, staffQueryJson, reload);
         if (!validRoles(json)) throw new Error('roles');
         if (!request.signal.aborted) setRoles(json);
-      } catch {
-        if (!request.signal.aborted) setIsError(true);
+      } catch (failure) {
+        if (!request.signal.aborted) {
+          if (failure instanceof ServerQueryError && [401, 403].includes(failure.status)) deny();
+          else setIsError(true);
+        }
       } finally {
         if (!request.signal.aborted) setIsLoading(false);
       }
     })();
     return () => request.abort();
-  }, [reload, deny]);
+  }, [reload, deny, read]);
 
   useEffect(() => () => lookupRequest.current?.abort(), []);
 
@@ -182,34 +181,31 @@ export default function AdminRolesPage({ queries }: { queries?: ListQueryBinding
       setPermLoading(true);
       setPermError(null);
       setEffective(null);
-      let failureKey = 'admin.roles.user.lookup.failed';
       try {
-        const res = await fetch(
+        const json = await read(
           `/api/admin/users/${encodeURIComponent(id)}/effective-permissions`,
-          {
-            signal: request.signal,
-          }
+          'detail',
+          request.signal,
+          staffQueryJson,
+          reload
         );
-        if (request.signal.aborted) return;
-        if (res.status === 401 || res.status === 403) {
-          deny();
-          return;
-        }
-        if (!res.ok) {
-          if (res.status === 404) failureKey = 'admin.roles.user.notfound';
-          throw new Error('permissions');
-        }
-        const json: unknown = await res.json();
         if (!validEffective(json, id)) throw new Error('permissions');
         if (!request.signal.aborted) setEffective(json);
-      } catch {
-        if (!request.signal.aborted) setPermError(failureKey);
+      } catch (failure) {
+        if (!request.signal.aborted) {
+          const status = failure instanceof ServerQueryError ? failure.status : null;
+          if (status === 401 || status === 403) deny();
+          else
+            setPermError(
+              status === 404 ? 'admin.roles.user.notfound' : 'admin.roles.user.lookup.failed'
+            );
+        }
       } finally {
         if (lookupOwner.current === owner) lookupOwner.current = null;
         if (!request.signal.aborted) setPermLoading(false);
       }
     },
-    [staffUserId, forbidden, isLoading, isError, roles, deny, lookupForm]
+    [staffUserId, forbidden, isLoading, isError, roles, deny, lookupForm, read, reload]
   );
 
   const roleIdentity = (role: StaffRole) => (

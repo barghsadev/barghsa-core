@@ -41,7 +41,7 @@ const allocation = {
 const harness = vi.hoisted(() => ({
   locale: 'en' as 'en' | 'fa',
   action: null as TeamAction | null,
-  finish: null as (() => Promise<void>) | null,
+  finish: null as ((receipt?: unknown) => Promise<void | string>) | null,
   validation: null as ((fields: unknown[]) => boolean) | null,
   close: null as (() => void) | null,
   deny: null as (() => void) | null,
@@ -67,20 +67,21 @@ vi.mock('./TeamActionDialog.js', () => ({
   }: {
     action: TeamAction;
     summary: ReactNode;
-    onSuccess: () => Promise<void>;
+    onSuccess: (receipt: unknown) => Promise<void | string>;
     onValidationError?: (fields: unknown[]) => boolean;
     onClose: () => void;
     onDenied?: () => void;
   }) => {
     harness.action = action;
-    harness.finish = onSuccess;
+    const finish = (value: unknown = { ...receipt, state: 'Confirmed' }) => onSuccess(value);
+    harness.finish = finish;
     harness.validation = onValidationError ?? null;
     harness.close = onClose;
     harness.deny = onDenied ?? null;
     return (
       <div>
         {summary}
-        <button onClick={() => void onSuccess()}>{'Finish action'}</button>
+        <button onClick={() => void finish()}>{'Finish action'}</button>
       </div>
     );
   },
@@ -230,6 +231,12 @@ it.each(['en', 'fa'] as const)('reviews the allocation and receipt file in %s', 
   });
   expect(container.textContent).toContain('Customer profile');
   expect(container.textContent).toContain('TRK');
+  await expect(
+    harness.finish!({ ...receipt, state: 'UnderReview', dualApprovalPending: false })
+  ).rejects.toThrow('Receipt decision mismatch');
+  expect(fetcher.mock.calls.filter(([url]) => String(url).endsWith('/bank-receipts')).length).toBe(
+    1
+  );
   await click('Finish action');
   expect(fetcher.mock.calls.filter(([url]) => String(url).endsWith('/bank-receipts')).length).toBe(
     2

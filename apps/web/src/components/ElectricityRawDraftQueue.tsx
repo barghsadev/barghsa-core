@@ -1,4 +1,7 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react';
+import { confirmationText } from '@barghsa/i18n/confirmation';
+import { staffQueryJson, useStaffQueryRead } from '../hooks/useStaffQueryRead.js';
+import { ServerQueryError } from '../lib/server-query-client.js';
 import { Button, Label, Textarea, TextCell, DateCell } from '@barghsa/ui';
 import { t } from '@barghsa/i18n/app';
 import { useLocale } from '../hooks/useLocale.js';
@@ -145,6 +148,7 @@ function queue(value: unknown) {
   return { drafts, nextAfter: value.nextAfter };
 }
 function Queue() {
+  const read = useStaffQueryRead('orders');
   const locale = useLocale(),
     copy = (key: string) => t('electricity.rawDraft.' + key, locale);
   const time = useAccountTime(locale);
@@ -155,6 +159,7 @@ function Queue() {
     [next, setNext] = useState<string | null>(null),
     [revision, setRevision] = useState(0),
     [loading, setLoading] = useState(false),
+    [listFailed, setListFailed] = useState(false),
     [error, setError] = useState('');
   const [selected, setSelected] = useState<{ row: Draft; action: 'reject' | 'cancel' } | null>(
       null
@@ -176,6 +181,9 @@ function Queue() {
     [invalid, setInvalid] = useState(false);
   const live = useRef(true),
     pending = useRef(false);
+  const scope = JSON.stringify([after, revision, locale]);
+  const [accepted, setAccepted] = useState<string | null>(null);
+  const canUseRows = accepted === scope && !loading && !listFailed;
   useEffect(() => {
     live.current = true;
     return () => {
@@ -186,37 +194,44 @@ function Queue() {
     if (!open) return;
     const abort = new AbortController();
     setLoading(true);
+    setListFailed(false);
     setError('');
-    setRows([]);
-    void fetch(
+    void read(
       '/api/staff/electricity/orders/drafts' + (after ? '?after=' + encodeURIComponent(after) : ''),
-      { signal: abort.signal }
+      'list',
+      abort.signal,
+      async (response) => queue(await staffQueryJson(response)),
+      revision
     )
-      .then(async (response) => {
-        if (!response.ok) throw new Error('Draft queue denied');
-        return queue(await response.json());
-      })
       .then((data) => {
         if (!abort.signal.aborted) {
           setRows(data.drafts);
           setNext(data.nextAfter);
+          setAccepted(scope);
         }
       })
-      .catch(() => {
-        if (!abort.signal.aborted) setError(copy('failed'));
+      .catch((failure: unknown) => {
+        if (abort.signal.aborted) return;
+        setListFailed(true);
+        if (failure instanceof ServerQueryError && [401, 403].includes(failure.status)) {
+          setRows([]);
+          setNext(null);
+          setSelected(null);
+        }
+        setError(copy('failed'));
       })
       .finally(() => {
         if (!abort.signal.aborted) setLoading(false);
       });
     return () => abort.abort();
-  }, [open, after, revision, locale]);
+  }, [open, after, revision, locale, read, scope]);
   const reload = () => {
     setAfter(null);
     setRevision((v) => v + 1);
   };
   async function review(event: FormEvent) {
     event.preventDefault();
-    if (!selected || pending.current) return;
+    if (!selected || pending.current || !canUseRows) return;
     const explanation = reason.trim();
     if (!explanation || explanation.length > 1000) {
       setInvalid(true);
@@ -332,7 +347,12 @@ function Queue() {
     <details
       className="rounded-md border p-4"
       dir={locale === 'fa' ? 'rtl' : 'ltr'}
-      onToggle={(event) => setOpen(event.currentTarget.open)}
+      onToggle={(event) => {
+        const nextOpen = event.currentTarget.open;
+        if (nextOpen === open) return;
+        if (nextOpen) setAccepted(null);
+        setOpen(nextOpen);
+      }}
     >
       <summary className="cursor-pointer font-medium">{copy('title')}</summary>
       {open ? (
@@ -376,7 +396,7 @@ function Queue() {
                     key={choice}
                     size="sm"
                     variant="outline"
-                    disabled={busy || !!action}
+                    disabled={busy || !!action || !canUseRows}
                     onClick={() => {
                       setSelected({ row, action: choice });
                       setReason('');
@@ -394,7 +414,15 @@ function Queue() {
             tableClassName="min-w-[36rem]"
           />
           {next ? (
-            <Button variant="outline" disabled={busy || !!action} onClick={() => setAfter(next)}>
+            <Button
+              variant="outline"
+              disabled={busy || !!action || !canUseRows}
+              onClick={() => {
+                setSelected(null);
+                setReason('');
+                setAfter(next);
+              }}
+            >
               {copy('next')}
             </Button>
           ) : null}
@@ -514,6 +542,7 @@ function Queue() {
                   if (live.current) {
                     setAction(null);
                     setError(copy('awaitingApproval'));
+                    return confirmationText('recorded', locale);
                   }
                   return;
                 }
@@ -569,7 +598,9 @@ function Queue() {
                   setSelected(null);
                   setReason('');
                   reload();
+                  return confirmationText('recorded', locale);
                 }
+                return;
               }}
               onDenied={() => {
                 setRows([]);

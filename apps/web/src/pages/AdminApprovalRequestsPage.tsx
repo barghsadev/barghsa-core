@@ -1,4 +1,5 @@
 import { CommandFeedback } from '../components/CommandFeedback.js';
+import { useStaffQueryRead } from '../hooks/useStaffQueryRead.js';
 import { contractText } from '@barghsa/i18n/contracts';
 import type { ListQueryBinding } from '../hooks/useListQuery.js';
 import { tInvoiceCorrections } from '@barghsa/i18n/invoice-corrections';
@@ -95,6 +96,7 @@ function ApprovalWorkspace({
   queries?: ListQueryBinding;
 }) {
   const locale = useLocale();
+  const read = useStaffQueryRead('operations');
   const numbers = useNumberFormatting(locale);
   const [localStatus, setStatus] = useState<Status>('pending');
   const [localOffset, setOffset] = useState(0);
@@ -165,15 +167,19 @@ function ApprovalWorkspace({
     setLoading(true);
     setError(false);
     try {
-      const response = await fetch(
+      const data = await read(
         requestId
           ? `/api/admin/approval-requests/${encodeURIComponent(requestId)}`
           : `/api/admin/approval-requests?status=${status}&limit=${PAGE_SIZE + 1}&offset=${offset}`,
-        { credentials: 'include', signal: controller.signal }
+        requestId ? 'detail' : 'list',
+        controller.signal,
+        async (response) => {
+          if ([401, 403].includes(response.status)) throw new Error('denied');
+          if (!response.ok) throw new Error('Queue unavailable');
+          return response.json() as Promise<unknown>;
+        },
+        current
       );
-      if ([401, 403].includes(response.status)) throw new Error('denied');
-      if (!response.ok) throw new Error('Queue unavailable');
-      const data: unknown = await response.json();
       if (requestId) {
         if (
           !data ||
@@ -205,7 +211,7 @@ function ApprovalWorkspace({
     } finally {
       if (current === generation.current) setLoading(false);
     }
-  }, [status, offset, requestId, scope]);
+  }, [status, offset, requestId, scope, read]);
   useEffect(() => {
     void load();
     return () => {

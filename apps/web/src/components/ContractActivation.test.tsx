@@ -25,6 +25,8 @@ vi.mock('@tanstack/react-router', () => ({
 const harness = vi.hoisted(() => ({
   locale: 'en' as 'en' | 'fa',
   action: null as TeamAction | null,
+  receipt: null as unknown,
+  finish: null as ((result: unknown) => Promise<void | string>) | null,
 }));
 vi.mock('../hooks/useLocale.js', () => ({ useLocale: () => harness.locale }));
 vi.mock('../hooks/useAccountTime.js', () => ({
@@ -38,13 +40,14 @@ vi.mock('./TeamActionDialog.js', () => ({
   }: {
     action: TeamAction;
     onClose: () => void;
-    onSuccess: () => Promise<void>;
+    onSuccess: (result: unknown) => Promise<void | string>;
   }) => {
     harness.action = action;
+    harness.finish = onSuccess;
     return (
       <div role="dialog">
         <button onClick={onClose}>Cancel</button>
-        <button onClick={() => void onSuccess()}>Confirm</button>
+        <button onClick={() => void onSuccess(harness.receipt)}>Confirm</button>
       </div>
     );
   },
@@ -59,6 +62,8 @@ let container: HTMLDivElement, root: Root;
 beforeEach(() => {
   harness.locale = 'en';
   harness.action = null;
+  harness.receipt = null;
+  harness.finish = null;
   container = document.createElement('div');
   document.body.append(container);
   root = createRoot(container);
@@ -247,6 +252,18 @@ for (const locale of ['en', 'fa'] as const)
       await click('Cancel');
       expect(container.querySelector('[role=dialog]')).toBeNull();
       await act(async () => electricity.querySelector('button')!.click());
+      const receipt = {
+        serviceType: 'electricity',
+        revision: 5,
+        signatureRequired: true,
+        paymentRequired: true,
+        serviceStartRequired: false,
+      };
+      await expect(harness.finish!({ ...receipt, serviceType: 'savings' })).rejects.toThrow(
+        'mismatch'
+      );
+      expect(fetcher).toHaveBeenCalledTimes(1);
+      harness.receipt = receipt;
       await click('Confirm');
       expect(fetcher).toHaveBeenCalledTimes(2);
       expect(container.querySelector('input')!.checked).toBe(false);

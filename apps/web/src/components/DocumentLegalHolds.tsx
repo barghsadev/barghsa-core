@@ -14,6 +14,7 @@ import {
   Textarea,
 } from '@barghsa/ui';
 import { documentText } from '@barghsa/i18n/documents';
+import { confirmationText } from '@barghsa/i18n/confirmation';
 import { useLocale } from '../hooks/useLocale.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { type BusinessDocument } from '../lib/documents.js';
@@ -30,6 +31,29 @@ type Hold = {
   active: boolean;
 };
 type HoldsResponse = { held: boolean; canManage: boolean; holds: Hold[] };
+type HoldAction = TeamAction & {
+  target: Pick<Hold, 'documentId' | 'profileId' | 'reason' | 'expiresAt'> & { holdId?: string };
+};
+
+function matchesHold(value: unknown, { target }: HoldAction) {
+  if (!value || typeof value !== 'object') return false;
+  const hold = value as Partial<Hold>;
+  if (
+    typeof hold.id !== 'string' ||
+    !hold.id ||
+    hold.documentId !== target.documentId ||
+    hold.profileId !== target.profileId ||
+    hold.reason !== target.reason ||
+    hold.expiresAt !== target.expiresAt
+  )
+    return false;
+  return target.holdId
+    ? hold.id === target.holdId &&
+        hold.active === false &&
+        typeof hold.releasedAt === 'string' &&
+        Number.isFinite(Date.parse(hold.releasedAt))
+    : hold.releasedAt === null;
+}
 
 export function DocumentLegalHolds(props: Parameters<typeof OwnedDocumentLegalHolds>[0]) {
   const actor = useAccountUser();
@@ -62,7 +86,7 @@ function OwnedDocumentLegalHolds({ document }: { document: BusinessDocument }) {
   const [expiresAt, setExpiresAt] = useState('');
   const [releaseNote, setReleaseNote] = useState('');
   const [invalid, setInvalid] = useState(false);
-  const [action, setAction] = useState<TeamAction | null>(null);
+  const [action, setAction] = useState<HoldAction | null>(null);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -84,6 +108,7 @@ function OwnedDocumentLegalHolds({ document }: { document: BusinessDocument }) {
 
   function create(event: FormEvent) {
     event.preventDefault();
+    if (!data?.canManage || error || action) return;
     const expiry = expiresAt ? new Date(expiresAt) : null;
     if (
       reason.trim().length < 3 ||
@@ -94,6 +119,12 @@ function OwnedDocumentLegalHolds({ document }: { document: BusinessDocument }) {
     }
     setInvalid(false);
     setAction({
+      target: {
+        profileId: scope === 'profile' ? document.profileId : null,
+        documentId: scope === 'document' ? document.id : null,
+        reason: reason.trim(),
+        expiresAt: expiry?.toISOString() ?? null,
+      },
       title: word('createHold'),
       description: scope === 'profile' ? word('holdProfile') : word('holdDocument'),
       path: '/api/admin/document-retention/holds',
@@ -107,12 +138,14 @@ function OwnedDocumentLegalHolds({ document }: { document: BusinessDocument }) {
     });
   }
   function release(hold: Hold) {
+    if (!data?.canManage || error || action || !hold.active) return;
     if (releaseNote.trim().length < 3) {
       setInvalid(true);
       return;
     }
     setInvalid(false);
     setAction({
+      target: { ...hold, holdId: hold.id },
       risk: 'destructive',
       title: word('releaseHold'),
       description: hold.reason,
@@ -160,7 +193,7 @@ function OwnedDocumentLegalHolds({ document }: { document: BusinessDocument }) {
                 {time.format(hold.initiatedAt)}
                 {hold.expiresAt ? ` · ${word('holdExpiry')}: ${time.format(hold.expiresAt)}` : ''}
               </p>
-              {data.canManage && hold.active ? (
+              {data.canManage && !error && hold.active ? (
                 <Button variant="outline" className="mt-3" onClick={() => release(hold)}>
                   {word('releaseHold')}
                 </Button>
@@ -171,7 +204,7 @@ function OwnedDocumentLegalHolds({ document }: { document: BusinessDocument }) {
       ) : data ? (
         <p className="text-sm text-muted-foreground">{word('noHolds')}</p>
       ) : null}
-      {data?.canManage ? (
+      {data?.canManage && !error ? (
         <div className="space-y-4 border-t pt-4">
           <form onSubmit={create} className="grid gap-3 sm:grid-cols-2">
             <Field>
@@ -230,10 +263,17 @@ function OwnedDocumentLegalHolds({ document }: { document: BusinessDocument }) {
         <TeamActionDialog
           action={action}
           onClose={() => setAction(null)}
-          onSuccess={async () => {
+          onUnconfirmed={() => {
+            setAction(null);
+            setData(null);
+            setReload((value) => value + 1);
+          }}
+          onSuccess={async (result) => {
+            if (!matchesHold(result, action)) throw new Error('Legal hold receipt mismatch');
             setReload((value) => value + 1);
             setReason('');
             setReleaseNote('');
+            return confirmationText('recorded', locale);
           }}
         />
       ) : null}

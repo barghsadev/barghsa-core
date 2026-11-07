@@ -1,5 +1,6 @@
 import { feedbackText } from '@barghsa/i18n/feedback';
 import { useOwnedDocumentRead } from '../hooks/useOwnedDocumentRead.js';
+import { confirmationText } from '@barghsa/i18n/confirmation';
 import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useEffect, useRef, useState } from 'react';
 import {
@@ -32,6 +33,18 @@ import {
   type DocumentAction,
   type DocumentDetail as Detail,
 } from '../lib/documents.js';
+
+const transitionState: Record<DocumentAction, BusinessDocument['state']> = {
+  submit: 'SubmittedForReview',
+  approve: 'Approved',
+  reject: 'Rejected',
+  'request-changes': 'Available',
+  quarantine: 'Quarantined',
+  remove: 'Removed',
+};
+type Transition = TeamAction & {
+  target: { id: string; profileId: string; revision: number; state: BusinessDocument['state'] };
+};
 
 export function DocumentDetail(props: Parameters<typeof OwnedDocumentDetail>[0]) {
   const actor = useAccountUser();
@@ -84,7 +97,7 @@ function OwnedDocumentDetail({
   const [reload, setReload] = useState(0);
   const [reason, setReason] = useState('');
   const [reasonMissing, setReasonMissing] = useState(false);
-  const [action, setAction] = useState<TeamAction | null>(null);
+  const [action, setAction] = useState<Transition | null>(null);
   const [download, setDownload] = useState<string | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [previewing, setPreviewing] = useState(false);
@@ -164,6 +177,12 @@ function OwnedDocumentDetail({
     }
     setReasonMissing(false);
     setAction({
+      target: {
+        id: document.id,
+        profileId: document.profileId,
+        revision: document.revision + 1,
+        state: transitionState[next],
+      },
       ...(['remove', 'quarantine', 'reject'].includes(next)
         ? { risk: 'destructive' as const }
         : {}),
@@ -408,11 +427,22 @@ function OwnedDocumentDetail({
         <TeamActionDialog
           action={action}
           onClose={() => setAction(null)}
-          onSuccess={async () => {
+          onSuccess={async (result) => {
+            const receipt = result as Partial<BusinessDocument> | null;
+            const target = action.target;
+            if (
+              !receipt ||
+              receipt.id !== target.id ||
+              receipt.profileId !== target.profileId ||
+              receipt.revision !== target.revision ||
+              receipt.state !== target.state
+            )
+              throw new Error('Document transition receipt mismatch');
             setAction(null);
             setReason('');
             setReload((value) => value + 1);
             onChanged();
+            return confirmationText('recorded', locale);
           }}
         />
       ) : null}

@@ -37,6 +37,8 @@ import {
 import { OperationalQueueTable, QueueRecordDetails } from '../components/OperationalQueueTable.js';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import { useLocale } from '../hooks/useLocale.js';
+import { staffQueryJson, useStaffQueryRead } from '../hooks/useStaffQueryRead.js';
+import { ServerQueryError } from '../lib/server-query-client.js';
 interface Limit {
   category: string;
   allowedExtensions: string[];
@@ -101,6 +103,9 @@ function basis(limit: Limit, policies: UploadPolicyDto[]) {
 }
 const mib = 1024 * 1024;
 export default function AdminUploadPoliciesPage() {
+  const readQuery = useStaffQueryRead('catalogue');
+  const deniedRead = (reason: unknown) =>
+    reason instanceof ServerQueryError && [401, 403].includes(reason.status);
   const time = useAccountTime();
   const locale = useLocale();
   const numbers = useNumberFormatting(locale);
@@ -215,14 +220,13 @@ export default function AdminUploadPoliciesPage() {
     setAccessError(false);
     void (async () => {
       try {
-        const res = await fetch('/api/admin/upload-policies/access', { signal: controller.signal });
-        if (controller.signal.aborted) return;
-        if (res.status === 401 || res.status === 403) {
-          deny();
-          return;
-        }
-        if (!res.ok) throw new Error('Unavailable');
-        const permission: unknown = await res.json();
+        const permission = await readQuery(
+          '/api/admin/upload-policies/access',
+          'detail',
+          controller.signal,
+          staffQueryJson,
+          accessRevision
+        );
         if (controller.signal.aborted) return;
         if (!record(permission) || typeof permission.canEdit !== 'boolean')
           throw new Error('Invalid access');
@@ -232,14 +236,17 @@ export default function AdminUploadPoliciesPage() {
         }
         setCanEdit(true);
         setAccessVersion((v) => v + 1);
-      } catch {
-        if (!controller.signal.aborted) setAccessError(true);
+      } catch (reason) {
+        if (!controller.signal.aborted) {
+          if (deniedRead(reason)) deny();
+          else setAccessError(true);
+        }
       } finally {
         if (!controller.signal.aborted) setAccessLoading(false);
       }
     })();
     return () => controller.abort();
-  }, [accessRevision, deny]);
+  }, [accessRevision, deny, readQuery]);
   useEffect(() => {
     if (!canEdit || accessLoading || accessError) return;
     const controller = new AbortController();
@@ -248,16 +255,21 @@ export default function AdminUploadPoliciesPage() {
     setError(false);
     void (async () => {
       try {
-        const read = async (path: string) => {
-          const res = await fetch(path, { signal: controller.signal });
-          if (controller.signal.aborted) throw new Error('Obsolete read');
-          if (res.status === 401 || res.status === 403) {
-            deny();
-            throw new Error('Denied');
-          }
-          if (!res.ok) throw new Error('Unavailable');
-          return res.json() as Promise<unknown>;
-        };
+        const read = (path: string) =>
+          readQuery(
+            path,
+            'list',
+            controller.signal,
+            async (res) => {
+              if (controller.signal.aborted) throw new Error('Obsolete read');
+              if (res.status === 401 || res.status === 403) {
+                deny();
+                throw new Error('Denied');
+              }
+              return staffQueryJson(res);
+            },
+            accessVersion
+          );
         const [versions, boundaries] = await Promise.all([
           read('/api/admin/upload-policies'),
           read('/api/admin/upload-policies/limits'),
@@ -286,7 +298,17 @@ export default function AdminUploadPoliciesPage() {
       }
     })();
     return () => controller.abort();
-  }, [revision, canEdit, accessVersion, accessLoading, accessError, deny, clearWork, withdraw]);
+  }, [
+    revision,
+    canEdit,
+    accessVersion,
+    accessLoading,
+    accessError,
+    deny,
+    clearWork,
+    withdraw,
+    readQuery,
+  ]);
   const disabled = !canEdit || loading || error || accessLoading || accessError;
   const refresh = () => {
     if (dialogBusy.current) return;

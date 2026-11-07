@@ -1,3 +1,5 @@
+import { toast } from '../lib/toast-api.js';
+import { confirmationText } from '@barghsa/i18n/confirmation';
 import { ConfirmationFields } from '@barghsa/ui';
 import { useRiskConfirmation } from '../hooks/useRiskConfirmation.js';
 import { useOwnedFinancialRead } from '../hooks/useOwnedFinancialRead.js';
@@ -348,6 +350,7 @@ function ChangeWorkspace(props: Props & { scope: string; currentScope: RefObject
         release();
         setQuote(null);
         form.reset(current);
+        toast.success(confirmationText('recorded', locale));
         props.onChanged();
         return;
       }

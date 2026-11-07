@@ -1,4 +1,5 @@
 import { useOwnedDocumentRead } from '../hooks/useOwnedDocumentRead.js';
+import { confirmationText } from '@barghsa/i18n/confirmation';
 import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
@@ -61,7 +62,9 @@ function OwnedDocumentDestructionQueue() {
   const [selected, setSelected] = useState<Item | null>(null);
   const [note, setNote] = useState('');
   const [invalid, setInvalid] = useState(false);
-  const [action, setAction] = useState<TeamAction | null>(null);
+  const [action, setAction] = useState<
+    (TeamAction & { target: { id: string; documentId: string } }) | null
+  >(null);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -130,6 +133,7 @@ function OwnedDocumentDestructionQueue() {
     }
     setInvalid(false);
     setAction({
+      target: { id: selected.id, documentId: selected.documentId },
       risk: 'destructive',
       title: word('destructionApprove'),
       description: word('destructionWarning'),
@@ -260,10 +264,26 @@ function OwnedDocumentDestructionQueue() {
         <TeamActionDialog
           action={action}
           onClose={() => setAction(null)}
-          onSuccess={async () => {
+          onUnconfirmed={() => {
             if (accessDenied.current) return;
+            setAction(null);
+            setSelected(null);
+            setData(null);
+            setReload((value) => value + 1);
+          }}
+          onSuccess={async (value) => {
+            if (accessDenied.current) return;
+            const receipt = value as { id?: string; document_id?: string; status?: string } | null;
+            if (
+              !receipt ||
+              receipt.id !== action.target.id ||
+              receipt.document_id !== action.target.documentId ||
+              receipt.status !== 'approved'
+            )
+              throw new Error('Destruction approval receipt mismatch');
             setSelected(null);
             setReload((value) => value + 1);
+            return confirmationText('recorded', locale);
           }}
         />
       ) : null}

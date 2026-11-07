@@ -24,13 +24,26 @@ vi.mock('./TeamActionDialog.js', () => ({
     onClose,
   }: {
     action: import('./TeamActionDialog.js').TeamAction;
-    onSuccess: () => Promise<void>;
+    onSuccess: (receipt: unknown) => Promise<void | string>;
     onClose: () => void;
   }) => {
     actionHarness.action = action;
+    const revision = (action.body as { expectedRevision: number }).expectedRevision;
+    const id = action.path.split('/').at(-2);
     return (
       <div role="dialog">
-        <button onClick={() => void onSuccess()}>Confirm removal</button>
+        <button
+          onClick={() =>
+            void onSuccess({
+              ...documentRow,
+              id,
+              state: 'Removed',
+              revision: revision + 1,
+            })
+          }
+        >
+          Confirm removal
+        </button>
         <button onClick={onClose}>Cancel removal</button>
       </div>
     );

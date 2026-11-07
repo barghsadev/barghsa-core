@@ -1,3 +1,5 @@
+import { confirmationText } from '@barghsa/i18n/confirmation';
+import { toast } from '../lib/toast-api.js';
 import { useOwnedDocumentRead } from '../hooks/useOwnedDocumentRead.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
@@ -247,8 +249,19 @@ function UploadForm({
           body: JSON.stringify({ expectedRevision: 1, idempotencyKey: current.confirmKey }),
         }
       );
-      if (!active.signal.aborted && mounted.current && controller.current === active)
+      if (!active.signal.aborted && mounted.current && controller.current === active) {
+        if (
+          !document ||
+          document.id !== current.upload.document.id ||
+          document.profileId !== current.upload.document.profileId ||
+          !['Available', 'PendingScan'].includes(document.state) ||
+          !Number.isInteger(document.revision) ||
+          document.revision <= current.upload.document.revision
+        )
+          throw new Error('Document sealing receipt mismatch');
+        toast.success(confirmationText('recorded', locale));
         onUploaded(document);
+      }
     } catch (failure) {
       if (!active.signal.aborted && mounted.current && controller.current === active) {
         setPhase('failed');

@@ -1,3 +1,5 @@
+import { toast } from '../lib/toast-api.js';
+import { confirmationText } from '@barghsa/i18n/confirmation';
 import { OrderWalletBalance } from '../components/OrderWalletBalance.js';
 import { commercialFetch as fetch } from '../lib/commercial-fetch.js';
 import { LoadingStatus, ListPage } from '@barghsa/ui';
@@ -557,6 +559,7 @@ export function ConsultationsPage({
         pendingIntake.current = null;
         setIntakeUnconfirmed(false);
         completed = true;
+        toast.success(confirmationText('recorded', locale));
         void navigate({
           to: '/consultations/$requestId',
           params: { requestId: result.requestId },

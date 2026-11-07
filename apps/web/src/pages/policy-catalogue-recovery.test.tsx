@@ -2,6 +2,7 @@ import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import Roles from './AdminRolesPage.js';
+import { QueryComponentProvider } from '../test/query-provider.js';
 import Uploads from './AdminUploadPoliciesPage.js';
 import type { TeamAction } from '../components/TeamActionDialog.js';
 import {
@@ -54,7 +55,13 @@ afterEach(async () => {
 });
 const response = (json: unknown, status = 200) => new Response(JSON.stringify(json), { status });
 async function render(Page: typeof Roles | typeof Uploads) {
-  await act(async () => root.render(<Page />));
+  await act(async () =>
+    root.render(
+      <QueryComponentProvider>
+        <Page />
+      </QueryComponentProvider>
+    )
+  );
 }
 async function click(text: string) {
   const button = [...document.querySelectorAll<HTMLButtonElement>('button')].find(

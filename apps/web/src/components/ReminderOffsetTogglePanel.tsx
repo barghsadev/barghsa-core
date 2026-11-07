@@ -1,3 +1,5 @@
+import { toast } from '../lib/toast-api.js';
+import { confirmationText } from '@barghsa/i18n/confirmation';
 import { LoadingStatus } from '@barghsa/ui';
 import { useQueryClient } from '@tanstack/react-query';
 import { queryKeys, type ServerQueryKey } from '../lib/query-keys.js';
@@ -280,6 +282,8 @@ function OwnedReminderOffsetTogglePanel() {
         current ? patchCell(current, item.serviceType, item.offset, result.enabled) : current
       );
       markPending(toggleKey(item.serviceType, item.offset), false);
+      if (alive.current && latest.current === identity)
+        toast.success(confirmationText('recorded', locale));
       return 'done';
     } catch {
       revertToggle(item);

@@ -20,6 +20,7 @@ const harness = vi.hoisted(() => ({
   locale: 'en' as 'en' | 'fa',
   action: null as TeamAction | null,
   result: null as unknown,
+  finish: null as ((result: unknown) => Promise<void | string>) | null,
 }));
 vi.mock('../hooks/useLocale.js', () => ({ useLocale: () => harness.locale }));
 vi.mock('../hooks/useAccountTime.js', () => ({
@@ -42,10 +43,11 @@ vi.mock('./TeamActionDialog.js', () => ({
   }: {
     action?: TeamAction;
     onDenied?: () => void;
-    onSuccess: (result: unknown) => Promise<void>;
+    onSuccess: (result: unknown) => Promise<void | string>;
     onClose: () => void;
   }) => {
     harness.action = action ?? null;
+    harness.finish = onSuccess;
     return (
       <div role="dialog">
         <button onClick={() => void onSuccess(harness.result)}>Confirm action</button>
@@ -88,6 +90,7 @@ beforeEach(() => {
   harness.locale = 'en';
   harness.action = null;
   harness.result = null;
+  harness.finish = null;
   container = document.createElement('div');
   document.body.append(container);
   root = createRoot(container);
@@ -191,6 +194,20 @@ it('shows a Persian legal hold and binds release to the selected hold', async ()
     path: '/api/admin/document-retention/holds/33333333-3333-4333-8333-333333333333/release',
     body: { note: 'Inquiry is complete' },
   });
+  const receipt = {
+    id: '33333333-3333-4333-8333-333333333333',
+    documentId: DOCUMENT,
+    profileId: null,
+    reason: 'Preserve for inquiry',
+    expiresAt: null,
+    releasedAt: '2026-09-25T00:00:00Z',
+    active: false,
+  };
+  await expect(harness.finish!({ ...receipt, documentId: PROFILE })).rejects.toThrow('mismatch');
+  expect(container.querySelector<HTMLTextAreaElement>('#hold-release-note')?.value).toBe(
+    'Inquiry is complete'
+  );
+  await act(async () => expect(await harness.finish!(receipt)).toBe('به‌روزرسانی ثبت شد'));
 });
 
 it('binds destruction approval to the selected manifest and legal note', async () => {
@@ -225,6 +242,22 @@ it('binds destruction approval to the selected manifest and legal note', async (
     path: `/api/admin/document-retention/destruction/${itemId}/approve`,
     body: { note: 'Approved by legal after record closure' },
   });
+  await expect(
+    harness.finish!({
+      id: itemId,
+      document_id: DOCUMENT,
+      status: 'destroyed',
+    })
+  ).rejects.toThrow('mismatch');
+  await act(async () =>
+    expect(
+      await harness.finish!({
+        id: itemId,
+        document_id: DOCUMENT,
+        status: 'approved',
+      })
+    ).toBe('Update recorded')
+  );
 });
 
 it.each(['en', 'fa'] as const)(

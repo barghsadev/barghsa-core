@@ -6,6 +6,10 @@ import { useLocale } from '../hooks/useLocale.js';
 import { useListView } from '../hooks/useListView.js';
 import { StaffInvoiceReceiptList } from './StaffInvoiceReceiptList.js';
 import { isInvoiceUuid } from '../lib/due-at-override.js';
+import { useAccountUser } from '../hooks/useAccountUser.js';
+import { useManualServerRead } from '../hooks/useServerQuery.js';
+import { useProfileContextRevision } from '../lib/profile-context.js';
+import { queryKeys } from '../lib/query-keys.js';
 
 import { useListQuery, type ListQueryBinding } from '../hooks/useListQuery.js';
 import { InvoiceReceiptHistoryFilters } from './InvoiceReceiptHistoryFilters.js';
@@ -33,15 +37,22 @@ interface HistoryPage {
   nextCursor: Cursor | null;
 }
 
-export function InvoiceBankReceiptHistory({
-  onOpen,
-  revision,
-  binding,
-}: {
+interface HistoryProps {
   onOpen: (receiptId: string) => void;
   revision: number;
   binding?: ListQueryBinding;
-}) {
+}
+
+export function InvoiceBankReceiptHistory(props: HistoryProps) {
+  const actor = useAccountUser();
+  const revision = useProfileContextRevision();
+  return <OwnedHistory key={JSON.stringify([actor, revision])} {...props} />;
+}
+
+function OwnedHistory({ onOpen, revision, binding }: HistoryProps) {
+  const accountId = useAccountUser();
+  const profileRevision = useProfileContextRevision();
+  const read = useManualServerRead();
   const locale = useLocale();
   const { view, setView } = useListView('staff-invoice-receipts-history');
   const word = (key: string) => adminText(`admin.invoiceReceipts.${key}`, locale);
@@ -88,14 +99,25 @@ export function InvoiceBankReceiptHistory({
       query.set('beforeId', cursor.beforeId);
     }
     setLoadState('loading');
-    void fetch(`/api/admin/invoices/bank-receipts/history?${query}`, {
-      credentials: 'include',
-      signal: controller.signal,
+    const endpoint = '/api/admin/invoices/bank-receipts/history';
+    const path = `${endpoint}?${query}`;
+    query.set('endpoint', endpoint);
+    const key = queryKeys.invoices.list(
+      {
+        context: 'staff',
+        ownerId: accountId ?? 'staff-session',
+        accountId,
+        revision: profileRevision,
+      },
+      query
+    );
+    void read(key, controller.signal, async (signal) => {
+      const response = await fetch(path, { credentials: 'include', signal });
+      if (!response.ok) throw new Error(String(response.status));
+      const result = (await response.json()) as HistoryPage;
+      if (!result || !Array.isArray(result.items)) throw new Error('Invalid receipt history');
+      return result;
     })
-      .then(async (response) => {
-        if (!response.ok) throw new Error(String(response.status));
-        return (await response.json()) as HistoryPage;
-      })
       .then((result) => {
         if (!controller.signal.aborted) {
           setPage(result);
@@ -110,7 +132,7 @@ export function InvoiceBankReceiptHistory({
         }
       });
     return () => controller.abort();
-  }, [criteria, cursorKey, revision, retryRevision]);
+  }, [criteria, cursorKey, revision, retryRevision, read]);
 
   function applyInvoice(event: FormEvent) {
     event.preventDefault();

@@ -1,3 +1,4 @@
+import { confirmationText } from '@barghsa/i18n/confirmation';
 import { tServiceSettings } from '@barghsa/i18n/service-settings';
 import { useRef } from 'react';
 import { Alert, Button, Input, Label } from '@barghsa/ui';
@@ -281,6 +282,7 @@ export function ServiceSettingsEditor({
               return;
             editor.complete(result as ServiceSettings);
             editor.resource.retry();
+            return confirmationText('recorded', locale);
           }}
         />
       )}

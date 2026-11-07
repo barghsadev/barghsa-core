@@ -19,6 +19,11 @@ import {
 } from '@barghsa/ui';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import { useLocale } from '../hooks/useLocale.js';
+import { useAccountUser } from '../hooks/useAccountUser.js';
+import { useManualServerRead } from '../hooks/useServerQuery.js';
+import { useProfileContextRevision } from '../lib/profile-context.js';
+import { queryKeys } from '../lib/query-keys.js';
+import { ServerQueryError } from '../lib/server-query-client.js';
 import {
   Form,
   FormInput,
@@ -47,7 +52,29 @@ import {
 const statuses = ['open', 'investigating', 'resolved', 'closed'];
 const severities = ['low', 'medium', 'high', 'critical'];
 const pageSize = 25;
-export default function AdminReconciliationPage({ queries }: { queries?: ListQueryBinding } = {}) {
+const endpoint = '/api/admin/reconciliation/items';
+async function reconciliationRead(path: string, signal: AbortSignal): Promise<unknown> {
+  const response = await fetch(path, { signal });
+  if (!response.ok) throw new ServerQueryError(response.status);
+  return response.json();
+}
+const readDenied = (error: unknown) =>
+  error instanceof ServerQueryError && [401, 403].includes(error.status);
+
+export default function AdminReconciliationPage(props: { queries?: ListQueryBinding } = {}) {
+  const actor = useAccountUser();
+  const revision = useProfileContextRevision();
+  return <OwnedReconciliation key={JSON.stringify([actor, revision])} {...props} />;
+}
+function OwnedReconciliation({ queries }: { queries?: ListQueryBinding }) {
+  const accountId = useAccountUser();
+  const scope = {
+    context: 'staff' as const,
+    ownerId: accountId ?? 'staff-session',
+    accountId,
+    revision: useProfileContextRevision(),
+  };
+  const read = useManualServerRead();
   const time = useAccountTime();
   const detailTrigger = useRef<HTMLElement | null>(null);
   const listHeading = useRef<HTMLHeadingElement>(null);
@@ -189,16 +216,12 @@ export default function AdminReconciliationPage({ queries }: { queries?: ListQue
     setAccessError(false);
     void (async () => {
       try {
-        const response = await fetch('/api/admin/reconciliation/items/access', {
-          signal: controller.signal,
-        });
-        if (controller.signal.aborted) return;
-        if ([401, 403].includes(response.status)) {
-          denyAccess();
-          return;
-        }
-        if (!response.ok) throw new Error('Access unavailable');
-        const permission = (await response.json()) as { canView: boolean; canResolve: boolean };
+        const path = endpoint + '/access';
+        const permission = (await read(
+          queryKeys.profiles.authority(scope, path),
+          controller.signal,
+          (signal) => reconciliationRead(path, signal)
+        )) as { canView: boolean; canResolve: boolean };
         if (controller.signal.aborted) return;
         if (typeof permission.canView !== 'boolean' || typeof permission.canResolve !== 'boolean')
           throw new Error('Invalid access');
@@ -212,8 +235,11 @@ export default function AdminReconciliationPage({ queries }: { queries?: ListQue
         setCanResolve(permission.canResolve);
         if (!permission.canResolve && reviewed.current) clearWork();
         setAccessVersion((v) => v + 1);
-      } catch {
-        if (!controller.signal.aborted) setAccessError(true);
+      } catch (failure) {
+        if (!controller.signal.aborted) {
+          if (readDenied(failure)) denyAccess();
+          else setAccessError(true);
+        }
       } finally {
         if (!controller.signal.aborted) {
           setAccessLoading(false);
@@ -222,7 +248,7 @@ export default function AdminReconciliationPage({ queries }: { queries?: ListQue
       }
     })();
     return () => controller.abort();
-  }, [accessRevision]);
+  }, [accessRevision, read]);
   useEffect(() => {
     if (!canView || !accessValid.current || accessLoading) return;
     const controller = new AbortController();
@@ -230,17 +256,17 @@ export default function AdminReconciliationPage({ queries }: { queries?: ListQue
     setError(false);
     void (async () => {
       try {
-        const response = await fetch(
-          `/api/admin/reconciliation/items?${query}&limit=${pageSize}&offset=${offset}`,
-          { signal: controller.signal }
+        const search = `${query}&limit=${pageSize}&offset=${offset}`;
+        const key = queryKeys.operations.queue(
+          scope,
+          endpoint,
+          new URLSearchParams(search),
+          accessVersion,
+          revision
         );
-        if (controller.signal.aborted) return;
-        if ([401, 403].includes(response.status)) {
-          denyAccess();
-          return;
-        }
-        if (!response.ok) throw new Error('List unavailable');
-        const rows: unknown = await response.json();
+        const rows = await read(key, controller.signal, (signal) =>
+          reconciliationRead(`${endpoint}?${search}`, signal)
+        );
         if (!Array.isArray(rows)) throw new Error('Invalid list');
         if (controller.signal.aborted || !accessValid.current) return;
         if (
@@ -252,14 +278,17 @@ export default function AdminReconciliationPage({ queries }: { queries?: ListQue
           clearWork();
         setAcceptedScope(query);
         setItems(rows);
-      } catch {
-        if (!controller.signal.aborted) setError(true);
+      } catch (failure) {
+        if (!controller.signal.aborted) {
+          if (readDenied(failure)) denyAccess();
+          else setError(true);
+        }
       } finally {
         if (!controller.signal.aborted) setLoading(false);
       }
     })();
     return () => controller.abort();
-  }, [query, offset, revision, canView, accessVersion, accessLoading]);
+  }, [query, offset, revision, canView, accessVersion, accessLoading, read]);
   function refreshAccess() {
     if (
       sending.current ||
@@ -387,11 +416,10 @@ export default function AdminReconciliationPage({ queries }: { queries?: ListQue
     const current = workGeneration.current;
     setFreshState('loading');
     setFresh(null);
-    void fetch(`/api/admin/reconciliation/items/${selected.id}`, { signal: controller.signal })
-      .then(async (response) => {
-        if (!response.ok)
-          throw new Error([401, 403].includes(response.status) ? 'denied' : 'error');
-        const value: unknown = await response.json();
+    const path = `${endpoint}/${selected.id}`;
+    const key = queryKeys.operations.detail(scope, JSON.stringify([path, accessVersion]));
+    void read(key, controller.signal, (signal) => reconciliationRead(path, signal))
+      .then((value) => {
         if (!isReconciliationItem(value) || value.id !== selected.id)
           throw new Error('Invalid saved exception');
         if (controller.signal.aborted || current !== workGeneration.current || !accessValid.current)
@@ -402,11 +430,11 @@ export default function AdminReconciliationPage({ queries }: { queries?: ListQue
       })
       .catch((reason: unknown) => {
         if (controller.signal.aborted || current !== workGeneration.current) return;
-        if (reason instanceof Error && reason.message === 'denied') denyAccess();
+        if (readDenied(reason)) denyAccess();
         else setFreshState('error');
       });
     return () => controller.abort();
-  }, [uncertain, selected?.id, freshRevision]);
+  }, [uncertain, selected?.id, freshRevision, read]);
   const recoveryView = (accessError || error) && (
     <div role="alert" className="space-y-2">
       <p>{label(accessError ? 'accessError' : 'error')}</p>

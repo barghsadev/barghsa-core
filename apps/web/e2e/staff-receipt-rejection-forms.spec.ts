@@ -1,3 +1,5 @@
+import { approveRiskConfirmation } from './confirmation-fixture';
+import { confirmationText } from '@barghsa/i18n/confirmation';
 import AxeBuilder from '@axe-core/playwright';
 import { t as adminText } from '@barghsa/i18n/admin-ui';
 import { tWalletReceipts as walletText } from '@barghsa/i18n/wallet-receipts';
@@ -212,11 +214,11 @@ for (const locale of ['en', 'fa'] as const)
         await expect(field).not.toHaveAttribute('aria-invalid', 'true');
         const submit = async () => {
           await reject.click();
-          if (kind === 'invoice')
-            await page
-              .getByRole('dialog')
-              .getByRole('button', { name: appText('team.confirm', locale), exact: true })
-              .click();
+          await approveRiskConfirmation(page, locale, 'both');
+          await page
+            .locator('[role=dialog], [role=alertdialog]')
+            .getByRole('button', { name: confirmationText('confirm', locale), exact: true })
+            .click();
         };
         await submit();
         const dialog = page.getByRole('dialog');
@@ -269,13 +271,17 @@ for (const locale of ['en', 'fa'] as const)
             await dialog
               .getByRole('button', { name: appText('team.confirm', locale), exact: true })
               .click();
-          else await reject.click();
+          else await submit();
         };
         await retryCaptured();
         await expect.poll(() => bodies.length).toBe(4);
         await expect(field).toHaveValue('  Revised investigation  ');
         await expect(page.getByText('Private server diagnostic', { exact: true })).toHaveCount(0);
-        await retryCaptured();
+        if (kind === 'invoice') {
+          await expect(dialog).toHaveCount(0);
+          await expect(reject).toBeEnabled();
+          await submit();
+        } else await retryCaptured();
         await expect.poll(() => bodies.length).toBe(5);
         await expect(field).toHaveCount(0);
         expect(bodies).toEqual([

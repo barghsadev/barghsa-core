@@ -1,3 +1,5 @@
+import { toast } from '../lib/toast-api.js';
+import { confirmationText } from '@barghsa/i18n/confirmation';
 import { useDestructiveConfirm } from '../hooks/useDestructiveConfirm.js';
 import { parseTemplateEventKey } from '@barghsa/shared/notifications';
 import { renderTemplatePreview } from '../lib/template-preview.js';
@@ -22,6 +24,7 @@ import {
   type NotificationDraft,
 } from '../lib/notification-form.js';
 import { useCatalogueScope } from '../hooks/useCatalogueResource.js';
+import { useStaffQueryRead } from '../hooks/useStaffQueryRead.js';
 import type { ListQueryBinding } from '../hooks/useListQuery.js';
 import type { FormEvent } from 'react';
 import { t } from '@barghsa/i18n/admin-ui';
@@ -248,6 +251,7 @@ export default function AdminNotificationsPage({
     setTestSendMsg(null);
   }, [resetEditorBusy, resetCatalogueBusy]);
   const scope = useCatalogueScope(clearPrivate);
+  const read = useStaffQueryRead('notifications');
   const confirmDestruction = useDestructiveConfirm(uiLocale, scope.version);
   const ready = accepted && !loading && !loadFailed && !scope.denied;
   const selectedTemplate = editId ? templates.find((r) => r.id === editId) : null;
@@ -302,16 +306,23 @@ export default function AdminNotificationsPage({
       if (filterChannel) params.set('channel', filterChannel);
       if (filterStatus) params.set('status', filterStatus);
       const qs = params.toString();
-      const res = await fetch(`/api/admin/notifications/templates${qs ? `?${qs}` : ''}`, {
-        signal: request.signal,
-      });
+      const packet = await read(
+        `/api/admin/notifications/templates${qs ? `?${qs}` : ''}`,
+        'list',
+        request.signal,
+        async (res) => {
+          if (res.status === 401 || res.status === 403) return null;
+          if (!res.ok) throw new Error('Templates unavailable');
+          return { payload: (await res.json()) as unknown };
+        },
+        epoch
+      );
       if (request.signal.aborted || scope.live.current !== epoch) return;
-      if (res.status === 401 || res.status === 403) {
+      if (!packet) {
         scope.deny();
         return;
       }
-      if (!res.ok) throw new Error();
-      const data: unknown = await res.json();
+      const { payload: data } = packet;
       if (
         !Array.isArray(data) ||
         !data.every(
@@ -370,6 +381,7 @@ export default function AdminNotificationsPage({
     scope.version,
     scope.deny,
     resetEditorBusy,
+    read,
   ]);
 
   useEffect(() => {
@@ -687,6 +699,7 @@ export default function AdminNotificationsPage({
                 )
                   throw new Error();
                 acceptReceipt(saved);
+                toast.success(confirmationText('recorded', uiLocale));
                 if (generation === editorGeneration.current) closeEditor();
                 await refreshTemplates.current();
               } catch (error) {
@@ -738,6 +751,7 @@ export default function AdminNotificationsPage({
           )
             throw new Error();
           acceptReceipt(saved);
+          toast.success(confirmationText('recorded', uiLocale));
           setPublishId((current) => (current === id ? null : current));
           await refreshTemplates.current();
         },
@@ -786,6 +800,7 @@ export default function AdminNotificationsPage({
           )
             throw new Error();
           acceptReceipt(saved);
+          toast.success(confirmationText('recorded', uiLocale));
           await refreshTemplates.current();
         },
         () => token === busyTokens.current.row
@@ -821,6 +836,7 @@ export default function AdminNotificationsPage({
         'admin.notifications.error.delete',
         async () => {
           acceptReceipt(null, id);
+          toast.success(confirmationText('recorded', uiLocale));
           await refreshTemplates.current();
         },
         () => token === busyTokens.current.row

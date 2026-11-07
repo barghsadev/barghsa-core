@@ -5,6 +5,10 @@ import { t } from '@barghsa/i18n/crm';
 import { LoadingStatus, Button, Input, Label, ListPage } from '@barghsa/ui';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import { useLocale } from '../hooks/useLocale.js';
+import { useAccountUser } from '../hooks/useAccountUser.js';
+import { useManualServerRead } from '../hooks/useServerQuery.js';
+import { useProfileContextRevision } from '../lib/profile-context.js';
+import { queryKeys } from '../lib/query-keys.js';
 import { useCatalogueResource, useCatalogueScope } from '../hooks/useCatalogueResource.js';
 import { useListQuery, type ListQueryBinding } from '../hooks/useListQuery.js';
 import { crmCorrectionQueryOptions, crmCorrectionSearch } from '../lib/crm-correction-query.js';
@@ -107,9 +111,11 @@ export function CrmCorrectionsRoutePage() {
 }
 export default function CrmCorrectionsPage({ queries }: { queries?: ListQueryBinding } = {}) {
   const { profileId, fieldName } = useSearch({ from: '/admin/crm/corrections' });
+  const actor = useAccountUser();
+  const revision = useProfileContextRevision();
   return (
     <Corrections
-      key={(profileId ?? 'queue') + ':' + (fieldName ?? '')}
+      key={JSON.stringify([actor, revision, profileId, fieldName])}
       profileId={profileId}
       initialField={fieldName}
       {...(queries ? { queries } : {})}
@@ -126,6 +132,9 @@ function Corrections({
   queries?: ListQueryBinding;
 }) {
   const locale = useLocale();
+  const accountId = useAccountUser();
+  const profileRevision = useProfileContextRevision();
+  const read = useManualServerRead();
   const generation = useRef(0),
     workGeneration = useRef(0),
     uploading = useRef(false);
@@ -298,25 +307,38 @@ function Corrections({
       ...(profileId ? { profileId } : {}),
     });
     try {
-      const response = await fetch(`/api/crm/verification-cases?${params}`, {
-        credentials: 'include',
-        signal: controller.signal,
+      const endpoint = '/api/crm/verification-cases';
+      const key = queryKeys.operations.queue(
+        {
+          context: 'staff',
+          ownerId: profileId ?? accountId ?? 'staff-session',
+          accountId,
+          revision: profileRevision,
+        },
+        endpoint,
+        params,
+        version,
+        current
+      );
+      const data = await read(key, controller.signal, async (signal) => {
+        const response = await fetch(`${endpoint}?${params}`, { credentials: 'include', signal });
+        if (response.status === 401 || response.status === 403) return response.status;
+        if (!response.ok) throw new Error('Queue unavailable');
+        const value = (await response.json()) as Queue;
+        if (!validQueue(value)) throw new Error('Invalid queue');
+        return value;
       });
       if (!isCurrent()) return;
-      if (response.status === 401) {
+      if (data === 401) {
         deny();
         return;
       }
-      if (response.status === 403) {
+      if (data === 403) {
         setQueueForbidden(true);
         setAccepted(null);
         clearReview();
         return;
       }
-      if (!response.ok) throw new Error('Queue unavailable');
-      const data = (await response.json()) as Queue;
-      if (!isCurrent()) return;
-      if (!validQueue(data)) throw new Error('Invalid queue');
       if (viewerRef.current && viewerRef.current.userId !== data.viewer.userId) {
         clearReview();
         clearCreation();
@@ -352,6 +374,9 @@ function Corrections({
     clearReview,
     clearCreation,
     profileRead.retry,
+    read,
+    accountId,
+    profileRevision,
   ]);
   const queueRead = useRef(load);
   queueRead.current = load;

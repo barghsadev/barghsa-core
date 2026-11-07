@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-07T04:10:11+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-07T04:39:57+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.4.0**. Next milestone: **v0.5.0**.
 
@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 842 | Accepted with unchanged source bindings. |
+| done | 845 | Accepted with unchanged source bindings. |
 | verify | 493 | Existing work may be complete; inspect evidence before building. |
-| partial | 26 | An earlier review found unmet criteria; reconcile later fixes. |
+| partial | 23 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 7 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
 | blocked | 1 | Named owner or external prerequisite. |
@@ -39,12 +39,16 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Finish remaining scoped list/detail adoption and confirmed command feedback. Reuse the existing manual/read hooks and guarded receipt checks, preserve privacy and money safeguards, and stay in v0.5.0. The pending route telemetry decision does not block this work.
+Verify the existing RTL/LTR, responsive primitives, breakpoints, mobile list presentation and touch targets. Reuse the source-bound route and component evidence; fix demonstrated gaps and keep the original accessibility and performance gates. Continue v0.5.0 and leave remaining command feedback visible.
 
-- `07-ui-ux-design.md#T-07.01.04.02`: Define shared query key factory conventions: `queryKeys.profiles.all`, `queryKeys.orders.list(filters)`, `queryKeys.orders.detail(id)`, `queryKeys.invoices.list(filters)`, `queryKeys.wallet.balance`, etc. All list and detail queries use the factory pattern for consistent invalidation. Document in `packages/ui` README.
-- `07-ui-ux-design.md#T-07.01.04.03`: Create `useServerListQuery` hook: wraps `useQuery` with cursor/offset pagination params, filter/sort/search serialization, and `keepPreviousData: true` to prevent layout shift during pagination. Shared by all list pages. Create `useServerDetailQuery(id)` for single-entity fetches.
-- `07-ui-ux-design.md#T-07.01.04.04`: Create `useServerMutation` hook: wraps `useMutation` with automatic toast on success/error, `onSettled` invalidation via query key factory, and optimistic updates only for low-risk actions (mark notification read, toggle boolean preference). Never optimistic for payments, wallet, orders, contracts.
-- `07-ui-ux-design.md#T-07.11.01.03`: Create an API response interceptor that auto-shows toasts for: successful CRUD operations ("Invoice created", "Profile updated", "Order submitted"), API errors (error message from API), network failures ("Connection lost. Retrying...").
+- `07-ui-ux-design.md#T-07.03.01.07`: Test every component and page in both RTL and LTR modes. Persian Lorem ipsum (`لورم ایپسوم`) should render correctly in all containers. Verify no text overflow, clipped content, or misaligned elements.
+- `07-ui-ux-design.md#T-07.04.01.01`: Define Tailwind breakpoints: `xs: 375px`, `sm: 640px`, `md: 768px`, `lg: 1024px`, `xl: 1280px`, `2xl: 1536px`. Use `mobile-first` (min-width) consistently. Document breakpoint usage conventions.
+- `07-ui-ux-design.md#T-07.04.01.02`: Create `ResponsiveContainer` component: max-width container with responsive padding. `full` on mobile → `container mx-auto` on desktop.
+- `07-ui-ux-design.md#T-07.04.01.03`: Create `Stack` and `Inline` layout primitives: `Stack` (vertical, with gap), `Inline` (horizontal, wraps on mobile). Responsive gap: different gap values per breakpoint.
+- `07-ui-ux-design.md#T-07.04.01.04`: Create `Grid` responsive layout component: `columns` prop accepts object `{ base: 1, sm: 2, lg: 3 }` mapping to CSS grid. Used for dashboard card grids, admin table layouts.
+- `07-ui-ux-design.md#T-07.04.01.05`: All list pages must have a mobile card view as an alternative to the desktop table view. When viewport < `md`, switch from `<DataTable>` to `<CardList>` where each card shows key fields.
+- `07-ui-ux-design.md#T-07.04.01.06`: Touch targets: ensure all interactive elements (buttons, links, inputs, toggles) have minimum 44×44px tap area per WCAG 2.5.8.
+- `07-ui-ux-design.md#T-07.04.02.04`: Verify all pages look correct at `320px`, `375px`, `390px`, `414px`, `768px`, `1024px`, `1280px`, and `1920px` viewport widths. No horizontal scroll, no overlapping text, no tiny touch targets.
 
 ## v0.2.0: Complete customer journeys
 
@@ -679,9 +683,9 @@ Customer and admin workflows work on desktop/mobile in both languages and themes
 | `07-ui-ux-design.md#T-07.01.03.20` | done | Recorded batch work | Separator — horizontal and vertical. Used in dropdowns, sidebars, form sections. |
 | `07-ui-ux-design.md#T-07.01.03.21` | done | Recorded batch work | — Pagination compound component: Previous/Next buttons, page number buttons, ellipsis for large ranges, page size selector (10/20/50/100), total count display ("Showing 1–20 of 154"). Compatible with both cursor and offset pagination. |
 | `07-ui-ux-design.md#T-07.01.04.01` | done | Recorded batch work | Install `@tanstack/react-query` and configure `QueryClient` in the app root with production defaults: `staleTime: 30_000` (30s for non-financial reads), `gcTime: 5 * 60_000` (5 min cache), `retry: 2` with exponential backoff, `refetchOnWindowFocus: true` for list pages, `refetchOnMount: true`. Create `QueryProvider` wrapper component. |
-| `07-ui-ux-design.md#T-07.01.04.02` | partial | Recorded batch work | Define shared query key factory conventions: `queryKeys.profiles.all`, `queryKeys.orders.list(filters)`, `queryKeys.orders.detail(id)`, `queryKeys.invoices.list(filters)`, `queryKeys.wallet.balance`, etc. All list and detail queries use the factory pattern for consistent invalidation. Document in `packages/ui` README. |
-| `07-ui-ux-design.md#T-07.01.04.03` | partial | Recorded batch work | Create `useServerListQuery` hook: wraps `useQuery` with cursor/offset pagination params, filter/sort/search serialization, and `keepPreviousData: true` to prevent layout shift during pagination. Shared by all list pages. Create `useServerDetailQuery(id)` for single-entity fetches. |
-| `07-ui-ux-design.md#T-07.01.04.04` | partial | Recorded batch work | Create `useServerMutation` hook: wraps `useMutation` with automatic toast on success/error, `onSettled` invalidation via query key factory, and optimistic updates only for low-risk actions (mark notification read, toggle boolean preference). Never optimistic for payments, wallet, orders, contracts. |
+| `07-ui-ux-design.md#T-07.01.04.02` | done | Recorded batch work | Define shared query key factory conventions: `queryKeys.profiles.all`, `queryKeys.orders.list(filters)`, `queryKeys.orders.detail(id)`, `queryKeys.invoices.list(filters)`, `queryKeys.wallet.balance`, etc. All list and detail queries use the factory pattern for consistent invalidation. Document in `packages/ui` README. |
+| `07-ui-ux-design.md#T-07.01.04.03` | done | Recorded batch work | Create `useServerListQuery` hook: wraps `useQuery` with cursor/offset pagination params, filter/sort/search serialization, and `keepPreviousData: true` to prevent layout shift during pagination. Shared by all list pages. Create `useServerDetailQuery(id)` for single-entity fetches. |
+| `07-ui-ux-design.md#T-07.01.04.04` | done | Recorded batch work | Create `useServerMutation` hook: wraps `useMutation` with automatic toast on success/error, `onSettled` invalidation via query key factory, and optimistic updates only for low-risk actions (mark notification read, toggle boolean preference). Never optimistic for payments, wallet, orders, contracts. |
 | `07-ui-ux-design.md#T-07.01.04.05` | done | Recorded batch work | Set up query cancellation: abort in-flight queries on unmount (via `AbortController`). Ensure financial/wallet queries have `refetchInterval: false` or long intervals — never auto-refresh balance without user action. |
 | `07-ui-ux-design.md#T-07.01.04.06` | done | Recorded batch work | Configure `@tanstack/react-query-devtools` in development mode only. Never expose query cache, stale data, or retry attempts in production. Devtools toggle bound to `process.env.NODE_ENV`. |
 | `07-ui-ux-design.md#T-07.02.01.01` | done | Recorded batch work | Define global color palette tokens in the existing shared `packages/ui/src/styles.css`: neutral gray scale (`50–950`), brand primary (`50–950`), brand secondary, success (green), warning (amber), danger (red), info (blue). Each scale has light and dark values. |

@@ -1,3 +1,5 @@
+import { toast } from '../lib/toast-api.js';
+import { confirmationText } from '@barghsa/i18n/confirmation';
 import { useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from '../lib/query-keys.js';
 import { useEffect, useId, useRef, useState } from 'react';
@@ -180,6 +182,7 @@ function LifecyclePanel({ authorized }: { authorized: () => boolean }) {
         throw new Error('Request not visible');
       command.current = null;
       setPending(false);
+      toast.success(confirmationText('recorded', locale));
     } catch {
       if (permitted()) {
         setPending(true);

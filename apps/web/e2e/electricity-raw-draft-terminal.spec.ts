@@ -1,4 +1,5 @@
 import { test, expect } from './coverage-fixture';
+import { approveRiskConfirmation } from './confirmation-fixture';
 import AxeBuilder from '@axe-core/playwright';
 import { setupCatalogueForms } from './catalogue-form-fixture';
 import { t } from '@barghsa/i18n/app';
@@ -157,6 +158,7 @@ for (const locale of ['en', 'fa'] as const)
           .filter((el) => el.left < 0 || el.right > innerWidth),
       }));
       expect(overflow.scrollWidth <= overflow.width, JSON.stringify(overflow)).toBe(true);
+      await approveRiskConfirmation(page, locale, 'both');
       await dialog.getByRole('button', { name: t('team.confirm', locale), exact: true }).click();
       await expect(dialog).toHaveCount(0);
       expect(writes).toHaveLength(1);

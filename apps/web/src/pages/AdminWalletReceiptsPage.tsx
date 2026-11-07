@@ -43,6 +43,9 @@ import { isTransactionUuid } from '../lib/bank-receipt-confirmation.js';
 import { useConfirm, FinancialReviewSummary } from '@barghsa/ui';
 import { confirmationText } from '@barghsa/i18n/confirmation';
 import { useAccountUser } from '../hooks/useAccountUser.js';
+import { useStaffQueryRead } from '../hooks/useStaffQueryRead.js';
+import { useCommandFeedback } from '../hooks/useCommandFeedback.js';
+import { serverListParams } from '../lib/query-keys.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import WalletTopUpLimitConfigPanel from '../components/WalletTopUpLimitConfigPanel.js';
 
@@ -221,6 +224,7 @@ function formatPaymentDate(value: string | null, locale: Locale): string {
 }
 
 export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQueryBinding } = {}) {
+  const readQuery = useStaffQueryRead('wallet');
   const queueBinding = useReceiptQueueQuery(binding);
   const queueParams = receiptQueueParams(queueBinding);
   const queueScopeRef = useRef(queueParams);
@@ -253,6 +257,7 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
   const [reviewRevision, setReviewRevision] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [status, setStatus] = useState<string | null>(null);
+  useCommandFeedback({ success: status, error });
   const [allocation, setAllocation] = useState<AllocationPreview | null>(null);
   const [allocationError, setAllocationError] = useState<string | null>(null);
   // A successful local blur check cannot clear a failed financial review.
@@ -346,11 +351,14 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
   );
   useLayoutEffect(() => {
     if (queueScopeRef.current === queueParams) return;
+    const sameCriteria =
+      serverListParams(new URLSearchParams(queueScopeRef.current)).criteria ===
+      serverListParams(new URLSearchParams(queueParams)).criteria;
     queueScopeRef.current = queueParams;
     queueController.current?.abort();
     ++accessGeneration.current;
     rowsRef.current = [];
-    setItems([]);
+    if (!sameCriteria) setItems([]);
     setNextCursor(null);
     selectReceipt(null);
     setQueueError(null);
@@ -364,20 +372,29 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
     setQueueError(null);
     setLoading(true);
     try {
-      const res = await fetch(`/api/admin/wallet/bank-receipt-top-ups${queueParams}`, {
-        signal: controller.signal,
-      });
+      const packet = await readQuery(
+        `/api/admin/wallet/bank-receipt-top-ups${queueParams}`,
+        'list',
+        controller.signal,
+        async (res) => {
+          if ([401, 403].includes(res.status)) return null;
+          if (!res.ok)
+            throw new Error(await parseError(res, t('admin.walletReceipts.error.load', locale)));
+          return {
+            data: (await res.json()) as {
+              items?: BankReceiptReviewDto[];
+              nextCursor?: FinanceCursor | null;
+            },
+          };
+        },
+        accessOwner
+      );
       if (controller.signal.aborted || accessOwner !== accessGeneration.current) return;
-      if ([401, 403].includes(res.status)) {
+      if (!packet) {
         denyAccess();
         return;
       }
-      if (!res.ok)
-        throw new Error(await parseError(res, t('admin.walletReceipts.error.load', locale)));
-      const data = (await res.json()) as {
-        items?: BankReceiptReviewDto[];
-        nextCursor?: FinanceCursor | null;
-      };
+      const { data } = packet;
       if (!Array.isArray(data.items)) throw new Error(t('admin.walletReceipts.error.load', locale));
       if (controller.signal.aborted || accessOwner !== accessGeneration.current) return;
       const next = data.items;
@@ -403,7 +420,7 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
     } finally {
       if (!controller.signal.aborted && accessOwner === accessGeneration.current) setLoading(false);
     }
-  }, [locale, queueParams]);
+  }, [locale, queueParams, readQuery]);
   useEffect(() => {
     void loadQueue();
     return () => queueController.current?.abort();
@@ -418,16 +435,23 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
     setDetailError(false);
     void (async () => {
       try {
-        const res = await fetch(`/api/admin/wallet/bank-receipt-top-ups/${selectedId}`, {
-          signal: controller.signal,
-        });
+        const packet = await readQuery(
+          `/api/admin/wallet/bank-receipt-top-ups/${selectedId}`,
+          'detail',
+          controller.signal,
+          async (res) => {
+            if ([401, 403].includes(res.status)) return null;
+            if (!res.ok) throw new Error('Receipt unavailable');
+            return { data: (await res.json()) as BankReceiptReviewDto };
+          },
+          accessGeneration.current
+        );
         if (controller.signal.aborted || selectedIdRef.current !== selectedId) return;
-        if ([401, 403].includes(res.status)) {
+        if (!packet) {
           denyAccess();
           return;
         }
-        if (!res.ok) throw new Error('Receipt unavailable');
-        const data = (await res.json()) as BankReceiptReviewDto;
+        const { data } = packet;
         if (
           !data ||
           data.transactionId !== selectedId ||
@@ -455,7 +479,7 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
       }
     })();
     return () => controller.abort();
-  }, [selectedId, detailRevision]);
+  }, [selectedId, detailRevision, readQuery]);
 
   useEffect(() => {
     const trimmed = invoiceId.trim().toLowerCase();
@@ -649,10 +673,11 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
     if (
       !dto ||
       dto.transactionId !== action.transactionId ||
-      typeof dto.state !== 'string' ||
       typeof dto.canDecide !== 'boolean' ||
       (action.kind === 'confirm' &&
-        (data as { reviewHash?: unknown }).reviewHash !== action.review.hash)
+        ((data as { reviewHash?: unknown }).reviewHash !== action.review.hash ||
+          (dto.state !== 'Released' && !(dto.state === 'Pending' && dto.dualApproval)))) ||
+      (action.kind === 'reject' && dto.state !== 'Rejected')
     )
       throw new Error('Unconfirmed receipt response');
     if (dto.state === 'Pending' && dto.dualApproval) {
@@ -1028,9 +1053,18 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
                 items={items}
                 view={view}
                 selectedId={selectedId}
-                disabled={acting || stepUpOpen || rejectionBusy || confirmationBusy}
+                disabled={
+                  loading ||
+                  !!queueError ||
+                  denied ||
+                  acting ||
+                  stepUpOpen ||
+                  rejectionBusy ||
+                  confirmationBusy
+                }
                 onSelect={(id) => {
-                  if (id !== selectedIdRef.current) selectReceipt(id);
+                  if (!loading && !queueError && !denied && id !== selectedIdRef.current)
+                    selectReceipt(id);
                 }}
               />
             </nav>

@@ -21,6 +21,8 @@ import {
 import { tCatalogue } from '@barghsa/i18n/catalogue';
 import { useTimezone } from '../hooks/useTimezone.js';
 import { useLocale } from '../hooks/useLocale.js';
+import { useStaffQueryRead } from '../hooks/useStaffQueryRead.js';
+import { serverListParams } from '../lib/query-keys.js';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import { SavingAgreementEditor } from './SavingAgreementEditor.js';
 import { SavingInventoryPanel } from '../components/SavingInventoryPanel.js';
@@ -62,6 +64,7 @@ export default function AdminCataloguePage({
 } = {}) {
   const preference = useTimezone();
   const locale = useLocale();
+  const read = useStaffQueryRead('catalogue');
   const numbers = useNumberFormatting(locale);
   const label = (key: string) => tCatalogue(key, locale);
   const [type, setType] = useState<ProductType>(initialType),
@@ -78,7 +81,8 @@ export default function AdminCataloguePage({
   const listCriteria = new URLSearchParams(queries?.params);
   listCriteria.set('type', type);
   const listKey = listCriteria.toString();
-  const previousListKey = useRef(listKey);
+  const criteriaKey = serverListParams(listCriteria).criteria;
+  const previousListKey = useRef(criteriaKey);
   const [detailRevision, setDetailRevision] = useState(0);
   const [hardwareRevision, setHardwareRevision] = useState(0);
   const [detailState, setDetailState] = useState<'loading' | 'ready' | 'error'>('ready');
@@ -316,14 +320,17 @@ export default function AdminCataloguePage({
   useEffect(() => {
     const abort = new AbortController();
     accessDenied.current = false;
-    if (previousListKey.current !== listKey) {
+    if (previousListKey.current !== criteriaKey) {
       setRows([]);
       setHasNextPage(false);
-      previousListKey.current = listKey;
+      previousListKey.current = criteriaKey;
     }
     setState('loading');
-    void fetch(`${base}?${listKey}`, { signal: abort.signal })
-      .then(async (response) => {
+    void read(
+      `${base}?${listKey}`,
+      'list',
+      abort.signal,
+      async (response) => {
         if (!response.ok) throw new Error(String(response.status));
         const data: unknown = await response.json();
         if (!validProducts(data, type)) throw new Error('Invalid catalogue');
@@ -343,7 +350,9 @@ export default function AdminCataloguePage({
           hasNext:
             next === null ? !!queries && data.length === queries.query.pageSize : next === 'true',
         };
-      })
+      },
+      revision
+    )
       .then(({ products, hasNext }) => {
         if (abort.signal.aborted || accessDenied.current) return;
         setRows(products);
@@ -356,7 +365,7 @@ export default function AdminCataloguePage({
         else setState('error');
       });
     return () => abort.abort();
-  }, [type, listKey, revision, listRevision]);
+  }, [type, listKey, revision, listRevision, criteriaKey, read]);
   useEffect(() => {
     const abort = new AbortController();
     if (type !== 'saving_plan' || !hasEditor || accessDenied.current) {
@@ -364,13 +373,18 @@ export default function AdminCataloguePage({
       return;
     }
     setHardwareState('loading');
-    void fetch(`${base}?type=hardware`, { signal: abort.signal })
-      .then(async (response) => {
+    void read(
+      `${base}?type=hardware`,
+      'list',
+      abort.signal,
+      async (response) => {
         if (!response.ok) throw new Error(String(response.status));
         const data: unknown = await response.json();
         if (!validProducts(data, 'hardware')) throw new Error('Invalid hardware');
         return data;
-      })
+      },
+      revision
+    )
       .then((products) => {
         if (abort.signal.aborted || accessDenied.current) return;
         setHardwareOptions(products);
@@ -382,7 +396,7 @@ export default function AdminCataloguePage({
         else setHardwareState('error');
       });
     return () => abort.abort();
-  }, [type, hasEditor, revision, hardwareRevision]);
+  }, [type, hasEditor, revision, hardwareRevision, read]);
   useEffect(() => {
     const abort = new AbortController();
     if (!editor || accessDenied.current) {
@@ -437,15 +451,27 @@ export default function AdminCataloguePage({
             ? [`/api/admin/catalogue/saving-plans/${editor}/configuration`]
             : []),
         ];
-        const responses = await Promise.all(
-          paths.map((path) => fetch(path, { signal: abort.signal }))
+        const packets = await Promise.all(
+          paths.map((path) =>
+            read(
+              path,
+              'detail',
+              abort.signal,
+              async (response) => ({
+                status: response.status,
+                ok: response.ok,
+                data: response.ok ? await response.json().catch(() => null) : null,
+              }),
+              revision
+            )
+          )
         );
-        if (responses.some((response) => response.status === 401 || response.status === 403)) {
+        if (packets.some((response) => response.status === 401 || response.status === 403)) {
           if (!abort.signal.aborted) denyAccess();
           return;
         }
-        if (responses.some((response) => !response.ok)) throw new Error('Load failed');
-        const data = await Promise.all(responses.map((response) => response.json()));
+        if (packets.some((response) => !response.ok)) throw new Error('Load failed');
+        const data = packets.map((packet) => packet.data);
         if (abort.signal.aborted || accessDenied.current) return;
         if (
           !validDetail(data[0]) ||
@@ -463,7 +489,7 @@ export default function AdminCataloguePage({
       }
     })();
     return () => abort.abort();
-  }, [type, editor, revision, detailRevision]);
+  }, [type, editor, revision, detailRevision, read]);
   useEffect(() => {
     const current = live.current;
     if (

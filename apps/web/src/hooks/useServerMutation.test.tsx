@@ -21,7 +21,8 @@ function deferred<T>() {
 }
 async function setup(
   write: (value: string) => Promise<string>,
-  keys?: (owner: string) => readonly ServerQueryKey[]
+  keys?: (owner: string) => readonly ServerQueryKey[],
+  commandCurrent: (value?: string) => boolean = () => true
 ) {
   vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
   const client = new QueryClient({
@@ -46,7 +47,7 @@ async function setup(
   function Harness({ owner }: { owner: string | null }) {
     mutation = useServerMutation({
       mutationKey: owner ? queryKeys.preferences.detail(scope(owner), 'notifications') : null,
-      isCurrent: () => owner !== null,
+      isCurrent: (value) => owner !== null && commandCurrent(value),
       write,
       invalidate: owner ? (keys?.(owner) ?? [queryKeys.preferences.all(scope(owner))]) : [],
       successMessage: 'انتخاب‌ها ذخیره شد.',
@@ -146,6 +147,29 @@ it('refuses stale completed results, feedback and invalidation after an actor ch
     expect(test.success).not.toHaveBeenCalled();
     expect(test.error).not.toHaveBeenCalled();
     expect(invalidation).not.toHaveBeenCalled();
+  } finally {
+    await test.close();
+  }
+});
+
+it('discards a retired command generation even when its owner key is still active', async () => {
+  let live = 'first';
+  const held = deferred<string>();
+  const write = vi.fn(() => held.promise);
+  const test = await setup(write, undefined, (value) => value === live);
+  const invalidate = vi.spyOn(test.client, 'invalidateQueries');
+  try {
+    let result!: Promise<unknown>;
+    await act(async () => {
+      result = test.mutation.mutateAsync('first').catch((error) => error);
+    });
+    expect(write).toHaveBeenCalledExactlyOnceWith('first');
+    live = 'replacement';
+    await act(async () => held.resolve('retired private receipt'));
+    expect(await result).toBeInstanceOf(DiscardedServerMutation);
+    expect(test.success).not.toHaveBeenCalled();
+    expect(test.error).not.toHaveBeenCalled();
+    expect(invalidate).not.toHaveBeenCalled();
   } finally {
     await test.close();
   }

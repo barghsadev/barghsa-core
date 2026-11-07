@@ -2,6 +2,7 @@ import { useOwnedContractRead } from '../hooks/useOwnedContractRead.js';
 import { useEffect, useState } from 'react';
 import { Alert, AlertDescription, Button, PageLoading } from '@barghsa/ui';
 import { contractText } from '@barghsa/i18n/contracts';
+import { confirmationText } from '@barghsa/i18n/confirmation';
 import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { useLocale } from '../hooks/useLocale.js';
@@ -9,6 +10,13 @@ import { useLocale } from '../hooks/useLocale.js';
 import type { ContractActivationRule } from '../lib/contracts.js';
 import { TeamActionDialog, type TeamAction } from './TeamActionDialog.js';
 const fields = ['signatureRequired', 'paymentRequired', 'serviceStartRequired'] as const;
+type RuleAction = TeamAction & {
+  serviceType: ContractActivationRule['serviceType'];
+  body: Pick<ContractActivationRule, (typeof fields)[number]> & {
+    expectedRevision: number;
+    idempotencyKey: string;
+  };
+};
 export function ContractActivationRules() {
   const locale = useLocale(),
     [open, setOpen] = useState(false);
@@ -53,7 +61,7 @@ function OwnedRulesEditor() {
     [drafts, setDrafts] = useState<ContractActivationRule[]>([]),
     [error, setError] = useState(false),
     [reload, setReload] = useState(0),
-    [action, setAction] = useState<TeamAction | null>(null);
+    [action, setAction] = useState<RuleAction | null>(null);
   useEffect(() => {
     const controller = new AbortController();
     setData(null);
@@ -77,6 +85,7 @@ function OwnedRulesEditor() {
   }, [reload, readContract]);
   function save(row: ContractActivationRule) {
     setAction({
+      serviceType: row.serviceType,
       title: word('saveActivationRules'),
       description: word(row.serviceType) + '. ' + word('activationRulesNotice'),
       path: '/api/admin/contract-activation-rules/' + row.serviceType,
@@ -168,9 +177,18 @@ function OwnedRulesEditor() {
         <TeamActionDialog
           action={action}
           onClose={() => setAction(null)}
-          onSuccess={async () => {
+          onSuccess={async (result) => {
+            const rule = result as ContractActivationRule | null;
+            if (
+              !rule ||
+              rule.serviceType !== action.serviceType ||
+              rule.revision !== action.body.expectedRevision + 1 ||
+              !fields.every((field) => rule[field] === action.body[field])
+            )
+              throw new Error('Activation rule receipt mismatch');
             setAction(null);
             setReload((value) => value + 1);
+            return confirmationText('recorded', locale);
           }}
         />
       ) : null}

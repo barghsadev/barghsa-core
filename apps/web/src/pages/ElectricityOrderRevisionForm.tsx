@@ -1,4 +1,6 @@
 import { ConfirmationFields } from '@barghsa/ui';
+import { confirmationText } from '@barghsa/i18n/confirmation';
+import { toast } from '../lib/toast-api.js';
 import { useRiskConfirmation } from '../hooks/useRiskConfirmation.js';
 import { useQueryClient } from '@tanstack/react-query';
 import { useServerDetailQuery } from '../hooks/useServerQuery.js';
@@ -575,6 +577,7 @@ export function ElectricityOrderRevisionForm({
       setUnconfirmed(false);
       setReview(null);
       lock.release('revision');
+      toast.success(confirmationText('recorded', locale));
       callbacks.current.onComplete();
     } catch {
       if (captured === attempt.current && captured.generation === generation.current) {

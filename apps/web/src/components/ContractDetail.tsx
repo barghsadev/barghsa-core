@@ -1,3 +1,4 @@
+import { confirmationText } from '@barghsa/i18n/confirmation';
 import { useOwnedContractRead } from '../hooks/useOwnedContractRead.js';
 import { ContractFinancialReviewDialog } from './ContractFinancialReviewDialog.js';
 import { Link } from '@tanstack/react-router';
@@ -538,6 +539,7 @@ function ContractDetailContent({
     shared.release(parentOwner.current);
     setReload((value) => value + 1);
     callbacks.current.onChanged();
+    return captured ? confirmationText('recorded', locale) : undefined;
   }
   function blockSibling(event: SyntheticEvent) {
     if (blocked()) {

@@ -1,3 +1,5 @@
+import { toast } from '../lib/toast-api.js';
+import { confirmationText } from '@barghsa/i18n/confirmation';
 import { useDestructiveConfirm } from '../hooks/useDestructiveConfirm.js';
 import { contentFormText } from '@barghsa/i18n/content-forms';
 import { useWizardForm } from '../hooks/useWizardForm.js';
@@ -490,6 +492,7 @@ export default function AdminTosPage() {
 
       if (!current()) return;
       setShowEditor(false);
+      toast.success(confirmationText('recorded', locale));
       await fetchVersions();
     } catch (err) {
       if (current()) {
@@ -616,6 +619,7 @@ export default function AdminTosPage() {
         ...previous.filter((v) => v.id !== result.id).map((v) => ({ ...v, isActive: false })),
       ]);
       setPublishVersion(null);
+      toast.success(confirmationText('recorded', locale));
       await fetchVersions();
     } catch (err) {
       if (current()) setError(displayError(err, 'publishFailed'));
@@ -664,6 +668,7 @@ export default function AdminTosPage() {
       }
       historyRequest.current++;
       setVersions((previous) => previous.filter((v) => v.id !== version.id));
+      toast.success(confirmationText('recorded', locale));
       await fetchVersions();
     } catch (err) {
       if (current()) setError(displayError(err, 'discardFailed'));

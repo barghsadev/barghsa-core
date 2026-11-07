@@ -12,7 +12,7 @@ export class DiscardedServerMutation extends Error {
 interface ServerMutation<T, Variables> {
   mutationKey: ServerQueryKey | null;
   write: (variables: Variables) => Promise<T>;
-  isCurrent: () => boolean;
+  isCurrent: (variables?: Variables) => boolean;
   invalidate: readonly ServerQueryKey[];
   successMessage: string | ((data: T) => string | undefined);
   errorMessage: string | ((error: Error) => string | undefined);
@@ -33,47 +33,50 @@ export function useServerMutation<T, Variables>(options: ServerMutation<T, Varia
   }, []);
   type Capture = ServerMutation<T, Variables> & { owner: string; client: typeof client };
   type Command = { variables: Variables; captured: Capture };
-  const current = (captured: Capture) =>
+  const current = ({ captured, variables }: Command) =>
     alive.current &&
     currentOwner.current === captured.owner &&
     captured.client === client &&
-    captured.isCurrent();
+    captured.isCurrent(variables);
   const mutation = useMutation<T, Error, Command>({
     mutationKey: options.mutationKey ?? [],
     retry: false,
-    mutationFn: ({ variables, captured }) => {
-      if (!current(captured)) throw new DiscardedServerMutation();
-      return captured.write(variables);
+    mutationFn: (command) => {
+      if (!current(command)) throw new DiscardedServerMutation();
+      return command.captured.write(command.variables);
     },
-    onSuccess: (data, { captured }) => {
-      if (!current(captured)) return;
+    onSuccess: (data, command) => {
+      if (!current(command)) return;
+      const { captured } = command;
       const message =
         typeof captured.successMessage === 'function'
           ? captured.successMessage(data)
           : captured.successMessage;
       if (message) toast.success(message);
     },
-    onError: (error, { captured }) => {
-      if (!current(captured) || error instanceof DiscardedServerMutation) return;
+    onError: (error, command) => {
+      if (!current(command) || error instanceof DiscardedServerMutation) return;
+      const { captured } = command;
       const message =
         typeof captured.errorMessage === 'function'
           ? captured.errorMessage(error)
           : captured.errorMessage;
       if (message) toast.error(message);
     },
-    onSettled: async (_data, _error, { captured }) => {
-      if (!current(captured)) return;
+    onSettled: async (_data, _error, command) => {
+      if (!current(command)) return;
+      const { captured } = command;
       await Promise.allSettled(
         captured.invalidate.map((queryKey) =>
           Promise.resolve().then(() =>
-            current(captured) ? captured.client.invalidateQueries({ queryKey }) : undefined
+            current(command) ? captured.client.invalidateQueries({ queryKey }) : undefined
           )
         )
       );
     },
   });
   function mutateAsync(variables: Variables) {
-    if (!options.mutationKey || !options.isCurrent())
+    if (!options.mutationKey || !options.isCurrent(variables))
       return Promise.reject(new DiscardedServerMutation());
     for (const key of options.invalidate) {
       if (key.slice(2, 6).some((value, index) => value !== options.mutationKey![index + 2]))
@@ -86,13 +89,14 @@ export function useServerMutation<T, Variables>(options: ServerMutation<T, Varia
       owner,
       client,
     };
-    return mutation.mutateAsync({ variables, captured }).then((data) => {
-      if (!current(captured)) throw new DiscardedServerMutation();
+    const command = { variables, captured };
+    return mutation.mutateAsync(command).then((data) => {
+      if (!current(command)) throw new DiscardedServerMutation();
       return data;
     });
   }
   const visible = mutation.variables
-    ? current(mutation.variables.captured)
+    ? current(mutation.variables)
     : !!options.mutationKey && options.isCurrent();
   return {
     mutateAsync,

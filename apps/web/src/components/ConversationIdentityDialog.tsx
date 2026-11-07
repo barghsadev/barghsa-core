@@ -15,6 +15,8 @@ import {
   Label,
 } from '@barghsa/ui';
 import { t, type Locale } from '@barghsa/i18n/conversation-identity';
+import { confirmationText } from '@barghsa/i18n/confirmation';
+import { toast } from '../lib/toast-api.js';
 import { withCsrf } from '../lib/csrf.js';
 import { isConversationPhoto, uploadConversationPhoto } from '../lib/branding-logo-upload.js';
 
@@ -138,8 +140,18 @@ export function ConversationIdentityDialog({
         }
         throw new Error(response.status === 401 || response.status === 403 ? 'denied' : 'save');
       }
-      await readIdentity(response);
-      if (!signal.aborted) onClose();
+      const saved = await readIdentity(response);
+      if (signal.aborted) return;
+      if (
+        saved.displayName !== displayName ||
+        saved.shareInActivity !== (displayName !== null && shareInActivity) ||
+        saved.shareInPaymentActivity !== (displayName !== null && shareInPaymentActivity) ||
+        (avatarUploadKey !== undefined && saved.avatarUploadKey !== avatarUploadKey) ||
+        (saved.revision !== identity.revision && saved.revision !== identity.revision + 1)
+      )
+        throw new Error('save');
+      if (saved.revision !== identity.revision) toast.success(confirmationText('recorded', locale));
+      onClose();
     } catch (reason) {
       if (!signal.aborted) {
         const message = reason instanceof Error ? reason.message : 'save';

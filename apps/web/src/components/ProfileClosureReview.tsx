@@ -1,3 +1,5 @@
+import { toast } from '../lib/toast-api.js';
+import { confirmationText } from '@barghsa/i18n/confirmation';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { LoadingStatus, Button, Input } from '@barghsa/ui';
 import {
@@ -205,6 +207,7 @@ function ClosureReview({
       if (!permitted()) return;
       if (!receipt) throw new Error('Invalid closure receipt');
       settled = true;
+      toast.success(confirmationText('recorded', locale));
       complete(receipt);
     } catch {
       if (permitted()) {

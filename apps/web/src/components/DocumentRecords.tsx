@@ -1,3 +1,4 @@
+import { confirmationText } from '@barghsa/i18n/confirmation';
 import { useOwnedDocumentRead } from '../hooks/useOwnedDocumentRead.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
@@ -86,6 +87,8 @@ function OwnedDocumentList({
   const [removal, setRemoval] = useState<{
     key: string;
     documentId: string;
+    profileId: string;
+    revision: number;
     action: TeamAction;
   } | null>(null);
   const activeRemoval =
@@ -292,6 +295,8 @@ function OwnedDocumentList({
                 setRemoval({
                   key,
                   documentId: item.id,
+                  profileId: item.profileId,
+                  revision: item.revision,
                   action: {
                     risk: 'destructive',
                     title: word('remove'),
@@ -440,8 +445,17 @@ function OwnedDocumentList({
             setReceipts({});
             onDenied?.();
           }}
-          onSuccess={async () => {
+          onSuccess={async (value) => {
             if (!alive.current || !keys.current.has(activeRemoval.key)) return;
+            const receipt = value as Partial<BusinessDocument> | null;
+            if (
+              !receipt ||
+              receipt.id !== activeRemoval.documentId ||
+              receipt.profileId !== activeRemoval.profileId ||
+              receipt.revision !== activeRemoval.revision + 1 ||
+              receipt.state !== 'Removed'
+            )
+              throw new Error('Document removal receipt mismatch');
             for (const [operation, controller] of controllers.current)
               if (operation.startsWith(`${activeRemoval.key}:`)) {
                 controller.abort();
@@ -450,6 +464,7 @@ function OwnedDocumentList({
             setRemoval(null);
             setReceipts({});
             onChanged?.(activeRemoval.documentId);
+            return confirmationText('recorded', locale);
           }}
         />
       )}

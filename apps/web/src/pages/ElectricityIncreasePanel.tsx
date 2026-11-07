@@ -1,3 +1,5 @@
+import { toast } from '../lib/toast-api.js';
+import { confirmationText } from '@barghsa/i18n/confirmation';
 import { useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from '../lib/query-keys.js';
 import { useServerDetailQuery } from '../hooks/useServerQuery.js';
@@ -313,6 +315,7 @@ export function ElectricityIncreasePanel({
       setError(null);
       if (current.kind === 'request') form.reset({ requestedKwh: '' });
       setAgreed(false);
+      toast.success(confirmationText('recorded', locale));
       refresh();
     } catch {
       if (current === attempt.current && current.generation === generation.current) {

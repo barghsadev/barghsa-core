@@ -10,6 +10,7 @@ import {
 } from '../test/document-list-fixtures.js';
 import { UploadXHR } from '../test/upload-progress-fixture.js';
 import type { TeamAction } from './TeamActionDialog.js';
+const sealedDocument = { ...documentRow, state: 'Available', revision: 3 };
 const harness = vi.hoisted(() => ({ action: null as TeamAction | null, result: null as unknown }));
 vi.mock('../hooks/useLocale.js', () => ({ useLocale: () => 'en' }));
 vi.mock('../hooks/useNumberFormatting.js', () => ({
@@ -51,7 +52,7 @@ beforeEach(() => {
       ? Response.json(documentUploadPolicy(String(input).split('/').at(-1)), {
           status: policyStatus,
         })
-      : Response.json(confirmStatus === 200 ? documentRow : {}, { status: confirmStatus })
+      : Response.json(confirmStatus === 200 ? sealedDocument : {}, { status: confirmStatus })
   );
   vi.stubGlobal('fetch', fetcher);
   host = document.createElement('div');
@@ -119,7 +120,7 @@ it('shows actual progress and resumes the same direct reservation after pausing'
   expect(UploadXHR.instances).toHaveLength(2);
   expect(UploadXHR.instances[1]!.url).toBe(first.url);
   await act(async () => UploadXHR.instances[1]!.complete(412));
-  expect(uploaded).toHaveBeenCalledWith(documentRow);
+  expect(uploaded).toHaveBeenCalledWith(sealedDocument);
   expect(harness.result).toBeDefined();
 });
 it('keeps a completed transfer across confirmation failure and reuses its idempotency key', async () => {
@@ -138,6 +139,14 @@ it('keeps a completed transfer across confirmation failure and reuses its idempo
     idempotencyKey: expect.any(String),
   });
   expect(uploaded).toHaveBeenCalledOnce();
+});
+
+it('does not publish an acknowledgement for a different sealed document', async () => {
+  await start();
+  fetcher.mockResolvedValueOnce(Response.json({ ...sealedDocument, id: documentProfileId }));
+  await act(async () => UploadXHR.instances[0]!.complete());
+  expect(uploaded).not.toHaveBeenCalled();
+  expect(host.textContent).toContain('Upload did not finish');
 });
 it('keeps a storage denial retryable without treating it as account denial', async () => {
   await start();
@@ -190,9 +199,9 @@ it('pausing confirmation ignores its late acknowledgement and retries only confi
   await act(async () => UploadXHR.instances[0]!.complete());
   expect(host.textContent).toContain('Verifying upload…');
   await click('Pause upload');
-  await act(async () => finish(Response.json(documentRow)));
+  await act(async () => finish(Response.json(sealedDocument)));
   expect(uploaded).not.toHaveBeenCalled();
-  fetcher.mockImplementation(async () => Response.json(documentRow));
+  fetcher.mockImplementation(async () => Response.json(sealedDocument));
   await click('Resume upload');
   expect(UploadXHR.instances).toHaveLength(1);
   expect(uploaded).toHaveBeenCalledOnce();

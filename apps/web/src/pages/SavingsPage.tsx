@@ -4,6 +4,10 @@ import { tSaving } from '@barghsa/i18n/saving';
 import { LoadingStatus, Button, Card, CardContent, ListPage } from '@barghsa/ui';
 import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
+import { useAccountUser } from '../hooks/useAccountUser.js';
+import { useManualServerRead } from '../hooks/useServerQuery.js';
+import { useProfileContextRevision } from '../lib/profile-context.js';
+import { queryKeys } from '../lib/query-keys.js';
 
 interface Product {
   id: string;
@@ -22,6 +26,9 @@ interface SavingPlan extends Product {
 
 export function SavingsPage() {
   const locale = useLocale();
+  const accountId = useAccountUser();
+  const profileRevision = useProfileContextRevision();
+  const read = useManualServerRead();
   const numbers = useNumberFormatting(locale);
   const copy = (key: string) => tSaving(key, locale);
   const [plans, setPlans] = useState<SavingPlan[]>([]);
@@ -36,11 +43,18 @@ export function SavingsPage() {
   useEffect(() => {
     const controller = new AbortController();
     setState('loading');
-    void fetch('/api/saving/plans', { credentials: 'include', signal: controller.signal })
-      .then(async (response) => {
-        if (!response.ok) throw new Error(String(response.status));
-        return response.json() as Promise<{ plans: SavingPlan[] }>;
-      })
+    const path = '/api/saving/plans';
+    const key = queryKeys.saving.list(
+      { context: 'account', ownerId: accountId ?? 'session', accountId, revision: profileRevision },
+      new URLSearchParams({ endpoint: path })
+    );
+    void read(key, controller.signal, async (signal) => {
+      const response = await fetch(path, { credentials: 'include', signal });
+      if (!response.ok) throw new Error(String(response.status));
+      const result = (await response.json()) as { plans: SavingPlan[] };
+      if (!result || !Array.isArray(result.plans)) throw new Error('Invalid saving catalogue');
+      return result;
+    })
       .then((result) => {
         if (!controller.signal.aborted) {
           setPlans(result.plans);
@@ -55,7 +69,7 @@ export function SavingsPage() {
         } else setState('error');
       });
     return () => controller.abort();
-  }, [revision]);
+  }, [revision, profileRevision, accountId, read]);
 
   return (
     <main
