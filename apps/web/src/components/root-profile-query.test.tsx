@@ -53,6 +53,8 @@ const empty = (kind: string) =>
   kind === 'verification'
     ? { ...notice, isVerified: true, verificationNotice: null }
     : { profiles: [], hasDefault: true, activeProfileId: null };
+const method = (url: RequestInfo | URL, init?: RequestInit) =>
+  new Request(new URL(String(url), 'https://barghsa.test'), init).method;
 beforeEach(() => {
   vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
   document.documentElement.lang = 'en';
@@ -65,7 +67,7 @@ beforeEach(() => {
     'fetch',
     vi.fn(async (url: RequestInfo | URL, init?: RequestInit) => {
       expect(['/api/profiles', '/api/profiles/verification-status']).toContain(String(url));
-      expect(init?.method).toBe('GET');
+      expect(method(url, init)).toBe('GET');
       expect(init?.credentials).toBe('include');
       readCount++;
       signal = init!.signal as AbortSignal;
@@ -122,7 +124,9 @@ for (const kind of ['verification', 'selection']) {
       await act(async () => oldFinish(kind === 'verification' ? notice : choices));
       expect(document.body.textContent).not.toContain('Private');
       expect(document.querySelector('[role="dialog"]')).toBeNull();
-      expect(vi.mocked(fetch).mock.calls.every(([, init]) => init?.method === 'GET')).toBe(true);
+      expect(vi.mocked(fetch).mock.calls.every(([url, init]) => method(url, init) === 'GET')).toBe(
+        true
+      );
     }
   );
   it(

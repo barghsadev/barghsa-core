@@ -10,6 +10,7 @@ import {
   Button,
   FinancialReviewSummary,
   ListPage,
+  NativeSelect,
 } from '@barghsa/ui';
 import {
   Form,
@@ -504,11 +505,11 @@ function AdminSolarPostalWorkspace({ queries }: { queries?: ListQueryBinding } =
         <ListPage>
           <ListPage.Toolbar
             filters={
-              <label className="block max-w-xs space-y-1" htmlFor="solar-postal-lane">
-                <span>{copy('postalLane')}</span>
-                <select
+              <div className="max-w-xs space-y-1">
+                <label htmlFor="solar-postal-lane">{copy('postalLane')}</label>
+                <NativeSelect
                   id="solar-postal-lane"
-                  className="w-full rounded-md border bg-background p-2"
+                  className="w-full"
                   value={lane}
                   disabled={commandPending || contractLocked}
                   onChange={(event) => {
@@ -529,8 +530,8 @@ function AdminSolarPostalWorkspace({ queries }: { queries?: ListQueryBinding } =
                   <option value="needs_staff">{copy('postalLaneAction')}</option>
                   <option value="waiting_customer">{copy('postalLaneWaiting')}</option>
                   <option value="all">{copy('postalLaneAll')}</option>
-                </select>
-              </label>
+                </NativeSelect>
+              </div>
             }
           />
           <ListPage.Content

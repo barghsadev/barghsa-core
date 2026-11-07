@@ -249,7 +249,7 @@ export function ChatPromptSuggestions({
 }) {
   return (
     <details ref={disclosureRef}>
-      <summary className="min-h-9 cursor-pointer py-2 text-sm font-medium text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">
+      <summary className="min-h-9 cursor-pointer py-2 text-sm font-medium text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary pointer-coarse:min-h-[45px]!">
         {label}
       </summary>
       <div className="mt-2 flex flex-wrap gap-2" role="group" aria-label={label}>
@@ -258,7 +258,7 @@ export function ChatPromptSuggestions({
             key={suggestion.key}
             type="button"
             disabled={disabled}
-            className="min-h-9 rounded-full border bg-background px-3 py-1.5 text-start text-xs text-foreground transition-colors hover:bg-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:opacity-50"
+            className="touch-action min-h-9 rounded-full border bg-background pointer-coarse:min-h-[45px]! px-3 py-1.5 text-start text-xs text-foreground transition-colors hover:bg-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:opacity-50"
             onClick={() => onPick(suggestion.key)}
           >
             {suggestion.label}

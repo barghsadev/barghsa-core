@@ -24,13 +24,14 @@ async function open(page: Page, kind: Kind, label: (key: string) => string) {
   await page.goto('/admin/catalogue');
   const type = kind === 'agreement' ? 'saving_plan' : 'hardware';
   await page.getByRole('tab', { name: label(type), exact: true }).click();
-  await page
+  const panel = page.getByRole('tabpanel', { name: label(type), exact: true });
+  await panel
     .getByRole('button', {
       name: `${label('edit')} ${catalogueProduct(type).title[(await page.locator('html').getAttribute('lang')) === 'fa' ? 'fa' : 'en']}`,
       exact: true,
     })
     .click();
-  const form = page.getByRole('form', {
+  const form = panel.getByRole('form', {
     name: label(kind === 'agreement' ? 'agreement' : 'inventory'),
     exact: true,
   });

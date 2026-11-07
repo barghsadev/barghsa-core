@@ -21,6 +21,7 @@ import {
 import {
   Button,
   DependentSelect,
+  NativeSelect,
   Input,
   Label,
   Alert,
@@ -226,12 +227,12 @@ function SettingsProfilePage() {
               {t('dashboard.profile.default.title', locale)}
             </label>
           </h2>
-          <select
+          <NativeSelect
             id="settings-profile-switcher"
             value={defaultProfileId ?? ''}
             onChange={(event) => void changeDefault(event.target.value)}
             disabled={loading || locked}
-            className="w-full rounded-md border bg-background px-3 py-2 text-sm"
+            className="w-full"
           >
             {!defaultProfileId && (
               <option value="" disabled>
@@ -245,7 +246,7 @@ function SettingsProfilePage() {
                   t('dashboard.profile.unnamed', locale)}
               </option>
             ))}
-          </select>
+          </NativeSelect>
           {defaultError && <p role="alert">{defaultError}</p>}
           {command.locked === 'default' && recovery()}
         </section>
@@ -600,7 +601,7 @@ function SettingsProfilePage() {
                     render={({ field }) => (
                       <FormItem id="profile-province">
                         <FormControl>
-                          <select
+                          <NativeSelect
                             {...field}
                             id="profile-province"
                             value={provinceId}
@@ -609,7 +610,7 @@ function SettingsProfilePage() {
                               change('cityId', '');
                             }}
                             disabled={locked || saving || loadingProvinces || provinceError}
-                            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                            className="w-full"
                           >
                             <option value="">{t('settings.profile.selectProvince', locale)}</option>
                             {provinceId && !provinces.some((item) => item.id === provinceId) && (
@@ -626,7 +627,7 @@ function SettingsProfilePage() {
                                 {locale === 'fa' ? item.nameFa : item.nameEn}
                               </option>
                             ))}
-                          </select>
+                          </NativeSelect>
                         </FormControl>
                         <FormMessage reserveSpace />
                       </FormItem>

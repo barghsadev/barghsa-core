@@ -9,6 +9,7 @@ import {
   Input,
   Label,
   ListPage,
+  NativeSelect,
   DateCell,
   TextCell,
 } from '@barghsa/ui';
@@ -648,10 +649,10 @@ export default function AdminVatPage() {
                   <>
                     <div className="flex min-w-0 flex-col gap-2">
                       <Label htmlFor="vat-category">{label('category')}</Label>
-                      <select
+                      <NativeSelect
                         id="vat-category"
                         {...draft.bind('category')}
-                        className="max-w-full rounded-md border bg-background p-2"
+                        className="w-full"
                         value={category}
                         onChange={(event) => setCategory(event.target.value)}
                       >
@@ -660,7 +661,7 @@ export default function AdminVatPage() {
                             {label(`category.${value}`)}
                           </option>
                         ))}
-                      </select>
+                      </NativeSelect>
                       {feedback('category')}
                     </div>
                     <div className="flex flex-col gap-2">
@@ -683,11 +684,12 @@ export default function AdminVatPage() {
                     <p>{label('overrideHelp')}</p>
                     <div className="flex min-w-0 flex-col gap-2">
                       <Label htmlFor="vat-product">{label('product')}</Label>
-                      <select
+                      <NativeSelect
                         id="vat-product"
                         {...draft.bind('productId')}
-                        className="max-w-full rounded-md border bg-background p-2"
+                        className="w-full"
                         required
+                        aria-required="true"
                         value={productId}
                         onChange={(event) => setProductId(event.target.value)}
                       >
@@ -702,16 +704,17 @@ export default function AdminVatPage() {
                             {productTitle(product.id)}
                           </option>
                         ))}
-                      </select>
+                      </NativeSelect>
                       {feedback('productId')}
                     </div>
                     <div className="flex min-w-0 flex-col gap-2">
                       <Label htmlFor="vat-rate">{label('rate')}</Label>
-                      <select
+                      <NativeSelect
                         id="vat-rate"
                         {...draft.bind('rateId')}
-                        className="max-w-full rounded-md border bg-background p-2"
+                        className="w-full"
                         required
+                        aria-required="true"
                         value={rateId}
                         onChange={(event) => setRateId(event.target.value)}
                       >
@@ -728,12 +731,12 @@ export default function AdminVatPage() {
                             {dateText(rate.effectiveFrom)}
                           </option>
                         ))}
-                      </select>
+                      </NativeSelect>
                       {feedback('rateId')}
                     </div>
                   </>
                 )}
-                <label className="flex items-center gap-2">
+                <label className="touch-label flex items-center gap-2">
                   <input
                     type="checkbox"
                     checked={scheduled}

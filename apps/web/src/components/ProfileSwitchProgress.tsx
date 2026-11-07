@@ -1,16 +1,9 @@
 import { Button, Dialog, DialogContent, DialogDescription, DialogTitle } from '@barghsa/ui';
-import type { Locale } from '@barghsa/i18n/workspace';
+import { t, type Locale } from '@barghsa/i18n/workspace';
 export interface ProfileSwitchProgressProps {
   locale: Locale;
   busy: boolean;
   error: string;
-  messages: {
-    switching: string;
-    uncertain: string;
-    mismatch: string;
-    recheck: string;
-    reload: string;
-  };
   recheck: () => Promise<boolean>;
 }
 /** Modal presentation loads on selection; the captured command stays in its owner. */
@@ -18,9 +11,9 @@ export default function ProfileSwitchProgress({
   locale,
   busy,
   error,
-  messages,
   recheck,
 }: ProfileSwitchProgressProps) {
+  const switching = t('dashboard.profile.switching', locale);
   return (
     <Dialog open onOpenChange={() => {}} preventCloseOnOverlayClick>
       <DialogContent
@@ -29,19 +22,22 @@ export default function ProfileSwitchProgress({
         className="place-content-center text-center data-open:animate-none data-closed:animate-none"
         dir={locale === 'fa' ? 'rtl' : 'ltr'}
       >
-        <DialogTitle>{messages.switching}</DialogTitle>
+        <DialogTitle>{switching}</DialogTitle>
         <DialogDescription role={busy ? 'status' : 'alert'}>
           {busy
-            ? messages.switching
-            : error === 'confirmationMismatch'
-              ? messages.mismatch
-              : messages.uncertain}
+            ? switching
+            : t(
+                error === 'confirmationMismatch'
+                  ? 'dashboard.profile.mismatch'
+                  : 'dashboard.profile.uncertain',
+                locale
+              )}
         </DialogDescription>
         {!busy && (
           <div className="flex flex-wrap justify-center gap-3">
-            <Button onClick={() => void recheck()}>{messages.recheck}</Button>
+            <Button onClick={() => void recheck()}>{t('dashboard.profile.recheck', locale)}</Button>
             <Button variant="outline" onClick={() => window.location.reload()}>
-              {messages.reload}
+              {t('dashboard.profile.reloadWorkspace', locale)}
             </Button>
           </div>
         )}

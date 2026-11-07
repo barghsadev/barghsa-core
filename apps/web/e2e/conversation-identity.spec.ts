@@ -287,8 +287,12 @@ for (const staff of [false, true])
       await shell(page, locale, staff);
       let reads = 0,
         writes = 0;
+      let release!: () => void;
+      const held = new Promise<void>((done) => {
+        release = done;
+      });
       const copy = (key: string) => identityText(`conversationIdentity.${key}`, locale);
-      await page.route('**/api/user/settings/conversation-identity', (route) => {
+      await page.route('**/api/user/settings/conversation-identity', async (route) => {
         if (route.request().method() === 'PUT') {
           writes++;
           const body = route.request().postDataJSON();
@@ -303,29 +307,50 @@ for (const staff of [false, true])
             shareInPaymentActivity: true,
           });
           return route.fulfill({
-            json: { displayName: 'My draft', avatarUrl: null, avatarUploadKey: null, revision: 3 },
+            json: {
+              displayName: 'My draft',
+              avatarUrl: null,
+              avatarUploadKey: null,
+              revision: 3,
+              shareInActivity: true,
+              shareInPaymentActivity: true,
+            },
           });
         }
-        reads++;
-        return reads === 1
-          ? route.fulfill({ status: 503, json: {} })
-          : route.fulfill({
-              json: {
-                displayName: reads === 2 ? 'Old alias' : 'Other edit',
-                avatarUrl: null,
-                avatarUploadKey: null,
-                revision: reads === 2 ? 1 : 2,
-              },
-            });
+        const read = ++reads;
+        if (read === 1) await held;
+        await route
+          .fulfill({
+            json: {
+              displayName: read === 1 ? 'Obsolete alias' : read === 2 ? 'Old alias' : 'Other edit',
+              avatarUrl: null,
+              avatarUploadKey: null,
+              revision: read <= 2 ? 1 : 2,
+            },
+          })
+          .catch((error) => {
+            if (read !== 1) throw error;
+          });
       });
+      await page.clock.install();
       await page.goto(staff ? '/admin/tickets' : '/tickets');
       await page
         .getByRole('button', { name: shellText('accountMenu', locale), exact: true })
         .click();
       await page.getByRole('button', { name: copy('title'), exact: true }).click();
       const editor = page.getByRole('dialog', { name: copy('title') });
-      await expect(editor.getByRole('alert')).toHaveText(copy('load'));
-      await editor.getByRole('button', { name: copy('retry'), exact: true }).click();
+      try {
+        await expect.poll(() => reads).toBe(1);
+        await expect(editor.getByRole('status')).toHaveText(copy('loading'));
+        await page.clock.fastForward(15_001);
+        await expect(editor.getByRole('alert')).toHaveText(copy('load'));
+        expect(reads).toBe(1);
+        expect(writes).toBe(0);
+        await editor.getByRole('button', { name: copy('retry'), exact: true }).click();
+        await expect(editor.getByLabel(copy('name'), { exact: true })).toHaveValue('Old alias');
+      } finally {
+        release();
+      }
       await expect(editor.getByLabel(copy('name'), { exact: true })).toHaveValue('Old alias');
       await editor.getByLabel(copy('name'), { exact: true }).fill('My draft');
       await editor.getByRole('checkbox', { name: copy('activity'), exact: true }).check();
@@ -341,6 +366,9 @@ for (const staff of [false, true])
       await expect(editor.getByRole('alert')).toHaveText(copy('photoError'));
       await editor.getByRole('button', { name: copy('saveAction'), exact: true }).click();
       await expect(editor.getByRole('alert')).toHaveText(copy('conflict'));
+      await expect(page.locator('[data-sonner-toast][data-type=error]')).toContainText(
+        copy('conflict')
+      );
       await expect(
         editor.getByRole('checkbox', { name: copy('activity'), exact: true })
       ).toBeChecked();
@@ -353,9 +381,9 @@ for (const staff of [false, true])
       ).violations;
       expect(violations).toEqual([]);
       if (locale === 'fa' && staff && testInfo.project.name === 'chromium') {
-        await page.screenshot({ path: '/tmp/barghsa-conversation-fa-mobile.png' });
+        await page.screenshot({ path: testInfo.outputPath('conversation-fa-mobile.png') });
         await page.setViewportSize({ width: 1280, height: 900 });
-        await page.screenshot({ path: '/tmp/barghsa-conversation-fa-desktop.png' });
+        await page.screenshot({ path: testInfo.outputPath('conversation-fa-desktop.png') });
       }
       expect(await editor.evaluate((element) => element.scrollWidth <= element.clientWidth)).toBe(
         true

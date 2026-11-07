@@ -93,12 +93,16 @@ for (const type of catalogueTypes)
         return route.fulfill({ status: 404, json: {} });
       });
       await page.goto('/admin/catalogue');
-      const content = page.locator('[data-slot="list-content"]');
-      await expect(content.getByRole('button').first()).toBeVisible();
+      const panel = (category: CatalogueType) =>
+        page.getByRole('tabpanel', { name: label(category), exact: true });
+      await expect(
+        panel('consultation').locator('[data-slot="list-content"]').getByRole('button').first()
+      ).toBeVisible();
       if (type !== 'consultation') {
         await page.getByRole('tab', { name: label(type), exact: true }).click();
-        await expect(content.getByRole('button').first()).toBeVisible();
       }
+      const content = panel(type).locator('[data-slot="list-content"]');
+      await expect(content.getByRole('button').first()).toBeVisible();
       const productTitle = catalogueProduct(type).title[locale];
       await content
         .getByRole('button', { name: `${label('edit')} ${productTitle}`, exact: true })

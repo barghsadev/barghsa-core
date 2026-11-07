@@ -779,7 +779,7 @@ export default function AdminEmailProvidersPage() {
                   ? providerText('admin.providers.activateHint', uiLocale)
                   : undefined
               }
-              className="px-3 py-1 bg-primary text-primary-foreground rounded text-xs hover:bg-primary/90 disabled:opacity-40 w-full text-start"
+              className="px-3 py-1 bg-primary text-primary-foreground rounded text-xs hover:bg-primary/90 disabled:opacity-40 w-full text-start pointer-coarse:min-h-[45px]!"
             >
               {providerText('admin.providers.activate', uiLocale)}
             </button>

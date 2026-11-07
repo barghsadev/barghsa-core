@@ -334,7 +334,7 @@ function ReceiptHistory({
         <Link
           to="/invoices"
           search={{ status: undefined }}
-          className="text-primary underline underline-offset-4"
+          className="touch-action text-primary underline underline-offset-4 pointer-coarse:min-h-[45px]!"
         >
           {label('backToInvoices')}
         </Link>
@@ -492,7 +492,7 @@ function ReceiptHistory({
                         to="/invoices/$invoiceId"
                         params={{ invoiceId: item.invoiceId }}
                         hash={`bank-receipt-${item.receiptId}`}
-                        className="text-primary underline underline-offset-4"
+                        className="touch-action text-primary underline underline-offset-4 pointer-coarse:min-h-[45px]!"
                       >
                         <bdi dir="ltr">{item.receiptId}</bdi>
                       </Link>

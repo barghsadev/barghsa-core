@@ -782,45 +782,48 @@ export default function AdminBrandingConfig() {
 
           <section className="bg-background rounded-lg border border-border p-6 space-y-4">
             <h2 className="text-lg font-semibold text-foreground">{text('shapeAndType')}</h2>
-            <label className="block space-y-1 text-sm font-medium">
-              <span>{text('fontFamily')}</span>
-              <select
+            <div className="space-y-1 text-sm font-medium">
+              <label htmlFor="branding-font-family">{text('fontFamily')}</label>
+              <NativeSelect
+                id="branding-font-family"
                 value={config.fontFamily}
                 onChange={(event) => updateConfig('fontFamily', event.target.value)}
-                className="block w-full rounded border border-input px-3 py-2"
+                className="w-full"
               >
                 <option value="vazirmatn">Vazirmatn</option>
                 <option value="tahoma">Tahoma</option>
-              </select>
-            </label>
-            <label className="block space-y-1 text-sm font-medium">
-              <span>{text('borderRadius')}</span>
-              <select
+              </NativeSelect>
+            </div>
+            <div className="space-y-1 text-sm font-medium">
+              <label htmlFor="branding-border-radius">{text('borderRadius')}</label>
+              <NativeSelect
+                id="branding-border-radius"
                 value={config.borderRadiusRem}
                 onChange={(event) => updateConfig('borderRadiusRem', Number(event.target.value))}
-                className="block w-full rounded border border-input px-3 py-2"
+                className="w-full"
               >
                 {[0, 0.25, 0.5, 0.75, 1, 1.25, 1.5].map((value) => (
                   <option key={value} value={value}>
                     {value} rem
                   </option>
                 ))}
-              </select>
-            </label>
-            <label className="block space-y-1 text-sm font-medium">
-              <span>{text('spacingScale')}</span>
-              <select
+              </NativeSelect>
+            </div>
+            <div className="space-y-1 text-sm font-medium">
+              <label htmlFor="branding-spacing-scale">{text('spacingScale')}</label>
+              <NativeSelect
+                id="branding-spacing-scale"
                 value={config.spacingScale}
                 onChange={(event) => updateConfig('spacingScale', Number(event.target.value))}
-                className="block w-full rounded border border-input px-3 py-2"
+                className="w-full"
               >
                 {[0.875, 1, 1.125, 1.25].map((value) => (
                   <option key={value} value={value}>
                     {Math.round(value * 100)}%
                   </option>
                 ))}
-              </select>
-            </label>
+              </NativeSelect>
+            </div>
             {!validConfig && (
               <p role="alert" className="text-sm text-destructive">
                 {text('invalidTheme')}
@@ -1015,17 +1018,17 @@ export default function AdminBrandingConfig() {
             <p id="branding-number-style-help" className="text-sm text-muted-foreground">
               {text('numberStyleHint')}
             </p>
-            <select
+            <NativeSelect
               id="branding-number-style"
               aria-describedby="branding-number-style-help"
               value={config.numberStyle}
               onChange={(event) => updateConfig('numberStyle', event.target.value)}
-              className="rounded border border-input px-3 py-2"
+              className="max-w-full"
             >
               <option value="locale">{text('numberLocale')}</option>
               <option value="persian">{text('numberPersian')}</option>
               <option value="western">{text('numberWestern')}</option>
-            </select>
+            </NativeSelect>
             <p>
               <output aria-label={text('numberPreview')}>
                 {formatCurrencyIrr('123456789', locale, { numberStyle: config.numberStyle })}

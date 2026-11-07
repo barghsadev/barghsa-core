@@ -159,7 +159,7 @@ export function ServiceSettingsEditor({
               return (
                 <fieldset key={field.prefix} className="min-w-0 space-y-3 rounded-md border p-4">
                   <legend className="px-1 font-medium">{title(field)}</legend>
-                  <label className="flex items-center gap-2">
+                  <label className="touch-label flex items-center gap-2 pointer-coarse:min-h-[45px]!">
                     <input
                       type="checkbox"
                       aria-label={`${label('enabled')} — ${title(field)}`}
@@ -200,7 +200,7 @@ export function ServiceSettingsEditor({
                   {kind === 'escalation' && (
                     <div className="space-y-2">
                       <p className="text-sm text-muted-foreground">{label('inApp')}</p>
-                      <label className="flex items-center gap-2">
+                      <label className="touch-label flex items-center gap-2 pointer-coarse:min-h-[45px]!">
                         <input
                           type="checkbox"
                           aria-label={`${label('email')} — ${title(field)}`}

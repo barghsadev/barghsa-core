@@ -103,7 +103,7 @@ function ElectricityIndexPage() {
         <p className="text-muted-foreground">{t('electricity.catalogue.description', locale)}</p>
         <Link
           to="/electricity/orders"
-          className="w-fit text-sm text-primary underline underline-offset-4"
+          className="touch-action w-fit text-sm text-primary underline underline-offset-4 pointer-coarse:min-h-[45px]!"
         >
           {t('electricity.orders.title', locale)}
         </Link>

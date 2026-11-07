@@ -261,6 +261,7 @@ for (const locale of ['en', 'fa'] as const)
             });
         const count = reads;
         const summary = details.locator(':scope > summary');
+        await expect(summary).toBeVisible();
         if (await page.evaluate(() => matchMedia('(pointer: coarse)').matches)) {
           const box = await summary.boundingBox();
           expect(box?.width).toBeGreaterThanOrEqual(44);

@@ -443,8 +443,11 @@ function Results({
     };
   }, [path, refresh, urlRows.acceptPage, readDocument]);
   function reload() {
-    if (queryRef.current) queryRef.current.queue.setQuery({ cursor: '' });
-    else setCursor(null);
+    if (queryRef.current && cursor) {
+      queryRef.current.queue.setQuery({ cursor: '' });
+      return;
+    }
+    setCursor(null);
     setNext(null);
     setRefresh((value) => value + 1);
   }

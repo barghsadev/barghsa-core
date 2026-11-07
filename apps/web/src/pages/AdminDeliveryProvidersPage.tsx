@@ -15,7 +15,7 @@ export default function AdminDeliveryProvidersPage() {
         href={`https://github.com/barghsadev/barghsa-core/blob/main/kanban/runbooks/provider-delivery${locale === 'fa' ? '.fa' : ''}.md`}
         target="_blank"
         rel="noopener noreferrer"
-        className="mb-4 inline-block text-sm text-primary underline underline-offset-2"
+        className="touch-action mb-4 pointer-coarse:min-h-[45px]! text-sm text-primary underline underline-offset-2"
       >
         {providerText('admin.providers.runbook', locale)}
       </a>

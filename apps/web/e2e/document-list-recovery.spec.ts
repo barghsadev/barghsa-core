@@ -169,11 +169,16 @@ for (const staff of [false, true])
         buffer: Buffer.from('%PDF-draft'),
       });
       const uploadFile = page.locator('[data-slot="file-upload"] input[type="file"]');
+      const refreshStart = queries.length;
       status = 503;
       await list.getByRole('button', { name: word('refresh'), exact: true }).click();
-      await expect(content.getByRole('alert')).toBeVisible();
+      const refreshError = content.getByRole('alert').filter({ hasText: word('listError') });
+      await expect(refreshError).toBeVisible();
+      const firstPage = new URL(failed, 'https://local');
+      firstPage.searchParams.delete('before');
+      expect(queries.slice(refreshStart)).toEqual([firstPage.pathname + firstPage.search]);
       status = 200;
-      await content.getByRole('button', { name: word('retry'), exact: true }).click();
+      await refreshError.getByRole('button', { name: word('retry'), exact: true }).click();
       await expect(content.getByRole('alert')).toHaveCount(0);
       expect(await uploadFile.evaluate((input: HTMLInputElement) => input.files?.[0]?.name)).toBe(
         'Draft.pdf'

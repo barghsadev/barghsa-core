@@ -18,6 +18,7 @@ import { t, type Locale } from '@barghsa/i18n/conversation-identity';
 import { confirmationText } from '@barghsa/i18n/confirmation';
 import { toast } from '../lib/toast-api.js';
 import { withCsrf } from '../lib/csrf.js';
+import { readWithDeadline } from '../lib/server-query-client.js';
 import { isConversationPhoto, uploadConversationPhoto } from '../lib/branding-logo-upload.js';
 
 type Identity = {
@@ -54,6 +55,12 @@ async function readIdentity(response: Response): Promise<Identity> {
   } as Identity;
 }
 
+function loadIdentity(parent: AbortSignal) {
+  return readWithDeadline(parent, async (signal) =>
+    readIdentity(await fetch(endpoint, { credentials: 'include', signal }))
+  );
+}
+
 export function ConversationIdentityDialog({
   locale,
   onClose,
@@ -79,8 +86,7 @@ export function ConversationIdentityDialog({
     const abort = new AbortController();
     controller.current = abort;
     setError(null);
-    void fetch(endpoint, { credentials: 'include', signal: abort.signal })
-      .then(readIdentity)
+    void loadIdentity(abort.signal)
       .then((value) => {
         if (!abort.signal.aborted) {
           setIdentity(value);
@@ -90,7 +96,8 @@ export function ConversationIdentityDialog({
         }
       })
       .catch((reason: unknown) => {
-        if (!abort.signal.aborted) setError(reason instanceof Error ? reason.message : 'load');
+        if (!abort.signal.aborted)
+          setError(reason instanceof Error && reason.message === 'denied' ? 'denied' : 'load');
       });
     return () => abort.abort();
   }, [attempt]);
@@ -132,9 +139,7 @@ export function ConversationIdentityDialog({
       });
       if (!response.ok) {
         if (response.status === 409) {
-          const latest = await readIdentity(
-            await fetch(endpoint, { credentials: 'include', signal })
-          );
+          const latest = await loadIdentity(signal);
           if (!signal.aborted) setIdentity(latest);
           throw new Error('conflict');
         }
@@ -155,7 +160,9 @@ export function ConversationIdentityDialog({
     } catch (reason) {
       if (!signal.aborted) {
         const message = reason instanceof Error ? reason.message : 'save';
-        setError(['denied', 'conflict'].includes(message) ? message : 'save');
+        const code = message === 'denied' || message === 'conflict' ? message : 'save';
+        setError(code);
+        toast.error(t(`conversationIdentity.${code}`, locale));
         if (message === 'denied') {
           setName('');
           setShareInActivity(false);

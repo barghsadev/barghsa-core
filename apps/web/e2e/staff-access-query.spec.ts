@@ -166,7 +166,10 @@ for (const locale of ['en', 'fa'] as const)
       const count = reads;
       await module.selectOption('tickets');
       expect(params(page).get('module')).toBe('tickets');
-      await expect(rows.first().getByRole('checkbox')).not.toBeChecked();
+      await expect(rows.first().getByRole('checkbox')).toHaveCount(1);
+      await expect(
+        rows.first().getByRole('checkbox', { name: 'tickets:read', exact: true })
+      ).not.toBeChecked();
       expect(reads).toBe(count);
       await page.goBack();
       await expect(module).toHaveValue('finance');

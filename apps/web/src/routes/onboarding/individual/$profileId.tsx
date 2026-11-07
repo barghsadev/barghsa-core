@@ -273,7 +273,7 @@ function IndividualProfileForm({ profileId }: { profileId: string }) {
         {/* Back link */}
         <Link
           to="/onboarding"
-          className="mb-4 inline-flex items-center text-sm text-muted-foreground hover:text-primary"
+          className="touch-action mb-4 inline-flex items-center text-sm pointer-coarse:min-h-[45px]! text-muted-foreground hover:text-primary"
         >
           <ChevronRightIcon className={`h-4 w-4 ${isRtl ? 'rotate-180' : ''}`} />
           {t('onboarding.individual.back', locale)}
@@ -463,7 +463,7 @@ function IndividualProfileForm({ profileId }: { profileId: string }) {
                           }}
                           onBlur={() => handleBlur('provinceId')}
                           disabled={submitting || !provinceOptions.ready}
-                          className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                          className="flex h-11 w-full pointer-coarse:min-h-[45px]! rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                           aria-invalid={touched.provinceId && !!errors.provinceId}
                           aria-describedby={errors.provinceId ? 'provinceId-error' : undefined}
                         >
@@ -491,6 +491,7 @@ function IndividualProfileForm({ profileId }: { profileId: string }) {
                         <span className="text-destructive ml-0.5">*</span>
                       </Label>
                       <DependentSelect
+                        className="h-11 pointer-coarse:min-h-[45px]!"
                         id="cityId"
                         ref={form.register('cityId').ref}
                         dependencyValue={selectedProvinceId}

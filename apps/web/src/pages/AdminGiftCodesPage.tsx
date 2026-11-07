@@ -10,6 +10,7 @@ import {
   Input,
   Label,
   ListPage,
+  NativeSelect,
 } from '@barghsa/ui';
 import { OperationalQueueTable } from '../components/OperationalQueueTable.js';
 import { tGift } from '@barghsa/i18n/gifts';
@@ -422,59 +423,59 @@ export default function AdminGiftCodesPage({
             </div>
             <div className="flex min-w-0 flex-col gap-2">
               <Label htmlFor="gift-status-filter">{label('status')}</Label>
-              <select
+              <NativeSelect
                 disabled={locked}
                 id="gift-status-filter"
-                className="max-w-full rounded-md border bg-background p-2"
+                className="w-full"
                 value={status}
                 onChange={(event) => setStatus(event.target.value)}
               >
                 <option value="">{label('all')}</option>
                 <option value="active">{label('active')}</option>
                 <option value="inactive">{label('inactive')}</option>
-              </select>
+              </NativeSelect>
             </div>
             <div className="flex min-w-0 flex-col gap-2">
               <Label htmlFor="gift-type-filter">{label('type')}</Label>
-              <select
+              <NativeSelect
                 disabled={locked}
                 id="gift-type-filter"
-                className="max-w-full rounded-md border bg-background p-2"
+                className="w-full"
                 value={type}
                 onChange={(event) => setType(event.target.value)}
               >
                 <option value="">{label('all')}</option>
                 <option value="fixed_irr">{label('fixed')}</option>
                 <option value="percentage">{label('percentage')}</option>
-              </select>
+              </NativeSelect>
             </div>
             <div className="flex min-w-0 flex-col gap-2">
               <Label htmlFor="gift-eligibility-filter">{label('eligibility')}</Label>
-              <select
+              <NativeSelect
                 disabled={locked}
                 id="gift-eligibility-filter"
-                className="max-w-full rounded-md border bg-background p-2"
+                className="w-full"
                 value={eligibility}
                 onChange={(event) => setEligibility(event.target.value)}
               >
                 <option value="">{label('all')}</option>
                 <option value="public">{label('public')}</option>
                 <option value="profile">{label('restricted')}</option>
-              </select>
+              </NativeSelect>
             </div>
             <div className="flex min-w-0 flex-col gap-2">
               <Label htmlFor="gift-expiry-filter">{label('expiry')}</Label>
-              <select
+              <NativeSelect
                 disabled={locked}
                 id="gift-expiry-filter"
-                className="max-w-full rounded-md border bg-background p-2"
+                className="w-full"
                 value={expiry}
                 onChange={(event) => setExpiry(event.target.value)}
               >
                 <option value="">{label('all')}</option>
                 <option value="not_expired">{label('notExpired')}</option>
                 <option value="expired">{label('expired')}</option>
-              </select>
+              </NativeSelect>
             </div>
             <Button type="submit" variant="outline" disabled={locked}>
               {label('search')}

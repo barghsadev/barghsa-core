@@ -115,10 +115,16 @@ export function LatestOrdersWidget({
         </ul>
       )}
       <div className="flex flex-wrap gap-x-5 gap-y-2 border-t pt-4 text-sm font-medium">
-        <Link to="/electricity/orders" className="text-primary underline underline-offset-4">
+        <Link
+          to="/electricity/orders"
+          className="touch-action pointer-coarse:min-h-[45px]! text-primary underline underline-offset-4"
+        >
           {dashboardText('orders.viewAllElectricity', locale)}
         </Link>
-        <Link to="/savings/orders" className="text-primary underline underline-offset-4">
+        <Link
+          to="/savings/orders"
+          className="touch-action pointer-coarse:min-h-[45px]! text-primary underline underline-offset-4"
+        >
           {dashboardText('orders.viewAllSaving', locale)}
         </Link>
       </div>

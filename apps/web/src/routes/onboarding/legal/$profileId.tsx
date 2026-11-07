@@ -675,7 +675,7 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
         {/* Back link */}
         <Link
           to="/onboarding"
-          className="mb-4 inline-flex items-center text-sm text-muted-foreground hover:text-primary"
+          className="touch-action mb-4 inline-flex items-center text-sm pointer-coarse:min-h-[45px]! text-muted-foreground hover:text-primary"
         >
           <ChevronRightIcon className={`h-4 w-4 ${isRtl ? 'rotate-180' : ''}`} />
           {isRtl ? 'بازگشت' : 'Back'}
@@ -774,6 +774,7 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
                             <Label htmlFor={field}>{t(`onboarding.legal.${field}`, locale)}</Label>
                             {field === 'representativeCityId' ? (
                               <DependentSelect
+                                className="h-11 pointer-coarse:min-h-[45px]!"
                                 id={field}
                                 ref={form.register(field).ref}
                                 required
@@ -819,7 +820,7 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
                                 onBlur={() => handleBlur(field)}
                                 aria-invalid={touched[field] && !!errors[field]}
                                 aria-describedby={errors[field] ? `${field}-error` : undefined}
-                                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                                className="flex h-11 w-full pointer-coarse:min-h-[45px]! rounded-md border border-input bg-background px-3 py-2 text-sm"
                               >
                                 <option value="">{t(`onboarding.legal.${field}`, locale)}</option>
                                 {provinces.map((item) => (
@@ -974,7 +975,7 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
                               onChange={(e) => setCompanyTypeId(e.target.value)}
                               onBlur={() => handleBlur('companyTypeId')}
                               disabled={submitting}
-                              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                              className="flex h-11 w-full pointer-coarse:min-h-[45px]! rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                               aria-invalid={touched.companyTypeId && !!errors.companyTypeId}
                               aria-describedby={
                                 errors.companyTypeId ? 'companyTypeId-error' : undefined
@@ -1097,7 +1098,7 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
                               errors.officialProvinceId ? 'officialProvinceId-error' : undefined
                             }
                             disabled={submitting || !provinceOptions.ready}
-                            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                            className="flex h-11 w-full pointer-coarse:min-h-[45px]! rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                           >
                             <option value="">
                               {isRtl ? 'استان را انتخاب کنید' : 'Select province'}
@@ -1124,6 +1125,7 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
                       <div className="space-y-2">
                         <Label htmlFor="officialCityId">{isRtl ? 'شهر' : 'City'}</Label>
                         <DependentSelect
+                          className="h-11 pointer-coarse:min-h-[45px]!"
                           id="officialCityId"
                           ref={form.register('officialCityId').ref}
                           required

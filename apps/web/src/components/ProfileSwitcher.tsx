@@ -174,13 +174,6 @@ export function ProfileWorkspaceProvider({
             locale={locale}
             busy={command.busy}
             error={command.error}
-            messages={{
-              switching: t('dashboard.profile.switching', locale),
-              uncertain: t('dashboard.profile.uncertain', locale),
-              mismatch: t('dashboard.profile.mismatch', locale),
-              recheck: t('dashboard.profile.recheck', locale),
-              reload: t('dashboard.profile.reloadWorkspace', locale),
-            }}
             recheck={command.refreshConfirmation}
           />
         ) : (

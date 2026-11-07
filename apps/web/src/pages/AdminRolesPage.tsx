@@ -1,7 +1,16 @@
 import type { ListQueryBinding } from '../hooks/useListQuery.js';
 import { useEffect, useState, useCallback, useRef } from 'react';
 import type { FormEvent } from 'react';
-import { LoadingStatus, Alert, Button, DataTable, Label, ListPage, TextCell } from '@barghsa/ui';
+import {
+  LoadingStatus,
+  Alert,
+  Button,
+  DataTable,
+  Label,
+  ListPage,
+  NativeSelect,
+  TextCell,
+} from '@barghsa/ui';
 import { t } from '@barghsa/i18n/admin-ui';
 import { useLocale } from '../hooks/useLocale.js';
 import { staffQueryJson, useStaffQueryRead } from '../hooks/useStaffQueryRead.js';
@@ -276,9 +285,9 @@ export default function AdminRolesPage({ queries }: { queries?: ListQueryBinding
           {!forbidden && roles && (
             <div className="space-y-1">
               <Label htmlFor="role-module">{t('admin.roles.compare.module', locale)}</Label>
-              <select
+              <NativeSelect
                 id="role-module"
-                className="block w-full rounded border bg-background px-3 py-2 text-sm"
+                className="w-full"
                 value={selectedGroup?.group ?? ''}
                 onChange={(event) =>
                   queries
@@ -292,7 +301,7 @@ export default function AdminRolesPage({ queries }: { queries?: ListQueryBinding
                     {groupName(group.group)}
                   </option>
                 ))}
-              </select>
+              </NativeSelect>
               <p className="text-sm text-muted-foreground">
                 {t('admin.roles.compare.help', locale)}
               </p>
