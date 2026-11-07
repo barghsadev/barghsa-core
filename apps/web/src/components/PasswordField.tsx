@@ -69,6 +69,8 @@ export interface PasswordFieldProps {
   label?: ReactNode;
   locale?: Locale;
   error?: string | null;
+  /** Reserve the error line before blur validation updates it. */
+  errorPlaceholder?: string | undefined;
   autoFocus?: boolean;
   /** Disable the input (loading / submission in progress) */
   disabled?: boolean;
@@ -91,6 +93,7 @@ export function PasswordField({
   label,
   locale = 'fa',
   error,
+  errorPlaceholder,
   autoFocus = false,
   disabled = false,
   name,
@@ -210,9 +213,14 @@ export function PasswordField({
         )}
       </div>
 
-      {!!error && (
-        <p id={`${id}-error`} className="text-sm text-destructive" role="alert">
-          {error}
+      {(error || errorPlaceholder) && (
+        <p
+          id={`${id}-error`}
+          aria-hidden={!error || undefined}
+          className={`text-sm text-destructive${error ? '' : ' invisible'}`}
+          role={error ? 'alert' : undefined}
+        >
+          {error || errorPlaceholder}
         </p>
       )}
 

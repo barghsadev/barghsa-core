@@ -61,7 +61,8 @@ for (const locale of ['fa', 'en'])
         await expect(password).toBeVisible();
         await expect(password).toHaveAttribute('autocomplete', 'current-password');
         await expect(submit).toBeEnabled();
-        await submit.click();
+        if (await page.evaluate(() => matchMedia('(pointer: coarse)').matches)) await submit.tap();
+        else await submit.click();
         expect(requests).toHaveLength(0);
         await expect(username).toHaveAttribute('aria-invalid', 'true');
         await expect(username).toBeFocused();

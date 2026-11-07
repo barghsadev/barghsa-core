@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-07T07:33:01+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-07T07:41:56+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.4.0**. Next milestone: **v0.5.0**.
 
@@ -12,8 +12,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 | --- | ---: | --- |
 | done | 861 | Accepted with unchanged source bindings. |
 | verify | 470 | Existing work may be complete; inspect evidence before building. |
-| partial | 31 | An earlier review found unmet criteria; reconcile later fixes. |
-| todo | 6 | New, concrete work or release checks. |
+| partial | 32 | An earlier review found unmet criteria; reconcile later fixes. |
+| todo | 5 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
 | blocked | 1 | Named owner or external prerequisite. |
 | superseded | 3 | Explicit approved scope disposition. |
@@ -39,12 +39,12 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Close the remaining measured electricity and wallet disclosure controls. Renew the critical browser, keyboard and contrast gate on the resulting source and reuse passing current bundle and coverage evidence where valid.
+Use the 98-route inventory and actual existing case receipts to complete the route landmark census. Identify unresolved populated and conditional states, then repair reproduced heading, landmark and direction defects.
 
-- `07-ui-ux-design.md#T-07.04.01.06`: Touch targets: ensure all interactive elements (buttons, links, inputs, toggles) have minimum 44×44px tap area per WCAG 2.5.8.
-- `07-ui-ux-design.md#T-07.05.01.08`: Ensure all color combinations pass WCAG AA contrast ratios: normal text ≥ 4.5:1, large text ≥ 3:1, UI components ≥ 3:1. Verify with automated tools. Provide a "high contrast" mode toggle that strengthens all contrast ratios.
+- `07-ui-ux-design.md#T-07.03.01.07`: Test every component and page in both RTL and LTR modes. Persian Lorem ipsum (`لورم ایپسوم`) should render correctly in all containers. Verify no text overflow, clipped content, or misaligned elements.
+- `07-ui-ux-design.md#T-07.04.02.04`: Verify all pages look correct at `320px`, `375px`, `390px`, `414px`, `768px`, `1024px`, `1280px`, and `1920px` viewport widths. No horizontal scroll, no overlapping text, no tiny touch targets.
+- `07-ui-ux-design.md#T-07.05.01.07`: Implement proper heading hierarchy (`h1` → `h2` → `h3` → `h4`) on every page. A single `<h1>` per page. Landmarks: `<header>`, `<nav>`, `<main>`, `<aside>`, `<footer>` with `aria-label` when multiple instances exist.
 - `release-readiness#R-04.01`: Verify full customer and admin UI adoption
-- `release-readiness#R-04.02`: Renew accessibility and performance evidence
 
 ## v0.2.0: Complete customer journeys
 
@@ -641,7 +641,7 @@ Customer and admin workflows work on desktop/mobile in both languages and themes
 | Qualified task | State | Build evidence | Required work |
 | --- | --- | --- | --- |
 | `release-readiness#R-04.01` | partial | Recorded batch work | Verify full customer and admin UI adoption |
-| `release-readiness#R-04.02` | todo | Inventory needed | Renew accessibility and performance evidence |
+| `release-readiness#R-04.02` | partial | Recorded batch work | Renew accessibility and performance evidence |
 | `02-auth-users-admin.md#T-09.01.01` | done | Earlier partial | Branding settings page |
 | `02-auth-users-admin.md#T-09.01.02` | done | Earlier acceptance_verified | Theme application |
 | `07-ui-ux-design.md#T-07.01.01.01` | done | Earlier acceptance_verified | Initialize `packages/ui` with Tailwind CSS v4, PostCSS, autoprefixer. Configure `tailwind.config.ts` with extended color palette, font families (self-hosted Vazirmatn for Persian and English, following the existing design context), border-radius, spacing scale, and animation tokens. |

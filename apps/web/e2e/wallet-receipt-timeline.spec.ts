@@ -260,8 +260,14 @@ for (const locale of ['en', 'fa'] as const)
               path: `/tmp/barghsa-wallet-views-card-fa-dark-${test.info().project.name}.png`,
             });
         const count = reads;
-        await details.locator(':scope > summary').focus();
-        await details.locator(':scope > summary').press('Enter');
+        const summary = details.locator(':scope > summary');
+        if (await page.evaluate(() => matchMedia('(pointer: coarse)').matches)) {
+          const box = await summary.boundingBox();
+          expect(box?.width).toBeGreaterThanOrEqual(44);
+          expect(box?.height).toBeGreaterThanOrEqual(44);
+        }
+        await summary.focus();
+        await summary.press('Enter');
         await expect(details).toHaveAttribute('open', '');
         await expect(history.getByRole('table')).toHaveCount(0);
         const beforeView = { reads, url: page.url() };

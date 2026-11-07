@@ -33,6 +33,8 @@ their invoices.
 
 Let long action labels wrap within their container at 320 pixels. Keep the
 44-pixel minimum height so the full label remains visible and easy to tap.
+Reserve space for errors that appear on blur when they can move a nearby
+submit button during a tap.
 
 The high contrast switch in account settings applies to the current browser.
 It strengthens text, form controls and focus outlines in both light and dark

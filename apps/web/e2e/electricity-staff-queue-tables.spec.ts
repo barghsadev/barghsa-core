@@ -188,6 +188,15 @@ for (const locale of ['en', 'fa'] as const)
         await reason.fill('  Keep the exact staff draft  ');
         const selectedReads = detailReads;
         await checkRoutePresentation(page, info, locale);
+        if (await page.evaluate(() => matchMedia('(pointer: coarse)').matches)) {
+          const summaries = page.locator('main summary:visible');
+          await expect(summaries).toHaveCount(3);
+          for (const summary of await summaries.all()) {
+            const box = await summary.boundingBox();
+            expect(box?.width).toBeGreaterThanOrEqual(44);
+            expect(box?.height).toBeGreaterThanOrEqual(44);
+          }
+        }
         await page.setViewportSize({ width: 1280, height: 900 });
         await expect(reason).toHaveValue('  Keep the exact staff draft  ');
         expect(detailReads).toBe(selectedReads);

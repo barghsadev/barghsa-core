@@ -354,7 +354,9 @@ function Queue() {
         setOpen(nextOpen);
       }}
     >
-      <summary className="cursor-pointer font-medium">{copy('title')}</summary>
+      <summary className="min-h-11 min-w-11 cursor-pointer content-center font-medium">
+        {copy('title')}
+      </summary>
       {open ? (
         <div className="mt-4 space-y-4">
           <p className="text-sm text-muted-foreground">{copy('description')}</p>

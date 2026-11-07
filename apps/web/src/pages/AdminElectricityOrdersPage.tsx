@@ -1240,7 +1240,9 @@ function OwnedAdminElectricityOrdersPage({ queries }: { queries?: StaffOrderList
                   )}
                 </section>
                 <details className="rounded-md border p-3 text-sm">
-                  <summary className="cursor-pointer font-medium">{copy('snapshots')}</summary>
+                  <summary className="min-h-11 min-w-11 cursor-pointer content-center font-medium">
+                    {copy('snapshots')}
+                  </summary>
                   <h3 className="mt-3 font-semibold">{copy('pricingSnapshot')}</h3>
                   <pre className="overflow-x-auto whitespace-pre-wrap break-words">
                     {JSON.stringify(detail.pricingSnapshot, null, 2)}

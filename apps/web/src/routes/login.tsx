@@ -318,6 +318,9 @@ function LoginPage() {
             onChange={(value) => edit(field, value)}
             disabled={model.locked}
             error={fieldState.error?.message ?? null}
+            errorPlaceholder={
+              name === 'password' ? loginFormText('passwordRequired', locale) : undefined
+            }
             showStrength={name === 'newPassword'}
             autoComplete={name === 'password' ? 'current-password' : 'new-password'}
             autoFocus={name === 'newPassword'}

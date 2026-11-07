@@ -72,7 +72,7 @@ export function WorkflowStatusBanner({
                 <span>{nextAction}</span>
               )}
               <span>{t('workflow.help', locale)}:</span>
-              <Link to={safeSupportHref} className="underline">
+              <Link to={safeSupportHref} className="touch-action underline">
                 {t('workflow.support', locale)}
               </Link>
             </div>
@@ -117,7 +117,10 @@ export function WorkflowStatusBanner({
           <div>
             <dt className="font-medium">{t('workflow.help', locale)}</dt>
             <dd className="mt-1">
-              <Link className="text-primary underline underline-offset-4" to={safeSupportHref}>
+              <Link
+                className="touch-action text-primary underline underline-offset-4"
+                to={safeSupportHref}
+              >
                 {t('workflow.support', locale)}
               </Link>
             </dd>

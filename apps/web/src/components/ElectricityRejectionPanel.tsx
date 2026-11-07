@@ -21,7 +21,7 @@ export function ElectricityRejectionPanel({
         if (event.currentTarget.open) setOpen(true);
       }}
     >
-      <summary className="cursor-pointer font-medium">
+      <summary className="min-h-11 min-w-11 cursor-pointer content-center font-medium">
         {contractText('rejectionTitle', locale)}
       </summary>
       {open ? (

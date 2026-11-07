@@ -29,7 +29,10 @@ export async function skipToMain(page: Page, locale: string) {
       ];
     });
   const previous = await focusOwner();
-  await page.keyboard.press('Tab');
+  // WebKit's default full-page keyboard traversal uses Option-Tab for links.
+  await page.keyboard.press(
+    page.context().browser()?.browserType().name() === 'webkit' ? 'Alt+Tab' : 'Tab'
+  );
   await expect(
     link,
     `First tab on ${new URL(page.url()).pathname}: ${JSON.stringify(previous)} → ${JSON.stringify(await focusOwner())}`
