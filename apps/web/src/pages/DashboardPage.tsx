@@ -23,8 +23,13 @@ import { useAccountTime } from '../hooks/useAccountTime.js';
 import { LatestOrdersWidget, type RecentOrder } from '../components/LatestOrdersWidget.js';
 import { ActiveContractsWidget, type ActiveContract } from '../components/ActiveContractsWidget.js';
 import { DashboardLayout } from '../components/dashboard/DashboardLayout.js';
-import { DashboardWidget } from '../components/dashboard/DashboardWidget.js';
-import { localizedAsyncReadError, useAsyncData, type AsyncData } from '../hooks/useAsyncData.js';
+import { DashboardWidget, retryDashboardRead } from '../components/dashboard/DashboardWidget.js';
+import {
+  localizedAsyncReadError,
+  readAsyncResponse,
+  useAsyncData,
+  type AsyncData,
+} from '../hooks/useAsyncData.js';
 import { useServerDetailQuery } from '../hooks/useServerQuery.js';
 import { queryKeys } from '../lib/query-keys.js';
 import { ServerQueryError } from '../lib/server-query-client.js';
@@ -50,9 +55,9 @@ function useWidget<T>(widget: WidgetKey, profileId: string): AsyncData<T> {
         : queryKeys[widget].detail(scope, 'dashboard'),
     manual: true,
     read: async (signal) => {
-      const response = await fetch(
+      const response = await readAsyncResponse(
         `/api/dashboard/widgets/${widget}?profileId=${encodeURIComponent(profileId)}`,
-        { credentials: 'include', signal }
+        signal
       );
       if (!response.ok) throw new ServerQueryError(response.status);
       return response.json();
@@ -223,7 +228,7 @@ export function DashboardPage({ locale: localeOverride }: { locale?: Locale } = 
         <Alert variant="destructive">
           <AlertDescription>
             <p>{t('dashboard.overview.loadError', locale)}</p>
-            <Button variant="outline" onClick={context.retry}>
+            <Button variant="outline" onClick={() => retryDashboardRead(context, locale)}>
               {t('dashboard.overview.retry', locale)}
             </Button>
           </AlertDescription>

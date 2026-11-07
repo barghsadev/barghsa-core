@@ -3,6 +3,7 @@ import type { Locale } from './app.js';
 const en = {
   'widget.error': 'This section could not be loaded. Other sections are still available.',
   'widget.retry': 'Retry this section',
+  'widget.connectionRetry': 'Connection interrupted. Retrying the request…',
   'status.title': 'At a glance',
   'verification.empty': 'No profiles are awaiting verification.',
   'chargebacks.empty': 'No unresolved chargebacks.',
@@ -33,6 +34,7 @@ const en = {
 const fa: Record<keyof typeof en, string> = {
   'widget.error': 'این بخش بارگذاری نشد. بخش‌های دیگر همچنان در دسترس هستند.',
   'widget.retry': 'تلاش دوباره برای این بخش',
+  'widget.connectionRetry': 'ارتباط قطع شد. درخواست دوباره ارسال می‌شود…',
   'status.title': 'در یک نگاه',
   'verification.empty': 'پروفایلی در انتظار تأیید نیست.',
   'chargebacks.empty': 'شارژبک حل‌نشده‌ای وجود ندارد.',

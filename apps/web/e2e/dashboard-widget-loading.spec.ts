@@ -38,14 +38,16 @@ for (const locale of ['en', 'fa'] as const) {
       await page.route('**/api/user/settings/timezone', (route) =>
         route.fulfill({ json: { timezone: 'Asia/Tehran' } })
       );
-      await page.route('**/api/dashboard/context', (route) =>
-        route.fulfill({
+      let contextReads = 0;
+      await page.route('**/api/dashboard/context', (route) => {
+        if (++contextReads === 1) return route.abort('failed');
+        return route.fulfill({
           json: {
             profile: { id: profileId, name: 'Ari Buyer' },
             access: { wallet: true, invoices: true, orders: true, contracts: true },
           },
-        })
-      );
+        });
+      });
       const reads: Record<string, number> = {};
       let failOrders = true;
       let releaseInvoices!: () => void;
@@ -77,6 +79,21 @@ for (const locale of ['en', 'fa'] as const) {
       try {
         await page.clock.install();
         await page.goto('/app');
+        const retryContext = page
+          .getByRole('alert')
+          .filter({ hasText: t('dashboard.overview.loadError', locale) })
+          .getByRole('button', { name: t('dashboard.overview.retry', locale), exact: true });
+        await expect(retryContext).toBeVisible();
+        const connectionNotice = page
+          .locator('[data-sonner-toast][data-type="info"]')
+          .filter({ hasText: dashboardText('widget.connectionRetry', locale) });
+        await expect(connectionNotice).toHaveCount(0);
+        await page.clock.fastForward(5_000);
+        expect(contextReads).toBe(1);
+        expect(reads).toEqual({});
+        await retryContext.click();
+        await expect(connectionNotice).toHaveCount(1);
+        await expect.poll(() => contextReads).toBe(2);
         const orders = page.getByRole('region', { name: dashboardText('orders.title', locale) });
         const invoices = page.getByRole('region', { name: dashboardText('invoice.title', locale) });
         const wallet = page.getByRole('region', {

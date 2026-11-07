@@ -57,6 +57,30 @@ describe('useAsyncData', () => {
     expect(fetcher.mock.calls.filter(([url]) => url === '/resource')).toHaveLength(2);
   });
 
+  it('identifies a transport failure without leaking its message or starting another read', async () => {
+    let disconnected = true;
+    const fetcher = vi.fn(async (url: string) => {
+      if (url === '/resource' && disconnected) throw new TypeError('private transport detail');
+      return response(url);
+    });
+    vi.stubGlobal('fetch', fetcher);
+    await act(async () =>
+      root.render(
+        <QueryProvider>
+          <Example />
+        </QueryProvider>
+      )
+    );
+    expect(resource).toMatchObject({ status: 'error', error: { code: 'READ_NETWORK' } });
+    expect(JSON.stringify(resource)).not.toContain('private transport detail');
+    expect(fetcher.mock.calls.filter(([url]) => url === '/resource')).toHaveLength(1);
+    disconnected = false;
+    await act(async () => resource.retry());
+    expect(resource).toMatchObject({ status: 'ready', data: '/resource' });
+    expect(fetcher.mock.calls.filter(([url]) => url === '/resource')).toHaveLength(2);
+    expect(fetcher.mock.calls.filter(([url]) => url === '/other')).toHaveLength(1);
+  });
+
   it('keeps raw errors private and translates a denial without another read', async () => {
     const lang = document.documentElement.lang;
     const fetcher = vi.fn(async () => response({ message: 'private account detail' }, 403));

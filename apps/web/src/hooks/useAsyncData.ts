@@ -26,14 +26,23 @@ export type AsyncData<T> =
   | { status: 'error'; data: null; retry: () => void; error: AsyncReadError }
   | { status: 'ready'; data: T; retry: () => void; refreshError?: boolean };
 
-type ReadErrorCode = 'READ_DENIED' | 'READ_UNAVAILABLE' | 'READ_FAILED';
+type ReadErrorCode = 'READ_DENIED' | 'READ_UNAVAILABLE' | 'READ_FAILED' | 'READ_NETWORK';
 interface AsyncReadError {
   code: ReadErrorCode;
   message: string;
 }
 
+export function readAsyncResponse(url: string, signal: AbortSignal): Promise<Response> {
+  return fetch(url, { credentials: 'include', signal }).catch((error: unknown) => {
+    // Zero represents a failed transport before an HTTP status was received.
+    if (!signal.aborted && error instanceof TypeError) throw new ServerQueryError(0);
+    throw error;
+  });
+}
+
 function readErrorCode(error: unknown): ReadErrorCode {
   if (error instanceof ServerQueryError) {
+    if (error.status === 0) return 'READ_NETWORK';
     if (error.status === 401 || error.status === 403) return 'READ_DENIED';
     if (error.status === 429 || error.status >= 500) return 'READ_UNAVAILABLE';
   }
@@ -99,7 +108,7 @@ export function useAsyncData<T>(
       if (signal.aborted) abort();
       signal.addEventListener('abort', abort, { once: true });
       try {
-        const response = await fetch(url, { credentials: 'include', signal: controller.signal });
+        const response = await readAsyncResponse(url, controller.signal);
         if (read) return { value: await read(response) };
         if (!response.ok) throw new ServerQueryError(response.status);
         return { value: (await response.json()) as T };
