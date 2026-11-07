@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-07T22:57:14+00:00",
-  "source_commit": "8d9b9f3b88bdb5b791e373d2b43fc4c1aa68efa9",
+  "updated": "2026-11-07T23:03:08+00:00",
+  "source_commit": "a82b62f1b8af6b93e15150e842c3c5282d86d275",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -22887,7 +22887,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "1382b71c9a4e8cb7fe6aef94ef81fb8a6086c22a6e1bf62ca8a2ec062f783844"
+              "sha256": "836f9c77667c33e22af98007a75b74fa7d401ba3dd6cc211040f6bdfe2840ec8"
             },
             {
               "path": "apps/web/e2e/session-cookies.spec.ts",
@@ -23546,7 +23546,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "1382b71c9a4e8cb7fe6aef94ef81fb8a6086c22a6e1bf62ca8a2ec062f783844"
+              "sha256": "836f9c77667c33e22af98007a75b74fa7d401ba3dd6cc211040f6bdfe2840ec8"
             },
             {
               "path": "apps/web/src/routes/_app/settings/security.tsx",
@@ -24302,7 +24302,7 @@
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "27fa650f2c5e874e43f453aeed24980374297ed9e10fc3fb544ce632871acfb3"
+              "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
             },
             {
               "path": "apps/web/src/routeTree.gen.ts",
@@ -25350,7 +25350,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "1382b71c9a4e8cb7fe6aef94ef81fb8a6086c22a6e1bf62ca8a2ec062f783844"
+              "sha256": "836f9c77667c33e22af98007a75b74fa7d401ba3dd6cc211040f6bdfe2840ec8"
             },
             {
               "path": "apps/web/e2e/trusted-devices.spec.ts",
@@ -28592,7 +28592,7 @@
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "27fa650f2c5e874e43f453aeed24980374297ed9e10fc3fb544ce632871acfb3"
+              "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
             },
             {
               "path": "apps/web/src/routeTree.gen.ts",
@@ -30656,7 +30656,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "1382b71c9a4e8cb7fe6aef94ef81fb8a6086c22a6e1bf62ca8a2ec062f783844"
+              "sha256": "836f9c77667c33e22af98007a75b74fa7d401ba3dd6cc211040f6bdfe2840ec8"
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
@@ -31515,7 +31515,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "1382b71c9a4e8cb7fe6aef94ef81fb8a6086c22a6e1bf62ca8a2ec062f783844"
+              "sha256": "836f9c77667c33e22af98007a75b74fa7d401ba3dd6cc211040f6bdfe2840ec8"
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
@@ -31782,7 +31782,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "1382b71c9a4e8cb7fe6aef94ef81fb8a6086c22a6e1bf62ca8a2ec062f783844"
+              "sha256": "836f9c77667c33e22af98007a75b74fa7d401ba3dd6cc211040f6bdfe2840ec8"
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
@@ -33220,7 +33220,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "1382b71c9a4e8cb7fe6aef94ef81fb8a6086c22a6e1bf62ca8a2ec062f783844"
+              "sha256": "836f9c77667c33e22af98007a75b74fa7d401ba3dd6cc211040f6bdfe2840ec8"
             },
             {
               "path": "apps/web/e2e/profile-settings-name.spec.ts",
@@ -33459,7 +33459,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "1382b71c9a4e8cb7fe6aef94ef81fb8a6086c22a6e1bf62ca8a2ec062f783844"
+              "sha256": "836f9c77667c33e22af98007a75b74fa7d401ba3dd6cc211040f6bdfe2840ec8"
             },
             {
               "path": "apps/web/e2e/profile-settings-name.spec.ts",
@@ -34042,7 +34042,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "1382b71c9a4e8cb7fe6aef94ef81fb8a6086c22a6e1bf62ca8a2ec062f783844"
+              "sha256": "836f9c77667c33e22af98007a75b74fa7d401ba3dd6cc211040f6bdfe2840ec8"
             },
             {
               "path": "apps/web/e2e/profile-settings-name.spec.ts",
@@ -35335,7 +35335,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "1382b71c9a4e8cb7fe6aef94ef81fb8a6086c22a6e1bf62ca8a2ec062f783844"
+              "sha256": "836f9c77667c33e22af98007a75b74fa7d401ba3dd6cc211040f6bdfe2840ec8"
             },
             {
               "path": "apps/web/e2e/notification-brand-preview.spec.ts",
@@ -35539,7 +35539,7 @@
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "27fa650f2c5e874e43f453aeed24980374297ed9e10fc3fb544ce632871acfb3"
+              "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
             },
             {
               "path": "apps/web/src/pages/TosPreview.tsx",
@@ -38722,7 +38722,7 @@
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "27fa650f2c5e874e43f453aeed24980374297ed9e10fc3fb544ce632871acfb3"
+              "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -40078,7 +40078,7 @@
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "27fa650f2c5e874e43f453aeed24980374297ed9e10fc3fb544ce632871acfb3"
+              "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -41442,7 +41442,7 @@
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "27fa650f2c5e874e43f453aeed24980374297ed9e10fc3fb544ce632871acfb3"
+              "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -63887,7 +63887,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "1382b71c9a4e8cb7fe6aef94ef81fb8a6086c22a6e1bf62ca8a2ec062f783844"
+              "sha256": "836f9c77667c33e22af98007a75b74fa7d401ba3dd6cc211040f6bdfe2840ec8"
             },
             {
               "path": "apps/web/e2e/geography-native-forms.spec.ts",
@@ -64548,7 +64548,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "1382b71c9a4e8cb7fe6aef94ef81fb8a6086c22a6e1bf62ca8a2ec062f783844"
+              "sha256": "836f9c77667c33e22af98007a75b74fa7d401ba3dd6cc211040f6bdfe2840ec8"
             },
             {
               "path": "apps/web/e2e/geography-native-forms.spec.ts",
@@ -65208,7 +65208,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "1382b71c9a4e8cb7fe6aef94ef81fb8a6086c22a6e1bf62ca8a2ec062f783844"
+              "sha256": "836f9c77667c33e22af98007a75b74fa7d401ba3dd6cc211040f6bdfe2840ec8"
             },
             {
               "path": "apps/web/e2e/geography-native-forms.spec.ts",
@@ -65867,7 +65867,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "1382b71c9a4e8cb7fe6aef94ef81fb8a6086c22a6e1bf62ca8a2ec062f783844"
+              "sha256": "836f9c77667c33e22af98007a75b74fa7d401ba3dd6cc211040f6bdfe2840ec8"
             },
             {
               "path": "apps/web/e2e/geography-native-forms.spec.ts",
@@ -75873,7 +75873,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "1382b71c9a4e8cb7fe6aef94ef81fb8a6086c22a6e1bf62ca8a2ec062f783844"
+              "sha256": "836f9c77667c33e22af98007a75b74fa7d401ba3dd6cc211040f6bdfe2840ec8"
             },
             {
               "path": "apps/web/e2e/notification-forms.spec.ts",
@@ -76282,7 +76282,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "1382b71c9a4e8cb7fe6aef94ef81fb8a6086c22a6e1bf62ca8a2ec062f783844"
+              "sha256": "836f9c77667c33e22af98007a75b74fa7d401ba3dd6cc211040f6bdfe2840ec8"
             },
             {
               "path": "apps/web/e2e/notification-forms.spec.ts",
@@ -76713,7 +76713,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "1382b71c9a4e8cb7fe6aef94ef81fb8a6086c22a6e1bf62ca8a2ec062f783844"
+              "sha256": "836f9c77667c33e22af98007a75b74fa7d401ba3dd6cc211040f6bdfe2840ec8"
             },
             {
               "path": "apps/web/e2e/notification-forms.spec.ts",
@@ -89391,7 +89391,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "1382b71c9a4e8cb7fe6aef94ef81fb8a6086c22a6e1bf62ca8a2ec062f783844"
+              "sha256": "836f9c77667c33e22af98007a75b74fa7d401ba3dd6cc211040f6bdfe2840ec8"
             },
             {
               "path": "apps/web/e2e/notification-forms.spec.ts",
@@ -287663,7 +287663,7 @@
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "27fa650f2c5e874e43f453aeed24980374297ed9e10fc3fb544ce632871acfb3"
+              "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -288518,7 +288518,7 @@
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "27fa650f2c5e874e43f453aeed24980374297ed9e10fc3fb544ce632871acfb3"
+              "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -289373,7 +289373,7 @@
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "27fa650f2c5e874e43f453aeed24980374297ed9e10fc3fb544ce632871acfb3"
+              "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -290283,7 +290283,7 @@
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "27fa650f2c5e874e43f453aeed24980374297ed9e10fc3fb544ce632871acfb3"
+              "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
             },
             {
               "path": "apps/web/src/routeTree.gen.ts",
@@ -290930,7 +290930,7 @@
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "27fa650f2c5e874e43f453aeed24980374297ed9e10fc3fb544ce632871acfb3"
+              "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -291786,7 +291786,7 @@
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "27fa650f2c5e874e43f453aeed24980374297ed9e10fc3fb544ce632871acfb3"
+              "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -292641,7 +292641,7 @@
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "27fa650f2c5e874e43f453aeed24980374297ed9e10fc3fb544ce632871acfb3"
+              "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -293496,7 +293496,7 @@
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "27fa650f2c5e874e43f453aeed24980374297ed9e10fc3fb544ce632871acfb3"
+              "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -294351,7 +294351,7 @@
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "27fa650f2c5e874e43f453aeed24980374297ed9e10fc3fb544ce632871acfb3"
+              "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -295207,7 +295207,7 @@
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "27fa650f2c5e874e43f453aeed24980374297ed9e10fc3fb544ce632871acfb3"
+              "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -296062,7 +296062,7 @@
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "27fa650f2c5e874e43f453aeed24980374297ed9e10fc3fb544ce632871acfb3"
+              "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -296917,7 +296917,7 @@
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "27fa650f2c5e874e43f453aeed24980374297ed9e10fc3fb544ce632871acfb3"
+              "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -297826,7 +297826,7 @@
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "27fa650f2c5e874e43f453aeed24980374297ed9e10fc3fb544ce632871acfb3"
+              "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
             },
             {
               "path": "apps/web/src/routeTree.gen.ts",
@@ -298473,7 +298473,7 @@
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "27fa650f2c5e874e43f453aeed24980374297ed9e10fc3fb544ce632871acfb3"
+              "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -299328,7 +299328,7 @@
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "27fa650f2c5e874e43f453aeed24980374297ed9e10fc3fb544ce632871acfb3"
+              "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -300183,7 +300183,7 @@
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "27fa650f2c5e874e43f453aeed24980374297ed9e10fc3fb544ce632871acfb3"
+              "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -301038,7 +301038,7 @@
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "27fa650f2c5e874e43f453aeed24980374297ed9e10fc3fb544ce632871acfb3"
+              "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -301893,7 +301893,7 @@
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "27fa650f2c5e874e43f453aeed24980374297ed9e10fc3fb544ce632871acfb3"
+              "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -302748,7 +302748,7 @@
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "27fa650f2c5e874e43f453aeed24980374297ed9e10fc3fb544ce632871acfb3"
+              "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -303603,7 +303603,7 @@
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "27fa650f2c5e874e43f453aeed24980374297ed9e10fc3fb544ce632871acfb3"
+              "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -304458,7 +304458,7 @@
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "27fa650f2c5e874e43f453aeed24980374297ed9e10fc3fb544ce632871acfb3"
+              "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -305316,7 +305316,7 @@
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "27fa650f2c5e874e43f453aeed24980374297ed9e10fc3fb544ce632871acfb3"
+              "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -306171,7 +306171,7 @@
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "27fa650f2c5e874e43f453aeed24980374297ed9e10fc3fb544ce632871acfb3"
+              "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -307026,7 +307026,7 @@
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "27fa650f2c5e874e43f453aeed24980374297ed9e10fc3fb544ce632871acfb3"
+              "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -318365,7 +318365,7 @@
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "27fa650f2c5e874e43f453aeed24980374297ed9e10fc3fb544ce632871acfb3"
+              "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
             },
             {
               "path": "apps/web/src/routeTree.gen.ts",
@@ -348994,7 +348994,7 @@
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "27fa650f2c5e874e43f453aeed24980374297ed9e10fc3fb544ce632871acfb3"
+              "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
             },
             {
               "path": "apps/web/src/routeTree.gen.ts",
@@ -421526,7 +421526,7 @@
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "27fa650f2c5e874e43f453aeed24980374297ed9e10fc3fb544ce632871acfb3"
+              "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -491322,7 +491322,7 @@
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "27fa650f2c5e874e43f453aeed24980374297ed9e10fc3fb544ce632871acfb3"
+              "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
@@ -508533,7 +508533,7 @@
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "27fa650f2c5e874e43f453aeed24980374297ed9e10fc3fb544ce632871acfb3"
+              "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -508938,7 +508938,7 @@
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "27fa650f2c5e874e43f453aeed24980374297ed9e10fc3fb544ce632871acfb3"
+              "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -509341,7 +509341,7 @@
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "27fa650f2c5e874e43f453aeed24980374297ed9e10fc3fb544ce632871acfb3"
+              "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -509744,7 +509744,7 @@
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "27fa650f2c5e874e43f453aeed24980374297ed9e10fc3fb544ce632871acfb3"
+              "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -512293,7 +512293,7 @@
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "27fa650f2c5e874e43f453aeed24980374297ed9e10fc3fb544ce632871acfb3"
+              "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
@@ -516704,7 +516704,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Electricity checkout now exposes the required product, period, dates, quantity and address controls. A simple quantity error is linked as soon as it appears. The nested new-address editor still needs field-level associations for missing values. Two legacy test fixtures for that editor also need current verification, product and wizard-step responses. Other conditional forms, including staff provider settings, remain open."
+        "Inline electricity address validation now associates missing-value messages with the controls and focuses the first correctable input. The two stale locale cases now pass with current fixtures and their original duplicate, scope and receipt checks. Staff provider settings and other conditional forms remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -516724,7 +516724,8 @@
           "release-0.5-required-input-semantics",
           "release-0.5-signature-target-and-fields",
           "release-0.5-solar-consultation-required",
-          "release-0.5-electricity-required-fields"
+          "release-0.5-electricity-required-fields",
+          "release-0.5-electricity-address-validation"
         ],
         "current_acceptance": null
       }
@@ -516833,7 +516834,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "1382b71c9a4e8cb7fe6aef94ef81fb8a6086c22a6e1bf62ca8a2ec062f783844"
+              "sha256": "836f9c77667c33e22af98007a75b74fa7d401ba3dd6cc211040f6bdfe2840ec8"
             },
             {
               "path": "apps/web/e2e/form-fields-component.spec.ts",
@@ -517479,7 +517480,7 @@
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "27fa650f2c5e874e43f453aeed24980374297ed9e10fc3fb544ce632871acfb3"
+              "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
@@ -518154,7 +518155,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "1382b71c9a4e8cb7fe6aef94ef81fb8a6086c22a6e1bf62ca8a2ec062f783844"
+              "sha256": "836f9c77667c33e22af98007a75b74fa7d401ba3dd6cc211040f6bdfe2840ec8"
             },
             {
               "path": "apps/web/e2e/form-fields-component.spec.ts",
@@ -518748,7 +518749,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "1382b71c9a4e8cb7fe6aef94ef81fb8a6086c22a6e1bf62ca8a2ec062f783844"
+              "sha256": "836f9c77667c33e22af98007a75b74fa7d401ba3dd6cc211040f6bdfe2840ec8"
             },
             {
               "path": "apps/web/e2e/green-rules.spec.ts",
@@ -519576,7 +519577,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "1382b71c9a4e8cb7fe6aef94ef81fb8a6086c22a6e1bf62ca8a2ec062f783844"
+              "sha256": "836f9c77667c33e22af98007a75b74fa7d401ba3dd6cc211040f6bdfe2840ec8"
             },
             {
               "path": "apps/web/e2e/green-rules.spec.ts",
@@ -520310,7 +520311,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "1382b71c9a4e8cb7fe6aef94ef81fb8a6086c22a6e1bf62ca8a2ec062f783844"
+              "sha256": "836f9c77667c33e22af98007a75b74fa7d401ba3dd6cc211040f6bdfe2840ec8"
             },
             {
               "path": "apps/web/e2e/form-fields-component.spec.ts",
@@ -520904,7 +520905,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "1382b71c9a4e8cb7fe6aef94ef81fb8a6086c22a6e1bf62ca8a2ec062f783844"
+              "sha256": "836f9c77667c33e22af98007a75b74fa7d401ba3dd6cc211040f6bdfe2840ec8"
             },
             {
               "path": "apps/web/e2e/green-rules.spec.ts",
@@ -539876,7 +539877,7 @@
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "27fa650f2c5e874e43f453aeed24980374297ed9e10fc3fb544ce632871acfb3"
+              "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -540279,7 +540280,7 @@
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "27fa650f2c5e874e43f453aeed24980374297ed9e10fc3fb544ce632871acfb3"
+              "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -540682,7 +540683,7 @@
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "27fa650f2c5e874e43f453aeed24980374297ed9e10fc3fb544ce632871acfb3"
+              "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -541085,7 +541086,7 @@
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "27fa650f2c5e874e43f453aeed24980374297ed9e10fc3fb544ce632871acfb3"
+              "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -541493,7 +541494,7 @@
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "27fa650f2c5e874e43f453aeed24980374297ed9e10fc3fb544ce632871acfb3"
+              "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -541902,7 +541903,7 @@
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "27fa650f2c5e874e43f453aeed24980374297ed9e10fc3fb544ce632871acfb3"
+              "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -542305,7 +542306,7 @@
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "27fa650f2c5e874e43f453aeed24980374297ed9e10fc3fb544ce632871acfb3"
+              "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -542708,7 +542709,7 @@
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "27fa650f2c5e874e43f453aeed24980374297ed9e10fc3fb544ce632871acfb3"
+              "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -543112,7 +543113,7 @@
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "27fa650f2c5e874e43f453aeed24980374297ed9e10fc3fb544ce632871acfb3"
+              "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -543517,7 +543518,7 @@
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "27fa650f2c5e874e43f453aeed24980374297ed9e10fc3fb544ce632871acfb3"
+              "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -543920,7 +543921,7 @@
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "27fa650f2c5e874e43f453aeed24980374297ed9e10fc3fb544ce632871acfb3"
+              "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -544324,7 +544325,7 @@
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "27fa650f2c5e874e43f453aeed24980374297ed9e10fc3fb544ce632871acfb3"
+              "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -545229,7 +545230,7 @@
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "27fa650f2c5e874e43f453aeed24980374297ed9e10fc3fb544ce632871acfb3"
+              "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -547094,7 +547095,7 @@
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "27fa650f2c5e874e43f453aeed24980374297ed9e10fc3fb544ce632871acfb3"
+              "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -548960,7 +548961,7 @@
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "27fa650f2c5e874e43f453aeed24980374297ed9e10fc3fb544ce632871acfb3"
+              "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -550795,7 +550796,7 @@
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "27fa650f2c5e874e43f453aeed24980374297ed9e10fc3fb544ce632871acfb3"
+              "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -552656,7 +552657,7 @@
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "27fa650f2c5e874e43f453aeed24980374297ed9e10fc3fb544ce632871acfb3"
+              "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -554526,7 +554527,7 @@
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "27fa650f2c5e874e43f453aeed24980374297ed9e10fc3fb544ce632871acfb3"
+              "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -556369,7 +556370,7 @@
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "27fa650f2c5e874e43f453aeed24980374297ed9e10fc3fb544ce632871acfb3"
+              "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -558176,7 +558177,7 @@
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "27fa650f2c5e874e43f453aeed24980374297ed9e10fc3fb544ce632871acfb3"
+              "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -559983,7 +559984,7 @@
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "27fa650f2c5e874e43f453aeed24980374297ed9e10fc3fb544ce632871acfb3"
+              "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -561791,7 +561792,7 @@
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "27fa650f2c5e874e43f453aeed24980374297ed9e10fc3fb544ce632871acfb3"
+              "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -563598,7 +563599,7 @@
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "27fa650f2c5e874e43f453aeed24980374297ed9e10fc3fb544ce632871acfb3"
+              "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -565443,7 +565444,7 @@
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "27fa650f2c5e874e43f453aeed24980374297ed9e10fc3fb544ce632871acfb3"
+              "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
@@ -567337,7 +567338,7 @@
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "27fa650f2c5e874e43f453aeed24980374297ed9e10fc3fb544ce632871acfb3"
+              "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
@@ -569281,7 +569282,7 @@
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "27fa650f2c5e874e43f453aeed24980374297ed9e10fc3fb544ce632871acfb3"
+              "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
@@ -571175,7 +571176,7 @@
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "27fa650f2c5e874e43f453aeed24980374297ed9e10fc3fb544ce632871acfb3"
+              "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
@@ -573069,7 +573070,7 @@
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "27fa650f2c5e874e43f453aeed24980374297ed9e10fc3fb544ce632871acfb3"
+              "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
@@ -574963,7 +574964,7 @@
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "27fa650f2c5e874e43f453aeed24980374297ed9e10fc3fb544ce632871acfb3"
+              "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
@@ -576857,7 +576858,7 @@
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "27fa650f2c5e874e43f453aeed24980374297ed9e10fc3fb544ce632871acfb3"
+              "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
@@ -578751,7 +578752,7 @@
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "27fa650f2c5e874e43f453aeed24980374297ed9e10fc3fb544ce632871acfb3"
+              "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
@@ -580645,7 +580646,7 @@
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "27fa650f2c5e874e43f453aeed24980374297ed9e10fc3fb544ce632871acfb3"
+              "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
@@ -582539,7 +582540,7 @@
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "27fa650f2c5e874e43f453aeed24980374297ed9e10fc3fb544ce632871acfb3"
+              "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
@@ -584433,7 +584434,7 @@
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "27fa650f2c5e874e43f453aeed24980374297ed9e10fc3fb544ce632871acfb3"
+              "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
@@ -586327,7 +586328,7 @@
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "27fa650f2c5e874e43f453aeed24980374297ed9e10fc3fb544ce632871acfb3"
+              "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
@@ -588221,7 +588222,7 @@
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "27fa650f2c5e874e43f453aeed24980374297ed9e10fc3fb544ce632871acfb3"
+              "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
@@ -590854,7 +590855,7 @@
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "27fa650f2c5e874e43f453aeed24980374297ed9e10fc3fb544ce632871acfb3"
+              "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
@@ -592748,7 +592749,7 @@
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "27fa650f2c5e874e43f453aeed24980374297ed9e10fc3fb544ce632871acfb3"
+              "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
@@ -594686,7 +594687,7 @@
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "27fa650f2c5e874e43f453aeed24980374297ed9e10fc3fb544ce632871acfb3"
+              "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -596489,7 +596490,7 @@
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "27fa650f2c5e874e43f453aeed24980374297ed9e10fc3fb544ce632871acfb3"
+              "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -598292,7 +598293,7 @@
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "27fa650f2c5e874e43f453aeed24980374297ed9e10fc3fb544ce632871acfb3"
+              "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -600095,7 +600096,7 @@
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "27fa650f2c5e874e43f453aeed24980374297ed9e10fc3fb544ce632871acfb3"
+              "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -601898,7 +601899,7 @@
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "27fa650f2c5e874e43f453aeed24980374297ed9e10fc3fb544ce632871acfb3"
+              "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -603701,7 +603702,7 @@
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "27fa650f2c5e874e43f453aeed24980374297ed9e10fc3fb544ce632871acfb3"
+              "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -605504,7 +605505,7 @@
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "27fa650f2c5e874e43f453aeed24980374297ed9e10fc3fb544ce632871acfb3"
+              "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -665893,7 +665894,7 @@
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "27fa650f2c5e874e43f453aeed24980374297ed9e10fc3fb544ce632871acfb3"
+              "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -666561,7 +666562,7 @@
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "27fa650f2c5e874e43f453aeed24980374297ed9e10fc3fb544ce632871acfb3"
+              "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -667228,7 +667229,7 @@
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "27fa650f2c5e874e43f453aeed24980374297ed9e10fc3fb544ce632871acfb3"
+              "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -667897,7 +667898,7 @@
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "27fa650f2c5e874e43f453aeed24980374297ed9e10fc3fb544ce632871acfb3"
+              "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -668566,7 +668567,7 @@
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "27fa650f2c5e874e43f453aeed24980374297ed9e10fc3fb544ce632871acfb3"
+              "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -669232,7 +669233,7 @@
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "27fa650f2c5e874e43f453aeed24980374297ed9e10fc3fb544ce632871acfb3"
+              "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -669898,7 +669899,7 @@
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "27fa650f2c5e874e43f453aeed24980374297ed9e10fc3fb544ce632871acfb3"
+              "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -670565,7 +670566,7 @@
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "27fa650f2c5e874e43f453aeed24980374297ed9e10fc3fb544ce632871acfb3"
+              "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -671231,7 +671232,7 @@
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "27fa650f2c5e874e43f453aeed24980374297ed9e10fc3fb544ce632871acfb3"
+              "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -671898,7 +671899,7 @@
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "27fa650f2c5e874e43f453aeed24980374297ed9e10fc3fb544ce632871acfb3"
+              "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -716993,7 +716994,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "1382b71c9a4e8cb7fe6aef94ef81fb8a6086c22a6e1bf62ca8a2ec062f783844"
+              "sha256": "836f9c77667c33e22af98007a75b74fa7d401ba3dd6cc211040f6bdfe2840ec8"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -720874,7 +720875,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "1382b71c9a4e8cb7fe6aef94ef81fb8a6086c22a6e1bf62ca8a2ec062f783844"
+              "sha256": "836f9c77667c33e22af98007a75b74fa7d401ba3dd6cc211040f6bdfe2840ec8"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -723589,7 +723590,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Electricity checkout, solar intake and consultation intake have browser evidence for the updated required semantics in both locales. Remaining conditional form, contrast, command feedback and route state verification is open."
+        "Current electricity address validation and protected save behavior pass in Persian and English on Chromium and mobile Safari. Other conditional form, contrast, command feedback and route state verification remains open."
       ],
       "owner": null,
       "depends_on": [],
@@ -723659,7 +723660,8 @@
           "release-0.5-popup-touch-targets",
           "release-0.5-signature-target-and-fields",
           "release-0.5-solar-consultation-required",
-          "release-0.5-electricity-required-fields"
+          "release-0.5-electricity-required-fields",
+          "release-0.5-electricity-address-validation"
         ]
       }
     },
@@ -724807,7 +724809,7 @@
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
-              "sha256": "27fa650f2c5e874e43f453aeed24980374297ed9e10fc3fb544ce632871acfb3"
+              "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
@@ -725169,7 +725171,8 @@
             "Popup touch changes passed the production bundle and cold-auth transfer budgets. Eight coverage groups reuse the unchanged eligible source and coverage inputs. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-popup-touch-targets/proof.json",
             "Signature label and required semantics passed the exact source coverage and production performance checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-signature-target-and-fields/proof.json",
             "Solar and consultation intake semantics passed current source coverage, production size and cold authentication checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-solar-consultation-required/proof.json",
-            "Electricity checkout semantics passed current source coverage, production size and cold authentication checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-required-fields/proof.json"
+            "Electricity checkout semantics passed current source coverage, production size and cold authentication checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-required-fields/proof.json",
+            "Inline electricity address validation passed current source coverage, production size and cold authentication checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-address-validation/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -791176,6 +791179,41 @@
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-required-fields/reviewed.patch",
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-required-fields",
       "release_disposition": "Electricity checkout form evidence recorded. Other v0.5.0 criteria remain open."
+    },
+    "release-0.5-electricity-address-validation": {
+      "batch": "release-0.5-electricity-address-validation",
+      "base_commit": "a82b62f1b8af6b93e15150e842c3c5282d86d275",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.05.01.05",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.05.01.05",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/form-accessibility.spec.ts",
+          "sha256": "836f9c77667c33e22af98007a75b74fa7d401ba3dd6cc211040f6bdfe2840ec8"
+        },
+        {
+          "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
+          "sha256": "e6488895d358847c40497b893ee6ce3689170fdfa60cf03e9050440df1d83d9f"
+        }
+      ],
+      "checks": [
+        "The inline electricity address editor marks the current invalid inputs and associates each with a localized error. The first correctable field receives focus. City validation waits for verified options for the current province, and errors clear as values become valid.",
+        "The two previously stale locale fixtures now reach the real fourth step with current verification, product and draft responses. They verify no write on missing values, the held request lock, preserved inputs, wrong-profile and blank-ID rejection, and acceptance of the final matching receipt.",
+        "28 production browser cases and 22 unit cases passed. A focused 33-case Chromium run renewed exact coverage for simple checkout, including geography and profile recovery. The existing advanced checkout coverage remains source-matched.",
+        "The production build, eight coverage groups, formatting, scoped lint, typecheck, 98 bundle budgets and three measured cold authentication transfers passed."
+      ],
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-address-validation/proof.json",
+      "source_scope_proof_sha256": "740709fa3266695f8e4bdd541d0dc4158147d90a39cc69b80131ba588b072192",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-address-validation/renewed-bindings.json",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-address-validation/reviewed.patch",
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-address-validation",
+      "release_disposition": "Inline electricity address validation and fixture recovery recorded. Other v0.5.0 criteria remain open."
     }
   },
   "historical_improvements": [

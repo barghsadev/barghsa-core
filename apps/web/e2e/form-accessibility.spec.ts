@@ -4,6 +4,7 @@ import { notificationTemplate } from '../src/test/content-catalogue-fixtures';
 import { fullNavigation } from './navigation-fixture';
 import { settingsProfileFixture, settingsProfileId } from './settings-profile-fixture';
 import { tSettingsForms } from '@barghsa/i18n/settings-forms';
+import { t } from '@barghsa/i18n/app';
 import { notificationFormText } from '@barghsa/i18n/notification-forms';
 import { crmShell } from './crm-shell-fixture';
 import { dismissMessages } from './dismiss-messages';
@@ -17,13 +18,7 @@ for (const locale of ['en', 'fa']) {
   test(`ordering address save freezes its draft and rejects malformed success (${locale})`, async ({
     page,
   }) => {
-    await shell(page, locale);
-    await page.route('**/api/profiles/verification-status', (route) =>
-      route.fulfill({
-        json: { activeProfileId: 'profile-one', verificationRequired: false, isVerified: false },
-      })
-    );
-    await page.route('**/api/products', (route) => route.fulfill({ json: [] }));
+    await orderAddressShell(page, locale);
     await page.route('**/api/geography/provinces', (route) =>
       route.fulfill({
         json: [{ id: 'province', nameFa: 'استان', nameEn: 'Province' }],
@@ -39,7 +34,7 @@ for (const locale of ['en', 'fa']) {
     const pending = new Promise<void>((done) => {
       release = done;
     });
-    await page.route('**/api/profiles/profile-one/addresses', async (route) => {
+    await page.route(`**/api/profiles/${orderAddressProfile}/addresses`, async (route) => {
       if (route.request().method() === 'GET') return route.fulfill({ json: { addresses: [] } });
       const input = route.request().postDataJSON();
       writes.push(input);
@@ -52,12 +47,12 @@ for (const locale of ['en', 'fa']) {
         json: {
           ...input,
           id: writes.length === 3 ? '' : 'saved-address',
-          profileId: writes.length === 2 ? 'another-profile' : 'profile-one',
+          profileId: writes.length === 2 ? 'another-profile' : orderAddressProfile,
           mainAddress: true,
         },
       });
     });
-    await page.goto('/electricity/order');
+    await page.goto('/electricity/order?step=4');
     await page
       .getByRole('button', {
         name: locale === 'fa' ? 'افزودن آدرس جدید' : 'Add New Address',
@@ -76,10 +71,29 @@ for (const locale of ['en', 'fa']) {
       name: locale === 'fa' ? 'ذخیره و استفاده' : 'Save & Use',
       exact: true,
     });
+    const message = t('formWizard.invalidField', locale);
+    await save.click();
+    await expect(province).toBeFocused();
+    for (const field of [province, address, postal]) {
+      await expect(field).toHaveAttribute('aria-invalid', 'true');
+      await expect(field).toHaveAccessibleDescription(message);
+    }
+    await expect(city).toBeDisabled();
+    await expect(city).not.toHaveAttribute('aria-invalid', 'true');
+    expect(writes).toHaveLength(0);
     await province.selectOption('province');
+    await expect(city).toBeEnabled();
+    await save.click();
+    await expect(city).toBeFocused();
+    await expect(city).toHaveAccessibleDescription(message);
+    expect(writes).toHaveLength(0);
     await city.selectOption('city');
     await address.fill('Saved delivery address');
     await postal.fill('1234567890');
+    for (const field of [province, city, address, postal]) {
+      await expect(field).not.toHaveAttribute('aria-invalid', 'true');
+      await expect(field).not.toHaveAttribute('aria-describedby');
+    }
     try {
       await save.evaluate((button: HTMLButtonElement) => {
         button.click();

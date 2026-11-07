@@ -315,6 +315,7 @@ function OwnedSimpleElectricityOrderPage() {
   const loadingCities = cityOptions.loading;
   const [formFullAddress, setFormFullAddress] = fields.field('formFullAddress');
   const [formPostalCode, setFormPostalCode] = fields.field('formPostalCode');
+  const [addressChecked, setAddressChecked] = useState(false);
   const [savingAddress, setSavingAddress] = useState(false);
   const addressSaveInFlight = useRef(false);
 
@@ -864,7 +865,41 @@ function OwnedSimpleElectricityOrderPage() {
 
   // ── Save new address ─────────────────────────────────────────────────
 
-  const handleSaveNewAddress = useCallback(async () => {
+  const addressValidity = {
+    formProvinceId: provinces.some((province) => province.id === formProvinceId),
+    formCityId: cities.some((city) => city.id === formCityId && city.provinceId === formProvinceId),
+    formFullAddress: !!formFullAddress.trim(),
+    formPostalCode: !!formPostalCode.trim(),
+  };
+  type AddressField = keyof typeof addressValidity;
+
+  function addressFieldInvalid(name: AddressField) {
+    return (
+      addressChecked &&
+      !addressValidity[name] &&
+      (name !== 'formCityId' || (addressValidity.formProvinceId && cityOptions.ready))
+    );
+  }
+
+  function bindAddressField(name: AddressField) {
+    const invalid = addressFieldInvalid(name);
+    return {
+      ...fields.bind(name),
+      'aria-required': true,
+      'aria-invalid': invalid || undefined,
+      'aria-describedby': invalid ? fields.errorId(name) : undefined,
+    };
+  }
+
+  function addressFieldError(name: AddressField) {
+    return addressFieldInvalid(name) ? (
+      <p id={fields.errorId(name)} className="text-sm text-destructive">
+        {t('formWizard.invalidField', locale)}
+      </p>
+    ) : null;
+  }
+
+  async function handleSaveNewAddress() {
     if (
       addressSaveInFlight.current ||
       orderSaveInFlight.current ||
@@ -879,12 +914,15 @@ function OwnedSimpleElectricityOrderPage() {
       provinceError ||
       loadingCities ||
       cityError ||
-      !provinces.some((province) => province.id === formProvinceId) ||
-      !cities.some((city) => city.id === formCityId && city.provinceId === formProvinceId)
+      (addressValidity.formProvinceId && !cityOptions.ready)
     )
       return;
-    if (!formProvinceId || !formCityId || !formFullAddress.trim() || !formPostalCode.trim()) {
-      toast.error(t('settings.addresses.error.create', locale));
+    const invalid = (Object.keys(addressValidity) as AddressField[]).find(
+      (name) => !addressValidity[name]
+    );
+    if (invalid) {
+      setAddressChecked(true);
+      requestAnimationFrame(() => fields.form.setFocus(invalid));
       return;
     }
 
@@ -931,6 +969,7 @@ function OwnedSimpleElectricityOrderPage() {
       setSelectedAddressId(newAddress.id);
       setAddressTouched(true);
       setShowNewAddressForm(false);
+      setAddressChecked(false);
 
       // Reset form
       setFormProvinceId('');
@@ -946,25 +985,7 @@ function OwnedSimpleElectricityOrderPage() {
         setSavingAddress(false);
       }
     }
-  }, [
-    formProvinceId,
-    loadingProvinces,
-    provinceError,
-    loadingCities,
-    cityError,
-    provinces,
-    cities,
-    formCityId,
-    formFullAddress,
-    formPostalCode,
-    activeProfileId,
-    locale,
-    checking,
-    blocked,
-    verificationError,
-    loadingAddresses,
-    addressError,
-  ]);
+  }
 
   const saveDraft = async (advance: boolean, target = advance ? step + 1 : step) => {
     if (unsavedAddress) {
@@ -1963,8 +1984,7 @@ function OwnedSimpleElectricityOrderPage() {
                               </label>
                               <select
                                 id="order-address-province"
-                                {...fields.bind('formProvinceId')}
-                                aria-required="true"
+                                {...bindAddressField('formProvinceId')}
                                 disabled={loadingProvinces || provinceError || savingAddress}
                                 value={formProvinceId}
                                 onChange={(e) => {
@@ -1983,6 +2003,7 @@ function OwnedSimpleElectricityOrderPage() {
                                   </option>
                                 ))}
                               </select>
+                              {addressFieldError('formProvinceId')}
                             </div>
 
                             {/* City */}
@@ -1995,8 +2016,7 @@ function OwnedSimpleElectricityOrderPage() {
                               </label>
                               <DependentSelect
                                 id="order-address-city"
-                                {...fields.bind('formCityId')}
-                                aria-required="true"
+                                {...bindAddressField('formCityId')}
                                 dependencyValue={formProvinceId}
                                 value={formCityId}
                                 ready={cityOptions.ready}
@@ -2012,6 +2032,7 @@ function OwnedSimpleElectricityOrderPage() {
                                 className="flex w-full rounded-lg border border-input bg-transparent px-3 py-2 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
                                 dir={locale === 'fa' ? 'rtl' : 'ltr'}
                               />
+                              {addressFieldError('formCityId')}
                             </div>
 
                             {/* Full Address */}
@@ -2024,8 +2045,7 @@ function OwnedSimpleElectricityOrderPage() {
                               </label>
                               <textarea
                                 id="order-address-fullAddress"
-                                {...fields.bind('formFullAddress')}
-                                aria-required="true"
+                                {...bindAddressField('formFullAddress')}
                                 disabled={savingAddress}
                                 value={formFullAddress}
                                 onChange={(e) => setFormFullAddress(e.target.value)}
@@ -2037,6 +2057,7 @@ function OwnedSimpleElectricityOrderPage() {
                                 dir={locale === 'fa' ? 'rtl' : 'ltr'}
                                 maxLength={500}
                               />
+                              {addressFieldError('formFullAddress')}
                             </div>
 
                             {/* Postal Code */}
@@ -2050,8 +2071,7 @@ function OwnedSimpleElectricityOrderPage() {
                               <input
                                 type="text"
                                 id="order-address-postalCode"
-                                {...fields.bind('formPostalCode')}
-                                aria-required="true"
+                                {...bindAddressField('formPostalCode')}
                                 disabled={savingAddress}
                                 value={formPostalCode}
                                 onChange={(e) => setFormPostalCode(e.target.value)}
@@ -2063,6 +2083,7 @@ function OwnedSimpleElectricityOrderPage() {
                                 dir={locale === 'fa' ? 'rtl' : 'ltr'}
                                 maxLength={10}
                               />
+                              {addressFieldError('formPostalCode')}
                             </div>
 
                             <div className="flex justify-end gap-2 pt-2">
@@ -2071,6 +2092,7 @@ function OwnedSimpleElectricityOrderPage() {
                                 disabled={savingAddress}
                                 onClick={() => {
                                   setShowNewAddressForm(false);
+                                  setAddressChecked(false);
                                   setFormProvinceId('');
                                   setFormCityId('');
                                   setFormFullAddress('');
