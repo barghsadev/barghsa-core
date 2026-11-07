@@ -1,4 +1,4 @@
-import { readFile } from 'node:fs/promises';
+import { productionManifest } from './production-manifest';
 import type { Locator, Page } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import { test, expect } from './coverage-fixture';
@@ -48,9 +48,7 @@ for (const [locale, theme] of settings) {
     page,
   }, info) => {
     const { state } = await setupConsultationForms(page, locale, theme === 'dark', true);
-    const manifest = JSON.parse(
-      await readFile(new URL('../dist/.vite/manifest.json', import.meta.url), 'utf8')
-    );
+    const manifest = await productionManifest();
     let release!: () => void;
     const delayed = new Promise<void>((resolve) => {
       release = resolve;

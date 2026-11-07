@@ -1,4 +1,4 @@
-import { readFile } from 'node:fs/promises';
+import { productionManifest } from './production-manifest';
 import { t } from '../../../packages/i18n/src/app';
 import AxeBuilder from '@axe-core/playwright';
 import type { Page } from '@playwright/test';
@@ -268,9 +268,7 @@ for (const kind of ['agreement', 'inventory'] as const) {
           }
         : { ...savingInventory, hardwareId: id, stockCount: changed ? 20 : 10 }
     );
-    const manifest = JSON.parse(
-      await readFile(new URL('../dist/.vite/manifest.json', import.meta.url), 'utf8')
-    );
+    const manifest = await productionManifest();
     let release!: () => void;
     const pending = new Promise<void>((resolve) => {
       release = resolve;
@@ -314,9 +312,7 @@ for (const kind of ['agreement', 'inventory'] as const) {
     await reads(page, kind, () =>
       kind === 'agreement' ? savingAgreementConfig : { ...savingInventory, hardwareId: id }
     );
-    const manifest = JSON.parse(
-      await readFile(new URL('../dist/.vite/manifest.json', import.meta.url), 'utf8')
-    );
+    const manifest = await productionManifest();
     await page.route('**/' + manifest['src/lib/catalogue-form-schemas.ts'].file, (route) =>
       route.abort()
     );

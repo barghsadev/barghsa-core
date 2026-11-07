@@ -1,4 +1,4 @@
-import { readFile } from 'node:fs/promises';
+import { productionManifest } from './production-manifest';
 import type { Route } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import { ErrorCodes } from '@barghsa/shared/errors';
@@ -459,9 +459,7 @@ for (const locale of ['en', 'fa'] as const)
     page,
   }) => {
     const f = await fixture(page, locale, false, 'customer');
-    const manifest = JSON.parse(
-      await readFile(new URL('../dist/.vite/manifest.json', import.meta.url), 'utf8')
-    );
+    const manifest = await productionManifest();
     await page.route(`**/${manifest['src/lib/cancellation-form-schemas.ts'].file}`, (route) =>
       route.abort()
     );

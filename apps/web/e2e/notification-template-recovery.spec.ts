@@ -2,6 +2,7 @@ import { t } from '@barghsa/i18n/admin-ui';
 import { crmShell } from './crm-shell-fixture';
 import { notificationTemplate } from '../src/test/content-catalogue-fixtures';
 import { test, expect } from './coverage-fixture';
+import { approveRiskConfirmation } from './confirmation-fixture';
 
 test.use({ viewport: { width: 390, height: 844 } });
 const template = notificationTemplate();
@@ -159,7 +160,6 @@ for (const operation of ['publish', 'unpublish', 'delete', 'test-send', 'edit'] 
       verified = true;
       return route.fulfill({ json: { ok: true } });
     });
-    page.on('dialog', (dialog) => dialog.accept());
     await page.goto('/admin/notifications');
     await page.evaluate(() => {
       document.documentElement.lang = 'en';
@@ -192,9 +192,22 @@ for (const operation of ['publish', 'unpublish', 'delete', 'test-send', 'edit'] 
       await row
         .getByRole('button', { name: operation === 'delete' ? 'Delete' : 'Unpublish', exact: true })
         .click();
+      const confirm = page
+        .getByRole('dialog')
+        .getByRole('button', { name: t('team.confirm', 'en'), exact: true });
+      await expect(confirm).toBeDisabled();
+      expect(calls).toBe(0);
+      await approveRiskConfirmation(page, 'en', 'destructive');
+      await confirm.click();
     }
     await page.locator('#team-step-up-password').fill('Local-test-password!');
-    await page.getByRole('dialog').locator('button[type=submit]').click();
+    const submit = page.getByRole('dialog').locator('button[type=submit]');
+    if (operation === 'delete') {
+      await expect(submit).toBeDisabled();
+      expect(calls).toBe(1);
+      await approveRiskConfirmation(page, 'en', 'destructive');
+    }
+    await submit.click();
     await expect(page.getByRole('dialog')).toHaveCount(0);
     expect(calls).toBe(2);
     expect(bodies[0]).toEqual(bodies[1]);

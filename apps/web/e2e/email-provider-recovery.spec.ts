@@ -4,7 +4,17 @@ import { providerFormText } from '@barghsa/i18n/provider-forms';
 import { providerText } from '@barghsa/i18n/providers';
 import { crmShell } from './crm-shell-fixture';
 import { cookieResponse } from './cookie-response';
-import { test, expect } from './coverage-fixture';
+import { test, expect, type Page } from './coverage-fixture';
+import { approveRiskConfirmation } from './confirmation-fixture';
+
+async function confirmProviderChange(page: Page, locale: 'en' | 'fa') {
+  const confirm = page
+    .getByRole('dialog')
+    .getByRole('button', { name: t('team.confirm', locale), exact: true });
+  await expect(confirm).toBeDisabled();
+  await approveRiskConfirmation(page, locale, 'destructive');
+  await confirm.click();
+}
 
 for (const locale of ['en', 'fa'] as const) {
   test(`provider list rejects malformed data and recovers (${locale})`, async ({ page }) => {
@@ -139,7 +149,6 @@ for (const locale of ['en', 'fa'] as const) {
         provider = { ...provider, id: 'new-version', status: 'active' };
       return route.fulfill({ json: provider });
     });
-    page.on('dialog', (dialog) => dialog.accept());
     await page.goto('/admin/providers');
 
     const row = page
@@ -167,12 +176,14 @@ for (const locale of ['en', 'fa'] as const) {
     ).toBeVisible();
     await activate.click();
     await row.getByRole('button', { name: fa ? 'غیرفعال‌سازی' : 'Disable', exact: true }).click();
+    await confirmProviderChange(page, locale);
     await row
       .getByRole('button', {
         name: fa ? 'بازگشت به این نسخه' : 'Rollback to this version',
         exact: true,
       })
       .click();
+    await confirmProviderChange(page, locale);
     await expect(
       row.getByRole('button', { name: fa ? 'غیرفعال‌سازی' : 'Disable', exact: true })
     ).toBeVisible();
@@ -304,7 +315,6 @@ for (const operation of ['test-connection', 'activate', 'disable', 'rollback'] a
       verified = route.request().postDataJSON().code === '123456';
       return route.fulfill({ status: verified ? 200 : 401, json: providerOtpProof() });
     });
-    page.on('dialog', (dialog) => dialog.accept());
     await page.goto('/admin/providers');
 
     const names = {
@@ -321,6 +331,10 @@ for (const operation of ['test-connection', 'activate', 'disable', 'rollback'] a
     await row
       .getByRole('button', { name: names[operation], exact: operation !== 'test-connection' })
       .click();
+    if (operation === 'disable' || operation === 'rollback') {
+      expect(attempts).toEqual([]);
+      await confirmProviderChange(page, 'en');
+    }
     const dialog = page.getByRole('dialog');
     await startProviderOtp(page, 'en');
     await dialog.locator('input[autocomplete=one-time-code]').fill('123456');

@@ -1,4 +1,4 @@
-import { readFile } from 'node:fs/promises';
+import { productionManifest } from './production-manifest';
 import type { Page } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import { t } from '../../../packages/i18n/src/admin-ui';
@@ -218,10 +218,7 @@ for (const locale of ['en', 'fa'] as const) {
     await setupCatalogueForms(page, locale, locale === 'fa');
     await reads(page);
     const label = (key: string) => t(`admin.green.${key}`, locale);
-    const manifest = JSON.parse(await readFile('dist/.vite/manifest.json', 'utf8')) as Record<
-      string,
-      { file: string }
-    >;
+    const manifest = (await productionManifest()) as Record<string, { file: string }>;
     const asset = manifest['src/lib/catalogue-form-schemas.ts'].file;
     let release!: () => void, requested!: () => void;
     const gate = new Promise<void>((resolve) => {
@@ -270,10 +267,7 @@ for (const locale of ['en', 'fa'] as const) {
     await setupCatalogueForms(page, locale, locale === 'fa');
     await reads(page);
     const label = (key: string) => t(`admin.green.${key}`, locale);
-    const manifest = JSON.parse(await readFile('dist/.vite/manifest.json', 'utf8')) as Record<
-      string,
-      { file: string }
-    >;
+    const manifest = (await productionManifest()) as Record<string, { file: string }>;
     await page.route(`**/${manifest['src/lib/catalogue-form-schemas.ts'].file}`, (route) =>
       route.abort()
     );

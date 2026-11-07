@@ -1,4 +1,4 @@
-import { readFile } from 'node:fs/promises';
+import { productionManifest } from './production-manifest';
 import AxeBuilder from '@axe-core/playwright';
 import type { Page } from '@playwright/test';
 import { test, expect } from './coverage-fixture';
@@ -173,9 +173,7 @@ for (const locale of ['en', 'fa'] as const)
   test(`catalogue unavailable validation preserves drafts (${locale})`, async ({ page }) => {
     await setup(page, locale, false);
     await reads(page);
-    const manifest = JSON.parse(
-      await readFile(new URL('../dist/.vite/manifest.json', import.meta.url), 'utf8')
-    );
+    const manifest = await productionManifest();
     await page.route('**/' + manifest['src/lib/catalogue-form-schemas.ts'].file, (route) =>
       route.abort()
     );
@@ -195,9 +193,7 @@ test('catalogue delayed validator blocks duplicate submits and ignores a changed
 }) => {
   await setup(page, 'en', false);
   await reads(page);
-  const manifest = JSON.parse(
-    await readFile(new URL('../dist/.vite/manifest.json', import.meta.url), 'utf8')
-  );
+  const manifest = await productionManifest();
   let release!: () => void;
   const pending = new Promise<void>((resolve) => {
     release = resolve;

@@ -1,4 +1,4 @@
-import { readFile } from 'node:fs/promises';
+import { productionManifest } from './production-manifest';
 import AxeBuilder from '@axe-core/playwright';
 import type { Locator, Page } from '@playwright/test';
 import { t } from '@barghsa/i18n/app';
@@ -56,9 +56,7 @@ for (const [locale, theme] of [
       theme === 'dark'
     );
     state.context = 'staff';
-    const manifest = JSON.parse(
-      await readFile(new URL('../dist/.vite/manifest.json', import.meta.url), 'utf8')
-    );
+    const manifest = await productionManifest();
     let releaseSchema!: () => void;
     const schemaHeld = new Promise<void>((resolve) => {
       releaseSchema = resolve;

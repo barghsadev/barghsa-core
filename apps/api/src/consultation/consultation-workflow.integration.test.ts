@@ -267,12 +267,19 @@ it('moves a consultation through staff assignment, customer information, and a r
     history: expect.arrayContaining([expect.objectContaining({ actor_name: null })]),
   });
   const notifications = (
-    await http.pool.query<{ count: number }>(
-      "SELECT count(*)::int AS count FROM in_app_notifications WHERE recipient_user_id='customer' AND profile_id=$1",
-      [profileId]
+    await http.pool.query<{ type: string }>(
+      "SELECT type FROM in_app_notifications WHERE recipient_user_id='customer' AND profile_id=$1 AND link_route=$2 ORDER BY created_at,id",
+      [profileId, `/consultations/${requestId}`]
     )
-  ).rows[0]!.count;
-  expect(notifications).toBe(5);
+  ).rows.map(({ type }) => type);
+  expect(notifications).toEqual([
+    'order.submitted',
+    'order.awaiting_staff',
+    'order.status_changed',
+    'order.status_changed',
+    'order.status_changed',
+    'order.status_changed',
+  ]);
   await http.pool.query("INSERT INTO staff_teams(name,is_active) VALUES('Consultation team',true)");
   const teams = await fetch(`${http.base}/api/admin/consultations/teams`, {
     headers: headers.reviewer!,
@@ -1042,12 +1049,16 @@ it('notifies every fee-replacement history transition and does not repeat notifi
   const notifications = async () =>
     (
       await http.pool.query(
-        "SELECT id,localized_content FROM in_app_notifications WHERE recipient_user_id='customer' AND profile_id=$1 AND link_route=$2 ORDER BY created_at,id",
+        "SELECT id,type,localized_content FROM in_app_notifications WHERE recipient_user_id='customer' AND profile_id=$1 AND link_route=$2 ORDER BY created_at,id",
         [profileId, `/consultations/${requestId}`]
       )
     ).rows;
   const before = await notifications();
-  expect(before).toHaveLength(history.length);
+  expect(before.map(({ type }) => type)).toEqual([
+    'order.submitted',
+    'order.awaiting_staff',
+    ...history.slice(1).map(() => 'order.status_changed'),
+  ]);
   const deliveries = await expectConsultationStatusDeliveries(http.pool, requestId, 'customer', [
     'under_review',
     'offer_pending',

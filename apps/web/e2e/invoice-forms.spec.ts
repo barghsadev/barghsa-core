@@ -1,4 +1,4 @@
-import { readFile } from 'node:fs/promises';
+import { productionManifest } from './production-manifest';
 import AxeBuilder from '@axe-core/playwright';
 import type { Page } from '@playwright/test';
 import { test, expect } from './coverage-fixture';
@@ -66,9 +66,7 @@ for (const locale of ['fa', 'en'] as const)
       let readStatus = 200,
         reviewStatus = 400,
         commitStatus = 400;
-      const manifest = JSON.parse(
-        await readFile(new URL('../dist/.vite/manifest.json', import.meta.url), 'utf8')
-      ) as Record<string, { file: string }>;
+      const manifest = (await productionManifest()) as Record<string, { file: string }>;
       let editorLoads = 0;
       await page.route('**/' + manifest['src/components/ManualInvoiceForm.tsx']!.file, (route) => {
         editorLoads++;
@@ -317,9 +315,7 @@ for (const locale of ['fa', 'en'] as const)
       writes = 0,
       invoiceReads = 0,
       blocked = 0;
-    const manifest = JSON.parse(
-      await readFile(new URL('../dist/.vite/manifest.json', import.meta.url), 'utf8')
-    ) as Record<string, { file: string }>;
+    const manifest = (await productionManifest()) as Record<string, { file: string }>;
     await page.route('**/' + manifest['src/lib/invoice-form-schemas.ts']!.file, (route) => {
       blocked++;
       return route.abort();

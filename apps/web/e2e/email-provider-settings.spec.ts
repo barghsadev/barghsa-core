@@ -156,9 +156,9 @@ for (const locale of ['en', 'fa'] as const) {
         await expect(form.getByLabel(text('field.host'), { exact: false })).toHaveValue(
           'smtp.example.test'
         );
-        await expect(
-          form.getByRole('spinbutton', { name: `${text('field.port')} *`, exact: true })
-        ).toHaveValue('465');
+        const port = form.getByRole('spinbutton', { name: text('field.port'), exact: true });
+        await expect(port).toHaveValue('465');
+        await expect(port).toHaveAttribute('aria-required', 'true');
         await expect(form.getByLabel(text('field.security'), { exact: false })).toHaveValue('TLS');
         await expect(form.getByLabel(text('field.username'), { exact: false })).toHaveValue(
           'saved-user'

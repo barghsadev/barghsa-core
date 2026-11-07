@@ -1,4 +1,4 @@
-import { readFile } from 'node:fs/promises';
+import { productionManifest } from './production-manifest';
 import AxeBuilder from '@axe-core/playwright';
 import type { Locator, Page } from '@playwright/test';
 import { t } from '@barghsa/i18n/app';
@@ -51,9 +51,7 @@ async function capture(region: Locator, path: string) {
   await region.screenshot({ path });
 }
 async function holdSchema(page: Page) {
-  const manifest = JSON.parse(
-    await readFile(new URL('../dist/.vite/manifest.json', import.meta.url), 'utf8')
-  );
+  const manifest = await productionManifest();
   let release!: () => void;
   const held = new Promise<void>((resolve) => {
     release = resolve;

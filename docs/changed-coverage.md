@@ -49,6 +49,10 @@ Chromium occasionally discards a script's optional source text after navigation.
 Those ranges receive no coverage credit and are reported as unmeasured. Supplied
 source that differs from the built asset still fails collection.
 
+Tests that hold or abort lazy chunks use `apps/web/e2e/production-manifest.ts`.
+It reads the manifest for the build the runner serves, so the test intercepts the
+actual chunk in both normal and coverage mode.
+
 A separate CI job combines unit and browser artifacts for the same HEAD. PR coverage
 always includes the web, UI, shared and i18n packages, even when the changed package
 set is smaller, so each mapped browser consumer has a unit baseline.

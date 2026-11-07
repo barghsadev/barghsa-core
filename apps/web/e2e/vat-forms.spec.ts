@@ -1,4 +1,4 @@
-import { readFile } from 'node:fs/promises';
+import { productionManifest } from './production-manifest';
 import AxeBuilder from '@axe-core/playwright';
 import type { Page } from '@playwright/test';
 import { test, expect } from './coverage-fixture';
@@ -66,9 +66,7 @@ test('VAT delayed validation locks duplicate submits and rejects a changed finan
 }) => {
   await setup(page, 'en', false);
   await catalogue(page);
-  const manifest = JSON.parse(
-    await readFile(new URL('../dist/.vite/manifest.json', import.meta.url), 'utf8')
-  ) as Record<string, { file: string }>;
+  const manifest = (await productionManifest()) as Record<string, { file: string }>;
   let release!: () => void;
   const pending = new Promise<void>((resolve) => {
     release = resolve;
@@ -219,9 +217,7 @@ for (const locale of ['en', 'fa'] as const)
     await setup(page, locale, false);
     await catalogue(page);
     const label = (key: string) => tVat('admin.vat.' + key, locale);
-    const manifest = JSON.parse(
-      await readFile(new URL('../dist/.vite/manifest.json', import.meta.url), 'utf8')
-    ) as Record<string, { file: string }>;
+    const manifest = (await productionManifest()) as Record<string, { file: string }>;
     await page.route('**/' + manifest['src/lib/vat-form-schema.ts']!.file, (route) =>
       route.abort()
     );

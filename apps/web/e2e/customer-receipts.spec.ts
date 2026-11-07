@@ -1,4 +1,4 @@
-import { readFile } from 'node:fs/promises';
+import { productionManifest } from './production-manifest';
 import AxeBuilder from '@axe-core/playwright';
 import { test, expect, type Page } from './coverage-fixture';
 
@@ -571,10 +571,7 @@ for (const locale of ['en', 'fa'] as const)
 
 for (const locale of ['en', 'fa'] as const)
   test(`wallet loads validation assets only on interaction (${locale})`, async ({ page }) => {
-    const manifest = JSON.parse(await readFile('dist/.vite/manifest.json', 'utf8')) as Record<
-      string,
-      { file: string }
-    >;
+    const manifest = (await productionManifest()) as Record<string, { file: string }>;
     const asset = manifest['src/lib/customer-finance-form-schemas.ts']!.file;
     const paymentReturnAsset = manifest['src/components/OnlinePaymentReturnPanel.tsx']!.file;
     const requests: string[] = [];

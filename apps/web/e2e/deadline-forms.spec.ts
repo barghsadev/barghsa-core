@@ -1,4 +1,4 @@
-import { readFile } from 'node:fs/promises';
+import { productionManifest } from './production-manifest';
 import AxeBuilder from '@axe-core/playwright';
 import type { Page } from '@playwright/test';
 import { test, expect } from './coverage-fixture';
@@ -270,9 +270,7 @@ for (const locale of ['fa', 'en'] as const)
     page,
   }) => {
     await setup(page, locale, false);
-    const manifest = JSON.parse(
-      await readFile(new URL('../dist/.vite/manifest.json', import.meta.url), 'utf8')
-    ) as Record<string, { file: string }>;
+    const manifest = (await productionManifest()) as Record<string, { file: string }>;
     await page.route('**/' + manifest['src/lib/deadline-form-schemas.ts']!.file, (route) =>
       route.abort()
     );
