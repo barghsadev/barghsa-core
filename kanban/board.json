@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-07T10:19:20+00:00",
-  "source_commit": "fcc43689e3267ef2953b39c9fc252c2f4bfc4353",
+  "updated": "2026-11-07T10:23:44+00:00",
+  "source_commit": "524a6c9197c9344f5fd0a93ac56abb4f556ccb35",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -677983,7 +677983,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Native staff role, promotion, SMS, OTP settings and geography routes now pass the affected confirmation, recovery, feedback and compact-dialog checks. Reconcile outstanding populated and conditional route evidence."
+        "The exact browser maps now also cover the complete staff authority, promotions, settings and saving address test groups. Finish the remaining populated/conditional route matrix and customer/staff states."
       ],
       "owner": null,
       "depends_on": [],
@@ -678009,7 +678009,8 @@
           "release-0.5-contract-finance-coverage",
           "release-0.5-staff-workspace-read-closure",
           "release-0.5-critical-branch-evidence",
-          "release-0.5-protected-staff-browser-closure"
+          "release-0.5-protected-staff-browser-closure",
+          "release-0.5-staff-coverage-renewal"
         ]
       }
     },
@@ -678028,7 +678029,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Staff protection and promotion native cases now reach the existing confirmations, and mobile Safari geography layout passed after the fix. Collect exact passing staff browser maps and final web coverage; the last measured critical branches still miss 85%. Complete remaining manual evidence and security scan disposition."
+        "58 more exact Chromium cases map cleanly. The web diagnostic is 571 critical and one ordinary branch short; renew final web and manual gates. The full-history secret scan passed after exact false-positive disposition. Verify and apply the zero-high/critical dependency candidate."
       ],
       "owner": null,
       "depends_on": [],
@@ -678051,7 +678052,8 @@
           "release-0.5-contract-finance-coverage",
           "release-0.5-staff-workspace-read-closure",
           "release-0.5-critical-branch-evidence",
-          "release-0.5-protected-staff-browser-closure"
+          "release-0.5-protected-staff-browser-closure",
+          "release-0.5-staff-coverage-renewal"
         ]
       }
     },
@@ -731633,7 +731635,47 @@
         "release-readiness#R-03.02"
       ],
       "failed_attempts_retained": true,
-      "release_disposition": "Corrected duplicate OTP toast and compact geography dialog, verified guarded staff browser journeys. No release publication."
+      "release_disposition": "Corrected duplicate OTP toast and compact geography dialog, verified guarded staff browser journeys. No release publication.",
+      "push_receipt": {
+        "commit": "524a6c9197c9344f5fd0a93ac56abb4f556ccb35",
+        "remote_sha": "524a6c9197c9344f5fd0a93ac56abb4f556ccb35",
+        "verified_at": "2026-11-07T10:20:00+00:00",
+        "ref": "refs/heads/main"
+      }
+    },
+    "release-0.5-staff-coverage-renewal": {
+      "batch": "release-0.5-staff-coverage-renewal",
+      "base_commit": "524a6c9197c9344f5fd0a93ac56abb4f556ccb35",
+      "task_keys": [
+        "release-readiness#R-04.02",
+        "release-readiness#R-04.01"
+      ],
+      "accepted_task_keys": [],
+      "partial_task_keys": [
+        "release-readiness#R-04.02",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": ".gitleaksignore",
+          "sha256": "ab2ed1d286fec78d38cf86535014aadef1ef24b18cba981bc7eb0d5f0411ecba"
+        },
+        {
+          "path": "scripts/check-secrets.py",
+          "sha256": "3f8308821355d3028a56fd9c35042f4d0775a78013a2eb80776cc6b15b9b023b"
+        }
+      ],
+      "checks": [
+        "58 distinct Chromium cases passed and mapped at exact 524a6c91: staff authority 20, promotions 12, staff settings 22 and saving address 4. The previously failed reports remain preserved and excluded.",
+        "The mixed-source diagnostic has critical web lines 16635/18129 and critical branches 20461/24743; the critical branch floor remains 571 hits short. Ordinary web lines 717/882 pass, while ordinary branches 1272/1697 are one hit short. The remaining package groups pass this diagnostic. This is not final release coverage.",
+        "All five historical Gitleaks findings are individually proven non-secrets. Ignore entries bind only their existing commit/path/rule/line; all default rules and new locations stay enabled. The scanner still detects and redacts its generated test credential and reports zero findings across 2690 commits.",
+        "The isolated dependency candidate resolves under existing strict peer checks and reports zero high and zero critical advisories. Main still has the prior dependency versions until frozen install, full build and affected checks verify the candidate. No dependency or security gate was weakened."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-coverage-renewal",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-coverage-renewal/reviewed-source.diff",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-coverage-renewal/source-binding.json",
+      "failed_attempts_retained": true,
+      "release_disposition": "Mapped verified staff journeys and reconciled five exact historical scan findings. No release publication."
     }
   },
   "historical_improvements": [
@@ -731673,19 +731715,16 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.5-staff-coverage-renewal",
+    "id": "release-0.5-dependency-gate-closure",
     "release": "0.5.0",
     "task_keys": [
-      "release-readiness#R-04.02",
-      "release-readiness#R-04.01",
-      "07-ui-ux-design.md#T-07.11.01.03",
-      "07-ui-ux-design.md#T-07.04.02.04"
+      "release-readiness#R-04.02"
     ],
-    "goal": "Map clean exact staff authority, promotions, settings and saving reports after the protected journey fixes; complete the exact security scan disposition and identify remaining critical coverage gaps."
+    "goal": "Verify the strict frozen dependency candidate with the existing checks, preserve prior exact evidence and renew affected application results before updating main."
   },
   "launch_forecast": {
     "status": "deadline_at_risk_until_v0_5_and_operational_gates_close",
-    "next_update_after": "v0.5.0 exact staff coverage and release gate reconciliation",
+    "next_update_after": "v0.5.0 dependency and current source coverage gates",
     "method": "v0.4.0 staging and Telegram receipts verified. v0.5.0 remains unaccepted: coverage diagnostics are below unchanged web/UI/i18n floors, required route/manual states and two owner decisions remain. v0.6.0 operations and v0.9.0 four-service rehearsal keep November 9 at risk. Production is not authorized."
   },
   "capabilities": [

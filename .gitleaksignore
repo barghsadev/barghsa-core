@@ -134,3 +134,10 @@ a4fe3b5a20561f28755b4f060c2d49c84503ba70:audit/evidence/r01/route-security.csv:g
 # Only these exact historical findings; all other paths, commits and default rules remain scanned.
 d613fd9778aecf09bc64b72d465d2bec08bd4365:kanban/board.json:generic-api-key:25
 d613fd9778aecf09bc64b72d465d2bec08bd4365:kanban/board.json:generic-api-key:107
+
+# Verified historical epic digests, invoice test evidence and the standard WebSocket test nonce.
+ce7f20e539cf76aac23b7145db68f16ae9f0e404:kanban/board.json:generic-api-key:769
+37b66f9d059ede6cb1c56aa38c0426a5266a61b0:kanban/board.json:generic-api-key:645
+71e64631bf3976c4e8804768da254dd3a7881ba1:kanban/board.json:generic-api-key:594
+8598d6fb561ff93ce51704b0424697df4acb6409:kanban/board.json:generic-api-key:38118
+b9abb1fb2ca020992fae572bd0a83a9ba2bc23b8:scripts/check-staging-proxy.mjs:generic-api-key:90

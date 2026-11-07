@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-07T10:19:20+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-07T10:23:44+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.4.0**. Next milestone: **v0.5.0**.
 
@@ -39,12 +39,9 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Map clean exact staff authority, promotions, settings and saving reports after the protected journey fixes; complete the exact security scan disposition and identify remaining critical coverage gaps.
+Verify the strict frozen dependency candidate with the existing checks, preserve prior exact evidence and renew affected application results before updating main.
 
 - `release-readiness#R-04.02`: Renew accessibility and performance evidence
-- `release-readiness#R-04.01`: Verify full customer and admin UI adoption
-- `07-ui-ux-design.md#T-07.11.01.03`: Create an API response interceptor that auto-shows toasts for: successful CRUD operations ("Invoice created", "Profile updated", "Order submitted"), API errors (error message from API), network failures ("Connection lost. Retrying...").
-- `07-ui-ux-design.md#T-07.04.02.04`: Verify all pages look correct at `320px`, `375px`, `390px`, `414px`, `768px`, `1024px`, `1280px`, and `1920px` viewport widths. No horizontal scroll, no overlapping text, no tiny touch targets.
 
 ## v0.2.0: Complete customer journeys
 
