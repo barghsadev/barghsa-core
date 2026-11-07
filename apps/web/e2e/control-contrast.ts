@@ -2,7 +2,7 @@ import type { Locator } from '@playwright/test';
 
 export async function measureControlContrast(
   control: Locator,
-  kind: 'boundary' | 'indicator' | 'focus',
+  kind: 'boundary' | 'indicator' | 'focus' | 'text',
   indicator?: string
 ) {
   return control.evaluate(
@@ -39,6 +39,7 @@ export async function measureControlContrast(
         surroundings.push(getComputedStyle(ancestor).backgroundColor);
       const style = getComputedStyle(element);
       const fill = [...surroundings, style.backgroundColor];
+      if (kind === 'text') return compare([...fill, style.color], fill);
       if (kind === 'boundary') {
         const border =
           style.borderTopStyle !== 'none' && parseFloat(style.borderTopWidth) > 0

@@ -779,7 +779,7 @@ export default function AdminEmailProvidersPage() {
                   ? providerText('admin.providers.activateHint', uiLocale)
                   : undefined
               }
-              className="px-3 py-1 bg-primary text-primary-foreground rounded text-xs hover:bg-primary/90 disabled:opacity-40 w-full text-start pointer-coarse:min-h-[45px]!"
+              className="px-3 py-1 bg-primary text-primary-foreground rounded text-xs hover:shadow-md disabled:opacity-40 w-full text-start pointer-coarse:min-h-[45px]!"
             >
               {providerText('admin.providers.activate', uiLocale)}
             </button>
@@ -796,7 +796,7 @@ export default function AdminEmailProvidersPage() {
             <button
               onClick={() => handleDisable(p)}
               disabled={busy || loading || loadFailed || scope.denied || !!protectedAction}
-              className="px-3 py-1 border border-destructive/20 text-destructive rounded text-xs hover:bg-red-50 disabled:opacity-50 w-full text-start"
+              className="px-3 py-1 border border-destructive/20 text-destructive rounded text-xs hover:bg-danger-soft-hover disabled:opacity-50 w-full text-start"
             >
               {providerText('admin.providers.disable', uiLocale)}
             </button>
@@ -833,7 +833,7 @@ export default function AdminEmailProvidersPage() {
           <button
             onClick={openCreate}
             disabled={busy || loading || loadFailed || scope.denied || !!protectedAction}
-            className="px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-primary/90"
+            className="px-4 py-2 bg-primary text-primary-foreground rounded hover:shadow-md"
           >
             {providerText('admin.providers.new', uiLocale)}
           </button>

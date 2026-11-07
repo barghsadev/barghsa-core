@@ -114,7 +114,7 @@ export function SavingsPage() {
         >
           <div className="grid gap-5 lg:grid-cols-2">
             {plans.map((plan) => (
-              <Card key={plan.id} className={plan.available ? '' : 'opacity-75'}>
+              <Card key={plan.id}>
                 <CardContent className="space-y-5 pt-6">
                   <div className="flex flex-wrap items-start justify-between gap-3">
                     <div>
@@ -174,7 +174,7 @@ export function SavingsPage() {
                   {plan.available && (
                     <Link
                       to="/savings/order"
-                      className="touch-action inline-flex min-h-11 items-center rounded-md bg-primary px-4 text-primary-foreground hover:bg-primary/90"
+                      className="touch-action inline-flex min-h-11 items-center rounded-md bg-primary px-4 text-primary-foreground hover:shadow-md"
                     >
                       {copy('startOrder')}
                     </Link>

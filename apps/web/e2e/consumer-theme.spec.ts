@@ -2,7 +2,10 @@ import { formatBrowserDate } from './browser-date';
 import { fullNavigation } from './navigation-fixture';
 import { fulfillDashboard } from './dashboard-fixture';
 import AxeBuilder from '@axe-core/playwright';
-import { test, expect } from './coverage-fixture';
+import { test, expect, type Locator } from './coverage-fixture';
+import { tSaving } from '@barghsa/i18n/saving';
+import { providerText } from '@barghsa/i18n/providers';
+import { measureControlContrast } from './control-contrast';
 
 const pages = [
   '/dashboard',
@@ -14,6 +17,153 @@ const pages = [
   '/admin/tos',
   '/admin/wallet-receipts',
 ];
+
+for (const locale of ['en', 'fa'] as const)
+  for (const dark of [false, true])
+    test(`saving and email provider actions retain contrast at rest and on hover (${locale}, dark=${dark})`, async ({
+      page,
+    }) => {
+      await page.setViewportSize({ width: 1280, height: 900 });
+      await page.emulateMedia({ colorScheme: dark ? 'dark' : 'light', reducedMotion: 'reduce' });
+      await page.addInitScript((value) => localStorage.setItem('barghsa.locale', value), locale);
+      const primaryColor = dark ? '#767676' : '#757575';
+      const profileId = '10000000-0000-4000-8000-000000000001';
+      let staff = false;
+      await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+      await page.route('**/api/auth/user', (route) =>
+        route.fulfill({
+          json: {
+            userId: 'theme-owner',
+            isStaff: staff,
+            operatingContext: staff ? 'staff' : 'customer',
+            canSwitchContext: false,
+            requiresTosAcceptance: false,
+            ...(staff ? { navigation: fullNavigation('staff') } : {}),
+          },
+        })
+      );
+      await page.route('**/api/profiles', (route) =>
+        route.fulfill({
+          json: {
+            profiles: [{ id: profileId, profileType: 'INDIVIDUAL', title: 'Buyer' }],
+            activeProfileId: profileId,
+            hasDefault: true,
+          },
+        })
+      );
+      await page.route('**/api/profiles/verification-status', (route) =>
+        route.fulfill({
+          json: { activeProfileId: profileId, profileStatus: 'ACTIVE', isVerified: true },
+        })
+      );
+      await page.route('**/api/public/branding/config', (route) =>
+        route.fulfill({
+          json: {
+            appTitle: 'Theme checks',
+            appTitleFa: 'آزمون نمایش',
+            supportEmail: 'support@example.test',
+            supportPhone: '02126658042',
+            supportMobile: '09002550292',
+            slogan: '',
+            primaryColor,
+            secondaryColor: '#64748b',
+            accentColor: '#f59e0b',
+            logoUrl: null,
+            faviconUrl: null,
+            darkMode: dark,
+          },
+        })
+      );
+      const available = {
+        id: '10000000-0000-4000-8000-000000000002',
+        title: { en: 'Available plan', fa: 'طرح در دسترس' },
+        description: null,
+        status: 'active',
+        available: true,
+        price: '100000',
+        hardware: [],
+        agreement: null,
+      };
+      const unavailable = {
+        ...available,
+        id: '10000000-0000-4000-8000-000000000003',
+        title: { en: 'Unavailable plan', fa: 'طرح خارج از دسترس' },
+        description: { en: 'Read this plan', fa: 'شرایط این طرح' },
+        available: false,
+      };
+      await page.route('**/api/saving/plans', (route) =>
+        route.fulfill({ json: { plans: [available, unavailable] } })
+      );
+      await page.route('**/api/admin/sms-providers', (route) => route.fulfill({ json: [] }));
+      const provider = {
+        id: 'theme-draft-email',
+        label: 'Draft provider',
+        transport: 'resend',
+        status: 'draft',
+        lastTestStatus: 'passed',
+        maskedConfig: { from_email: 'mail@example.test' },
+      };
+      await page.route('**/api/admin/email-providers', (route) =>
+        route.fulfill({
+          json: [
+            provider,
+            { ...provider, id: 'theme-active-email', label: 'Active provider', status: 'active' },
+          ],
+        })
+      );
+
+      const theme = page.locator('html');
+      const expectBrand = async () =>
+        expect
+          .poll(() => theme.evaluate((element) => element.style.getPropertyValue('--primary')))
+          .toBe(primaryColor);
+      const setHighContrast = (high: boolean) =>
+        theme.evaluate((element, enabled) => {
+          if (enabled) element.dataset.contrast = 'more';
+          else delete element.dataset.contrast;
+        }, high);
+      const checkAction = async (action: Locator) => {
+        await expect(action).toBeEnabled();
+        expect(await measureControlContrast(action, 'text')).toBeGreaterThanOrEqual(4.5);
+        await action.hover();
+        expect(await action.evaluate((element) => element.matches(':hover'))).toBe(true);
+        expect(await measureControlContrast(action, 'text')).toBeGreaterThanOrEqual(4.5);
+        await page.mouse.move(0, 0);
+      };
+
+      await page.goto('/savings');
+      await expectBrand();
+      const order = page.getByRole('link', { name: tSaving('startOrder', locale), exact: true });
+      const unavailableCard = page.locator('[data-slot=card]').filter({
+        has: page.getByRole('heading', { name: unavailable.title[locale], exact: true }),
+      });
+      await expect(order).toHaveAttribute('href', '/savings/order');
+      await expect(unavailableCard.getByRole('link')).toHaveCount(0);
+      for (const high of [false, true]) {
+        await setHighContrast(high);
+        await checkAction(order);
+        await expect(unavailableCard).toHaveCSS('opacity', '1');
+        const description = unavailableCard.getByText(unavailable.description[locale], {
+          exact: true,
+        });
+        expect(await measureControlContrast(description, 'text')).toBeGreaterThanOrEqual(4.5);
+      }
+
+      staff = true;
+      await page.goto('/admin/providers');
+      await expectBrand();
+      for (const high of [false, true]) {
+        await setHighContrast(high);
+        for (const name of ['new', 'activate', 'disable'])
+          await checkAction(
+            page.getByRole('button', {
+              name: providerText(`admin.providers.${name}`, locale),
+              exact: true,
+            })
+          );
+      }
+    });
+
 for (const locale of ['en', 'fa'] as const)
   for (const dark of [false, true])
     for (const mobile of [false, true]) {

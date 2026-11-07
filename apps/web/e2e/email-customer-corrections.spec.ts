@@ -149,8 +149,11 @@ for (const locale of ['en', 'fa'] as const) {
     await confirm.click();
     await expect(dialog).toHaveCount(0);
     await expect(panel.getByRole('listitem')).toHaveCount(0);
-    await expect(panel.getByRole('status')).toContainText(
-      fa ? 'همچنان مسدود' : 'remains suppressed'
+    const savedNotice = fa
+      ? 'نتیجه پیگیری ثبت شد. ارسال ایمیل همچنان مسدود است.'
+      : 'Follow-up recorded. Email remains suppressed.';
+    await expect(panel.getByRole('status').filter({ hasText: savedNotice })).toHaveText(
+      savedNotice
     );
     await panel.getByLabel(copy.completed).check();
     await expect(panel.getByText(note, { exact: true })).toBeVisible();

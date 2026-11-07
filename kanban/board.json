@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-07T20:46:53+00:00",
-  "source_commit": "62d119ac5a90125645f8d4fa24c858fc9df096b3",
+  "updated": "2026-11-07T21:01:15+00:00",
+  "source_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -35050,7 +35050,8 @@
           "release-0.5-crm-archive-touch-targets",
           "release-0.5-owned-read-retry-feedback",
           "release-0.5-conditional-native-choices",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-action-contrast"
         ],
         "current_acceptance": {
           "kind": "verified-account-preferences-and-timestamp-consumers",
@@ -35062,7 +35063,7 @@
             },
             {
               "path": "apps/web/e2e/consumer-theme.spec.ts",
-              "sha256": "33ec3846bafb7656bbecdd35f513455f5b0e02d62e250ee34629b361a8b87474"
+              "sha256": "41edf8cca123d3f0dd3beeaf2e21c76788747ed5140015ee7f153d07d9e5af7b"
             },
             {
               "path": "apps/web/e2e/direction-component.spec.ts",
@@ -35202,7 +35203,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "8ec7669175de7e5474b96c34b6282fca07cf4c7edf0b95a603fd38e88db1ee8e"
+              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
@@ -36016,6 +36017,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-action-contrast",
+              "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json"
             }
           ]
         },
@@ -62604,7 +62610,8 @@
           "release-0.5-crm-archive-touch-targets",
           "release-0.5-owned-read-retry-feedback",
           "release-0.5-conditional-native-choices",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-action-contrast"
         ],
         "current_acceptance": {
           "kind": "accepted-native-brand-theme-application",
@@ -62624,7 +62631,7 @@
             },
             {
               "path": "apps/web/e2e/consumer-theme.spec.ts",
-              "sha256": "33ec3846bafb7656bbecdd35f513455f5b0e02d62e250ee34629b361a8b87474"
+              "sha256": "41edf8cca123d3f0dd3beeaf2e21c76788747ed5140015ee7f153d07d9e5af7b"
             },
             {
               "path": "apps/web/e2e/direction-component.spec.ts",
@@ -62748,7 +62755,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "8ec7669175de7e5474b96c34b6282fca07cf4c7edf0b95a603fd38e88db1ee8e"
+              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
@@ -63204,6 +63211,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-action-contrast",
+              "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json"
             }
           ]
         },
@@ -66032,7 +66044,8 @@
           "release-0.5-exact-coverage",
           "release-0.5-final-gates",
           "release-0.5-route-census-closure",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-action-contrast"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -66144,7 +66157,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "8ec7669175de7e5474b96c34b6282fca07cf4c7edf0b95a603fd38e88db1ee8e"
+              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -66446,6 +66459,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-action-contrast",
+              "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json"
             }
           ]
         },
@@ -76710,7 +76728,8 @@
           "release-0.5-exact-coverage",
           "release-0.5-final-gates",
           "release-0.5-route-census-closure",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-action-contrast"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -76822,7 +76841,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "8ec7669175de7e5474b96c34b6282fca07cf4c7edf0b95a603fd38e88db1ee8e"
+              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -77124,6 +77143,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-action-contrast",
+              "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json"
             }
           ]
         },
@@ -77283,7 +77307,8 @@
           "release-0.5-exact-coverage",
           "release-0.5-final-gates",
           "release-0.5-route-census-closure",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-action-contrast"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -77395,7 +77420,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "8ec7669175de7e5474b96c34b6282fca07cf4c7edf0b95a603fd38e88db1ee8e"
+              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -77697,6 +77722,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-action-contrast",
+              "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json"
             }
           ]
         },
@@ -78023,7 +78053,8 @@
           "release-0.5-exact-coverage",
           "release-0.5-final-gates",
           "release-0.5-route-census-closure",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-action-contrast"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -78135,7 +78166,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "8ec7669175de7e5474b96c34b6282fca07cf4c7edf0b95a603fd38e88db1ee8e"
+              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -78437,6 +78468,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-action-contrast",
+              "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json"
             }
           ]
         },
@@ -78593,7 +78629,8 @@
           "release-0.5-exact-coverage",
           "release-0.5-final-gates",
           "release-0.5-route-census-closure",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-action-contrast"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -78705,7 +78742,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "8ec7669175de7e5474b96c34b6282fca07cf4c7edf0b95a603fd38e88db1ee8e"
+              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -79007,6 +79044,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-action-contrast",
+              "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json"
             }
           ]
         },
@@ -79166,7 +79208,8 @@
           "release-0.5-exact-coverage",
           "release-0.5-final-gates",
           "release-0.5-route-census-closure",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-action-contrast"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -79278,7 +79321,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "8ec7669175de7e5474b96c34b6282fca07cf4c7edf0b95a603fd38e88db1ee8e"
+              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -79580,6 +79623,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-action-contrast",
+              "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json"
             }
           ]
         },
@@ -81390,7 +81438,8 @@
           "release-0.5-candidate-acceptance",
           "release-0.5-final-acceptance",
           "release-0.5-final-rehearsal",
-          "release-0.5-route-census-closure"
+          "release-0.5-route-census-closure",
+          "release-0.5-action-contrast"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -81514,7 +81563,7 @@
             },
             {
               "path": "apps/web/e2e/email-customer-corrections.spec.ts",
-              "sha256": "02353d586ba5fd6ba324d6a5b57420f5c13de4abed9550f1890eaeadebfd327e"
+              "sha256": "8090689baa0a979cdbe751852c2b3da0cda737e9bdd7c67b1f06ba5bbfb565ca"
             },
             {
               "path": "apps/web/e2e/email-provider-recovery.spec.ts",
@@ -81554,7 +81603,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "8ec7669175de7e5474b96c34b6282fca07cf4c7edf0b95a603fd38e88db1ee8e"
+              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
             },
             {
               "path": "apps/web/src/pages/AdminFailedNotificationsPage.tsx",
@@ -82021,6 +82070,11 @@
               "batch": "release-0.5-route-census-closure",
               "base_commit": "054e9d662b3f017f4ba07154000ef26ad167ae29",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-census-closure/route-census-proof.json"
+            },
+            {
+              "batch": "release-0.5-action-contrast",
+              "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json"
             }
           ]
         },
@@ -82327,7 +82381,8 @@
           "release-0.5-candidate-acceptance",
           "release-0.5-final-acceptance",
           "release-0.5-final-rehearsal",
-          "release-0.5-route-census-closure"
+          "release-0.5-route-census-closure",
+          "release-0.5-action-contrast"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -82451,7 +82506,7 @@
             },
             {
               "path": "apps/web/e2e/email-customer-corrections.spec.ts",
-              "sha256": "02353d586ba5fd6ba324d6a5b57420f5c13de4abed9550f1890eaeadebfd327e"
+              "sha256": "8090689baa0a979cdbe751852c2b3da0cda737e9bdd7c67b1f06ba5bbfb565ca"
             },
             {
               "path": "apps/web/e2e/email-provider-recovery.spec.ts",
@@ -82491,7 +82546,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "8ec7669175de7e5474b96c34b6282fca07cf4c7edf0b95a603fd38e88db1ee8e"
+              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
             },
             {
               "path": "apps/web/src/pages/AdminFailedNotificationsPage.tsx",
@@ -82958,6 +83013,11 @@
               "batch": "release-0.5-route-census-closure",
               "base_commit": "054e9d662b3f017f4ba07154000ef26ad167ae29",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-census-closure/route-census-proof.json"
+            },
+            {
+              "batch": "release-0.5-action-contrast",
+              "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json"
             }
           ]
         },
@@ -83264,7 +83324,8 @@
           "release-0.5-candidate-acceptance",
           "release-0.5-final-acceptance",
           "release-0.5-final-rehearsal",
-          "release-0.5-route-census-closure"
+          "release-0.5-route-census-closure",
+          "release-0.5-action-contrast"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -83388,7 +83449,7 @@
             },
             {
               "path": "apps/web/e2e/email-customer-corrections.spec.ts",
-              "sha256": "02353d586ba5fd6ba324d6a5b57420f5c13de4abed9550f1890eaeadebfd327e"
+              "sha256": "8090689baa0a979cdbe751852c2b3da0cda737e9bdd7c67b1f06ba5bbfb565ca"
             },
             {
               "path": "apps/web/e2e/email-provider-recovery.spec.ts",
@@ -83428,7 +83489,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "8ec7669175de7e5474b96c34b6282fca07cf4c7edf0b95a603fd38e88db1ee8e"
+              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
             },
             {
               "path": "apps/web/src/pages/AdminFailedNotificationsPage.tsx",
@@ -83895,6 +83956,11 @@
               "batch": "release-0.5-route-census-closure",
               "base_commit": "054e9d662b3f017f4ba07154000ef26ad167ae29",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-census-closure/route-census-proof.json"
+            },
+            {
+              "batch": "release-0.5-action-contrast",
+              "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json"
             }
           ]
         },
@@ -84202,7 +84268,8 @@
           "release-0.5-candidate-acceptance",
           "release-0.5-final-acceptance",
           "release-0.5-final-rehearsal",
-          "release-0.5-route-census-closure"
+          "release-0.5-route-census-closure",
+          "release-0.5-action-contrast"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -84326,7 +84393,7 @@
             },
             {
               "path": "apps/web/e2e/email-customer-corrections.spec.ts",
-              "sha256": "02353d586ba5fd6ba324d6a5b57420f5c13de4abed9550f1890eaeadebfd327e"
+              "sha256": "8090689baa0a979cdbe751852c2b3da0cda737e9bdd7c67b1f06ba5bbfb565ca"
             },
             {
               "path": "apps/web/e2e/email-provider-recovery.spec.ts",
@@ -84366,7 +84433,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "8ec7669175de7e5474b96c34b6282fca07cf4c7edf0b95a603fd38e88db1ee8e"
+              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
             },
             {
               "path": "apps/web/src/pages/AdminFailedNotificationsPage.tsx",
@@ -84833,6 +84900,11 @@
               "batch": "release-0.5-route-census-closure",
               "base_commit": "054e9d662b3f017f4ba07154000ef26ad167ae29",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-census-closure/route-census-proof.json"
+            },
+            {
+              "batch": "release-0.5-action-contrast",
+              "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json"
             }
           ]
         },
@@ -85139,7 +85211,8 @@
           "release-0.5-candidate-acceptance",
           "release-0.5-final-acceptance",
           "release-0.5-final-rehearsal",
-          "release-0.5-route-census-closure"
+          "release-0.5-route-census-closure",
+          "release-0.5-action-contrast"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -85263,7 +85336,7 @@
             },
             {
               "path": "apps/web/e2e/email-customer-corrections.spec.ts",
-              "sha256": "02353d586ba5fd6ba324d6a5b57420f5c13de4abed9550f1890eaeadebfd327e"
+              "sha256": "8090689baa0a979cdbe751852c2b3da0cda737e9bdd7c67b1f06ba5bbfb565ca"
             },
             {
               "path": "apps/web/e2e/email-provider-recovery.spec.ts",
@@ -85303,7 +85376,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "8ec7669175de7e5474b96c34b6282fca07cf4c7edf0b95a603fd38e88db1ee8e"
+              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
             },
             {
               "path": "apps/web/src/pages/AdminFailedNotificationsPage.tsx",
@@ -85770,6 +85843,11 @@
               "batch": "release-0.5-route-census-closure",
               "base_commit": "054e9d662b3f017f4ba07154000ef26ad167ae29",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-census-closure/route-census-proof.json"
+            },
+            {
+              "batch": "release-0.5-action-contrast",
+              "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json"
             }
           ]
         },
@@ -86077,7 +86155,8 @@
           "release-0.5-candidate-acceptance",
           "release-0.5-final-acceptance",
           "release-0.5-final-rehearsal",
-          "release-0.5-route-census-closure"
+          "release-0.5-route-census-closure",
+          "release-0.5-action-contrast"
         ],
         "current_acceptance": {
           "status": "done",
@@ -86169,7 +86248,7 @@
             },
             {
               "path": "apps/web/e2e/email-customer-corrections.spec.ts",
-              "sha256": "02353d586ba5fd6ba324d6a5b57420f5c13de4abed9550f1890eaeadebfd327e"
+              "sha256": "8090689baa0a979cdbe751852c2b3da0cda737e9bdd7c67b1f06ba5bbfb565ca"
             },
             {
               "path": "apps/web/e2e/email-provider-recovery.spec.ts",
@@ -86189,7 +86268,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "8ec7669175de7e5474b96c34b6282fca07cf4c7edf0b95a603fd38e88db1ee8e"
+              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
             },
             {
               "path": "apps/web/src/pages/AdminFailedNotificationsPage.tsx",
@@ -86491,6 +86570,11 @@
               "batch": "release-0.5-route-census-closure",
               "base_commit": "054e9d662b3f017f4ba07154000ef26ad167ae29",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-census-closure/route-census-proof.json"
+            },
+            {
+              "batch": "release-0.5-action-contrast",
+              "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json"
             }
           ]
         },
@@ -86794,7 +86878,8 @@
           "release-0.5-candidate-acceptance",
           "release-0.5-final-acceptance",
           "release-0.5-final-rehearsal",
-          "release-0.5-route-census-closure"
+          "release-0.5-route-census-closure",
+          "release-0.5-action-contrast"
         ],
         "current_acceptance": {
           "status": "done",
@@ -86906,7 +86991,7 @@
             },
             {
               "path": "apps/web/e2e/email-customer-corrections.spec.ts",
-              "sha256": "02353d586ba5fd6ba324d6a5b57420f5c13de4abed9550f1890eaeadebfd327e"
+              "sha256": "8090689baa0a979cdbe751852c2b3da0cda737e9bdd7c67b1f06ba5bbfb565ca"
             },
             {
               "path": "apps/web/e2e/email-provider-recovery.spec.ts",
@@ -86930,7 +87015,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "8ec7669175de7e5474b96c34b6282fca07cf4c7edf0b95a603fd38e88db1ee8e"
+              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
             },
             {
               "path": "apps/web/src/pages/AdminFailedNotificationsPage.tsx",
@@ -87237,6 +87322,11 @@
               "batch": "release-0.5-route-census-closure",
               "base_commit": "054e9d662b3f017f4ba07154000ef26ad167ae29",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-census-closure/route-census-proof.json"
+            },
+            {
+              "batch": "release-0.5-action-contrast",
+              "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json"
             }
           ]
         }
@@ -87416,7 +87506,8 @@
           "release-0.5-candidate-acceptance",
           "release-0.5-final-acceptance",
           "release-0.5-final-rehearsal",
-          "release-0.5-route-census-closure"
+          "release-0.5-route-census-closure",
+          "release-0.5-action-contrast"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -87540,7 +87631,7 @@
             },
             {
               "path": "apps/web/e2e/email-customer-corrections.spec.ts",
-              "sha256": "02353d586ba5fd6ba324d6a5b57420f5c13de4abed9550f1890eaeadebfd327e"
+              "sha256": "8090689baa0a979cdbe751852c2b3da0cda737e9bdd7c67b1f06ba5bbfb565ca"
             },
             {
               "path": "apps/web/e2e/email-provider-recovery.spec.ts",
@@ -87580,7 +87671,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "8ec7669175de7e5474b96c34b6282fca07cf4c7edf0b95a603fd38e88db1ee8e"
+              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
             },
             {
               "path": "apps/web/src/pages/AdminFailedNotificationsPage.tsx",
@@ -88047,6 +88138,11 @@
               "batch": "release-0.5-route-census-closure",
               "base_commit": "054e9d662b3f017f4ba07154000ef26ad167ae29",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-census-closure/route-census-proof.json"
+            },
+            {
+              "batch": "release-0.5-action-contrast",
+              "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json"
             }
           ]
         },
@@ -435083,7 +435179,8 @@
           "release-0.5-protected-staff-browser-closure",
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
-          "release-0.5-route-census-closure"
+          "release-0.5-route-census-closure",
+          "release-0.5-action-contrast"
         ],
         "current_acceptance": {
           "status": "done",
@@ -435227,7 +435324,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "8ec7669175de7e5474b96c34b6282fca07cf4c7edf0b95a603fd38e88db1ee8e"
+              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -435570,6 +435667,11 @@
               "batch": "release-0.5-route-census-closure",
               "base_commit": "054e9d662b3f017f4ba07154000ef26ad167ae29",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-census-closure/route-census-proof.json"
+            },
+            {
+              "batch": "release-0.5-action-contrast",
+              "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json"
             }
           ]
         },
@@ -488393,7 +488495,8 @@
           "release-0.5-component-direction-matrix",
           "release-0.5-saving-conditional-agreement",
           "release-0.5-solar-guidance-ready",
-          "release-0.5-ownership-transfer-receipt"
+          "release-0.5-ownership-transfer-receipt",
+          "release-0.5-action-contrast"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -488677,7 +488780,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "8ec7669175de7e5474b96c34b6282fca07cf4c7edf0b95a603fd38e88db1ee8e"
+              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
@@ -488841,7 +488944,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
-              "sha256": "6ca86608049095b742467033fbb3151dc70186012664ffac95dda46f31dbddec"
+              "sha256": "0a50d25798f2695c3507a06367c1fccd9777e3fc8a1ca20feaef955d8235aba2"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -489324,6 +489427,11 @@
               "batch": "release-0.5-ownership-transfer-receipt",
               "base_commit": "62d119ac5a90125645f8d4fa24c858fc9df096b3",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ownership-transfer-receipt/proof.json"
+            },
+            {
+              "batch": "release-0.5-action-contrast",
+              "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json"
             }
           ]
         },
@@ -491490,7 +491598,8 @@
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-owned-staff-solar-review",
           "release-0.5-saving-conditional-agreement",
-          "release-0.5-ownership-transfer-receipt"
+          "release-0.5-ownership-transfer-receipt",
+          "release-0.5-action-contrast"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -491898,7 +492007,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
-              "sha256": "6ca86608049095b742467033fbb3151dc70186012664ffac95dda46f31dbddec"
+              "sha256": "0a50d25798f2695c3507a06367c1fccd9777e3fc8a1ca20feaef955d8235aba2"
             },
             {
               "path": "apps/web/src/pages/ServiceSettingsEditor.tsx",
@@ -492216,6 +492325,11 @@
               "batch": "release-0.5-ownership-transfer-receipt",
               "base_commit": "62d119ac5a90125645f8d4fa24c858fc9df096b3",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ownership-transfer-receipt/proof.json"
+            },
+            {
+              "batch": "release-0.5-action-contrast",
+              "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json"
             }
           ]
         }
@@ -492354,7 +492468,8 @@
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-owned-staff-solar-review",
           "release-0.5-saving-conditional-agreement",
-          "release-0.5-ownership-transfer-receipt"
+          "release-0.5-ownership-transfer-receipt",
+          "release-0.5-action-contrast"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -492762,7 +492877,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
-              "sha256": "6ca86608049095b742467033fbb3151dc70186012664ffac95dda46f31dbddec"
+              "sha256": "0a50d25798f2695c3507a06367c1fccd9777e3fc8a1ca20feaef955d8235aba2"
             },
             {
               "path": "apps/web/src/pages/ServiceSettingsEditor.tsx",
@@ -493080,6 +493195,11 @@
               "batch": "release-0.5-ownership-transfer-receipt",
               "base_commit": "62d119ac5a90125645f8d4fa24c858fc9df096b3",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ownership-transfer-receipt/proof.json"
+            },
+            {
+              "batch": "release-0.5-action-contrast",
+              "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json"
             }
           ]
         }
@@ -493159,7 +493279,8 @@
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-owned-staff-solar-review",
           "release-0.5-saving-conditional-agreement",
-          "release-0.5-ownership-transfer-receipt"
+          "release-0.5-ownership-transfer-receipt",
+          "release-0.5-action-contrast"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -493567,7 +493688,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
-              "sha256": "6ca86608049095b742467033fbb3151dc70186012664ffac95dda46f31dbddec"
+              "sha256": "0a50d25798f2695c3507a06367c1fccd9777e3fc8a1ca20feaef955d8235aba2"
             },
             {
               "path": "apps/web/src/pages/ServiceSettingsEditor.tsx",
@@ -493885,6 +494006,11 @@
               "batch": "release-0.5-ownership-transfer-receipt",
               "base_commit": "62d119ac5a90125645f8d4fa24c858fc9df096b3",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ownership-transfer-receipt/proof.json"
+            },
+            {
+              "batch": "release-0.5-action-contrast",
+              "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json"
             }
           ]
         }
@@ -496197,7 +496323,8 @@
           "release-0.5-profile-picker-preload-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-essential-control-contrast",
-          "release-0.5-solar-guidance-ready"
+          "release-0.5-solar-guidance-ready",
+          "release-0.5-action-contrast"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -496269,7 +496396,7 @@
             },
             {
               "path": "apps/web/e2e/consumer-theme.spec.ts",
-              "sha256": "33ec3846bafb7656bbecdd35f513455f5b0e02d62e250ee34629b361a8b87474"
+              "sha256": "41edf8cca123d3f0dd3beeaf2e21c76788747ed5140015ee7f153d07d9e5af7b"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -496629,6 +496756,11 @@
               "batch": "release-0.5-solar-guidance-ready",
               "base_commit": "0e3c581025a102eb58d5f7a966777418b7cd9d7f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-solar-guidance-ready/proof.json"
+            },
+            {
+              "batch": "release-0.5-action-contrast",
+              "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json"
             }
           ]
         }
@@ -496723,7 +496855,8 @@
           "release-0.5-profile-picker-preload-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-essential-control-contrast",
-          "release-0.5-solar-guidance-ready"
+          "release-0.5-solar-guidance-ready",
+          "release-0.5-action-contrast"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -496795,7 +496928,7 @@
             },
             {
               "path": "apps/web/e2e/consumer-theme.spec.ts",
-              "sha256": "33ec3846bafb7656bbecdd35f513455f5b0e02d62e250ee34629b361a8b87474"
+              "sha256": "41edf8cca123d3f0dd3beeaf2e21c76788747ed5140015ee7f153d07d9e5af7b"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -497155,6 +497288,11 @@
               "batch": "release-0.5-solar-guidance-ready",
               "base_commit": "0e3c581025a102eb58d5f7a966777418b7cd9d7f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-solar-guidance-ready/proof.json"
+            },
+            {
+              "batch": "release-0.5-action-contrast",
+              "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json"
             }
           ]
         }
@@ -497249,7 +497387,8 @@
           "release-0.5-profile-picker-preload-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-essential-control-contrast",
-          "release-0.5-solar-guidance-ready"
+          "release-0.5-solar-guidance-ready",
+          "release-0.5-action-contrast"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -497321,7 +497460,7 @@
             },
             {
               "path": "apps/web/e2e/consumer-theme.spec.ts",
-              "sha256": "33ec3846bafb7656bbecdd35f513455f5b0e02d62e250ee34629b361a8b87474"
+              "sha256": "41edf8cca123d3f0dd3beeaf2e21c76788747ed5140015ee7f153d07d9e5af7b"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -497681,6 +497820,11 @@
               "batch": "release-0.5-solar-guidance-ready",
               "base_commit": "0e3c581025a102eb58d5f7a966777418b7cd9d7f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-solar-guidance-ready/proof.json"
+            },
+            {
+              "batch": "release-0.5-action-contrast",
+              "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json"
             }
           ]
         }
@@ -497775,7 +497919,8 @@
           "release-0.5-profile-picker-preload-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-essential-control-contrast",
-          "release-0.5-solar-guidance-ready"
+          "release-0.5-solar-guidance-ready",
+          "release-0.5-action-contrast"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -497847,7 +497992,7 @@
             },
             {
               "path": "apps/web/e2e/consumer-theme.spec.ts",
-              "sha256": "33ec3846bafb7656bbecdd35f513455f5b0e02d62e250ee34629b361a8b87474"
+              "sha256": "41edf8cca123d3f0dd3beeaf2e21c76788747ed5140015ee7f153d07d9e5af7b"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -498207,6 +498352,11 @@
               "batch": "release-0.5-solar-guidance-ready",
               "base_commit": "0e3c581025a102eb58d5f7a966777418b7cd9d7f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-solar-guidance-ready/proof.json"
+            },
+            {
+              "batch": "release-0.5-action-contrast",
+              "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json"
             }
           ]
         }
@@ -498301,7 +498451,8 @@
           "release-0.5-profile-picker-preload-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-essential-control-contrast",
-          "release-0.5-solar-guidance-ready"
+          "release-0.5-solar-guidance-ready",
+          "release-0.5-action-contrast"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -498373,7 +498524,7 @@
             },
             {
               "path": "apps/web/e2e/consumer-theme.spec.ts",
-              "sha256": "33ec3846bafb7656bbecdd35f513455f5b0e02d62e250ee34629b361a8b87474"
+              "sha256": "41edf8cca123d3f0dd3beeaf2e21c76788747ed5140015ee7f153d07d9e5af7b"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -498733,6 +498884,11 @@
               "batch": "release-0.5-solar-guidance-ready",
               "base_commit": "0e3c581025a102eb58d5f7a966777418b7cd9d7f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-solar-guidance-ready/proof.json"
+            },
+            {
+              "batch": "release-0.5-action-contrast",
+              "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json"
             }
           ]
         }
@@ -498827,7 +498983,8 @@
           "release-0.5-profile-picker-preload-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-essential-control-contrast",
-          "release-0.5-solar-guidance-ready"
+          "release-0.5-solar-guidance-ready",
+          "release-0.5-action-contrast"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -498899,7 +499056,7 @@
             },
             {
               "path": "apps/web/e2e/consumer-theme.spec.ts",
-              "sha256": "33ec3846bafb7656bbecdd35f513455f5b0e02d62e250ee34629b361a8b87474"
+              "sha256": "41edf8cca123d3f0dd3beeaf2e21c76788747ed5140015ee7f153d07d9e5af7b"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -499259,6 +499416,11 @@
               "batch": "release-0.5-solar-guidance-ready",
               "base_commit": "0e3c581025a102eb58d5f7a966777418b7cd9d7f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-solar-guidance-ready/proof.json"
+            },
+            {
+              "batch": "release-0.5-action-contrast",
+              "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json"
             }
           ]
         }
@@ -499353,7 +499515,8 @@
           "release-0.5-profile-picker-preload-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-essential-control-contrast",
-          "release-0.5-solar-guidance-ready"
+          "release-0.5-solar-guidance-ready",
+          "release-0.5-action-contrast"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -499425,7 +499588,7 @@
             },
             {
               "path": "apps/web/e2e/consumer-theme.spec.ts",
-              "sha256": "33ec3846bafb7656bbecdd35f513455f5b0e02d62e250ee34629b361a8b87474"
+              "sha256": "41edf8cca123d3f0dd3beeaf2e21c76788747ed5140015ee7f153d07d9e5af7b"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -499785,6 +499948,11 @@
               "batch": "release-0.5-solar-guidance-ready",
               "base_commit": "0e3c581025a102eb58d5f7a966777418b7cd9d7f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-solar-guidance-ready/proof.json"
+            },
+            {
+              "batch": "release-0.5-action-contrast",
+              "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json"
             }
           ]
         }
@@ -499879,7 +500047,8 @@
           "release-0.5-profile-picker-preload-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-essential-control-contrast",
-          "release-0.5-solar-guidance-ready"
+          "release-0.5-solar-guidance-ready",
+          "release-0.5-action-contrast"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -499951,7 +500120,7 @@
             },
             {
               "path": "apps/web/e2e/consumer-theme.spec.ts",
-              "sha256": "33ec3846bafb7656bbecdd35f513455f5b0e02d62e250ee34629b361a8b87474"
+              "sha256": "41edf8cca123d3f0dd3beeaf2e21c76788747ed5140015ee7f153d07d9e5af7b"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -500311,6 +500480,11 @@
               "batch": "release-0.5-solar-guidance-ready",
               "base_commit": "0e3c581025a102eb58d5f7a966777418b7cd9d7f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-solar-guidance-ready/proof.json"
+            },
+            {
+              "batch": "release-0.5-action-contrast",
+              "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json"
             }
           ]
         }
@@ -500405,7 +500579,8 @@
           "release-0.5-profile-picker-preload-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-essential-control-contrast",
-          "release-0.5-solar-guidance-ready"
+          "release-0.5-solar-guidance-ready",
+          "release-0.5-action-contrast"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -500477,7 +500652,7 @@
             },
             {
               "path": "apps/web/e2e/consumer-theme.spec.ts",
-              "sha256": "33ec3846bafb7656bbecdd35f513455f5b0e02d62e250ee34629b361a8b87474"
+              "sha256": "41edf8cca123d3f0dd3beeaf2e21c76788747ed5140015ee7f153d07d9e5af7b"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -500837,6 +501012,11 @@
               "batch": "release-0.5-solar-guidance-ready",
               "base_commit": "0e3c581025a102eb58d5f7a966777418b7cd9d7f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-solar-guidance-ready/proof.json"
+            },
+            {
+              "batch": "release-0.5-action-contrast",
+              "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json"
             }
           ]
         }
@@ -500931,7 +501111,8 @@
           "release-0.5-profile-picker-preload-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-essential-control-contrast",
-          "release-0.5-solar-guidance-ready"
+          "release-0.5-solar-guidance-ready",
+          "release-0.5-action-contrast"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -501003,7 +501184,7 @@
             },
             {
               "path": "apps/web/e2e/consumer-theme.spec.ts",
-              "sha256": "33ec3846bafb7656bbecdd35f513455f5b0e02d62e250ee34629b361a8b87474"
+              "sha256": "41edf8cca123d3f0dd3beeaf2e21c76788747ed5140015ee7f153d07d9e5af7b"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -501363,6 +501544,11 @@
               "batch": "release-0.5-solar-guidance-ready",
               "base_commit": "0e3c581025a102eb58d5f7a966777418b7cd9d7f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-solar-guidance-ready/proof.json"
+            },
+            {
+              "batch": "release-0.5-action-contrast",
+              "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json"
             }
           ]
         }
@@ -501457,7 +501643,8 @@
           "release-0.5-profile-picker-preload-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-essential-control-contrast",
-          "release-0.5-solar-guidance-ready"
+          "release-0.5-solar-guidance-ready",
+          "release-0.5-action-contrast"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -501529,7 +501716,7 @@
             },
             {
               "path": "apps/web/e2e/consumer-theme.spec.ts",
-              "sha256": "33ec3846bafb7656bbecdd35f513455f5b0e02d62e250ee34629b361a8b87474"
+              "sha256": "41edf8cca123d3f0dd3beeaf2e21c76788747ed5140015ee7f153d07d9e5af7b"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -501889,6 +502076,11 @@
               "batch": "release-0.5-solar-guidance-ready",
               "base_commit": "0e3c581025a102eb58d5f7a966777418b7cd9d7f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-solar-guidance-ready/proof.json"
+            },
+            {
+              "batch": "release-0.5-action-contrast",
+              "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json"
             }
           ]
         }
@@ -501983,7 +502175,8 @@
           "release-0.5-profile-picker-preload-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-essential-control-contrast",
-          "release-0.5-solar-guidance-ready"
+          "release-0.5-solar-guidance-ready",
+          "release-0.5-action-contrast"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -502055,7 +502248,7 @@
             },
             {
               "path": "apps/web/e2e/consumer-theme.spec.ts",
-              "sha256": "33ec3846bafb7656bbecdd35f513455f5b0e02d62e250ee34629b361a8b87474"
+              "sha256": "41edf8cca123d3f0dd3beeaf2e21c76788747ed5140015ee7f153d07d9e5af7b"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -502415,6 +502608,11 @@
               "batch": "release-0.5-solar-guidance-ready",
               "base_commit": "0e3c581025a102eb58d5f7a966777418b7cd9d7f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-solar-guidance-ready/proof.json"
+            },
+            {
+              "batch": "release-0.5-action-contrast",
+              "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json"
             }
           ]
         }
@@ -502509,7 +502707,8 @@
           "release-0.5-profile-picker-preload-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-essential-control-contrast",
-          "release-0.5-solar-guidance-ready"
+          "release-0.5-solar-guidance-ready",
+          "release-0.5-action-contrast"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -502581,7 +502780,7 @@
             },
             {
               "path": "apps/web/e2e/consumer-theme.spec.ts",
-              "sha256": "33ec3846bafb7656bbecdd35f513455f5b0e02d62e250ee34629b361a8b87474"
+              "sha256": "41edf8cca123d3f0dd3beeaf2e21c76788747ed5140015ee7f153d07d9e5af7b"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -502941,6 +503140,11 @@
               "batch": "release-0.5-solar-guidance-ready",
               "base_commit": "0e3c581025a102eb58d5f7a966777418b7cd9d7f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-solar-guidance-ready/proof.json"
+            },
+            {
+              "batch": "release-0.5-action-contrast",
+              "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json"
             }
           ]
         }
@@ -503035,7 +503239,8 @@
           "release-0.5-profile-picker-preload-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-essential-control-contrast",
-          "release-0.5-solar-guidance-ready"
+          "release-0.5-solar-guidance-ready",
+          "release-0.5-action-contrast"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -503107,7 +503312,7 @@
             },
             {
               "path": "apps/web/e2e/consumer-theme.spec.ts",
-              "sha256": "33ec3846bafb7656bbecdd35f513455f5b0e02d62e250ee34629b361a8b87474"
+              "sha256": "41edf8cca123d3f0dd3beeaf2e21c76788747ed5140015ee7f153d07d9e5af7b"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -503467,6 +503672,11 @@
               "batch": "release-0.5-solar-guidance-ready",
               "base_commit": "0e3c581025a102eb58d5f7a966777418b7cd9d7f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-solar-guidance-ready/proof.json"
+            },
+            {
+              "batch": "release-0.5-action-contrast",
+              "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json"
             }
           ]
         }
@@ -508179,7 +508389,8 @@
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-essential-control-contrast",
           "release-0.5-consultation-staff-command-receipts",
-          "release-0.5-ownership-transfer-receipt"
+          "release-0.5-ownership-transfer-receipt",
+          "release-0.5-action-contrast"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -508407,7 +508618,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "8ec7669175de7e5474b96c34b6282fca07cf4c7edf0b95a603fd38e88db1ee8e"
+              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
@@ -508747,6 +508958,11 @@
               "batch": "release-0.5-ownership-transfer-receipt",
               "base_commit": "62d119ac5a90125645f8d4fa24c858fc9df096b3",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ownership-transfer-receipt/proof.json"
+            },
+            {
+              "batch": "release-0.5-action-contrast",
+              "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json"
             }
           ]
         }
@@ -513108,7 +513324,8 @@
           "release-0.5-profile-picker-preload-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-essential-control-contrast",
-          "release-0.5-component-direction-matrix"
+          "release-0.5-component-direction-matrix",
+          "release-0.5-action-contrast"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -513296,7 +513513,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "8ec7669175de7e5474b96c34b6282fca07cf4c7edf0b95a603fd38e88db1ee8e"
+              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
             },
             {
               "path": "apps/web/src/pages/CrmCorrectionsPage.tsx",
@@ -513540,6 +513757,11 @@
               "batch": "release-0.5-component-direction-matrix",
               "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
+            },
+            {
+              "batch": "release-0.5-action-contrast",
+              "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json"
             }
           ]
         }
@@ -513604,7 +513826,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "The populated route and revoke-sessions receipts remain recorded. Eight Chromium/mobile Safari cases now verify 480 control measurements (minimum 3.26:1) and 32 clean text-contrast scenarios across normal and high contrast, light and dark, Persian and English, and default and near-limit brand canvases. Remaining conditional surfaces and all-combination acceptance are open."
+        "Saving plan descriptions stay readable while unavailable, and saving and email-provider actions preserve contrast at rest and on hover. The bilingual theme tests include light, dark and high contrast. Direct measurements improved the worst case from 1.60:1 to 4.61:1. Prior route and shared-control evidence remains recorded. Other conditional surfaces and all-combination acceptance are open."
       ],
       "owner": null,
       "depends_on": [],
@@ -513624,7 +513846,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-verified-command-rejection",
           "release-0.5-responsive-width-acceptance",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-action-contrast"
         ],
         "current_acceptance": null
       }
@@ -514106,7 +514329,8 @@
           "release-0.5-profile-picker-preload-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-essential-control-contrast",
-          "release-0.5-component-direction-matrix"
+          "release-0.5-component-direction-matrix",
+          "release-0.5-action-contrast"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -514294,7 +514518,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "8ec7669175de7e5474b96c34b6282fca07cf4c7edf0b95a603fd38e88db1ee8e"
+              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
             },
             {
               "path": "apps/web/src/pages/CrmCorrectionsPage.tsx",
@@ -514538,6 +514762,11 @@
               "batch": "release-0.5-component-direction-matrix",
               "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
+            },
+            {
+              "batch": "release-0.5-action-contrast",
+              "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json"
             }
           ]
         }
@@ -514608,7 +514837,8 @@
           "release-0.5-consultation-staff-command-receipts",
           "release-0.5-component-direction-matrix",
           "release-0.5-saving-conditional-agreement",
-          "release-0.5-ownership-transfer-receipt"
+          "release-0.5-ownership-transfer-receipt",
+          "release-0.5-action-contrast"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -514676,7 +514906,7 @@
             },
             {
               "path": "apps/web/e2e/consumer-theme.spec.ts",
-              "sha256": "33ec3846bafb7656bbecdd35f513455f5b0e02d62e250ee34629b361a8b87474"
+              "sha256": "41edf8cca123d3f0dd3beeaf2e21c76788747ed5140015ee7f153d07d9e5af7b"
             },
             {
               "path": "apps/web/e2e/contract-authoring-forms.spec.ts",
@@ -514956,7 +515186,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
-              "sha256": "6ca86608049095b742467033fbb3151dc70186012664ffac95dda46f31dbddec"
+              "sha256": "0a50d25798f2695c3507a06367c1fccd9777e3fc8a1ca20feaef955d8235aba2"
             },
             {
               "path": "apps/web/src/pages/SolarRequestsPage.tsx",
@@ -515336,6 +515566,11 @@
               "batch": "release-0.5-ownership-transfer-receipt",
               "base_commit": "62d119ac5a90125645f8d4fa24c858fc9df096b3",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ownership-transfer-receipt/proof.json"
+            },
+            {
+              "batch": "release-0.5-action-contrast",
+              "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json"
             }
           ]
         }
@@ -515406,7 +515641,8 @@
           "release-0.5-consultation-staff-command-receipts",
           "release-0.5-component-direction-matrix",
           "release-0.5-saving-conditional-agreement",
-          "release-0.5-ownership-transfer-receipt"
+          "release-0.5-ownership-transfer-receipt",
+          "release-0.5-action-contrast"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -515474,7 +515710,7 @@
             },
             {
               "path": "apps/web/e2e/consumer-theme.spec.ts",
-              "sha256": "33ec3846bafb7656bbecdd35f513455f5b0e02d62e250ee34629b361a8b87474"
+              "sha256": "41edf8cca123d3f0dd3beeaf2e21c76788747ed5140015ee7f153d07d9e5af7b"
             },
             {
               "path": "apps/web/e2e/contract-authoring-forms.spec.ts",
@@ -515754,7 +515990,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
-              "sha256": "6ca86608049095b742467033fbb3151dc70186012664ffac95dda46f31dbddec"
+              "sha256": "0a50d25798f2695c3507a06367c1fccd9777e3fc8a1ca20feaef955d8235aba2"
             },
             {
               "path": "apps/web/src/pages/SolarRequestsPage.tsx",
@@ -516134,6 +516370,11 @@
               "batch": "release-0.5-ownership-transfer-receipt",
               "base_commit": "62d119ac5a90125645f8d4fa24c858fc9df096b3",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ownership-transfer-receipt/proof.json"
+            },
+            {
+              "batch": "release-0.5-action-contrast",
+              "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json"
             }
           ]
         }
@@ -516184,7 +516425,8 @@
           "release-0.5-profile-picker-preload-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-essential-control-contrast",
-          "release-0.5-component-direction-matrix"
+          "release-0.5-component-direction-matrix",
+          "release-0.5-action-contrast"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -516372,7 +516614,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "8ec7669175de7e5474b96c34b6282fca07cf4c7edf0b95a603fd38e88db1ee8e"
+              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
             },
             {
               "path": "apps/web/src/pages/CrmCorrectionsPage.tsx",
@@ -516616,6 +516858,11 @@
               "batch": "release-0.5-component-direction-matrix",
               "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
+            },
+            {
+              "batch": "release-0.5-action-contrast",
+              "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json"
             }
           ]
         }
@@ -516686,7 +516933,8 @@
           "release-0.5-consultation-staff-command-receipts",
           "release-0.5-component-direction-matrix",
           "release-0.5-saving-conditional-agreement",
-          "release-0.5-ownership-transfer-receipt"
+          "release-0.5-ownership-transfer-receipt",
+          "release-0.5-action-contrast"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -516754,7 +517002,7 @@
             },
             {
               "path": "apps/web/e2e/consumer-theme.spec.ts",
-              "sha256": "33ec3846bafb7656bbecdd35f513455f5b0e02d62e250ee34629b361a8b87474"
+              "sha256": "41edf8cca123d3f0dd3beeaf2e21c76788747ed5140015ee7f153d07d9e5af7b"
             },
             {
               "path": "apps/web/e2e/contract-authoring-forms.spec.ts",
@@ -517034,7 +517282,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
-              "sha256": "6ca86608049095b742467033fbb3151dc70186012664ffac95dda46f31dbddec"
+              "sha256": "0a50d25798f2695c3507a06367c1fccd9777e3fc8a1ca20feaef955d8235aba2"
             },
             {
               "path": "apps/web/src/pages/SolarRequestsPage.tsx",
@@ -517414,6 +517662,11 @@
               "batch": "release-0.5-ownership-transfer-receipt",
               "base_commit": "62d119ac5a90125645f8d4fa24c858fc9df096b3",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ownership-transfer-receipt/proof.json"
+            },
+            {
+              "batch": "release-0.5-action-contrast",
+              "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json"
             }
           ]
         }
@@ -540400,7 +540653,8 @@
           "release-0.5-essential-control-contrast",
           "release-0.5-consultation-staff-command-receipts",
           "release-0.5-saving-conditional-agreement",
-          "release-0.5-ownership-transfer-receipt"
+          "release-0.5-ownership-transfer-receipt",
+          "release-0.5-action-contrast"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -540888,7 +541142,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "8ec7669175de7e5474b96c34b6282fca07cf4c7edf0b95a603fd38e88db1ee8e"
+              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
             },
             {
               "path": "apps/web/src/pages/AdminGeographyDialog.tsx",
@@ -542092,6 +542346,11 @@
               "batch": "release-0.5-ownership-transfer-receipt",
               "base_commit": "62d119ac5a90125645f8d4fa24c858fc9df096b3",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ownership-transfer-receipt/proof.json"
+            },
+            {
+              "batch": "release-0.5-action-contrast",
+              "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json"
             }
           ]
         },
@@ -542241,7 +542500,8 @@
           "release-0.5-essential-control-contrast",
           "release-0.5-consultation-staff-command-receipts",
           "release-0.5-saving-conditional-agreement",
-          "release-0.5-ownership-transfer-receipt"
+          "release-0.5-ownership-transfer-receipt",
+          "release-0.5-action-contrast"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -542729,7 +542989,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "8ec7669175de7e5474b96c34b6282fca07cf4c7edf0b95a603fd38e88db1ee8e"
+              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
             },
             {
               "path": "apps/web/src/pages/AdminGeographyDialog.tsx",
@@ -543933,6 +544193,11 @@
               "batch": "release-0.5-ownership-transfer-receipt",
               "base_commit": "62d119ac5a90125645f8d4fa24c858fc9df096b3",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ownership-transfer-receipt/proof.json"
+            },
+            {
+              "batch": "release-0.5-action-contrast",
+              "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json"
             }
           ]
         },
@@ -544083,7 +544348,8 @@
           "release-0.5-essential-control-contrast",
           "release-0.5-consultation-staff-command-receipts",
           "release-0.5-saving-conditional-agreement",
-          "release-0.5-ownership-transfer-receipt"
+          "release-0.5-ownership-transfer-receipt",
+          "release-0.5-action-contrast"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -544571,7 +544837,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "8ec7669175de7e5474b96c34b6282fca07cf4c7edf0b95a603fd38e88db1ee8e"
+              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
             },
             {
               "path": "apps/web/src/pages/AdminGeographyDialog.tsx",
@@ -545775,6 +546041,11 @@
               "batch": "release-0.5-ownership-transfer-receipt",
               "base_commit": "62d119ac5a90125645f8d4fa24c858fc9df096b3",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ownership-transfer-receipt/proof.json"
+            },
+            {
+              "batch": "release-0.5-action-contrast",
+              "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json"
             }
           ]
         },
@@ -545894,7 +546165,8 @@
           "release-0.5-essential-control-contrast",
           "release-0.5-consultation-staff-command-receipts",
           "release-0.5-saving-conditional-agreement",
-          "release-0.5-ownership-transfer-receipt"
+          "release-0.5-ownership-transfer-receipt",
+          "release-0.5-action-contrast"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -546382,7 +546654,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "8ec7669175de7e5474b96c34b6282fca07cf4c7edf0b95a603fd38e88db1ee8e"
+              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
             },
             {
               "path": "apps/web/src/pages/AdminGeographyDialog.tsx",
@@ -547586,6 +547858,11 @@
               "batch": "release-0.5-ownership-transfer-receipt",
               "base_commit": "62d119ac5a90125645f8d4fa24c858fc9df096b3",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ownership-transfer-receipt/proof.json"
+            },
+            {
+              "batch": "release-0.5-action-contrast",
+              "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json"
             }
           ]
         },
@@ -547731,7 +548008,8 @@
           "release-0.5-essential-control-contrast",
           "release-0.5-consultation-staff-command-receipts",
           "release-0.5-saving-conditional-agreement",
-          "release-0.5-ownership-transfer-receipt"
+          "release-0.5-ownership-transfer-receipt",
+          "release-0.5-action-contrast"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -548219,7 +548497,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "8ec7669175de7e5474b96c34b6282fca07cf4c7edf0b95a603fd38e88db1ee8e"
+              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
             },
             {
               "path": "apps/web/src/pages/AdminGeographyDialog.tsx",
@@ -549423,6 +549701,11 @@
               "batch": "release-0.5-ownership-transfer-receipt",
               "base_commit": "62d119ac5a90125645f8d4fa24c858fc9df096b3",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ownership-transfer-receipt/proof.json"
+            },
+            {
+              "batch": "release-0.5-action-contrast",
+              "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json"
             }
           ]
         },
@@ -549577,7 +549860,8 @@
           "release-0.5-essential-control-contrast",
           "release-0.5-consultation-staff-command-receipts",
           "release-0.5-saving-conditional-agreement",
-          "release-0.5-ownership-transfer-receipt"
+          "release-0.5-ownership-transfer-receipt",
+          "release-0.5-action-contrast"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -550065,7 +550349,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "8ec7669175de7e5474b96c34b6282fca07cf4c7edf0b95a603fd38e88db1ee8e"
+              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
             },
             {
               "path": "apps/web/src/pages/AdminGeographyDialog.tsx",
@@ -551269,6 +551553,11 @@
               "batch": "release-0.5-ownership-transfer-receipt",
               "base_commit": "62d119ac5a90125645f8d4fa24c858fc9df096b3",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ownership-transfer-receipt/proof.json"
+            },
+            {
+              "batch": "release-0.5-action-contrast",
+              "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json"
             }
           ]
         },
@@ -551396,7 +551685,8 @@
           "release-0.5-essential-control-contrast",
           "release-0.5-consultation-staff-command-receipts",
           "release-0.5-saving-conditional-agreement",
-          "release-0.5-ownership-transfer-receipt"
+          "release-0.5-ownership-transfer-receipt",
+          "release-0.5-action-contrast"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -551884,7 +552174,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "8ec7669175de7e5474b96c34b6282fca07cf4c7edf0b95a603fd38e88db1ee8e"
+              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
             },
             {
               "path": "apps/web/src/pages/AdminGeographyDialog.tsx",
@@ -553088,6 +553378,11 @@
               "batch": "release-0.5-ownership-transfer-receipt",
               "base_commit": "62d119ac5a90125645f8d4fa24c858fc9df096b3",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ownership-transfer-receipt/proof.json"
+            },
+            {
+              "batch": "release-0.5-action-contrast",
+              "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json"
             }
           ]
         },
@@ -553179,7 +553474,8 @@
           "release-0.5-essential-control-contrast",
           "release-0.5-consultation-staff-command-receipts",
           "release-0.5-saving-conditional-agreement",
-          "release-0.5-ownership-transfer-receipt"
+          "release-0.5-ownership-transfer-receipt",
+          "release-0.5-action-contrast"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -553667,7 +553963,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "8ec7669175de7e5474b96c34b6282fca07cf4c7edf0b95a603fd38e88db1ee8e"
+              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
             },
             {
               "path": "apps/web/src/pages/AdminGeographyDialog.tsx",
@@ -554871,6 +555167,11 @@
               "batch": "release-0.5-ownership-transfer-receipt",
               "base_commit": "62d119ac5a90125645f8d4fa24c858fc9df096b3",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ownership-transfer-receipt/proof.json"
+            },
+            {
+              "batch": "release-0.5-action-contrast",
+              "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json"
             }
           ]
         },
@@ -554962,7 +555263,8 @@
           "release-0.5-essential-control-contrast",
           "release-0.5-consultation-staff-command-receipts",
           "release-0.5-saving-conditional-agreement",
-          "release-0.5-ownership-transfer-receipt"
+          "release-0.5-ownership-transfer-receipt",
+          "release-0.5-action-contrast"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -555450,7 +555752,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "8ec7669175de7e5474b96c34b6282fca07cf4c7edf0b95a603fd38e88db1ee8e"
+              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
             },
             {
               "path": "apps/web/src/pages/AdminGeographyDialog.tsx",
@@ -556654,6 +556956,11 @@
               "batch": "release-0.5-ownership-transfer-receipt",
               "base_commit": "62d119ac5a90125645f8d4fa24c858fc9df096b3",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ownership-transfer-receipt/proof.json"
+            },
+            {
+              "batch": "release-0.5-action-contrast",
+              "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json"
             }
           ]
         },
@@ -556746,7 +557053,8 @@
           "release-0.5-essential-control-contrast",
           "release-0.5-consultation-staff-command-receipts",
           "release-0.5-saving-conditional-agreement",
-          "release-0.5-ownership-transfer-receipt"
+          "release-0.5-ownership-transfer-receipt",
+          "release-0.5-action-contrast"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -557234,7 +557542,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "8ec7669175de7e5474b96c34b6282fca07cf4c7edf0b95a603fd38e88db1ee8e"
+              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
             },
             {
               "path": "apps/web/src/pages/AdminGeographyDialog.tsx",
@@ -558438,6 +558746,11 @@
               "batch": "release-0.5-ownership-transfer-receipt",
               "base_commit": "62d119ac5a90125645f8d4fa24c858fc9df096b3",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ownership-transfer-receipt/proof.json"
+            },
+            {
+              "batch": "release-0.5-action-contrast",
+              "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json"
             }
           ]
         },
@@ -558529,7 +558842,8 @@
           "release-0.5-essential-control-contrast",
           "release-0.5-consultation-staff-command-receipts",
           "release-0.5-saving-conditional-agreement",
-          "release-0.5-ownership-transfer-receipt"
+          "release-0.5-ownership-transfer-receipt",
+          "release-0.5-action-contrast"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -559017,7 +559331,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "8ec7669175de7e5474b96c34b6282fca07cf4c7edf0b95a603fd38e88db1ee8e"
+              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
             },
             {
               "path": "apps/web/src/pages/AdminGeographyDialog.tsx",
@@ -560221,6 +560535,11 @@
               "batch": "release-0.5-ownership-transfer-receipt",
               "base_commit": "62d119ac5a90125645f8d4fa24c858fc9df096b3",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ownership-transfer-receipt/proof.json"
+            },
+            {
+              "batch": "release-0.5-action-contrast",
+              "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json"
             }
           ]
         },
@@ -589403,7 +589722,8 @@
           "release-0.5-essential-control-contrast",
           "release-0.5-consultation-staff-command-receipts",
           "release-0.5-saving-conditional-agreement",
-          "release-0.5-ownership-transfer-receipt"
+          "release-0.5-ownership-transfer-receipt",
+          "release-0.5-action-contrast"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -589891,7 +590211,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "8ec7669175de7e5474b96c34b6282fca07cf4c7edf0b95a603fd38e88db1ee8e"
+              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
             },
             {
               "path": "apps/web/src/pages/AdminGeographyDialog.tsx",
@@ -591095,6 +591415,11 @@
               "batch": "release-0.5-ownership-transfer-receipt",
               "base_commit": "62d119ac5a90125645f8d4fa24c858fc9df096b3",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ownership-transfer-receipt/proof.json"
+            },
+            {
+              "batch": "release-0.5-action-contrast",
+              "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json"
             }
           ]
         },
@@ -591182,7 +591507,8 @@
           "release-0.5-essential-control-contrast",
           "release-0.5-consultation-staff-command-receipts",
           "release-0.5-saving-conditional-agreement",
-          "release-0.5-ownership-transfer-receipt"
+          "release-0.5-ownership-transfer-receipt",
+          "release-0.5-action-contrast"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -591670,7 +591996,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "8ec7669175de7e5474b96c34b6282fca07cf4c7edf0b95a603fd38e88db1ee8e"
+              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
             },
             {
               "path": "apps/web/src/pages/AdminGeographyDialog.tsx",
@@ -592874,6 +593200,11 @@
               "batch": "release-0.5-ownership-transfer-receipt",
               "base_commit": "62d119ac5a90125645f8d4fa24c858fc9df096b3",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ownership-transfer-receipt/proof.json"
+            },
+            {
+              "batch": "release-0.5-action-contrast",
+              "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json"
             }
           ]
         },
@@ -592961,7 +593292,8 @@
           "release-0.5-essential-control-contrast",
           "release-0.5-consultation-staff-command-receipts",
           "release-0.5-saving-conditional-agreement",
-          "release-0.5-ownership-transfer-receipt"
+          "release-0.5-ownership-transfer-receipt",
+          "release-0.5-action-contrast"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -593449,7 +593781,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "8ec7669175de7e5474b96c34b6282fca07cf4c7edf0b95a603fd38e88db1ee8e"
+              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
             },
             {
               "path": "apps/web/src/pages/AdminGeographyDialog.tsx",
@@ -594653,6 +594985,11 @@
               "batch": "release-0.5-ownership-transfer-receipt",
               "base_commit": "62d119ac5a90125645f8d4fa24c858fc9df096b3",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ownership-transfer-receipt/proof.json"
+            },
+            {
+              "batch": "release-0.5-action-contrast",
+              "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json"
             }
           ]
         },
@@ -594740,7 +595077,8 @@
           "release-0.5-essential-control-contrast",
           "release-0.5-consultation-staff-command-receipts",
           "release-0.5-saving-conditional-agreement",
-          "release-0.5-ownership-transfer-receipt"
+          "release-0.5-ownership-transfer-receipt",
+          "release-0.5-action-contrast"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -595228,7 +595566,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "8ec7669175de7e5474b96c34b6282fca07cf4c7edf0b95a603fd38e88db1ee8e"
+              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
             },
             {
               "path": "apps/web/src/pages/AdminGeographyDialog.tsx",
@@ -596432,6 +596770,11 @@
               "batch": "release-0.5-ownership-transfer-receipt",
               "base_commit": "62d119ac5a90125645f8d4fa24c858fc9df096b3",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ownership-transfer-receipt/proof.json"
+            },
+            {
+              "batch": "release-0.5-action-contrast",
+              "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json"
             }
           ]
         },
@@ -596519,7 +596862,8 @@
           "release-0.5-essential-control-contrast",
           "release-0.5-consultation-staff-command-receipts",
           "release-0.5-saving-conditional-agreement",
-          "release-0.5-ownership-transfer-receipt"
+          "release-0.5-ownership-transfer-receipt",
+          "release-0.5-action-contrast"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -597007,7 +597351,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "8ec7669175de7e5474b96c34b6282fca07cf4c7edf0b95a603fd38e88db1ee8e"
+              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
             },
             {
               "path": "apps/web/src/pages/AdminGeographyDialog.tsx",
@@ -598211,6 +598555,11 @@
               "batch": "release-0.5-ownership-transfer-receipt",
               "base_commit": "62d119ac5a90125645f8d4fa24c858fc9df096b3",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ownership-transfer-receipt/proof.json"
+            },
+            {
+              "batch": "release-0.5-action-contrast",
+              "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json"
             }
           ]
         },
@@ -598298,7 +598647,8 @@
           "release-0.5-essential-control-contrast",
           "release-0.5-consultation-staff-command-receipts",
           "release-0.5-saving-conditional-agreement",
-          "release-0.5-ownership-transfer-receipt"
+          "release-0.5-ownership-transfer-receipt",
+          "release-0.5-action-contrast"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -598786,7 +599136,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "8ec7669175de7e5474b96c34b6282fca07cf4c7edf0b95a603fd38e88db1ee8e"
+              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
             },
             {
               "path": "apps/web/src/pages/AdminGeographyDialog.tsx",
@@ -599990,6 +600340,11 @@
               "batch": "release-0.5-ownership-transfer-receipt",
               "base_commit": "62d119ac5a90125645f8d4fa24c858fc9df096b3",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ownership-transfer-receipt/proof.json"
+            },
+            {
+              "batch": "release-0.5-action-contrast",
+              "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json"
             }
           ]
         },
@@ -600077,7 +600432,8 @@
           "release-0.5-essential-control-contrast",
           "release-0.5-consultation-staff-command-receipts",
           "release-0.5-saving-conditional-agreement",
-          "release-0.5-ownership-transfer-receipt"
+          "release-0.5-ownership-transfer-receipt",
+          "release-0.5-action-contrast"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -600565,7 +600921,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "8ec7669175de7e5474b96c34b6282fca07cf4c7edf0b95a603fd38e88db1ee8e"
+              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
             },
             {
               "path": "apps/web/src/pages/AdminGeographyDialog.tsx",
@@ -601769,6 +602125,11 @@
               "batch": "release-0.5-ownership-transfer-receipt",
               "base_commit": "62d119ac5a90125645f8d4fa24c858fc9df096b3",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ownership-transfer-receipt/proof.json"
+            },
+            {
+              "batch": "release-0.5-action-contrast",
+              "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json"
             }
           ]
         },
@@ -627610,7 +627971,8 @@
           "release-0.5-essential-control-contrast",
           "release-0.5-consultation-staff-command-receipts",
           "release-0.5-saving-conditional-agreement",
-          "release-0.5-ownership-transfer-receipt"
+          "release-0.5-ownership-transfer-receipt",
+          "release-0.5-action-contrast"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -627930,7 +628292,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "8ec7669175de7e5474b96c34b6282fca07cf4c7edf0b95a603fd38e88db1ee8e"
+              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
@@ -628038,7 +628400,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
-              "sha256": "6ca86608049095b742467033fbb3151dc70186012664ffac95dda46f31dbddec"
+              "sha256": "0a50d25798f2695c3507a06367c1fccd9777e3fc8a1ca20feaef955d8235aba2"
             },
             {
               "path": "apps/web/src/pages/SolarRequestsPage.tsx",
@@ -628640,6 +629002,11 @@
               "batch": "release-0.5-ownership-transfer-receipt",
               "base_commit": "62d119ac5a90125645f8d4fa24c858fc9df096b3",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ownership-transfer-receipt/proof.json"
+            },
+            {
+              "batch": "release-0.5-action-contrast",
+              "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json"
             }
           ]
         }
@@ -628716,7 +629083,8 @@
           "release-0.5-essential-control-contrast",
           "release-0.5-consultation-staff-command-receipts",
           "release-0.5-saving-conditional-agreement",
-          "release-0.5-ownership-transfer-receipt"
+          "release-0.5-ownership-transfer-receipt",
+          "release-0.5-action-contrast"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -629036,7 +629404,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "8ec7669175de7e5474b96c34b6282fca07cf4c7edf0b95a603fd38e88db1ee8e"
+              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
@@ -629144,7 +629512,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
-              "sha256": "6ca86608049095b742467033fbb3151dc70186012664ffac95dda46f31dbddec"
+              "sha256": "0a50d25798f2695c3507a06367c1fccd9777e3fc8a1ca20feaef955d8235aba2"
             },
             {
               "path": "apps/web/src/pages/SolarRequestsPage.tsx",
@@ -629746,6 +630114,11 @@
               "batch": "release-0.5-ownership-transfer-receipt",
               "base_commit": "62d119ac5a90125645f8d4fa24c858fc9df096b3",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ownership-transfer-receipt/proof.json"
+            },
+            {
+              "batch": "release-0.5-action-contrast",
+              "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json"
             }
           ]
         }
@@ -629822,7 +630195,8 @@
           "release-0.5-essential-control-contrast",
           "release-0.5-consultation-staff-command-receipts",
           "release-0.5-saving-conditional-agreement",
-          "release-0.5-ownership-transfer-receipt"
+          "release-0.5-ownership-transfer-receipt",
+          "release-0.5-action-contrast"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -630142,7 +630516,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "8ec7669175de7e5474b96c34b6282fca07cf4c7edf0b95a603fd38e88db1ee8e"
+              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
@@ -630250,7 +630624,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
-              "sha256": "6ca86608049095b742467033fbb3151dc70186012664ffac95dda46f31dbddec"
+              "sha256": "0a50d25798f2695c3507a06367c1fccd9777e3fc8a1ca20feaef955d8235aba2"
             },
             {
               "path": "apps/web/src/pages/SolarRequestsPage.tsx",
@@ -630852,6 +631226,11 @@
               "batch": "release-0.5-ownership-transfer-receipt",
               "base_commit": "62d119ac5a90125645f8d4fa24c858fc9df096b3",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ownership-transfer-receipt/proof.json"
+            },
+            {
+              "batch": "release-0.5-action-contrast",
+              "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json"
             }
           ]
         }
@@ -630931,7 +631310,8 @@
           "release-0.5-essential-control-contrast",
           "release-0.5-consultation-staff-command-receipts",
           "release-0.5-saving-conditional-agreement",
-          "release-0.5-ownership-transfer-receipt"
+          "release-0.5-ownership-transfer-receipt",
+          "release-0.5-action-contrast"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -631251,7 +631631,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "8ec7669175de7e5474b96c34b6282fca07cf4c7edf0b95a603fd38e88db1ee8e"
+              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
@@ -631359,7 +631739,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
-              "sha256": "6ca86608049095b742467033fbb3151dc70186012664ffac95dda46f31dbddec"
+              "sha256": "0a50d25798f2695c3507a06367c1fccd9777e3fc8a1ca20feaef955d8235aba2"
             },
             {
               "path": "apps/web/src/pages/SolarRequestsPage.tsx",
@@ -631961,6 +632341,11 @@
               "batch": "release-0.5-ownership-transfer-receipt",
               "base_commit": "62d119ac5a90125645f8d4fa24c858fc9df096b3",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ownership-transfer-receipt/proof.json"
+            },
+            {
+              "batch": "release-0.5-action-contrast",
+              "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json"
             }
           ]
         }
@@ -632040,7 +632425,8 @@
           "release-0.5-essential-control-contrast",
           "release-0.5-consultation-staff-command-receipts",
           "release-0.5-saving-conditional-agreement",
-          "release-0.5-ownership-transfer-receipt"
+          "release-0.5-ownership-transfer-receipt",
+          "release-0.5-action-contrast"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -632360,7 +632746,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "8ec7669175de7e5474b96c34b6282fca07cf4c7edf0b95a603fd38e88db1ee8e"
+              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
@@ -632468,7 +632854,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
-              "sha256": "6ca86608049095b742467033fbb3151dc70186012664ffac95dda46f31dbddec"
+              "sha256": "0a50d25798f2695c3507a06367c1fccd9777e3fc8a1ca20feaef955d8235aba2"
             },
             {
               "path": "apps/web/src/pages/SolarRequestsPage.tsx",
@@ -633070,6 +633456,11 @@
               "batch": "release-0.5-ownership-transfer-receipt",
               "base_commit": "62d119ac5a90125645f8d4fa24c858fc9df096b3",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ownership-transfer-receipt/proof.json"
+            },
+            {
+              "batch": "release-0.5-action-contrast",
+              "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json"
             }
           ]
         }
@@ -633176,7 +633567,8 @@
           "release-0.5-essential-control-contrast",
           "release-0.5-consultation-staff-command-receipts",
           "release-0.5-saving-conditional-agreement",
-          "release-0.5-ownership-transfer-receipt"
+          "release-0.5-ownership-transfer-receipt",
+          "release-0.5-action-contrast"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -633496,7 +633888,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "8ec7669175de7e5474b96c34b6282fca07cf4c7edf0b95a603fd38e88db1ee8e"
+              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
@@ -633604,7 +633996,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
-              "sha256": "6ca86608049095b742467033fbb3151dc70186012664ffac95dda46f31dbddec"
+              "sha256": "0a50d25798f2695c3507a06367c1fccd9777e3fc8a1ca20feaef955d8235aba2"
             },
             {
               "path": "apps/web/src/pages/SolarRequestsPage.tsx",
@@ -634206,6 +634598,11 @@
               "batch": "release-0.5-ownership-transfer-receipt",
               "base_commit": "62d119ac5a90125645f8d4fa24c858fc9df096b3",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ownership-transfer-receipt/proof.json"
+            },
+            {
+              "batch": "release-0.5-action-contrast",
+              "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json"
             }
           ]
         }
@@ -634281,7 +634678,8 @@
           "release-0.5-essential-control-contrast",
           "release-0.5-consultation-staff-command-receipts",
           "release-0.5-saving-conditional-agreement",
-          "release-0.5-ownership-transfer-receipt"
+          "release-0.5-ownership-transfer-receipt",
+          "release-0.5-action-contrast"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -634601,7 +634999,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "8ec7669175de7e5474b96c34b6282fca07cf4c7edf0b95a603fd38e88db1ee8e"
+              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
@@ -634709,7 +635107,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
-              "sha256": "6ca86608049095b742467033fbb3151dc70186012664ffac95dda46f31dbddec"
+              "sha256": "0a50d25798f2695c3507a06367c1fccd9777e3fc8a1ca20feaef955d8235aba2"
             },
             {
               "path": "apps/web/src/pages/SolarRequestsPage.tsx",
@@ -635311,6 +635709,11 @@
               "batch": "release-0.5-ownership-transfer-receipt",
               "base_commit": "62d119ac5a90125645f8d4fa24c858fc9df096b3",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ownership-transfer-receipt/proof.json"
+            },
+            {
+              "batch": "release-0.5-action-contrast",
+              "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json"
             }
           ]
         }
@@ -635386,7 +635789,8 @@
           "release-0.5-essential-control-contrast",
           "release-0.5-consultation-staff-command-receipts",
           "release-0.5-saving-conditional-agreement",
-          "release-0.5-ownership-transfer-receipt"
+          "release-0.5-ownership-transfer-receipt",
+          "release-0.5-action-contrast"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -635706,7 +636110,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "8ec7669175de7e5474b96c34b6282fca07cf4c7edf0b95a603fd38e88db1ee8e"
+              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
@@ -635814,7 +636218,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
-              "sha256": "6ca86608049095b742467033fbb3151dc70186012664ffac95dda46f31dbddec"
+              "sha256": "0a50d25798f2695c3507a06367c1fccd9777e3fc8a1ca20feaef955d8235aba2"
             },
             {
               "path": "apps/web/src/pages/SolarRequestsPage.tsx",
@@ -636416,6 +636820,11 @@
               "batch": "release-0.5-ownership-transfer-receipt",
               "base_commit": "62d119ac5a90125645f8d4fa24c858fc9df096b3",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ownership-transfer-receipt/proof.json"
+            },
+            {
+              "batch": "release-0.5-action-contrast",
+              "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json"
             }
           ]
         }
@@ -636492,7 +636901,8 @@
           "release-0.5-essential-control-contrast",
           "release-0.5-consultation-staff-command-receipts",
           "release-0.5-saving-conditional-agreement",
-          "release-0.5-ownership-transfer-receipt"
+          "release-0.5-ownership-transfer-receipt",
+          "release-0.5-action-contrast"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -636812,7 +637222,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "8ec7669175de7e5474b96c34b6282fca07cf4c7edf0b95a603fd38e88db1ee8e"
+              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
@@ -636920,7 +637330,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
-              "sha256": "6ca86608049095b742467033fbb3151dc70186012664ffac95dda46f31dbddec"
+              "sha256": "0a50d25798f2695c3507a06367c1fccd9777e3fc8a1ca20feaef955d8235aba2"
             },
             {
               "path": "apps/web/src/pages/SolarRequestsPage.tsx",
@@ -637522,6 +637932,11 @@
               "batch": "release-0.5-ownership-transfer-receipt",
               "base_commit": "62d119ac5a90125645f8d4fa24c858fc9df096b3",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ownership-transfer-receipt/proof.json"
+            },
+            {
+              "batch": "release-0.5-action-contrast",
+              "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json"
             }
           ]
         }
@@ -637616,7 +638031,8 @@
           "release-0.5-essential-control-contrast",
           "release-0.5-consultation-staff-command-receipts",
           "release-0.5-saving-conditional-agreement",
-          "release-0.5-ownership-transfer-receipt"
+          "release-0.5-ownership-transfer-receipt",
+          "release-0.5-action-contrast"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -637936,7 +638352,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "8ec7669175de7e5474b96c34b6282fca07cf4c7edf0b95a603fd38e88db1ee8e"
+              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
@@ -638044,7 +638460,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
-              "sha256": "6ca86608049095b742467033fbb3151dc70186012664ffac95dda46f31dbddec"
+              "sha256": "0a50d25798f2695c3507a06367c1fccd9777e3fc8a1ca20feaef955d8235aba2"
             },
             {
               "path": "apps/web/src/pages/SolarRequestsPage.tsx",
@@ -638646,6 +639062,11 @@
               "batch": "release-0.5-ownership-transfer-receipt",
               "base_commit": "62d119ac5a90125645f8d4fa24c858fc9df096b3",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ownership-transfer-receipt/proof.json"
+            },
+            {
+              "batch": "release-0.5-action-contrast",
+              "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json"
             }
           ]
         }
@@ -638723,7 +639144,8 @@
           "release-0.5-essential-control-contrast",
           "release-0.5-consultation-staff-command-receipts",
           "release-0.5-saving-conditional-agreement",
-          "release-0.5-ownership-transfer-receipt"
+          "release-0.5-ownership-transfer-receipt",
+          "release-0.5-action-contrast"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -639043,7 +639465,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "8ec7669175de7e5474b96c34b6282fca07cf4c7edf0b95a603fd38e88db1ee8e"
+              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
@@ -639151,7 +639573,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
-              "sha256": "6ca86608049095b742467033fbb3151dc70186012664ffac95dda46f31dbddec"
+              "sha256": "0a50d25798f2695c3507a06367c1fccd9777e3fc8a1ca20feaef955d8235aba2"
             },
             {
               "path": "apps/web/src/pages/SolarRequestsPage.tsx",
@@ -639753,6 +640175,11 @@
               "batch": "release-0.5-ownership-transfer-receipt",
               "base_commit": "62d119ac5a90125645f8d4fa24c858fc9df096b3",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ownership-transfer-receipt/proof.json"
+            },
+            {
+              "batch": "release-0.5-action-contrast",
+              "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json"
             }
           ]
         }
@@ -669983,7 +670410,8 @@
           "release-0.5-essential-control-contrast",
           "release-0.5-consultation-staff-command-receipts",
           "release-0.5-saving-conditional-agreement",
-          "release-0.5-ownership-transfer-receipt"
+          "release-0.5-ownership-transfer-receipt",
+          "release-0.5-action-contrast"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -670303,7 +670731,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "8ec7669175de7e5474b96c34b6282fca07cf4c7edf0b95a603fd38e88db1ee8e"
+              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
@@ -670411,7 +670839,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
-              "sha256": "6ca86608049095b742467033fbb3151dc70186012664ffac95dda46f31dbddec"
+              "sha256": "0a50d25798f2695c3507a06367c1fccd9777e3fc8a1ca20feaef955d8235aba2"
             },
             {
               "path": "apps/web/src/pages/SolarRequestsPage.tsx",
@@ -671013,6 +671441,11 @@
               "batch": "release-0.5-ownership-transfer-receipt",
               "base_commit": "62d119ac5a90125645f8d4fa24c858fc9df096b3",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ownership-transfer-receipt/proof.json"
+            },
+            {
+              "batch": "release-0.5-action-contrast",
+              "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json"
             }
           ]
         }
@@ -671087,7 +671520,8 @@
           "release-0.5-essential-control-contrast",
           "release-0.5-consultation-staff-command-receipts",
           "release-0.5-saving-conditional-agreement",
-          "release-0.5-ownership-transfer-receipt"
+          "release-0.5-ownership-transfer-receipt",
+          "release-0.5-action-contrast"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -671407,7 +671841,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "8ec7669175de7e5474b96c34b6282fca07cf4c7edf0b95a603fd38e88db1ee8e"
+              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
@@ -671515,7 +671949,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
-              "sha256": "6ca86608049095b742467033fbb3151dc70186012664ffac95dda46f31dbddec"
+              "sha256": "0a50d25798f2695c3507a06367c1fccd9777e3fc8a1ca20feaef955d8235aba2"
             },
             {
               "path": "apps/web/src/pages/SolarRequestsPage.tsx",
@@ -672117,6 +672551,11 @@
               "batch": "release-0.5-ownership-transfer-receipt",
               "base_commit": "62d119ac5a90125645f8d4fa24c858fc9df096b3",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ownership-transfer-receipt/proof.json"
+            },
+            {
+              "batch": "release-0.5-action-contrast",
+              "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json"
             }
           ]
         }
@@ -672191,7 +672630,8 @@
           "release-0.5-essential-control-contrast",
           "release-0.5-consultation-staff-command-receipts",
           "release-0.5-saving-conditional-agreement",
-          "release-0.5-ownership-transfer-receipt"
+          "release-0.5-ownership-transfer-receipt",
+          "release-0.5-action-contrast"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -672511,7 +672951,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "8ec7669175de7e5474b96c34b6282fca07cf4c7edf0b95a603fd38e88db1ee8e"
+              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
@@ -672619,7 +673059,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
-              "sha256": "6ca86608049095b742467033fbb3151dc70186012664ffac95dda46f31dbddec"
+              "sha256": "0a50d25798f2695c3507a06367c1fccd9777e3fc8a1ca20feaef955d8235aba2"
             },
             {
               "path": "apps/web/src/pages/SolarRequestsPage.tsx",
@@ -673221,6 +673661,11 @@
               "batch": "release-0.5-ownership-transfer-receipt",
               "base_commit": "62d119ac5a90125645f8d4fa24c858fc9df096b3",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ownership-transfer-receipt/proof.json"
+            },
+            {
+              "batch": "release-0.5-action-contrast",
+              "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json"
             }
           ]
         }
@@ -673295,7 +673740,8 @@
           "release-0.5-essential-control-contrast",
           "release-0.5-consultation-staff-command-receipts",
           "release-0.5-saving-conditional-agreement",
-          "release-0.5-ownership-transfer-receipt"
+          "release-0.5-ownership-transfer-receipt",
+          "release-0.5-action-contrast"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -673615,7 +674061,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "8ec7669175de7e5474b96c34b6282fca07cf4c7edf0b95a603fd38e88db1ee8e"
+              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
@@ -673723,7 +674169,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
-              "sha256": "6ca86608049095b742467033fbb3151dc70186012664ffac95dda46f31dbddec"
+              "sha256": "0a50d25798f2695c3507a06367c1fccd9777e3fc8a1ca20feaef955d8235aba2"
             },
             {
               "path": "apps/web/src/pages/SolarRequestsPage.tsx",
@@ -674325,6 +674771,11 @@
               "batch": "release-0.5-ownership-transfer-receipt",
               "base_commit": "62d119ac5a90125645f8d4fa24c858fc9df096b3",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ownership-transfer-receipt/proof.json"
+            },
+            {
+              "batch": "release-0.5-action-contrast",
+              "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json"
             }
           ]
         }
@@ -693601,7 +694052,8 @@
           "release-0.5-staff-lists-and-receipts",
           "release-0.5-form-and-document-accessibility",
           "release-0.5-protected-contract-and-finance",
-          "release-0.5-route-census-closure"
+          "release-0.5-route-census-closure",
+          "release-0.5-action-contrast"
         ],
         "current_acceptance": {
           "kind": "verified-admin-settings-adoption",
@@ -693649,7 +694101,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "8ec7669175de7e5474b96c34b6282fca07cf4c7edf0b95a603fd38e88db1ee8e"
+              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -693716,6 +694168,11 @@
               "batch": "release-0.5-route-census-closure",
               "base_commit": "054e9d662b3f017f4ba07154000ef26ad167ae29",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-census-closure/route-census-proof.json"
+            },
+            {
+              "batch": "release-0.5-action-contrast",
+              "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json"
             }
           ]
         }
@@ -694495,7 +694952,8 @@
           "release-0.5-forms-confirmation-journey",
           "release-0.5-form-and-document-accessibility",
           "release-0.5-coverage-remaining-branches",
-          "release-0.5-route-census-closure"
+          "release-0.5-route-census-closure",
+          "release-0.5-action-contrast"
         ],
         "current_acceptance": {
           "kind": "accepted-admin-communications-ai-ui",
@@ -694519,7 +694977,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "8ec7669175de7e5474b96c34b6282fca07cf4c7edf0b95a603fd38e88db1ee8e"
+              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
             },
             {
               "path": "apps/web/src/pages/delivery-provider-recovery.test.tsx",
@@ -694568,6 +695026,11 @@
               "batch": "release-0.5-route-census-closure",
               "base_commit": "054e9d662b3f017f4ba07154000ef26ad167ae29",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-census-closure/route-census-proof.json"
+            },
+            {
+              "batch": "release-0.5-action-contrast",
+              "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json"
             }
           ]
         }
@@ -710906,7 +711369,7 @@
             },
             {
               "path": "apps/web/e2e/email-customer-corrections.spec.ts",
-              "sha256": "02353d586ba5fd6ba324d6a5b57420f5c13de4abed9550f1890eaeadebfd327e"
+              "sha256": "8090689baa0a979cdbe751852c2b3da0cda737e9bdd7c67b1f06ba5bbfb565ca"
             },
             {
               "path": "apps/web/e2e/email-provider-recovery.spec.ts",
@@ -711458,7 +711921,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "8ec7669175de7e5474b96c34b6282fca07cf4c7edf0b95a603fd38e88db1ee8e"
+              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
             },
             {
               "path": "apps/web/src/pages/AdminFailedNotificationsPage.tsx",
@@ -713514,6 +713977,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-action-contrast",
+              "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json"
             }
           ]
         },
@@ -713556,7 +714024,8 @@
           "release-0.5-ai-tab-intrinsic-widths",
           "release-0.5-responsive-width-acceptance",
           "release-0.5-conditional-native-choices",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-action-contrast"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -714769,7 +715238,7 @@
             },
             {
               "path": "apps/web/e2e/email-customer-corrections.spec.ts",
-              "sha256": "02353d586ba5fd6ba324d6a5b57420f5c13de4abed9550f1890eaeadebfd327e"
+              "sha256": "8090689baa0a979cdbe751852c2b3da0cda737e9bdd7c67b1f06ba5bbfb565ca"
             },
             {
               "path": "apps/web/e2e/email-provider-recovery.spec.ts",
@@ -715305,7 +715774,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-              "sha256": "8ec7669175de7e5474b96c34b6282fca07cf4c7edf0b95a603fd38e88db1ee8e"
+              "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
             },
             {
               "path": "apps/web/src/pages/AdminFailedNotificationsPage.tsx",
@@ -717247,6 +717716,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-action-contrast",
+              "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json"
             }
           ]
         },
@@ -717306,7 +717780,8 @@
           "release-0.5-ai-tab-intrinsic-widths",
           "release-0.5-responsive-width-acceptance",
           "release-0.5-conditional-native-choices",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-action-contrast"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -717482,7 +717957,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "The team workspace requires the existing typed and step-up safeguards for exact transfer targets. It shows a confirmed result only after the transfer receipt and holds retry through a pending or unconfirmed read. Prior shared router and service evidence remains recorded. Remaining conditional UI and command adoption are open."
+        "Saving catalogue and email-provider states now retain text contrast for conditional availability and action hover. The correction lifecycle test matches the exact localized success notice during its independent refresh. Prior command and route evidence remains recorded. Remaining conditional UI and command adoption are open."
       ],
       "owner": null,
       "depends_on": [],
@@ -717542,7 +718017,8 @@
           "release-0.5-saving-conditional-agreement",
           "release-0.5-solar-guidance-ready",
           "release-0.5-stale-route-recovery",
-          "release-0.5-ownership-transfer-receipt"
+          "release-0.5-ownership-transfer-receipt",
+          "release-0.5-action-contrast"
         ]
       }
     },
@@ -717561,7 +718037,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "The ownership transfer batch passed 20 production Chromium/mobile Safari cases, 68 affected web unit cases and all 98 bundle limits. Official combined coverage remains bound to dd9c6d87. Final candidate coverage and remaining accessibility gates are open."
+        "The action contrast batch passed 32 production Chromium/mobile Safari cases, 432 affected web unit cases and all 98 bundle limits. The preceding a60f978b pilot passed 5,306 web, 174 UI and 130 i18n units and mapped 107 browser cases across the successful groups. Its separate correction selector failure is repaired and retested. Full official coverage remains bound to dd9c6d87, pending exact release-candidate coverage and remaining accessibility gates."
       ],
       "owner": null,
       "depends_on": [],
@@ -717623,7 +718099,8 @@
           "release-0.5-saving-conditional-agreement",
           "release-0.5-solar-guidance-ready",
           "release-0.5-stale-route-recovery",
-          "release-0.5-ownership-transfer-receipt"
+          "release-0.5-ownership-transfer-receipt",
+          "release-0.5-action-contrast"
         ]
       }
     },
@@ -780170,6 +780647,135 @@
       ],
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ownership-transfer-receipt",
       "release_disposition": "Ownership command receipts verified. Other conditional criteria, owner decisions and final candidate gates remain open."
+    },
+    "release-0.5-action-contrast": {
+      "batch": "release-0.5-action-contrast",
+      "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.05.01.08",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "accepted_task_keys": [],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.05.01.08",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/consumer-theme.spec.ts",
+          "sha256": "41edf8cca123d3f0dd3beeaf2e21c76788747ed5140015ee7f153d07d9e5af7b"
+        },
+        {
+          "path": "apps/web/e2e/control-contrast.ts",
+          "sha256": "0ee1e3772bb0a7d7071b67d53dc52bba6d1d09a7871cb5bd99b238ef924b4cb9"
+        },
+        {
+          "path": "apps/web/e2e/email-customer-corrections.spec.ts",
+          "sha256": "8090689baa0a979cdbe751852c2b3da0cda737e9bdd7c67b1f06ba5bbfb565ca"
+        },
+        {
+          "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
+          "sha256": "a424d259b4f2015ca5cdb74e17a16415803311ce177bccb3b51488caaf9da13d"
+        },
+        {
+          "path": "apps/web/src/pages/SavingsPage.tsx",
+          "sha256": "0a50d25798f2695c3507a06367c1fccd9777e3fc8a1ca20feaef955d8235aba2"
+        }
+      ],
+      "checks": [
+        "Measured saving and email provider hover defects reproduce at allowed boundary colors in Chromium and desktop WebKit. All 36 direct text contrast measurements reach 4.5:1 after the repair. Unavailable plans still cannot start orders.",
+        "Eight bilingual production-browser cases verify the saving and provider states in light, dark and high contrast. Affected saving, provider and correction journeys remain green. The correction check requires the exact localized confirmation while the read reloads.",
+        "32 browser cases, 432 targeted web unit cases, typecheck, lint, formatting, production build and all 98 gzip limits passed."
+      ],
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json",
+      "source_scope_proof_sha256": "3e8ba0e3d47528077a85864874de4e56cbfab79ef9dcb9f1f3c8587b5293168a",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/reviewed.patch",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/renewed-bindings.json",
+      "renewed_task_keys": [
+        "02-auth-users-admin.md#T-03.03.06",
+        "02-auth-users-admin.md#T-09.01.02",
+        "02-auth-users-admin.md#T-09.04.01",
+        "02-auth-users-admin.md#T-09.06.01",
+        "05-notifications-documents-ai.md#T-05.04.01",
+        "05-notifications-documents-ai.md#T-05.04.02",
+        "05-notifications-documents-ai.md#T-05.04.03",
+        "05-notifications-documents-ai.md#T-05.04.04",
+        "05-notifications-documents-ai.md#T-05.04.05",
+        "05-notifications-documents-ai.md#T-05.06.01",
+        "05-notifications-documents-ai.md#T-05.06.02",
+        "05-notifications-documents-ai.md#T-05.06.03",
+        "05-notifications-documents-ai.md#T-05.06.04",
+        "05-notifications-documents-ai.md#T-05.06.05",
+        "05-notifications-documents-ai.md#T-05.06.06",
+        "05-notifications-documents-ai.md#T-05.06.07",
+        "05-notifications-documents-ai.md#T-05.08.02",
+        "07-ui-ux-design.md#T-07.01.03.19",
+        "07-ui-ux-design.md#T-07.01.04.02",
+        "07-ui-ux-design.md#T-07.01.04.03",
+        "07-ui-ux-design.md#T-07.01.04.04",
+        "07-ui-ux-design.md#T-07.02.01.01",
+        "07-ui-ux-design.md#T-07.02.01.02",
+        "07-ui-ux-design.md#T-07.02.01.03",
+        "07-ui-ux-design.md#T-07.02.01.04",
+        "07-ui-ux-design.md#T-07.02.01.05",
+        "07-ui-ux-design.md#T-07.02.01.06",
+        "07-ui-ux-design.md#T-07.02.01.07",
+        "07-ui-ux-design.md#T-07.02.02.01",
+        "07-ui-ux-design.md#T-07.02.02.02",
+        "07-ui-ux-design.md#T-07.02.02.03",
+        "07-ui-ux-design.md#T-07.02.02.04",
+        "07-ui-ux-design.md#T-07.03.01.01",
+        "07-ui-ux-design.md#T-07.03.01.02",
+        "07-ui-ux-design.md#T-07.03.01.03",
+        "07-ui-ux-design.md#T-07.04.01.05",
+        "07-ui-ux-design.md#T-07.05.01.06",
+        "07-ui-ux-design.md#T-07.05.01.10",
+        "07-ui-ux-design.md#T-07.05.01.11",
+        "07-ui-ux-design.md#T-07.05.02.01",
+        "07-ui-ux-design.md#T-07.05.02.02",
+        "07-ui-ux-design.md#T-07.05.02.03",
+        "07-ui-ux-design.md#T-07.10.01.01",
+        "07-ui-ux-design.md#T-07.10.01.02",
+        "07-ui-ux-design.md#T-07.10.01.03",
+        "07-ui-ux-design.md#T-07.10.01.04",
+        "07-ui-ux-design.md#T-07.10.01.05",
+        "07-ui-ux-design.md#T-07.10.01.06",
+        "07-ui-ux-design.md#T-07.10.02.01",
+        "07-ui-ux-design.md#T-07.10.02.02",
+        "07-ui-ux-design.md#T-07.10.02.03",
+        "07-ui-ux-design.md#T-07.10.02.04",
+        "07-ui-ux-design.md#T-07.10.02.05",
+        "07-ui-ux-design.md#T-07.13.01.01",
+        "07-ui-ux-design.md#T-07.13.01.02",
+        "07-ui-ux-design.md#T-07.13.01.03",
+        "07-ui-ux-design.md#T-07.13.01.04",
+        "07-ui-ux-design.md#T-07.13.01.05",
+        "07-ui-ux-design.md#T-07.13.01.06",
+        "07-ui-ux-design.md#T-07.13.01.07",
+        "07-ui-ux-design.md#T-07.18.01.01",
+        "07-ui-ux-design.md#T-07.18.01.02",
+        "07-ui-ux-design.md#T-07.18.01.03",
+        "07-ui-ux-design.md#T-07.18.01.04",
+        "07-ui-ux-design.md#T-07.18.01.05",
+        "07-ui-ux-design.md#T-07.18.01.06",
+        "07-ui-ux-design.md#T-07.18.02.01",
+        "07-ui-ux-design.md#T-07.18.02.02",
+        "07-ui-ux-design.md#T-07.18.02.03",
+        "07-ui-ux-design.md#T-07.18.02.04",
+        "07-ui-ux-design.md#T-07.18.02.05",
+        "07-ui-ux-design.md#T-07.24.01.01",
+        "07-ui-ux-design.md#T-07.24.01.02",
+        "07-ui-ux-design.md#T-07.24.01.03",
+        "07-ui-ux-design.md#T-07.24.01.04",
+        "07-ui-ux-design.md#T-07.30.01.06",
+        "07-ui-ux-design.md#T-07.30.02.06",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02"
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast",
+      "release_disposition": "Scoped contrast and correction evidence renewed. The complete candidate gate, pending decisions and other conditional criteria remain open."
     }
   },
   "historical_improvements": [
