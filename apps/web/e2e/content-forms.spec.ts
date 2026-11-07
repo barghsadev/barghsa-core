@@ -10,9 +10,56 @@ import {
   templateId,
 } from '../src/test/contract-settings-fixtures';
 import AxeBuilder from '@axe-core/playwright';
+import { measureControlContrast } from './control-contrast';
+
 test.use({ viewport: { width: 390, height: 844 } });
 for (const locale of ['en', 'fa'] as const)
   for (const dark of [false, true]) {
+    test(`saved terms links and active formatting stay readable (${locale}, ${dark ? 'dark' : 'light'})`, async ({
+      page,
+    }, info) => {
+      await setupCatalogueForms(page, locale, dark);
+      const text = adminTosText(locale);
+      await page.route('**/api/admin/tos/versions', (route) =>
+        route.fulfill({
+          json: [{ ...termsVersion(), contentEn: '[Barghsa help](https://example.test/help)' }],
+        })
+      );
+      await page.goto('/admin/tos');
+      await expect(page.locator('html')).toHaveClass(dark ? /\bdark\b/ : /^(?!.*\bdark\b)/);
+      await page.getByRole('button', { name: text.edit, exact: true }).click();
+      const editor = page.getByRole('textbox', { name: text.english, exact: true });
+      const link = editor.getByRole('link', { name: 'Barghsa help' });
+      await expect(link).toHaveAttribute('href', 'https://example.test/help');
+      const bold = page
+        .getByRole('group', { name: `${text.english}: ${text.formatting}`, exact: true })
+        .getByRole('button', { name: text.bold, exact: true });
+      await bold.click();
+      await expect(bold).toHaveAttribute('aria-pressed', 'true');
+      const measurements = [];
+      for (const highContrast of [false, true]) {
+        await page.locator('html').evaluate((root, enabled) => {
+          if (enabled) root.dataset.contrast = 'more';
+          else delete root.dataset.contrast;
+        }, highContrast);
+        const linkText = await measureControlContrast(link, 'text');
+        const activeText = await measureControlContrast(bold, 'text');
+        const activeBoundary = await measureControlContrast(bold, 'boundary');
+        measurements.push({ highContrast, linkText, activeText, activeBoundary });
+        expect.soft(linkText, `link, high contrast=${highContrast}`).toBeGreaterThanOrEqual(4.5);
+        expect
+          .soft(activeText, `active formatting text, high contrast=${highContrast}`)
+          .toBeGreaterThanOrEqual(4.5);
+        expect
+          .soft(activeBoundary, `active formatting boundary, high contrast=${highContrast}`)
+          .toBeGreaterThanOrEqual(3);
+      }
+      await info.attach('terms-editor-contrast', {
+        body: JSON.stringify({ locale, dark, measurements }),
+        contentType: 'application/json',
+      });
+    });
+
     test(`content forms link rich-text feedback and preserve content (${locale}, ${dark ? 'dark' : 'light'})`, async ({
       page,
     }, info) => {

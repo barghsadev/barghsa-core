@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-07T23:24:37+00:00",
-  "source_commit": "4aca67dbd94186207ea2487acb58999f0531a1d7",
+  "updated": "2026-11-07T23:34:31+00:00",
+  "source_commit": "3e98734f2bf6cc80de4a3fea20620b63beec165b",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -35547,7 +35547,7 @@
             },
             {
               "path": "apps/web/src/pages/TosRichText.tsx",
-              "sha256": "9b6155fac43f41f2bdc92b96507f04c543204fa3a34322d60f964bf9e618b105"
+              "sha256": "ec5cbb24b8f28dad84e320a6d08f3e3df3e45ba612cc3285463b7e7797901702"
             },
             {
               "path": "apps/web/src/pages/VideosPage.tsx",
@@ -63224,7 +63224,7 @@
             },
             {
               "path": "apps/web/src/pages/TosRichText.tsx",
-              "sha256": "9b6155fac43f41f2bdc92b96507f04c543204fa3a34322d60f964bf9e618b105"
+              "sha256": "ec5cbb24b8f28dad84e320a6d08f3e3df3e45ba612cc3285463b7e7797901702"
             },
             {
               "path": "apps/web/src/pages/VideosPage.tsx",
@@ -63883,7 +63883,7 @@
             },
             {
               "path": "apps/web/e2e/content-forms.spec.ts",
-              "sha256": "2892c1351951036c3651c005e3772b28fc8c03d716dd9cf1363ec7e001cb839b"
+              "sha256": "2e8f52bba09ddab8a0296991cc6ccd536cc5452a1531d37f6404ed0c488c4ff1"
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
@@ -63947,7 +63947,7 @@
             },
             {
               "path": "apps/web/src/pages/TosRichText.tsx",
-              "sha256": "9b6155fac43f41f2bdc92b96507f04c543204fa3a34322d60f964bf9e618b105"
+              "sha256": "ec5cbb24b8f28dad84e320a6d08f3e3df3e45ba612cc3285463b7e7797901702"
             },
             {
               "path": "apps/web/src/pages/admin-tos-text.ts",
@@ -64544,7 +64544,7 @@
             },
             {
               "path": "apps/web/e2e/content-forms.spec.ts",
-              "sha256": "2892c1351951036c3651c005e3772b28fc8c03d716dd9cf1363ec7e001cb839b"
+              "sha256": "2e8f52bba09ddab8a0296991cc6ccd536cc5452a1531d37f6404ed0c488c4ff1"
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
@@ -64608,7 +64608,7 @@
             },
             {
               "path": "apps/web/src/pages/TosRichText.tsx",
-              "sha256": "9b6155fac43f41f2bdc92b96507f04c543204fa3a34322d60f964bf9e618b105"
+              "sha256": "ec5cbb24b8f28dad84e320a6d08f3e3df3e45ba612cc3285463b7e7797901702"
             },
             {
               "path": "apps/web/src/pages/admin-tos-text.ts",
@@ -65204,7 +65204,7 @@
             },
             {
               "path": "apps/web/e2e/content-forms.spec.ts",
-              "sha256": "2892c1351951036c3651c005e3772b28fc8c03d716dd9cf1363ec7e001cb839b"
+              "sha256": "2e8f52bba09ddab8a0296991cc6ccd536cc5452a1531d37f6404ed0c488c4ff1"
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
@@ -65268,7 +65268,7 @@
             },
             {
               "path": "apps/web/src/pages/TosRichText.tsx",
-              "sha256": "9b6155fac43f41f2bdc92b96507f04c543204fa3a34322d60f964bf9e618b105"
+              "sha256": "ec5cbb24b8f28dad84e320a6d08f3e3df3e45ba612cc3285463b7e7797901702"
             },
             {
               "path": "apps/web/src/pages/admin-tos-text.ts",
@@ -65863,7 +65863,7 @@
             },
             {
               "path": "apps/web/e2e/content-forms.spec.ts",
-              "sha256": "2892c1351951036c3651c005e3772b28fc8c03d716dd9cf1363ec7e001cb839b"
+              "sha256": "2e8f52bba09ddab8a0296991cc6ccd536cc5452a1531d37f6404ed0c488c4ff1"
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
@@ -65927,7 +65927,7 @@
             },
             {
               "path": "apps/web/src/pages/TosRichText.tsx",
-              "sha256": "9b6155fac43f41f2bdc92b96507f04c543204fa3a34322d60f964bf9e618b105"
+              "sha256": "ec5cbb24b8f28dad84e320a6d08f3e3df3e45ba612cc3285463b7e7797901702"
             },
             {
               "path": "apps/web/src/pages/admin-tos-text.ts",
@@ -517590,7 +517590,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Saving plan descriptions stay readable while unavailable, and saving and email-provider actions preserve contrast at rest and on hover. The bilingual theme tests include light, dark and high contrast. Direct measurements improved the worst case from 1.60:1 to 4.61:1. Prior route and shared-control evidence remains recorded. Other conditional surfaces and all-combination acceptance are open."
+        "The terms editor saved links, active formatting label and active border now meet their contrast floors in both themes and in high contrast. The current pre-fix route diagnostic observed 15 populated routes and left automated findings where text was partially obscured or overlapped. Complete targeted measurements for those findings and the other route and conditional states before acceptance."
       ],
       "owner": null,
       "depends_on": [],
@@ -517611,7 +517611,8 @@
           "release-0.5-verified-command-rejection",
           "release-0.5-responsive-width-acceptance",
           "release-0.5-essential-control-contrast",
-          "release-0.5-action-contrast"
+          "release-0.5-action-contrast",
+          "release-0.5-route-contrast-matrix"
         ],
         "current_acceptance": null
       }
@@ -700320,7 +700321,7 @@
             },
             {
               "path": "apps/web/src/pages/TosRichText.tsx",
-              "sha256": "9b6155fac43f41f2bdc92b96507f04c543204fa3a34322d60f964bf9e618b105"
+              "sha256": "ec5cbb24b8f28dad84e320a6d08f3e3df3e45ba612cc3285463b7e7797901702"
             },
             {
               "path": "apps/web/src/pages/TosPreview.tsx",
@@ -700340,7 +700341,7 @@
             },
             {
               "path": "apps/web/e2e/content-forms.spec.ts",
-              "sha256": "2892c1351951036c3651c005e3772b28fc8c03d716dd9cf1363ec7e001cb839b"
+              "sha256": "2e8f52bba09ddab8a0296991cc6ccd536cc5452a1531d37f6404ed0c488c4ff1"
             }
           ],
           "checks": [
@@ -723593,7 +723594,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Individual and legal onboarding and the earlier saving and receipt changes have current Chromium and Mobile Safari evidence. Remaining native and conditional forms, contrast, command feedback and route state verification are open."
+        "Current terms-editor link and formatting contrast is verified in Persian and English in both browsers. Remaining native and conditional forms, route contrast, command feedback and route state verification are open."
       ],
       "owner": null,
       "depends_on": [],
@@ -723667,7 +723668,8 @@
           "release-0.5-electricity-address-validation",
           "release-0.5-provider-required-fields",
           "release-0.5-saving-receipt-required",
-          "release-0.5-onboarding-required"
+          "release-0.5-onboarding-required",
+          "release-0.5-route-contrast-matrix"
         ]
       }
     },
@@ -725168,6 +725170,10 @@
             {
               "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.tsx",
               "sha256": "2a0c2e6937dc50e563b066b5c093e205b0ed93038f5073dd8b27253c07a6ac3e"
+            },
+            {
+              "path": "apps/web/src/pages/TosRichText.tsx",
+              "sha256": "ec5cbb24b8f28dad84e320a6d08f3e3df3e45ba612cc3285463b7e7797901702"
             }
           ],
           "checks": [
@@ -725185,7 +725191,8 @@
             "Inline electricity address validation passed current source coverage, production size and cold authentication checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-address-validation/proof.json",
             "Provider form semantics passed current source coverage, production size and cold authentication checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-provider-required-fields/proof.json",
             "Saving and bank receipt form semantics passed current source coverage, production size and cold authentication checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-receipt-required/proof.json",
-            "Individual and legal onboarding form semantics passed current source coverage, production size and cold authentication checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-onboarding-required/proof.json"
+            "Individual and legal onboarding form semantics passed current source coverage, production size and cold authentication checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-onboarding-required/proof.json",
+            "Terms editor contrast passed current source coverage, production size and cold authentication checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-contrast-matrix/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -791376,6 +791383,41 @@
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-onboarding-required/reviewed.patch",
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-onboarding-required",
       "release_disposition": "Individual and legal onboarding form evidence recorded. Other v0.5.0 criteria remain open."
+    },
+    "release-0.5-route-contrast-matrix": {
+      "batch": "release-0.5-route-contrast-matrix",
+      "base_commit": "3e98734f2bf6cc80de4a3fea20620b63beec165b",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.05.01.08",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.05.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/content-forms.spec.ts",
+          "sha256": "2e8f52bba09ddab8a0296991cc6ccd536cc5452a1531d37f6404ed0c488c4ff1"
+        },
+        {
+          "path": "apps/web/src/pages/TosRichText.tsx",
+          "sha256": "ec5cbb24b8f28dad84e320a6d08f3e3df3e45ba612cc3285463b7e7797901702"
+        }
+      ],
+      "checks": [
+        "The saved rich-text terms editor now uses theme text and focus colors and pairs the active formatting fill and label with the accessible focus border. On the old build, dark mode measured 2.14:1 on a saved link and 1.03:1 on the active toolbar label.",
+        "Current minimum contrast measured 12.35:1 for links, 9.78:1 for active toolbar text and 12.35:1 for the active boundary, across both languages, light and dark, with and without high contrast, in Chromium and Mobile Safari.",
+        "The terms and contract form suite passed 20 browser cases and 50 affected unit cases, preserving verified content receipts, validation, field focus and recovery. Eight coverage groups, 98 bundle budgets, three cold authentication transfers, scoped lint, format and typecheck passed.",
+        "A separate pre-fix route diagnostic observed 244 theme samples over 15 populated routes and 79 passing fixture cases. It left 946 automated observations unresolved and one instrumented Persian Mobile Safari touch assertion reported 43.9995 CSS pixels against 44. The unchanged native fixture passed separately. The incomplete samples and unobserved routes require further verification."
+      ],
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-contrast-matrix/proof.json",
+      "source_scope_proof_sha256": "417efd66158b2706ec6f5d425675e3332593f1a7ff410e9b8ae0ec6ee7a9f7a5",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-contrast-matrix/renewed-bindings.json",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-contrast-matrix/reviewed.patch",
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-contrast-matrix",
+      "release_disposition": "Terms editor contrast recorded, with unresolved route observations preserved. Other v0.5.0 criteria remain open."
     }
   },
   "historical_improvements": [

@@ -44,7 +44,7 @@ export default function TosRichText({
         dir: language === 'fa' ? 'rtl' : 'ltr',
         lang: language,
         class:
-          'min-h-48 p-3 outline-none focus-visible:ring-2 focus-visible:ring-blue-600 [&_h2]:text-xl [&_h2]:font-bold [&_p]:my-2 [&_ul]:list-disc [&_ol]:list-decimal [&_ul]:ps-6 [&_ol]:ps-6 [&_blockquote]:border-s-4 [&_blockquote]:ps-3 [&_a]:underline [&_a]:text-blue-700',
+          'min-h-48 p-3 outline-none focus-visible:ring-2 focus-visible:ring-ring [&_h2]:text-xl [&_h2]:font-bold [&_p]:my-2 [&_ul]:list-disc [&_ol]:list-decimal [&_ul]:ps-6 [&_ol]:ps-6 [&_blockquote]:border-s-4 [&_blockquote]:ps-3 [&_a]:underline [&_a]:text-primary',
       },
     },
     onBlur: () => binding?.onBlur(),
@@ -132,7 +132,7 @@ export default function TosRichText({
             aria-pressed={action.active}
             disabled={disabled}
             onClick={action.run}
-            className="rounded border px-2 py-1 text-sm aria-pressed:bg-blue-100 disabled:opacity-50"
+            className="rounded border px-2 py-1 text-sm aria-pressed:border-ring aria-pressed:bg-accent aria-pressed:text-accent-foreground disabled:opacity-50"
           >
             {action.name}
           </button>
