@@ -130,9 +130,16 @@ for (const locale of ['en', 'fa'] as const) {
         expect(Object.fromEntries(target.searchParams)).toEqual(parameters);
       }
       for (const [width, columns] of [
+        [320, 1],
+        [375, 1],
         [390, 1],
+        [414, 1],
+        [768, 2],
         [900, 2],
+        [1024, 2],
+        [1280, 3],
         [1440, 3],
+        [1920, 3],
       ] as const) {
         await page.setViewportSize({ width, height: 1000 });
         await page.evaluate(
@@ -174,6 +181,10 @@ for (const locale of ['en', 'fa'] as const) {
           await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth),
           `Dashboard overflow at ${width}px (${locale}): ${JSON.stringify(overflow)}`
         ).toBe(true);
+        expect(
+          await page.getByRole('main').evaluate((node) => node.scrollWidth - node.clientWidth),
+          `Dashboard content overflow at ${width}px (${locale})`
+        ).toBeLessThanOrEqual(1);
       }
       const accessibility = await new AxeBuilder({ page }).include('main').analyze();
       expect(accessibility.violations).toEqual([]);

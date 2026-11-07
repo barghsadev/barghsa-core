@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-07T04:39:57+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-07T04:50:33+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.4.0**. Next milestone: **v0.5.0**.
 
@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 845 | Accepted with unchanged source bindings. |
-| verify | 493 | Existing work may be complete; inspect evidence before building. |
-| partial | 23 | An earlier review found unmet criteria; reconcile later fixes. |
+| done | 849 | Accepted with unchanged source bindings. |
+| verify | 485 | Existing work may be complete; inspect evidence before building. |
+| partial | 27 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 7 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
 | blocked | 1 | Named owner or external prerequisite. |
@@ -39,16 +39,12 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Verify the existing RTL/LTR, responsive primitives, breakpoints, mobile list presentation and touch targets. Reuse the source-bound route and component evidence; fix demonstrated gaps and keep the original accessibility and performance gates. Continue v0.5.0 and leave remaining command feedback visible.
+Complete responsive record views and measured touch hit areas, then bind the populated route and component layout matrix. Reuse existing table/card and route evidence; target demonstrated gaps and preserve all financial controls and original budgets.
 
-- `07-ui-ux-design.md#T-07.03.01.07`: Test every component and page in both RTL and LTR modes. Persian Lorem ipsum (`لورم ایپسوم`) should render correctly in all containers. Verify no text overflow, clipped content, or misaligned elements.
-- `07-ui-ux-design.md#T-07.04.01.01`: Define Tailwind breakpoints: `xs: 375px`, `sm: 640px`, `md: 768px`, `lg: 1024px`, `xl: 1280px`, `2xl: 1536px`. Use `mobile-first` (min-width) consistently. Document breakpoint usage conventions.
-- `07-ui-ux-design.md#T-07.04.01.02`: Create `ResponsiveContainer` component: max-width container with responsive padding. `full` on mobile → `container mx-auto` on desktop.
-- `07-ui-ux-design.md#T-07.04.01.03`: Create `Stack` and `Inline` layout primitives: `Stack` (vertical, with gap), `Inline` (horizontal, wraps on mobile). Responsive gap: different gap values per breakpoint.
-- `07-ui-ux-design.md#T-07.04.01.04`: Create `Grid` responsive layout component: `columns` prop accepts object `{ base: 1, sm: 2, lg: 3 }` mapping to CSS grid. Used for dashboard card grids, admin table layouts.
 - `07-ui-ux-design.md#T-07.04.01.05`: All list pages must have a mobile card view as an alternative to the desktop table view. When viewport < `md`, switch from `<DataTable>` to `<CardList>` where each card shows key fields.
 - `07-ui-ux-design.md#T-07.04.01.06`: Touch targets: ensure all interactive elements (buttons, links, inputs, toggles) have minimum 44×44px tap area per WCAG 2.5.8.
 - `07-ui-ux-design.md#T-07.04.02.04`: Verify all pages look correct at `320px`, `375px`, `390px`, `414px`, `768px`, `1024px`, `1280px`, and `1920px` viewport widths. No horizontal scroll, no overlapping text, no tiny touch targets.
+- `07-ui-ux-design.md#T-07.03.01.07`: Test every component and page in both RTL and LTR modes. Persian Lorem ipsum (`لورم ایپسوم`) should render correctly in all containers. Verify no text overflow, clipped content, or misaligned elements.
 
 ## v0.2.0: Complete customer journeys
 
@@ -705,21 +701,21 @@ Customer and admin workflows work on desktop/mobile in both languages and themes
 | `07-ui-ux-design.md#T-07.03.01.04` | done | Recorded batch work | Audit installed Base UI/shadcn components for hardcoded physical LTR placements. Keep native logical inline placements; create `useFlippedPlacement(placement)` to mirror physical `left` ↔ `right` in RTL while leaving logical/top/bottom placements intact. |
 | `07-ui-ux-design.md#T-07.03.01.05` | done | Recorded batch work | Retain and configure the existing `packages/i18n` native namespace dictionaries and `useLocale` subscription in `apps/web`. Detect the short-lived entry handoff, explicit storage/cookie preference, supported URL hint and browser language, with Persian fallback. No second i18n framework is required. |
 | `07-ui-ux-design.md#T-07.03.01.06` | done | Recorded batch work | Icons with directional meaning (arrows, chevrons, carets) must flip horizontally in RTL mode. Implement `Icon` wrapper that auto-flips icons ending in `-left`/`-right` (e.g. `ChevronLeft` → mirrored in RTL). |
-| `07-ui-ux-design.md#T-07.03.01.07` | verify | Inventory needed | Test every component and page in both RTL and LTR modes. Persian Lorem ipsum (`لورم ایپسوم`) should render correctly in all containers. Verify no text overflow, clipped content, or misaligned elements. |
+| `07-ui-ux-design.md#T-07.03.01.07` | partial | Recorded batch work | Test every component and page in both RTL and LTR modes. Persian Lorem ipsum (`لورم ایپسوم`) should render correctly in all containers. Verify no text overflow, clipped content, or misaligned elements. |
 | `07-ui-ux-design.md#T-07.03.02.01` | done | Recorded batch work | Build LanguageSwitcher component: button/dropdown showing "FA" / "EN" labels. Changes language, toggles direction, persists in cookie and localStorage for subsequent client visits. |
 | `07-ui-ux-design.md#T-07.03.02.02` | done | Recorded batch work | Implement early client language detection for the approved Vite SPA: read the persisted language preference from cookie/localStorage, falling back to browser language preferences. Set `dir` and `lang` attributes on `<html>` before React renders. No flash of the wrong direction during initial client rendering. |
 | `07-ui-ux-design.md#T-07.03.02.03` | done | Recorded batch work | When language changes: (1) update `dir` on `<html>`, (2) update `lang` attribute, (3) select the already bundled i18n namespaces, (4) re-translate current page without full browser reload. Animations should not be required to transition direction. |
 | `07-ui-ux-design.md#T-07.03.02.04` | done | Recorded batch work | Date and number formatting must change with language — Persian uses Jalali calendar, Arabic numerals with Persian separators; English uses Gregorian calendar and Western numerals. Explicit published numeral preferences retain precedence over these language defaults. Direction change is decoupled from locale data change but both happen together. |
-| `07-ui-ux-design.md#T-07.04.01.01` | verify | Inventory needed | Define Tailwind breakpoints: `xs: 375px`, `sm: 640px`, `md: 768px`, `lg: 1024px`, `xl: 1280px`, `2xl: 1536px`. Use `mobile-first` (min-width) consistently. Document breakpoint usage conventions. |
-| `07-ui-ux-design.md#T-07.04.01.02` | verify | Inventory needed | Create `ResponsiveContainer` component: max-width container with responsive padding. `full` on mobile → `container mx-auto` on desktop. |
-| `07-ui-ux-design.md#T-07.04.01.03` | verify | Inventory needed | Create `Stack` and `Inline` layout primitives: `Stack` (vertical, with gap), `Inline` (horizontal, wraps on mobile). Responsive gap: different gap values per breakpoint. |
-| `07-ui-ux-design.md#T-07.04.01.04` | verify | Inventory needed | Create `Grid` responsive layout component: `columns` prop accepts object `{ base: 1, sm: 2, lg: 3 }` mapping to CSS grid. Used for dashboard card grids, admin table layouts. |
-| `07-ui-ux-design.md#T-07.04.01.05` | verify | Inventory needed | All list pages must have a mobile card view as an alternative to the desktop table view. When viewport < `md`, switch from `<DataTable>` to `<CardList>` where each card shows key fields. |
-| `07-ui-ux-design.md#T-07.04.01.06` | verify | Inventory needed | Touch targets: ensure all interactive elements (buttons, links, inputs, toggles) have minimum 44×44px tap area per WCAG 2.5.8. |
+| `07-ui-ux-design.md#T-07.04.01.01` | done | Recorded batch work | Define Tailwind breakpoints: `xs: 375px`, `sm: 640px`, `md: 768px`, `lg: 1024px`, `xl: 1280px`, `2xl: 1536px`. Use `mobile-first` (min-width) consistently. Document breakpoint usage conventions. |
+| `07-ui-ux-design.md#T-07.04.01.02` | done | Recorded batch work | Create `ResponsiveContainer` component: max-width container with responsive padding. `full` on mobile → `container mx-auto` on desktop. |
+| `07-ui-ux-design.md#T-07.04.01.03` | done | Recorded batch work | Create `Stack` and `Inline` layout primitives: `Stack` (vertical, with gap), `Inline` (horizontal, wraps on mobile). Responsive gap: different gap values per breakpoint. |
+| `07-ui-ux-design.md#T-07.04.01.04` | done | Recorded batch work | Create `Grid` responsive layout component: `columns` prop accepts object `{ base: 1, sm: 2, lg: 3 }` mapping to CSS grid. Used for dashboard card grids, admin table layouts. |
+| `07-ui-ux-design.md#T-07.04.01.05` | partial | Recorded batch work | All list pages must have a mobile card view as an alternative to the desktop table view. When viewport < `md`, switch from `<DataTable>` to `<CardList>` where each card shows key fields. |
+| `07-ui-ux-design.md#T-07.04.01.06` | partial | Recorded batch work | Touch targets: ensure all interactive elements (buttons, links, inputs, toggles) have minimum 44×44px tap area per WCAG 2.5.8. |
 | `07-ui-ux-design.md#T-07.04.02.01` | done | Recorded batch work | On mobile (< `lg`): sidebar becomes a bottom tab bar with 4–5 primary navigation icons (Home, Orders, Wallet, Profile, More). "More" opens a sheet with all remaining navigation items. |
 | `07-ui-ux-design.md#T-07.04.02.02` | done | Recorded batch work | On mobile: topbar shows only hamburger menu, app logo/title, notification bell, and profile avatar. All secondary actions move into the "More" drawer or overflow menus. |
 | `07-ui-ux-design.md#T-07.04.02.03` | done | Recorded batch work | On tablet (`md`–`lg`): sidebar collapses to icon-only rail (60px wide). Expand on hover or tap. |
-| `07-ui-ux-design.md#T-07.04.02.04` | verify | Recorded batch work | Verify all pages look correct at `320px`, `375px`, `390px`, `414px`, `768px`, `1024px`, `1280px`, and `1920px` viewport widths. No horizontal scroll, no overlapping text, no tiny touch targets. |
+| `07-ui-ux-design.md#T-07.04.02.04` | partial | Recorded batch work | Verify all pages look correct at `320px`, `375px`, `390px`, `414px`, `768px`, `1024px`, `1280px`, and `1920px` viewport widths. No horizontal scroll, no overlapping text, no tiny touch targets. |
 | `07-ui-ux-design.md#T-07.05.01.01` | verify | Inventory needed | Implement `SkipLink` component (first focusable element on every page, visible on focus: "Skip to main content"). All pages have a `<main>` element with `id="main-content"`. |
 | `07-ui-ux-design.md#T-07.05.01.02` | verify | Inventory needed | Ensure all interactive elements have visible focus indicators. Define a custom focus ring via `:focus-visible` in CSS: `outline: 2px solid var(--ring)`, `outline-offset: 2px`. Never use `outline: none` without a visible replacement. |
 | `07-ui-ux-design.md#T-07.05.01.03` | verify | Inventory needed | Implement a `FocusTrap` component for modals, sheets, and dropdowns. When open, Tab/Shift+Tab cycles within the dialog. Focus returns to trigger on close. |

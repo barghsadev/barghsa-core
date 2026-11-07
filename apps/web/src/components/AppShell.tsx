@@ -195,13 +195,9 @@ export function AppShell({
         <main
           id={`${area}-content`}
           tabIndex={-1}
-          className="app-content min-h-0 min-w-0 flex-1 overflow-auto p-4 md:p-8 lg:p-10"
+          className="app-content min-h-0 min-w-0 flex-1 overflow-auto"
         >
-          <Animated
-            variant="page"
-            motionKey={pathname}
-            className="mx-auto w-full max-w-(--container-max-width)"
-          >
+          <Animated variant="page" motionKey={pathname} className="responsive-container">
             {children}
           </Animated>
         </main>

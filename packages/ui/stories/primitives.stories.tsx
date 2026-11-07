@@ -3,6 +3,35 @@ import type { Story } from '@ladle/react';
 import { Search, ArrowUpRight, CircleAlert, CircleCheck, Eye, EyeOff, Zap } from 'lucide-react';
 import * as UI from '../src/index';
 import { useStoryText } from './story-context';
+
+export const ResponsiveLayout: Story = () => {
+  const text = useStoryText();
+  return (
+    <UI.ResponsiveContainer>
+      <UI.Stack gap={{ base: 3, md: 5 }}>
+        <UI.Inline gap={{ base: 2, xs: 3, sm: 4, xl: 5, '2xl': 6 }}>
+          <UI.Button variant="outline" className="w-36">
+            {text('نمایش جزئیات', 'View details')}
+          </UI.Button>
+          <UI.Button variant="outline" className="w-36">
+            {text('مشاهده درخواست‌ها', 'View requests')}
+          </UI.Button>
+        </UI.Inline>
+        <UI.Grid columns={{ base: 1, sm: 2, lg: 3 }}>
+          {Array.from({ length: 3 }, (_, index) => (
+            <UI.Card key={index} className="p-4 [overflow-wrap:anywhere]">
+              {text(
+                'لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ',
+                'A sample record with a title long enough to wrap across several lines.'
+              )}
+            </UI.Card>
+          ))}
+        </UI.Grid>
+      </UI.Stack>
+    </UI.ResponsiveContainer>
+  );
+};
+
 export const Buttons: Story = () => {
   const text = useStoryText();
   const [clicks, setClicks] = useState(0);

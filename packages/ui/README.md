@@ -67,3 +67,19 @@ The inbox keeps its reversible read-mark projection local. `useServerMutation` s
 Query notifications use microtasks, so completed validated replies update views without waiting for a timer tick. This preserves timely warning recovery while keeping batching, retry limits, financial manual policy and observer cancellation.
 
 Calendar and timestamp conventions are documented in [the localization design](../../docs/design/localisation.md). `MonthPicker` reuses `NativeSelect` for caller-owned permitted months and localized labels; it never generates service periods. App-level `DateDisplay`, `DateTimeDisplay`, `RelativeTime` and `useCalendar` reuse the locale and accepted account timezone. Keep explicit UTC instants and backend-reviewed financial ranges unchanged when changing language.
+
+## Responsive layout
+
+Start with the narrow layout (320px). Add styles at the first width where there
+is space for them. Tailwind's minimum widths, expressed in `rem` to keep a
+consistent unit, are `xs` 375px, `sm` 640px, `md` 768px, `lg` 1024px,
+`xl` 1280px and `2xl` 1536px at the default browser font size. Prefer logical
+alignment and spacing so the same layout works in Persian and English.
+
+`ResponsiveContainer` provides full available width, responsive padding and a
+centered desktop content limit. Use `Stack` for vertical content and `Inline`
+for a wrapping row. Gaps use Tailwind spacing units (for example,
+`gap={{ base: 2, md: 4 }}`). `Grid` accepts a column count or
+`columns={{ base: 1, sm: 2, lg: 3 }}`; missing widths inherit the previous
+setting. Keep record semantics in the native table or card list. Use the grid
+for surrounding controls, dashboard widgets and other content groups.

@@ -118,6 +118,58 @@ for (const story of Object.keys(meta.stories)) {
           expect(
             await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)
           ).toBe(true);
+          if (story === 'primitives--responsive-layout') {
+            const container = surface.locator('[data-slot=responsive-container]');
+            const stack = container.locator('[data-slot=stack]');
+            const inline = container.locator('[data-slot=inline]');
+            const grid = container.locator('[data-slot=grid]');
+            await expect(grid).toContainText(rtl ? 'لورم ایپسوم' : 'A sample record');
+            for (const width of [
+              320, 374, 375, 390, 414, 639, 640, 767, 768, 1023, 1024, 1279, 1280, 1535, 1536, 1920,
+            ]) {
+              await page.setViewportSize({ width, height: 900 });
+              await expect(container).toHaveCSS(
+                'padding-inline-start',
+                width < 768 ? '16px' : width < 1024 ? '32px' : '40px'
+              );
+              await expect(stack).toHaveCSS('row-gap', width < 768 ? '12px' : '20px');
+              await expect(inline).toHaveCSS(
+                'column-gap',
+                width < 375
+                  ? '8px'
+                  : width < 640
+                    ? '12px'
+                    : width < 1280
+                      ? '16px'
+                      : width < 1536
+                        ? '20px'
+                        : '24px'
+              );
+              const tracks = await grid.evaluate(
+                (node) => getComputedStyle(node).gridTemplateColumns.split(' ').length
+              );
+              expect(tracks, `grid columns at ${width}px`).toBe(
+                width < 640 ? 1 : width < 1024 ? 2 : 3
+              );
+              const buttons = inline.getByRole('button');
+              const first = (await buttons.first().boundingBox())!;
+              const second = (await buttons.last().boundingBox())!;
+              if (width === 320) expect(second.y).toBeGreaterThanOrEqual(first.y + first.height);
+              if (width === 414) {
+                expect(second.y).toBe(first.y);
+                expect(
+                  rtl ? second.x + second.width <= first.x : first.x + first.width <= second.x
+                ).toBe(true);
+              }
+              expect(
+                await container.evaluate((node) =>
+                  [node, ...node.querySelectorAll('[data-slot=card]')].every(
+                    (item) => item.scrollWidth <= item.clientWidth + 1
+                  )
+                )
+              ).toBe(true);
+            }
+          }
           if (story === 'widgets--months') {
             const month = surface.getByRole('combobox', {
               name: rtl ? 'ماه تحویل' : 'Delivery month',

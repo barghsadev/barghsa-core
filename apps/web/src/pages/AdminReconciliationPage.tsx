@@ -9,6 +9,7 @@ import {
   LoadingStatus,
   Button,
   ListPage,
+  Grid,
   DateCell,
   TextCell,
   Dialog,
@@ -482,63 +483,65 @@ function OwnedReconciliation({ queries }: { queries?: ListQueryBinding }) {
               }}
               className="rounded-lg border bg-card text-card-foreground p-4"
             >
-              <fieldset disabled={locked} className="grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
-                {(['status', 'severity'] as const).map((name) => (
-                  <FormField
-                    key={name}
+              <fieldset disabled={locked} className="min-w-0">
+                <Grid columns={{ base: 1, sm: 2, xl: 5 }} gap={3}>
+                  {(['status', 'severity'] as const).map((name) => (
+                    <FormField
+                      key={name}
+                      control={filters.control}
+                      name={name}
+                      render={({ field }) => (
+                        <FormItem id={`rex-${name}`} className="min-w-0">
+                          <FormLabel>{label(name)}</FormLabel>
+                          <FormControl>
+                            <select
+                              {...field}
+                              className="block w-full min-w-0 rounded border bg-card p-2"
+                            >
+                              <option value="">{label('all')}</option>
+                              {(name === 'status' ? statuses : severities).map((value) => (
+                                <option key={value} value={value}>
+                                  {label(value)}
+                                </option>
+                              ))}
+                            </select>
+                          </FormControl>
+                          <FormMessage reserveSpace />
+                        </FormItem>
+                      )}
+                    />
+                  ))}
+                  <FormInput
                     control={filters.control}
-                    name={name}
-                    render={({ field }) => (
-                      <FormItem id={`rex-${name}`} className="min-w-0">
-                        <FormLabel>{label(name)}</FormLabel>
-                        <FormControl>
-                          <select
-                            {...field}
-                            className="block w-full min-w-0 rounded border bg-card p-2"
-                          >
-                            <option value="">{label('all')}</option>
-                            {(name === 'status' ? statuses : severities).map((value) => (
-                              <option key={value} value={value}>
-                                {label(value)}
-                              </option>
-                            ))}
-                          </select>
-                        </FormControl>
-                        <FormMessage reserveSpace />
-                      </FormItem>
-                    )}
+                    name="from"
+                    id="rex-from"
+                    label={label('from')}
+                    disabled={time.status !== 'ready'}
+                    inputProps={{ type: 'datetime-local', className: 'min-w-0 w-full' }}
+                    itemClassName="min-w-0"
                   />
-                ))}
-                <FormInput
-                  control={filters.control}
-                  name="from"
-                  id="rex-from"
-                  label={label('from')}
-                  disabled={time.status !== 'ready'}
-                  inputProps={{ type: 'datetime-local', className: 'min-w-0 w-full' }}
-                  itemClassName="min-w-0"
-                />
-                <FormInput
-                  control={filters.control}
-                  name="before"
-                  id="rex-before"
-                  label={label('before')}
-                  disabled={time.status !== 'ready'}
-                  inputProps={{ type: 'datetime-local', className: 'min-w-0 w-full' }}
-                  itemClassName="min-w-0"
-                />
-                <FormSubmit
-                  loading={validating === 'filter'}
-                  disabled={locked || time.status !== 'ready'}
-                >
-                  {label('apply')}
-                </FormSubmit>
-                <p className="sm:col-span-2 xl:col-span-5 text-sm text-muted-foreground">
-                  {time.status === 'ready' && label('timeHint').replace('{zone}', time.timezone)}
-                </p>
-                {filters.formState.errors.root?.validation?.message && (
-                  <p role="alert">{filters.formState.errors.root.validation.message}</p>
-                )}
+                  <FormInput
+                    control={filters.control}
+                    name="before"
+                    id="rex-before"
+                    label={label('before')}
+                    disabled={time.status !== 'ready'}
+                    inputProps={{ type: 'datetime-local', className: 'min-w-0 w-full' }}
+                    itemClassName="min-w-0"
+                  />
+                  <FormSubmit
+                    loading={validating === 'filter'}
+                    disabled={locked || time.status !== 'ready'}
+                  >
+                    {label('apply')}
+                  </FormSubmit>
+                  <p className="sm:col-span-2 xl:col-span-5 text-sm text-muted-foreground">
+                    {time.status === 'ready' && label('timeHint').replace('{zone}', time.timezone)}
+                  </p>
+                  {filters.formState.errors.root?.validation?.message && (
+                    <p role="alert">{filters.formState.errors.root.validation.message}</p>
+                  )}
+                </Grid>
               </fieldset>
             </form>
           </Form>

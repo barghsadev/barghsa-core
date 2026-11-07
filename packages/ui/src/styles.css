@@ -19,6 +19,49 @@
 
 @custom-variant dark (&:is(.dark *));
 
+@theme {
+  --breakpoint-xs: 23.4375rem;
+}
+
+@utility responsive-container {
+  margin-inline: auto;
+  box-sizing: content-box;
+  min-width: 0;
+  max-width: var(--container-max-width);
+  @apply p-4 md:p-8 lg:p-10;
+}
+
+@utility layout-flow {
+  gap: calc(var(--spacing) * var(--layout-gap));
+  grid-template-columns: repeat(var(--layout-cols, 1), minmax(0, 1fr));
+  --layout-gap: var(--layout-base-gap);
+  --layout-cols: var(--layout-base-cols);
+  @variant xs {
+    --layout-gap: var(--layout-xs-gap);
+    --layout-cols: var(--layout-xs-cols);
+  }
+  @variant sm {
+    --layout-gap: var(--layout-sm-gap);
+    --layout-cols: var(--layout-sm-cols);
+  }
+  @variant md {
+    --layout-gap: var(--layout-md-gap);
+    --layout-cols: var(--layout-md-cols);
+  }
+  @variant lg {
+    --layout-gap: var(--layout-lg-gap);
+    --layout-cols: var(--layout-lg-cols);
+  }
+  @variant xl {
+    --layout-gap: var(--layout-xl-gap);
+    --layout-cols: var(--layout-xl-cols);
+  }
+  @variant 2xl {
+    --layout-gap: var(--layout-2xl-gap);
+    --layout-cols: var(--layout-2xl-cols);
+  }
+}
+
 @utility text-primary {
   &:not(.dark *) {
     color: var(--brand-primary-text-light, var(--primary));

@@ -79,6 +79,7 @@ export * from './components/ui/list-view-toggle';
 
 export * from './components/ui/list-toolbar';
 export * from './components/ui/list-page';
+export * from './components/ui/responsive-layout';
 
 export * from './components/base-ui/month-picker';
 export * from './components/base-ui/animated';
