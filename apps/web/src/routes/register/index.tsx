@@ -88,7 +88,7 @@ function RegisterPage() {
             {t('auth.register.loginLink', locale)}{' '}
             <Link
               to="/login"
-              className="font-medium text-foreground underline underline-offset-4 hover:decoration-2"
+              className="touch-action font-medium text-foreground underline underline-offset-4 hover:decoration-2"
               onClick={(event) => {
                 if (model.busy) event.preventDefault();
               }}
@@ -100,7 +100,7 @@ function RegisterPage() {
           <p className="text-center text-sm">
             <Link
               to="/forgot-password"
-              className="text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+              className="touch-action text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
               onClick={(event) => {
                 if (model.busy) event.preventDefault();
               }}
@@ -309,7 +309,7 @@ function RegisterPage() {
                             }
                           }}
                           aria-disabled={!terms || model.locked}
-                          className="font-medium text-foreground underline underline-offset-4 hover:text-foreground"
+                          className="touch-action font-medium text-foreground underline underline-offset-4 hover:text-foreground"
                           aria-label={t('auth.register.tosLinkText', locale)}
                         >
                           {t('auth.register.tosLinkText', locale)}

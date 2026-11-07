@@ -76,6 +76,40 @@ it('reads the selected account directly, and preserves its last result on failed
   expect(document.querySelector('[data-testid=effective-permissions]')).toBeNull();
   expect(document.body.textContent).toContain('User not found');
 });
+it('lets staff retry when reading the permissions response body stalls', async () => {
+  vi.useFakeTimers();
+  try {
+    let oldSignal!: AbortSignal, complete!: (value: unknown) => void;
+    const fetcher = vi
+      .fn()
+      .mockImplementationOnce((_path: string, options: RequestInit) => {
+        oldSignal = options.signal!;
+        return Promise.resolve({
+          status: 200,
+          ok: true,
+          json: () =>
+            new Promise((resolve) => {
+              complete = resolve;
+            }),
+        });
+      })
+      .mockResolvedValue(response(effectivePermissions));
+    vi.stubGlobal('fetch', fetcher);
+    await inspect();
+    expect(oldSignal.aborted).toBe(false);
+    await act(async () => vi.advanceTimersByTimeAsync(15_000));
+    expect(oldSignal.aborted).toBe(true);
+    expect(document.querySelector('[role=alert]')?.textContent).toContain('permissions');
+    await click('Retry');
+    expect(fetcher).toHaveBeenCalledTimes(2);
+    expect(document.body.textContent).toContain('finance:read');
+    await act(async () => complete({ ...effectivePermissions, userId: 'private-obsolete' }));
+    expect(document.body.textContent).not.toContain('private-obsolete');
+    expect(document.body.textContent).toContain('finance:read');
+  } finally {
+    vi.useRealTimers();
+  }
+});
 it.each([401, 403] as const)(
   'clears accepted permissions on %s and delegates authority recovery',
   async (status) => {

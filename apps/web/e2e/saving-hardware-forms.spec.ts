@@ -1,3 +1,4 @@
+import { approveRiskConfirmation } from './confirmation-fixture';
 import { productionManifest } from './production-manifest';
 import AxeBuilder from '@axe-core/playwright';
 import type { Locator, Page } from '@playwright/test';
@@ -74,6 +75,11 @@ for (const [locale, theme] of [
   const refresh = (page: Page) =>
     page.getByRole('button', { name: copy('staffRefresh'), exact: true }).first();
   const confirm = (page: Page) => page.getByRole('dialog').locator('button[type=submit]');
+  const acknowledge = async (page: Page, kind: 'financial' | 'both') => {
+    await expect(confirm(page)).toBeDisabled();
+    await approveRiskConfirmation(page, locale, kind);
+    await expect(confirm(page)).toBeEnabled();
+  };
   const cancel = (page: Page) =>
     page.getByRole('dialog').getByRole('button', { name: t('team.cancel', locale), exact: true });
   test(`paid saving hardware charge and cancellation retain independent reasons and exact commands (${locale}, ${theme})`, async ({
@@ -134,6 +140,7 @@ for (const [locale, theme] of [
     await expect(dialog).toContainText(copy('staffHardwareOutcome.additional_charge'));
     await expect(dialog).toContainText(copy('staffHardwareTargetTotal'));
     await expect(dialog).toContainText(copy('staffReviewContractVersion'));
+    await acknowledge(page, 'financial');
     await inspect(page, dialog, '[role="dialog"]', confirm(page));
     state.hardwareWriteMode = 'held';
     state.needsStepUp = true;
@@ -187,12 +194,14 @@ for (const [locale, theme] of [
     expect(state.hardwareWrites).toHaveLength(2);
     state.hardwareWriteMode = 'rejected';
     await hardwareRetry.click();
+    await acknowledge(page, 'financial');
     await confirm(page).click();
     await cancel(page).click();
     await expect(hardwareRetry).toBeEnabled();
     await expect(hardware).toBeDisabled();
     state.hardwareWriteMode = 'success';
     await hardwareRetry.click();
+    await acknowledge(page, 'financial');
     await confirm(page).click();
     await expect(page.getByRole('dialog')).toHaveCount(0);
     await expect(hardwareRetry).toHaveCount(0);
@@ -238,6 +247,7 @@ for (const [locale, theme] of [
     dialog = page.getByRole('dialog');
     await expect(dialog).toContainText(copy('staffUpgradeCancellationRelease'));
     await expect(dialog).toContainText(copy('staffUpgradeCancellationOutcome'));
+    await acknowledge(page, 'both');
     await inspect(page, dialog, '[role="dialog"]', confirm(page));
     state.cancelWriteMode = 'held';
     await confirm(page).click();
@@ -269,12 +279,14 @@ for (const [locale, theme] of [
     expect(state.cancelWrites).toHaveLength(1);
     state.cancelWriteMode = 'rejected';
     await retry.click();
+    await acknowledge(page, 'both');
     await confirm(page).click();
     await cancel(page).click();
     await expect(retry).toBeEnabled();
     await expect(rowReason).toHaveValue('  Customer declined unpaid charge  ');
     state.cancelWriteMode = 'success';
     await retry.click();
+    await acknowledge(page, 'both');
     await confirm(page).click();
     await expect(retry).toHaveCount(0);
     await expect(row).toHaveCount(0);
@@ -341,6 +353,7 @@ for (const [locale, theme] of [
       )
     );
     state.hardwareWriteMode = 'held';
+    await acknowledge(page, 'financial');
     await confirm(page).click();
     await expect.poll(() => !!state.hardwareWriteRoute).toBe(true);
     const command = state.hardwareWrites[0]!,
@@ -379,18 +392,21 @@ for (const [locale, theme] of [
     expect(state.hardwareWrites).toHaveLength(1);
     state.hardwareWriteMode = 'malformed';
     await retry.click();
+    await acknowledge(page, 'financial');
     await confirm(page).click();
     await expect(page.getByRole('dialog')).toHaveCount(0);
     await expect(retry).toBeEnabled();
     await expect(hardware).toBeDisabled();
     state.hardwareWriteMode = 'rejected';
     await retry.click();
+    await acknowledge(page, 'financial');
     await confirm(page).click();
     await cancel(page).click();
     await expect(retry).toBeEnabled();
     await expect(reason).toHaveValue('  Customer chose immediate replacement  ');
     state.hardwareWriteMode = 'success';
     await retry.click();
+    await acknowledge(page, 'financial');
     await confirm(page).click();
     await expect(retry).toHaveCount(0);
     await expect(reason).toHaveValue('');

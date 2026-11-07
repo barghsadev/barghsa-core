@@ -72,13 +72,12 @@ for (const locale of ['en', 'fa'] as const) {
     await expect.poll(() => Boolean(held)).toBe(true);
     await expect(page.getByRole('main').locator('[data-slot="skeleton"]')).toHaveCount(5);
     if (locale === 'fa') await page.screenshot({ path: '/tmp/notification-center-loading-fa.png' });
+    const previous = held!.request();
+    const cancelled = page.waitForEvent('requestfailed', (request) => request === previous);
     await page.getByRole('tab', { name: t('notifications.unread', locale), exact: true }).click();
     await expect(page.getByRole('button', { name: /Unread notice/ })).toBeVisible();
-    const completed = page.waitForResponse(
-      (r) => r.url().includes('limit=20') && new URL(r.url()).searchParams.get('filter') === 'all'
-    );
+    await cancelled;
     await held!.fulfill({ json: response('Stale all notice') });
-    await (await completed).finished();
     await paint(page);
     await expect(page.getByRole('button', { name: /Unread notice/ })).toBeVisible();
     await expect(page.getByRole('button', { name: /Stale all notice/ })).toHaveCount(0);
@@ -174,6 +173,16 @@ for (const locale of ['en', 'fa'] as const) {
     });
     await page.goto('/notifications');
     const bell = page.getByTestId('notification-bell');
+    const badge = bell.locator('.barghsa-notification-count');
+    const announcement = bell.locator('..').locator(':scope > [role=status][aria-atomic=true]');
+    const countLabel = (value: number) =>
+      t('notifications.bellAria', locale).replace('{count}', value.toLocaleString(locale));
+    const expectUnread = async (value: number) => {
+      await expect(announcement).toHaveText(countLabel(value));
+      await expect(bell).toHaveAttribute('aria-label', countLabel(value));
+      if (value) await expect(badge).toHaveText(value.toLocaleString(locale));
+      else await expect(badge).toHaveCount(0);
+    };
     await bell.click();
     const panel = page.getByTestId('notification-panel');
     const markAll = panel.getByRole('button', {
@@ -181,23 +190,24 @@ for (const locale of ['en', 'fa'] as const) {
       exact: true,
     });
     await expect(markAll).toBeEnabled();
+    await expectUnread(2);
     await markAll.click();
     await expect.poll(() => Boolean(poll && write)).toBe(true);
-    await expect(bell.getByRole('status')).toHaveCount(0);
+    await expectUnread(0);
     const completed = page.waitForResponse((r) => r.url().endsWith('/notifications/unread-count'));
     await poll!.fulfill({ json: { unread_count: 2 } });
     await (await completed).finished();
     await paint(page);
-    await expect(bell.getByRole('status')).toHaveCount(0);
+    await expectUnread(0);
     await write!.fulfill({ status: 503, json: {} });
     await expect(panel.getByRole('alert')).toBeVisible();
-    await expect(bell.getByRole('status')).toBeVisible();
+    await expectUnread(2);
     await panel.getByRole('button', { name: t('notifications.retry', locale) }).click();
     await expect(markAll).toBeEnabled();
     fail = false;
     await markAll.click();
     await expect.poll(() => count).toBe(0);
-    await expect(bell.getByRole('status')).toHaveCount(0);
+    await expectUnread(0);
     await expect(panel.getByRole('alert')).toHaveCount(0);
   });
 }

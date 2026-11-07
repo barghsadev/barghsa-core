@@ -169,7 +169,7 @@ function TermsPage() {
               search={{ lang: 'fa', version }}
               lang="fa"
               aria-current={locale === 'fa' ? 'page' : undefined}
-              className="underline underline-offset-4"
+              className="touch-action justify-center underline underline-offset-4"
             >
               فارسی
             </Link>
@@ -178,7 +178,7 @@ function TermsPage() {
               search={{ lang: 'en', version }}
               lang="en"
               aria-current={locale === 'en' ? 'page' : undefined}
-              className="underline underline-offset-4"
+              className="touch-action justify-center underline underline-offset-4"
             >
               English
             </Link>

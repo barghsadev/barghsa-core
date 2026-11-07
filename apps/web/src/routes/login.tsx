@@ -339,7 +339,7 @@ function LoginPage() {
               type="button"
               disabled={model.busy || (model.locked && !model.uncertain)}
               onClick={() => returnToCredentials()}
-              className="text-muted-foreground underline-offset-4 hover:text-primary dark:hover:text-foreground hover:underline"
+              className="touch-action text-muted-foreground underline-offset-4 hover:text-primary dark:hover:text-foreground hover:underline"
               aria-label={t(
                 stage === 'otp' ? 'auth.login.otpBackToLogin' : 'auth.login.backToLogin',
                 locale
@@ -357,7 +357,7 @@ function LoginPage() {
                 onClick={(event) => {
                   if (model.busy) event.preventDefault();
                 }}
-                className="font-medium text-primary dark:text-foreground underline-offset-4 hover:underline"
+                className="touch-action font-medium text-primary dark:text-foreground underline-offset-4 hover:underline"
                 aria-label={t('auth.login.registerLinkLabel', locale)}
               >
                 {t('auth.login.registerLinkLabel', locale)}
@@ -369,7 +369,7 @@ function LoginPage() {
                 onClick={(event) => {
                   if (model.busy) event.preventDefault();
                 }}
-                className="text-muted-foreground underline-offset-4 hover:text-primary dark:hover:text-foreground hover:underline"
+                className="touch-action text-muted-foreground underline-offset-4 hover:text-primary dark:hover:text-foreground hover:underline"
                 aria-label={t('auth.register.forgotPasswordLabel', locale)}
               >
                 {t('auth.register.forgotPasswordLink', locale)}
@@ -542,7 +542,7 @@ function LoginPage() {
                             disabled={model.locked}
                           />
                         </FormControl>
-                        <FormLabel className="text-sm text-muted-foreground">
+                        <FormLabel className="touch-action text-sm text-muted-foreground">
                           {t('auth.login.trustDevice', locale)}
                         </FormLabel>
                       </div>

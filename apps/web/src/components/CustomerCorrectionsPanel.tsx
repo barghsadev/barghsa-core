@@ -1,3 +1,4 @@
+import { readWithDeadline } from '../lib/server-query-client.js';
 import { CommandFeedback } from './CommandFeedback.js';
 import { useEffect, useId, useState } from 'react';
 import { LoadingStatus, Button } from '@barghsa/ui';
@@ -74,37 +75,38 @@ export default function CustomerCorrectionsPanel({ locale }: { locale: Locale })
     setMore(false);
     void (async () => {
       try {
-        const response = await fetch('/api/admin/failed-notifications/access', {
-          signal: controller.signal,
-        });
-        const permission = await response.json();
-        if (
-          !response.ok ||
-          typeof permission?.canView !== 'boolean' ||
-          typeof permission?.canRetry !== 'boolean'
-        )
-          throw new Error('Invalid access');
-        if (controller.signal.aborted) return;
-        setAccess(permission);
-        if (!permission.canView) return;
-        const list = await fetch(
-          `/api/admin/notifications/customer-corrections?completed=${completed}&offset=${offset}`,
-          { signal: controller.signal }
-        );
-        const result: unknown = await list.json();
-        if (
-          !list.ok ||
-          !Array.isArray(result) ||
-          result.length > 26 ||
-          !result.every(isCorrection) ||
-          new Set(result.map((row) => row.id)).size !== result.length ||
-          result.some((row) => Boolean(row.resolvedAt) !== completed)
-        )
-          throw new Error('Invalid correction list');
-        if (!controller.signal.aborted) {
+        await readWithDeadline(controller.signal, async (signal) => {
+          const response = await fetch('/api/admin/failed-notifications/access', {
+            signal,
+          });
+          const permission = await response.json();
+          if (
+            !response.ok ||
+            typeof permission?.canView !== 'boolean' ||
+            typeof permission?.canRetry !== 'boolean'
+          )
+            throw new Error('Invalid access');
+          signal.throwIfAborted();
+          setAccess(permission);
+          if (!permission.canView) return;
+          const list = await fetch(
+            `/api/admin/notifications/customer-corrections?completed=${completed}&offset=${offset}`,
+            { signal }
+          );
+          const result: unknown = await list.json();
+          if (
+            !list.ok ||
+            !Array.isArray(result) ||
+            result.length > 26 ||
+            !result.every(isCorrection) ||
+            new Set(result.map((row) => row.id)).size !== result.length ||
+            result.some((row) => Boolean(row.resolvedAt) !== completed)
+          )
+            throw new Error('Invalid correction list');
+          signal.throwIfAborted();
           setRows(result.slice(0, 25));
           setMore(result.length > 25);
-        }
+        });
       } catch {
         if (!controller.signal.aborted) setError(true);
       } finally {

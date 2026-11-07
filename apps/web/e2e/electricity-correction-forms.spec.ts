@@ -1,3 +1,4 @@
+import { approveRiskConfirmation } from './confirmation-fixture';
 import { productionManifest } from './production-manifest';
 import AxeBuilder from '@axe-core/playwright';
 import type { Locator, Page } from '@playwright/test';
@@ -137,6 +138,8 @@ for (const [locale, theme] of [
     });
     let dialog = page.getByRole('dialog');
     await expect(dialog).toContainText('Captured <script> delivery correction');
+    await expect(dialog.locator('button[type=submit]')).toBeDisabled();
+    await approveRiskConfirmation(page, locale, 'both');
     await dialog.locator('button[type=submit]').click();
     await expect.poll(() => !!state.staffWrite).toBe(true);
     const staffCommand = state.staffWrites[0]!;
@@ -170,6 +173,8 @@ for (const [locale, theme] of [
       .click();
     dialog = page.getByRole('dialog');
     state.staffWriteMode = 'success';
+    await expect(dialog.locator('button[type=submit]')).toBeDisabled();
+    await approveRiskConfirmation(page, locale, 'both');
     await dialog.locator('button[type=submit]').click();
     await expect(dialog).toHaveCount(0);
     expect(state.staffPreviews).toHaveLength(staffPreviewCount);
@@ -257,6 +262,8 @@ for (const [locale, theme] of [
     await page.getByRole('button', { name: staffText('reject'), exact: true }).click();
     dialog = page.getByRole('dialog');
     await expect(dialog).toContainText('Final rejection reason');
+    await expect(dialog.locator('button[type=submit]')).toBeDisabled();
+    await approveRiskConfirmation(page, locale, 'both');
     await dialog.locator('button[type=submit]').click();
     await expect(dialog).toHaveCount(0);
     expect(state.staffWrites.at(-1)).toMatchObject({
@@ -365,6 +372,8 @@ for (const [locale, theme] of [
         name: copy('electricity.order.correction.submit'),
         exact: true,
       });
+      await expect(confirm).toBeDisabled();
+      await approveRiskConfirmation(page, locale, 'financial');
       await expect(confirm).toBeEnabled();
       await expect(region).toContainText(copy('electricity.order.revision.replacesInvoice'));
       await confirm.click();
@@ -426,6 +435,8 @@ for (const [locale, theme] of [
         await note.fill('PRIVATE_WITHDRAWN_REVISION_DRAFT');
         await page.locator('#correction-note').fill('PRIVATE_WITHDRAWN_ADDRESS_DRAFT');
         await preview.click();
+        await expect(confirm).toBeDisabled();
+        await approveRiskConfirmation(page, locale, 'financial');
         await expect(confirm).toBeEnabled();
         await confirm.click();
         await expect(form).toHaveCount(0);

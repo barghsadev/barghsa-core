@@ -79,7 +79,7 @@ export function AuthLayout({ locale = 'fa', children, footer }: AuthLayoutProps)
               {footer}
               <Link
                 to="/support"
-                className="text-center text-sm text-muted-foreground underline underline-offset-4 hover:text-foreground"
+                className="touch-action justify-center text-center text-sm text-muted-foreground underline underline-offset-4 hover:text-foreground"
               >
                 {t('auth.forgotPassword.helpLink', locale)}
               </Link>

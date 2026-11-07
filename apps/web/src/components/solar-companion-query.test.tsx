@@ -199,6 +199,42 @@ for (const kind of ['postal', 'images', 'tracking', 'contract']) {
     }
   );
 }
+it.each(['postal', 'images'])(
+  'expires a stalled %s response body and retries without a write',
+  async (kind) => {
+    vi.useFakeTimers();
+    try {
+      owner = kind;
+      await render('postal');
+      const old = signal;
+      const late = finish;
+      expect(old.aborted).toBe(false);
+      await act(async () => vi.advanceTimersByTimeAsync(15_000));
+      expect(old.aborted).toBe(true);
+      const alert =
+        kind === 'postal' ? 'Could not load postal details.' : 'Could not load receipt images.';
+      expect(host.textContent).toContain(alert);
+      const retry = [...host.querySelectorAll('button')].find(
+        (button) =>
+          button.textContent === (kind === 'postal' ? 'Reload shipment tracking' : 'Try again')
+      );
+      expect(retry).toBeDefined();
+      await act(async () => retry!.click());
+      expect(host.textContent).not.toContain(alert);
+      expect(host.textContent).toContain('Current guidance');
+      expect(
+        vi.mocked(fetch).mock.calls.filter(([url]) => matches(kind, String(url)))
+      ).toHaveLength(2);
+      await act(async () =>
+        late({ ...postal(), guidance: { ...postal().guidance, en: 'Obsolete shipment' } })
+      );
+      expect(host.textContent).not.toContain('Obsolete shipment');
+      expect(writes).toHaveLength(0);
+    } finally {
+      vi.useRealTimers();
+    }
+  }
+);
 it('cancels post-shipment confirmation bytes without submitting the recorded shipment again', async () => {
   owner = 'confirmation';
   await render('postal');

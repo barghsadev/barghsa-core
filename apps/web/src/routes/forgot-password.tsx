@@ -39,7 +39,7 @@ function ForgotPasswordPage() {
       footer={
         <Link
           to="/login"
-          className="text-sm text-foreground underline"
+          className="touch-action justify-center text-sm text-foreground underline"
           onClick={(event) => {
             if (model.busy) event.preventDefault();
           }}

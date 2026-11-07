@@ -1,3 +1,4 @@
+import { readWithDeadline } from '../lib/server-query-client.js';
 import { useQueryClient } from '@tanstack/react-query';
 import { confirmationText } from '@barghsa/i18n/confirmation';
 import { toast } from '../lib/toast-api.js';
@@ -99,17 +100,18 @@ function OwnedSolarPostalPanel({ requestId, profileId }: { requestId: string; pr
         staleTime: 0,
         gcTime: 0,
         retry: false,
-        queryFn: async ({ signal: querySignal }) => {
-          const response = await fetch(
-            `/api/solar/requests/${encodeURIComponent(requestId)}/postal`,
-            { credentials: 'include', signal: querySignal }
-          );
-          return {
-            ok: response.ok,
-            status: response.status,
-            data: response.ok ? ((await response.json()) as unknown) : null,
-          };
-        },
+        queryFn: ({ signal }) =>
+          readWithDeadline(signal, async (transport) => {
+            const response = await fetch(
+              `/api/solar/requests/${encodeURIComponent(requestId)}/postal`,
+              { credentials: 'include', signal: transport }
+            );
+            return {
+              ok: response.ok,
+              status: response.status,
+              data: response.ok ? ((await response.json()) as unknown) : null,
+            };
+          }),
       });
     } finally {
       controller.signal.removeEventListener('abort', cancel);
@@ -272,7 +274,9 @@ function OwnedSolarPostalPanel({ requestId, profileId }: { requestId: string; pr
         gcTime: 0,
         retry: false,
         queryFn: ({ signal }) =>
-          documentRequest<DocumentPage>(`/api/documents?${params}`, { signal }),
+          readWithDeadline(signal, (transport) =>
+            documentRequest<DocumentPage>(`/api/documents?${params}`, { signal: transport })
+          ),
       })
       .then((value) => {
         if (

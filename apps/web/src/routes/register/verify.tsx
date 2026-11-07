@@ -207,7 +207,7 @@ function OtpVerifyPage() {
       footer={
         <Link
           to="/register"
-          className="text-muted-foreground underline"
+          className="touch-action justify-center text-muted-foreground underline"
           onClick={(event) => {
             if (model.busy) event.preventDefault();
           }}

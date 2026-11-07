@@ -1,3 +1,4 @@
+import { readWithDeadline } from '../lib/server-query-client.js';
 import { useEffect, useRef, useState, type ComponentProps } from 'react';
 import {
   LoadingStatus,
@@ -42,22 +43,28 @@ export function StaffEffectivePermissions({
     setError(null);
     void (async () => {
       try {
-        const response = await fetch(
-          `/api/admin/users/${encodeURIComponent(target.userId)}/effective-permissions`,
-          { credentials: 'include', signal: controller.signal }
-        );
+        const { status, ok, json } = await readWithDeadline(controller.signal, async (signal) => {
+          const response = await fetch(
+            `/api/admin/users/${encodeURIComponent(target.userId)}/effective-permissions`,
+            { credentials: 'include', signal }
+          );
+          return {
+            status: response.status,
+            ok: response.ok,
+            json: response.ok ? ((await response.json()) as unknown) : null,
+          };
+        });
         if (controller.signal.aborted) return;
-        if (response.status === 401 || response.status === 403) {
+        if (status === 401 || status === 403) {
           setData(null);
-          denied.current(response.status);
+          denied.current(status);
           return;
         }
-        if (response.status === 404) setData(null);
-        if (!response.ok)
+        if (status === 404) setData(null);
+        if (!ok)
           throw new Error(
-            response.status === 404 ? 'admin.roles.user.notfound' : 'admin.roles.user.lookup.failed'
+            status === 404 ? 'admin.roles.user.notfound' : 'admin.roles.user.lookup.failed'
           );
-        const json: unknown = await response.json();
         if (!validEffective(json, target.userId)) throw new Error('admin.roles.user.lookup.failed');
         if (!controller.signal.aborted) setData(json);
       } catch (failure) {
