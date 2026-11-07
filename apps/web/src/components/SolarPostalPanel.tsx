@@ -507,6 +507,7 @@ function OwnedSolarPostalPanel({ requestId, profileId }: { requestId: string; pr
                           <Input
                             {...field}
                             disabled={sending || unconfirmed}
+                            aria-required="true"
                             type={name === 'sendDate' ? 'date' : 'text'}
                             dir={name === 'trackingNumber' ? 'ltr' : undefined}
                             onChange={(event) => {

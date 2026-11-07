@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-07T07:23:44+00:00",
-  "source_commit": "fa9f3d06d2de8028bbb72853609c6a0e636410cf",
+  "updated": "2026-11-07T07:28:33+00:00",
+  "source_commit": "bfb8f903e36012086d6f8e886e73acc751af5f80",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -350338,7 +350338,8 @@
           "release-0.5-forms-confirmation-journey",
           "release-0.5-notification-recovery-journey",
           "release-0.5-query-and-command-completion",
-          "release-0.5-form-and-document-accessibility"
+          "release-0.5-form-and-document-accessibility",
+          "release-0.5-required-form-and-action-closure"
         ],
         "current_acceptance": {
           "kind": "current-saving-cancellation-and-derived-financial-closure-acceptance",
@@ -350558,7 +350559,7 @@
             },
             {
               "path": "apps/web/e2e/cancellation-forms.spec.ts",
-              "sha256": "86d34832b5a8058b551bbd3b6e6099aa8eb74897155dc3101a106c39744b0834"
+              "sha256": "976e5ad51c72d8faab07ca621a3dabc4dd38978d256eedeb7371379f21b1e285"
             },
             {
               "path": "apps/web/e2e/contract-cancellation.spec.ts",
@@ -350570,7 +350571,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationEditor.tsx",
-              "sha256": "508441590262d0385299b4543af6045b7522cc70dec7ebc8bf09912342ff2b94"
+              "sha256": "34ba5168c6739c255a19c6a23de561081e1b0651d0d717a5dfadac19212dec0c"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
@@ -350951,7 +350952,8 @@
             "Bindings renewed by release-0.5-forms-confirmation-journey: additive confirmation entry/exports, display-only exact IRR/toman, scoped host/risk metadata and guarded explicit approval. Existing81 requests and180 payload/version/idempotency fields AST-identical; backend/shared domain and original budgets unchanged.139 distinct native cases,138 affected full-file web passes, shared control/distribution checks cover the UI delta. Original domain evidence retained for unchanged behavior; adapted test actions explicitly perform the additional approval and preserve assertions.",
             "Bindings renewed by release-0.5-notification-recovery-journey: tested presentation, read-only owned timestamp and additive locale changes. All 71 UI HTTP calls and 96 captured body/review/idempotency fields are unchanged, old feedback labels and original numeric limits are preserved, and affected browser/API/unit and export checks are recorded.",
             "Source bindings renewed by release-0.5-query-and-command-completion: affected owned read, permission, financial review and browser cases pass; writes/CSRF, original budget rules and financial assertions are preserved.",
-            "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only."
+            "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
+            "Bindings renewed by release-0.5-required-form-and-action-closure: required announcements and a native label target changed; solar and cancellation behavior, current authority, exact command and receipt assertions pass on the matching production build."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/saving-cancellation",
           "limitations": [
@@ -351520,6 +351522,11 @@
               "batch": "release-0.5-form-and-document-accessibility",
               "base_commit": "bc50e458e469d4fae48336f6384692b2a0a93251",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-form-and-document-accessibility/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-required-form-and-action-closure",
+              "base_commit": "bfb8f903e36012086d6f8e886e73acc751af5f80",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-form-and-action-closure/source-binding.json"
             }
           ]
         }
@@ -351559,7 +351566,8 @@
           "release-0.5-forms-confirmation-journey",
           "release-0.5-notification-recovery-journey",
           "release-0.5-query-and-command-completion",
-          "release-0.5-form-and-document-accessibility"
+          "release-0.5-form-and-document-accessibility",
+          "release-0.5-required-form-and-action-closure"
         ],
         "current_acceptance": {
           "kind": "current-saving-cancellation-and-derived-financial-closure-acceptance",
@@ -351779,7 +351787,7 @@
             },
             {
               "path": "apps/web/e2e/cancellation-forms.spec.ts",
-              "sha256": "86d34832b5a8058b551bbd3b6e6099aa8eb74897155dc3101a106c39744b0834"
+              "sha256": "976e5ad51c72d8faab07ca621a3dabc4dd38978d256eedeb7371379f21b1e285"
             },
             {
               "path": "apps/web/e2e/contract-cancellation.spec.ts",
@@ -351791,7 +351799,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationEditor.tsx",
-              "sha256": "508441590262d0385299b4543af6045b7522cc70dec7ebc8bf09912342ff2b94"
+              "sha256": "34ba5168c6739c255a19c6a23de561081e1b0651d0d717a5dfadac19212dec0c"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
@@ -352172,7 +352180,8 @@
             "Bindings renewed by release-0.5-forms-confirmation-journey: additive confirmation entry/exports, display-only exact IRR/toman, scoped host/risk metadata and guarded explicit approval. Existing81 requests and180 payload/version/idempotency fields AST-identical; backend/shared domain and original budgets unchanged.139 distinct native cases,138 affected full-file web passes, shared control/distribution checks cover the UI delta. Original domain evidence retained for unchanged behavior; adapted test actions explicitly perform the additional approval and preserve assertions.",
             "Bindings renewed by release-0.5-notification-recovery-journey: tested presentation, read-only owned timestamp and additive locale changes. All 71 UI HTTP calls and 96 captured body/review/idempotency fields are unchanged, old feedback labels and original numeric limits are preserved, and affected browser/API/unit and export checks are recorded.",
             "Source bindings renewed by release-0.5-query-and-command-completion: affected owned read, permission, financial review and browser cases pass; writes/CSRF, original budget rules and financial assertions are preserved.",
-            "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only."
+            "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
+            "Bindings renewed by release-0.5-required-form-and-action-closure: required announcements and a native label target changed; solar and cancellation behavior, current authority, exact command and receipt assertions pass on the matching production build."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/saving-cancellation",
           "limitations": [
@@ -352741,6 +352750,11 @@
               "batch": "release-0.5-form-and-document-accessibility",
               "base_commit": "bc50e458e469d4fae48336f6384692b2a0a93251",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-form-and-document-accessibility/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-required-form-and-action-closure",
+              "base_commit": "bfb8f903e36012086d6f8e886e73acc751af5f80",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-form-and-action-closure/source-binding.json"
             }
           ]
         }
@@ -352780,7 +352794,8 @@
           "release-0.5-forms-confirmation-journey",
           "release-0.5-notification-recovery-journey",
           "release-0.5-query-and-command-completion",
-          "release-0.5-form-and-document-accessibility"
+          "release-0.5-form-and-document-accessibility",
+          "release-0.5-required-form-and-action-closure"
         ],
         "current_acceptance": {
           "kind": "current-saving-cancellation-and-derived-financial-closure-acceptance",
@@ -353000,7 +353015,7 @@
             },
             {
               "path": "apps/web/e2e/cancellation-forms.spec.ts",
-              "sha256": "86d34832b5a8058b551bbd3b6e6099aa8eb74897155dc3101a106c39744b0834"
+              "sha256": "976e5ad51c72d8faab07ca621a3dabc4dd38978d256eedeb7371379f21b1e285"
             },
             {
               "path": "apps/web/e2e/contract-cancellation.spec.ts",
@@ -353012,7 +353027,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationEditor.tsx",
-              "sha256": "508441590262d0385299b4543af6045b7522cc70dec7ebc8bf09912342ff2b94"
+              "sha256": "34ba5168c6739c255a19c6a23de561081e1b0651d0d717a5dfadac19212dec0c"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
@@ -353393,7 +353408,8 @@
             "Bindings renewed by release-0.5-forms-confirmation-journey: additive confirmation entry/exports, display-only exact IRR/toman, scoped host/risk metadata and guarded explicit approval. Existing81 requests and180 payload/version/idempotency fields AST-identical; backend/shared domain and original budgets unchanged.139 distinct native cases,138 affected full-file web passes, shared control/distribution checks cover the UI delta. Original domain evidence retained for unchanged behavior; adapted test actions explicitly perform the additional approval and preserve assertions.",
             "Bindings renewed by release-0.5-notification-recovery-journey: tested presentation, read-only owned timestamp and additive locale changes. All 71 UI HTTP calls and 96 captured body/review/idempotency fields are unchanged, old feedback labels and original numeric limits are preserved, and affected browser/API/unit and export checks are recorded.",
             "Source bindings renewed by release-0.5-query-and-command-completion: affected owned read, permission, financial review and browser cases pass; writes/CSRF, original budget rules and financial assertions are preserved.",
-            "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only."
+            "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
+            "Bindings renewed by release-0.5-required-form-and-action-closure: required announcements and a native label target changed; solar and cancellation behavior, current authority, exact command and receipt assertions pass on the matching production build."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/saving-cancellation",
           "limitations": [
@@ -353962,6 +353978,11 @@
               "batch": "release-0.5-form-and-document-accessibility",
               "base_commit": "bc50e458e469d4fae48336f6384692b2a0a93251",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-form-and-document-accessibility/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-required-form-and-action-closure",
+              "base_commit": "bfb8f903e36012086d6f8e886e73acc751af5f80",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-form-and-action-closure/source-binding.json"
             }
           ]
         }
@@ -354001,7 +354022,8 @@
           "release-0.5-forms-confirmation-journey",
           "release-0.5-notification-recovery-journey",
           "release-0.5-query-and-command-completion",
-          "release-0.5-form-and-document-accessibility"
+          "release-0.5-form-and-document-accessibility",
+          "release-0.5-required-form-and-action-closure"
         ],
         "current_acceptance": {
           "kind": "current-saving-cancellation-and-derived-financial-closure-acceptance",
@@ -354221,7 +354243,7 @@
             },
             {
               "path": "apps/web/e2e/cancellation-forms.spec.ts",
-              "sha256": "86d34832b5a8058b551bbd3b6e6099aa8eb74897155dc3101a106c39744b0834"
+              "sha256": "976e5ad51c72d8faab07ca621a3dabc4dd38978d256eedeb7371379f21b1e285"
             },
             {
               "path": "apps/web/e2e/contract-cancellation.spec.ts",
@@ -354233,7 +354255,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationEditor.tsx",
-              "sha256": "508441590262d0385299b4543af6045b7522cc70dec7ebc8bf09912342ff2b94"
+              "sha256": "34ba5168c6739c255a19c6a23de561081e1b0651d0d717a5dfadac19212dec0c"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
@@ -354614,7 +354636,8 @@
             "Bindings renewed by release-0.5-forms-confirmation-journey: additive confirmation entry/exports, display-only exact IRR/toman, scoped host/risk metadata and guarded explicit approval. Existing81 requests and180 payload/version/idempotency fields AST-identical; backend/shared domain and original budgets unchanged.139 distinct native cases,138 affected full-file web passes, shared control/distribution checks cover the UI delta. Original domain evidence retained for unchanged behavior; adapted test actions explicitly perform the additional approval and preserve assertions.",
             "Bindings renewed by release-0.5-notification-recovery-journey: tested presentation, read-only owned timestamp and additive locale changes. All 71 UI HTTP calls and 96 captured body/review/idempotency fields are unchanged, old feedback labels and original numeric limits are preserved, and affected browser/API/unit and export checks are recorded.",
             "Source bindings renewed by release-0.5-query-and-command-completion: affected owned read, permission, financial review and browser cases pass; writes/CSRF, original budget rules and financial assertions are preserved.",
-            "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only."
+            "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
+            "Bindings renewed by release-0.5-required-form-and-action-closure: required announcements and a native label target changed; solar and cancellation behavior, current authority, exact command and receipt assertions pass on the matching production build."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/saving-cancellation",
           "limitations": [
@@ -355183,6 +355206,11 @@
               "batch": "release-0.5-form-and-document-accessibility",
               "base_commit": "bc50e458e469d4fae48336f6384692b2a0a93251",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-form-and-document-accessibility/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-required-form-and-action-closure",
+              "base_commit": "bfb8f903e36012086d6f8e886e73acc751af5f80",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-form-and-action-closure/source-binding.json"
             }
           ]
         }
@@ -355223,7 +355251,8 @@
           "release-0.5-forms-confirmation-journey",
           "release-0.5-notification-recovery-journey",
           "release-0.5-query-and-command-completion",
-          "release-0.5-form-and-document-accessibility"
+          "release-0.5-form-and-document-accessibility",
+          "release-0.5-required-form-and-action-closure"
         ],
         "current_acceptance": {
           "kind": "current-saving-cancellation-and-derived-financial-closure-acceptance",
@@ -355443,7 +355472,7 @@
             },
             {
               "path": "apps/web/e2e/cancellation-forms.spec.ts",
-              "sha256": "86d34832b5a8058b551bbd3b6e6099aa8eb74897155dc3101a106c39744b0834"
+              "sha256": "976e5ad51c72d8faab07ca621a3dabc4dd38978d256eedeb7371379f21b1e285"
             },
             {
               "path": "apps/web/e2e/contract-cancellation.spec.ts",
@@ -355455,7 +355484,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationEditor.tsx",
-              "sha256": "508441590262d0385299b4543af6045b7522cc70dec7ebc8bf09912342ff2b94"
+              "sha256": "34ba5168c6739c255a19c6a23de561081e1b0651d0d717a5dfadac19212dec0c"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
@@ -355836,7 +355865,8 @@
             "Bindings renewed by release-0.5-forms-confirmation-journey: additive confirmation entry/exports, display-only exact IRR/toman, scoped host/risk metadata and guarded explicit approval. Existing81 requests and180 payload/version/idempotency fields AST-identical; backend/shared domain and original budgets unchanged.139 distinct native cases,138 affected full-file web passes, shared control/distribution checks cover the UI delta. Original domain evidence retained for unchanged behavior; adapted test actions explicitly perform the additional approval and preserve assertions.",
             "Bindings renewed by release-0.5-notification-recovery-journey: tested presentation, read-only owned timestamp and additive locale changes. All 71 UI HTTP calls and 96 captured body/review/idempotency fields are unchanged, old feedback labels and original numeric limits are preserved, and affected browser/API/unit and export checks are recorded.",
             "Source bindings renewed by release-0.5-query-and-command-completion: affected owned read, permission, financial review and browser cases pass; writes/CSRF, original budget rules and financial assertions are preserved.",
-            "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only."
+            "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
+            "Bindings renewed by release-0.5-required-form-and-action-closure: required announcements and a native label target changed; solar and cancellation behavior, current authority, exact command and receipt assertions pass on the matching production build."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/saving-cancellation",
           "limitations": [
@@ -356405,6 +356435,11 @@
               "batch": "release-0.5-form-and-document-accessibility",
               "base_commit": "bc50e458e469d4fae48336f6384692b2a0a93251",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-form-and-document-accessibility/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-required-form-and-action-closure",
+              "base_commit": "bfb8f903e36012086d6f8e886e73acc751af5f80",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-form-and-action-closure/source-binding.json"
             }
           ]
         }
@@ -381347,7 +381382,8 @@
           "release-0.5-query-and-command-completion",
           "release-0.5-staff-lists-and-receipts",
           "release-0.5-critical-accessibility",
-          "release-0.5-form-and-document-accessibility"
+          "release-0.5-form-and-document-accessibility",
+          "release-0.5-required-form-and-action-closure"
         ],
         "current_acceptance": {
           "kind": "current-solar-postal-finalization-criteria-and-compatible-staff-routes",
@@ -381691,7 +381727,7 @@
             },
             {
               "path": "apps/web/e2e/solar-postal-forms.spec.ts",
-              "sha256": "4ad26ff1e6572ca5553043718a7ae72a56ce505b6f7bd351c9189314a2929513"
+              "sha256": "511167cb4338fb7b6d42a0ded63f35f7f0f9214932e615386100eb3131c2561c"
             },
             {
               "path": "apps/web/e2e/solar-postal-tracking.spec.ts",
@@ -381707,7 +381743,7 @@
             },
             {
               "path": "apps/web/src/components/SolarPostalPanel.tsx",
-              "sha256": "0f3c3ecb0f37274a22c5b42d73a820707d7638b78b62b540cedafbfd0df8bfe2"
+              "sha256": "36f0ed3952b5079765d4367294e329e644f8ce0c233b09aab23de9eebd960c97"
             },
             {
               "path": "apps/web/src/components/solar-contract-forms.test.tsx",
@@ -382074,7 +382110,8 @@
             "Source bindings renewed by release-0.5-query-and-command-completion: affected owned read, permission, financial review and browser cases pass; writes/CSRF, original budget rules and financial assertions are preserved.",
             "Bindings renewed by release-0.5-staff-lists-and-receipts: scoped query and confirmed receipt behavior with the original assertions, write payloads, CSRF and budgets. Current targeted unit and native results are recorded.",
             "Bindings renewed by release-0.5-critical-accessibility: audited canonical landmarks, retained command calls and validated auth-entry authority. Exact targeted unit/browser and original performance evidence passes.",
-            "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only."
+            "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
+            "Bindings renewed by release-0.5-required-form-and-action-closure: required announcements and a native label target changed; solar and cancellation behavior, current authority, exact command and receipt assertions pass on the matching production build."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/solar-postal-finalization",
           "limitations": [
@@ -382565,6 +382602,11 @@
               "batch": "release-0.5-form-and-document-accessibility",
               "base_commit": "bc50e458e469d4fae48336f6384692b2a0a93251",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-form-and-document-accessibility/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-required-form-and-action-closure",
+              "base_commit": "bfb8f903e36012086d6f8e886e73acc751af5f80",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-form-and-action-closure/source-binding.json"
             }
           ]
         }
@@ -382606,7 +382648,8 @@
           "release-0.5-query-and-command-completion",
           "release-0.5-staff-lists-and-receipts",
           "release-0.5-critical-accessibility",
-          "release-0.5-form-and-document-accessibility"
+          "release-0.5-form-and-document-accessibility",
+          "release-0.5-required-form-and-action-closure"
         ],
         "current_acceptance": {
           "kind": "current-solar-postal-finalization-criteria-and-compatible-staff-routes",
@@ -382950,7 +382993,7 @@
             },
             {
               "path": "apps/web/e2e/solar-postal-forms.spec.ts",
-              "sha256": "4ad26ff1e6572ca5553043718a7ae72a56ce505b6f7bd351c9189314a2929513"
+              "sha256": "511167cb4338fb7b6d42a0ded63f35f7f0f9214932e615386100eb3131c2561c"
             },
             {
               "path": "apps/web/e2e/solar-postal-tracking.spec.ts",
@@ -382966,7 +383009,7 @@
             },
             {
               "path": "apps/web/src/components/SolarPostalPanel.tsx",
-              "sha256": "0f3c3ecb0f37274a22c5b42d73a820707d7638b78b62b540cedafbfd0df8bfe2"
+              "sha256": "36f0ed3952b5079765d4367294e329e644f8ce0c233b09aab23de9eebd960c97"
             },
             {
               "path": "apps/web/src/components/solar-contract-forms.test.tsx",
@@ -383333,7 +383376,8 @@
             "Source bindings renewed by release-0.5-query-and-command-completion: affected owned read, permission, financial review and browser cases pass; writes/CSRF, original budget rules and financial assertions are preserved.",
             "Bindings renewed by release-0.5-staff-lists-and-receipts: scoped query and confirmed receipt behavior with the original assertions, write payloads, CSRF and budgets. Current targeted unit and native results are recorded.",
             "Bindings renewed by release-0.5-critical-accessibility: audited canonical landmarks, retained command calls and validated auth-entry authority. Exact targeted unit/browser and original performance evidence passes.",
-            "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only."
+            "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
+            "Bindings renewed by release-0.5-required-form-and-action-closure: required announcements and a native label target changed; solar and cancellation behavior, current authority, exact command and receipt assertions pass on the matching production build."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/solar-postal-finalization",
           "limitations": [
@@ -383824,6 +383868,11 @@
               "batch": "release-0.5-form-and-document-accessibility",
               "base_commit": "bc50e458e469d4fae48336f6384692b2a0a93251",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-form-and-document-accessibility/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-required-form-and-action-closure",
+              "base_commit": "bfb8f903e36012086d6f8e886e73acc751af5f80",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-form-and-action-closure/source-binding.json"
             }
           ]
         }
@@ -383866,7 +383915,8 @@
           "release-0.5-query-and-command-completion",
           "release-0.5-staff-lists-and-receipts",
           "release-0.5-critical-accessibility",
-          "release-0.5-form-and-document-accessibility"
+          "release-0.5-form-and-document-accessibility",
+          "release-0.5-required-form-and-action-closure"
         ],
         "current_acceptance": {
           "kind": "current-solar-postal-finalization-criteria-and-compatible-staff-routes",
@@ -384210,7 +384260,7 @@
             },
             {
               "path": "apps/web/e2e/solar-postal-forms.spec.ts",
-              "sha256": "4ad26ff1e6572ca5553043718a7ae72a56ce505b6f7bd351c9189314a2929513"
+              "sha256": "511167cb4338fb7b6d42a0ded63f35f7f0f9214932e615386100eb3131c2561c"
             },
             {
               "path": "apps/web/e2e/solar-postal-tracking.spec.ts",
@@ -384226,7 +384276,7 @@
             },
             {
               "path": "apps/web/src/components/SolarPostalPanel.tsx",
-              "sha256": "0f3c3ecb0f37274a22c5b42d73a820707d7638b78b62b540cedafbfd0df8bfe2"
+              "sha256": "36f0ed3952b5079765d4367294e329e644f8ce0c233b09aab23de9eebd960c97"
             },
             {
               "path": "apps/web/src/components/solar-contract-forms.test.tsx",
@@ -384593,7 +384643,8 @@
             "Source bindings renewed by release-0.5-query-and-command-completion: affected owned read, permission, financial review and browser cases pass; writes/CSRF, original budget rules and financial assertions are preserved.",
             "Bindings renewed by release-0.5-staff-lists-and-receipts: scoped query and confirmed receipt behavior with the original assertions, write payloads, CSRF and budgets. Current targeted unit and native results are recorded.",
             "Bindings renewed by release-0.5-critical-accessibility: audited canonical landmarks, retained command calls and validated auth-entry authority. Exact targeted unit/browser and original performance evidence passes.",
-            "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only."
+            "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
+            "Bindings renewed by release-0.5-required-form-and-action-closure: required announcements and a native label target changed; solar and cancellation behavior, current authority, exact command and receipt assertions pass on the matching production build."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/solar-postal-finalization",
           "limitations": [
@@ -385084,6 +385135,11 @@
               "batch": "release-0.5-form-and-document-accessibility",
               "base_commit": "bc50e458e469d4fae48336f6384692b2a0a93251",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-form-and-document-accessibility/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-required-form-and-action-closure",
+              "base_commit": "bfb8f903e36012086d6f8e886e73acc751af5f80",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-form-and-action-closure/source-binding.json"
             }
           ]
         }
@@ -385125,7 +385181,8 @@
           "release-0.5-query-and-command-completion",
           "release-0.5-staff-lists-and-receipts",
           "release-0.5-critical-accessibility",
-          "release-0.5-form-and-document-accessibility"
+          "release-0.5-form-and-document-accessibility",
+          "release-0.5-required-form-and-action-closure"
         ],
         "current_acceptance": {
           "kind": "current-solar-postal-finalization-criteria-and-compatible-staff-routes",
@@ -385469,7 +385526,7 @@
             },
             {
               "path": "apps/web/e2e/solar-postal-forms.spec.ts",
-              "sha256": "4ad26ff1e6572ca5553043718a7ae72a56ce505b6f7bd351c9189314a2929513"
+              "sha256": "511167cb4338fb7b6d42a0ded63f35f7f0f9214932e615386100eb3131c2561c"
             },
             {
               "path": "apps/web/e2e/solar-postal-tracking.spec.ts",
@@ -385485,7 +385542,7 @@
             },
             {
               "path": "apps/web/src/components/SolarPostalPanel.tsx",
-              "sha256": "0f3c3ecb0f37274a22c5b42d73a820707d7638b78b62b540cedafbfd0df8bfe2"
+              "sha256": "36f0ed3952b5079765d4367294e329e644f8ce0c233b09aab23de9eebd960c97"
             },
             {
               "path": "apps/web/src/components/solar-contract-forms.test.tsx",
@@ -385852,7 +385909,8 @@
             "Source bindings renewed by release-0.5-query-and-command-completion: affected owned read, permission, financial review and browser cases pass; writes/CSRF, original budget rules and financial assertions are preserved.",
             "Bindings renewed by release-0.5-staff-lists-and-receipts: scoped query and confirmed receipt behavior with the original assertions, write payloads, CSRF and budgets. Current targeted unit and native results are recorded.",
             "Bindings renewed by release-0.5-critical-accessibility: audited canonical landmarks, retained command calls and validated auth-entry authority. Exact targeted unit/browser and original performance evidence passes.",
-            "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only."
+            "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
+            "Bindings renewed by release-0.5-required-form-and-action-closure: required announcements and a native label target changed; solar and cancellation behavior, current authority, exact command and receipt assertions pass on the matching production build."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/solar-postal-finalization",
           "limitations": [
@@ -386343,6 +386401,11 @@
               "batch": "release-0.5-form-and-document-accessibility",
               "base_commit": "bc50e458e469d4fae48336f6384692b2a0a93251",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-form-and-document-accessibility/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-required-form-and-action-closure",
+              "base_commit": "bfb8f903e36012086d6f8e886e73acc751af5f80",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-form-and-action-closure/source-binding.json"
             }
           ]
         }
@@ -386384,7 +386447,8 @@
           "release-0.5-query-and-command-completion",
           "release-0.5-staff-lists-and-receipts",
           "release-0.5-critical-accessibility",
-          "release-0.5-form-and-document-accessibility"
+          "release-0.5-form-and-document-accessibility",
+          "release-0.5-required-form-and-action-closure"
         ],
         "current_acceptance": {
           "kind": "current-solar-postal-finalization-criteria-and-compatible-staff-routes",
@@ -386728,7 +386792,7 @@
             },
             {
               "path": "apps/web/e2e/solar-postal-forms.spec.ts",
-              "sha256": "4ad26ff1e6572ca5553043718a7ae72a56ce505b6f7bd351c9189314a2929513"
+              "sha256": "511167cb4338fb7b6d42a0ded63f35f7f0f9214932e615386100eb3131c2561c"
             },
             {
               "path": "apps/web/e2e/solar-postal-tracking.spec.ts",
@@ -386744,7 +386808,7 @@
             },
             {
               "path": "apps/web/src/components/SolarPostalPanel.tsx",
-              "sha256": "0f3c3ecb0f37274a22c5b42d73a820707d7638b78b62b540cedafbfd0df8bfe2"
+              "sha256": "36f0ed3952b5079765d4367294e329e644f8ce0c233b09aab23de9eebd960c97"
             },
             {
               "path": "apps/web/src/components/solar-contract-forms.test.tsx",
@@ -387111,7 +387175,8 @@
             "Source bindings renewed by release-0.5-query-and-command-completion: affected owned read, permission, financial review and browser cases pass; writes/CSRF, original budget rules and financial assertions are preserved.",
             "Bindings renewed by release-0.5-staff-lists-and-receipts: scoped query and confirmed receipt behavior with the original assertions, write payloads, CSRF and budgets. Current targeted unit and native results are recorded.",
             "Bindings renewed by release-0.5-critical-accessibility: audited canonical landmarks, retained command calls and validated auth-entry authority. Exact targeted unit/browser and original performance evidence passes.",
-            "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only."
+            "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
+            "Bindings renewed by release-0.5-required-form-and-action-closure: required announcements and a native label target changed; solar and cancellation behavior, current authority, exact command and receipt assertions pass on the matching production build."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/solar-postal-finalization",
           "limitations": [
@@ -387602,6 +387667,11 @@
               "batch": "release-0.5-form-and-document-accessibility",
               "base_commit": "bc50e458e469d4fae48336f6384692b2a0a93251",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-form-and-document-accessibility/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-required-form-and-action-closure",
+              "base_commit": "bfb8f903e36012086d6f8e886e73acc751af5f80",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-form-and-action-closure/source-binding.json"
             }
           ]
         }
@@ -387644,7 +387714,8 @@
           "release-0.5-query-and-command-completion",
           "release-0.5-staff-lists-and-receipts",
           "release-0.5-critical-accessibility",
-          "release-0.5-form-and-document-accessibility"
+          "release-0.5-form-and-document-accessibility",
+          "release-0.5-required-form-and-action-closure"
         ],
         "current_acceptance": {
           "kind": "current-solar-postal-finalization-criteria-and-compatible-staff-routes",
@@ -387988,7 +388059,7 @@
             },
             {
               "path": "apps/web/e2e/solar-postal-forms.spec.ts",
-              "sha256": "4ad26ff1e6572ca5553043718a7ae72a56ce505b6f7bd351c9189314a2929513"
+              "sha256": "511167cb4338fb7b6d42a0ded63f35f7f0f9214932e615386100eb3131c2561c"
             },
             {
               "path": "apps/web/e2e/solar-postal-tracking.spec.ts",
@@ -388004,7 +388075,7 @@
             },
             {
               "path": "apps/web/src/components/SolarPostalPanel.tsx",
-              "sha256": "0f3c3ecb0f37274a22c5b42d73a820707d7638b78b62b540cedafbfd0df8bfe2"
+              "sha256": "36f0ed3952b5079765d4367294e329e644f8ce0c233b09aab23de9eebd960c97"
             },
             {
               "path": "apps/web/src/components/solar-contract-forms.test.tsx",
@@ -388371,7 +388442,8 @@
             "Source bindings renewed by release-0.5-query-and-command-completion: affected owned read, permission, financial review and browser cases pass; writes/CSRF, original budget rules and financial assertions are preserved.",
             "Bindings renewed by release-0.5-staff-lists-and-receipts: scoped query and confirmed receipt behavior with the original assertions, write payloads, CSRF and budgets. Current targeted unit and native results are recorded.",
             "Bindings renewed by release-0.5-critical-accessibility: audited canonical landmarks, retained command calls and validated auth-entry authority. Exact targeted unit/browser and original performance evidence passes.",
-            "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only."
+            "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
+            "Bindings renewed by release-0.5-required-form-and-action-closure: required announcements and a native label target changed; solar and cancellation behavior, current authority, exact command and receipt assertions pass on the matching production build."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/solar-postal-finalization",
           "limitations": [
@@ -388862,6 +388934,11 @@
               "batch": "release-0.5-form-and-document-accessibility",
               "base_commit": "bc50e458e469d4fae48336f6384692b2a0a93251",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-form-and-document-accessibility/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-required-form-and-action-closure",
+              "base_commit": "bfb8f903e36012086d6f8e886e73acc751af5f80",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-form-and-action-closure/source-binding.json"
             }
           ]
         }
@@ -388905,7 +388982,8 @@
           "release-0.5-query-and-command-completion",
           "release-0.5-staff-lists-and-receipts",
           "release-0.5-critical-accessibility",
-          "release-0.5-form-and-document-accessibility"
+          "release-0.5-form-and-document-accessibility",
+          "release-0.5-required-form-and-action-closure"
         ],
         "current_acceptance": {
           "kind": "current-solar-postal-finalization-criteria-and-compatible-staff-routes",
@@ -389249,7 +389327,7 @@
             },
             {
               "path": "apps/web/e2e/solar-postal-forms.spec.ts",
-              "sha256": "4ad26ff1e6572ca5553043718a7ae72a56ce505b6f7bd351c9189314a2929513"
+              "sha256": "511167cb4338fb7b6d42a0ded63f35f7f0f9214932e615386100eb3131c2561c"
             },
             {
               "path": "apps/web/e2e/solar-postal-tracking.spec.ts",
@@ -389265,7 +389343,7 @@
             },
             {
               "path": "apps/web/src/components/SolarPostalPanel.tsx",
-              "sha256": "0f3c3ecb0f37274a22c5b42d73a820707d7638b78b62b540cedafbfd0df8bfe2"
+              "sha256": "36f0ed3952b5079765d4367294e329e644f8ce0c233b09aab23de9eebd960c97"
             },
             {
               "path": "apps/web/src/components/solar-contract-forms.test.tsx",
@@ -389632,7 +389710,8 @@
             "Source bindings renewed by release-0.5-query-and-command-completion: affected owned read, permission, financial review and browser cases pass; writes/CSRF, original budget rules and financial assertions are preserved.",
             "Bindings renewed by release-0.5-staff-lists-and-receipts: scoped query and confirmed receipt behavior with the original assertions, write payloads, CSRF and budgets. Current targeted unit and native results are recorded.",
             "Bindings renewed by release-0.5-critical-accessibility: audited canonical landmarks, retained command calls and validated auth-entry authority. Exact targeted unit/browser and original performance evidence passes.",
-            "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only."
+            "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
+            "Bindings renewed by release-0.5-required-form-and-action-closure: required announcements and a native label target changed; solar and cancellation behavior, current authority, exact command and receipt assertions pass on the matching production build."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/solar-postal-finalization",
           "limitations": [
@@ -390123,6 +390202,11 @@
               "batch": "release-0.5-form-and-document-accessibility",
               "base_commit": "bc50e458e469d4fae48336f6384692b2a0a93251",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-form-and-document-accessibility/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-required-form-and-action-closure",
+              "base_commit": "bfb8f903e36012086d6f8e886e73acc751af5f80",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-form-and-action-closure/source-binding.json"
             }
           ]
         }
@@ -391422,7 +391506,8 @@
           "release-0.5-query-and-command-completion",
           "release-0.5-staff-lists-and-receipts",
           "release-0.5-critical-accessibility",
-          "release-0.5-form-and-document-accessibility"
+          "release-0.5-form-and-document-accessibility",
+          "release-0.5-required-form-and-action-closure"
         ],
         "current_acceptance": {
           "kind": "current-solar-postal-finalization-criteria-and-compatible-staff-routes",
@@ -391766,7 +391851,7 @@
             },
             {
               "path": "apps/web/e2e/solar-postal-forms.spec.ts",
-              "sha256": "4ad26ff1e6572ca5553043718a7ae72a56ce505b6f7bd351c9189314a2929513"
+              "sha256": "511167cb4338fb7b6d42a0ded63f35f7f0f9214932e615386100eb3131c2561c"
             },
             {
               "path": "apps/web/e2e/solar-postal-tracking.spec.ts",
@@ -391782,7 +391867,7 @@
             },
             {
               "path": "apps/web/src/components/SolarPostalPanel.tsx",
-              "sha256": "0f3c3ecb0f37274a22c5b42d73a820707d7638b78b62b540cedafbfd0df8bfe2"
+              "sha256": "36f0ed3952b5079765d4367294e329e644f8ce0c233b09aab23de9eebd960c97"
             },
             {
               "path": "apps/web/src/components/solar-contract-forms.test.tsx",
@@ -392149,7 +392234,8 @@
             "Source bindings renewed by release-0.5-query-and-command-completion: affected owned read, permission, financial review and browser cases pass; writes/CSRF, original budget rules and financial assertions are preserved.",
             "Bindings renewed by release-0.5-staff-lists-and-receipts: scoped query and confirmed receipt behavior with the original assertions, write payloads, CSRF and budgets. Current targeted unit and native results are recorded.",
             "Bindings renewed by release-0.5-critical-accessibility: audited canonical landmarks, retained command calls and validated auth-entry authority. Exact targeted unit/browser and original performance evidence passes.",
-            "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only."
+            "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
+            "Bindings renewed by release-0.5-required-form-and-action-closure: required announcements and a native label target changed; solar and cancellation behavior, current authority, exact command and receipt assertions pass on the matching production build."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/solar-postal-finalization",
           "limitations": [
@@ -392640,6 +392726,11 @@
               "batch": "release-0.5-form-and-document-accessibility",
               "base_commit": "bc50e458e469d4fae48336f6384692b2a0a93251",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-form-and-document-accessibility/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-required-form-and-action-closure",
+              "base_commit": "bfb8f903e36012086d6f8e886e73acc751af5f80",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-form-and-action-closure/source-binding.json"
             }
           ]
         }
@@ -392680,7 +392771,8 @@
           "release-0.5-query-and-command-completion",
           "release-0.5-staff-lists-and-receipts",
           "release-0.5-critical-accessibility",
-          "release-0.5-form-and-document-accessibility"
+          "release-0.5-form-and-document-accessibility",
+          "release-0.5-required-form-and-action-closure"
         ],
         "current_acceptance": {
           "kind": "current-solar-postal-finalization-criteria-and-compatible-staff-routes",
@@ -393024,7 +393116,7 @@
             },
             {
               "path": "apps/web/e2e/solar-postal-forms.spec.ts",
-              "sha256": "4ad26ff1e6572ca5553043718a7ae72a56ce505b6f7bd351c9189314a2929513"
+              "sha256": "511167cb4338fb7b6d42a0ded63f35f7f0f9214932e615386100eb3131c2561c"
             },
             {
               "path": "apps/web/e2e/solar-postal-tracking.spec.ts",
@@ -393040,7 +393132,7 @@
             },
             {
               "path": "apps/web/src/components/SolarPostalPanel.tsx",
-              "sha256": "0f3c3ecb0f37274a22c5b42d73a820707d7638b78b62b540cedafbfd0df8bfe2"
+              "sha256": "36f0ed3952b5079765d4367294e329e644f8ce0c233b09aab23de9eebd960c97"
             },
             {
               "path": "apps/web/src/components/solar-contract-forms.test.tsx",
@@ -393407,7 +393499,8 @@
             "Source bindings renewed by release-0.5-query-and-command-completion: affected owned read, permission, financial review and browser cases pass; writes/CSRF, original budget rules and financial assertions are preserved.",
             "Bindings renewed by release-0.5-staff-lists-and-receipts: scoped query and confirmed receipt behavior with the original assertions, write payloads, CSRF and budgets. Current targeted unit and native results are recorded.",
             "Bindings renewed by release-0.5-critical-accessibility: audited canonical landmarks, retained command calls and validated auth-entry authority. Exact targeted unit/browser and original performance evidence passes.",
-            "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only."
+            "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
+            "Bindings renewed by release-0.5-required-form-and-action-closure: required announcements and a native label target changed; solar and cancellation behavior, current authority, exact command and receipt assertions pass on the matching production build."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/solar-postal-finalization",
           "limitations": [
@@ -393898,6 +393991,11 @@
               "batch": "release-0.5-form-and-document-accessibility",
               "base_commit": "bc50e458e469d4fae48336f6384692b2a0a93251",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-form-and-document-accessibility/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-required-form-and-action-closure",
+              "base_commit": "bfb8f903e36012086d6f8e886e73acc751af5f80",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-form-and-action-closure/source-binding.json"
             }
           ]
         }
@@ -463693,7 +463791,8 @@
           "release-0.5-form-conditions-and-command-feedback",
           "release-0.5-route-state-closure",
           "release-0.5-safari-main-keyboard",
-          "release-0.5-route-adoption-matrix"
+          "release-0.5-route-adoption-matrix",
+          "release-0.5-required-form-and-action-closure"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -463861,7 +463960,7 @@
             },
             {
               "path": "apps/web/src/components/SolarPostalPanel.tsx",
-              "sha256": "0f3c3ecb0f37274a22c5b42d73a820707d7638b78b62b540cedafbfd0df8bfe2"
+              "sha256": "36f0ed3952b5079765d4367294e329e644f8ce0c233b09aab23de9eebd960c97"
             },
             {
               "path": "apps/web/src/components/SonnerToaster.tsx",
@@ -464285,7 +464384,8 @@
             "Bindings renewed by release-0.5-form-conditions-and-command-feedback: form semantics and receipt-based feedback verified with scoped units, browser journeys and original budgets.",
             "Bindings renewed by release-0.5-route-state-closure: bounded reads, existing authorization and caller behavior checked with targeted units, browser journeys and original bundle limits.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
-            "Bindings renewed by release-0.5-route-adoption-matrix: the solar document action has a layout-only change, and the affected browser journeys and solar units pass with existing receipt, authority and financial assertions. Saving browser checks preserve their exact draft and refund assertions after the width probe."
+            "Bindings renewed by release-0.5-route-adoption-matrix: the solar document action has a layout-only change, and the affected browser journeys and solar units pass with existing receipt, authority and financial assertions. Saving browser checks preserve their exact draft and refund assertions after the width probe.",
+            "Bindings renewed by release-0.5-required-form-and-action-closure: required announcements and a native label target changed; solar and cancellation behavior, current authority, exact command and receipt assertions pass on the matching production build."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-shared-component-closure",
           "limitations": [
@@ -464381,6 +464481,11 @@
               "batch": "release-0.5-route-adoption-matrix",
               "base_commit": "fa9f3d06d2de8028bbb72853609c6a0e636410cf",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-adoption-matrix/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-required-form-and-action-closure",
+              "base_commit": "bfb8f903e36012086d6f8e886e73acc751af5f80",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-form-and-action-closure/source-binding.json"
             }
           ]
         },
@@ -466325,7 +466430,8 @@
           "release-0.5-populated-route-presentation",
           "release-0.5-form-conditions-and-command-feedback",
           "release-0.5-route-state-closure",
-          "release-0.5-route-adoption-matrix"
+          "release-0.5-route-adoption-matrix",
+          "release-0.5-required-form-and-action-closure"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -466525,7 +466631,7 @@
             },
             {
               "path": "apps/web/src/components/SolarPostalPanel.tsx",
-              "sha256": "0f3c3ecb0f37274a22c5b42d73a820707d7638b78b62b540cedafbfd0df8bfe2"
+              "sha256": "36f0ed3952b5079765d4367294e329e644f8ce0c233b09aab23de9eebd960c97"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
@@ -466826,7 +466932,8 @@
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
             "Bindings renewed by release-0.5-form-conditions-and-command-feedback: form semantics and receipt-based feedback verified with scoped units, browser journeys and original budgets.",
             "Bindings renewed by release-0.5-route-state-closure: bounded reads, existing authorization and caller behavior checked with targeted units, browser journeys and original bundle limits.",
-            "Bindings renewed by release-0.5-route-adoption-matrix: the solar document action has a layout-only change, and the affected browser journeys and solar units pass with existing receipt, authority and financial assertions. Saving browser checks preserve their exact draft and refund assertions after the width probe."
+            "Bindings renewed by release-0.5-route-adoption-matrix: the solar document action has a layout-only change, and the affected browser journeys and solar units pass with existing receipt, authority and financial assertions. Saving browser checks preserve their exact draft and refund assertions after the width probe.",
+            "Bindings renewed by release-0.5-required-form-and-action-closure: required announcements and a native label target changed; solar and cancellation behavior, current authority, exact command and receipt assertions pass on the matching production build."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-lists-and-receipts",
           "limitations": [
@@ -466877,6 +466984,11 @@
               "batch": "release-0.5-route-adoption-matrix",
               "base_commit": "fa9f3d06d2de8028bbb72853609c6a0e636410cf",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-adoption-matrix/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-required-form-and-action-closure",
+              "base_commit": "bfb8f903e36012086d6f8e886e73acc751af5f80",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-form-and-action-closure/source-binding.json"
             }
           ]
         }
@@ -466984,7 +467096,8 @@
           "release-0.5-populated-route-presentation",
           "release-0.5-form-conditions-and-command-feedback",
           "release-0.5-route-state-closure",
-          "release-0.5-route-adoption-matrix"
+          "release-0.5-route-adoption-matrix",
+          "release-0.5-required-form-and-action-closure"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -467184,7 +467297,7 @@
             },
             {
               "path": "apps/web/src/components/SolarPostalPanel.tsx",
-              "sha256": "0f3c3ecb0f37274a22c5b42d73a820707d7638b78b62b540cedafbfd0df8bfe2"
+              "sha256": "36f0ed3952b5079765d4367294e329e644f8ce0c233b09aab23de9eebd960c97"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
@@ -467485,7 +467598,8 @@
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
             "Bindings renewed by release-0.5-form-conditions-and-command-feedback: form semantics and receipt-based feedback verified with scoped units, browser journeys and original budgets.",
             "Bindings renewed by release-0.5-route-state-closure: bounded reads, existing authorization and caller behavior checked with targeted units, browser journeys and original bundle limits.",
-            "Bindings renewed by release-0.5-route-adoption-matrix: the solar document action has a layout-only change, and the affected browser journeys and solar units pass with existing receipt, authority and financial assertions. Saving browser checks preserve their exact draft and refund assertions after the width probe."
+            "Bindings renewed by release-0.5-route-adoption-matrix: the solar document action has a layout-only change, and the affected browser journeys and solar units pass with existing receipt, authority and financial assertions. Saving browser checks preserve their exact draft and refund assertions after the width probe.",
+            "Bindings renewed by release-0.5-required-form-and-action-closure: required announcements and a native label target changed; solar and cancellation behavior, current authority, exact command and receipt assertions pass on the matching production build."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-lists-and-receipts",
           "limitations": [
@@ -467536,6 +467650,11 @@
               "batch": "release-0.5-route-adoption-matrix",
               "base_commit": "fa9f3d06d2de8028bbb72853609c6a0e636410cf",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-adoption-matrix/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-required-form-and-action-closure",
+              "base_commit": "bfb8f903e36012086d6f8e886e73acc751af5f80",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-form-and-action-closure/source-binding.json"
             }
           ]
         }
@@ -467584,7 +467703,8 @@
           "release-0.5-populated-route-presentation",
           "release-0.5-form-conditions-and-command-feedback",
           "release-0.5-route-state-closure",
-          "release-0.5-route-adoption-matrix"
+          "release-0.5-route-adoption-matrix",
+          "release-0.5-required-form-and-action-closure"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -467784,7 +467904,7 @@
             },
             {
               "path": "apps/web/src/components/SolarPostalPanel.tsx",
-              "sha256": "0f3c3ecb0f37274a22c5b42d73a820707d7638b78b62b540cedafbfd0df8bfe2"
+              "sha256": "36f0ed3952b5079765d4367294e329e644f8ce0c233b09aab23de9eebd960c97"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
@@ -468085,7 +468205,8 @@
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
             "Bindings renewed by release-0.5-form-conditions-and-command-feedback: form semantics and receipt-based feedback verified with scoped units, browser journeys and original budgets.",
             "Bindings renewed by release-0.5-route-state-closure: bounded reads, existing authorization and caller behavior checked with targeted units, browser journeys and original bundle limits.",
-            "Bindings renewed by release-0.5-route-adoption-matrix: the solar document action has a layout-only change, and the affected browser journeys and solar units pass with existing receipt, authority and financial assertions. Saving browser checks preserve their exact draft and refund assertions after the width probe."
+            "Bindings renewed by release-0.5-route-adoption-matrix: the solar document action has a layout-only change, and the affected browser journeys and solar units pass with existing receipt, authority and financial assertions. Saving browser checks preserve their exact draft and refund assertions after the width probe.",
+            "Bindings renewed by release-0.5-required-form-and-action-closure: required announcements and a native label target changed; solar and cancellation behavior, current authority, exact command and receipt assertions pass on the matching production build."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-lists-and-receipts",
           "limitations": [
@@ -468136,6 +468257,11 @@
               "batch": "release-0.5-route-adoption-matrix",
               "base_commit": "fa9f3d06d2de8028bbb72853609c6a0e636410cf",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-adoption-matrix/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-required-form-and-action-closure",
+              "base_commit": "bfb8f903e36012086d6f8e886e73acc751af5f80",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-form-and-action-closure/source-binding.json"
             }
           ]
         }
@@ -468243,7 +468369,8 @@
           "release-0.5-form-and-document-accessibility",
           "release-0.5-populated-route-presentation",
           "release-0.5-route-state-closure",
-          "release-0.5-route-adoption-matrix"
+          "release-0.5-route-adoption-matrix",
+          "release-0.5-required-form-and-action-closure"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -468303,7 +468430,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationEditor.tsx",
-              "sha256": "508441590262d0385299b4543af6045b7522cc70dec7ebc8bf09912342ff2b94"
+              "sha256": "34ba5168c6739c255a19c6a23de561081e1b0651d0d717a5dfadac19212dec0c"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.tsx",
@@ -468712,7 +468839,8 @@
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
             "Bindings renewed by release-0.5-route-state-closure: bounded reads, existing authorization and caller behavior checked with targeted units, browser journeys and original bundle limits.",
-            "Bindings renewed by release-0.5-route-adoption-matrix: the solar document action has a layout-only change, and the affected browser journeys and solar units pass with existing receipt, authority and financial assertions. Saving browser checks preserve their exact draft and refund assertions after the width probe."
+            "Bindings renewed by release-0.5-route-adoption-matrix: the solar document action has a layout-only change, and the affected browser journeys and solar units pass with existing receipt, authority and financial assertions. Saving browser checks preserve their exact draft and refund assertions after the width probe.",
+            "Bindings renewed by release-0.5-required-form-and-action-closure: required announcements and a native label target changed; solar and cancellation behavior, current authority, exact command and receipt assertions pass on the matching production build."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-query-and-command-completion",
           "limitations": [
@@ -468763,6 +468891,11 @@
               "batch": "release-0.5-route-adoption-matrix",
               "base_commit": "fa9f3d06d2de8028bbb72853609c6a0e636410cf",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-adoption-matrix/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-required-form-and-action-closure",
+              "base_commit": "bfb8f903e36012086d6f8e886e73acc751af5f80",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-form-and-action-closure/source-binding.json"
             }
           ]
         }
@@ -480270,7 +480403,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Fixed the measured CRM, contracts, invoice, wallet input and consultation form targets. The receipt identifies remaining short standalone history and wallet links, native receipt disclosure and staff controls. Measure custom picker and other unvisited interactions before global acceptance."
+        "Mobile label taps now verify the 44×44 cancellation custom refund checkbox target. Existing width reports still show short standalone actions in electricity detail/history, invoices, saving, contracts and the consultation staff team selector. Measure and repair the exact recorded targets and unvisited pickers before global acceptance."
       ],
       "owner": null,
       "depends_on": [],
@@ -480280,7 +480413,8 @@
         "batches": [
           "release-0.5-responsive-and-rtl",
           "release-0.5-mobile-lists-and-touch",
-          "release-0.5-populated-route-presentation"
+          "release-0.5-populated-route-presentation",
+          "release-0.5-required-form-and-action-closure"
         ],
         "current_acceptance": null
       }
@@ -483581,7 +483715,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "The earlier 561-field census and linked error fixes are retained. Verified required ticket controls, conditional CRM verification reason, and the either-or reply rule. Reconcile other schema-only conditional controls, starting with required solar postal courier, tracking number and send date and custom cancellation decisions."
+        "The 561-field census and previous linked error evidence are retained. Verified customer postal courier, tracking and date, optional receipt, and conditional custom refund amount and destination. Finish checking the remaining fields whose requirement is expressed only in conditional domain validation, including admin solar guidance languages."
       ],
       "owner": null,
       "depends_on": [],
@@ -483590,7 +483724,8 @@
         "changed_paths": [],
         "batches": [
           "release-0.5-form-and-document-accessibility",
-          "release-0.5-form-conditions-and-command-feedback"
+          "release-0.5-form-conditions-and-command-feedback",
+          "release-0.5-required-form-and-action-closure"
         ],
         "current_acceptance": null
       }
@@ -505849,7 +505984,8 @@
           "release-0.5-populated-route-presentation",
           "release-0.5-form-conditions-and-command-feedback",
           "release-0.5-safari-main-keyboard",
-          "release-0.5-route-adoption-matrix"
+          "release-0.5-route-adoption-matrix",
+          "release-0.5-required-form-and-action-closure"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -505921,7 +506057,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationEditor.tsx",
-              "sha256": "508441590262d0385299b4543af6045b7522cc70dec7ebc8bf09912342ff2b94"
+              "sha256": "34ba5168c6739c255a19c6a23de561081e1b0651d0d717a5dfadac19212dec0c"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
@@ -507244,7 +507380,8 @@
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
             "Bindings renewed by release-0.5-form-conditions-and-command-feedback: form semantics and receipt-based feedback verified with scoped units, browser journeys and original budgets.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
-            "Bindings renewed by release-0.5-route-adoption-matrix: the solar document action has a layout-only change, and the affected browser journeys and solar units pass with existing receipt, authority and financial assertions. Saving browser checks preserve their exact draft and refund assertions after the width probe."
+            "Bindings renewed by release-0.5-route-adoption-matrix: the solar document action has a layout-only change, and the affected browser journeys and solar units pass with existing receipt, authority and financial assertions. Saving browser checks preserve their exact draft and refund assertions after the width probe.",
+            "Bindings renewed by release-0.5-required-form-and-action-closure: required announcements and a native label target changed; solar and cancellation behavior, current authority, exact command and receipt assertions pass on the matching production build."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -507320,6 +507457,11 @@
               "batch": "release-0.5-route-adoption-matrix",
               "base_commit": "fa9f3d06d2de8028bbb72853609c6a0e636410cf",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-adoption-matrix/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-required-form-and-action-closure",
+              "base_commit": "bfb8f903e36012086d6f8e886e73acc751af5f80",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-form-and-action-closure/source-binding.json"
             }
           ]
         },
@@ -507428,7 +507570,8 @@
           "release-0.5-populated-route-presentation",
           "release-0.5-form-conditions-and-command-feedback",
           "release-0.5-safari-main-keyboard",
-          "release-0.5-route-adoption-matrix"
+          "release-0.5-route-adoption-matrix",
+          "release-0.5-required-form-and-action-closure"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -507500,7 +507643,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationEditor.tsx",
-              "sha256": "508441590262d0385299b4543af6045b7522cc70dec7ebc8bf09912342ff2b94"
+              "sha256": "34ba5168c6739c255a19c6a23de561081e1b0651d0d717a5dfadac19212dec0c"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
@@ -508823,7 +508966,8 @@
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
             "Bindings renewed by release-0.5-form-conditions-and-command-feedback: form semantics and receipt-based feedback verified with scoped units, browser journeys and original budgets.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
-            "Bindings renewed by release-0.5-route-adoption-matrix: the solar document action has a layout-only change, and the affected browser journeys and solar units pass with existing receipt, authority and financial assertions. Saving browser checks preserve their exact draft and refund assertions after the width probe."
+            "Bindings renewed by release-0.5-route-adoption-matrix: the solar document action has a layout-only change, and the affected browser journeys and solar units pass with existing receipt, authority and financial assertions. Saving browser checks preserve their exact draft and refund assertions after the width probe.",
+            "Bindings renewed by release-0.5-required-form-and-action-closure: required announcements and a native label target changed; solar and cancellation behavior, current authority, exact command and receipt assertions pass on the matching production build."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -508899,6 +509043,11 @@
               "batch": "release-0.5-route-adoption-matrix",
               "base_commit": "fa9f3d06d2de8028bbb72853609c6a0e636410cf",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-adoption-matrix/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-required-form-and-action-closure",
+              "base_commit": "bfb8f903e36012086d6f8e886e73acc751af5f80",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-form-and-action-closure/source-binding.json"
             }
           ]
         },
@@ -509008,7 +509157,8 @@
           "release-0.5-populated-route-presentation",
           "release-0.5-form-conditions-and-command-feedback",
           "release-0.5-safari-main-keyboard",
-          "release-0.5-route-adoption-matrix"
+          "release-0.5-route-adoption-matrix",
+          "release-0.5-required-form-and-action-closure"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -509080,7 +509230,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationEditor.tsx",
-              "sha256": "508441590262d0385299b4543af6045b7522cc70dec7ebc8bf09912342ff2b94"
+              "sha256": "34ba5168c6739c255a19c6a23de561081e1b0651d0d717a5dfadac19212dec0c"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
@@ -510403,7 +510553,8 @@
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
             "Bindings renewed by release-0.5-form-conditions-and-command-feedback: form semantics and receipt-based feedback verified with scoped units, browser journeys and original budgets.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
-            "Bindings renewed by release-0.5-route-adoption-matrix: the solar document action has a layout-only change, and the affected browser journeys and solar units pass with existing receipt, authority and financial assertions. Saving browser checks preserve their exact draft and refund assertions after the width probe."
+            "Bindings renewed by release-0.5-route-adoption-matrix: the solar document action has a layout-only change, and the affected browser journeys and solar units pass with existing receipt, authority and financial assertions. Saving browser checks preserve their exact draft and refund assertions after the width probe.",
+            "Bindings renewed by release-0.5-required-form-and-action-closure: required announcements and a native label target changed; solar and cancellation behavior, current authority, exact command and receipt assertions pass on the matching production build."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -510479,6 +510630,11 @@
               "batch": "release-0.5-route-adoption-matrix",
               "base_commit": "fa9f3d06d2de8028bbb72853609c6a0e636410cf",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-adoption-matrix/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-required-form-and-action-closure",
+              "base_commit": "bfb8f903e36012086d6f8e886e73acc751af5f80",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-form-and-action-closure/source-binding.json"
             }
           ]
         },
@@ -510557,7 +510713,8 @@
           "release-0.5-populated-route-presentation",
           "release-0.5-form-conditions-and-command-feedback",
           "release-0.5-safari-main-keyboard",
-          "release-0.5-route-adoption-matrix"
+          "release-0.5-route-adoption-matrix",
+          "release-0.5-required-form-and-action-closure"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -510629,7 +510786,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationEditor.tsx",
-              "sha256": "508441590262d0385299b4543af6045b7522cc70dec7ebc8bf09912342ff2b94"
+              "sha256": "34ba5168c6739c255a19c6a23de561081e1b0651d0d717a5dfadac19212dec0c"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
@@ -511952,7 +512109,8 @@
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
             "Bindings renewed by release-0.5-form-conditions-and-command-feedback: form semantics and receipt-based feedback verified with scoped units, browser journeys and original budgets.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
-            "Bindings renewed by release-0.5-route-adoption-matrix: the solar document action has a layout-only change, and the affected browser journeys and solar units pass with existing receipt, authority and financial assertions. Saving browser checks preserve their exact draft and refund assertions after the width probe."
+            "Bindings renewed by release-0.5-route-adoption-matrix: the solar document action has a layout-only change, and the affected browser journeys and solar units pass with existing receipt, authority and financial assertions. Saving browser checks preserve their exact draft and refund assertions after the width probe.",
+            "Bindings renewed by release-0.5-required-form-and-action-closure: required announcements and a native label target changed; solar and cancellation behavior, current authority, exact command and receipt assertions pass on the matching production build."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -512028,6 +512186,11 @@
               "batch": "release-0.5-route-adoption-matrix",
               "base_commit": "fa9f3d06d2de8028bbb72853609c6a0e636410cf",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-adoption-matrix/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-required-form-and-action-closure",
+              "base_commit": "bfb8f903e36012086d6f8e886e73acc751af5f80",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-form-and-action-closure/source-binding.json"
             }
           ]
         },
@@ -512132,7 +512295,8 @@
           "release-0.5-populated-route-presentation",
           "release-0.5-form-conditions-and-command-feedback",
           "release-0.5-safari-main-keyboard",
-          "release-0.5-route-adoption-matrix"
+          "release-0.5-route-adoption-matrix",
+          "release-0.5-required-form-and-action-closure"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -512204,7 +512368,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationEditor.tsx",
-              "sha256": "508441590262d0385299b4543af6045b7522cc70dec7ebc8bf09912342ff2b94"
+              "sha256": "34ba5168c6739c255a19c6a23de561081e1b0651d0d717a5dfadac19212dec0c"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
@@ -513527,7 +513691,8 @@
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
             "Bindings renewed by release-0.5-form-conditions-and-command-feedback: form semantics and receipt-based feedback verified with scoped units, browser journeys and original budgets.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
-            "Bindings renewed by release-0.5-route-adoption-matrix: the solar document action has a layout-only change, and the affected browser journeys and solar units pass with existing receipt, authority and financial assertions. Saving browser checks preserve their exact draft and refund assertions after the width probe."
+            "Bindings renewed by release-0.5-route-adoption-matrix: the solar document action has a layout-only change, and the affected browser journeys and solar units pass with existing receipt, authority and financial assertions. Saving browser checks preserve their exact draft and refund assertions after the width probe.",
+            "Bindings renewed by release-0.5-required-form-and-action-closure: required announcements and a native label target changed; solar and cancellation behavior, current authority, exact command and receipt assertions pass on the matching production build."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -513603,6 +513768,11 @@
               "batch": "release-0.5-route-adoption-matrix",
               "base_commit": "fa9f3d06d2de8028bbb72853609c6a0e636410cf",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-adoption-matrix/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-required-form-and-action-closure",
+              "base_commit": "bfb8f903e36012086d6f8e886e73acc751af5f80",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-form-and-action-closure/source-binding.json"
             }
           ]
         },
@@ -513716,7 +513886,8 @@
           "release-0.5-populated-route-presentation",
           "release-0.5-form-conditions-and-command-feedback",
           "release-0.5-safari-main-keyboard",
-          "release-0.5-route-adoption-matrix"
+          "release-0.5-route-adoption-matrix",
+          "release-0.5-required-form-and-action-closure"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -513788,7 +513959,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationEditor.tsx",
-              "sha256": "508441590262d0385299b4543af6045b7522cc70dec7ebc8bf09912342ff2b94"
+              "sha256": "34ba5168c6739c255a19c6a23de561081e1b0651d0d717a5dfadac19212dec0c"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
@@ -515111,7 +515282,8 @@
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
             "Bindings renewed by release-0.5-form-conditions-and-command-feedback: form semantics and receipt-based feedback verified with scoped units, browser journeys and original budgets.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
-            "Bindings renewed by release-0.5-route-adoption-matrix: the solar document action has a layout-only change, and the affected browser journeys and solar units pass with existing receipt, authority and financial assertions. Saving browser checks preserve their exact draft and refund assertions after the width probe."
+            "Bindings renewed by release-0.5-route-adoption-matrix: the solar document action has a layout-only change, and the affected browser journeys and solar units pass with existing receipt, authority and financial assertions. Saving browser checks preserve their exact draft and refund assertions after the width probe.",
+            "Bindings renewed by release-0.5-required-form-and-action-closure: required announcements and a native label target changed; solar and cancellation behavior, current authority, exact command and receipt assertions pass on the matching production build."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -515187,6 +515359,11 @@
               "batch": "release-0.5-route-adoption-matrix",
               "base_commit": "fa9f3d06d2de8028bbb72853609c6a0e636410cf",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-adoption-matrix/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-required-form-and-action-closure",
+              "base_commit": "bfb8f903e36012086d6f8e886e73acc751af5f80",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-form-and-action-closure/source-binding.json"
             }
           ]
         },
@@ -515273,7 +515450,8 @@
           "release-0.5-populated-route-presentation",
           "release-0.5-form-conditions-and-command-feedback",
           "release-0.5-safari-main-keyboard",
-          "release-0.5-route-adoption-matrix"
+          "release-0.5-route-adoption-matrix",
+          "release-0.5-required-form-and-action-closure"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -515345,7 +515523,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationEditor.tsx",
-              "sha256": "508441590262d0385299b4543af6045b7522cc70dec7ebc8bf09912342ff2b94"
+              "sha256": "34ba5168c6739c255a19c6a23de561081e1b0651d0d717a5dfadac19212dec0c"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
@@ -516668,7 +516846,8 @@
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
             "Bindings renewed by release-0.5-form-conditions-and-command-feedback: form semantics and receipt-based feedback verified with scoped units, browser journeys and original budgets.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
-            "Bindings renewed by release-0.5-route-adoption-matrix: the solar document action has a layout-only change, and the affected browser journeys and solar units pass with existing receipt, authority and financial assertions. Saving browser checks preserve their exact draft and refund assertions after the width probe."
+            "Bindings renewed by release-0.5-route-adoption-matrix: the solar document action has a layout-only change, and the affected browser journeys and solar units pass with existing receipt, authority and financial assertions. Saving browser checks preserve their exact draft and refund assertions after the width probe.",
+            "Bindings renewed by release-0.5-required-form-and-action-closure: required announcements and a native label target changed; solar and cancellation behavior, current authority, exact command and receipt assertions pass on the matching production build."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -516744,6 +516923,11 @@
               "batch": "release-0.5-route-adoption-matrix",
               "base_commit": "fa9f3d06d2de8028bbb72853609c6a0e636410cf",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-adoption-matrix/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-required-form-and-action-closure",
+              "base_commit": "bfb8f903e36012086d6f8e886e73acc751af5f80",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-form-and-action-closure/source-binding.json"
             }
           ]
         },
@@ -516794,7 +516978,8 @@
           "release-0.5-populated-route-presentation",
           "release-0.5-form-conditions-and-command-feedback",
           "release-0.5-safari-main-keyboard",
-          "release-0.5-route-adoption-matrix"
+          "release-0.5-route-adoption-matrix",
+          "release-0.5-required-form-and-action-closure"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -516866,7 +517051,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationEditor.tsx",
-              "sha256": "508441590262d0385299b4543af6045b7522cc70dec7ebc8bf09912342ff2b94"
+              "sha256": "34ba5168c6739c255a19c6a23de561081e1b0651d0d717a5dfadac19212dec0c"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
@@ -518189,7 +518374,8 @@
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
             "Bindings renewed by release-0.5-form-conditions-and-command-feedback: form semantics and receipt-based feedback verified with scoped units, browser journeys and original budgets.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
-            "Bindings renewed by release-0.5-route-adoption-matrix: the solar document action has a layout-only change, and the affected browser journeys and solar units pass with existing receipt, authority and financial assertions. Saving browser checks preserve their exact draft and refund assertions after the width probe."
+            "Bindings renewed by release-0.5-route-adoption-matrix: the solar document action has a layout-only change, and the affected browser journeys and solar units pass with existing receipt, authority and financial assertions. Saving browser checks preserve their exact draft and refund assertions after the width probe.",
+            "Bindings renewed by release-0.5-required-form-and-action-closure: required announcements and a native label target changed; solar and cancellation behavior, current authority, exact command and receipt assertions pass on the matching production build."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -518265,6 +518451,11 @@
               "batch": "release-0.5-route-adoption-matrix",
               "base_commit": "fa9f3d06d2de8028bbb72853609c6a0e636410cf",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-adoption-matrix/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-required-form-and-action-closure",
+              "base_commit": "bfb8f903e36012086d6f8e886e73acc751af5f80",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-form-and-action-closure/source-binding.json"
             }
           ]
         },
@@ -518315,7 +518506,8 @@
           "release-0.5-populated-route-presentation",
           "release-0.5-form-conditions-and-command-feedback",
           "release-0.5-safari-main-keyboard",
-          "release-0.5-route-adoption-matrix"
+          "release-0.5-route-adoption-matrix",
+          "release-0.5-required-form-and-action-closure"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -518387,7 +518579,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationEditor.tsx",
-              "sha256": "508441590262d0385299b4543af6045b7522cc70dec7ebc8bf09912342ff2b94"
+              "sha256": "34ba5168c6739c255a19c6a23de561081e1b0651d0d717a5dfadac19212dec0c"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
@@ -519710,7 +519902,8 @@
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
             "Bindings renewed by release-0.5-form-conditions-and-command-feedback: form semantics and receipt-based feedback verified with scoped units, browser journeys and original budgets.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
-            "Bindings renewed by release-0.5-route-adoption-matrix: the solar document action has a layout-only change, and the affected browser journeys and solar units pass with existing receipt, authority and financial assertions. Saving browser checks preserve their exact draft and refund assertions after the width probe."
+            "Bindings renewed by release-0.5-route-adoption-matrix: the solar document action has a layout-only change, and the affected browser journeys and solar units pass with existing receipt, authority and financial assertions. Saving browser checks preserve their exact draft and refund assertions after the width probe.",
+            "Bindings renewed by release-0.5-required-form-and-action-closure: required announcements and a native label target changed; solar and cancellation behavior, current authority, exact command and receipt assertions pass on the matching production build."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -519786,6 +519979,11 @@
               "batch": "release-0.5-route-adoption-matrix",
               "base_commit": "fa9f3d06d2de8028bbb72853609c6a0e636410cf",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-adoption-matrix/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-required-form-and-action-closure",
+              "base_commit": "bfb8f903e36012086d6f8e886e73acc751af5f80",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-form-and-action-closure/source-binding.json"
             }
           ]
         },
@@ -519837,7 +520035,8 @@
           "release-0.5-populated-route-presentation",
           "release-0.5-form-conditions-and-command-feedback",
           "release-0.5-safari-main-keyboard",
-          "release-0.5-route-adoption-matrix"
+          "release-0.5-route-adoption-matrix",
+          "release-0.5-required-form-and-action-closure"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -519909,7 +520108,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationEditor.tsx",
-              "sha256": "508441590262d0385299b4543af6045b7522cc70dec7ebc8bf09912342ff2b94"
+              "sha256": "34ba5168c6739c255a19c6a23de561081e1b0651d0d717a5dfadac19212dec0c"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
@@ -521232,7 +521431,8 @@
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
             "Bindings renewed by release-0.5-form-conditions-and-command-feedback: form semantics and receipt-based feedback verified with scoped units, browser journeys and original budgets.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
-            "Bindings renewed by release-0.5-route-adoption-matrix: the solar document action has a layout-only change, and the affected browser journeys and solar units pass with existing receipt, authority and financial assertions. Saving browser checks preserve their exact draft and refund assertions after the width probe."
+            "Bindings renewed by release-0.5-route-adoption-matrix: the solar document action has a layout-only change, and the affected browser journeys and solar units pass with existing receipt, authority and financial assertions. Saving browser checks preserve their exact draft and refund assertions after the width probe.",
+            "Bindings renewed by release-0.5-required-form-and-action-closure: required announcements and a native label target changed; solar and cancellation behavior, current authority, exact command and receipt assertions pass on the matching production build."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -521308,6 +521508,11 @@
               "batch": "release-0.5-route-adoption-matrix",
               "base_commit": "fa9f3d06d2de8028bbb72853609c6a0e636410cf",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-adoption-matrix/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-required-form-and-action-closure",
+              "base_commit": "bfb8f903e36012086d6f8e886e73acc751af5f80",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-form-and-action-closure/source-binding.json"
             }
           ]
         },
@@ -521358,7 +521563,8 @@
           "release-0.5-populated-route-presentation",
           "release-0.5-form-conditions-and-command-feedback",
           "release-0.5-safari-main-keyboard",
-          "release-0.5-route-adoption-matrix"
+          "release-0.5-route-adoption-matrix",
+          "release-0.5-required-form-and-action-closure"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -521430,7 +521636,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationEditor.tsx",
-              "sha256": "508441590262d0385299b4543af6045b7522cc70dec7ebc8bf09912342ff2b94"
+              "sha256": "34ba5168c6739c255a19c6a23de561081e1b0651d0d717a5dfadac19212dec0c"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
@@ -522753,7 +522959,8 @@
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
             "Bindings renewed by release-0.5-form-conditions-and-command-feedback: form semantics and receipt-based feedback verified with scoped units, browser journeys and original budgets.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
-            "Bindings renewed by release-0.5-route-adoption-matrix: the solar document action has a layout-only change, and the affected browser journeys and solar units pass with existing receipt, authority and financial assertions. Saving browser checks preserve their exact draft and refund assertions after the width probe."
+            "Bindings renewed by release-0.5-route-adoption-matrix: the solar document action has a layout-only change, and the affected browser journeys and solar units pass with existing receipt, authority and financial assertions. Saving browser checks preserve their exact draft and refund assertions after the width probe.",
+            "Bindings renewed by release-0.5-required-form-and-action-closure: required announcements and a native label target changed; solar and cancellation behavior, current authority, exact command and receipt assertions pass on the matching production build."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -522829,6 +523036,11 @@
               "batch": "release-0.5-route-adoption-matrix",
               "base_commit": "fa9f3d06d2de8028bbb72853609c6a0e636410cf",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-adoption-matrix/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-required-form-and-action-closure",
+              "base_commit": "bfb8f903e36012086d6f8e886e73acc751af5f80",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-form-and-action-closure/source-binding.json"
             }
           ]
         },
@@ -543910,7 +544122,8 @@
           "release-0.5-form-and-document-accessibility",
           "release-0.5-populated-route-presentation",
           "release-0.5-route-state-closure",
-          "release-0.5-route-adoption-matrix"
+          "release-0.5-route-adoption-matrix",
+          "release-0.5-required-form-and-action-closure"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -543970,7 +544183,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationEditor.tsx",
-              "sha256": "508441590262d0385299b4543af6045b7522cc70dec7ebc8bf09912342ff2b94"
+              "sha256": "34ba5168c6739c255a19c6a23de561081e1b0651d0d717a5dfadac19212dec0c"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.tsx",
@@ -544379,7 +544592,8 @@
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
             "Bindings renewed by release-0.5-route-state-closure: bounded reads, existing authorization and caller behavior checked with targeted units, browser journeys and original bundle limits.",
-            "Bindings renewed by release-0.5-route-adoption-matrix: the solar document action has a layout-only change, and the affected browser journeys and solar units pass with existing receipt, authority and financial assertions. Saving browser checks preserve their exact draft and refund assertions after the width probe."
+            "Bindings renewed by release-0.5-route-adoption-matrix: the solar document action has a layout-only change, and the affected browser journeys and solar units pass with existing receipt, authority and financial assertions. Saving browser checks preserve their exact draft and refund assertions after the width probe.",
+            "Bindings renewed by release-0.5-required-form-and-action-closure: required announcements and a native label target changed; solar and cancellation behavior, current authority, exact command and receipt assertions pass on the matching production build."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-query-and-command-completion",
           "limitations": [
@@ -544430,6 +544644,11 @@
               "batch": "release-0.5-route-adoption-matrix",
               "base_commit": "fa9f3d06d2de8028bbb72853609c6a0e636410cf",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-adoption-matrix/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-required-form-and-action-closure",
+              "base_commit": "bfb8f903e36012086d6f8e886e73acc751af5f80",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-form-and-action-closure/source-binding.json"
             }
           ]
         }
@@ -547761,7 +547980,8 @@
           "release-0.5-populated-route-presentation",
           "release-0.5-form-conditions-and-command-feedback",
           "release-0.5-safari-main-keyboard",
-          "release-0.5-route-adoption-matrix"
+          "release-0.5-route-adoption-matrix",
+          "release-0.5-required-form-and-action-closure"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -547833,7 +548053,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationEditor.tsx",
-              "sha256": "508441590262d0385299b4543af6045b7522cc70dec7ebc8bf09912342ff2b94"
+              "sha256": "34ba5168c6739c255a19c6a23de561081e1b0651d0d717a5dfadac19212dec0c"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
@@ -549156,7 +549376,8 @@
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
             "Bindings renewed by release-0.5-form-conditions-and-command-feedback: form semantics and receipt-based feedback verified with scoped units, browser journeys and original budgets.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
-            "Bindings renewed by release-0.5-route-adoption-matrix: the solar document action has a layout-only change, and the affected browser journeys and solar units pass with existing receipt, authority and financial assertions. Saving browser checks preserve their exact draft and refund assertions after the width probe."
+            "Bindings renewed by release-0.5-route-adoption-matrix: the solar document action has a layout-only change, and the affected browser journeys and solar units pass with existing receipt, authority and financial assertions. Saving browser checks preserve their exact draft and refund assertions after the width probe.",
+            "Bindings renewed by release-0.5-required-form-and-action-closure: required announcements and a native label target changed; solar and cancellation behavior, current authority, exact command and receipt assertions pass on the matching production build."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -549232,6 +549453,11 @@
               "batch": "release-0.5-route-adoption-matrix",
               "base_commit": "fa9f3d06d2de8028bbb72853609c6a0e636410cf",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-adoption-matrix/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-required-form-and-action-closure",
+              "base_commit": "bfb8f903e36012086d6f8e886e73acc751af5f80",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-form-and-action-closure/source-binding.json"
             }
           ]
         },
@@ -549278,7 +549504,8 @@
           "release-0.5-populated-route-presentation",
           "release-0.5-form-conditions-and-command-feedback",
           "release-0.5-safari-main-keyboard",
-          "release-0.5-route-adoption-matrix"
+          "release-0.5-route-adoption-matrix",
+          "release-0.5-required-form-and-action-closure"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -549350,7 +549577,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationEditor.tsx",
-              "sha256": "508441590262d0385299b4543af6045b7522cc70dec7ebc8bf09912342ff2b94"
+              "sha256": "34ba5168c6739c255a19c6a23de561081e1b0651d0d717a5dfadac19212dec0c"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
@@ -550673,7 +550900,8 @@
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
             "Bindings renewed by release-0.5-form-conditions-and-command-feedback: form semantics and receipt-based feedback verified with scoped units, browser journeys and original budgets.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
-            "Bindings renewed by release-0.5-route-adoption-matrix: the solar document action has a layout-only change, and the affected browser journeys and solar units pass with existing receipt, authority and financial assertions. Saving browser checks preserve their exact draft and refund assertions after the width probe."
+            "Bindings renewed by release-0.5-route-adoption-matrix: the solar document action has a layout-only change, and the affected browser journeys and solar units pass with existing receipt, authority and financial assertions. Saving browser checks preserve their exact draft and refund assertions after the width probe.",
+            "Bindings renewed by release-0.5-required-form-and-action-closure: required announcements and a native label target changed; solar and cancellation behavior, current authority, exact command and receipt assertions pass on the matching production build."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -550749,6 +550977,11 @@
               "batch": "release-0.5-route-adoption-matrix",
               "base_commit": "fa9f3d06d2de8028bbb72853609c6a0e636410cf",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-adoption-matrix/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-required-form-and-action-closure",
+              "base_commit": "bfb8f903e36012086d6f8e886e73acc751af5f80",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-form-and-action-closure/source-binding.json"
             }
           ]
         },
@@ -550795,7 +551028,8 @@
           "release-0.5-populated-route-presentation",
           "release-0.5-form-conditions-and-command-feedback",
           "release-0.5-safari-main-keyboard",
-          "release-0.5-route-adoption-matrix"
+          "release-0.5-route-adoption-matrix",
+          "release-0.5-required-form-and-action-closure"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -550867,7 +551101,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationEditor.tsx",
-              "sha256": "508441590262d0385299b4543af6045b7522cc70dec7ebc8bf09912342ff2b94"
+              "sha256": "34ba5168c6739c255a19c6a23de561081e1b0651d0d717a5dfadac19212dec0c"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
@@ -552190,7 +552424,8 @@
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
             "Bindings renewed by release-0.5-form-conditions-and-command-feedback: form semantics and receipt-based feedback verified with scoped units, browser journeys and original budgets.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
-            "Bindings renewed by release-0.5-route-adoption-matrix: the solar document action has a layout-only change, and the affected browser journeys and solar units pass with existing receipt, authority and financial assertions. Saving browser checks preserve their exact draft and refund assertions after the width probe."
+            "Bindings renewed by release-0.5-route-adoption-matrix: the solar document action has a layout-only change, and the affected browser journeys and solar units pass with existing receipt, authority and financial assertions. Saving browser checks preserve their exact draft and refund assertions after the width probe.",
+            "Bindings renewed by release-0.5-required-form-and-action-closure: required announcements and a native label target changed; solar and cancellation behavior, current authority, exact command and receipt assertions pass on the matching production build."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -552266,6 +552501,11 @@
               "batch": "release-0.5-route-adoption-matrix",
               "base_commit": "fa9f3d06d2de8028bbb72853609c6a0e636410cf",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-adoption-matrix/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-required-form-and-action-closure",
+              "base_commit": "bfb8f903e36012086d6f8e886e73acc751af5f80",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-form-and-action-closure/source-binding.json"
             }
           ]
         },
@@ -552312,7 +552552,8 @@
           "release-0.5-populated-route-presentation",
           "release-0.5-form-conditions-and-command-feedback",
           "release-0.5-safari-main-keyboard",
-          "release-0.5-route-adoption-matrix"
+          "release-0.5-route-adoption-matrix",
+          "release-0.5-required-form-and-action-closure"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -552384,7 +552625,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationEditor.tsx",
-              "sha256": "508441590262d0385299b4543af6045b7522cc70dec7ebc8bf09912342ff2b94"
+              "sha256": "34ba5168c6739c255a19c6a23de561081e1b0651d0d717a5dfadac19212dec0c"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
@@ -553707,7 +553948,8 @@
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
             "Bindings renewed by release-0.5-form-conditions-and-command-feedback: form semantics and receipt-based feedback verified with scoped units, browser journeys and original budgets.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
-            "Bindings renewed by release-0.5-route-adoption-matrix: the solar document action has a layout-only change, and the affected browser journeys and solar units pass with existing receipt, authority and financial assertions. Saving browser checks preserve their exact draft and refund assertions after the width probe."
+            "Bindings renewed by release-0.5-route-adoption-matrix: the solar document action has a layout-only change, and the affected browser journeys and solar units pass with existing receipt, authority and financial assertions. Saving browser checks preserve their exact draft and refund assertions after the width probe.",
+            "Bindings renewed by release-0.5-required-form-and-action-closure: required announcements and a native label target changed; solar and cancellation behavior, current authority, exact command and receipt assertions pass on the matching production build."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -553783,6 +554025,11 @@
               "batch": "release-0.5-route-adoption-matrix",
               "base_commit": "fa9f3d06d2de8028bbb72853609c6a0e636410cf",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-adoption-matrix/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-required-form-and-action-closure",
+              "base_commit": "bfb8f903e36012086d6f8e886e73acc751af5f80",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-form-and-action-closure/source-binding.json"
             }
           ]
         },
@@ -553829,7 +554076,8 @@
           "release-0.5-populated-route-presentation",
           "release-0.5-form-conditions-and-command-feedback",
           "release-0.5-safari-main-keyboard",
-          "release-0.5-route-adoption-matrix"
+          "release-0.5-route-adoption-matrix",
+          "release-0.5-required-form-and-action-closure"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -553901,7 +554149,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationEditor.tsx",
-              "sha256": "508441590262d0385299b4543af6045b7522cc70dec7ebc8bf09912342ff2b94"
+              "sha256": "34ba5168c6739c255a19c6a23de561081e1b0651d0d717a5dfadac19212dec0c"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
@@ -555224,7 +555472,8 @@
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
             "Bindings renewed by release-0.5-form-conditions-and-command-feedback: form semantics and receipt-based feedback verified with scoped units, browser journeys and original budgets.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
-            "Bindings renewed by release-0.5-route-adoption-matrix: the solar document action has a layout-only change, and the affected browser journeys and solar units pass with existing receipt, authority and financial assertions. Saving browser checks preserve their exact draft and refund assertions after the width probe."
+            "Bindings renewed by release-0.5-route-adoption-matrix: the solar document action has a layout-only change, and the affected browser journeys and solar units pass with existing receipt, authority and financial assertions. Saving browser checks preserve their exact draft and refund assertions after the width probe.",
+            "Bindings renewed by release-0.5-required-form-and-action-closure: required announcements and a native label target changed; solar and cancellation behavior, current authority, exact command and receipt assertions pass on the matching production build."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -555300,6 +555549,11 @@
               "batch": "release-0.5-route-adoption-matrix",
               "base_commit": "fa9f3d06d2de8028bbb72853609c6a0e636410cf",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-adoption-matrix/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-required-form-and-action-closure",
+              "base_commit": "bfb8f903e36012086d6f8e886e73acc751af5f80",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-form-and-action-closure/source-binding.json"
             }
           ]
         },
@@ -555346,7 +555600,8 @@
           "release-0.5-populated-route-presentation",
           "release-0.5-form-conditions-and-command-feedback",
           "release-0.5-safari-main-keyboard",
-          "release-0.5-route-adoption-matrix"
+          "release-0.5-route-adoption-matrix",
+          "release-0.5-required-form-and-action-closure"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -555418,7 +555673,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationEditor.tsx",
-              "sha256": "508441590262d0385299b4543af6045b7522cc70dec7ebc8bf09912342ff2b94"
+              "sha256": "34ba5168c6739c255a19c6a23de561081e1b0651d0d717a5dfadac19212dec0c"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
@@ -556741,7 +556996,8 @@
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
             "Bindings renewed by release-0.5-form-conditions-and-command-feedback: form semantics and receipt-based feedback verified with scoped units, browser journeys and original budgets.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
-            "Bindings renewed by release-0.5-route-adoption-matrix: the solar document action has a layout-only change, and the affected browser journeys and solar units pass with existing receipt, authority and financial assertions. Saving browser checks preserve their exact draft and refund assertions after the width probe."
+            "Bindings renewed by release-0.5-route-adoption-matrix: the solar document action has a layout-only change, and the affected browser journeys and solar units pass with existing receipt, authority and financial assertions. Saving browser checks preserve their exact draft and refund assertions after the width probe.",
+            "Bindings renewed by release-0.5-required-form-and-action-closure: required announcements and a native label target changed; solar and cancellation behavior, current authority, exact command and receipt assertions pass on the matching production build."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -556817,6 +557073,11 @@
               "batch": "release-0.5-route-adoption-matrix",
               "base_commit": "fa9f3d06d2de8028bbb72853609c6a0e636410cf",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-adoption-matrix/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-required-form-and-action-closure",
+              "base_commit": "bfb8f903e36012086d6f8e886e73acc751af5f80",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-form-and-action-closure/source-binding.json"
             }
           ]
         },
@@ -556863,7 +557124,8 @@
           "release-0.5-populated-route-presentation",
           "release-0.5-form-conditions-and-command-feedback",
           "release-0.5-safari-main-keyboard",
-          "release-0.5-route-adoption-matrix"
+          "release-0.5-route-adoption-matrix",
+          "release-0.5-required-form-and-action-closure"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -556935,7 +557197,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationEditor.tsx",
-              "sha256": "508441590262d0385299b4543af6045b7522cc70dec7ebc8bf09912342ff2b94"
+              "sha256": "34ba5168c6739c255a19c6a23de561081e1b0651d0d717a5dfadac19212dec0c"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
@@ -558258,7 +558520,8 @@
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
             "Bindings renewed by release-0.5-form-conditions-and-command-feedback: form semantics and receipt-based feedback verified with scoped units, browser journeys and original budgets.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
-            "Bindings renewed by release-0.5-route-adoption-matrix: the solar document action has a layout-only change, and the affected browser journeys and solar units pass with existing receipt, authority and financial assertions. Saving browser checks preserve their exact draft and refund assertions after the width probe."
+            "Bindings renewed by release-0.5-route-adoption-matrix: the solar document action has a layout-only change, and the affected browser journeys and solar units pass with existing receipt, authority and financial assertions. Saving browser checks preserve their exact draft and refund assertions after the width probe.",
+            "Bindings renewed by release-0.5-required-form-and-action-closure: required announcements and a native label target changed; solar and cancellation behavior, current authority, exact command and receipt assertions pass on the matching production build."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -558334,6 +558597,11 @@
               "batch": "release-0.5-route-adoption-matrix",
               "base_commit": "fa9f3d06d2de8028bbb72853609c6a0e636410cf",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-adoption-matrix/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-required-form-and-action-closure",
+              "base_commit": "bfb8f903e36012086d6f8e886e73acc751af5f80",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-form-and-action-closure/source-binding.json"
             }
           ]
         },
@@ -591026,7 +591294,8 @@
           "release-0.5-critical-accessibility",
           "release-0.5-form-and-document-accessibility",
           "release-0.5-populated-route-presentation",
-          "release-0.5-route-state-closure"
+          "release-0.5-route-state-closure",
+          "release-0.5-required-form-and-action-closure"
         ],
         "current_acceptance": {
           "kind": "verified-service-detail-workspace-compositions",
@@ -591274,7 +591543,7 @@
             },
             {
               "path": "apps/web/src/components/SolarPostalPanel.tsx",
-              "sha256": "0f3c3ecb0f37274a22c5b42d73a820707d7638b78b62b540cedafbfd0df8bfe2"
+              "sha256": "36f0ed3952b5079765d4367294e329e644f8ce0c233b09aab23de9eebd960c97"
             },
             {
               "path": "apps/web/src/components/SolarPostalTrackingSummary.tsx",
@@ -591569,7 +591838,8 @@
             "Bindings renewed by release-0.5-critical-accessibility: audited canonical landmarks, retained command calls and validated auth-entry authority. Exact targeted unit/browser and original performance evidence passes.",
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
-            "Bindings renewed by release-0.5-route-state-closure: bounded reads, existing authorization and caller behavior checked with targeted units, browser journeys and original bundle limits."
+            "Bindings renewed by release-0.5-route-state-closure: bounded reads, existing authorization and caller behavior checked with targeted units, browser journeys and original bundle limits.",
+            "Bindings renewed by release-0.5-required-form-and-action-closure: required announcements and a native label target changed; solar and cancellation behavior, current authority, exact command and receipt assertions pass on the matching production build."
           ],
           "criterion_result": "Contract list columns and accepted-party/commercial-value snapshots, current and historical terms, schedules, selected-version timeline, amendment lineage, signed/version-bound documents and linked order/invoice/prerequisite status verified in current customer/staff compositions.",
           "limitations": [
@@ -591678,6 +591948,11 @@
               "batch": "release-0.5-route-state-closure",
               "base_commit": "402a710db66b8107e342e607fb691855f2c6ed0d",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-state-closure/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-required-form-and-action-closure",
+              "base_commit": "bfb8f903e36012086d6f8e886e73acc751af5f80",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-form-and-action-closure/source-binding.json"
             }
           ]
         }
@@ -591727,7 +592002,8 @@
           "release-0.5-critical-accessibility",
           "release-0.5-form-and-document-accessibility",
           "release-0.5-populated-route-presentation",
-          "release-0.5-route-state-closure"
+          "release-0.5-route-state-closure",
+          "release-0.5-required-form-and-action-closure"
         ],
         "current_acceptance": {
           "kind": "verified-service-detail-workspace-compositions",
@@ -591975,7 +592251,7 @@
             },
             {
               "path": "apps/web/src/components/SolarPostalPanel.tsx",
-              "sha256": "0f3c3ecb0f37274a22c5b42d73a820707d7638b78b62b540cedafbfd0df8bfe2"
+              "sha256": "36f0ed3952b5079765d4367294e329e644f8ce0c233b09aab23de9eebd960c97"
             },
             {
               "path": "apps/web/src/components/SolarPostalTrackingSummary.tsx",
@@ -592270,7 +592546,8 @@
             "Bindings renewed by release-0.5-critical-accessibility: audited canonical landmarks, retained command calls and validated auth-entry authority. Exact targeted unit/browser and original performance evidence passes.",
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
-            "Bindings renewed by release-0.5-route-state-closure: bounded reads, existing authorization and caller behavior checked with targeted units, browser journeys and original bundle limits."
+            "Bindings renewed by release-0.5-route-state-closure: bounded reads, existing authorization and caller behavior checked with targeted units, browser journeys and original bundle limits.",
+            "Bindings renewed by release-0.5-required-form-and-action-closure: required announcements and a native label target changed; solar and cancellation behavior, current authority, exact command and receipt assertions pass on the matching production build."
           ],
           "criterion_result": "Invoice list references/type/status/period/amount/due/paid columns and responsive views; original/replacement/adjustment detail chain, explanations, exact lines/VAT, paid/remaining, payment/receipt timelines, attachments and guarded payment options verified.",
           "limitations": [
@@ -592379,6 +592656,11 @@
               "batch": "release-0.5-route-state-closure",
               "base_commit": "402a710db66b8107e342e607fb691855f2c6ed0d",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-state-closure/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-required-form-and-action-closure",
+              "base_commit": "bfb8f903e36012086d6f8e886e73acc751af5f80",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-form-and-action-closure/source-binding.json"
             }
           ]
         }
@@ -592436,7 +592718,8 @@
           "release-0.5-critical-accessibility",
           "release-0.5-form-and-document-accessibility",
           "release-0.5-populated-route-presentation",
-          "release-0.5-route-state-closure"
+          "release-0.5-route-state-closure",
+          "release-0.5-required-form-and-action-closure"
         ],
         "current_acceptance": {
           "kind": "verified-service-detail-workspace-compositions",
@@ -592684,7 +592967,7 @@
             },
             {
               "path": "apps/web/src/components/SolarPostalPanel.tsx",
-              "sha256": "0f3c3ecb0f37274a22c5b42d73a820707d7638b78b62b540cedafbfd0df8bfe2"
+              "sha256": "36f0ed3952b5079765d4367294e329e644f8ce0c233b09aab23de9eebd960c97"
             },
             {
               "path": "apps/web/src/components/SolarPostalTrackingSummary.tsx",
@@ -592979,7 +593262,8 @@
             "Bindings renewed by release-0.5-critical-accessibility: audited canonical landmarks, retained command calls and validated auth-entry authority. Exact targeted unit/browser and original performance evidence passes.",
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
-            "Bindings renewed by release-0.5-route-state-closure: bounded reads, existing authorization and caller behavior checked with targeted units, browser journeys and original bundle limits."
+            "Bindings renewed by release-0.5-route-state-closure: bounded reads, existing authorization and caller behavior checked with targeted units, browser journeys and original bundle limits.",
+            "Bindings renewed by release-0.5-required-form-and-action-closure: required announcements and a native label target changed; solar and cancellation behavior, current authority, exact command and receipt assertions pass on the matching production build."
           ],
           "criterion_result": "Bank receipt tables/cards expose receipt/invoice reference, exact amount, bank, deposit date, state and open action. Customer and staff details retain matched invoice, safe attachment/preview, deposit metadata and verification timeline with audience-specific fields and current authorization.",
           "limitations": [
@@ -593088,6 +593372,11 @@
               "batch": "release-0.5-route-state-closure",
               "base_commit": "402a710db66b8107e342e607fb691855f2c6ed0d",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-state-closure/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-required-form-and-action-closure",
+              "base_commit": "bfb8f903e36012086d6f8e886e73acc751af5f80",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-form-and-action-closure/source-binding.json"
             }
           ]
         }
@@ -593129,7 +593418,8 @@
           "release-0.5-critical-accessibility",
           "release-0.5-form-and-document-accessibility",
           "release-0.5-populated-route-presentation",
-          "release-0.5-route-state-closure"
+          "release-0.5-route-state-closure",
+          "release-0.5-required-form-and-action-closure"
         ],
         "current_acceptance": {
           "kind": "verified-service-detail-workspace-compositions",
@@ -593377,7 +593667,7 @@
             },
             {
               "path": "apps/web/src/components/SolarPostalPanel.tsx",
-              "sha256": "0f3c3ecb0f37274a22c5b42d73a820707d7638b78b62b540cedafbfd0df8bfe2"
+              "sha256": "36f0ed3952b5079765d4367294e329e644f8ce0c233b09aab23de9eebd960c97"
             },
             {
               "path": "apps/web/src/components/SolarPostalTrackingSummary.tsx",
@@ -593672,7 +593962,8 @@
             "Bindings renewed by release-0.5-critical-accessibility: audited canonical landmarks, retained command calls and validated auth-entry authority. Exact targeted unit/browser and original performance evidence passes.",
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
-            "Bindings renewed by release-0.5-route-state-closure: bounded reads, existing authorization and caller behavior checked with targeted units, browser journeys and original bundle limits."
+            "Bindings renewed by release-0.5-route-state-closure: bounded reads, existing authorization and caller behavior checked with targeted units, browser journeys and original bundle limits.",
+            "Bindings renewed by release-0.5-required-form-and-action-closure: required announcements and a native label target changed; solar and cancellation behavior, current authority, exact command and receipt assertions pass on the matching production build."
           ],
           "criterion_result": "Electricity detail composition retains separate commercial/financial status, recorded period/quantities, green and pricing/gift snapshots, payment/refund outcomes, links/history. Added read-only current-version contract document prerequisites, publication waiting notice, AwaitingSignature contract link and one valid main landmark. Denied nested reads clear that section without withdrawing an authorized order.",
           "limitations": [
@@ -593781,6 +594072,11 @@
               "batch": "release-0.5-route-state-closure",
               "base_commit": "402a710db66b8107e342e607fb691855f2c6ed0d",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-state-closure/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-required-form-and-action-closure",
+              "base_commit": "bfb8f903e36012086d6f8e886e73acc751af5f80",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-form-and-action-closure/source-binding.json"
             }
           ]
         }
@@ -593821,7 +594117,8 @@
           "release-0.5-critical-accessibility",
           "release-0.5-form-and-document-accessibility",
           "release-0.5-populated-route-presentation",
-          "release-0.5-route-state-closure"
+          "release-0.5-route-state-closure",
+          "release-0.5-required-form-and-action-closure"
         ],
         "current_acceptance": {
           "kind": "verified-service-detail-workspace-compositions",
@@ -594069,7 +594366,7 @@
             },
             {
               "path": "apps/web/src/components/SolarPostalPanel.tsx",
-              "sha256": "0f3c3ecb0f37274a22c5b42d73a820707d7638b78b62b540cedafbfd0df8bfe2"
+              "sha256": "36f0ed3952b5079765d4367294e329e644f8ce0c233b09aab23de9eebd960c97"
             },
             {
               "path": "apps/web/src/components/SolarPostalTrackingSummary.tsx",
@@ -594364,7 +594661,8 @@
             "Bindings renewed by release-0.5-critical-accessibility: audited canonical landmarks, retained command calls and validated auth-entry authority. Exact targeted unit/browser and original performance evidence passes.",
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
-            "Bindings renewed by release-0.5-route-state-closure: bounded reads, existing authorization and caller behavior checked with targeted units, browser journeys and original bundle limits."
+            "Bindings renewed by release-0.5-route-state-closure: bounded reads, existing authorization and caller behavior checked with targeted units, browser journeys and original bundle limits.",
+            "Bindings renewed by release-0.5-required-form-and-action-closure: required announcements and a native label target changed; solar and cancellation behavior, current authority, exact command and receipt assertions pass on the matching production build."
           ],
           "criterion_result": "Solar postal detail composes current postal state, configured original-document checklist, recorded carrier/tracking and safe public HTTPS link, optional dated arrival estimate with explicit non-guarantee, customer-visible notes and separate immutable construction milestone tracker. Recovery, exact reviewed retry and lost authority verified.",
           "limitations": [
@@ -594473,6 +594771,11 @@
               "batch": "release-0.5-route-state-closure",
               "base_commit": "402a710db66b8107e342e607fb691855f2c6ed0d",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-state-closure/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-required-form-and-action-closure",
+              "base_commit": "bfb8f903e36012086d6f8e886e73acc751af5f80",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-form-and-action-closure/source-binding.json"
             }
           ]
         }
@@ -649904,7 +650207,7 @@
             },
             {
               "path": "apps/web/e2e/cancellation-forms.spec.ts",
-              "sha256": "86d34832b5a8058b551bbd3b6e6099aa8eb74897155dc3101a106c39744b0834"
+              "sha256": "976e5ad51c72d8faab07ca621a3dabc4dd38978d256eedeb7371379f21b1e285"
             },
             {
               "path": "apps/web/e2e/contract-cancellation.spec.ts",
@@ -649916,7 +650219,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationEditor.tsx",
-              "sha256": "508441590262d0385299b4543af6045b7522cc70dec7ebc8bf09912342ff2b94"
+              "sha256": "34ba5168c6739c255a19c6a23de561081e1b0651d0d717a5dfadac19212dec0c"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
@@ -650372,7 +650675,7 @@
             },
             {
               "path": "apps/web/e2e/solar-postal-forms.spec.ts",
-              "sha256": "4ad26ff1e6572ca5553043718a7ae72a56ce505b6f7bd351c9189314a2929513"
+              "sha256": "511167cb4338fb7b6d42a0ded63f35f7f0f9214932e615386100eb3131c2561c"
             },
             {
               "path": "apps/web/e2e/solar-postal-tracking.spec.ts",
@@ -650388,7 +650691,7 @@
             },
             {
               "path": "apps/web/src/components/SolarPostalPanel.tsx",
-              "sha256": "0f3c3ecb0f37274a22c5b42d73a820707d7638b78b62b540cedafbfd0df8bfe2"
+              "sha256": "36f0ed3952b5079765d4367294e329e644f8ce0c233b09aab23de9eebd960c97"
             },
             {
               "path": "apps/web/src/components/solar-contract-forms.test.tsx",
@@ -651271,7 +651574,8 @@
             "Bindings renewed by release-0.5-form-conditions-and-command-feedback: form semantics and receipt-based feedback verified with scoped units, browser journeys and original budgets.",
             "Bindings renewed by release-0.5-route-state-closure: bounded reads, existing authorization and caller behavior checked with targeted units, browser journeys and original bundle limits.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
-            "Bindings renewed by release-0.5-route-adoption-matrix: the solar document action has a layout-only change, and the affected browser journeys and solar units pass with existing receipt, authority and financial assertions. Saving browser checks preserve their exact draft and refund assertions after the width probe."
+            "Bindings renewed by release-0.5-route-adoption-matrix: the solar document action has a layout-only change, and the affected browser journeys and solar units pass with existing receipt, authority and financial assertions. Saving browser checks preserve their exact draft and refund assertions after the width probe.",
+            "Bindings renewed by release-0.5-required-form-and-action-closure: required announcements and a native label target changed; solar and cancellation behavior, current authority, exact command and receipt assertions pass on the matching production build."
           ],
           "limitations": [],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/staff-order-detail-authority",
@@ -652566,6 +652870,11 @@
               "batch": "release-0.5-route-adoption-matrix",
               "base_commit": "fa9f3d06d2de8028bbb72853609c6a0e636410cf",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-adoption-matrix/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-required-form-and-action-closure",
+              "base_commit": "bfb8f903e36012086d6f8e886e73acc751af5f80",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-form-and-action-closure/source-binding.json"
             }
           ]
         },
@@ -652592,7 +652901,8 @@
           "release-0.5-form-conditions-and-command-feedback",
           "release-0.5-route-state-closure",
           "release-0.5-safari-main-keyboard",
-          "release-0.5-route-adoption-matrix"
+          "release-0.5-route-adoption-matrix",
+          "release-0.5-required-form-and-action-closure"
         ]
       }
     },
@@ -660042,7 +660352,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "The 98-route inventory now has exact eight-width populated evidence for electricity, saving, solar document/postal and consultation staff queues. Map actual case receipts for remaining routes and verify their conditional states in both directions and themes, including desktop/mobile, keyboard, filters, forms and stale context."
+        "The 98-route inventory includes exact eight-width populated evidence for the four service staff queues and verified solar postal and cancellation conditional fields. Map remaining actual route receipts and verify unresolved conditional states in both directions and themes, including desktop/mobile, keyboard, filters, forms and stale context."
       ],
       "owner": null,
       "depends_on": [],
@@ -660051,7 +660361,8 @@
         "batches": [
           "release-0.5-route-state-closure",
           "release-0.5-safari-main-keyboard",
-          "release-0.5-route-adoption-matrix"
+          "release-0.5-route-adoption-matrix",
+          "release-0.5-required-form-and-action-closure"
         ]
       }
     },
@@ -707901,7 +708212,195 @@
         "release-readiness#R-02.02"
       ],
       "failed_attempts_retained": true,
-      "release_disposition": "Solar narrow viewport defect repaired and five staff routes verified. Other route states and release gates remain open. No release publication."
+      "release_disposition": "Solar narrow viewport defect repaired and five staff routes verified. Other route states and release gates remain open. No release publication.",
+      "push_receipt": {
+        "commit": "bfb8f903e36012086d6f8e886e73acc751af5f80",
+        "remote_sha": "bfb8f903e36012086d6f8e886e73acc751af5f80",
+        "ref": "refs/heads/main",
+        "verified_at": "2026-11-07T07:24:30+00:00",
+        "method": "GitHub CLI ref readback"
+      }
+    },
+    "release-0.5-required-form-and-action-closure": {
+      "batch": "release-0.5-required-form-and-action-closure",
+      "base_commit": "bfb8f903e36012086d6f8e886e73acc751af5f80",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.05.01.05",
+        "07-ui-ux-design.md#T-07.04.01.06",
+        "release-readiness#R-04.01"
+      ],
+      "accepted_task_keys": [],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.05.01.05",
+        "07-ui-ux-design.md#T-07.04.01.06",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": ".size-limit.json",
+          "sha256": "61a016162937f78da6d71dfb7f9c2b7d4f9b768362a9e543eae80869cb48073d"
+        },
+        {
+          "path": "apps/web/build.mjs",
+          "sha256": "20432f55d9d3090f592a28e79064d99f0066108a3cda87aeebf023583d55c35f"
+        },
+        {
+          "path": "apps/web/e2e/cancellation-forms.spec.ts",
+          "sha256": "976e5ad51c72d8faab07ca621a3dabc4dd38978d256eedeb7371379f21b1e285"
+        },
+        {
+          "path": "apps/web/e2e/confirmation-fixture.ts",
+          "sha256": "8d842de5577a9f43a5ca0efcf8e6a00e18e6ea1fb53116555fac8cbd7608bb61"
+        },
+        {
+          "path": "apps/web/e2e/coverage-fixture.ts",
+          "sha256": "d2728c203779bb170516ad5cedd445aa4c61d4590fb6ce44bc48cde125281ef2"
+        },
+        {
+          "path": "apps/web/e2e/crm-shell-fixture.ts",
+          "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+        },
+        {
+          "path": "apps/web/e2e/global-setup.ts",
+          "sha256": "26c3a1b7f928e58254e33b57e486ced1882ff07296d41fa619309094a7db9d61"
+        },
+        {
+          "path": "apps/web/e2e/navigation-fixture.ts",
+          "sha256": "231d6e8b1f6192d1935348c7096f53613fdc206fb8dae9f79131eec1f1adc19e"
+        },
+        {
+          "path": "apps/web/e2e/solar-journey.spec.ts",
+          "sha256": "0f56661c430e9c37319cf24090445fbb8dec227b7ce2471380b3da658cfdad08"
+        },
+        {
+          "path": "apps/web/e2e/solar-postal-form-fixture.ts",
+          "sha256": "c23e7bbec50f2aae15a2c96c844a2c50c42fd002f77e13876ff68de869d33cbc"
+        },
+        {
+          "path": "apps/web/e2e/solar-postal-forms.spec.ts",
+          "sha256": "511167cb4338fb7b6d42a0ded63f35f7f0f9214932e615386100eb3131c2561c"
+        },
+        {
+          "path": "apps/web/e2e/upload-fixture.ts",
+          "sha256": "339937d705859718be013cc7d5823c600b1d6271aced6e935ce1603b72eb4d59"
+        },
+        {
+          "path": "apps/web/package.json",
+          "sha256": "f0b538d3c070cc67a2aed63b66842938bd74a992b66d5ae412057c34fe86e8db"
+        },
+        {
+          "path": "apps/web/playwright.config.ts",
+          "sha256": "ad9a9e23b46599266a7fe0dcfd7185e12e612cdc50c040453533d1fccbea85cf"
+        },
+        {
+          "path": "apps/web/server.js",
+          "sha256": "8f2f2eb0a4a158fe322c1fd4c6f119044d0b0aa61ea71aacc052ba1ba348caab"
+        },
+        {
+          "path": "apps/web/src/components/ContractCancellationEditor.tsx",
+          "sha256": "34ba5168c6739c255a19c6a23de561081e1b0651d0d717a5dfadac19212dec0c"
+        },
+        {
+          "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
+          "sha256": "d37d557c3f539ca6b37aa48f8bd972521161862cd1c4a25f5c1e6f5ae1e0dfb3"
+        },
+        {
+          "path": "apps/web/src/components/ContractCancellationRequestPanel.test.tsx",
+          "sha256": "bb03bbe34660905721f1a339ee0f59db023be90ce37517ec57159d268fc6b1de"
+        },
+        {
+          "path": "apps/web/src/components/SolarPostalPanel.tsx",
+          "sha256": "36f0ed3952b5079765d4367294e329e644f8ce0c233b09aab23de9eebd960c97"
+        },
+        {
+          "path": "apps/web/src/components/solar-postal-forms.test.tsx",
+          "sha256": "63e1dac1ea97bc2532de0a2d113d65abbaf5f0f0d0574b2645cbc42460ad7c75"
+        },
+        {
+          "path": "apps/web/src/lib/cancellation-form-schemas.ts",
+          "sha256": "3850da7155f40023ff290c6bbfbe0066f42a44784e296c7efdf98e2f099add89"
+        },
+        {
+          "path": "apps/web/src/lib/solar-postal-form-schemas.ts",
+          "sha256": "8ecde0883666b6e1de7df9f5a7241bbf702407ae5650880d8b1e33124aaab6d0"
+        },
+        {
+          "path": "package.json",
+          "sha256": "14f5f1be936e9e0f976f40fe7371506701008e7fa53256b80fd0ec9b7f207f1d"
+        },
+        {
+          "path": "packages/ui/src/styles.css",
+          "sha256": "29ef75f0da3aa9b32c27d301c9c539c0bea933854365f019c13ef3ba9d657e2b"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "0b875687ee1d2f32ea8819c9eb58af72f0c0db3796f5e74f82317d4b7ce46251"
+        },
+        {
+          "path": "scripts/check-route-budgets.mjs",
+          "sha256": "4dd831c645a9dbf1e6fd9b0c211b5559e4fc22652373b31525bd4f4aae38186d"
+        },
+        {
+          "path": "scripts/run-production-browser.mjs",
+          "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+        }
+      ],
+      "checks": [
+        "Solar customer postal courier, tracking number and send date are announced as required. Browser locators use their actual labels and confirm the attachment remains optional. Existing linked errors, captured shipment, uncertain receipt, stale scope and lost authority assertions pass.",
+        "Custom refund amount and destination exist only in custom mode and are announced as required. The label is at least 44×44 on a coarse pointer and toggles the native control from a real tap away from the checkbox in four Mobile Safari cases. Cancellation values, confirmation phrase, financial acknowledgement, step-up, authority, replay and exact refund assertions remain intact.",
+        "40 distinct production browser cases pass on Chromium and Mobile Safari, including both languages and the end-to-end solar postal receipt. The initial mobile label locator was scoped from the wrong node; its failed trace is retained and only the four affected cases were rerun. The 68 focused unit tests, typecheck, lint, formatting and 91 original bundle budgets pass."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-form-and-action-closure",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-form-and-action-closure/reviewed-source.diff",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-form-and-action-closure/source-binding.json",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-form-and-action-closure/renewed-bindings.json",
+      "renewed_task_keys": [
+        "03-core-business.md#T-03.09.05.01",
+        "03-core-business.md#T-03.09.05.02",
+        "03-core-business.md#T-03.09.05.03",
+        "03-core-business.md#T-03.09.05.04",
+        "03-core-business.md#T-03.09.05.05",
+        "03-core-business.md#T-03.12.03.01",
+        "03-core-business.md#T-03.12.03.02",
+        "03-core-business.md#T-03.12.03.03",
+        "03-core-business.md#T-03.12.03.04",
+        "03-core-business.md#T-03.12.03.05",
+        "03-core-business.md#T-03.12.03.06",
+        "03-core-business.md#T-03.13.01.01",
+        "03-core-business.md#T-03.13.01.03",
+        "03-core-business.md#T-03.13.01.04",
+        "07-ui-ux-design.md#T-07.01.03.19",
+        "07-ui-ux-design.md#T-07.01.04.02",
+        "07-ui-ux-design.md#T-07.01.04.03",
+        "07-ui-ux-design.md#T-07.01.04.04",
+        "07-ui-ux-design.md#T-07.01.04.05",
+        "07-ui-ux-design.md#T-07.10.01.01",
+        "07-ui-ux-design.md#T-07.10.01.02",
+        "07-ui-ux-design.md#T-07.10.01.03",
+        "07-ui-ux-design.md#T-07.10.01.04",
+        "07-ui-ux-design.md#T-07.10.01.05",
+        "07-ui-ux-design.md#T-07.10.01.06",
+        "07-ui-ux-design.md#T-07.10.02.01",
+        "07-ui-ux-design.md#T-07.10.02.02",
+        "07-ui-ux-design.md#T-07.10.02.03",
+        "07-ui-ux-design.md#T-07.10.02.04",
+        "07-ui-ux-design.md#T-07.10.02.05",
+        "07-ui-ux-design.md#T-07.12.01.05",
+        "07-ui-ux-design.md#T-07.13.01.01",
+        "07-ui-ux-design.md#T-07.13.01.02",
+        "07-ui-ux-design.md#T-07.13.01.03",
+        "07-ui-ux-design.md#T-07.13.01.04",
+        "07-ui-ux-design.md#T-07.13.01.05",
+        "07-ui-ux-design.md#T-07.13.01.06",
+        "07-ui-ux-design.md#T-07.13.01.07",
+        "07-ui-ux-design.md#T-07.18.03.01",
+        "07-ui-ux-design.md#T-07.18.03.02",
+        "07-ui-ux-design.md#T-07.18.03.03",
+        "07-ui-ux-design.md#T-07.18.03.04",
+        "07-ui-ux-design.md#T-07.18.03.05",
+        "release-readiness#R-02.02"
+      ],
+      "release_disposition": "Solar postal and custom refund form gaps verified. Other routes and release gates remain open. No release publication."
     }
   },
   "historical_improvements": [
@@ -707941,18 +708440,18 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.5-required-form-and-action-closure",
+    "id": "release-0.5-measured-action-targets",
     "release": "0.5.0",
     "task_keys": [
-      "07-ui-ux-design.md#T-07.05.01.05",
       "07-ui-ux-design.md#T-07.04.01.06",
+      "07-ui-ux-design.md#T-07.04.02.04",
       "release-readiness#R-04.01"
     ],
-    "goal": "Complete conditional required announcements for solar postal submission and custom cancellation, and measure the remaining known short standalone actions in those active flows. Retain captured commands, ownership and existing validation."
+    "goal": "Use the existing populated width reports to repair short standalone launch-service links and the staff consultation team selector. Verify their actual coarse-pointer hit targets, authorization, navigation and existing financial assertions."
   },
   "launch_forecast": {
     "status": "deadline_at_risk_until_v0_5_and_operational_gates_close",
-    "next_update_after": "v0.5.0 conditional form and touch action evidence",
+    "next_update_after": "v0.5.0 measured touch target evidence",
     "method": "v0.4.0 staging and Telegram receipts verified. 12 v0.5.0 criteria and gates remain, including route diagnostics and required CI merge enforcement decisions. v0.6.0 operations and v0.9.0 four-service rehearsal keep November 9 at risk. Production is not authorized."
   },
   "capabilities": [

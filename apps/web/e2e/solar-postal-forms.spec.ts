@@ -4,6 +4,7 @@ import { test, expect } from './coverage-fixture';
 import { t } from '@barghsa/i18n/app';
 import { tSolar } from '@barghsa/i18n/solar';
 import { postalReceipt, setupSolarPostalForms } from './solar-postal-form-fixture';
+import { approveRiskConfirmation } from './confirmation-fixture';
 
 test.use({ viewport: { width: 390, height: 844 } });
 const settings = [
@@ -38,12 +39,17 @@ for (const [locale, theme] of settings) {
     await page.goto(`/solar/requests/${firstSolar}`);
     const postal = page.getByRole('region', { name: copy('postalStage'), exact: true });
     const form = postal.getByRole('group', { name: copy('postalShipment'), exact: true });
-    const courier = page.locator('#solar-postal-courier');
-    const tracking = page.locator('#solar-postal-tracking-number');
-    const date = page.locator('#solar-postal-send-date');
-    const receipt = page.locator('#solar-postal-receipt-image');
+    const courier = form.getByLabel(copy('postalCourier'), { exact: true });
+    const tracking = form.getByLabel(copy('postalTracking'), { exact: true });
+    const date = form.getByLabel(copy('postalSendDate'), { exact: true });
+    const receipt = form.getByLabel(copy('postalReceipt'), { exact: true });
     const submit = form.getByRole('button', { name: copy('postalSubmit'), exact: true });
     const reload = postal.getByRole('button', { name: copy('postalTrackingReload'), exact: true });
+    for (const field of [courier, tracking, date]) {
+      await expect(field).toHaveAttribute('aria-required', 'true');
+    }
+    await expect(receipt).not.toHaveAttribute('aria-required', 'true');
+    await expect(receipt).not.toHaveAttribute('required');
     await courier.fill('C'.repeat(101));
     await tracking.fill('T'.repeat(201));
     await date.fill('2026-09-23');
@@ -290,6 +296,7 @@ for (const [locale, theme] of settings) {
     state.finalPreviewMode = 'success';
     await close.click();
     dialog = page.getByRole('dialog', { name: copy('solarCloseNoContract'), exact: true });
+    await approveRiskConfirmation(page, locale, 'destructive');
     await dialog.locator('button[type=submit]').click();
     await expect(dialog).toHaveCount(0);
     expect(state.finalPreviews.at(-1)).toEqual({

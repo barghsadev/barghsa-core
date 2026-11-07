@@ -7,6 +7,7 @@ import { t } from '@barghsa/i18n/app';
 import { test, expect, type Page } from './coverage-fixture';
 import { crmShell } from './crm-shell-fixture';
 import { fullNavigation } from './navigation-fixture';
+import { approveRiskConfirmation } from './confirmation-fixture';
 
 const id = '11111111-1111-4111-8111-111111111111';
 const versionId = '22222222-2222-4222-8222-222222222222';
@@ -309,7 +310,22 @@ for (const surface of ['customer', 'rejection', 'decision'] as const)
         if (surface === 'customer')
           await page.locator(`#request-destination-${id}`).selectOption('external_bank');
         if (surface === 'decision') {
-          await form.getByRole('checkbox', { name: w('cancellationCustom'), exact: true }).check();
+          const custom = form.getByRole('checkbox', { name: w('cancellationCustom'), exact: true });
+          const destination = page.locator(`#destination-${invoiceId}`);
+          await expect(amount).toHaveCount(0);
+          await expect(destination).toHaveCount(0);
+          if (await page.evaluate(() => matchMedia('(pointer: coarse)').matches)) {
+            const label = form.locator('label').filter({ hasText: w('cancellationCustom') });
+            const bounds = await label.boundingBox();
+            expect(bounds?.width).toBeGreaterThanOrEqual(44);
+            expect(bounds?.height).toBeGreaterThanOrEqual(44);
+            await label.tap({ position: { x: bounds!.width / 2, y: bounds!.height / 2 } });
+            await expect(custom).toBeChecked();
+          } else {
+            await custom.check();
+          }
+          await expect(amount).toHaveAttribute('aria-required', 'true');
+          await expect(destination).toHaveAttribute('aria-required', 'true');
           await page.locator(`#return-${firstInvoice}`).fill('0');
           await amount.fill('9007199254740994');
           await submit();
@@ -333,8 +349,16 @@ for (const surface of ['customer', 'rejection', 'decision'] as const)
         const dialog = page.getByRole('dialog').last();
         const confirm = () =>
           dialog.getByRole('button', { name: t('team.confirm', locale), exact: true }).click();
+        const confirmNew = async (
+          kind: 'financial' | 'destructive' | 'both' = surface === 'decision'
+            ? 'financial'
+            : 'destructive'
+        ) => {
+          await approveRiskConfirmation(page, locale, kind);
+          await confirm();
+        };
         await expect(reason).toBeDisabled();
-        await confirm();
+        await confirmNew();
         await dialog.locator('input[type=password]').fill('Test-password');
         await confirm();
         await expect(dialog).toHaveCount(0);
@@ -358,7 +382,7 @@ for (const surface of ['customer', 'rejection', 'decision'] as const)
         } else await reason.fill('  Raw reason  ');
         f.setMode('mixed');
         await submit();
-        await confirm();
+        await confirmNew();
         await expect(dialog.getByRole('alert')).toBeVisible();
         await expect(reason).toHaveValue('  Raw reason  ');
         f.setMode('service');
@@ -392,7 +416,7 @@ for (const surface of ['customer', 'rejection', 'decision'] as const)
           });
         f.setMode('denied');
         await submit();
-        await confirm();
+        await confirmNew();
         await expect(dialog).toHaveCount(0);
         await expect(reason).toHaveCount(0);
         await region
@@ -411,11 +435,11 @@ for (const surface of ['customer', 'rejection', 'decision'] as const)
         }
         f.setMode('success');
         await submit();
-        await confirm();
+        await confirmNew();
         await expect(dialog).toHaveCount(0);
         if (surface === 'decision') {
           await region.getByRole('button', { name: w('cancellationConfirm'), exact: true }).click();
-          await confirm();
+          await confirmNew('both');
           await expect(
             region.getByText(w('cancellationServiceEnded'), { exact: true })
           ).toBeVisible();

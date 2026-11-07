@@ -395,7 +395,7 @@ function OwnedCancellationEditor({
                 )}
               </p>
               {preview.serviceType !== 'electricity' && canChooseRefund ? (
-                <label className="flex items-center gap-2">
+                <label className="touch-label flex items-center gap-2">
                   <input
                     type="checkbox"
                     disabled={busy || error}
@@ -420,6 +420,7 @@ function OwnedCancellationEditor({
                           value={lines[invoice.id]?.amount ?? ''}
                           {...draft.bind(`lines.${invoice.id}.amount`)}
                           disabled={busy || error}
+                          aria-required="true"
                           onChange={(e) =>
                             draft.field(`lines.${invoice.id}.amount`)[1](e.target.value)
                           }
@@ -457,6 +458,7 @@ function OwnedCancellationEditor({
                           value={lines[invoice.id]?.destination ?? 'wallet'}
                           {...draft.bind(`lines.${invoice.id}.destination`)}
                           disabled={busy || error}
+                          aria-required="true"
                           onChange={(e) =>
                             draft.field(`lines.${invoice.id}.destination`)[1](
                               e.target.value as 'wallet' | 'external_bank'
