@@ -973,6 +973,7 @@ function AdminSolarPostalWorkspace({ queries }: { queries?: ListQueryBinding } =
                         <textarea
                           {...field}
                           disabled={editorLocked || guidanceDenied}
+                          aria-required={name === 'fa' || name === 'en' || undefined}
                           dir={
                             name.endsWith('Fa') || name === 'fa'
                               ? 'rtl'

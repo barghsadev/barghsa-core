@@ -26,10 +26,10 @@ for (const locale of ['en', 'fa'] as const)
       const documents = page.getByRole('group', { name: copy('staffDocuments'), exact: true });
       const guidance = page.getByRole('group', { name: copy('documentGuidance'), exact: true });
       const reason = page.locator('#solar-review-reason');
-      const fa = page.locator('#solar-guidance-fa');
-      const en = page.locator('#solar-guidance-en');
-      const suggestionsFa = page.locator('#solar-guidance-fa-suggestions');
-      const suggestionsEn = page.locator('#solar-guidance-en-suggestions');
+      const fa = guidance.getByLabel(copy('guidanceFa'), { exact: true });
+      const en = guidance.getByLabel(copy('guidanceEn'), { exact: true });
+      const suggestionsFa = guidance.getByLabel(copy('suggestionsFa'), { exact: true });
+      const suggestionsEn = guidance.getByLabel(copy('suggestionsEn'), { exact: true });
       const reject = documents.getByRole('button', { name: copy('reject'), exact: true });
       const additional = documents.getByRole('button', {
         name: copy('requestAdditional'),
@@ -37,6 +37,9 @@ for (const locale of ['en', 'fa'] as const)
       });
       const save = guidance.getByRole('button', { name: copy('saveGuidance'), exact: true });
       await expect(reason).toBeVisible();
+      for (const field of [fa, en]) await expect(field).toHaveAttribute('aria-required', 'true');
+      for (const field of [suggestionsFa, suggestionsEn])
+        await expect(field).not.toHaveAttribute('aria-required', 'true');
 
       // Intent-specific limits: rejection is bounded at 1000; the same control
       // still supports the full 2000-character additional-document instruction.

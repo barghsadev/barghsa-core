@@ -149,14 +149,21 @@ for (const [locale, theme] of settings) {
     await page.goto('/admin/solar-postal');
     await page.getByRole('button', { name: /First solar buyer/ }).click();
     const reason = page.locator('#solar-postal-reason');
-    const guidance = page.getByRole('group', { name: copy('postalGuidance'), exact: true });
-    const en = page.locator('#solar-postal-guidance-en');
-    const fa = page.locator('#solar-postal-guidance-fa');
-    const originalsFa = page.locator('#solar-postal-guidance-originals-fa');
-    const originalsEn = page.locator('#solar-postal-guidance-originals-en');
-    const address = page.locator('#solar-postal-guidance-destination-address');
-    const contact = page.locator('#solar-postal-guidance-contact-details');
+    const guidance = page.getByRole('group', {
+      name: copy('postalGuidance'),
+      exact: true,
+      includeHidden: true,
+    });
+    const en = guidance.getByLabel(copy('postalGuidance_en'), { exact: true });
+    const fa = guidance.getByLabel(copy('postalGuidance_fa'), { exact: true });
+    const originalsFa = guidance.getByLabel(copy('postalOriginalsFa'), { exact: true });
+    const originalsEn = guidance.getByLabel(copy('postalOriginalsEn'), { exact: true });
+    const address = guidance.getByLabel(copy('postalGuidance_destinationAddress'), { exact: true });
+    const contact = guidance.getByLabel(copy('postalGuidance_contactDetails'), { exact: true });
     const save = guidance.getByRole('button', { name: copy('postalSaveGuidance'), exact: true });
+    for (const field of [fa, en]) await expect(field).toHaveAttribute('aria-required', 'true');
+    for (const field of [originalsFa, originalsEn, address, contact])
+      await expect(field).not.toHaveAttribute('aria-required', 'true');
     const reload = page.locator('#solar-postal-guidance-reload');
     await reason.fill('Independent postal issue draft');
     await en.fill('  Captured postal guidance  ');

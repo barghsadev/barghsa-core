@@ -857,6 +857,7 @@ function OwnedAdminSolarDocumentsPage({ queries }: { queries?: SolarDocumentQuer
                         <textarea
                           {...field}
                           disabled={editorLocked || guidanceDenied}
+                          aria-required={name === 'fa' || name === 'en' || undefined}
                           dir={name.startsWith('fa') ? 'rtl' : 'ltr'}
                           className="min-h-24 w-full rounded-md border bg-background p-2"
                         />
