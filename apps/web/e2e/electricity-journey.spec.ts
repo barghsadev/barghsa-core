@@ -1,6 +1,7 @@
 import { test, expect } from './coverage-fixture';
 import { t } from '@barghsa/i18n/app';
 import { electricityPaymentReview } from './electricity-payment-fixture';
+import { approveRiskConfirmation } from './confirmation-fixture';
 
 const profileId = '11111111-1111-4111-8111-111111111111';
 const orderId = '66666666-6666-4666-8666-666666666666';
@@ -470,9 +471,13 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(
       wizard.getByText(locale === 'fa' ? /جمع قلم/ : /Line total/).first()
     ).toBeVisible();
-    await page
-      .getByRole('button', { name: locale === 'fa' ? 'ثبت سفارش' : 'Submit Order', exact: true })
-      .click();
+    const submit = page.getByRole('button', {
+      name: locale === 'fa' ? 'ثبت سفارش' : 'Submit Order',
+      exact: true,
+    });
+    await expect(submit).toBeDisabled();
+    await approveRiskConfirmation(page, locale, 'financial');
+    await submit.click();
     await expect(page).toHaveURL(/\/electricity\/orders\/66666666-/);
     await expect(page.locator(`a[href="/invoices/${invoiceId}"]`)).toBeVisible();
     expect(drafts).toHaveLength(5);
@@ -510,10 +515,13 @@ for (const locale of ['en', 'fa'] as const) {
         exact: true,
       })
       .click();
-    await page
-      .getByRole('dialog')
-      .getByRole('button', { name: locale === 'fa' ? 'تأیید' : 'Confirm', exact: true })
-      .click();
+    const pay = page.getByRole('dialog').getByRole('button', {
+      name: locale === 'fa' ? 'تأیید' : 'Confirm',
+      exact: true,
+    });
+    await expect(pay).toBeDisabled();
+    await approveRiskConfirmation(page, locale, 'financial');
+    await pay.click();
     await expect(wallet.getByRole('status')).toContainText(transactionId);
     expect(payments).toHaveLength(1);
     expect(payments[0]).toMatchObject({

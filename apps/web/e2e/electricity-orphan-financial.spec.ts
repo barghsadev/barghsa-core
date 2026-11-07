@@ -1,4 +1,5 @@
 import { test, expect } from './coverage-fixture';
+import { approveRiskConfirmation } from './confirmation-fixture';
 import AxeBuilder from '@axe-core/playwright';
 import { setupCatalogueForms } from './catalogue-form-fixture';
 import { t } from '@barghsa/i18n/app';
@@ -104,7 +105,10 @@ for (const locale of ['en', 'fa'] as const)
       ).violations
     ).toEqual([]);
     expect(writes).toHaveLength(0);
-    await dialog.getByRole('button', { name: t('team.confirm', locale), exact: true }).click();
+    const confirm = dialog.getByRole('button', { name: t('team.confirm', locale), exact: true });
+    await expect(confirm).toBeDisabled();
+    await approveRiskConfirmation(page, locale, 'both');
+    await confirm.click();
     await expect(dialog).toHaveCount(0);
     await expect(details).toContainText(word('awaitingApproval'));
     expect(writes).toHaveLength(1);
@@ -122,7 +126,9 @@ for (const locale of ['en', 'fa'] as const)
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
       true
     );
-    await dialog.getByRole('button', { name: t('team.confirm', locale), exact: true }).click();
+    await expect(confirm).toBeDisabled();
+    await approveRiskConfirmation(page, locale, 'both');
+    await confirm.click();
     await expect(dialog).toHaveCount(0);
     await expect(details).toContainText(word('empty'));
     expect(writes).toHaveLength(2);

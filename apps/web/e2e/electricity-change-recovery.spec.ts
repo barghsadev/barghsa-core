@@ -1,4 +1,5 @@
 import { test, expect, type Page } from './coverage-fixture';
+import { approveRiskConfirmation } from './confirmation-fixture';
 import type { Route } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import { t } from '@barghsa/i18n/admin-ui';
@@ -175,6 +176,8 @@ for (const locale of ['en', 'fa'] as const) {
       name: locale === 'en' ? 'Confirm' : 'تأیید',
       exact: true,
     });
+    await expect(confirm).toBeDisabled();
+    await approveRiskConfirmation(page, locale, 'financial');
     await confirm.click();
     await expect.poll(() => publishBodies.length).toBe(1);
     await expect(dialog).toHaveCount(0);
@@ -184,6 +187,8 @@ for (const locale of ['en', 'fa'] as const) {
         exact: true,
       })
       .click();
+    await expect(confirm).toBeDisabled();
+    await approveRiskConfirmation(page, locale, 'financial');
     await expect(confirm).toBeEnabled();
     await confirm.click();
     await expect.poll(() => publishBodies.length).toBe(2);
@@ -198,18 +203,24 @@ for (const locale of ['en', 'fa'] as const) {
   }) => {
     await shell(page, locale);
     const copy = (key: string) => t(`admin.electricityIncreases.${key}`, locale);
+    const reason = 'Capacity reviewed for the requested period';
+    const effectiveFrom = '2026-10-06T08:30:00.000Z';
     const writes: Record<string, string>[] = [];
     await page.route('**/api/staff/electricity/increase-requests?*', (route) =>
       route.fulfill({ json: { requests: [increaseRow], nextBefore: null } })
     );
-    await page.route(`**/increase-requests/${increaseRow.requestId}/approve/review`, (route) =>
-      route.fulfill({ json: increaseReview('approve') })
-    );
+    await page.route(`**/increase-requests/${increaseRow.requestId}/approve/review`, (route) => {
+      expect(route.request().postDataJSON()).toEqual({ reason, effectiveFrom });
+      const review = increaseReview('approve', '', effectiveFrom);
+      return route.fulfill({ json: { ...review, data: { ...review.data, reason } } });
+    });
     await page.route(`**/increase-requests/${increaseRow.requestId}/approve`, (route) => {
       writes.push(route.request().postDataJSON());
       return route.fulfill({ status: 503, json: {} });
     });
     await page.goto('/admin/electricity-increases');
+    await page.locator(`#increase-effective-${increaseRow.requestId}`).fill('2026-10-06T12:00');
+    await page.locator(`#increase-approval-reason-${increaseRow.requestId}`).fill(reason);
     await page.getByRole('button', { name: copy('approve'), exact: true }).click();
     const dialog = page.getByRole('dialog');
     await expect(dialog).toContainText(copy('reviewTitle'));
@@ -217,6 +228,8 @@ for (const locale of ['en', 'fa'] as const) {
       name: locale === 'en' ? 'Confirm' : 'تأیید',
       exact: true,
     });
+    await expect(confirm).toBeDisabled();
+    await approveRiskConfirmation(page, locale, 'financial');
     await confirm.click();
     await expect.poll(() => writes.length).toBe(1);
     await expect(dialog).toHaveCount(0);
@@ -226,10 +239,13 @@ for (const locale of ['en', 'fa'] as const) {
         exact: true,
       })
       .click();
+    await expect(confirm).toBeDisabled();
+    await approveRiskConfirmation(page, locale, 'financial');
     await expect(confirm).toBeEnabled();
     await confirm.click();
     await expect.poll(() => writes.length).toBe(2);
     expect(writes[1]).toEqual(writes[0]);
     expect(writes[0]!.expectedReviewHash).toBe('a'.repeat(64));
+    expect(writes[0]).toMatchObject({ reason, effectiveFrom });
   });
 }

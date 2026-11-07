@@ -1,4 +1,5 @@
 import { test, expect } from './coverage-fixture';
+import { approveRiskConfirmation } from './confirmation-fixture';
 import { contractText } from '@barghsa/i18n/contracts';
 import { t } from '@barghsa/i18n/app';
 import { setupCatalogueForms } from './catalogue-form-fixture';
@@ -157,7 +158,10 @@ for (const locale of ['en', 'fa'] as const)
           .analyze()
       ).violations
     ).toEqual([]);
-    await dialog.getByRole('button', { name: t('team.confirm', locale), exact: true }).click();
+    const confirm = dialog.getByRole('button', { name: t('team.confirm', locale), exact: true });
+    await expect(confirm).toBeDisabled();
+    await approveRiskConfirmation(page, locale, 'financial');
+    await confirm.click();
     await expect(dialog).toHaveCount(0);
     expect(commands[0]).toMatchObject({
       terminalAction: 'reject',
@@ -166,7 +170,9 @@ for (const locale of ['en', 'fa'] as const)
     });
     await panel.getByRole('button', { name: w('rejectionConfirm'), exact: true }).click();
     await expect(dialog).toContainText(w('rejectionIrreversible'));
-    await dialog.getByRole('button', { name: t('team.confirm', locale), exact: true }).click();
+    await expect(confirm).toBeDisabled();
+    await approveRiskConfirmation(page, locale, 'both');
+    await confirm.click();
     await expect(dialog).toHaveCount(0);
     expect(commands).toHaveLength(2);
     await expect(panel).toContainText(w('rejectionServiceEnded'));

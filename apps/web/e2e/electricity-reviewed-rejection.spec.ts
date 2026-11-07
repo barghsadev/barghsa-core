@@ -1,4 +1,5 @@
 import { test, expect } from './coverage-fixture';
+import { approveRiskConfirmation } from './confirmation-fixture';
 import AxeBuilder from '@axe-core/playwright';
 import { setupCatalogueForms } from './catalogue-form-fixture';
 import { contractText } from '@barghsa/i18n/contracts';
@@ -121,7 +122,10 @@ for (const locale of ['en', 'fa'] as const)
           .analyze()
       ).violations
     ).toEqual([]);
-    await dialog.getByRole('button', { name: t('team.confirm', locale), exact: true }).click();
+    const confirm = dialog.getByRole('button', { name: t('team.confirm', locale), exact: true });
+    await expect(confirm).toBeDisabled();
+    await approveRiskConfirmation(page, locale, 'financial');
+    await confirm.click();
     await expect(dialog).toHaveCount(0);
     expect(writes[0]).toMatchObject({
       terminalAction: 'reject',
@@ -138,7 +142,9 @@ for (const locale of ['en', 'fa'] as const)
     await expect
       .poll(() => page.evaluate(() => document.documentElement.scrollWidth <= innerWidth))
       .toBe(true);
-    await dialog.getByRole('button', { name: t('team.confirm', locale), exact: true }).click();
+    await expect(confirm).toBeDisabled();
+    await approveRiskConfirmation(page, locale, 'both');
+    await confirm.click();
     await expect(dialog).toHaveCount(0);
     expect(writes).toHaveLength(2);
     expect(writes[1]).toMatchObject({ intentId });
