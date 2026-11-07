@@ -654,6 +654,13 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(firstName).toBeFocused();
     await expect(firstName).toHaveAccessibleName(t('onboarding.individual.firstName', locale));
     await expect(firstName).toHaveAttribute('required', '');
+    await expect(firstName).toHaveAttribute('aria-required', 'true');
+    await expect(page.locator('#title')).not.toHaveAttribute('aria-required', 'true');
+    for (const field of ['lastName', 'nationalId'] as const) {
+      const input = page.locator(`#${field}`);
+      await expect(input).toHaveAccessibleName(t(`onboarding.individual.${field}`, locale));
+      await expect(input).toHaveAttribute('aria-required', 'true');
+    }
     await expect(firstName).toHaveAttribute('aria-invalid', 'true');
     await expect(firstName).toHaveAccessibleDescription(
       t('onboarding.individual.error.required', locale)
@@ -688,6 +695,14 @@ for (const locale of ['en', 'fa'] as const) {
     await province.selectOption(provinceId);
     await expect(city).toBeEnabled();
     await city.selectOption(cityId);
+    for (const [id, field] of [
+      ['fullAddress', 'address'],
+      ['postalCode', 'postalCode'],
+    ] as const) {
+      const input = page.locator(`#${id}`);
+      await expect(input).toHaveAccessibleName(t(`onboarding.individual.${field}`, locale));
+      await expect(input).toHaveAttribute('aria-required', 'true');
+    }
     await page.locator('#fullAddress').fill(individual.fullAddress);
     await page.locator('#postalCode').fill('۱۲۳۴۵۶۷۸۹۰');
     await next(page, locale);
@@ -746,8 +761,31 @@ for (const locale of ['en', 'fa'] as const) {
     const state = await fixture(page, locale, 'LEGAL', { ...legal });
     await page.goto(`/onboarding/legal/${profileId}`);
     await expect(page.locator('#representativeFirstName')).toHaveValue('Person');
+    await expect(page.locator('#representativeHonorific')).not.toHaveAttribute(
+      'aria-required',
+      'true'
+    );
+    for (const field of [
+      'representativeFirstName',
+      'representativeLastName',
+      'representativeNationalId',
+      'representativeProvinceId',
+      'representativeCityId',
+      'representativeFullAddress',
+      'representativePostalCode',
+    ] as const) {
+      const input = page.locator(`#${field}`);
+      await expect(input).toHaveAccessibleName(t(`onboarding.legal.${field}`, locale));
+      await expect(input).toHaveAttribute('aria-required', 'true');
+    }
+    for (const field of ['representativeTitle', 'representativeRelationship']) {
+      await expect(page.locator(`#${field}`)).toHaveAttribute('aria-required', 'true');
+    }
     await next(page, locale);
     await expect(page.locator('#legalName')).toHaveValue('Saved Company');
+    for (const field of ['legalName', 'nationalIdentifier', 'registrationNumber']) {
+      await expect(page.locator(`#${field}`)).toHaveAttribute('aria-required', 'true');
+    }
     const companyType = page.locator('#companyTypeId');
     await expect(companyType).toHaveAccessibleName(locale === 'fa' ? 'نوع شرکت' : 'Company Type');
     await expect(companyType).toHaveAttribute('aria-required', 'true');
@@ -773,6 +811,9 @@ for (const locale of ['en', 'fa'] as const) {
     const postal = page.locator('#officialPostalCode');
     await expect(postal).toHaveAccessibleName(locale === 'fa' ? 'کد پستی' : 'Postal Code');
     await expect(postal).toHaveAttribute('aria-required', 'true');
+    for (const field of ['officialProvinceId', 'officialCityId', 'officialFullAddress']) {
+      await expect(page.locator(`#${field}`)).toHaveAttribute('aria-required', 'true');
+    }
     await expect(page.locator('#officialCityId')).toBeEnabled();
     await postal.clear();
     await next(page, locale, false);

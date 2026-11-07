@@ -357,6 +357,7 @@ function IndividualProfileForm({ profileId }: { profileId: string }) {
                         ref={form.register('firstName').ref}
                         type="text"
                         required
+                        aria-required="true"
                         maxLength={100}
                         value={firstName}
                         onChange={(e) => setFirstName(e.target.value)}
@@ -388,6 +389,7 @@ function IndividualProfileForm({ profileId }: { profileId: string }) {
                         ref={form.register('lastName').ref}
                         type="text"
                         required
+                        aria-required="true"
                         maxLength={100}
                         value={lastName}
                         onChange={(e) => setLastName(e.target.value)}
@@ -420,6 +422,7 @@ function IndividualProfileForm({ profileId }: { profileId: string }) {
                       type="text"
                       inputMode="numeric"
                       required
+                      aria-required="true"
                       maxLength={10}
                       value={nationalId}
                       onChange={(e) => {
@@ -557,6 +560,7 @@ function IndividualProfileForm({ profileId }: { profileId: string }) {
                       id="fullAddress"
                       ref={form.register('fullAddress').ref}
                       required
+                      aria-required="true"
                       maxLength={500}
                       rows={3}
                       value={fullAddress}
@@ -593,6 +597,7 @@ function IndividualProfileForm({ profileId }: { profileId: string }) {
                       type="text"
                       inputMode="numeric"
                       required
+                      aria-required="true"
                       maxLength={10}
                       value={postalCode}
                       onChange={(e) => {

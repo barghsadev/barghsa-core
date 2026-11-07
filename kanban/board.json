@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-07T23:19:37+00:00",
-  "source_commit": "997452e547718e6a4a06f4cabb545a86f9f6a7b7",
+  "updated": "2026-11-07T23:24:37+00:00",
+  "source_commit": "4aca67dbd94186207ea2487acb58999f0531a1d7",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -29899,7 +29899,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "f2d4c1469796b750c60f06cfbe400ba902e9788a27ffea1091ddabb8479a3b63"
+              "sha256": "431c02a2dca694d5ef0a60a047857aa4da1004e3c4b52e4fe4a8c27a24e8f6d7"
             },
             {
               "path": "apps/web/e2e/profile-display-name.spec.ts",
@@ -30660,7 +30660,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "f2d4c1469796b750c60f06cfbe400ba902e9788a27ffea1091ddabb8479a3b63"
+              "sha256": "431c02a2dca694d5ef0a60a047857aa4da1004e3c4b52e4fe4a8c27a24e8f6d7"
             },
             {
               "path": "apps/web/e2e/verification-banner.spec.ts",
@@ -31282,7 +31282,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "f2d4c1469796b750c60f06cfbe400ba902e9788a27ffea1091ddabb8479a3b63"
+              "sha256": "431c02a2dca694d5ef0a60a047857aa4da1004e3c4b52e4fe4a8c27a24e8f6d7"
             },
             {
               "path": "apps/web/src/routes/onboarding/index.tsx",
@@ -31519,7 +31519,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "f2d4c1469796b750c60f06cfbe400ba902e9788a27ffea1091ddabb8479a3b63"
+              "sha256": "431c02a2dca694d5ef0a60a047857aa4da1004e3c4b52e4fe4a8c27a24e8f6d7"
             },
             {
               "path": "apps/web/src/lib/profile-digits.ts",
@@ -31527,7 +31527,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/individual/$profileId.tsx",
-              "sha256": "373898cf434decfe0d983b59d5485d9200aa002de62dd331d3108f782b95aa1c"
+              "sha256": "309a35cc9de3fa513de89896b33290349a2c950ff758d71119fcd0f110d603dc"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -31786,7 +31786,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "f2d4c1469796b750c60f06cfbe400ba902e9788a27ffea1091ddabb8479a3b63"
+              "sha256": "431c02a2dca694d5ef0a60a047857aa4da1004e3c4b52e4fe4a8c27a24e8f6d7"
             },
             {
               "path": "apps/web/src/hooks/useOnboardingDraft.ts",
@@ -31798,7 +31798,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/legal/$profileId.tsx",
-              "sha256": "2924fb024590e4ee6abb927411fff9c269eb16cc72d2a7acce8768dac2283da7"
+              "sha256": "c17a8b1020cf61df5b60490c8ffdc2539592646295f583e25800fb22a83a7a07"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -32012,7 +32012,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "f2d4c1469796b750c60f06cfbe400ba902e9788a27ffea1091ddabb8479a3b63"
+              "sha256": "431c02a2dca694d5ef0a60a047857aa4da1004e3c4b52e4fe4a8c27a24e8f6d7"
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
@@ -32232,7 +32232,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "f2d4c1469796b750c60f06cfbe400ba902e9788a27ffea1091ddabb8479a3b63"
+              "sha256": "431c02a2dca694d5ef0a60a047857aa4da1004e3c4b52e4fe4a8c27a24e8f6d7"
             },
             {
               "path": "apps/web/e2e/profile-display-name.spec.ts",
@@ -32555,7 +32555,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "f2d4c1469796b750c60f06cfbe400ba902e9788a27ffea1091ddabb8479a3b63"
+              "sha256": "431c02a2dca694d5ef0a60a047857aa4da1004e3c4b52e4fe4a8c27a24e8f6d7"
             },
             {
               "path": "apps/web/e2e/profile-display-name.spec.ts",
@@ -491370,11 +491370,11 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/individual/$profileId.tsx",
-              "sha256": "373898cf434decfe0d983b59d5485d9200aa002de62dd331d3108f782b95aa1c"
+              "sha256": "309a35cc9de3fa513de89896b33290349a2c950ff758d71119fcd0f110d603dc"
             },
             {
               "path": "apps/web/src/routes/onboarding/legal/$profileId.tsx",
-              "sha256": "2924fb024590e4ee6abb927411fff9c269eb16cc72d2a7acce8768dac2283da7"
+              "sha256": "c17a8b1020cf61df5b60490c8ffdc2539592646295f583e25800fb22a83a7a07"
             },
             {
               "path": "apps/web/src/routes/terms.tsx",
@@ -508294,11 +508294,11 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/individual/$profileId.tsx",
-              "sha256": "373898cf434decfe0d983b59d5485d9200aa002de62dd331d3108f782b95aa1c"
+              "sha256": "309a35cc9de3fa513de89896b33290349a2c950ff758d71119fcd0f110d603dc"
             },
             {
               "path": "apps/web/src/routes/onboarding/legal/$profileId.tsx",
-              "sha256": "2924fb024590e4ee6abb927411fff9c269eb16cc72d2a7acce8768dac2283da7"
+              "sha256": "c17a8b1020cf61df5b60490c8ffdc2539592646295f583e25800fb22a83a7a07"
             },
             {
               "path": "packages/i18n/src/feedback.ts",
@@ -512337,11 +512337,11 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/individual/$profileId.tsx",
-              "sha256": "373898cf434decfe0d983b59d5485d9200aa002de62dd331d3108f782b95aa1c"
+              "sha256": "309a35cc9de3fa513de89896b33290349a2c950ff758d71119fcd0f110d603dc"
             },
             {
               "path": "apps/web/src/routes/onboarding/legal/$profileId.tsx",
-              "sha256": "2924fb024590e4ee6abb927411fff9c269eb16cc72d2a7acce8768dac2283da7"
+              "sha256": "c17a8b1020cf61df5b60490c8ffdc2539592646295f583e25800fb22a83a7a07"
             },
             {
               "path": "packages/i18n/src/feedback.ts",
@@ -516704,7 +516704,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Service checkout and the invoice and wallet bank receipt fields now have current required-state and inline error evidence. Native required attributes without explicit ARIA remain in individual and legal onboarding, recovery, staff invoicing and other staff/customer forms. Verify their labels, conditional required state and error associations against each validator before acceptance."
+        "Service checkout, invoice and wallet bank receipts, and individual and legal onboarding have current required-state and inline error evidence. Verify remaining native and conditional fields in recovery, staff invoicing and other staff/customer forms against each validator before acceptance."
       ],
       "owner": null,
       "depends_on": [],
@@ -516727,7 +516727,8 @@
           "release-0.5-electricity-required-fields",
           "release-0.5-electricity-address-validation",
           "release-0.5-provider-required-fields",
-          "release-0.5-saving-receipt-required"
+          "release-0.5-saving-receipt-required",
+          "release-0.5-onboarding-required"
         ],
         "current_acceptance": null
       }
@@ -516988,7 +516989,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/legal/$profileId.tsx",
-              "sha256": "2924fb024590e4ee6abb927411fff9c269eb16cc72d2a7acce8768dac2283da7"
+              "sha256": "c17a8b1020cf61df5b60490c8ffdc2539592646295f583e25800fb22a83a7a07"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -517506,11 +517507,11 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/individual/$profileId.tsx",
-              "sha256": "373898cf434decfe0d983b59d5485d9200aa002de62dd331d3108f782b95aa1c"
+              "sha256": "309a35cc9de3fa513de89896b33290349a2c950ff758d71119fcd0f110d603dc"
             },
             {
               "path": "apps/web/src/routes/onboarding/legal/$profileId.tsx",
-              "sha256": "2924fb024590e4ee6abb927411fff9c269eb16cc72d2a7acce8768dac2283da7"
+              "sha256": "c17a8b1020cf61df5b60490c8ffdc2539592646295f583e25800fb22a83a7a07"
             },
             {
               "path": "packages/i18n/src/feedback.ts",
@@ -518309,7 +518310,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/legal/$profileId.tsx",
-              "sha256": "2924fb024590e4ee6abb927411fff9c269eb16cc72d2a7acce8768dac2283da7"
+              "sha256": "c17a8b1020cf61df5b60490c8ffdc2539592646295f583e25800fb22a83a7a07"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -518787,7 +518788,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "f2d4c1469796b750c60f06cfbe400ba902e9788a27ffea1091ddabb8479a3b63"
+              "sha256": "431c02a2dca694d5ef0a60a047857aa4da1004e3c4b52e4fe4a8c27a24e8f6d7"
             },
             {
               "path": "apps/web/e2e/order-comment-forms.spec.ts",
@@ -519615,7 +519616,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "f2d4c1469796b750c60f06cfbe400ba902e9788a27ffea1091ddabb8479a3b63"
+              "sha256": "431c02a2dca694d5ef0a60a047857aa4da1004e3c4b52e4fe4a8c27a24e8f6d7"
             },
             {
               "path": "apps/web/e2e/order-comment-forms.spec.ts",
@@ -520465,7 +520466,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/legal/$profileId.tsx",
-              "sha256": "2924fb024590e4ee6abb927411fff9c269eb16cc72d2a7acce8768dac2283da7"
+              "sha256": "c17a8b1020cf61df5b60490c8ffdc2539592646295f583e25800fb22a83a7a07"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -520943,7 +520944,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "f2d4c1469796b750c60f06cfbe400ba902e9788a27ffea1091ddabb8479a3b63"
+              "sha256": "431c02a2dca694d5ef0a60a047857aa4da1004e3c4b52e4fe4a8c27a24e8f6d7"
             },
             {
               "path": "apps/web/e2e/order-comment-forms.spec.ts",
@@ -665740,7 +665741,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "f2d4c1469796b750c60f06cfbe400ba902e9788a27ffea1091ddabb8479a3b63"
+              "sha256": "431c02a2dca694d5ef0a60a047857aa4da1004e3c4b52e4fe4a8c27a24e8f6d7"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -665948,11 +665949,11 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/individual/$profileId.tsx",
-              "sha256": "373898cf434decfe0d983b59d5485d9200aa002de62dd331d3108f782b95aa1c"
+              "sha256": "309a35cc9de3fa513de89896b33290349a2c950ff758d71119fcd0f110d603dc"
             },
             {
               "path": "apps/web/src/routes/onboarding/legal/$profileId.tsx",
-              "sha256": "2924fb024590e4ee6abb927411fff9c269eb16cc72d2a7acce8768dac2283da7"
+              "sha256": "c17a8b1020cf61df5b60490c8ffdc2539592646295f583e25800fb22a83a7a07"
             },
             {
               "path": "apps/web/src/test/query-provider.tsx",
@@ -666408,7 +666409,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "f2d4c1469796b750c60f06cfbe400ba902e9788a27ffea1091ddabb8479a3b63"
+              "sha256": "431c02a2dca694d5ef0a60a047857aa4da1004e3c4b52e4fe4a8c27a24e8f6d7"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -666616,11 +666617,11 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/individual/$profileId.tsx",
-              "sha256": "373898cf434decfe0d983b59d5485d9200aa002de62dd331d3108f782b95aa1c"
+              "sha256": "309a35cc9de3fa513de89896b33290349a2c950ff758d71119fcd0f110d603dc"
             },
             {
               "path": "apps/web/src/routes/onboarding/legal/$profileId.tsx",
-              "sha256": "2924fb024590e4ee6abb927411fff9c269eb16cc72d2a7acce8768dac2283da7"
+              "sha256": "c17a8b1020cf61df5b60490c8ffdc2539592646295f583e25800fb22a83a7a07"
             },
             {
               "path": "apps/web/src/test/query-provider.tsx",
@@ -667075,7 +667076,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "f2d4c1469796b750c60f06cfbe400ba902e9788a27ffea1091ddabb8479a3b63"
+              "sha256": "431c02a2dca694d5ef0a60a047857aa4da1004e3c4b52e4fe4a8c27a24e8f6d7"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -667283,11 +667284,11 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/individual/$profileId.tsx",
-              "sha256": "373898cf434decfe0d983b59d5485d9200aa002de62dd331d3108f782b95aa1c"
+              "sha256": "309a35cc9de3fa513de89896b33290349a2c950ff758d71119fcd0f110d603dc"
             },
             {
               "path": "apps/web/src/routes/onboarding/legal/$profileId.tsx",
-              "sha256": "2924fb024590e4ee6abb927411fff9c269eb16cc72d2a7acce8768dac2283da7"
+              "sha256": "c17a8b1020cf61df5b60490c8ffdc2539592646295f583e25800fb22a83a7a07"
             },
             {
               "path": "apps/web/src/test/query-provider.tsx",
@@ -667744,7 +667745,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "f2d4c1469796b750c60f06cfbe400ba902e9788a27ffea1091ddabb8479a3b63"
+              "sha256": "431c02a2dca694d5ef0a60a047857aa4da1004e3c4b52e4fe4a8c27a24e8f6d7"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -667952,11 +667953,11 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/individual/$profileId.tsx",
-              "sha256": "373898cf434decfe0d983b59d5485d9200aa002de62dd331d3108f782b95aa1c"
+              "sha256": "309a35cc9de3fa513de89896b33290349a2c950ff758d71119fcd0f110d603dc"
             },
             {
               "path": "apps/web/src/routes/onboarding/legal/$profileId.tsx",
-              "sha256": "2924fb024590e4ee6abb927411fff9c269eb16cc72d2a7acce8768dac2283da7"
+              "sha256": "c17a8b1020cf61df5b60490c8ffdc2539592646295f583e25800fb22a83a7a07"
             },
             {
               "path": "apps/web/src/test/query-provider.tsx",
@@ -668413,7 +668414,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "f2d4c1469796b750c60f06cfbe400ba902e9788a27ffea1091ddabb8479a3b63"
+              "sha256": "431c02a2dca694d5ef0a60a047857aa4da1004e3c4b52e4fe4a8c27a24e8f6d7"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -668621,11 +668622,11 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/individual/$profileId.tsx",
-              "sha256": "373898cf434decfe0d983b59d5485d9200aa002de62dd331d3108f782b95aa1c"
+              "sha256": "309a35cc9de3fa513de89896b33290349a2c950ff758d71119fcd0f110d603dc"
             },
             {
               "path": "apps/web/src/routes/onboarding/legal/$profileId.tsx",
-              "sha256": "2924fb024590e4ee6abb927411fff9c269eb16cc72d2a7acce8768dac2283da7"
+              "sha256": "c17a8b1020cf61df5b60490c8ffdc2539592646295f583e25800fb22a83a7a07"
             },
             {
               "path": "apps/web/src/test/query-provider.tsx",
@@ -669079,7 +669080,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "f2d4c1469796b750c60f06cfbe400ba902e9788a27ffea1091ddabb8479a3b63"
+              "sha256": "431c02a2dca694d5ef0a60a047857aa4da1004e3c4b52e4fe4a8c27a24e8f6d7"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -669287,11 +669288,11 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/individual/$profileId.tsx",
-              "sha256": "373898cf434decfe0d983b59d5485d9200aa002de62dd331d3108f782b95aa1c"
+              "sha256": "309a35cc9de3fa513de89896b33290349a2c950ff758d71119fcd0f110d603dc"
             },
             {
               "path": "apps/web/src/routes/onboarding/legal/$profileId.tsx",
-              "sha256": "2924fb024590e4ee6abb927411fff9c269eb16cc72d2a7acce8768dac2283da7"
+              "sha256": "c17a8b1020cf61df5b60490c8ffdc2539592646295f583e25800fb22a83a7a07"
             },
             {
               "path": "apps/web/src/test/query-provider.tsx",
@@ -669745,7 +669746,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "f2d4c1469796b750c60f06cfbe400ba902e9788a27ffea1091ddabb8479a3b63"
+              "sha256": "431c02a2dca694d5ef0a60a047857aa4da1004e3c4b52e4fe4a8c27a24e8f6d7"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -669953,11 +669954,11 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/individual/$profileId.tsx",
-              "sha256": "373898cf434decfe0d983b59d5485d9200aa002de62dd331d3108f782b95aa1c"
+              "sha256": "309a35cc9de3fa513de89896b33290349a2c950ff758d71119fcd0f110d603dc"
             },
             {
               "path": "apps/web/src/routes/onboarding/legal/$profileId.tsx",
-              "sha256": "2924fb024590e4ee6abb927411fff9c269eb16cc72d2a7acce8768dac2283da7"
+              "sha256": "c17a8b1020cf61df5b60490c8ffdc2539592646295f583e25800fb22a83a7a07"
             },
             {
               "path": "apps/web/src/test/query-provider.tsx",
@@ -670412,7 +670413,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "f2d4c1469796b750c60f06cfbe400ba902e9788a27ffea1091ddabb8479a3b63"
+              "sha256": "431c02a2dca694d5ef0a60a047857aa4da1004e3c4b52e4fe4a8c27a24e8f6d7"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -670620,11 +670621,11 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/individual/$profileId.tsx",
-              "sha256": "373898cf434decfe0d983b59d5485d9200aa002de62dd331d3108f782b95aa1c"
+              "sha256": "309a35cc9de3fa513de89896b33290349a2c950ff758d71119fcd0f110d603dc"
             },
             {
               "path": "apps/web/src/routes/onboarding/legal/$profileId.tsx",
-              "sha256": "2924fb024590e4ee6abb927411fff9c269eb16cc72d2a7acce8768dac2283da7"
+              "sha256": "c17a8b1020cf61df5b60490c8ffdc2539592646295f583e25800fb22a83a7a07"
             },
             {
               "path": "apps/web/src/test/query-provider.tsx",
@@ -671078,7 +671079,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "f2d4c1469796b750c60f06cfbe400ba902e9788a27ffea1091ddabb8479a3b63"
+              "sha256": "431c02a2dca694d5ef0a60a047857aa4da1004e3c4b52e4fe4a8c27a24e8f6d7"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -671286,11 +671287,11 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/individual/$profileId.tsx",
-              "sha256": "373898cf434decfe0d983b59d5485d9200aa002de62dd331d3108f782b95aa1c"
+              "sha256": "309a35cc9de3fa513de89896b33290349a2c950ff758d71119fcd0f110d603dc"
             },
             {
               "path": "apps/web/src/routes/onboarding/legal/$profileId.tsx",
-              "sha256": "2924fb024590e4ee6abb927411fff9c269eb16cc72d2a7acce8768dac2283da7"
+              "sha256": "c17a8b1020cf61df5b60490c8ffdc2539592646295f583e25800fb22a83a7a07"
             },
             {
               "path": "apps/web/src/test/query-provider.tsx",
@@ -671745,7 +671746,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "f2d4c1469796b750c60f06cfbe400ba902e9788a27ffea1091ddabb8479a3b63"
+              "sha256": "431c02a2dca694d5ef0a60a047857aa4da1004e3c4b52e4fe4a8c27a24e8f6d7"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -671953,11 +671954,11 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/individual/$profileId.tsx",
-              "sha256": "373898cf434decfe0d983b59d5485d9200aa002de62dd331d3108f782b95aa1c"
+              "sha256": "309a35cc9de3fa513de89896b33290349a2c950ff758d71119fcd0f110d603dc"
             },
             {
               "path": "apps/web/src/routes/onboarding/legal/$profileId.tsx",
-              "sha256": "2924fb024590e4ee6abb927411fff9c269eb16cc72d2a7acce8768dac2283da7"
+              "sha256": "c17a8b1020cf61df5b60490c8ffdc2539592646295f583e25800fb22a83a7a07"
             },
             {
               "path": "apps/web/src/test/query-provider.tsx",
@@ -692858,7 +692859,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "f2d4c1469796b750c60f06cfbe400ba902e9788a27ffea1091ddabb8479a3b63"
+              "sha256": "431c02a2dca694d5ef0a60a047857aa4da1004e3c4b52e4fe4a8c27a24e8f6d7"
             },
             {
               "path": "apps/web/e2e/team-catalogue-recovery.spec.ts",
@@ -693062,11 +693063,11 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/individual/$profileId.tsx",
-              "sha256": "373898cf434decfe0d983b59d5485d9200aa002de62dd331d3108f782b95aa1c"
+              "sha256": "309a35cc9de3fa513de89896b33290349a2c950ff758d71119fcd0f110d603dc"
             },
             {
               "path": "apps/web/src/routes/onboarding/legal/$profileId.tsx",
-              "sha256": "2924fb024590e4ee6abb927411fff9c269eb16cc72d2a7acce8768dac2283da7"
+              "sha256": "c17a8b1020cf61df5b60490c8ffdc2539592646295f583e25800fb22a83a7a07"
             },
             {
               "path": "apps/web/vitest.config.ts",
@@ -693488,7 +693489,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "f2d4c1469796b750c60f06cfbe400ba902e9788a27ffea1091ddabb8479a3b63"
+              "sha256": "431c02a2dca694d5ef0a60a047857aa4da1004e3c4b52e4fe4a8c27a24e8f6d7"
             },
             {
               "path": "apps/web/e2e/team-catalogue-recovery.spec.ts",
@@ -693692,11 +693693,11 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/individual/$profileId.tsx",
-              "sha256": "373898cf434decfe0d983b59d5485d9200aa002de62dd331d3108f782b95aa1c"
+              "sha256": "309a35cc9de3fa513de89896b33290349a2c950ff758d71119fcd0f110d603dc"
             },
             {
               "path": "apps/web/src/routes/onboarding/legal/$profileId.tsx",
-              "sha256": "2924fb024590e4ee6abb927411fff9c269eb16cc72d2a7acce8768dac2283da7"
+              "sha256": "c17a8b1020cf61df5b60490c8ffdc2539592646295f583e25800fb22a83a7a07"
             },
             {
               "path": "apps/web/vitest.config.ts",
@@ -694118,7 +694119,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "f2d4c1469796b750c60f06cfbe400ba902e9788a27ffea1091ddabb8479a3b63"
+              "sha256": "431c02a2dca694d5ef0a60a047857aa4da1004e3c4b52e4fe4a8c27a24e8f6d7"
             },
             {
               "path": "apps/web/e2e/team-catalogue-recovery.spec.ts",
@@ -694322,11 +694323,11 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/individual/$profileId.tsx",
-              "sha256": "373898cf434decfe0d983b59d5485d9200aa002de62dd331d3108f782b95aa1c"
+              "sha256": "309a35cc9de3fa513de89896b33290349a2c950ff758d71119fcd0f110d603dc"
             },
             {
               "path": "apps/web/src/routes/onboarding/legal/$profileId.tsx",
-              "sha256": "2924fb024590e4ee6abb927411fff9c269eb16cc72d2a7acce8768dac2283da7"
+              "sha256": "c17a8b1020cf61df5b60490c8ffdc2539592646295f583e25800fb22a83a7a07"
             },
             {
               "path": "apps/web/vitest.config.ts",
@@ -694749,7 +694750,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "f2d4c1469796b750c60f06cfbe400ba902e9788a27ffea1091ddabb8479a3b63"
+              "sha256": "431c02a2dca694d5ef0a60a047857aa4da1004e3c4b52e4fe4a8c27a24e8f6d7"
             },
             {
               "path": "apps/web/e2e/team-catalogue-recovery.spec.ts",
@@ -694953,11 +694954,11 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/individual/$profileId.tsx",
-              "sha256": "373898cf434decfe0d983b59d5485d9200aa002de62dd331d3108f782b95aa1c"
+              "sha256": "309a35cc9de3fa513de89896b33290349a2c950ff758d71119fcd0f110d603dc"
             },
             {
               "path": "apps/web/src/routes/onboarding/legal/$profileId.tsx",
-              "sha256": "2924fb024590e4ee6abb927411fff9c269eb16cc72d2a7acce8768dac2283da7"
+              "sha256": "c17a8b1020cf61df5b60490c8ffdc2539592646295f583e25800fb22a83a7a07"
             },
             {
               "path": "apps/web/vitest.config.ts",
@@ -695379,7 +695380,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "f2d4c1469796b750c60f06cfbe400ba902e9788a27ffea1091ddabb8479a3b63"
+              "sha256": "431c02a2dca694d5ef0a60a047857aa4da1004e3c4b52e4fe4a8c27a24e8f6d7"
             },
             {
               "path": "apps/web/e2e/team-catalogue-recovery.spec.ts",
@@ -695583,11 +695584,11 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/individual/$profileId.tsx",
-              "sha256": "373898cf434decfe0d983b59d5485d9200aa002de62dd331d3108f782b95aa1c"
+              "sha256": "309a35cc9de3fa513de89896b33290349a2c950ff758d71119fcd0f110d603dc"
             },
             {
               "path": "apps/web/src/routes/onboarding/legal/$profileId.tsx",
-              "sha256": "2924fb024590e4ee6abb927411fff9c269eb16cc72d2a7acce8768dac2283da7"
+              "sha256": "c17a8b1020cf61df5b60490c8ffdc2539592646295f583e25800fb22a83a7a07"
             },
             {
               "path": "apps/web/vitest.config.ts",
@@ -696009,7 +696010,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "f2d4c1469796b750c60f06cfbe400ba902e9788a27ffea1091ddabb8479a3b63"
+              "sha256": "431c02a2dca694d5ef0a60a047857aa4da1004e3c4b52e4fe4a8c27a24e8f6d7"
             },
             {
               "path": "apps/web/e2e/team-catalogue-recovery.spec.ts",
@@ -696213,11 +696214,11 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/individual/$profileId.tsx",
-              "sha256": "373898cf434decfe0d983b59d5485d9200aa002de62dd331d3108f782b95aa1c"
+              "sha256": "309a35cc9de3fa513de89896b33290349a2c950ff758d71119fcd0f110d603dc"
             },
             {
               "path": "apps/web/src/routes/onboarding/legal/$profileId.tsx",
-              "sha256": "2924fb024590e4ee6abb927411fff9c269eb16cc72d2a7acce8768dac2283da7"
+              "sha256": "c17a8b1020cf61df5b60490c8ffdc2539592646295f583e25800fb22a83a7a07"
             },
             {
               "path": "apps/web/vitest.config.ts",
@@ -696639,7 +696640,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "f2d4c1469796b750c60f06cfbe400ba902e9788a27ffea1091ddabb8479a3b63"
+              "sha256": "431c02a2dca694d5ef0a60a047857aa4da1004e3c4b52e4fe4a8c27a24e8f6d7"
             },
             {
               "path": "apps/web/e2e/team-catalogue-recovery.spec.ts",
@@ -696843,11 +696844,11 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/individual/$profileId.tsx",
-              "sha256": "373898cf434decfe0d983b59d5485d9200aa002de62dd331d3108f782b95aa1c"
+              "sha256": "309a35cc9de3fa513de89896b33290349a2c950ff758d71119fcd0f110d603dc"
             },
             {
               "path": "apps/web/src/routes/onboarding/legal/$profileId.tsx",
-              "sha256": "2924fb024590e4ee6abb927411fff9c269eb16cc72d2a7acce8768dac2283da7"
+              "sha256": "c17a8b1020cf61df5b60490c8ffdc2539592646295f583e25800fb22a83a7a07"
             },
             {
               "path": "apps/web/vitest.config.ts",
@@ -697270,7 +697271,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "f2d4c1469796b750c60f06cfbe400ba902e9788a27ffea1091ddabb8479a3b63"
+              "sha256": "431c02a2dca694d5ef0a60a047857aa4da1004e3c4b52e4fe4a8c27a24e8f6d7"
             },
             {
               "path": "apps/web/e2e/team-catalogue-recovery.spec.ts",
@@ -697474,11 +697475,11 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/individual/$profileId.tsx",
-              "sha256": "373898cf434decfe0d983b59d5485d9200aa002de62dd331d3108f782b95aa1c"
+              "sha256": "309a35cc9de3fa513de89896b33290349a2c950ff758d71119fcd0f110d603dc"
             },
             {
               "path": "apps/web/src/routes/onboarding/legal/$profileId.tsx",
-              "sha256": "2924fb024590e4ee6abb927411fff9c269eb16cc72d2a7acce8768dac2283da7"
+              "sha256": "c17a8b1020cf61df5b60490c8ffdc2539592646295f583e25800fb22a83a7a07"
             },
             {
               "path": "apps/web/vitest.config.ts",
@@ -697900,7 +697901,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "f2d4c1469796b750c60f06cfbe400ba902e9788a27ffea1091ddabb8479a3b63"
+              "sha256": "431c02a2dca694d5ef0a60a047857aa4da1004e3c4b52e4fe4a8c27a24e8f6d7"
             },
             {
               "path": "apps/web/e2e/team-catalogue-recovery.spec.ts",
@@ -698104,11 +698105,11 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/individual/$profileId.tsx",
-              "sha256": "373898cf434decfe0d983b59d5485d9200aa002de62dd331d3108f782b95aa1c"
+              "sha256": "309a35cc9de3fa513de89896b33290349a2c950ff758d71119fcd0f110d603dc"
             },
             {
               "path": "apps/web/src/routes/onboarding/legal/$profileId.tsx",
-              "sha256": "2924fb024590e4ee6abb927411fff9c269eb16cc72d2a7acce8768dac2283da7"
+              "sha256": "c17a8b1020cf61df5b60490c8ffdc2539592646295f583e25800fb22a83a7a07"
             },
             {
               "path": "apps/web/vitest.config.ts",
@@ -698530,7 +698531,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "f2d4c1469796b750c60f06cfbe400ba902e9788a27ffea1091ddabb8479a3b63"
+              "sha256": "431c02a2dca694d5ef0a60a047857aa4da1004e3c4b52e4fe4a8c27a24e8f6d7"
             },
             {
               "path": "apps/web/e2e/team-catalogue-recovery.spec.ts",
@@ -698734,11 +698735,11 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/individual/$profileId.tsx",
-              "sha256": "373898cf434decfe0d983b59d5485d9200aa002de62dd331d3108f782b95aa1c"
+              "sha256": "309a35cc9de3fa513de89896b33290349a2c950ff758d71119fcd0f110d603dc"
             },
             {
               "path": "apps/web/src/routes/onboarding/legal/$profileId.tsx",
-              "sha256": "2924fb024590e4ee6abb927411fff9c269eb16cc72d2a7acce8768dac2283da7"
+              "sha256": "c17a8b1020cf61df5b60490c8ffdc2539592646295f583e25800fb22a83a7a07"
             },
             {
               "path": "apps/web/vitest.config.ts",
@@ -723592,7 +723593,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Saving checkout and invoice and wallet receipt form semantics pass on desktop Chromium and mobile Safari in Persian and English. Remaining native and conditional forms, contrast, command feedback and route state verification are open."
+        "Individual and legal onboarding and the earlier saving and receipt changes have current Chromium and Mobile Safari evidence. Remaining native and conditional forms, contrast, command feedback and route state verification are open."
       ],
       "owner": null,
       "depends_on": [],
@@ -723665,7 +723666,8 @@
           "release-0.5-electricity-required-fields",
           "release-0.5-electricity-address-validation",
           "release-0.5-provider-required-fields",
-          "release-0.5-saving-receipt-required"
+          "release-0.5-saving-receipt-required",
+          "release-0.5-onboarding-required"
         ]
       }
     },
@@ -723749,7 +723751,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "f2d4c1469796b750c60f06cfbe400ba902e9788a27ffea1091ddabb8479a3b63"
+              "sha256": "431c02a2dca694d5ef0a60a047857aa4da1004e3c4b52e4fe4a8c27a24e8f6d7"
             },
             {
               "path": "apps/web/e2e/solar-construction-progress.spec.ts",
@@ -724921,11 +724923,11 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/individual/$profileId.tsx",
-              "sha256": "373898cf434decfe0d983b59d5485d9200aa002de62dd331d3108f782b95aa1c"
+              "sha256": "309a35cc9de3fa513de89896b33290349a2c950ff758d71119fcd0f110d603dc"
             },
             {
               "path": "apps/web/src/routes/onboarding/legal/$profileId.tsx",
-              "sha256": "2924fb024590e4ee6abb927411fff9c269eb16cc72d2a7acce8768dac2283da7"
+              "sha256": "c17a8b1020cf61df5b60490c8ffdc2539592646295f583e25800fb22a83a7a07"
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
@@ -725182,7 +725184,8 @@
             "Electricity checkout semantics passed current source coverage, production size and cold authentication checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-required-fields/proof.json",
             "Inline electricity address validation passed current source coverage, production size and cold authentication checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-address-validation/proof.json",
             "Provider form semantics passed current source coverage, production size and cold authentication checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-provider-required-fields/proof.json",
-            "Saving and bank receipt form semantics passed current source coverage, production size and cold authentication checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-receipt-required/proof.json"
+            "Saving and bank receipt form semantics passed current source coverage, production size and cold authentication checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-receipt-required/proof.json",
+            "Individual and legal onboarding form semantics passed current source coverage, production size and cold authentication checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-onboarding-required/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -791335,6 +791338,44 @@
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-receipt-required/reviewed.patch",
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-receipt-required",
       "release_disposition": "Saving checkout and invoice and wallet bank receipt form evidence recorded. Other v0.5.0 criteria remain open."
+    },
+    "release-0.5-onboarding-required": {
+      "batch": "release-0.5-onboarding-required",
+      "base_commit": "4aca67dbd94186207ea2487acb58999f0531a1d7",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.05.01.05",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.05.01.05",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/onboarding-wizard.spec.ts",
+          "sha256": "431c02a2dca694d5ef0a60a047857aa4da1004e3c4b52e4fe4a8c27a24e8f6d7"
+        },
+        {
+          "path": "apps/web/src/routes/onboarding/individual/$profileId.tsx",
+          "sha256": "309a35cc9de3fa513de89896b33290349a2c950ff758d71119fcd0f110d603dc"
+        },
+        {
+          "path": "apps/web/src/routes/onboarding/legal/$profileId.tsx",
+          "sha256": "c17a8b1020cf61df5b60490c8ffdc2539592646295f583e25800fb22a83a7a07"
+        }
+      ],
+      "checks": [
+        "Individual and legal onboarding expose required semantics on native identity, representative, company and address fields while retaining the native validation, labels and linked errors. Personal and representative honorifics and the company registration date remain optional.",
+        "59 Chromium cases and 14 Mobile Safari cases passed. The checks retain localized field errors, dependent city scope and late-read denial, draft restoration, upload sealing and verification of submission receipts. 16 onboarding unit cases passed.",
+        "The production build, all eight coverage groups, scoped lint, formatting, typecheck, all 98 bundle budgets and three cold authentication transfers passed."
+      ],
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-onboarding-required/proof.json",
+      "source_scope_proof_sha256": "aed7504237f56560d16b4637077572c4aa2266206de7927828882cc25d7d7a20",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-onboarding-required/renewed-bindings.json",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-onboarding-required/reviewed.patch",
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-onboarding-required",
+      "release_disposition": "Individual and legal onboarding form evidence recorded. Other v0.5.0 criteria remain open."
     }
   },
   "historical_improvements": [

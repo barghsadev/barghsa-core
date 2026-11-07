@@ -603,6 +603,7 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
               id={field}
               ref={form.register(field).ref}
               required
+              aria-required="true"
               rows={3}
               maxLength={500}
               value={value}
@@ -647,6 +648,7 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
             type={options?.type ?? 'text'}
             inputMode={options?.inputMode}
             required={options?.required}
+            aria-required={options?.required || undefined}
             maxLength={options?.maxLength}
             value={value}
             onChange={(e) => onChange(e.target.value)}
@@ -783,6 +785,7 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
                                 id={field}
                                 ref={form.register(field).ref}
                                 required
+                                aria-required="true"
                                 dependencyValue={representative.representativeProvinceId}
                                 value={representative[field]}
                                 ready={representativeCityOptions.ready}
@@ -811,6 +814,7 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
                                 id={field}
                                 ref={form.register(field).ref}
                                 required
+                                aria-required="true"
                                 value={representative[field]}
                                 disabled={submitting || !provinceOptions.ready}
                                 onChange={(event) =>
@@ -1104,6 +1108,7 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
                             id="officialProvinceId"
                             ref={form.register('officialProvinceId').ref}
                             required
+                            aria-required="true"
                             value={officialProvinceId}
                             onChange={(e) => {
                               setOfficialProvinceId(e.target.value);
@@ -1153,6 +1158,7 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
                           id="officialCityId"
                           ref={form.register('officialCityId').ref}
                           required
+                          aria-required="true"
                           dependencyValue={officialProvinceId}
                           value={officialCityId}
                           ready={cityOptions.ready}
@@ -1203,6 +1209,7 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
                         id="officialFullAddress"
                         ref={form.register('officialFullAddress').ref}
                         required
+                        aria-required="true"
                         maxLength={500}
                         rows={3}
                         value={officialFullAddress}
