@@ -505,7 +505,7 @@ export function ConsultationDetailPage() {
             owner={action!.owner}
             actionHref={action?.href}
           />
-          <section className="space-y-3 rounded-xl border bg-card p-5">
+          <section className="space-y-3 rounded-xl border bg-card p-5 wrap-anywhere">
             <h2 className="text-xl font-semibold" dir="auto">
               {request.product_snapshot.title[locale]}
             </h2>

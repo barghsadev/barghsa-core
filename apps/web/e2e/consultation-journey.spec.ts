@@ -4,7 +4,7 @@ import { confirmationText } from '@barghsa/i18n/confirmation';
 import { fullNavigation } from './navigation-fixture';
 import { approveRiskConfirmation } from './confirmation-fixture';
 import AxeBuilder from '@axe-core/playwright';
-import { expect, test, type Page } from './coverage-fixture';
+import { expect, test, type Locator, type Page } from './coverage-fixture';
 import { shellText } from '@barghsa/i18n/shell';
 
 async function switchLanguage(page: Page, locale: 'en' | 'fa') {
@@ -14,6 +14,31 @@ async function switchLanguage(page: Page, locale: 'en' | 'fa') {
     await page.getByRole('button', { name: shellText('accountMenu', locale), exact: true }).click();
   await switcher.click();
   if (compact) await page.keyboard.press('Escape');
+}
+
+async function expectOfferTextFits(
+  page: Page,
+  surface: Locator,
+  fields: readonly { value: string; direction: 'ltr' | 'rtl' }[]
+) {
+  const viewport = page.viewportSize()!;
+  await page.setViewportSize({ width: 320, height: viewport.height });
+  for (const { value, direction } of fields) {
+    const text = surface.getByText(value, { exact: true });
+    await expect(text).toBeVisible();
+    await expect(text).toHaveCSS('direction', direction);
+    const fits = await text.evaluate((node) => {
+      const bounds = node.parentElement!.getBoundingClientRect();
+      const range = document.createRange();
+      range.selectNodeContents(node);
+      return Array.from(range.getClientRects()).every(
+        (line) => line.left >= bounds.left - 1 && line.right <= bounds.right + 1
+      );
+    });
+    expect(fits, `Full ${direction} offer text fits its row at 320px`).toBe(true);
+  }
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  await page.setViewportSize(viewport);
 }
 
 const profileId = '11111111-1111-4111-8111-111111111111';
@@ -27,6 +52,20 @@ for (const locale of ['en', 'fa'] as const)
   test(`customer consultation moves through staff offer, payment handoff, and completion (${locale})`, async ({
     page,
   }) => {
+    const reference = `CONSULTATION-${'2026ENERGY'.repeat(10)}`;
+    const scope = {
+      value:
+        locale === 'fa'
+          ? `لورم ایپسوم ارزیابی تأمین انرژی ${reference}`
+          : `Supply assessment ${reference}`,
+      direction: locale === 'fa' ? 'rtl' : 'ltr',
+    } as const;
+    const deliverables = {
+      value:
+        locale === 'fa' ? `Written report ${reference}` : `گزارش مکتوب بررسی انرژی ${reference}`,
+      direction: locale === 'fa' ? 'ltr' : 'rtl',
+    } as const;
+    const fields = [scope, deliverables];
     let status = 'submitted';
     let submitted = false;
     let acceptedAt: string | null = null;
@@ -185,8 +224,8 @@ for (const locale of ['en', 'fa'] as const)
       expect(input).toMatchObject({
         expectedReviewHash: 'a'.repeat(64),
         fee: '500000',
-        scope: 'Supply assessment',
-        deliverables: 'Written report',
+        scope: scope.value,
+        deliverables: deliverables.value,
       });
       offer = {
         fee: input.fee!,
@@ -312,14 +351,15 @@ for (const locale of ['en', 'fa'] as const)
     ).toBeVisible();
     await page.getByLabel(consultationCopy('feeIrr', locale)).fill('500000');
     await page.getByLabel(consultationCopy('offerValidUntil', locale)).fill('2030-01-01T12:30');
-    await page.getByLabel(consultationCopy('scope', locale)).fill('Supply assessment');
-    await page.getByLabel(consultationCopy('deliverables', locale)).fill('Written report');
+    await page.getByLabel(consultationCopy('scope', locale)).fill(scope.value);
+    await page.getByLabel(consultationCopy('deliverables', locale)).fill(deliverables.value);
     await page.getByRole('button', { name: consultationCopy('issueFee', locale) }).click();
     const feeReview = page.getByRole('dialog', { name: consultationCopy('issueFee', locale) });
     await expect(feeReview).toContainText(consultationCopy('feeReviewTitle', locale));
-    await expect(feeReview).toContainText('Supply assessment');
-    await expect(feeReview).toContainText('Written report');
+    await expect(feeReview).toContainText(scope.value);
+    await expect(feeReview).toContainText(deliverables.value);
     await expect(feeReview).toContainText(`${new Intl.NumberFormat(locale).format(500000)} IRR`);
+    await expectOfferTextFits(page, feeReview, fields);
     const confirmFee = feeReview.getByRole('button', { name: appCopy('team.confirm', locale) });
     await expect(confirmFee).toBeDisabled();
     await approveRiskConfirmation(page, locale, 'financial');
@@ -327,8 +367,9 @@ for (const locale of ['en', 'fa'] as const)
     await expect.poll(() => status).toBe('offer_pending');
     const savedOffer = page.getByRole('region', { name: consultationCopy('savedOffer', locale) });
     await expect(savedOffer).toContainText(`${new Intl.NumberFormat(locale).format(500000)} IRR`);
-    await expect(savedOffer).toContainText('Supply assessment');
-    await expect(savedOffer).toContainText('Written report');
+    await expect(savedOffer).toContainText(scope.value);
+    await expect(savedOffer).toContainText(deliverables.value);
+    await expectOfferTextFits(page, savedOffer, fields);
     await expect(savedOffer.locator('time')).toHaveAttribute('datetime', offer!.validUntil);
     await expect(savedOffer).toContainText(consultationCopy('invoice_state_Unpaid', locale));
     await expect(
@@ -349,15 +390,16 @@ for (const locale of ['en', 'fa'] as const)
           .analyze()
       ).violations
     ).toEqual([]);
-    await expect(page.getByText('Supply assessment')).toBeVisible();
-    await expect(page.getByText('Written report')).toBeVisible();
+    await expect(page.getByText(scope.value)).toBeVisible();
+    await expect(page.getByText(deliverables.value)).toBeVisible();
+    await expectOfferTextFits(page, page.locator('main[data-area=dashboard]'), fields);
     const alternate = locale === 'en' ? 'fa' : 'en';
     await switchLanguage(page, locale);
     await page.getByRole('button', { name: consultationCopy('declineOffer', alternate) }).click();
     const declineReview = page.getByRole('dialog', {
       name: consultationCopy('decisionReviewTitle', alternate),
     });
-    await expect(declineReview).toContainText('Supply assessment');
+    await expect(declineReview).toContainText(scope.value);
     await expect(declineReview).toContainText(
       consultationCopy('decisionReviewCancelOutcome', alternate)
     );
@@ -377,8 +419,9 @@ for (const locale of ['en', 'fa'] as const)
       name: consultationCopy('decisionReviewTitle', locale),
     });
     await expect(review).toContainText(new Intl.NumberFormat(locale).format(500000));
-    await expect(review).toContainText('Supply assessment');
-    await expect(review).toContainText('Written report');
+    await expect(review).toContainText(scope.value);
+    await expect(review).toContainText(deliverables.value);
+    await expectOfferTextFits(page, review, fields);
     const accept = review.getByRole('button', { name: consultationCopy('acceptOffer', locale) });
     await expect(accept).toBeDisabled();
     await approveRiskConfirmation(page, locale, 'financial');

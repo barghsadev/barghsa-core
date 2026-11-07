@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-07T22:07:53+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-07T22:15:38+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.4.0**. Next milestone: **v0.5.0**.
 
@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 863 | Accepted with unchanged source bindings. |
+| done | 864 | Accepted with unchanged source bindings. |
 | verify | 470 | Existing work may be complete; inspect evidence before building. |
-| partial | 30 | An earlier review found unmet criteria; reconcile later fixes. |
+| partial | 29 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 5 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
 | blocked | 1 | Named owner or external prerequisite. |
@@ -702,7 +702,7 @@ Customer and admin workflows work on desktop/mobile in both languages and themes
 | `07-ui-ux-design.md#T-07.03.01.04` | done | Recorded batch work | Audit installed Base UI/shadcn components for hardcoded physical LTR placements. Keep native logical inline placements; create `useFlippedPlacement(placement)` to mirror physical `left` ↔ `right` in RTL while leaving logical/top/bottom placements intact. |
 | `07-ui-ux-design.md#T-07.03.01.05` | done | Recorded batch work | Retain and configure the existing `packages/i18n` native namespace dictionaries and `useLocale` subscription in `apps/web`. Detect the short-lived entry handoff, explicit storage/cookie preference, supported URL hint and browser language, with Persian fallback. No second i18n framework is required. |
 | `07-ui-ux-design.md#T-07.03.01.06` | done | Recorded batch work | Icons with directional meaning (arrows, chevrons, carets) must flip horizontally in RTL mode. Implement `Icon` wrapper that auto-flips icons ending in `-left`/`-right` (e.g. `ChevronLeft` → mirrored in RTL). |
-| `07-ui-ux-design.md#T-07.03.01.07` | partial | Recorded batch work | Test every component and page in both RTL and LTR modes. Persian Lorem ipsum (`لورم ایپسوم`) should render correctly in all containers. Verify no text overflow, clipped content, or misaligned elements. |
+| `07-ui-ux-design.md#T-07.03.01.07` | done | Recorded batch work | Test every component and page in both RTL and LTR modes. Persian Lorem ipsum (`لورم ایپسوم`) should render correctly in all containers. Verify no text overflow, clipped content, or misaligned elements. |
 | `07-ui-ux-design.md#T-07.03.02.01` | done | Recorded batch work | Build LanguageSwitcher component: button/dropdown showing "FA" / "EN" labels. Changes language, toggles direction, persists in cookie and localStorage for subsequent client visits. |
 | `07-ui-ux-design.md#T-07.03.02.02` | done | Recorded batch work | Implement early client language detection for the approved Vite SPA: read the persisted language preference from cookie/localStorage, falling back to browser language preferences. Set `dir` and `lang` attributes on `<html>` before React renders. No flash of the wrong direction during initial client rendering. |
 | `07-ui-ux-design.md#T-07.03.02.03` | done | Recorded batch work | When language changes: (1) update `dir` on `<html>`, (2) update `lang` attribute, (3) select the already bundled i18n namespaces, (4) re-translate current page without full browser reload. Animations should not be required to transition direction. |
