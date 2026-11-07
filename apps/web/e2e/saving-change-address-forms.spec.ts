@@ -63,6 +63,55 @@ for (const [locale, theme] of [
 ] as const) {
   const copy = (key: string) => tSavingStaffReview(key, locale) ?? tSaving(key, locale);
   const formCopy = (key: string) => tSavingChange(key, locale);
+  test(`staff saving address review recovers from a stalled read (${locale}, ${theme})`, async ({
+    page,
+  }) => {
+    await page.clock.install();
+    const { state } = await setupSavingChangeAddressForms(page, locale, true);
+    state.staffReviewMode = 'held';
+    await page.goto(`/admin/saving-orders?lane=fulfillment&orderId=${savingChangeOrder}`);
+    const region = page.getByTestId('saving-staff-address-form');
+    const address = region.locator('#saving-amend-address');
+    const reason = region.locator('#saving-amend-reason');
+    const preview = region.getByRole('button', { name: copy('staffAmendAddress'), exact: true });
+    const refresh = page.getByRole('button', { name: copy('staffRefresh'), exact: true }).first();
+    await address.selectOption(replacementAddress);
+    await reason.fill('  Confirmed installation address  ');
+    await preview.click();
+    await expect.poll(() => !!state.staffReviewRoute).toBe(true);
+    const stale = state.staffReviewRoute!;
+    await expect(region.getByRole('status')).toHaveText(formCopy('staffChecking'));
+    await expect(preview).toBeDisabled();
+    await expect(refresh).toBeEnabled();
+    await page.clock.fastForward(15_001);
+    await expect(region.getByRole('alert')).toHaveText(copy('staffReviewError'));
+    await expect(page.getByRole('dialog')).toHaveCount(0);
+    await expect(preview).toBeEnabled();
+    await expect(refresh).toBeEnabled();
+    await expect(address).toHaveValue(replacementAddress);
+    await expect(reason).toHaveValue('  Confirmed installation address  ');
+    const input = {
+      expectedVersionId: changeVersion,
+      expectedAddressId: currentAddress,
+      addressId: replacementAddress,
+      reason: 'Confirmed installation address',
+    };
+    expect(state.staffReviews).toEqual([input]);
+    expect(state.staffWrites).toEqual([]);
+    state.staffReviewMode = 'success';
+    await preview.click();
+    const dialog = page.getByRole('dialog');
+    await expect(dialog).toContainText('Replacement installation address');
+    await stale.fulfill({ status: 403, json: { error: 'AUTHZ:FORBIDDEN' } }).catch(() => {});
+    await expect(dialog).toBeVisible();
+    expect(state.staffReviews).toEqual([input, input]);
+    expect(state.staffWrites).toEqual([]);
+    await dialog.getByRole('button', { name: t('team.cancel', locale), exact: true }).click();
+    await expect(dialog).toHaveCount(0);
+    await expect(preview).toBeEnabled();
+    await expect(reason).toHaveValue('  Confirmed installation address  ');
+  });
+
   test(`customer saving changes retain reviewed selections and exact revision recovery (${locale}, ${theme})`, async ({
     page,
   }, info) => {

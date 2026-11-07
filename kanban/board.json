@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-07T23:51:10+00:00",
-  "source_commit": "ead59b0c8c561a92a4e02c4391edfe890bdaf836",
+  "updated": "2026-11-07T23:57:15+00:00",
+  "source_commit": "fa4c19b20b7da3e0e0717d0431b1f8b7055ba8a5",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -35635,7 +35635,7 @@
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.ts",
-              "sha256": "6dd0fb0250861ca7281e24047fef98440813243dd5bcc7186c5e9944b255c6e6"
+              "sha256": "df1ac1dcfcb5b3296f0c25b643d71b437a5ae65a9551674b9b310fa248b002c5"
             },
             {
               "path": "apps/web/src/pages/wallet-preview-query.test.tsx",
@@ -137630,7 +137630,7 @@
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.ts",
-              "sha256": "6dd0fb0250861ca7281e24047fef98440813243dd5bcc7186c5e9944b255c6e6"
+              "sha256": "df1ac1dcfcb5b3296f0c25b643d71b437a5ae65a9551674b9b310fa248b002c5"
             },
             {
               "path": "apps/web/src/pages/wallet-preview-query.test.tsx",
@@ -137922,7 +137922,7 @@
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.ts",
-              "sha256": "6dd0fb0250861ca7281e24047fef98440813243dd5bcc7186c5e9944b255c6e6"
+              "sha256": "df1ac1dcfcb5b3296f0c25b643d71b437a5ae65a9551674b9b310fa248b002c5"
             },
             {
               "path": "apps/web/src/pages/wallet-preview-query.test.tsx",
@@ -138214,7 +138214,7 @@
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.ts",
-              "sha256": "6dd0fb0250861ca7281e24047fef98440813243dd5bcc7186c5e9944b255c6e6"
+              "sha256": "df1ac1dcfcb5b3296f0c25b643d71b437a5ae65a9551674b9b310fa248b002c5"
             },
             {
               "path": "apps/web/src/pages/wallet-preview-query.test.tsx",
@@ -138505,7 +138505,7 @@
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.ts",
-              "sha256": "6dd0fb0250861ca7281e24047fef98440813243dd5bcc7186c5e9944b255c6e6"
+              "sha256": "df1ac1dcfcb5b3296f0c25b643d71b437a5ae65a9551674b9b310fa248b002c5"
             },
             {
               "path": "apps/web/src/pages/wallet-preview-query.test.tsx",
@@ -138796,7 +138796,7 @@
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.ts",
-              "sha256": "6dd0fb0250861ca7281e24047fef98440813243dd5bcc7186c5e9944b255c6e6"
+              "sha256": "df1ac1dcfcb5b3296f0c25b643d71b437a5ae65a9551674b9b310fa248b002c5"
             },
             {
               "path": "apps/web/src/pages/wallet-preview-query.test.tsx",
@@ -139086,7 +139086,7 @@
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.ts",
-              "sha256": "6dd0fb0250861ca7281e24047fef98440813243dd5bcc7186c5e9944b255c6e6"
+              "sha256": "df1ac1dcfcb5b3296f0c25b643d71b437a5ae65a9551674b9b310fa248b002c5"
             },
             {
               "path": "apps/web/src/pages/wallet-preview-query.test.tsx",
@@ -139376,7 +139376,7 @@
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.ts",
-              "sha256": "6dd0fb0250861ca7281e24047fef98440813243dd5bcc7186c5e9944b255c6e6"
+              "sha256": "df1ac1dcfcb5b3296f0c25b643d71b437a5ae65a9551674b9b310fa248b002c5"
             },
             {
               "path": "apps/web/src/pages/wallet-preview-query.test.tsx",
@@ -139718,7 +139718,7 @@
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.ts",
-              "sha256": "6dd0fb0250861ca7281e24047fef98440813243dd5bcc7186c5e9944b255c6e6"
+              "sha256": "df1ac1dcfcb5b3296f0c25b643d71b437a5ae65a9551674b9b310fa248b002c5"
             },
             {
               "path": "apps/web/src/pages/wallet-preview-query.test.tsx",
@@ -140125,7 +140125,7 @@
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.ts",
-              "sha256": "6dd0fb0250861ca7281e24047fef98440813243dd5bcc7186c5e9944b255c6e6"
+              "sha256": "df1ac1dcfcb5b3296f0c25b643d71b437a5ae65a9551674b9b310fa248b002c5"
             },
             {
               "path": "apps/web/src/pages/wallet-preview-query.test.tsx",
@@ -140697,7 +140697,7 @@
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.ts",
-              "sha256": "6dd0fb0250861ca7281e24047fef98440813243dd5bcc7186c5e9944b255c6e6"
+              "sha256": "df1ac1dcfcb5b3296f0c25b643d71b437a5ae65a9551674b9b310fa248b002c5"
             },
             {
               "path": "apps/web/src/pages/wallet-preview-query.test.tsx",
@@ -141188,7 +141188,7 @@
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.ts",
-              "sha256": "6dd0fb0250861ca7281e24047fef98440813243dd5bcc7186c5e9944b255c6e6"
+              "sha256": "df1ac1dcfcb5b3296f0c25b643d71b437a5ae65a9551674b9b310fa248b002c5"
             },
             {
               "path": "apps/web/src/pages/wallet-preview-query.test.tsx",
@@ -141667,7 +141667,7 @@
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.ts",
-              "sha256": "6dd0fb0250861ca7281e24047fef98440813243dd5bcc7186c5e9944b255c6e6"
+              "sha256": "df1ac1dcfcb5b3296f0c25b643d71b437a5ae65a9551674b9b310fa248b002c5"
             },
             {
               "path": "apps/web/src/pages/wallet-preview-query.test.tsx",
@@ -142015,7 +142015,7 @@
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.ts",
-              "sha256": "6dd0fb0250861ca7281e24047fef98440813243dd5bcc7186c5e9944b255c6e6"
+              "sha256": "df1ac1dcfcb5b3296f0c25b643d71b437a5ae65a9551674b9b310fa248b002c5"
             },
             {
               "path": "apps/web/src/pages/wallet-preview-query.test.tsx",
@@ -142452,7 +142452,7 @@
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.ts",
-              "sha256": "6dd0fb0250861ca7281e24047fef98440813243dd5bcc7186c5e9944b255c6e6"
+              "sha256": "df1ac1dcfcb5b3296f0c25b643d71b437a5ae65a9551674b9b310fa248b002c5"
             },
             {
               "path": "apps/web/src/pages/wallet-preview-query.test.tsx",
@@ -143101,11 +143101,11 @@
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.ts",
-              "sha256": "6dd0fb0250861ca7281e24047fef98440813243dd5bcc7186c5e9944b255c6e6"
+              "sha256": "df1ac1dcfcb5b3296f0c25b643d71b437a5ae65a9551674b9b310fa248b002c5"
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.test.tsx",
-              "sha256": "277d51f3e3a2a581213552d5f5ab49f9e0344f0d15ed09ffa3bb9e0f25c6e6e2"
+              "sha256": "ee86712a2b0ba2dca152ecf60f2c013be81fb1b04cc2839497af3de8c9d905af"
             },
             {
               "path": "apps/web/src/components/service-financial-query.test.tsx",
@@ -195732,7 +195732,7 @@
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.ts",
-              "sha256": "6dd0fb0250861ca7281e24047fef98440813243dd5bcc7186c5e9944b255c6e6"
+              "sha256": "df1ac1dcfcb5b3296f0c25b643d71b437a5ae65a9551674b9b310fa248b002c5"
             },
             {
               "path": "apps/web/src/pages/wallet-preview-query.test.tsx",
@@ -197670,7 +197670,7 @@
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.ts",
-              "sha256": "6dd0fb0250861ca7281e24047fef98440813243dd5bcc7186c5e9944b255c6e6"
+              "sha256": "df1ac1dcfcb5b3296f0c25b643d71b437a5ae65a9551674b9b310fa248b002c5"
             },
             {
               "path": "apps/web/src/pages/wallet-preview-query.test.tsx",
@@ -253526,7 +253526,7 @@
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.ts",
-              "sha256": "6dd0fb0250861ca7281e24047fef98440813243dd5bcc7186c5e9944b255c6e6"
+              "sha256": "df1ac1dcfcb5b3296f0c25b643d71b437a5ae65a9551674b9b310fa248b002c5"
             },
             {
               "path": "apps/web/src/pages/wallet-preview-query.test.tsx",
@@ -254664,7 +254664,7 @@
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.ts",
-              "sha256": "6dd0fb0250861ca7281e24047fef98440813243dd5bcc7186c5e9944b255c6e6"
+              "sha256": "df1ac1dcfcb5b3296f0c25b643d71b437a5ae65a9551674b9b310fa248b002c5"
             },
             {
               "path": "apps/web/src/pages/wallet-preview-query.test.tsx",
@@ -255798,7 +255798,7 @@
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.ts",
-              "sha256": "6dd0fb0250861ca7281e24047fef98440813243dd5bcc7186c5e9944b255c6e6"
+              "sha256": "df1ac1dcfcb5b3296f0c25b643d71b437a5ae65a9551674b9b310fa248b002c5"
             },
             {
               "path": "apps/web/src/pages/wallet-preview-query.test.tsx",
@@ -256931,7 +256931,7 @@
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.ts",
-              "sha256": "6dd0fb0250861ca7281e24047fef98440813243dd5bcc7186c5e9944b255c6e6"
+              "sha256": "df1ac1dcfcb5b3296f0c25b643d71b437a5ae65a9551674b9b310fa248b002c5"
             },
             {
               "path": "apps/web/src/pages/wallet-preview-query.test.tsx",
@@ -258065,7 +258065,7 @@
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.ts",
-              "sha256": "6dd0fb0250861ca7281e24047fef98440813243dd5bcc7186c5e9944b255c6e6"
+              "sha256": "df1ac1dcfcb5b3296f0c25b643d71b437a5ae65a9551674b9b310fa248b002c5"
             },
             {
               "path": "apps/web/src/pages/wallet-preview-query.test.tsx",
@@ -259199,7 +259199,7 @@
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.ts",
-              "sha256": "6dd0fb0250861ca7281e24047fef98440813243dd5bcc7186c5e9944b255c6e6"
+              "sha256": "df1ac1dcfcb5b3296f0c25b643d71b437a5ae65a9551674b9b310fa248b002c5"
             },
             {
               "path": "apps/web/src/pages/wallet-preview-query.test.tsx",
@@ -260338,7 +260338,7 @@
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.ts",
-              "sha256": "6dd0fb0250861ca7281e24047fef98440813243dd5bcc7186c5e9944b255c6e6"
+              "sha256": "df1ac1dcfcb5b3296f0c25b643d71b437a5ae65a9551674b9b310fa248b002c5"
             },
             {
               "path": "apps/web/src/pages/wallet-preview-query.test.tsx",
@@ -261475,7 +261475,7 @@
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.ts",
-              "sha256": "6dd0fb0250861ca7281e24047fef98440813243dd5bcc7186c5e9944b255c6e6"
+              "sha256": "df1ac1dcfcb5b3296f0c25b643d71b437a5ae65a9551674b9b310fa248b002c5"
             },
             {
               "path": "apps/web/src/pages/wallet-preview-query.test.tsx",
@@ -262610,7 +262610,7 @@
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.ts",
-              "sha256": "6dd0fb0250861ca7281e24047fef98440813243dd5bcc7186c5e9944b255c6e6"
+              "sha256": "df1ac1dcfcb5b3296f0c25b643d71b437a5ae65a9551674b9b310fa248b002c5"
             },
             {
               "path": "apps/web/src/pages/wallet-preview-query.test.tsx",
@@ -263748,7 +263748,7 @@
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.ts",
-              "sha256": "6dd0fb0250861ca7281e24047fef98440813243dd5bcc7186c5e9944b255c6e6"
+              "sha256": "df1ac1dcfcb5b3296f0c25b643d71b437a5ae65a9551674b9b310fa248b002c5"
             },
             {
               "path": "apps/web/src/pages/wallet-preview-query.test.tsx",
@@ -264888,7 +264888,7 @@
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.ts",
-              "sha256": "6dd0fb0250861ca7281e24047fef98440813243dd5bcc7186c5e9944b255c6e6"
+              "sha256": "df1ac1dcfcb5b3296f0c25b643d71b437a5ae65a9551674b9b310fa248b002c5"
             },
             {
               "path": "apps/web/src/pages/wallet-preview-query.test.tsx",
@@ -266023,7 +266023,7 @@
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.ts",
-              "sha256": "6dd0fb0250861ca7281e24047fef98440813243dd5bcc7186c5e9944b255c6e6"
+              "sha256": "df1ac1dcfcb5b3296f0c25b643d71b437a5ae65a9551674b9b310fa248b002c5"
             },
             {
               "path": "apps/web/src/pages/wallet-preview-query.test.tsx",
@@ -267157,7 +267157,7 @@
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.ts",
-              "sha256": "6dd0fb0250861ca7281e24047fef98440813243dd5bcc7186c5e9944b255c6e6"
+              "sha256": "df1ac1dcfcb5b3296f0c25b643d71b437a5ae65a9551674b9b310fa248b002c5"
             },
             {
               "path": "apps/web/src/pages/wallet-preview-query.test.tsx",
@@ -268292,7 +268292,7 @@
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.ts",
-              "sha256": "6dd0fb0250861ca7281e24047fef98440813243dd5bcc7186c5e9944b255c6e6"
+              "sha256": "df1ac1dcfcb5b3296f0c25b643d71b437a5ae65a9551674b9b310fa248b002c5"
             },
             {
               "path": "apps/web/src/pages/wallet-preview-query.test.tsx",
@@ -269427,7 +269427,7 @@
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.ts",
-              "sha256": "6dd0fb0250861ca7281e24047fef98440813243dd5bcc7186c5e9944b255c6e6"
+              "sha256": "df1ac1dcfcb5b3296f0c25b643d71b437a5ae65a9551674b9b310fa248b002c5"
             },
             {
               "path": "apps/web/src/pages/wallet-preview-query.test.tsx",
@@ -270563,7 +270563,7 @@
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.ts",
-              "sha256": "6dd0fb0250861ca7281e24047fef98440813243dd5bcc7186c5e9944b255c6e6"
+              "sha256": "df1ac1dcfcb5b3296f0c25b643d71b437a5ae65a9551674b9b310fa248b002c5"
             },
             {
               "path": "apps/web/src/pages/wallet-preview-query.test.tsx",
@@ -370395,7 +370395,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "7ef61b1eb9df59f55a7d9adcaad89d1bdbebc7dd8c25d091d9f88199db585a9d"
+              "sha256": "7a925319a1b3163823ed94b5174e75de6c1049ce27e3b8b5069dedc2c5597e5c"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -371677,7 +371677,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "7ef61b1eb9df59f55a7d9adcaad89d1bdbebc7dd8c25d091d9f88199db585a9d"
+              "sha256": "7a925319a1b3163823ed94b5174e75de6c1049ce27e3b8b5069dedc2c5597e5c"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -372959,7 +372959,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "7ef61b1eb9df59f55a7d9adcaad89d1bdbebc7dd8c25d091d9f88199db585a9d"
+              "sha256": "7a925319a1b3163823ed94b5174e75de6c1049ce27e3b8b5069dedc2c5597e5c"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -374241,7 +374241,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "7ef61b1eb9df59f55a7d9adcaad89d1bdbebc7dd8c25d091d9f88199db585a9d"
+              "sha256": "7a925319a1b3163823ed94b5174e75de6c1049ce27e3b8b5069dedc2c5597e5c"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -375524,7 +375524,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "7ef61b1eb9df59f55a7d9adcaad89d1bdbebc7dd8c25d091d9f88199db585a9d"
+              "sha256": "7a925319a1b3163823ed94b5174e75de6c1049ce27e3b8b5069dedc2c5597e5c"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -376614,7 +376614,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "7ef61b1eb9df59f55a7d9adcaad89d1bdbebc7dd8c25d091d9f88199db585a9d"
+              "sha256": "7a925319a1b3163823ed94b5174e75de6c1049ce27e3b8b5069dedc2c5597e5c"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -376842,11 +376842,11 @@
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.ts",
-              "sha256": "6dd0fb0250861ca7281e24047fef98440813243dd5bcc7186c5e9944b255c6e6"
+              "sha256": "df1ac1dcfcb5b3296f0c25b643d71b437a5ae65a9551674b9b310fa248b002c5"
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.test.tsx",
-              "sha256": "277d51f3e3a2a581213552d5f5ab49f9e0344f0d15ed09ffa3bb9e0f25c6e6e2"
+              "sha256": "ee86712a2b0ba2dca152ecf60f2c013be81fb1b04cc2839497af3de8c9d905af"
             },
             {
               "path": "apps/web/src/components/service-financial-query.test.tsx",
@@ -377469,7 +377469,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "7ef61b1eb9df59f55a7d9adcaad89d1bdbebc7dd8c25d091d9f88199db585a9d"
+              "sha256": "7a925319a1b3163823ed94b5174e75de6c1049ce27e3b8b5069dedc2c5597e5c"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -377697,11 +377697,11 @@
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.ts",
-              "sha256": "6dd0fb0250861ca7281e24047fef98440813243dd5bcc7186c5e9944b255c6e6"
+              "sha256": "df1ac1dcfcb5b3296f0c25b643d71b437a5ae65a9551674b9b310fa248b002c5"
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.test.tsx",
-              "sha256": "277d51f3e3a2a581213552d5f5ab49f9e0344f0d15ed09ffa3bb9e0f25c6e6e2"
+              "sha256": "ee86712a2b0ba2dca152ecf60f2c013be81fb1b04cc2839497af3de8c9d905af"
             },
             {
               "path": "apps/web/src/components/service-financial-query.test.tsx",
@@ -378320,7 +378320,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "7ef61b1eb9df59f55a7d9adcaad89d1bdbebc7dd8c25d091d9f88199db585a9d"
+              "sha256": "7a925319a1b3163823ed94b5174e75de6c1049ce27e3b8b5069dedc2c5597e5c"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -378548,11 +378548,11 @@
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.ts",
-              "sha256": "6dd0fb0250861ca7281e24047fef98440813243dd5bcc7186c5e9944b255c6e6"
+              "sha256": "df1ac1dcfcb5b3296f0c25b643d71b437a5ae65a9551674b9b310fa248b002c5"
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.test.tsx",
-              "sha256": "277d51f3e3a2a581213552d5f5ab49f9e0344f0d15ed09ffa3bb9e0f25c6e6e2"
+              "sha256": "ee86712a2b0ba2dca152ecf60f2c013be81fb1b04cc2839497af3de8c9d905af"
             },
             {
               "path": "apps/web/src/components/service-financial-query.test.tsx",
@@ -379171,7 +379171,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "7ef61b1eb9df59f55a7d9adcaad89d1bdbebc7dd8c25d091d9f88199db585a9d"
+              "sha256": "7a925319a1b3163823ed94b5174e75de6c1049ce27e3b8b5069dedc2c5597e5c"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -379399,11 +379399,11 @@
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.ts",
-              "sha256": "6dd0fb0250861ca7281e24047fef98440813243dd5bcc7186c5e9944b255c6e6"
+              "sha256": "df1ac1dcfcb5b3296f0c25b643d71b437a5ae65a9551674b9b310fa248b002c5"
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.test.tsx",
-              "sha256": "277d51f3e3a2a581213552d5f5ab49f9e0344f0d15ed09ffa3bb9e0f25c6e6e2"
+              "sha256": "ee86712a2b0ba2dca152ecf60f2c013be81fb1b04cc2839497af3de8c9d905af"
             },
             {
               "path": "apps/web/src/components/service-financial-query.test.tsx",
@@ -380021,7 +380021,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "7ef61b1eb9df59f55a7d9adcaad89d1bdbebc7dd8c25d091d9f88199db585a9d"
+              "sha256": "7a925319a1b3163823ed94b5174e75de6c1049ce27e3b8b5069dedc2c5597e5c"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -380249,11 +380249,11 @@
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.ts",
-              "sha256": "6dd0fb0250861ca7281e24047fef98440813243dd5bcc7186c5e9944b255c6e6"
+              "sha256": "df1ac1dcfcb5b3296f0c25b643d71b437a5ae65a9551674b9b310fa248b002c5"
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.test.tsx",
-              "sha256": "277d51f3e3a2a581213552d5f5ab49f9e0344f0d15ed09ffa3bb9e0f25c6e6e2"
+              "sha256": "ee86712a2b0ba2dca152ecf60f2c013be81fb1b04cc2839497af3de8c9d905af"
             },
             {
               "path": "apps/web/src/components/service-financial-query.test.tsx",
@@ -403968,11 +403968,11 @@
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.ts",
-              "sha256": "6dd0fb0250861ca7281e24047fef98440813243dd5bcc7186c5e9944b255c6e6"
+              "sha256": "df1ac1dcfcb5b3296f0c25b643d71b437a5ae65a9551674b9b310fa248b002c5"
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.test.tsx",
-              "sha256": "277d51f3e3a2a581213552d5f5ab49f9e0344f0d15ed09ffa3bb9e0f25c6e6e2"
+              "sha256": "ee86712a2b0ba2dca152ecf60f2c013be81fb1b04cc2839497af3de8c9d905af"
             },
             {
               "path": "apps/web/src/components/service-financial-query.test.tsx",
@@ -405314,11 +405314,11 @@
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.ts",
-              "sha256": "6dd0fb0250861ca7281e24047fef98440813243dd5bcc7186c5e9944b255c6e6"
+              "sha256": "df1ac1dcfcb5b3296f0c25b643d71b437a5ae65a9551674b9b310fa248b002c5"
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.test.tsx",
-              "sha256": "277d51f3e3a2a581213552d5f5ab49f9e0344f0d15ed09ffa3bb9e0f25c6e6e2"
+              "sha256": "ee86712a2b0ba2dca152ecf60f2c013be81fb1b04cc2839497af3de8c9d905af"
             },
             {
               "path": "apps/web/src/components/service-financial-query.test.tsx",
@@ -406661,11 +406661,11 @@
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.ts",
-              "sha256": "6dd0fb0250861ca7281e24047fef98440813243dd5bcc7186c5e9944b255c6e6"
+              "sha256": "df1ac1dcfcb5b3296f0c25b643d71b437a5ae65a9551674b9b310fa248b002c5"
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.test.tsx",
-              "sha256": "277d51f3e3a2a581213552d5f5ab49f9e0344f0d15ed09ffa3bb9e0f25c6e6e2"
+              "sha256": "ee86712a2b0ba2dca152ecf60f2c013be81fb1b04cc2839497af3de8c9d905af"
             },
             {
               "path": "apps/web/src/components/service-financial-query.test.tsx",
@@ -408007,11 +408007,11 @@
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.ts",
-              "sha256": "6dd0fb0250861ca7281e24047fef98440813243dd5bcc7186c5e9944b255c6e6"
+              "sha256": "df1ac1dcfcb5b3296f0c25b643d71b437a5ae65a9551674b9b310fa248b002c5"
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.test.tsx",
-              "sha256": "277d51f3e3a2a581213552d5f5ab49f9e0344f0d15ed09ffa3bb9e0f25c6e6e2"
+              "sha256": "ee86712a2b0ba2dca152ecf60f2c013be81fb1b04cc2839497af3de8c9d905af"
             },
             {
               "path": "apps/web/src/components/service-financial-query.test.tsx",
@@ -409353,11 +409353,11 @@
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.ts",
-              "sha256": "6dd0fb0250861ca7281e24047fef98440813243dd5bcc7186c5e9944b255c6e6"
+              "sha256": "df1ac1dcfcb5b3296f0c25b643d71b437a5ae65a9551674b9b310fa248b002c5"
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.test.tsx",
-              "sha256": "277d51f3e3a2a581213552d5f5ab49f9e0344f0d15ed09ffa3bb9e0f25c6e6e2"
+              "sha256": "ee86712a2b0ba2dca152ecf60f2c013be81fb1b04cc2839497af3de8c9d905af"
             },
             {
               "path": "apps/web/src/components/service-financial-query.test.tsx",
@@ -410700,11 +410700,11 @@
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.ts",
-              "sha256": "6dd0fb0250861ca7281e24047fef98440813243dd5bcc7186c5e9944b255c6e6"
+              "sha256": "df1ac1dcfcb5b3296f0c25b643d71b437a5ae65a9551674b9b310fa248b002c5"
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.test.tsx",
-              "sha256": "277d51f3e3a2a581213552d5f5ab49f9e0344f0d15ed09ffa3bb9e0f25c6e6e2"
+              "sha256": "ee86712a2b0ba2dca152ecf60f2c013be81fb1b04cc2839497af3de8c9d905af"
             },
             {
               "path": "apps/web/src/components/service-financial-query.test.tsx",
@@ -412048,11 +412048,11 @@
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.ts",
-              "sha256": "6dd0fb0250861ca7281e24047fef98440813243dd5bcc7186c5e9944b255c6e6"
+              "sha256": "df1ac1dcfcb5b3296f0c25b643d71b437a5ae65a9551674b9b310fa248b002c5"
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.test.tsx",
-              "sha256": "277d51f3e3a2a581213552d5f5ab49f9e0344f0d15ed09ffa3bb9e0f25c6e6e2"
+              "sha256": "ee86712a2b0ba2dca152ecf60f2c013be81fb1b04cc2839497af3de8c9d905af"
             },
             {
               "path": "apps/web/src/components/service-financial-query.test.tsx",
@@ -413428,11 +413428,11 @@
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.ts",
-              "sha256": "6dd0fb0250861ca7281e24047fef98440813243dd5bcc7186c5e9944b255c6e6"
+              "sha256": "df1ac1dcfcb5b3296f0c25b643d71b437a5ae65a9551674b9b310fa248b002c5"
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.test.tsx",
-              "sha256": "277d51f3e3a2a581213552d5f5ab49f9e0344f0d15ed09ffa3bb9e0f25c6e6e2"
+              "sha256": "ee86712a2b0ba2dca152ecf60f2c013be81fb1b04cc2839497af3de8c9d905af"
             },
             {
               "path": "apps/web/src/components/service-financial-query.test.tsx",
@@ -414699,11 +414699,11 @@
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.ts",
-              "sha256": "6dd0fb0250861ca7281e24047fef98440813243dd5bcc7186c5e9944b255c6e6"
+              "sha256": "df1ac1dcfcb5b3296f0c25b643d71b437a5ae65a9551674b9b310fa248b002c5"
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.test.tsx",
-              "sha256": "277d51f3e3a2a581213552d5f5ab49f9e0344f0d15ed09ffa3bb9e0f25c6e6e2"
+              "sha256": "ee86712a2b0ba2dca152ecf60f2c013be81fb1b04cc2839497af3de8c9d905af"
             },
             {
               "path": "apps/web/src/components/service-financial-query.test.tsx",
@@ -416044,11 +416044,11 @@
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.ts",
-              "sha256": "6dd0fb0250861ca7281e24047fef98440813243dd5bcc7186c5e9944b255c6e6"
+              "sha256": "df1ac1dcfcb5b3296f0c25b643d71b437a5ae65a9551674b9b310fa248b002c5"
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.test.tsx",
-              "sha256": "277d51f3e3a2a581213552d5f5ab49f9e0344f0d15ed09ffa3bb9e0f25c6e6e2"
+              "sha256": "ee86712a2b0ba2dca152ecf60f2c013be81fb1b04cc2839497af3de8c9d905af"
             },
             {
               "path": "apps/web/src/components/service-financial-query.test.tsx",
@@ -417421,11 +417421,11 @@
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.ts",
-              "sha256": "6dd0fb0250861ca7281e24047fef98440813243dd5bcc7186c5e9944b255c6e6"
+              "sha256": "df1ac1dcfcb5b3296f0c25b643d71b437a5ae65a9551674b9b310fa248b002c5"
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.test.tsx",
-              "sha256": "277d51f3e3a2a581213552d5f5ab49f9e0344f0d15ed09ffa3bb9e0f25c6e6e2"
+              "sha256": "ee86712a2b0ba2dca152ecf60f2c013be81fb1b04cc2839497af3de8c9d905af"
             },
             {
               "path": "apps/web/src/components/service-financial-query.test.tsx",
@@ -418721,11 +418721,11 @@
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.ts",
-              "sha256": "6dd0fb0250861ca7281e24047fef98440813243dd5bcc7186c5e9944b255c6e6"
+              "sha256": "df1ac1dcfcb5b3296f0c25b643d71b437a5ae65a9551674b9b310fa248b002c5"
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.test.tsx",
-              "sha256": "277d51f3e3a2a581213552d5f5ab49f9e0344f0d15ed09ffa3bb9e0f25c6e6e2"
+              "sha256": "ee86712a2b0ba2dca152ecf60f2c013be81fb1b04cc2839497af3de8c9d905af"
             },
             {
               "path": "apps/web/src/components/service-financial-query.test.tsx",
@@ -420021,11 +420021,11 @@
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.ts",
-              "sha256": "6dd0fb0250861ca7281e24047fef98440813243dd5bcc7186c5e9944b255c6e6"
+              "sha256": "df1ac1dcfcb5b3296f0c25b643d71b437a5ae65a9551674b9b310fa248b002c5"
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.test.tsx",
-              "sha256": "277d51f3e3a2a581213552d5f5ab49f9e0344f0d15ed09ffa3bb9e0f25c6e6e2"
+              "sha256": "ee86712a2b0ba2dca152ecf60f2c013be81fb1b04cc2839497af3de8c9d905af"
             },
             {
               "path": "apps/web/src/components/service-financial-query.test.tsx",
@@ -421490,7 +421490,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "7ef61b1eb9df59f55a7d9adcaad89d1bdbebc7dd8c25d091d9f88199db585a9d"
+              "sha256": "7a925319a1b3163823ed94b5174e75de6c1049ce27e3b8b5069dedc2c5597e5c"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -421714,11 +421714,11 @@
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.ts",
-              "sha256": "6dd0fb0250861ca7281e24047fef98440813243dd5bcc7186c5e9944b255c6e6"
+              "sha256": "df1ac1dcfcb5b3296f0c25b643d71b437a5ae65a9551674b9b310fa248b002c5"
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.test.tsx",
-              "sha256": "277d51f3e3a2a581213552d5f5ab49f9e0344f0d15ed09ffa3bb9e0f25c6e6e2"
+              "sha256": "ee86712a2b0ba2dca152ecf60f2c013be81fb1b04cc2839497af3de8c9d905af"
             },
             {
               "path": "apps/web/src/components/service-financial-query.test.tsx",
@@ -483193,7 +483193,7 @@
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.ts",
-              "sha256": "6dd0fb0250861ca7281e24047fef98440813243dd5bcc7186c5e9944b255c6e6"
+              "sha256": "df1ac1dcfcb5b3296f0c25b643d71b437a5ae65a9551674b9b310fa248b002c5"
             },
             {
               "path": "apps/web/src/pages/wallet-preview-query.test.tsx",
@@ -483785,7 +483785,7 @@
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.ts",
-              "sha256": "6dd0fb0250861ca7281e24047fef98440813243dd5bcc7186c5e9944b255c6e6"
+              "sha256": "df1ac1dcfcb5b3296f0c25b643d71b437a5ae65a9551674b9b310fa248b002c5"
             },
             {
               "path": "apps/web/src/pages/wallet-preview-query.test.tsx",
@@ -484377,7 +484377,7 @@
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.ts",
-              "sha256": "6dd0fb0250861ca7281e24047fef98440813243dd5bcc7186c5e9944b255c6e6"
+              "sha256": "df1ac1dcfcb5b3296f0c25b643d71b437a5ae65a9551674b9b310fa248b002c5"
             },
             {
               "path": "apps/web/src/pages/wallet-preview-query.test.tsx",
@@ -484969,7 +484969,7 @@
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.ts",
-              "sha256": "6dd0fb0250861ca7281e24047fef98440813243dd5bcc7186c5e9944b255c6e6"
+              "sha256": "df1ac1dcfcb5b3296f0c25b643d71b437a5ae65a9551674b9b310fa248b002c5"
             },
             {
               "path": "apps/web/src/pages/wallet-preview-query.test.tsx",
@@ -491190,7 +491190,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "7ef61b1eb9df59f55a7d9adcaad89d1bdbebc7dd8c25d091d9f88199db585a9d"
+              "sha256": "7a925319a1b3163823ed94b5174e75de6c1049ce27e3b8b5069dedc2c5597e5c"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -493229,7 +493229,7 @@
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.ts",
-              "sha256": "6dd0fb0250861ca7281e24047fef98440813243dd5bcc7186c5e9944b255c6e6"
+              "sha256": "df1ac1dcfcb5b3296f0c25b643d71b437a5ae65a9551674b9b310fa248b002c5"
             },
             {
               "path": "apps/web/src/pages/wallet-preview-query.test.tsx",
@@ -494337,7 +494337,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "7ef61b1eb9df59f55a7d9adcaad89d1bdbebc7dd8c25d091d9f88199db585a9d"
+              "sha256": "7a925319a1b3163823ed94b5174e75de6c1049ce27e3b8b5069dedc2c5597e5c"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -495219,7 +495219,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "7ef61b1eb9df59f55a7d9adcaad89d1bdbebc7dd8c25d091d9f88199db585a9d"
+              "sha256": "7a925319a1b3163823ed94b5174e75de6c1049ce27e3b8b5069dedc2c5597e5c"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -496042,7 +496042,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "7ef61b1eb9df59f55a7d9adcaad89d1bdbebc7dd8c25d091d9f88199db585a9d"
+              "sha256": "7a925319a1b3163823ed94b5174e75de6c1049ce27e3b8b5069dedc2c5597e5c"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -496790,11 +496790,11 @@
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.test.tsx",
-              "sha256": "277d51f3e3a2a581213552d5f5ab49f9e0344f0d15ed09ffa3bb9e0f25c6e6e2"
+              "sha256": "ee86712a2b0ba2dca152ecf60f2c013be81fb1b04cc2839497af3de8c9d905af"
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.ts",
-              "sha256": "6dd0fb0250861ca7281e24047fef98440813243dd5bcc7186c5e9944b255c6e6"
+              "sha256": "df1ac1dcfcb5b3296f0c25b643d71b437a5ae65a9551674b9b310fa248b002c5"
             },
             {
               "path": "apps/web/src/hooks/useOwnedGateRead.test.tsx",
@@ -496866,7 +496866,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "7ef61b1eb9df59f55a7d9adcaad89d1bdbebc7dd8c25d091d9f88199db585a9d"
+              "sha256": "7a925319a1b3163823ed94b5174e75de6c1049ce27e3b8b5069dedc2c5597e5c"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -498046,7 +498046,7 @@
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.ts",
-              "sha256": "6dd0fb0250861ca7281e24047fef98440813243dd5bcc7186c5e9944b255c6e6"
+              "sha256": "df1ac1dcfcb5b3296f0c25b643d71b437a5ae65a9551674b9b310fa248b002c5"
             },
             {
               "path": "apps/web/src/pages/wallet-preview-query.test.tsx",
@@ -589678,11 +589678,11 @@
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.test.tsx",
-              "sha256": "277d51f3e3a2a581213552d5f5ab49f9e0344f0d15ed09ffa3bb9e0f25c6e6e2"
+              "sha256": "ee86712a2b0ba2dca152ecf60f2c013be81fb1b04cc2839497af3de8c9d905af"
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.ts",
-              "sha256": "6dd0fb0250861ca7281e24047fef98440813243dd5bcc7186c5e9944b255c6e6"
+              "sha256": "df1ac1dcfcb5b3296f0c25b643d71b437a5ae65a9551674b9b310fa248b002c5"
             },
             {
               "path": "apps/web/src/hooks/useOwnedGateRead.test.tsx",
@@ -589754,7 +589754,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "7ef61b1eb9df59f55a7d9adcaad89d1bdbebc7dd8c25d091d9f88199db585a9d"
+              "sha256": "7a925319a1b3163823ed94b5174e75de6c1049ce27e3b8b5069dedc2c5597e5c"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -593953,7 +593953,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Simple and advanced electricity price preview, saving quote and saving duplicate lookup now recover from held reads with localized explicit retry and preserved submission safeguards. Remaining bespoke list, detail and staff route states require verification."
+        "Customer electricity and saving previews and the paid saving staff address review recover from held reads. The staff review keeps its draft, enables an explicit retry and ignores a late obsolete response. Remaining bespoke list, detail and staff route states require verification."
       ],
       "owner": null,
       "depends_on": [],
@@ -593990,7 +593990,8 @@
           "release-0.5-review-preview-deadlines",
           "release-0.5-onboarding-deadlines-coverage",
           "release-0.5-conditional-heading-acceptance",
-          "release-0.5-checkout-read-recovery"
+          "release-0.5-checkout-read-recovery",
+          "release-0.5-staff-saving-address-read"
         ],
         "current_acceptance": null
       }
@@ -633113,7 +633114,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "7ef61b1eb9df59f55a7d9adcaad89d1bdbebc7dd8c25d091d9f88199db585a9d"
+              "sha256": "7a925319a1b3163823ed94b5174e75de6c1049ce27e3b8b5069dedc2c5597e5c"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -634237,7 +634238,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "7ef61b1eb9df59f55a7d9adcaad89d1bdbebc7dd8c25d091d9f88199db585a9d"
+              "sha256": "7a925319a1b3163823ed94b5174e75de6c1049ce27e3b8b5069dedc2c5597e5c"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -635361,7 +635362,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "7ef61b1eb9df59f55a7d9adcaad89d1bdbebc7dd8c25d091d9f88199db585a9d"
+              "sha256": "7a925319a1b3163823ed94b5174e75de6c1049ce27e3b8b5069dedc2c5597e5c"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -636488,7 +636489,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "7ef61b1eb9df59f55a7d9adcaad89d1bdbebc7dd8c25d091d9f88199db585a9d"
+              "sha256": "7a925319a1b3163823ed94b5174e75de6c1049ce27e3b8b5069dedc2c5597e5c"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -637615,7 +637616,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "7ef61b1eb9df59f55a7d9adcaad89d1bdbebc7dd8c25d091d9f88199db585a9d"
+              "sha256": "7a925319a1b3163823ed94b5174e75de6c1049ce27e3b8b5069dedc2c5597e5c"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -638769,7 +638770,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "7ef61b1eb9df59f55a7d9adcaad89d1bdbebc7dd8c25d091d9f88199db585a9d"
+              "sha256": "7a925319a1b3163823ed94b5174e75de6c1049ce27e3b8b5069dedc2c5597e5c"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -639892,7 +639893,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "7ef61b1eb9df59f55a7d9adcaad89d1bdbebc7dd8c25d091d9f88199db585a9d"
+              "sha256": "7a925319a1b3163823ed94b5174e75de6c1049ce27e3b8b5069dedc2c5597e5c"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -641015,7 +641016,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "7ef61b1eb9df59f55a7d9adcaad89d1bdbebc7dd8c25d091d9f88199db585a9d"
+              "sha256": "7a925319a1b3163823ed94b5174e75de6c1049ce27e3b8b5069dedc2c5597e5c"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -642139,7 +642140,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "7ef61b1eb9df59f55a7d9adcaad89d1bdbebc7dd8c25d091d9f88199db585a9d"
+              "sha256": "7a925319a1b3163823ed94b5174e75de6c1049ce27e3b8b5069dedc2c5597e5c"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -643281,7 +643282,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "7ef61b1eb9df59f55a7d9adcaad89d1bdbebc7dd8c25d091d9f88199db585a9d"
+              "sha256": "7a925319a1b3163823ed94b5174e75de6c1049ce27e3b8b5069dedc2c5597e5c"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -644406,7 +644407,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "7ef61b1eb9df59f55a7d9adcaad89d1bdbebc7dd8c25d091d9f88199db585a9d"
+              "sha256": "7a925319a1b3163823ed94b5174e75de6c1049ce27e3b8b5069dedc2c5597e5c"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -645490,11 +645491,11 @@
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.test.tsx",
-              "sha256": "277d51f3e3a2a581213552d5f5ab49f9e0344f0d15ed09ffa3bb9e0f25c6e6e2"
+              "sha256": "ee86712a2b0ba2dca152ecf60f2c013be81fb1b04cc2839497af3de8c9d905af"
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.ts",
-              "sha256": "6dd0fb0250861ca7281e24047fef98440813243dd5bcc7186c5e9944b255c6e6"
+              "sha256": "df1ac1dcfcb5b3296f0c25b643d71b437a5ae65a9551674b9b310fa248b002c5"
             },
             {
               "path": "apps/web/src/hooks/useServerQuery.test.tsx",
@@ -646319,11 +646320,11 @@
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.test.tsx",
-              "sha256": "277d51f3e3a2a581213552d5f5ab49f9e0344f0d15ed09ffa3bb9e0f25c6e6e2"
+              "sha256": "ee86712a2b0ba2dca152ecf60f2c013be81fb1b04cc2839497af3de8c9d905af"
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.ts",
-              "sha256": "6dd0fb0250861ca7281e24047fef98440813243dd5bcc7186c5e9944b255c6e6"
+              "sha256": "df1ac1dcfcb5b3296f0c25b643d71b437a5ae65a9551674b9b310fa248b002c5"
             },
             {
               "path": "apps/web/src/hooks/useServerQuery.test.tsx",
@@ -647156,11 +647157,11 @@
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.test.tsx",
-              "sha256": "277d51f3e3a2a581213552d5f5ab49f9e0344f0d15ed09ffa3bb9e0f25c6e6e2"
+              "sha256": "ee86712a2b0ba2dca152ecf60f2c013be81fb1b04cc2839497af3de8c9d905af"
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.ts",
-              "sha256": "6dd0fb0250861ca7281e24047fef98440813243dd5bcc7186c5e9944b255c6e6"
+              "sha256": "df1ac1dcfcb5b3296f0c25b643d71b437a5ae65a9551674b9b310fa248b002c5"
             },
             {
               "path": "apps/web/src/hooks/useServerQuery.test.tsx",
@@ -647977,11 +647978,11 @@
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.test.tsx",
-              "sha256": "277d51f3e3a2a581213552d5f5ab49f9e0344f0d15ed09ffa3bb9e0f25c6e6e2"
+              "sha256": "ee86712a2b0ba2dca152ecf60f2c013be81fb1b04cc2839497af3de8c9d905af"
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.ts",
-              "sha256": "6dd0fb0250861ca7281e24047fef98440813243dd5bcc7186c5e9944b255c6e6"
+              "sha256": "df1ac1dcfcb5b3296f0c25b643d71b437a5ae65a9551674b9b310fa248b002c5"
             },
             {
               "path": "apps/web/src/hooks/useServerQuery.test.tsx",
@@ -648797,11 +648798,11 @@
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.test.tsx",
-              "sha256": "277d51f3e3a2a581213552d5f5ab49f9e0344f0d15ed09ffa3bb9e0f25c6e6e2"
+              "sha256": "ee86712a2b0ba2dca152ecf60f2c013be81fb1b04cc2839497af3de8c9d905af"
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.ts",
-              "sha256": "6dd0fb0250861ca7281e24047fef98440813243dd5bcc7186c5e9944b255c6e6"
+              "sha256": "df1ac1dcfcb5b3296f0c25b643d71b437a5ae65a9551674b9b310fa248b002c5"
             },
             {
               "path": "apps/web/src/hooks/useServerQuery.test.tsx",
@@ -675906,7 +675907,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "7ef61b1eb9df59f55a7d9adcaad89d1bdbebc7dd8c25d091d9f88199db585a9d"
+              "sha256": "7a925319a1b3163823ed94b5174e75de6c1049ce27e3b8b5069dedc2c5597e5c"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -677028,7 +677029,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "7ef61b1eb9df59f55a7d9adcaad89d1bdbebc7dd8c25d091d9f88199db585a9d"
+              "sha256": "7a925319a1b3163823ed94b5174e75de6c1049ce27e3b8b5069dedc2c5597e5c"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -678150,7 +678151,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "7ef61b1eb9df59f55a7d9adcaad89d1bdbebc7dd8c25d091d9f88199db585a9d"
+              "sha256": "7a925319a1b3163823ed94b5174e75de6c1049ce27e3b8b5069dedc2c5597e5c"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -679272,7 +679273,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "7ef61b1eb9df59f55a7d9adcaad89d1bdbebc7dd8c25d091d9f88199db585a9d"
+              "sha256": "7a925319a1b3163823ed94b5174e75de6c1049ce27e3b8b5069dedc2c5597e5c"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -683723,11 +683724,11 @@
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.test.tsx",
-              "sha256": "277d51f3e3a2a581213552d5f5ab49f9e0344f0d15ed09ffa3bb9e0f25c6e6e2"
+              "sha256": "ee86712a2b0ba2dca152ecf60f2c013be81fb1b04cc2839497af3de8c9d905af"
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.ts",
-              "sha256": "6dd0fb0250861ca7281e24047fef98440813243dd5bcc7186c5e9944b255c6e6"
+              "sha256": "df1ac1dcfcb5b3296f0c25b643d71b437a5ae65a9551674b9b310fa248b002c5"
             },
             {
               "path": "apps/web/src/lib/customer-invoices.test.ts",
@@ -684564,11 +684565,11 @@
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.test.tsx",
-              "sha256": "277d51f3e3a2a581213552d5f5ab49f9e0344f0d15ed09ffa3bb9e0f25c6e6e2"
+              "sha256": "ee86712a2b0ba2dca152ecf60f2c013be81fb1b04cc2839497af3de8c9d905af"
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.ts",
-              "sha256": "6dd0fb0250861ca7281e24047fef98440813243dd5bcc7186c5e9944b255c6e6"
+              "sha256": "df1ac1dcfcb5b3296f0c25b643d71b437a5ae65a9551674b9b310fa248b002c5"
             },
             {
               "path": "apps/web/src/lib/customer-invoices.test.ts",
@@ -685407,11 +685408,11 @@
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.test.tsx",
-              "sha256": "277d51f3e3a2a581213552d5f5ab49f9e0344f0d15ed09ffa3bb9e0f25c6e6e2"
+              "sha256": "ee86712a2b0ba2dca152ecf60f2c013be81fb1b04cc2839497af3de8c9d905af"
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.ts",
-              "sha256": "6dd0fb0250861ca7281e24047fef98440813243dd5bcc7186c5e9944b255c6e6"
+              "sha256": "df1ac1dcfcb5b3296f0c25b643d71b437a5ae65a9551674b9b310fa248b002c5"
             },
             {
               "path": "apps/web/src/lib/customer-invoices.test.ts",
@@ -686248,11 +686249,11 @@
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.test.tsx",
-              "sha256": "277d51f3e3a2a581213552d5f5ab49f9e0344f0d15ed09ffa3bb9e0f25c6e6e2"
+              "sha256": "ee86712a2b0ba2dca152ecf60f2c013be81fb1b04cc2839497af3de8c9d905af"
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.ts",
-              "sha256": "6dd0fb0250861ca7281e24047fef98440813243dd5bcc7186c5e9944b255c6e6"
+              "sha256": "df1ac1dcfcb5b3296f0c25b643d71b437a5ae65a9551674b9b310fa248b002c5"
             },
             {
               "path": "apps/web/src/lib/customer-invoices.test.ts",
@@ -687089,11 +687090,11 @@
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.test.tsx",
-              "sha256": "277d51f3e3a2a581213552d5f5ab49f9e0344f0d15ed09ffa3bb9e0f25c6e6e2"
+              "sha256": "ee86712a2b0ba2dca152ecf60f2c013be81fb1b04cc2839497af3de8c9d905af"
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.ts",
-              "sha256": "6dd0fb0250861ca7281e24047fef98440813243dd5bcc7186c5e9944b255c6e6"
+              "sha256": "df1ac1dcfcb5b3296f0c25b643d71b437a5ae65a9551674b9b310fa248b002c5"
             },
             {
               "path": "apps/web/src/lib/customer-invoices.test.ts",
@@ -687934,11 +687935,11 @@
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.test.tsx",
-              "sha256": "277d51f3e3a2a581213552d5f5ab49f9e0344f0d15ed09ffa3bb9e0f25c6e6e2"
+              "sha256": "ee86712a2b0ba2dca152ecf60f2c013be81fb1b04cc2839497af3de8c9d905af"
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.ts",
-              "sha256": "6dd0fb0250861ca7281e24047fef98440813243dd5bcc7186c5e9944b255c6e6"
+              "sha256": "df1ac1dcfcb5b3296f0c25b643d71b437a5ae65a9551674b9b310fa248b002c5"
             },
             {
               "path": "apps/web/src/lib/customer-invoices.test.ts",
@@ -688779,11 +688780,11 @@
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.test.tsx",
-              "sha256": "277d51f3e3a2a581213552d5f5ab49f9e0344f0d15ed09ffa3bb9e0f25c6e6e2"
+              "sha256": "ee86712a2b0ba2dca152ecf60f2c013be81fb1b04cc2839497af3de8c9d905af"
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.ts",
-              "sha256": "6dd0fb0250861ca7281e24047fef98440813243dd5bcc7186c5e9944b255c6e6"
+              "sha256": "df1ac1dcfcb5b3296f0c25b643d71b437a5ae65a9551674b9b310fa248b002c5"
             },
             {
               "path": "apps/web/src/lib/customer-invoices.test.ts",
@@ -689620,11 +689621,11 @@
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.test.tsx",
-              "sha256": "277d51f3e3a2a581213552d5f5ab49f9e0344f0d15ed09ffa3bb9e0f25c6e6e2"
+              "sha256": "ee86712a2b0ba2dca152ecf60f2c013be81fb1b04cc2839497af3de8c9d905af"
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.ts",
-              "sha256": "6dd0fb0250861ca7281e24047fef98440813243dd5bcc7186c5e9944b255c6e6"
+              "sha256": "df1ac1dcfcb5b3296f0c25b643d71b437a5ae65a9551674b9b310fa248b002c5"
             },
             {
               "path": "apps/web/src/lib/customer-invoices.test.ts",
@@ -690461,11 +690462,11 @@
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.test.tsx",
-              "sha256": "277d51f3e3a2a581213552d5f5ab49f9e0344f0d15ed09ffa3bb9e0f25c6e6e2"
+              "sha256": "ee86712a2b0ba2dca152ecf60f2c013be81fb1b04cc2839497af3de8c9d905af"
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.ts",
-              "sha256": "6dd0fb0250861ca7281e24047fef98440813243dd5bcc7186c5e9944b255c6e6"
+              "sha256": "df1ac1dcfcb5b3296f0c25b643d71b437a5ae65a9551674b9b310fa248b002c5"
             },
             {
               "path": "apps/web/src/lib/customer-invoices.test.ts",
@@ -691303,11 +691304,11 @@
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.test.tsx",
-              "sha256": "277d51f3e3a2a581213552d5f5ab49f9e0344f0d15ed09ffa3bb9e0f25c6e6e2"
+              "sha256": "ee86712a2b0ba2dca152ecf60f2c013be81fb1b04cc2839497af3de8c9d905af"
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.ts",
-              "sha256": "6dd0fb0250861ca7281e24047fef98440813243dd5bcc7186c5e9944b255c6e6"
+              "sha256": "df1ac1dcfcb5b3296f0c25b643d71b437a5ae65a9551674b9b310fa248b002c5"
             },
             {
               "path": "apps/web/src/lib/customer-invoices.test.ts",
@@ -692150,11 +692151,11 @@
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.test.tsx",
-              "sha256": "277d51f3e3a2a581213552d5f5ab49f9e0344f0d15ed09ffa3bb9e0f25c6e6e2"
+              "sha256": "ee86712a2b0ba2dca152ecf60f2c013be81fb1b04cc2839497af3de8c9d905af"
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.ts",
-              "sha256": "6dd0fb0250861ca7281e24047fef98440813243dd5bcc7186c5e9944b255c6e6"
+              "sha256": "df1ac1dcfcb5b3296f0c25b643d71b437a5ae65a9551674b9b310fa248b002c5"
             },
             {
               "path": "apps/web/src/lib/customer-invoices.test.ts",
@@ -705394,7 +705395,7 @@
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.ts",
-              "sha256": "6dd0fb0250861ca7281e24047fef98440813243dd5bcc7186c5e9944b255c6e6"
+              "sha256": "df1ac1dcfcb5b3296f0c25b643d71b437a5ae65a9551674b9b310fa248b002c5"
             },
             {
               "path": "apps/web/src/pages/wallet-preview-query.test.tsx",
@@ -709713,11 +709714,11 @@
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.ts",
-              "sha256": "6dd0fb0250861ca7281e24047fef98440813243dd5bcc7186c5e9944b255c6e6"
+              "sha256": "df1ac1dcfcb5b3296f0c25b643d71b437a5ae65a9551674b9b310fa248b002c5"
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.test.tsx",
-              "sha256": "277d51f3e3a2a581213552d5f5ab49f9e0344f0d15ed09ffa3bb9e0f25c6e6e2"
+              "sha256": "ee86712a2b0ba2dca152ecf60f2c013be81fb1b04cc2839497af3de8c9d905af"
             },
             {
               "path": "apps/web/src/components/service-financial-query.test.tsx",
@@ -712870,7 +712871,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "7ef61b1eb9df59f55a7d9adcaad89d1bdbebc7dd8c25d091d9f88199db585a9d"
+              "sha256": "7a925319a1b3163823ed94b5174e75de6c1049ce27e3b8b5069dedc2c5597e5c"
             },
             {
               "path": "packages/db/drizzle/production/0260_saving_cancellation_financial_closure.sql",
@@ -714094,11 +714095,11 @@
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.ts",
-              "sha256": "6dd0fb0250861ca7281e24047fef98440813243dd5bcc7186c5e9944b255c6e6"
+              "sha256": "df1ac1dcfcb5b3296f0c25b643d71b437a5ae65a9551674b9b310fa248b002c5"
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.test.tsx",
-              "sha256": "277d51f3e3a2a581213552d5f5ab49f9e0344f0d15ed09ffa3bb9e0f25c6e6e2"
+              "sha256": "ee86712a2b0ba2dca152ecf60f2c013be81fb1b04cc2839497af3de8c9d905af"
             },
             {
               "path": "apps/web/src/components/service-financial-query.test.tsx",
@@ -723596,7 +723597,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "The customer electricity and saving preview journeys are bounded and preserve their existing drafts, confirmations and quote and order receipts. Remaining native and conditional forms, contrast, command feedback and other route state verification stay open."
+        "The customer electricity and saving checkout and staff paid saving address review journeys have bounded preview recovery. Remaining native and conditional forms, contrast, command feedback and other route state verification stay open."
       ],
       "owner": null,
       "depends_on": [],
@@ -723673,7 +723674,8 @@
           "release-0.5-onboarding-required",
           "release-0.5-route-contrast-matrix",
           "release-0.5-banner-dismiss-contrast",
-          "release-0.5-checkout-read-recovery"
+          "release-0.5-checkout-read-recovery",
+          "release-0.5-staff-saving-address-read"
         ]
       }
     },
@@ -724377,7 +724379,7 @@
             },
             {
               "path": "apps/web/src/hooks/useOwnedFinancialRead.ts",
-              "sha256": "6dd0fb0250861ca7281e24047fef98440813243dd5bcc7186c5e9944b255c6e6"
+              "sha256": "df1ac1dcfcb5b3296f0c25b643d71b437a5ae65a9551674b9b310fa248b002c5"
             },
             {
               "path": "apps/web/src/hooks/useOwnedGateRead.ts",
@@ -724677,7 +724679,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
-              "sha256": "7ef61b1eb9df59f55a7d9adcaad89d1bdbebc7dd8c25d091d9f88199db585a9d"
+              "sha256": "7a925319a1b3163823ed94b5174e75de6c1049ce27e3b8b5069dedc2c5597e5c"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -725202,7 +725204,8 @@
             "Individual and legal onboarding form semantics passed current source coverage, production size and cold authentication checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-onboarding-required/proof.json",
             "Terms editor contrast passed current source coverage, production size and cold authentication checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-contrast-matrix/proof.json",
             "Status banner dismiss contrast passed current source coverage, production size and cold authentication checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-banner-dismiss-contrast/proof.json",
-            "Checkout read recovery passed current source coverage, production size and cold authentication checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-checkout-read-recovery/proof.json"
+            "Checkout read recovery passed current source coverage, production size and cold authentication checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-checkout-read-recovery/proof.json",
+            "Paid saving staff address review recovery passed current source coverage, production size and cold authentication checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-saving-address-read/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -791530,6 +791533,49 @@
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-checkout-read-recovery/reviewed.patch",
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-checkout-read-recovery",
       "release_disposition": "Checkout read recovery recorded, with wider route verification still open. Other v0.5.0 criteria remain open."
+    },
+    "release-0.5-staff-saving-address-read": {
+      "batch": "release-0.5-staff-saving-address-read",
+      "base_commit": "fa4c19b20b7da3e0e0717d0431b1f8b7055ba8a5",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/saving-change-address-forms.spec.ts",
+          "sha256": "50d31d0d6b6628b2512f9dfde882ef91743eb391951c6d019e8151665211769d"
+        },
+        {
+          "path": "apps/web/src/hooks/useOwnedFinancialRead.test.tsx",
+          "sha256": "ee86712a2b0ba2dca152ecf60f2c013be81fb1b04cc2839497af3de8c9d905af"
+        },
+        {
+          "path": "apps/web/src/hooks/useOwnedFinancialRead.ts",
+          "sha256": "df1ac1dcfcb5b3296f0c25b643d71b437a5ae65a9551674b9b310fa248b002c5"
+        },
+        {
+          "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
+          "sha256": "7a925319a1b3163823ed94b5174e75de6c1049ce27e3b8b5069dedc2c5597e5c"
+        }
+      ],
+      "checks": [
+        "Paid saving address previews use the shared 15-second owner-scoped financial read and retain existing authorization handling, verified review hash and exact command boundary. The helper admits only POST on amend-address-review and rejects the actual amend-address command.",
+        "Both browsers hold the first preview through the deadline, show the localized error, preserve the exact address and reason, and verify that the next explicit preview is the same request. A late denial from the abandoned request cannot clear a fresh review. Recovery and cancelling the new review issue no amendment.",
+        "16 Chromium and six Mobile Safari cases passed. Related address, customer change, hardware, staff approval and fulfillment journeys retain the existing validation, receipt, ownership and confirmation assertions.",
+        "195 distinct affected unit cases passed, including actor, profile, revision and order-context retirement. Fresh source maps pass all eight coverage groups. Production build, 98 bundle budgets, three cold authentication transfers, scoped lint, format and typecheck passed."
+      ],
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-saving-address-read/proof.json",
+      "source_scope_proof_sha256": "66105d0de3f09b315fb06724fc9183edb76066c667b1fbaa63b7f2e2147b3f69",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-saving-address-read/renewed-bindings.json",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-saving-address-read/reviewed.patch",
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-saving-address-read",
+      "release_disposition": "Staff saving address recovery recorded, with wider route verification still open. Other v0.5.0 criteria remain open."
     }
   },
   "historical_improvements": [

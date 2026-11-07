@@ -32,6 +32,7 @@ import {
 } from '@barghsa/ui/form';
 import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
+import { useOwnedFinancialRead } from '../hooks/useOwnedFinancialRead.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { sameFormData } from '../lib/form-receipt.js';
 import {
@@ -1151,6 +1152,13 @@ function PaidSavingAddressForm({
   onSuccess: () => void;
   onWithdraw: (reason: 'forbidden' | 'missing') => void;
 }) {
+  const actor = useAccountUser();
+  const profileRevision = useProfileContextRevision();
+  const readFinancial = useOwnedFinancialRead(
+    actor,
+    profileRevision,
+    JSON.stringify([scope, order])
+  );
   const locale = useLocale();
   const copy = (key: string) => tSavingStaffReview(key, locale) ?? tSaving(key, locale);
   const formCopy = (key: string) => tSavingChange(key, locale);
@@ -1320,14 +1328,15 @@ function PaidSavingAddressForm({
           reason: draft.reason.trim(),
         };
         try {
-          const response = await fetch(
+          const response = await readFinancial(
             `/api/staff/saving/orders/${encodeURIComponent(order.id)}/amend-address-review`,
             {
               method: 'POST',
               credentials: 'include',
               headers: withCsrf({ 'Content-Type': 'application/json' }),
               body: JSON.stringify(body),
-            }
+            },
+            true
           );
           if (!authorized()) return;
           if ([401, 403].includes(response.status)) {

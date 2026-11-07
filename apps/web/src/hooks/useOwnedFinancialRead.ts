@@ -21,7 +21,7 @@ export function useOwnedFinancialRead(
       const url = new URL(path, 'http://barghsa.local');
       const wallet = /^\/api\/invoices\/[^/?]+\/wallet-payment$/.test(url.pathname);
       const saving =
-        /^\/api\/staff\/saving\/orders\/[^/?]+\/(?:financial-review|amend-hardware-review|cancel-hardware-upgrade-review|stages\/[^/?]+\/(?:complete|skip)\/review)$/.test(
+        /^\/api\/staff\/saving\/orders\/[^/?]+\/(?:financial-review|amend-address-review|amend-hardware-review|cancel-hardware-upgrade-review|stages\/[^/?]+\/(?:complete|skip)\/review)$/.test(
           url.pathname
         );
       const solar = /^\/api\/admin\/solar\/requests\/[^/?]+\/create-contract\/review$/.test(
