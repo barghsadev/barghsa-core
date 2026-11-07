@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-07T21:55:06+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-07T22:01:44+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.4.0**. Next milestone: **v0.5.0**.
 
@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 862 | Accepted with unchanged source bindings. |
+| done | 863 | Accepted with unchanged source bindings. |
 | verify | 470 | Existing work may be complete; inspect evidence before building. |
-| partial | 31 | An earlier review found unmet criteria; reconcile later fixes. |
+| partial | 30 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 5 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
 | blocked | 1 | Named owner or external prerequisite. |
@@ -642,7 +642,7 @@ Customer and admin workflows work on desktop/mobile in both languages and themes
 | Qualified task | State | Build evidence | Required work |
 | --- | --- | --- | --- |
 | `release-readiness#R-04.01` | partial | Recorded batch work | Verify full customer and admin UI adoption |
-| `release-readiness#R-04.02` | partial | Recorded batch work | Renew accessibility and performance evidence |
+| `release-readiness#R-04.02` | done | Recorded batch work | Renew accessibility and performance evidence |
 | `02-auth-users-admin.md#T-09.01.01` | done | Earlier partial | Branding settings page |
 | `02-auth-users-admin.md#T-09.01.02` | done | Earlier acceptance_verified | Theme application |
 | `07-ui-ux-design.md#T-07.01.01.01` | done | Earlier acceptance_verified | Initialize `packages/ui` with Tailwind CSS v4, PostCSS, autoprefixer. Configure `tailwind.config.ts` with extended color palette, font families (self-hosted Vazirmatn for Persian and English, following the existing design context), border-radius, spacing scale, and animation tokens. |
