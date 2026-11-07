@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-07T08:43:25+00:00",
-  "source_commit": "a68236ce5a764e7d1eb686fcfa00e07553df2bc0",
+  "updated": "2026-11-07T08:51:41+00:00",
+  "source_commit": "de12b6ffa5b1f4dde8bcb01eb96a48e0e5094c4c",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -34029,7 +34029,8 @@
           "release-0.5-workspace-route-census",
           "release-0.5-staff-direct-reads",
           "release-0.5-staff-finance-read-recovery",
-          "release-0.5-ui-coverage-collection"
+          "release-0.5-ui-coverage-collection",
+          "release-0.5-mapped-coverage-gate"
         ],
         "current_acceptance": {
           "kind": "verified-account-preferences-and-timestamp-consumers",
@@ -34069,7 +34070,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "6ee6b4eb8e7724aa1f5f60cb9cd7882dc89c42e93a368b6f5154ec02646dee69"
+              "sha256": "1d471736d14b974e26e43d6dcebdc6b7c825ce70618707e8bc6404195d73c788"
             },
             {
               "path": "apps/web/e2e/timezone-settings.spec.ts",
@@ -34420,7 +34421,8 @@
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
             "Bindings renewed by release-0.5-staff-direct-reads: bounded saving and team reads pass exact browser and unit checks with current ownership, retained drafts and protected commands.",
             "Bindings renewed by release-0.5-staff-finance-read-recovery: Only staff maintenance and allocation read transport and related test fixtures changed. Scoped browser and unit evidence retains denial, financial review and protected command assertions.",
-            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed."
+            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
+            "Bindings renewed by release-0.5-mapped-coverage-gate: responsive story fixture and affected theme/notice assertions pass on both engines. No application source changed."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/account-preferences-acceptance",
           "limitations": [
@@ -34886,6 +34888,11 @@
               "batch": "release-0.5-ui-coverage-collection",
               "base_commit": "a68236ce5a764e7d1eb686fcfa00e07553df2bc0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ui-coverage-collection/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-mapped-coverage-gate",
+              "base_commit": "de12b6ffa5b1f4dde8bcb01eb96a48e0e5094c4c",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-mapped-coverage-gate/source-binding.json"
             }
           ]
         },
@@ -60255,7 +60262,8 @@
           "release-0.5-workspace-route-census",
           "release-0.5-staff-direct-reads",
           "release-0.5-staff-finance-read-recovery",
-          "release-0.5-ui-coverage-collection"
+          "release-0.5-ui-coverage-collection",
+          "release-0.5-mapped-coverage-gate"
         ],
         "current_acceptance": {
           "kind": "accepted-native-brand-theme-application",
@@ -60291,7 +60299,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "6ee6b4eb8e7724aa1f5f60cb9cd7882dc89c42e93a368b6f5154ec02646dee69"
+              "sha256": "1d471736d14b974e26e43d6dcebdc6b7c825ce70618707e8bc6404195d73c788"
             },
             {
               "path": "apps/web/e2e/timezone-settings.spec.ts",
@@ -60587,7 +60595,8 @@
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
             "Bindings renewed by release-0.5-staff-direct-reads: bounded saving and team reads pass exact browser and unit checks with current ownership, retained drafts and protected commands.",
             "Bindings renewed by release-0.5-staff-finance-read-recovery: Only staff maintenance and allocation read transport and related test fixtures changed. Scoped browser and unit evidence retains denial, financial review and protected command assertions.",
-            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed."
+            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
+            "Bindings renewed by release-0.5-mapped-coverage-gate: responsive story fixture and affected theme/notice assertions pass on both engines. No application source changed."
           ],
           "source_renewals": [
             {
@@ -60757,6 +60766,11 @@
               "batch": "release-0.5-ui-coverage-collection",
               "base_commit": "a68236ce5a764e7d1eb686fcfa00e07553df2bc0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ui-coverage-collection/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-mapped-coverage-gate",
+              "base_commit": "de12b6ffa5b1f4dde8bcb01eb96a48e0e5094c4c",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-mapped-coverage-gate/source-binding.json"
             }
           ]
         },
@@ -456266,7 +456280,8 @@
           "release-0.5-ci-workflow",
           "release-0.5-populated-route-presentation",
           "release-0.5-safari-main-keyboard",
-          "release-0.5-ui-coverage-collection"
+          "release-0.5-ui-coverage-collection",
+          "release-0.5-mapped-coverage-gate"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -456286,7 +456301,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "6ee6b4eb8e7724aa1f5f60cb9cd7882dc89c42e93a368b6f5154ec02646dee69"
+              "sha256": "1d471736d14b974e26e43d6dcebdc6b7c825ce70618707e8bc6404195d73c788"
             },
             {
               "path": "apps/web/e2e/ui-identity-loading.spec.ts",
@@ -456808,7 +456823,8 @@
             "Bindings renewed by release-0.5-ci-workflow: motion preserves opacity and finance/authority behavior; exact fast accessibility cases, motion checks and original transfer budgets passed.",
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
-            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed."
+            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
+            "Bindings renewed by release-0.5-mapped-coverage-gate: responsive story fixture and affected theme/notice assertions pass on both engines. No application source changed."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-shared-component-closure",
           "limitations": [
@@ -456894,6 +456910,11 @@
               "batch": "release-0.5-ui-coverage-collection",
               "base_commit": "a68236ce5a764e7d1eb686fcfa00e07553df2bc0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ui-coverage-collection/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-mapped-coverage-gate",
+              "base_commit": "de12b6ffa5b1f4dde8bcb01eb96a48e0e5094c4c",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-mapped-coverage-gate/source-binding.json"
             }
           ]
         },
@@ -457056,7 +457077,8 @@
           "release-0.5-ci-workflow",
           "release-0.5-populated-route-presentation",
           "release-0.5-safari-main-keyboard",
-          "release-0.5-ui-coverage-collection"
+          "release-0.5-ui-coverage-collection",
+          "release-0.5-mapped-coverage-gate"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -457076,7 +457098,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "6ee6b4eb8e7724aa1f5f60cb9cd7882dc89c42e93a368b6f5154ec02646dee69"
+              "sha256": "1d471736d14b974e26e43d6dcebdc6b7c825ce70618707e8bc6404195d73c788"
             },
             {
               "path": "apps/web/e2e/ui-identity-loading.spec.ts",
@@ -457598,7 +457620,8 @@
             "Bindings renewed by release-0.5-ci-workflow: motion preserves opacity and finance/authority behavior; exact fast accessibility cases, motion checks and original transfer budgets passed.",
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
-            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed."
+            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
+            "Bindings renewed by release-0.5-mapped-coverage-gate: responsive story fixture and affected theme/notice assertions pass on both engines. No application source changed."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-shared-component-closure",
           "limitations": [
@@ -457684,6 +457707,11 @@
               "batch": "release-0.5-ui-coverage-collection",
               "base_commit": "a68236ce5a764e7d1eb686fcfa00e07553df2bc0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ui-coverage-collection/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-mapped-coverage-gate",
+              "base_commit": "de12b6ffa5b1f4dde8bcb01eb96a48e0e5094c4c",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-mapped-coverage-gate/source-binding.json"
             }
           ]
         },
@@ -458553,7 +458581,8 @@
           "release-0.5-ci-workflow",
           "release-0.5-populated-route-presentation",
           "release-0.5-safari-main-keyboard",
-          "release-0.5-ui-coverage-collection"
+          "release-0.5-ui-coverage-collection",
+          "release-0.5-mapped-coverage-gate"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -458573,7 +458602,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "6ee6b4eb8e7724aa1f5f60cb9cd7882dc89c42e93a368b6f5154ec02646dee69"
+              "sha256": "1d471736d14b974e26e43d6dcebdc6b7c825ce70618707e8bc6404195d73c788"
             },
             {
               "path": "apps/web/e2e/ui-identity-loading.spec.ts",
@@ -459095,7 +459124,8 @@
             "Bindings renewed by release-0.5-ci-workflow: motion preserves opacity and finance/authority behavior; exact fast accessibility cases, motion checks and original transfer budgets passed.",
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
-            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed."
+            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
+            "Bindings renewed by release-0.5-mapped-coverage-gate: responsive story fixture and affected theme/notice assertions pass on both engines. No application source changed."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-shared-component-closure",
           "limitations": [
@@ -459181,6 +459211,11 @@
               "batch": "release-0.5-ui-coverage-collection",
               "base_commit": "a68236ce5a764e7d1eb686fcfa00e07553df2bc0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ui-coverage-collection/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-mapped-coverage-gate",
+              "base_commit": "de12b6ffa5b1f4dde8bcb01eb96a48e0e5094c4c",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-mapped-coverage-gate/source-binding.json"
             }
           ]
         },
@@ -460052,7 +460087,8 @@
           "release-0.5-ci-workflow",
           "release-0.5-populated-route-presentation",
           "release-0.5-safari-main-keyboard",
-          "release-0.5-ui-coverage-collection"
+          "release-0.5-ui-coverage-collection",
+          "release-0.5-mapped-coverage-gate"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -460072,7 +460108,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "6ee6b4eb8e7724aa1f5f60cb9cd7882dc89c42e93a368b6f5154ec02646dee69"
+              "sha256": "1d471736d14b974e26e43d6dcebdc6b7c825ce70618707e8bc6404195d73c788"
             },
             {
               "path": "apps/web/e2e/ui-identity-loading.spec.ts",
@@ -460594,7 +460630,8 @@
             "Bindings renewed by release-0.5-ci-workflow: motion preserves opacity and finance/authority behavior; exact fast accessibility cases, motion checks and original transfer budgets passed.",
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
-            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed."
+            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
+            "Bindings renewed by release-0.5-mapped-coverage-gate: responsive story fixture and affected theme/notice assertions pass on both engines. No application source changed."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-shared-component-closure",
           "limitations": [
@@ -460680,6 +460717,11 @@
               "batch": "release-0.5-ui-coverage-collection",
               "base_commit": "a68236ce5a764e7d1eb686fcfa00e07553df2bc0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ui-coverage-collection/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-mapped-coverage-gate",
+              "base_commit": "de12b6ffa5b1f4dde8bcb01eb96a48e0e5094c4c",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-mapped-coverage-gate/source-binding.json"
             }
           ]
         },
@@ -460731,7 +460773,8 @@
           "release-0.5-ci-workflow",
           "release-0.5-populated-route-presentation",
           "release-0.5-safari-main-keyboard",
-          "release-0.5-ui-coverage-collection"
+          "release-0.5-ui-coverage-collection",
+          "release-0.5-mapped-coverage-gate"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -460751,7 +460794,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "6ee6b4eb8e7724aa1f5f60cb9cd7882dc89c42e93a368b6f5154ec02646dee69"
+              "sha256": "1d471736d14b974e26e43d6dcebdc6b7c825ce70618707e8bc6404195d73c788"
             },
             {
               "path": "apps/web/e2e/ui-identity-loading.spec.ts",
@@ -461273,7 +461316,8 @@
             "Bindings renewed by release-0.5-ci-workflow: motion preserves opacity and finance/authority behavior; exact fast accessibility cases, motion checks and original transfer budgets passed.",
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
-            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed."
+            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
+            "Bindings renewed by release-0.5-mapped-coverage-gate: responsive story fixture and affected theme/notice assertions pass on both engines. No application source changed."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-shared-component-closure",
           "limitations": [
@@ -461359,6 +461403,11 @@
               "batch": "release-0.5-ui-coverage-collection",
               "base_commit": "a68236ce5a764e7d1eb686fcfa00e07553df2bc0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ui-coverage-collection/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-mapped-coverage-gate",
+              "base_commit": "de12b6ffa5b1f4dde8bcb01eb96a48e0e5094c4c",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-mapped-coverage-gate/source-binding.json"
             }
           ]
         },
@@ -461410,7 +461459,8 @@
           "release-0.5-ci-workflow",
           "release-0.5-populated-route-presentation",
           "release-0.5-safari-main-keyboard",
-          "release-0.5-ui-coverage-collection"
+          "release-0.5-ui-coverage-collection",
+          "release-0.5-mapped-coverage-gate"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -461430,7 +461480,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "6ee6b4eb8e7724aa1f5f60cb9cd7882dc89c42e93a368b6f5154ec02646dee69"
+              "sha256": "1d471736d14b974e26e43d6dcebdc6b7c825ce70618707e8bc6404195d73c788"
             },
             {
               "path": "apps/web/e2e/ui-identity-loading.spec.ts",
@@ -461524,7 +461574,8 @@
             "Bindings renewed by release-0.5-ci-workflow: motion preserves opacity and finance/authority behavior; exact fast accessibility cases, motion checks and original transfer budgets passed.",
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
-            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed."
+            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
+            "Bindings renewed by release-0.5-mapped-coverage-gate: responsive story fixture and affected theme/notice assertions pass on both engines. No application source changed."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-shared-component-closure",
           "limitations": [
@@ -461610,6 +461661,11 @@
               "batch": "release-0.5-ui-coverage-collection",
               "base_commit": "a68236ce5a764e7d1eb686fcfa00e07553df2bc0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ui-coverage-collection/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-mapped-coverage-gate",
+              "base_commit": "de12b6ffa5b1f4dde8bcb01eb96a48e0e5094c4c",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-mapped-coverage-gate/source-binding.json"
             }
           ]
         },
@@ -464853,7 +464909,8 @@
           "release-0.5-ci-workflow",
           "release-0.5-populated-route-presentation",
           "release-0.5-safari-main-keyboard",
-          "release-0.5-ui-coverage-collection"
+          "release-0.5-ui-coverage-collection",
+          "release-0.5-mapped-coverage-gate"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -464873,7 +464930,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "6ee6b4eb8e7724aa1f5f60cb9cd7882dc89c42e93a368b6f5154ec02646dee69"
+              "sha256": "1d471736d14b974e26e43d6dcebdc6b7c825ce70618707e8bc6404195d73c788"
             },
             {
               "path": "apps/web/e2e/ui-identity-loading.spec.ts",
@@ -464971,7 +465028,8 @@
             "Bindings renewed by release-0.5-ci-workflow: motion preserves opacity and finance/authority behavior; exact fast accessibility cases, motion checks and original transfer budgets passed.",
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
-            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed."
+            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
+            "Bindings renewed by release-0.5-mapped-coverage-gate: responsive story fixture and affected theme/notice assertions pass on both engines. No application source changed."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-shared-component-closure",
           "limitations": [
@@ -465057,6 +465115,11 @@
               "batch": "release-0.5-ui-coverage-collection",
               "base_commit": "a68236ce5a764e7d1eb686fcfa00e07553df2bc0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ui-coverage-collection/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-mapped-coverage-gate",
+              "base_commit": "de12b6ffa5b1f4dde8bcb01eb96a48e0e5094c4c",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-mapped-coverage-gate/source-binding.json"
             }
           ]
         },
@@ -468239,7 +468302,8 @@
           "release-0.5-ci-workflow",
           "release-0.5-populated-route-presentation",
           "release-0.5-safari-main-keyboard",
-          "release-0.5-ui-coverage-collection"
+          "release-0.5-ui-coverage-collection",
+          "release-0.5-mapped-coverage-gate"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -468271,7 +468335,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "6ee6b4eb8e7724aa1f5f60cb9cd7882dc89c42e93a368b6f5154ec02646dee69"
+              "sha256": "1d471736d14b974e26e43d6dcebdc6b7c825ce70618707e8bc6404195d73c788"
             },
             {
               "path": "apps/web/e2e/ui-identity-loading.spec.ts",
@@ -468373,7 +468437,8 @@
             "Bindings renewed by release-0.5-ci-workflow: motion preserves opacity and finance/authority behavior; exact fast accessibility cases, motion checks and original transfer budgets passed.",
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
-            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed."
+            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
+            "Bindings renewed by release-0.5-mapped-coverage-gate: responsive story fixture and affected theme/notice assertions pass on both engines. No application source changed."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-shared-component-closure",
           "limitations": [
@@ -468459,6 +468524,11 @@
               "batch": "release-0.5-ui-coverage-collection",
               "base_commit": "a68236ce5a764e7d1eb686fcfa00e07553df2bc0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ui-coverage-collection/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-mapped-coverage-gate",
+              "base_commit": "de12b6ffa5b1f4dde8bcb01eb96a48e0e5094c4c",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-mapped-coverage-gate/source-binding.json"
             }
           ]
         },
@@ -468523,7 +468593,8 @@
           "release-0.5-staff-terms-reads",
           "release-0.5-route-matrix-reconciliation",
           "release-0.5-staff-finance-read-recovery",
-          "release-0.5-ui-coverage-collection"
+          "release-0.5-ui-coverage-collection",
+          "release-0.5-mapped-coverage-gate"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -468547,7 +468618,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "6ee6b4eb8e7724aa1f5f60cb9cd7882dc89c42e93a368b6f5154ec02646dee69"
+              "sha256": "1d471736d14b974e26e43d6dcebdc6b7c825ce70618707e8bc6404195d73c788"
             },
             {
               "path": "apps/web/e2e/ui-identity-loading.spec.ts",
@@ -469126,7 +469197,8 @@
             "Bindings renewed by release-0.5-staff-terms-reads: Only wizard read transport and fixture assertions changed; exact electricity and solar browser/unit cases retain current ownership, persisted progress, financial confirmation and command safeguards.",
             "Bindings renewed by release-0.5-route-matrix-reconciliation: exact populated electricity, saving and solar journeys preserve the underlying captured draft, authority, price, receipt and financial confirmation assertions. Only solar fieldset presentation and test observations changed.",
             "Bindings renewed by release-0.5-staff-finance-read-recovery: Only staff maintenance and allocation read transport and related test fixtures changed. Scoped browser and unit evidence retains denial, financial review and protected command assertions.",
-            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed."
+            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
+            "Bindings renewed by release-0.5-mapped-coverage-gate: responsive story fixture and affected theme/notice assertions pass on both engines. No application source changed."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-shared-component-closure",
           "limitations": [
@@ -469277,6 +469349,11 @@
               "batch": "release-0.5-ui-coverage-collection",
               "base_commit": "a68236ce5a764e7d1eb686fcfa00e07553df2bc0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ui-coverage-collection/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-mapped-coverage-gate",
+              "base_commit": "de12b6ffa5b1f4dde8bcb01eb96a48e0e5094c4c",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-mapped-coverage-gate/source-binding.json"
             }
           ]
         },
@@ -469328,7 +469405,8 @@
           "release-0.5-ci-workflow",
           "release-0.5-populated-route-presentation",
           "release-0.5-safari-main-keyboard",
-          "release-0.5-ui-coverage-collection"
+          "release-0.5-ui-coverage-collection",
+          "release-0.5-mapped-coverage-gate"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -469348,7 +469426,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "6ee6b4eb8e7724aa1f5f60cb9cd7882dc89c42e93a368b6f5154ec02646dee69"
+              "sha256": "1d471736d14b974e26e43d6dcebdc6b7c825ce70618707e8bc6404195d73c788"
             },
             {
               "path": "apps/web/e2e/ui-identity-loading.spec.ts",
@@ -469450,7 +469528,8 @@
             "Bindings renewed by release-0.5-ci-workflow: motion preserves opacity and finance/authority behavior; exact fast accessibility cases, motion checks and original transfer budgets passed.",
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
-            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed."
+            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
+            "Bindings renewed by release-0.5-mapped-coverage-gate: responsive story fixture and affected theme/notice assertions pass on both engines. No application source changed."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-shared-component-closure",
           "limitations": [
@@ -469536,6 +469615,11 @@
               "batch": "release-0.5-ui-coverage-collection",
               "base_commit": "a68236ce5a764e7d1eb686fcfa00e07553df2bc0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ui-coverage-collection/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-mapped-coverage-gate",
+              "base_commit": "de12b6ffa5b1f4dde8bcb01eb96a48e0e5094c4c",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-mapped-coverage-gate/source-binding.json"
             }
           ]
         },
@@ -475298,7 +475382,8 @@
           "release-0.5-populated-route-presentation",
           "release-0.5-safari-main-keyboard",
           "release-0.5-critical-accessibility-renewal",
-          "release-0.5-ui-coverage-collection"
+          "release-0.5-ui-coverage-collection",
+          "release-0.5-mapped-coverage-gate"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -475394,7 +475479,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "6ee6b4eb8e7724aa1f5f60cb9cd7882dc89c42e93a368b6f5154ec02646dee69"
+              "sha256": "1d471736d14b974e26e43d6dcebdc6b7c825ce70618707e8bc6404195d73c788"
             },
             {
               "path": "apps/web/index.html",
@@ -475564,7 +475649,8 @@
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
-            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed."
+            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
+            "Bindings renewed by release-0.5-mapped-coverage-gate: responsive story fixture and affected theme/notice assertions pass on both engines. No application source changed."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-theme-direction",
           "limitations": [
@@ -475653,6 +475739,11 @@
               "batch": "release-0.5-ui-coverage-collection",
               "base_commit": "a68236ce5a764e7d1eb686fcfa00e07553df2bc0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ui-coverage-collection/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-mapped-coverage-gate",
+              "base_commit": "de12b6ffa5b1f4dde8bcb01eb96a48e0e5094c4c",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-mapped-coverage-gate/source-binding.json"
             }
           ]
         }
@@ -475733,7 +475824,8 @@
           "release-0.5-populated-route-presentation",
           "release-0.5-safari-main-keyboard",
           "release-0.5-critical-accessibility-renewal",
-          "release-0.5-ui-coverage-collection"
+          "release-0.5-ui-coverage-collection",
+          "release-0.5-mapped-coverage-gate"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -475829,7 +475921,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "6ee6b4eb8e7724aa1f5f60cb9cd7882dc89c42e93a368b6f5154ec02646dee69"
+              "sha256": "1d471736d14b974e26e43d6dcebdc6b7c825ce70618707e8bc6404195d73c788"
             },
             {
               "path": "apps/web/index.html",
@@ -475999,7 +476091,8 @@
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
-            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed."
+            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
+            "Bindings renewed by release-0.5-mapped-coverage-gate: responsive story fixture and affected theme/notice assertions pass on both engines. No application source changed."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-theme-direction",
           "limitations": [
@@ -476088,6 +476181,11 @@
               "batch": "release-0.5-ui-coverage-collection",
               "base_commit": "a68236ce5a764e7d1eb686fcfa00e07553df2bc0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ui-coverage-collection/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-mapped-coverage-gate",
+              "base_commit": "de12b6ffa5b1f4dde8bcb01eb96a48e0e5094c4c",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-mapped-coverage-gate/source-binding.json"
             }
           ]
         }
@@ -476168,7 +476266,8 @@
           "release-0.5-populated-route-presentation",
           "release-0.5-safari-main-keyboard",
           "release-0.5-critical-accessibility-renewal",
-          "release-0.5-ui-coverage-collection"
+          "release-0.5-ui-coverage-collection",
+          "release-0.5-mapped-coverage-gate"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -476264,7 +476363,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "6ee6b4eb8e7724aa1f5f60cb9cd7882dc89c42e93a368b6f5154ec02646dee69"
+              "sha256": "1d471736d14b974e26e43d6dcebdc6b7c825ce70618707e8bc6404195d73c788"
             },
             {
               "path": "apps/web/index.html",
@@ -476434,7 +476533,8 @@
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
-            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed."
+            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
+            "Bindings renewed by release-0.5-mapped-coverage-gate: responsive story fixture and affected theme/notice assertions pass on both engines. No application source changed."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-theme-direction",
           "limitations": [
@@ -476523,6 +476623,11 @@
               "batch": "release-0.5-ui-coverage-collection",
               "base_commit": "a68236ce5a764e7d1eb686fcfa00e07553df2bc0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ui-coverage-collection/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-mapped-coverage-gate",
+              "base_commit": "de12b6ffa5b1f4dde8bcb01eb96a48e0e5094c4c",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-mapped-coverage-gate/source-binding.json"
             }
           ]
         }
@@ -476603,7 +476708,8 @@
           "release-0.5-populated-route-presentation",
           "release-0.5-safari-main-keyboard",
           "release-0.5-critical-accessibility-renewal",
-          "release-0.5-ui-coverage-collection"
+          "release-0.5-ui-coverage-collection",
+          "release-0.5-mapped-coverage-gate"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -476699,7 +476805,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "6ee6b4eb8e7724aa1f5f60cb9cd7882dc89c42e93a368b6f5154ec02646dee69"
+              "sha256": "1d471736d14b974e26e43d6dcebdc6b7c825ce70618707e8bc6404195d73c788"
             },
             {
               "path": "apps/web/index.html",
@@ -476869,7 +476975,8 @@
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
-            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed."
+            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
+            "Bindings renewed by release-0.5-mapped-coverage-gate: responsive story fixture and affected theme/notice assertions pass on both engines. No application source changed."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-theme-direction",
           "limitations": [
@@ -476958,6 +477065,11 @@
               "batch": "release-0.5-ui-coverage-collection",
               "base_commit": "a68236ce5a764e7d1eb686fcfa00e07553df2bc0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ui-coverage-collection/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-mapped-coverage-gate",
+              "base_commit": "de12b6ffa5b1f4dde8bcb01eb96a48e0e5094c4c",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-mapped-coverage-gate/source-binding.json"
             }
           ]
         }
@@ -477038,7 +477150,8 @@
           "release-0.5-populated-route-presentation",
           "release-0.5-safari-main-keyboard",
           "release-0.5-critical-accessibility-renewal",
-          "release-0.5-ui-coverage-collection"
+          "release-0.5-ui-coverage-collection",
+          "release-0.5-mapped-coverage-gate"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -477134,7 +477247,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "6ee6b4eb8e7724aa1f5f60cb9cd7882dc89c42e93a368b6f5154ec02646dee69"
+              "sha256": "1d471736d14b974e26e43d6dcebdc6b7c825ce70618707e8bc6404195d73c788"
             },
             {
               "path": "apps/web/index.html",
@@ -477304,7 +477417,8 @@
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
-            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed."
+            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
+            "Bindings renewed by release-0.5-mapped-coverage-gate: responsive story fixture and affected theme/notice assertions pass on both engines. No application source changed."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-theme-direction",
           "limitations": [
@@ -477393,6 +477507,11 @@
               "batch": "release-0.5-ui-coverage-collection",
               "base_commit": "a68236ce5a764e7d1eb686fcfa00e07553df2bc0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ui-coverage-collection/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-mapped-coverage-gate",
+              "base_commit": "de12b6ffa5b1f4dde8bcb01eb96a48e0e5094c4c",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-mapped-coverage-gate/source-binding.json"
             }
           ]
         }
@@ -477473,7 +477592,8 @@
           "release-0.5-populated-route-presentation",
           "release-0.5-safari-main-keyboard",
           "release-0.5-critical-accessibility-renewal",
-          "release-0.5-ui-coverage-collection"
+          "release-0.5-ui-coverage-collection",
+          "release-0.5-mapped-coverage-gate"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -477569,7 +477689,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "6ee6b4eb8e7724aa1f5f60cb9cd7882dc89c42e93a368b6f5154ec02646dee69"
+              "sha256": "1d471736d14b974e26e43d6dcebdc6b7c825ce70618707e8bc6404195d73c788"
             },
             {
               "path": "apps/web/index.html",
@@ -477739,7 +477859,8 @@
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
-            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed."
+            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
+            "Bindings renewed by release-0.5-mapped-coverage-gate: responsive story fixture and affected theme/notice assertions pass on both engines. No application source changed."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-theme-direction",
           "limitations": [
@@ -477828,6 +477949,11 @@
               "batch": "release-0.5-ui-coverage-collection",
               "base_commit": "a68236ce5a764e7d1eb686fcfa00e07553df2bc0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ui-coverage-collection/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-mapped-coverage-gate",
+              "base_commit": "de12b6ffa5b1f4dde8bcb01eb96a48e0e5094c4c",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-mapped-coverage-gate/source-binding.json"
             }
           ]
         }
@@ -477908,7 +478034,8 @@
           "release-0.5-populated-route-presentation",
           "release-0.5-safari-main-keyboard",
           "release-0.5-critical-accessibility-renewal",
-          "release-0.5-ui-coverage-collection"
+          "release-0.5-ui-coverage-collection",
+          "release-0.5-mapped-coverage-gate"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -478004,7 +478131,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "6ee6b4eb8e7724aa1f5f60cb9cd7882dc89c42e93a368b6f5154ec02646dee69"
+              "sha256": "1d471736d14b974e26e43d6dcebdc6b7c825ce70618707e8bc6404195d73c788"
             },
             {
               "path": "apps/web/index.html",
@@ -478174,7 +478301,8 @@
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
-            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed."
+            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
+            "Bindings renewed by release-0.5-mapped-coverage-gate: responsive story fixture and affected theme/notice assertions pass on both engines. No application source changed."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-theme-direction",
           "limitations": [
@@ -478263,6 +478391,11 @@
               "batch": "release-0.5-ui-coverage-collection",
               "base_commit": "a68236ce5a764e7d1eb686fcfa00e07553df2bc0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ui-coverage-collection/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-mapped-coverage-gate",
+              "base_commit": "de12b6ffa5b1f4dde8bcb01eb96a48e0e5094c4c",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-mapped-coverage-gate/source-binding.json"
             }
           ]
         }
@@ -478343,7 +478476,8 @@
           "release-0.5-populated-route-presentation",
           "release-0.5-safari-main-keyboard",
           "release-0.5-critical-accessibility-renewal",
-          "release-0.5-ui-coverage-collection"
+          "release-0.5-ui-coverage-collection",
+          "release-0.5-mapped-coverage-gate"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -478439,7 +478573,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "6ee6b4eb8e7724aa1f5f60cb9cd7882dc89c42e93a368b6f5154ec02646dee69"
+              "sha256": "1d471736d14b974e26e43d6dcebdc6b7c825ce70618707e8bc6404195d73c788"
             },
             {
               "path": "apps/web/index.html",
@@ -478609,7 +478743,8 @@
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
-            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed."
+            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
+            "Bindings renewed by release-0.5-mapped-coverage-gate: responsive story fixture and affected theme/notice assertions pass on both engines. No application source changed."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-theme-direction",
           "limitations": [
@@ -478698,6 +478833,11 @@
               "batch": "release-0.5-ui-coverage-collection",
               "base_commit": "a68236ce5a764e7d1eb686fcfa00e07553df2bc0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ui-coverage-collection/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-mapped-coverage-gate",
+              "base_commit": "de12b6ffa5b1f4dde8bcb01eb96a48e0e5094c4c",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-mapped-coverage-gate/source-binding.json"
             }
           ]
         }
@@ -478778,7 +478918,8 @@
           "release-0.5-populated-route-presentation",
           "release-0.5-safari-main-keyboard",
           "release-0.5-critical-accessibility-renewal",
-          "release-0.5-ui-coverage-collection"
+          "release-0.5-ui-coverage-collection",
+          "release-0.5-mapped-coverage-gate"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -478874,7 +479015,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "6ee6b4eb8e7724aa1f5f60cb9cd7882dc89c42e93a368b6f5154ec02646dee69"
+              "sha256": "1d471736d14b974e26e43d6dcebdc6b7c825ce70618707e8bc6404195d73c788"
             },
             {
               "path": "apps/web/index.html",
@@ -479044,7 +479185,8 @@
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
-            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed."
+            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
+            "Bindings renewed by release-0.5-mapped-coverage-gate: responsive story fixture and affected theme/notice assertions pass on both engines. No application source changed."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-theme-direction",
           "limitations": [
@@ -479133,6 +479275,11 @@
               "batch": "release-0.5-ui-coverage-collection",
               "base_commit": "a68236ce5a764e7d1eb686fcfa00e07553df2bc0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ui-coverage-collection/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-mapped-coverage-gate",
+              "base_commit": "de12b6ffa5b1f4dde8bcb01eb96a48e0e5094c4c",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-mapped-coverage-gate/source-binding.json"
             }
           ]
         }
@@ -479213,7 +479360,8 @@
           "release-0.5-populated-route-presentation",
           "release-0.5-safari-main-keyboard",
           "release-0.5-critical-accessibility-renewal",
-          "release-0.5-ui-coverage-collection"
+          "release-0.5-ui-coverage-collection",
+          "release-0.5-mapped-coverage-gate"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -479309,7 +479457,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "6ee6b4eb8e7724aa1f5f60cb9cd7882dc89c42e93a368b6f5154ec02646dee69"
+              "sha256": "1d471736d14b974e26e43d6dcebdc6b7c825ce70618707e8bc6404195d73c788"
             },
             {
               "path": "apps/web/index.html",
@@ -479479,7 +479627,8 @@
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
-            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed."
+            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
+            "Bindings renewed by release-0.5-mapped-coverage-gate: responsive story fixture and affected theme/notice assertions pass on both engines. No application source changed."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-theme-direction",
           "limitations": [
@@ -479568,6 +479717,11 @@
               "batch": "release-0.5-ui-coverage-collection",
               "base_commit": "a68236ce5a764e7d1eb686fcfa00e07553df2bc0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ui-coverage-collection/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-mapped-coverage-gate",
+              "base_commit": "de12b6ffa5b1f4dde8bcb01eb96a48e0e5094c4c",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-mapped-coverage-gate/source-binding.json"
             }
           ]
         }
@@ -479648,7 +479802,8 @@
           "release-0.5-populated-route-presentation",
           "release-0.5-safari-main-keyboard",
           "release-0.5-critical-accessibility-renewal",
-          "release-0.5-ui-coverage-collection"
+          "release-0.5-ui-coverage-collection",
+          "release-0.5-mapped-coverage-gate"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -479744,7 +479899,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "6ee6b4eb8e7724aa1f5f60cb9cd7882dc89c42e93a368b6f5154ec02646dee69"
+              "sha256": "1d471736d14b974e26e43d6dcebdc6b7c825ce70618707e8bc6404195d73c788"
             },
             {
               "path": "apps/web/index.html",
@@ -479914,7 +480069,8 @@
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
-            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed."
+            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
+            "Bindings renewed by release-0.5-mapped-coverage-gate: responsive story fixture and affected theme/notice assertions pass on both engines. No application source changed."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-theme-direction",
           "limitations": [
@@ -480003,6 +480159,11 @@
               "batch": "release-0.5-ui-coverage-collection",
               "base_commit": "a68236ce5a764e7d1eb686fcfa00e07553df2bc0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ui-coverage-collection/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-mapped-coverage-gate",
+              "base_commit": "de12b6ffa5b1f4dde8bcb01eb96a48e0e5094c4c",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-mapped-coverage-gate/source-binding.json"
             }
           ]
         }
@@ -480083,7 +480244,8 @@
           "release-0.5-populated-route-presentation",
           "release-0.5-safari-main-keyboard",
           "release-0.5-critical-accessibility-renewal",
-          "release-0.5-ui-coverage-collection"
+          "release-0.5-ui-coverage-collection",
+          "release-0.5-mapped-coverage-gate"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -480179,7 +480341,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "6ee6b4eb8e7724aa1f5f60cb9cd7882dc89c42e93a368b6f5154ec02646dee69"
+              "sha256": "1d471736d14b974e26e43d6dcebdc6b7c825ce70618707e8bc6404195d73c788"
             },
             {
               "path": "apps/web/index.html",
@@ -480349,7 +480511,8 @@
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
-            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed."
+            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
+            "Bindings renewed by release-0.5-mapped-coverage-gate: responsive story fixture and affected theme/notice assertions pass on both engines. No application source changed."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-theme-direction",
           "limitations": [
@@ -480438,6 +480601,11 @@
               "batch": "release-0.5-ui-coverage-collection",
               "base_commit": "a68236ce5a764e7d1eb686fcfa00e07553df2bc0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ui-coverage-collection/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-mapped-coverage-gate",
+              "base_commit": "de12b6ffa5b1f4dde8bcb01eb96a48e0e5094c4c",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-mapped-coverage-gate/source-binding.json"
             }
           ]
         }
@@ -480518,7 +480686,8 @@
           "release-0.5-populated-route-presentation",
           "release-0.5-safari-main-keyboard",
           "release-0.5-critical-accessibility-renewal",
-          "release-0.5-ui-coverage-collection"
+          "release-0.5-ui-coverage-collection",
+          "release-0.5-mapped-coverage-gate"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -480614,7 +480783,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "6ee6b4eb8e7724aa1f5f60cb9cd7882dc89c42e93a368b6f5154ec02646dee69"
+              "sha256": "1d471736d14b974e26e43d6dcebdc6b7c825ce70618707e8bc6404195d73c788"
             },
             {
               "path": "apps/web/index.html",
@@ -480784,7 +480953,8 @@
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
-            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed."
+            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
+            "Bindings renewed by release-0.5-mapped-coverage-gate: responsive story fixture and affected theme/notice assertions pass on both engines. No application source changed."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-theme-direction",
           "limitations": [
@@ -480873,6 +481043,11 @@
               "batch": "release-0.5-ui-coverage-collection",
               "base_commit": "a68236ce5a764e7d1eb686fcfa00e07553df2bc0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ui-coverage-collection/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-mapped-coverage-gate",
+              "base_commit": "de12b6ffa5b1f4dde8bcb01eb96a48e0e5094c4c",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-mapped-coverage-gate/source-binding.json"
             }
           ]
         }
@@ -480953,7 +481128,8 @@
           "release-0.5-populated-route-presentation",
           "release-0.5-safari-main-keyboard",
           "release-0.5-critical-accessibility-renewal",
-          "release-0.5-ui-coverage-collection"
+          "release-0.5-ui-coverage-collection",
+          "release-0.5-mapped-coverage-gate"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -481049,7 +481225,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "6ee6b4eb8e7724aa1f5f60cb9cd7882dc89c42e93a368b6f5154ec02646dee69"
+              "sha256": "1d471736d14b974e26e43d6dcebdc6b7c825ce70618707e8bc6404195d73c788"
             },
             {
               "path": "apps/web/index.html",
@@ -481219,7 +481395,8 @@
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
-            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed."
+            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
+            "Bindings renewed by release-0.5-mapped-coverage-gate: responsive story fixture and affected theme/notice assertions pass on both engines. No application source changed."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-theme-direction",
           "limitations": [
@@ -481308,6 +481485,11 @@
               "batch": "release-0.5-ui-coverage-collection",
               "base_commit": "a68236ce5a764e7d1eb686fcfa00e07553df2bc0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ui-coverage-collection/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-mapped-coverage-gate",
+              "base_commit": "de12b6ffa5b1f4dde8bcb01eb96a48e0e5094c4c",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-mapped-coverage-gate/source-binding.json"
             }
           ]
         }
@@ -487876,7 +488058,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "32 populated observations cover both electricity modes, saving catalogue/order and solar intake at all eight widths. Complete uncovered routes, conditional/dialog states and actual overlap checks. The recorded route reconciliation exposes exact remaining width evidence."
+        "The shared responsive layout story now passes all eight widths and both directions in Chromium and Mobile Safari, with actual wrapping, touch area and keyboard proof. Complete remaining populated route and conditional state widths."
       ],
       "owner": null,
       "depends_on": [],
@@ -487892,7 +488074,8 @@
           "release-0.5-measured-action-targets",
           "release-0.5-route-landmark-census",
           "release-0.5-workspace-route-census",
-          "release-0.5-route-matrix-reconciliation"
+          "release-0.5-route-matrix-reconciliation",
+          "release-0.5-mapped-coverage-gate"
         ],
         "current_acceptance": null
       }
@@ -489632,7 +489815,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "The success notice has current exact semantic color and policy-switch evidence in both languages and engines. The remaining complex-state contrast and manual evidence is open; the initial component coverage run failed and is not accepted."
+        "Shared theme and native semantic notice cases pass with current color, motion and source-map evidence. Complete remaining complex route and manual contrast measurements."
       ],
       "owner": null,
       "depends_on": [],
@@ -489644,7 +489827,8 @@
           "release-0.5-route-fallback-and-announcement",
           "release-0.5-populated-route-presentation",
           "release-0.5-critical-accessibility-renewal",
-          "release-0.5-ui-coverage-collection"
+          "release-0.5-ui-coverage-collection",
+          "release-0.5-mapped-coverage-gate"
         ],
         "current_acceptance": null
       }
@@ -492571,7 +492755,8 @@
           "release-0.5-populated-route-presentation",
           "release-0.5-safari-main-keyboard",
           "release-0.5-workspace-route-census",
-          "release-0.5-ui-coverage-collection"
+          "release-0.5-ui-coverage-collection",
+          "release-0.5-mapped-coverage-gate"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -492635,7 +492820,7 @@
             },
             {
               "path": "apps/web/e2e/fixtures/theme/main.tsx",
-              "sha256": "ac9d76d09b4b425b1827312d6dddc3d9623fd1359ddd4f35036831cdd956640a"
+              "sha256": "557f24995225882b8a99acdae19455c7b96f538dedff33f00ac895133cf8e591"
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
@@ -492647,7 +492832,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "6ee6b4eb8e7724aa1f5f60cb9cd7882dc89c42e93a368b6f5154ec02646dee69"
+              "sha256": "1d471736d14b974e26e43d6dcebdc6b7c825ce70618707e8bc6404195d73c788"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -493227,7 +493412,8 @@
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
-            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed."
+            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
+            "Bindings renewed by release-0.5-mapped-coverage-gate: responsive story fixture and affected theme/notice assertions pass on both engines. No application source changed."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-appearance-motion-journey",
           "limitations": [
@@ -493303,6 +493489,11 @@
               "batch": "release-0.5-ui-coverage-collection",
               "base_commit": "a68236ce5a764e7d1eb686fcfa00e07553df2bc0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ui-coverage-collection/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-mapped-coverage-gate",
+              "base_commit": "de12b6ffa5b1f4dde8bcb01eb96a48e0e5094c4c",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-mapped-coverage-gate/source-binding.json"
             }
           ]
         },
@@ -493349,7 +493540,8 @@
           "release-0.5-populated-route-presentation",
           "release-0.5-safari-main-keyboard",
           "release-0.5-workspace-route-census",
-          "release-0.5-ui-coverage-collection"
+          "release-0.5-ui-coverage-collection",
+          "release-0.5-mapped-coverage-gate"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -493413,7 +493605,7 @@
             },
             {
               "path": "apps/web/e2e/fixtures/theme/main.tsx",
-              "sha256": "ac9d76d09b4b425b1827312d6dddc3d9623fd1359ddd4f35036831cdd956640a"
+              "sha256": "557f24995225882b8a99acdae19455c7b96f538dedff33f00ac895133cf8e591"
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
@@ -493425,7 +493617,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "6ee6b4eb8e7724aa1f5f60cb9cd7882dc89c42e93a368b6f5154ec02646dee69"
+              "sha256": "1d471736d14b974e26e43d6dcebdc6b7c825ce70618707e8bc6404195d73c788"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -494005,7 +494197,8 @@
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
-            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed."
+            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
+            "Bindings renewed by release-0.5-mapped-coverage-gate: responsive story fixture and affected theme/notice assertions pass on both engines. No application source changed."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-appearance-motion-journey",
           "limitations": [
@@ -494081,6 +494274,11 @@
               "batch": "release-0.5-ui-coverage-collection",
               "base_commit": "a68236ce5a764e7d1eb686fcfa00e07553df2bc0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ui-coverage-collection/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-mapped-coverage-gate",
+              "base_commit": "de12b6ffa5b1f4dde8bcb01eb96a48e0e5094c4c",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-mapped-coverage-gate/source-binding.json"
             }
           ]
         },
@@ -494127,7 +494325,8 @@
           "release-0.5-populated-route-presentation",
           "release-0.5-safari-main-keyboard",
           "release-0.5-workspace-route-census",
-          "release-0.5-ui-coverage-collection"
+          "release-0.5-ui-coverage-collection",
+          "release-0.5-mapped-coverage-gate"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -494191,7 +494390,7 @@
             },
             {
               "path": "apps/web/e2e/fixtures/theme/main.tsx",
-              "sha256": "ac9d76d09b4b425b1827312d6dddc3d9623fd1359ddd4f35036831cdd956640a"
+              "sha256": "557f24995225882b8a99acdae19455c7b96f538dedff33f00ac895133cf8e591"
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
@@ -494203,7 +494402,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "6ee6b4eb8e7724aa1f5f60cb9cd7882dc89c42e93a368b6f5154ec02646dee69"
+              "sha256": "1d471736d14b974e26e43d6dcebdc6b7c825ce70618707e8bc6404195d73c788"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -494783,7 +494982,8 @@
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
-            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed."
+            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
+            "Bindings renewed by release-0.5-mapped-coverage-gate: responsive story fixture and affected theme/notice assertions pass on both engines. No application source changed."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-appearance-motion-journey",
           "limitations": [
@@ -494859,6 +495059,11 @@
               "batch": "release-0.5-ui-coverage-collection",
               "base_commit": "a68236ce5a764e7d1eb686fcfa00e07553df2bc0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ui-coverage-collection/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-mapped-coverage-gate",
+              "base_commit": "de12b6ffa5b1f4dde8bcb01eb96a48e0e5094c4c",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-mapped-coverage-gate/source-binding.json"
             }
           ]
         },
@@ -494905,7 +495110,8 @@
           "release-0.5-populated-route-presentation",
           "release-0.5-safari-main-keyboard",
           "release-0.5-workspace-route-census",
-          "release-0.5-ui-coverage-collection"
+          "release-0.5-ui-coverage-collection",
+          "release-0.5-mapped-coverage-gate"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -494969,7 +495175,7 @@
             },
             {
               "path": "apps/web/e2e/fixtures/theme/main.tsx",
-              "sha256": "ac9d76d09b4b425b1827312d6dddc3d9623fd1359ddd4f35036831cdd956640a"
+              "sha256": "557f24995225882b8a99acdae19455c7b96f538dedff33f00ac895133cf8e591"
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
@@ -494981,7 +495187,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "6ee6b4eb8e7724aa1f5f60cb9cd7882dc89c42e93a368b6f5154ec02646dee69"
+              "sha256": "1d471736d14b974e26e43d6dcebdc6b7c825ce70618707e8bc6404195d73c788"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -495561,7 +495767,8 @@
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
-            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed."
+            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
+            "Bindings renewed by release-0.5-mapped-coverage-gate: responsive story fixture and affected theme/notice assertions pass on both engines. No application source changed."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-appearance-motion-journey",
           "limitations": [
@@ -495637,6 +495844,11 @@
               "batch": "release-0.5-ui-coverage-collection",
               "base_commit": "a68236ce5a764e7d1eb686fcfa00e07553df2bc0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ui-coverage-collection/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-mapped-coverage-gate",
+              "base_commit": "de12b6ffa5b1f4dde8bcb01eb96a48e0e5094c4c",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-mapped-coverage-gate/source-binding.json"
             }
           ]
         },
@@ -495683,7 +495895,8 @@
           "release-0.5-populated-route-presentation",
           "release-0.5-safari-main-keyboard",
           "release-0.5-workspace-route-census",
-          "release-0.5-ui-coverage-collection"
+          "release-0.5-ui-coverage-collection",
+          "release-0.5-mapped-coverage-gate"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -495747,7 +495960,7 @@
             },
             {
               "path": "apps/web/e2e/fixtures/theme/main.tsx",
-              "sha256": "ac9d76d09b4b425b1827312d6dddc3d9623fd1359ddd4f35036831cdd956640a"
+              "sha256": "557f24995225882b8a99acdae19455c7b96f538dedff33f00ac895133cf8e591"
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
@@ -495759,7 +495972,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "6ee6b4eb8e7724aa1f5f60cb9cd7882dc89c42e93a368b6f5154ec02646dee69"
+              "sha256": "1d471736d14b974e26e43d6dcebdc6b7c825ce70618707e8bc6404195d73c788"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -496339,7 +496552,8 @@
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
-            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed."
+            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
+            "Bindings renewed by release-0.5-mapped-coverage-gate: responsive story fixture and affected theme/notice assertions pass on both engines. No application source changed."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-appearance-motion-journey",
           "limitations": [
@@ -496415,6 +496629,11 @@
               "batch": "release-0.5-ui-coverage-collection",
               "base_commit": "a68236ce5a764e7d1eb686fcfa00e07553df2bc0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ui-coverage-collection/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-mapped-coverage-gate",
+              "base_commit": "de12b6ffa5b1f4dde8bcb01eb96a48e0e5094c4c",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-mapped-coverage-gate/source-binding.json"
             }
           ]
         },
@@ -496461,7 +496680,8 @@
           "release-0.5-populated-route-presentation",
           "release-0.5-safari-main-keyboard",
           "release-0.5-workspace-route-census",
-          "release-0.5-ui-coverage-collection"
+          "release-0.5-ui-coverage-collection",
+          "release-0.5-mapped-coverage-gate"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -496525,7 +496745,7 @@
             },
             {
               "path": "apps/web/e2e/fixtures/theme/main.tsx",
-              "sha256": "ac9d76d09b4b425b1827312d6dddc3d9623fd1359ddd4f35036831cdd956640a"
+              "sha256": "557f24995225882b8a99acdae19455c7b96f538dedff33f00ac895133cf8e591"
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
@@ -496537,7 +496757,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "6ee6b4eb8e7724aa1f5f60cb9cd7882dc89c42e93a368b6f5154ec02646dee69"
+              "sha256": "1d471736d14b974e26e43d6dcebdc6b7c825ce70618707e8bc6404195d73c788"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -497117,7 +497337,8 @@
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
-            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed."
+            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
+            "Bindings renewed by release-0.5-mapped-coverage-gate: responsive story fixture and affected theme/notice assertions pass on both engines. No application source changed."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-appearance-motion-journey",
           "limitations": [
@@ -497193,6 +497414,11 @@
               "batch": "release-0.5-ui-coverage-collection",
               "base_commit": "a68236ce5a764e7d1eb686fcfa00e07553df2bc0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ui-coverage-collection/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-mapped-coverage-gate",
+              "base_commit": "de12b6ffa5b1f4dde8bcb01eb96a48e0e5094c4c",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-mapped-coverage-gate/source-binding.json"
             }
           ]
         },
@@ -497239,7 +497465,8 @@
           "release-0.5-populated-route-presentation",
           "release-0.5-safari-main-keyboard",
           "release-0.5-workspace-route-census",
-          "release-0.5-ui-coverage-collection"
+          "release-0.5-ui-coverage-collection",
+          "release-0.5-mapped-coverage-gate"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -497303,7 +497530,7 @@
             },
             {
               "path": "apps/web/e2e/fixtures/theme/main.tsx",
-              "sha256": "ac9d76d09b4b425b1827312d6dddc3d9623fd1359ddd4f35036831cdd956640a"
+              "sha256": "557f24995225882b8a99acdae19455c7b96f538dedff33f00ac895133cf8e591"
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
@@ -497315,7 +497542,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "6ee6b4eb8e7724aa1f5f60cb9cd7882dc89c42e93a368b6f5154ec02646dee69"
+              "sha256": "1d471736d14b974e26e43d6dcebdc6b7c825ce70618707e8bc6404195d73c788"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -497895,7 +498122,8 @@
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
-            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed."
+            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
+            "Bindings renewed by release-0.5-mapped-coverage-gate: responsive story fixture and affected theme/notice assertions pass on both engines. No application source changed."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-appearance-motion-journey",
           "limitations": [
@@ -497971,6 +498199,11 @@
               "batch": "release-0.5-ui-coverage-collection",
               "base_commit": "a68236ce5a764e7d1eb686fcfa00e07553df2bc0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ui-coverage-collection/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-mapped-coverage-gate",
+              "base_commit": "de12b6ffa5b1f4dde8bcb01eb96a48e0e5094c4c",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-mapped-coverage-gate/source-binding.json"
             }
           ]
         },
@@ -498017,7 +498250,8 @@
           "release-0.5-populated-route-presentation",
           "release-0.5-safari-main-keyboard",
           "release-0.5-workspace-route-census",
-          "release-0.5-ui-coverage-collection"
+          "release-0.5-ui-coverage-collection",
+          "release-0.5-mapped-coverage-gate"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -498081,7 +498315,7 @@
             },
             {
               "path": "apps/web/e2e/fixtures/theme/main.tsx",
-              "sha256": "ac9d76d09b4b425b1827312d6dddc3d9623fd1359ddd4f35036831cdd956640a"
+              "sha256": "557f24995225882b8a99acdae19455c7b96f538dedff33f00ac895133cf8e591"
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
@@ -498093,7 +498327,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "6ee6b4eb8e7724aa1f5f60cb9cd7882dc89c42e93a368b6f5154ec02646dee69"
+              "sha256": "1d471736d14b974e26e43d6dcebdc6b7c825ce70618707e8bc6404195d73c788"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -498673,7 +498907,8 @@
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
-            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed."
+            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
+            "Bindings renewed by release-0.5-mapped-coverage-gate: responsive story fixture and affected theme/notice assertions pass on both engines. No application source changed."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-appearance-motion-journey",
           "limitations": [
@@ -498749,6 +498984,11 @@
               "batch": "release-0.5-ui-coverage-collection",
               "base_commit": "a68236ce5a764e7d1eb686fcfa00e07553df2bc0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ui-coverage-collection/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-mapped-coverage-gate",
+              "base_commit": "de12b6ffa5b1f4dde8bcb01eb96a48e0e5094c4c",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-mapped-coverage-gate/source-binding.json"
             }
           ]
         },
@@ -498795,7 +499035,8 @@
           "release-0.5-populated-route-presentation",
           "release-0.5-safari-main-keyboard",
           "release-0.5-workspace-route-census",
-          "release-0.5-ui-coverage-collection"
+          "release-0.5-ui-coverage-collection",
+          "release-0.5-mapped-coverage-gate"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -498859,7 +499100,7 @@
             },
             {
               "path": "apps/web/e2e/fixtures/theme/main.tsx",
-              "sha256": "ac9d76d09b4b425b1827312d6dddc3d9623fd1359ddd4f35036831cdd956640a"
+              "sha256": "557f24995225882b8a99acdae19455c7b96f538dedff33f00ac895133cf8e591"
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
@@ -498871,7 +499112,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "6ee6b4eb8e7724aa1f5f60cb9cd7882dc89c42e93a368b6f5154ec02646dee69"
+              "sha256": "1d471736d14b974e26e43d6dcebdc6b7c825ce70618707e8bc6404195d73c788"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -499451,7 +499692,8 @@
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
-            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed."
+            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
+            "Bindings renewed by release-0.5-mapped-coverage-gate: responsive story fixture and affected theme/notice assertions pass on both engines. No application source changed."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-appearance-motion-journey",
           "limitations": [
@@ -499527,6 +499769,11 @@
               "batch": "release-0.5-ui-coverage-collection",
               "base_commit": "a68236ce5a764e7d1eb686fcfa00e07553df2bc0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ui-coverage-collection/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-mapped-coverage-gate",
+              "base_commit": "de12b6ffa5b1f4dde8bcb01eb96a48e0e5094c4c",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-mapped-coverage-gate/source-binding.json"
             }
           ]
         },
@@ -499573,7 +499820,8 @@
           "release-0.5-populated-route-presentation",
           "release-0.5-safari-main-keyboard",
           "release-0.5-workspace-route-census",
-          "release-0.5-ui-coverage-collection"
+          "release-0.5-ui-coverage-collection",
+          "release-0.5-mapped-coverage-gate"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -499637,7 +499885,7 @@
             },
             {
               "path": "apps/web/e2e/fixtures/theme/main.tsx",
-              "sha256": "ac9d76d09b4b425b1827312d6dddc3d9623fd1359ddd4f35036831cdd956640a"
+              "sha256": "557f24995225882b8a99acdae19455c7b96f538dedff33f00ac895133cf8e591"
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
@@ -499649,7 +499897,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "6ee6b4eb8e7724aa1f5f60cb9cd7882dc89c42e93a368b6f5154ec02646dee69"
+              "sha256": "1d471736d14b974e26e43d6dcebdc6b7c825ce70618707e8bc6404195d73c788"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -500229,7 +500477,8 @@
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
-            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed."
+            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
+            "Bindings renewed by release-0.5-mapped-coverage-gate: responsive story fixture and affected theme/notice assertions pass on both engines. No application source changed."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-appearance-motion-journey",
           "limitations": [
@@ -500305,6 +500554,11 @@
               "batch": "release-0.5-ui-coverage-collection",
               "base_commit": "a68236ce5a764e7d1eb686fcfa00e07553df2bc0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ui-coverage-collection/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-mapped-coverage-gate",
+              "base_commit": "de12b6ffa5b1f4dde8bcb01eb96a48e0e5094c4c",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-mapped-coverage-gate/source-binding.json"
             }
           ]
         },
@@ -500351,7 +500605,8 @@
           "release-0.5-populated-route-presentation",
           "release-0.5-safari-main-keyboard",
           "release-0.5-workspace-route-census",
-          "release-0.5-ui-coverage-collection"
+          "release-0.5-ui-coverage-collection",
+          "release-0.5-mapped-coverage-gate"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -500415,7 +500670,7 @@
             },
             {
               "path": "apps/web/e2e/fixtures/theme/main.tsx",
-              "sha256": "ac9d76d09b4b425b1827312d6dddc3d9623fd1359ddd4f35036831cdd956640a"
+              "sha256": "557f24995225882b8a99acdae19455c7b96f538dedff33f00ac895133cf8e591"
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
@@ -500427,7 +500682,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "6ee6b4eb8e7724aa1f5f60cb9cd7882dc89c42e93a368b6f5154ec02646dee69"
+              "sha256": "1d471736d14b974e26e43d6dcebdc6b7c825ce70618707e8bc6404195d73c788"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -501007,7 +501262,8 @@
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
-            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed."
+            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
+            "Bindings renewed by release-0.5-mapped-coverage-gate: responsive story fixture and affected theme/notice assertions pass on both engines. No application source changed."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-appearance-motion-journey",
           "limitations": [
@@ -501083,6 +501339,11 @@
               "batch": "release-0.5-ui-coverage-collection",
               "base_commit": "a68236ce5a764e7d1eb686fcfa00e07553df2bc0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ui-coverage-collection/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-mapped-coverage-gate",
+              "base_commit": "de12b6ffa5b1f4dde8bcb01eb96a48e0e5094c4c",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-mapped-coverage-gate/source-binding.json"
             }
           ]
         },
@@ -501129,7 +501390,8 @@
           "release-0.5-populated-route-presentation",
           "release-0.5-safari-main-keyboard",
           "release-0.5-workspace-route-census",
-          "release-0.5-ui-coverage-collection"
+          "release-0.5-ui-coverage-collection",
+          "release-0.5-mapped-coverage-gate"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -501193,7 +501455,7 @@
             },
             {
               "path": "apps/web/e2e/fixtures/theme/main.tsx",
-              "sha256": "ac9d76d09b4b425b1827312d6dddc3d9623fd1359ddd4f35036831cdd956640a"
+              "sha256": "557f24995225882b8a99acdae19455c7b96f538dedff33f00ac895133cf8e591"
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
@@ -501205,7 +501467,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "6ee6b4eb8e7724aa1f5f60cb9cd7882dc89c42e93a368b6f5154ec02646dee69"
+              "sha256": "1d471736d14b974e26e43d6dcebdc6b7c825ce70618707e8bc6404195d73c788"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -501785,7 +502047,8 @@
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
-            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed."
+            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
+            "Bindings renewed by release-0.5-mapped-coverage-gate: responsive story fixture and affected theme/notice assertions pass on both engines. No application source changed."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-appearance-motion-journey",
           "limitations": [
@@ -501861,6 +502124,11 @@
               "batch": "release-0.5-ui-coverage-collection",
               "base_commit": "a68236ce5a764e7d1eb686fcfa00e07553df2bc0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ui-coverage-collection/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-mapped-coverage-gate",
+              "base_commit": "de12b6ffa5b1f4dde8bcb01eb96a48e0e5094c4c",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-mapped-coverage-gate/source-binding.json"
             }
           ]
         },
@@ -501907,7 +502175,8 @@
           "release-0.5-populated-route-presentation",
           "release-0.5-safari-main-keyboard",
           "release-0.5-workspace-route-census",
-          "release-0.5-ui-coverage-collection"
+          "release-0.5-ui-coverage-collection",
+          "release-0.5-mapped-coverage-gate"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -501971,7 +502240,7 @@
             },
             {
               "path": "apps/web/e2e/fixtures/theme/main.tsx",
-              "sha256": "ac9d76d09b4b425b1827312d6dddc3d9623fd1359ddd4f35036831cdd956640a"
+              "sha256": "557f24995225882b8a99acdae19455c7b96f538dedff33f00ac895133cf8e591"
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
@@ -501983,7 +502252,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "6ee6b4eb8e7724aa1f5f60cb9cd7882dc89c42e93a368b6f5154ec02646dee69"
+              "sha256": "1d471736d14b974e26e43d6dcebdc6b7c825ce70618707e8bc6404195d73c788"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -502563,7 +502832,8 @@
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
-            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed."
+            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
+            "Bindings renewed by release-0.5-mapped-coverage-gate: responsive story fixture and affected theme/notice assertions pass on both engines. No application source changed."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-appearance-motion-journey",
           "limitations": [
@@ -502639,6 +502909,11 @@
               "batch": "release-0.5-ui-coverage-collection",
               "base_commit": "a68236ce5a764e7d1eb686fcfa00e07553df2bc0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ui-coverage-collection/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-mapped-coverage-gate",
+              "base_commit": "de12b6ffa5b1f4dde8bcb01eb96a48e0e5094c4c",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-mapped-coverage-gate/source-binding.json"
             }
           ]
         },
@@ -502685,7 +502960,8 @@
           "release-0.5-populated-route-presentation",
           "release-0.5-safari-main-keyboard",
           "release-0.5-workspace-route-census",
-          "release-0.5-ui-coverage-collection"
+          "release-0.5-ui-coverage-collection",
+          "release-0.5-mapped-coverage-gate"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -502749,7 +503025,7 @@
             },
             {
               "path": "apps/web/e2e/fixtures/theme/main.tsx",
-              "sha256": "ac9d76d09b4b425b1827312d6dddc3d9623fd1359ddd4f35036831cdd956640a"
+              "sha256": "557f24995225882b8a99acdae19455c7b96f538dedff33f00ac895133cf8e591"
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
@@ -502761,7 +503037,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "6ee6b4eb8e7724aa1f5f60cb9cd7882dc89c42e93a368b6f5154ec02646dee69"
+              "sha256": "1d471736d14b974e26e43d6dcebdc6b7c825ce70618707e8bc6404195d73c788"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -503341,7 +503617,8 @@
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
-            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed."
+            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
+            "Bindings renewed by release-0.5-mapped-coverage-gate: responsive story fixture and affected theme/notice assertions pass on both engines. No application source changed."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-appearance-motion-journey",
           "limitations": [
@@ -503417,6 +503694,11 @@
               "batch": "release-0.5-ui-coverage-collection",
               "base_commit": "a68236ce5a764e7d1eb686fcfa00e07553df2bc0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ui-coverage-collection/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-mapped-coverage-gate",
+              "base_commit": "de12b6ffa5b1f4dde8bcb01eb96a48e0e5094c4c",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-mapped-coverage-gate/source-binding.json"
             }
           ]
         },
@@ -503463,7 +503745,8 @@
           "release-0.5-populated-route-presentation",
           "release-0.5-safari-main-keyboard",
           "release-0.5-workspace-route-census",
-          "release-0.5-ui-coverage-collection"
+          "release-0.5-ui-coverage-collection",
+          "release-0.5-mapped-coverage-gate"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -503527,7 +503810,7 @@
             },
             {
               "path": "apps/web/e2e/fixtures/theme/main.tsx",
-              "sha256": "ac9d76d09b4b425b1827312d6dddc3d9623fd1359ddd4f35036831cdd956640a"
+              "sha256": "557f24995225882b8a99acdae19455c7b96f538dedff33f00ac895133cf8e591"
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
@@ -503539,7 +503822,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "6ee6b4eb8e7724aa1f5f60cb9cd7882dc89c42e93a368b6f5154ec02646dee69"
+              "sha256": "1d471736d14b974e26e43d6dcebdc6b7c825ce70618707e8bc6404195d73c788"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -504119,7 +504402,8 @@
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
-            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed."
+            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
+            "Bindings renewed by release-0.5-mapped-coverage-gate: responsive story fixture and affected theme/notice assertions pass on both engines. No application source changed."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-appearance-motion-journey",
           "limitations": [
@@ -504195,6 +504479,11 @@
               "batch": "release-0.5-ui-coverage-collection",
               "base_commit": "a68236ce5a764e7d1eb686fcfa00e07553df2bc0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ui-coverage-collection/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-mapped-coverage-gate",
+              "base_commit": "de12b6ffa5b1f4dde8bcb01eb96a48e0e5094c4c",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-mapped-coverage-gate/source-binding.json"
             }
           ]
         },
@@ -504241,7 +504530,8 @@
           "release-0.5-populated-route-presentation",
           "release-0.5-safari-main-keyboard",
           "release-0.5-workspace-route-census",
-          "release-0.5-ui-coverage-collection"
+          "release-0.5-ui-coverage-collection",
+          "release-0.5-mapped-coverage-gate"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -504305,7 +504595,7 @@
             },
             {
               "path": "apps/web/e2e/fixtures/theme/main.tsx",
-              "sha256": "ac9d76d09b4b425b1827312d6dddc3d9623fd1359ddd4f35036831cdd956640a"
+              "sha256": "557f24995225882b8a99acdae19455c7b96f538dedff33f00ac895133cf8e591"
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
@@ -504317,7 +504607,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "6ee6b4eb8e7724aa1f5f60cb9cd7882dc89c42e93a368b6f5154ec02646dee69"
+              "sha256": "1d471736d14b974e26e43d6dcebdc6b7c825ce70618707e8bc6404195d73c788"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -504897,7 +505187,8 @@
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
-            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed."
+            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
+            "Bindings renewed by release-0.5-mapped-coverage-gate: responsive story fixture and affected theme/notice assertions pass on both engines. No application source changed."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-appearance-motion-journey",
           "limitations": [
@@ -504973,6 +505264,11 @@
               "batch": "release-0.5-ui-coverage-collection",
               "base_commit": "a68236ce5a764e7d1eb686fcfa00e07553df2bc0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ui-coverage-collection/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-mapped-coverage-gate",
+              "base_commit": "de12b6ffa5b1f4dde8bcb01eb96a48e0e5094c4c",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-mapped-coverage-gate/source-binding.json"
             }
           ]
         },
@@ -505019,7 +505315,8 @@
           "release-0.5-populated-route-presentation",
           "release-0.5-safari-main-keyboard",
           "release-0.5-workspace-route-census",
-          "release-0.5-ui-coverage-collection"
+          "release-0.5-ui-coverage-collection",
+          "release-0.5-mapped-coverage-gate"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -505083,7 +505380,7 @@
             },
             {
               "path": "apps/web/e2e/fixtures/theme/main.tsx",
-              "sha256": "ac9d76d09b4b425b1827312d6dddc3d9623fd1359ddd4f35036831cdd956640a"
+              "sha256": "557f24995225882b8a99acdae19455c7b96f538dedff33f00ac895133cf8e591"
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
@@ -505095,7 +505392,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "6ee6b4eb8e7724aa1f5f60cb9cd7882dc89c42e93a368b6f5154ec02646dee69"
+              "sha256": "1d471736d14b974e26e43d6dcebdc6b7c825ce70618707e8bc6404195d73c788"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -505675,7 +505972,8 @@
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
-            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed."
+            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
+            "Bindings renewed by release-0.5-mapped-coverage-gate: responsive story fixture and affected theme/notice assertions pass on both engines. No application source changed."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-appearance-motion-journey",
           "limitations": [
@@ -505751,6 +506049,11 @@
               "batch": "release-0.5-ui-coverage-collection",
               "base_commit": "a68236ce5a764e7d1eb686fcfa00e07553df2bc0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ui-coverage-collection/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-mapped-coverage-gate",
+              "base_commit": "de12b6ffa5b1f4dde8bcb01eb96a48e0e5094c4c",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-mapped-coverage-gate/source-binding.json"
             }
           ]
         },
@@ -505797,7 +506100,8 @@
           "release-0.5-populated-route-presentation",
           "release-0.5-safari-main-keyboard",
           "release-0.5-workspace-route-census",
-          "release-0.5-ui-coverage-collection"
+          "release-0.5-ui-coverage-collection",
+          "release-0.5-mapped-coverage-gate"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -505861,7 +506165,7 @@
             },
             {
               "path": "apps/web/e2e/fixtures/theme/main.tsx",
-              "sha256": "ac9d76d09b4b425b1827312d6dddc3d9623fd1359ddd4f35036831cdd956640a"
+              "sha256": "557f24995225882b8a99acdae19455c7b96f538dedff33f00ac895133cf8e591"
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
@@ -505873,7 +506177,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "6ee6b4eb8e7724aa1f5f60cb9cd7882dc89c42e93a368b6f5154ec02646dee69"
+              "sha256": "1d471736d14b974e26e43d6dcebdc6b7c825ce70618707e8bc6404195d73c788"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -506453,7 +506757,8 @@
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
-            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed."
+            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
+            "Bindings renewed by release-0.5-mapped-coverage-gate: responsive story fixture and affected theme/notice assertions pass on both engines. No application source changed."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-appearance-motion-journey",
           "limitations": [
@@ -506529,6 +506834,11 @@
               "batch": "release-0.5-ui-coverage-collection",
               "base_commit": "a68236ce5a764e7d1eb686fcfa00e07553df2bc0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ui-coverage-collection/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-mapped-coverage-gate",
+              "base_commit": "de12b6ffa5b1f4dde8bcb01eb96a48e0e5094c4c",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-mapped-coverage-gate/source-binding.json"
             }
           ]
         },
@@ -506575,7 +506885,8 @@
           "release-0.5-populated-route-presentation",
           "release-0.5-safari-main-keyboard",
           "release-0.5-workspace-route-census",
-          "release-0.5-ui-coverage-collection"
+          "release-0.5-ui-coverage-collection",
+          "release-0.5-mapped-coverage-gate"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -506639,7 +506950,7 @@
             },
             {
               "path": "apps/web/e2e/fixtures/theme/main.tsx",
-              "sha256": "ac9d76d09b4b425b1827312d6dddc3d9623fd1359ddd4f35036831cdd956640a"
+              "sha256": "557f24995225882b8a99acdae19455c7b96f538dedff33f00ac895133cf8e591"
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
@@ -506651,7 +506962,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "6ee6b4eb8e7724aa1f5f60cb9cd7882dc89c42e93a368b6f5154ec02646dee69"
+              "sha256": "1d471736d14b974e26e43d6dcebdc6b7c825ce70618707e8bc6404195d73c788"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -507231,7 +507542,8 @@
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
-            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed."
+            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
+            "Bindings renewed by release-0.5-mapped-coverage-gate: responsive story fixture and affected theme/notice assertions pass on both engines. No application source changed."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-appearance-motion-journey",
           "limitations": [
@@ -507307,6 +507619,11 @@
               "batch": "release-0.5-ui-coverage-collection",
               "base_commit": "a68236ce5a764e7d1eb686fcfa00e07553df2bc0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ui-coverage-collection/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-mapped-coverage-gate",
+              "base_commit": "de12b6ffa5b1f4dde8bcb01eb96a48e0e5094c4c",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-mapped-coverage-gate/source-binding.json"
             }
           ]
         },
@@ -507353,7 +507670,8 @@
           "release-0.5-populated-route-presentation",
           "release-0.5-safari-main-keyboard",
           "release-0.5-workspace-route-census",
-          "release-0.5-ui-coverage-collection"
+          "release-0.5-ui-coverage-collection",
+          "release-0.5-mapped-coverage-gate"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -507417,7 +507735,7 @@
             },
             {
               "path": "apps/web/e2e/fixtures/theme/main.tsx",
-              "sha256": "ac9d76d09b4b425b1827312d6dddc3d9623fd1359ddd4f35036831cdd956640a"
+              "sha256": "557f24995225882b8a99acdae19455c7b96f538dedff33f00ac895133cf8e591"
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
@@ -507429,7 +507747,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "6ee6b4eb8e7724aa1f5f60cb9cd7882dc89c42e93a368b6f5154ec02646dee69"
+              "sha256": "1d471736d14b974e26e43d6dcebdc6b7c825ce70618707e8bc6404195d73c788"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -508009,7 +508327,8 @@
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
-            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed."
+            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
+            "Bindings renewed by release-0.5-mapped-coverage-gate: responsive story fixture and affected theme/notice assertions pass on both engines. No application source changed."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-appearance-motion-journey",
           "limitations": [
@@ -508085,6 +508404,11 @@
               "batch": "release-0.5-ui-coverage-collection",
               "base_commit": "a68236ce5a764e7d1eb686fcfa00e07553df2bc0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ui-coverage-collection/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-mapped-coverage-gate",
+              "base_commit": "de12b6ffa5b1f4dde8bcb01eb96a48e0e5094c4c",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-mapped-coverage-gate/source-binding.json"
             }
           ]
         },
@@ -671580,7 +671904,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Bounded native API coverage storage verified on nine HTTP tests. The interrupted large run and its failures are preserved. Restart the full API coverage and collect clean mapped browser evidence with the corrected notice fixture, then enforce the original thresholds and remaining manual checks."
+        "117 current clean browser cases now map UI and app source. The measured web, UI and critical i18n gaps remain below the unchanged thresholds; the full bounded API result and manual checks are still pending. Fill measured deficits and revalidate the final source."
       ],
       "owner": null,
       "depends_on": [],
@@ -671592,7 +671916,8 @@
           "release-0.5-source-coverage-gate",
           "release-0.5-staff-finance-read-recovery",
           "release-0.5-coverage-deficits",
-          "release-0.5-ui-coverage-collection"
+          "release-0.5-ui-coverage-collection",
+          "release-0.5-mapped-coverage-gate"
         ]
       }
     },
@@ -723030,7 +723355,179 @@
         "release-readiness#R-03.02"
       ],
       "failed_attempts_retained": true,
-      "release_disposition": "Verified bounded API process records and corrected semantic notice and OTP fixtures. Coverage gate still open."
+      "release_disposition": "Verified bounded API process records and corrected semantic notice and OTP fixtures. Coverage gate still open.",
+      "push_receipt": {
+        "commit": "de12b6ffa5b1f4dde8bcb01eb96a48e0e5094c4c",
+        "remote_sha": "de12b6ffa5b1f4dde8bcb01eb96a48e0e5094c4c",
+        "ref": "refs/heads/main",
+        "verified_at": "2026-11-07T08:44:00+00:00",
+        "method": "GitHub CLI API read after authenticated HTTPS Git push"
+      }
+    },
+    "release-0.5-mapped-coverage-gate": {
+      "batch": "release-0.5-mapped-coverage-gate",
+      "base_commit": "de12b6ffa5b1f4dde8bcb01eb96a48e0e5094c4c",
+      "task_keys": [
+        "release-readiness#R-04.02",
+        "07-ui-ux-design.md#T-07.05.01.08",
+        "07-ui-ux-design.md#T-07.04.02.04"
+      ],
+      "accepted_task_keys": [],
+      "partial_task_keys": [
+        "release-readiness#R-04.02",
+        "07-ui-ux-design.md#T-07.05.01.08",
+        "07-ui-ux-design.md#T-07.04.02.04"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/build.mjs",
+          "sha256": "20432f55d9d3090f592a28e79064d99f0066108a3cda87aeebf023583d55c35f"
+        },
+        {
+          "path": "apps/web/e2e/contract-quantity-increase.spec.ts",
+          "sha256": "e426afca86cd4123d0e4a9ee77ad67f6496ecc60ba1e4df8e96c0c70bb2b6d15"
+        },
+        {
+          "path": "apps/web/e2e/coverage-fixture.ts",
+          "sha256": "d2728c203779bb170516ad5cedd445aa4c61d4590fb6ce44bc48cde125281ef2"
+        },
+        {
+          "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
+          "sha256": "0ca66b1b7b5230d4daf81d62a637e6895c674cb35c65e3038941a148d2d0d74c"
+        },
+        {
+          "path": "apps/web/e2e/fixtures/theme/main.tsx",
+          "sha256": "557f24995225882b8a99acdae19455c7b96f538dedff33f00ac895133cf8e591"
+        },
+        {
+          "path": "apps/web/e2e/fixtures/theme/styles.css",
+          "sha256": "172687e91bb8735af153d9e504f0d9e3da6c7f02743e4134ea56439b8fde1a4a"
+        },
+        {
+          "path": "apps/web/e2e/maintenance-forms.spec.ts",
+          "sha256": "459394aeb35b948e9bc2dc756febef4242b9eb670868596f8f849039e623ce7f"
+        },
+        {
+          "path": "apps/web/e2e/saving-journey.spec.ts",
+          "sha256": "c046f323fef15f2a2312da59307501ea4e31f1f0221185d7513add6a530c506f"
+        },
+        {
+          "path": "apps/web/e2e/solar-journey.spec.ts",
+          "sha256": "69da1f59742e9b91e000e79e6be515a6a0419687370a61a350e4e5826cdb74d3"
+        },
+        {
+          "path": "apps/web/e2e/theme-components.spec.ts",
+          "sha256": "1d471736d14b974e26e43d6dcebdc6b7c825ce70618707e8bc6404195d73c788"
+        },
+        {
+          "path": "apps/web/e2e/wallet-confirmation-forms.spec.ts",
+          "sha256": "c8426ccd6801e35c725485da6e82379dc5ece632017be9cd44fb4cff103a2e4d"
+        },
+        {
+          "path": "apps/web/playwright.config.ts",
+          "sha256": "ad9a9e23b46599266a7fe0dcfd7185e12e612cdc50c040453533d1fccbea85cf"
+        },
+        {
+          "path": "packages/ui/src/components/ui/button.tsx",
+          "sha256": "29ef0f6518707f51356d50dfea3b67edb724f4491c0e2272411b0c3639499eab"
+        },
+        {
+          "path": "packages/ui/src/components/ui/responsive-layout.tsx",
+          "sha256": "598555556f63803afc4c6f8dc944dc48d87bbedee451ab78939c17befaae5b4f"
+        },
+        {
+          "path": "packages/ui/src/components/ui/sonner.tsx",
+          "sha256": "35d2e8cc7030bd0c50842a9df59ae5aeab48d32d854267588e65788ec4573588"
+        },
+        {
+          "path": "packages/ui/src/styles.css",
+          "sha256": "29ef75f0da3aa9b32c27d301c9c539c0bea933854365f019c13ef3ba9d657e2b"
+        },
+        {
+          "path": "packages/ui/stories/primitives.stories.tsx",
+          "sha256": "07a780d215d8c3e67568e8fe9a57bf406cb65b853dff6ea2d6cb6ed0a43965c8"
+        },
+        {
+          "path": "packages/ui/stories/story-context.tsx",
+          "sha256": "02dd2796863f5b0a14d1046595d533e350709d78d713aa4a04af83e28050aaf3"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "0b875687ee1d2f32ea8819c9eb58af72f0c0db3796f5e74f82317d4b7ce46251"
+        },
+        {
+          "path": "scripts/check-changed-coverage.py",
+          "sha256": "721aa5763bb62336c0e4c454b8e36e2f15ff1e14bf4b0136c7c7946424bbd736"
+        },
+        {
+          "path": "scripts/collect-browser-coverage.mjs",
+          "sha256": "f3446ae4ad567716f8b618a4a3c93f9a62cb148bc6dd7405be955f80d8f5bfaa"
+        },
+        {
+          "path": "scripts/merge-browser-coverage.mjs",
+          "sha256": "19fcc8cef996c4e0ddedb872cfe643c2cb755e5a23df3086ddc01d72c87caa75"
+        }
+      ],
+      "checks": [
+        "50 component and 67 launch-route browser cases passed in separate clean Chromium runs at the exact preceding source. Both reports map real shared UI sources (42 and 53 respectively) and preserve unmeasured branch treatment. Neither report alone certifies the final release.",
+        "The canonical responsive story now has exact native evidence at all eight original widths, both languages and both Chromium and Mobile Safari. Controls wrap at 320px with their actual story classes, wider controls follow direction, the nested grid retains separate spacing, long records fit, and both touch targets and Tab focus pass.",
+        "Twelve focused browser cases pass after the fixture source change, including the existing live theme, reduced motion and semantic notice journeys. Initial layout fixture lacked its story Tailwind source and all four failing attempts remain recorded. Lint, formatting and web typecheck pass.",
+        "Current combined diagnostic remains below original web/UI branch floors: web ordinary 79.03% lines/71.25% branches; web critical 88.75%/79.97%; UI 84.82%/65.60%; critical i18n branches 83.33%. The independent bounded API run was still pending. No incomplete or stale report is credited as release acceptance."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-mapped-coverage-gate",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-mapped-coverage-gate/reviewed-source.diff",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-mapped-coverage-gate/source-binding.json",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-mapped-coverage-gate/renewed-bindings.json",
+      "renewed_task_keys": [
+        "02-auth-users-admin.md#T-03.03.06",
+        "02-auth-users-admin.md#T-09.01.02",
+        "07-ui-ux-design.md#T-07.01.01.02",
+        "07-ui-ux-design.md#T-07.01.01.03",
+        "07-ui-ux-design.md#T-07.01.01.05",
+        "07-ui-ux-design.md#T-07.01.01.07",
+        "07-ui-ux-design.md#T-07.01.01.08",
+        "07-ui-ux-design.md#T-07.01.02.01",
+        "07-ui-ux-design.md#T-07.01.03.05",
+        "07-ui-ux-design.md#T-07.01.03.18",
+        "07-ui-ux-design.md#T-07.01.03.19",
+        "07-ui-ux-design.md#T-07.01.03.20",
+        "07-ui-ux-design.md#T-07.02.01.01",
+        "07-ui-ux-design.md#T-07.02.01.02",
+        "07-ui-ux-design.md#T-07.02.01.03",
+        "07-ui-ux-design.md#T-07.02.01.04",
+        "07-ui-ux-design.md#T-07.02.01.05",
+        "07-ui-ux-design.md#T-07.02.01.06",
+        "07-ui-ux-design.md#T-07.02.01.07",
+        "07-ui-ux-design.md#T-07.02.02.01",
+        "07-ui-ux-design.md#T-07.02.02.02",
+        "07-ui-ux-design.md#T-07.02.02.03",
+        "07-ui-ux-design.md#T-07.02.02.04",
+        "07-ui-ux-design.md#T-07.03.01.01",
+        "07-ui-ux-design.md#T-07.03.01.02",
+        "07-ui-ux-design.md#T-07.03.01.03",
+        "07-ui-ux-design.md#T-07.06.01.01",
+        "07-ui-ux-design.md#T-07.06.01.02",
+        "07-ui-ux-design.md#T-07.06.01.03",
+        "07-ui-ux-design.md#T-07.06.01.04",
+        "07-ui-ux-design.md#T-07.06.01.05",
+        "07-ui-ux-design.md#T-07.07.01.01",
+        "07-ui-ux-design.md#T-07.07.01.02",
+        "07-ui-ux-design.md#T-07.07.01.03",
+        "07-ui-ux-design.md#T-07.07.01.04",
+        "07-ui-ux-design.md#T-07.07.01.05",
+        "07-ui-ux-design.md#T-07.07.01.06",
+        "07-ui-ux-design.md#T-07.08.01.01",
+        "07-ui-ux-design.md#T-07.08.01.02",
+        "07-ui-ux-design.md#T-07.08.01.03",
+        "07-ui-ux-design.md#T-07.08.01.04",
+        "07-ui-ux-design.md#T-07.08.01.05",
+        "07-ui-ux-design.md#T-07.08.01.06",
+        "07-ui-ux-design.md#T-07.08.02.01",
+        "07-ui-ux-design.md#T-07.08.02.02",
+        "07-ui-ux-design.md#T-07.08.02.03"
+      ],
+      "failed_attempts_retained": true,
+      "release_disposition": "Measured current browser coverage and verified the shared responsive story. Release gate remains open."
     }
   },
   "historical_improvements": [
@@ -723070,17 +723567,17 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.5-mapped-coverage-gate",
+    "id": "release-0.5-coverage-remaining-branches",
     "release": "0.5.0",
     "task_keys": [
       "release-readiness#R-04.02",
       "07-ui-ux-design.md#T-07.05.01.08"
     ],
-    "goal": "Run bounded API process coverage and collect clean mapped browser reports, starting with the corrected shared component set. Measure exact remaining source floor and accessibility gaps without credit for interrupted or failed runs."
+    "goal": "Fill the largest remaining changed-source branch gaps with current launch workflow and shared component tests, starting with admin notifications, email/catalogue, and source-bound responsive coverage. Finish the independent API report without rerunning valid unrelated checks."
   },
   "launch_forecast": {
     "status": "deadline_at_risk_until_v0_5_and_operational_gates_close",
-    "next_update_after": "v0.5.0 bounded API and real mapped UI coverage",
+    "next_update_after": "v0.5.0 remaining changed-source branch gates",
     "method": "v0.4.0 staging and Telegram receipts verified. v0.5.0 remains unaccepted: coverage diagnostics are below unchanged web/UI/i18n floors, required route/manual states and two owner decisions remain. v0.6.0 operations and v0.9.0 four-service rehearsal keep November 9 at risk. Production is not authorized."
   },
   "capabilities": [

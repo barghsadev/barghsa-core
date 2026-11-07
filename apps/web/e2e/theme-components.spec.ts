@@ -47,6 +47,73 @@ test.afterAll(async () => {
     await rm(outDir, { recursive: true, force: true });
 });
 
+for (const locale of ['en', 'fa'] as const) {
+  test(`responsive layout wraps long records and retains independent spacing (${locale})`, async ({
+    page,
+  }, info) => {
+    await page.emulateMedia({ colorScheme: locale === 'fa' ? 'dark' : 'light' });
+    await page.goto(`${url}?${locale}&layout`);
+    const main = page.getByRole('main');
+    const controls = main.getByRole('button');
+    await expect(controls).toHaveCount(2);
+    await expect(main.getByRole('heading', { level: 1 })).toHaveText(
+      locale === 'fa' ? 'چیدمان واکنش‌گرا' : 'Responsive layout'
+    );
+    await expect(page.locator('html')).toHaveAttribute('dir', locale === 'fa' ? 'rtl' : 'ltr');
+    const rows = [];
+    for (const [width, columns, inlineGap, stackGap] of [
+      [320, 1, 8, 12],
+      [375, 1, 12, 12],
+      [390, 1, 12, 12],
+      [414, 1, 12, 12],
+      [768, 2, 16, 20],
+      [1024, 3, 16, 20],
+      [1280, 3, 20, 20],
+      [1920, 3, 24, 20],
+    ] as const) {
+      await page.setViewportSize({ width, height: 900 });
+      const row = await main.evaluate((node) => {
+        const grid = node.querySelector('[data-slot=grid]')!;
+        const stack = node.querySelector('[data-slot=stack]')!;
+        const inline = node.querySelector('[data-slot=inline]')!;
+        const style = getComputedStyle(grid);
+        const first = inline.children[0]!.getBoundingClientRect();
+        const second = inline.children[1]!.getBoundingClientRect();
+        return {
+          columns: style.gridTemplateColumns.split(' ').length,
+          gap: parseFloat(style.gap),
+          stackGap: parseFloat(getComputedStyle(stack).gap),
+          inlineGap: parseFloat(getComputedStyle(inline).gap),
+          overflow: Math.max(
+            node.scrollWidth - node.clientWidth,
+            ...[...grid.children].map((card) => card.scrollWidth - card.clientWidth)
+          ),
+          wraps: second.top > first.top,
+          leftToRight: first.left < second.left,
+          target: Math.min(first.width, first.height, second.width, second.height),
+          coarse: matchMedia('(pointer: coarse)').matches,
+        };
+      });
+      rows.push({ width, ...row });
+      expect(row).toMatchObject({ columns, gap: 16, inlineGap, stackGap });
+      expect(row.overflow).toBeLessThanOrEqual(1);
+      if (width === 320) expect(row.wraps).toBe(true);
+      if (width >= 768) {
+        expect(row.wraps).toBe(false);
+        expect(row.leftToRight).toBe(locale === 'en');
+      }
+      if (row.coarse) expect(row.target).toBeGreaterThanOrEqual(44);
+    }
+    await controls.first().focus();
+    await page.keyboard.press('Tab');
+    await expect(controls.last()).toBeFocused();
+    await info.attach('responsive-layout', {
+      body: JSON.stringify({ locale, rows }),
+      contentType: 'application/json',
+    });
+  });
+}
+
 for (const locale of ['en', 'fa'])
   for (const darkMode of [false, true]) {
     test(`form controls preserve focus and direction (${locale}, dark=${darkMode})`, async ({

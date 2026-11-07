@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-07T08:43:25+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-07T08:51:41+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.4.0**. Next milestone: **v0.5.0**.
 
@@ -39,7 +39,7 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Run bounded API process coverage and collect clean mapped browser reports, starting with the corrected shared component set. Measure exact remaining source floor and accessibility gaps without credit for interrupted or failed runs.
+Fill the largest remaining changed-source branch gaps with current launch workflow and shared component tests, starting with admin notifications, email/catalogue, and source-bound responsive coverage. Finish the independent API report without rerunning valid unrelated checks.
 
 - `release-readiness#R-04.02`: Renew accessibility and performance evidence
 - `07-ui-ux-design.md#T-07.05.01.08`: Ensure all color combinations pass WCAG AA contrast ratios: normal text ≥ 4.5:1, large text ≥ 3:1, UI components ≥ 3:1. Verify with automated tools. Provide a "high contrast" mode toggle that strengthens all contrast ratios.

@@ -3,7 +3,7 @@ import { BrandMark } from '../../../src/components/BrandMark';
 import SonnerToaster from '../../../src/components/SonnerToaster';
 import { useTheme } from '../../../src/hooks/useTheme';
 import { toast as appToast } from '../../../src/lib/toast-api';
-import '@barghsa/ui/styles.css';
+import './styles.css';
 import * as React from 'react';
 import { createRoot } from 'react-dom/client';
 import { Button } from '../../../../../packages/ui/src/components/ui/button';
@@ -75,6 +75,8 @@ import {
 import { Toaster, toast } from '../../../../../packages/ui/src/components/ui/toast';
 import { Skeleton } from '../../../../../packages/ui/src/components/ui/skeleton';
 import { PageLoading } from '../../../../../packages/ui/src/components/ui/page-states';
+import { ResponsiveLayout } from '../../../../../packages/ui/stories/primitives.stories';
+import { StoryLocale } from '../../../../../packages/ui/stories/story-context';
 function MotionControls() {
   const [revision, setRevision] = React.useState(0);
   const reduced = useReducedMotion();
@@ -315,32 +317,42 @@ function Controls() {
     </section>
   );
 }
-const locale = new URLSearchParams(location.search).has('fa') ? 'fa' : 'en';
+const query = new URLSearchParams(location.search);
+const locale = query.has('fa') ? 'fa' : 'en';
 document.documentElement.lang = locale;
 document.documentElement.dir = locale === 'fa' ? 'rtl' : 'ltr';
 createRoot(document.getElementById('root')!).render(
   <UiDirectionProvider>
     <BrandThemeProvider>
-      <main className="flex flex-col gap-4 p-6">
-        <h1>Theme checks</h1>
-        {(['default', 'outline', 'secondary', 'ghost', 'destructive', 'link'] as const).map(
-          (variant) => (
-            <Button key={variant} variant={variant}>
-              {variant}
-            </Button>
-          )
-        )}
-        <Alert variant="destructive">
-          <AlertTitle>{locale === 'fa' ? 'ذخیره انجام نشد' : 'Could not save'}</AlertTitle>
-          <AlertDescription>
-            {locale === 'fa' ? 'دوباره تلاش کنید.' : 'Try again.'}
-          </AlertDescription>
-        </Alert>
-        <Controls />
-        <Auxiliary />
-        <NoticeControls />
-        <MotionControls />
-      </main>
+      {query.has('layout') ? (
+        <main>
+          <h1>{locale === 'fa' ? 'چیدمان واکنش‌گرا' : 'Responsive layout'}</h1>
+          <StoryLocale.Provider value={locale}>
+            <ResponsiveLayout />
+          </StoryLocale.Provider>
+        </main>
+      ) : (
+        <main className="flex flex-col gap-4 p-6">
+          <h1>Theme checks</h1>
+          {(['default', 'outline', 'secondary', 'ghost', 'destructive', 'link'] as const).map(
+            (variant) => (
+              <Button key={variant} variant={variant}>
+                {variant}
+              </Button>
+            )
+          )}
+          <Alert variant="destructive">
+            <AlertTitle>{locale === 'fa' ? 'ذخیره انجام نشد' : 'Could not save'}</AlertTitle>
+            <AlertDescription>
+              {locale === 'fa' ? 'دوباره تلاش کنید.' : 'Try again.'}
+            </AlertDescription>
+          </Alert>
+          <Controls />
+          <Auxiliary />
+          <NoticeControls />
+          <MotionControls />
+        </main>
+      )}
     </BrandThemeProvider>
   </UiDirectionProvider>
 );
