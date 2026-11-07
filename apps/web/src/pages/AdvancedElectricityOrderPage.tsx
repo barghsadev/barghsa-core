@@ -602,9 +602,11 @@ export function AdvancedElectricityOrderPage() {
       const result = electricityOrderReceipt(await response.json());
       if (epoch !== generation.current) return;
       completed.current = true;
+      toast.success(t('electricity.order.success.create', locale));
       await navigate({ to: '/electricity/orders/$orderId', params: { orderId: result.orderId } });
     } catch {
-      if (epoch === generation.current) toast.error(t('electricity.order.submitFailed', locale));
+      if (epoch === generation.current && !completed.current)
+        toast.error(t('electricity.order.error.create', locale));
     } finally {
       if (command.current === token) {
         command.current = null;

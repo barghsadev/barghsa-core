@@ -4,6 +4,7 @@ import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { t } from '@barghsa/i18n/app';
 import { AdvancedElectricityOrderPage } from './AdvancedElectricityOrderPage.js';
+import { toast } from '../lib/toast-api.js';
 
 const blockerConfig = vi.hoisted(() => ({
   current: null as null | {
@@ -204,6 +205,7 @@ afterEach(async () => {
   await act(async () => root.unmount());
   container.remove();
   vi.unstubAllGlobals();
+  vi.restoreAllMocks();
 });
 
 const mount = () => act(async () => root.render(<AdvancedElectricityOrderPage />));
@@ -460,6 +462,8 @@ it('does not advance when the saved bundle differs from the reviewed quantities'
 });
 
 it('sends one submission and retains its key until all order references are confirmed', async () => {
+  const success = vi.spyOn(toast, 'success').mockImplementation(() => {});
+  const error = vi.spyOn(toast, 'error').mockImplementation(() => {});
   step = 5;
   quantities = { thermal: '100', green: '0', free_market: '0', energy_saving: '0' };
   quoteSuccess = true;
@@ -496,12 +500,25 @@ it('sends one submission and retains its key until all order references are conf
   await act(async () => finish(reply({ orderId: '11111111-1111-4111-8111-111111111111' }, 201)));
   expect(navigateMock).not.toHaveBeenCalled();
   expect(submit().disabled).toBe(false);
-  orderReply = null;
+  expect(success).not.toHaveBeenCalled();
+  expect(error).toHaveBeenCalledExactlyOnceWith('Failed to create order');
+  orderReply = () => Promise.reject(new TypeError('Internal transport detail'));
   await approveVisibleConfirmation();
   await act(async () => submit().click());
-  expect(JSON.parse(orderCalls()[1]![1]!.body as string).idempotencyKey).toBe(
-    JSON.parse(orderCalls()[0]![1]!.body as string).idempotencyKey
+  expect(navigateMock).not.toHaveBeenCalled();
+  expect(success).not.toHaveBeenCalled();
+  expect(error.mock.calls).toEqual([['Failed to create order'], ['Failed to create order']]);
+  orderReply = null;
+  navigateMock.mockRejectedValueOnce(new Error('Navigation failed after the receipt'));
+  await approveVisibleConfirmation();
+  await act(async () => submit().click());
+  expect(orderCalls()).toHaveLength(3);
+  expect(orderCalls().map(([, options]) => options!.body)).toEqual(
+    Array(3).fill(orderCalls()[0]![1]!.body)
   );
+  expect(JSON.parse(orderCalls()[0]![1]!.body as string).idempotencyKey).toMatch(/^[0-9a-f-]{36}$/);
+  expect(success).toHaveBeenCalledExactlyOnceWith('Electricity order submitted.');
+  expect(error).toHaveBeenCalledTimes(2);
   expect(navigateMock).toHaveBeenCalledWith({
     to: '/electricity/orders/$orderId',
     params: { orderId: '11111111-1111-4111-8111-111111111111' },
@@ -509,6 +526,7 @@ it('sends one submission and retains its key until all order references are conf
 });
 
 it('ignores an order receipt after the advanced form has unmounted', async () => {
+  const success = vi.spyOn(toast, 'success').mockImplementation(() => {});
   step = 5;
   quantities = { thermal: '100', green: '0', free_market: '0', energy_saving: '0' };
   quoteSuccess = true;
@@ -548,4 +566,5 @@ it('ignores an order receipt after the advanced form has unmounted', async () =>
     )
   );
   expect(navigateMock).not.toHaveBeenCalled();
+  expect(success).not.toHaveBeenCalled();
 });

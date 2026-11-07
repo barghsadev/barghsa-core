@@ -479,6 +479,11 @@ for (const locale of ['en', 'fa'] as const) {
     await approveRiskConfirmation(page, locale, 'financial');
     await submit.click();
     await expect(page).toHaveURL(/\/electricity\/orders\/66666666-/);
+    await expect(
+      page.locator('[data-sonner-toast][data-type=success]').filter({
+        hasText: t('electricity.order.success.create', locale),
+      })
+    ).toBeVisible();
     await expect(page.locator(`a[href="/invoices/${invoiceId}"]`)).toBeVisible();
     expect(drafts).toHaveLength(5);
     expect(drafts.at(-1)?.currentStep).toBe(5);

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-07T16:13:35+00:00",
-  "source_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
+  "updated": "2026-11-07T16:36:59+00:00",
+  "source_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -24035,7 +24035,8 @@
           "release-0.5-final-acceptance",
           "release-0.5-final-rehearsal",
           "release-0.5-verified-command-rejection",
-          "release-0.5-native-staff-touch-and-electricity-recovery"
+          "release-0.5-native-staff-touch-and-electricity-recovery",
+          "release-0.5-confirmed-electricity-feedback"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.2.0-closure",
@@ -24103,7 +24104,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-journey.spec.ts",
-              "sha256": "e13027e4811239815ecf1b0defe5e09a4d79b0d3b374b6318949a2fd876fe97d"
+              "sha256": "aa0f356f4a5bd5ef322aa613d86dbb0a06b5e2b79c01ec5d897319781813c488"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -24131,7 +24132,7 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "61ea8243ad2767c9726361e7e974e73420e0b6d823f8d0f5f96dd538add32a87"
+              "sha256": "1cbdcfcfd7ec6a29e8a571466bad542a79b4d2f22c0a2c21dd2ae2356e578db1"
             },
             {
               "path": "apps/web/src/pages/CrmCorrectionsPage.tsx",
@@ -24446,6 +24447,11 @@
               "batch": "release-0.5-native-staff-touch-and-electricity-recovery",
               "base_commit": "e28bf7ac30a3a6b2605edd7b9b98afaa34a47119",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-exact-confirmation-gate/native-ui-batch-receipt.json"
+            },
+            {
+              "batch": "release-0.5-confirmed-electricity-feedback",
+              "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
             }
           ]
         },
@@ -28301,7 +28307,8 @@
           "release-0.5-final-acceptance",
           "release-0.5-final-rehearsal",
           "release-0.5-verified-command-rejection",
-          "release-0.5-native-staff-touch-and-electricity-recovery"
+          "release-0.5-native-staff-touch-and-electricity-recovery",
+          "release-0.5-confirmed-electricity-feedback"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.2.0-closure",
@@ -28369,7 +28376,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-journey.spec.ts",
-              "sha256": "e13027e4811239815ecf1b0defe5e09a4d79b0d3b374b6318949a2fd876fe97d"
+              "sha256": "aa0f356f4a5bd5ef322aa613d86dbb0a06b5e2b79c01ec5d897319781813c488"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -28397,7 +28404,7 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "61ea8243ad2767c9726361e7e974e73420e0b6d823f8d0f5f96dd538add32a87"
+              "sha256": "1cbdcfcfd7ec6a29e8a571466bad542a79b4d2f22c0a2c21dd2ae2356e578db1"
             },
             {
               "path": "apps/web/src/pages/CrmCorrectionsPage.tsx",
@@ -28712,6 +28719,11 @@
               "batch": "release-0.5-native-staff-touch-and-electricity-recovery",
               "base_commit": "e28bf7ac30a3a6b2605edd7b9b98afaa34a47119",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-exact-confirmation-gate/native-ui-batch-receipt.json"
+            },
+            {
+              "batch": "release-0.5-confirmed-electricity-feedback",
+              "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
             }
           ]
         },
@@ -36036,7 +36048,8 @@
           "release-0.5-protected-journey-proof",
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
-          "release-0.5-native-staff-touch-and-electricity-recovery"
+          "release-0.5-native-staff-touch-and-electricity-recovery",
+          "release-0.5-confirmed-electricity-feedback"
         ],
         "current_acceptance": {
           "kind": "verified-active-profile-address-crud",
@@ -36048,15 +36061,15 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "61ea8243ad2767c9726361e7e974e73420e0b6d823f8d0f5f96dd538add32a87"
+              "sha256": "1cbdcfcfd7ec6a29e8a571466bad542a79b4d2f22c0a2c21dd2ae2356e578db1"
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "36c0dbfd2493822946019d086a52d02c1ae79a53e1b4de852124467995df06b7"
+              "sha256": "5becc851da07813acfdff5380658a47c01b9e3930708d08e93ff5f0cbefe699b"
             },
             {
               "path": "apps/web/e2e/electricity-journey.spec.ts",
-              "sha256": "e13027e4811239815ecf1b0defe5e09a4d79b0d3b374b6318949a2fd876fe97d"
+              "sha256": "aa0f356f4a5bd5ef322aa613d86dbb0a06b5e2b79c01ec5d897319781813c488"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -36620,6 +36633,11 @@
               "batch": "release-0.5-native-staff-touch-and-electricity-recovery",
               "base_commit": "e28bf7ac30a3a6b2605edd7b9b98afaa34a47119",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-exact-confirmation-gate/native-ui-batch-receipt.json"
+            },
+            {
+              "batch": "release-0.5-confirmed-electricity-feedback",
+              "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
             }
           ]
         },
@@ -36843,7 +36861,8 @@
           "release-0.5-final-acceptance",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-confirmed-electricity-feedback"
         ],
         "current_acceptance": {
           "kind": "verified-electricity-saving-solar-address-flow",
@@ -36891,7 +36910,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-journey.spec.ts",
-              "sha256": "e13027e4811239815ecf1b0defe5e09a4d79b0d3b374b6318949a2fd876fe97d"
+              "sha256": "aa0f356f4a5bd5ef322aa613d86dbb0a06b5e2b79c01ec5d897319781813c488"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -36939,7 +36958,7 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "61ea8243ad2767c9726361e7e974e73420e0b6d823f8d0f5f96dd538add32a87"
+              "sha256": "1cbdcfcfd7ec6a29e8a571466bad542a79b4d2f22c0a2c21dd2ae2356e578db1"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -36955,7 +36974,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "36c0dbfd2493822946019d086a52d02c1ae79a53e1b4de852124467995df06b7"
+              "sha256": "5becc851da07813acfdff5380658a47c01b9e3930708d08e93ff5f0cbefe699b"
             },
             {
               "path": "apps/web/src/pages/saving-order.test.tsx",
@@ -37687,6 +37706,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-confirmed-electricity-feedback",
+              "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
             }
           ]
         },
@@ -38127,7 +38151,8 @@
           "release-0.5-final-rehearsal",
           "release-0.5-verified-command-rejection",
           "release-0.5-native-staff-touch-and-electricity-recovery",
-          "release-0.5-compact-touch-and-saving-feedback"
+          "release-0.5-compact-touch-and-saving-feedback",
+          "release-0.5-confirmed-electricity-feedback"
         ],
         "current_acceptance": {
           "kind": "verified-versioned-terms-commercial-admission-and-receipts",
@@ -38231,7 +38256,7 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "61ea8243ad2767c9726361e7e974e73420e0b6d823f8d0f5f96dd538add32a87"
+              "sha256": "1cbdcfcfd7ec6a29e8a571466bad542a79b4d2f22c0a2c21dd2ae2356e578db1"
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
@@ -39324,6 +39349,11 @@
               "batch": "release-0.5-compact-touch-and-saving-feedback",
               "base_commit": "cd60ed9886cd2971ecebdded76e3dca24a7a203e",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-native-candidate-gate/touch-and-saving-candidate-receipt.json"
+            },
+            {
+              "batch": "release-0.5-confirmed-electricity-feedback",
+              "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
             }
           ]
         }
@@ -39441,7 +39471,8 @@
           "release-0.5-final-rehearsal",
           "release-0.5-verified-command-rejection",
           "release-0.5-native-staff-touch-and-electricity-recovery",
-          "release-0.5-compact-touch-and-saving-feedback"
+          "release-0.5-compact-touch-and-saving-feedback",
+          "release-0.5-confirmed-electricity-feedback"
         ],
         "current_acceptance": {
           "kind": "verified-versioned-terms-commercial-admission-and-receipts",
@@ -39545,7 +39576,7 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "61ea8243ad2767c9726361e7e974e73420e0b6d823f8d0f5f96dd538add32a87"
+              "sha256": "1cbdcfcfd7ec6a29e8a571466bad542a79b4d2f22c0a2c21dd2ae2356e578db1"
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
@@ -40638,6 +40669,11 @@
               "batch": "release-0.5-compact-touch-and-saving-feedback",
               "base_commit": "cd60ed9886cd2971ecebdded76e3dca24a7a203e",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-native-candidate-gate/touch-and-saving-candidate-receipt.json"
+            },
+            {
+              "batch": "release-0.5-confirmed-electricity-feedback",
+              "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
             }
           ]
         }
@@ -40763,7 +40799,8 @@
           "release-0.5-final-rehearsal",
           "release-0.5-verified-command-rejection",
           "release-0.5-native-staff-touch-and-electricity-recovery",
-          "release-0.5-compact-touch-and-saving-feedback"
+          "release-0.5-compact-touch-and-saving-feedback",
+          "release-0.5-confirmed-electricity-feedback"
         ],
         "current_acceptance": {
           "kind": "verified-versioned-terms-commercial-admission-and-receipts",
@@ -40867,7 +40904,7 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "61ea8243ad2767c9726361e7e974e73420e0b6d823f8d0f5f96dd538add32a87"
+              "sha256": "1cbdcfcfd7ec6a29e8a571466bad542a79b4d2f22c0a2c21dd2ae2356e578db1"
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
@@ -41960,6 +41997,11 @@
               "batch": "release-0.5-compact-touch-and-saving-feedback",
               "base_commit": "cd60ed9886cd2971ecebdded76e3dca24a7a203e",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-native-candidate-gate/touch-and-saving-candidate-receipt.json"
+            },
+            {
+              "batch": "release-0.5-confirmed-electricity-feedback",
+              "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
             }
           ]
         }
@@ -268007,7 +268049,8 @@
           "release-0.5-ui-coverage-collection",
           "release-0.5-coverage-remaining-branches",
           "release-0.5-dependency-gate-closure",
-          "release-0.5-final-acceptance"
+          "release-0.5-final-acceptance",
+          "release-0.5-confirmed-electricity-feedback"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -268151,7 +268194,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "36c0dbfd2493822946019d086a52d02c1ae79a53e1b4de852124467995df06b7"
+              "sha256": "5becc851da07813acfdff5380658a47c01b9e3930708d08e93ff5f0cbefe699b"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -268909,6 +268952,11 @@
               "batch": "release-0.5-final-acceptance",
               "base_commit": "460fdb3e46b92b3086c95b925a6f4735a21fc2ff",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-final-acceptance/customer-interaction-proof.json"
+            },
+            {
+              "batch": "release-0.5-confirmed-electricity-feedback",
+              "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
             }
           ]
         }
@@ -268956,7 +269004,8 @@
           "release-0.5-ui-coverage-collection",
           "release-0.5-coverage-remaining-branches",
           "release-0.5-dependency-gate-closure",
-          "release-0.5-final-acceptance"
+          "release-0.5-final-acceptance",
+          "release-0.5-confirmed-electricity-feedback"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -269100,7 +269149,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "36c0dbfd2493822946019d086a52d02c1ae79a53e1b4de852124467995df06b7"
+              "sha256": "5becc851da07813acfdff5380658a47c01b9e3930708d08e93ff5f0cbefe699b"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -269858,6 +269907,11 @@
               "batch": "release-0.5-final-acceptance",
               "base_commit": "460fdb3e46b92b3086c95b925a6f4735a21fc2ff",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-final-acceptance/customer-interaction-proof.json"
+            },
+            {
+              "batch": "release-0.5-confirmed-electricity-feedback",
+              "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
             }
           ]
         }
@@ -269905,7 +269959,8 @@
           "release-0.5-ui-coverage-collection",
           "release-0.5-coverage-remaining-branches",
           "release-0.5-dependency-gate-closure",
-          "release-0.5-final-acceptance"
+          "release-0.5-final-acceptance",
+          "release-0.5-confirmed-electricity-feedback"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -270049,7 +270104,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "36c0dbfd2493822946019d086a52d02c1ae79a53e1b4de852124467995df06b7"
+              "sha256": "5becc851da07813acfdff5380658a47c01b9e3930708d08e93ff5f0cbefe699b"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -270807,6 +270862,11 @@
               "batch": "release-0.5-final-acceptance",
               "base_commit": "460fdb3e46b92b3086c95b925a6f4735a21fc2ff",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-final-acceptance/customer-interaction-proof.json"
+            },
+            {
+              "batch": "release-0.5-confirmed-electricity-feedback",
+              "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
             }
           ]
         }
@@ -270854,7 +270914,8 @@
           "release-0.5-ui-coverage-collection",
           "release-0.5-coverage-remaining-branches",
           "release-0.5-dependency-gate-closure",
-          "release-0.5-final-acceptance"
+          "release-0.5-final-acceptance",
+          "release-0.5-confirmed-electricity-feedback"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -270998,7 +271059,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "36c0dbfd2493822946019d086a52d02c1ae79a53e1b4de852124467995df06b7"
+              "sha256": "5becc851da07813acfdff5380658a47c01b9e3930708d08e93ff5f0cbefe699b"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -271756,6 +271817,11 @@
               "batch": "release-0.5-final-acceptance",
               "base_commit": "460fdb3e46b92b3086c95b925a6f4735a21fc2ff",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-final-acceptance/customer-interaction-proof.json"
+            },
+            {
+              "batch": "release-0.5-confirmed-electricity-feedback",
+              "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
             }
           ]
         }
@@ -271803,7 +271869,8 @@
           "release-0.5-ui-coverage-collection",
           "release-0.5-coverage-remaining-branches",
           "release-0.5-dependency-gate-closure",
-          "release-0.5-final-acceptance"
+          "release-0.5-final-acceptance",
+          "release-0.5-confirmed-electricity-feedback"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -271947,7 +272014,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "36c0dbfd2493822946019d086a52d02c1ae79a53e1b4de852124467995df06b7"
+              "sha256": "5becc851da07813acfdff5380658a47c01b9e3930708d08e93ff5f0cbefe699b"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -272705,6 +272772,11 @@
               "batch": "release-0.5-final-acceptance",
               "base_commit": "460fdb3e46b92b3086c95b925a6f4735a21fc2ff",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-final-acceptance/customer-interaction-proof.json"
+            },
+            {
+              "batch": "release-0.5-confirmed-electricity-feedback",
+              "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
             }
           ]
         }
@@ -272752,7 +272824,8 @@
           "release-0.5-ui-coverage-collection",
           "release-0.5-coverage-remaining-branches",
           "release-0.5-dependency-gate-closure",
-          "release-0.5-final-acceptance"
+          "release-0.5-final-acceptance",
+          "release-0.5-confirmed-electricity-feedback"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -272896,7 +272969,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "36c0dbfd2493822946019d086a52d02c1ae79a53e1b4de852124467995df06b7"
+              "sha256": "5becc851da07813acfdff5380658a47c01b9e3930708d08e93ff5f0cbefe699b"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -273654,6 +273727,11 @@
               "batch": "release-0.5-final-acceptance",
               "base_commit": "460fdb3e46b92b3086c95b925a6f4735a21fc2ff",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-final-acceptance/customer-interaction-proof.json"
+            },
+            {
+              "batch": "release-0.5-confirmed-electricity-feedback",
+              "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
             }
           ]
         }
@@ -273701,7 +273779,8 @@
           "release-0.5-ui-coverage-collection",
           "release-0.5-coverage-remaining-branches",
           "release-0.5-dependency-gate-closure",
-          "release-0.5-final-acceptance"
+          "release-0.5-final-acceptance",
+          "release-0.5-confirmed-electricity-feedback"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -273845,7 +273924,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "36c0dbfd2493822946019d086a52d02c1ae79a53e1b4de852124467995df06b7"
+              "sha256": "5becc851da07813acfdff5380658a47c01b9e3930708d08e93ff5f0cbefe699b"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -274603,6 +274682,11 @@
               "batch": "release-0.5-final-acceptance",
               "base_commit": "460fdb3e46b92b3086c95b925a6f4735a21fc2ff",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-final-acceptance/customer-interaction-proof.json"
+            },
+            {
+              "batch": "release-0.5-confirmed-electricity-feedback",
+              "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
             }
           ]
         }
@@ -274650,7 +274734,8 @@
           "release-0.5-ui-coverage-collection",
           "release-0.5-coverage-remaining-branches",
           "release-0.5-dependency-gate-closure",
-          "release-0.5-final-acceptance"
+          "release-0.5-final-acceptance",
+          "release-0.5-confirmed-electricity-feedback"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -274794,7 +274879,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "36c0dbfd2493822946019d086a52d02c1ae79a53e1b4de852124467995df06b7"
+              "sha256": "5becc851da07813acfdff5380658a47c01b9e3930708d08e93ff5f0cbefe699b"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -275552,6 +275637,11 @@
               "batch": "release-0.5-final-acceptance",
               "base_commit": "460fdb3e46b92b3086c95b925a6f4735a21fc2ff",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-final-acceptance/customer-interaction-proof.json"
+            },
+            {
+              "batch": "release-0.5-confirmed-electricity-feedback",
+              "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
             }
           ]
         }
@@ -275599,7 +275689,8 @@
           "release-0.5-ui-coverage-collection",
           "release-0.5-coverage-remaining-branches",
           "release-0.5-dependency-gate-closure",
-          "release-0.5-final-acceptance"
+          "release-0.5-final-acceptance",
+          "release-0.5-confirmed-electricity-feedback"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -275743,7 +275834,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "36c0dbfd2493822946019d086a52d02c1ae79a53e1b4de852124467995df06b7"
+              "sha256": "5becc851da07813acfdff5380658a47c01b9e3930708d08e93ff5f0cbefe699b"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -276501,6 +276592,11 @@
               "batch": "release-0.5-final-acceptance",
               "base_commit": "460fdb3e46b92b3086c95b925a6f4735a21fc2ff",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-final-acceptance/customer-interaction-proof.json"
+            },
+            {
+              "batch": "release-0.5-confirmed-electricity-feedback",
+              "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
             }
           ]
         }
@@ -276548,7 +276644,8 @@
           "release-0.5-ui-coverage-collection",
           "release-0.5-coverage-remaining-branches",
           "release-0.5-dependency-gate-closure",
-          "release-0.5-final-acceptance"
+          "release-0.5-final-acceptance",
+          "release-0.5-confirmed-electricity-feedback"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -276692,7 +276789,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "36c0dbfd2493822946019d086a52d02c1ae79a53e1b4de852124467995df06b7"
+              "sha256": "5becc851da07813acfdff5380658a47c01b9e3930708d08e93ff5f0cbefe699b"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -277450,6 +277547,11 @@
               "batch": "release-0.5-final-acceptance",
               "base_commit": "460fdb3e46b92b3086c95b925a6f4735a21fc2ff",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-final-acceptance/customer-interaction-proof.json"
+            },
+            {
+              "batch": "release-0.5-confirmed-electricity-feedback",
+              "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
             }
           ]
         }
@@ -277497,7 +277599,8 @@
           "release-0.5-ui-coverage-collection",
           "release-0.5-coverage-remaining-branches",
           "release-0.5-dependency-gate-closure",
-          "release-0.5-final-acceptance"
+          "release-0.5-final-acceptance",
+          "release-0.5-confirmed-electricity-feedback"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -277641,7 +277744,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "36c0dbfd2493822946019d086a52d02c1ae79a53e1b4de852124467995df06b7"
+              "sha256": "5becc851da07813acfdff5380658a47c01b9e3930708d08e93ff5f0cbefe699b"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -278399,6 +278502,11 @@
               "batch": "release-0.5-final-acceptance",
               "base_commit": "460fdb3e46b92b3086c95b925a6f4735a21fc2ff",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-final-acceptance/customer-interaction-proof.json"
+            },
+            {
+              "batch": "release-0.5-confirmed-electricity-feedback",
+              "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
             }
           ]
         }
@@ -278446,7 +278554,8 @@
           "release-0.5-ui-coverage-collection",
           "release-0.5-coverage-remaining-branches",
           "release-0.5-dependency-gate-closure",
-          "release-0.5-final-acceptance"
+          "release-0.5-final-acceptance",
+          "release-0.5-confirmed-electricity-feedback"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -278590,7 +278699,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "36c0dbfd2493822946019d086a52d02c1ae79a53e1b4de852124467995df06b7"
+              "sha256": "5becc851da07813acfdff5380658a47c01b9e3930708d08e93ff5f0cbefe699b"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -279348,6 +279457,11 @@
               "batch": "release-0.5-final-acceptance",
               "base_commit": "460fdb3e46b92b3086c95b925a6f4735a21fc2ff",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-final-acceptance/customer-interaction-proof.json"
+            },
+            {
+              "batch": "release-0.5-confirmed-electricity-feedback",
+              "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
             }
           ]
         }
@@ -279396,7 +279510,8 @@
           "release-0.5-ui-coverage-collection",
           "release-0.5-coverage-remaining-branches",
           "release-0.5-dependency-gate-closure",
-          "release-0.5-final-acceptance"
+          "release-0.5-final-acceptance",
+          "release-0.5-confirmed-electricity-feedback"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -279540,7 +279655,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "36c0dbfd2493822946019d086a52d02c1ae79a53e1b4de852124467995df06b7"
+              "sha256": "5becc851da07813acfdff5380658a47c01b9e3930708d08e93ff5f0cbefe699b"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -280298,6 +280413,11 @@
               "batch": "release-0.5-final-acceptance",
               "base_commit": "460fdb3e46b92b3086c95b925a6f4735a21fc2ff",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-final-acceptance/customer-interaction-proof.json"
+            },
+            {
+              "batch": "release-0.5-confirmed-electricity-feedback",
+              "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
             }
           ]
         }
@@ -280345,7 +280465,8 @@
           "release-0.5-ui-coverage-collection",
           "release-0.5-coverage-remaining-branches",
           "release-0.5-dependency-gate-closure",
-          "release-0.5-final-acceptance"
+          "release-0.5-final-acceptance",
+          "release-0.5-confirmed-electricity-feedback"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -280489,7 +280610,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "36c0dbfd2493822946019d086a52d02c1ae79a53e1b4de852124467995df06b7"
+              "sha256": "5becc851da07813acfdff5380658a47c01b9e3930708d08e93ff5f0cbefe699b"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -281247,6 +281368,11 @@
               "batch": "release-0.5-final-acceptance",
               "base_commit": "460fdb3e46b92b3086c95b925a6f4735a21fc2ff",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-final-acceptance/customer-interaction-proof.json"
+            },
+            {
+              "batch": "release-0.5-confirmed-electricity-feedback",
+              "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
             }
           ]
         }
@@ -281294,7 +281420,8 @@
           "release-0.5-ui-coverage-collection",
           "release-0.5-coverage-remaining-branches",
           "release-0.5-dependency-gate-closure",
-          "release-0.5-final-acceptance"
+          "release-0.5-final-acceptance",
+          "release-0.5-confirmed-electricity-feedback"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -281438,7 +281565,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "36c0dbfd2493822946019d086a52d02c1ae79a53e1b4de852124467995df06b7"
+              "sha256": "5becc851da07813acfdff5380658a47c01b9e3930708d08e93ff5f0cbefe699b"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -282196,6 +282323,11 @@
               "batch": "release-0.5-final-acceptance",
               "base_commit": "460fdb3e46b92b3086c95b925a6f4735a21fc2ff",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-final-acceptance/customer-interaction-proof.json"
+            },
+            {
+              "batch": "release-0.5-confirmed-electricity-feedback",
+              "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
             }
           ]
         }
@@ -282243,7 +282375,8 @@
           "release-0.5-ui-coverage-collection",
           "release-0.5-coverage-remaining-branches",
           "release-0.5-dependency-gate-closure",
-          "release-0.5-final-acceptance"
+          "release-0.5-final-acceptance",
+          "release-0.5-confirmed-electricity-feedback"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -282387,7 +282520,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "36c0dbfd2493822946019d086a52d02c1ae79a53e1b4de852124467995df06b7"
+              "sha256": "5becc851da07813acfdff5380658a47c01b9e3930708d08e93ff5f0cbefe699b"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -283145,6 +283278,11 @@
               "batch": "release-0.5-final-acceptance",
               "base_commit": "460fdb3e46b92b3086c95b925a6f4735a21fc2ff",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-final-acceptance/customer-interaction-proof.json"
+            },
+            {
+              "batch": "release-0.5-confirmed-electricity-feedback",
+              "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
             }
           ]
         }
@@ -283192,7 +283330,8 @@
           "release-0.5-ui-coverage-collection",
           "release-0.5-coverage-remaining-branches",
           "release-0.5-dependency-gate-closure",
-          "release-0.5-final-acceptance"
+          "release-0.5-final-acceptance",
+          "release-0.5-confirmed-electricity-feedback"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -283336,7 +283475,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "36c0dbfd2493822946019d086a52d02c1ae79a53e1b4de852124467995df06b7"
+              "sha256": "5becc851da07813acfdff5380658a47c01b9e3930708d08e93ff5f0cbefe699b"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -284094,6 +284233,11 @@
               "batch": "release-0.5-final-acceptance",
               "base_commit": "460fdb3e46b92b3086c95b925a6f4735a21fc2ff",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-final-acceptance/customer-interaction-proof.json"
+            },
+            {
+              "batch": "release-0.5-confirmed-electricity-feedback",
+              "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
             }
           ]
         }
@@ -286686,7 +286830,8 @@
           "release-0.5-final-acceptance",
           "release-0.5-final-rehearsal",
           "release-0.5-verified-command-rejection",
-          "release-0.5-native-staff-touch-and-electricity-recovery"
+          "release-0.5-native-staff-touch-and-electricity-recovery",
+          "release-0.5-confirmed-electricity-feedback"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.2.0-closure",
@@ -286754,7 +286899,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-journey.spec.ts",
-              "sha256": "e13027e4811239815ecf1b0defe5e09a4d79b0d3b374b6318949a2fd876fe97d"
+              "sha256": "aa0f356f4a5bd5ef322aa613d86dbb0a06b5e2b79c01ec5d897319781813c488"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -286782,7 +286927,7 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "61ea8243ad2767c9726361e7e974e73420e0b6d823f8d0f5f96dd538add32a87"
+              "sha256": "1cbdcfcfd7ec6a29e8a571466bad542a79b4d2f22c0a2c21dd2ae2356e578db1"
             },
             {
               "path": "apps/web/src/pages/CrmCorrectionsPage.tsx",
@@ -287097,6 +287242,11 @@
               "batch": "release-0.5-native-staff-touch-and-electricity-recovery",
               "base_commit": "e28bf7ac30a3a6b2605edd7b9b98afaa34a47119",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-exact-confirmation-gate/native-ui-batch-receipt.json"
+            },
+            {
+              "batch": "release-0.5-confirmed-electricity-feedback",
+              "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
             }
           ]
         },
@@ -294175,7 +294325,8 @@
           "release-0.5-final-acceptance",
           "release-0.5-final-rehearsal",
           "release-0.5-verified-command-rejection",
-          "release-0.5-native-staff-touch-and-electricity-recovery"
+          "release-0.5-native-staff-touch-and-electricity-recovery",
+          "release-0.5-confirmed-electricity-feedback"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.2.0-closure",
@@ -294243,7 +294394,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-journey.spec.ts",
-              "sha256": "e13027e4811239815ecf1b0defe5e09a4d79b0d3b374b6318949a2fd876fe97d"
+              "sha256": "aa0f356f4a5bd5ef322aa613d86dbb0a06b5e2b79c01ec5d897319781813c488"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -294271,7 +294422,7 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "61ea8243ad2767c9726361e7e974e73420e0b6d823f8d0f5f96dd538add32a87"
+              "sha256": "1cbdcfcfd7ec6a29e8a571466bad542a79b4d2f22c0a2c21dd2ae2356e578db1"
             },
             {
               "path": "apps/web/src/pages/CrmCorrectionsPage.tsx",
@@ -294586,6 +294737,11 @@
               "batch": "release-0.5-native-staff-touch-and-electricity-recovery",
               "base_commit": "e28bf7ac30a3a6b2605edd7b9b98afaa34a47119",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-exact-confirmation-gate/native-ui-batch-receipt.json"
+            },
+            {
+              "batch": "release-0.5-confirmed-electricity-feedback",
+              "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
             }
           ]
         },
@@ -304208,7 +304364,8 @@
           "release-0.5-protected-journey-proof",
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
-          "release-0.5-native-staff-touch-and-electricity-recovery"
+          "release-0.5-native-staff-touch-and-electricity-recovery",
+          "release-0.5-confirmed-electricity-feedback"
         ],
         "current_acceptance": {
           "kind": "verified-existing-advanced-electricity-journey-with-source-bound-reuse",
@@ -304244,11 +304401,11 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "61ea8243ad2767c9726361e7e974e73420e0b6d823f8d0f5f96dd538add32a87"
+              "sha256": "1cbdcfcfd7ec6a29e8a571466bad542a79b4d2f22c0a2c21dd2ae2356e578db1"
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "36c0dbfd2493822946019d086a52d02c1ae79a53e1b4de852124467995df06b7"
+              "sha256": "5becc851da07813acfdff5380658a47c01b9e3930708d08e93ff5f0cbefe699b"
             },
             {
               "path": "apps/web/src/lib/jalali-date-time.ts",
@@ -304256,7 +304413,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-journey.spec.ts",
-              "sha256": "e13027e4811239815ecf1b0defe5e09a4d79b0d3b374b6318949a2fd876fe97d"
+              "sha256": "aa0f356f4a5bd5ef322aa613d86dbb0a06b5e2b79c01ec5d897319781813c488"
             },
             {
               "path": "apps/web/e2e/electricity-payment-fixture.ts",
@@ -304812,6 +304969,11 @@
               "batch": "release-0.5-native-staff-touch-and-electricity-recovery",
               "base_commit": "e28bf7ac30a3a6b2605edd7b9b98afaa34a47119",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-exact-confirmation-gate/native-ui-batch-receipt.json"
+            },
+            {
+              "batch": "release-0.5-confirmed-electricity-feedback",
+              "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
             }
           ]
         }
@@ -304852,7 +305014,8 @@
           "release-0.5-protected-journey-proof",
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
-          "release-0.5-native-staff-touch-and-electricity-recovery"
+          "release-0.5-native-staff-touch-and-electricity-recovery",
+          "release-0.5-confirmed-electricity-feedback"
         ],
         "current_acceptance": {
           "kind": "verified-existing-advanced-electricity-journey-with-source-bound-reuse",
@@ -304888,11 +305051,11 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "61ea8243ad2767c9726361e7e974e73420e0b6d823f8d0f5f96dd538add32a87"
+              "sha256": "1cbdcfcfd7ec6a29e8a571466bad542a79b4d2f22c0a2c21dd2ae2356e578db1"
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "36c0dbfd2493822946019d086a52d02c1ae79a53e1b4de852124467995df06b7"
+              "sha256": "5becc851da07813acfdff5380658a47c01b9e3930708d08e93ff5f0cbefe699b"
             },
             {
               "path": "apps/web/src/lib/jalali-date-time.ts",
@@ -304900,7 +305063,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-journey.spec.ts",
-              "sha256": "e13027e4811239815ecf1b0defe5e09a4d79b0d3b374b6318949a2fd876fe97d"
+              "sha256": "aa0f356f4a5bd5ef322aa613d86dbb0a06b5e2b79c01ec5d897319781813c488"
             },
             {
               "path": "apps/web/e2e/electricity-payment-fixture.ts",
@@ -305456,6 +305619,11 @@
               "batch": "release-0.5-native-staff-touch-and-electricity-recovery",
               "base_commit": "e28bf7ac30a3a6b2605edd7b9b98afaa34a47119",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-exact-confirmation-gate/native-ui-batch-receipt.json"
+            },
+            {
+              "batch": "release-0.5-confirmed-electricity-feedback",
+              "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
             }
           ]
         }
@@ -305496,7 +305664,8 @@
           "release-0.5-protected-journey-proof",
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
-          "release-0.5-native-staff-touch-and-electricity-recovery"
+          "release-0.5-native-staff-touch-and-electricity-recovery",
+          "release-0.5-confirmed-electricity-feedback"
         ],
         "current_acceptance": {
           "kind": "verified-existing-advanced-electricity-journey-with-source-bound-reuse",
@@ -305532,11 +305701,11 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "61ea8243ad2767c9726361e7e974e73420e0b6d823f8d0f5f96dd538add32a87"
+              "sha256": "1cbdcfcfd7ec6a29e8a571466bad542a79b4d2f22c0a2c21dd2ae2356e578db1"
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "36c0dbfd2493822946019d086a52d02c1ae79a53e1b4de852124467995df06b7"
+              "sha256": "5becc851da07813acfdff5380658a47c01b9e3930708d08e93ff5f0cbefe699b"
             },
             {
               "path": "apps/web/src/lib/jalali-date-time.ts",
@@ -305544,7 +305713,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-journey.spec.ts",
-              "sha256": "e13027e4811239815ecf1b0defe5e09a4d79b0d3b374b6318949a2fd876fe97d"
+              "sha256": "aa0f356f4a5bd5ef322aa613d86dbb0a06b5e2b79c01ec5d897319781813c488"
             },
             {
               "path": "apps/web/e2e/electricity-payment-fixture.ts",
@@ -306100,6 +306269,11 @@
               "batch": "release-0.5-native-staff-touch-and-electricity-recovery",
               "base_commit": "e28bf7ac30a3a6b2605edd7b9b98afaa34a47119",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-exact-confirmation-gate/native-ui-batch-receipt.json"
+            },
+            {
+              "batch": "release-0.5-confirmed-electricity-feedback",
+              "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
             }
           ]
         }
@@ -306140,7 +306314,8 @@
           "release-0.5-protected-journey-proof",
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
-          "release-0.5-native-staff-touch-and-electricity-recovery"
+          "release-0.5-native-staff-touch-and-electricity-recovery",
+          "release-0.5-confirmed-electricity-feedback"
         ],
         "current_acceptance": {
           "kind": "verified-existing-advanced-electricity-journey-with-source-bound-reuse",
@@ -306176,11 +306351,11 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "61ea8243ad2767c9726361e7e974e73420e0b6d823f8d0f5f96dd538add32a87"
+              "sha256": "1cbdcfcfd7ec6a29e8a571466bad542a79b4d2f22c0a2c21dd2ae2356e578db1"
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "36c0dbfd2493822946019d086a52d02c1ae79a53e1b4de852124467995df06b7"
+              "sha256": "5becc851da07813acfdff5380658a47c01b9e3930708d08e93ff5f0cbefe699b"
             },
             {
               "path": "apps/web/src/lib/jalali-date-time.ts",
@@ -306188,7 +306363,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-journey.spec.ts",
-              "sha256": "e13027e4811239815ecf1b0defe5e09a4d79b0d3b374b6318949a2fd876fe97d"
+              "sha256": "aa0f356f4a5bd5ef322aa613d86dbb0a06b5e2b79c01ec5d897319781813c488"
             },
             {
               "path": "apps/web/e2e/electricity-payment-fixture.ts",
@@ -306744,6 +306919,11 @@
               "batch": "release-0.5-native-staff-touch-and-electricity-recovery",
               "base_commit": "e28bf7ac30a3a6b2605edd7b9b98afaa34a47119",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-exact-confirmation-gate/native-ui-batch-receipt.json"
+            },
+            {
+              "batch": "release-0.5-confirmed-electricity-feedback",
+              "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
             }
           ]
         }
@@ -306784,7 +306964,8 @@
           "release-0.5-protected-journey-proof",
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
-          "release-0.5-native-staff-touch-and-electricity-recovery"
+          "release-0.5-native-staff-touch-and-electricity-recovery",
+          "release-0.5-confirmed-electricity-feedback"
         ],
         "current_acceptance": {
           "kind": "verified-existing-advanced-electricity-journey-with-source-bound-reuse",
@@ -306820,11 +307001,11 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "61ea8243ad2767c9726361e7e974e73420e0b6d823f8d0f5f96dd538add32a87"
+              "sha256": "1cbdcfcfd7ec6a29e8a571466bad542a79b4d2f22c0a2c21dd2ae2356e578db1"
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "36c0dbfd2493822946019d086a52d02c1ae79a53e1b4de852124467995df06b7"
+              "sha256": "5becc851da07813acfdff5380658a47c01b9e3930708d08e93ff5f0cbefe699b"
             },
             {
               "path": "apps/web/src/lib/jalali-date-time.ts",
@@ -306832,7 +307013,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-journey.spec.ts",
-              "sha256": "e13027e4811239815ecf1b0defe5e09a4d79b0d3b374b6318949a2fd876fe97d"
+              "sha256": "aa0f356f4a5bd5ef322aa613d86dbb0a06b5e2b79c01ec5d897319781813c488"
             },
             {
               "path": "apps/web/e2e/electricity-payment-fixture.ts",
@@ -307388,6 +307569,11 @@
               "batch": "release-0.5-native-staff-touch-and-electricity-recovery",
               "base_commit": "e28bf7ac30a3a6b2605edd7b9b98afaa34a47119",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-exact-confirmation-gate/native-ui-batch-receipt.json"
+            },
+            {
+              "batch": "release-0.5-confirmed-electricity-feedback",
+              "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
             }
           ]
         }
@@ -307429,7 +307615,8 @@
           "release-0.5-protected-journey-proof",
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
-          "release-0.5-native-staff-touch-and-electricity-recovery"
+          "release-0.5-native-staff-touch-and-electricity-recovery",
+          "release-0.5-confirmed-electricity-feedback"
         ],
         "current_acceptance": {
           "kind": "verified-existing-advanced-electricity-journey-with-source-bound-reuse",
@@ -307465,11 +307652,11 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "61ea8243ad2767c9726361e7e974e73420e0b6d823f8d0f5f96dd538add32a87"
+              "sha256": "1cbdcfcfd7ec6a29e8a571466bad542a79b4d2f22c0a2c21dd2ae2356e578db1"
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "36c0dbfd2493822946019d086a52d02c1ae79a53e1b4de852124467995df06b7"
+              "sha256": "5becc851da07813acfdff5380658a47c01b9e3930708d08e93ff5f0cbefe699b"
             },
             {
               "path": "apps/web/src/lib/jalali-date-time.ts",
@@ -307477,7 +307664,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-journey.spec.ts",
-              "sha256": "e13027e4811239815ecf1b0defe5e09a4d79b0d3b374b6318949a2fd876fe97d"
+              "sha256": "aa0f356f4a5bd5ef322aa613d86dbb0a06b5e2b79c01ec5d897319781813c488"
             },
             {
               "path": "apps/web/e2e/electricity-payment-fixture.ts",
@@ -308033,6 +308220,11 @@
               "batch": "release-0.5-native-staff-touch-and-electricity-recovery",
               "base_commit": "e28bf7ac30a3a6b2605edd7b9b98afaa34a47119",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-exact-confirmation-gate/native-ui-batch-receipt.json"
+            },
+            {
+              "batch": "release-0.5-confirmed-electricity-feedback",
+              "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
             }
           ]
         }
@@ -308074,7 +308266,8 @@
           "release-0.5-protected-journey-proof",
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
-          "release-0.5-native-staff-touch-and-electricity-recovery"
+          "release-0.5-native-staff-touch-and-electricity-recovery",
+          "release-0.5-confirmed-electricity-feedback"
         ],
         "current_acceptance": {
           "kind": "verified-existing-advanced-electricity-journey-with-source-bound-reuse",
@@ -308110,11 +308303,11 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "61ea8243ad2767c9726361e7e974e73420e0b6d823f8d0f5f96dd538add32a87"
+              "sha256": "1cbdcfcfd7ec6a29e8a571466bad542a79b4d2f22c0a2c21dd2ae2356e578db1"
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "36c0dbfd2493822946019d086a52d02c1ae79a53e1b4de852124467995df06b7"
+              "sha256": "5becc851da07813acfdff5380658a47c01b9e3930708d08e93ff5f0cbefe699b"
             },
             {
               "path": "apps/web/src/lib/jalali-date-time.ts",
@@ -308122,7 +308315,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-journey.spec.ts",
-              "sha256": "e13027e4811239815ecf1b0defe5e09a4d79b0d3b374b6318949a2fd876fe97d"
+              "sha256": "aa0f356f4a5bd5ef322aa613d86dbb0a06b5e2b79c01ec5d897319781813c488"
             },
             {
               "path": "apps/web/e2e/electricity-payment-fixture.ts",
@@ -308678,6 +308871,11 @@
               "batch": "release-0.5-native-staff-touch-and-electricity-recovery",
               "base_commit": "e28bf7ac30a3a6b2605edd7b9b98afaa34a47119",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-exact-confirmation-gate/native-ui-batch-receipt.json"
+            },
+            {
+              "batch": "release-0.5-confirmed-electricity-feedback",
+              "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
             }
           ]
         }
@@ -308718,7 +308916,8 @@
           "release-0.5-protected-journey-proof",
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
-          "release-0.5-native-staff-touch-and-electricity-recovery"
+          "release-0.5-native-staff-touch-and-electricity-recovery",
+          "release-0.5-confirmed-electricity-feedback"
         ],
         "current_acceptance": {
           "kind": "verified-existing-advanced-electricity-journey-with-source-bound-reuse",
@@ -308754,11 +308953,11 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "61ea8243ad2767c9726361e7e974e73420e0b6d823f8d0f5f96dd538add32a87"
+              "sha256": "1cbdcfcfd7ec6a29e8a571466bad542a79b4d2f22c0a2c21dd2ae2356e578db1"
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "36c0dbfd2493822946019d086a52d02c1ae79a53e1b4de852124467995df06b7"
+              "sha256": "5becc851da07813acfdff5380658a47c01b9e3930708d08e93ff5f0cbefe699b"
             },
             {
               "path": "apps/web/src/lib/jalali-date-time.ts",
@@ -308766,7 +308965,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-journey.spec.ts",
-              "sha256": "e13027e4811239815ecf1b0defe5e09a4d79b0d3b374b6318949a2fd876fe97d"
+              "sha256": "aa0f356f4a5bd5ef322aa613d86dbb0a06b5e2b79c01ec5d897319781813c488"
             },
             {
               "path": "apps/web/e2e/electricity-payment-fixture.ts",
@@ -309322,6 +309521,11 @@
               "batch": "release-0.5-native-staff-touch-and-electricity-recovery",
               "base_commit": "e28bf7ac30a3a6b2605edd7b9b98afaa34a47119",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-exact-confirmation-gate/native-ui-batch-receipt.json"
+            },
+            {
+              "batch": "release-0.5-confirmed-electricity-feedback",
+              "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
             }
           ]
         }
@@ -309362,7 +309566,8 @@
           "release-0.5-protected-journey-proof",
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
-          "release-0.5-native-staff-touch-and-electricity-recovery"
+          "release-0.5-native-staff-touch-and-electricity-recovery",
+          "release-0.5-confirmed-electricity-feedback"
         ],
         "current_acceptance": {
           "kind": "verified-existing-advanced-electricity-journey-with-source-bound-reuse",
@@ -309398,11 +309603,11 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "61ea8243ad2767c9726361e7e974e73420e0b6d823f8d0f5f96dd538add32a87"
+              "sha256": "1cbdcfcfd7ec6a29e8a571466bad542a79b4d2f22c0a2c21dd2ae2356e578db1"
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "36c0dbfd2493822946019d086a52d02c1ae79a53e1b4de852124467995df06b7"
+              "sha256": "5becc851da07813acfdff5380658a47c01b9e3930708d08e93ff5f0cbefe699b"
             },
             {
               "path": "apps/web/src/lib/jalali-date-time.ts",
@@ -309410,7 +309615,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-journey.spec.ts",
-              "sha256": "e13027e4811239815ecf1b0defe5e09a4d79b0d3b374b6318949a2fd876fe97d"
+              "sha256": "aa0f356f4a5bd5ef322aa613d86dbb0a06b5e2b79c01ec5d897319781813c488"
             },
             {
               "path": "apps/web/e2e/electricity-payment-fixture.ts",
@@ -309966,6 +310171,11 @@
               "batch": "release-0.5-native-staff-touch-and-electricity-recovery",
               "base_commit": "e28bf7ac30a3a6b2605edd7b9b98afaa34a47119",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-exact-confirmation-gate/native-ui-batch-receipt.json"
+            },
+            {
+              "batch": "release-0.5-confirmed-electricity-feedback",
+              "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
             }
           ]
         }
@@ -310006,7 +310216,8 @@
           "release-0.5-protected-journey-proof",
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
-          "release-0.5-native-staff-touch-and-electricity-recovery"
+          "release-0.5-native-staff-touch-and-electricity-recovery",
+          "release-0.5-confirmed-electricity-feedback"
         ],
         "current_acceptance": {
           "kind": "verified-existing-advanced-electricity-journey-with-source-bound-reuse",
@@ -310042,11 +310253,11 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "61ea8243ad2767c9726361e7e974e73420e0b6d823f8d0f5f96dd538add32a87"
+              "sha256": "1cbdcfcfd7ec6a29e8a571466bad542a79b4d2f22c0a2c21dd2ae2356e578db1"
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "36c0dbfd2493822946019d086a52d02c1ae79a53e1b4de852124467995df06b7"
+              "sha256": "5becc851da07813acfdff5380658a47c01b9e3930708d08e93ff5f0cbefe699b"
             },
             {
               "path": "apps/web/src/lib/jalali-date-time.ts",
@@ -310054,7 +310265,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-journey.spec.ts",
-              "sha256": "e13027e4811239815ecf1b0defe5e09a4d79b0d3b374b6318949a2fd876fe97d"
+              "sha256": "aa0f356f4a5bd5ef322aa613d86dbb0a06b5e2b79c01ec5d897319781813c488"
             },
             {
               "path": "apps/web/e2e/electricity-payment-fixture.ts",
@@ -310610,6 +310821,11 @@
               "batch": "release-0.5-native-staff-touch-and-electricity-recovery",
               "base_commit": "e28bf7ac30a3a6b2605edd7b9b98afaa34a47119",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-exact-confirmation-gate/native-ui-batch-receipt.json"
+            },
+            {
+              "batch": "release-0.5-confirmed-electricity-feedback",
+              "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
             }
           ]
         }
@@ -310651,7 +310867,8 @@
           "release-0.5-protected-journey-proof",
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
-          "release-0.5-native-staff-touch-and-electricity-recovery"
+          "release-0.5-native-staff-touch-and-electricity-recovery",
+          "release-0.5-confirmed-electricity-feedback"
         ],
         "current_acceptance": {
           "kind": "verified-existing-advanced-electricity-journey-with-source-bound-reuse",
@@ -310687,11 +310904,11 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "61ea8243ad2767c9726361e7e974e73420e0b6d823f8d0f5f96dd538add32a87"
+              "sha256": "1cbdcfcfd7ec6a29e8a571466bad542a79b4d2f22c0a2c21dd2ae2356e578db1"
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "36c0dbfd2493822946019d086a52d02c1ae79a53e1b4de852124467995df06b7"
+              "sha256": "5becc851da07813acfdff5380658a47c01b9e3930708d08e93ff5f0cbefe699b"
             },
             {
               "path": "apps/web/src/lib/jalali-date-time.ts",
@@ -310699,7 +310916,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-journey.spec.ts",
-              "sha256": "e13027e4811239815ecf1b0defe5e09a4d79b0d3b374b6318949a2fd876fe97d"
+              "sha256": "aa0f356f4a5bd5ef322aa613d86dbb0a06b5e2b79c01ec5d897319781813c488"
             },
             {
               "path": "apps/web/e2e/electricity-payment-fixture.ts",
@@ -311255,6 +311472,11 @@
               "batch": "release-0.5-native-staff-touch-and-electricity-recovery",
               "base_commit": "e28bf7ac30a3a6b2605edd7b9b98afaa34a47119",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-exact-confirmation-gate/native-ui-batch-receipt.json"
+            },
+            {
+              "batch": "release-0.5-confirmed-electricity-feedback",
+              "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
             }
           ]
         }
@@ -311295,7 +311517,8 @@
           "release-0.5-protected-journey-proof",
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
-          "release-0.5-native-staff-touch-and-electricity-recovery"
+          "release-0.5-native-staff-touch-and-electricity-recovery",
+          "release-0.5-confirmed-electricity-feedback"
         ],
         "current_acceptance": {
           "kind": "verified-existing-advanced-electricity-journey-with-source-bound-reuse",
@@ -311331,11 +311554,11 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "61ea8243ad2767c9726361e7e974e73420e0b6d823f8d0f5f96dd538add32a87"
+              "sha256": "1cbdcfcfd7ec6a29e8a571466bad542a79b4d2f22c0a2c21dd2ae2356e578db1"
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "36c0dbfd2493822946019d086a52d02c1ae79a53e1b4de852124467995df06b7"
+              "sha256": "5becc851da07813acfdff5380658a47c01b9e3930708d08e93ff5f0cbefe699b"
             },
             {
               "path": "apps/web/src/lib/jalali-date-time.ts",
@@ -311343,7 +311566,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-journey.spec.ts",
-              "sha256": "e13027e4811239815ecf1b0defe5e09a4d79b0d3b374b6318949a2fd876fe97d"
+              "sha256": "aa0f356f4a5bd5ef322aa613d86dbb0a06b5e2b79c01ec5d897319781813c488"
             },
             {
               "path": "apps/web/e2e/electricity-payment-fixture.ts",
@@ -311899,6 +312122,11 @@
               "batch": "release-0.5-native-staff-touch-and-electricity-recovery",
               "base_commit": "e28bf7ac30a3a6b2605edd7b9b98afaa34a47119",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-exact-confirmation-gate/native-ui-batch-receipt.json"
+            },
+            {
+              "batch": "release-0.5-confirmed-electricity-feedback",
+              "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
             }
           ]
         }
@@ -311939,7 +312167,8 @@
           "release-0.5-protected-journey-proof",
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
-          "release-0.5-native-staff-touch-and-electricity-recovery"
+          "release-0.5-native-staff-touch-and-electricity-recovery",
+          "release-0.5-confirmed-electricity-feedback"
         ],
         "current_acceptance": {
           "kind": "verified-existing-advanced-electricity-journey-with-source-bound-reuse",
@@ -311975,11 +312204,11 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "61ea8243ad2767c9726361e7e974e73420e0b6d823f8d0f5f96dd538add32a87"
+              "sha256": "1cbdcfcfd7ec6a29e8a571466bad542a79b4d2f22c0a2c21dd2ae2356e578db1"
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "36c0dbfd2493822946019d086a52d02c1ae79a53e1b4de852124467995df06b7"
+              "sha256": "5becc851da07813acfdff5380658a47c01b9e3930708d08e93ff5f0cbefe699b"
             },
             {
               "path": "apps/web/src/lib/jalali-date-time.ts",
@@ -311987,7 +312216,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-journey.spec.ts",
-              "sha256": "e13027e4811239815ecf1b0defe5e09a4d79b0d3b374b6318949a2fd876fe97d"
+              "sha256": "aa0f356f4a5bd5ef322aa613d86dbb0a06b5e2b79c01ec5d897319781813c488"
             },
             {
               "path": "apps/web/e2e/electricity-payment-fixture.ts",
@@ -312543,6 +312772,11 @@
               "batch": "release-0.5-native-staff-touch-and-electricity-recovery",
               "base_commit": "e28bf7ac30a3a6b2605edd7b9b98afaa34a47119",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-exact-confirmation-gate/native-ui-batch-receipt.json"
+            },
+            {
+              "batch": "release-0.5-confirmed-electricity-feedback",
+              "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
             }
           ]
         }
@@ -312583,7 +312817,8 @@
           "release-0.5-protected-journey-proof",
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
-          "release-0.5-native-staff-touch-and-electricity-recovery"
+          "release-0.5-native-staff-touch-and-electricity-recovery",
+          "release-0.5-confirmed-electricity-feedback"
         ],
         "current_acceptance": {
           "kind": "verified-existing-advanced-electricity-journey-with-source-bound-reuse",
@@ -312619,11 +312854,11 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "61ea8243ad2767c9726361e7e974e73420e0b6d823f8d0f5f96dd538add32a87"
+              "sha256": "1cbdcfcfd7ec6a29e8a571466bad542a79b4d2f22c0a2c21dd2ae2356e578db1"
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "36c0dbfd2493822946019d086a52d02c1ae79a53e1b4de852124467995df06b7"
+              "sha256": "5becc851da07813acfdff5380658a47c01b9e3930708d08e93ff5f0cbefe699b"
             },
             {
               "path": "apps/web/src/lib/jalali-date-time.ts",
@@ -312631,7 +312866,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-journey.spec.ts",
-              "sha256": "e13027e4811239815ecf1b0defe5e09a4d79b0d3b374b6318949a2fd876fe97d"
+              "sha256": "aa0f356f4a5bd5ef322aa613d86dbb0a06b5e2b79c01ec5d897319781813c488"
             },
             {
               "path": "apps/web/e2e/electricity-payment-fixture.ts",
@@ -313187,6 +313422,11 @@
               "batch": "release-0.5-native-staff-touch-and-electricity-recovery",
               "base_commit": "e28bf7ac30a3a6b2605edd7b9b98afaa34a47119",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-exact-confirmation-gate/native-ui-batch-receipt.json"
+            },
+            {
+              "batch": "release-0.5-confirmed-electricity-feedback",
+              "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
             }
           ]
         }
@@ -313232,7 +313472,8 @@
           "release-0.5-protected-journey-proof",
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
-          "release-0.5-native-staff-touch-and-electricity-recovery"
+          "release-0.5-native-staff-touch-and-electricity-recovery",
+          "release-0.5-confirmed-electricity-feedback"
         ],
         "current_acceptance": {
           "kind": "verified-existing-advanced-electricity-journey-with-source-bound-reuse",
@@ -313268,11 +313509,11 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "61ea8243ad2767c9726361e7e974e73420e0b6d823f8d0f5f96dd538add32a87"
+              "sha256": "1cbdcfcfd7ec6a29e8a571466bad542a79b4d2f22c0a2c21dd2ae2356e578db1"
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "36c0dbfd2493822946019d086a52d02c1ae79a53e1b4de852124467995df06b7"
+              "sha256": "5becc851da07813acfdff5380658a47c01b9e3930708d08e93ff5f0cbefe699b"
             },
             {
               "path": "apps/web/src/lib/jalali-date-time.ts",
@@ -313280,7 +313521,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-journey.spec.ts",
-              "sha256": "e13027e4811239815ecf1b0defe5e09a4d79b0d3b374b6318949a2fd876fe97d"
+              "sha256": "aa0f356f4a5bd5ef322aa613d86dbb0a06b5e2b79c01ec5d897319781813c488"
             },
             {
               "path": "apps/web/e2e/electricity-payment-fixture.ts",
@@ -313836,6 +314077,11 @@
               "batch": "release-0.5-native-staff-touch-and-electricity-recovery",
               "base_commit": "e28bf7ac30a3a6b2605edd7b9b98afaa34a47119",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-exact-confirmation-gate/native-ui-batch-receipt.json"
+            },
+            {
+              "batch": "release-0.5-confirmed-electricity-feedback",
+              "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
             }
           ]
         }
@@ -313876,7 +314122,8 @@
           "release-0.5-protected-journey-proof",
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
-          "release-0.5-native-staff-touch-and-electricity-recovery"
+          "release-0.5-native-staff-touch-and-electricity-recovery",
+          "release-0.5-confirmed-electricity-feedback"
         ],
         "current_acceptance": {
           "kind": "verified-existing-advanced-electricity-journey-with-source-bound-reuse",
@@ -313912,11 +314159,11 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "61ea8243ad2767c9726361e7e974e73420e0b6d823f8d0f5f96dd538add32a87"
+              "sha256": "1cbdcfcfd7ec6a29e8a571466bad542a79b4d2f22c0a2c21dd2ae2356e578db1"
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "36c0dbfd2493822946019d086a52d02c1ae79a53e1b4de852124467995df06b7"
+              "sha256": "5becc851da07813acfdff5380658a47c01b9e3930708d08e93ff5f0cbefe699b"
             },
             {
               "path": "apps/web/src/lib/jalali-date-time.ts",
@@ -313924,7 +314171,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-journey.spec.ts",
-              "sha256": "e13027e4811239815ecf1b0defe5e09a4d79b0d3b374b6318949a2fd876fe97d"
+              "sha256": "aa0f356f4a5bd5ef322aa613d86dbb0a06b5e2b79c01ec5d897319781813c488"
             },
             {
               "path": "apps/web/e2e/electricity-payment-fixture.ts",
@@ -314480,6 +314727,11 @@
               "batch": "release-0.5-native-staff-touch-and-electricity-recovery",
               "base_commit": "e28bf7ac30a3a6b2605edd7b9b98afaa34a47119",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-exact-confirmation-gate/native-ui-batch-receipt.json"
+            },
+            {
+              "batch": "release-0.5-confirmed-electricity-feedback",
+              "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
             }
           ]
         }
@@ -314546,7 +314798,8 @@
           "release-0.5-final-acceptance",
           "release-0.5-final-rehearsal",
           "release-0.5-verified-command-rejection",
-          "release-0.5-native-staff-touch-and-electricity-recovery"
+          "release-0.5-native-staff-touch-and-electricity-recovery",
+          "release-0.5-confirmed-electricity-feedback"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.2.0-closure",
@@ -314614,7 +314867,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-journey.spec.ts",
-              "sha256": "e13027e4811239815ecf1b0defe5e09a4d79b0d3b374b6318949a2fd876fe97d"
+              "sha256": "aa0f356f4a5bd5ef322aa613d86dbb0a06b5e2b79c01ec5d897319781813c488"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -314642,7 +314895,7 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "61ea8243ad2767c9726361e7e974e73420e0b6d823f8d0f5f96dd538add32a87"
+              "sha256": "1cbdcfcfd7ec6a29e8a571466bad542a79b4d2f22c0a2c21dd2ae2356e578db1"
             },
             {
               "path": "apps/web/src/pages/CrmCorrectionsPage.tsx",
@@ -314957,6 +315210,11 @@
               "batch": "release-0.5-native-staff-touch-and-electricity-recovery",
               "base_commit": "e28bf7ac30a3a6b2605edd7b9b98afaa34a47119",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-exact-confirmation-gate/native-ui-batch-receipt.json"
+            },
+            {
+              "batch": "release-0.5-confirmed-electricity-feedback",
+              "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
             }
           ]
         },
@@ -344989,7 +345247,8 @@
           "release-0.5-final-acceptance",
           "release-0.5-final-rehearsal",
           "release-0.5-verified-command-rejection",
-          "release-0.5-native-staff-touch-and-electricity-recovery"
+          "release-0.5-native-staff-touch-and-electricity-recovery",
+          "release-0.5-confirmed-electricity-feedback"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.2.0-closure",
@@ -345057,7 +345316,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-journey.spec.ts",
-              "sha256": "e13027e4811239815ecf1b0defe5e09a4d79b0d3b374b6318949a2fd876fe97d"
+              "sha256": "aa0f356f4a5bd5ef322aa613d86dbb0a06b5e2b79c01ec5d897319781813c488"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -345085,7 +345344,7 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "61ea8243ad2767c9726361e7e974e73420e0b6d823f8d0f5f96dd538add32a87"
+              "sha256": "1cbdcfcfd7ec6a29e8a571466bad542a79b4d2f22c0a2c21dd2ae2356e578db1"
             },
             {
               "path": "apps/web/src/pages/CrmCorrectionsPage.tsx",
@@ -345400,6 +345659,11 @@
               "batch": "release-0.5-native-staff-touch-and-electricity-recovery",
               "base_commit": "e28bf7ac30a3a6b2605edd7b9b98afaa34a47119",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-exact-confirmation-gate/native-ui-batch-receipt.json"
+            },
+            {
+              "batch": "release-0.5-confirmed-electricity-feedback",
+              "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
             }
           ]
         },
@@ -355612,7 +355876,8 @@
           "release-0.5-final-acceptance",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-confirmed-electricity-feedback"
         ],
         "current_acceptance": {
           "kind": "verified-saving-installation-address-selection",
@@ -355636,15 +355901,15 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "61ea8243ad2767c9726361e7e974e73420e0b6d823f8d0f5f96dd538add32a87"
+              "sha256": "1cbdcfcfd7ec6a29e8a571466bad542a79b4d2f22c0a2c21dd2ae2356e578db1"
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "36c0dbfd2493822946019d086a52d02c1ae79a53e1b4de852124467995df06b7"
+              "sha256": "5becc851da07813acfdff5380658a47c01b9e3930708d08e93ff5f0cbefe699b"
             },
             {
               "path": "apps/web/e2e/electricity-journey.spec.ts",
-              "sha256": "e13027e4811239815ecf1b0defe5e09a4d79b0d3b374b6318949a2fd876fe97d"
+              "sha256": "aa0f356f4a5bd5ef322aa613d86dbb0a06b5e2b79c01ec5d897319781813c488"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -356255,6 +356520,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-confirmed-electricity-feedback",
+              "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
             }
           ]
         }
@@ -357262,7 +357532,8 @@
           "release-0.5-final-acceptance",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-confirmed-electricity-feedback"
         ],
         "current_acceptance": {
           "kind": "verified-saving-authoritative-final-review",
@@ -357287,15 +357558,15 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "61ea8243ad2767c9726361e7e974e73420e0b6d823f8d0f5f96dd538add32a87"
+              "sha256": "1cbdcfcfd7ec6a29e8a571466bad542a79b4d2f22c0a2c21dd2ae2356e578db1"
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "36c0dbfd2493822946019d086a52d02c1ae79a53e1b4de852124467995df06b7"
+              "sha256": "5becc851da07813acfdff5380658a47c01b9e3930708d08e93ff5f0cbefe699b"
             },
             {
               "path": "apps/web/e2e/electricity-journey.spec.ts",
-              "sha256": "e13027e4811239815ecf1b0defe5e09a4d79b0d3b374b6318949a2fd876fe97d"
+              "sha256": "aa0f356f4a5bd5ef322aa613d86dbb0a06b5e2b79c01ec5d897319781813c488"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -357910,6 +358181,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-confirmed-electricity-feedback",
+              "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
             }
           ]
         }
@@ -415718,7 +415994,8 @@
           "release-0.5-final-rehearsal",
           "release-0.5-verified-command-rejection",
           "release-0.5-native-staff-touch-and-electricity-recovery",
-          "release-0.5-compact-touch-and-saving-feedback"
+          "release-0.5-compact-touch-and-saving-feedback",
+          "release-0.5-confirmed-electricity-feedback"
         ],
         "current_acceptance": {
           "kind": "accepted-all-applicable-order-review-wallet-disclosure",
@@ -415898,7 +416175,7 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "61ea8243ad2767c9726361e7e974e73420e0b6d823f8d0f5f96dd538add32a87"
+              "sha256": "1cbdcfcfd7ec6a29e8a571466bad542a79b4d2f22c0a2c21dd2ae2356e578db1"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -417034,6 +417311,11 @@
               "batch": "release-0.5-compact-touch-and-saving-feedback",
               "base_commit": "cd60ed9886cd2971ecebdded76e3dca24a7a203e",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-native-candidate-gate/touch-and-saving-candidate-receipt.json"
+            },
+            {
+              "batch": "release-0.5-confirmed-electricity-feedback",
+              "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
             }
           ]
         }
@@ -484296,7 +484578,8 @@
           "release-0.5-verified-command-rejection",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-confirmed-electricity-feedback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -484668,7 +484951,7 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "61ea8243ad2767c9726361e7e974e73420e0b6d823f8d0f5f96dd538add32a87"
+              "sha256": "1cbdcfcfd7ec6a29e8a571466bad542a79b4d2f22c0a2c21dd2ae2356e578db1"
             },
             {
               "path": "apps/web/src/pages/BankReceiptsPage.test.tsx",
@@ -485142,6 +485425,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-confirmed-electricity-feedback",
+              "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
             }
           ]
         },
@@ -533395,7 +533683,8 @@
           "release-0.5-verified-command-rejection",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-confirmed-electricity-feedback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -533959,7 +534248,7 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "61ea8243ad2767c9726361e7e974e73420e0b6d823f8d0f5f96dd538add32a87"
+              "sha256": "1cbdcfcfd7ec6a29e8a571466bad542a79b4d2f22c0a2c21dd2ae2356e578db1"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -534019,7 +534308,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "36c0dbfd2493822946019d086a52d02c1ae79a53e1b4de852124467995df06b7"
+              "sha256": "5becc851da07813acfdff5380658a47c01b9e3930708d08e93ff5f0cbefe699b"
             },
             {
               "path": "apps/web/src/pages/ai-admin-presentation.test.tsx",
@@ -535012,6 +535301,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-confirmed-electricity-feedback",
+              "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
             }
           ]
         },
@@ -535146,7 +535440,8 @@
           "release-0.5-verified-command-rejection",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-confirmed-electricity-feedback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -535710,7 +536005,7 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "61ea8243ad2767c9726361e7e974e73420e0b6d823f8d0f5f96dd538add32a87"
+              "sha256": "1cbdcfcfd7ec6a29e8a571466bad542a79b4d2f22c0a2c21dd2ae2356e578db1"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -535770,7 +536065,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "36c0dbfd2493822946019d086a52d02c1ae79a53e1b4de852124467995df06b7"
+              "sha256": "5becc851da07813acfdff5380658a47c01b9e3930708d08e93ff5f0cbefe699b"
             },
             {
               "path": "apps/web/src/pages/ai-admin-presentation.test.tsx",
@@ -536763,6 +537058,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-confirmed-electricity-feedback",
+              "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
             }
           ]
         },
@@ -536898,7 +537198,8 @@
           "release-0.5-verified-command-rejection",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-confirmed-electricity-feedback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -537462,7 +537763,7 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "61ea8243ad2767c9726361e7e974e73420e0b6d823f8d0f5f96dd538add32a87"
+              "sha256": "1cbdcfcfd7ec6a29e8a571466bad542a79b4d2f22c0a2c21dd2ae2356e578db1"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -537522,7 +537823,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "36c0dbfd2493822946019d086a52d02c1ae79a53e1b4de852124467995df06b7"
+              "sha256": "5becc851da07813acfdff5380658a47c01b9e3930708d08e93ff5f0cbefe699b"
             },
             {
               "path": "apps/web/src/pages/ai-admin-presentation.test.tsx",
@@ -538515,6 +538816,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-confirmed-electricity-feedback",
+              "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
             }
           ]
         },
@@ -538619,7 +538925,8 @@
           "release-0.5-verified-command-rejection",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-confirmed-electricity-feedback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -539183,7 +539490,7 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "61ea8243ad2767c9726361e7e974e73420e0b6d823f8d0f5f96dd538add32a87"
+              "sha256": "1cbdcfcfd7ec6a29e8a571466bad542a79b4d2f22c0a2c21dd2ae2356e578db1"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -539243,7 +539550,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "36c0dbfd2493822946019d086a52d02c1ae79a53e1b4de852124467995df06b7"
+              "sha256": "5becc851da07813acfdff5380658a47c01b9e3930708d08e93ff5f0cbefe699b"
             },
             {
               "path": "apps/web/src/pages/ai-admin-presentation.test.tsx",
@@ -540236,6 +540543,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-confirmed-electricity-feedback",
+              "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
             }
           ]
         },
@@ -540366,7 +540678,8 @@
           "release-0.5-verified-command-rejection",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-confirmed-electricity-feedback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -540930,7 +541243,7 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "61ea8243ad2767c9726361e7e974e73420e0b6d823f8d0f5f96dd538add32a87"
+              "sha256": "1cbdcfcfd7ec6a29e8a571466bad542a79b4d2f22c0a2c21dd2ae2356e578db1"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -540990,7 +541303,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "36c0dbfd2493822946019d086a52d02c1ae79a53e1b4de852124467995df06b7"
+              "sha256": "5becc851da07813acfdff5380658a47c01b9e3930708d08e93ff5f0cbefe699b"
             },
             {
               "path": "apps/web/src/pages/ai-admin-presentation.test.tsx",
@@ -541983,6 +542296,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-confirmed-electricity-feedback",
+              "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
             }
           ]
         },
@@ -542122,7 +542440,8 @@
           "release-0.5-verified-command-rejection",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-confirmed-electricity-feedback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -542686,7 +543005,7 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "61ea8243ad2767c9726361e7e974e73420e0b6d823f8d0f5f96dd538add32a87"
+              "sha256": "1cbdcfcfd7ec6a29e8a571466bad542a79b4d2f22c0a2c21dd2ae2356e578db1"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -542746,7 +543065,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "36c0dbfd2493822946019d086a52d02c1ae79a53e1b4de852124467995df06b7"
+              "sha256": "5becc851da07813acfdff5380658a47c01b9e3930708d08e93ff5f0cbefe699b"
             },
             {
               "path": "apps/web/src/pages/ai-admin-presentation.test.tsx",
@@ -543739,6 +544058,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-confirmed-electricity-feedback",
+              "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
             }
           ]
         },
@@ -543851,7 +544175,8 @@
           "release-0.5-verified-command-rejection",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-confirmed-electricity-feedback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -544415,7 +544740,7 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "61ea8243ad2767c9726361e7e974e73420e0b6d823f8d0f5f96dd538add32a87"
+              "sha256": "1cbdcfcfd7ec6a29e8a571466bad542a79b4d2f22c0a2c21dd2ae2356e578db1"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -544475,7 +544800,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "36c0dbfd2493822946019d086a52d02c1ae79a53e1b4de852124467995df06b7"
+              "sha256": "5becc851da07813acfdff5380658a47c01b9e3930708d08e93ff5f0cbefe699b"
             },
             {
               "path": "apps/web/src/pages/ai-admin-presentation.test.tsx",
@@ -545468,6 +545793,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-confirmed-electricity-feedback",
+              "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
             }
           ]
         },
@@ -545544,7 +545874,8 @@
           "release-0.5-verified-command-rejection",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-confirmed-electricity-feedback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -546108,7 +546439,7 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "61ea8243ad2767c9726361e7e974e73420e0b6d823f8d0f5f96dd538add32a87"
+              "sha256": "1cbdcfcfd7ec6a29e8a571466bad542a79b4d2f22c0a2c21dd2ae2356e578db1"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -546168,7 +546499,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "36c0dbfd2493822946019d086a52d02c1ae79a53e1b4de852124467995df06b7"
+              "sha256": "5becc851da07813acfdff5380658a47c01b9e3930708d08e93ff5f0cbefe699b"
             },
             {
               "path": "apps/web/src/pages/ai-admin-presentation.test.tsx",
@@ -547161,6 +547492,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-confirmed-electricity-feedback",
+              "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
             }
           ]
         },
@@ -547237,7 +547573,8 @@
           "release-0.5-verified-command-rejection",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-confirmed-electricity-feedback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -547801,7 +548138,7 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "61ea8243ad2767c9726361e7e974e73420e0b6d823f8d0f5f96dd538add32a87"
+              "sha256": "1cbdcfcfd7ec6a29e8a571466bad542a79b4d2f22c0a2c21dd2ae2356e578db1"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -547861,7 +548198,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "36c0dbfd2493822946019d086a52d02c1ae79a53e1b4de852124467995df06b7"
+              "sha256": "5becc851da07813acfdff5380658a47c01b9e3930708d08e93ff5f0cbefe699b"
             },
             {
               "path": "apps/web/src/pages/ai-admin-presentation.test.tsx",
@@ -548854,6 +549191,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-confirmed-electricity-feedback",
+              "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
             }
           ]
         },
@@ -548931,7 +549273,8 @@
           "release-0.5-verified-command-rejection",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-confirmed-electricity-feedback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -549495,7 +549838,7 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "61ea8243ad2767c9726361e7e974e73420e0b6d823f8d0f5f96dd538add32a87"
+              "sha256": "1cbdcfcfd7ec6a29e8a571466bad542a79b4d2f22c0a2c21dd2ae2356e578db1"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -549555,7 +549898,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "36c0dbfd2493822946019d086a52d02c1ae79a53e1b4de852124467995df06b7"
+              "sha256": "5becc851da07813acfdff5380658a47c01b9e3930708d08e93ff5f0cbefe699b"
             },
             {
               "path": "apps/web/src/pages/ai-admin-presentation.test.tsx",
@@ -550548,6 +550891,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-confirmed-electricity-feedback",
+              "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
             }
           ]
         },
@@ -550624,7 +550972,8 @@
           "release-0.5-verified-command-rejection",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-confirmed-electricity-feedback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -551188,7 +551537,7 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "61ea8243ad2767c9726361e7e974e73420e0b6d823f8d0f5f96dd538add32a87"
+              "sha256": "1cbdcfcfd7ec6a29e8a571466bad542a79b4d2f22c0a2c21dd2ae2356e578db1"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -551248,7 +551597,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "36c0dbfd2493822946019d086a52d02c1ae79a53e1b4de852124467995df06b7"
+              "sha256": "5becc851da07813acfdff5380658a47c01b9e3930708d08e93ff5f0cbefe699b"
             },
             {
               "path": "apps/web/src/pages/ai-admin-presentation.test.tsx",
@@ -552241,6 +552590,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-confirmed-electricity-feedback",
+              "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
             }
           ]
         },
@@ -552310,7 +552664,8 @@
           "release-0.5-verified-command-rejection",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-confirmed-electricity-feedback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -552998,7 +553353,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "36c0dbfd2493822946019d086a52d02c1ae79a53e1b4de852124467995df06b7"
+              "sha256": "5becc851da07813acfdff5380658a47c01b9e3930708d08e93ff5f0cbefe699b"
             },
             {
               "path": "apps/web/src/pages/ai-admin-presentation.test.tsx",
@@ -554021,6 +554376,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-confirmed-electricity-feedback",
+              "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
             }
           ]
         }
@@ -554084,7 +554444,8 @@
           "release-0.5-verified-command-rejection",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-confirmed-electricity-feedback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -554772,7 +555133,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "36c0dbfd2493822946019d086a52d02c1ae79a53e1b4de852124467995df06b7"
+              "sha256": "5becc851da07813acfdff5380658a47c01b9e3930708d08e93ff5f0cbefe699b"
             },
             {
               "path": "apps/web/src/pages/ai-admin-presentation.test.tsx",
@@ -555795,6 +556156,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-confirmed-electricity-feedback",
+              "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
             }
           ]
         }
@@ -555815,7 +556181,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Saving submission failures now show the localized form alert and an automatic error toast. The original review, body and idempotency key survive the explicit retry, and the private response is not rendered. Simple electricity rejection remains scoped. Reconcile remaining release command feedback and the original interceptor requirement."
+        "Advanced electricity now displays a localized failure message and one success toast only after a complete current receipt. Malformed and lost responses preserve the same request and reference through explicit retry, and stale receipts stay silent. Current saving and simple electricity receipts remain scoped. Remaining command adoption and the interceptor requirement are open."
       ],
       "owner": null,
       "depends_on": [],
@@ -555835,7 +556201,8 @@
           "release-0.5-final-rehearsal",
           "release-0.5-route-census-closure",
           "release-0.5-verified-command-rejection",
-          "release-0.5-compact-touch-and-saving-feedback"
+          "release-0.5-compact-touch-and-saving-feedback",
+          "release-0.5-confirmed-electricity-feedback"
         ],
         "current_acceptance": null
       }
@@ -555898,7 +556265,8 @@
           "release-0.5-verified-command-rejection",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-confirmed-electricity-feedback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -556586,7 +556954,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "36c0dbfd2493822946019d086a52d02c1ae79a53e1b4de852124467995df06b7"
+              "sha256": "5becc851da07813acfdff5380658a47c01b9e3930708d08e93ff5f0cbefe699b"
             },
             {
               "path": "apps/web/src/pages/ai-admin-presentation.test.tsx",
@@ -557609,6 +557977,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-confirmed-electricity-feedback",
+              "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
             }
           ]
         }
@@ -557672,7 +558045,8 @@
           "release-0.5-verified-command-rejection",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-confirmed-electricity-feedback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -558360,7 +558734,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "36c0dbfd2493822946019d086a52d02c1ae79a53e1b4de852124467995df06b7"
+              "sha256": "5becc851da07813acfdff5380658a47c01b9e3930708d08e93ff5f0cbefe699b"
             },
             {
               "path": "apps/web/src/pages/ai-admin-presentation.test.tsx",
@@ -559383,6 +559757,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-confirmed-electricity-feedback",
+              "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
             }
           ]
         }
@@ -559446,7 +559825,8 @@
           "release-0.5-verified-command-rejection",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-confirmed-electricity-feedback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -560134,7 +560514,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "36c0dbfd2493822946019d086a52d02c1ae79a53e1b4de852124467995df06b7"
+              "sha256": "5becc851da07813acfdff5380658a47c01b9e3930708d08e93ff5f0cbefe699b"
             },
             {
               "path": "apps/web/src/pages/ai-admin-presentation.test.tsx",
@@ -561157,6 +561537,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-confirmed-electricity-feedback",
+              "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
             }
           ]
         }
@@ -561220,7 +561605,8 @@
           "release-0.5-verified-command-rejection",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-confirmed-electricity-feedback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -561908,7 +562294,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "36c0dbfd2493822946019d086a52d02c1ae79a53e1b4de852124467995df06b7"
+              "sha256": "5becc851da07813acfdff5380658a47c01b9e3930708d08e93ff5f0cbefe699b"
             },
             {
               "path": "apps/web/src/pages/ai-admin-presentation.test.tsx",
@@ -562931,6 +563317,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-confirmed-electricity-feedback",
+              "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
             }
           ]
         }
@@ -562994,7 +563385,8 @@
           "release-0.5-verified-command-rejection",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-confirmed-electricity-feedback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -563682,7 +564074,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "36c0dbfd2493822946019d086a52d02c1ae79a53e1b4de852124467995df06b7"
+              "sha256": "5becc851da07813acfdff5380658a47c01b9e3930708d08e93ff5f0cbefe699b"
             },
             {
               "path": "apps/web/src/pages/ai-admin-presentation.test.tsx",
@@ -564705,6 +565097,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-confirmed-electricity-feedback",
+              "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
             }
           ]
         }
@@ -564768,7 +565165,8 @@
           "release-0.5-verified-command-rejection",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-confirmed-electricity-feedback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -565456,7 +565854,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "36c0dbfd2493822946019d086a52d02c1ae79a53e1b4de852124467995df06b7"
+              "sha256": "5becc851da07813acfdff5380658a47c01b9e3930708d08e93ff5f0cbefe699b"
             },
             {
               "path": "apps/web/src/pages/ai-admin-presentation.test.tsx",
@@ -566479,6 +566877,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-confirmed-electricity-feedback",
+              "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
             }
           ]
         }
@@ -566542,7 +566945,8 @@
           "release-0.5-verified-command-rejection",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-confirmed-electricity-feedback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -567230,7 +567634,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "36c0dbfd2493822946019d086a52d02c1ae79a53e1b4de852124467995df06b7"
+              "sha256": "5becc851da07813acfdff5380658a47c01b9e3930708d08e93ff5f0cbefe699b"
             },
             {
               "path": "apps/web/src/pages/ai-admin-presentation.test.tsx",
@@ -568253,6 +568657,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-confirmed-electricity-feedback",
+              "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
             }
           ]
         }
@@ -568316,7 +568725,8 @@
           "release-0.5-verified-command-rejection",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-confirmed-electricity-feedback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -569004,7 +569414,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "36c0dbfd2493822946019d086a52d02c1ae79a53e1b4de852124467995df06b7"
+              "sha256": "5becc851da07813acfdff5380658a47c01b9e3930708d08e93ff5f0cbefe699b"
             },
             {
               "path": "apps/web/src/pages/ai-admin-presentation.test.tsx",
@@ -570027,6 +570437,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-confirmed-electricity-feedback",
+              "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
             }
           ]
         }
@@ -570090,7 +570505,8 @@
           "release-0.5-verified-command-rejection",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-confirmed-electricity-feedback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -570778,7 +571194,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "36c0dbfd2493822946019d086a52d02c1ae79a53e1b4de852124467995df06b7"
+              "sha256": "5becc851da07813acfdff5380658a47c01b9e3930708d08e93ff5f0cbefe699b"
             },
             {
               "path": "apps/web/src/pages/ai-admin-presentation.test.tsx",
@@ -571801,6 +572217,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-confirmed-electricity-feedback",
+              "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
             }
           ]
         }
@@ -571864,7 +572285,8 @@
           "release-0.5-verified-command-rejection",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-confirmed-electricity-feedback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -572552,7 +572974,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "36c0dbfd2493822946019d086a52d02c1ae79a53e1b4de852124467995df06b7"
+              "sha256": "5becc851da07813acfdff5380658a47c01b9e3930708d08e93ff5f0cbefe699b"
             },
             {
               "path": "apps/web/src/pages/ai-admin-presentation.test.tsx",
@@ -573575,6 +573997,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-confirmed-electricity-feedback",
+              "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
             }
           ]
         }
@@ -573638,7 +574065,8 @@
           "release-0.5-verified-command-rejection",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-confirmed-electricity-feedback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -574326,7 +574754,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "36c0dbfd2493822946019d086a52d02c1ae79a53e1b4de852124467995df06b7"
+              "sha256": "5becc851da07813acfdff5380658a47c01b9e3930708d08e93ff5f0cbefe699b"
             },
             {
               "path": "apps/web/src/pages/ai-admin-presentation.test.tsx",
@@ -575349,6 +575777,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-confirmed-electricity-feedback",
+              "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
             }
           ]
         }
@@ -576091,7 +576524,8 @@
           "release-0.5-verified-command-rejection",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-confirmed-electricity-feedback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -576779,7 +577213,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "36c0dbfd2493822946019d086a52d02c1ae79a53e1b4de852124467995df06b7"
+              "sha256": "5becc851da07813acfdff5380658a47c01b9e3930708d08e93ff5f0cbefe699b"
             },
             {
               "path": "apps/web/src/pages/ai-admin-presentation.test.tsx",
@@ -577802,6 +578236,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-confirmed-electricity-feedback",
+              "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
             }
           ]
         }
@@ -577865,7 +578304,8 @@
           "release-0.5-verified-command-rejection",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-confirmed-electricity-feedback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -578553,7 +578993,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "36c0dbfd2493822946019d086a52d02c1ae79a53e1b4de852124467995df06b7"
+              "sha256": "5becc851da07813acfdff5380658a47c01b9e3930708d08e93ff5f0cbefe699b"
             },
             {
               "path": "apps/web/src/pages/ai-admin-presentation.test.tsx",
@@ -579576,6 +580016,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-confirmed-electricity-feedback",
+              "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
             }
           ]
         }
@@ -579713,7 +580158,8 @@
           "release-0.5-verified-command-rejection",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-confirmed-electricity-feedback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -580277,7 +580723,7 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "61ea8243ad2767c9726361e7e974e73420e0b6d823f8d0f5f96dd538add32a87"
+              "sha256": "1cbdcfcfd7ec6a29e8a571466bad542a79b4d2f22c0a2c21dd2ae2356e578db1"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -580337,7 +580783,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "36c0dbfd2493822946019d086a52d02c1ae79a53e1b4de852124467995df06b7"
+              "sha256": "5becc851da07813acfdff5380658a47c01b9e3930708d08e93ff5f0cbefe699b"
             },
             {
               "path": "apps/web/src/pages/ai-admin-presentation.test.tsx",
@@ -581330,6 +581776,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-confirmed-electricity-feedback",
+              "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
             }
           ]
         },
@@ -581402,7 +581853,8 @@
           "release-0.5-verified-command-rejection",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-confirmed-electricity-feedback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -581966,7 +582418,7 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "61ea8243ad2767c9726361e7e974e73420e0b6d823f8d0f5f96dd538add32a87"
+              "sha256": "1cbdcfcfd7ec6a29e8a571466bad542a79b4d2f22c0a2c21dd2ae2356e578db1"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -582026,7 +582478,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "36c0dbfd2493822946019d086a52d02c1ae79a53e1b4de852124467995df06b7"
+              "sha256": "5becc851da07813acfdff5380658a47c01b9e3930708d08e93ff5f0cbefe699b"
             },
             {
               "path": "apps/web/src/pages/ai-admin-presentation.test.tsx",
@@ -583019,6 +583471,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-confirmed-electricity-feedback",
+              "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
             }
           ]
         },
@@ -583091,7 +583548,8 @@
           "release-0.5-verified-command-rejection",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-confirmed-electricity-feedback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -583655,7 +584113,7 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "61ea8243ad2767c9726361e7e974e73420e0b6d823f8d0f5f96dd538add32a87"
+              "sha256": "1cbdcfcfd7ec6a29e8a571466bad542a79b4d2f22c0a2c21dd2ae2356e578db1"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -583715,7 +584173,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "36c0dbfd2493822946019d086a52d02c1ae79a53e1b4de852124467995df06b7"
+              "sha256": "5becc851da07813acfdff5380658a47c01b9e3930708d08e93ff5f0cbefe699b"
             },
             {
               "path": "apps/web/src/pages/ai-admin-presentation.test.tsx",
@@ -584708,6 +585166,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-confirmed-electricity-feedback",
+              "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
             }
           ]
         },
@@ -584780,7 +585243,8 @@
           "release-0.5-verified-command-rejection",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-confirmed-electricity-feedback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -585344,7 +585808,7 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "61ea8243ad2767c9726361e7e974e73420e0b6d823f8d0f5f96dd538add32a87"
+              "sha256": "1cbdcfcfd7ec6a29e8a571466bad542a79b4d2f22c0a2c21dd2ae2356e578db1"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -585404,7 +585868,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "36c0dbfd2493822946019d086a52d02c1ae79a53e1b4de852124467995df06b7"
+              "sha256": "5becc851da07813acfdff5380658a47c01b9e3930708d08e93ff5f0cbefe699b"
             },
             {
               "path": "apps/web/src/pages/ai-admin-presentation.test.tsx",
@@ -586397,6 +586861,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-confirmed-electricity-feedback",
+              "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
             }
           ]
         },
@@ -586469,7 +586938,8 @@
           "release-0.5-verified-command-rejection",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-confirmed-electricity-feedback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -587033,7 +587503,7 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "61ea8243ad2767c9726361e7e974e73420e0b6d823f8d0f5f96dd538add32a87"
+              "sha256": "1cbdcfcfd7ec6a29e8a571466bad542a79b4d2f22c0a2c21dd2ae2356e578db1"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -587093,7 +587563,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "36c0dbfd2493822946019d086a52d02c1ae79a53e1b4de852124467995df06b7"
+              "sha256": "5becc851da07813acfdff5380658a47c01b9e3930708d08e93ff5f0cbefe699b"
             },
             {
               "path": "apps/web/src/pages/ai-admin-presentation.test.tsx",
@@ -588086,6 +588556,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-confirmed-electricity-feedback",
+              "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
             }
           ]
         },
@@ -588158,7 +588633,8 @@
           "release-0.5-verified-command-rejection",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-confirmed-electricity-feedback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -588722,7 +589198,7 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "61ea8243ad2767c9726361e7e974e73420e0b6d823f8d0f5f96dd538add32a87"
+              "sha256": "1cbdcfcfd7ec6a29e8a571466bad542a79b4d2f22c0a2c21dd2ae2356e578db1"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -588782,7 +589258,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "36c0dbfd2493822946019d086a52d02c1ae79a53e1b4de852124467995df06b7"
+              "sha256": "5becc851da07813acfdff5380658a47c01b9e3930708d08e93ff5f0cbefe699b"
             },
             {
               "path": "apps/web/src/pages/ai-admin-presentation.test.tsx",
@@ -589775,6 +590251,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-confirmed-electricity-feedback",
+              "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
             }
           ]
         },
@@ -589847,7 +590328,8 @@
           "release-0.5-verified-command-rejection",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-confirmed-electricity-feedback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -590411,7 +590893,7 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "61ea8243ad2767c9726361e7e974e73420e0b6d823f8d0f5f96dd538add32a87"
+              "sha256": "1cbdcfcfd7ec6a29e8a571466bad542a79b4d2f22c0a2c21dd2ae2356e578db1"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -590471,7 +590953,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "36c0dbfd2493822946019d086a52d02c1ae79a53e1b4de852124467995df06b7"
+              "sha256": "5becc851da07813acfdff5380658a47c01b9e3930708d08e93ff5f0cbefe699b"
             },
             {
               "path": "apps/web/src/pages/ai-admin-presentation.test.tsx",
@@ -591464,6 +591946,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-confirmed-electricity-feedback",
+              "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
             }
           ]
         },
@@ -647858,7 +648345,8 @@
           "release-0.5-verified-command-rejection",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-confirmed-electricity-feedback"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -648102,7 +648590,7 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "61ea8243ad2767c9726361e7e974e73420e0b6d823f8d0f5f96dd538add32a87"
+              "sha256": "1cbdcfcfd7ec6a29e8a571466bad542a79b4d2f22c0a2c21dd2ae2356e578db1"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -648118,7 +648606,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "36c0dbfd2493822946019d086a52d02c1ae79a53e1b4de852124467995df06b7"
+              "sha256": "5becc851da07813acfdff5380658a47c01b9e3930708d08e93ff5f0cbefe699b"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -648423,6 +648911,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-confirmed-electricity-feedback",
+              "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
             }
           ]
         }
@@ -648472,7 +648965,8 @@
           "release-0.5-verified-command-rejection",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-confirmed-electricity-feedback"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -648716,7 +649210,7 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "61ea8243ad2767c9726361e7e974e73420e0b6d823f8d0f5f96dd538add32a87"
+              "sha256": "1cbdcfcfd7ec6a29e8a571466bad542a79b4d2f22c0a2c21dd2ae2356e578db1"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -648732,7 +649226,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "36c0dbfd2493822946019d086a52d02c1ae79a53e1b4de852124467995df06b7"
+              "sha256": "5becc851da07813acfdff5380658a47c01b9e3930708d08e93ff5f0cbefe699b"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -649037,6 +649531,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-confirmed-electricity-feedback",
+              "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
             }
           ]
         }
@@ -649085,7 +649584,8 @@
           "release-0.5-verified-command-rejection",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-confirmed-electricity-feedback"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -649329,7 +649829,7 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "61ea8243ad2767c9726361e7e974e73420e0b6d823f8d0f5f96dd538add32a87"
+              "sha256": "1cbdcfcfd7ec6a29e8a571466bad542a79b4d2f22c0a2c21dd2ae2356e578db1"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -649345,7 +649845,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "36c0dbfd2493822946019d086a52d02c1ae79a53e1b4de852124467995df06b7"
+              "sha256": "5becc851da07813acfdff5380658a47c01b9e3930708d08e93ff5f0cbefe699b"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -649650,6 +650150,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-confirmed-electricity-feedback",
+              "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
             }
           ]
         }
@@ -649700,7 +650205,8 @@
           "release-0.5-verified-command-rejection",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-confirmed-electricity-feedback"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -649944,7 +650450,7 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "61ea8243ad2767c9726361e7e974e73420e0b6d823f8d0f5f96dd538add32a87"
+              "sha256": "1cbdcfcfd7ec6a29e8a571466bad542a79b4d2f22c0a2c21dd2ae2356e578db1"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -649960,7 +650466,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "36c0dbfd2493822946019d086a52d02c1ae79a53e1b4de852124467995df06b7"
+              "sha256": "5becc851da07813acfdff5380658a47c01b9e3930708d08e93ff5f0cbefe699b"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -650265,6 +650771,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-confirmed-electricity-feedback",
+              "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
             }
           ]
         }
@@ -650315,7 +650826,8 @@
           "release-0.5-verified-command-rejection",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-confirmed-electricity-feedback"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -650559,7 +651071,7 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "61ea8243ad2767c9726361e7e974e73420e0b6d823f8d0f5f96dd538add32a87"
+              "sha256": "1cbdcfcfd7ec6a29e8a571466bad542a79b4d2f22c0a2c21dd2ae2356e578db1"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -650575,7 +651087,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "36c0dbfd2493822946019d086a52d02c1ae79a53e1b4de852124467995df06b7"
+              "sha256": "5becc851da07813acfdff5380658a47c01b9e3930708d08e93ff5f0cbefe699b"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -650880,6 +651392,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-confirmed-electricity-feedback",
+              "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
             }
           ]
         }
@@ -650927,7 +651444,8 @@
           "release-0.5-verified-command-rejection",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-confirmed-electricity-feedback"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -651171,7 +651689,7 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "61ea8243ad2767c9726361e7e974e73420e0b6d823f8d0f5f96dd538add32a87"
+              "sha256": "1cbdcfcfd7ec6a29e8a571466bad542a79b4d2f22c0a2c21dd2ae2356e578db1"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -651187,7 +651705,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "36c0dbfd2493822946019d086a52d02c1ae79a53e1b4de852124467995df06b7"
+              "sha256": "5becc851da07813acfdff5380658a47c01b9e3930708d08e93ff5f0cbefe699b"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -651492,6 +652010,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-confirmed-electricity-feedback",
+              "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
             }
           ]
         }
@@ -651539,7 +652062,8 @@
           "release-0.5-verified-command-rejection",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-confirmed-electricity-feedback"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -651783,7 +652307,7 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "61ea8243ad2767c9726361e7e974e73420e0b6d823f8d0f5f96dd538add32a87"
+              "sha256": "1cbdcfcfd7ec6a29e8a571466bad542a79b4d2f22c0a2c21dd2ae2356e578db1"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -651799,7 +652323,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "36c0dbfd2493822946019d086a52d02c1ae79a53e1b4de852124467995df06b7"
+              "sha256": "5becc851da07813acfdff5380658a47c01b9e3930708d08e93ff5f0cbefe699b"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -652104,6 +652628,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-confirmed-electricity-feedback",
+              "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
             }
           ]
         }
@@ -652152,7 +652681,8 @@
           "release-0.5-verified-command-rejection",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-confirmed-electricity-feedback"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -652396,7 +652926,7 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "61ea8243ad2767c9726361e7e974e73420e0b6d823f8d0f5f96dd538add32a87"
+              "sha256": "1cbdcfcfd7ec6a29e8a571466bad542a79b4d2f22c0a2c21dd2ae2356e578db1"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -652412,7 +652942,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "36c0dbfd2493822946019d086a52d02c1ae79a53e1b4de852124467995df06b7"
+              "sha256": "5becc851da07813acfdff5380658a47c01b9e3930708d08e93ff5f0cbefe699b"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -652717,6 +653247,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-confirmed-electricity-feedback",
+              "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
             }
           ]
         }
@@ -652764,7 +653299,8 @@
           "release-0.5-verified-command-rejection",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-confirmed-electricity-feedback"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -653008,7 +653544,7 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "61ea8243ad2767c9726361e7e974e73420e0b6d823f8d0f5f96dd538add32a87"
+              "sha256": "1cbdcfcfd7ec6a29e8a571466bad542a79b4d2f22c0a2c21dd2ae2356e578db1"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -653024,7 +653560,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "36c0dbfd2493822946019d086a52d02c1ae79a53e1b4de852124467995df06b7"
+              "sha256": "5becc851da07813acfdff5380658a47c01b9e3930708d08e93ff5f0cbefe699b"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -653329,6 +653865,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-confirmed-electricity-feedback",
+              "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
             }
           ]
         }
@@ -653377,7 +653918,8 @@
           "release-0.5-verified-command-rejection",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-confirmed-electricity-feedback"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -653621,7 +654163,7 @@
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
-              "sha256": "61ea8243ad2767c9726361e7e974e73420e0b6d823f8d0f5f96dd538add32a87"
+              "sha256": "1cbdcfcfd7ec6a29e8a571466bad542a79b4d2f22c0a2c21dd2ae2356e578db1"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -653637,7 +654179,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "36c0dbfd2493822946019d086a52d02c1ae79a53e1b4de852124467995df06b7"
+              "sha256": "5becc851da07813acfdff5380658a47c01b9e3930708d08e93ff5f0cbefe699b"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -653942,6 +654484,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-confirmed-electricity-feedback",
+              "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
             }
           ]
         }
@@ -684076,7 +684623,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-journey.spec.ts",
-              "sha256": "e13027e4811239815ecf1b0defe5e09a4d79b0d3b374b6318949a2fd876fe97d"
+              "sha256": "aa0f356f4a5bd5ef322aa613d86dbb0a06b5e2b79c01ec5d897319781813c488"
             },
             {
               "path": "apps/web/e2e/electricity-simple-journey.spec.ts",
@@ -684124,7 +684671,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "36c0dbfd2493822946019d086a52d02c1ae79a53e1b4de852124467995df06b7"
+              "sha256": "5becc851da07813acfdff5380658a47c01b9e3930708d08e93ff5f0cbefe699b"
             },
             {
               "path": "apps/web/src/pages/electricity-catalogue.test.tsx",
@@ -685122,6 +685669,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-confirmed-electricity-feedback",
+              "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
             }
           ]
         },
@@ -685165,7 +685717,8 @@
           "release-0.5-verified-command-rejection",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-confirmed-electricity-feedback"
         ],
         "inspection": {
           "wallet_history": "R-01.02 accepted separately.",
@@ -686080,7 +686633,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-journey.spec.ts",
-              "sha256": "e13027e4811239815ecf1b0defe5e09a4d79b0d3b374b6318949a2fd876fe97d"
+              "sha256": "aa0f356f4a5bd5ef322aa613d86dbb0a06b5e2b79c01ec5d897319781813c488"
             },
             {
               "path": "apps/web/e2e/electricity-simple-journey.spec.ts",
@@ -686128,7 +686681,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "36c0dbfd2493822946019d086a52d02c1ae79a53e1b4de852124467995df06b7"
+              "sha256": "5becc851da07813acfdff5380658a47c01b9e3930708d08e93ff5f0cbefe699b"
             },
             {
               "path": "apps/web/src/pages/electricity-catalogue.test.tsx",
@@ -687119,6 +687672,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-confirmed-electricity-feedback",
+              "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
             }
           ]
         },
@@ -687158,7 +687716,8 @@
           "release-0.5-verified-command-rejection",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-confirmed-electricity-feedback"
         ]
       }
     },
@@ -692325,7 +692884,7 @@
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
-              "sha256": "36c0dbfd2493822946019d086a52d02c1ae79a53e1b4de852124467995df06b7"
+              "sha256": "5becc851da07813acfdff5380658a47c01b9e3930708d08e93ff5f0cbefe699b"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -695772,6 +696331,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-confirmed-electricity-feedback",
+              "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
             }
           ]
         },
@@ -695823,7 +696387,8 @@
           "release-0.5-staff-confirmation-fixtures",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-confirmed-electricity-feedback"
         ]
       }
     },
@@ -703606,7 +704171,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "The preceding exact commit mapped 988 passing browser cases. Its critical web branch result was 20,488/24,164 (84.79%), 52 branches below the 85% floor. One notification fixture let the response recover before the failure assertion and prevented mapping its 44-case group. The corrected fixture waits for the visible error and retains its cursor and retry assertions. The successor needs exact combined coverage."
+        "The preceding exact source mapped 1,036 passing browser cases. Combined coverage passed and critical web branches were 20,565/24,164 (85.11%). The isolated advanced electricity feedback change passed its related units, native journeys and all 98 bundle limits. Final candidate coverage and presentation gates remain required."
       ],
       "owner": null,
       "depends_on": [],
@@ -703643,7 +704208,8 @@
           "release-0.5-staff-confirmation-fixtures",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-confirmed-electricity-feedback"
         ]
       }
     },
@@ -762583,7 +763149,151 @@
         "release-readiness#R-03.02"
       ],
       "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-renewed-source-bindings.json",
-      "release_disposition": "Exact successor coverage, remaining v0.5.0 requirements and owner dispositions gate staging acceptance."
+      "release_disposition": "Exact successor coverage, remaining v0.5.0 requirements and owner dispositions gate staging acceptance.",
+      "push_receipt": {
+        "local_sha": "a24ab6475afb34b1827c0542689e3c571b122454",
+        "remote_sha": "a24ab6475afb34b1827c0542689e3c571b122454",
+        "verified_at": "2026-11-07T16:14:07+00:00"
+      }
+    },
+    "release-0.5-confirmed-electricity-feedback": {
+      "batch": "release-0.5-confirmed-electricity-feedback",
+      "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.11.01.03",
+        "release-readiness#R-04.02"
+      ],
+      "accepted_task_keys": [],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.11.01.03",
+        "release-readiness#R-04.02"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/electricity-journey.spec.ts",
+          "sha256": "aa0f356f4a5bd5ef322aa613d86dbb0a06b5e2b79c01ec5d897319781813c488"
+        },
+        {
+          "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
+          "sha256": "1cbdcfcfd7ec6a29e8a571466bad542a79b4d2f22c0a2c21dd2ae2356e578db1"
+        },
+        {
+          "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
+          "sha256": "5becc851da07813acfdff5380658a47c01b9e3930708d08e93ff5f0cbefe699b"
+        }
+      ],
+      "checks": [
+        "An earlier run reproduced the literal untranslated advanced submission failure key.",
+        "The reviewed patch passed 14 scoped web units, four Persian/English Chromium and Safari electricity payment and contract journeys, changed-file lint, format and web typecheck. A complete current receipt emits success once, navigation failure emits no conflicting error, and explicit retries retain the identical serialized body and key.",
+        "The production web build passed all 98 unchanged limits. Electricity ordering was 254.94 KB gzip against 255 KB.",
+        "The preceding exact source mapped 1,036 passing browser cases. Combined coverage passed and critical web branches were 20,565/24,164 (85.11%). The isolated advanced electricity feedback change passed its related units, native journeys and all 98 bundle limits. Final candidate coverage and presentation gates remain required."
+      ],
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json",
+      "source_scope_proof_sha256": "ab6c5970c7b8d9ccbcc3a3bca6c7c6c8fe0f705772f13bcecb5f328a5647124d",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/advanced-electricity-confirmed-feedback.patch",
+      "preceding_exact_coverage_receipt": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-native-touch-setup-exact/combined-current-gate.json",
+      "preceding_exact_coverage_sha256": "5a8bb3f6273a80ab002ca34c0f4ed6b11165da4f7b5ffe65ed8a799cdd6d3e85",
+      "preceding_exact_presentation_receipt": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-native-touch-setup-exact/final-exact-presentation.json",
+      "preceding_exact_presentation_sha256": "e835e1d1cb2d9841dfde66866b1d25417449de30f8fed1fc79c813d6fd77b0cd",
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback",
+      "renewed_task_keys": [
+        "02-auth-users-admin.md#T-02.02.03",
+        "02-auth-users-admin.md#T-02.03.03",
+        "02-auth-users-admin.md#T-03.04.01",
+        "02-auth-users-admin.md#T-03.04.02",
+        "02-auth-users-admin.md#T-04.01.01",
+        "02-auth-users-admin.md#T-04.01.02",
+        "02-auth-users-admin.md#T-04.01.03",
+        "03-core-business.md#T-03.04.01.01",
+        "03-core-business.md#T-03.04.01.02",
+        "03-core-business.md#T-03.04.01.03",
+        "03-core-business.md#T-03.04.01.04",
+        "03-core-business.md#T-03.04.01.05",
+        "03-core-business.md#T-03.04.02.01",
+        "03-core-business.md#T-03.04.02.02",
+        "03-core-business.md#T-03.04.02.03",
+        "03-core-business.md#T-03.04.02.04",
+        "03-core-business.md#T-03.04.03.01",
+        "03-core-business.md#T-03.04.03.02",
+        "03-core-business.md#T-03.04.03.03",
+        "03-core-business.md#T-03.04.03.04",
+        "03-core-business.md#T-03.04.04.01",
+        "03-core-business.md#T-03.04.04.02",
+        "03-core-business.md#T-03.04.04.03",
+        "03-core-business.md#T-03.04.04.04",
+        "03-core-business.md#T-03.05.01.04",
+        "03-core-business.md#T-03.05.03.02",
+        "03-core-business.md#T-03.06.01.01",
+        "03-core-business.md#T-03.06.01.02",
+        "03-core-business.md#T-03.06.01.03",
+        "03-core-business.md#T-03.06.02.01",
+        "03-core-business.md#T-03.06.02.02",
+        "03-core-business.md#T-03.06.02.03",
+        "03-core-business.md#T-03.06.02.04",
+        "03-core-business.md#T-03.06.03.01",
+        "03-core-business.md#T-03.06.03.02",
+        "03-core-business.md#T-03.06.03.03",
+        "03-core-business.md#T-03.06.04.01",
+        "03-core-business.md#T-03.06.04.02",
+        "03-core-business.md#T-03.06.04.03",
+        "03-core-business.md#T-03.06.04.04",
+        "03-core-business.md#T-03.06.04.05",
+        "03-core-business.md#T-03.06.04.06",
+        "03-core-business.md#T-03.07.01.01",
+        "03-core-business.md#T-03.09.01.01",
+        "03-core-business.md#T-03.09.03.01",
+        "03-core-business.md#T-03.09.03.03",
+        "03-core-business.md#T-03.90.02",
+        "07-ui-ux-design.md#T-07.01.03.19",
+        "07-ui-ux-design.md#T-07.10.01.01",
+        "07-ui-ux-design.md#T-07.10.01.02",
+        "07-ui-ux-design.md#T-07.10.01.03",
+        "07-ui-ux-design.md#T-07.10.01.04",
+        "07-ui-ux-design.md#T-07.10.01.05",
+        "07-ui-ux-design.md#T-07.10.01.06",
+        "07-ui-ux-design.md#T-07.10.02.01",
+        "07-ui-ux-design.md#T-07.10.02.02",
+        "07-ui-ux-design.md#T-07.10.02.03",
+        "07-ui-ux-design.md#T-07.10.02.04",
+        "07-ui-ux-design.md#T-07.10.02.05",
+        "07-ui-ux-design.md#T-07.11.01.01",
+        "07-ui-ux-design.md#T-07.11.01.02",
+        "07-ui-ux-design.md#T-07.11.01.04",
+        "07-ui-ux-design.md#T-07.11.01.05",
+        "07-ui-ux-design.md#T-07.11.02.01",
+        "07-ui-ux-design.md#T-07.11.02.02",
+        "07-ui-ux-design.md#T-07.11.02.03",
+        "07-ui-ux-design.md#T-07.11.02.04",
+        "07-ui-ux-design.md#T-07.11.02.05",
+        "07-ui-ux-design.md#T-07.12.01.01",
+        "07-ui-ux-design.md#T-07.12.01.02",
+        "07-ui-ux-design.md#T-07.12.01.03",
+        "07-ui-ux-design.md#T-07.12.01.04",
+        "07-ui-ux-design.md#T-07.12.01.06",
+        "07-ui-ux-design.md#T-07.12.01.07",
+        "07-ui-ux-design.md#T-07.13.01.01",
+        "07-ui-ux-design.md#T-07.13.01.02",
+        "07-ui-ux-design.md#T-07.13.01.03",
+        "07-ui-ux-design.md#T-07.13.01.04",
+        "07-ui-ux-design.md#T-07.13.01.05",
+        "07-ui-ux-design.md#T-07.13.01.06",
+        "07-ui-ux-design.md#T-07.13.01.07",
+        "07-ui-ux-design.md#T-07.22.01.01",
+        "07-ui-ux-design.md#T-07.22.01.02",
+        "07-ui-ux-design.md#T-07.22.01.03",
+        "07-ui-ux-design.md#T-07.22.01.04",
+        "07-ui-ux-design.md#T-07.22.01.05",
+        "07-ui-ux-design.md#T-07.22.02.01",
+        "07-ui-ux-design.md#T-07.22.02.02",
+        "07-ui-ux-design.md#T-07.22.02.03",
+        "07-ui-ux-design.md#T-07.22.02.04",
+        "07-ui-ux-design.md#T-07.22.02.05",
+        "release-readiness#R-01.01",
+        "release-readiness#R-01.04",
+        "release-readiness#R-02.02"
+      ],
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-renewed-source-bindings.json",
+      "release_disposition": "No version or staging release until effective v0.5.0 criteria are accepted."
     }
   },
   "historical_improvements": [
