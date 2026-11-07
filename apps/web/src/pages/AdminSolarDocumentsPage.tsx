@@ -29,6 +29,7 @@ import { useAccountTime } from '../hooks/useAccountTime.js';
 import { DocumentDetail } from '../components/DocumentDetail.js';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import { withCsrf } from '../lib/csrf.js';
+import { toast } from '../lib/toast-api.js';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
 import {
@@ -85,6 +86,7 @@ interface Guidance {
 }
 interface SetReview {
   hash: string;
+  scope: { action: string; profileId: string; resourceId: string };
   data: {
     requestId: string;
     currentStatus: string;
@@ -95,9 +97,82 @@ interface SetReview {
       state: string;
     }>;
     existingRequests: Array<{ id: string; description: string }>;
+    decision: string;
     description: string | null;
     nextStatus: string;
+    createsContract: boolean;
+    createsInvoice: boolean;
   };
+}
+
+type ReviewDecision = {
+  requestId: string;
+  profileId: string;
+  outcome:
+    | {
+        kind: 'document';
+        id: string;
+        revision: number;
+        state: 'Approved' | 'Rejected';
+        reason: string | null;
+      }
+    | {
+        kind: 'set';
+        status: 'changes_requested' | 'waiting_for_postal_submission';
+        description: string | null;
+        previousRequests: string[];
+      };
+};
+type ReviewAction = TeamAction & { setReview?: SetReview; decision?: ReviewDecision };
+
+function confirmsDecision(value: unknown, decision: ReviewDecision) {
+  if (!value || typeof value !== 'object') return false;
+  const { requestId, profileId, outcome } = decision;
+  if (outcome.kind === 'set') return 'status' in value && value.status === outcome.status;
+  const receipt = value as {
+    id?: unknown;
+    businessRecordType?: unknown;
+    businessRecordId?: unknown;
+    profileId?: unknown;
+    revision?: unknown;
+    state?: unknown;
+    rejectionReason?: unknown;
+  };
+  return (
+    receipt.id === outcome.id &&
+    receipt.businessRecordType === 'solar_request' &&
+    receipt.businessRecordId === requestId &&
+    receipt.profileId === profileId &&
+    receipt.revision === outcome.revision &&
+    receipt.state === outcome.state &&
+    receipt.rejectionReason === outcome.reason
+  );
+}
+
+function recordedDecision(detail: Detail, decision: ReviewDecision) {
+  const { outcome } = decision;
+  if (outcome.kind === 'document')
+    return detail.documents.some(
+      (document) =>
+        document.document_id === outcome.id &&
+        document.revision === outcome.revision &&
+        document.state === outcome.state &&
+        document.staff_status === (outcome.state === 'Approved' ? 'approved' : 'rejected') &&
+        document.staff_reason === outcome.reason
+    );
+  return (
+    detail.request.status === outcome.status &&
+    (outcome.description === null ||
+      detail.requestedDocuments.some(
+        (item) =>
+          item.description === outcome.description && !outcome.previousRequests.includes(item.id)
+      ))
+  );
+}
+
+function usesReason(decision: ReviewDecision) {
+  const { outcome } = decision;
+  return outcome.kind === 'document' ? outcome.reason !== null : outcome.description !== null;
 }
 
 export function AdminSolarDocumentsPage(
@@ -168,10 +243,15 @@ function OwnedAdminSolarDocumentsPage({ queries }: { queries?: SolarDocumentQuer
   const [commandPending, setCommandPending] = useState(false);
   const commandPendingRef = useRef(false);
   const preparingDecisionRef = useRef(false);
-  const actionRef = useRef<NonNullable<typeof action> | null>(null);
+  const actionRef = useRef<ReviewAction | null>(null);
 
   const [preview, setPreview] = useState<string | null>(null);
-  const [action, setAction] = useState<(TeamAction & { setReview?: SetReview }) | null>(null);
+  const [action, setAction] = useState<ReviewAction | null>(null);
+  const [recoveries, setRecoveries] = useState(() => new Map<string, ReviewDecision>());
+  const latestRecoveries = useRef(recoveries);
+  latestRecoveries.current = recoveries;
+  const recovery = selected ? recoveries.get(selected) : undefined;
+  const [unmatchedRecovery, setUnmatchedRecovery] = useState<string | null>(null);
   const [preparingDecision, setPreparingDecision] = useState(false);
   const [revision, setRevision] = useState(0);
   const [localBefore, setBefore] = useState<string | null>(null);
@@ -206,10 +286,11 @@ function OwnedAdminSolarDocumentsPage({ queries }: { queries?: SolarDocumentQuer
       guidanceForm.isSubmissionPending()
     );
   }
-  function propose(next: NonNullable<typeof action>) {
+  function propose(next: ReviewAction) {
     commandGeneration.current = ++reviewRequest.current;
     preparingDecisionRef.current = false;
     setPreparingDecision(false);
+    if (next.decision) setUnmatchedRecovery(null);
     actionRef.current = next;
     setAction(next);
   }
@@ -230,6 +311,7 @@ function OwnedAdminSolarDocumentsPage({ queries }: { queries?: SolarDocumentQuer
       setDetailError(false);
       documentForm.reset({ reason: '' });
       setError(false);
+      setUnmatchedRecovery(null);
     }
     setSelected(id);
     setPreview(documentId);
@@ -362,6 +444,7 @@ function OwnedAdminSolarDocumentsPage({ queries }: { queries?: SolarDocumentQuer
       return;
     }
     const controller = new AbortController();
+    const recovery = latestRecoveries.current.get(selected);
     void readStaff(
       'solar',
       'detail',
@@ -370,10 +453,42 @@ function OwnedAdminSolarDocumentsPage({ queries }: { queries?: SolarDocumentQuer
     )
       .then(async (response) => {
         if (!response.ok) throw new Error('details');
-        return response.json() as Promise<Detail>;
+        const result = (await response.json()) as Detail | null;
+        if (
+          result?.request?.id !== selected ||
+          typeof result.request.profile_id !== 'string' ||
+          !result.request.profile_id.trim() ||
+          typeof result.request.status !== 'string' ||
+          !Array.isArray(result.documents) ||
+          !result.documents.every(
+            (row) =>
+              row &&
+              typeof row.document_id === 'string' &&
+              Number.isSafeInteger(row.revision) &&
+              typeof row.state === 'string'
+          ) ||
+          !Array.isArray(result.requestedDocuments) ||
+          !result.requestedDocuments.every(
+            (row) => row && typeof row.id === 'string' && typeof row.description === 'string'
+          ) ||
+          (recovery && result.request.profile_id !== recovery.profileId)
+        )
+          throw new Error('details');
+        return result;
       })
       .then((result) => {
-        if (!controller.signal.aborted) setDetail(result);
+        if (controller.signal.aborted) return;
+        setDetail(result);
+        if (!recovery || latestRecoveries.current.get(selected) !== recovery) return;
+        setRecoveries((current) => {
+          const next = new Map(current);
+          next.delete(selected);
+          return next;
+        });
+        if (recordedDecision(result, recovery)) {
+          if (usesReason(recovery)) documentForm.reset({ reason: '' });
+          toast.success(confirmationText('recorded', locale));
+        } else setUnmatchedRecovery(selected);
       })
       .catch(() => {
         if (!controller.signal.aborted) setDetailError(true);
@@ -419,8 +534,9 @@ function OwnedAdminSolarDocumentsPage({ queries }: { queries?: SolarDocumentQuer
     })(event);
   }
   function review(document: DocumentRow, decision: 'approve' | 'reject') {
-    if (!selected || busy()) return;
+    if (!selected || detail?.request.id !== selected || !canReview || recovery || busy()) return;
     const requestId = selected,
+      profileId = detail.request.profile_id,
       generation = reviewRequest.current;
     const submit = (value: string) => {
       if (generation !== reviewRequest.current) return;
@@ -435,6 +551,17 @@ function OwnedAdminSolarDocumentsPage({ queries }: { queries?: SolarDocumentQuer
           expectedRevision: document.revision,
           ...(decision === 'reject' ? { reason: value.trim() } : {}),
         },
+        decision: {
+          requestId,
+          profileId,
+          outcome: {
+            kind: 'document',
+            id: document.document_id,
+            revision: document.revision + 1,
+            state: decision === 'approve' ? 'Approved' : 'Rejected',
+            reason: decision === 'reject' ? value.trim() : null,
+          },
+        },
       });
     };
     if (decision === 'approve') submit('');
@@ -444,11 +571,14 @@ function OwnedAdminSolarDocumentsPage({ queries }: { queries?: SolarDocumentQuer
     }
   }
   function prepareSetDecision(decision: 'request_additional' | 'advance') {
-    if (!selected || busy()) return;
+    if (!selected || detail?.request.id !== selected || !canReview || recovery || busy()) return;
     const requestId = selected,
+      profileId = detail.request.profile_id,
+      status = decision === 'advance' ? 'waiting_for_postal_submission' : 'changes_requested',
       generation = reviewRequest.current;
     const prepare = async (description: string) => {
       if (generation !== reviewRequest.current) return;
+      const reason = decision === 'request_additional' ? description.trim() : null;
       const request = ++reviewRequest.current;
       preparingDecisionRef.current = true;
       setPreparingDecision(true);
@@ -462,7 +592,7 @@ function OwnedAdminSolarDocumentsPage({ queries }: { queries?: SolarDocumentQuer
             headers: withCsrf({ 'Content-Type': 'application/json' }),
             body: JSON.stringify({
               decision,
-              ...(decision === 'request_additional' ? { description: description.trim() } : {}),
+              ...(reason === null ? {} : { description: reason }),
             }),
           }
         );
@@ -485,10 +615,30 @@ function OwnedAdminSolarDocumentsPage({ queries }: { queries?: SolarDocumentQuer
         if (
           !setReview ||
           typeof setReview.hash !== 'string' ||
+          !/^[0-9a-f]{64}$/.test(setReview.hash) ||
+          setReview.scope?.action !== `solar.documents.${decision}` ||
+          setReview.scope.resourceId !== requestId ||
+          setReview.scope.profileId !== profileId ||
           !setReview.data ||
           setReview.data.requestId !== requestId ||
+          setReview.data.decision !== decision ||
+          setReview.data.description !== reason ||
+          setReview.data.nextStatus !== status ||
+          setReview.data.createsContract !== false ||
+          setReview.data.createsInvoice !== false ||
           !Array.isArray(setReview.data.documents) ||
-          !Array.isArray(setReview.data.existingRequests)
+          !setReview.data.documents.every(
+            (item) =>
+              item &&
+              typeof item.documentId === 'string' &&
+              typeof item.fileName === 'string' &&
+              typeof item.state === 'string' &&
+              typeof item.staffStatus === 'string'
+          ) ||
+          !Array.isArray(setReview.data.existingRequests) ||
+          !setReview.data.existingRequests.every(
+            (item) => item && typeof item.id === 'string' && typeof item.description === 'string'
+          )
         )
           throw new Error('review');
         propose({
@@ -497,11 +647,21 @@ function OwnedAdminSolarDocumentsPage({ queries }: { queries?: SolarDocumentQuer
           method: 'POST',
           path: `/api/admin/solar/requests/${encodeURIComponent(requestId)}/documents/${decision === 'advance' ? 'advance' : 'request-additional'}`,
           body: {
-            ...(decision === 'request_additional' ? { description: description.trim() } : {}),
+            ...(reason === null ? {} : { description: reason }),
             expectedReviewHash: setReview.hash,
           },
           conflictMessage: copy('documentSetReviewChanged'),
           setReview,
+          decision: {
+            requestId,
+            profileId,
+            outcome: {
+              kind: 'set',
+              status,
+              description: reason,
+              previousRequests: setReview.data.existingRequests.map((item) => item.id),
+            },
+          },
         });
       } catch {
         if (request === reviewRequest.current) setError(true);
@@ -526,6 +686,10 @@ function OwnedAdminSolarDocumentsPage({ queries }: { queries?: SolarDocumentQuer
     documentForm.formState.isSubmitting ||
     guidanceForm.formState.isSubmitting;
   const guidanceAction = action?.path === '/api/admin/solar/document-guidance';
+  const documentLocked = editorLocked || !!recovery;
+  const canReview = ['documents_under_review', 'changes_requested'].includes(
+    detail?.request.status ?? ''
+  );
   return (
     <div className="space-y-6 px-4 py-8" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
       <h1 className="text-3xl font-semibold">{copy('staffTitle')}</h1>
@@ -704,6 +868,32 @@ function OwnedAdminSolarDocumentsPage({ queries }: { queries?: SolarDocumentQuer
           <p>
             {copy('status')}: {copy(`status_${detail.request.status}`)}
           </p>
+          {recovery && (
+            <div role="alert" className="space-y-2">
+              <p>{copy('documentDecisionUnconfirmed')}</p>
+              <Button
+                type="button"
+                variant="outline"
+                disabled={editorLocked}
+                onClick={() => setDetailRevision((value) => value + 1)}
+              >
+                {copy('documentDecisionReload')}
+              </Button>
+            </div>
+          )}
+          {unmatchedRecovery === selected && <p role="alert">{copy('documentDecisionNotFound')}</p>}
+          {!!detail.requestedDocuments.length && (
+            <div>
+              <h3 className="font-medium">{copy('requestedDocuments')}</h3>
+              <ul className="list-inside list-disc">
+                {detail.requestedDocuments.map((item) => (
+                  <li key={item.id} dir="auto" className="break-words">
+                    {item.description}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
           <ul className="space-y-3">
             {detail.documents.map((document) => (
               <li key={document.id} className="rounded-md border p-3">
@@ -715,36 +905,37 @@ function OwnedAdminSolarDocumentsPage({ queries }: { queries?: SolarDocumentQuer
                 </p>
                 {document.staff_reason && <p>{document.staff_reason}</p>}
                 <div className="mt-2 flex flex-wrap gap-2">
-                  <Button variant="outline" onClick={() => setPreview(document.document_id)}>
+                  <Button
+                    variant="outline"
+                    disabled={!!recovery}
+                    onClick={() => setPreview(document.document_id)}
+                  >
                     {copy('preview')}
                   </Button>
-                  {['Available', 'SubmittedForReview'].includes(document.state) &&
-                    ['documents_under_review', 'changes_requested'].includes(
-                      detail.request.status
-                    ) && (
-                      <>
-                        <Button
-                          variant="outline"
-                          disabled={editorLocked}
-                          onClick={() => review(document, 'approve')}
-                        >
-                          {copy('approve')}
-                        </Button>
-                        <Button
-                          variant="outline"
-                          onClick={() => review(document, 'reject')}
-                          loading={documentForm.formState.isSubmitting}
-                          disabled={editorLocked}
-                        >
-                          {copy('reject')}
-                        </Button>
-                      </>
-                    )}
+                  {['Available', 'SubmittedForReview'].includes(document.state) && canReview && (
+                    <>
+                      <Button
+                        variant="outline"
+                        disabled={documentLocked}
+                        onClick={() => review(document, 'approve')}
+                      >
+                        {copy('approve')}
+                      </Button>
+                      <Button
+                        variant="outline"
+                        onClick={() => review(document, 'reject')}
+                        loading={documentForm.formState.isSubmitting}
+                        disabled={documentLocked}
+                      >
+                        {copy('reject')}
+                      </Button>
+                    </>
+                  )}
                 </div>
               </li>
             ))}
           </ul>
-          {preview && (
+          {preview && !recovery && (
             <DocumentDetail
               id={preview}
               staff
@@ -768,7 +959,7 @@ function OwnedAdminSolarDocumentsPage({ queries }: { queries?: SolarDocumentQuer
                 <FormItem id="solar-review-reason">
                   <FormLabel>{copy('reason')}</FormLabel>
                   <FormControl>
-                    <Input {...field} disabled={editorLocked} />
+                    <Input {...field} disabled={documentLocked} />
                   </FormControl>
                   <FormDescription>{copy('documentReviewHelp')}</FormDescription>
                   <div className="grid">
@@ -792,7 +983,7 @@ function OwnedAdminSolarDocumentsPage({ queries }: { queries?: SolarDocumentQuer
           <div className="flex flex-wrap gap-2">
             <Button
               variant="outline"
-              disabled={editorLocked}
+              disabled={documentLocked || !canReview}
               loading={preparingDecision || documentForm.formState.isSubmitting}
               onClick={() => void prepareSetDecision('request_additional')}
             >
@@ -800,7 +991,7 @@ function OwnedAdminSolarDocumentsPage({ queries }: { queries?: SolarDocumentQuer
             </Button>
             <Button
               className="h-auto min-h-11 max-w-full whitespace-normal"
-              disabled={editorLocked}
+              disabled={documentLocked || !canReview}
               loading={preparingDecision}
               onClick={() => void prepareSetDecision('advance')}
             >
@@ -900,7 +1091,7 @@ function OwnedAdminSolarDocumentsPage({ queries }: { queries?: SolarDocumentQuer
       {action && (
         <TeamActionDialog
           action={action}
-          confirmationDisabled={guidanceAction && (guidanceUnconfirmed || guidanceDenied)}
+          confirmationDisabled={guidanceAction ? guidanceUnconfirmed || guidanceDenied : !!recovery}
           onPendingChange={(pending) => {
             if (actionGeneration === reviewRequest.current) {
               commandPendingRef.current = pending;
@@ -936,8 +1127,11 @@ function OwnedAdminSolarDocumentsPage({ queries }: { queries?: SolarDocumentQuer
             );
           }}
           onUnconfirmed={() => {
-            if (actionGeneration === reviewRequest.current && guidanceAction)
-              setGuidanceUnconfirmed(true);
+            if (actionGeneration !== reviewRequest.current) return;
+            if (guidanceAction) setGuidanceUnconfirmed(true);
+            const decision = action.decision;
+            if (decision)
+              setRecoveries((current) => new Map(current).set(decision.requestId, decision));
           }}
           onDenied={() => {
             if (actionGeneration !== reviewRequest.current) return;
@@ -1008,12 +1202,14 @@ function OwnedAdminSolarDocumentsPage({ queries }: { queries?: SolarDocumentQuer
               setGuidanceUnconfirmed(false);
               invalidateReview();
               return confirmationText('recorded', locale);
-            } else {
-              documentForm.reset({ reason: '' });
-              setPreview(null);
-              refresh();
-              return;
             }
+            const decision = action.decision;
+            if (!decision || !confirmsDecision(receipt, decision))
+              throw new Error('Unconfirmed solar document decision');
+            if (usesReason(decision)) documentForm.reset({ reason: '' });
+            setPreview(null);
+            refresh();
+            return confirmationText('recorded', locale);
           }}
         />
       )}

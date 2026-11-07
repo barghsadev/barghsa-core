@@ -11,6 +11,7 @@ import {
   solarDocuments,
   solarFile,
   solarGuidance,
+  solarProfile,
   solarRequest,
 } from '../test/solar-staff-fixtures.js';
 
@@ -34,13 +35,21 @@ const invalid = (fields: unknown[]) =>
   );
 const setReview = (description: string | null = null) => ({
   hash: 'a'.repeat(64),
+  scope: {
+    action: `solar.documents.${description ? 'request_additional' : 'advance'}`,
+    resourceId: firstSolar,
+    profileId: solarProfile,
+  },
   data: {
     requestId: firstSolar,
     currentStatus: 'documents_under_review',
     documents: [],
     existingRequests: [],
+    decision: description ? 'request_additional' : 'advance',
     description,
     nextStatus: description ? 'changes_requested' : 'waiting_for_postal_submission',
+    createsContract: false,
+    createsInvoice: false,
   },
 });
 function read(url: string) {
@@ -435,6 +444,14 @@ it.each(['approve', 'advance'] as const)(
       await waitForDialog();
       await view.click('Confirm', document);
       expect(document.querySelector('[role=dialog]')).not.toBeNull();
+      expect(button(document.querySelector('[role=dialog]')!, 'Confirm').disabled).toBe(true);
+      const writeCount = writes.length;
+      await act(async () =>
+        document
+          .querySelector('[role=dialog] form')!
+          .dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
+      );
+      expect(writes).toHaveLength(writeCount);
       expect(writes.at(-1)?.body).toEqual(
         decision === 'approve' ? { expectedRevision: 1 } : { expectedReviewHash: 'a'.repeat(64) }
       );

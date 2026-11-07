@@ -261,6 +261,11 @@ const en: Record<string, string> = {
   advancePostal: 'Documents sufficient — advance to postal stage',
   documentSetReviewTitle: 'Review document-stage decision',
   documentSetReviewChanged: 'The document set changed. Review it again before confirming.',
+  documentDecisionUnconfirmed:
+    'The decision could not be confirmed. Check the current review before sending it again.',
+  documentDecisionReload: 'Check current review',
+  documentDecisionNotFound:
+    'The latest review does not confirm that decision. Check the current status and requests before starting a new decision.',
   documentReview_pending: 'Pending staff review',
   documentReview_approved: 'Approved by staff',
   documentReview_rejected: 'Rejected by staff',
@@ -633,6 +638,11 @@ const fa: Record<string, string> = {
   advancePostal: 'مدارک کافی است — انتقال به مرحله پستی',
   documentSetReviewTitle: 'بازبینی تصمیم مرحله مدارک',
   documentSetReviewChanged: 'مجموعه مدارک تغییر کرده است. پیش از تأیید دوباره آن را بررسی کنید.',
+  documentDecisionUnconfirmed:
+    'تصمیم تأیید نشد. پیش از ارسال دوباره، وضعیت فعلی بررسی را مشاهده کنید.',
+  documentDecisionReload: 'بررسی وضعیت فعلی',
+  documentDecisionNotFound:
+    'وضعیت فعلی این تصمیم را تأیید نمی‌کند. پیش از ثبت تصمیم تازه، وضعیت و درخواست‌های فعلی را بررسی کنید.',
   documentReview_pending: 'در انتظار بررسی کارشناس',
   documentReview_approved: 'تأییدشده توسط کارشناس',
   documentReview_rejected: 'ردشده توسط کارشناس',

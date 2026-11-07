@@ -3,6 +3,7 @@ import AxeBuilder from '@axe-core/playwright';
 import { test, expect } from './coverage-fixture';
 import { t } from '@barghsa/i18n/app';
 import { tSolar } from '@barghsa/i18n/solar';
+import { confirmationText } from '@barghsa/i18n/confirmation';
 import { setupSolarDocumentForms } from './solar-document-review-form-fixture';
 import { approveRiskConfirmation } from './confirmation-fixture';
 
@@ -295,4 +296,72 @@ for (const [locale, theme, invalidReceipt] of [
       { expectedRevision: 7, reason: 'Document permission denied' },
     ]);
     expect(state.additionalWrites).toEqual([]);
+  });
+
+for (const locale of ['en', 'fa'] as const)
+  test(`staff checks the original solar request after an unconfirmed decision (${locale})`, async ({
+    page,
+  }) => {
+    const copy = (key: string) => tSolar(key, locale);
+    const { state, firstSolar } = await setupSolarDocumentForms(page, locale, locale === 'fa');
+    await page.goto('/admin/solar-requests');
+    await page.getByRole('button', { name: /First solar buyer/ }).click();
+    const documents = page.getByRole('group', { name: copy('staffDocuments'), exact: true });
+    const reason = page.locator('#solar-review-reason');
+    const additional = documents.getByRole('button', {
+      name: copy('requestAdditional'),
+      exact: true,
+    });
+    const draft = 'Upload the corrected roof plan';
+    await reason.fill(draft);
+    state.previewMode = 'mismatch';
+    await additional.click();
+    await expect(page.getByRole('alert').filter({ hasText: copy('documentError') })).toBeVisible();
+    await expect(page.getByRole('dialog')).toHaveCount(0);
+    expect(state.additionalWrites).toEqual([]);
+    await expect(reason).toHaveValue(draft);
+    state.previewMode = 'success';
+    state.additionalMode = 'mismatch';
+    await additional.click();
+    const dialog = page.getByRole('dialog', { name: copy('requestAdditional'), exact: true });
+    const confirm = dialog.locator('button[type=submit]');
+    const success = page
+      .locator('[data-sonner-toast][data-type="success"]')
+      .filter({ hasText: confirmationText('recorded', locale) });
+    await confirm.click();
+    await expect(dialog.getByRole('alert')).toBeVisible();
+    await expect(confirm).toBeDisabled();
+    await expect(reason).toHaveValue(draft);
+    await expect(success).toHaveCount(0);
+    await expect(dialog).not.toContainText('PRIVATE_BAD_RECEIPT');
+    await dialog.locator('form').dispatchEvent('submit');
+    expect(state.additionalWrites).toEqual([
+      { description: draft, expectedReviewHash: 'a'.repeat(64) },
+    ]);
+    await page.keyboard.press('Escape');
+    await expect(dialog).toHaveCount(0);
+    await expect(documents).toContainText(copy('documentDecisionUnconfirmed'));
+    await expect(additional).toBeDisabled();
+    await expect(
+      documents.getByRole('button', { name: copy('preview'), exact: true })
+    ).toBeDisabled();
+    await expect(page.locator('#solar-guidance-en')).toBeEnabled();
+    state.detailMode = 'wrong-request';
+    await documents
+      .getByRole('button', { name: copy('documentDecisionReload'), exact: true })
+      .click();
+    const failedRead = page.getByRole('alert').filter({ hasText: copy('staffDetailLoadError') });
+    await expect(failedRead).toBeVisible();
+    await expect(success).toHaveCount(0);
+    expect(state.additionalWrites).toHaveLength(1);
+    state.detailMode = 'success';
+    await failedRead.getByRole('button', { name: copy('retry'), exact: true }).click();
+    await expect(documents.getByText(draft, { exact: true })).toBeVisible();
+    await expect(documents).toContainText(copy('status_changes_requested'));
+    await expect(additional).toBeEnabled();
+    await expect(reason).toHaveValue('');
+    await expect(success).toBeVisible();
+    expect(state.detailReads.at(-1)).toBe(firstSolar);
+    expect(state.additionalWrites).toHaveLength(1);
+    await expect(page.locator('[data-sonner-toaster]')).not.toContainText('PRIVATE_BAD_RECEIPT');
   });

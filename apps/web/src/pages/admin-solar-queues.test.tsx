@@ -126,7 +126,11 @@ it('shows individual pending solar files with uploader, time and another page', 
       const older = new URL(url, 'http://localhost').searchParams.has('before');
       const payload = url.endsWith('/requests/request-1/documents')
         ? {
-            request: { id: 'request-1', status: 'documents_under_review' },
+            request: {
+              id: 'request-1',
+              profile_id: 'profile-1',
+              status: 'documents_under_review',
+            },
             documents: [],
             requestedDocuments: [],
           }

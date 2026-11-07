@@ -303,7 +303,8 @@ for (const locale of ['en', 'fa'] as const)
         expect(requestStatus).toBe('documents_under_review');
         staffDocumentStatus = 'approved';
         documentStatus = 'Approved';
-        return route.fulfill({ json: { status: staffDocumentStatus } });
+        document.revision++;
+        return route.fulfill({ json: { ...document, state: documentStatus } });
       }
     );
     const setReviewHash = 'b'.repeat(64);
@@ -314,6 +315,11 @@ for (const locale of ['en', 'fa'] as const)
         return route.fulfill({
           json: {
             hash: setReviewHash,
+            scope: {
+              action: 'solar.documents.advance',
+              profileId,
+              resourceId: requestId,
+            },
             data: {
               requestId,
               currentStatus: 'documents_under_review',
@@ -326,8 +332,11 @@ for (const locale of ['en', 'fa'] as const)
                 },
               ],
               existingRequests: [],
+              decision: 'advance',
               description: null,
               nextStatus: 'waiting_for_postal_submission',
+              createsContract: false,
+              createsInvoice: false,
             },
           },
         });

@@ -21,7 +21,9 @@ export async function setupSolarDocumentForms(page: Page, locale: 'en' | 'fa', d
     guidanceMode: 'success' as 'success' | 'owned' | 'unsafe' | 'malformed' | 'mismatch' | 'denied',
     guidanceReadMode: 'success' as 'success' | 'unavailable',
     rejectMode: 'owned' as 'owned' | 'protected' | 'success' | 'denied',
-    previewMode: 'success' as 'success' | 'owned' | 'held' | 'denied',
+    additionalMode: 'success' as 'success' | 'mismatch',
+    detailMode: 'success' as 'success' | 'wrong-request',
+    previewMode: 'success' as 'success' | 'owned' | 'held' | 'denied' | 'mismatch',
     verified: false,
     stepUp: undefined as Route | undefined,
     preview: undefined as Route | undefined,
@@ -33,6 +35,8 @@ export async function setupSolarDocumentForms(page: Page, locale: 'en' | 'fa', d
     guidanceReads: 0,
     verifications: 0,
     rejected: false,
+    requestStatus: 'documents_under_review',
+    requestedDocuments: [] as Array<{ id: string; description: string }>,
   };
   const invalid = (route: Route, fields: string[]) =>
     route.fulfill({
@@ -74,26 +78,45 @@ export async function setupSolarDocumentForms(page: Page, locale: 'en' | 'fa', d
   for (const id of [firstSolar, olderSolar])
     await page.route(`**/api/admin/solar/requests/${id}/documents`, (route) => {
       state.detailReads.push(id);
+      if (id === firstSolar && state.detailMode === 'wrong-request')
+        return route.fulfill({ json: solarDocuments(olderSolar) });
       const detail = solarDocuments(id);
       if (id === firstSolar) {
+        detail.request.status = state.requestStatus;
         detail.documents[0]!.revision = state.rejected ? 8 : 7;
         if (state.rejected) {
           detail.documents[0]!.staff_status = 'rejected';
           detail.documents[0]!.state = 'Rejected';
         }
       }
-      return route.fulfill({ json: detail });
+      return route.fulfill({
+        json: {
+          ...detail,
+          requestedDocuments: id === firstSolar ? state.requestedDocuments : [],
+        },
+      });
     });
   await page.route(
     `**/api/admin/solar/requests/${firstSolar}/documents/${firstSolar}/reject`,
     (route) => {
-      state.rejectWrites.push(route.request().postDataJSON());
+      const body = route.request().postDataJSON();
+      state.rejectWrites.push(body);
       if (state.rejectMode === 'owned') return invalid(route, ['reason']);
       if (state.rejectMode === 'denied') return route.fulfill({ status: 403, json: {} });
       if (state.rejectMode === 'protected' && !state.verified)
         return route.fulfill({ status: 403, json: { requiresStepUp: true } });
       state.rejected = true;
-      return route.fulfill({ json: { id: firstSolar, state: 'Rejected', revision: 8 } });
+      return route.fulfill({
+        json: {
+          id: firstSolar,
+          profileId: solarProfile,
+          businessRecordType: 'solar_request',
+          businessRecordId: firstSolar,
+          state: 'Rejected',
+          revision: 8,
+          rejectionReason: body.reason,
+        },
+      });
     }
   );
   await page.route('**/api/auth/step-up', (route) => {
@@ -109,7 +132,7 @@ export async function setupSolarDocumentForms(page: Page, locale: 'en' | 'fa', d
     },
     data: {
       requestId: firstSolar,
-      currentStatus: 'documents_under_review',
+      currentStatus: state.requestStatus,
       documents: [
         {
           documentId: firstSolar,
@@ -120,7 +143,7 @@ export async function setupSolarDocumentForms(page: Page, locale: 'en' | 'fa', d
           supersedesDocumentId: null,
         },
       ],
-      existingRequests: [],
+      existingRequests: state.requestedDocuments,
       decision: body.decision,
       description: body.description,
       nextStatus: 'changes_requested',
@@ -139,14 +162,31 @@ export async function setupSolarDocumentForms(page: Page, locale: 'en' | 'fa', d
         state.preview = route;
         return;
       }
-      return route.fulfill({ json: reviewFor(body) });
+      return route.fulfill({
+        json: reviewFor(
+          state.previewMode === 'mismatch'
+            ? { ...body, description: 'Different instruction' }
+            : body
+        ),
+      });
     }
   );
   await page.route(
     `**/api/admin/solar/requests/${firstSolar}/documents/request-additional`,
     (route) => {
-      state.additionalWrites.push(route.request().postDataJSON());
-      return route.fulfill({ json: { status: 'changes_requested' } });
+      const body = route.request().postDataJSON();
+      state.additionalWrites.push(body);
+      state.requestStatus = 'changes_requested';
+      state.requestedDocuments.push({
+        id: `additional-${state.additionalWrites.length}`,
+        description: body.description,
+      });
+      return route.fulfill({
+        json:
+          state.additionalMode === 'mismatch'
+            ? { status: 'documents_under_review', message: 'PRIVATE_BAD_RECEIPT' }
+            : { status: state.requestStatus },
+      });
     }
   );
   return { state, reviewFor, firstSolar, olderSolar };
