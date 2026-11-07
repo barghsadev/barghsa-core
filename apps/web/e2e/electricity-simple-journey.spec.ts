@@ -211,6 +211,8 @@ for (const locale of ['en', 'fa'] as const)
     );
     await page.route('**/api/electricity/orders/simple', (route) => {
       orderSubmissions.push(route.request().postDataJSON() as Record<string, unknown>);
+      if (orderSubmissions.length === 1)
+        return route.fulfill({ status: 422, json: { message: 'PRIVATE_REJECTION_DETAIL' } });
       return route.fulfill({ status: 201, json: { orderId, contractId, invoiceId, ...quote } });
     });
     await page.route(`**/api/electricity/orders/${orderId}`, (route) =>
@@ -622,9 +624,16 @@ for (const locale of ['en', 'fa'] as const)
     await expect(submit).toBeDisabled();
     await approveRiskConfirmation(page, locale, 'financial');
     await submit.click();
+    await expect(page.getByText(appCopy('electricity.order.error.create', locale))).toBeVisible();
+    await expect(page.getByText('PRIVATE_REJECTION_DETAIL')).toHaveCount(0);
+    await expect(page.getByText('Buyer Legal Ltd', { exact: true })).toBeVisible();
+    await expect(submit).toBeEnabled();
+    expect(orderSubmissions).toHaveLength(1);
+    await submit.click();
     await expect(page).toHaveURL(new RegExp(`/electricity/orders/${orderId}$`));
     await expect(page.getByText(appCopy('electricity.order.success.create', locale))).toBeVisible();
-    expect(orderSubmissions).toHaveLength(1);
+    expect(orderSubmissions).toHaveLength(2);
+    expect(orderSubmissions[1]).toEqual(orderSubmissions[0]);
     expect(orderSubmissions[0]).toMatchObject({
       profileId,
       period: 'next_week',

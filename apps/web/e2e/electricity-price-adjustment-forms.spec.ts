@@ -1,3 +1,4 @@
+import { approveRiskConfirmation } from './confirmation-fixture';
 import { productionManifest } from './production-manifest';
 import AxeBuilder from '@axe-core/playwright';
 import type { Locator, Page } from '@playwright/test';
@@ -145,6 +146,7 @@ for (const [locale, theme] of [
     let dialog = page.getByRole('dialog');
     await expect(dialog).toContainText('Updated tariff');
     await expect(dialog).toContainText('Contract clause 7');
+    await approveRiskConfirmation(page, locale, 'financial');
     await dialog.locator('button[type=submit]').click();
     await expect.poll(() => !!state.writeRoute).toBe(true);
     const publish = state.writes[0]!;
@@ -173,6 +175,7 @@ for (const [locale, theme] of [
     state.writeMode = 'success';
     await retry.click();
     dialog = page.getByRole('dialog');
+    await approveRiskConfirmation(page, locale, 'financial');
     await dialog.locator('button[type=submit]').click();
     await expect(dialog).toHaveCount(0);
     const cancel = page.getByRole('button', { name: copy('cancel'), exact: true });
@@ -185,6 +188,7 @@ for (const [locale, theme] of [
     state.writeRoute = undefined;
     await cancel.click();
     dialog = page.getByRole('dialog');
+    await approveRiskConfirmation(page, locale, 'both');
     await dialog.locator('button[type=submit]').click();
     await expect.poll(() => !!state.writeRoute).toBe(true);
     const cancellation = state.writes.at(-1)!;
@@ -195,6 +199,7 @@ for (const [locale, theme] of [
     state.writeMode = 'success';
     await retry.click();
     dialog = page.getByRole('dialog');
+    await approveRiskConfirmation(page, locale, 'both');
     await dialog.locator('button[type=submit]').click();
     await expect(dialog).toHaveCount(0);
     await expect(review).toBeEnabled();
@@ -210,6 +215,7 @@ for (const [locale, theme] of [
     await review.click();
     dialog = page.getByRole('dialog');
     await expect(dialog).toContainText('Credit tariff');
+    await approveRiskConfirmation(page, locale, 'financial');
     await dialog.locator('button[type=submit]').click();
     await expect(dialog).toHaveCount(0);
     const finalize = page.getByRole('button', { name: copy('finalize'), exact: true });
@@ -221,6 +227,7 @@ for (const [locale, theme] of [
     state.writeRoute = undefined;
     await finalize.click();
     dialog = page.getByRole('dialog');
+    await approveRiskConfirmation(page, locale, 'financial');
     await dialog.locator('button[type=submit]').click();
     await expect.poll(() => !!state.writeRoute).toBe(true);
     const finalCommand = state.writes.at(-1)!;
@@ -233,6 +240,7 @@ for (const [locale, theme] of [
     state.writeMode = 'success';
     await retry.click();
     dialog = page.getByRole('dialog');
+    await approveRiskConfirmation(page, locale, 'financial');
     await dialog.locator('button[type=submit]').click();
     await expect(dialog).toHaveCount(0);
     await expect(

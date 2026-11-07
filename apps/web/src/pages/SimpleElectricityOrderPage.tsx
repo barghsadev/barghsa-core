@@ -1137,9 +1137,7 @@ function OwnedSimpleElectricityOrderPage() {
           toast.error(t('electricity.order.reviewChanged', locale));
           return;
         }
-        const errBody = await res.json().catch(() => ({}));
-        const message = (errBody as { message?: string }).message;
-        toast.error(message || t('electricity.order.error.create', locale));
+        toast.error(t('electricity.order.error.create', locale));
         return;
       }
 

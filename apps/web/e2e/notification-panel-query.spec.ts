@@ -115,12 +115,14 @@ for (const locale of ['en', 'fa'] as const)
       const version = page.locator('#tpl-preview-version');
       await expect(version).toHaveValue('draft-v3');
       await expect(page.locator('pre').first()).toHaveText('Draft preview');
-      expect(Object.fromEntries(queueReads.at(-1)!.searchParams)).toEqual({
-        channel: 'email',
-        severity: 'critical',
-        limit: '26',
-        offset: '50',
-      });
+      await expect
+        .poll(() => Object.fromEntries(queueReads.at(-1)?.searchParams ?? []))
+        .toEqual({
+          channel: 'email',
+          severity: 'critical',
+          limit: '26',
+          offset: '50',
+        });
       expect(Object.fromEntries(catalogueReads.at(-1)!.searchParams)).toEqual({ locale });
       await version.selectOption('active-v2');
       await expect.poll(() => params(page).get('preview_version')).toBe('active-v2');

@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-07T14:24:05+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-07T14:54:08+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.4.0**. Next milestone: **v0.5.0**.
 
@@ -39,7 +39,7 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Close candidate coverage and remaining conditional UI evidence, resolve the already requested owner dispositions and accept v0.5.0 before staging release.
+Renew exact candidate coverage, close remaining conditional route evidence and resolve the requested owner dispositions before accepting v0.5.0.
 
 - `release-readiness#R-04.01`: Verify full customer and admin UI adoption
 - `release-readiness#R-04.02`: Renew accessibility and performance evidence

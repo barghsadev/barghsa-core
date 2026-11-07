@@ -468,11 +468,10 @@ for (const [locale, theme] of [
     expect(publicComment.attachments[0]!.fileIndex).toBe(1);
     expect(publicComment).not.toHaveProperty('submissionId');
     expect(publicComment).not.toHaveProperty('hash');
-    // A concurrent allowed transition makes this request a real same-status no-op.
-    // Its original receipt still refreshes this ticket without clearing the internal branch.
+    await status.locator('#ticket-next-status').selectOption('waiting_staff');
+    // Change the server after the UI captures a permitted next status.
     fixture.tickets.get(ticketId)!.status = 'waiting_staff';
     const unchangedStatusInstant = fixture.tickets.get(ticketId)!.updatedAt;
-    await status.locator('#ticket-next-status').selectOption('waiting_staff');
     state.modes.status = 'hold';
     await submit(status).click();
     await expect.poll(() => state.held?.command.family).toBe('status');

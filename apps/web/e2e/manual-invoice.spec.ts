@@ -1,3 +1,4 @@
+import { approveRiskConfirmation } from './confirmation-fixture';
 import AxeBuilder from '@axe-core/playwright';
 import { test, expect } from './coverage-fixture';
 import { formatCurrencyIrr } from '@barghsa/i18n/numbers';
@@ -232,6 +233,7 @@ for (const locale of ['fa', 'en'] as const)
       await expect(reviewDialog).toContainText(total);
       await expect(panel.locator('[data-array-action=up]').last()).toBeDisabled();
       await expect(panel.locator('[data-array-action=remove]').first()).toBeDisabled();
+      await approveRiskConfirmation(page, locale, 'financial');
       await reviewDialog
         .getByRole('button', {
           name: fa ? 'تأیید و صدور فاکتور' : 'Confirm and issue invoice',
@@ -245,6 +247,7 @@ for (const locale of ['fa', 'en'] as const)
       const password = dialog.getByLabel(fa ? 'رمز عبور' : 'Password', { exact: true });
       await expect(password).toBeFocused();
       await password.fill('test-only');
+      await approveRiskConfirmation(page, locale, 'financial');
       await dialog
         .getByRole('button', { name: fa ? 'تأیید و صدور' : 'Verify and issue', exact: true })
         .click();
