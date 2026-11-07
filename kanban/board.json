@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-07T17:40:38+00:00",
-  "source_commit": "d0555f77ac44ec5ea209db9407149824031617da",
+  "updated": "2026-11-07T17:44:59+00:00",
+  "source_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -36882,7 +36882,8 @@
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-confirmed-electricity-feedback",
           "release-0.5-settings-response-feedback",
-          "release-0.5-saving-address-response-feedback"
+          "release-0.5-saving-address-response-feedback",
+          "release-0.5-saving-address-field-errors"
         ],
         "current_acceptance": {
           "kind": "verified-electricity-saving-solar-address-flow",
@@ -36942,7 +36943,7 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "57d66446aa044bf4ac586b0292208639c7073f9c124f39ed3ed9a4df5db033f2"
+              "sha256": "d0140aeadcfc26e9eea5436167afaa69aaab783a71b7c332c4b3bf8ec261acc3"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -36982,7 +36983,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "da6822e7d84c829852ee08af018db71a6dc088a2ff78900d2c119a3ddec574a0"
+              "sha256": "481cf948e50c647cb8c925532dda7c110a6b41b22b5fb39f9438ad8710bb5730"
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
@@ -37741,6 +37742,11 @@
               "batch": "release-0.5-saving-address-response-feedback",
               "base_commit": "e65ef2058f98eaa3c7b514c395ff7a2c9e2aaa3f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-response-feedback/saving-address-response-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-saving-address-field-errors",
+              "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
             }
           ]
         },
@@ -38183,7 +38189,8 @@
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-confirmed-electricity-feedback",
-          "release-0.5-saving-address-response-feedback"
+          "release-0.5-saving-address-response-feedback",
+          "release-0.5-saving-address-field-errors"
         ],
         "current_acceptance": {
           "kind": "verified-versioned-terms-commercial-admission-and-receipts",
@@ -38299,7 +38306,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "da6822e7d84c829852ee08af018db71a6dc088a2ff78900d2c119a3ddec574a0"
+              "sha256": "481cf948e50c647cb8c925532dda7c110a6b41b22b5fb39f9438ad8710bb5730"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -39390,6 +39397,11 @@
               "batch": "release-0.5-saving-address-response-feedback",
               "base_commit": "e65ef2058f98eaa3c7b514c395ff7a2c9e2aaa3f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-response-feedback/saving-address-response-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-saving-address-field-errors",
+              "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
             }
           ]
         }
@@ -39509,7 +39521,8 @@
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-confirmed-electricity-feedback",
-          "release-0.5-saving-address-response-feedback"
+          "release-0.5-saving-address-response-feedback",
+          "release-0.5-saving-address-field-errors"
         ],
         "current_acceptance": {
           "kind": "verified-versioned-terms-commercial-admission-and-receipts",
@@ -39625,7 +39638,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "da6822e7d84c829852ee08af018db71a6dc088a2ff78900d2c119a3ddec574a0"
+              "sha256": "481cf948e50c647cb8c925532dda7c110a6b41b22b5fb39f9438ad8710bb5730"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -40716,6 +40729,11 @@
               "batch": "release-0.5-saving-address-response-feedback",
               "base_commit": "e65ef2058f98eaa3c7b514c395ff7a2c9e2aaa3f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-response-feedback/saving-address-response-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-saving-address-field-errors",
+              "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
             }
           ]
         }
@@ -40843,7 +40861,8 @@
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-confirmed-electricity-feedback",
-          "release-0.5-saving-address-response-feedback"
+          "release-0.5-saving-address-response-feedback",
+          "release-0.5-saving-address-field-errors"
         ],
         "current_acceptance": {
           "kind": "verified-versioned-terms-commercial-admission-and-receipts",
@@ -40959,7 +40978,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "da6822e7d84c829852ee08af018db71a6dc088a2ff78900d2c119a3ddec574a0"
+              "sha256": "481cf948e50c647cb8c925532dda7c110a6b41b22b5fb39f9438ad8710bb5730"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -42050,6 +42069,11 @@
               "batch": "release-0.5-saving-address-response-feedback",
               "base_commit": "e65ef2058f98eaa3c7b514c395ff7a2c9e2aaa3f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-response-feedback/saving-address-response-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-saving-address-field-errors",
+              "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
             }
           ]
         }
@@ -346602,7 +346626,8 @@
           "release-0.5-final-acceptance",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-saving-address-response-feedback"
+          "release-0.5-saving-address-response-feedback",
+          "release-0.5-saving-address-field-errors"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -346646,7 +346671,7 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "57d66446aa044bf4ac586b0292208639c7073f9c124f39ed3ed9a4df5db033f2"
+              "sha256": "d0140aeadcfc26e9eea5436167afaa69aaab783a71b7c332c4b3bf8ec261acc3"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -346658,7 +346683,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "da6822e7d84c829852ee08af018db71a6dc088a2ff78900d2c119a3ddec574a0"
+              "sha256": "481cf948e50c647cb8c925532dda7c110a6b41b22b5fb39f9438ad8710bb5730"
             },
             {
               "path": "apps/web/src/pages/saving-order.test.tsx",
@@ -347529,6 +347554,11 @@
               "batch": "release-0.5-saving-address-response-feedback",
               "base_commit": "e65ef2058f98eaa3c7b514c395ff7a2c9e2aaa3f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-response-feedback/saving-address-response-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-saving-address-field-errors",
+              "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
             }
           ]
         }
@@ -347573,7 +347603,8 @@
           "release-0.5-final-acceptance",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-saving-address-response-feedback"
+          "release-0.5-saving-address-response-feedback",
+          "release-0.5-saving-address-field-errors"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -347617,7 +347648,7 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "57d66446aa044bf4ac586b0292208639c7073f9c124f39ed3ed9a4df5db033f2"
+              "sha256": "d0140aeadcfc26e9eea5436167afaa69aaab783a71b7c332c4b3bf8ec261acc3"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -347629,7 +347660,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "da6822e7d84c829852ee08af018db71a6dc088a2ff78900d2c119a3ddec574a0"
+              "sha256": "481cf948e50c647cb8c925532dda7c110a6b41b22b5fb39f9438ad8710bb5730"
             },
             {
               "path": "apps/web/src/pages/saving-order.test.tsx",
@@ -348500,6 +348531,11 @@
               "batch": "release-0.5-saving-address-response-feedback",
               "base_commit": "e65ef2058f98eaa3c7b514c395ff7a2c9e2aaa3f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-response-feedback/saving-address-response-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-saving-address-field-errors",
+              "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
             }
           ]
         }
@@ -348546,7 +348582,8 @@
           "release-0.5-final-acceptance",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-saving-address-response-feedback"
+          "release-0.5-saving-address-response-feedback",
+          "release-0.5-saving-address-field-errors"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -348590,7 +348627,7 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "57d66446aa044bf4ac586b0292208639c7073f9c124f39ed3ed9a4df5db033f2"
+              "sha256": "d0140aeadcfc26e9eea5436167afaa69aaab783a71b7c332c4b3bf8ec261acc3"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -348602,7 +348639,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "da6822e7d84c829852ee08af018db71a6dc088a2ff78900d2c119a3ddec574a0"
+              "sha256": "481cf948e50c647cb8c925532dda7c110a6b41b22b5fb39f9438ad8710bb5730"
             },
             {
               "path": "apps/web/src/pages/saving-order.test.tsx",
@@ -349473,6 +349510,11 @@
               "batch": "release-0.5-saving-address-response-feedback",
               "base_commit": "e65ef2058f98eaa3c7b514c395ff7a2c9e2aaa3f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-response-feedback/saving-address-response-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-saving-address-field-errors",
+              "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
             }
           ]
         }
@@ -349517,7 +349559,8 @@
           "release-0.5-final-acceptance",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-saving-address-response-feedback"
+          "release-0.5-saving-address-response-feedback",
+          "release-0.5-saving-address-field-errors"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -349561,7 +349604,7 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "57d66446aa044bf4ac586b0292208639c7073f9c124f39ed3ed9a4df5db033f2"
+              "sha256": "d0140aeadcfc26e9eea5436167afaa69aaab783a71b7c332c4b3bf8ec261acc3"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -349573,7 +349616,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "da6822e7d84c829852ee08af018db71a6dc088a2ff78900d2c119a3ddec574a0"
+              "sha256": "481cf948e50c647cb8c925532dda7c110a6b41b22b5fb39f9438ad8710bb5730"
             },
             {
               "path": "apps/web/src/pages/saving-order.test.tsx",
@@ -350444,6 +350487,11 @@
               "batch": "release-0.5-saving-address-response-feedback",
               "base_commit": "e65ef2058f98eaa3c7b514c395ff7a2c9e2aaa3f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-response-feedback/saving-address-response-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-saving-address-field-errors",
+              "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
             }
           ]
         }
@@ -350488,7 +350536,8 @@
           "release-0.5-final-acceptance",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-saving-address-response-feedback"
+          "release-0.5-saving-address-response-feedback",
+          "release-0.5-saving-address-field-errors"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -350532,7 +350581,7 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "57d66446aa044bf4ac586b0292208639c7073f9c124f39ed3ed9a4df5db033f2"
+              "sha256": "d0140aeadcfc26e9eea5436167afaa69aaab783a71b7c332c4b3bf8ec261acc3"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -350544,7 +350593,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "da6822e7d84c829852ee08af018db71a6dc088a2ff78900d2c119a3ddec574a0"
+              "sha256": "481cf948e50c647cb8c925532dda7c110a6b41b22b5fb39f9438ad8710bb5730"
             },
             {
               "path": "apps/web/src/pages/saving-order.test.tsx",
@@ -351415,6 +351464,11 @@
               "batch": "release-0.5-saving-address-response-feedback",
               "base_commit": "e65ef2058f98eaa3c7b514c395ff7a2c9e2aaa3f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-response-feedback/saving-address-response-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-saving-address-field-errors",
+              "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
             }
           ]
         }
@@ -351459,7 +351513,8 @@
           "release-0.5-final-acceptance",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-saving-address-response-feedback"
+          "release-0.5-saving-address-response-feedback",
+          "release-0.5-saving-address-field-errors"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -351503,7 +351558,7 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "57d66446aa044bf4ac586b0292208639c7073f9c124f39ed3ed9a4df5db033f2"
+              "sha256": "d0140aeadcfc26e9eea5436167afaa69aaab783a71b7c332c4b3bf8ec261acc3"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -351515,7 +351570,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "da6822e7d84c829852ee08af018db71a6dc088a2ff78900d2c119a3ddec574a0"
+              "sha256": "481cf948e50c647cb8c925532dda7c110a6b41b22b5fb39f9438ad8710bb5730"
             },
             {
               "path": "apps/web/src/pages/saving-order.test.tsx",
@@ -352386,6 +352441,11 @@
               "batch": "release-0.5-saving-address-response-feedback",
               "base_commit": "e65ef2058f98eaa3c7b514c395ff7a2c9e2aaa3f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-response-feedback/saving-address-response-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-saving-address-field-errors",
+              "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
             }
           ]
         }
@@ -352431,7 +352491,8 @@
           "release-0.5-final-acceptance",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-saving-address-response-feedback"
+          "release-0.5-saving-address-response-feedback",
+          "release-0.5-saving-address-field-errors"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -352475,7 +352536,7 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "57d66446aa044bf4ac586b0292208639c7073f9c124f39ed3ed9a4df5db033f2"
+              "sha256": "d0140aeadcfc26e9eea5436167afaa69aaab783a71b7c332c4b3bf8ec261acc3"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -352487,7 +352548,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "da6822e7d84c829852ee08af018db71a6dc088a2ff78900d2c119a3ddec574a0"
+              "sha256": "481cf948e50c647cb8c925532dda7c110a6b41b22b5fb39f9438ad8710bb5730"
             },
             {
               "path": "apps/web/src/pages/saving-order.test.tsx",
@@ -353358,6 +353419,11 @@
               "batch": "release-0.5-saving-address-response-feedback",
               "base_commit": "e65ef2058f98eaa3c7b514c395ff7a2c9e2aaa3f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-response-feedback/saving-address-response-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-saving-address-field-errors",
+              "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
             }
           ]
         }
@@ -353402,7 +353468,8 @@
           "release-0.5-final-acceptance",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-saving-address-response-feedback"
+          "release-0.5-saving-address-response-feedback",
+          "release-0.5-saving-address-field-errors"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -353446,7 +353513,7 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "57d66446aa044bf4ac586b0292208639c7073f9c124f39ed3ed9a4df5db033f2"
+              "sha256": "d0140aeadcfc26e9eea5436167afaa69aaab783a71b7c332c4b3bf8ec261acc3"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -353458,7 +353525,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "da6822e7d84c829852ee08af018db71a6dc088a2ff78900d2c119a3ddec574a0"
+              "sha256": "481cf948e50c647cb8c925532dda7c110a6b41b22b5fb39f9438ad8710bb5730"
             },
             {
               "path": "apps/web/src/pages/saving-order.test.tsx",
@@ -354329,6 +354396,11 @@
               "batch": "release-0.5-saving-address-response-feedback",
               "base_commit": "e65ef2058f98eaa3c7b514c395ff7a2c9e2aaa3f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-response-feedback/saving-address-response-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-saving-address-field-errors",
+              "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
             }
           ]
         }
@@ -354373,7 +354445,8 @@
           "release-0.5-final-acceptance",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-saving-address-response-feedback"
+          "release-0.5-saving-address-response-feedback",
+          "release-0.5-saving-address-field-errors"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -354417,7 +354490,7 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "57d66446aa044bf4ac586b0292208639c7073f9c124f39ed3ed9a4df5db033f2"
+              "sha256": "d0140aeadcfc26e9eea5436167afaa69aaab783a71b7c332c4b3bf8ec261acc3"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -354429,7 +354502,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "da6822e7d84c829852ee08af018db71a6dc088a2ff78900d2c119a3ddec574a0"
+              "sha256": "481cf948e50c647cb8c925532dda7c110a6b41b22b5fb39f9438ad8710bb5730"
             },
             {
               "path": "apps/web/src/pages/saving-order.test.tsx",
@@ -355300,6 +355373,11 @@
               "batch": "release-0.5-saving-address-response-feedback",
               "base_commit": "e65ef2058f98eaa3c7b514c395ff7a2c9e2aaa3f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-response-feedback/saving-address-response-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-saving-address-field-errors",
+              "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
             }
           ]
         }
@@ -355344,7 +355422,8 @@
           "release-0.5-final-acceptance",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-saving-address-response-feedback"
+          "release-0.5-saving-address-response-feedback",
+          "release-0.5-saving-address-field-errors"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -355388,7 +355467,7 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "57d66446aa044bf4ac586b0292208639c7073f9c124f39ed3ed9a4df5db033f2"
+              "sha256": "d0140aeadcfc26e9eea5436167afaa69aaab783a71b7c332c4b3bf8ec261acc3"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -355400,7 +355479,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "da6822e7d84c829852ee08af018db71a6dc088a2ff78900d2c119a3ddec574a0"
+              "sha256": "481cf948e50c647cb8c925532dda7c110a6b41b22b5fb39f9438ad8710bb5730"
             },
             {
               "path": "apps/web/src/pages/saving-order.test.tsx",
@@ -356271,6 +356350,11 @@
               "batch": "release-0.5-saving-address-response-feedback",
               "base_commit": "e65ef2058f98eaa3c7b514c395ff7a2c9e2aaa3f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-response-feedback/saving-address-response-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-saving-address-field-errors",
+              "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
             }
           ]
         }
@@ -356317,7 +356401,8 @@
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-confirmed-electricity-feedback",
           "release-0.5-settings-response-feedback",
-          "release-0.5-saving-address-response-feedback"
+          "release-0.5-saving-address-response-feedback",
+          "release-0.5-saving-address-field-errors"
         ],
         "current_acceptance": {
           "kind": "verified-saving-installation-address-selection",
@@ -356325,7 +356410,7 @@
           "source_evidence": [
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "da6822e7d84c829852ee08af018db71a6dc088a2ff78900d2c119a3ddec574a0"
+              "sha256": "481cf948e50c647cb8c925532dda7c110a6b41b22b5fb39f9438ad8710bb5730"
             },
             {
               "path": "apps/web/src/pages/saving-order.test.tsx",
@@ -356333,7 +356418,7 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "57d66446aa044bf4ac586b0292208639c7073f9c124f39ed3ed9a4df5db033f2"
+              "sha256": "d0140aeadcfc26e9eea5436167afaa69aaab783a71b7c332c4b3bf8ec261acc3"
             },
             {
               "path": "packages/i18n/src/saving.ts",
@@ -356975,6 +357060,11 @@
               "batch": "release-0.5-saving-address-response-feedback",
               "base_commit": "e65ef2058f98eaa3c7b514c395ff7a2c9e2aaa3f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-response-feedback/saving-address-response-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-saving-address-field-errors",
+              "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
             }
           ]
         }
@@ -357019,7 +357109,8 @@
           "release-0.5-final-acceptance",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-saving-address-response-feedback"
+          "release-0.5-saving-address-response-feedback",
+          "release-0.5-saving-address-field-errors"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -357063,7 +357154,7 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "57d66446aa044bf4ac586b0292208639c7073f9c124f39ed3ed9a4df5db033f2"
+              "sha256": "d0140aeadcfc26e9eea5436167afaa69aaab783a71b7c332c4b3bf8ec261acc3"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -357075,7 +357166,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "da6822e7d84c829852ee08af018db71a6dc088a2ff78900d2c119a3ddec574a0"
+              "sha256": "481cf948e50c647cb8c925532dda7c110a6b41b22b5fb39f9438ad8710bb5730"
             },
             {
               "path": "apps/web/src/pages/saving-order.test.tsx",
@@ -357946,6 +358037,11 @@
               "batch": "release-0.5-saving-address-response-feedback",
               "base_commit": "e65ef2058f98eaa3c7b514c395ff7a2c9e2aaa3f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-response-feedback/saving-address-response-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-saving-address-field-errors",
+              "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
             }
           ]
         }
@@ -357991,7 +358087,8 @@
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-confirmed-electricity-feedback",
           "release-0.5-settings-response-feedback",
-          "release-0.5-saving-address-response-feedback"
+          "release-0.5-saving-address-response-feedback",
+          "release-0.5-saving-address-field-errors"
         ],
         "current_acceptance": {
           "kind": "verified-saving-authoritative-final-review",
@@ -358000,7 +358097,7 @@
           "source_evidence": [
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "da6822e7d84c829852ee08af018db71a6dc088a2ff78900d2c119a3ddec574a0"
+              "sha256": "481cf948e50c647cb8c925532dda7c110a6b41b22b5fb39f9438ad8710bb5730"
             },
             {
               "path": "apps/web/src/pages/saving-order.test.tsx",
@@ -358008,7 +358105,7 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "57d66446aa044bf4ac586b0292208639c7073f9c124f39ed3ed9a4df5db033f2"
+              "sha256": "d0140aeadcfc26e9eea5436167afaa69aaab783a71b7c332c4b3bf8ec261acc3"
             },
             {
               "path": "packages/i18n/src/saving.ts",
@@ -358654,6 +358751,11 @@
               "batch": "release-0.5-saving-address-response-feedback",
               "base_commit": "e65ef2058f98eaa3c7b514c395ff7a2c9e2aaa3f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-response-feedback/saving-address-response-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-saving-address-field-errors",
+              "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
             }
           ]
         }
@@ -358699,7 +358801,8 @@
           "release-0.5-final-acceptance",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-saving-address-response-feedback"
+          "release-0.5-saving-address-response-feedback",
+          "release-0.5-saving-address-field-errors"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -358743,7 +358846,7 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "57d66446aa044bf4ac586b0292208639c7073f9c124f39ed3ed9a4df5db033f2"
+              "sha256": "d0140aeadcfc26e9eea5436167afaa69aaab783a71b7c332c4b3bf8ec261acc3"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -358755,7 +358858,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "da6822e7d84c829852ee08af018db71a6dc088a2ff78900d2c119a3ddec574a0"
+              "sha256": "481cf948e50c647cb8c925532dda7c110a6b41b22b5fb39f9438ad8710bb5730"
             },
             {
               "path": "apps/web/src/pages/saving-order.test.tsx",
@@ -359626,6 +359729,11 @@
               "batch": "release-0.5-saving-address-response-feedback",
               "base_commit": "e65ef2058f98eaa3c7b514c395ff7a2c9e2aaa3f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-response-feedback/saving-address-response-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-saving-address-field-errors",
+              "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
             }
           ]
         }
@@ -359670,7 +359778,8 @@
           "release-0.5-final-acceptance",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-saving-address-response-feedback"
+          "release-0.5-saving-address-response-feedback",
+          "release-0.5-saving-address-field-errors"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -359714,7 +359823,7 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "57d66446aa044bf4ac586b0292208639c7073f9c124f39ed3ed9a4df5db033f2"
+              "sha256": "d0140aeadcfc26e9eea5436167afaa69aaab783a71b7c332c4b3bf8ec261acc3"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -359726,7 +359835,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "da6822e7d84c829852ee08af018db71a6dc088a2ff78900d2c119a3ddec574a0"
+              "sha256": "481cf948e50c647cb8c925532dda7c110a6b41b22b5fb39f9438ad8710bb5730"
             },
             {
               "path": "apps/web/src/pages/saving-order.test.tsx",
@@ -360597,6 +360706,11 @@
               "batch": "release-0.5-saving-address-response-feedback",
               "base_commit": "e65ef2058f98eaa3c7b514c395ff7a2c9e2aaa3f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-response-feedback/saving-address-response-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-saving-address-field-errors",
+              "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
             }
           ]
         }
@@ -360641,7 +360755,8 @@
           "release-0.5-final-acceptance",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-saving-address-response-feedback"
+          "release-0.5-saving-address-response-feedback",
+          "release-0.5-saving-address-field-errors"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -360685,7 +360800,7 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "57d66446aa044bf4ac586b0292208639c7073f9c124f39ed3ed9a4df5db033f2"
+              "sha256": "d0140aeadcfc26e9eea5436167afaa69aaab783a71b7c332c4b3bf8ec261acc3"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -360697,7 +360812,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "da6822e7d84c829852ee08af018db71a6dc088a2ff78900d2c119a3ddec574a0"
+              "sha256": "481cf948e50c647cb8c925532dda7c110a6b41b22b5fb39f9438ad8710bb5730"
             },
             {
               "path": "apps/web/src/pages/saving-order.test.tsx",
@@ -361568,6 +361683,11 @@
               "batch": "release-0.5-saving-address-response-feedback",
               "base_commit": "e65ef2058f98eaa3c7b514c395ff7a2c9e2aaa3f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-response-feedback/saving-address-response-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-saving-address-field-errors",
+              "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
             }
           ]
         }
@@ -361614,7 +361734,8 @@
           "release-0.5-final-acceptance",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-saving-address-response-feedback"
+          "release-0.5-saving-address-response-feedback",
+          "release-0.5-saving-address-field-errors"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -361658,7 +361779,7 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "57d66446aa044bf4ac586b0292208639c7073f9c124f39ed3ed9a4df5db033f2"
+              "sha256": "d0140aeadcfc26e9eea5436167afaa69aaab783a71b7c332c4b3bf8ec261acc3"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -361670,7 +361791,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "da6822e7d84c829852ee08af018db71a6dc088a2ff78900d2c119a3ddec574a0"
+              "sha256": "481cf948e50c647cb8c925532dda7c110a6b41b22b5fb39f9438ad8710bb5730"
             },
             {
               "path": "apps/web/src/pages/saving-order.test.tsx",
@@ -362541,6 +362662,11 @@
               "batch": "release-0.5-saving-address-response-feedback",
               "base_commit": "e65ef2058f98eaa3c7b514c395ff7a2c9e2aaa3f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-response-feedback/saving-address-response-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-saving-address-field-errors",
+              "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
             }
           ]
         }
@@ -362585,7 +362711,8 @@
           "release-0.5-final-acceptance",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-saving-address-response-feedback"
+          "release-0.5-saving-address-response-feedback",
+          "release-0.5-saving-address-field-errors"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -362629,7 +362756,7 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "57d66446aa044bf4ac586b0292208639c7073f9c124f39ed3ed9a4df5db033f2"
+              "sha256": "d0140aeadcfc26e9eea5436167afaa69aaab783a71b7c332c4b3bf8ec261acc3"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -362641,7 +362768,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "da6822e7d84c829852ee08af018db71a6dc088a2ff78900d2c119a3ddec574a0"
+              "sha256": "481cf948e50c647cb8c925532dda7c110a6b41b22b5fb39f9438ad8710bb5730"
             },
             {
               "path": "apps/web/src/pages/saving-order.test.tsx",
@@ -363512,6 +363639,11 @@
               "batch": "release-0.5-saving-address-response-feedback",
               "base_commit": "e65ef2058f98eaa3c7b514c395ff7a2c9e2aaa3f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-response-feedback/saving-address-response-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-saving-address-field-errors",
+              "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
             }
           ]
         }
@@ -363561,7 +363693,8 @@
           "release-0.5-final-acceptance",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-saving-address-response-feedback"
+          "release-0.5-saving-address-response-feedback",
+          "release-0.5-saving-address-field-errors"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -363605,7 +363738,7 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "57d66446aa044bf4ac586b0292208639c7073f9c124f39ed3ed9a4df5db033f2"
+              "sha256": "d0140aeadcfc26e9eea5436167afaa69aaab783a71b7c332c4b3bf8ec261acc3"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -363617,7 +363750,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "da6822e7d84c829852ee08af018db71a6dc088a2ff78900d2c119a3ddec574a0"
+              "sha256": "481cf948e50c647cb8c925532dda7c110a6b41b22b5fb39f9438ad8710bb5730"
             },
             {
               "path": "apps/web/src/pages/saving-order.test.tsx",
@@ -364488,6 +364621,11 @@
               "batch": "release-0.5-saving-address-response-feedback",
               "base_commit": "e65ef2058f98eaa3c7b514c395ff7a2c9e2aaa3f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-response-feedback/saving-address-response-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-saving-address-field-errors",
+              "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
             }
           ]
         }
@@ -364541,7 +364679,8 @@
           "release-0.5-final-acceptance",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-saving-address-response-feedback"
+          "release-0.5-saving-address-response-feedback",
+          "release-0.5-saving-address-field-errors"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -364585,7 +364724,7 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "57d66446aa044bf4ac586b0292208639c7073f9c124f39ed3ed9a4df5db033f2"
+              "sha256": "d0140aeadcfc26e9eea5436167afaa69aaab783a71b7c332c4b3bf8ec261acc3"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -364597,7 +364736,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "da6822e7d84c829852ee08af018db71a6dc088a2ff78900d2c119a3ddec574a0"
+              "sha256": "481cf948e50c647cb8c925532dda7c110a6b41b22b5fb39f9438ad8710bb5730"
             },
             {
               "path": "apps/web/src/pages/saving-order.test.tsx",
@@ -365468,6 +365607,11 @@
               "batch": "release-0.5-saving-address-response-feedback",
               "base_commit": "e65ef2058f98eaa3c7b514c395ff7a2c9e2aaa3f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-response-feedback/saving-address-response-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-saving-address-field-errors",
+              "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
             }
           ]
         }
@@ -365521,7 +365665,8 @@
           "release-0.5-final-acceptance",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-saving-address-response-feedback"
+          "release-0.5-saving-address-response-feedback",
+          "release-0.5-saving-address-field-errors"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -365565,7 +365710,7 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "57d66446aa044bf4ac586b0292208639c7073f9c124f39ed3ed9a4df5db033f2"
+              "sha256": "d0140aeadcfc26e9eea5436167afaa69aaab783a71b7c332c4b3bf8ec261acc3"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -365577,7 +365722,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "da6822e7d84c829852ee08af018db71a6dc088a2ff78900d2c119a3ddec574a0"
+              "sha256": "481cf948e50c647cb8c925532dda7c110a6b41b22b5fb39f9438ad8710bb5730"
             },
             {
               "path": "apps/web/src/pages/saving-order.test.tsx",
@@ -366448,6 +366593,11 @@
               "batch": "release-0.5-saving-address-response-feedback",
               "base_commit": "e65ef2058f98eaa3c7b514c395ff7a2c9e2aaa3f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-response-feedback/saving-address-response-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-saving-address-field-errors",
+              "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
             }
           ]
         }
@@ -379913,7 +380063,8 @@
           "release-0.5-final-acceptance",
           "release-0.5-route-census-closure",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-saving-address-response-feedback"
+          "release-0.5-saving-address-response-feedback",
+          "release-0.5-saving-address-field-errors"
         ],
         "current_acceptance": {
           "kind": "current-saving-inventory-reservation-and-conservation-acceptance",
@@ -379969,7 +380120,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "da6822e7d84c829852ee08af018db71a6dc088a2ff78900d2c119a3ddec574a0"
+              "sha256": "481cf948e50c647cb8c925532dda7c110a6b41b22b5fb39f9438ad8710bb5730"
             },
             {
               "path": "apps/web/src/pages/saving-catalogue-forms.test.tsx",
@@ -380705,6 +380856,11 @@
               "batch": "release-0.5-saving-address-response-feedback",
               "base_commit": "e65ef2058f98eaa3c7b514c395ff7a2c9e2aaa3f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-response-feedback/saving-address-response-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-saving-address-field-errors",
+              "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
             }
           ]
         }
@@ -380746,7 +380902,8 @@
           "release-0.5-final-acceptance",
           "release-0.5-route-census-closure",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-saving-address-response-feedback"
+          "release-0.5-saving-address-response-feedback",
+          "release-0.5-saving-address-field-errors"
         ],
         "current_acceptance": {
           "kind": "current-saving-inventory-reservation-and-conservation-acceptance",
@@ -380802,7 +380959,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "da6822e7d84c829852ee08af018db71a6dc088a2ff78900d2c119a3ddec574a0"
+              "sha256": "481cf948e50c647cb8c925532dda7c110a6b41b22b5fb39f9438ad8710bb5730"
             },
             {
               "path": "apps/web/src/pages/saving-catalogue-forms.test.tsx",
@@ -381538,6 +381695,11 @@
               "batch": "release-0.5-saving-address-response-feedback",
               "base_commit": "e65ef2058f98eaa3c7b514c395ff7a2c9e2aaa3f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-response-feedback/saving-address-response-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-saving-address-field-errors",
+              "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
             }
           ]
         }
@@ -381580,7 +381742,8 @@
           "release-0.5-final-acceptance",
           "release-0.5-route-census-closure",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-saving-address-response-feedback"
+          "release-0.5-saving-address-response-feedback",
+          "release-0.5-saving-address-field-errors"
         ],
         "current_acceptance": {
           "kind": "current-saving-inventory-reservation-and-conservation-acceptance",
@@ -381636,7 +381799,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "da6822e7d84c829852ee08af018db71a6dc088a2ff78900d2c119a3ddec574a0"
+              "sha256": "481cf948e50c647cb8c925532dda7c110a6b41b22b5fb39f9438ad8710bb5730"
             },
             {
               "path": "apps/web/src/pages/saving-catalogue-forms.test.tsx",
@@ -382372,6 +382535,11 @@
               "batch": "release-0.5-saving-address-response-feedback",
               "base_commit": "e65ef2058f98eaa3c7b514c395ff7a2c9e2aaa3f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-response-feedback/saving-address-response-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-saving-address-field-errors",
+              "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
             }
           ]
         }
@@ -416530,7 +416698,8 @@
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-confirmed-electricity-feedback",
-          "release-0.5-saving-address-response-feedback"
+          "release-0.5-saving-address-response-feedback",
+          "release-0.5-saving-address-field-errors"
         ],
         "current_acceptance": {
           "kind": "accepted-all-applicable-order-review-wallet-disclosure",
@@ -416738,7 +416907,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "da6822e7d84c829852ee08af018db71a6dc088a2ff78900d2c119a3ddec574a0"
+              "sha256": "481cf948e50c647cb8c925532dda7c110a6b41b22b5fb39f9438ad8710bb5730"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -417856,6 +418025,11 @@
               "batch": "release-0.5-saving-address-response-feedback",
               "base_commit": "e65ef2058f98eaa3c7b514c395ff7a2c9e2aaa3f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-response-feedback/saving-address-response-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-saving-address-field-errors",
+              "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
             }
           ]
         }
@@ -485201,7 +485375,8 @@
           "release-0.5-native-staff-control-targets",
           "release-0.5-saving-address-response-feedback",
           "release-0.5-operational-queue-touch",
-          "release-0.5-responsive-width-acceptance"
+          "release-0.5-responsive-width-acceptance",
+          "release-0.5-saving-address-field-errors"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -485645,7 +485820,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "da6822e7d84c829852ee08af018db71a6dc088a2ff78900d2c119a3ddec574a0"
+              "sha256": "481cf948e50c647cb8c925532dda7c110a6b41b22b5fb39f9438ad8710bb5730"
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
@@ -486072,6 +486247,11 @@
               "batch": "release-0.5-responsive-width-acceptance",
               "base_commit": "d0555f77ac44ec5ea209db9407149824031617da",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-responsive-width-acceptance/closure-touch-width-proof.json"
+            },
+            {
+              "batch": "release-0.5-saving-address-field-errors",
+              "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
             }
           ]
         },
@@ -506961,7 +507141,8 @@
           "release-0.5-native-staff-control-targets",
           "release-0.5-ai-tab-intrinsic-widths",
           "release-0.5-operational-queue-touch",
-          "release-0.5-responsive-width-acceptance"
+          "release-0.5-responsive-width-acceptance",
+          "release-0.5-saving-address-field-errors"
         ],
         "current_acceptance": {
           "kind": "populated-canonical-viewport-matrix",
@@ -506978,17 +507159,33 @@
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
               "sha256": "607f764dd241f8152498963f373b40b189496e72bdefc078785d416617a5ad2e"
+            },
+            {
+              "path": "apps/web/e2e/saving-journey.spec.ts",
+              "sha256": "d0140aeadcfc26e9eea5436167afaa69aaab783a71b7c332c4b3bf8ec261acc3"
+            },
+            {
+              "path": "apps/web/src/pages/SavingsOrderPage.tsx",
+              "sha256": "481cf948e50c647cb8c925532dda7c110a6b41b22b5fb39f9438ad8710bb5730"
             }
           ],
           "checks": [
             "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-responsive-width-acceptance/closure-touch-width-proof.json",
             "332 exact current production-built browser cases and 2,976 populated measurements across 93 canonical routes.",
             "Original strict overflow, layout, target and landmark assertions retained. Native consent uses a directly tapped 44px label.",
-            "Targeted staff lifecycle passed 28 browser cases and 11 unit cases. Current build, typecheck, lint, formatting and all 98 gzip budgets passed."
+            "Targeted staff lifecycle passed 28 browser cases and 11 unit cases. Current build, typecheck, lint, formatting and all 98 gzip budgets passed.",
+            "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
           ],
           "criterion_result": "All eight required widths passed in English and Persian on Chromium and mobile Safari. No rendered text overlap, clipping or horizontal overflow was reported. All additional fractional touch reports retained both 44px computed minima and at least 44 CSS pixels of physical area.",
           "limitations": [
             "The viewport matrix covers populated canonical routes. Conditional component, accessibility, contrast, recovery and command acceptance remain separate tasks."
+          ],
+          "presentation_renewals": [
+            {
+              "batch": "release-0.5-saving-address-field-errors",
+              "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
+            }
           ]
         }
       }
@@ -508573,7 +508770,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "The tested current electricity address step has named province, city, address and postal controls, including label activation and dependent validation. The historical broad form diagnosis and targeted checks are source-bound. Remaining conditional form semantics are open."
+        "Current bilingual native evidence links safe server feedback to the exact owned saving address field and identifies all four required controls. Unrelated controls are valid and the original retry stays locked after an uncertain write. Remaining conditional form states are open."
       ],
       "owner": null,
       "depends_on": [],
@@ -508588,7 +508785,8 @@
           "release-0.5-final-ui-evidence",
           "release-0.5-route-census-closure",
           "release-0.5-brand-label-fixture",
-          "release-0.5-native-staff-touch-and-electricity-recovery"
+          "release-0.5-native-staff-touch-and-electricity-recovery",
+          "release-0.5-saving-address-field-errors"
         ],
         "current_acceptance": null
       }
@@ -534497,7 +534695,8 @@
           "release-0.5-native-staff-control-targets",
           "release-0.5-invoice-response-feedback",
           "release-0.5-saving-address-response-feedback",
-          "release-0.5-responsive-width-acceptance"
+          "release-0.5-responsive-width-acceptance",
+          "release-0.5-saving-address-field-errors"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -535081,7 +535280,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "da6822e7d84c829852ee08af018db71a6dc088a2ff78900d2c119a3ddec574a0"
+              "sha256": "481cf948e50c647cb8c925532dda7c110a6b41b22b5fb39f9438ad8710bb5730"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -536139,6 +536338,11 @@
               "batch": "release-0.5-responsive-width-acceptance",
               "base_commit": "d0555f77ac44ec5ea209db9407149824031617da",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-responsive-width-acceptance/closure-touch-width-proof.json"
+            },
+            {
+              "batch": "release-0.5-saving-address-field-errors",
+              "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
             }
           ]
         },
@@ -536278,7 +536482,8 @@
           "release-0.5-native-staff-control-targets",
           "release-0.5-invoice-response-feedback",
           "release-0.5-saving-address-response-feedback",
-          "release-0.5-responsive-width-acceptance"
+          "release-0.5-responsive-width-acceptance",
+          "release-0.5-saving-address-field-errors"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -536862,7 +537067,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "da6822e7d84c829852ee08af018db71a6dc088a2ff78900d2c119a3ddec574a0"
+              "sha256": "481cf948e50c647cb8c925532dda7c110a6b41b22b5fb39f9438ad8710bb5730"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -537920,6 +538125,11 @@
               "batch": "release-0.5-responsive-width-acceptance",
               "base_commit": "d0555f77ac44ec5ea209db9407149824031617da",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-responsive-width-acceptance/closure-touch-width-proof.json"
+            },
+            {
+              "batch": "release-0.5-saving-address-field-errors",
+              "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
             }
           ]
         },
@@ -538060,7 +538270,8 @@
           "release-0.5-native-staff-control-targets",
           "release-0.5-invoice-response-feedback",
           "release-0.5-saving-address-response-feedback",
-          "release-0.5-responsive-width-acceptance"
+          "release-0.5-responsive-width-acceptance",
+          "release-0.5-saving-address-field-errors"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -538644,7 +538855,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "da6822e7d84c829852ee08af018db71a6dc088a2ff78900d2c119a3ddec574a0"
+              "sha256": "481cf948e50c647cb8c925532dda7c110a6b41b22b5fb39f9438ad8710bb5730"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -539702,6 +539913,11 @@
               "batch": "release-0.5-responsive-width-acceptance",
               "base_commit": "d0555f77ac44ec5ea209db9407149824031617da",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-responsive-width-acceptance/closure-touch-width-proof.json"
+            },
+            {
+              "batch": "release-0.5-saving-address-field-errors",
+              "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
             }
           ]
         },
@@ -539811,7 +540027,8 @@
           "release-0.5-native-staff-control-targets",
           "release-0.5-invoice-response-feedback",
           "release-0.5-saving-address-response-feedback",
-          "release-0.5-responsive-width-acceptance"
+          "release-0.5-responsive-width-acceptance",
+          "release-0.5-saving-address-field-errors"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -540395,7 +540612,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "da6822e7d84c829852ee08af018db71a6dc088a2ff78900d2c119a3ddec574a0"
+              "sha256": "481cf948e50c647cb8c925532dda7c110a6b41b22b5fb39f9438ad8710bb5730"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -541453,6 +541670,11 @@
               "batch": "release-0.5-responsive-width-acceptance",
               "base_commit": "d0555f77ac44ec5ea209db9407149824031617da",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-responsive-width-acceptance/closure-touch-width-proof.json"
+            },
+            {
+              "batch": "release-0.5-saving-address-field-errors",
+              "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
             }
           ]
         },
@@ -541588,7 +541810,8 @@
           "release-0.5-native-staff-control-targets",
           "release-0.5-invoice-response-feedback",
           "release-0.5-saving-address-response-feedback",
-          "release-0.5-responsive-width-acceptance"
+          "release-0.5-responsive-width-acceptance",
+          "release-0.5-saving-address-field-errors"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -542172,7 +542395,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "da6822e7d84c829852ee08af018db71a6dc088a2ff78900d2c119a3ddec574a0"
+              "sha256": "481cf948e50c647cb8c925532dda7c110a6b41b22b5fb39f9438ad8710bb5730"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -543230,6 +543453,11 @@
               "batch": "release-0.5-responsive-width-acceptance",
               "base_commit": "d0555f77ac44ec5ea209db9407149824031617da",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-responsive-width-acceptance/closure-touch-width-proof.json"
+            },
+            {
+              "batch": "release-0.5-saving-address-field-errors",
+              "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
             }
           ]
         },
@@ -543374,7 +543602,8 @@
           "release-0.5-native-staff-control-targets",
           "release-0.5-invoice-response-feedback",
           "release-0.5-saving-address-response-feedback",
-          "release-0.5-responsive-width-acceptance"
+          "release-0.5-responsive-width-acceptance",
+          "release-0.5-saving-address-field-errors"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -543958,7 +544187,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "da6822e7d84c829852ee08af018db71a6dc088a2ff78900d2c119a3ddec574a0"
+              "sha256": "481cf948e50c647cb8c925532dda7c110a6b41b22b5fb39f9438ad8710bb5730"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -545016,6 +545245,11 @@
               "batch": "release-0.5-responsive-width-acceptance",
               "base_commit": "d0555f77ac44ec5ea209db9407149824031617da",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-responsive-width-acceptance/closure-touch-width-proof.json"
+            },
+            {
+              "batch": "release-0.5-saving-address-field-errors",
+              "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
             }
           ]
         },
@@ -545133,7 +545367,8 @@
           "release-0.5-native-staff-control-targets",
           "release-0.5-invoice-response-feedback",
           "release-0.5-saving-address-response-feedback",
-          "release-0.5-responsive-width-acceptance"
+          "release-0.5-responsive-width-acceptance",
+          "release-0.5-saving-address-field-errors"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -545717,7 +545952,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "da6822e7d84c829852ee08af018db71a6dc088a2ff78900d2c119a3ddec574a0"
+              "sha256": "481cf948e50c647cb8c925532dda7c110a6b41b22b5fb39f9438ad8710bb5730"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -546775,6 +547010,11 @@
               "batch": "release-0.5-responsive-width-acceptance",
               "base_commit": "d0555f77ac44ec5ea209db9407149824031617da",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-responsive-width-acceptance/closure-touch-width-proof.json"
+            },
+            {
+              "batch": "release-0.5-saving-address-field-errors",
+              "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
             }
           ]
         },
@@ -546856,7 +547096,8 @@
           "release-0.5-native-staff-control-targets",
           "release-0.5-invoice-response-feedback",
           "release-0.5-saving-address-response-feedback",
-          "release-0.5-responsive-width-acceptance"
+          "release-0.5-responsive-width-acceptance",
+          "release-0.5-saving-address-field-errors"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -547440,7 +547681,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "da6822e7d84c829852ee08af018db71a6dc088a2ff78900d2c119a3ddec574a0"
+              "sha256": "481cf948e50c647cb8c925532dda7c110a6b41b22b5fb39f9438ad8710bb5730"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -548498,6 +548739,11 @@
               "batch": "release-0.5-responsive-width-acceptance",
               "base_commit": "d0555f77ac44ec5ea209db9407149824031617da",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-responsive-width-acceptance/closure-touch-width-proof.json"
+            },
+            {
+              "batch": "release-0.5-saving-address-field-errors",
+              "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
             }
           ]
         },
@@ -548579,7 +548825,8 @@
           "release-0.5-native-staff-control-targets",
           "release-0.5-invoice-response-feedback",
           "release-0.5-saving-address-response-feedback",
-          "release-0.5-responsive-width-acceptance"
+          "release-0.5-responsive-width-acceptance",
+          "release-0.5-saving-address-field-errors"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -549163,7 +549410,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "da6822e7d84c829852ee08af018db71a6dc088a2ff78900d2c119a3ddec574a0"
+              "sha256": "481cf948e50c647cb8c925532dda7c110a6b41b22b5fb39f9438ad8710bb5730"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -550221,6 +550468,11 @@
               "batch": "release-0.5-responsive-width-acceptance",
               "base_commit": "d0555f77ac44ec5ea209db9407149824031617da",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-responsive-width-acceptance/closure-touch-width-proof.json"
+            },
+            {
+              "batch": "release-0.5-saving-address-field-errors",
+              "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
             }
           ]
         },
@@ -550303,7 +550555,8 @@
           "release-0.5-native-staff-control-targets",
           "release-0.5-invoice-response-feedback",
           "release-0.5-saving-address-response-feedback",
-          "release-0.5-responsive-width-acceptance"
+          "release-0.5-responsive-width-acceptance",
+          "release-0.5-saving-address-field-errors"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -550887,7 +551140,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "da6822e7d84c829852ee08af018db71a6dc088a2ff78900d2c119a3ddec574a0"
+              "sha256": "481cf948e50c647cb8c925532dda7c110a6b41b22b5fb39f9438ad8710bb5730"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -551945,6 +552198,11 @@
               "batch": "release-0.5-responsive-width-acceptance",
               "base_commit": "d0555f77ac44ec5ea209db9407149824031617da",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-responsive-width-acceptance/closure-touch-width-proof.json"
+            },
+            {
+              "batch": "release-0.5-saving-address-field-errors",
+              "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
             }
           ]
         },
@@ -552026,7 +552284,8 @@
           "release-0.5-native-staff-control-targets",
           "release-0.5-invoice-response-feedback",
           "release-0.5-saving-address-response-feedback",
-          "release-0.5-responsive-width-acceptance"
+          "release-0.5-responsive-width-acceptance",
+          "release-0.5-saving-address-field-errors"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -552610,7 +552869,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "da6822e7d84c829852ee08af018db71a6dc088a2ff78900d2c119a3ddec574a0"
+              "sha256": "481cf948e50c647cb8c925532dda7c110a6b41b22b5fb39f9438ad8710bb5730"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -553668,6 +553927,11 @@
               "batch": "release-0.5-responsive-width-acceptance",
               "base_commit": "d0555f77ac44ec5ea209db9407149824031617da",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-responsive-width-acceptance/closure-touch-width-proof.json"
+            },
+            {
+              "batch": "release-0.5-saving-address-field-errors",
+              "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
             }
           ]
         },
@@ -553742,7 +554006,8 @@
           "release-0.5-native-staff-control-targets",
           "release-0.5-settings-response-feedback",
           "release-0.5-invoice-response-feedback",
-          "release-0.5-saving-address-response-feedback"
+          "release-0.5-saving-address-response-feedback",
+          "release-0.5-saving-address-field-errors"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -554370,7 +554635,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "da6822e7d84c829852ee08af018db71a6dc088a2ff78900d2c119a3ddec574a0"
+              "sha256": "481cf948e50c647cb8c925532dda7c110a6b41b22b5fb39f9438ad8710bb5730"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -555478,6 +555743,11 @@
               "batch": "release-0.5-saving-address-response-feedback",
               "base_commit": "e65ef2058f98eaa3c7b514c395ff7a2c9e2aaa3f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-response-feedback/saving-address-response-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-saving-address-field-errors",
+              "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
             }
           ]
         }
@@ -555546,7 +555816,8 @@
           "release-0.5-native-staff-control-targets",
           "release-0.5-settings-response-feedback",
           "release-0.5-invoice-response-feedback",
-          "release-0.5-saving-address-response-feedback"
+          "release-0.5-saving-address-response-feedback",
+          "release-0.5-saving-address-field-errors"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -556174,7 +556445,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "da6822e7d84c829852ee08af018db71a6dc088a2ff78900d2c119a3ddec574a0"
+              "sha256": "481cf948e50c647cb8c925532dda7c110a6b41b22b5fb39f9438ad8710bb5730"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -557282,6 +557553,11 @@
               "batch": "release-0.5-saving-address-response-feedback",
               "base_commit": "e65ef2058f98eaa3c7b514c395ff7a2c9e2aaa3f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-response-feedback/saving-address-response-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-saving-address-field-errors",
+              "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
             }
           ]
         }
@@ -557394,7 +557670,8 @@
           "release-0.5-native-staff-control-targets",
           "release-0.5-settings-response-feedback",
           "release-0.5-invoice-response-feedback",
-          "release-0.5-saving-address-response-feedback"
+          "release-0.5-saving-address-response-feedback",
+          "release-0.5-saving-address-field-errors"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -558022,7 +558299,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "da6822e7d84c829852ee08af018db71a6dc088a2ff78900d2c119a3ddec574a0"
+              "sha256": "481cf948e50c647cb8c925532dda7c110a6b41b22b5fb39f9438ad8710bb5730"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -559130,6 +559407,11 @@
               "batch": "release-0.5-saving-address-response-feedback",
               "base_commit": "e65ef2058f98eaa3c7b514c395ff7a2c9e2aaa3f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-response-feedback/saving-address-response-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-saving-address-field-errors",
+              "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
             }
           ]
         }
@@ -559198,7 +559480,8 @@
           "release-0.5-native-staff-control-targets",
           "release-0.5-settings-response-feedback",
           "release-0.5-invoice-response-feedback",
-          "release-0.5-saving-address-response-feedback"
+          "release-0.5-saving-address-response-feedback",
+          "release-0.5-saving-address-field-errors"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -559826,7 +560109,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "da6822e7d84c829852ee08af018db71a6dc088a2ff78900d2c119a3ddec574a0"
+              "sha256": "481cf948e50c647cb8c925532dda7c110a6b41b22b5fb39f9438ad8710bb5730"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -560934,6 +561217,11 @@
               "batch": "release-0.5-saving-address-response-feedback",
               "base_commit": "e65ef2058f98eaa3c7b514c395ff7a2c9e2aaa3f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-response-feedback/saving-address-response-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-saving-address-field-errors",
+              "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
             }
           ]
         }
@@ -561002,7 +561290,8 @@
           "release-0.5-native-staff-control-targets",
           "release-0.5-settings-response-feedback",
           "release-0.5-invoice-response-feedback",
-          "release-0.5-saving-address-response-feedback"
+          "release-0.5-saving-address-response-feedback",
+          "release-0.5-saving-address-field-errors"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -561630,7 +561919,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "da6822e7d84c829852ee08af018db71a6dc088a2ff78900d2c119a3ddec574a0"
+              "sha256": "481cf948e50c647cb8c925532dda7c110a6b41b22b5fb39f9438ad8710bb5730"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -562738,6 +563027,11 @@
               "batch": "release-0.5-saving-address-response-feedback",
               "base_commit": "e65ef2058f98eaa3c7b514c395ff7a2c9e2aaa3f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-response-feedback/saving-address-response-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-saving-address-field-errors",
+              "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
             }
           ]
         }
@@ -562806,7 +563100,8 @@
           "release-0.5-native-staff-control-targets",
           "release-0.5-settings-response-feedback",
           "release-0.5-invoice-response-feedback",
-          "release-0.5-saving-address-response-feedback"
+          "release-0.5-saving-address-response-feedback",
+          "release-0.5-saving-address-field-errors"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -563434,7 +563729,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "da6822e7d84c829852ee08af018db71a6dc088a2ff78900d2c119a3ddec574a0"
+              "sha256": "481cf948e50c647cb8c925532dda7c110a6b41b22b5fb39f9438ad8710bb5730"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -564542,6 +564837,11 @@
               "batch": "release-0.5-saving-address-response-feedback",
               "base_commit": "e65ef2058f98eaa3c7b514c395ff7a2c9e2aaa3f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-response-feedback/saving-address-response-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-saving-address-field-errors",
+              "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
             }
           ]
         }
@@ -564610,7 +564910,8 @@
           "release-0.5-native-staff-control-targets",
           "release-0.5-settings-response-feedback",
           "release-0.5-invoice-response-feedback",
-          "release-0.5-saving-address-response-feedback"
+          "release-0.5-saving-address-response-feedback",
+          "release-0.5-saving-address-field-errors"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -565238,7 +565539,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "da6822e7d84c829852ee08af018db71a6dc088a2ff78900d2c119a3ddec574a0"
+              "sha256": "481cf948e50c647cb8c925532dda7c110a6b41b22b5fb39f9438ad8710bb5730"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -566346,6 +566647,11 @@
               "batch": "release-0.5-saving-address-response-feedback",
               "base_commit": "e65ef2058f98eaa3c7b514c395ff7a2c9e2aaa3f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-response-feedback/saving-address-response-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-saving-address-field-errors",
+              "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
             }
           ]
         }
@@ -566414,7 +566720,8 @@
           "release-0.5-native-staff-control-targets",
           "release-0.5-settings-response-feedback",
           "release-0.5-invoice-response-feedback",
-          "release-0.5-saving-address-response-feedback"
+          "release-0.5-saving-address-response-feedback",
+          "release-0.5-saving-address-field-errors"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -567042,7 +567349,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "da6822e7d84c829852ee08af018db71a6dc088a2ff78900d2c119a3ddec574a0"
+              "sha256": "481cf948e50c647cb8c925532dda7c110a6b41b22b5fb39f9438ad8710bb5730"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -568150,6 +568457,11 @@
               "batch": "release-0.5-saving-address-response-feedback",
               "base_commit": "e65ef2058f98eaa3c7b514c395ff7a2c9e2aaa3f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-response-feedback/saving-address-response-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-saving-address-field-errors",
+              "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
             }
           ]
         }
@@ -568218,7 +568530,8 @@
           "release-0.5-native-staff-control-targets",
           "release-0.5-settings-response-feedback",
           "release-0.5-invoice-response-feedback",
-          "release-0.5-saving-address-response-feedback"
+          "release-0.5-saving-address-response-feedback",
+          "release-0.5-saving-address-field-errors"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -568846,7 +569159,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "da6822e7d84c829852ee08af018db71a6dc088a2ff78900d2c119a3ddec574a0"
+              "sha256": "481cf948e50c647cb8c925532dda7c110a6b41b22b5fb39f9438ad8710bb5730"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -569954,6 +570267,11 @@
               "batch": "release-0.5-saving-address-response-feedback",
               "base_commit": "e65ef2058f98eaa3c7b514c395ff7a2c9e2aaa3f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-response-feedback/saving-address-response-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-saving-address-field-errors",
+              "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
             }
           ]
         }
@@ -570022,7 +570340,8 @@
           "release-0.5-native-staff-control-targets",
           "release-0.5-settings-response-feedback",
           "release-0.5-invoice-response-feedback",
-          "release-0.5-saving-address-response-feedback"
+          "release-0.5-saving-address-response-feedback",
+          "release-0.5-saving-address-field-errors"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -570650,7 +570969,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "da6822e7d84c829852ee08af018db71a6dc088a2ff78900d2c119a3ddec574a0"
+              "sha256": "481cf948e50c647cb8c925532dda7c110a6b41b22b5fb39f9438ad8710bb5730"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -571758,6 +572077,11 @@
               "batch": "release-0.5-saving-address-response-feedback",
               "base_commit": "e65ef2058f98eaa3c7b514c395ff7a2c9e2aaa3f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-response-feedback/saving-address-response-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-saving-address-field-errors",
+              "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
             }
           ]
         }
@@ -571826,7 +572150,8 @@
           "release-0.5-native-staff-control-targets",
           "release-0.5-settings-response-feedback",
           "release-0.5-invoice-response-feedback",
-          "release-0.5-saving-address-response-feedback"
+          "release-0.5-saving-address-response-feedback",
+          "release-0.5-saving-address-field-errors"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -572454,7 +572779,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "da6822e7d84c829852ee08af018db71a6dc088a2ff78900d2c119a3ddec574a0"
+              "sha256": "481cf948e50c647cb8c925532dda7c110a6b41b22b5fb39f9438ad8710bb5730"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -573562,6 +573887,11 @@
               "batch": "release-0.5-saving-address-response-feedback",
               "base_commit": "e65ef2058f98eaa3c7b514c395ff7a2c9e2aaa3f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-response-feedback/saving-address-response-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-saving-address-field-errors",
+              "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
             }
           ]
         }
@@ -573630,7 +573960,8 @@
           "release-0.5-native-staff-control-targets",
           "release-0.5-settings-response-feedback",
           "release-0.5-invoice-response-feedback",
-          "release-0.5-saving-address-response-feedback"
+          "release-0.5-saving-address-response-feedback",
+          "release-0.5-saving-address-field-errors"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -574258,7 +574589,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "da6822e7d84c829852ee08af018db71a6dc088a2ff78900d2c119a3ddec574a0"
+              "sha256": "481cf948e50c647cb8c925532dda7c110a6b41b22b5fb39f9438ad8710bb5730"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -575366,6 +575697,11 @@
               "batch": "release-0.5-saving-address-response-feedback",
               "base_commit": "e65ef2058f98eaa3c7b514c395ff7a2c9e2aaa3f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-response-feedback/saving-address-response-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-saving-address-field-errors",
+              "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
             }
           ]
         }
@@ -575434,7 +575770,8 @@
           "release-0.5-native-staff-control-targets",
           "release-0.5-settings-response-feedback",
           "release-0.5-invoice-response-feedback",
-          "release-0.5-saving-address-response-feedback"
+          "release-0.5-saving-address-response-feedback",
+          "release-0.5-saving-address-field-errors"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -576062,7 +576399,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "da6822e7d84c829852ee08af018db71a6dc088a2ff78900d2c119a3ddec574a0"
+              "sha256": "481cf948e50c647cb8c925532dda7c110a6b41b22b5fb39f9438ad8710bb5730"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -577170,6 +577507,11 @@
               "batch": "release-0.5-saving-address-response-feedback",
               "base_commit": "e65ef2058f98eaa3c7b514c395ff7a2c9e2aaa3f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-response-feedback/saving-address-response-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-saving-address-field-errors",
+              "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
             }
           ]
         }
@@ -577929,7 +578271,8 @@
           "release-0.5-native-staff-control-targets",
           "release-0.5-settings-response-feedback",
           "release-0.5-invoice-response-feedback",
-          "release-0.5-saving-address-response-feedback"
+          "release-0.5-saving-address-response-feedback",
+          "release-0.5-saving-address-field-errors"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -578557,7 +578900,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "da6822e7d84c829852ee08af018db71a6dc088a2ff78900d2c119a3ddec574a0"
+              "sha256": "481cf948e50c647cb8c925532dda7c110a6b41b22b5fb39f9438ad8710bb5730"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -579665,6 +580008,11 @@
               "batch": "release-0.5-saving-address-response-feedback",
               "base_commit": "e65ef2058f98eaa3c7b514c395ff7a2c9e2aaa3f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-response-feedback/saving-address-response-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-saving-address-field-errors",
+              "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
             }
           ]
         }
@@ -579733,7 +580081,8 @@
           "release-0.5-native-staff-control-targets",
           "release-0.5-settings-response-feedback",
           "release-0.5-invoice-response-feedback",
-          "release-0.5-saving-address-response-feedback"
+          "release-0.5-saving-address-response-feedback",
+          "release-0.5-saving-address-field-errors"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -580361,7 +580710,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "da6822e7d84c829852ee08af018db71a6dc088a2ff78900d2c119a3ddec574a0"
+              "sha256": "481cf948e50c647cb8c925532dda7c110a6b41b22b5fb39f9438ad8710bb5730"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -581469,6 +581818,11 @@
               "batch": "release-0.5-saving-address-response-feedback",
               "base_commit": "e65ef2058f98eaa3c7b514c395ff7a2c9e2aaa3f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-response-feedback/saving-address-response-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-saving-address-field-errors",
+              "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
             }
           ]
         }
@@ -581611,7 +581965,8 @@
           "release-0.5-native-staff-control-targets",
           "release-0.5-invoice-response-feedback",
           "release-0.5-saving-address-response-feedback",
-          "release-0.5-responsive-width-acceptance"
+          "release-0.5-responsive-width-acceptance",
+          "release-0.5-saving-address-field-errors"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -582195,7 +582550,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "da6822e7d84c829852ee08af018db71a6dc088a2ff78900d2c119a3ddec574a0"
+              "sha256": "481cf948e50c647cb8c925532dda7c110a6b41b22b5fb39f9438ad8710bb5730"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -583253,6 +583608,11 @@
               "batch": "release-0.5-responsive-width-acceptance",
               "base_commit": "d0555f77ac44ec5ea209db9407149824031617da",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-responsive-width-acceptance/closure-touch-width-proof.json"
+            },
+            {
+              "batch": "release-0.5-saving-address-field-errors",
+              "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
             }
           ]
         },
@@ -583330,7 +583690,8 @@
           "release-0.5-native-staff-control-targets",
           "release-0.5-invoice-response-feedback",
           "release-0.5-saving-address-response-feedback",
-          "release-0.5-responsive-width-acceptance"
+          "release-0.5-responsive-width-acceptance",
+          "release-0.5-saving-address-field-errors"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -583914,7 +584275,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "da6822e7d84c829852ee08af018db71a6dc088a2ff78900d2c119a3ddec574a0"
+              "sha256": "481cf948e50c647cb8c925532dda7c110a6b41b22b5fb39f9438ad8710bb5730"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -584972,6 +585333,11 @@
               "batch": "release-0.5-responsive-width-acceptance",
               "base_commit": "d0555f77ac44ec5ea209db9407149824031617da",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-responsive-width-acceptance/closure-touch-width-proof.json"
+            },
+            {
+              "batch": "release-0.5-saving-address-field-errors",
+              "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
             }
           ]
         },
@@ -585049,7 +585415,8 @@
           "release-0.5-native-staff-control-targets",
           "release-0.5-invoice-response-feedback",
           "release-0.5-saving-address-response-feedback",
-          "release-0.5-responsive-width-acceptance"
+          "release-0.5-responsive-width-acceptance",
+          "release-0.5-saving-address-field-errors"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -585633,7 +586000,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "da6822e7d84c829852ee08af018db71a6dc088a2ff78900d2c119a3ddec574a0"
+              "sha256": "481cf948e50c647cb8c925532dda7c110a6b41b22b5fb39f9438ad8710bb5730"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -586691,6 +587058,11 @@
               "batch": "release-0.5-responsive-width-acceptance",
               "base_commit": "d0555f77ac44ec5ea209db9407149824031617da",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-responsive-width-acceptance/closure-touch-width-proof.json"
+            },
+            {
+              "batch": "release-0.5-saving-address-field-errors",
+              "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
             }
           ]
         },
@@ -586768,7 +587140,8 @@
           "release-0.5-native-staff-control-targets",
           "release-0.5-invoice-response-feedback",
           "release-0.5-saving-address-response-feedback",
-          "release-0.5-responsive-width-acceptance"
+          "release-0.5-responsive-width-acceptance",
+          "release-0.5-saving-address-field-errors"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -587352,7 +587725,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "da6822e7d84c829852ee08af018db71a6dc088a2ff78900d2c119a3ddec574a0"
+              "sha256": "481cf948e50c647cb8c925532dda7c110a6b41b22b5fb39f9438ad8710bb5730"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -588410,6 +588783,11 @@
               "batch": "release-0.5-responsive-width-acceptance",
               "base_commit": "d0555f77ac44ec5ea209db9407149824031617da",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-responsive-width-acceptance/closure-touch-width-proof.json"
+            },
+            {
+              "batch": "release-0.5-saving-address-field-errors",
+              "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
             }
           ]
         },
@@ -588487,7 +588865,8 @@
           "release-0.5-native-staff-control-targets",
           "release-0.5-invoice-response-feedback",
           "release-0.5-saving-address-response-feedback",
-          "release-0.5-responsive-width-acceptance"
+          "release-0.5-responsive-width-acceptance",
+          "release-0.5-saving-address-field-errors"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -589071,7 +589450,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "da6822e7d84c829852ee08af018db71a6dc088a2ff78900d2c119a3ddec574a0"
+              "sha256": "481cf948e50c647cb8c925532dda7c110a6b41b22b5fb39f9438ad8710bb5730"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -590129,6 +590508,11 @@
               "batch": "release-0.5-responsive-width-acceptance",
               "base_commit": "d0555f77ac44ec5ea209db9407149824031617da",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-responsive-width-acceptance/closure-touch-width-proof.json"
+            },
+            {
+              "batch": "release-0.5-saving-address-field-errors",
+              "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
             }
           ]
         },
@@ -590206,7 +590590,8 @@
           "release-0.5-native-staff-control-targets",
           "release-0.5-invoice-response-feedback",
           "release-0.5-saving-address-response-feedback",
-          "release-0.5-responsive-width-acceptance"
+          "release-0.5-responsive-width-acceptance",
+          "release-0.5-saving-address-field-errors"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -590790,7 +591175,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "da6822e7d84c829852ee08af018db71a6dc088a2ff78900d2c119a3ddec574a0"
+              "sha256": "481cf948e50c647cb8c925532dda7c110a6b41b22b5fb39f9438ad8710bb5730"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -591848,6 +592233,11 @@
               "batch": "release-0.5-responsive-width-acceptance",
               "base_commit": "d0555f77ac44ec5ea209db9407149824031617da",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-responsive-width-acceptance/closure-touch-width-proof.json"
+            },
+            {
+              "batch": "release-0.5-saving-address-field-errors",
+              "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
             }
           ]
         },
@@ -591925,7 +592315,8 @@
           "release-0.5-native-staff-control-targets",
           "release-0.5-invoice-response-feedback",
           "release-0.5-saving-address-response-feedback",
-          "release-0.5-responsive-width-acceptance"
+          "release-0.5-responsive-width-acceptance",
+          "release-0.5-saving-address-field-errors"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -592509,7 +592900,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "da6822e7d84c829852ee08af018db71a6dc088a2ff78900d2c119a3ddec574a0"
+              "sha256": "481cf948e50c647cb8c925532dda7c110a6b41b22b5fb39f9438ad8710bb5730"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -593567,6 +593958,11 @@
               "batch": "release-0.5-responsive-width-acceptance",
               "base_commit": "d0555f77ac44ec5ea209db9407149824031617da",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-responsive-width-acceptance/closure-touch-width-proof.json"
+            },
+            {
+              "batch": "release-0.5-saving-address-field-errors",
+              "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
             }
           ]
         },
@@ -650186,7 +650582,8 @@
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-confirmed-electricity-feedback",
           "release-0.5-native-staff-control-targets",
-          "release-0.5-saving-address-response-feedback"
+          "release-0.5-saving-address-response-feedback",
+          "release-0.5-saving-address-field-errors"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -650434,7 +650831,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "da6822e7d84c829852ee08af018db71a6dc088a2ff78900d2c119a3ddec574a0"
+              "sha256": "481cf948e50c647cb8c925532dda7c110a6b41b22b5fb39f9438ad8710bb5730"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -650766,6 +651163,11 @@
               "batch": "release-0.5-saving-address-response-feedback",
               "base_commit": "e65ef2058f98eaa3c7b514c395ff7a2c9e2aaa3f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-response-feedback/saving-address-response-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-saving-address-field-errors",
+              "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
             }
           ]
         }
@@ -650818,7 +651220,8 @@
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-confirmed-electricity-feedback",
           "release-0.5-native-staff-control-targets",
-          "release-0.5-saving-address-response-feedback"
+          "release-0.5-saving-address-response-feedback",
+          "release-0.5-saving-address-field-errors"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -651066,7 +651469,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "da6822e7d84c829852ee08af018db71a6dc088a2ff78900d2c119a3ddec574a0"
+              "sha256": "481cf948e50c647cb8c925532dda7c110a6b41b22b5fb39f9438ad8710bb5730"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -651398,6 +651801,11 @@
               "batch": "release-0.5-saving-address-response-feedback",
               "base_commit": "e65ef2058f98eaa3c7b514c395ff7a2c9e2aaa3f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-response-feedback/saving-address-response-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-saving-address-field-errors",
+              "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
             }
           ]
         }
@@ -651449,7 +651857,8 @@
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-confirmed-electricity-feedback",
           "release-0.5-native-staff-control-targets",
-          "release-0.5-saving-address-response-feedback"
+          "release-0.5-saving-address-response-feedback",
+          "release-0.5-saving-address-field-errors"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -651697,7 +652106,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "da6822e7d84c829852ee08af018db71a6dc088a2ff78900d2c119a3ddec574a0"
+              "sha256": "481cf948e50c647cb8c925532dda7c110a6b41b22b5fb39f9438ad8710bb5730"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -652029,6 +652438,11 @@
               "batch": "release-0.5-saving-address-response-feedback",
               "base_commit": "e65ef2058f98eaa3c7b514c395ff7a2c9e2aaa3f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-response-feedback/saving-address-response-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-saving-address-field-errors",
+              "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
             }
           ]
         }
@@ -652082,7 +652496,8 @@
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-confirmed-electricity-feedback",
           "release-0.5-native-staff-control-targets",
-          "release-0.5-saving-address-response-feedback"
+          "release-0.5-saving-address-response-feedback",
+          "release-0.5-saving-address-field-errors"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -652330,7 +652745,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "da6822e7d84c829852ee08af018db71a6dc088a2ff78900d2c119a3ddec574a0"
+              "sha256": "481cf948e50c647cb8c925532dda7c110a6b41b22b5fb39f9438ad8710bb5730"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -652662,6 +653077,11 @@
               "batch": "release-0.5-saving-address-response-feedback",
               "base_commit": "e65ef2058f98eaa3c7b514c395ff7a2c9e2aaa3f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-response-feedback/saving-address-response-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-saving-address-field-errors",
+              "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
             }
           ]
         }
@@ -652715,7 +653135,8 @@
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-confirmed-electricity-feedback",
           "release-0.5-native-staff-control-targets",
-          "release-0.5-saving-address-response-feedback"
+          "release-0.5-saving-address-response-feedback",
+          "release-0.5-saving-address-field-errors"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -652963,7 +653384,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "da6822e7d84c829852ee08af018db71a6dc088a2ff78900d2c119a3ddec574a0"
+              "sha256": "481cf948e50c647cb8c925532dda7c110a6b41b22b5fb39f9438ad8710bb5730"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -653295,6 +653716,11 @@
               "batch": "release-0.5-saving-address-response-feedback",
               "base_commit": "e65ef2058f98eaa3c7b514c395ff7a2c9e2aaa3f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-response-feedback/saving-address-response-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-saving-address-field-errors",
+              "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
             }
           ]
         }
@@ -653345,7 +653771,8 @@
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-confirmed-electricity-feedback",
           "release-0.5-native-staff-control-targets",
-          "release-0.5-saving-address-response-feedback"
+          "release-0.5-saving-address-response-feedback",
+          "release-0.5-saving-address-field-errors"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -653593,7 +654020,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "da6822e7d84c829852ee08af018db71a6dc088a2ff78900d2c119a3ddec574a0"
+              "sha256": "481cf948e50c647cb8c925532dda7c110a6b41b22b5fb39f9438ad8710bb5730"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -653925,6 +654352,11 @@
               "batch": "release-0.5-saving-address-response-feedback",
               "base_commit": "e65ef2058f98eaa3c7b514c395ff7a2c9e2aaa3f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-response-feedback/saving-address-response-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-saving-address-field-errors",
+              "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
             }
           ]
         }
@@ -653975,7 +654407,8 @@
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-confirmed-electricity-feedback",
           "release-0.5-native-staff-control-targets",
-          "release-0.5-saving-address-response-feedback"
+          "release-0.5-saving-address-response-feedback",
+          "release-0.5-saving-address-field-errors"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -654223,7 +654656,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "da6822e7d84c829852ee08af018db71a6dc088a2ff78900d2c119a3ddec574a0"
+              "sha256": "481cf948e50c647cb8c925532dda7c110a6b41b22b5fb39f9438ad8710bb5730"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -654555,6 +654988,11 @@
               "batch": "release-0.5-saving-address-response-feedback",
               "base_commit": "e65ef2058f98eaa3c7b514c395ff7a2c9e2aaa3f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-response-feedback/saving-address-response-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-saving-address-field-errors",
+              "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
             }
           ]
         }
@@ -654606,7 +655044,8 @@
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-confirmed-electricity-feedback",
           "release-0.5-native-staff-control-targets",
-          "release-0.5-saving-address-response-feedback"
+          "release-0.5-saving-address-response-feedback",
+          "release-0.5-saving-address-field-errors"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -654854,7 +655293,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "da6822e7d84c829852ee08af018db71a6dc088a2ff78900d2c119a3ddec574a0"
+              "sha256": "481cf948e50c647cb8c925532dda7c110a6b41b22b5fb39f9438ad8710bb5730"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -655186,6 +655625,11 @@
               "batch": "release-0.5-saving-address-response-feedback",
               "base_commit": "e65ef2058f98eaa3c7b514c395ff7a2c9e2aaa3f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-response-feedback/saving-address-response-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-saving-address-field-errors",
+              "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
             }
           ]
         }
@@ -655236,7 +655680,8 @@
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-confirmed-electricity-feedback",
           "release-0.5-native-staff-control-targets",
-          "release-0.5-saving-address-response-feedback"
+          "release-0.5-saving-address-response-feedback",
+          "release-0.5-saving-address-field-errors"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -655484,7 +655929,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "da6822e7d84c829852ee08af018db71a6dc088a2ff78900d2c119a3ddec574a0"
+              "sha256": "481cf948e50c647cb8c925532dda7c110a6b41b22b5fb39f9438ad8710bb5730"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -655816,6 +656261,11 @@
               "batch": "release-0.5-saving-address-response-feedback",
               "base_commit": "e65ef2058f98eaa3c7b514c395ff7a2c9e2aaa3f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-response-feedback/saving-address-response-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-saving-address-field-errors",
+              "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
             }
           ]
         }
@@ -655867,7 +656317,8 @@
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-confirmed-electricity-feedback",
           "release-0.5-native-staff-control-targets",
-          "release-0.5-saving-address-response-feedback"
+          "release-0.5-saving-address-response-feedback",
+          "release-0.5-saving-address-field-errors"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -656115,7 +656566,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "da6822e7d84c829852ee08af018db71a6dc088a2ff78900d2c119a3ddec574a0"
+              "sha256": "481cf948e50c647cb8c925532dda7c110a6b41b22b5fb39f9438ad8710bb5730"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -656447,6 +656898,11 @@
               "batch": "release-0.5-saving-address-response-feedback",
               "base_commit": "e65ef2058f98eaa3c7b514c395ff7a2c9e2aaa3f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-response-feedback/saving-address-response-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-saving-address-field-errors",
+              "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
             }
           ]
         }
@@ -686671,7 +687127,7 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "57d66446aa044bf4ac586b0292208639c7073f9c124f39ed3ed9a4df5db033f2"
+              "sha256": "d0140aeadcfc26e9eea5436167afaa69aaab783a71b7c332c4b3bf8ec261acc3"
             },
             {
               "path": "apps/web/e2e/solar-journey.spec.ts",
@@ -687703,6 +688159,11 @@
               "batch": "release-0.5-saving-address-response-feedback",
               "base_commit": "e65ef2058f98eaa3c7b514c395ff7a2c9e2aaa3f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-response-feedback/saving-address-response-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-saving-address-field-errors",
+              "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
             }
           ]
         },
@@ -687748,7 +688209,8 @@
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-confirmed-electricity-feedback",
-          "release-0.5-saving-address-response-feedback"
+          "release-0.5-saving-address-response-feedback",
+          "release-0.5-saving-address-field-errors"
         ],
         "inspection": {
           "wallet_history": "R-01.02 accepted separately.",
@@ -688687,7 +689149,7 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "57d66446aa044bf4ac586b0292208639c7073f9c124f39ed3ed9a4df5db033f2"
+              "sha256": "d0140aeadcfc26e9eea5436167afaa69aaab783a71b7c332c4b3bf8ec261acc3"
             },
             {
               "path": "apps/web/e2e/solar-journey.spec.ts",
@@ -689712,6 +690174,11 @@
               "batch": "release-0.5-saving-address-response-feedback",
               "base_commit": "e65ef2058f98eaa3c7b514c395ff7a2c9e2aaa3f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-response-feedback/saving-address-response-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-saving-address-field-errors",
+              "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
             }
           ]
         },
@@ -689753,7 +690220,8 @@
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-confirmed-electricity-feedback",
-          "release-0.5-saving-address-response-feedback"
+          "release-0.5-saving-address-response-feedback",
+          "release-0.5-saving-address-field-errors"
         ]
       }
     },
@@ -695366,7 +695834,7 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "57d66446aa044bf4ac586b0292208639c7073f9c124f39ed3ed9a4df5db033f2"
+              "sha256": "d0140aeadcfc26e9eea5436167afaa69aaab783a71b7c332c4b3bf8ec261acc3"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -695378,7 +695846,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "da6822e7d84c829852ee08af018db71a6dc088a2ff78900d2c119a3ddec574a0"
+              "sha256": "481cf948e50c647cb8c925532dda7c110a6b41b22b5fb39f9438ad8710bb5730"
             },
             {
               "path": "apps/web/src/pages/saving-order.test.tsx",
@@ -698388,6 +698856,11 @@
               "batch": "release-0.5-saving-address-response-feedback",
               "base_commit": "e65ef2058f98eaa3c7b514c395ff7a2c9e2aaa3f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-response-feedback/saving-address-response-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-saving-address-field-errors",
+              "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
             }
           ]
         },
@@ -698442,7 +698915,8 @@
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-confirmed-electricity-feedback",
           "release-0.5-native-staff-control-targets",
-          "release-0.5-saving-address-response-feedback"
+          "release-0.5-saving-address-response-feedback",
+          "release-0.5-saving-address-field-errors"
         ]
       }
     },
@@ -706202,7 +706676,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "The current width gate covers 93 populated canonical routes and all 2,976 required cells. The staff consent touch gap is fixed. Conditional presentation and command adoption remain open."
+        "The 93-route populated width matrix is recorded. The current saving address error is linked to the rejected field and passed all eight widths in both native engines and directions. Other conditional states and command adoption remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -706248,7 +706722,8 @@
           "release-0.5-invoice-response-feedback",
           "release-0.5-saving-address-response-feedback",
           "release-0.5-operational-queue-touch",
-          "release-0.5-responsive-width-acceptance"
+          "release-0.5-responsive-width-acceptance",
+          "release-0.5-saving-address-field-errors"
         ]
       }
     },
@@ -706267,7 +706742,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Current responsive acceptance includes 332 browser cases, 28 affected profile lifecycle browser cases, 11 closure unit cases and all 98 route and interaction gzip limits. Complete the final candidate combined coverage and accessibility gates."
+        "The saving address delta passed 16 related unit cases, 50 native browser cases, four width replays and all 98 bundle limits. Complete final candidate combined coverage and accessibility."
       ],
       "owner": null,
       "depends_on": [],
@@ -706312,7 +706787,8 @@
           "release-0.5-invoice-response-feedback",
           "release-0.5-saving-address-response-feedback",
           "release-0.5-operational-queue-touch",
-          "release-0.5-responsive-width-acceptance"
+          "release-0.5-responsive-width-acceptance",
+          "release-0.5-saving-address-field-errors"
         ]
       }
     },
@@ -766098,7 +766574,127 @@
       ],
       "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-responsive-width-acceptance/closure-touch-renewed-bindings.json",
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-responsive-width-acceptance",
-      "release_disposition": "Populated width accepted. Conditional, combined and owner policy gates still apply to v0.5.0."
+      "release_disposition": "Populated width accepted. Conditional, combined and owner policy gates still apply to v0.5.0.",
+      "push_receipt": {
+        "verified_at": "2026-11-07T17:41:07.756690+00:00",
+        "local_sha": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
+        "remote_sha": "4a8713cfba365025ee471f30b9d1a2cca95926b7"
+      }
+    },
+    "release-0.5-saving-address-field-errors": {
+      "batch": "release-0.5-saving-address-field-errors",
+      "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.05.01.05",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02",
+        "07-ui-ux-design.md#T-07.04.02.04"
+      ],
+      "accepted_task_keys": [],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.05.01.05",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/saving-journey.spec.ts",
+          "sha256": "d0140aeadcfc26e9eea5436167afaa69aaab783a71b7c332c4b3bf8ec261acc3"
+        },
+        {
+          "path": "apps/web/src/pages/SavingsOrderPage.tsx",
+          "sha256": "481cf948e50c647cb8c925532dda7c110a6b41b22b5fb39f9438ad8710bb5730"
+        }
+      ],
+      "checks": [
+        "A localized, programmatically linked error marks only the rejected owned address field. Editable draft, uncertain exact retry, receipt and original order assertions passed.",
+        "16 unit cases, 50 Chromium and Safari cases, four width replays and all 98 gzip limits passed."
+      ],
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json",
+      "source_scope_proof_sha256": "03f0e08ce49ddef3600beefe31111d38ffd963228ee750970759de69f760b16e",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/reviewed.patch",
+      "renewed_task_keys": [
+        "02-auth-users-admin.md#T-03.04.02",
+        "02-auth-users-admin.md#T-04.01.01",
+        "02-auth-users-admin.md#T-04.01.02",
+        "02-auth-users-admin.md#T-04.01.03",
+        "03-core-business.md#T-03.09.01.02",
+        "03-core-business.md#T-03.09.01.03",
+        "03-core-business.md#T-03.09.02.01",
+        "03-core-business.md#T-03.09.02.02",
+        "03-core-business.md#T-03.09.02.03",
+        "03-core-business.md#T-03.09.02.04",
+        "03-core-business.md#T-03.09.02.05",
+        "03-core-business.md#T-03.09.02.06",
+        "03-core-business.md#T-03.09.02.07",
+        "03-core-business.md#T-03.09.02.08",
+        "03-core-business.md#T-03.09.03.01",
+        "03-core-business.md#T-03.09.03.02",
+        "03-core-business.md#T-03.09.03.03",
+        "03-core-business.md#T-03.09.03.04",
+        "03-core-business.md#T-03.09.03.05",
+        "03-core-business.md#T-03.09.03.06",
+        "03-core-business.md#T-03.09.04.01",
+        "03-core-business.md#T-03.09.04.02",
+        "03-core-business.md#T-03.09.04.03",
+        "03-core-business.md#T-03.09.04.04",
+        "03-core-business.md#T-03.09.04.05",
+        "03-core-business.md#T-03.10.03.01",
+        "03-core-business.md#T-03.10.03.02",
+        "03-core-business.md#T-03.10.03.03",
+        "03-core-business.md#T-03.90.02",
+        "07-ui-ux-design.md#T-07.01.03.19",
+        "07-ui-ux-design.md#T-07.04.02.04",
+        "07-ui-ux-design.md#T-07.10.01.01",
+        "07-ui-ux-design.md#T-07.10.01.02",
+        "07-ui-ux-design.md#T-07.10.01.03",
+        "07-ui-ux-design.md#T-07.10.01.04",
+        "07-ui-ux-design.md#T-07.10.01.05",
+        "07-ui-ux-design.md#T-07.10.01.06",
+        "07-ui-ux-design.md#T-07.10.02.01",
+        "07-ui-ux-design.md#T-07.10.02.02",
+        "07-ui-ux-design.md#T-07.10.02.03",
+        "07-ui-ux-design.md#T-07.10.02.04",
+        "07-ui-ux-design.md#T-07.10.02.05",
+        "07-ui-ux-design.md#T-07.11.01.01",
+        "07-ui-ux-design.md#T-07.11.01.02",
+        "07-ui-ux-design.md#T-07.11.01.04",
+        "07-ui-ux-design.md#T-07.11.01.05",
+        "07-ui-ux-design.md#T-07.11.02.01",
+        "07-ui-ux-design.md#T-07.11.02.02",
+        "07-ui-ux-design.md#T-07.11.02.03",
+        "07-ui-ux-design.md#T-07.11.02.04",
+        "07-ui-ux-design.md#T-07.11.02.05",
+        "07-ui-ux-design.md#T-07.12.01.01",
+        "07-ui-ux-design.md#T-07.12.01.02",
+        "07-ui-ux-design.md#T-07.12.01.03",
+        "07-ui-ux-design.md#T-07.12.01.04",
+        "07-ui-ux-design.md#T-07.12.01.06",
+        "07-ui-ux-design.md#T-07.12.01.07",
+        "07-ui-ux-design.md#T-07.13.01.01",
+        "07-ui-ux-design.md#T-07.13.01.02",
+        "07-ui-ux-design.md#T-07.13.01.03",
+        "07-ui-ux-design.md#T-07.13.01.04",
+        "07-ui-ux-design.md#T-07.13.01.05",
+        "07-ui-ux-design.md#T-07.13.01.06",
+        "07-ui-ux-design.md#T-07.13.01.07",
+        "07-ui-ux-design.md#T-07.22.01.01",
+        "07-ui-ux-design.md#T-07.22.01.02",
+        "07-ui-ux-design.md#T-07.22.01.03",
+        "07-ui-ux-design.md#T-07.22.01.04",
+        "07-ui-ux-design.md#T-07.22.01.05",
+        "07-ui-ux-design.md#T-07.22.02.01",
+        "07-ui-ux-design.md#T-07.22.02.02",
+        "07-ui-ux-design.md#T-07.22.02.03",
+        "07-ui-ux-design.md#T-07.22.02.04",
+        "07-ui-ux-design.md#T-07.22.02.05",
+        "release-readiness#R-01.01",
+        "release-readiness#R-01.04",
+        "release-readiness#R-02.02"
+      ],
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/renewed-bindings.json",
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors",
+      "release_disposition": "Remaining conditional form, final candidate and owner policy gates still apply."
     }
   },
   "historical_improvements": [

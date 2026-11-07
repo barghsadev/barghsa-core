@@ -94,6 +94,7 @@ interface Draft {
   addressId: string;
   giftCode: string;
 }
+type AddressDraftField = 'provinceId' | 'cityId' | 'fullAddress' | 'postalCode';
 
 const draftSchema: DraftSchema<Draft> = {
   safeParse(value) {
@@ -260,7 +261,7 @@ function OwnedSavingsOrderPage() {
   const [submitError, setSubmitError] = useState('');
   const submissionKey = useRef<{ fingerprint: string; key: string } | null>(null);
   const hydratedProfile = useRef<string | null>(null);
-  const [addressError, setAddressError] = useState(false);
+  const [addressErrors, setAddressErrors] = useState<AddressDraftField[]>([]);
   const actorId = useAccountUser();
   const contextRevision = useProfileContextRevision();
   const readIntake = useOwnedIntakeRead(JSON.stringify([actorId, contextRevision]));
@@ -284,7 +285,24 @@ function OwnedSavingsOrderPage() {
     () => !!profileId && !loadError && getProfileContextRevision() === contextRevision
   );
   const savingAddress = addressCommand.busy;
-  const addressErrorMessage = addressError ? t('settings.addresses.error.create', locale) : null;
+  const addressErrorMessage = addressErrors.length
+    ? t('settings.addresses.error.create', locale)
+    : null;
+  function bindAddressField(name: AddressDraftField) {
+    const rejected = addressErrors.includes(name);
+    return {
+      ...fields.bind(name),
+      'aria-required': true,
+      ...(rejected && { 'aria-invalid': true, 'aria-describedby': fields.errorId(name) }),
+    };
+  }
+  function addressFieldError(name: AddressDraftField) {
+    return addressErrors.includes(name) ? (
+      <p id={fields.errorId(name)} className="text-sm text-destructive">
+        {invalidField}
+      </p>
+    ) : null;
+  }
   useCommandFeedback({
     error: addressCommand.error ? copy('addressUnconfirmed') : addressErrorMessage,
     operation: profileId ?? undefined,
@@ -434,7 +452,7 @@ function OwnedSavingsOrderPage() {
       return;
     await protection.run(async () => {
       if (!addressCommand.coordination.claim('address')) return;
-      setAddressError(false);
+      setAddressErrors([]);
       const patch = { provinceId, cityId, fullAddress: fullAddress.trim(), postalCode };
       await addressCommand.submit({
         owner: 'address',
@@ -447,10 +465,13 @@ function OwnedSavingsOrderPage() {
         fields: (names) => {
           if (
             !names.length ||
-            !names.every((name) => typeof name === 'string' && Object.hasOwn(patch, name))
+            !names.every(
+              (name): name is AddressDraftField =>
+                typeof name === 'string' && Object.hasOwn(patch, name)
+            )
           )
             return false;
-          setAddressError(true);
+          setAddressErrors(names);
           return true;
         },
         accepted: (value) => {
@@ -1052,7 +1073,7 @@ function OwnedSavingsOrderPage() {
                             setCityId('');
                             setFullAddress('');
                             setPostalCode('');
-                            setAddressError(false);
+                            setAddressErrors([]);
                           }
                           setAddingAddress((value) => !value);
                         }}
@@ -1067,7 +1088,7 @@ function OwnedSavingsOrderPage() {
                             <select
                               id="saving-address-province"
                               className="mt-1 w-full rounded-md border bg-background p-2"
-                              {...fields.bind('provinceId')}
+                              {...bindAddressField('provinceId')}
                               value={provinceId}
                               disabled={savingAddress || !provinceOptions.ready}
                               onChange={(event) => {
@@ -1082,6 +1103,7 @@ function OwnedSavingsOrderPage() {
                                 </option>
                               ))}
                             </select>
+                            {addressFieldError('provinceId')}
                             <GeographyLoadError
                               {...provinceOptions}
                               message={t('settings.addresses.error.loadProvinces', locale)}
@@ -1095,7 +1117,7 @@ function OwnedSavingsOrderPage() {
                               id="saving-address-city"
                               className="mt-1 w-full rounded-md border bg-background p-2"
                               dependencyValue={provinceId}
-                              {...fields.bind('cityId')}
+                              {...bindAddressField('cityId')}
                               value={cityId}
                               ready={cityOptions.ready}
                               loading={cityOptions.loading}
@@ -1108,6 +1130,7 @@ function OwnedSavingsOrderPage() {
                               placeholder={t('settings.addresses.form.cityPlaceholder', locale)}
                               onChange={(event) => setCityId(event.target.value)}
                             />
+                            {addressFieldError('cityId')}
                             <GeographyLoadError
                               {...cityOptions}
                               message={t('settings.addresses.error.loadCities', locale)}
@@ -1115,23 +1138,26 @@ function OwnedSavingsOrderPage() {
                               testId="saving-address-city-retry"
                             />
                           </div>
-                          <label>
-                            {copy('fullAddress')}
+                          <div>
+                            <label htmlFor="saving-address-full">{copy('fullAddress')}</label>
                             <input
+                              id="saving-address-full"
                               className="mt-1 w-full rounded-md border bg-background p-2"
                               maxLength={500}
-                              {...fields.bind('fullAddress')}
+                              {...bindAddressField('fullAddress')}
                               value={fullAddress}
                               onChange={(event) => setFullAddress(event.target.value)}
                             />
-                          </label>
-                          <label>
-                            {copy('postalCode')}
+                            {addressFieldError('fullAddress')}
+                          </div>
+                          <div>
+                            <label htmlFor="saving-address-postal">{copy('postalCode')}</label>
                             <input
+                              id="saving-address-postal"
                               className="mt-1 w-full rounded-md border bg-background p-2"
                               inputMode="numeric"
                               maxLength={10}
-                              {...fields.bind('postalCode')}
+                              {...bindAddressField('postalCode')}
                               value={postalCode}
                               onChange={(event) =>
                                 setPostalCode(
@@ -1139,7 +1165,8 @@ function OwnedSavingsOrderPage() {
                                 )
                               }
                             />
-                          </label>
+                            {addressFieldError('postalCode')}
+                          </div>
                           <Button
                             disabled={
                               savingAddress ||

@@ -504,7 +504,8 @@ for (const locale of ['en', 'fa'] as const)
     await expect(next).toBeEnabled();
     await next.click();
     await page.getByRole('button', { name: savingCopy('newAddress', locale), exact: true }).click();
-    await page.locator('#saving-address-province').selectOption(provinceId);
+    const province = page.locator('#saving-address-province');
+    await province.selectOption(provinceId);
     const city = page.locator('#saving-address-city');
     await city.selectOption(cityId);
     if (await page.evaluate(() => matchMedia('(pointer: coarse)').matches)) {
@@ -526,6 +527,12 @@ for (const locale of ['en', 'fa'] as const)
       name: savingCopy('fullAddress', locale),
       exact: true,
     });
+    const postalCode = page.getByRole('textbox', {
+      name: savingCopy('postalCode', locale),
+      exact: true,
+    });
+    for (const field of [province, city, fullAddress, postalCode])
+      await expect(field).toHaveAttribute('aria-required', 'true');
     const addressError = appCopy('settings.addresses.error.create', locale);
     const addressUnconfirmed = savingCopy('addressUnconfirmed', locale);
     const addressSaved = page.locator('[data-sonner-toast][data-type="success"]').filter({
@@ -538,6 +545,11 @@ for (const locale of ['en', 'fa'] as const)
     );
     await expect(errorToasts.filter({ hasText: addressError })).toHaveText(addressError);
     await expect(page.getByText('private-saving-address-diagnostic')).toHaveCount(0);
+    await expect(postalCode).toHaveAttribute('aria-invalid', 'true');
+    await expect(postalCode).toHaveAccessibleDescription(
+      appCopy('formWizard.invalidField', locale)
+    );
+    await expect(fullAddress).not.toHaveAttribute('aria-invalid', 'true');
     await expect(fullAddress).toBeEditable();
     await expect(fullAddress).toHaveValue(savedAddress.fullAddress);
     await expect(addressSaved).toHaveCount(0);
@@ -545,6 +557,7 @@ for (const locale of ['en', 'fa'] as const)
 
     await saveAddress.click();
     await expect(page.getByRole('alert').filter({ hasText: addressUnconfirmed })).toBeVisible();
+    await expect(postalCode).not.toHaveAttribute('aria-invalid', 'true');
     await expect(errorToasts.filter({ hasText: addressUnconfirmed })).toHaveText(
       addressUnconfirmed
     );
