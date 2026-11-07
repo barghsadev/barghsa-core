@@ -1,3 +1,4 @@
+import { runMigrationPrefix } from './test/migration-prefix';
 import { randomUUID } from 'node:crypto';
 import { mkdtempSync, mkdirSync, readFileSync, writeFileSync, copyFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
@@ -39,12 +40,15 @@ it('protects existing audit history on upgrade and leaves migration replay harml
       [id, actor, randomUUID()]
     );
     const before = (await pool.query('SELECT * FROM audit_log ORDER BY id')).rows;
-    expect(await runMigrations({ connection })).toEqual({
+    expect(await runMigrationPrefix('0249_audit_log_immutability', { connection })).toEqual({
       ok: true,
       applied: ['0249_audit_log_immutability'],
     });
     expect((await pool.query('SELECT * FROM audit_log ORDER BY id')).rows).toEqual(before);
-    expect(await runMigrations({ connection })).toEqual({ ok: true, applied: [] });
+    expect(await runMigrationPrefix('0249_audit_log_immutability', { connection })).toEqual({
+      ok: true,
+      applied: [],
+    });
     await expect(pool.query('DELETE FROM audit_log WHERE id=$1', [id])).rejects.toMatchObject({
       code: '55000',
     });

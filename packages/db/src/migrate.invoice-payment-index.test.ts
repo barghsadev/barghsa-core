@@ -1,14 +1,10 @@
+import { runMigrationPrefix } from './test/migration-prefix';
 import { randomUUID } from 'node:crypto';
-import { cpSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
-import { resolve } from 'node:path';
 import { Pool } from 'pg';
 import { afterAll, beforeAll, expect, it } from 'vitest';
-import { runMigrations } from './migrate';
 
 const tag = '0261_invoice_payment_lookup';
-const folder = resolve(__dirname, '../drizzle/production');
-let pool: Pool, management: Pool, scratch: string, connection: string;
+let pool: Pool, management: Pool, connection: string;
 const database = `test_invoice_index_${randomUUID().replaceAll('-', '')}`;
 const profile = randomUUID(),
   invoice = randomUUID();
@@ -18,15 +14,8 @@ beforeAll(async () => {
   const url = new URL(process.env.TEST_DATABASE_URL!);
   url.pathname = `/${database}`;
   connection = url.toString();
-  scratch = mkdtempSync(resolve(tmpdir(), 'barghsa-invoice-index-'));
-  cpSync(folder, scratch, { recursive: true });
-  const journal = JSON.parse(readFileSync(resolve(scratch, 'meta/_journal.json'), 'utf8'));
-  expect(journal.entries.at(-1).tag).toBe(tag);
-  journal.entries = journal.entries.slice(0, -1);
-  writeFileSync(resolve(scratch, 'meta/_journal.json'), JSON.stringify(journal));
-  const base = await runMigrations({
+  const base = await runMigrationPrefix('0260_saving_cancellation_financial_closure', {
     connection: { pgdirectUrl: connection },
-    migrationsFolder: scratch,
   });
   expect(base).toMatchObject({ ok: true });
   pool = new Pool({ connectionString: connection });
@@ -50,7 +39,6 @@ afterAll(async () => {
     await management.query(`DROP DATABASE "${database}"`);
     await management.end();
   }
-  if (scratch) rmSync(scratch, { recursive: true, force: true });
 });
 async function financialRows() {
   return Object.fromEntries(
@@ -71,7 +59,7 @@ it('upgrades the actual prior journal without changing financial rows, preserves
     ).rows
   ).toEqual([]);
   const before = await financialRows();
-  const upgraded = await runMigrations({ connection: { pgdirectUrl: connection } });
+  const upgraded = await runMigrationPrefix(tag, { connection: { pgdirectUrl: connection } });
   expect(upgraded).toEqual({ ok: true, applied: [tag] });
   const indexes = (
     await pool.query(
@@ -92,7 +80,7 @@ it('upgrades the actual prior journal without changing financial rows, preserves
     ).rows
   ).toEqual([{ amount: '-500' }]);
   expect(await financialRows()).toEqual(before);
-  expect(await runMigrations({ connection: { pgdirectUrl: connection } })).toEqual({
+  expect(await runMigrationPrefix(tag, { connection: { pgdirectUrl: connection } })).toEqual({
     ok: true,
     applied: [],
   });

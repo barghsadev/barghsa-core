@@ -103,11 +103,14 @@ export default function DeadLetterPanel({
   uiLocale,
   queries,
   historyQueries,
+  headingLevel = 2,
 }: {
   uiLocale: Locale;
+  headingLevel?: 1 | 2;
   queries?: ListQueryBinding | undefined;
   historyQueries?: ListQueryBinding | undefined;
 }) {
+  const Heading = headingLevel === 1 ? 'h1' : 'h2';
   const time = useAccountTime(uiLocale);
   const numbers = useNumberFormatting(uiLocale);
   const filterId = useId();
@@ -329,7 +332,11 @@ export default function DeadLetterPanel({
     <section className="space-y-3" dir={uiLocale === 'fa' ? 'rtl' : 'ltr'}>
       {time.notice}
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <h2 className="text-lg font-semibold">{label('title')}</h2>
+        <Heading
+          className={headingLevel === 1 ? 'text-2xl font-semibold' : 'text-lg font-semibold'}
+        >
+          {label('title')}
+        </Heading>
         {queue.canView && (
           <Button
             variant="outline"
@@ -452,6 +459,7 @@ export default function DeadLetterPanel({
               rows={rows}
               caption={label('title')}
               scrollLabel={label('table')}
+              cardHeading={headingLevel === 1 ? 'h2' : 'h3'}
               loading={loading}
               emptyMessage={label('empty')}
               nameHeader={label('eventKey')}

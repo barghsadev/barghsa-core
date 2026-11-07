@@ -1,8 +1,12 @@
+import { useOwnedManualServerRead } from '../hooks/useServerQuery.js';
+import { useAccountUser } from '../hooks/useAccountUser.js';
+import { getProfileContextRevision, useProfileContextRevision } from '../lib/profile-context.js';
+import { queryKeys } from '../lib/query-keys.js';
 import { LoadingStatus } from '@barghsa/ui';
 import { InvoiceActivity } from './InvoiceActivity.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { InvoicePaymentSummary } from '../components/InvoicePaymentSummary.js';
 import { Link } from '@tanstack/react-router';
 import { t } from '@barghsa/i18n/app';
@@ -34,6 +38,30 @@ interface InvoiceDetailsPageProps {
  * the change. RTL-aware, profile-scoped via the details API.
  */
 export function InvoiceDetailsPage({ invoiceId }: InvoiceDetailsPageProps) {
+  const actor = useAccountUser();
+  const revision = useProfileContextRevision();
+  const scope = JSON.stringify([actor, revision, invoiceId]);
+  return (
+    <OwnedInvoiceDetails
+      key={scope}
+      invoiceId={invoiceId}
+      actor={actor}
+      revision={revision}
+      scope={scope}
+    />
+  );
+}
+
+function OwnedInvoiceDetails({
+  invoiceId,
+  actor,
+  revision,
+  scope,
+}: InvoiceDetailsPageProps & {
+  actor: string | null;
+  revision: number;
+  scope: string;
+}) {
   const time = useAccountTime();
   const locale = useLocale();
   const isRtl = locale === 'fa';
@@ -41,35 +69,55 @@ export function InvoiceDetailsPage({ invoiceId }: InvoiceDetailsPageProps) {
   const [error, setError] = useState<'not-found' | 'load' | null>(null);
   const [loading, setLoading] = useState(true);
   const [reload, setReload] = useState(0);
+  const read = useOwnedManualServerRead(scope);
+  const readDetails = useCallback(
+    (signal?: AbortSignal) =>
+      read(
+        queryKeys.invoices.detail(
+          { context: 'account', ownerId: actor ?? 'account-session', accountId: actor, revision },
+          invoiceId
+        ),
+        signal,
+        (transport) => fetchInvoiceDetails(invoiceId, transport)
+      ),
+    [read, actor, revision, invoiceId]
+  );
+  const refreshSequence = useRef(0);
   const refreshDetails = useCallback(async () => {
-    const next = await fetchInvoiceDetails(invoiceId);
-    setDetails((current) => (current?.viewedInvoiceId === invoiceId ? next : current));
-  }, [invoiceId]);
+    const request = ++refreshSequence.current;
+    const current = () =>
+      request === refreshSequence.current && getProfileContextRevision() === revision;
+    try {
+      const next = await readDetails();
+      if (current()) setDetails(next);
+    } catch (err) {
+      if (current() && err instanceof InvoiceRequestError && [401, 403, 404].includes(err.status)) {
+        setDetails(null);
+        setError(err.status === 404 ? 'not-found' : 'load');
+      }
+      throw err;
+    }
+  }, [readDetails, revision]);
 
   useEffect(() => {
-    let cancelled = false;
+    const controller = new AbortController();
+    const current = () => !controller.signal.aborted && getProfileContextRevision() === revision;
     setLoading(true);
     setError(null);
     setDetails(null);
-    fetchInvoiceDetails(invoiceId)
+    void readDetails(controller.signal)
       .then((payload) => {
-        if (!cancelled) setDetails(payload);
+        if (current()) setDetails(payload);
       })
       .catch((err: unknown) => {
-        if (cancelled) return;
-        if (err instanceof InvoiceRequestError && err.status === 404) {
-          setError('not-found');
-        } else {
-          setError('load');
-        }
+        if (current())
+          setError(err instanceof InvoiceRequestError && err.status === 404 ? 'not-found' : 'load');
       })
       .finally(() => {
-        if (!cancelled) setLoading(false);
+        if (current()) setLoading(false);
       });
-    return () => {
-      cancelled = true;
-    };
-  }, [invoiceId, reload]);
+    return () => controller.abort();
+  }, [readDetails, reload, revision]);
 
   return (
     <div

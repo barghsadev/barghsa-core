@@ -1,3 +1,4 @@
+import { checkRoutePresentation } from './route-presentation';
 import { test, expect } from './coverage-fixture';
 import { setupCatalogueForms } from './catalogue-form-fixture';
 import { aiModel, aiAgent, aiDetail, aiOptions } from '../src/test/ai-catalogue-fixtures';
@@ -125,6 +126,7 @@ for (const locale of ['en', 'fa'] as const)
       await page.goto('/admin/ai-models');
       const modelTable = page.getByRole('table', { name: modelCaption, exact: true });
       await expect(modelTable).toBeVisible();
+      await checkRoutePresentation(page, test.info(), locale);
       await expect(modelTable.getByRole('columnheader')).toHaveCount(5);
       await expect(modelTable.getByRole('rowheader').first()).toContainText(model.title);
       await expect(modelTable.locator('thead button')).toHaveCount(0);
@@ -203,7 +205,10 @@ for (const locale of ['en', 'fa'] as const)
       await page.setViewportSize({ width: 1280, height: 900 });
       await page.goto('/admin/agents');
       try {
-        const pending = page.locator('main[data-area=admin] [data-slot=loading-status]');
+        const pending = page
+          .getByRole('main')
+          .getByRole('status')
+          .filter({ has: page.getByText(agentText('loading'), { exact: true }) });
         await expect(pending).toBeVisible();
         await expect(pending.locator('[data-slot=skeleton]')).toHaveCount(2);
         await expect(page.locator('main[data-area=admin] [data-slot=avatar]')).toHaveCount(0);
@@ -214,6 +219,7 @@ for (const locale of ['en', 'fa'] as const)
 
       const agentTable = page.getByRole('table', { name: agentText('title'), exact: true });
       await expect(agentTable).toBeVisible();
+      await checkRoutePresentation(page, test.info(), locale);
       const agentRow = agentTable.locator('tbody tr').first();
       await expect(agentRow).toContainText(agent.title);
       await expect(agentRow.locator('[data-slot=avatar]')).toHaveCount(1);

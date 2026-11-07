@@ -1,3 +1,4 @@
+import { runMigrationPrefix } from './test/migration-prefix';
 import { randomUUID } from 'node:crypto';
 import { copyFileSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
@@ -42,7 +43,7 @@ beforeAll(async () => {
   legacy = await seed();
   expect((await expire(legacy)).rows[0].disposition).toBe('unsigned');
   historical = await snapshot(legacy);
-  migration = await runMigrations({ connection });
+  migration = await runMigrationPrefix('0251_electricity_increase_audit', { connection });
 }, 30000);
 afterAll(async () => {
   await pool?.end();
@@ -154,7 +155,10 @@ it('upgrades from250 without rewriting prior audits, requests, contracts, invoic
   expect(await snapshot(legacy)).toEqual(historical);
   expect(historical.audits).toHaveLength(1);
   expect(JSON.parse(historical.audits[0].metadata)).not.toHaveProperty('entity');
-  expect(await runMigrations({ connection })).toEqual({ ok: true, applied: [] });
+  expect(await runMigrationPrefix('0251_electricity_increase_audit', { connection })).toEqual({
+    ok: true,
+    applied: [],
+  });
   expect(await snapshot(legacy)).toEqual(historical);
 });
 it('records exact pending and signed expiry with only unpaid invoice cancellation, then makes retries no-ops', async () => {

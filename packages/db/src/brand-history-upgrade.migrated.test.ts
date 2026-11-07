@@ -1,3 +1,4 @@
+import { runMigrationPrefix } from './test/migration-prefix';
 import { randomUUID } from 'node:crypto';
 import { mkdtempSync, mkdirSync, readFileSync, writeFileSync, copyFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
@@ -45,7 +46,7 @@ it('supersedes only obsolete drafts on upgrade without changing published brandi
     ).rows[0];
     const history = (await pool.query('SELECT * FROM drizzle.__drizzle_migrations ORDER BY id'))
       .rows;
-    expect(await runMigrations({ connection })).toEqual({
+    expect(await runMigrationPrefix('0278_brand_history_repair', { connection })).toEqual({
       ok: true,
       applied: ['0278_brand_history_repair'],
     });
@@ -64,7 +65,10 @@ it('supersedes only obsolete drafts on upgrade without changing published brandi
         history.length
       )
     ).toEqual(history);
-    expect(await runMigrations({ connection })).toEqual({ ok: true, applied: [] });
+    expect(await runMigrationPrefix('0278_brand_history_repair', { connection })).toEqual({
+      ok: true,
+      applied: [],
+    });
   } finally {
     await pool?.end();
     try {

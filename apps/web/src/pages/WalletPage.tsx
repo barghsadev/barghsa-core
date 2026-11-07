@@ -25,11 +25,7 @@ import {
 } from '@barghsa/shared/finance/browser';
 import type { OnlineTopUpActionError } from '../lib/online-topup-action.js';
 import { useLocale } from '../hooks/useLocale.js';
-import {
-  uploadInvoiceReceiptAttachment as uploadReceiptAttachment,
-  normalizeIrrAmountDigits,
-  utcTodayIso,
-} from '../lib/invoice-bank-receipt-upload.js';
+import { normalizeIrrAmountDigits } from '../lib/invoice-bank-receipt-fields.js';
 import { rememberWalletInvoiceReturn } from '../lib/wallet-invoice-return.js';
 import { useMaintenance } from '../hooks/useMaintenance.js';
 import { MaintenanceNotice } from '../components/MaintenanceNotice.js';
@@ -400,18 +396,19 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
     setReceiptError(null);
     setReceiptSuccess(false);
     try {
+      const { loadBankReceiptTopUpReview, uploadWalletReceiptAttachment } =
+        await import('../lib/bank-receipt-topup-action.js');
+      if (!current()) return;
       const attachmentKey =
         receiptUploaded?.file === selectedFile && receiptUploaded.profileId === profileId
           ? receiptUploaded.key
-          : await uploadReceiptAttachment(selectedFile, profileId);
+          : await uploadWalletReceiptAttachment(selectedFile, profileId);
       if (!current()) return;
       if (!attachmentKey) {
         setReceiptError('upload');
         return;
       }
       setReceiptUploaded({ file: selectedFile, profileId, key: attachmentKey });
-      const { loadBankReceiptTopUpReview } = await import('../lib/bank-receipt-topup-action.js');
-      if (!current()) return;
       const bankName = parseBankReceiptBankName(values.bankName);
       const result = await loadBankReceiptTopUpReview(
         {
@@ -809,7 +806,7 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
                   data-testid="wallet-receipt-date"
                   name="paymentDate"
                   type="date"
-                  max={utcTodayIso()}
+                  max={new Date().toISOString().slice(0, 10)}
                   value={receiptDate}
                   disabled={receiptLocked}
                   onChange={(event) => {

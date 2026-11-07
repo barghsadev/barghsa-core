@@ -182,10 +182,14 @@ async function readJson<T>(res: Response): Promise<T> {
   return (await res.json()) as T;
 }
 
-export async function fetchInvoiceDetails(invoiceId: string): Promise<CustomerInvoiceDetails> {
-  const res = await fetch(`/api/invoices/${invoiceId}`, {
+export async function fetchInvoiceDetails(
+  invoiceId: string,
+  signal: AbortSignal
+): Promise<CustomerInvoiceDetails> {
+  const res = await fetch(`/api/invoices/${encodeURIComponent(invoiceId)}`, {
     credentials: 'include',
     headers: { Accept: 'application/json' },
+    signal,
   });
   if (res.status === 404) {
     throw new InvoiceRequestError(404, 'not found');
@@ -193,7 +197,14 @@ export async function fetchInvoiceDetails(invoiceId: string): Promise<CustomerIn
   if (!res.ok) {
     throw new InvoiceRequestError(res.status, `HTTP ${res.status}`);
   }
-  return readJson<CustomerInvoiceDetails>(res);
+  const data = await readJson<CustomerInvoiceDetails>(res);
+  if (
+    data?.viewedInvoiceId !== invoiceId ||
+    data.invoice?.invoiceId !== invoiceId ||
+    !Array.isArray(data.chain)
+  )
+    throw new InvoiceRequestError(502, 'Invalid invoice details');
+  return data;
 }
 
 export async function fetchInvoiceList(

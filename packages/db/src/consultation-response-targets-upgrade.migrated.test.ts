@@ -1,3 +1,4 @@
+import { runMigrationPrefix } from './test/migration-prefix';
 import { randomUUID } from 'node:crypto';
 import { copyFileSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
@@ -61,7 +62,7 @@ it('expands consultation breaches while preserving existing episodes, routing cu
     const notices = (await pool.query('SELECT * FROM in_app_notifications ORDER BY id')).rows;
     const history = (await pool.query('SELECT * FROM drizzle.__drizzle_migrations ORDER BY id'))
       .rows;
-    expect(await runMigrations({ connection })).toEqual({
+    expect(await runMigrationPrefix('0247_gift_code_integrity', { connection })).toEqual({
       ok: true,
       applied: [
         '0244_consultation_response_targets',
@@ -130,7 +131,10 @@ it('expands consultation breaches while preserving existing episodes, routing cu
     const upgradedAlerts = (
       await pool.query('SELECT * FROM service_breach_alerts ORDER BY item_id')
     ).rows;
-    expect(await runMigrations({ connection })).toEqual({ ok: true, applied: [] });
+    expect(await runMigrationPrefix('0247_gift_code_integrity', { connection })).toEqual({
+      ok: true,
+      applied: [],
+    });
     expect((await pool.query('SELECT * FROM service_breach_alerts ORDER BY item_id')).rows).toEqual(
       upgradedAlerts
     );

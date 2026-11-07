@@ -1,3 +1,4 @@
+import { runMigrationPrefix } from './test/migration-prefix';
 import { randomUUID } from 'node:crypto';
 import { readFileSync, mkdtempSync, mkdirSync, symlinkSync, writeFileSync, rmSync } from 'node:fs';
 import { resolve, join } from 'node:path';
@@ -86,7 +87,7 @@ it('upgrades the unchanged 0252 journal prefix exactly once, preserves old rows,
     } finally {
       client.release();
     }
-    const next = await runMigrations(options);
+    const next = await runMigrationPrefix('0259_invoice_origin_foreign_keys', options);
     expect(next).toEqual({
       ok: true,
       applied: [
@@ -102,7 +103,10 @@ it('upgrades the unchanged 0252 journal prefix exactly once, preserves old rows,
     expect(
       (await pool.query('SELECT * FROM drizzle.__drizzle_migrations ORDER BY id')).rows.slice(0, -7)
     ).toEqual(before);
-    expect(await runMigrations(options)).toEqual({ ok: true, applied: [] });
+    expect(await runMigrationPrefix('0259_invoice_origin_foreign_keys', options)).toEqual({
+      ok: true,
+      applied: [],
+    });
     expect(await retained()).toEqual(oldRecord);
   } finally {
     await pool.end();

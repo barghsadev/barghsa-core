@@ -4,7 +4,17 @@ import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { AssignmentFallbackEditor } from '../components/AssignmentFallbackEditor.js';
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
 import { tStaffTeams as t } from '@barghsa/i18n/staff-team-forms';
-import { LoadingStatus, Alert, Badge, Button, Input, Label, ListPage, TextCell } from '@barghsa/ui';
+import {
+  LoadingStatus,
+  Alert,
+  Badge,
+  Button,
+  Input,
+  Label,
+  ListPage,
+  NativeSelect,
+  TextCell,
+} from '@barghsa/ui';
 import {
   DEFAULT_STAFF_ASSIGNMENT_RULES,
   STAFF_ASSIGNMENT_WORK_TYPES,
@@ -775,10 +785,10 @@ export default function AdminStaffTeamsPage() {
                 </ul>
                 <div>
                   <Label htmlFor="staff-team-lead">{label('lead')}</Label>
-                  <select
+                  <NativeSelect
                     id="staff-team-lead"
                     {...teamForm.bind('leadUserId')}
-                    className="block rounded border p-2"
+                    className="w-full"
                     value={draft.leadUserId ?? ''}
                     onChange={(event) =>
                       setDraft({ ...draft, leadUserId: event.target.value || null })
@@ -790,7 +800,7 @@ export default function AdminStaffTeamsPage() {
                         {known[id]?.name ?? label('loading')}
                       </option>
                     ))}
-                  </select>
+                  </NativeSelect>
                   <p className="text-sm text-muted-foreground">{label('leadHelp')}</p>
                   {feedback('team', 'leadUserId')}
                 </div>
@@ -876,16 +886,16 @@ export default function AdminStaffTeamsPage() {
                     className="min-w-0 flex flex-wrap items-end gap-3"
                   >
                     <legend className="font-medium">{label(type)}</legend>
-                    <div>
+                    <div className="min-w-0 w-full sm:w-fit">
                       <Label htmlFor={`team-${type}`}>{label('team')}</Label>
-                      <select
+                      <NativeSelect
                         id={`team-${type}`}
                         {...routingForm.bind(`${ruleField(type)}.teamId`)}
                         aria-invalid={
                           routingForm.form.getFieldState(ruleField(type)).invalid || undefined
                         }
                         aria-describedby={routingForm.errorId(ruleField(type))}
-                        className="block rounded border p-2"
+                        className="w-full"
                         value={rules[type].teamId ?? ''}
                         onChange={(event) =>
                           updateRule(
@@ -914,17 +924,17 @@ export default function AdminStaffTeamsPage() {
                           !teams.some(
                             (team) => team.id === rules[type].teamId && team.isActive
                           ) && <option value={rules[type].teamId!}>{label('unavailable')}</option>}
-                      </select>
+                      </NativeSelect>
                     </div>
-                    <div>
+                    <div className="min-w-0 w-full sm:w-fit">
                       <Label htmlFor={`strategy-${type}`}>{label('strategy')}</Label>
-                      <select
+                      <NativeSelect
                         id={`strategy-${type}`}
                         aria-invalid={
                           routingForm.form.getFieldState(ruleField(type)).invalid || undefined
                         }
                         aria-describedby={routingForm.errorId(ruleField(type))}
-                        className="block rounded border p-2"
+                        className="w-full"
                         disabled={!rules[type].teamId}
                         value={rules[type].strategy}
                         onChange={(event) =>
@@ -939,7 +949,7 @@ export default function AdminStaffTeamsPage() {
                             {label(strategy)}
                           </option>
                         ))}
-                      </select>
+                      </NativeSelect>
                     </div>
                     <div className="w-full">{feedback('rules', ruleField(type))}</div>
                     <AssignmentFallbackEditor

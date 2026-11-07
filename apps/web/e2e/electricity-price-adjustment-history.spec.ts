@@ -1,3 +1,5 @@
+import { approveRiskConfirmation } from './confirmation-fixture';
+import { checkRoutePresentation } from './route-presentation';
 import AxeBuilder from '@axe-core/playwright';
 import { t } from '@barghsa/i18n/admin-ui';
 import { test, expect } from './coverage-fixture';
@@ -71,6 +73,7 @@ for (const locale of ['en', 'fa'] as const)
         'table:visible > tbody > tr:has(th[scope=row]), ol[role=list]:visible > li:has(h2)'
       );
       await expect(records).toHaveCount(3);
+      await checkRoutePresentation(page, test.info(), locale);
       await expect(content.getByRole('table')).toHaveAccessibleName(
         locale === 'fa' ? 'تاریخچه تعدیل قیمت برق' : 'Electricity price adjustment history'
       );
@@ -195,7 +198,10 @@ for (const locale of ['en', 'fa'] as const)
       expect(digits(await dialog.innerText())).toContain(charge.adjustmentAmountIrR);
       await expect(dialog).toContainText(defaultPriceInput.contractualBasis);
       state.writeMode = 'success';
-      await dialog.locator('button[type=submit]').click();
+      const confirm = dialog.locator('button[type=submit]');
+      await expect(confirm).toBeDisabled();
+      await approveRiskConfirmation(page, locale, 'financial');
+      await confirm.click();
       await expect(dialog).toHaveCount(0);
       expect(state.writes).toHaveLength(1);
       expect(state.writes[0]!.path).toContain(

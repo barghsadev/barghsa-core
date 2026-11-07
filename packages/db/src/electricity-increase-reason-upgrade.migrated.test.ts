@@ -1,3 +1,4 @@
+import { runMigrationPrefix } from './test/migration-prefix';
 import { randomUUID } from 'node:crypto';
 import { copyFileSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
@@ -93,12 +94,16 @@ it('preserves legacy reasons, requires new review reasons and rolls the additive
     const legacy = await seed();
     await review(legacy, null);
     const before = await row(legacy);
-    expect(await runMigrations({ connection })).toEqual({
+    expect(
+      await runMigrationPrefix('0262_electricity_increase_approval_reason', { connection })
+    ).toEqual({
       ok: true,
       applied: ['0262_electricity_increase_approval_reason'],
     });
     expect(await row(legacy)).toEqual(before);
-    expect(await runMigrations({ connection })).toEqual({ ok: true, applied: [] });
+    expect(
+      await runMigrationPrefix('0262_electricity_increase_approval_reason', { connection })
+    ).toEqual({ ok: true, applied: [] });
     await expect(
       pool.query(
         "UPDATE electricity_quantity_increase_requests SET review_reason='Invented history' WHERE id=$1",

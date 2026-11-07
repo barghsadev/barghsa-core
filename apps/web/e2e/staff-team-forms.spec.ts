@@ -1,3 +1,4 @@
+import { checkRoutePresentation } from './route-presentation';
 import { test, expect } from './coverage-fixture';
 import { setupCatalogueForms } from './catalogue-form-fixture';
 import { tStaffTeams as t } from '@barghsa/i18n/staff-team-forms';
@@ -49,6 +50,15 @@ for (const locale of ['en', 'fa'] as const)
       });
       await page.goto('/admin/staff-teams');
       await page.getByRole('button', { name: text('edit'), exact: true }).click();
+      await checkRoutePresentation(page, test.info(), locale);
+      const viewport = page.viewportSize()!;
+      await page.setViewportSize({ width: 320, height: 844 });
+      for (const field of ['#staff-team-lead', '#team-ticket']) {
+        const control = page.locator(field);
+        await expect(control).toBeVisible();
+        expect((await control.boundingBox())!.height).toBeGreaterThanOrEqual(44);
+      }
+      await page.setViewportSize(viewport);
       const form = page.locator('form').filter({ has: page.locator('#staff-team-name') });
       const name = page.locator('#staff-team-name'),
         tags = page.locator('#staff-team-tags');

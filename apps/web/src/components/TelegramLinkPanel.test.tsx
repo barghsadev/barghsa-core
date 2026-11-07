@@ -7,11 +7,17 @@ import TelegramLinkPanel from './TelegramLinkPanel.js';
 import { AccountUserProvider } from '../hooks/useAccountUser.js';
 import { usePreferenceSettingsOwner } from '../hooks/usePreferenceSettingsForm.js';
 import { refreshProfileContext } from '../lib/profile-context.js';
+import { sendToast } from '../lib/toast-api.js';
+vi.mock(import('../lib/toast-api.js'), async (importOriginal) => ({
+  ...(await importOriginal()),
+  sendToast: vi.fn(),
+}));
 import { telegramText as copy } from '@barghsa/i18n/telegram';
 const uuid = '0199f111-1111-7111-8111-111111111111';
 const url = 'https://t.me/barghsa_dev_bot?start=' + 'a'.repeat(43);
 let root: Root, host: HTMLDivElement;
 beforeEach(() => {
+  vi.mocked(sendToast).mockClear();
   vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
   document.documentElement.lang = 'en';
   document.cookie = 'barghsa_csrf=original';
@@ -113,6 +119,7 @@ it('displays only a freshly scoped link and confirms normalized digits with live
   await mount();
   await click('connect');
   expect(host.querySelector('a')?.getAttribute('href')).toBe(url);
+  expect(sendToast).toHaveBeenLastCalledWith('success', copy('linkReady', 'en'));
   f.state.intent = {
     id: uuid,
     status: 'claimed',
@@ -129,6 +136,7 @@ it('displays only a freshly scoped link and confirms normalized digits with live
     csrf: 'latest',
   });
   expect(host.textContent).toContain(copy('linked', 'en'));
+  expect(sendToast).toHaveBeenLastCalledWith('success', copy('linked', 'en'));
   await click('revoke');
   await approveVisibleConfirmation();
   await act(async () =>
@@ -137,6 +145,7 @@ it('displays only a freshly scoped link and confirms normalized digits with live
       .click()
   );
   expect(host.textContent).not.toContain(copy('linked', 'en'));
+  expect(sendToast).toHaveBeenLastCalledWith('success', copy('unlinked', 'en'));
 });
 it('focuses invalid code and sends no malformed confirmation', async () => {
   const f = fixture();
@@ -160,6 +169,7 @@ it('freezes an uncertain write until an owned status read without blindly retryi
   await click('connect');
   expect(button('connect').disabled).toBe(true);
   expect(host.textContent).toContain(copy('requestUnknown', 'en'));
+  expect(sendToast).toHaveBeenLastCalledWith('error', copy('requestUnknown', 'en'));
   await click('connect');
   expect(f.requests.filter((r) => r.method === 'POST')).toHaveLength(0);
   await click('refresh');
@@ -179,6 +189,7 @@ it('retires data and a late create response when the profile context changes', a
   await click('connect');
   await act(async () => refreshProfileContext());
   await act(async () => resolve(Response.json({ id: uuid, url })));
+  expect(sendToast).not.toHaveBeenCalled();
   expect(host.querySelector('a')).toBeNull();
   expect(host.querySelector('input')).toBeNull();
 });

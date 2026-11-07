@@ -9,7 +9,12 @@ export default function AdminFailedNotificationsPage({
   const locale = useLocale();
   return (
     <div className="space-y-8">
-      <DeadLetterPanel uiLocale={locale} queries={queries} historyQueries={historyQueries} />
+      <DeadLetterPanel
+        headingLevel={1}
+        uiLocale={locale}
+        queries={queries}
+        historyQueries={historyQueries}
+      />
       <CustomerCorrectionsSection locale={locale} />
     </div>
   );

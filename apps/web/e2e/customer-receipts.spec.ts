@@ -241,11 +241,25 @@ for (const kind of ['wallet', 'invoice'] as const) {
     test(`${kind} receipt retries a lost acknowledgement without creating another upload or receipt (${locale})`, async ({
       page,
     }) => {
+      const receiptAction =
+        kind === 'wallet'
+          ? (await productionManifest())['src/lib/bank-receipt-topup-action.ts']
+          : null;
+      if (kind === 'wallet') expect(receiptAction).toBeDefined();
+      let actionLoads = 0;
+      page.on('request', (request) => {
+        if (receiptAction && new URL(request.url()).pathname === '/' + receiptAction.file)
+          actionLoads++;
+      });
       const { prefix, uploads, submissions, receipts } = await setup(page, locale, kind, true);
       if (kind === 'wallet')
         await page.getByTestId('wallet-receipt-bank-name').fill('  بانک ملی  ');
+      expect(actionLoads).toBe(0);
       await page.getByTestId(`${prefix}-submit`).click();
-      if (kind === 'wallet') await expect(page.getByRole('dialog')).toContainText('بانک ملی');
+      if (kind === 'wallet') {
+        await expect(page.getByRole('dialog')).toContainText('بانک ملی');
+        expect(actionLoads).toBe(1);
+      }
       await confirmReceipt(page, locale);
       await expect(page.getByTestId(`${prefix}-error`)).toBeVisible();
       await expect(page.getByTestId(`${prefix}-success`)).toHaveCount(0);

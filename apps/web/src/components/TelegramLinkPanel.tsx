@@ -10,6 +10,7 @@ import { securitySettingsText } from '@barghsa/i18n/security-settings-forms';
 import { useLocale } from '../hooks/useLocale.js';
 import type { usePreferenceSettingsOwner } from '../hooks/usePreferenceSettingsForm.js';
 import { withCsrf } from '../lib/csrf.js';
+import { sendToast } from '../lib/toast-api.js';
 import { accountErrorCode, accountWriteDenied } from '../lib/account-settings-form.js';
 import { securityStepUpReceipt } from '../lib/security-settings-form.js';
 import {
@@ -198,9 +199,11 @@ function OwnedTelegramLinkPanel({ scope }: { scope: Scope }) {
       if (!response.ok) {
         if (response.status >= 500 || response.status === 408)
           throw new Error('Telegram request outcome unavailable');
-        setError(
-          copy(response.status === 422 || response.status === 409 ? 'invalidCode' : 'error')
+        const message = copy(
+          response.status === 422 || response.status === 409 ? 'invalidCode' : 'error'
         );
+        setError(message);
+        sendToast('error', message);
         return;
       }
       if (action === 'create') {
@@ -229,10 +232,16 @@ function OwnedTelegramLinkPanel({ scope }: { scope: Scope }) {
         setCode('');
         setUrl(null);
       }
+      sendToast(
+        'success',
+        copy(action === 'create' ? 'linkReady' : action === 'confirm' ? 'linked' : 'unlinked')
+      );
     } catch {
       if (scope.owns(family)) {
         setUncertain(true);
-        setError(copy('requestUnknown'));
+        const message = copy('requestUnknown');
+        setError(message);
+        sendToast('error', message);
       }
     } finally {
       if (scope.isCurrent()) scope.release(family);

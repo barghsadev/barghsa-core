@@ -86,6 +86,11 @@ Calculate locale-sensitive date expectations in the browser being tested. When c
 3. Add the JSON record to `scripts/quarantine-registry.json`.
 4. In the test runner config, mark the test as skipped with a comment referencing the quarantine issue.
 
+Historical migration tests run the production SQL and journal prefix for the specific
+upgrade they assert. Pin the end of that prefix by tag, including any later migration
+whose schema is explicitly under test. Use the same prefix for replay. Current
+migration-chain tests still run the entire production journal.
+
 ### Removing from Quarantine
 
 1. Fix the root cause.

@@ -1,3 +1,4 @@
+import { runMigrationPrefix } from './test/migration-prefix';
 import { randomUUID } from 'node:crypto';
 import { copyFileSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
@@ -41,11 +42,9 @@ it('upgrades existing profiles without creating setup records and enforces retry
     ).rows[0];
     const checksums = (await pool.query('SELECT * FROM drizzle.__drizzle_migrations ORDER BY id'))
       .rows;
-    expect(await runMigrations({ connection })).toEqual({
+    expect(await runMigrationPrefix('0240_onboarding_journeys', { connection })).toEqual({
       ok: true,
-      applied: journal.entries
-        .filter((e: { idx: number }) => e.idx >= 240)
-        .map((e: { tag: string }) => e.tag),
+      applied: ['0240_onboarding_journeys'],
     });
     expect((await pool.query('SELECT * FROM profiles WHERE id=$1', [profile.id])).rows[0]).toEqual(
       profile
@@ -57,7 +56,10 @@ it('upgrades existing profiles without creating setup records and enforces retry
         checksums.length
       )
     ).toEqual(checksums);
-    expect(await runMigrations({ connection })).toEqual({ ok: true, applied: [] });
+    expect(await runMigrationPrefix('0240_onboarding_journeys', { connection })).toEqual({
+      ok: true,
+      applied: [],
+    });
     const constraints = (
       await pool.query(
         "SELECT conname FROM pg_constraint WHERE conrelid='profile_onboarding_journeys'::regclass"

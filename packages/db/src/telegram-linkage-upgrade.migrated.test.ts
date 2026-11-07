@@ -1,3 +1,4 @@
+import { runMigrationPrefix } from './test/migration-prefix';
 import { randomUUID } from 'node:crypto';
 import { copyFileSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
@@ -73,7 +74,7 @@ it('expands a populated prior database without changing existing rows/functions 
   ).rows.map((r) => r.tablename);
   const beforeRows = await rows(tables),
     beforeFunctions = await functions();
-  expect(await runMigrations({ connection })).toEqual({
+  expect(await runMigrationPrefix('0273_telegram_profile_linkage', { connection })).toEqual({
     ok: true,
     applied: ['0273_telegram_profile_linkage'],
   });
@@ -93,7 +94,10 @@ it('expands a populated prior database without changing existing rows/functions 
     'telegram_links',
     'telegram_updates',
   ]);
-  expect(await runMigrations({ connection })).toEqual({ ok: true, applied: [] });
+  expect(await runMigrationPrefix('0273_telegram_profile_linkage', { connection })).toEqual({
+    ok: true,
+    applied: [],
+  });
   expect(await rows(afterTables)).toEqual({
     ...beforeRows,
     telegram_link_intents: [],

@@ -11,12 +11,18 @@ describe('customer invoice helpers (T-04.1.05.04)', () => {
   afterEach(() => vi.unstubAllGlobals());
 
   it('preserves a failed detail request status even when its body is not JSON', async () => {
-    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response('Unavailable', { status: 503 })));
-    await expect(fetchInvoiceDetails('invoice-1')).rejects.toMatchObject({
+    const signal = new AbortController().signal;
+    const fetch = vi.fn().mockResolvedValue(new Response('Unavailable', { status: 503 }));
+    vi.stubGlobal('fetch', fetch);
+    await expect(fetchInvoiceDetails('invoice-1', signal)).rejects.toMatchObject({
       name: 'InvoiceRequestError',
       status: 503,
       message: 'HTTP 503',
     });
+    expect(fetch).toHaveBeenCalledWith(
+      '/api/invoices/invoice-1',
+      expect.objectContaining({ credentials: 'include', signal })
+    );
   });
 
   it('preserves malformed money text instead of displaying a fabricated numeric amount', () => {

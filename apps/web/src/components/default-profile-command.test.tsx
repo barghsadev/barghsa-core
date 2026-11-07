@@ -6,8 +6,8 @@ import { QueryComponentProvider } from '../test/query-provider.js';
 import { refreshProfileContext } from '../lib/profile-context.js';
 import { sendToast } from '../lib/toast-api.js';
 
-vi.mock('../lib/profile-context.js', async (importOriginal) => {
-  const original = await importOriginal<typeof import('../lib/profile-context.js')>();
+vi.mock(import('../lib/profile-context.js'), async (importOriginal) => {
+  const original = await importOriginal();
   return { ...original, refreshProfileContext: vi.fn() };
 });
 vi.mock('../lib/toast-api.js', () => ({ sendToast: vi.fn() }));

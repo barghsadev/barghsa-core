@@ -1,9 +1,10 @@
 import { useOwnedGateRead } from '../hooks/useOwnedGateRead.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
-import { useProfileContextRevision } from '../lib/profile-context.js';
+import { getProfileContextRevision, useProfileContextRevision } from '../lib/profile-context.js';
+import { sendToast } from '../lib/toast-api.js';
 import { useRouterState } from '@tanstack/react-router';
 import { useAccountTime } from '../hooks/useAccountTime.js';
-import { useState, useEffect, useCallback, useRef, lazy, Suspense } from 'react';
+import { useState, useEffect, useLayoutEffect, useCallback, useRef, lazy, Suspense } from 'react';
 import { t, type Locale } from '@barghsa/i18n/terms';
 import { SkeletonText, Button } from '@barghsa/ui';
 import {
@@ -14,7 +15,7 @@ import {
   DialogDescription,
   DialogFooter,
 } from '@barghsa/ui';
-import { AlertCircleIcon, CheckIcon, Loader2Icon } from 'lucide-react';
+import { AlertCircleIcon, Loader2Icon } from 'lucide-react';
 import { withCsrf } from '../lib/csrf.js';
 
 const TosContent = lazy(() => import('./TosContent.js'));
@@ -81,7 +82,6 @@ function OwnedTosBanner({ locale = 'fa' }: TosBannerProps) {
   const markRendered = useCallback(() => setRenderedVersion(renderKey), [renderKey]);
   const [accepting, setAccepting] = useState(false);
   const acceptancePending = useRef(false);
-  const [accepted, setAccepted] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [dismissedAutoModal, setDismissedAutoModal] = useState(false);
 
@@ -213,7 +213,7 @@ function OwnedTosBanner({ locale = 'fa' }: TosBannerProps) {
       setLoadingTos(false);
     }
   }, [automaticReviewAllowed]);
-  useEffect(
+  useLayoutEffect(
     () => () => {
       reviewController.current?.abort();
       reviewRequest.current++;
@@ -228,6 +228,14 @@ function OwnedTosBanner({ locale = 'fa' }: TosBannerProps) {
 
     acceptancePending.current = true;
     const review = reviewRequest.current;
+    const current = () =>
+      review === reviewRequest.current && revision === getProfileContextRevision();
+    const failed = () => {
+      if (!current()) return;
+      const message = t('tos.modal.error', locale);
+      setError(message);
+      sendToast('error', message);
+    };
 
     setAccepting(true);
     setError(null);
@@ -238,43 +246,34 @@ function OwnedTosBanner({ locale = 'fa' }: TosBannerProps) {
         headers: withCsrf({ 'Content-Type': 'application/json' }),
       });
 
-      if (!response.ok) {
-        setError(t('tos.modal.error', locale));
-        return;
-      }
+      if (!current()) return;
+      if (!response.ok) return failed();
 
       const receipt: unknown = await response.json();
-      if (review !== reviewRequest.current) return;
+      if (!current()) return;
       if (
         !receipt ||
         typeof receipt !== 'object' ||
         !('acceptedVersionId' in receipt) ||
         receipt.acceptedVersionId !== currentTos.id
       ) {
-        setError(t('tos.modal.error', locale));
-        return;
+        return failed();
       }
 
       statusController.current?.abort();
       statusRequest.current++;
       setChecking(false);
       setStatusFailed(false);
-      setAccepted(true);
       setRequiresAcceptance(false);
-
-      // Close modal after brief success state
-      setTimeout(() => {
-        if (review !== reviewRequest.current) return;
-        setShowModal(false);
-        setAccepted(false);
-      }, 1500);
+      setShowModal(false);
+      sendToast('success', t('tos.modal.success', locale));
     } catch {
-      setError(t('tos.modal.error', locale));
+      failed();
     } finally {
       acceptancePending.current = false;
-      setAccepting(false);
+      if (revision === getProfileContextRevision()) setAccepting(false);
     }
-  }, [currentTos, locale, renderedVersion, renderKey]);
+  }, [currentTos, locale, renderedVersion, renderKey, revision]);
 
   // ── Render ──────────────────────────────────────────────────────
 
@@ -325,9 +324,7 @@ function OwnedTosBanner({ locale = 'fa' }: TosBannerProps) {
             reviewRequest.current++;
             setLoadingTos(false);
           }
-          if (!open && !accepted) {
-            setDismissedAutoModal(true);
-          }
+          if (!open) setDismissedAutoModal(true);
           setShowModal(open);
         }}
       >
@@ -361,7 +358,7 @@ function OwnedTosBanner({ locale = 'fa' }: TosBannerProps) {
             )}
             {error && (
               <div className="flex items-center justify-center h-full text-destructive">
-                <p>{error}</p>
+                <p role="alert">{error}</p>
               </div>
             )}
             {currentTos && !loadingTos && !error && (
@@ -378,28 +375,21 @@ function OwnedTosBanner({ locale = 'fa' }: TosBannerProps) {
           </div>
 
           <DialogFooter>
-            {accepted ? (
-              <div className="flex items-center gap-2 text-foreground">
-                <CheckIcon className="h-4 w-4" />
-                <span>{t('tos.modal.success', locale)}</span>
-              </div>
-            ) : (
-              <Button
-                onClick={handleAccept}
-                disabled={
-                  accepting || loadingTos || !!error || !currentTos || renderedVersion !== renderKey
-                }
-              >
-                {accepting ? (
-                  <>
-                    <Loader2Icon className="h-4 w-4 me-2 animate-spin" />
-                    {t('tos.modal.accepting', locale)}
-                  </>
-                ) : (
-                  t('tos.modal.accept', locale)
-                )}
-              </Button>
-            )}
+            <Button
+              onClick={handleAccept}
+              disabled={
+                accepting || loadingTos || !!error || !currentTos || renderedVersion !== renderKey
+              }
+            >
+              {accepting ? (
+                <>
+                  <Loader2Icon className="h-4 w-4 me-2 animate-spin" />
+                  {t('tos.modal.accepting', locale)}
+                </>
+              ) : (
+                t('tos.modal.accept', locale)
+              )}
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

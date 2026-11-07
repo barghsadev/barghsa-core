@@ -13,7 +13,9 @@ const dictionary = {
     pending:
       'پیوند را در تلگرام باز کنید و کد خصوصی را در این صفحه وارد کنید. این پیوند ده دقیقه اعتبار دارد.',
     claimed: 'حساب خصوصی تلگرام آماده تأیید است.',
+    linkReady: 'پیوند اتصال تلگرام آماده است.',
     linked: 'حساب تلگرام متصل است.',
+    unlinked: 'اتصال حساب تلگرام قطع شد.',
     otherProfile: 'این اتصال مربوط به نمایه دیگری است. برای تغییر نمایه، دوباره متصل شوید.',
     error: 'انجام این درخواست ممکن نشد. وضعیت را بررسی کنید و دوباره تلاش کنید.',
     requestUnknown: 'نتیجه درخواست تأیید نشده است. پیش از اقدام بعدی، وضعیت را بررسی کنید.',
@@ -42,7 +44,9 @@ const dictionary = {
     pending:
       'Open the link in Telegram and enter the private code on this page. The link expires in ten minutes.',
     claimed: 'The private Telegram account is ready to confirm.',
+    linkReady: 'Your Telegram linking URL is ready.',
     linked: 'Telegram account linked.',
+    unlinked: 'Telegram account unlinked.',
     otherProfile: 'This link belongs to another profile. Link again to change the profile.',
     error: 'This request could not be completed. Check the status and try again.',
     requestUnknown: 'The request outcome is not confirmed. Check status before another action.',

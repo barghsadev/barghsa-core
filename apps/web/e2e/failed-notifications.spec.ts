@@ -1,3 +1,4 @@
+import { checkRoutePresentation } from './route-presentation';
 import { t } from '@barghsa/i18n/admin-ui';
 import { crmShell } from './crm-shell-fixture';
 import { formatBrowserDate } from './browser-date';
@@ -78,6 +79,7 @@ for (const locale of ['en', 'fa'])
         'table:visible > tbody > tr:has(th[scope=row]), ol[role=list]:visible > li:has(h2, h3)'
       )
     ).toHaveCount(25);
+    await checkRoutePresentation(page, test.info(), locale);
     await expect(
       page
         .locator(

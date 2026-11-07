@@ -1,3 +1,4 @@
+import { t } from '@barghsa/i18n/app';
 import AxeBuilder from '@axe-core/playwright';
 import { skipToMain } from './critical-accessibility';
 import { test, expect, type Page } from './coverage-fixture';
@@ -1231,3 +1232,69 @@ for (const locale of ['en', 'fa'] as const)
       ).toHaveValue(type === 'INDIVIDUAL' ? 'Saved Street' : 'Company Street');
     });
   }
+
+for (const locale of ['fa', 'en'] as const) {
+  test(`a stalled completion read can be retried without sending a completion command (${locale})`, async ({
+    page,
+  }) => {
+    const state = await combinedFixture(page, locale);
+    state.personalDone = state.companyDone = true;
+    let reads = 0;
+    let release!: () => void;
+    const held = new Promise<void>((done) => {
+      release = done;
+    });
+    await page.route(`**/api/onboarding/journeys/${journeyId}`, async (route) => {
+      expect(route.request().method()).toBe('GET');
+      const receipt = {
+        id: journeyId,
+        completed: false,
+        selectedProfileId: null,
+        activeProfileId: profileId,
+        profiles: [
+          {
+            id: profileId,
+            profileType: 'INDIVIDUAL',
+            status: 'ACTIVE',
+            isDefault: true,
+            firstName: 'Person',
+            lastName: 'Owner',
+          },
+          {
+            id: companyId,
+            profileType: 'LEGAL',
+            status: 'VERIFIED',
+            isDefault: false,
+            title: 'Saved Company',
+          },
+        ],
+      };
+      if (++reads !== 1) return route.fulfill({ json: receipt });
+      await held;
+      await route
+        .fulfill({ json: { ...receipt, profiles: [receipt.profiles[0]] } })
+        .catch(() => {});
+    });
+    await page.clock.install();
+    await page.goto(`/onboarding/complete?journeyId=${journeyId}`);
+    try {
+      await expect.poll(() => reads).toBe(1);
+      await expect(
+        page.getByRole('status').filter({ hasText: t('onboarding.complete.finalizing', locale) })
+      ).toBeVisible();
+      await page.clock.fastForward(15_001);
+      await expect(page.getByRole('alert')).toContainText(t('onboarding.complete.error', locale));
+      expect(reads).toBe(1);
+      await page
+        .getByRole('button', { name: t('onboarding.draft.retry', locale), exact: true })
+        .click();
+      await expect(page.locator('dl[aria-label]')).toHaveCount(2);
+      expect(reads).toBe(2);
+    } finally {
+      release();
+    }
+    await expect(page.locator('dl[aria-label]')).toHaveCount(2);
+    expect(state.finishes).toHaveLength(0);
+    expect(state.starts).toHaveLength(0);
+  });
+}

@@ -1,4 +1,4 @@
-import { Button, Label } from '@barghsa/ui';
+import { Button, Label, NativeSelect } from '@barghsa/ui';
 import {
   STAFF_ASSIGNMENT_MAX_FALLBACKS,
   STAFF_ASSIGNMENT_STRATEGIES,
@@ -54,18 +54,21 @@ export function AssignmentFallbackEditor({
         const teamId = `fallback-team-${workType}-${number}`;
         const strategyId = `fallback-strategy-${workType}-${number}`;
         return (
-          <fieldset key={number} className="flex flex-wrap items-end gap-3 rounded border p-3">
+          <fieldset
+            key={number}
+            className="min-w-0 flex flex-wrap items-end gap-3 rounded border p-3"
+          >
             <legend>
               {label('priority')} {number}
             </legend>
-            <div>
+            <div className="min-w-0 w-full sm:w-fit">
               <Label htmlFor={teamId}>
                 {label('team')} {number}
               </Label>
-              <select
+              <NativeSelect
                 {...feedback}
                 id={teamId}
-                className="block rounded border p-2"
+                className="w-full"
                 value={choice.teamId}
                 onChange={(event) =>
                   replace(
@@ -91,16 +94,16 @@ export function AssignmentFallbackEditor({
                 {!teams.some((team) => team.id === choice.teamId && team.isActive) && (
                   <option value={choice.teamId}>{label('unavailable')}</option>
                 )}
-              </select>
+              </NativeSelect>
             </div>
-            <div>
+            <div className="min-w-0 w-full sm:w-fit">
               <Label htmlFor={strategyId}>
                 {label('strategy')} {number}
               </Label>
-              <select
+              <NativeSelect
                 {...feedback}
                 id={strategyId}
-                className="block rounded border p-2"
+                className="w-full"
                 value={choice.strategy}
                 onChange={(event) =>
                   replace(
@@ -117,7 +120,7 @@ export function AssignmentFallbackEditor({
                     {label(strategy)}
                   </option>
                 ))}
-              </select>
+              </NativeSelect>
             </div>
             <Button type="button" variant="outline" onClick={() => move(position, -1)}>
               {label('moveUp')} {number}

@@ -1,3 +1,4 @@
+import { readWithDeadline } from '../../lib/server-query-client.js';
 import { parseOnboardingProfile, type OnboardingProfile } from '../../lib/onboarding-profile.js';
 import { useLocale } from '../../hooks/useLocale.js';
 import { withCsrf } from '../../lib/csrf.js';
@@ -96,7 +97,7 @@ function Completion({ profileId, journeyId }: { profileId?: string; journeyId?: 
     setStatus('loading');
     setProfile(null);
     setJourney(null);
-    const load = async () => {
+    const request = async (signal: AbortSignal) => {
       const response = await fetch(
         journeyId
           ? `/api/onboarding/journeys/${encodeURIComponent(journeyId)}`
@@ -105,11 +106,16 @@ function Completion({ profileId, journeyId }: { profileId?: string; journeyId?: 
           method: journeyId ? 'GET' : 'POST',
           credentials: 'include',
           ...(journeyId ? {} : { headers: withCsrf() }),
-          signal: controller.signal,
+          signal,
         }
       );
       if (!response.ok) throw new Error('Completion failed');
-      const body = await response.json();
+      return response.json();
+    };
+    const load = async () => {
+      const body = journeyId
+        ? await readWithDeadline(controller.signal, request)
+        : await request(controller.signal);
       const completed = profileId ? parseOnboardingProfile(body, profileId) : null;
       const current = journeyId
         ? parseOnboardingJourney(body, journeyId)

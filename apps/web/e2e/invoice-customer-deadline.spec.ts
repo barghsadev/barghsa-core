@@ -115,17 +115,68 @@ for (const locale of ['fa', 'en'] as const)
           },
         ],
       };
-      await page.route(`**/api/invoices/${invoiceId}`, (route) =>
-        route.fulfill({
-          json: {
-            viewedInvoiceId: invoiceId,
-            originalInvoiceId: invoiceId,
-            invoice,
-            chain: [invoice, adjustment],
-          },
-        })
-      );
+      const details = {
+        viewedInvoiceId: invoiceId,
+        originalInvoiceId: invoiceId,
+        invoice,
+        chain: [invoice, adjustment],
+      };
+      let reads = 0;
+      let release!: () => void;
+      const held = new Promise<void>((done) => {
+        release = done;
+      });
+      await page.route(`**/api/invoices/${invoiceId}`, async (route) => {
+        reads++;
+        if (!darkMode && reads === 1) {
+          await held;
+          await route
+            .fulfill({
+              json: {
+                ...details,
+                invoice: { ...invoice, dueAtOverrideReason: 'Obsolete invoice' },
+                chain: [{ ...invoice, dueAtOverrideReason: 'Obsolete invoice' }],
+              },
+            })
+            .catch(() => {});
+          return;
+        }
+        if (!darkMode && reads === 2)
+          return route.fulfill({
+            json: {
+              ...details,
+              viewedInvoiceId: adjustmentId,
+              invoice: adjustment,
+              chain: [adjustment],
+            },
+          });
+        return route.fulfill({ json: details });
+      });
+      if (!darkMode) await page.clock.install();
       await page.goto(`/invoices/${invoiceId}`);
+      if (!darkMode) {
+        try {
+          await expect.poll(() => reads).toBe(1);
+          await expect(
+            page.getByText(t('invoices.details.loading', locale), { exact: true })
+          ).toBeVisible();
+          await page.clock.fastForward(15_001);
+          const failed = page.getByTestId('invoice-load-error');
+          const retry = failed.getByRole('button', { name: t('invoices.activity.retry', locale) });
+          await expect(failed).toBeVisible();
+          expect(reads).toBe(1);
+          await retry.click();
+          await expect.poll(() => reads).toBe(2);
+          await expect(failed).toBeVisible();
+          await expect(page.getByTestId(`invoice-card-${adjustmentId}`)).toHaveCount(0);
+          await retry.click();
+          await expect.poll(() => reads).toBe(3);
+          await expect(page.getByTestId(`invoice-card-${invoiceId}`)).toBeVisible();
+        } finally {
+          release();
+        }
+        await expect(page.getByText('Obsolete invoice', { exact: true })).toHaveCount(0);
+      }
       await expect(page.locator('html')).toHaveAttribute('lang', locale);
       await expect(page.locator('html')).toHaveClass(darkMode ? /dark/ : /^(?!.*\bdark\b)/);
       const card = page.getByTestId(`invoice-card-${invoiceId}`);

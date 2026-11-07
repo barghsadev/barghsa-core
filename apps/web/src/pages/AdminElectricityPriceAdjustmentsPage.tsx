@@ -1159,7 +1159,9 @@ function PriceWorkspace({
           >
             <DialogHeader>
               <DialogTitle>{copy('viewCalculation')}</DialogTitle>
-              <DialogDescription>{copy('calculationDescription')}</DialogDescription>
+              <DialogDescription className="text-foreground">
+                {copy('calculationDescription')}
+              </DialogDescription>
             </DialogHeader>
             <p className="font-mono text-xs">
               <TextCell value={inspected.adjustmentId} />

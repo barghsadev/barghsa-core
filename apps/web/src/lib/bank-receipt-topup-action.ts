@@ -1,6 +1,7 @@
 import { inputErrorFields } from './input-error-fields.js';
 import type { BankReceiptTopUpReview } from '@barghsa/shared/finance';
 import { withCsrf } from './csrf.js';
+export { uploadInvoiceReceiptAttachment as uploadWalletReceiptAttachment } from './invoice-bank-receipt-upload.js';
 
 export interface BankReceiptTopUpDetails {
   profileId: string;

@@ -1,3 +1,4 @@
+import { runMigrationPrefix } from './test/migration-prefix';
 import { randomUUID } from 'node:crypto';
 import { readFileSync, mkdtempSync, mkdirSync, symlinkSync, writeFileSync, rmSync } from 'node:fs';
 import { resolve, join } from 'node:path';
@@ -83,7 +84,7 @@ it('adds orphan authority atomically to the unchanged0255 prefix, retains rows a
       await client.query('ROLLBACK');
       client.release();
     }
-    expect(await runMigrations(options)).toEqual({
+    expect(await runMigrationPrefix('0259_invoice_origin_foreign_keys', options)).toEqual({
       ok: true,
       applied: [
         '0256_electricity_orphan_financial',
@@ -95,7 +96,10 @@ it('adds orphan authority atomically to the unchanged0255 prefix, retains rows a
     expect(
       (await pool.query('SELECT * FROM drizzle.__drizzle_migrations ORDER BY id')).rows.slice(0, -4)
     ).toEqual(history);
-    expect(await runMigrations(options)).toEqual({ ok: true, applied: [] });
+    expect(await runMigrationPrefix('0259_invoice_origin_foreign_keys', options)).toEqual({
+      ok: true,
+      applied: [],
+    });
     expect(await retained()).toEqual(oldRows);
     expect(
       (await pool.query('SELECT order_id FROM electricity_draft_terminations')).rows

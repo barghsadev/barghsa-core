@@ -1,3 +1,4 @@
+import { runMigrationPrefix } from './test/migration-prefix';
 import { randomUUID } from 'node:crypto';
 import { copyFileSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
@@ -42,11 +43,18 @@ it('upgrades populated solar records without inventing progress, and enforces or
     const oldChecksums = (
       await pool.query('SELECT * FROM drizzle.__drizzle_migrations ORDER BY id')
     ).rows;
-    expect(await runMigrations({ connection })).toEqual({
+    expect(await runMigrationPrefix('0245_business_actor_context', { connection })).toEqual({
       ok: true,
-      applied: journal.entries
-        .filter((e: { idx: number }) => e.idx >= 238)
-        .map((e: { tag: string }) => e.tag),
+      applied: [
+        '0238_solar_construction_progress',
+        '0239_solar_postal_tracking',
+        '0240_onboarding_journeys',
+        '0241_onboarding_journey_timestamps',
+        '0242_solar_wizard_steps',
+        '0243_consultation_assignment',
+        '0244_consultation_response_targets',
+        '0245_business_actor_context',
+      ],
     });
     expect(
       (await pool.query('SELECT * FROM solar_construction_requests ORDER BY id')).rows
@@ -59,7 +67,10 @@ it('upgrades populated solar records without inventing progress, and enforces or
         oldChecksums.length
       )
     ).toEqual(oldChecksums);
-    expect(await runMigrations({ connection })).toEqual({ ok: true, applied: [] });
+    expect(await runMigrationPrefix('0245_business_actor_context', { connection })).toEqual({
+      ok: true,
+      applied: [],
+    });
     const config = getTableConfig(solarConstructionProgressEvents);
     const constraints = (
       await pool.query('SELECT conname FROM pg_constraint WHERE conrelid=$1::regclass', [

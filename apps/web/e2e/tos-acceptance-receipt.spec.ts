@@ -3,7 +3,7 @@ import { fullNavigation } from './navigation-fixture';
 import { t } from '@barghsa/i18n/terms';
 
 for (const locale of ['en', 'fa'] as const) {
-  for (const invalid of ['empty', 'wrong-version', 'no-body'] as const) {
+  for (const invalid of ['empty', 'wrong-version', 'no-body', 'obsolete-http-error'] as const) {
     test(`terms acceptance retains review after ${invalid} acknowledgement and sends once (${locale})`, async ({
       page,
       baseURL,
@@ -12,6 +12,10 @@ for (const locale of ['en', 'fa'] as const) {
       let required = true,
         writes = 0,
         statusReads = 0;
+      let releaseOld!: () => void;
+      const old = new Promise<void>((resolve) => {
+        releaseOld = resolve;
+      });
       let release!: () => void;
       const pending = new Promise<void>((resolve) => {
         release = resolve;
@@ -71,6 +75,10 @@ for (const locale of ['en', 'fa'] as const) {
         writes++;
         expect(route.request().headers()['x-csrf-token']).toBe('terms-csrf');
         if (writes === 1) {
+          if (invalid === 'obsolete-http-error') {
+            await old;
+            return route.fulfill({ status: 503, json: {} });
+          }
           if (invalid === 'no-body') return route.fulfill({ status: 204 });
           return route.fulfill({
             json:
@@ -86,22 +94,45 @@ for (const locale of ['en', 'fa'] as const) {
       await page.goto('/tickets');
       await page.getByRole('button', { name: t('tos.banner.review', locale), exact: true }).click();
       const dialog = page.getByRole('dialog');
+      const success = page.getByText(t('tos.modal.success', locale), { exact: true });
       const accept = dialog.getByRole('button', {
         name: t('tos.modal.accept', locale),
         exact: true,
       });
       await expect(accept).toBeEnabled();
       await accept.click();
-      await expect(dialog).toContainText(t('tos.modal.error', locale));
-      await expect(accept).toBeDisabled();
-      await dialog.getByRole('button', { name: t('tos.modal.close', locale), exact: true }).click();
-      await expect(dialog).toHaveCount(0);
-      await expect(
-        page.getByRole('alert').filter({ hasText: t('tos.banner.text', locale) })
-      ).toBeVisible();
-      // A service denial must recheck the account and reopen a dismissed review.
-      await page.evaluate(() => window.dispatchEvent(new Event('barghsa:tos-required')));
-      await expect(accept).toBeEnabled();
+      if (invalid === 'obsolete-http-error') {
+        await expect.poll(() => writes).toBe(1);
+        try {
+          await dialog
+            .getByRole('button', { name: t('tos.modal.close', locale), exact: true })
+            .click();
+          await expect(dialog).toHaveCount(0);
+          await page
+            .getByRole('button', { name: t('tos.banner.review', locale), exact: true })
+            .click();
+          await expect(dialog).toContainText('Displayed terms');
+        } finally {
+          releaseOld();
+        }
+        await expect(accept).toBeEnabled();
+        await expect(dialog).not.toContainText(t('tos.modal.error', locale));
+        await expect(page.getByText(t('tos.modal.error', locale), { exact: true })).toHaveCount(0);
+      } else {
+        await expect(dialog).toContainText(t('tos.modal.error', locale));
+        await expect(accept).toBeDisabled();
+        await dialog
+          .getByRole('button', { name: t('tos.modal.close', locale), exact: true })
+          .click();
+        await expect(dialog).toHaveCount(0);
+        await expect(
+          page.getByRole('alert').filter({ hasText: t('tos.banner.text', locale) })
+        ).toBeVisible();
+        // A service denial must recheck the account and reopen a dismissed review.
+        await page.evaluate(() => window.dispatchEvent(new Event('barghsa:tos-required')));
+        await expect(accept).toBeEnabled();
+      }
+      await expect(success).toHaveCount(0);
       await accept.evaluate((button: HTMLButtonElement) => {
         button.click();
         button.click();
@@ -112,10 +143,12 @@ for (const locale of ['en', 'fa'] as const) {
           dialog.getByRole('button', { name: t('tos.modal.accepting', locale), exact: true })
         ).toBeDisabled();
         expect(writes).toBe(2);
+        await expect(success).toHaveCount(0);
       } finally {
         release();
       }
       await expect(dialog).toHaveCount(0);
+      await expect(success).toBeVisible();
       expect(writes).toBe(2);
       const reads = statusReads;
       await page.evaluate(() => window.dispatchEvent(new Event('barghsa:tos-required')));

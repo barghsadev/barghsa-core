@@ -1,3 +1,4 @@
+import { runMigrationPrefix } from './test/migration-prefix';
 import { randomUUID } from 'node:crypto';
 import { copyFileSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
@@ -64,14 +65,20 @@ it('expands only recovery schema/purpose and preserves every existing public row
       "SELECT p.oid,pg_get_functiondef(p.oid) AS definition FROM pg_proc p JOIN pg_namespace n ON n.oid=p.pronamespace WHERE n.nspname='public' AND p.prokind='f' ORDER BY p.oid"
     )
   ).rows;
-  expect((await runMigrations({ connection, migrationsFolder: production })).ok).toBe(true);
+  expect(await runMigrationPrefix('0274_account_recovery', { connection })).toEqual({
+    ok: true,
+    applied: ['0274_account_recovery'],
+  });
   expect(await rows()).toEqual(before);
   for (const fn of functions)
     expect(
       (await pool.query('SELECT pg_get_functiondef($1::oid) AS definition', [fn.oid])).rows[0]
         .definition
     ).toBe(fn.definition);
-  expect((await runMigrations({ connection, migrationsFolder: production })).ok).toBe(true);
+  expect(await runMigrationPrefix('0274_account_recovery', { connection })).toEqual({
+    ok: true,
+    applied: [],
+  });
   expect(await rows()).toEqual(before);
   expect(
     (await pool.query("SELECT to_regclass('public.account_recovery_cases') AS table")).rows[0].table
