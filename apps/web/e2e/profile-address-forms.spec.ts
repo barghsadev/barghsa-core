@@ -20,6 +20,8 @@ const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{1
 const form = (page: Page, surface: 'profile' | 'address') =>
   page.locator(`[data-slot=settings-${surface}-form]`);
 const submit = (owner: Locator) => owner.locator('button[type=submit]');
+const commandToast = (page: Page, type: 'error' | 'success', message: string) =>
+  page.locator(`[data-sonner-toast][data-type="${type}"]`).filter({ hasText: message });
 const action = (page: Page, locale: Locale, key: string) =>
   page.getByRole('button', { name: tSettingsForms(key, locale), exact: true });
 async function confirm(page: Page, locale: Locale) {
@@ -257,6 +259,7 @@ for (const locale of ['en', 'fa'] as const) {
     await confirm(page, locale);
     await expect.poll(() => state.writes.length).toBe(1);
     await linkedError(legal, tSettingsForms('legalNameInvalid', locale));
+    await expect(commandToast(page, 'error', tSettingsForms('error', locale))).toHaveCount(1);
     await expect(full).toHaveValue('  Retained main address  ');
     await expect(page.locator('body')).not.toContainText(privateText);
 
@@ -267,6 +270,9 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(action(page, locale, 'retryOriginal')).toBeVisible();
     await expect(page.locator('body')).not.toContainText(privateText);
     await expect(full).toHaveValue('  Retained main address  ');
+    const uncertain = commandToast(page, 'error', tSettingsForms('uncertain', locale));
+    await expect(uncertain).toHaveCount(1);
+    const earlierNotice = await uncertain.elementHandle();
     state.modes.profile = 'hold';
     await rotateCsrf(page, 'settings-profile-retry-one');
     await action(page, locale, 'retryOriginal').click();
@@ -279,6 +285,18 @@ for (const locale of ['en', 'fa'] as const) {
     expect(result).not.toHaveProperty('idempotencyKey');
     await fixture.finishHeld(result, true);
     await expect(action(page, locale, 'retryOriginal')).toBeVisible();
+    await expect
+      .poll(() =>
+        uncertain.evaluateAll(
+          (notices, prior) => notices.some((notice) => notice !== prior),
+          earlierNotice
+        )
+      )
+      .toBe(true);
+    await earlierNotice.dispose();
+    await expect(
+      commandToast(page, 'success', crmText('settings.profile.success', locale))
+    ).toHaveCount(0);
     expect(state.effects).toEqual({ profile: 1, create: 0, edit: 0, history: 1, audit: 1 });
 
     state.modes.profile = 'success';
@@ -299,6 +317,9 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(action(page, locale, 'refreshConfirmation')).toHaveCount(0);
     await expect(page.getByRole('dialog')).toHaveCount(0);
     await expect(legal).toHaveValue('Captured Company');
+    await expect(
+      commandToast(page, 'success', crmText('settings.profile.success', locale))
+    ).toHaveCount(1);
     await expect(full).toHaveValue('Retained main address');
     expect(state.writes).toHaveLength(writesBeforeConfirmation);
     expect(state.effects).toEqual({ profile: 1, create: 0, edit: 0, history: 1, audit: 1 });
@@ -373,6 +394,7 @@ for (const locale of ['en', 'fa'] as const) {
     await submit(owner).click();
     await expect.poll(() => state.writes.length).toBe(1);
     await linkedError(postal, t('settings.addresses.validation.postalCode', locale));
+    await expect(commandToast(page, 'error', tSettingsForms('error', locale))).toHaveCount(1);
     await expect(full).toHaveValue('  First saved address  ');
     await expect(page.getByRole('dialog')).not.toContainText(privateText);
     state.modes.create = 'mixed';
@@ -399,6 +421,9 @@ for (const locale of ['en', 'fa'] as const) {
     expect(state.writes[2]!.csrf).toBe('settings-address-retry-one');
     expect(state.writes[3]!.csrf).toBe('settings-address-retry-two');
     expect(state.effects).toEqual({ profile: 0, create: 1, edit: 0, history: 0, audit: 1 });
+    await expect(
+      commandToast(page, 'success', t('settings.addresses.success.create', locale))
+    ).toHaveCount(1);
     const card = page.locator('[data-slot=card]').filter({ hasText: 'First saved address' });
     await expect(card).toContainText(t('settings.addresses.main', locale));
     expect(state.reads).not.toContain(`/api/profiles/${profileId}`); // Manager address editing never invents owner-only detail access.

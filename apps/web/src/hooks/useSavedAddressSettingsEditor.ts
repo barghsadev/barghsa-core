@@ -7,6 +7,7 @@ import { useOwnedProfileRead } from './useOwnedProfileRead.js';
 import { useGeographyOptions } from './useGeographyOptions.js';
 import { useSettingsCommand } from './useSettingsCommand.js';
 import { useSettingsFormFeedback } from './useSettingsFormFeedback.js';
+import { useCommandFeedback } from './useCommandFeedback.js';
 import { useProfileContextReset, useProfileContextRevision } from '../lib/profile-context.js';
 import { toast } from '../lib/toast-api.js';
 import {
@@ -60,6 +61,12 @@ export function useSavedAddressSettingsEditor(locale: Locale) {
     },
     () => !!actor && !withdrawn.current
   );
+  useCommandFeedback({
+    error: command.error
+      ? copy(command.error === 'confirmationMismatch' ? 'confirmationMismatch' : 'uncertain')
+      : null,
+    operation: identity,
+  });
   const coordination = useRef(command.coordination);
   coordination.current = command.coordination;
   const base = useRef(editingAddress);
@@ -273,7 +280,11 @@ export function useSavedAddressSettingsEditor(locale: Locale) {
             keyed: true,
             body,
             receipt: (v) => addressReceipt(v, target, source, patch),
-            fields: feedback.fields,
+            fields: (names) => {
+              if (!feedback.fields(names)) return false;
+              toast.error(copy('error'));
+              return true;
+            },
             accepted: async (value) => {
               if (!permitted(token)) return;
               const row = value as SavedAddress;

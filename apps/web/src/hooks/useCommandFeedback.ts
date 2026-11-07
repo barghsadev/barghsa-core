@@ -27,7 +27,7 @@ export function useCommandFeedback({
     const before = previous.current;
     previous.current = { scope, success, error };
     if (before.scope !== scope) {
-      armed.current = false;
+      armed.current = !success && !error;
       return;
     }
     if (!success && !error) armed.current = true;

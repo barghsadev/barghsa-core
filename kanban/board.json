@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-07T16:59:16+00:00",
-  "source_commit": "1a62016b62709882a7d5ddf84af5d3b655ca27ee",
+  "updated": "2026-11-07T17:09:54+00:00",
+  "source_commit": "8c419ffe7a5a4d5b06d5ca4299d64499902fa8bb",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -36055,7 +36055,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
           "release-0.5-native-staff-touch-and-electricity-recovery",
-          "release-0.5-confirmed-electricity-feedback"
+          "release-0.5-confirmed-electricity-feedback",
+          "release-0.5-settings-response-feedback"
         ],
         "current_acceptance": {
           "kind": "verified-active-profile-address-crud",
@@ -36087,7 +36088,7 @@
             },
             {
               "path": "apps/web/src/hooks/useSavedAddressSettingsEditor.ts",
-              "sha256": "0265d0f208fffc8dbe64df13c5b704c413dac6b113a6b2fc89ca1091605a7961"
+              "sha256": "11323412ad185ed00e1528d99b80b9c273a9b02693cbbb08027599836258247e"
             },
             {
               "path": "apps/web/src/hooks/useSettingsCommand.ts",
@@ -36644,6 +36645,11 @@
               "batch": "release-0.5-confirmed-electricity-feedback",
               "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-settings-response-feedback",
+              "base_commit": "8c419ffe7a5a4d5b06d5ca4299d64499902fa8bb",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-settings-response-feedback/scoped-settings-feedback-proof.json"
             }
           ]
         },
@@ -36868,7 +36874,8 @@
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-confirmed-electricity-feedback"
+          "release-0.5-confirmed-electricity-feedback",
+          "release-0.5-settings-response-feedback"
         ],
         "current_acceptance": {
           "kind": "verified-electricity-saving-solar-address-flow",
@@ -36948,7 +36955,7 @@
             },
             {
               "path": "apps/web/src/hooks/useSavedAddressSettingsEditor.ts",
-              "sha256": "0265d0f208fffc8dbe64df13c5b704c413dac6b113a6b2fc89ca1091605a7961"
+              "sha256": "11323412ad185ed00e1528d99b80b9c273a9b02693cbbb08027599836258247e"
             },
             {
               "path": "apps/web/src/hooks/useSettingsCommand.ts",
@@ -37717,6 +37724,11 @@
               "batch": "release-0.5-confirmed-electricity-feedback",
               "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-settings-response-feedback",
+              "base_commit": "8c419ffe7a5a4d5b06d5ca4299d64499902fa8bb",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-settings-response-feedback/scoped-settings-feedback-proof.json"
             }
           ]
         },
@@ -356027,7 +356039,8 @@
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-confirmed-electricity-feedback"
+          "release-0.5-confirmed-electricity-feedback",
+          "release-0.5-settings-response-feedback"
         ],
         "current_acceptance": {
           "kind": "verified-saving-installation-address-selection",
@@ -356071,7 +356084,7 @@
             },
             {
               "path": "apps/web/src/hooks/useSavedAddressSettingsEditor.ts",
-              "sha256": "0265d0f208fffc8dbe64df13c5b704c413dac6b113a6b2fc89ca1091605a7961"
+              "sha256": "11323412ad185ed00e1528d99b80b9c273a9b02693cbbb08027599836258247e"
             },
             {
               "path": "apps/web/src/hooks/useSettingsCommand.ts",
@@ -356675,6 +356688,11 @@
               "batch": "release-0.5-confirmed-electricity-feedback",
               "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-settings-response-feedback",
+              "base_commit": "8c419ffe7a5a4d5b06d5ca4299d64499902fa8bb",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-settings-response-feedback/scoped-settings-feedback-proof.json"
             }
           ]
         }
@@ -357683,7 +357701,8 @@
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-confirmed-electricity-feedback"
+          "release-0.5-confirmed-electricity-feedback",
+          "release-0.5-settings-response-feedback"
         ],
         "current_acceptance": {
           "kind": "verified-saving-authoritative-final-review",
@@ -357728,7 +357747,7 @@
             },
             {
               "path": "apps/web/src/hooks/useSavedAddressSettingsEditor.ts",
-              "sha256": "0265d0f208fffc8dbe64df13c5b704c413dac6b113a6b2fc89ca1091605a7961"
+              "sha256": "11323412ad185ed00e1528d99b80b9c273a9b02693cbbb08027599836258247e"
             },
             {
               "path": "apps/web/src/hooks/useSettingsCommand.ts",
@@ -358336,6 +358355,11 @@
               "batch": "release-0.5-confirmed-electricity-feedback",
               "base_commit": "a24ab6475afb34b1827c0542689e3c571b122454",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-confirmed-order-feedback/scoped-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-settings-response-feedback",
+              "base_commit": "8c419ffe7a5a4d5b06d5ca4299d64499902fa8bb",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-settings-response-feedback/scoped-settings-feedback-proof.json"
             }
           ]
         }
@@ -483205,7 +483229,8 @@
           "release-0.5-coverage-remaining-branches",
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-ui-evidence",
-          "release-0.5-verified-command-rejection"
+          "release-0.5-verified-command-rejection",
+          "release-0.5-settings-response-feedback"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -483221,7 +483246,7 @@
             },
             {
               "path": "apps/web/e2e/profile-address-forms.spec.ts",
-              "sha256": "398488c9544080f40a18ec3b9bbf38d89e733cb5a7f78fc5aa7a4379da6c548e"
+              "sha256": "c154f15cdfe160c9eddb3cdc66c70fdc3988bdd564bb572a9e73528f8ff6909c"
             },
             {
               "path": "apps/web/e2e/ticket-forms-fixture.ts",
@@ -483508,6 +483533,11 @@
               "batch": "release-0.5-verified-command-rejection",
               "base_commit": "5551ca05908bf4f177b6a4621aadbc85d8fd273a",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-final-gate-reconciliation/candidate-release-evidence.json"
+            },
+            {
+              "batch": "release-0.5-settings-response-feedback",
+              "base_commit": "8c419ffe7a5a4d5b06d5ca4299d64499902fa8bb",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-settings-response-feedback/scoped-settings-feedback-proof.json"
             }
           ]
         }
@@ -483547,7 +483577,8 @@
           "release-0.5-coverage-remaining-branches",
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-ui-evidence",
-          "release-0.5-verified-command-rejection"
+          "release-0.5-verified-command-rejection",
+          "release-0.5-settings-response-feedback"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -483563,7 +483594,7 @@
             },
             {
               "path": "apps/web/e2e/profile-address-forms.spec.ts",
-              "sha256": "398488c9544080f40a18ec3b9bbf38d89e733cb5a7f78fc5aa7a4379da6c548e"
+              "sha256": "c154f15cdfe160c9eddb3cdc66c70fdc3988bdd564bb572a9e73528f8ff6909c"
             },
             {
               "path": "apps/web/e2e/ticket-forms-fixture.ts",
@@ -483850,6 +483881,11 @@
               "batch": "release-0.5-verified-command-rejection",
               "base_commit": "5551ca05908bf4f177b6a4621aadbc85d8fd273a",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-final-gate-reconciliation/candidate-release-evidence.json"
+            },
+            {
+              "batch": "release-0.5-settings-response-feedback",
+              "base_commit": "8c419ffe7a5a4d5b06d5ca4299d64499902fa8bb",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-settings-response-feedback/scoped-settings-feedback-proof.json"
             }
           ]
         }
@@ -553000,7 +553036,8 @@
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-confirmed-electricity-feedback",
-          "release-0.5-native-staff-control-targets"
+          "release-0.5-native-staff-control-targets",
+          "release-0.5-settings-response-feedback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -553408,11 +553445,11 @@
             },
             {
               "path": "apps/web/src/hooks/useCommandFeedback.test.tsx",
-              "sha256": "70b09ad2c38307a79a1c07beca503232565b39354e6d996bdfa04b619459819e"
+              "sha256": "ecf1f15d2af88c5061b46f186e89951619f3b3e2ffe7bcdf4b6bf6f43a661413"
             },
             {
               "path": "apps/web/src/hooks/useCommandFeedback.ts",
-              "sha256": "8228da0a507b0c408aa38cd12928c890d948fc28a6a65db212e0142e7d725e0f"
+              "sha256": "31fe8600d7ad7a0b826be248c0abcefd736a5f6f3b7543506f24b709db53acc9"
             },
             {
               "path": "apps/web/src/hooks/useServerMutation.test.tsx",
@@ -554721,6 +554758,11 @@
               "batch": "release-0.5-native-staff-control-targets",
               "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
+            },
+            {
+              "batch": "release-0.5-settings-response-feedback",
+              "base_commit": "8c419ffe7a5a4d5b06d5ca4299d64499902fa8bb",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-settings-response-feedback/scoped-settings-feedback-proof.json"
             }
           ]
         }
@@ -554786,7 +554828,8 @@
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-confirmed-electricity-feedback",
-          "release-0.5-native-staff-control-targets"
+          "release-0.5-native-staff-control-targets",
+          "release-0.5-settings-response-feedback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -555194,11 +555237,11 @@
             },
             {
               "path": "apps/web/src/hooks/useCommandFeedback.test.tsx",
-              "sha256": "70b09ad2c38307a79a1c07beca503232565b39354e6d996bdfa04b619459819e"
+              "sha256": "ecf1f15d2af88c5061b46f186e89951619f3b3e2ffe7bcdf4b6bf6f43a661413"
             },
             {
               "path": "apps/web/src/hooks/useCommandFeedback.ts",
-              "sha256": "8228da0a507b0c408aa38cd12928c890d948fc28a6a65db212e0142e7d725e0f"
+              "sha256": "31fe8600d7ad7a0b826be248c0abcefd736a5f6f3b7543506f24b709db53acc9"
             },
             {
               "path": "apps/web/src/hooks/useServerMutation.test.tsx",
@@ -556507,6 +556550,11 @@
               "batch": "release-0.5-native-staff-control-targets",
               "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
+            },
+            {
+              "batch": "release-0.5-settings-response-feedback",
+              "base_commit": "8c419ffe7a5a4d5b06d5ca4299d64499902fa8bb",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-settings-response-feedback/scoped-settings-feedback-proof.json"
             }
           ]
         }
@@ -556527,7 +556575,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Advanced electricity now displays a localized failure message and one success toast only after a complete current receipt. Malformed and lost responses preserve the same request and reference through explicit retry, and stale receipts stay silent. Current saving and simple electricity receipts remain scoped. Remaining command adoption and the interceptor requirement are open."
+        "Profile and saved-address editors now automatically show localized feedback for validated server field rejection and unconfirmed commands. The shared observer accepts the first new result from an already-clear account scope and suppresses stale carryover. Valid success receipts, private-response filtering, exact retries and the confirmation read are verified. Manual-invoice owned field rejection and remaining command adoption are still open."
       ],
       "owner": null,
       "depends_on": [],
@@ -556548,7 +556596,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-verified-command-rejection",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-confirmed-electricity-feedback"
+          "release-0.5-confirmed-electricity-feedback",
+          "release-0.5-settings-response-feedback"
         ],
         "current_acceptance": null
       }
@@ -556613,7 +556662,8 @@
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-confirmed-electricity-feedback",
-          "release-0.5-native-staff-control-targets"
+          "release-0.5-native-staff-control-targets",
+          "release-0.5-settings-response-feedback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -557021,11 +557071,11 @@
             },
             {
               "path": "apps/web/src/hooks/useCommandFeedback.test.tsx",
-              "sha256": "70b09ad2c38307a79a1c07beca503232565b39354e6d996bdfa04b619459819e"
+              "sha256": "ecf1f15d2af88c5061b46f186e89951619f3b3e2ffe7bcdf4b6bf6f43a661413"
             },
             {
               "path": "apps/web/src/hooks/useCommandFeedback.ts",
-              "sha256": "8228da0a507b0c408aa38cd12928c890d948fc28a6a65db212e0142e7d725e0f"
+              "sha256": "31fe8600d7ad7a0b826be248c0abcefd736a5f6f3b7543506f24b709db53acc9"
             },
             {
               "path": "apps/web/src/hooks/useServerMutation.test.tsx",
@@ -558334,6 +558384,11 @@
               "batch": "release-0.5-native-staff-control-targets",
               "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
+            },
+            {
+              "batch": "release-0.5-settings-response-feedback",
+              "base_commit": "8c419ffe7a5a4d5b06d5ca4299d64499902fa8bb",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-settings-response-feedback/scoped-settings-feedback-proof.json"
             }
           ]
         }
@@ -558399,7 +558454,8 @@
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-confirmed-electricity-feedback",
-          "release-0.5-native-staff-control-targets"
+          "release-0.5-native-staff-control-targets",
+          "release-0.5-settings-response-feedback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -558807,11 +558863,11 @@
             },
             {
               "path": "apps/web/src/hooks/useCommandFeedback.test.tsx",
-              "sha256": "70b09ad2c38307a79a1c07beca503232565b39354e6d996bdfa04b619459819e"
+              "sha256": "ecf1f15d2af88c5061b46f186e89951619f3b3e2ffe7bcdf4b6bf6f43a661413"
             },
             {
               "path": "apps/web/src/hooks/useCommandFeedback.ts",
-              "sha256": "8228da0a507b0c408aa38cd12928c890d948fc28a6a65db212e0142e7d725e0f"
+              "sha256": "31fe8600d7ad7a0b826be248c0abcefd736a5f6f3b7543506f24b709db53acc9"
             },
             {
               "path": "apps/web/src/hooks/useServerMutation.test.tsx",
@@ -560120,6 +560176,11 @@
               "batch": "release-0.5-native-staff-control-targets",
               "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
+            },
+            {
+              "batch": "release-0.5-settings-response-feedback",
+              "base_commit": "8c419ffe7a5a4d5b06d5ca4299d64499902fa8bb",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-settings-response-feedback/scoped-settings-feedback-proof.json"
             }
           ]
         }
@@ -560185,7 +560246,8 @@
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-confirmed-electricity-feedback",
-          "release-0.5-native-staff-control-targets"
+          "release-0.5-native-staff-control-targets",
+          "release-0.5-settings-response-feedback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -560593,11 +560655,11 @@
             },
             {
               "path": "apps/web/src/hooks/useCommandFeedback.test.tsx",
-              "sha256": "70b09ad2c38307a79a1c07beca503232565b39354e6d996bdfa04b619459819e"
+              "sha256": "ecf1f15d2af88c5061b46f186e89951619f3b3e2ffe7bcdf4b6bf6f43a661413"
             },
             {
               "path": "apps/web/src/hooks/useCommandFeedback.ts",
-              "sha256": "8228da0a507b0c408aa38cd12928c890d948fc28a6a65db212e0142e7d725e0f"
+              "sha256": "31fe8600d7ad7a0b826be248c0abcefd736a5f6f3b7543506f24b709db53acc9"
             },
             {
               "path": "apps/web/src/hooks/useServerMutation.test.tsx",
@@ -561906,6 +561968,11 @@
               "batch": "release-0.5-native-staff-control-targets",
               "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
+            },
+            {
+              "batch": "release-0.5-settings-response-feedback",
+              "base_commit": "8c419ffe7a5a4d5b06d5ca4299d64499902fa8bb",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-settings-response-feedback/scoped-settings-feedback-proof.json"
             }
           ]
         }
@@ -561971,7 +562038,8 @@
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-confirmed-electricity-feedback",
-          "release-0.5-native-staff-control-targets"
+          "release-0.5-native-staff-control-targets",
+          "release-0.5-settings-response-feedback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -562379,11 +562447,11 @@
             },
             {
               "path": "apps/web/src/hooks/useCommandFeedback.test.tsx",
-              "sha256": "70b09ad2c38307a79a1c07beca503232565b39354e6d996bdfa04b619459819e"
+              "sha256": "ecf1f15d2af88c5061b46f186e89951619f3b3e2ffe7bcdf4b6bf6f43a661413"
             },
             {
               "path": "apps/web/src/hooks/useCommandFeedback.ts",
-              "sha256": "8228da0a507b0c408aa38cd12928c890d948fc28a6a65db212e0142e7d725e0f"
+              "sha256": "31fe8600d7ad7a0b826be248c0abcefd736a5f6f3b7543506f24b709db53acc9"
             },
             {
               "path": "apps/web/src/hooks/useServerMutation.test.tsx",
@@ -563692,6 +563760,11 @@
               "batch": "release-0.5-native-staff-control-targets",
               "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
+            },
+            {
+              "batch": "release-0.5-settings-response-feedback",
+              "base_commit": "8c419ffe7a5a4d5b06d5ca4299d64499902fa8bb",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-settings-response-feedback/scoped-settings-feedback-proof.json"
             }
           ]
         }
@@ -563757,7 +563830,8 @@
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-confirmed-electricity-feedback",
-          "release-0.5-native-staff-control-targets"
+          "release-0.5-native-staff-control-targets",
+          "release-0.5-settings-response-feedback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -564165,11 +564239,11 @@
             },
             {
               "path": "apps/web/src/hooks/useCommandFeedback.test.tsx",
-              "sha256": "70b09ad2c38307a79a1c07beca503232565b39354e6d996bdfa04b619459819e"
+              "sha256": "ecf1f15d2af88c5061b46f186e89951619f3b3e2ffe7bcdf4b6bf6f43a661413"
             },
             {
               "path": "apps/web/src/hooks/useCommandFeedback.ts",
-              "sha256": "8228da0a507b0c408aa38cd12928c890d948fc28a6a65db212e0142e7d725e0f"
+              "sha256": "31fe8600d7ad7a0b826be248c0abcefd736a5f6f3b7543506f24b709db53acc9"
             },
             {
               "path": "apps/web/src/hooks/useServerMutation.test.tsx",
@@ -565478,6 +565552,11 @@
               "batch": "release-0.5-native-staff-control-targets",
               "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
+            },
+            {
+              "batch": "release-0.5-settings-response-feedback",
+              "base_commit": "8c419ffe7a5a4d5b06d5ca4299d64499902fa8bb",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-settings-response-feedback/scoped-settings-feedback-proof.json"
             }
           ]
         }
@@ -565543,7 +565622,8 @@
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-confirmed-electricity-feedback",
-          "release-0.5-native-staff-control-targets"
+          "release-0.5-native-staff-control-targets",
+          "release-0.5-settings-response-feedback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -565951,11 +566031,11 @@
             },
             {
               "path": "apps/web/src/hooks/useCommandFeedback.test.tsx",
-              "sha256": "70b09ad2c38307a79a1c07beca503232565b39354e6d996bdfa04b619459819e"
+              "sha256": "ecf1f15d2af88c5061b46f186e89951619f3b3e2ffe7bcdf4b6bf6f43a661413"
             },
             {
               "path": "apps/web/src/hooks/useCommandFeedback.ts",
-              "sha256": "8228da0a507b0c408aa38cd12928c890d948fc28a6a65db212e0142e7d725e0f"
+              "sha256": "31fe8600d7ad7a0b826be248c0abcefd736a5f6f3b7543506f24b709db53acc9"
             },
             {
               "path": "apps/web/src/hooks/useServerMutation.test.tsx",
@@ -567264,6 +567344,11 @@
               "batch": "release-0.5-native-staff-control-targets",
               "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
+            },
+            {
+              "batch": "release-0.5-settings-response-feedback",
+              "base_commit": "8c419ffe7a5a4d5b06d5ca4299d64499902fa8bb",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-settings-response-feedback/scoped-settings-feedback-proof.json"
             }
           ]
         }
@@ -567329,7 +567414,8 @@
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-confirmed-electricity-feedback",
-          "release-0.5-native-staff-control-targets"
+          "release-0.5-native-staff-control-targets",
+          "release-0.5-settings-response-feedback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -567737,11 +567823,11 @@
             },
             {
               "path": "apps/web/src/hooks/useCommandFeedback.test.tsx",
-              "sha256": "70b09ad2c38307a79a1c07beca503232565b39354e6d996bdfa04b619459819e"
+              "sha256": "ecf1f15d2af88c5061b46f186e89951619f3b3e2ffe7bcdf4b6bf6f43a661413"
             },
             {
               "path": "apps/web/src/hooks/useCommandFeedback.ts",
-              "sha256": "8228da0a507b0c408aa38cd12928c890d948fc28a6a65db212e0142e7d725e0f"
+              "sha256": "31fe8600d7ad7a0b826be248c0abcefd736a5f6f3b7543506f24b709db53acc9"
             },
             {
               "path": "apps/web/src/hooks/useServerMutation.test.tsx",
@@ -569050,6 +569136,11 @@
               "batch": "release-0.5-native-staff-control-targets",
               "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
+            },
+            {
+              "batch": "release-0.5-settings-response-feedback",
+              "base_commit": "8c419ffe7a5a4d5b06d5ca4299d64499902fa8bb",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-settings-response-feedback/scoped-settings-feedback-proof.json"
             }
           ]
         }
@@ -569115,7 +569206,8 @@
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-confirmed-electricity-feedback",
-          "release-0.5-native-staff-control-targets"
+          "release-0.5-native-staff-control-targets",
+          "release-0.5-settings-response-feedback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -569523,11 +569615,11 @@
             },
             {
               "path": "apps/web/src/hooks/useCommandFeedback.test.tsx",
-              "sha256": "70b09ad2c38307a79a1c07beca503232565b39354e6d996bdfa04b619459819e"
+              "sha256": "ecf1f15d2af88c5061b46f186e89951619f3b3e2ffe7bcdf4b6bf6f43a661413"
             },
             {
               "path": "apps/web/src/hooks/useCommandFeedback.ts",
-              "sha256": "8228da0a507b0c408aa38cd12928c890d948fc28a6a65db212e0142e7d725e0f"
+              "sha256": "31fe8600d7ad7a0b826be248c0abcefd736a5f6f3b7543506f24b709db53acc9"
             },
             {
               "path": "apps/web/src/hooks/useServerMutation.test.tsx",
@@ -570836,6 +570928,11 @@
               "batch": "release-0.5-native-staff-control-targets",
               "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
+            },
+            {
+              "batch": "release-0.5-settings-response-feedback",
+              "base_commit": "8c419ffe7a5a4d5b06d5ca4299d64499902fa8bb",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-settings-response-feedback/scoped-settings-feedback-proof.json"
             }
           ]
         }
@@ -570901,7 +570998,8 @@
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-confirmed-electricity-feedback",
-          "release-0.5-native-staff-control-targets"
+          "release-0.5-native-staff-control-targets",
+          "release-0.5-settings-response-feedback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -571309,11 +571407,11 @@
             },
             {
               "path": "apps/web/src/hooks/useCommandFeedback.test.tsx",
-              "sha256": "70b09ad2c38307a79a1c07beca503232565b39354e6d996bdfa04b619459819e"
+              "sha256": "ecf1f15d2af88c5061b46f186e89951619f3b3e2ffe7bcdf4b6bf6f43a661413"
             },
             {
               "path": "apps/web/src/hooks/useCommandFeedback.ts",
-              "sha256": "8228da0a507b0c408aa38cd12928c890d948fc28a6a65db212e0142e7d725e0f"
+              "sha256": "31fe8600d7ad7a0b826be248c0abcefd736a5f6f3b7543506f24b709db53acc9"
             },
             {
               "path": "apps/web/src/hooks/useServerMutation.test.tsx",
@@ -572622,6 +572720,11 @@
               "batch": "release-0.5-native-staff-control-targets",
               "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
+            },
+            {
+              "batch": "release-0.5-settings-response-feedback",
+              "base_commit": "8c419ffe7a5a4d5b06d5ca4299d64499902fa8bb",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-settings-response-feedback/scoped-settings-feedback-proof.json"
             }
           ]
         }
@@ -572687,7 +572790,8 @@
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-confirmed-electricity-feedback",
-          "release-0.5-native-staff-control-targets"
+          "release-0.5-native-staff-control-targets",
+          "release-0.5-settings-response-feedback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -573095,11 +573199,11 @@
             },
             {
               "path": "apps/web/src/hooks/useCommandFeedback.test.tsx",
-              "sha256": "70b09ad2c38307a79a1c07beca503232565b39354e6d996bdfa04b619459819e"
+              "sha256": "ecf1f15d2af88c5061b46f186e89951619f3b3e2ffe7bcdf4b6bf6f43a661413"
             },
             {
               "path": "apps/web/src/hooks/useCommandFeedback.ts",
-              "sha256": "8228da0a507b0c408aa38cd12928c890d948fc28a6a65db212e0142e7d725e0f"
+              "sha256": "31fe8600d7ad7a0b826be248c0abcefd736a5f6f3b7543506f24b709db53acc9"
             },
             {
               "path": "apps/web/src/hooks/useServerMutation.test.tsx",
@@ -574408,6 +574512,11 @@
               "batch": "release-0.5-native-staff-control-targets",
               "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
+            },
+            {
+              "batch": "release-0.5-settings-response-feedback",
+              "base_commit": "8c419ffe7a5a4d5b06d5ca4299d64499902fa8bb",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-settings-response-feedback/scoped-settings-feedback-proof.json"
             }
           ]
         }
@@ -574473,7 +574582,8 @@
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-confirmed-electricity-feedback",
-          "release-0.5-native-staff-control-targets"
+          "release-0.5-native-staff-control-targets",
+          "release-0.5-settings-response-feedback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -574881,11 +574991,11 @@
             },
             {
               "path": "apps/web/src/hooks/useCommandFeedback.test.tsx",
-              "sha256": "70b09ad2c38307a79a1c07beca503232565b39354e6d996bdfa04b619459819e"
+              "sha256": "ecf1f15d2af88c5061b46f186e89951619f3b3e2ffe7bcdf4b6bf6f43a661413"
             },
             {
               "path": "apps/web/src/hooks/useCommandFeedback.ts",
-              "sha256": "8228da0a507b0c408aa38cd12928c890d948fc28a6a65db212e0142e7d725e0f"
+              "sha256": "31fe8600d7ad7a0b826be248c0abcefd736a5f6f3b7543506f24b709db53acc9"
             },
             {
               "path": "apps/web/src/hooks/useServerMutation.test.tsx",
@@ -576194,6 +576304,11 @@
               "batch": "release-0.5-native-staff-control-targets",
               "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
+            },
+            {
+              "batch": "release-0.5-settings-response-feedback",
+              "base_commit": "8c419ffe7a5a4d5b06d5ca4299d64499902fa8bb",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-settings-response-feedback/scoped-settings-feedback-proof.json"
             }
           ]
         }
@@ -576944,7 +577059,8 @@
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-confirmed-electricity-feedback",
-          "release-0.5-native-staff-control-targets"
+          "release-0.5-native-staff-control-targets",
+          "release-0.5-settings-response-feedback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -577352,11 +577468,11 @@
             },
             {
               "path": "apps/web/src/hooks/useCommandFeedback.test.tsx",
-              "sha256": "70b09ad2c38307a79a1c07beca503232565b39354e6d996bdfa04b619459819e"
+              "sha256": "ecf1f15d2af88c5061b46f186e89951619f3b3e2ffe7bcdf4b6bf6f43a661413"
             },
             {
               "path": "apps/web/src/hooks/useCommandFeedback.ts",
-              "sha256": "8228da0a507b0c408aa38cd12928c890d948fc28a6a65db212e0142e7d725e0f"
+              "sha256": "31fe8600d7ad7a0b826be248c0abcefd736a5f6f3b7543506f24b709db53acc9"
             },
             {
               "path": "apps/web/src/hooks/useServerMutation.test.tsx",
@@ -578665,6 +578781,11 @@
               "batch": "release-0.5-native-staff-control-targets",
               "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
+            },
+            {
+              "batch": "release-0.5-settings-response-feedback",
+              "base_commit": "8c419ffe7a5a4d5b06d5ca4299d64499902fa8bb",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-settings-response-feedback/scoped-settings-feedback-proof.json"
             }
           ]
         }
@@ -578730,7 +578851,8 @@
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-confirmed-electricity-feedback",
-          "release-0.5-native-staff-control-targets"
+          "release-0.5-native-staff-control-targets",
+          "release-0.5-settings-response-feedback"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -579138,11 +579260,11 @@
             },
             {
               "path": "apps/web/src/hooks/useCommandFeedback.test.tsx",
-              "sha256": "70b09ad2c38307a79a1c07beca503232565b39354e6d996bdfa04b619459819e"
+              "sha256": "ecf1f15d2af88c5061b46f186e89951619f3b3e2ffe7bcdf4b6bf6f43a661413"
             },
             {
               "path": "apps/web/src/hooks/useCommandFeedback.ts",
-              "sha256": "8228da0a507b0c408aa38cd12928c890d948fc28a6a65db212e0142e7d725e0f"
+              "sha256": "31fe8600d7ad7a0b826be248c0abcefd736a5f6f3b7543506f24b709db53acc9"
             },
             {
               "path": "apps/web/src/hooks/useServerMutation.test.tsx",
@@ -580451,6 +580573,11 @@
               "batch": "release-0.5-native-staff-control-targets",
               "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
+            },
+            {
+              "batch": "release-0.5-settings-response-feedback",
+              "base_commit": "8c419ffe7a5a4d5b06d5ca4299d64499902fa8bb",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-settings-response-feedback/scoped-settings-feedback-proof.json"
             }
           ]
         }
@@ -704782,7 +704909,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "The preceding pushed source has a complete populated width matrix across 93 routes in Chromium and Safari. Existing receipt, denial and financial assertions ran with the layout cases. Four affected staff forms pass targeted checks after enlarging their native controls. Remaining conditional UI adoption and shared command feedback are open."
+        "The 2,976-cell populated width matrix, native staff controls and AI navigation repair are recorded. Profile, address, invoice, wallet and saving cases now provide scoped command feedback evidence. Remaining text, conditional UI and shared command adoption still gate acceptance."
       ],
       "owner": null,
       "depends_on": [],
@@ -704823,7 +704950,8 @@
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-native-staff-control-targets"
+          "release-0.5-native-staff-control-targets",
+          "release-0.5-settings-response-feedback"
         ]
       }
     },
@@ -704842,7 +704970,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "The AI tab candidate passed 3 focused unit cases, 56 Chromium and Safari cases and all 98 route and interaction gzip limits. Earlier exact combined evidence at a24ab647 passed with 1,036 cases and 85.11% critical web branches. Complete final candidate combined and accessibility acceptance."
+        "Current command feedback passed 22 scoped units, 40 Chromium and Safari cases and all 98 production gzip limits. Electricity ordering was 254.89 KB gzip against 255 KB. The exact earlier combined gate at a24ab647 passed with 1,036 browser cases and 85.11% critical web branches. Renew combined checks on final release sources."
       ],
       "owner": null,
       "depends_on": [],
@@ -704882,7 +705010,8 @@
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-confirmed-electricity-feedback",
           "release-0.5-native-staff-control-targets",
-          "release-0.5-ai-tab-intrinsic-widths"
+          "release-0.5-ai-tab-intrinsic-widths",
+          "release-0.5-settings-response-feedback"
         ]
       }
     },
@@ -764190,7 +764319,83 @@
       ],
       "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/ai-tab-renewed-bindings.json",
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout",
-      "release_disposition": "Conditional UI, final combined gates and the pending merge and diagnostics decisions remain open."
+      "release_disposition": "Conditional UI, final combined gates and the pending merge and diagnostics decisions remain open.",
+      "push_receipt": {
+        "local_sha": "8c419ffe7a5a4d5b06d5ca4299d64499902fa8bb",
+        "remote_sha": "8c419ffe7a5a4d5b06d5ca4299d64499902fa8bb",
+        "verified_at": "2026-11-07T16:59:28+00:00"
+      }
+    },
+    "release-0.5-settings-response-feedback": {
+      "batch": "release-0.5-settings-response-feedback",
+      "base_commit": "8c419ffe7a5a4d5b06d5ca4299d64499902fa8bb",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.11.01.03",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "accepted_task_keys": [],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.11.01.03",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/profile-address-forms.spec.ts",
+          "sha256": "c154f15cdfe160c9eddb3cdc66c70fdc3988bdd564bb572a9e73528f8ff6909c"
+        },
+        {
+          "path": "apps/web/src/hooks/useCommandFeedback.test.tsx",
+          "sha256": "ecf1f15d2af88c5061b46f186e89951619f3b3e2ffe7bcdf4b6bf6f43a661413"
+        },
+        {
+          "path": "apps/web/src/hooks/useCommandFeedback.ts",
+          "sha256": "31fe8600d7ad7a0b826be248c0abcefd736a5f6f3b7543506f24b709db53acc9"
+        },
+        {
+          "path": "apps/web/src/hooks/useProfileSettingsEditor.ts",
+          "sha256": "caacd30df7f714f1e4f352ec6a02104df59b18a5e8bbe77f33351260265fe33d"
+        },
+        {
+          "path": "apps/web/src/hooks/useSavedAddressSettingsEditor.ts",
+          "sha256": "11323412ad185ed00e1528d99b80b9c273a9b02693cbbb08027599836258247e"
+        }
+      ],
+      "checks": [
+        "A targeted regression reproduced suppression of the first failure after entering a clear account scope. The repaired observer passed stale-account, stale-operation and duplicate-feedback tests.",
+        "The final build passed 22 scoped units and 40 Chromium and Safari cases for settings, saving, manual invoice and wallet payment. Draft preservation, exact retry, CSRF rotation, authorized receipt confirmation and private-response assertions ran. The original hidden-dismiss fixture failure remains recorded and was replaced with a distinct toast-occurrence assertion.",
+        "Two shared-handler designs exceeded the unchanged electricity budget. Route-local subscriptions passed all 98 production limits with electricity at 254.89 KB gzip."
+      ],
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-settings-response-feedback/scoped-settings-feedback-proof.json",
+      "source_scope_proof_sha256": "6231be7419f26ac3a169bf3f2826c5baf3ccafb7e1b4367f142a550647060f33",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-settings-response-feedback/scoped-settings-response-feedback.patch",
+      "renewed_task_keys": [
+        "02-auth-users-admin.md#T-03.04.01",
+        "02-auth-users-admin.md#T-03.04.02",
+        "03-core-business.md#T-03.09.03.01",
+        "03-core-business.md#T-03.09.03.03",
+        "07-ui-ux-design.md#T-07.01.03.14",
+        "07-ui-ux-design.md#T-07.01.03.15",
+        "07-ui-ux-design.md#T-07.11.01.01",
+        "07-ui-ux-design.md#T-07.11.01.02",
+        "07-ui-ux-design.md#T-07.11.01.04",
+        "07-ui-ux-design.md#T-07.11.01.05",
+        "07-ui-ux-design.md#T-07.11.02.01",
+        "07-ui-ux-design.md#T-07.11.02.02",
+        "07-ui-ux-design.md#T-07.11.02.03",
+        "07-ui-ux-design.md#T-07.11.02.04",
+        "07-ui-ux-design.md#T-07.11.02.05",
+        "07-ui-ux-design.md#T-07.12.01.01",
+        "07-ui-ux-design.md#T-07.12.01.02",
+        "07-ui-ux-design.md#T-07.12.01.03",
+        "07-ui-ux-design.md#T-07.12.01.04",
+        "07-ui-ux-design.md#T-07.12.01.06",
+        "07-ui-ux-design.md#T-07.12.01.07"
+      ],
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-settings-response-feedback/settings-feedback-renewed-bindings.json",
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-settings-response-feedback",
+      "release_disposition": "Final candidate and owner policy gates remain open."
     }
   },
   "historical_improvements": [

@@ -81,6 +81,15 @@ it('withdraws stale feedback on account and operation changes', async () => {
   expect(notice.success).toHaveBeenCalledTimes(1);
 });
 
+it('announces the first failure when a new account starts with clear feedback', async () => {
+  await render(null);
+  await render('Previous account saved');
+  await render(null, null, 'b');
+  await render(null, 'Current account could not save', 'b');
+  expect(notice.error).toHaveBeenCalledExactlyOnceWith('Current account could not save');
+  expect(notice.success).toHaveBeenCalledExactlyOnceWith('Previous account saved');
+});
+
 it('profile or locale changes do not announce stale or merely translated outcomes', async () => {
   await render(null);
   await render('Saved');

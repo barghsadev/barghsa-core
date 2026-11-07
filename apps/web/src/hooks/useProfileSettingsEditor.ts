@@ -7,6 +7,7 @@ import { useOwnedProfileRead } from './useOwnedProfileRead.js';
 import { useGeographyOptions } from './useGeographyOptions.js';
 import { useSettingsCommand } from './useSettingsCommand.js';
 import { useSettingsFormFeedback } from './useSettingsFormFeedback.js';
+import { useCommandFeedback } from './useCommandFeedback.js';
 import {
   refreshProfileContext,
   useProfileContextReset,
@@ -71,6 +72,12 @@ export function useProfileSettingsEditor(locale: Locale) {
         held.owner !== 'profile' ||
         (!!accepted.current && (!held.body || profilePatchAuthorized(accepted.current, held.body))))
   );
+  useCommandFeedback({
+    error: command.error
+      ? copy(command.error === 'confirmationMismatch' ? 'confirmationMismatch' : 'uncertain')
+      : null,
+    operation: identity,
+  });
   const coordinator = useRef(command.coordination);
   coordinator.current = command.coordination;
   const geography = useRef<{
@@ -304,6 +311,7 @@ export function useProfileSettingsEditor(locale: Locale) {
             confirmed: (v) => !!profileConfirmation(v, source, patch),
             fields: (names) => {
               if (!feedback.fields(names)) return false;
+              toast.error(copy('error'));
               setConfirmOpen(false);
               return true;
             },
