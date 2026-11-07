@@ -1,3 +1,4 @@
+import { readWithDeadline } from '../lib/server-query-client.js';
 import { serviceFeedback } from '@barghsa/i18n/service-feedback';
 import { LoadingStatus, NoDeadEndBanner, Button } from '@barghsa/ui';
 import { Link } from '@tanstack/react-router';
@@ -51,17 +52,18 @@ function OwnedAIChat() {
         staleTime: 0,
         gcTime: 0,
         retry: false,
-        queryFn: async ({ signal }) => {
-          const response = await fetch('/api/ai/knowledge/availability', {
-            credentials: 'include',
-            signal,
-          });
-          return {
-            status: response.status,
-            ok: response.ok,
-            value: response.ok ? ((await response.json()) as unknown) : null,
-          };
-        },
+        queryFn: ({ signal: ownerSignal }) =>
+          readWithDeadline(ownerSignal, async (signal) => {
+            const response = await fetch('/api/ai/knowledge/availability', {
+              credentials: 'include',
+              signal,
+            });
+            return {
+              status: response.status,
+              ok: response.ok,
+              value: response.ok ? ((await response.json()) as unknown) : null,
+            };
+          }),
       })
       .then(async (response) => {
         if (!response.ok) throw new Error('Assistant availability unavailable');

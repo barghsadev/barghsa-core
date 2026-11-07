@@ -1,3 +1,4 @@
+import { readWithDeadline } from '../../lib/server-query-client.js';
 import { InvitationBanner } from '../../components/InvitationBanner.js';
 import { useLocale } from '../../hooks/useLocale.js';
 import { withCsrf } from '../../lib/csrf.js';
@@ -39,14 +40,20 @@ function OnboardingContent({ accountId }: { accountId: string }) {
     const controller = new AbortController();
     setLoading(true);
     setError(false);
-    fetch('/api/onboarding/journeys/active', { credentials: 'include', signal: controller.signal })
-      .then(async (response) => {
-        if (!response.ok) throw new Error('Unable to read setup');
-        const body: unknown = await response.json();
-        if (!body || typeof body !== 'object' || !('journey' in body))
-          throw new Error('Invalid setup response');
-        const current = body.journey === null ? null : parseOnboardingJourney(body.journey);
-        if (current?.completed) throw new Error('Unexpected completed setup');
+    void readWithDeadline(controller.signal, async (signal) => {
+      const response = await fetch('/api/onboarding/journeys/active', {
+        credentials: 'include',
+        signal,
+      });
+      if (!response.ok) throw new Error('Unable to read setup');
+      const body: unknown = await response.json();
+      if (!body || typeof body !== 'object' || !('journey' in body))
+        throw new Error('Invalid setup response');
+      const current = body.journey === null ? null : parseOnboardingJourney(body.journey);
+      if (current?.completed) throw new Error('Unexpected completed setup');
+      return current;
+    })
+      .then((current) => {
         if (!controller.signal.aborted) setJourney(current);
       })
       .catch(() => {

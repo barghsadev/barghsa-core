@@ -160,7 +160,9 @@ function OwnedDocumentDestructionQueue() {
 
   return (
     <details className="rounded-xl border bg-card p-5">
-      <summary className="cursor-pointer font-semibold">{word('destructionQueue')}</summary>
+      <summary className="cursor-pointer font-semibold pointer-coarse:min-h-11 pointer-coarse:py-2">
+        {word('destructionQueue')}
+      </summary>
       <ListPage className="mt-4" role="region" aria-label={word('destructionQueue')}>
         <ListPage.Toolbar>
           <Button

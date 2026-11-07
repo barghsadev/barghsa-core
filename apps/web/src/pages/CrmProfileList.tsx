@@ -1,3 +1,4 @@
+import { readWithDeadline } from '../lib/server-query-client.js';
 import { useCompactRecords } from '../hooks/useCompactRecords.js';
 import { useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from '../lib/query-keys.js';
@@ -202,17 +203,18 @@ function OwnedCrmProfileList({ query }: { query?: ListQueryBinding } = {}) {
         staleTime: 0,
         gcTime: 0,
         retry: false,
-        queryFn: async ({ signal }) => {
-          const response = await fetch(`/api/crm/users?${params}`, {
-            credentials: 'include',
-            signal,
-          });
-          return {
-            status: response.status,
-            ok: response.ok,
-            value: response.ok ? await response.json() : null,
-          };
-        },
+        queryFn: ({ signal: ownerSignal }) =>
+          readWithDeadline(ownerSignal, async (signal) => {
+            const response = await fetch(`/api/crm/users?${params}`, {
+              credentials: 'include',
+              signal,
+            });
+            return {
+              status: response.status,
+              ok: response.ok,
+              value: response.ok ? await response.json() : null,
+            };
+          }),
       });
       if (current !== generation.current || controller.signal.aborted) return;
       if ([401, 403].includes(response.status)) {

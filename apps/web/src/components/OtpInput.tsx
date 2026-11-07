@@ -201,7 +201,7 @@ export const OtpInput = forwardRef<OtpInputHandle, OtpInputProps>(function OtpIn
   return (
     <div className="space-y-3">
       <div
-        className={`flex items-center justify-center gap-2 sm:gap-3 ${
+        className={`flex items-center justify-center gap-1 sm:gap-3 ${
           shaking ? 'animate-shake' : ''
         }`}
         dir="ltr"

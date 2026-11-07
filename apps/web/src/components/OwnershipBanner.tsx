@@ -1,3 +1,4 @@
+import { readWithDeadline } from '../lib/server-query-client.js';
 import { useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from '../lib/query-keys.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
@@ -36,14 +37,15 @@ function OwnedOwnershipBanner() {
         staleTime: 0,
         gcTime: 0,
         retry: false,
-        queryFn: async ({ signal }) => {
-          const response = await fetch('/api/profiles/ownership-transfers', {
-            credentials: 'include',
-            signal,
-          });
-          if (response.ok) return response.json();
-          return null;
-        },
+        queryFn: ({ signal: ownerSignal }) =>
+          readWithDeadline(ownerSignal, async (signal) => {
+            const response = await fetch('/api/profiles/ownership-transfers', {
+              credentials: 'include',
+              signal,
+            });
+            if (response.ok) return response.json();
+            return null;
+          }),
       })
       .then((data) => {
         if (!controller.signal.aborted)

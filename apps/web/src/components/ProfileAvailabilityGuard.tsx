@@ -1,3 +1,4 @@
+import { readWithDeadline } from '../lib/server-query-client.js';
 import { useEffect, useId, useRef } from 'react';
 import { useRouter } from '@tanstack/react-router';
 import { useQueryClient } from '@tanstack/react-query';
@@ -34,25 +35,26 @@ export function ProfileAvailabilityGuard({
           staleTime: 0,
           gcTime: 0,
           retry: false,
-          queryFn: async ({ signal }) => {
-            const response = await fetch('/api/profiles', {
-              method: 'GET',
-              signal,
-              credentials: 'include',
-              headers: { Accept: 'application/json' },
-            });
-            return {
-              status: response.status,
-              ok: response.ok,
-              data: response.ok
-                ? ((await response.json()) as {
-                    profiles: Array<{ id: string; isDefault: boolean }>;
-                    hasDefault: boolean;
-                    activeProfileId: string | null;
-                  })
-                : null,
-            };
-          },
+          queryFn: ({ signal: ownerSignal }) =>
+            readWithDeadline(ownerSignal, async (signal) => {
+              const response = await fetch('/api/profiles', {
+                method: 'GET',
+                signal,
+                credentials: 'include',
+                headers: { Accept: 'application/json' },
+              });
+              return {
+                status: response.status,
+                ok: response.ok,
+                data: response.ok
+                  ? ((await response.json()) as {
+                      profiles: Array<{ id: string; isDefault: boolean }>;
+                      hasDefault: boolean;
+                      activeProfileId: string | null;
+                    })
+                  : null,
+              };
+            }),
         });
         // Not authenticated — no redirect needed
         if (response.status === 401) return;

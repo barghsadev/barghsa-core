@@ -1,3 +1,4 @@
+import { readWithDeadline } from '../lib/server-query-client.js';
 import { toast } from '../lib/toast-api.js';
 import { confirmationText } from '@barghsa/i18n/confirmation';
 import { LoadingStatus } from '@barghsa/ui';
@@ -319,17 +320,18 @@ function OwnedReminderOffsetTogglePanel() {
         staleTime: 0,
         gcTime: 0,
         retry: false,
-        queryFn: async ({ signal }) => {
-          const res = await fetch('/api/admin/config/invoice-reminder-offsets', { signal });
-          if (!res.ok) {
-            throw new Error(
-              await parseError(res, t('admin.invoices.reminders.loadFailed', locale))
-            );
-          }
-          const data = (await res.json()) as ReminderOffsetToggleDto[];
-          if (!current() || signal.aborted) throw new Error('Obsolete reminder read');
-          return data;
-        },
+        queryFn: ({ signal: ownerSignal }) =>
+          readWithDeadline(ownerSignal, async (signal) => {
+            const res = await fetch('/api/admin/config/invoice-reminder-offsets', { signal });
+            if (!res.ok) {
+              throw new Error(
+                await parseError(res, t('admin.invoices.reminders.loadFailed', locale))
+              );
+            }
+            const data = (await res.json()) as ReminderOffsetToggleDto[];
+            if (!current() || signal.aborted) throw new Error('Obsolete reminder read');
+            return data;
+          }),
       });
       if (!current()) return;
       setToggles(data);
@@ -506,7 +508,7 @@ function OwnedReminderOffsetTogglePanel() {
                     const busy = pendingKeys.has(key);
                     return (
                       <td key={offset} className="text-center py-3 px-2">
-                        <label className="inline-flex items-center justify-center gap-2 cursor-pointer">
+                        <label className="touch-label inline-flex items-center justify-center gap-2 cursor-pointer">
                           <input
                             type="checkbox"
                             role="switch"

@@ -332,7 +332,7 @@ function RecoveryWorkflow({ actor }: { actor: string | null }) {
             {data.history.map((item, index) => (
               <li key={index}>
                 <details>
-                  <summary>
+                  <summary className="cursor-pointer pointer-coarse:min-h-11 pointer-coarse:py-2">
                     <bdi>
                       {item.created_at} · {item.event}
                     </bdi>

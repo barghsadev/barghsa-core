@@ -1,3 +1,4 @@
+import { approveRiskConfirmation } from './confirmation-fixture';
 import { test, expect } from './coverage-fixture';
 import AxeBuilder from '@axe-core/playwright';
 import { crmShell } from './crm-shell-fixture';
@@ -93,9 +94,14 @@ for (const locale of ['en', 'fa'] as const) {
     await row
       .getByRole('button', { name: fa ? 'غیرفعال‌سازی' : 'Deactivate', exact: true })
       .click();
-    await dialog
-      .getByRole('button', { name: fa ? 'غیرفعال‌سازی' : 'Deactivate', exact: true })
-      .click();
+    const deactivate = dialog.getByRole('button', {
+      name: fa ? 'غیرفعال‌سازی' : 'Deactivate',
+      exact: true,
+    });
+    await expect(deactivate).toBeDisabled();
+    await approveRiskConfirmation(page, locale, 'destructive');
+    await expect(deactivate).toBeEnabled();
+    await deactivate.click();
     await expect(dialog).toHaveCount(0);
     await expect(row.getByText(fa ? 'غیرفعال' : 'Inactive', { exact: true })).toBeVisible();
   });
@@ -291,9 +297,14 @@ for (const locale of ['en', 'fa'] as const) {
     await row
       .getByRole('button', { name: fa ? 'غیرفعال‌سازی' : 'Deactivate', exact: true })
       .click();
-    await dialog
-      .getByRole('button', { name: fa ? 'غیرفعال‌سازی' : 'Deactivate', exact: true })
-      .click();
+    const deactivate = dialog.getByRole('button', {
+      name: fa ? 'غیرفعال‌سازی' : 'Deactivate',
+      exact: true,
+    });
+    await expect(deactivate).toBeDisabled();
+    await approveRiskConfirmation(page, locale, 'destructive');
+    await expect(deactivate).toBeEnabled();
+    await deactivate.click();
     await expect(dialog).toHaveCount(0);
     await expect(row.getByText(fa ? 'غیرفعال' : 'Inactive', { exact: true })).toBeVisible();
     const importName = fa ? 'ورود گروهی شهرها' : 'Import Cities';

@@ -1,3 +1,4 @@
+import { readWithDeadline } from '../../lib/server-query-client.js';
 import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { createFileRoute, Link, useRouter } from '@tanstack/react-router';
 import { t, type Locale } from '@barghsa/i18n/auth';
@@ -50,6 +51,7 @@ function RegisterPage() {
   const [termsOpen, setTermsOpen] = useState(false),
     [tosError, setTosError] = useState(false),
     [error, setError] = useState<string | null>(null);
+  const [termsRevision, setTermsRevision] = useState(0);
   const termsTrigger = useRef<HTMLAnchorElement>(null);
   const model = useRegistrationNativeForm('register', 'register', locale);
   const form = model.form,
@@ -63,22 +65,25 @@ function RegisterPage() {
     setTosError(false);
     setTermsOpen(false);
     form.setValue('tos', false);
-    void fetch(`/api/tos/current?locale=${locale}`, {
-      signal: controller.signal,
-      credentials: 'same-origin',
-      cache: 'no-store',
+    void readWithDeadline(controller.signal, async (signal) => {
+      const response = await fetch(`/api/tos/current?locale=${locale}`, {
+        signal,
+        credentials: 'same-origin',
+        cache: 'no-store',
+      });
+      if (!response.ok) throw new Error('Terms unavailable');
+      const receipt = registrationTerms(await response.json());
+      if (!receipt) throw new Error('Invalid terms');
+      return receipt;
     })
-      .then(async (response) => {
-        if (!response.ok) throw new Error('Terms unavailable');
-        const receipt = registrationTerms(await response.json());
-        if (!receipt) throw new Error('Invalid terms');
+      .then((receipt) => {
         if (!controller.signal.aborted) setLoadedTerms({ ...receipt, locale });
       })
       .catch(() => {
         if (!controller.signal.aborted) setTosError(true);
       });
     return () => controller.abort();
-  }, [locale, form.setValue]);
+  }, [locale, form.setValue, termsRevision]);
   return (
     <AuthLayout
       locale={locale}
@@ -319,9 +324,19 @@ function RegisterPage() {
                     </div>
                     <FormMessage />
                     {tosError && (
-                      <p role="alert" className="text-sm text-destructive">
-                        {t('tos.page.error', locale)}
-                      </p>
+                      <div className="space-y-2">
+                        <p role="alert" className="text-sm text-destructive">
+                          {t('tos.page.error', locale)}
+                        </p>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          disabled={model.busy}
+                          onClick={() => setTermsRevision((value) => value + 1)}
+                        >
+                          {t('tos.page.retry', locale)}
+                        </Button>
+                      </div>
                     )}
                   </FormItem>
                 )}

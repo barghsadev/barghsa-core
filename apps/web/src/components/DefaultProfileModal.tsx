@@ -1,3 +1,4 @@
+import { readWithDeadline } from '../lib/server-query-client.js';
 import { useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from '../lib/query-keys.js';
 import { refreshProfileContext, useProfileContextRevision } from '../lib/profile-context.js';
@@ -94,19 +95,20 @@ function OwnedDefaultProfileModal({
           staleTime: 0,
           gcTime: 0,
           retry: false,
-          queryFn: async ({ signal }) => {
-            const response = await fetch('/api/profiles', {
-              method: 'GET',
-              credentials: 'include',
-              signal,
-              headers: { Accept: 'application/json' },
-            });
-            return {
-              ok: response.ok,
-              status: response.status,
-              data: response.ok ? ((await response.json()) as ProfilesResponse) : null,
-            };
-          },
+          queryFn: ({ signal: ownerSignal }) =>
+            readWithDeadline(ownerSignal, async (signal) => {
+              const response = await fetch('/api/profiles', {
+                method: 'GET',
+                credentials: 'include',
+                signal,
+                headers: { Accept: 'application/json' },
+              });
+              return {
+                ok: response.ok,
+                status: response.status,
+                data: response.ok ? ((await response.json()) as ProfilesResponse) : null,
+              };
+            }),
         });
 
         // Not authenticated — no modal

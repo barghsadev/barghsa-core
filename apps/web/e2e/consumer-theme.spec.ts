@@ -1,3 +1,4 @@
+import { formatBrowserDate } from './browser-date';
 import { fullNavigation } from './navigation-fixture';
 import { fulfillDashboard } from './dashboard-fixture';
 import AxeBuilder from '@axe-core/playwright';
@@ -293,20 +294,21 @@ for (const locale of ['en', 'fa'] as const)
           .toBe(dark);
         if (path === '/invoices') {
           const expected = (zone: string) =>
-            new Intl.DateTimeFormat(locale, {
-              dateStyle: 'medium',
-              timeStyle: 'short',
-              timeZone: zone,
-            }).format(new Date(issuedAt));
-          await expect(main).toContainText(expected(timezone));
+            formatBrowserDate(
+              page,
+              locale,
+              { dateStyle: 'medium', timeStyle: 'short', timeZone: zone },
+              issuedAt
+            );
+          await expect(main).toContainText(await expected(timezone));
           failTimezone = true;
           await page.evaluate(() => window.dispatchEvent(new Event('barghsa:timezone-changed')));
           await expect(main.getByRole('alert')).toBeVisible();
-          await expect(main).not.toContainText(expected(timezone));
+          await expect(main).not.toContainText(await expected(timezone));
           timezone = 'Pacific/Auckland';
           failTimezone = false;
           await main.getByRole('alert').getByRole('button').click();
-          await expect(main).toContainText(expected(timezone));
+          await expect(main).toContainText(await expected(timezone));
           await expect(main.getByRole('alert')).toHaveCount(0);
         }
         if (path === '/notifications')

@@ -83,10 +83,10 @@ function SupportPage() {
       <main
         id="main-content"
         tabIndex={-1}
-        className="flex flex-1 items-center justify-center p-4 md:p-8 lg:p-12"
+        className="flex flex-1 items-center justify-center p-2 sm:p-4 md:p-8 lg:p-12"
       >
         <Card className="w-full max-w-lg">
-          <CardContent className="pt-6">
+          <CardContent className="px-2 pt-6 sm:px-(--card-spacing)">
             <div className="space-y-6">
               {/* Title */}
               <div className="space-y-1.5">
@@ -111,46 +111,64 @@ function SupportPage() {
 
               {/* Contact methods */}
               <div className="space-y-4">
-                <div className="flex items-start gap-3">
-                  <MailIcon className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
-                  <div className="space-y-0.5">
-                    <p className="text-sm font-medium">{t('auth.support.contactEmail', locale)}</p>
-                    <a
-                      href={`mailto:${brandConfig.supportEmail}${reference ? `?subject=${encodeURIComponent(`${feedbackText('reference', locale)}: ${reference}`)}` : ''}`}
-                      className="text-sm text-primary underline-offset-4 hover:underline"
-                    >
-                      {brandConfig.supportEmail}
-                    </a>
+                {brandConfig.supportEmail && (
+                  <div className="flex items-start gap-3">
+                    <MailIcon className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
+                    <div className="space-y-0.5">
+                      <p className="text-sm font-medium">
+                        {t('auth.support.contactEmail', locale)}
+                      </p>
+                      <a
+                        href={`mailto:${brandConfig.supportEmail}${reference ? `?subject=${encodeURIComponent(`${feedbackText('reference', locale)}: ${reference}`)}` : ''}`}
+                        className="touch-action text-sm text-primary underline-offset-4 hover:underline"
+                      >
+                        {brandConfig.supportEmail}
+                      </a>
+                    </div>
                   </div>
-                </div>
+                )}
 
-                <div className="flex items-start gap-3">
-                  <PhoneIcon className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
-                  <div className="space-y-0.5">
-                    <p className="text-sm font-medium">{t('auth.support.contactPhone', locale)}</p>
-                    <a
-                      href={phoneHref(brandConfig.supportPhone)}
-                      dir="ltr"
-                      className="text-sm text-primary underline-offset-4 hover:underline"
-                    >
-                      {displayPhone(brandConfig.supportPhone)}
-                    </a>
+                {brandConfig.supportPhone && (
+                  <div className="flex items-start gap-3">
+                    <PhoneIcon
+                      className="mt-0.5 h-4 w-4 shrink-0 text-primary"
+                      aria-hidden="true"
+                    />
+                    <div className="space-y-0.5">
+                      <p className="text-sm font-medium">
+                        {t('auth.support.contactPhone', locale)}
+                      </p>
+                      <a
+                        href={phoneHref(brandConfig.supportPhone)}
+                        dir="ltr"
+                        className="touch-action text-sm text-primary underline-offset-4 hover:underline"
+                      >
+                        {displayPhone(brandConfig.supportPhone)}
+                      </a>
+                    </div>
                   </div>
-                </div>
+                )}
 
-                <div className="flex items-start gap-3">
-                  <PhoneIcon className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
-                  <div className="space-y-0.5">
-                    <p className="text-sm font-medium">{t('auth.support.contactMobile', locale)}</p>
-                    <a
-                      href={phoneHref(brandConfig.supportMobile)}
-                      dir="ltr"
-                      className="text-sm text-primary underline-offset-4 hover:underline"
-                    >
-                      {displayPhone(brandConfig.supportMobile)}
-                    </a>
+                {brandConfig.supportMobile && (
+                  <div className="flex items-start gap-3">
+                    <PhoneIcon
+                      className="mt-0.5 h-4 w-4 shrink-0 text-primary"
+                      aria-hidden="true"
+                    />
+                    <div className="space-y-0.5">
+                      <p className="text-sm font-medium">
+                        {t('auth.support.contactMobile', locale)}
+                      </p>
+                      <a
+                        href={phoneHref(brandConfig.supportMobile)}
+                        dir="ltr"
+                        className="touch-action text-sm text-primary underline-offset-4 hover:underline"
+                      >
+                        {displayPhone(brandConfig.supportMobile)}
+                      </a>
+                    </div>
                   </div>
-                </div>
+                )}
 
                 <div className="flex items-start gap-3">
                   <ClockIcon className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
@@ -172,7 +190,7 @@ function SupportPage() {
           <div className="px-(--card-spacing) pb-(--card-spacing)">
             <Link
               to="/login"
-              className="inline-flex items-center gap-2 text-sm font-medium text-primary underline-offset-4 hover:underline"
+              className="touch-action inline-flex items-center gap-2 text-sm font-medium text-primary underline-offset-4 hover:underline"
               aria-label={t('auth.support.backToLogin', locale)}
             >
               <BackIcon className="h-3.5 w-3.5" aria-hidden="true" />

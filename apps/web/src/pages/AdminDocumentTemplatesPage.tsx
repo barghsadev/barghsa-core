@@ -3,7 +3,16 @@ import { useOwnedDocumentRead } from '../hooks/useOwnedDocumentRead.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
-import { LoadingStatus, Button, DateCell, TextCell, Input, Label, ListPage } from '@barghsa/ui';
+import {
+  LoadingStatus,
+  Button,
+  DateCell,
+  TextCell,
+  Input,
+  Label,
+  ListPage,
+  NativeSelect,
+} from '@barghsa/ui';
 import { OperationalQueueTable } from '../components/OperationalQueueTable.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import {
@@ -466,9 +475,9 @@ function OwnedAdminDocumentTemplatesPage({ queries }: { queries?: ListQueryBindi
             </div>
             <div className="min-w-44 space-y-1">
               <Label htmlFor="document-template-category">{word('category')}</Label>
-              <select
+              <NativeSelect
                 id="document-template-category"
-                className="h-10 w-full rounded-md border bg-background px-3"
+                className="w-full"
                 value={category}
                 disabled={locked}
                 onChange={(event) => {
@@ -483,7 +492,7 @@ function OwnedAdminDocumentTemplatesPage({ queries }: { queries?: ListQueryBindi
                     {word(value)}
                   </option>
                 ))}
-              </select>
+              </NativeSelect>
             </div>
             <Button type="submit" variant="outline" disabled={locked}>
               {word('search')}
@@ -795,7 +804,10 @@ function OwnedAdminDocumentTemplatesPage({ queries }: { queries?: ListQueryBindi
                               >
                                 <legend className="font-medium">{word('currentFiles')}</legend>
                                 {latest.files.map((file) => (
-                                  <label key={file.id} className="flex items-center gap-2 text-sm">
+                                  <label
+                                    key={file.id}
+                                    className="touch-label flex items-center gap-2 text-sm"
+                                  >
                                     <input
                                       type="checkbox"
                                       checked={retained.includes(file.id)}

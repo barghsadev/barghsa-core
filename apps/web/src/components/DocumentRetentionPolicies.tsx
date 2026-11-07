@@ -114,7 +114,9 @@ function OwnedDocumentRetentionPolicies() {
   const current = data?.policies.find((item) => item.businessRecordType === kind);
   return (
     <details className="rounded-xl border bg-card p-5">
-      <summary className="cursor-pointer font-semibold">{word('retentionPolicies')}</summary>
+      <summary className="cursor-pointer font-semibold pointer-coarse:min-h-11 pointer-coarse:py-2">
+        {word('retentionPolicies')}
+      </summary>
       <div className="mt-4 space-y-4">
         <p className="text-sm text-muted-foreground">{word('retentionDescription')}</p>
         {error ? (

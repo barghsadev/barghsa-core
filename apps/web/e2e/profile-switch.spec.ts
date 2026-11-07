@@ -565,6 +565,15 @@ test('late old-profile responses cannot overwrite the switched page or notificat
     active = '99222222-2222-4222-8222-222222222222';
     return route.fulfill({ json: { activeProfileId: active } });
   });
+  const expectUnreadThree = async () => {
+    const bell = page.getByTestId('notification-bell');
+    const label = t('notifications.bellAria', 'fa').replace('{count}', '۳');
+    await expect(bell).toHaveAttribute('aria-label', label);
+    await expect(bell.locator('.barghsa-notification-count')).toHaveText('۳');
+    await expect(bell.locator('..').locator(':scope > [role=status][aria-atomic=true]')).toHaveText(
+      label
+    );
+  };
   try {
     await page.goto('/dashboard');
     await expect.poll(() => oldReads).toBeGreaterThanOrEqual(3);
@@ -572,14 +581,14 @@ test('late old-profile responses cannot overwrite the switched page or notificat
     await openProfileMenu(page);
     await pickProfile(page, '99222222-2222-4222-8222-222222222222');
     await expect(page.locator('main')).toContainText('۹۸۷٬۶۵۴');
-    await expect(page.getByTestId('notification-bell').getByRole('status')).toHaveText('۳');
+    await expectUnreadThree();
     releaseOld();
     // The old dashboard context request is aborted on switch; its delayed
     // fulfillment must not populate any of the new profile's widget resources.
     await expect.poll(() => oldDashboardReleased).toBeGreaterThan(0);
     await expect(page.locator('main')).toContainText('۹۸۷٬۶۵۴');
     await expect(page.locator('main')).not.toContainText('۱۲۳٬۴۵۶');
-    await expect(page.getByTestId('notification-bell').getByRole('status')).toHaveText('۳');
+    await expectUnreadThree();
   } finally {
     releaseOld();
   }

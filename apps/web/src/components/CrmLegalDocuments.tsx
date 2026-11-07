@@ -1,3 +1,4 @@
+import { readWithDeadline } from '../lib/server-query-client.js';
 import { useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from '../lib/query-keys.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
@@ -67,17 +68,18 @@ function OwnedCrmLegalDocuments({ profileId, canRead }: LegalDocumentsProps) {
         staleTime: 0,
         gcTime: 0,
         retry: false,
-        queryFn: async ({ signal }) => {
-          const response = await fetch('/api/crm/profiles/' + profileId + '/documents', {
-            credentials: 'include',
-            cache: 'no-store',
-            signal,
-          });
-          return {
-            ok: response.ok,
-            value: response.ok ? ((await response.json()) as unknown) : null,
-          };
-        },
+        queryFn: ({ signal: ownerSignal }) =>
+          readWithDeadline(ownerSignal, async (signal) => {
+            const response = await fetch('/api/crm/profiles/' + profileId + '/documents', {
+              credentials: 'include',
+              cache: 'no-store',
+              signal,
+            });
+            return {
+              ok: response.ok,
+              value: response.ok ? ((await response.json()) as unknown) : null,
+            };
+          }),
       });
       if (!response.ok) throw new Error('Document request failed');
       const body: unknown = response.value;

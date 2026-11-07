@@ -1,3 +1,4 @@
+import { readWithDeadline } from '../lib/server-query-client.js';
 import { Moon, Sun } from 'lucide-react';
 import { useEffect, useRef, useState, useId } from 'react';
 import { NativeSelect } from '@barghsa/ui';
@@ -29,10 +30,13 @@ export function ThemeSwitcher() {
     const request = new AbortController();
     void (async () => {
       try {
-        const response = await fetch('/api/user/settings/theme', { signal: request.signal });
-        if (!response.ok) throw new Error();
-        const mode = readMode(await response.json());
-        if (mode === undefined) throw new Error();
+        const mode = await readWithDeadline(request.signal, async (signal) => {
+          const response = await fetch('/api/user/settings/theme', { signal });
+          if (!response.ok) throw new Error();
+          const mode = readMode(await response.json());
+          if (mode === undefined) throw new Error();
+          return mode;
+        });
         if (!request.signal.aborted) setUserMode(mode);
       } catch {
         // Keep the admin default when the preference is unavailable.

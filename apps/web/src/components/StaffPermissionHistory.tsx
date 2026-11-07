@@ -1,3 +1,4 @@
+import { readWithDeadline } from '../lib/server-query-client.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useEffect, useState } from 'react';
 import { tWorkspace as t } from '@barghsa/i18n/workspace-admin';
@@ -16,6 +17,37 @@ interface Event {
   reason: string | null;
   createdAt: string;
 }
+function isHistory(value: unknown, targetId?: string): value is { items: Event[]; total: number } {
+  if (!value || typeof value !== 'object') return false;
+  const { items, total } = value as Record<string, unknown>;
+  const roles = (rows: unknown) =>
+    Array.isArray(rows) &&
+    rows.every((row) => row && typeof row.roleId === 'string' && typeof row.roleName === 'string');
+  const nullableText = (entry: unknown) => entry === null || typeof entry === 'string';
+  return (
+    typeof total === 'number' &&
+    Number.isSafeInteger(total) &&
+    total >= 0 &&
+    Array.isArray(items) &&
+    items.length <= 25 &&
+    items.every(
+      (entry) =>
+        entry &&
+        typeof entry.id === 'string' &&
+        typeof entry.targetUserId === 'string' &&
+        (!targetId || entry.targetUserId === targetId) &&
+        nullableText(entry.targetUsername) &&
+        typeof entry.actorUserId === 'string' &&
+        nullableText(entry.actorUsername) &&
+        nullableText(entry.reason) &&
+        typeof entry.createdAt === 'string' &&
+        Number.isFinite(Date.parse(entry.createdAt)) &&
+        roles(entry.addedRoles) &&
+        roles(entry.removedRoles)
+    )
+  );
+}
+
 export function StaffPermissionHistory({
   target,
   onClose,
@@ -46,10 +78,14 @@ export function StaffPermissionHistory({
       offset: String(offset),
       ...(target ? { userId: target.userId } : {}),
     });
-    void fetch(`/api/admin/staff/audit?${query}`, { signal: controller.signal })
-      .then(async (response) => {
-        if (!response.ok) throw new Error('Unavailable');
-        const result = await response.json();
+    void readWithDeadline(controller.signal, async (signal) => {
+      const response = await fetch(`/api/admin/staff/audit?${query}`, { signal });
+      if (!response.ok) throw new Error('Unavailable');
+      const result: unknown = await response.json();
+      if (!isHistory(result, target?.userId)) throw new Error('Invalid staff history');
+      return result;
+    })
+      .then((result) => {
         if (!controller.signal.aborted) setData(result);
       })
       .catch(() => {

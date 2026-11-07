@@ -1,3 +1,4 @@
+import { readWithDeadline } from '../lib/server-query-client.js';
 import { feedbackText } from '@barghsa/i18n/feedback';
 import { useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from '../lib/query-keys.js';
@@ -88,19 +89,20 @@ function OwnedVerificationBanner({
           staleTime: 0,
           gcTime: 0,
           retry: false,
-          queryFn: async ({ signal }) => {
-            const response = await fetch('/api/profiles/verification-status', {
-              method: 'GET',
-              credentials: 'include',
-              signal,
-              headers: { Accept: 'application/json', 'Accept-Language': locale },
-            });
-            return {
-              ok: response.ok,
-              status: response.status,
-              data: response.ok ? ((await response.json()) as VerificationStatusResponse) : null,
-            };
-          },
+          queryFn: ({ signal: ownerSignal }) =>
+            readWithDeadline(ownerSignal, async (signal) => {
+              const response = await fetch('/api/profiles/verification-status', {
+                method: 'GET',
+                credentials: 'include',
+                signal,
+                headers: { Accept: 'application/json', 'Accept-Language': locale },
+              });
+              return {
+                ok: response.ok,
+                status: response.status,
+                data: response.ok ? ((await response.json()) as VerificationStatusResponse) : null,
+              };
+            }),
         });
 
         // Not authenticated — no banner

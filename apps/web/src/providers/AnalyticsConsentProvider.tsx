@@ -1,3 +1,4 @@
+import { readWithDeadline } from '../lib/server-query-client.js';
 import {
   createContext,
   useCallback,
@@ -58,10 +59,13 @@ export function AnalyticsConsentProvider({
     setStatus('loading');
     void (async () => {
       try {
-        const response = await fetch('/api/user/analytics/consent', { signal: request.signal });
-        if (!response.ok) throw new Error('Consent read failed');
-        const value = parseConsent(await response.json());
-        if (value === undefined) throw new Error('Invalid consent response');
+        const value = await readWithDeadline(request.signal, async (signal) => {
+          const response = await fetch('/api/user/analytics/consent', { signal });
+          if (!response.ok) throw new Error('Consent read failed');
+          const value = parseConsent(await response.json());
+          if (value === undefined) throw new Error('Invalid consent response');
+          return value;
+        });
         if (!request.signal.aborted) {
           setConsent(value);
           setStatus('ready');

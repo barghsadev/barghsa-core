@@ -252,7 +252,9 @@ test('the full-page guide answers with sources and handles an unassigned profile
     .context()
     .addCookies([{ name: 'barghsa_csrf', value: 'knowledge-page-fixture', url: baseURL! }]);
   let available = true;
-  let activeProfileId = 'profile-1';
+  const first = '99111111-1111-4111-8111-111111111111';
+  const second = '99222222-2222-4222-8222-222222222222';
+  let activeProfileId = first;
   await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
   await page.route('**/api/user/settings/timezone', (route) =>
     route.fulfill({ json: { timezone: 'Asia/Tehran' } })
@@ -272,14 +274,20 @@ test('the full-page guide answers with sources and handles an unassigned profile
       json: {
         profiles: [
           {
-            id: 'profile-1',
+            id: first,
+            isDefault: true,
+            title: null,
+            nationalId: null,
             profileType: 'INDIVIDUAL',
             status: 'ACTIVE',
             firstName: 'Ari',
             lastName: 'Buyer',
           },
           {
-            id: 'profile-2',
+            id: second,
+            isDefault: false,
+            title: 'Nova Energy',
+            nationalId: null,
             profileType: 'LEGAL',
             status: 'ACTIVE',
             firstName: 'Nova',
@@ -291,8 +299,9 @@ test('the full-page guide answers with sources and handles an unassigned profile
       },
     })
   );
-  await page.route('**/api/profiles/switch/profile-2', (route) => {
-    activeProfileId = 'profile-2';
+  await page.route(`**/api/profiles/switch/${second}`, (route) => {
+    expect(route.request().method()).toBe('POST');
+    activeProfileId = second;
     return route.fulfill({ json: { activeProfileId } });
   });
   await page.route('**/api/ai/knowledge/availability', (route) =>
@@ -301,9 +310,8 @@ test('the full-page guide answers with sources and handles an unassigned profile
         ? {
             available: true,
             profileId: activeProfileId,
-            profileName: activeProfileId === 'profile-1' ? 'Ari Buyer' : 'Nova Energy',
-            slotKey:
-              activeProfileId === 'profile-1' ? 'individual_chatbot' : 'legal_entity_chatbot',
+            profileName: activeProfileId === first ? 'Ari Buyer' : 'Nova Energy',
+            slotKey: activeProfileId === first ? 'individual_chatbot' : 'legal_entity_chatbot',
           }
         : { available: false, profileId: null, profileName: null, slotKey: null },
     })
@@ -351,10 +359,15 @@ test('the full-page guide answers with sources and handles an unassigned profile
 
   const profilePicker = page.getByLabel('Switch active profile');
   const navigationToggle = page.locator('[aria-controls="dashboard-navigation"]');
-  const openedNavigation = !(await profilePicker.isVisible());
+  const openedNavigation =
+    (await navigationToggle.isVisible()) &&
+    (await navigationToggle.getAttribute('aria-expanded')) === 'false';
   if (openedNavigation) await navigationToggle.click();
-  await profilePicker.selectOption('profile-2');
-  if (openedNavigation) await navigationToggle.click();
+  await expect(profilePicker).toBeVisible();
+  await profilePicker.click();
+  await page.getByRole('radiogroup').locator(`[role=radio][data-profile-id="${second}"]`).click();
+  if (openedNavigation && (await navigationToggle.getAttribute('aria-expanded')) === 'true')
+    await navigationToggle.click();
   await expect(page.getByText("You're asking as Nova Energy.")).toBeVisible();
   await expect(page.getByText('Pay an issued invoice from its detail page.')).toHaveCount(0);
 

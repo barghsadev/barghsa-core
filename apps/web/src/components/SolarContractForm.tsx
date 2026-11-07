@@ -1,3 +1,4 @@
+import { readWithDeadline } from '../lib/server-query-client.js';
 import { useOwnedFinancialRead } from '../hooks/useOwnedFinancialRead.js';
 import { useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from '../lib/query-keys.js';
@@ -212,17 +213,18 @@ function OwnedSolarContractForm({
         staleTime: 0,
         gcTime: 0,
         retry: false,
-        queryFn: async ({ signal }) => {
-          const response = await fetch(
-            `/api/admin/solar/requests/${encodeURIComponent(requestId)}/contract-options`,
-            { credentials: 'include', signal }
-          );
-          return {
-            ok: response.ok,
-            status: response.status,
-            data: response.ok ? ((await response.json()) as unknown) : null,
-          };
-        },
+        queryFn: ({ signal: ownerSignal }) =>
+          readWithDeadline(ownerSignal, async (signal) => {
+            const response = await fetch(
+              `/api/admin/solar/requests/${encodeURIComponent(requestId)}/contract-options`,
+              { credentials: 'include', signal }
+            );
+            return {
+              ok: response.ok,
+              status: response.status,
+              data: response.ok ? ((await response.json()) as unknown) : null,
+            };
+          }),
       })
       .then(async (response) => {
         if (controller.signal.aborted || token !== generation.current || scope.current !== scopeKey)

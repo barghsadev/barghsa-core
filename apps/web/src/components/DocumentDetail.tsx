@@ -280,7 +280,7 @@ function OwnedDocumentDetail({
               })()}
               expectedResponse={workflowFeedback('responseUnknown', locale)}
               help={
-                <Link to="/tickets" className="underline">
+                <Link to="/tickets" className="touch-action underline">
                   {feedbackText('support', locale)}
                 </Link>
               }

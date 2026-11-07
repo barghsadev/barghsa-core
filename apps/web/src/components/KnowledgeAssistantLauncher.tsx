@@ -1,3 +1,4 @@
+import { readWithDeadline } from '../lib/server-query-client.js';
 import { useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from '../lib/query-keys.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
@@ -45,16 +46,17 @@ function OwnedKnowledgeAssistantLauncher({ locale, pathname }: LauncherProps) {
         staleTime: 0,
         gcTime: 0,
         retry: false,
-        queryFn: async ({ signal }) => {
-          const response = await fetch('/api/ai/knowledge/availability', {
-            credentials: 'include',
-            signal,
-          });
-          return {
-            status: response.status,
-            value: response.status === 200 ? ((await response.json()) as unknown) : null,
-          };
-        },
+        queryFn: ({ signal: ownerSignal }) =>
+          readWithDeadline(ownerSignal, async (signal) => {
+            const response = await fetch('/api/ai/knowledge/availability', {
+              credentials: 'include',
+              signal,
+            });
+            return {
+              status: response.status,
+              value: response.status === 200 ? ((await response.json()) as unknown) : null,
+            };
+          }),
       })
       .then(async (response) =>
         response.status === 200 ? readAssistantAvailability(response.value) : null

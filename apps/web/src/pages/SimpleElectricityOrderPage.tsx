@@ -1,3 +1,4 @@
+import { readWithDeadline } from '../lib/server-query-client.js';
 import { serviceFeedback } from '@barghsa/i18n/service-feedback';
 import { ConfirmationFields } from '@barghsa/ui';
 import { NoDeadEndBanner } from '@barghsa/ui';
@@ -747,14 +748,15 @@ function OwnedSimpleElectricityOrderPage() {
         staleTime: 0,
         gcTime: 0,
         retry: false,
-        queryFn: async ({ signal }) => {
-          const response = await fetch(`/api/wallet/${activeProfileId}`, {
-            credentials: 'include',
-            signal,
-          });
-          if (!response.ok) throw new Error('Wallet unavailable');
-          return response.json() as Promise<{ balance: unknown }>;
-        },
+        queryFn: ({ signal: ownerSignal }) =>
+          readWithDeadline(ownerSignal, async (signal) => {
+            const response = await fetch(`/api/wallet/${activeProfileId}`, {
+              credentials: 'include',
+              signal,
+            });
+            if (!response.ok) throw new Error('Wallet unavailable');
+            return response.json() as Promise<{ balance: unknown }>;
+          }),
       })
       .then((wallet) => {
         if (!wallet || typeof wallet.balance !== 'string' || !/^[0-9]+$/.test(wallet.balance))

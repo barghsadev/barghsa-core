@@ -138,7 +138,7 @@ export function InvoicesPage({
           <Link
             to="/invoices/$invoiceId"
             params={{ invoiceId: item.invoiceId }}
-            className="text-primary underline underline-offset-4"
+            className="touch-action text-primary underline underline-offset-4"
           >
             <bdi dir="ltr" className="break-all font-mono">
               {item.invoiceId}
@@ -198,11 +198,14 @@ export function InvoicesPage({
           <p className="mt-1 text-sm text-muted-foreground">{t('invoices.description', locale)}</p>
         </div>
       </header>
-      <nav className="flex gap-4 text-sm" aria-label={t('invoices.title', locale)}>
+      <nav
+        className="flex flex-wrap gap-x-4 gap-y-1 text-sm"
+        aria-label={t('invoices.title', locale)}
+      >
         <Link
           to="/invoices"
           search={{ status: undefined }}
-          className="text-primary underline underline-offset-4"
+          className="touch-action text-primary underline underline-offset-4"
           aria-current={unpaidOnly ? undefined : 'page'}
         >
           {t('invoices.filter.all', locale)}
@@ -210,12 +213,15 @@ export function InvoicesPage({
         <Link
           to="/invoices"
           search={{ status: 'unpaid' }}
-          className="text-primary underline underline-offset-4"
+          className="touch-action text-primary underline underline-offset-4"
           aria-current={unpaidOnly ? 'page' : undefined}
         >
           {t('invoices.filter.unpaid', locale)}
         </Link>
-        <Link to="/invoices/receipts" className="text-primary underline underline-offset-4">
+        <Link
+          to="/invoices/receipts"
+          className="touch-action text-primary underline underline-offset-4"
+        >
           {t('invoices.receipts.title', locale)}
         </Link>
       </nav>

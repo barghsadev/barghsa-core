@@ -414,3 +414,32 @@ it('retains a legacy forced policy and rejects invalid published policy without 
   expect(currentTheme()).toBe('dark');
   expect(document.documentElement.style.getPropertyValue('--primary')).toBe('#777777');
 });
+
+it('uses fallback branding after a stalled body and ignores a late brand receipt', async () => {
+  vi.useFakeTimers();
+  try {
+    let signal!: AbortSignal;
+    let resolveBody!: (value: unknown) => void;
+    const fetcher = vi.fn((_url: string, options: RequestInit) => {
+      signal = options.signal!;
+      return Promise.resolve({
+        ok: true,
+        json: () =>
+          new Promise((resolve) => {
+            resolveBody = resolve;
+          }),
+      });
+    });
+    vi.stubGlobal('fetch', fetcher);
+    await mount();
+    expect(host.textContent).toBe('Loading');
+    await act(async () => vi.advanceTimersByTimeAsync(15_000));
+    expect(signal.aborted).toBe(true);
+    expect(host.textContent).not.toBe('Loading');
+    await act(async () => resolveBody(config));
+    expect(host.textContent).not.toBe(config.appTitle);
+    expect(fetcher).toHaveBeenCalledOnce();
+  } finally {
+    vi.useRealTimers();
+  }
+});

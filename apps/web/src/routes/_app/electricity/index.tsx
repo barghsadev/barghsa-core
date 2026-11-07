@@ -1,3 +1,4 @@
+import { readWithDeadline } from '../../../lib/server-query-client.js';
 import { createFileRoute, Link } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
 import {
@@ -70,11 +71,14 @@ function ElectricityIndexPage() {
   useEffect(() => {
     const abort = new AbortController();
     setState('loading');
-    void fetch('/api/products/electricity', { signal: abort.signal })
-      .then(async (response) => {
-        if (!response.ok) throw new Error(String(response.status));
-        const data: unknown = await response.json();
-        if (!isCatalogue(data)) throw new Error('Invalid catalogue');
+    void readWithDeadline(abort.signal, async (signal) => {
+      const response = await fetch('/api/products/electricity', { signal });
+      if (!response.ok) throw new Error(String(response.status));
+      const data: unknown = await response.json();
+      if (!isCatalogue(data)) throw new Error('Invalid catalogue');
+      return data;
+    })
+      .then((data) => {
         if (!abort.signal.aborted) {
           setProducts(data);
           setState('ready');

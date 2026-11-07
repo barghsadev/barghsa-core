@@ -1,3 +1,4 @@
+import { readWithDeadline } from '../lib/server-query-client.js';
 import { toast } from '../lib/toast-api.js';
 import { ConfirmationFields } from '@barghsa/ui';
 import { useRiskConfirmation } from '../hooks/useRiskConfirmation.js';
@@ -585,14 +586,15 @@ function OwnedSavingsOrderPage() {
         staleTime: 0,
         gcTime: 0,
         retry: false,
-        queryFn: async ({ signal }) => {
-          const response = await fetch(`/api/wallet/${profileId}`, {
-            credentials: 'include',
-            signal,
-          });
-          if (!response.ok) throw new Error('Wallet unavailable');
-          return response.json() as Promise<{ balance?: unknown; availableBalance?: unknown }>;
-        },
+        queryFn: ({ signal: ownerSignal }) =>
+          readWithDeadline(ownerSignal, async (signal) => {
+            const response = await fetch(`/api/wallet/${profileId}`, {
+              credentials: 'include',
+              signal,
+            });
+            if (!response.ok) throw new Error('Wallet unavailable');
+            return response.json() as Promise<{ balance?: unknown; availableBalance?: unknown }>;
+          }),
       })
       .then((result) => {
         const balance = result?.availableBalance ?? result?.balance;

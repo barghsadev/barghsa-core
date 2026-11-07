@@ -1,3 +1,4 @@
+import { readWithDeadline } from '../lib/server-query-client.js';
 import { CommandFeedback } from '../components/CommandFeedback.js';
 import { ProfileVerificationReview } from '../components/ProfileVerificationReview.js';
 import { DEFAULT_VERIFICATION_POLICY, type VerificationPolicy } from '@barghsa/shared/verification';
@@ -261,25 +262,26 @@ function CrmProfileDetailContent() {
       staleTime: 0,
       gcTime: 0,
       retry: false,
-      queryFn: async ({ signal }) => {
-        const response = await fetch(`/api/crm/profiles/${profileId}`, {
-          credentials: 'include',
-          signal,
-        });
-        if (!response.ok) return { status: response.status, value: null };
-        const value = (await response.json()) as ProfileDetail;
-        if (
-          !value ||
-          value.profile?.id !== profileId ||
-          !value.user ||
-          !Array.isArray(value.addresses) ||
-          !value.sessions ||
-          !Array.isArray(value.sessions.entries) ||
-          !Array.isArray(value.siblingProfiles)
-        )
-          throw new Error('Invalid CRM profile detail');
-        return { status: response.status, value };
-      },
+      queryFn: ({ signal: ownerSignal }) =>
+        readWithDeadline(ownerSignal, async (signal) => {
+          const response = await fetch(`/api/crm/profiles/${profileId}`, {
+            credentials: 'include',
+            signal,
+          });
+          if (!response.ok) return { status: response.status, value: null };
+          const value = (await response.json()) as ProfileDetail;
+          if (
+            !value ||
+            value.profile?.id !== profileId ||
+            !value.user ||
+            !Array.isArray(value.addresses) ||
+            !value.sessions ||
+            !Array.isArray(value.sessions.entries) ||
+            !Array.isArray(value.siblingProfiles)
+          )
+            throw new Error('Invalid CRM profile detail');
+          return { status: response.status, value };
+        }),
     });
     return { current, cancel, result };
   }

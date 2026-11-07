@@ -53,7 +53,31 @@ export async function verifyClippedContrast(
     await node.evaluate((element) =>
       element.scrollIntoView({ block: 'center', inline: 'center', behavior: 'instant' })
     );
-    await expect(node).toBeInViewport({ ratio: 1 });
+    // WebKit can round an intersection edge by 1/64 CSS px. Require the
+    // entire target to occupy the same physical pixels as its intersection.
+    await expect
+      .poll(() =>
+        node.evaluate(
+          (element) =>
+            new Promise<boolean>((resolve) => {
+              const observer = new IntersectionObserver(([entry]) => {
+                observer.disconnect();
+                const physical = (value: number) => Math.round(value * devicePixelRatio);
+                const edges = ['top', 'right', 'bottom', 'left'] as const;
+                resolve(
+                  !!entry?.isIntersecting &&
+                    edges.every(
+                      (edge) =>
+                        physical(entry.boundingClientRect[edge]) ===
+                        physical(entry.intersectionRect[edge])
+                    )
+                );
+              });
+              observer.observe(element);
+            })
+        )
+      )
+      .toBe(true);
     // Scrolling can move a hovered row away from the pointer. Preserve that
     // state when the incomplete text belongs to the row being inspected.
     if (

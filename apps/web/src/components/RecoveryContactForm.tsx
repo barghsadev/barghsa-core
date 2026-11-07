@@ -50,7 +50,7 @@ export default function RecoveryContactForm() {
   return (
     <form
       onSubmit={(e) => void submit(e)}
-      className="space-y-3 rounded border p-4 [&_input]:min-w-0"
+      className="space-y-3 rounded border py-4 min-[375px]:px-4 [&_input]:min-w-0"
       dir={locale === 'fa' ? 'rtl' : 'ltr'}
     >
       <h2 className="font-semibold">{t('auth.recovery.title', locale)}</h2>

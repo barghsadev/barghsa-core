@@ -1,3 +1,4 @@
+import { readWithDeadline } from '../lib/server-query-client.js';
 import { useEffect, useState } from 'react';
 import { LoadingStatus, Button, Input, Label } from '@barghsa/ui';
 interface ProfileOption {
@@ -47,17 +48,20 @@ export function GiftProfilePicker({
     setLoading(true);
     setError(false);
     setOptions([]);
-    void fetch(`/api/admin/promotions/gift-codes/profiles?search=${encodeURIComponent(query)}`, {
-      signal: abort.signal,
+    void readWithDeadline(abort.signal, async (signal) => {
+      const response = await fetch(
+        `/api/admin/promotions/gift-codes/profiles?search=${encodeURIComponent(query)}`,
+        {
+          signal,
+        }
+      );
+      signal.throwIfAborted();
+      if (response.status === 401 || response.status === 403) onDenied?.();
+      if (!response.ok) throw new Error('Load failed');
+      const data: unknown = await response.json();
+      if (!isProfileOptions(data)) throw new Error('Invalid profile options');
+      return data;
     })
-      .then(async (response) => {
-        if (!abort.signal.aborted && (response.status === 401 || response.status === 403))
-          onDenied?.();
-        if (!response.ok) throw new Error('Load failed');
-        const data: unknown = await response.json();
-        if (!isProfileOptions(data)) throw new Error('Invalid profile options');
-        return data;
-      })
       .then((rows) => {
         if (!abort.signal.aborted) setOptions(rows);
       })
@@ -75,19 +79,21 @@ export function GiftProfilePicker({
     setSelected([]);
     const batches: string[][] = [];
     for (let i = 0; i < ids.length; i += 200) batches.push(ids.slice(i, i + 200));
-    void Promise.all(
-      batches.map(async (batch) => {
-        const response = await fetch(
-          `/api/admin/promotions/gift-codes/profiles?ids=${encodeURIComponent(batch.join(','))}`,
-          { signal: abort.signal }
-        );
-        if (!abort.signal.aborted && (response.status === 401 || response.status === 403))
-          onDenied?.();
-        if (!response.ok) throw new Error('Load failed');
-        const data: unknown = await response.json();
-        if (!isProfileOptions(data)) throw new Error('Invalid profile options');
-        return data;
-      })
+    void readWithDeadline(abort.signal, (signal) =>
+      Promise.all(
+        batches.map(async (batch) => {
+          const response = await fetch(
+            `/api/admin/promotions/gift-codes/profiles?ids=${encodeURIComponent(batch.join(','))}`,
+            { signal }
+          );
+          signal.throwIfAborted();
+          if (response.status === 401 || response.status === 403) onDenied?.();
+          if (!response.ok) throw new Error('Load failed');
+          const data: unknown = await response.json();
+          if (!isProfileOptions(data)) throw new Error('Invalid profile options');
+          return data;
+        })
+      )
     )
       .then((rows) => {
         if (!abort.signal.aborted) setSelected(rows.flat());

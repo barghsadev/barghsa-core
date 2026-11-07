@@ -1,3 +1,4 @@
+import { readWithDeadline } from '../lib/server-query-client.js';
 import {
   DEFAULT_BRAND_CONFIG,
   BRAND_SURFACES,
@@ -191,9 +192,11 @@ export function BrandThemeProvider({ children }: { children: ReactNode }) {
       request = current;
       setLoading(true);
       try {
-        const response = await fetch('/api/public/branding/config', { signal: current.signal });
-        if (!response.ok) return;
-        const config = parseBrandConfig(await response.json());
+        const config = await readWithDeadline(current.signal, async (signal) => {
+          const response = await fetch('/api/public/branding/config', { signal });
+          if (!response.ok) return null;
+          return parseBrandConfig(await response.json());
+        });
         if (!config || current.signal.aborted) return;
         apply(config);
         setBrandConfig(config);
