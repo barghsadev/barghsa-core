@@ -67,6 +67,7 @@ export default function AdminAiSections({
           <TabsTrigger
             key={item.to}
             value={item.to}
+            className="pointer-coarse:flex-none"
             ref={item.to === current ? selectedTab : undefined}
           >
             {t(item.key, locale)}

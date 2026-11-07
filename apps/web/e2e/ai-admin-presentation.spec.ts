@@ -70,6 +70,24 @@ for (const locale of ['en', 'fa'] as const)
           expect(width).toBeGreaterThanOrEqual(44);
           expect(height).toBeGreaterThanOrEqual(44);
         }
+        const original = page.viewportSize()!;
+        await page.setViewportSize({ width: 768, height: 900 });
+        const tabs = page.locator('[data-slot="scrollable-tabs"]').getByRole('tab');
+        await expect(tabs).toHaveCount(5);
+        await expect
+          .poll(() =>
+            tabs.evaluateAll((items) =>
+              items.map((tab) => {
+                const range = document.createRange();
+                range.selectNodeContents(tab);
+                const text = range.getBoundingClientRect();
+                const box = tab.getBoundingClientRect();
+                return text.left >= box.left && text.right <= box.right;
+              })
+            )
+          )
+          .toEqual([true, true, true, true, true]);
+        await page.setViewportSize(original);
       }
       await expect(
         item

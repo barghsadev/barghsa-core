@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-07T16:51:53+00:00",
-  "source_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
+  "updated": "2026-11-07T16:59:16+00:00",
+  "source_commit": "1a62016b62709882a7d5ddf84af5d3b655ca27ee",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -102305,7 +102305,8 @@
           "release-0.5-staff-workspace-read-closure",
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-ui-evidence",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-ai-tab-intrinsic-widths"
         ],
         "current_acceptance": {
           "status": "done",
@@ -102485,7 +102486,7 @@
             },
             {
               "path": "apps/web/e2e/ai-admin-presentation.spec.ts",
-              "sha256": "2e32547e82b5812e9fb6fa5e8328a6a5b9c1288029f2e246b8d5de63f42da80e"
+              "sha256": "cbf5723b460f6c9e5fb0088dfa5195c1f41003f0d05c47ca87e37287734e1f2c"
             },
             {
               "path": "apps/web/e2e/catalogue-form-fixture.ts",
@@ -102723,6 +102724,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-ai-tab-intrinsic-widths",
+              "base_commit": "1a62016b62709882a7d5ddf84af5d3b655ca27ee",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/ai-tab-label-proof.json"
             }
           ]
         },
@@ -449058,7 +449064,8 @@
           "release-0.5-staff-workspace-read-closure",
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-ui-evidence",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-ai-tab-intrinsic-widths"
         ],
         "current_acceptance": {
           "status": "done",
@@ -449238,7 +449245,7 @@
             },
             {
               "path": "apps/web/e2e/ai-admin-presentation.spec.ts",
-              "sha256": "2e32547e82b5812e9fb6fa5e8328a6a5b9c1288029f2e246b8d5de63f42da80e"
+              "sha256": "cbf5723b460f6c9e5fb0088dfa5195c1f41003f0d05c47ca87e37287734e1f2c"
             },
             {
               "path": "apps/web/e2e/catalogue-form-fixture.ts",
@@ -449476,6 +449483,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-ai-tab-intrinsic-widths",
+              "base_commit": "1a62016b62709882a7d5ddf84af5d3b655ca27ee",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/ai-tab-label-proof.json"
             }
           ]
         },
@@ -449523,7 +449535,8 @@
           "release-0.5-staff-workspace-read-closure",
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-ui-evidence",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-ai-tab-intrinsic-widths"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -449703,7 +449716,7 @@
             },
             {
               "path": "apps/web/e2e/ai-admin-presentation.spec.ts",
-              "sha256": "2e32547e82b5812e9fb6fa5e8328a6a5b9c1288029f2e246b8d5de63f42da80e"
+              "sha256": "cbf5723b460f6c9e5fb0088dfa5195c1f41003f0d05c47ca87e37287734e1f2c"
             },
             {
               "path": "apps/web/e2e/catalogue-form-fixture.ts",
@@ -449965,6 +449978,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-ai-tab-intrinsic-widths",
+              "base_commit": "1a62016b62709882a7d5ddf84af5d3b655ca27ee",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/ai-tab-label-proof.json"
             }
           ]
         },
@@ -450014,7 +450032,8 @@
           "release-0.5-staff-workspace-read-closure",
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-ui-evidence",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-ai-tab-intrinsic-widths"
         ],
         "current_acceptance": {
           "status": "done",
@@ -450194,7 +450213,7 @@
             },
             {
               "path": "apps/web/e2e/ai-admin-presentation.spec.ts",
-              "sha256": "2e32547e82b5812e9fb6fa5e8328a6a5b9c1288029f2e246b8d5de63f42da80e"
+              "sha256": "cbf5723b460f6c9e5fb0088dfa5195c1f41003f0d05c47ca87e37287734e1f2c"
             },
             {
               "path": "apps/web/e2e/catalogue-form-fixture.ts",
@@ -450432,6 +450451,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-ai-tab-intrinsic-widths",
+              "base_commit": "1a62016b62709882a7d5ddf84af5d3b655ca27ee",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/ai-tab-label-proof.json"
             }
           ]
         },
@@ -450478,7 +450502,8 @@
           "release-0.5-staff-workspace-read-closure",
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-ui-evidence",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-ai-tab-intrinsic-widths"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -450658,7 +450683,7 @@
             },
             {
               "path": "apps/web/e2e/ai-admin-presentation.spec.ts",
-              "sha256": "2e32547e82b5812e9fb6fa5e8328a6a5b9c1288029f2e246b8d5de63f42da80e"
+              "sha256": "cbf5723b460f6c9e5fb0088dfa5195c1f41003f0d05c47ca87e37287734e1f2c"
             },
             {
               "path": "apps/web/e2e/catalogue-form-fixture.ts",
@@ -450920,6 +450945,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-ai-tab-intrinsic-widths",
+              "base_commit": "1a62016b62709882a7d5ddf84af5d3b655ca27ee",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/ai-tab-label-proof.json"
             }
           ]
         },
@@ -450967,7 +450997,8 @@
           "release-0.5-staff-workspace-read-closure",
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-ui-evidence",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-ai-tab-intrinsic-widths"
         ],
         "current_acceptance": {
           "status": "done",
@@ -451147,7 +451178,7 @@
             },
             {
               "path": "apps/web/e2e/ai-admin-presentation.spec.ts",
-              "sha256": "2e32547e82b5812e9fb6fa5e8328a6a5b9c1288029f2e246b8d5de63f42da80e"
+              "sha256": "cbf5723b460f6c9e5fb0088dfa5195c1f41003f0d05c47ca87e37287734e1f2c"
             },
             {
               "path": "apps/web/e2e/catalogue-form-fixture.ts",
@@ -451385,6 +451416,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-ai-tab-intrinsic-widths",
+              "base_commit": "1a62016b62709882a7d5ddf84af5d3b655ca27ee",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/ai-tab-label-proof.json"
             }
           ]
         },
@@ -500853,7 +500889,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Both Persian and English populated samples exist for all 93 route views in both engines. Finish conditional component/text stress evidence and preserve current source bindings."
+        "The exact 768px Persian Safari measurement found a 7.18px overlap between the AI policies and agents tab labels. The coarse-pointer tabs now keep their intrinsic widths. The original keyboard navigation and both-language label tests passed. Complete remaining text and conditional samples."
       ],
       "owner": null,
       "depends_on": [],
@@ -500873,7 +500909,8 @@
           "release-0.5-final-gates",
           "release-0.5-final-acceptance",
           "release-0.5-final-rehearsal",
-          "release-0.5-route-census-closure"
+          "release-0.5-route-census-closure",
+          "release-0.5-ai-tab-intrinsic-widths"
         ],
         "current_acceptance": null
       }
@@ -506402,7 +506439,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "A 332-case replay on the preceding pushed source covered 2,976 populated route, engine, direction and width cells across 93 routes, after a strict separate recheck of the sole failing case. The staff invoice control showed a WebKit subpixel measurement in the initial run and 44 CSS pixels, 132 physical pixels and successful edge hit tests on recheck. Finish text geometry triage and conditional presentation evidence at the final candidate."
+        "The preceding full 2,976-cell populated width matrix remains recorded. The current geometry recheck confirmed and repaired one AI navigation overlap at 768px. The 320px staff electricity pricing table reveals its VAT column by keyboard in both languages and engines without document overflow. Other painted text signals and conditional route states still require triage."
       ],
       "owner": null,
       "depends_on": [],
@@ -506428,7 +506465,8 @@
           "release-0.5-final-acceptance",
           "release-0.5-final-rehearsal",
           "release-0.5-route-census-closure",
-          "release-0.5-native-staff-control-targets"
+          "release-0.5-native-staff-control-targets",
+          "release-0.5-ai-tab-intrinsic-widths"
         ],
         "current_acceptance": null
       }
@@ -509439,7 +509477,8 @@
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-native-staff-control-targets"
+          "release-0.5-native-staff-control-targets",
+          "release-0.5-ai-tab-intrinsic-widths"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -509467,7 +509506,7 @@
             },
             {
               "path": "apps/web/e2e/ai-admin-presentation.spec.ts",
-              "sha256": "2e32547e82b5812e9fb6fa5e8328a6a5b9c1288029f2e246b8d5de63f42da80e"
+              "sha256": "cbf5723b460f6c9e5fb0088dfa5195c1f41003f0d05c47ca87e37287734e1f2c"
             },
             {
               "path": "apps/web/e2e/ai-agent-slot-forms.spec.ts",
@@ -510102,6 +510141,11 @@
               "batch": "release-0.5-native-staff-control-targets",
               "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
+            },
+            {
+              "batch": "release-0.5-ai-tab-intrinsic-widths",
+              "base_commit": "1a62016b62709882a7d5ddf84af5d3b655ca27ee",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/ai-tab-label-proof.json"
             }
           ]
         }
@@ -510159,7 +510203,8 @@
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-native-staff-control-targets"
+          "release-0.5-native-staff-control-targets",
+          "release-0.5-ai-tab-intrinsic-widths"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -510187,7 +510232,7 @@
             },
             {
               "path": "apps/web/e2e/ai-admin-presentation.spec.ts",
-              "sha256": "2e32547e82b5812e9fb6fa5e8328a6a5b9c1288029f2e246b8d5de63f42da80e"
+              "sha256": "cbf5723b460f6c9e5fb0088dfa5195c1f41003f0d05c47ca87e37287734e1f2c"
             },
             {
               "path": "apps/web/e2e/ai-agent-slot-forms.spec.ts",
@@ -510822,6 +510867,11 @@
               "batch": "release-0.5-native-staff-control-targets",
               "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
+            },
+            {
+              "batch": "release-0.5-ai-tab-intrinsic-widths",
+              "base_commit": "1a62016b62709882a7d5ddf84af5d3b655ca27ee",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/ai-tab-label-proof.json"
             }
           ]
         }
@@ -511319,7 +511369,8 @@
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-native-staff-control-targets"
+          "release-0.5-native-staff-control-targets",
+          "release-0.5-ai-tab-intrinsic-widths"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -511347,7 +511398,7 @@
             },
             {
               "path": "apps/web/e2e/ai-admin-presentation.spec.ts",
-              "sha256": "2e32547e82b5812e9fb6fa5e8328a6a5b9c1288029f2e246b8d5de63f42da80e"
+              "sha256": "cbf5723b460f6c9e5fb0088dfa5195c1f41003f0d05c47ca87e37287734e1f2c"
             },
             {
               "path": "apps/web/e2e/ai-agent-slot-forms.spec.ts",
@@ -511982,6 +512033,11 @@
               "batch": "release-0.5-native-staff-control-targets",
               "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
+            },
+            {
+              "batch": "release-0.5-ai-tab-intrinsic-widths",
+              "base_commit": "1a62016b62709882a7d5ddf84af5d3b655ca27ee",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/ai-tab-label-proof.json"
             }
           ]
         }
@@ -682201,7 +682257,8 @@
           "release-0.5-critical-accessibility",
           "release-0.5-staff-workspace-read-closure",
           "release-0.5-final-ui-evidence",
-          "release-0.5-staff-confirmation-fixtures"
+          "release-0.5-staff-confirmation-fixtures",
+          "release-0.5-ai-tab-intrinsic-widths"
         ],
         "current_acceptance": {
           "kind": "accepted-admin-communications-ai-ui",
@@ -682237,7 +682294,7 @@
             },
             {
               "path": "apps/web/src/components/AdminAiSections.tsx",
-              "sha256": "23c7364970a8c55238a17d6292ebb39ecfd7322ca5ea328d9dea32c10eb85a80"
+              "sha256": "2b18fa285f521214cd94e124a7b5cec53d463ecd9cb3414c746054251025b3fe"
             },
             {
               "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
@@ -682350,6 +682407,11 @@
               "batch": "release-0.5-staff-confirmation-fixtures",
               "base_commit": "6fdbab7d3a149e6fa4fa612dc205cccad29afeb9",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-exact-command-feedback-renewal/confirmation-fixture-batch-proof.json"
+            },
+            {
+              "batch": "release-0.5-ai-tab-intrinsic-widths",
+              "base_commit": "1a62016b62709882a7d5ddf84af5d3b655ca27ee",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/ai-tab-label-proof.json"
             }
           ]
         }
@@ -698116,7 +698178,7 @@
             },
             {
               "path": "apps/web/e2e/ai-admin-presentation.spec.ts",
-              "sha256": "2e32547e82b5812e9fb6fa5e8328a6a5b9c1288029f2e246b8d5de63f42da80e"
+              "sha256": "cbf5723b460f6c9e5fb0088dfa5195c1f41003f0d05c47ca87e37287734e1f2c"
             },
             {
               "path": "apps/web/e2e/ai-agent-slot-forms.spec.ts",
@@ -700768,6 +700830,11 @@
               "batch": "release-0.5-native-staff-control-targets",
               "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
+            },
+            {
+              "batch": "release-0.5-ai-tab-intrinsic-widths",
+              "base_commit": "1a62016b62709882a7d5ddf84af5d3b655ca27ee",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/ai-tab-label-proof.json"
             }
           ]
         },
@@ -700806,7 +700873,8 @@
           "release-0.5-staff-confirmation-fixtures",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-native-staff-control-targets"
+          "release-0.5-native-staff-control-targets",
+          "release-0.5-ai-tab-intrinsic-widths"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -701955,7 +702023,7 @@
             },
             {
               "path": "apps/web/e2e/ai-admin-presentation.spec.ts",
-              "sha256": "2e32547e82b5812e9fb6fa5e8328a6a5b9c1288029f2e246b8d5de63f42da80e"
+              "sha256": "cbf5723b460f6c9e5fb0088dfa5195c1f41003f0d05c47ca87e37287734e1f2c"
             },
             {
               "path": "apps/web/e2e/ai-agent-slot-forms.spec.ts",
@@ -704477,6 +704545,11 @@
               "batch": "release-0.5-native-staff-control-targets",
               "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
+            },
+            {
+              "batch": "release-0.5-ai-tab-intrinsic-widths",
+              "base_commit": "1a62016b62709882a7d5ddf84af5d3b655ca27ee",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/ai-tab-label-proof.json"
             }
           ]
         },
@@ -704532,7 +704605,8 @@
           "release-0.5-staff-confirmation-fixtures",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-native-staff-control-targets"
+          "release-0.5-native-staff-control-targets",
+          "release-0.5-ai-tab-intrinsic-widths"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -704768,7 +704842,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "The staff control candidate passed 47 focused unit cases, 68 Chromium and Safari cases and all 98 gzip limits. Electricity ordering measured 254.93 KB gzip against the 255 KB limit. The exact combined gate passed at a24ab647 with 1,036 mapped cases and 85.11% critical web branches. Renew combined evidence on final release sources."
+        "The AI tab candidate passed 3 focused unit cases, 56 Chromium and Safari cases and all 98 route and interaction gzip limits. Earlier exact combined evidence at a24ab647 passed with 1,036 cases and 85.11% critical web branches. Complete final candidate combined and accessibility acceptance."
       ],
       "owner": null,
       "depends_on": [],
@@ -704807,7 +704881,8 @@
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-confirmed-electricity-feedback",
-          "release-0.5-native-staff-control-targets"
+          "release-0.5-native-staff-control-targets",
+          "release-0.5-ai-tab-intrinsic-widths"
         ]
       }
     },
@@ -764060,7 +764135,62 @@
       ],
       "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-control-renewed-bindings.json",
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout",
-      "release_disposition": "No release. Text and conditional evidence, final coverage and the owner dispositions remain open."
+      "release_disposition": "No release. Text and conditional evidence, final coverage and the owner dispositions remain open.",
+      "push_receipt": {
+        "local_sha": "1a62016b62709882a7d5ddf84af5d3b655ca27ee",
+        "remote_sha": "1a62016b62709882a7d5ddf84af5d3b655ca27ee",
+        "verified_at": "2026-11-07T16:52:05+00:00"
+      }
+    },
+    "release-0.5-ai-tab-intrinsic-widths": {
+      "batch": "release-0.5-ai-tab-intrinsic-widths",
+      "base_commit": "1a62016b62709882a7d5ddf84af5d3b655ca27ee",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.03.01.07",
+        "07-ui-ux-design.md#T-07.04.02.04",
+        "release-readiness#R-04.02"
+      ],
+      "accepted_task_keys": [],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.03.01.07",
+        "07-ui-ux-design.md#T-07.04.02.04",
+        "release-readiness#R-04.02"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/ai-admin-presentation.spec.ts",
+          "sha256": "cbf5723b460f6c9e5fb0088dfa5195c1f41003f0d05c47ca87e37287734e1f2c"
+        },
+        {
+          "path": "apps/web/src/components/AdminAiSections.tsx",
+          "sha256": "2b18fa285f521214cd94e124a7b5cec53d463ecd9cb3414c746054251025b3fe"
+        }
+      ],
+      "checks": [
+        "A direct Safari measurement confirmed 7.18 CSS pixels of Persian label overlap at 768px after the shared coarse-pointer minimum replaced the tabs’ automatic intrinsic minimum.",
+        "The repaired AI tab geometry passed 40 caller cases and 16 keyboard navigation cases in Chromium and Safari. Three focused units, format, lint, web typecheck and all 98 gzip limits passed.",
+        "A separate four-case proof reached the VAT column by keyboard at 320px while preserving document geometry, amounts and protected staff decisions. The first scratch scroll probe failed due to an unbound evaluation variable. It was corrected before rerun."
+      ],
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/ai-tab-label-proof.json",
+      "source_scope_proof_sha256": "0a53da38d71f83f72058c719aa089828f3c18cfe3c923ef09722cfb887551ad6",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/ai-tab-label-layout.patch",
+      "renewed_task_keys": [
+        "02-auth-users-admin.md#T-09.11.04",
+        "05-notifications-documents-ai.md#T-05.19.01",
+        "05-notifications-documents-ai.md#T-05.19.02",
+        "05-notifications-documents-ai.md#T-05.19.03",
+        "05-notifications-documents-ai.md#T-05.20.01",
+        "05-notifications-documents-ai.md#T-05.20.02",
+        "07-ui-ux-design.md#T-07.05.01.11",
+        "07-ui-ux-design.md#T-07.05.02.01",
+        "07-ui-ux-design.md#T-07.05.02.03",
+        "07-ui-ux-design.md#T-07.30.02.08",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02"
+      ],
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/ai-tab-renewed-bindings.json",
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout",
+      "release_disposition": "Conditional UI, final combined gates and the pending merge and diagnostics decisions remain open."
     }
   },
   "historical_improvements": [
