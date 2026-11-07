@@ -1,11 +1,12 @@
-/**
- * Chart visualizations page — heavy module, lazy-loaded.
- */
+import { workspaceMedia } from '@barghsa/i18n/workspace-media';
+import { useLocale } from '../hooks/useLocale.js';
+
 export default function ChartsPage() {
+  const locale = useLocale();
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-4">Charts &amp; Analytics</h1>
-      <p className="text-muted-foreground">Electricity market data visualization.</p>
+      <h1 className="mb-4 text-2xl font-bold">{workspaceMedia('charts', locale)}</h1>
+      <p className="text-muted-foreground">{workspaceMedia('chartsDescription', locale)}</p>
     </div>
   );
 }

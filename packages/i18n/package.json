@@ -433,6 +433,11 @@
       "types": "./dist/loading-feedback.d.ts",
       "import": "./dist/loading-feedback.js",
       "default": "./dist/loading-feedback.js"
+    },
+    "./workspace-media": {
+      "types": "./dist/workspace-media.d.ts",
+      "import": "./dist/workspace-media.js",
+      "default": "./dist/workspace-media.js"
     }
   },
   "scripts": {
