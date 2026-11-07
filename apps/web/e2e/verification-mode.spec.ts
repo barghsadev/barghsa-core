@@ -53,7 +53,7 @@ for (const locale of ['en', 'fa']) {
       .click();
     await expect(
       page
-        .locator('#admin-content')
+        .locator('main[data-area=admin]')
         .getByRole('status')
         .filter({
           hasText: fa ? 'روش فعال احراز هویت تغییر نکرده' : 'Active verification mode is unchanged',
@@ -107,7 +107,7 @@ for (const locale of ['en', 'fa']) {
     await expect(dialog).toHaveCount(0);
     await expect(
       page
-        .locator('#admin-content')
+        .locator('main[data-area=admin]')
         .getByRole('status')
         .filter({
           hasText: fa ? 'روش احراز هویت فعال شد' : 'Verification mode activated',

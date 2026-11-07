@@ -147,7 +147,7 @@ async function holdSchema(page: Page) {
 async function checkView(page: Page) {
   const violations = (
     await new AxeBuilder({ page })
-      .include('#dashboard-content')
+      .include('main[data-area=dashboard]')
       .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
       .analyze()
   ).violations;

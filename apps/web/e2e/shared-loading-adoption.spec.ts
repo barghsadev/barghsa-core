@@ -64,7 +64,7 @@ for (const locale of ['en', 'fa'] as const) {
     });
     try {
       await page.goto('/wallet');
-      const main = page.locator('#dashboard-content');
+      const main = page.locator('main[data-area=dashboard]');
       const skeleton = main.getByTestId('wallet-loading');
       await expect(skeleton).toBeVisible();
       await expect(skeleton).toHaveAttribute('aria-hidden', 'true');

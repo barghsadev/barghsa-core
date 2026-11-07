@@ -111,7 +111,6 @@ function ActivatePage() {
             )}
             <PasswordField
               id="activation-password"
-              autoFocus
               label={t('auth.resetPassword.newPassword', locale)}
               locale={locale}
               value={password}

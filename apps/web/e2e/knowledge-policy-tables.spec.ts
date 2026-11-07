@@ -103,9 +103,9 @@ for (const locale of ['en', 'fa'] as const)
         await expect(first.getByRole('heading', { name: title, exact: true })).toBeVisible();
         await expect(first).toContainText(`${label(item.fieldLabel)}: ${digits}`);
         await expect(table.locator('tbody tr').nth(1)).toContainText('—');
-        await expect(page.locator('#admin-content script')).toHaveCount(0);
+        await expect(page.locator('main[data-area=admin] script')).toHaveCount(0);
         expect(
-          (await new AxeBuilder({ page }).include('#admin-content').analyze()).violations
+          (await new AxeBuilder({ page }).include('main[data-area=admin]').analyze()).violations
         ).toEqual([]);
         if (item.kind === 'knowledge-bases')
           await page.screenshot({
@@ -129,7 +129,7 @@ for (const locale of ['en', 'fa'] as const)
           `${label(item.fieldLabel)}: ${digits}`
         );
         expect(
-          (await new AxeBuilder({ page }).include('#admin-content').analyze()).violations
+          (await new AxeBuilder({ page }).include('main[data-area=admin]').analyze()).violations
         ).toEqual([]);
         await expect
           .poll(() => page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1))
@@ -164,7 +164,7 @@ for (const locale of ['en', 'fa'] as const)
       status = 403;
       await page.getByRole('button', { name: label('refresh'), exact: true }).click();
       await expect(cards).toHaveCount(0);
-      await expect(page.locator('#admin-content')).not.toContainText('Zeta policy-groups');
-      await expect(page.locator('#admin-content')).not.toContainText('Alpha policy-groups');
+      await expect(page.locator('main[data-area=admin]')).not.toContainText('Zeta policy-groups');
+      await expect(page.locator('main[data-area=admin]')).not.toContainText('Alpha policy-groups');
       expect(writes).toBe(0);
     });

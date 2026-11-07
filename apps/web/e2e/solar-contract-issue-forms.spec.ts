@@ -408,7 +408,9 @@ for (const [locale, theme] of [
       await line(0, 'unit-price').fill('1');
       await submit.click();
       await expect(form).toHaveCount(0);
-      await expect(page.locator('#admin-content')).not.toContainText('PRIVATE_CURRENT_SOLAR_DRAFT');
+      await expect(page.locator('main[data-area=admin]')).not.toContainText(
+        'PRIVATE_CURRENT_SOLAR_DRAFT'
+      );
     });
   }
 }

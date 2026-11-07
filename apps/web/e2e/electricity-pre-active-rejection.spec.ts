@@ -49,7 +49,7 @@ for (const [locale, theme] of [
       expectedReviewHash: 'b'.repeat(64),
       reason: 'Unable to deliver approved supply',
     });
-    await expect(page.locator('#admin-content')).toContainText(copy('commercial.rejected'));
+    await expect(page.locator('main[data-area=admin]')).toContainText(copy('commercial.rejected'));
     await expect(form).toHaveCount(0);
   });
 }

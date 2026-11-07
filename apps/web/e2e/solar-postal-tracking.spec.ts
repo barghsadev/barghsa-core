@@ -235,7 +235,7 @@ for (const locale of ['en', 'fa'] as const) {
     await editor.getByRole('button', { name: copy('postalTrackingReload'), exact: true }).click();
     await expect(editor).toHaveCount(0);
     await expect(page.getByRole('button', { name: /First solar buyer/ })).toHaveCount(0);
-    await expect(page.locator('#admin-content')).not.toContainText('TRACK-1');
+    await expect(page.locator('main[data-area=admin]')).not.toContainText('TRACK-1');
   });
 
   test(`${locale}: a late tracking review cannot reopen after selecting another shipment`, async ({

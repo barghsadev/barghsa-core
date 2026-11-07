@@ -23,6 +23,13 @@
   --breakpoint-xs: 23.4375rem;
 }
 
+@utility skip-link {
+  @apply sr-only;
+  &:focus {
+    @apply not-sr-only fixed start-3 top-3 z-[100] rounded-md bg-card px-4 py-3 text-card-foreground;
+  }
+}
+
 @utility responsive-container {
   margin-inline: auto;
   box-sizing: content-box;

@@ -95,9 +95,9 @@ for (const locale of ['en', 'fa'] as const)
       await expect(group).toHaveAttribute('aria-invalid', 'true');
       await expect(page.getByRole('checkbox', { name: 'Tariffs', exact: true })).toBeChecked();
       await expect(prompt).toHaveValue('Preserve my instructions');
-      await expect(page.locator('#admin-content')).not.toContainText('private-server-value');
+      await expect(page.locator('main[data-area=admin]')).not.toContainText('private-server-value');
       expect(
-        (await new AxeBuilder({ page }).include('#admin-content').analyze()).violations
+        (await new AxeBuilder({ page }).include('main[data-area=admin]').analyze()).violations
       ).toEqual([]);
       await page.screenshot({ path: info.outputPath('agent-link-feedback.png'), fullPage: true });
       await button(agentText('save')).click();
@@ -201,7 +201,7 @@ for (const locale of ['en', 'fa'] as const)
       await expect(individual).toHaveAttribute('aria-invalid', 'true');
       await expect(website).toHaveValue(otherAssignmentAgent.id);
       expect(
-        (await new AxeBuilder({ page }).include('#admin-content').analyze()).violations
+        (await new AxeBuilder({ page }).include('main[data-area=admin]').analyze()).violations
       ).toEqual([]);
       expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
         true

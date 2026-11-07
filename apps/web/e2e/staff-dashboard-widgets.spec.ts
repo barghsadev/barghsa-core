@@ -125,10 +125,10 @@ for (const locale of ['en', 'fa'] as const) {
           .toBe(true);
       }
       expect(
-        (await new AxeBuilder({ page }).include('#admin-content').analyze()).violations
+        (await new AxeBuilder({ page }).include('main[data-area=admin]').analyze()).violations
       ).toEqual([]);
       await page.setViewportSize({ width: 390, height: 844 });
-      await page.locator('#admin-content').evaluate((main) => {
+      await page.locator('main[data-area=admin]').evaluate((main) => {
         main.scrollTop = 0;
       });
       await page.screenshot({

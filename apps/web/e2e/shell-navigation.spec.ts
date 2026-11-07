@@ -1,5 +1,6 @@
 import { fullNavigation } from './navigation-fixture';
 import { test, expect } from './coverage-fixture';
+import { skipToMain } from './critical-accessibility';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 for (const locale of ['en', 'fa'])
@@ -49,6 +50,7 @@ for (const locale of ['en', 'fa'])
       );
       await page.setViewportSize({ width: 390, height: 844 });
       await page.goto(area === 'admin' ? '/admin/failed-notifications' : '/dashboard');
+      await skipToMain(page, locale);
       const nav = page.locator(area === 'admin' ? '#admin-navigation' : '#dashboard-navigation');
       const menu = page.getByRole('button', { name: fa ? 'فهرست' : 'Menu', exact: true });
       await expect(nav).toBeHidden();
@@ -79,7 +81,7 @@ for (const locale of ['en', 'fa'])
       await skip.focus();
       await page.keyboard.press('Enter');
       await expect(
-        page.locator(area === 'admin' ? '#admin-content' : '#dashboard-content')
+        page.locator(area === 'admin' ? 'main[data-area=admin]' : 'main[data-area=dashboard]')
       ).toBeFocused();
       await page.setViewportSize({ width: 1280, height: 720 });
       await expect(menu).toBeHidden();

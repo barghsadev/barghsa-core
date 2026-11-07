@@ -167,7 +167,7 @@ for (const locale of ['en', 'fa'] as const) {
         exact: true,
       })
     ).toBeVisible();
-    await expect(page.locator('#admin-content')).toContainText(
+    await expect(page.locator('main[data-area=admin]')).toContainText(
       fa ? 'درخواست خورشیدی' : 'Profile setup, electricity, saving and solar drafts'
     );
     await ttl.fill('14');
@@ -192,7 +192,7 @@ for (const locale of ['en', 'fa'] as const) {
     await dismissMessages(page, locale);
     await expect(ttl).toHaveValue('14');
     await expect(page.locator('html')).toHaveAttribute('dir', fa ? 'rtl' : 'ltr');
-    const accessibility = await new AxeBuilder({ page }).include('#admin-content').analyze();
+    const accessibility = await new AxeBuilder({ page }).include('main[data-area=admin]').analyze();
     expect(accessibility.violations).toEqual([]);
     expect(
       await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)

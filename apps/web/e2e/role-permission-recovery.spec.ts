@@ -82,7 +82,7 @@ for (const locale of ['en', 'fa'] as const) {
     await page.evaluate((lang) => {
       document.documentElement.lang = lang;
     }, locale);
-    const content = page.locator('#admin-content');
+    const content = page.locator('main[data-area=admin]');
     const finance = page
       .getByRole('row')
       .filter({ has: page.getByRole('rowheader', { name: fa ? /^مالی/ : /^Finance/ }) })
@@ -118,7 +118,7 @@ for (const locale of ['en', 'fa'] as const) {
             .map((a) => a.finished.catch(() => {}))
         );
       }, dark);
-      const report = await new AxeBuilder({ page }).include('#admin-content').analyze();
+      const report = await new AxeBuilder({ page }).include('main[data-area=admin]').analyze();
       expect(report.violations, `role catalogue accessibility, dark=${dark}`).toEqual([]);
     }
     expect(

@@ -156,7 +156,7 @@ for (const locale of ['en', 'fa'])
     ).toHaveCount(0);
     await expect(
       page
-        .locator('#admin-content')
+        .locator('main[data-area=admin]')
         .getByRole('status')
         .filter({ hasText: fa ? 'تحویل هنوز' : 'Delivery is not yet confirmed' })
     ).toContainText(fa ? 'تحویل هنوز' : 'Delivery is not yet confirmed');

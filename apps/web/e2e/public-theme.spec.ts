@@ -1,5 +1,7 @@
 import AxeBuilder from '@axe-core/playwright';
 import { test, expect } from './coverage-fixture';
+import { skipToMain } from './critical-accessibility';
+import { mockPublicAuthCsrf } from './public-auth-fixture';
 
 for (const locale of ['fa', 'en'] as const) {
   for (const darkMode of [false, true]) {
@@ -9,6 +11,8 @@ for (const locale of ['fa', 'en'] as const) {
       await page.setViewportSize({ width: 390, height: 844 });
       await page.emulateMedia({ reducedMotion: 'reduce' });
       await page.addInitScript((value) => {
+        localStorage.setItem('barghsa.locale', value);
+        localStorage.setItem('barghsa-locale', value);
         const apply = () => {
           document.documentElement.lang = value;
         };
@@ -16,6 +20,7 @@ for (const locale of ['fa', 'en'] as const) {
         new MutationObserver(apply).observe(document, { childList: true });
       }, locale);
       await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+      await mockPublicAuthCsrf(page);
       await page.route('**/api/public/branding/config', (route) =>
         route.fulfill({
           json: {
@@ -45,12 +50,19 @@ for (const locale of ['fa', 'en'] as const) {
           },
         })
       );
-      for (const path of ['/register', '/forgot-password', '/activate', `/terms?lang=${locale}`]) {
+      for (const path of [
+        '/register',
+        '/forgot-password',
+        '/activate',
+        '/support',
+        `/terms?lang=${locale}`,
+      ]) {
         await page.goto(path);
         await expect
           .poll(() => page.locator('html').evaluate((e) => e.style.getPropertyValue('--primary')))
           .toBe('#ffffff');
         await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
+        await skipToMain(page, locale);
         const violations = (await new AxeBuilder({ page }).withRules(['color-contrast']).analyze())
           .violations;
         expect
@@ -65,6 +77,7 @@ for (const locale of ['fa', 'en'] as const) {
         const links = page.getByRole('link');
         for (let index = 0; index < (await links.count()); index++) {
           const link = links.nth(index);
+          if ((await link.getAttribute('href')) === '#main-content') continue;
           if (!(await link.isVisible())) continue;
           await link.hover();
           const failures = (await new AxeBuilder({ page }).withRules(['color-contrast']).analyze())

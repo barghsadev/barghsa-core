@@ -157,7 +157,7 @@ for (const locale of ['en', 'fa'] as const)
       await expect(ttl).toBeFocused();
       await expect(ttl).toHaveValue(' ۱۴ ');
       await expect(ttl).toHaveAttribute('aria-invalid', 'true');
-      await expect(page.locator('#admin-content')).not.toContainText('PRIVATE_MESSAGE');
+      await expect(page.locator('main[data-area=admin]')).not.toContainText('PRIVATE_MESSAGE');
       ttlPhase = 'success';
       await saveTtl.click();
       await confirm.click();
@@ -184,7 +184,7 @@ for (const locale of ['en', 'fa'] as const)
       await expect(ttl).toHaveValue('14');
       await expect(template).toHaveValue(templateId);
       expect(
-        (await new AxeBuilder({ page }).include('#admin-content').analyze()).violations
+        (await new AxeBuilder({ page }).include('main[data-area=admin]').analyze()).violations
       ).toEqual([]);
       expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
         true
@@ -207,7 +207,7 @@ for (const locale of ['en', 'fa'] as const)
       await saveRules.click();
       await confirm.click();
       await expect(dialog).toHaveCount(0);
-      await expect(page.locator('#admin-content')).toContainText(label('forbidden'));
+      await expect(page.locator('main[data-area=admin]')).toContainText(label('forbidden'));
       for (const field of [simple, ttl, template]) await expect(field).toHaveCount(0);
     });
 

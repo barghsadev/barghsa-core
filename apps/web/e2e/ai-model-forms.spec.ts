@@ -98,7 +98,7 @@ for (const locale of ['en', 'fa'] as const)
       await expect(max).toHaveAttribute('aria-invalid', 'true');
       await expect(page.locator('#ai-model-token')).toHaveValue('private-new-token');
       expect(await max.getAttribute('aria-describedby')).toContain('-maxTokens-error');
-      await expect(page.locator('#admin-content')).not.toContainText('private-server-value');
+      await expect(page.locator('main[data-area=admin]')).not.toContainText('private-server-value');
       await page.screenshot({ path: info.outputPath('ai-model-feedback.png'), fullPage: true });
       await button('save').click();
       const dialog = page.getByRole('dialog');
@@ -131,7 +131,7 @@ for (const locale of ['en', 'fa'] as const)
       await confirm();
       await expect(cost).toBeFocused();
       await expect(cost).toHaveAttribute('aria-invalid', 'true');
-      const axe = await new AxeBuilder({ page }).include('#admin-content').analyze();
+      const axe = await new AxeBuilder({ page }).include('main[data-area=admin]').analyze();
       expect(axe.violations).toEqual([]);
       expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
         true
@@ -171,6 +171,6 @@ for (const locale of ['en', 'fa'] as const)
       readStatus = 403;
       await button('refresh').click();
       await expect(page.locator('#ai-model-token')).toHaveCount(0);
-      await expect(page.locator('#admin-content table')).toHaveCount(0);
+      await expect(page.locator('main[data-area=admin] table')).toHaveCount(0);
     });
   }

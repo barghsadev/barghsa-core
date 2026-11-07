@@ -289,11 +289,11 @@ for (const locale of ['en', 'fa'] as const)
     await expect(
       page.getByText(consultationCopy('assignedStaff', locale), { exact: true })
     ).toBeVisible();
-    await expect(page.locator('#dashboard-content')).not.toContainText('private-owner-id');
+    await expect(page.locator('main[data-area=dashboard]')).not.toContainText('private-owner-id');
     expect(
       (
         await new AxeBuilder({ page })
-          .include('#dashboard-content')
+          .include('main[data-area=dashboard]')
           .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
           .analyze()
       ).violations

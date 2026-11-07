@@ -91,7 +91,7 @@ function ElectricityIndexPage() {
   }, [revision]);
 
   return (
-    <main className="flex flex-col gap-8" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
+    <div className="flex flex-col gap-8" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
       <header className="flex flex-col gap-2">
         <h1 className="text-2xl font-semibold tracking-tight">
           {t('electricity.catalogue.title', locale)}
@@ -207,7 +207,7 @@ function ElectricityIndexPage() {
           </div>
         </ListPage.Content>
       </ListPage>
-    </main>
+    </div>
   );
 }
 

@@ -120,7 +120,7 @@ for (const locale of ['en', 'fa'] as const)
         owner.getByRole('button', { name: fa ? 'حذف عضو' : 'Remove member', exact: true })
       ).toBeDisabled();
       expect(
-        (await new AxeBuilder({ page }).include('#dashboard-content').analyze()).violations
+        (await new AxeBuilder({ page }).include('main[data-area=dashboard]').analyze()).violations
       ).toEqual([]);
       expect((await owner.boundingBox())!.height).toBeLessThan(240);
       const role = table
@@ -143,7 +143,7 @@ for (const locale of ['en', 'fa'] as const)
       await expect(mobileRole).toBeChecked();
       await mobileRole.uncheck();
       expect(
-        (await new AxeBuilder({ page }).include('#dashboard-content').analyze()).violations
+        (await new AxeBuilder({ page }).include('main[data-area=dashboard]').analyze()).violations
       ).toEqual([]);
       expect(
         await page.evaluate(

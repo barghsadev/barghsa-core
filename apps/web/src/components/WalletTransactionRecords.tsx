@@ -164,7 +164,7 @@ export function WalletTransactionRecords({
   };
   const description = (item: WalletTransaction) => (
     <div className="flex min-w-0 flex-col gap-2">
-      <p className="text-muted-foreground">{descriptionText(item)}</p>
+      <p className="text-foreground">{descriptionText(item)}</p>
       {item.description && (
         <p className="break-words [overflow-wrap:anywhere]" dir="auto">
           {item.description}

@@ -114,9 +114,9 @@ for (const locale of ['en', 'fa'] as const)
       await expect(size).toBeFocused();
       await expect(size).toHaveAttribute('aria-invalid', 'true');
       await expect(source).toHaveValue('https://one.example.test\nhttps://two.example.test');
-      await expect(page.locator('#admin-content')).not.toContainText('private-server-value');
+      await expect(page.locator('main[data-area=admin]')).not.toContainText('private-server-value');
       expect(
-        (await new AxeBuilder({ page }).include('#admin-content').analyze()).violations
+        (await new AxeBuilder({ page }).include('main[data-area=admin]').analyze()).violations
       ).toEqual([]);
       await page.screenshot({
         path: info.outputPath('knowledge-field-feedback.png'),
@@ -208,9 +208,9 @@ for (const locale of ['en', 'fa'] as const)
       await expect(requests).toBeFocused();
       await expect(requests).toHaveAttribute('aria-invalid', 'true');
       await expect(enabled).not.toBeChecked();
-      await expect(page.locator('#admin-content')).not.toContainText('private-server-value');
+      await expect(page.locator('main[data-area=admin]')).not.toContainText('private-server-value');
       expect(
-        (await new AxeBuilder({ page }).include('#admin-content').analyze()).violations
+        (await new AxeBuilder({ page }).include('main[data-area=admin]').analyze()).violations
       ).toEqual([]);
       expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
         true
@@ -271,7 +271,7 @@ for (const locale of ['en', 'fa'] as const)
         await expect(title).toBeFocused();
         await expect(title).toHaveAttribute('aria-invalid', 'true');
         expect(
-          (await new AxeBuilder({ page }).include('#admin-content').analyze()).violations
+          (await new AxeBuilder({ page }).include('main[data-area=admin]').analyze()).violations
         ).toEqual([]);
         await button(group.text('save')).click();
         await confirm();

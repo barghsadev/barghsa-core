@@ -72,7 +72,7 @@ export function SavingsPage() {
   }, [revision, profileRevision, accountId, read]);
 
   return (
-    <main
+    <div
       className="mx-auto w-full max-w-5xl space-y-6 p-4 md:p-8"
       dir={locale === 'fa' ? 'rtl' : 'ltr'}
     >
@@ -189,6 +189,6 @@ export function SavingsPage() {
       >
         {copy('orders')}
       </Link>
-    </main>
+    </div>
   );
 }

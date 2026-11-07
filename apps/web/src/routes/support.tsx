@@ -80,7 +80,11 @@ function SupportPage() {
         </Link>
       </aside>
 
-      <main className="flex flex-1 items-center justify-center p-4 md:p-8 lg:p-12">
+      <main
+        id="main-content"
+        tabIndex={-1}
+        className="flex flex-1 items-center justify-center p-4 md:p-8 lg:p-12"
+      >
         <Card className="w-full max-w-lg">
           <CardContent className="pt-6">
             <div className="space-y-6">

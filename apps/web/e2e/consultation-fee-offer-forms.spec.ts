@@ -164,17 +164,19 @@ for (const [locale, theme] of [
     });
     state.previewMode = 'mixed';
     await submit(page).click();
-    await expect(page.locator('#admin-content').getByRole('alert')).toContainText(
+    await expect(page.locator('main[data-area=admin]').getByRole('alert')).toContainText(
       copy('loadError')
     );
     await expect(fee(page)).not.toHaveAttribute('aria-invalid', 'true');
     state.previewMode = 'foreign';
     await submit(page).click();
     await expect(dialog(page)).toHaveCount(0);
-    await expect(page.locator('#admin-content').getByRole('alert')).toContainText(
+    await expect(page.locator('main[data-area=admin]').getByRole('alert')).toContainText(
       copy('loadError')
     );
-    await expect(page.locator('#admin-content')).not.toContainText('PRIVATE_FEE_SERVER_TEXT');
+    await expect(page.locator('main[data-area=admin]')).not.toContainText(
+      'PRIVATE_FEE_SERVER_TEXT'
+    );
     state.previewMode = 'success';
     await submit(page).click();
     await expect(dialog(page)).toContainText(copy('feeReviewIssueOutcome'));

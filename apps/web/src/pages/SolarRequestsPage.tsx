@@ -164,7 +164,7 @@ export function SolarRequestsPage({
     },
   ];
   return (
-    <main
+    <div
       className={`mx-auto w-full min-w-0 space-y-5 px-4 py-8 ${view === 'table' ? 'max-w-7xl' : 'max-w-3xl'}`}
       dir={locale === 'fa' ? 'rtl' : 'ltr'}
     >
@@ -317,6 +317,6 @@ export function SolarRequestsPage({
           nextLabel={copy('moreRequests')}
         />
       </ListPage>
-    </main>
+    </div>
   );
 }

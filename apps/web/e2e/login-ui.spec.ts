@@ -1,11 +1,13 @@
 import { mockPublicAuthCsrf } from './public-auth-fixture';
 import AxeBuilder from '@axe-core/playwright';
 import { test, expect } from './coverage-fixture';
+import { skipToMain } from './critical-accessibility';
 
 for (const locale of ['fa', 'en'])
   for (const darkMode of [false, true])
     test(
       'login fields, normalization and generic errors (' + locale + ', dark=' + darkMode + ')',
+      { tag: '@a11y-critical' },
       async ({ page }, testInfo) => {
         await page.addInitScript((locale) => {
           localStorage.setItem('barghsa.locale', locale);
@@ -49,6 +51,11 @@ for (const locale of ['fa', 'en'])
         const username = page.locator('#username'),
           password = page.locator('#password'),
           submit = page.locator('button[type=submit]');
+        await skipToMain(page, locale);
+        await page.keyboard.press('Tab');
+        await expect(username).toBeFocused();
+        await page.keyboard.press('Tab');
+        await expect(password).toBeFocused();
         await expect(username).toHaveAttribute('autocomplete', 'username');
         await expect(username).toHaveAttribute('dir', 'ltr');
         await expect(password).toBeVisible();

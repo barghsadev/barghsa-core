@@ -8,5 +8,9 @@ export const Route = createFileRoute('/onboarding')({
     if (session.operatingContext === 'staff') throw redirect({ to: '/app', replace: true });
     return { onboardingUserId: session.userId };
   },
-  component: Outlet,
+  component: () => (
+    <main id="main-content" tabIndex={-1}>
+      <Outlet />
+    </main>
+  ),
 });

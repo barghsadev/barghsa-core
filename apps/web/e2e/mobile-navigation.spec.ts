@@ -97,7 +97,9 @@ for (const locale of ['en', 'fa'] as const)
       }
       await expect(selected).toHaveAttribute('aria-current', 'page');
       const barBox = await quick.boundingBox();
-      const content = page.locator(area === 'customer' ? '#dashboard-content' : '#admin-content');
+      const content = page.locator(
+        area === 'customer' ? 'main[data-area=dashboard]' : 'main[data-area=admin]'
+      );
       const contentBox = await content.boundingBox();
       expect(contentBox!.y + contentBox!.height).toBeLessThanOrEqual(barBox!.y + 1);
       if (area === 'customer') {

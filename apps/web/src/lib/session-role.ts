@@ -1,5 +1,6 @@
 import { getProfileContextRevision } from './profile-context.js';
 import { parseNavigation, type NavigationConfiguration } from './navigation-config.js';
+import { readAuthBootstrap } from './auth-bootstrap-read.js';
 
 export interface SessionContext {
   userId?: string;
@@ -111,6 +112,8 @@ async function readBootstrapPacket(
   accountId: string | null,
   revision: number
 ) {
+  if (import.meta.env.PROD && __BARGHSA_AUTH_ENTRY__)
+    return readAuthBootstrap(path, external, revision);
   const { readRouteBootstrap } = await import('./route-bootstrap-read.js');
   return readRouteBootstrap(path, external, accountId, revision);
 }

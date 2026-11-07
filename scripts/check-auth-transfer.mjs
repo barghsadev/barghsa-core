@@ -18,6 +18,10 @@ try {
     try {
       const page = await context.newPage();
       await page.route('**/api/**', (request) => request.fulfill({ status: 404, json: {} }));
+      await page.route('**/api/auth/user', (request) => request.fulfill({ status: 401, json: {} }));
+      await page.route('**/api/auth/csrf', (request) =>
+        request.fulfill({ json: { csrfToken: 'c'.repeat(64) } })
+      );
       const scripts = new Map();
       const errors = [];
       page.on('pageerror', (error) => errors.push(error.message));

@@ -185,7 +185,7 @@ export function SavingOrdersPage({
     },
   ];
   return (
-    <main
+    <div
       className={`mx-auto w-full min-w-0 space-y-6 p-4 md:p-8 ${view === 'table' ? 'max-w-7xl' : 'max-w-4xl'}`}
       dir={locale === 'fa' ? 'rtl' : 'ltr'}
     >
@@ -402,6 +402,6 @@ export function SavingOrdersPage({
           nextLabel={copy('moreOrders')}
         />
       </ListPage>
-    </main>
+    </div>
   );
 }

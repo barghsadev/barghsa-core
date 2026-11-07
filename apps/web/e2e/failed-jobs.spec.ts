@@ -235,7 +235,7 @@ for (const locale of ['en', 'fa'])
     await expect(page.getByRole('checkbox')).toHaveCount(0);
     await expect(
       page
-        .locator('#admin-content')
+        .locator('main[data-area=admin]')
         .getByRole('status')
         .filter({ hasText: fa ? '1 مورد دیگر' : '۱ selections were skipped' })
     ).toContainText(fa ? '1 مورد دیگر' : '۱ selections were skipped');

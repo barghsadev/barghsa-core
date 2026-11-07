@@ -1235,7 +1235,7 @@ function OwnedAdminConsultationsPage({ queries }: { queries?: ConsultationListQu
     );
   }
   return (
-    <main className="space-y-6" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
+    <div className="space-y-6" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
       <header className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <h1 className="text-2xl font-semibold">{copy('staffTitle')}</h1>
@@ -2238,6 +2238,6 @@ function OwnedAdminConsultationsPage({ queries }: { queries?: ConsultationListQu
           }}
         />
       )}
-    </main>
+    </div>
   );
 }

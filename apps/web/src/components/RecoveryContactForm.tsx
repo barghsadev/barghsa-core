@@ -79,6 +79,7 @@ export default function RecoveryContactForm() {
         <Label htmlFor="recovery-code">{t('auth.recovery.code', locale)}</Label>
         <OtpInput
           id="recovery-code"
+          autoFocus={false}
           locale={locale}
           disabled={busy}
           onChange={(value) => {

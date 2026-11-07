@@ -76,7 +76,6 @@ function ForgotPasswordPage() {
                       <Input
                         {...field}
                         autoComplete="username"
-                        autoFocus
                         maxLength={255}
                         disabled={model.locked}
                         onChange={(event) => {

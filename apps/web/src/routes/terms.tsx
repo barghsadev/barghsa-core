@@ -156,7 +156,11 @@ function TermsPage() {
       </aside>
 
       {/* Content */}
-      <main className="flex flex-1 items-start justify-center p-4 md:p-8 lg:p-12">
+      <main
+        id="main-content"
+        tabIndex={-1}
+        className="flex flex-1 items-start justify-center p-4 md:p-8 lg:p-12"
+      >
         <div className="w-full max-w-3xl">
           <nav aria-label={t('tos.page.language', locale)} className="mb-6 flex flex-wrap gap-4">
             <Link

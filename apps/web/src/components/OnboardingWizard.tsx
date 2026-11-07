@@ -57,6 +57,7 @@ export function OnboardingWizard({
   const region = useRef<HTMLDivElement>(null);
   const mounted = useRef(true);
   const stepRef = useRef(step);
+  const focusStep = useRef<number | null>(null);
   useLayoutEffect(() => {
     stepRef.current = step;
   }, [step]);
@@ -77,6 +78,8 @@ export function OnboardingWizard({
     };
   }, []);
   useEffect(() => {
+    if (focusStep.current !== step) return;
+    focusStep.current = null;
     region.current?.focus();
   }, [step]);
   const move = async (target: number) => {
@@ -87,8 +90,10 @@ export function OnboardingWizard({
     setSaving(true);
     try {
       const version = await draft.flush();
-      if (version !== undefined && mounted.current && stepRef.current === step && target !== step)
+      if (version !== undefined && mounted.current && stepRef.current === step && target !== step) {
+        focusStep.current = target;
         await onStepChange(target);
+      }
     } finally {
       busy.current = false;
       if (mounted.current) setSaving(false);
@@ -183,6 +188,7 @@ export function OnboardingWizard({
                 disabled={pending || saving || submitting}
                 onClick={() => {
                   if (draft.status === 'conflict' || !draft.ready) {
+                    if (step !== 1) focusStep.current = 1;
                     void onStepChange(1);
                     draft.reload();
                   } else void move(step);

@@ -210,7 +210,7 @@ for (const locale of ['en', 'fa'] as const)
         true
       );
       expect(
-        (await new AxeBuilder({ page }).include('#dashboard-content').analyze()).violations
+        (await new AxeBuilder({ page }).include('main[data-area=dashboard]').analyze()).violations
       ).toEqual([]);
       await page.screenshot({ path: `/tmp/barghsa-team-${locale}-${theme}.png` });
       memberDenied = true;
@@ -240,7 +240,7 @@ for (const locale of ['en', 'fa'] as const)
       ).toHaveCount(0);
       await expect(page.getByText('Transfer company', { exact: true })).toHaveCount(0);
       expect(
-        (await new AxeBuilder({ page }).include('#dashboard-content').analyze()).violations
+        (await new AxeBuilder({ page }).include('main[data-area=dashboard]').analyze()).violations
       ).toEqual([]);
       expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
       accountDenied = false;

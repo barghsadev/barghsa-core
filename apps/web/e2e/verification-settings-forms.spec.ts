@@ -92,7 +92,7 @@ for (const locale of ['en', 'fa'] as const)
         'true'
       );
       await expect(ttl).toHaveValue('120');
-      await expect(page.locator('#admin-content')).not.toContainText('private-server-value');
+      await expect(page.locator('main[data-area=admin]')).not.toContainText('private-server-value');
       const linked = await mode.getAttribute('aria-describedby');
       expect(linked).toContain('-mode-error');
       await page.screenshot({
@@ -104,7 +104,7 @@ for (const locale of ['en', 'fa'] as const)
       await expect(ttl).toBeFocused();
       await expect(mode).toBeChecked();
       await expect(ttl).toHaveValue('120');
-      const results = await new AxeBuilder({ page }).include('#admin-content').analyze();
+      const results = await new AxeBuilder({ page }).include('main[data-area=admin]').analyze();
       expect(results.violations).toEqual([]);
       expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
         true

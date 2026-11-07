@@ -144,9 +144,9 @@ for (const locale of ['en', 'fa'] as const)
       await expect(input).toBeFocused();
       await expect(input).toHaveAttribute('aria-invalid', 'true');
       await expect(input).toHaveValue(source);
-      await expect(page.locator('#admin-content')).not.toContainText('private-server-copy');
+      await expect(page.locator('main[data-area=admin]')).not.toContainText('private-server-copy');
       expect(
-        (await new AxeBuilder({ page }).include('#admin-content').analyze()).violations
+        (await new AxeBuilder({ page }).include('main[data-area=admin]').analyze()).violations
       ).toEqual([]);
       await input.evaluate((node) => {
         node.scrollTop = 0;
@@ -166,7 +166,7 @@ for (const locale of ['en', 'fa'] as const)
       await expect(backdrop).toContainText('#');
       denied = true;
       await page.getByRole('button', { name: agentText('refresh'), exact: true }).click();
-      await expect(page.locator('#admin-content pre')).toHaveCount(0);
+      await expect(page.locator('main[data-area=admin] pre')).toHaveCount(0);
 
       // The independent slots scenario uses the standard theme, not the prompt color fixture.
       await setupCatalogueForms(page, locale, dark);
@@ -224,7 +224,7 @@ for (const locale of ['en', 'fa'] as const)
         })
       ).toBeEnabled();
       expect(
-        (await new AxeBuilder({ page }).include('#admin-content').analyze()).violations
+        (await new AxeBuilder({ page }).include('main[data-area=admin]').analyze()).violations
       ).toEqual([]);
       expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
         true

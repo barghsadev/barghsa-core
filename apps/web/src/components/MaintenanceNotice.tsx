@@ -49,9 +49,9 @@ export function MaintenanceBoundary({
 }) {
   const setting = useMaintenance(capability);
   return setting?.active ? (
-    <main className="mx-auto max-w-3xl p-4 md:p-8">
+    <div className="mx-auto max-w-3xl p-4 md:p-8">
       <MaintenanceNotice setting={setting} />
-    </main>
+    </div>
   ) : (
     children
   );

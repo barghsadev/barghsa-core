@@ -118,9 +118,9 @@ for (const locale of ['en', 'fa'] as const)
       await confirm();
       await expect(member).toBeFocused();
       await expect(member).toHaveValue(kb.id);
-      await expect(page.locator('#admin-content')).not.toContainText('private-member-value');
+      await expect(page.locator('main[data-area=admin]')).not.toContainText('private-member-value');
       expect(
-        (await new AxeBuilder({ page }).include('#admin-content').analyze()).violations
+        (await new AxeBuilder({ page }).include('main[data-area=admin]').analyze()).violations
       ).toEqual([]);
       await button(k('link')).click();
       const dialog = page.getByRole('dialog');
@@ -208,7 +208,7 @@ for (const locale of ['en', 'fa'] as const)
       await expect(first).toHaveAttribute('aria-invalid', 'true');
       await expect(second).toHaveValue('77');
       expect(
-        (await new AxeBuilder({ page }).include('#admin-content').analyze()).violations
+        (await new AxeBuilder({ page }).include('main[data-area=admin]').analyze()).violations
       ).toEqual([]);
       expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
         true
@@ -252,7 +252,7 @@ for (const locale of ['en', 'fa'] as const)
       await button(k('runQuery')).click();
       await expect(page.getByText('Verified guidance', { exact: true })).toBeVisible();
       expect(
-        (await new AxeBuilder({ page }).include('#admin-content').analyze()).violations
+        (await new AxeBuilder({ page }).include('main[data-area=admin]').analyze()).violations
       ).toEqual([]);
       await page.screenshot({
         path: info.outputPath('knowledge-query-feedback.png'),

@@ -89,9 +89,6 @@ export function AppShell({
       )}
       dir={locale === 'fa' ? 'rtl' : 'ltr'}
     >
-      <a href={`#${area}-content`} className="sr-only focus:not-sr-only focus:bg-card focus:p-3">
-        {shellText('skip', locale)}
-      </a>
       {banners}
       <AnalyticsConsentBanner />
       <Topbar
@@ -193,7 +190,8 @@ export function AppShell({
           )}
         </aside>
         <main
-          id={`${area}-content`}
+          id="main-content"
+          data-area={area}
           tabIndex={-1}
           className="app-content min-h-0 min-w-0 flex-1 overflow-auto"
         >

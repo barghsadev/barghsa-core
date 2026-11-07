@@ -110,19 +110,19 @@ for (const [locale, theme] of [
     const staleOrder = structuredClone(state.staff);
     await page.getByRole('button', { name: /Other Correction Buyer/ }).click();
     await expect(
-      page.locator('#admin-content dd').filter({ hasText: /^Other Correction Buyer$/ })
+      page.locator('main[data-area=admin] dd').filter({ hasText: /^Other Correction Buyer$/ })
     ).toBeVisible();
     await expect(reason).toHaveValue('');
     await reason.fill('PRIVATE_NEW_SELECTION_REASON');
     await stalePreview.fulfill({ json: correctionStaffReview(staleOrder, staleCommand) });
     await expect(page.getByRole('dialog')).toHaveCount(0);
     await expect(reason).toHaveValue('PRIVATE_NEW_SELECTION_REASON');
-    await expect(page.locator('#admin-content')).not.toContainText(
+    await expect(page.locator('main[data-area=admin]')).not.toContainText(
       'Captured <script> delivery correction'
     );
     await page.getByRole('button', { name: new RegExp(correctionOrder) }).click();
     await expect(
-      page.locator('#admin-content dd').filter({ hasText: /^Correction Buyer$/ })
+      page.locator('main[data-area=admin] dd').filter({ hasText: /^Correction Buyer$/ })
     ).toBeVisible();
     await expect(reason).toHaveValue('');
     await reason.fill('  Captured <script> delivery correction  ');
@@ -266,7 +266,9 @@ for (const [locale, theme] of [
       expectedReviewHash: 'b'.repeat(64),
       reason: 'Final rejection reason',
     });
-    await expect(page.locator('#admin-content')).toContainText(staffText('commercial.rejected'));
+    await expect(page.locator('main[data-area=admin]')).toContainText(
+      staffText('commercial.rejected')
+    );
   });
 
   for (const advanced of [false, true]) {

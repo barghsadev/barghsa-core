@@ -227,7 +227,7 @@ for (const [locale, theme] of settings) {
     await information.fill('PRIVATE_NEW_REQUEST_DRAFT');
     await state.detailRead!.fulfill({ json: detail(informationRequest) });
     await expect(information).toHaveValue('PRIVATE_NEW_REQUEST_DRAFT');
-    await expect(page.locator('#dashboard-content')).not.toContainText(captured.body.reason);
+    await expect(page.locator('main[data-area=dashboard]')).not.toContainText(captured.body.reason);
     state.replyMode = 'success';
     await submit.click();
     await expect(information).toHaveCount(0);
@@ -245,10 +245,10 @@ for (const [locale, theme] of settings) {
     state.replyMode = 'denied';
     await submit.click();
     await expect(information).toHaveCount(0);
-    await expect(page.locator('#dashboard-content')).not.toContainText(
+    await expect(page.locator('main[data-area=dashboard]')).not.toContainText(
       'PRIVATE_DENIED_REPLY_DRAFT'
     );
-    await expect(page.locator('#dashboard-content')).not.toContainText(
+    await expect(page.locator('main[data-area=dashboard]')).not.toContainText(
       'PRIVATE_EXISTING_REQUEST_CONTEXT'
     );
     expect(state.replyWrites.at(-1)).toEqual({
@@ -417,8 +417,10 @@ for (const [locale, theme] of settings) {
     await dialog.locator('button[type=submit]').click();
     await expect(dialog).toHaveCount(0);
     await expect(reason).toHaveCount(0);
-    await expect(page.locator('#admin-content')).not.toContainText('PRIVATE_STAFF_NEW_SCOPE_DRAFT');
-    await expect(page.locator('#admin-content')).not.toContainText(
+    await expect(page.locator('main[data-area=admin]')).not.toContainText(
+      'PRIVATE_STAFF_NEW_SCOPE_DRAFT'
+    );
+    await expect(page.locator('main[data-area=admin]')).not.toContainText(
       'PRIVATE_EXISTING_REQUEST_CONTEXT'
     );
   });

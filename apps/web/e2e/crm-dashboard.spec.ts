@@ -89,7 +89,7 @@ for (const locale of ['fa', 'en'])
           `/admin/crm/profiles/${recentProfiles[0]!.id}`
         );
         const scan = await new AxeBuilder({ page })
-          .include('#admin-content')
+          .include('main[data-area=admin]')
           .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
           .analyze();
         expect(scan.violations).toEqual([]);

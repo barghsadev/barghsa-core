@@ -85,7 +85,7 @@ for (const locale of ['fa', 'en']) {
     expect(actions[0]).toBe(actions[1]);
     await expect(
       page
-        .locator('#admin-content')
+        .locator('main[data-area=admin]')
         .getByRole('status')
         .filter({
           hasText:
@@ -298,7 +298,7 @@ for (const locale of ['fa', 'en'])
       .click();
     await expect(
       page
-        .locator('#admin-content')
+        .locator('main[data-area=admin]')
         .getByRole('status')
         .filter({
           hasText:

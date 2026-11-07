@@ -226,7 +226,7 @@ export function ElectricityOrdersPage({
     },
   ];
   return (
-    <main
+    <div
       className={`container mx-auto min-w-0 space-y-6 px-4 py-8 ${view === 'table' ? 'max-w-7xl' : 'max-w-4xl'}`}
       dir={locale === 'fa' ? 'rtl' : 'ltr'}
     >
@@ -430,6 +430,6 @@ export function ElectricityOrdersPage({
           nextLabel={t('electricity.orders.more', locale)}
         />
       </ListPage>
-    </main>
+    </div>
   );
 }

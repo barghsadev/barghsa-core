@@ -92,7 +92,7 @@ for (const locale of ['en', 'fa'] as const)
             .poll(() => page.locator('html').evaluate((e) => e.style.getPropertyValue('--primary')))
             .toBe('#777777');
           const main = page.locator(
-            path.startsWith('/admin') ? '#admin-content' : '#dashboard-content'
+            path.startsWith('/admin') ? 'main[data-area=admin]' : 'main[data-area=dashboard]'
           );
           await expect(main).toBeVisible();
           await expect(
@@ -274,7 +274,7 @@ for (const locale of ['en', 'fa'] as const)
       );
       for (const path of ['/dashboard', '/invoices', '/notifications']) {
         await page.goto(path);
-        const main = page.locator('#dashboard-content');
+        const main = page.locator('main[data-area=dashboard]');
         await expect(main.getByRole('heading').first()).toBeVisible();
         await page.locator('button[aria-controls$="navigation"]').click();
         const profile = page.locator('#profile-switcher');

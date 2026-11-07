@@ -260,7 +260,7 @@ for (const [locale, theme] of [
     state.readMode = 'success';
     await page.getByRole('button', { name: /Other Comment Buyer/ }).click();
     await expect(
-      page.locator('#admin-content dd').filter({ hasText: /^Other Comment Buyer$/ })
+      page.locator('main[data-area=admin] dd').filter({ hasText: /^Other Comment Buyer$/ })
     ).toBeVisible();
     await expect(body).toHaveValue('');
     await stale

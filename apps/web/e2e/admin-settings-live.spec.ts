@@ -1148,7 +1148,7 @@ for (const locale of ['en', 'fa'])
     const beforeInvalidSave = modelWrites.length;
     await page.getByRole('button', { name: fa ? 'ذخیره مدل' : 'Save model', exact: true }).click();
     await expect(page.locator('#ai-model-token-choice')).toHaveAttribute('aria-invalid', 'true');
-    await expect(page.locator('#admin-content')).toContainText(
+    await expect(page.locator('main[data-area=admin]')).toContainText(
       aiModelFormText('tokenChoice', locale)
     );
     await expect(page.getByRole('dialog')).toHaveCount(0);

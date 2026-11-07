@@ -240,7 +240,7 @@ for (const locale of ['fa', 'en'] as const) {
     await expect(dialog).toHaveCount(0);
     await expect(
       page
-        .locator('#dashboard-content')
+        .locator('main[data-area=dashboard]')
         .getByRole('status')
         .filter({
           hasText:
@@ -411,7 +411,7 @@ for (const locale of ['fa', 'en'] as const) {
       .click();
     await expect(
       page
-        .locator('#dashboard-content')
+        .locator('main[data-area=dashboard]')
         .getByRole('status')
         .filter({
           hasText:
@@ -600,7 +600,7 @@ for (const action of [
     expect(requests).toBe(1);
     await expect(
       page
-        .locator('#dashboard-content')
+        .locator('main[data-area=dashboard]')
         .getByRole('status')
         .filter({
           hasText:
@@ -726,7 +726,7 @@ for (const locale of ['en', 'fa'] as const) {
         );
       }, dark);
       expect(
-        (await new AxeBuilder({ page }).include('#dashboard-content').analyze()).violations
+        (await new AxeBuilder({ page }).include('main[data-area=dashboard]').analyze()).violations
       ).toEqual([]);
     }
   });

@@ -225,6 +225,7 @@ function OtpVerifyPage() {
                 <OtpInput
                   ref={otpRef}
                   id="registration-code"
+                  autoFocus={false}
                   name={field.name}
                   locale={locale}
                   disabled={model.locked || attemptCooldown > 0}

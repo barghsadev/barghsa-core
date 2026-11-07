@@ -193,7 +193,7 @@ for (const [locale, theme] of [
     });
     state.previewMode = 'mixed';
     await button(page, action).click();
-    await expect(page.locator('#admin-content').getByRole('alert')).toContainText(
+    await expect(page.locator('main[data-area=admin]').getByRole('alert')).toContainText(
       copy('loadError')
     );
     await expect(reason(page)).not.toHaveAttribute('aria-invalid', 'true');
@@ -203,7 +203,7 @@ for (const [locale, theme] of [
     await expect.poll(() => state.previews.length).toBe(foreignPreviewCount);
     await expect(button(page, action)).toBeEnabled();
     await expect(dialog(page)).toHaveCount(0);
-    await expect(page.locator('#admin-content')).not.toContainText(
+    await expect(page.locator('main[data-area=admin]')).not.toContainText(
       'PRIVATE_RESOLUTION_SERVER_TEXT'
     );
     state.previewMode = 'success';
@@ -352,10 +352,10 @@ for (const [locale, theme] of [
     state.previewMode = 'denied';
     await button(page, 'recoverRefund').click();
     await expect(reason(page)).toHaveCount(0);
-    await expect(page.locator('#admin-content')).not.toContainText(
+    await expect(page.locator('main[data-area=admin]')).not.toContainText(
       'Fresh authorized recovery draft'
     );
-    await expect(page.locator('#admin-content')).not.toContainText('PRIVATE_OLD_SCOPE');
+    await expect(page.locator('main[data-area=admin]')).not.toContainText('PRIVATE_OLD_SCOPE');
   });
   test(`consultation uncovered credit recovery retains its exact original plan (${locale}, ${theme})`, async ({
     page,
@@ -525,7 +525,9 @@ for (const [locale, theme] of [
     state.previewMode = 'missing';
     await button(page, locale === 'en' ? 'cancel' : 'reject').click();
     await expect(reason(page)).toHaveCount(0);
-    await expect(page.locator('#admin-content')).not.toContainText('Current private closure draft');
-    await expect(page.locator('#admin-content')).not.toContainText('PRIVATE_OLD_RESOLUTION');
+    await expect(page.locator('main[data-area=admin]')).not.toContainText(
+      'Current private closure draft'
+    );
+    await expect(page.locator('main[data-area=admin]')).not.toContainText('PRIVATE_OLD_RESOLUTION');
   });
 }

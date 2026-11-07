@@ -133,7 +133,7 @@ for (const width of [390, 1440]) {
             });
           await page.goto('/admin/tickets');
           await expect(page.getByTestId('admin-settings-layout')).toHaveCount(0);
-          await expect(page.locator('#admin-content')).toBeVisible();
+          await expect(page.locator('main[data-area=admin]')).toBeVisible();
         });
       }
     }

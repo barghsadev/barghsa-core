@@ -84,7 +84,7 @@ for (const locale of ['fa', 'en'])
       await expect(banner.locator('[dir="ltr"]')).toHaveText('evt-open');
       await expect(banner.getByRole('button')).toHaveCount(0);
       const accessibility = await new AxeBuilder({ page })
-        .include('#admin-content')
+        .include('main[data-area=admin]')
         .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
         .analyze();
       expect(accessibility.violations).toEqual([]);

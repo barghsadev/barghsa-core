@@ -43,7 +43,7 @@ for (const locale of ['en', 'fa'] as const) {
       return route.fulfill({ json: { timezone: saved } });
     });
     await page.goto('/settings/timezone');
-    const main = page.locator('#dashboard-content');
+    const main = page.locator('main[data-area=dashboard]');
     const save = main.getByRole('button', {
       name: fa ? 'ذخیره تغییرات' : 'Save Changes',
       exact: true,

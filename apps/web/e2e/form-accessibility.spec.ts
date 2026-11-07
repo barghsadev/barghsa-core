@@ -1888,7 +1888,7 @@ for (const locale of ['en', 'fa']) {
         .toBe('#2563eb');
       const checkContrast = async (scrollToEnd = false) => {
         const content = await new AxeBuilder({ page })
-          .include('#admin-content')
+          .include('main[data-area=admin]')
           .withRules(['color-contrast'])
           .analyze();
         expect(content.violations).toEqual([]);
@@ -1948,10 +1948,10 @@ for (const locale of ['en', 'fa']) {
       await expect(page.getByRole('alert')).toBeVisible();
       await checkContrast();
       await save.click();
-      await expect(page.locator('#admin-content').getByRole('status')).toBeVisible();
+      await expect(page.locator('main[data-area=admin]').getByRole('status')).toBeVisible();
       await checkContrast();
       await page
-        .locator('#admin-content')
+        .locator('main[data-area=admin]')
         .screenshot({ path: testInfo.outputPath('verification-contrast.png') });
     });
   }
@@ -2019,9 +2019,9 @@ for (const locale of ['en', 'fa']) {
     await save.click();
     await expect.poll(() => writes).toBe(2);
     await expect(page.getByRole('alert')).toBeVisible();
-    await expect(page.locator('#admin-content').getByRole('status')).toHaveCount(0);
+    await expect(page.locator('main[data-area=admin]').getByRole('status')).toHaveCount(0);
     await save.click();
-    await expect(page.locator('#admin-content').getByRole('status')).toContainText(
+    await expect(page.locator('main[data-area=admin]').getByRole('status')).toContainText(
       locale === 'fa' ? 'پیش‌نویس ذخیره شد' : 'Draft saved'
     );
     await expect(save).toBeDisabled();

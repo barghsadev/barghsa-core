@@ -195,8 +195,10 @@ for (const [locale, theme] of [
     await dialog.locator('button[type=submit]').click();
     await expect(dialog).toHaveCount(0);
     await expect(region).toHaveCount(0);
-    await expect(page.locator('#admin-content')).not.toContainText('PRIVATE_NEW_PARCEL_DRAFT');
-    await expect(page.locator('#admin-content')).not.toContainText('OTHER-PARCEL');
+    await expect(page.locator('main[data-area=admin]')).not.toContainText(
+      'PRIVATE_NEW_PARCEL_DRAFT'
+    );
+    await expect(page.locator('main[data-area=admin]')).not.toContainText('OTHER-PARCEL');
     expect(state.trackingWrites.at(-1)).toMatchObject({
       note: 'PRIVATE_NEW_PARCEL_DRAFT',
       expectedReviewHash: 'a'.repeat(64),
@@ -322,7 +324,7 @@ for (const [locale, theme] of [
     await state.progressPreview!.fulfill({ json: constructionReview(lateSnapshot, late) });
     await expect(page.getByRole('dialog')).toHaveCount(0);
     await expect(note).toHaveValue('PRIVATE_NEW_CONSTRUCTION_DRAFT');
-    await expect(page.locator('#admin-content')).not.toContainText(
+    await expect(page.locator('main[data-area=admin]')).not.toContainText(
       'PRIVATE_OLD_CONSTRUCTION_DRAFT'
     );
     state.progressReviewMode = 'success';
@@ -333,7 +335,7 @@ for (const [locale, theme] of [
     await expect(dialog).toHaveCount(0);
     await expect(note).toHaveCount(0);
     await expect(page.getByRole('button', { name: /701|702/ })).toHaveCount(0);
-    await expect(page.locator('#admin-content')).not.toContainText(
+    await expect(page.locator('main[data-area=admin]')).not.toContainText(
       'PRIVATE_NEW_CONSTRUCTION_DRAFT'
     );
     expect(state.progressWrites.at(-1)).toMatchObject({

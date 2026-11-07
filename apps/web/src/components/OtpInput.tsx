@@ -20,6 +20,7 @@ export interface OtpInputProps {
   name?: string;
   onChange?: (value: string) => void;
   disabled?: boolean;
+  autoFocus?: boolean;
   error?: string | null;
   onComplete?: (otp: string) => void;
   onClearError: () => void;
@@ -30,7 +31,17 @@ export interface OtpInputProps {
  * keyboard navigation, paste support, and shake animation on error.
  */
 export const OtpInput = forwardRef<OtpInputHandle, OtpInputProps>(function OtpInput(
-  { locale, id, name, onChange, disabled = false, error = null, onComplete, onClearError },
+  {
+    locale,
+    id,
+    name,
+    onChange,
+    disabled = false,
+    autoFocus = true,
+    error = null,
+    onComplete,
+    onClearError,
+  },
   ref
 ) {
   const [digits, setDigits] = useState<string[]>(Array(DIGIT_COUNT).fill(''));
@@ -39,10 +50,10 @@ export const OtpInput = forwardRef<OtpInputHandle, OtpInputProps>(function OtpIn
 
   // Focus first input on mount
   useEffect(() => {
-    if (!disabled) {
+    if (autoFocus && !disabled) {
       inputRefs.current[0]?.focus();
     }
-  }, [disabled]);
+  }, [autoFocus, disabled]);
 
   // Shake animation when error changes from null to non-null
   useEffect(() => {

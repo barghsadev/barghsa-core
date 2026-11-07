@@ -73,7 +73,7 @@ for (const locale of ['en', 'fa'] as const) {
       route.fulfill({ json: { addresses: [] } })
     );
     await page.goto('/electricity/order');
-    const main = page.locator('#dashboard-content');
+    const main = page.locator('main[data-area=dashboard]');
     await expect(
       main.getByRole('heading', { name: t('electricity.order.title', locale), exact: true })
     ).toBeVisible();

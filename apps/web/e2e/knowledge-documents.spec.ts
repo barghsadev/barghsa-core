@@ -136,7 +136,9 @@ for (const locale of ['en', 'fa'] as const)
       await expect(page.getByRole('dialog')).toHaveCount(0);
       await expect(selected).toBeFocused();
       await expect(selected).toHaveValue(guide.storageKey);
-      await expect(page.locator('#admin-content')).not.toContainText('private-document-value');
+      await expect(page.locator('main[data-area=admin]')).not.toContainText(
+        'private-document-value'
+      );
       await button(label('attach')).click();
       let dialog = page.getByRole('dialog');
       await dialog.locator('button[type=submit]').click();
@@ -160,7 +162,7 @@ for (const locale of ['en', 'fa'] as const)
       await expect(file).toBeFocused();
       expect(puts).toBe(0);
       expect(
-        (await new AxeBuilder({ page }).include('#admin-content').analyze()).violations
+        (await new AxeBuilder({ page }).include('main[data-area=admin]').analyze()).violations
       ).toEqual([]);
       await page.screenshot({
         path: info.outputPath('knowledge-documents-feedback.png'),
@@ -194,7 +196,7 @@ for (const locale of ['en', 'fa'] as const)
       denied = true;
       await button(label('search')).click();
       await expect(page.locator('#kb-file')).toHaveCount(0);
-      await expect(page.locator('#admin-content')).not.toContainText(uploaded.fileName);
+      await expect(page.locator('main[data-area=admin]')).not.toContainText(uploaded.fileName);
       await page.route('**/api/admin/policies', (route) =>
         route.fulfill({ json: [{ ...policyEntry, priority: 123 }] })
       );
@@ -219,6 +221,6 @@ for (const locale of ['en', 'fa'] as const)
         true
       );
       expect(
-        (await new AxeBuilder({ page }).include('#admin-content').analyze()).violations
+        (await new AxeBuilder({ page }).include('main[data-area=admin]').analyze()).violations
       ).toEqual([]);
     });

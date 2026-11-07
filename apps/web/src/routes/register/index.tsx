@@ -208,7 +208,6 @@ function RegisterPage() {
                         {...field}
                         type="text"
                         autoComplete="username"
-                        autoFocus
                         maxLength={255}
                         placeholder={t('auth.register.usernamePlaceholder', locale)}
                         disabled={model.locked}

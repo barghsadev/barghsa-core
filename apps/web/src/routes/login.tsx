@@ -420,7 +420,6 @@ function LoginPage() {
                           type="text"
                           dir="ltr"
                           autoComplete="username"
-                          autoFocus
                           maxLength={255}
                           placeholder={t('auth.register.usernamePlaceholder', locale)}
                           disabled={model.locked}

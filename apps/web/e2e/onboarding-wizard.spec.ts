@@ -1,4 +1,5 @@
 import AxeBuilder from '@axe-core/playwright';
+import { skipToMain } from './critical-accessibility';
 import { test, expect, type Page } from './coverage-fixture';
 import { fullNavigation } from './navigation-fixture';
 import { dismissMessages } from './dismiss-messages';
@@ -327,11 +328,13 @@ for (const locale of ['en', 'fa'] as const) {
     await fixture(page, locale, 'INDIVIDUAL', { ...individual });
     await page.goto(`/onboarding/individual/${profileId}?step=2`);
     await expect(page.locator('#fullAddress')).toBeVisible();
+    await skipToMain(page, locale);
     await expect(page.locator('#fullAddress')).toHaveValue('Saved Street');
     await page.reload();
     await expect(page.locator('#fullAddress')).toBeVisible();
     await next(page, locale);
     await expect(page).toHaveURL(/\?step=3$/);
+    await expect(page.locator('main form div[tabindex="-1"][aria-label]')).toBeFocused();
     await page.goBack();
     await expect(page).toHaveURL(/\?step=2$/);
     await expect(page.locator('#fullAddress')).toBeVisible();

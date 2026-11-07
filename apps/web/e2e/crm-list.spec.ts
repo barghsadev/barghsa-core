@@ -377,7 +377,7 @@ for (const locale of ['fa', 'en'])
         await expect(table.getByRole('link', { name: /Company profile/ })).toBeVisible();
         await expect(cards).toHaveCount(0);
         const scan = await new AxeBuilder({ page })
-          .include('#admin-content')
+          .include('main[data-area=admin]')
           .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
           .analyze();
         expect(scan.violations).toEqual([]);

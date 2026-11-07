@@ -1292,7 +1292,7 @@ for (const locale of ['fa', 'en'] as const)
         const overflow = await main.evaluate((n) => n.scrollWidth - n.clientWidth);
         expect.soft(overflow, `tab ${n} page overflow`).toBeLessThanOrEqual(1);
         const result = await new AxeBuilder({ page })
-          .include('#admin-content')
+          .include('main[data-area=admin]')
           .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
           .analyze();
         const relevant = {
@@ -1312,7 +1312,7 @@ for (const locale of ['fa', 'en'] as const)
           const row = n === 3 ? panel.getByRole('row').last() : panel.locator('.rounded-lg');
           await row.hover();
           const hoverScan = await new AxeBuilder({ page })
-            .include('#admin-content')
+            .include('main[data-area=admin]')
             .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
             .analyze();
           expect(hoverScan.violations).toEqual([]);
@@ -1416,7 +1416,7 @@ for (const locale of ['fa', 'en'] as const)
         await expect(main.getByRole('alert')).toContainText(message);
         await expect(main).not.toContainText('Internal upstream detail');
         const scan = await new AxeBuilder({ page })
-          .include('#admin-content')
+          .include('main[data-area=admin]')
           .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
           .analyze();
         expect(scan.violations).toEqual([]);

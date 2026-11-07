@@ -38,6 +38,7 @@ const DefaultProfileModal = authEntry
 import { UiDirectionProvider } from '../providers/UiDirectionProvider.js';
 import { BrandThemeProvider } from '../providers/BrandThemeProvider.js';
 import { ApplicationToaster } from '../components/ApplicationToaster.js';
+import { SkipLink } from '../components/SkipLink.js';
 
 export const Route = createRootRoute({
   beforeLoad: async ({ location, preload, abortController }) => {
@@ -119,6 +120,7 @@ function RootComponent() {
   return (
     <UiDirectionProvider>
       <BrandThemeProvider key={profileRevision}>
+        <SkipLink />
         {showCustomerBanner && (
           <Suspense fallback={null}>
             <VerificationBanner accountId={accountId} />

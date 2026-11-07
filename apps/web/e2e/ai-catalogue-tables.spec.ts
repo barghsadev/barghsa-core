@@ -103,7 +103,7 @@ for (const locale of ['en', 'fa'] as const)
       });
       const inspect = async (name: string) => {
         expect(
-          (await new AxeBuilder({ page }).include('#admin-content').analyze()).violations
+          (await new AxeBuilder({ page }).include('main[data-area=admin]').analyze()).violations
         ).toEqual([]);
         expect(
           await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1)
@@ -161,8 +161,8 @@ for (const locale of ['en', 'fa'] as const)
           .nth(1)
           .getByRole('button', { name: modelText('enable'), exact: true })
       ).toBeDisabled();
-      await expect(page.locator('#admin-content')).not.toContainText(privateToken);
-      await expect(page.locator('#admin-content script')).toHaveCount(0);
+      await expect(page.locator('main[data-area=admin]')).not.toContainText(privateToken);
+      await expect(page.locator('main[data-area=admin] script')).toHaveCount(0);
       modelStatus = 503;
       await page.getByRole('button', { name: modelText('refresh'), exact: true }).click();
       await expect(
@@ -182,7 +182,7 @@ for (const locale of ['en', 'fa'] as const)
       ).toBeVisible();
       await expect(modelControls.first()).toBeDisabled();
       await expect(modelDraft).toHaveValue('Retained model draft');
-      await expect(page.locator('#admin-content')).not.toContainText(privateToken);
+      await expect(page.locator('main[data-area=admin]')).not.toContainText(privateToken);
       unsafePayload = false;
       await page.getByRole('button', { name: modelText('retry'), exact: true }).click();
       await expect(modelControls.first()).toBeEnabled();
@@ -197,16 +197,16 @@ for (const locale of ['en', 'fa'] as const)
       modelStatus = 403;
       await page.getByRole('button', { name: modelText('refresh'), exact: true }).click();
       await expect(modelCards).toHaveCount(0);
-      await expect(page.locator('#admin-content')).not.toContainText(model.title);
+      await expect(page.locator('main[data-area=admin]')).not.toContainText(model.title);
 
       const agentText = (key: string) => t(`admin.agents.${key}`, locale);
       await page.setViewportSize({ width: 1280, height: 900 });
       await page.goto('/admin/agents');
       try {
-        const pending = page.locator('#admin-content [data-slot=loading-status]');
+        const pending = page.locator('main[data-area=admin] [data-slot=loading-status]');
         await expect(pending).toBeVisible();
         await expect(pending.locator('[data-slot=skeleton]')).toHaveCount(2);
-        await expect(page.locator('#admin-content [data-slot=avatar]')).toHaveCount(0);
+        await expect(page.locator('main[data-area=admin] [data-slot=avatar]')).toHaveCount(0);
         expect(writes).toBe(0);
       } finally {
         releaseAgentRead();
@@ -260,6 +260,6 @@ for (const locale of ['en', 'fa'] as const)
       agentStatus = 403;
       await page.getByRole('button', { name: agentText('refresh'), exact: true }).click();
       await expect(agentCards).toHaveCount(0);
-      await expect(page.locator('#admin-content')).not.toContainText(agent.title);
+      await expect(page.locator('main[data-area=admin]')).not.toContainText(agent.title);
       expect(writes).toBe(0);
     });

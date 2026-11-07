@@ -310,7 +310,9 @@ for (const [locale, theme] of [
     state.queueDenied = true;
     await refresh.click();
     await expect(page.getByTestId('electricity-increase-reject-form')).toHaveCount(0);
-    await expect(page.locator('#admin-content')).not.toContainText('PRIVATE_WITHDRAWN_REASON');
-    await expect(page.locator('#admin-content')).toContainText(staffText('forbidden'));
+    await expect(page.locator('main[data-area=admin]')).not.toContainText(
+      'PRIVATE_WITHDRAWN_REASON'
+    );
+    await expect(page.locator('main[data-area=admin]')).toContainText(staffText('forbidden'));
   });
 }

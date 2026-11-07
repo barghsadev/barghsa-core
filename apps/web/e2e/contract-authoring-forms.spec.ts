@@ -302,10 +302,12 @@ for (const [locale, theme] of [
     state.denied = true;
     await refresh(page);
     await expect(terms(page)).toHaveCount(0);
-    await expect(page.locator('#admin-content')).not.toContainText(
+    await expect(page.locator('main[data-area=admin]')).not.toContainText(
       'Revised imported delivery terms'
     );
-    await expect(page.locator('#admin-content')).not.toContainText('PRIVATE_AUTHORING_SERVER_TEXT');
+    await expect(page.locator('main[data-area=admin]')).not.toContainText(
+      'PRIVATE_AUTHORING_SERVER_TEXT'
+    );
   });
 
   test(`context versions and base amendments keep original instants and immutable retries (${locale}, ${theme})`, async ({
@@ -405,7 +407,9 @@ for (const [locale, theme] of [
     await state.heldWrite!.fulfill({ status: 200, json: malformed });
     await expect(contextRetry(page)).toBeEnabled();
     await expect(start).toBeDisabled();
-    await expect(page.locator('#admin-content')).not.toContainText('PRIVATE_FOREIGN_RECEIPT');
+    await expect(page.locator('main[data-area=admin]')).not.toContainText(
+      'PRIVATE_FOREIGN_RECEIPT'
+    );
     state.writeMode = 'success';
     await contextRetry(page).click();
     await confirm(page);

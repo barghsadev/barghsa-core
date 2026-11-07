@@ -225,7 +225,7 @@ function LifecyclePanel({ authorized }: { authorized: () => boolean }) {
     });
   }
   return (
-    <main
+    <div
       data-slot="profile-lifecycle"
       className="container mx-auto max-w-3xl space-y-6 px-4 py-8"
       dir={locale === 'fa' ? 'rtl' : 'ltr'}
@@ -374,6 +374,6 @@ function LifecyclePanel({ authorized }: { authorized: () => boolean }) {
           )}
         </>
       )}
-    </main>
+    </div>
   );
 }

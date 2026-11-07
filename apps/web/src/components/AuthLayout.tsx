@@ -68,7 +68,11 @@ export function AuthLayout({ locale = 'fa', children, footer }: AuthLayoutProps)
         <div className="flex items-center justify-end px-5 py-4 md:px-10 md:py-6">
           <LanguageSwitcher />
         </div>
-        <main className="flex flex-1 items-center justify-center px-6 pb-10 pt-4 sm:px-10 md:py-12">
+        <main
+          id="main-content"
+          tabIndex={-1}
+          className="flex flex-1 items-center justify-center px-6 pb-10 pt-4 sm:px-10 md:py-12"
+        >
           <div className="auth-form w-full max-w-(--auth-panel-max-width)">
             {children}
             <div className="mt-8 flex flex-col gap-5 border-t pt-6">
