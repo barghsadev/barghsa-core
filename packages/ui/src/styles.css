@@ -777,6 +777,42 @@
   .app-shell[data-no-navigation='true'] {
     --mobile-navigation-height: 0px;
   }
+  .shell-topbar {
+    @apply flex min-h-(--topbar-height) shrink-0 items-center gap-1 border-b bg-card px-2 sm:gap-3 sm:px-4 md:px-6;
+  }
+  .shell-topbar-context {
+    @apply hidden min-w-0 flex-1 items-center gap-2 text-sm md:flex;
+  }
+  .shell-topbar-actions {
+    @apply ms-auto flex shrink-0 items-center gap-1 sm:gap-2;
+  }
+  .shell-topbar-brand {
+    @apply flex min-h-11 min-w-11 items-center text-foreground no-underline;
+  }
+  .shell-breadcrumbs {
+    @apply shrink-0 border-b bg-card/60 px-4 py-2 text-sm lg:px-6;
+  }
+  .shell-breadcrumb-parent {
+    @apply rounded-sm text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary;
+  }
+  .shell-breadcrumb-trigger {
+    @apply min-h-8 cursor-pointer list-none rounded-md px-2 py-1 font-semibold text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary;
+  }
+  .shell-breadcrumb-menu {
+    @apply absolute start-0 top-full z-40 mt-1 min-w-48 space-y-3 rounded-lg border bg-card p-4 shadow-lg;
+  }
+  .shell-body {
+    @apply flex min-h-0 flex-1 flex-col md:flex-row;
+  }
+  .shell-body > .app-content {
+    @apply min-h-0 min-w-0 flex-1 overflow-auto;
+  }
+  .shell-sidebar-brand {
+    @apply mb-4 hidden min-h-11 items-center md:flex;
+  }
+  .shell-navigation-fallback {
+    @apply flex min-h-16 shrink-0 items-center justify-between gap-3 border-t bg-card px-4 pb-[env(safe-area-inset-bottom)];
+  }
   .app-shell-sidebar {
     @apply hidden max-h-[55dvh] shrink-0 overflow-y-auto overscroll-contain border-b border-e bg-sidebar p-4 text-sidebar-foreground md:block md:max-h-none md:w-[60px] md:border-b-0 md:px-1.5 md:py-2 md:hover:w-(--sidebar-width) md:focus-within:w-(--sidebar-width) lg:w-(--sidebar-width) lg:p-4;
   }

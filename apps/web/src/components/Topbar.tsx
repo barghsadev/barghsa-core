@@ -35,18 +35,22 @@ export function Topbar({
   navigationId: string;
 }) {
   const title = shellText(area === 'admin' ? 'administration' : 'workspace', locale);
+  const preferences = (
+    <>
+      <ThemeSwitcher />
+      <LanguageSwitcher />
+    </>
+  );
   return (
-    <header className="flex min-h-(--topbar-height) shrink-0 items-center gap-1 border-b bg-card px-2 sm:gap-3 sm:px-4 md:px-6">
+    <header className="shell-topbar">
       <Link
         to="/app"
         aria-label={shellText('workspace', locale)}
-        className={
-          isWide ? 'hidden' : 'flex min-h-11 min-w-11 items-center text-foreground no-underline'
-        }
+        className={isWide ? 'hidden' : 'shell-topbar-brand'}
       >
         <BrandMark compact />
       </Link>
-      <div className="hidden min-w-0 flex-1 items-center gap-2 text-sm md:flex">
+      <div className="shell-topbar-context">
         <span className="shrink-0 text-muted-foreground">{title}</span>
         {currentLabel ? (
           <>
@@ -59,13 +63,8 @@ export function Topbar({
           </>
         ) : null}
       </div>
-      <div className="ms-auto flex shrink-0 items-center gap-1 sm:gap-2">
-        {isWide && (
-          <div className="hidden lg:contents">
-            <ThemeSwitcher />
-            <LanguageSwitcher />
-          </div>
-        )}
+      <div className="shell-topbar-actions">
+        {isWide && <div className="hidden lg:contents">{preferences}</div>}
         <ProfileMenu
           area={area}
           locale={locale}
@@ -73,10 +72,7 @@ export function Topbar({
           profileBadge={!isWide ? profileBadge : undefined}
           preferences={
             !isWide ? (
-              <div className="flex flex-wrap items-center gap-3">
-                <ThemeSwitcher />
-                <LanguageSwitcher />
-              </div>
+              <div className="flex flex-wrap items-center gap-3">{preferences}</div>
             ) : undefined
           }
         />

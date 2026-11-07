@@ -387,7 +387,11 @@ test('dashboard shell uses configured brand title and exposes navigation', async
   );
   await page.goto('/dashboard');
   const menu = page.locator('button[aria-controls="dashboard-navigation"]');
-  if (await menu.isVisible()) await menu.click();
+  await expect(menu).toBeAttached();
+  if (await menu.isVisible()) {
+    await menu.click();
+    await expect(menu).toHaveAttribute('aria-expanded', 'true');
+  }
   await expect(page.locator('#dashboard-navigation > a[href="/app"]')).toHaveText(
     'Configured company'
   );

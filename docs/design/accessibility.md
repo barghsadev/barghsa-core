@@ -6,6 +6,9 @@ landmark its own heading or labelled region when it needs a name. Use native
 controls and the shared dialog, sheet and menu components for keyboard
 interaction and focus restoration.
 
+The focused workspace pane handles Arrow Up and Arrow Down so it scrolls
+in Safari. Its child controls keep their own keyboard behavior.
+
 The production browser cases tagged `@a11y-critical` cover login, the customer
 dashboard, service histories, the wallet and contract details. Fast CI runs
 these cases against the production web build and fails on a violation. The

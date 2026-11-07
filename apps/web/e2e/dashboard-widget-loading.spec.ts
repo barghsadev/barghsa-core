@@ -206,8 +206,11 @@ for (const locale of ['en', 'fa'] as const) {
           main.scrollTop = 0;
         });
         await main.focus();
+        await expect(main).toBeFocused();
         await page.keyboard.press('ArrowDown');
         await expect.poll(() => main.evaluate((node) => node.scrollTop)).toBeGreaterThan(0);
+        await page.keyboard.press('ArrowUp');
+        await expect.poll(() => main.evaluate((node) => node.scrollTop)).toBe(0);
         await main.evaluate((node) => {
           node.scrollTop = 0;
         });

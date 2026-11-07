@@ -82,6 +82,11 @@ export function AppShell({
     return () => document.removeEventListener('keydown', close);
   }, [menuOpen]);
   const current = currentNavigation(groups, pathname);
+  const closeMenu = () => setMenuOpen(false);
+  const openMenu = () => {
+    setMenuOpen(true);
+    menuButton.current?.focus();
+  };
   const shell = (
     <div
       className="app-shell"
@@ -100,11 +105,11 @@ export function AppShell({
         menuOpen={menuOpen}
         menuButton={menuButton}
         onMenuToggle={() => setMenuOpen(!menuOpen)}
-        onAccountOpen={() => setMenuOpen(false)}
+        onAccountOpen={closeMenu}
         navigationId={`${area}-navigation`}
       />
       <BreadcrumbBar groups={groups} pathname={pathname} area={area} locale={locale} />
-      <div className="flex min-h-0 flex-1 flex-col md:flex-row">
+      <div className="shell-body">
         <aside
           id={`${area}-navigation`}
           data-expanded={menuOpen}
@@ -113,7 +118,7 @@ export function AppShell({
           <Link
             to="/app"
             aria-label={shellText('workspace', locale)}
-            className="mb-4 hidden min-h-11 items-center md:flex"
+            className="shell-sidebar-brand"
           >
             <BrandMark compact={compact && !menuOpen} />
           </Link>
@@ -151,7 +156,7 @@ export function AppShell({
                         aria-label={label}
                         title={label}
                         aria-current={current?.to === to ? 'page' : undefined}
-                        onClick={() => setMenuOpen(false)}
+                        onClick={closeMenu}
                       >
                         <Icon
                           className="size-[1.125rem] shrink-0"
@@ -181,11 +186,25 @@ export function AppShell({
             </div>
           )}
         </aside>
+        {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
         <main
           id="main-content"
           data-area={area}
           tabIndex={-1}
-          className="app-content min-h-0 min-w-0 flex-1 overflow-auto"
+          className="app-content"
+          onKeyDown={(event) => {
+            if (
+              event.target !== event.currentTarget ||
+              event.altKey ||
+              event.ctrlKey ||
+              event.metaKey ||
+              event.shiftKey
+            )
+              return;
+            if (event.key !== 'ArrowUp' && event.key !== 'ArrowDown') return;
+            event.preventDefault();
+            event.currentTarget.scrollTop += event.key === 'ArrowDown' ? 40 : -40;
+          }}
         >
           <Animated variant="page" motionKey={pathname} className="responsive-container">
             <InsideRouteMain value={true}>{children}</InsideRouteMain>
@@ -200,17 +219,14 @@ export function AppShell({
             locale={locale}
             groups={groups}
             pathname={pathname}
-            onOpen={() => setMenuOpen(false)}
-            onFallback={() => {
-              setMenuOpen(true);
-              menuButton.current?.focus();
-            }}
+            onOpen={closeMenu}
+            onFallback={openMenu}
           />
         ) : (
           <div
             role="region"
             aria-label={shellText('quickNavigation', locale)}
-            className="flex min-h-16 shrink-0 items-center justify-between gap-3 border-t bg-card px-4 pb-[env(safe-area-inset-bottom)]"
+            className="shell-navigation-fallback"
           >
             <p role={compactError ? 'alert' : 'status'} className="text-sm text-muted-foreground">
               {shellText(compactError ? 'navigationError' : 'navigationLoading', locale)}
@@ -219,10 +235,7 @@ export function AppShell({
               <button
                 type="button"
                 className="min-h-10 px-2 font-semibold text-primary"
-                onClick={() => {
-                  setMenuOpen(true);
-                  menuButton.current?.focus();
-                }}
+                onClick={openMenu}
               >
                 {shellText('menu', locale)}
               </button>

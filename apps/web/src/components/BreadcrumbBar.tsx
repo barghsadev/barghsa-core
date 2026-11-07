@@ -58,7 +58,7 @@ export function BreadcrumbBar({
   const parentLink = (crumb: typeof root) => (
     <Link
       to={crumb.to}
-      className="rounded-sm text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+      className="shell-breadcrumb-parent"
       aria-label={shellText('backToPage', locale).replace('{page}', crumb.label)}
     >
       {crumb.label}
@@ -72,10 +72,7 @@ export function BreadcrumbBar({
     />
   );
   return (
-    <nav
-      aria-label={shellText('breadcrumbs', locale)}
-      className="shrink-0 border-b bg-card/60 px-4 py-2 text-sm lg:px-6"
-    >
+    <nav aria-label={shellText('breadcrumbs', locale)} className="shell-breadcrumbs">
       <ol className="flex min-w-0 flex-wrap items-center gap-2">
         {parents.map((crumb) => (
           <li key={crumb.to} className="hidden items-center gap-2 lg:flex">
@@ -89,11 +86,11 @@ export function BreadcrumbBar({
               <details ref={disclosure} className="relative">
                 <summary
                   aria-label={shellText('parentPages', locale)}
-                  className="min-h-8 cursor-pointer list-none rounded-md px-2 py-1 font-semibold text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                  className="shell-breadcrumb-trigger"
                 >
                   …
                 </summary>
-                <ol className="absolute start-0 top-full z-40 mt-1 min-w-48 space-y-3 rounded-lg border bg-card p-4 shadow-lg">
+                <ol className="shell-breadcrumb-menu">
                   {parents.map((crumb) => (
                     <li key={crumb.to}>{parentLink(crumb)}</li>
                   ))}
