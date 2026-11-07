@@ -559,15 +559,18 @@ function CrmProfileDetailContent() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-[300px]">
-        <LoadingStatus className="text-muted-foreground">
-          {t('crm.profile.loading', locale)}
-        </LoadingStatus>
-      </div>
+      <>
+        <h1 className="text-2xl font-bold">{t('crm.profile.title', locale)}</h1>
+        <div className="flex items-center justify-center min-h-[300px]">
+          <LoadingStatus className="text-muted-foreground">
+            {t('crm.profile.loading', locale)}
+          </LoadingStatus>
+        </div>
+      </>
     );
   }
 
-  if (error) {
+  if (error || !data) {
     return (
       <div className="flex items-center justify-center min-h-[300px]">
         <div className="text-center">
@@ -575,7 +578,9 @@ function CrmProfileDetailContent() {
             <h1 className="text-xl font-semibold text-destructive mb-2">
               {t('crm.profile.error.title', locale)}
             </h1>
-            <p className="text-muted-foreground">{error}</p>
+            <p className="text-muted-foreground">
+              {error ?? t('crm.profile.error.generic', locale)}
+            </p>
           </div>
           <Button
             type="button"
@@ -595,8 +600,6 @@ function CrmProfileDetailContent() {
       </div>
     );
   }
-
-  if (!data) return null;
 
   const { profile, user, legalInfo, addresses, sessions, siblingProfiles } = data;
 
@@ -1646,7 +1649,7 @@ function AdminActionConfirmModal({
           }}
           className="space-y-4"
         >
-          <DialogHeader className="pr-8">
+          <DialogHeader className="pe-12">
             <DialogTitle>{title}</DialogTitle>
             <DialogDescription>{message}</DialogDescription>
           </DialogHeader>

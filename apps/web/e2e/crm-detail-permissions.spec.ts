@@ -1433,6 +1433,8 @@ for (const locale of ['fa', 'en'] as const)
       await expect(main.getByRole('status')).toHaveText(
         locale === 'fa' ? 'در حال بارگذاری پروفایل…' : 'Loading profile...'
       );
+      const heading = main.getByRole('heading', { level: 1 });
+      await expect(heading).toHaveText(locale === 'fa' ? 'مشخصات پروفایل' : 'Profile Detail');
       release();
       const generic =
         locale === 'fa' ? 'بارگذاری پروفایل با خطا مواجه شد' : 'Failed to load profile';
@@ -1445,6 +1447,7 @@ for (const locale of ['fa', 'en'] as const)
       ];
       for (const message of messages) {
         await expect(main.getByRole('alert')).toContainText(message);
+        await expect(heading).toBeVisible();
         await expect(main).not.toContainText('Internal upstream detail');
         const scan = await new AxeBuilder({ page })
           .include('main[data-area=admin]')
@@ -1461,6 +1464,7 @@ for (const locale of ['fa', 'en'] as const)
         await retry.press('Enter');
       }
       await expect(main.getByRole('tablist')).toBeVisible();
+      await expect(heading).toBeVisible();
       expect([...new Set(requestedPhases)]).toEqual([0, 1, 2, 3, 4, 5]);
     });
 

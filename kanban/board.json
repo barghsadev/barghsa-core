@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-07T17:44:59+00:00",
-  "source_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
+  "updated": "2026-11-07T17:51:36+00:00",
+  "source_commit": "bcca44c8c54cb21991eb5b6b54afc64166cac743",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -34979,7 +34979,8 @@
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-native-staff-control-targets",
-          "release-0.5-operational-queue-touch"
+          "release-0.5-operational-queue-touch",
+          "release-0.5-crm-profile-loading-heading"
         ],
         "current_acceptance": {
           "kind": "verified-account-preferences-and-timestamp-consumers",
@@ -35175,7 +35176,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "5b63565a20ab8875150a9d202eedaef09a216bfd96c9d84de46af62501cfc690"
+              "sha256": "940f31e6658c987dfded5cdccc6e3b522cab362741e99ef39b2148b3c4b8f926"
             },
             {
               "path": "apps/web/src/pages/DashboardLayout.tsx",
@@ -35920,6 +35921,11 @@
               "batch": "release-0.5-operational-queue-touch",
               "base_commit": "a23e77940836461988a4643eb61abb9df0746996",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-operational-queue-touch/operational-queue-touch-proof.json"
+            },
+            {
+              "batch": "release-0.5-crm-profile-loading-heading",
+              "base_commit": "bcca44c8c54cb21991eb5b6b54afc64166cac743",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-crm-profile-loading-heading/proof.json"
             }
           ]
         },
@@ -42969,7 +42975,8 @@
           "release-0.5-form-conditions-and-command-feedback",
           "release-0.5-workspace-route-census",
           "release-0.5-dependency-gate-closure",
-          "release-0.5-final-gates"
+          "release-0.5-final-gates",
+          "release-0.5-crm-profile-loading-heading"
         ],
         "current_acceptance": {
           "kind": "current-crm-criterion-and-boundary-verification",
@@ -43025,7 +43032,7 @@
             },
             {
               "path": "apps/web/e2e/crm-detail-permissions.spec.ts",
-              "sha256": "d990c39115930a2a2dcf3ae9f6057900e647db0014b52a30e9b8bee4a973130a"
+              "sha256": "a09d90ad66660c2cb117b5652e607cbda19e57ea52fa21eea26e2867b5ffa5eb"
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
@@ -43057,7 +43064,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "5b63565a20ab8875150a9d202eedaef09a216bfd96c9d84de46af62501cfc690"
+              "sha256": "940f31e6658c987dfded5cdccc6e3b522cab362741e99ef39b2148b3c4b8f926"
             },
             {
               "path": "apps/web/src/routeTree.gen.ts",
@@ -43601,6 +43608,11 @@
               "batch": "release-0.5-final-gates",
               "base_commit": "9005d5f06a01a1024fb2b6f94d809f893823d90a",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-final-gates/route-read-proof.json"
+            },
+            {
+              "batch": "release-0.5-crm-profile-loading-heading",
+              "base_commit": "bcca44c8c54cb21991eb5b6b54afc64166cac743",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-crm-profile-loading-heading/proof.json"
             }
           ]
         }
@@ -43790,7 +43802,8 @@
           "release-0.5-protected-contract-and-finance",
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-gates",
-          "release-0.5-final-acceptance"
+          "release-0.5-final-acceptance",
+          "release-0.5-crm-profile-loading-heading"
         ],
         "current_acceptance": {
           "kind": "current-crm-criterion-and-boundary-verification",
@@ -43858,7 +43871,7 @@
             },
             {
               "path": "apps/web/e2e/crm-detail-permissions.spec.ts",
-              "sha256": "d990c39115930a2a2dcf3ae9f6057900e647db0014b52a30e9b8bee4a973130a"
+              "sha256": "a09d90ad66660c2cb117b5652e607cbda19e57ea52fa21eea26e2867b5ffa5eb"
             },
             {
               "path": "apps/web/e2e/crm-legal-edit.spec.ts",
@@ -43906,7 +43919,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "5b63565a20ab8875150a9d202eedaef09a216bfd96c9d84de46af62501cfc690"
+              "sha256": "940f31e6658c987dfded5cdccc6e3b522cab362741e99ef39b2148b3c4b8f926"
             },
             {
               "path": "kanban/epics/02-auth-users-admin.md",
@@ -44929,6 +44942,11 @@
               "batch": "release-0.5-final-acceptance",
               "base_commit": "460fdb3e46b92b3086c95b925a6f4735a21fc2ff",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-final-acceptance/customer-interaction-proof.json"
+            },
+            {
+              "batch": "release-0.5-crm-profile-loading-heading",
+              "base_commit": "bcca44c8c54cb21991eb5b6b54afc64166cac743",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-crm-profile-loading-heading/proof.json"
             }
           ]
         }
@@ -45054,7 +45072,8 @@
           "release-0.5-protected-contract-and-finance",
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-gates",
-          "release-0.5-final-acceptance"
+          "release-0.5-final-acceptance",
+          "release-0.5-crm-profile-loading-heading"
         ],
         "current_acceptance": {
           "kind": "current-crm-criterion-and-boundary-verification",
@@ -45090,7 +45109,7 @@
             },
             {
               "path": "apps/web/e2e/crm-detail-permissions.spec.ts",
-              "sha256": "d990c39115930a2a2dcf3ae9f6057900e647db0014b52a30e9b8bee4a973130a"
+              "sha256": "a09d90ad66660c2cb117b5652e607cbda19e57ea52fa21eea26e2867b5ffa5eb"
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
@@ -45118,7 +45137,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "5b63565a20ab8875150a9d202eedaef09a216bfd96c9d84de46af62501cfc690"
+              "sha256": "940f31e6658c987dfded5cdccc6e3b522cab362741e99ef39b2148b3c4b8f926"
             },
             {
               "path": "packages/i18n/src/crm.ts",
@@ -46053,6 +46072,11 @@
               "batch": "release-0.5-final-acceptance",
               "base_commit": "460fdb3e46b92b3086c95b925a6f4735a21fc2ff",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-final-acceptance/customer-interaction-proof.json"
+            },
+            {
+              "batch": "release-0.5-crm-profile-loading-heading",
+              "base_commit": "bcca44c8c54cb21991eb5b6b54afc64166cac743",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-crm-profile-loading-heading/proof.json"
             }
           ]
         }
@@ -46192,7 +46216,8 @@
           "release-0.5-protected-contract-and-finance",
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-gates",
-          "release-0.5-final-acceptance"
+          "release-0.5-final-acceptance",
+          "release-0.5-crm-profile-loading-heading"
         ],
         "current_acceptance": {
           "kind": "current-crm-criterion-and-boundary-verification",
@@ -46240,7 +46265,7 @@
             },
             {
               "path": "apps/web/e2e/crm-detail-permissions.spec.ts",
-              "sha256": "d990c39115930a2a2dcf3ae9f6057900e647db0014b52a30e9b8bee4a973130a"
+              "sha256": "a09d90ad66660c2cb117b5652e607cbda19e57ea52fa21eea26e2867b5ffa5eb"
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
@@ -46268,7 +46293,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "5b63565a20ab8875150a9d202eedaef09a216bfd96c9d84de46af62501cfc690"
+              "sha256": "940f31e6658c987dfded5cdccc6e3b522cab362741e99ef39b2148b3c4b8f926"
             },
             {
               "path": "packages/i18n/src/crm.ts",
@@ -47203,6 +47228,11 @@
               "batch": "release-0.5-final-acceptance",
               "base_commit": "460fdb3e46b92b3086c95b925a6f4735a21fc2ff",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-final-acceptance/customer-interaction-proof.json"
+            },
+            {
+              "batch": "release-0.5-crm-profile-loading-heading",
+              "base_commit": "bcca44c8c54cb21991eb5b6b54afc64166cac743",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-crm-profile-loading-heading/proof.json"
             }
           ]
         }
@@ -47338,7 +47368,8 @@
           "release-0.5-ui-coverage-collection",
           "release-0.5-protected-contract-and-finance",
           "release-0.5-dependency-gate-closure",
-          "release-0.5-final-gates"
+          "release-0.5-final-gates",
+          "release-0.5-crm-profile-loading-heading"
         ],
         "current_acceptance": {
           "kind": "current-identity-staff-and-legal-membership-boundary-verification",
@@ -47370,7 +47401,7 @@
             },
             {
               "path": "apps/web/e2e/crm-detail-permissions.spec.ts",
-              "sha256": "d990c39115930a2a2dcf3ae9f6057900e647db0014b52a30e9b8bee4a973130a"
+              "sha256": "a09d90ad66660c2cb117b5652e607cbda19e57ea52fa21eea26e2867b5ffa5eb"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -47394,7 +47425,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "5b63565a20ab8875150a9d202eedaef09a216bfd96c9d84de46af62501cfc690"
+              "sha256": "940f31e6658c987dfded5cdccc6e3b522cab362741e99ef39b2148b3c4b8f926"
             },
             {
               "path": "apps/web/src/routes/admin/crm/corrections.tsx",
@@ -47596,6 +47627,11 @@
               "batch": "release-0.5-final-gates",
               "base_commit": "9005d5f06a01a1024fb2b6f94d809f893823d90a",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-final-gates/route-read-proof.json"
+            },
+            {
+              "batch": "release-0.5-crm-profile-loading-heading",
+              "base_commit": "bcca44c8c54cb21991eb5b6b54afc64166cac743",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-crm-profile-loading-heading/proof.json"
             }
           ]
         }
@@ -62239,7 +62275,8 @@
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-native-staff-control-targets",
-          "release-0.5-operational-queue-touch"
+          "release-0.5-operational-queue-touch",
+          "release-0.5-crm-profile-loading-heading"
         ],
         "current_acceptance": {
           "kind": "accepted-native-brand-theme-application",
@@ -62423,7 +62460,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "5b63565a20ab8875150a9d202eedaef09a216bfd96c9d84de46af62501cfc690"
+              "sha256": "940f31e6658c987dfded5cdccc6e3b522cab362741e99ef39b2148b3c4b8f926"
             },
             {
               "path": "apps/web/src/pages/DashboardLayout.tsx",
@@ -62814,6 +62851,11 @@
               "batch": "release-0.5-operational-queue-touch",
               "base_commit": "a23e77940836461988a4643eb61abb9df0746996",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-operational-queue-touch/operational-queue-touch-proof.json"
+            },
+            {
+              "batch": "release-0.5-crm-profile-loading-heading",
+              "base_commit": "bcca44c8c54cb21991eb5b6b54afc64166cac743",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-crm-profile-loading-heading/proof.json"
             }
           ]
         },
@@ -485376,7 +485418,8 @@
           "release-0.5-saving-address-response-feedback",
           "release-0.5-operational-queue-touch",
           "release-0.5-responsive-width-acceptance",
-          "release-0.5-saving-address-field-errors"
+          "release-0.5-saving-address-field-errors",
+          "release-0.5-crm-profile-loading-heading"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -485772,7 +485815,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "5b63565a20ab8875150a9d202eedaef09a216bfd96c9d84de46af62501cfc690"
+              "sha256": "940f31e6658c987dfded5cdccc6e3b522cab362741e99ef39b2148b3c4b8f926"
             },
             {
               "path": "apps/web/src/pages/CrmProfileList.tsx",
@@ -486252,6 +486295,11 @@
               "batch": "release-0.5-saving-address-field-errors",
               "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
+            },
+            {
+              "batch": "release-0.5-crm-profile-loading-heading",
+              "base_commit": "bcca44c8c54cb21991eb5b6b54afc64166cac743",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-crm-profile-loading-heading/proof.json"
             }
           ]
         },
@@ -488362,7 +488410,8 @@
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-native-staff-control-targets",
-          "release-0.5-responsive-width-acceptance"
+          "release-0.5-responsive-width-acceptance",
+          "release-0.5-crm-profile-loading-heading"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -488746,7 +488795,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "5b63565a20ab8875150a9d202eedaef09a216bfd96c9d84de46af62501cfc690"
+              "sha256": "940f31e6658c987dfded5cdccc6e3b522cab362741e99ef39b2148b3c4b8f926"
             },
             {
               "path": "apps/web/src/pages/CrmProfileList.tsx",
@@ -489048,6 +489097,11 @@
               "batch": "release-0.5-responsive-width-acceptance",
               "base_commit": "d0555f77ac44ec5ea209db9407149824031617da",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-responsive-width-acceptance/closure-touch-width-proof.json"
+            },
+            {
+              "batch": "release-0.5-crm-profile-loading-heading",
+              "base_commit": "bcca44c8c54cb21991eb5b6b54afc64166cac743",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-crm-profile-loading-heading/proof.json"
             }
           ]
         }
@@ -489178,7 +489232,8 @@
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-native-staff-control-targets",
-          "release-0.5-responsive-width-acceptance"
+          "release-0.5-responsive-width-acceptance",
+          "release-0.5-crm-profile-loading-heading"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -489562,7 +489617,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "5b63565a20ab8875150a9d202eedaef09a216bfd96c9d84de46af62501cfc690"
+              "sha256": "940f31e6658c987dfded5cdccc6e3b522cab362741e99ef39b2148b3c4b8f926"
             },
             {
               "path": "apps/web/src/pages/CrmProfileList.tsx",
@@ -489864,6 +489919,11 @@
               "batch": "release-0.5-responsive-width-acceptance",
               "base_commit": "d0555f77ac44ec5ea209db9407149824031617da",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-responsive-width-acceptance/closure-touch-width-proof.json"
+            },
+            {
+              "batch": "release-0.5-crm-profile-loading-heading",
+              "base_commit": "bcca44c8c54cb21991eb5b6b54afc64166cac743",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-crm-profile-loading-heading/proof.json"
             }
           ]
         }
@@ -489935,7 +489995,8 @@
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-native-staff-control-targets",
-          "release-0.5-responsive-width-acceptance"
+          "release-0.5-responsive-width-acceptance",
+          "release-0.5-crm-profile-loading-heading"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -490319,7 +490380,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "5b63565a20ab8875150a9d202eedaef09a216bfd96c9d84de46af62501cfc690"
+              "sha256": "940f31e6658c987dfded5cdccc6e3b522cab362741e99ef39b2148b3c4b8f926"
             },
             {
               "path": "apps/web/src/pages/CrmProfileList.tsx",
@@ -490621,6 +490682,11 @@
               "batch": "release-0.5-responsive-width-acceptance",
               "base_commit": "d0555f77ac44ec5ea209db9407149824031617da",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-responsive-width-acceptance/closure-touch-width-proof.json"
+            },
+            {
+              "batch": "release-0.5-crm-profile-loading-heading",
+              "base_commit": "bcca44c8c54cb21991eb5b6b54afc64166cac743",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-crm-profile-loading-heading/proof.json"
             }
           ]
         }
@@ -504249,7 +504315,8 @@
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-native-staff-control-targets",
-          "release-0.5-operational-queue-touch"
+          "release-0.5-operational-queue-touch",
+          "release-0.5-crm-profile-loading-heading"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -504541,7 +504608,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "5b63565a20ab8875150a9d202eedaef09a216bfd96c9d84de46af62501cfc690"
+              "sha256": "940f31e6658c987dfded5cdccc6e3b522cab362741e99ef39b2148b3c4b8f926"
             },
             {
               "path": "apps/web/src/pages/CrmProfileList.tsx",
@@ -504777,6 +504844,11 @@
               "batch": "release-0.5-operational-queue-touch",
               "base_commit": "a23e77940836461988a4643eb61abb9df0746996",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-operational-queue-touch/operational-queue-touch-proof.json"
+            },
+            {
+              "batch": "release-0.5-crm-profile-loading-heading",
+              "base_commit": "bcca44c8c54cb21991eb5b6b54afc64166cac743",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-crm-profile-loading-heading/proof.json"
             }
           ]
         }
@@ -507142,7 +507214,8 @@
           "release-0.5-ai-tab-intrinsic-widths",
           "release-0.5-operational-queue-touch",
           "release-0.5-responsive-width-acceptance",
-          "release-0.5-saving-address-field-errors"
+          "release-0.5-saving-address-field-errors",
+          "release-0.5-crm-profile-loading-heading"
         ],
         "current_acceptance": {
           "kind": "populated-canonical-viewport-matrix",
@@ -507167,6 +507240,14 @@
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
               "sha256": "481cf948e50c647cb8c925532dda7c110a6b41b22b5fb39f9438ad8710bb5730"
+            },
+            {
+              "path": "apps/web/e2e/crm-detail-permissions.spec.ts",
+              "sha256": "a09d90ad66660c2cb117b5652e607cbda19e57ea52fa21eea26e2867b5ffa5eb"
+            },
+            {
+              "path": "apps/web/src/pages/CrmProfileDetail.tsx",
+              "sha256": "940f31e6658c987dfded5cdccc6e3b522cab362741e99ef39b2148b3c4b8f926"
             }
           ],
           "checks": [
@@ -507174,7 +507255,8 @@
             "332 exact current production-built browser cases and 2,976 populated measurements across 93 canonical routes.",
             "Original strict overflow, layout, target and landmark assertions retained. Native consent uses a directly tapped 44px label.",
             "Targeted staff lifecycle passed 28 browser cases and 11 unit cases. Current build, typecheck, lint, formatting and all 98 gzip budgets passed.",
-            "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json",
+            "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-crm-profile-loading-heading/proof.json"
           ],
           "criterion_result": "All eight required widths passed in English and Persian on Chromium and mobile Safari. No rendered text overlap, clipping or horizontal overflow was reported. All additional fractional touch reports retained both 44px computed minima and at least 44 CSS pixels of physical area.",
           "limitations": [
@@ -507185,6 +507267,11 @@
               "batch": "release-0.5-saving-address-field-errors",
               "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
+            },
+            {
+              "batch": "release-0.5-crm-profile-loading-heading",
+              "base_commit": "bcca44c8c54cb21991eb5b6b54afc64166cac743",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-crm-profile-loading-heading/proof.json"
             }
           ]
         }
@@ -508830,7 +508917,8 @@
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-invoice-response-feedback"
+          "release-0.5-invoice-response-feedback",
+          "release-0.5-crm-profile-loading-heading"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -508862,7 +508950,7 @@
             },
             {
               "path": "apps/web/e2e/crm-detail-permissions.spec.ts",
-              "sha256": "d990c39115930a2a2dcf3ae9f6057900e647db0014b52a30e9b8bee4a973130a"
+              "sha256": "a09d90ad66660c2cb117b5652e607cbda19e57ea52fa21eea26e2867b5ffa5eb"
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
@@ -509026,7 +509114,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "5b63565a20ab8875150a9d202eedaef09a216bfd96c9d84de46af62501cfc690"
+              "sha256": "940f31e6658c987dfded5cdccc6e3b522cab362741e99ef39b2148b3c4b8f926"
             },
             {
               "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.tsx",
@@ -509232,6 +509320,11 @@
               "batch": "release-0.5-invoice-response-feedback",
               "base_commit": "a27bfb6aca1393b091d9e63d4ce00ad7a2eae457",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-response-feedback/invoice-response-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-crm-profile-loading-heading",
+              "base_commit": "bcca44c8c54cb21991eb5b6b54afc64166cac743",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-crm-profile-loading-heading/proof.json"
             }
           ]
         }
@@ -509252,7 +509345,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Simple and advanced electricity now expose a localized level-one heading during verification, loading and recovery. Recorded populated routes retain the main landmark and single page title. Remaining conditional headings and landmarks are open."
+        "Staff CRM profile detail now keeps one localized level-one heading through a held read, recoverable errors and populated detail. Current widths and landmarks passed in both directions and native engines. The archive dialog reserves its inline-end close target in both directions. Remaining conditional headings and landmarks are open."
       ],
       "owner": null,
       "depends_on": [],
@@ -509272,7 +509365,8 @@
           "release-0.5-final-acceptance",
           "release-0.5-final-rehearsal",
           "release-0.5-route-census-closure",
-          "release-0.5-native-staff-touch-and-electricity-recovery"
+          "release-0.5-native-staff-touch-and-electricity-recovery",
+          "release-0.5-crm-profile-loading-heading"
         ],
         "current_acceptance": null
       }
@@ -509751,7 +509845,8 @@
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-invoice-response-feedback"
+          "release-0.5-invoice-response-feedback",
+          "release-0.5-crm-profile-loading-heading"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -509783,7 +509878,7 @@
             },
             {
               "path": "apps/web/e2e/crm-detail-permissions.spec.ts",
-              "sha256": "d990c39115930a2a2dcf3ae9f6057900e647db0014b52a30e9b8bee4a973130a"
+              "sha256": "a09d90ad66660c2cb117b5652e607cbda19e57ea52fa21eea26e2867b5ffa5eb"
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
@@ -509947,7 +510042,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "5b63565a20ab8875150a9d202eedaef09a216bfd96c9d84de46af62501cfc690"
+              "sha256": "940f31e6658c987dfded5cdccc6e3b522cab362741e99ef39b2148b3c4b8f926"
             },
             {
               "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.tsx",
@@ -510153,6 +510248,11 @@
               "batch": "release-0.5-invoice-response-feedback",
               "base_commit": "a27bfb6aca1393b091d9e63d4ce00ad7a2eae457",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-response-feedback/invoice-response-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-crm-profile-loading-heading",
+              "base_commit": "bcca44c8c54cb21991eb5b6b54afc64166cac743",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-crm-profile-loading-heading/proof.json"
             }
           ]
         }
@@ -510211,7 +510311,8 @@
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-native-staff-control-targets",
-          "release-0.5-ai-tab-intrinsic-widths"
+          "release-0.5-ai-tab-intrinsic-widths",
+          "release-0.5-crm-profile-loading-heading"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -510299,7 +510400,7 @@
             },
             {
               "path": "apps/web/e2e/crm-detail-permissions.spec.ts",
-              "sha256": "d990c39115930a2a2dcf3ae9f6057900e647db0014b52a30e9b8bee4a973130a"
+              "sha256": "a09d90ad66660c2cb117b5652e607cbda19e57ea52fa21eea26e2867b5ffa5eb"
             },
             {
               "path": "apps/web/e2e/crm-list.spec.ts",
@@ -510879,6 +510980,11 @@
               "batch": "release-0.5-ai-tab-intrinsic-widths",
               "base_commit": "1a62016b62709882a7d5ddf84af5d3b655ca27ee",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/ai-tab-label-proof.json"
+            },
+            {
+              "batch": "release-0.5-crm-profile-loading-heading",
+              "base_commit": "bcca44c8c54cb21991eb5b6b54afc64166cac743",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-crm-profile-loading-heading/proof.json"
             }
           ]
         }
@@ -510937,7 +511043,8 @@
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-native-staff-control-targets",
-          "release-0.5-ai-tab-intrinsic-widths"
+          "release-0.5-ai-tab-intrinsic-widths",
+          "release-0.5-crm-profile-loading-heading"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -511025,7 +511132,7 @@
             },
             {
               "path": "apps/web/e2e/crm-detail-permissions.spec.ts",
-              "sha256": "d990c39115930a2a2dcf3ae9f6057900e647db0014b52a30e9b8bee4a973130a"
+              "sha256": "a09d90ad66660c2cb117b5652e607cbda19e57ea52fa21eea26e2867b5ffa5eb"
             },
             {
               "path": "apps/web/e2e/crm-list.spec.ts",
@@ -511605,6 +511712,11 @@
               "batch": "release-0.5-ai-tab-intrinsic-widths",
               "base_commit": "1a62016b62709882a7d5ddf84af5d3b655ca27ee",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/ai-tab-label-proof.json"
+            },
+            {
+              "batch": "release-0.5-crm-profile-loading-heading",
+              "base_commit": "bcca44c8c54cb21991eb5b6b54afc64166cac743",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-crm-profile-loading-heading/proof.json"
             }
           ]
         }
@@ -511649,7 +511761,8 @@
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-invoice-response-feedback"
+          "release-0.5-invoice-response-feedback",
+          "release-0.5-crm-profile-loading-heading"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -511681,7 +511794,7 @@
             },
             {
               "path": "apps/web/e2e/crm-detail-permissions.spec.ts",
-              "sha256": "d990c39115930a2a2dcf3ae9f6057900e647db0014b52a30e9b8bee4a973130a"
+              "sha256": "a09d90ad66660c2cb117b5652e607cbda19e57ea52fa21eea26e2867b5ffa5eb"
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
@@ -511845,7 +511958,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "5b63565a20ab8875150a9d202eedaef09a216bfd96c9d84de46af62501cfc690"
+              "sha256": "940f31e6658c987dfded5cdccc6e3b522cab362741e99ef39b2148b3c4b8f926"
             },
             {
               "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.tsx",
@@ -512051,6 +512164,11 @@
               "batch": "release-0.5-invoice-response-feedback",
               "base_commit": "a27bfb6aca1393b091d9e63d4ce00ad7a2eae457",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-response-feedback/invoice-response-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-crm-profile-loading-heading",
+              "base_commit": "bcca44c8c54cb21991eb5b6b54afc64166cac743",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-crm-profile-loading-heading/proof.json"
             }
           ]
         }
@@ -512109,7 +512227,8 @@
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-native-staff-control-targets",
-          "release-0.5-ai-tab-intrinsic-widths"
+          "release-0.5-ai-tab-intrinsic-widths",
+          "release-0.5-crm-profile-loading-heading"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -512197,7 +512316,7 @@
             },
             {
               "path": "apps/web/e2e/crm-detail-permissions.spec.ts",
-              "sha256": "d990c39115930a2a2dcf3ae9f6057900e647db0014b52a30e9b8bee4a973130a"
+              "sha256": "a09d90ad66660c2cb117b5652e607cbda19e57ea52fa21eea26e2867b5ffa5eb"
             },
             {
               "path": "apps/web/e2e/crm-list.spec.ts",
@@ -512777,6 +512896,11 @@
               "batch": "release-0.5-ai-tab-intrinsic-widths",
               "base_commit": "1a62016b62709882a7d5ddf84af5d3b655ca27ee",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/ai-tab-label-proof.json"
+            },
+            {
+              "batch": "release-0.5-crm-profile-loading-heading",
+              "base_commit": "bcca44c8c54cb21991eb5b6b54afc64166cac743",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-crm-profile-loading-heading/proof.json"
             }
           ]
         }
@@ -534696,7 +534820,8 @@
           "release-0.5-invoice-response-feedback",
           "release-0.5-saving-address-response-feedback",
           "release-0.5-responsive-width-acceptance",
-          "release-0.5-saving-address-field-errors"
+          "release-0.5-saving-address-field-errors",
+          "release-0.5-crm-profile-loading-heading"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -535268,7 +535393,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "5b63565a20ab8875150a9d202eedaef09a216bfd96c9d84de46af62501cfc690"
+              "sha256": "940f31e6658c987dfded5cdccc6e3b522cab362741e99ef39b2148b3c4b8f926"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
@@ -536343,6 +536468,11 @@
               "batch": "release-0.5-saving-address-field-errors",
               "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
+            },
+            {
+              "batch": "release-0.5-crm-profile-loading-heading",
+              "base_commit": "bcca44c8c54cb21991eb5b6b54afc64166cac743",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-crm-profile-loading-heading/proof.json"
             }
           ]
         },
@@ -536483,7 +536613,8 @@
           "release-0.5-invoice-response-feedback",
           "release-0.5-saving-address-response-feedback",
           "release-0.5-responsive-width-acceptance",
-          "release-0.5-saving-address-field-errors"
+          "release-0.5-saving-address-field-errors",
+          "release-0.5-crm-profile-loading-heading"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -537055,7 +537186,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "5b63565a20ab8875150a9d202eedaef09a216bfd96c9d84de46af62501cfc690"
+              "sha256": "940f31e6658c987dfded5cdccc6e3b522cab362741e99ef39b2148b3c4b8f926"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
@@ -538130,6 +538261,11 @@
               "batch": "release-0.5-saving-address-field-errors",
               "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
+            },
+            {
+              "batch": "release-0.5-crm-profile-loading-heading",
+              "base_commit": "bcca44c8c54cb21991eb5b6b54afc64166cac743",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-crm-profile-loading-heading/proof.json"
             }
           ]
         },
@@ -538271,7 +538407,8 @@
           "release-0.5-invoice-response-feedback",
           "release-0.5-saving-address-response-feedback",
           "release-0.5-responsive-width-acceptance",
-          "release-0.5-saving-address-field-errors"
+          "release-0.5-saving-address-field-errors",
+          "release-0.5-crm-profile-loading-heading"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -538843,7 +538980,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "5b63565a20ab8875150a9d202eedaef09a216bfd96c9d84de46af62501cfc690"
+              "sha256": "940f31e6658c987dfded5cdccc6e3b522cab362741e99ef39b2148b3c4b8f926"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
@@ -539918,6 +540055,11 @@
               "batch": "release-0.5-saving-address-field-errors",
               "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
+            },
+            {
+              "batch": "release-0.5-crm-profile-loading-heading",
+              "base_commit": "bcca44c8c54cb21991eb5b6b54afc64166cac743",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-crm-profile-loading-heading/proof.json"
             }
           ]
         },
@@ -540028,7 +540170,8 @@
           "release-0.5-invoice-response-feedback",
           "release-0.5-saving-address-response-feedback",
           "release-0.5-responsive-width-acceptance",
-          "release-0.5-saving-address-field-errors"
+          "release-0.5-saving-address-field-errors",
+          "release-0.5-crm-profile-loading-heading"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -540600,7 +540743,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "5b63565a20ab8875150a9d202eedaef09a216bfd96c9d84de46af62501cfc690"
+              "sha256": "940f31e6658c987dfded5cdccc6e3b522cab362741e99ef39b2148b3c4b8f926"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
@@ -541675,6 +541818,11 @@
               "batch": "release-0.5-saving-address-field-errors",
               "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
+            },
+            {
+              "batch": "release-0.5-crm-profile-loading-heading",
+              "base_commit": "bcca44c8c54cb21991eb5b6b54afc64166cac743",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-crm-profile-loading-heading/proof.json"
             }
           ]
         },
@@ -541811,7 +541959,8 @@
           "release-0.5-invoice-response-feedback",
           "release-0.5-saving-address-response-feedback",
           "release-0.5-responsive-width-acceptance",
-          "release-0.5-saving-address-field-errors"
+          "release-0.5-saving-address-field-errors",
+          "release-0.5-crm-profile-loading-heading"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -542383,7 +542532,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "5b63565a20ab8875150a9d202eedaef09a216bfd96c9d84de46af62501cfc690"
+              "sha256": "940f31e6658c987dfded5cdccc6e3b522cab362741e99ef39b2148b3c4b8f926"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
@@ -543458,6 +543607,11 @@
               "batch": "release-0.5-saving-address-field-errors",
               "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
+            },
+            {
+              "batch": "release-0.5-crm-profile-loading-heading",
+              "base_commit": "bcca44c8c54cb21991eb5b6b54afc64166cac743",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-crm-profile-loading-heading/proof.json"
             }
           ]
         },
@@ -543603,7 +543757,8 @@
           "release-0.5-invoice-response-feedback",
           "release-0.5-saving-address-response-feedback",
           "release-0.5-responsive-width-acceptance",
-          "release-0.5-saving-address-field-errors"
+          "release-0.5-saving-address-field-errors",
+          "release-0.5-crm-profile-loading-heading"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -544175,7 +544330,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "5b63565a20ab8875150a9d202eedaef09a216bfd96c9d84de46af62501cfc690"
+              "sha256": "940f31e6658c987dfded5cdccc6e3b522cab362741e99ef39b2148b3c4b8f926"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
@@ -545250,6 +545405,11 @@
               "batch": "release-0.5-saving-address-field-errors",
               "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
+            },
+            {
+              "batch": "release-0.5-crm-profile-loading-heading",
+              "base_commit": "bcca44c8c54cb21991eb5b6b54afc64166cac743",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-crm-profile-loading-heading/proof.json"
             }
           ]
         },
@@ -545368,7 +545528,8 @@
           "release-0.5-invoice-response-feedback",
           "release-0.5-saving-address-response-feedback",
           "release-0.5-responsive-width-acceptance",
-          "release-0.5-saving-address-field-errors"
+          "release-0.5-saving-address-field-errors",
+          "release-0.5-crm-profile-loading-heading"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -545940,7 +546101,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "5b63565a20ab8875150a9d202eedaef09a216bfd96c9d84de46af62501cfc690"
+              "sha256": "940f31e6658c987dfded5cdccc6e3b522cab362741e99ef39b2148b3c4b8f926"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
@@ -547015,6 +547176,11 @@
               "batch": "release-0.5-saving-address-field-errors",
               "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
+            },
+            {
+              "batch": "release-0.5-crm-profile-loading-heading",
+              "base_commit": "bcca44c8c54cb21991eb5b6b54afc64166cac743",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-crm-profile-loading-heading/proof.json"
             }
           ]
         },
@@ -547097,7 +547263,8 @@
           "release-0.5-invoice-response-feedback",
           "release-0.5-saving-address-response-feedback",
           "release-0.5-responsive-width-acceptance",
-          "release-0.5-saving-address-field-errors"
+          "release-0.5-saving-address-field-errors",
+          "release-0.5-crm-profile-loading-heading"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -547669,7 +547836,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "5b63565a20ab8875150a9d202eedaef09a216bfd96c9d84de46af62501cfc690"
+              "sha256": "940f31e6658c987dfded5cdccc6e3b522cab362741e99ef39b2148b3c4b8f926"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
@@ -548744,6 +548911,11 @@
               "batch": "release-0.5-saving-address-field-errors",
               "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
+            },
+            {
+              "batch": "release-0.5-crm-profile-loading-heading",
+              "base_commit": "bcca44c8c54cb21991eb5b6b54afc64166cac743",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-crm-profile-loading-heading/proof.json"
             }
           ]
         },
@@ -548826,7 +548998,8 @@
           "release-0.5-invoice-response-feedback",
           "release-0.5-saving-address-response-feedback",
           "release-0.5-responsive-width-acceptance",
-          "release-0.5-saving-address-field-errors"
+          "release-0.5-saving-address-field-errors",
+          "release-0.5-crm-profile-loading-heading"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -549398,7 +549571,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "5b63565a20ab8875150a9d202eedaef09a216bfd96c9d84de46af62501cfc690"
+              "sha256": "940f31e6658c987dfded5cdccc6e3b522cab362741e99ef39b2148b3c4b8f926"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
@@ -550473,6 +550646,11 @@
               "batch": "release-0.5-saving-address-field-errors",
               "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
+            },
+            {
+              "batch": "release-0.5-crm-profile-loading-heading",
+              "base_commit": "bcca44c8c54cb21991eb5b6b54afc64166cac743",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-crm-profile-loading-heading/proof.json"
             }
           ]
         },
@@ -550556,7 +550734,8 @@
           "release-0.5-invoice-response-feedback",
           "release-0.5-saving-address-response-feedback",
           "release-0.5-responsive-width-acceptance",
-          "release-0.5-saving-address-field-errors"
+          "release-0.5-saving-address-field-errors",
+          "release-0.5-crm-profile-loading-heading"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -551128,7 +551307,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "5b63565a20ab8875150a9d202eedaef09a216bfd96c9d84de46af62501cfc690"
+              "sha256": "940f31e6658c987dfded5cdccc6e3b522cab362741e99ef39b2148b3c4b8f926"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
@@ -552203,6 +552382,11 @@
               "batch": "release-0.5-saving-address-field-errors",
               "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
+            },
+            {
+              "batch": "release-0.5-crm-profile-loading-heading",
+              "base_commit": "bcca44c8c54cb21991eb5b6b54afc64166cac743",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-crm-profile-loading-heading/proof.json"
             }
           ]
         },
@@ -552285,7 +552469,8 @@
           "release-0.5-invoice-response-feedback",
           "release-0.5-saving-address-response-feedback",
           "release-0.5-responsive-width-acceptance",
-          "release-0.5-saving-address-field-errors"
+          "release-0.5-saving-address-field-errors",
+          "release-0.5-crm-profile-loading-heading"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -552857,7 +553042,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "5b63565a20ab8875150a9d202eedaef09a216bfd96c9d84de46af62501cfc690"
+              "sha256": "940f31e6658c987dfded5cdccc6e3b522cab362741e99ef39b2148b3c4b8f926"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
@@ -553932,6 +554117,11 @@
               "batch": "release-0.5-saving-address-field-errors",
               "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
+            },
+            {
+              "batch": "release-0.5-crm-profile-loading-heading",
+              "base_commit": "bcca44c8c54cb21991eb5b6b54afc64166cac743",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-crm-profile-loading-heading/proof.json"
             }
           ]
         },
@@ -554007,7 +554197,8 @@
           "release-0.5-settings-response-feedback",
           "release-0.5-invoice-response-feedback",
           "release-0.5-saving-address-response-feedback",
-          "release-0.5-saving-address-field-errors"
+          "release-0.5-saving-address-field-errors",
+          "release-0.5-crm-profile-loading-heading"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -554599,7 +554790,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "5b63565a20ab8875150a9d202eedaef09a216bfd96c9d84de46af62501cfc690"
+              "sha256": "940f31e6658c987dfded5cdccc6e3b522cab362741e99ef39b2148b3c4b8f926"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.test.tsx",
@@ -555748,6 +555939,11 @@
               "batch": "release-0.5-saving-address-field-errors",
               "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
+            },
+            {
+              "batch": "release-0.5-crm-profile-loading-heading",
+              "base_commit": "bcca44c8c54cb21991eb5b6b54afc64166cac743",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-crm-profile-loading-heading/proof.json"
             }
           ]
         }
@@ -555817,7 +556013,8 @@
           "release-0.5-settings-response-feedback",
           "release-0.5-invoice-response-feedback",
           "release-0.5-saving-address-response-feedback",
-          "release-0.5-saving-address-field-errors"
+          "release-0.5-saving-address-field-errors",
+          "release-0.5-crm-profile-loading-heading"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -556409,7 +556606,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "5b63565a20ab8875150a9d202eedaef09a216bfd96c9d84de46af62501cfc690"
+              "sha256": "940f31e6658c987dfded5cdccc6e3b522cab362741e99ef39b2148b3c4b8f926"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.test.tsx",
@@ -557558,6 +557755,11 @@
               "batch": "release-0.5-saving-address-field-errors",
               "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
+            },
+            {
+              "batch": "release-0.5-crm-profile-loading-heading",
+              "base_commit": "bcca44c8c54cb21991eb5b6b54afc64166cac743",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-crm-profile-loading-heading/proof.json"
             }
           ]
         }
@@ -557671,7 +557873,8 @@
           "release-0.5-settings-response-feedback",
           "release-0.5-invoice-response-feedback",
           "release-0.5-saving-address-response-feedback",
-          "release-0.5-saving-address-field-errors"
+          "release-0.5-saving-address-field-errors",
+          "release-0.5-crm-profile-loading-heading"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -558263,7 +558466,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "5b63565a20ab8875150a9d202eedaef09a216bfd96c9d84de46af62501cfc690"
+              "sha256": "940f31e6658c987dfded5cdccc6e3b522cab362741e99ef39b2148b3c4b8f926"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.test.tsx",
@@ -559412,6 +559615,11 @@
               "batch": "release-0.5-saving-address-field-errors",
               "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
+            },
+            {
+              "batch": "release-0.5-crm-profile-loading-heading",
+              "base_commit": "bcca44c8c54cb21991eb5b6b54afc64166cac743",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-crm-profile-loading-heading/proof.json"
             }
           ]
         }
@@ -559481,7 +559689,8 @@
           "release-0.5-settings-response-feedback",
           "release-0.5-invoice-response-feedback",
           "release-0.5-saving-address-response-feedback",
-          "release-0.5-saving-address-field-errors"
+          "release-0.5-saving-address-field-errors",
+          "release-0.5-crm-profile-loading-heading"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -560073,7 +560282,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "5b63565a20ab8875150a9d202eedaef09a216bfd96c9d84de46af62501cfc690"
+              "sha256": "940f31e6658c987dfded5cdccc6e3b522cab362741e99ef39b2148b3c4b8f926"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.test.tsx",
@@ -561222,6 +561431,11 @@
               "batch": "release-0.5-saving-address-field-errors",
               "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
+            },
+            {
+              "batch": "release-0.5-crm-profile-loading-heading",
+              "base_commit": "bcca44c8c54cb21991eb5b6b54afc64166cac743",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-crm-profile-loading-heading/proof.json"
             }
           ]
         }
@@ -561291,7 +561505,8 @@
           "release-0.5-settings-response-feedback",
           "release-0.5-invoice-response-feedback",
           "release-0.5-saving-address-response-feedback",
-          "release-0.5-saving-address-field-errors"
+          "release-0.5-saving-address-field-errors",
+          "release-0.5-crm-profile-loading-heading"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -561883,7 +562098,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "5b63565a20ab8875150a9d202eedaef09a216bfd96c9d84de46af62501cfc690"
+              "sha256": "940f31e6658c987dfded5cdccc6e3b522cab362741e99ef39b2148b3c4b8f926"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.test.tsx",
@@ -563032,6 +563247,11 @@
               "batch": "release-0.5-saving-address-field-errors",
               "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
+            },
+            {
+              "batch": "release-0.5-crm-profile-loading-heading",
+              "base_commit": "bcca44c8c54cb21991eb5b6b54afc64166cac743",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-crm-profile-loading-heading/proof.json"
             }
           ]
         }
@@ -563101,7 +563321,8 @@
           "release-0.5-settings-response-feedback",
           "release-0.5-invoice-response-feedback",
           "release-0.5-saving-address-response-feedback",
-          "release-0.5-saving-address-field-errors"
+          "release-0.5-saving-address-field-errors",
+          "release-0.5-crm-profile-loading-heading"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -563693,7 +563914,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "5b63565a20ab8875150a9d202eedaef09a216bfd96c9d84de46af62501cfc690"
+              "sha256": "940f31e6658c987dfded5cdccc6e3b522cab362741e99ef39b2148b3c4b8f926"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.test.tsx",
@@ -564842,6 +565063,11 @@
               "batch": "release-0.5-saving-address-field-errors",
               "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
+            },
+            {
+              "batch": "release-0.5-crm-profile-loading-heading",
+              "base_commit": "bcca44c8c54cb21991eb5b6b54afc64166cac743",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-crm-profile-loading-heading/proof.json"
             }
           ]
         }
@@ -564911,7 +565137,8 @@
           "release-0.5-settings-response-feedback",
           "release-0.5-invoice-response-feedback",
           "release-0.5-saving-address-response-feedback",
-          "release-0.5-saving-address-field-errors"
+          "release-0.5-saving-address-field-errors",
+          "release-0.5-crm-profile-loading-heading"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -565503,7 +565730,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "5b63565a20ab8875150a9d202eedaef09a216bfd96c9d84de46af62501cfc690"
+              "sha256": "940f31e6658c987dfded5cdccc6e3b522cab362741e99ef39b2148b3c4b8f926"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.test.tsx",
@@ -566652,6 +566879,11 @@
               "batch": "release-0.5-saving-address-field-errors",
               "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
+            },
+            {
+              "batch": "release-0.5-crm-profile-loading-heading",
+              "base_commit": "bcca44c8c54cb21991eb5b6b54afc64166cac743",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-crm-profile-loading-heading/proof.json"
             }
           ]
         }
@@ -566721,7 +566953,8 @@
           "release-0.5-settings-response-feedback",
           "release-0.5-invoice-response-feedback",
           "release-0.5-saving-address-response-feedback",
-          "release-0.5-saving-address-field-errors"
+          "release-0.5-saving-address-field-errors",
+          "release-0.5-crm-profile-loading-heading"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -567313,7 +567546,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "5b63565a20ab8875150a9d202eedaef09a216bfd96c9d84de46af62501cfc690"
+              "sha256": "940f31e6658c987dfded5cdccc6e3b522cab362741e99ef39b2148b3c4b8f926"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.test.tsx",
@@ -568462,6 +568695,11 @@
               "batch": "release-0.5-saving-address-field-errors",
               "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
+            },
+            {
+              "batch": "release-0.5-crm-profile-loading-heading",
+              "base_commit": "bcca44c8c54cb21991eb5b6b54afc64166cac743",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-crm-profile-loading-heading/proof.json"
             }
           ]
         }
@@ -568531,7 +568769,8 @@
           "release-0.5-settings-response-feedback",
           "release-0.5-invoice-response-feedback",
           "release-0.5-saving-address-response-feedback",
-          "release-0.5-saving-address-field-errors"
+          "release-0.5-saving-address-field-errors",
+          "release-0.5-crm-profile-loading-heading"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -569123,7 +569362,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "5b63565a20ab8875150a9d202eedaef09a216bfd96c9d84de46af62501cfc690"
+              "sha256": "940f31e6658c987dfded5cdccc6e3b522cab362741e99ef39b2148b3c4b8f926"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.test.tsx",
@@ -570272,6 +570511,11 @@
               "batch": "release-0.5-saving-address-field-errors",
               "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
+            },
+            {
+              "batch": "release-0.5-crm-profile-loading-heading",
+              "base_commit": "bcca44c8c54cb21991eb5b6b54afc64166cac743",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-crm-profile-loading-heading/proof.json"
             }
           ]
         }
@@ -570341,7 +570585,8 @@
           "release-0.5-settings-response-feedback",
           "release-0.5-invoice-response-feedback",
           "release-0.5-saving-address-response-feedback",
-          "release-0.5-saving-address-field-errors"
+          "release-0.5-saving-address-field-errors",
+          "release-0.5-crm-profile-loading-heading"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -570933,7 +571178,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "5b63565a20ab8875150a9d202eedaef09a216bfd96c9d84de46af62501cfc690"
+              "sha256": "940f31e6658c987dfded5cdccc6e3b522cab362741e99ef39b2148b3c4b8f926"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.test.tsx",
@@ -572082,6 +572327,11 @@
               "batch": "release-0.5-saving-address-field-errors",
               "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
+            },
+            {
+              "batch": "release-0.5-crm-profile-loading-heading",
+              "base_commit": "bcca44c8c54cb21991eb5b6b54afc64166cac743",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-crm-profile-loading-heading/proof.json"
             }
           ]
         }
@@ -572151,7 +572401,8 @@
           "release-0.5-settings-response-feedback",
           "release-0.5-invoice-response-feedback",
           "release-0.5-saving-address-response-feedback",
-          "release-0.5-saving-address-field-errors"
+          "release-0.5-saving-address-field-errors",
+          "release-0.5-crm-profile-loading-heading"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -572743,7 +572994,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "5b63565a20ab8875150a9d202eedaef09a216bfd96c9d84de46af62501cfc690"
+              "sha256": "940f31e6658c987dfded5cdccc6e3b522cab362741e99ef39b2148b3c4b8f926"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.test.tsx",
@@ -573892,6 +574143,11 @@
               "batch": "release-0.5-saving-address-field-errors",
               "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
+            },
+            {
+              "batch": "release-0.5-crm-profile-loading-heading",
+              "base_commit": "bcca44c8c54cb21991eb5b6b54afc64166cac743",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-crm-profile-loading-heading/proof.json"
             }
           ]
         }
@@ -573961,7 +574217,8 @@
           "release-0.5-settings-response-feedback",
           "release-0.5-invoice-response-feedback",
           "release-0.5-saving-address-response-feedback",
-          "release-0.5-saving-address-field-errors"
+          "release-0.5-saving-address-field-errors",
+          "release-0.5-crm-profile-loading-heading"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -574553,7 +574810,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "5b63565a20ab8875150a9d202eedaef09a216bfd96c9d84de46af62501cfc690"
+              "sha256": "940f31e6658c987dfded5cdccc6e3b522cab362741e99ef39b2148b3c4b8f926"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.test.tsx",
@@ -575702,6 +575959,11 @@
               "batch": "release-0.5-saving-address-field-errors",
               "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
+            },
+            {
+              "batch": "release-0.5-crm-profile-loading-heading",
+              "base_commit": "bcca44c8c54cb21991eb5b6b54afc64166cac743",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-crm-profile-loading-heading/proof.json"
             }
           ]
         }
@@ -575771,7 +576033,8 @@
           "release-0.5-settings-response-feedback",
           "release-0.5-invoice-response-feedback",
           "release-0.5-saving-address-response-feedback",
-          "release-0.5-saving-address-field-errors"
+          "release-0.5-saving-address-field-errors",
+          "release-0.5-crm-profile-loading-heading"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -576363,7 +576626,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "5b63565a20ab8875150a9d202eedaef09a216bfd96c9d84de46af62501cfc690"
+              "sha256": "940f31e6658c987dfded5cdccc6e3b522cab362741e99ef39b2148b3c4b8f926"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.test.tsx",
@@ -577512,6 +577775,11 @@
               "batch": "release-0.5-saving-address-field-errors",
               "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
+            },
+            {
+              "batch": "release-0.5-crm-profile-loading-heading",
+              "base_commit": "bcca44c8c54cb21991eb5b6b54afc64166cac743",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-crm-profile-loading-heading/proof.json"
             }
           ]
         }
@@ -578272,7 +578540,8 @@
           "release-0.5-settings-response-feedback",
           "release-0.5-invoice-response-feedback",
           "release-0.5-saving-address-response-feedback",
-          "release-0.5-saving-address-field-errors"
+          "release-0.5-saving-address-field-errors",
+          "release-0.5-crm-profile-loading-heading"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -578864,7 +579133,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "5b63565a20ab8875150a9d202eedaef09a216bfd96c9d84de46af62501cfc690"
+              "sha256": "940f31e6658c987dfded5cdccc6e3b522cab362741e99ef39b2148b3c4b8f926"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.test.tsx",
@@ -580013,6 +580282,11 @@
               "batch": "release-0.5-saving-address-field-errors",
               "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
+            },
+            {
+              "batch": "release-0.5-crm-profile-loading-heading",
+              "base_commit": "bcca44c8c54cb21991eb5b6b54afc64166cac743",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-crm-profile-loading-heading/proof.json"
             }
           ]
         }
@@ -580082,7 +580356,8 @@
           "release-0.5-settings-response-feedback",
           "release-0.5-invoice-response-feedback",
           "release-0.5-saving-address-response-feedback",
-          "release-0.5-saving-address-field-errors"
+          "release-0.5-saving-address-field-errors",
+          "release-0.5-crm-profile-loading-heading"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -580674,7 +580949,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "5b63565a20ab8875150a9d202eedaef09a216bfd96c9d84de46af62501cfc690"
+              "sha256": "940f31e6658c987dfded5cdccc6e3b522cab362741e99ef39b2148b3c4b8f926"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.test.tsx",
@@ -581823,6 +582098,11 @@
               "batch": "release-0.5-saving-address-field-errors",
               "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
+            },
+            {
+              "batch": "release-0.5-crm-profile-loading-heading",
+              "base_commit": "bcca44c8c54cb21991eb5b6b54afc64166cac743",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-crm-profile-loading-heading/proof.json"
             }
           ]
         }
@@ -581843,7 +582123,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "The onboarding draft directory now uses the shared 15-second read deadline. A timeout or service failure retains the block on new setup until a confirmed response. Exact-cursor retry, existing setup resume and late-reply isolation passed in both browsers. Remaining conditional route states are open."
+        "The staff CRM profile detail has an explicit localized loading heading and uses its retry view whenever a finished read yields no displayable profile. A held read, five distinct failure responses and an exact manual recovery passed. Remaining conditional route states are open."
       ],
       "owner": null,
       "depends_on": [],
@@ -581865,7 +582145,8 @@
           "release-0.5-final-rehearsal",
           "release-0.5-route-census-closure",
           "release-0.5-native-staff-touch-and-electricity-recovery",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-crm-profile-loading-heading"
         ],
         "current_acceptance": null
       }
@@ -581966,7 +582247,8 @@
           "release-0.5-invoice-response-feedback",
           "release-0.5-saving-address-response-feedback",
           "release-0.5-responsive-width-acceptance",
-          "release-0.5-saving-address-field-errors"
+          "release-0.5-saving-address-field-errors",
+          "release-0.5-crm-profile-loading-heading"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -582538,7 +582820,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "5b63565a20ab8875150a9d202eedaef09a216bfd96c9d84de46af62501cfc690"
+              "sha256": "940f31e6658c987dfded5cdccc6e3b522cab362741e99ef39b2148b3c4b8f926"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
@@ -583613,6 +583895,11 @@
               "batch": "release-0.5-saving-address-field-errors",
               "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
+            },
+            {
+              "batch": "release-0.5-crm-profile-loading-heading",
+              "base_commit": "bcca44c8c54cb21991eb5b6b54afc64166cac743",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-crm-profile-loading-heading/proof.json"
             }
           ]
         },
@@ -583691,7 +583978,8 @@
           "release-0.5-invoice-response-feedback",
           "release-0.5-saving-address-response-feedback",
           "release-0.5-responsive-width-acceptance",
-          "release-0.5-saving-address-field-errors"
+          "release-0.5-saving-address-field-errors",
+          "release-0.5-crm-profile-loading-heading"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -584263,7 +584551,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "5b63565a20ab8875150a9d202eedaef09a216bfd96c9d84de46af62501cfc690"
+              "sha256": "940f31e6658c987dfded5cdccc6e3b522cab362741e99ef39b2148b3c4b8f926"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
@@ -585338,6 +585626,11 @@
               "batch": "release-0.5-saving-address-field-errors",
               "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
+            },
+            {
+              "batch": "release-0.5-crm-profile-loading-heading",
+              "base_commit": "bcca44c8c54cb21991eb5b6b54afc64166cac743",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-crm-profile-loading-heading/proof.json"
             }
           ]
         },
@@ -585416,7 +585709,8 @@
           "release-0.5-invoice-response-feedback",
           "release-0.5-saving-address-response-feedback",
           "release-0.5-responsive-width-acceptance",
-          "release-0.5-saving-address-field-errors"
+          "release-0.5-saving-address-field-errors",
+          "release-0.5-crm-profile-loading-heading"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -585988,7 +586282,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "5b63565a20ab8875150a9d202eedaef09a216bfd96c9d84de46af62501cfc690"
+              "sha256": "940f31e6658c987dfded5cdccc6e3b522cab362741e99ef39b2148b3c4b8f926"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
@@ -587063,6 +587357,11 @@
               "batch": "release-0.5-saving-address-field-errors",
               "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
+            },
+            {
+              "batch": "release-0.5-crm-profile-loading-heading",
+              "base_commit": "bcca44c8c54cb21991eb5b6b54afc64166cac743",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-crm-profile-loading-heading/proof.json"
             }
           ]
         },
@@ -587141,7 +587440,8 @@
           "release-0.5-invoice-response-feedback",
           "release-0.5-saving-address-response-feedback",
           "release-0.5-responsive-width-acceptance",
-          "release-0.5-saving-address-field-errors"
+          "release-0.5-saving-address-field-errors",
+          "release-0.5-crm-profile-loading-heading"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -587713,7 +588013,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "5b63565a20ab8875150a9d202eedaef09a216bfd96c9d84de46af62501cfc690"
+              "sha256": "940f31e6658c987dfded5cdccc6e3b522cab362741e99ef39b2148b3c4b8f926"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
@@ -588788,6 +589088,11 @@
               "batch": "release-0.5-saving-address-field-errors",
               "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
+            },
+            {
+              "batch": "release-0.5-crm-profile-loading-heading",
+              "base_commit": "bcca44c8c54cb21991eb5b6b54afc64166cac743",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-crm-profile-loading-heading/proof.json"
             }
           ]
         },
@@ -588866,7 +589171,8 @@
           "release-0.5-invoice-response-feedback",
           "release-0.5-saving-address-response-feedback",
           "release-0.5-responsive-width-acceptance",
-          "release-0.5-saving-address-field-errors"
+          "release-0.5-saving-address-field-errors",
+          "release-0.5-crm-profile-loading-heading"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -589438,7 +589744,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "5b63565a20ab8875150a9d202eedaef09a216bfd96c9d84de46af62501cfc690"
+              "sha256": "940f31e6658c987dfded5cdccc6e3b522cab362741e99ef39b2148b3c4b8f926"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
@@ -590513,6 +590819,11 @@
               "batch": "release-0.5-saving-address-field-errors",
               "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
+            },
+            {
+              "batch": "release-0.5-crm-profile-loading-heading",
+              "base_commit": "bcca44c8c54cb21991eb5b6b54afc64166cac743",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-crm-profile-loading-heading/proof.json"
             }
           ]
         },
@@ -590591,7 +590902,8 @@
           "release-0.5-invoice-response-feedback",
           "release-0.5-saving-address-response-feedback",
           "release-0.5-responsive-width-acceptance",
-          "release-0.5-saving-address-field-errors"
+          "release-0.5-saving-address-field-errors",
+          "release-0.5-crm-profile-loading-heading"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -591163,7 +591475,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "5b63565a20ab8875150a9d202eedaef09a216bfd96c9d84de46af62501cfc690"
+              "sha256": "940f31e6658c987dfded5cdccc6e3b522cab362741e99ef39b2148b3c4b8f926"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
@@ -592238,6 +592550,11 @@
               "batch": "release-0.5-saving-address-field-errors",
               "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
+            },
+            {
+              "batch": "release-0.5-crm-profile-loading-heading",
+              "base_commit": "bcca44c8c54cb21991eb5b6b54afc64166cac743",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-crm-profile-loading-heading/proof.json"
             }
           ]
         },
@@ -592316,7 +592633,8 @@
           "release-0.5-invoice-response-feedback",
           "release-0.5-saving-address-response-feedback",
           "release-0.5-responsive-width-acceptance",
-          "release-0.5-saving-address-field-errors"
+          "release-0.5-saving-address-field-errors",
+          "release-0.5-crm-profile-loading-heading"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -592888,7 +593206,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "5b63565a20ab8875150a9d202eedaef09a216bfd96c9d84de46af62501cfc690"
+              "sha256": "940f31e6658c987dfded5cdccc6e3b522cab362741e99ef39b2148b3c4b8f926"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
@@ -593963,6 +594281,11 @@
               "batch": "release-0.5-saving-address-field-errors",
               "base_commit": "4a8713cfba365025ee471f30b9d1a2cca95926b7",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/proof.json"
+            },
+            {
+              "batch": "release-0.5-crm-profile-loading-heading",
+              "base_commit": "bcca44c8c54cb21991eb5b6b54afc64166cac743",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-crm-profile-loading-heading/proof.json"
             }
           ]
         },
@@ -685467,7 +685790,8 @@
           "release-0.5-protected-staff-browser-closure",
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-gates",
-          "release-0.5-final-acceptance"
+          "release-0.5-final-acceptance",
+          "release-0.5-crm-profile-loading-heading"
         ],
         "current_acceptance": {
           "kind": "enforced-expanded-verification-settings",
@@ -685611,7 +685935,7 @@
             },
             {
               "path": "apps/web/e2e/crm-detail-permissions.spec.ts",
-              "sha256": "d990c39115930a2a2dcf3ae9f6057900e647db0014b52a30e9b8bee4a973130a"
+              "sha256": "a09d90ad66660c2cb117b5652e607cbda19e57ea52fa21eea26e2867b5ffa5eb"
             },
             {
               "path": "apps/web/e2e/verification-policy-settings.spec.ts",
@@ -685659,7 +685983,7 @@
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-              "sha256": "5b63565a20ab8875150a9d202eedaef09a216bfd96c9d84de46af62501cfc690"
+              "sha256": "940f31e6658c987dfded5cdccc6e3b522cab362741e99ef39b2148b3c4b8f926"
             },
             {
               "path": "apps/web/src/pages/crm-profile-query.test.tsx",
@@ -685905,6 +686229,11 @@
               "batch": "release-0.5-final-acceptance",
               "base_commit": "460fdb3e46b92b3086c95b925a6f4735a21fc2ff",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-final-acceptance/customer-interaction-proof.json"
+            },
+            {
+              "batch": "release-0.5-crm-profile-loading-heading",
+              "base_commit": "bcca44c8c54cb21991eb5b6b54afc64166cac743",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-crm-profile-loading-heading/proof.json"
             }
           ]
         }
@@ -706676,7 +707005,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "The 93-route populated width matrix is recorded. The current saving address error is linked to the rejected field and passed all eight widths in both native engines and directions. Other conditional states and command adoption remain open."
+        "Current scoped browser checks cover CRM loading, five error outcomes, retry, detail and related authorization. The populated width matrix and linked saving address rejection evidence are retained. Other conditional states and command adoption remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -706723,7 +707052,8 @@
           "release-0.5-saving-address-response-feedback",
           "release-0.5-operational-queue-touch",
           "release-0.5-responsive-width-acceptance",
-          "release-0.5-saving-address-field-errors"
+          "release-0.5-saving-address-field-errors",
+          "release-0.5-crm-profile-loading-heading"
         ]
       }
     },
@@ -706742,7 +707072,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "The saving address delta passed 16 related unit cases, 50 native browser cases, four width replays and all 98 bundle limits. Complete final candidate combined coverage and accessibility."
+        "The CRM profile delta passed six unit cases, 20 scoped browser cases including 12 width replays, and all 98 bundle limits. Complete final candidate combined coverage and accessibility."
       ],
       "owner": null,
       "depends_on": [],
@@ -706788,7 +707118,8 @@
           "release-0.5-saving-address-response-feedback",
           "release-0.5-operational-queue-touch",
           "release-0.5-responsive-width-acceptance",
-          "release-0.5-saving-address-field-errors"
+          "release-0.5-saving-address-field-errors",
+          "release-0.5-crm-profile-loading-heading"
         ]
       }
     },
@@ -766694,7 +767025,105 @@
       ],
       "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors/renewed-bindings.json",
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-field-errors",
-      "release_disposition": "Remaining conditional form, final candidate and owner policy gates still apply."
+      "release_disposition": "Remaining conditional form, final candidate and owner policy gates still apply.",
+      "push_receipt": {
+        "verified_at": "2026-11-07T17:45:11.597794+00:00",
+        "local_sha": "bcca44c8c54cb21991eb5b6b54afc64166cac743",
+        "remote_sha": "bcca44c8c54cb21991eb5b6b54afc64166cac743"
+      }
+    },
+    "release-0.5-crm-profile-loading-heading": {
+      "batch": "release-0.5-crm-profile-loading-heading",
+      "base_commit": "bcca44c8c54cb21991eb5b6b54afc64166cac743",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.05.01.07",
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02",
+        "07-ui-ux-design.md#T-07.04.02.04"
+      ],
+      "accepted_task_keys": [],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.05.01.07",
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/crm-detail-permissions.spec.ts",
+          "sha256": "a09d90ad66660c2cb117b5652e607cbda19e57ea52fa21eea26e2867b5ffa5eb"
+        },
+        {
+          "path": "apps/web/src/pages/CrmProfileDetail.tsx",
+          "sha256": "940f31e6658c987dfded5cdccc6e3b522cab362741e99ef39b2148b3c4b8f926"
+        }
+      ],
+      "checks": [
+        "Localized heading during a held read and explicit retry when detail is unavailable. Profile authority, exact GET, error sanitization and existing mutation checks passed.",
+        "The predecessor run passed 80 of 84 cases and found four Safari archive-title geometry failures. After fixing the gap, 20 scoped cases, six unit cases and all 98 gzip limits passed."
+      ],
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-crm-profile-loading-heading/proof.json",
+      "source_scope_proof_sha256": "b7870fdac80523fd6c05d46dac7ec4f4f89f57a00f25ca8db34f5531dd5d0341",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-crm-profile-loading-heading/reviewed.patch",
+      "renewed_task_keys": [
+        "02-auth-users-admin.md#T-03.03.06",
+        "02-auth-users-admin.md#T-05.02.01",
+        "02-auth-users-admin.md#T-05.02.02",
+        "02-auth-users-admin.md#T-05.02.03",
+        "02-auth-users-admin.md#T-05.02.04",
+        "02-auth-users-admin.md#T-05.02.05",
+        "02-auth-users-admin.md#T-09.01.02",
+        "07-ui-ux-design.md#T-07.01.03.19",
+        "07-ui-ux-design.md#T-07.01.04.02",
+        "07-ui-ux-design.md#T-07.01.04.03",
+        "07-ui-ux-design.md#T-07.01.04.04",
+        "07-ui-ux-design.md#T-07.04.01.05",
+        "07-ui-ux-design.md#T-07.04.02.04",
+        "07-ui-ux-design.md#T-07.05.01.06",
+        "07-ui-ux-design.md#T-07.05.01.10",
+        "07-ui-ux-design.md#T-07.05.01.11",
+        "07-ui-ux-design.md#T-07.05.02.01",
+        "07-ui-ux-design.md#T-07.05.02.02",
+        "07-ui-ux-design.md#T-07.05.02.03",
+        "07-ui-ux-design.md#T-07.10.01.01",
+        "07-ui-ux-design.md#T-07.10.01.02",
+        "07-ui-ux-design.md#T-07.10.01.03",
+        "07-ui-ux-design.md#T-07.10.01.04",
+        "07-ui-ux-design.md#T-07.10.01.05",
+        "07-ui-ux-design.md#T-07.10.01.06",
+        "07-ui-ux-design.md#T-07.10.02.01",
+        "07-ui-ux-design.md#T-07.10.02.02",
+        "07-ui-ux-design.md#T-07.10.02.03",
+        "07-ui-ux-design.md#T-07.10.02.04",
+        "07-ui-ux-design.md#T-07.10.02.05",
+        "07-ui-ux-design.md#T-07.11.01.01",
+        "07-ui-ux-design.md#T-07.11.01.02",
+        "07-ui-ux-design.md#T-07.11.01.04",
+        "07-ui-ux-design.md#T-07.11.01.05",
+        "07-ui-ux-design.md#T-07.11.02.01",
+        "07-ui-ux-design.md#T-07.11.02.02",
+        "07-ui-ux-design.md#T-07.11.02.03",
+        "07-ui-ux-design.md#T-07.11.02.04",
+        "07-ui-ux-design.md#T-07.11.02.05",
+        "07-ui-ux-design.md#T-07.12.01.01",
+        "07-ui-ux-design.md#T-07.12.01.02",
+        "07-ui-ux-design.md#T-07.12.01.03",
+        "07-ui-ux-design.md#T-07.12.01.04",
+        "07-ui-ux-design.md#T-07.12.01.06",
+        "07-ui-ux-design.md#T-07.12.01.07",
+        "07-ui-ux-design.md#T-07.13.01.01",
+        "07-ui-ux-design.md#T-07.13.01.02",
+        "07-ui-ux-design.md#T-07.13.01.03",
+        "07-ui-ux-design.md#T-07.13.01.04",
+        "07-ui-ux-design.md#T-07.13.01.05",
+        "07-ui-ux-design.md#T-07.13.01.06",
+        "07-ui-ux-design.md#T-07.13.01.07",
+        "07-ui-ux-design.md#T-07.30.02.14"
+      ],
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-crm-profile-loading-heading/renewed-bindings.json",
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-crm-profile-loading-heading",
+      "release_disposition": "Remaining conditional, final candidate and owner policy gates still apply."
     }
   },
   "historical_improvements": [
