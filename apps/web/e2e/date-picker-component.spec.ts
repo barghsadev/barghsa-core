@@ -91,6 +91,44 @@ for (const [locale, selectedDay] of [
 test.describe('touch calendar', () => {
   test.use({ hasTouch: true });
 
+  for (const locale of ['en', 'fa']) {
+    test(`the ${locale} calendar fits at 320px with 44px touch targets`, async ({ page }) => {
+      await page.setViewportSize({ width: 320, height: 720 });
+      await page.emulateMedia({ reducedMotion: 'reduce' });
+      await page.goto(`${url}?timezone=Asia%2FTehran&${locale}`);
+      const trigger = page.getByRole('combobox', { name: 'Delivery date' });
+      await trigger.tap();
+      const dialog = page.getByRole('dialog', { name: 'Delivery date' });
+      await expect(dialog.getByRole('grid')).toBeVisible();
+      await expect
+        .poll(() =>
+          dialog.evaluate((node) => {
+            const width = document.documentElement.clientWidth;
+            const popup = node.getBoundingClientRect();
+            const targets = Array.from(
+              node.querySelectorAll('nav button, button[data-day], select')
+            );
+            return {
+              width,
+              coarse: matchMedia('(pointer: coarse)').matches,
+              fits:
+                popup.left >= 0 &&
+                popup.right <= width &&
+                document.documentElement.scrollWidth === width,
+              headerTargets: node.querySelectorAll('nav button, select').length,
+              allTargetsFit:
+                targets.length > 7 &&
+                targets.every((target) => {
+                  const box = target.getBoundingClientRect();
+                  return box.width >= 44 && box.height >= 44 && box.left >= 0 && box.right <= width;
+                }),
+            };
+          })
+        )
+        .toEqual({ width: 320, coarse: true, fits: true, headerTargets: 3, allTargetsFit: true });
+    });
+  }
+
   test('selects a Persian calendar day by touch and stores Tehran midnight', async ({ page }) => {
     await page.goto(`${url}?timezone=Asia%2FTehran&fa`);
     const trigger = page.getByRole('combobox', { name: 'Delivery date' });

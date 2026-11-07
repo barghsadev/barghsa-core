@@ -49,7 +49,7 @@ function Fixture() {
     error: params.has('error') ? 'Choose an allowed date' : undefined,
   };
   return (
-    <main dir={locale === 'fa' ? 'rtl' : 'ltr'}>
+    <main dir={locale === 'fa' ? 'rtl' : 'ltr'} className="grid gap-3">
       <button onClick={() => setLocale(locale === 'en' ? 'fa' : 'en')}>Switch language</button>
       {params.has('datetime') && (
         <>
