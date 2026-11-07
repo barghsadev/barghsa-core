@@ -1,3 +1,4 @@
+import { approveRiskConfirmation } from './confirmation-fixture';
 import AxeBuilder from '@axe-core/playwright';
 import { t as adminText } from '@barghsa/i18n/admin-ui';
 import { test, expect } from './coverage-fixture';
@@ -41,7 +42,12 @@ for (const [locale, theme] of [
     const dialog = page.getByRole('dialog');
     await expect(dialog).toContainText('Unable to deliver approved supply');
     await dialog.screenshot({ path: info.outputPath(`approved-rejection-review-${locale}.png`) });
-    await dialog.locator('button[type=submit]').click();
+    const confirm = dialog.locator('button[type=submit]');
+    await expect(confirm).toBeDisabled();
+    expect(state.staffWrites).toHaveLength(0);
+    await approveRiskConfirmation(page, locale, 'both');
+    await expect(confirm).toBeEnabled();
+    await confirm.click();
     await expect(dialog).toHaveCount(0);
     expect(state.staffWrites).toHaveLength(1);
     expect(state.staffWrites[0]).toMatchObject({

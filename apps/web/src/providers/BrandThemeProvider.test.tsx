@@ -173,6 +173,18 @@ it('restores document properties on unmount and ignores a late reply', async () 
   expect(document.documentElement.style.getPropertyValue('--primary')).toBe('#123456');
   expect(document.querySelector('link[rel="icon"]')?.getAttribute('href')).toBe('/original.ico');
 });
+it('keeps the default dark text readable before branding is available', async () => {
+  localStorage.setItem(THEME_STORAGE_KEY, 'dark');
+  vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response(null, { status: 503 })));
+  await mount();
+  const { style, classList } = document.documentElement;
+  expect(classList.contains('dark')).toBe(true);
+  expect(host.textContent).toBe('Barghsa');
+  expect(style.getPropertyValue('--primary')).toBe('#176b5b');
+  expect(style.getPropertyValue('--brand-primary-text-dark')).toBe('var(--foreground)');
+  expect(style.getPropertyValue('--brand-primary-text-light')).toBe('#176b5b');
+});
+
 it('ignores malformed branding instead of partially applying it', async () => {
   vi.stubGlobal(
     'fetch',

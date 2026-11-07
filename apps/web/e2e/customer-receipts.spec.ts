@@ -223,15 +223,21 @@ async function setup(
   return { form, prefix, uploads, submissions, receipts, invoice, endpoint };
 }
 
-async function confirmReceipt(page: Page, payerReference = 'TRACK-123') {
+async function confirmReceipt(page: Page, locale: 'en' | 'fa', payerReference = 'TRACK-123') {
   const dialog = page.getByRole('dialog');
   await expect(dialog).toBeVisible();
   await expect(dialog).toContainText(payerReference);
-  await dialog.getByRole('button', { name: /تأیید و ثبت رسید|Confirm and submit receipt/ }).click();
+  const submit = dialog.getByRole('button', {
+    name: /تأیید و ثبت رسید|Confirm and submit receipt/,
+  });
+  await expect(submit).toBeDisabled();
+  await approveRiskConfirmation(page, locale, 'financial');
+  await expect(submit).toBeEnabled();
+  await submit.click();
 }
 
 for (const kind of ['wallet', 'invoice'] as const) {
-  for (const locale of ['en', 'fa']) {
+  for (const locale of ['en', 'fa'] as const) {
     test(`${kind} receipt retries a lost acknowledgement without creating another upload or receipt (${locale})`, async ({
       page,
     }) => {
@@ -240,7 +246,7 @@ for (const kind of ['wallet', 'invoice'] as const) {
         await page.getByTestId('wallet-receipt-bank-name').fill('  بانک ملی  ');
       await page.getByTestId(`${prefix}-submit`).click();
       if (kind === 'wallet') await expect(page.getByRole('dialog')).toContainText('بانک ملی');
-      await confirmReceipt(page);
+      await confirmReceipt(page, locale);
       await expect(page.getByTestId(`${prefix}-error`)).toBeVisible();
       await expect(page.getByTestId(`${prefix}-success`)).toHaveCount(0);
       expect(submissions).toHaveLength(1);
@@ -254,7 +260,7 @@ for (const kind of ['wallet', 'invoice'] as const) {
         ...(kind === 'wallet' ? { bankName: 'بانک ملی' } : {}),
       });
       await page.getByTestId(`${prefix}-submit`).click();
-      await confirmReceipt(page);
+      await confirmReceipt(page, locale);
       await expect.poll(() => submissions.length).toBe(2);
       expect(submissions[1]).toEqual(submissions[0]);
       expect(uploads).toHaveLength(1);
@@ -269,7 +275,7 @@ for (const kind of ['wallet', 'invoice'] as const) {
       await page.getByTestId(`${prefix}-payer-ref`).fill('TRACK-456');
       await page.getByTestId(`${prefix}-file`).setInputFiles({ ...pdf, name: 'other.pdf' });
       await page.getByTestId(`${prefix}-submit`).click();
-      await confirmReceipt(page, 'TRACK-456');
+      await confirmReceipt(page, locale, 'TRACK-456');
       await expect.poll(() => submissions.length).toBe(3);
       await expect(page.getByTestId(`${prefix}-success`)).toBeVisible();
       expect(uploads).toHaveLength(2);
@@ -313,7 +319,7 @@ for (const kind of ['wallet', 'invoice'] as const) {
       expect(uploads).toHaveLength(0);
       await page.getByTestId(`${prefix}-file`).setInputFiles(pdf);
       await page.getByTestId(`${prefix}-submit`).click();
-      await confirmReceipt(page);
+      await confirmReceipt(page, locale);
       await expect(page.getByTestId(`${prefix}-success`)).toBeVisible();
       expect(submissions).toHaveLength(1);
     });
@@ -450,7 +456,7 @@ for (const locale of ['en', 'fa'] as const)
         expect(
           (await new AxeBuilder({ page }).include('[role=dialog]').analyze()).violations
         ).toEqual([]);
-        await confirmReceipt(page);
+        await confirmReceipt(page, locale);
         await expect(dialog).toHaveCount(0);
         await expect(payer).toBeFocused();
         await expect(payer).toHaveAttribute('aria-invalid', 'true');
@@ -474,7 +480,7 @@ for (const locale of ['en', 'fa'] as const)
         expect(uploads).toHaveLength(1);
         await expect(file).not.toHaveValue('');
         await submit.click();
-        await confirmReceipt(page, 'TRACK-456');
+        await confirmReceipt(page, locale, 'TRACK-456');
         await expect(page.getByTestId(`${prefix}-success`)).toBeVisible();
         expect(uploads).toHaveLength(2);
         expect(submissions).toHaveLength(1);

@@ -1,3 +1,4 @@
+import { approveRiskConfirmation } from './confirmation-fixture';
 import { productionManifest } from './production-manifest';
 import AxeBuilder from '@axe-core/playwright';
 import { contractText } from '@barghsa/i18n/contracts';
@@ -165,6 +166,8 @@ for (const locale of ['en', 'fa'] as const)
         confirm = dialog.getByRole('button', { name: t('team.confirm', locale), exact: true });
       await expect(dialog).toContainText(word('review'));
       await expect(amount).toBeDisabled();
+      await expect(confirm).toBeDisabled();
+      await approveRiskConfirmation(page, locale, 'financial');
       await confirm.click();
       await dialog.getByLabel(t('team.password', locale), { exact: true }).fill('Test-password');
       await confirm.click();
@@ -174,6 +177,8 @@ for (const locale of ['en', 'fa'] as const)
       await expect(reason).toHaveValue('  Raw request reason  ');
       expect(attempts[1]).toEqual(attempts[0]);
       await panel.getByRole('button', { name: word('request'), exact: true }).click();
+      await expect(confirm).toBeDisabled();
+      await approveRiskConfirmation(page, locale, 'financial');
       for (let index = 0; index < 3; index++) {
         await confirm.click();
         await expect(dialog.getByRole('alert')).toBeVisible();
@@ -289,6 +294,8 @@ for (const locale of ['en', 'fa'] as const)
       await expect(decisionReason).toHaveValue('  Decline return  ');
       await panel.getByRole('button', { name: bank('record-transfer'), exact: true }).click();
       const confirm = dialog.getByRole('button', { name: t('team.confirm', locale), exact: true });
+      await expect(confirm).toBeDisabled();
+      await approveRiskConfirmation(page, locale, 'financial');
       for (let index = 0; index < 2; index++) {
         await confirm.click();
         await expect(dialog.getByRole('alert')).toBeVisible();
@@ -306,6 +313,8 @@ for (const locale of ['en', 'fa'] as const)
       ).toBeVisible();
       await reference.fill('BANK-123');
       await panel.getByRole('button', { name: bank('reconcile'), exact: true }).click();
+      await expect(confirm).toBeDisabled();
+      await approveRiskConfirmation(page, locale, 'financial');
       await confirm.click();
       await expect(dialog).toHaveCount(0);
       await expect(panel.getByText(shared('state.Completed'), { exact: true })).toBeVisible();
@@ -419,11 +428,15 @@ for (const locale of ['en', 'fa'] as const)
       const dialog = page.getByRole('dialog'),
         confirm = dialog.getByRole('button', { name: t('team.confirm', locale), exact: true });
       await expect(dialog).toContainText(adminText('admin.invoices.walletRefunds.review', locale));
+      await expect(confirm).toBeDisabled();
+      await approveRiskConfirmation(page, locale, 'financial');
       await confirm.click();
       await expect(dialog).toHaveCount(0);
       await expect(reference).toBeFocused();
       await expect(reference).toHaveValue('  BANK-123  ');
       await button.click();
+      await expect(confirm).toBeDisabled();
+      await approveRiskConfirmation(page, locale, 'financial');
       await confirm.click();
       await expect(dialog).toHaveCount(0);
       await expect(

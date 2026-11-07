@@ -1,4 +1,4 @@
-import { test, expect } from './coverage-fixture';
+import { test, expect } from './upload-fixture';
 import { crmShell } from './crm-shell-fixture';
 import { brandSettings } from '../src/test/branding-settings-fixtures';
 import { brandingText } from '@barghsa/i18n/branding';
@@ -11,6 +11,7 @@ const png = Buffer.from(
 for (const locale of ['fa', 'en'] as const) {
   test(`dark palette and logo stay private until their reviewed revision is activated (${locale})`, async ({
     page,
+    uploadReceiver,
   }, info) => {
     await page.emulateMedia({ colorScheme: 'dark', reducedMotion: 'reduce' });
     await crmShell(page, locale);
@@ -60,15 +61,9 @@ for (const locale of ['fa', 'en'] as const) {
       return route.fulfill({
         json: {
           key: 'uploads/image/dark-logo.png',
-          presignedUrl: 'https://uploads.example.test/dark-logo',
+          presignedUrl: uploadReceiver.url,
         },
       });
-    });
-    await page.route('https://uploads.example.test/dark-logo', (route) => {
-      expect(route.request().method()).toBe('PUT');
-      expect(route.request().headers()['if-none-match']).toBe('*');
-      expect(route.request().postDataBuffer()).toEqual(png);
-      return route.fulfill({ status: 200 });
     });
     await page.route('**/api/upload/**/verify', (route) =>
       route.fulfill({ json: { status: 'confirmed' } })
@@ -105,6 +100,11 @@ for (const locale of ['fa', 'en'] as const) {
       'src',
       /^blob:/
     );
+    expect(uploadReceiver.uploads).toHaveLength(1);
+    const received = uploadReceiver.uploads[0]!;
+    expect(received.method).toBe('PUT');
+    expect(received.headers['if-none-match']).toBe('*');
+    expect(received.body).toEqual(png);
     await expect(page.locator('html')).toHaveCSS('--primary', brandSettings.primaryColor);
     expect(publicImageReads).toBe(0);
     await page.getByRole('button', { name: brandingText('save', locale), exact: true }).click();

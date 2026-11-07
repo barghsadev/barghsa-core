@@ -170,17 +170,6 @@ export function BrandThemeProvider({ children }: { children: ReactNode }) {
       root.style.setProperty('--brand-light-background', config.backgroundColor);
       root.style.setProperty('--brand-dark-background', config.darkBackgroundColor);
       root.style.setProperty(
-        '--brand-primary-text-light',
-        getBrandTextColor(config.primaryColor, [config.backgroundColor, ...BRAND_SURFACES.light])
-      );
-      root.style.setProperty(
-        '--brand-primary-text-dark',
-        getBrandTextColor(brandColor(config, 'primary', 'dark'), [
-          config.darkBackgroundColor,
-          ...BRAND_SURFACES.dark,
-        ])
-      );
-      root.style.setProperty(
         '--app-font',
         config.fontFamily === 'tahoma' ? 'Tahoma' : "'Vazirmatn'"
       );
@@ -235,6 +224,20 @@ export function BrandThemeProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const root = document.documentElement;
     root.classList.toggle('dark', resolvedTheme === 'dark');
+    root.style.setProperty(
+      '--brand-primary-text-light',
+      getBrandTextColor(brandConfig.primaryColor, [
+        brandConfig.backgroundColor,
+        ...BRAND_SURFACES.light,
+      ])
+    );
+    root.style.setProperty(
+      '--brand-primary-text-dark',
+      getBrandTextColor(brandColor(brandConfig, 'primary', 'dark'), [
+        brandConfig.darkBackgroundColor,
+        ...BRAND_SURFACES.dark,
+      ])
+    );
     for (const color of ['primary', 'secondary', 'accent'] as const) {
       const background = brandColor(brandConfig, color, resolvedTheme);
       const foreground = getContrastForeground(background);
