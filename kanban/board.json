@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-07T09:42:54+00:00",
-  "source_commit": "2f42079466bf06df3b2dcee575eb5c2acc183906",
+  "updated": "2026-11-07T09:51:35+00:00",
+  "source_commit": "e0a8b0e35394517f37fac727ca09ec3574c8516e",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -53056,7 +53056,8 @@
           "release-0.5-critical-accessibility",
           "release-0.5-form-and-document-accessibility",
           "release-0.5-workspace-route-census",
-          "release-0.5-ui-coverage-collection"
+          "release-0.5-ui-coverage-collection",
+          "release-0.5-contract-finance-coverage"
         ],
         "current_acceptance": {
           "kind": "current-staff-administration-and-dashboard-verification",
@@ -53084,7 +53085,7 @@
             },
             {
               "path": "apps/web/e2e/crm-dashboard.spec.ts",
-              "sha256": "6bddbbba0916e11ede96dc54572a8c874da94c7f87d12c450fe802f94fbf1cd2"
+              "sha256": "59e01fcd87a53dcff9e379b98054f0f5017f880961173f22674c371757bfa847"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -53220,7 +53221,8 @@
             "Bindings renewed by release-0.5-critical-accessibility: audited canonical landmarks, retained command calls and validated auth-entry authority. Exact targeted unit/browser and original performance evidence passes.",
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
-            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed."
+            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
+            "Bindings renewed by release-0.5-contract-finance-coverage: eight native wallet and eight native CRM cases preserve current review, timeout, denial and recovery assertions. Product code is unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/staff-administration",
           "limitations": [
@@ -53600,6 +53602,11 @@
               "batch": "release-0.5-ui-coverage-collection",
               "base_commit": "a68236ce5a764e7d1eb686fcfa00e07553df2bc0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ui-coverage-collection/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-contract-finance-coverage",
+              "base_commit": "e0a8b0e35394517f37fac727ca09ec3574c8516e",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-contract-finance-coverage/source-binding.json"
             }
           ]
         }
@@ -137390,7 +137397,8 @@
           "release-0.5-measured-action-targets",
           "release-0.5-workspace-route-census",
           "release-0.5-admin-coverage-proof",
-          "release-0.5-protected-contract-and-finance"
+          "release-0.5-protected-contract-and-finance",
+          "release-0.5-contract-finance-coverage"
         ],
         "current_acceptance": {
           "kind": "current-wallet-payment-reversal-and-finance-alert-verification",
@@ -137454,7 +137462,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-invoice-payment.spec.ts",
-              "sha256": "ce6ec6c40eb71c861a8f73e4d7f26b50a43282cd2723498f2994a41670e78e16"
+              "sha256": "3354e3965c328b394e4ce9835e50ce4b7fe8faa6f2e633c4b58fbbcc2cab0707"
             },
             {
               "path": "apps/web/src/components/WalletInvoicePaymentPanel.tsx",
@@ -137647,7 +137655,8 @@
             "Bindings renewed by release-0.5-measured-action-targets: target sizing changes pass exact populated route browsers and scoped invoice, saving and customer-history ownership units. Navigation, authority, receipt and money behavior are unchanged.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
             "Bindings renewed by release-0.5-admin-coverage-proof: all affected API files pass with the same product code, append-only evidence protections, financial/security assertions and exact notification occurrences.",
-            "Bindings renewed by release-0.5-protected-contract-and-finance: protected fixtures retain all financial, privacy and replay assertions; dynamic password focus is verified on both engines, with unchanged initial focus and gates. Related units and original budgets pass."
+            "Bindings renewed by release-0.5-protected-contract-and-finance: protected fixtures retain all financial, privacy and replay assertions; dynamic password focus is verified on both engines, with unchanged initial focus and gates. Related units and original budgets pass.",
+            "Bindings renewed by release-0.5-contract-finance-coverage: eight native wallet and eight native CRM cases preserve current review, timeout, denial and recovery assertions. Product code is unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/wallet-payments-reversals",
           "limitations": [
@@ -138109,6 +138118,11 @@
               "batch": "release-0.5-protected-contract-and-finance",
               "base_commit": "2f42079466bf06df3b2dcee575eb5c2acc183906",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-protected-contract-and-finance/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-contract-finance-coverage",
+              "base_commit": "e0a8b0e35394517f37fac727ca09ec3574c8516e",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-contract-finance-coverage/source-binding.json"
             }
           ]
         }
@@ -138200,7 +138214,8 @@
           "release-0.5-critical-accessibility",
           "release-0.5-form-and-document-accessibility",
           "release-0.5-admin-coverage-proof",
-          "release-0.5-protected-contract-and-finance"
+          "release-0.5-protected-contract-and-finance",
+          "release-0.5-contract-finance-coverage"
         ],
         "current_acceptance": {
           "kind": "current-wallet-payment-reversal-and-finance-alert-verification",
@@ -138252,7 +138267,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-invoice-payment.spec.ts",
-              "sha256": "ce6ec6c40eb71c861a8f73e4d7f26b50a43282cd2723498f2994a41670e78e16"
+              "sha256": "3354e3965c328b394e4ce9835e50ce4b7fe8faa6f2e633c4b58fbbcc2cab0707"
             },
             {
               "path": "apps/web/src/hooks/useLocale.ts",
@@ -138303,7 +138318,8 @@
             "Bindings renewed by release-0.5-critical-accessibility: audited canonical landmarks, retained command calls and validated auth-entry authority. Exact targeted unit/browser and original performance evidence passes.",
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
             "Bindings renewed by release-0.5-admin-coverage-proof: all affected API files pass with the same product code, append-only evidence protections, financial/security assertions and exact notification occurrences.",
-            "Bindings renewed by release-0.5-protected-contract-and-finance: protected fixtures retain all financial, privacy and replay assertions; dynamic password focus is verified on both engines, with unchanged initial focus and gates. Related units and original budgets pass."
+            "Bindings renewed by release-0.5-protected-contract-and-finance: protected fixtures retain all financial, privacy and replay assertions; dynamic password focus is verified on both engines, with unchanged initial focus and gates. Related units and original budgets pass.",
+            "Bindings renewed by release-0.5-contract-finance-coverage: eight native wallet and eight native CRM cases preserve current review, timeout, denial and recovery assertions. Product code is unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/wallet-payments-reversals",
           "limitations": [
@@ -138390,6 +138406,11 @@
               "batch": "release-0.5-protected-contract-and-finance",
               "base_commit": "2f42079466bf06df3b2dcee575eb5c2acc183906",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-protected-contract-and-finance/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-contract-finance-coverage",
+              "base_commit": "e0a8b0e35394517f37fac727ca09ec3574c8516e",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-contract-finance-coverage/source-binding.json"
             }
           ]
         }
@@ -138483,7 +138504,8 @@
           "release-0.5-critical-accessibility",
           "release-0.5-form-and-document-accessibility",
           "release-0.5-admin-coverage-proof",
-          "release-0.5-protected-contract-and-finance"
+          "release-0.5-protected-contract-and-finance",
+          "release-0.5-contract-finance-coverage"
         ],
         "current_acceptance": {
           "kind": "current-wallet-payment-reversal-and-finance-alert-verification",
@@ -138539,7 +138561,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-invoice-payment.spec.ts",
-              "sha256": "ce6ec6c40eb71c861a8f73e4d7f26b50a43282cd2723498f2994a41670e78e16"
+              "sha256": "3354e3965c328b394e4ce9835e50ce4b7fe8faa6f2e633c4b58fbbcc2cab0707"
             },
             {
               "path": "apps/web/src/hooks/useLocale.ts",
@@ -138594,7 +138616,8 @@
             "Bindings renewed by release-0.5-critical-accessibility: audited canonical landmarks, retained command calls and validated auth-entry authority. Exact targeted unit/browser and original performance evidence passes.",
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
             "Bindings renewed by release-0.5-admin-coverage-proof: all affected API files pass with the same product code, append-only evidence protections, financial/security assertions and exact notification occurrences.",
-            "Bindings renewed by release-0.5-protected-contract-and-finance: protected fixtures retain all financial, privacy and replay assertions; dynamic password focus is verified on both engines, with unchanged initial focus and gates. Related units and original budgets pass."
+            "Bindings renewed by release-0.5-protected-contract-and-finance: protected fixtures retain all financial, privacy and replay assertions; dynamic password focus is verified on both engines, with unchanged initial focus and gates. Related units and original budgets pass.",
+            "Bindings renewed by release-0.5-contract-finance-coverage: eight native wallet and eight native CRM cases preserve current review, timeout, denial and recovery assertions. Product code is unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/wallet-payments-reversals",
           "limitations": [
@@ -138681,6 +138704,11 @@
               "batch": "release-0.5-protected-contract-and-finance",
               "base_commit": "2f42079466bf06df3b2dcee575eb5c2acc183906",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-protected-contract-and-finance/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-contract-finance-coverage",
+              "base_commit": "e0a8b0e35394517f37fac727ca09ec3574c8516e",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-contract-finance-coverage/source-binding.json"
             }
           ]
         }
@@ -138763,7 +138791,8 @@
           "release-0.5-critical-accessibility",
           "release-0.5-form-and-document-accessibility",
           "release-0.5-admin-coverage-proof",
-          "release-0.5-protected-contract-and-finance"
+          "release-0.5-protected-contract-and-finance",
+          "release-0.5-contract-finance-coverage"
         ],
         "current_acceptance": {
           "kind": "current-wallet-payment-reversal-and-finance-alert-verification",
@@ -138811,7 +138840,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-invoice-payment.spec.ts",
-              "sha256": "ce6ec6c40eb71c861a8f73e4d7f26b50a43282cd2723498f2994a41670e78e16"
+              "sha256": "3354e3965c328b394e4ce9835e50ce4b7fe8faa6f2e633c4b58fbbcc2cab0707"
             },
             {
               "path": "apps/web/src/hooks/useLocale.ts",
@@ -138862,7 +138891,8 @@
             "Bindings renewed by release-0.5-critical-accessibility: audited canonical landmarks, retained command calls and validated auth-entry authority. Exact targeted unit/browser and original performance evidence passes.",
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
             "Bindings renewed by release-0.5-admin-coverage-proof: all affected API files pass with the same product code, append-only evidence protections, financial/security assertions and exact notification occurrences.",
-            "Bindings renewed by release-0.5-protected-contract-and-finance: protected fixtures retain all financial, privacy and replay assertions; dynamic password focus is verified on both engines, with unchanged initial focus and gates. Related units and original budgets pass."
+            "Bindings renewed by release-0.5-protected-contract-and-finance: protected fixtures retain all financial, privacy and replay assertions; dynamic password focus is verified on both engines, with unchanged initial focus and gates. Related units and original budgets pass.",
+            "Bindings renewed by release-0.5-contract-finance-coverage: eight native wallet and eight native CRM cases preserve current review, timeout, denial and recovery assertions. Product code is unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/wallet-payments-reversals",
           "limitations": [
@@ -138949,6 +138979,11 @@
               "batch": "release-0.5-protected-contract-and-finance",
               "base_commit": "2f42079466bf06df3b2dcee575eb5c2acc183906",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-protected-contract-and-finance/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-contract-finance-coverage",
+              "base_commit": "e0a8b0e35394517f37fac727ca09ec3574c8516e",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-contract-finance-coverage/source-binding.json"
             }
           ]
         }
@@ -139019,7 +139054,8 @@
           "release-0.5-critical-accessibility",
           "release-0.5-form-and-document-accessibility",
           "release-0.5-admin-coverage-proof",
-          "release-0.5-protected-contract-and-finance"
+          "release-0.5-protected-contract-and-finance",
+          "release-0.5-contract-finance-coverage"
         ],
         "current_acceptance": {
           "kind": "current-wallet-payment-reversal-and-finance-alert-verification",
@@ -139051,7 +139087,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-invoice-payment.spec.ts",
-              "sha256": "ce6ec6c40eb71c861a8f73e4d7f26b50a43282cd2723498f2994a41670e78e16"
+              "sha256": "3354e3965c328b394e4ce9835e50ce4b7fe8faa6f2e633c4b58fbbcc2cab0707"
             },
             {
               "path": "apps/web/src/hooks/useLocale.ts",
@@ -139110,7 +139146,8 @@
             "Bindings renewed by release-0.5-critical-accessibility: audited canonical landmarks, retained command calls and validated auth-entry authority. Exact targeted unit/browser and original performance evidence passes.",
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
             "Bindings renewed by release-0.5-admin-coverage-proof: all affected API files pass with the same product code, append-only evidence protections, financial/security assertions and exact notification occurrences.",
-            "Bindings renewed by release-0.5-protected-contract-and-finance: protected fixtures retain all financial, privacy and replay assertions; dynamic password focus is verified on both engines, with unchanged initial focus and gates. Related units and original budgets pass."
+            "Bindings renewed by release-0.5-protected-contract-and-finance: protected fixtures retain all financial, privacy and replay assertions; dynamic password focus is verified on both engines, with unchanged initial focus and gates. Related units and original budgets pass.",
+            "Bindings renewed by release-0.5-contract-finance-coverage: eight native wallet and eight native CRM cases preserve current review, timeout, denial and recovery assertions. Product code is unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/wallet-payments-reversals",
           "limitations": [
@@ -139197,6 +139234,11 @@
               "batch": "release-0.5-protected-contract-and-finance",
               "base_commit": "2f42079466bf06df3b2dcee575eb5c2acc183906",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-protected-contract-and-finance/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-contract-finance-coverage",
+              "base_commit": "e0a8b0e35394517f37fac727ca09ec3574c8516e",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-contract-finance-coverage/source-binding.json"
             }
           ]
         }
@@ -139503,7 +139545,8 @@
           "release-0.5-form-and-document-accessibility",
           "release-0.5-workspace-route-census",
           "release-0.5-admin-coverage-proof",
-          "release-0.5-protected-contract-and-finance"
+          "release-0.5-protected-contract-and-finance",
+          "release-0.5-contract-finance-coverage"
         ],
         "current_acceptance": {
           "kind": "current-wallet-payment-reversal-and-finance-alert-verification",
@@ -139539,11 +139582,11 @@
             },
             {
               "path": "apps/web/e2e/crm-dashboard.spec.ts",
-              "sha256": "6bddbbba0916e11ede96dc54572a8c874da94c7f87d12c450fe802f94fbf1cd2"
+              "sha256": "59e01fcd87a53dcff9e379b98054f0f5017f880961173f22674c371757bfa847"
             },
             {
               "path": "apps/web/e2e/wallet-invoice-payment.spec.ts",
-              "sha256": "ce6ec6c40eb71c861a8f73e4d7f26b50a43282cd2723498f2994a41670e78e16"
+              "sha256": "3354e3965c328b394e4ce9835e50ce4b7fe8faa6f2e633c4b58fbbcc2cab0707"
             },
             {
               "path": "apps/web/src/hooks/useLocale.ts",
@@ -139772,7 +139815,8 @@
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
             "Bindings renewed by release-0.5-admin-coverage-proof: all affected API files pass with the same product code, append-only evidence protections, financial/security assertions and exact notification occurrences.",
-            "Bindings renewed by release-0.5-protected-contract-and-finance: protected fixtures retain all financial, privacy and replay assertions; dynamic password focus is verified on both engines, with unchanged initial focus and gates. Related units and original budgets pass."
+            "Bindings renewed by release-0.5-protected-contract-and-finance: protected fixtures retain all financial, privacy and replay assertions; dynamic password focus is verified on both engines, with unchanged initial focus and gates. Related units and original budgets pass.",
+            "Bindings renewed by release-0.5-contract-finance-coverage: eight native wallet and eight native CRM cases preserve current review, timeout, denial and recovery assertions. Product code is unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/wallet-payments-reversals",
           "limitations": [
@@ -140126,6 +140170,11 @@
               "batch": "release-0.5-protected-contract-and-finance",
               "base_commit": "2f42079466bf06df3b2dcee575eb5c2acc183906",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-protected-contract-and-finance/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-contract-finance-coverage",
+              "base_commit": "e0a8b0e35394517f37fac727ca09ec3574c8516e",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-contract-finance-coverage/source-binding.json"
             }
           ]
         }
@@ -493317,7 +493366,8 @@
           "release-0.5-route-landmark-census",
           "release-0.5-profile-lifecycle-feedback",
           "release-0.5-coverage-remaining-branches",
-          "release-0.5-critical-coverage-closure"
+          "release-0.5-critical-coverage-closure",
+          "release-0.5-contract-finance-coverage"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -493401,7 +493451,7 @@
             },
             {
               "path": "apps/web/e2e/crm-dashboard.spec.ts",
-              "sha256": "6bddbbba0916e11ede96dc54572a8c874da94c7f87d12c450fe802f94fbf1cd2"
+              "sha256": "59e01fcd87a53dcff9e379b98054f0f5017f880961173f22674c371757bfa847"
             },
             {
               "path": "apps/web/e2e/crm-detail-permissions.spec.ts",
@@ -493808,7 +493858,8 @@
             "Bindings renewed by release-0.5-route-landmark-census: the detail change is identifier wrapping and bidi isolation only. Existing exact receipt, authority, navigation and draft checks pass with the new populated layout assertions.",
             "Bindings renewed by release-0.5-profile-lifecycle-feedback: exact lifecycle browsers and units verify timeout, current scope, protected consent, duplicate prevention and receipts after the bounded preview/feedback change.",
             "Bindings renewed by release-0.5-coverage-remaining-branches: normal manifest behavior and all 27 test assertion bodies are preserved, and exact protected admin and consultation fixture checks pass. No production source changed.",
-            "Bindings renewed by release-0.5-critical-coverage-closure: 30 terms/registration and 42 calendar native cases, 35 related units and original bundle budgets pass. Exact public version, consent, read privacy and existing calendar assertions are preserved."
+            "Bindings renewed by release-0.5-critical-coverage-closure: 30 terms/registration and 42 calendar native cases, 35 related units and original bundle budgets pass. Exact public version, consent, read privacy and existing calendar assertions are preserved.",
+            "Bindings renewed by release-0.5-contract-finance-coverage: eight native wallet and eight native CRM cases preserve current review, timeout, denial and recovery assertions. Product code is unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-accessibility",
           "limitations": [
@@ -493889,6 +493940,11 @@
               "batch": "release-0.5-critical-coverage-closure",
               "base_commit": "f343e07f2221fd22705be5dd73298287bf963978",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-coverage-closure/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-contract-finance-coverage",
+              "base_commit": "e0a8b0e35394517f37fac727ca09ec3574c8516e",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-contract-finance-coverage/source-binding.json"
             }
           ]
         }
@@ -493930,7 +493986,8 @@
           "release-0.5-route-landmark-census",
           "release-0.5-profile-lifecycle-feedback",
           "release-0.5-coverage-remaining-branches",
-          "release-0.5-critical-coverage-closure"
+          "release-0.5-critical-coverage-closure",
+          "release-0.5-contract-finance-coverage"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -494014,7 +494071,7 @@
             },
             {
               "path": "apps/web/e2e/crm-dashboard.spec.ts",
-              "sha256": "6bddbbba0916e11ede96dc54572a8c874da94c7f87d12c450fe802f94fbf1cd2"
+              "sha256": "59e01fcd87a53dcff9e379b98054f0f5017f880961173f22674c371757bfa847"
             },
             {
               "path": "apps/web/e2e/crm-detail-permissions.spec.ts",
@@ -494421,7 +494478,8 @@
             "Bindings renewed by release-0.5-route-landmark-census: the detail change is identifier wrapping and bidi isolation only. Existing exact receipt, authority, navigation and draft checks pass with the new populated layout assertions.",
             "Bindings renewed by release-0.5-profile-lifecycle-feedback: exact lifecycle browsers and units verify timeout, current scope, protected consent, duplicate prevention and receipts after the bounded preview/feedback change.",
             "Bindings renewed by release-0.5-coverage-remaining-branches: normal manifest behavior and all 27 test assertion bodies are preserved, and exact protected admin and consultation fixture checks pass. No production source changed.",
-            "Bindings renewed by release-0.5-critical-coverage-closure: 30 terms/registration and 42 calendar native cases, 35 related units and original bundle budgets pass. Exact public version, consent, read privacy and existing calendar assertions are preserved."
+            "Bindings renewed by release-0.5-critical-coverage-closure: 30 terms/registration and 42 calendar native cases, 35 related units and original bundle budgets pass. Exact public version, consent, read privacy and existing calendar assertions are preserved.",
+            "Bindings renewed by release-0.5-contract-finance-coverage: eight native wallet and eight native CRM cases preserve current review, timeout, denial and recovery assertions. Product code is unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-accessibility",
           "limitations": [
@@ -494502,6 +494560,11 @@
               "batch": "release-0.5-critical-coverage-closure",
               "base_commit": "f343e07f2221fd22705be5dd73298287bf963978",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-coverage-closure/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-contract-finance-coverage",
+              "base_commit": "e0a8b0e35394517f37fac727ca09ec3574c8516e",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-contract-finance-coverage/source-binding.json"
             }
           ]
         }
@@ -494916,7 +494979,8 @@
           "release-0.5-route-landmark-census",
           "release-0.5-profile-lifecycle-feedback",
           "release-0.5-coverage-remaining-branches",
-          "release-0.5-critical-coverage-closure"
+          "release-0.5-critical-coverage-closure",
+          "release-0.5-contract-finance-coverage"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -495000,7 +495064,7 @@
             },
             {
               "path": "apps/web/e2e/crm-dashboard.spec.ts",
-              "sha256": "6bddbbba0916e11ede96dc54572a8c874da94c7f87d12c450fe802f94fbf1cd2"
+              "sha256": "59e01fcd87a53dcff9e379b98054f0f5017f880961173f22674c371757bfa847"
             },
             {
               "path": "apps/web/e2e/crm-detail-permissions.spec.ts",
@@ -495407,7 +495471,8 @@
             "Bindings renewed by release-0.5-route-landmark-census: the detail change is identifier wrapping and bidi isolation only. Existing exact receipt, authority, navigation and draft checks pass with the new populated layout assertions.",
             "Bindings renewed by release-0.5-profile-lifecycle-feedback: exact lifecycle browsers and units verify timeout, current scope, protected consent, duplicate prevention and receipts after the bounded preview/feedback change.",
             "Bindings renewed by release-0.5-coverage-remaining-branches: normal manifest behavior and all 27 test assertion bodies are preserved, and exact protected admin and consultation fixture checks pass. No production source changed.",
-            "Bindings renewed by release-0.5-critical-coverage-closure: 30 terms/registration and 42 calendar native cases, 35 related units and original bundle budgets pass. Exact public version, consent, read privacy and existing calendar assertions are preserved."
+            "Bindings renewed by release-0.5-critical-coverage-closure: 30 terms/registration and 42 calendar native cases, 35 related units and original bundle budgets pass. Exact public version, consent, read privacy and existing calendar assertions are preserved.",
+            "Bindings renewed by release-0.5-contract-finance-coverage: eight native wallet and eight native CRM cases preserve current review, timeout, denial and recovery assertions. Product code is unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-accessibility",
           "limitations": [
@@ -495488,6 +495553,11 @@
               "batch": "release-0.5-critical-coverage-closure",
               "base_commit": "f343e07f2221fd22705be5dd73298287bf963978",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-coverage-closure/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-contract-finance-coverage",
+              "base_commit": "e0a8b0e35394517f37fac727ca09ec3574c8516e",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-contract-finance-coverage/source-binding.json"
             }
           ]
         }
@@ -608583,7 +608653,8 @@
           "release-0.5-safari-main-keyboard",
           "release-0.5-workspace-route-census",
           "release-0.5-source-coverage-gate",
-          "release-0.5-ui-coverage-collection"
+          "release-0.5-ui-coverage-collection",
+          "release-0.5-contract-finance-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -608663,7 +608734,7 @@
             },
             {
               "path": "apps/web/e2e/crm-dashboard.spec.ts",
-              "sha256": "6bddbbba0916e11ede96dc54572a8c874da94c7f87d12c450fe802f94fbf1cd2"
+              "sha256": "59e01fcd87a53dcff9e379b98054f0f5017f880961173f22674c371757bfa847"
             },
             {
               "path": "apps/web/e2e/dashboard-fixture.ts",
@@ -608979,7 +609050,8 @@
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
             "Bindings renewed by release-0.5-source-coverage-gate: test fixtures now exercise actual acknowledgement, current query/account context and nonoverlapping polls before the bounded read deadline; 61 focused tests passed and application source was unchanged.",
-            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed."
+            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
+            "Bindings renewed by release-0.5-contract-finance-coverage: eight native wallet and eight native CRM cases preserve current review, timeout, denial and recovery assertions. Product code is unchanged."
           ],
           "criterion_result": "Responsive1/2/3-column DashboardLayout, mounted Card headers with icon/title/optional navigation and independently rendered customer/staff bodies verified.",
           "limitations": [
@@ -609121,6 +609193,11 @@
               "batch": "release-0.5-ui-coverage-collection",
               "base_commit": "a68236ce5a764e7d1eb686fcfa00e07553df2bc0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ui-coverage-collection/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-contract-finance-coverage",
+              "base_commit": "e0a8b0e35394517f37fac727ca09ec3574c8516e",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-contract-finance-coverage/source-binding.json"
             }
           ]
         }
@@ -609165,7 +609242,8 @@
           "release-0.5-safari-main-keyboard",
           "release-0.5-workspace-route-census",
           "release-0.5-source-coverage-gate",
-          "release-0.5-ui-coverage-collection"
+          "release-0.5-ui-coverage-collection",
+          "release-0.5-contract-finance-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -609245,7 +609323,7 @@
             },
             {
               "path": "apps/web/e2e/crm-dashboard.spec.ts",
-              "sha256": "6bddbbba0916e11ede96dc54572a8c874da94c7f87d12c450fe802f94fbf1cd2"
+              "sha256": "59e01fcd87a53dcff9e379b98054f0f5017f880961173f22674c371757bfa847"
             },
             {
               "path": "apps/web/e2e/dashboard-fixture.ts",
@@ -609561,7 +609639,8 @@
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
             "Bindings renewed by release-0.5-source-coverage-gate: test fixtures now exercise actual acknowledgement, current query/account context and nonoverlapping polls before the bounded read deadline; 61 focused tests passed and application source was unchanged.",
-            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed."
+            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
+            "Bindings renewed by release-0.5-contract-finance-coverage: eight native wallet and eight native CRM cases preserve current review, timeout, denial and recovery assertions. Product code is unchanged."
           ],
           "criterion_result": "Each authorized widget owns loading/error/retry/empty/data behavior. Customer server-query and staff useAsyncData readers independently fetch, validate ownership and fence account/profile changes. No sibling read depends on a failed resource.",
           "limitations": [
@@ -609703,6 +609782,11 @@
               "batch": "release-0.5-ui-coverage-collection",
               "base_commit": "a68236ce5a764e7d1eb686fcfa00e07553df2bc0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ui-coverage-collection/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-contract-finance-coverage",
+              "base_commit": "e0a8b0e35394517f37fac727ca09ec3574c8516e",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-contract-finance-coverage/source-binding.json"
             }
           ]
         }
@@ -609747,7 +609831,8 @@
           "release-0.5-safari-main-keyboard",
           "release-0.5-workspace-route-census",
           "release-0.5-source-coverage-gate",
-          "release-0.5-ui-coverage-collection"
+          "release-0.5-ui-coverage-collection",
+          "release-0.5-contract-finance-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -609827,7 +609912,7 @@
             },
             {
               "path": "apps/web/e2e/crm-dashboard.spec.ts",
-              "sha256": "6bddbbba0916e11ede96dc54572a8c874da94c7f87d12c450fe802f94fbf1cd2"
+              "sha256": "59e01fcd87a53dcff9e379b98054f0f5017f880961173f22674c371757bfa847"
             },
             {
               "path": "apps/web/e2e/dashboard-fixture.ts",
@@ -610143,7 +610228,8 @@
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
             "Bindings renewed by release-0.5-source-coverage-gate: test fixtures now exercise actual acknowledgement, current query/account context and nonoverlapping polls before the bounded read deadline; 61 focused tests passed and application source was unchanged.",
-            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed."
+            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
+            "Bindings renewed by release-0.5-contract-finance-coverage: eight native wallet and eight native CRM cases preserve current review, timeout, denial and recovery assertions. Product code is unchanged."
           ],
           "criterion_result": "Mounted widgets reserve32rem card height across loading/error/empty/ready; browser geometry checks verify unchanged coordinates and sizes during independent widget loads, with keyboard-scrollable long bodies.",
           "limitations": [
@@ -610285,6 +610371,11 @@
               "batch": "release-0.5-ui-coverage-collection",
               "base_commit": "a68236ce5a764e7d1eb686fcfa00e07553df2bc0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ui-coverage-collection/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-contract-finance-coverage",
+              "base_commit": "e0a8b0e35394517f37fac727ca09ec3574c8516e",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-contract-finance-coverage/source-binding.json"
             }
           ]
         }
@@ -610327,7 +610418,8 @@
           "release-0.5-safari-main-keyboard",
           "release-0.5-workspace-route-census",
           "release-0.5-source-coverage-gate",
-          "release-0.5-ui-coverage-collection"
+          "release-0.5-ui-coverage-collection",
+          "release-0.5-contract-finance-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -610407,7 +610499,7 @@
             },
             {
               "path": "apps/web/e2e/crm-dashboard.spec.ts",
-              "sha256": "6bddbbba0916e11ede96dc54572a8c874da94c7f87d12c450fe802f94fbf1cd2"
+              "sha256": "59e01fcd87a53dcff9e379b98054f0f5017f880961173f22674c371757bfa847"
             },
             {
               "path": "apps/web/e2e/dashboard-fixture.ts",
@@ -610723,7 +610815,8 @@
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
             "Bindings renewed by release-0.5-source-coverage-gate: test fixtures now exercise actual acknowledgement, current query/account context and nonoverlapping polls before the bounded read deadline; 61 focused tests passed and application source was unchanged.",
-            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed."
+            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
+            "Bindings renewed by release-0.5-contract-finance-coverage: eight native wallet and eight native CRM cases preserve current review, timeout, denial and recovery assertions. Product code is unchanged."
           ],
           "criterion_result": "Exact available/posted/reserved IRR and toman, all-outstanding-invoice low-funds warning, charge navigation and isolated failed-wallet alert/retry verified using current native and shared money evidence.",
           "limitations": [
@@ -610865,6 +610958,11 @@
               "batch": "release-0.5-ui-coverage-collection",
               "base_commit": "a68236ce5a764e7d1eb686fcfa00e07553df2bc0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ui-coverage-collection/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-contract-finance-coverage",
+              "base_commit": "e0a8b0e35394517f37fac727ca09ec3574c8516e",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-contract-finance-coverage/source-binding.json"
             }
           ]
         }
@@ -610907,7 +611005,8 @@
           "release-0.5-safari-main-keyboard",
           "release-0.5-workspace-route-census",
           "release-0.5-source-coverage-gate",
-          "release-0.5-ui-coverage-collection"
+          "release-0.5-ui-coverage-collection",
+          "release-0.5-contract-finance-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -610987,7 +611086,7 @@
             },
             {
               "path": "apps/web/e2e/crm-dashboard.spec.ts",
-              "sha256": "6bddbbba0916e11ede96dc54572a8c874da94c7f87d12c450fe802f94fbf1cd2"
+              "sha256": "59e01fcd87a53dcff9e379b98054f0f5017f880961173f22674c371757bfa847"
             },
             {
               "path": "apps/web/e2e/dashboard-fixture.ts",
@@ -611303,7 +611402,8 @@
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
             "Bindings renewed by release-0.5-source-coverage-gate: test fixtures now exercise actual acknowledgement, current query/account context and nonoverlapping polls before the bounded read deadline; 61 focused tests passed and application source was unchanged.",
-            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed."
+            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
+            "Bindings renewed by release-0.5-contract-finance-coverage: eight native wallet and eight native CRM cases preserve current review, timeout, denial and recovery assertions. Product code is unchanged."
           ],
           "criterion_result": "Four localized counts with icons/color and exact filtered navigation: active contracts, orders in progress, customer open tickets, unpaid invoices. Current permissions and native no-double-count union retained.",
           "limitations": [
@@ -611445,6 +611545,11 @@
               "batch": "release-0.5-ui-coverage-collection",
               "base_commit": "a68236ce5a764e7d1eb686fcfa00e07553df2bc0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ui-coverage-collection/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-contract-finance-coverage",
+              "base_commit": "e0a8b0e35394517f37fac727ca09ec3574c8516e",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-contract-finance-coverage/source-binding.json"
             }
           ]
         }
@@ -611489,7 +611594,8 @@
           "release-0.5-safari-main-keyboard",
           "release-0.5-workspace-route-census",
           "release-0.5-source-coverage-gate",
-          "release-0.5-ui-coverage-collection"
+          "release-0.5-ui-coverage-collection",
+          "release-0.5-contract-finance-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -611569,7 +611675,7 @@
             },
             {
               "path": "apps/web/e2e/crm-dashboard.spec.ts",
-              "sha256": "6bddbbba0916e11ede96dc54572a8c874da94c7f87d12c450fe802f94fbf1cd2"
+              "sha256": "59e01fcd87a53dcff9e379b98054f0f5017f880961173f22674c371757bfa847"
             },
             {
               "path": "apps/web/e2e/dashboard-fixture.ts",
@@ -611885,7 +611991,8 @@
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
             "Bindings renewed by release-0.5-source-coverage-gate: test fixtures now exercise actual acknowledgement, current query/account context and nonoverlapping polls before the bounded read deadline; 61 focused tests passed and application source was unchanged.",
-            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed."
+            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
+            "Bindings renewed by release-0.5-contract-finance-coverage: eight native wallet and eight native CRM cases preserve current review, timeout, denial and recovery assertions. Product code is unchanged."
           ],
           "criterion_result": "Current crm:verify permission, policy-enabled pending count, latest five non-archived profiles with deterministic timestamp ties, detail/show-all navigation, empty/disabled/malformed/denied behavior verified.",
           "limitations": [
@@ -612027,6 +612134,11 @@
               "batch": "release-0.5-ui-coverage-collection",
               "base_commit": "a68236ce5a764e7d1eb686fcfa00e07553df2bc0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ui-coverage-collection/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-contract-finance-coverage",
+              "base_commit": "e0a8b0e35394517f37fac727ca09ec3574c8516e",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-contract-finance-coverage/source-binding.json"
             }
           ]
         }
@@ -612070,7 +612182,8 @@
           "release-0.5-safari-main-keyboard",
           "release-0.5-workspace-route-census",
           "release-0.5-source-coverage-gate",
-          "release-0.5-ui-coverage-collection"
+          "release-0.5-ui-coverage-collection",
+          "release-0.5-contract-finance-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -612150,7 +612263,7 @@
             },
             {
               "path": "apps/web/e2e/crm-dashboard.spec.ts",
-              "sha256": "6bddbbba0916e11ede96dc54572a8c874da94c7f87d12c450fe802f94fbf1cd2"
+              "sha256": "59e01fcd87a53dcff9e379b98054f0f5017f880961173f22674c371757bfa847"
             },
             {
               "path": "apps/web/e2e/dashboard-fixture.ts",
@@ -612466,7 +612579,8 @@
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
             "Bindings renewed by release-0.5-source-coverage-gate: test fixtures now exercise actual acknowledgement, current query/account context and nonoverlapping polls before the bounded read deadline; 61 focused tests passed and application source was unchanged.",
-            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed."
+            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
+            "Bindings renewed by release-0.5-contract-finance-coverage: eight native wallet and eight native CRM cases preserve current review, timeout, denial and recovery assertions. Product code is unchanged."
           ],
           "criterion_result": "Account-bound customer invitations persist above shared dashboard header until explicit accept/decline; previously accepted bilingual private-details, recovery, native invitation and owner-bound action evidence matches current sources.",
           "limitations": [
@@ -612608,6 +612722,11 @@
               "batch": "release-0.5-ui-coverage-collection",
               "base_commit": "a68236ce5a764e7d1eb686fcfa00e07553df2bc0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ui-coverage-collection/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-contract-finance-coverage",
+              "base_commit": "e0a8b0e35394517f37fac727ca09ec3574c8516e",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-contract-finance-coverage/source-binding.json"
             }
           ]
         }
@@ -612651,7 +612770,8 @@
           "release-0.5-safari-main-keyboard",
           "release-0.5-workspace-route-census",
           "release-0.5-source-coverage-gate",
-          "release-0.5-ui-coverage-collection"
+          "release-0.5-ui-coverage-collection",
+          "release-0.5-contract-finance-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -612731,7 +612851,7 @@
             },
             {
               "path": "apps/web/e2e/crm-dashboard.spec.ts",
-              "sha256": "6bddbbba0916e11ede96dc54572a8c874da94c7f87d12c450fe802f94fbf1cd2"
+              "sha256": "59e01fcd87a53dcff9e379b98054f0f5017f880961173f22674c371757bfa847"
             },
             {
               "path": "apps/web/e2e/dashboard-fixture.ts",
@@ -613047,7 +613167,8 @@
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
             "Bindings renewed by release-0.5-source-coverage-gate: test fixtures now exercise actual acknowledgement, current query/account context and nonoverlapping polls before the bounded read deadline; 61 focused tests passed and application source was unchanged.",
-            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed."
+            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
+            "Bindings renewed by release-0.5-contract-finance-coverage: eight native wallet and eight native CRM cases preserve current review, timeout, denial and recovery assertions. Product code is unchanged."
           ],
           "criterion_result": "Latest five submitted electricity/saving orders merge in deterministic chronological order with localized status/date, exact invoice amount or explicit missing amount and service-specific view-all/detail links. Electricity submit transaction atomically establishes contract/invoice, so pre-publication submitted orders are included.",
           "limitations": [
@@ -613189,6 +613310,11 @@
               "batch": "release-0.5-ui-coverage-collection",
               "base_commit": "a68236ce5a764e7d1eb686fcfa00e07553df2bc0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ui-coverage-collection/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-contract-finance-coverage",
+              "base_commit": "e0a8b0e35394517f37fac727ca09ec3574c8516e",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-contract-finance-coverage/source-binding.json"
             }
           ]
         }
@@ -613232,7 +613358,8 @@
           "release-0.5-safari-main-keyboard",
           "release-0.5-workspace-route-census",
           "release-0.5-source-coverage-gate",
-          "release-0.5-ui-coverage-collection"
+          "release-0.5-ui-coverage-collection",
+          "release-0.5-contract-finance-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -613312,7 +613439,7 @@
             },
             {
               "path": "apps/web/e2e/crm-dashboard.spec.ts",
-              "sha256": "6bddbbba0916e11ede96dc54572a8c874da94c7f87d12c450fe802f94fbf1cd2"
+              "sha256": "59e01fcd87a53dcff9e379b98054f0f5017f880961173f22674c371757bfa847"
             },
             {
               "path": "apps/web/e2e/dashboard-fixture.ts",
@@ -613628,7 +613755,8 @@
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
             "Bindings renewed by release-0.5-source-coverage-gate: test fixtures now exercise actual acknowledgement, current query/account context and nonoverlapping polls before the bounded read deadline; 61 focused tests passed and application source was unchanged.",
-            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed."
+            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
+            "Bindings renewed by release-0.5-contract-finance-coverage: eight native wallet and eight native CRM cases preserve current review, timeout, denial and recovery assertions. Product code is unchanged."
           ],
           "criterion_result": "First three next-due invoices show exact remaining amount, due date and timezone-based days/urgency. Payment availability text distinguishes future payable dates; pay links open guarded invoice details and profile changes clear old rows.",
           "limitations": [
@@ -613770,6 +613898,11 @@
               "batch": "release-0.5-ui-coverage-collection",
               "base_commit": "a68236ce5a764e7d1eb686fcfa00e07553df2bc0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ui-coverage-collection/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-contract-finance-coverage",
+              "base_commit": "e0a8b0e35394517f37fac727ca09ec3574c8516e",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-contract-finance-coverage/source-binding.json"
             }
           ]
         }
@@ -613813,7 +613946,8 @@
           "release-0.5-safari-main-keyboard",
           "release-0.5-workspace-route-census",
           "release-0.5-source-coverage-gate",
-          "release-0.5-ui-coverage-collection"
+          "release-0.5-ui-coverage-collection",
+          "release-0.5-contract-finance-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -613893,7 +614027,7 @@
             },
             {
               "path": "apps/web/e2e/crm-dashboard.spec.ts",
-              "sha256": "6bddbbba0916e11ede96dc54572a8c874da94c7f87d12c450fe802f94fbf1cd2"
+              "sha256": "59e01fcd87a53dcff9e379b98054f0f5017f880961173f22674c371757bfa847"
             },
             {
               "path": "apps/web/e2e/dashboard-fixture.ts",
@@ -614209,7 +614343,8 @@
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
             "Bindings renewed by release-0.5-source-coverage-gate: test fixtures now exercise actual acknowledgement, current query/account context and nonoverlapping polls before the bounded read deadline; 61 focused tests passed and application source was unchanged.",
-            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed."
+            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
+            "Bindings renewed by release-0.5-contract-finance-coverage: eight native wallet and eight native CRM cases preserve current review, timeout, denial and recovery assertions. Product code is unchanged."
           ],
           "criterion_result": "Active published contracts retain recorded service end dates/status, bounded elapsed-term progress, explicit missing/invalid-date fallback and contract links. Progress does not fabricate fulfillment.",
           "limitations": [
@@ -614351,6 +614486,11 @@
               "batch": "release-0.5-ui-coverage-collection",
               "base_commit": "a68236ce5a764e7d1eb686fcfa00e07553df2bc0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ui-coverage-collection/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-contract-finance-coverage",
+              "base_commit": "e0a8b0e35394517f37fac727ca09ec3574c8516e",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-contract-finance-coverage/source-binding.json"
             }
           ]
         }
@@ -614394,7 +614534,8 @@
           "release-0.5-safari-main-keyboard",
           "release-0.5-workspace-route-census",
           "release-0.5-source-coverage-gate",
-          "release-0.5-ui-coverage-collection"
+          "release-0.5-ui-coverage-collection",
+          "release-0.5-contract-finance-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -614474,7 +614615,7 @@
             },
             {
               "path": "apps/web/e2e/crm-dashboard.spec.ts",
-              "sha256": "6bddbbba0916e11ede96dc54572a8c874da94c7f87d12c450fe802f94fbf1cd2"
+              "sha256": "59e01fcd87a53dcff9e379b98054f0f5017f880961173f22674c371757bfa847"
             },
             {
               "path": "apps/web/e2e/dashboard-fixture.ts",
@@ -614790,7 +614931,8 @@
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
             "Bindings renewed by release-0.5-source-coverage-gate: test fixtures now exercise actual acknowledgement, current query/account context and nonoverlapping polls before the bounded read deadline; 61 focused tests passed and application source was unchanged.",
-            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed."
+            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
+            "Bindings renewed by release-0.5-contract-finance-coverage: eight native wallet and eight native CRM cases preserve current review, timeout, denial and recovery assertions. Product code is unchanged."
           ],
           "criterion_result": "Staff queue independently reads current-grant ticket/order/unassigned-consultation counts with appropriate filtered links; tickets:assigned is constrained to that actor and concurrent grant removal withdraws results.",
           "limitations": [
@@ -614932,6 +615074,11 @@
               "batch": "release-0.5-ui-coverage-collection",
               "base_commit": "a68236ce5a764e7d1eb686fcfa00e07553df2bc0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ui-coverage-collection/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-contract-finance-coverage",
+              "base_commit": "e0a8b0e35394517f37fac727ca09ec3574c8516e",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-contract-finance-coverage/source-binding.json"
             }
           ]
         }
@@ -614975,7 +615122,8 @@
           "release-0.5-safari-main-keyboard",
           "release-0.5-workspace-route-census",
           "release-0.5-source-coverage-gate",
-          "release-0.5-ui-coverage-collection"
+          "release-0.5-ui-coverage-collection",
+          "release-0.5-contract-finance-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -615055,7 +615203,7 @@
             },
             {
               "path": "apps/web/e2e/crm-dashboard.spec.ts",
-              "sha256": "6bddbbba0916e11ede96dc54572a8c874da94c7f87d12c450fe802f94fbf1cd2"
+              "sha256": "59e01fcd87a53dcff9e379b98054f0f5017f880961173f22674c371757bfa847"
             },
             {
               "path": "apps/web/e2e/dashboard-fixture.ts",
@@ -615371,7 +615519,8 @@
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
             "Bindings renewed by release-0.5-source-coverage-gate: test fixtures now exercise actual acknowledgement, current query/account context and nonoverlapping polls before the bounded read deadline; 61 focused tests passed and application source was unchanged.",
-            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed."
+            "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
+            "Bindings renewed by release-0.5-contract-finance-coverage: eight native wallet and eight native CRM cases preserve current review, timeout, denial and recovery assertions. Product code is unchanged."
           ],
           "criterion_result": "Admin dashboard exposes unresolved refund obligations in open business work and failed/exhausted subset in failures alongside failed background jobs and open delivery dead letters. Severity, links, independent retry, permission denial and stale-zero handling verified.",
           "limitations": [
@@ -615513,6 +615662,11 @@
               "batch": "release-0.5-ui-coverage-collection",
               "base_commit": "a68236ce5a764e7d1eb686fcfa00e07553df2bc0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ui-coverage-collection/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-contract-finance-coverage",
+              "base_commit": "e0a8b0e35394517f37fac727ca09ec3574c8516e",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-contract-finance-coverage/source-binding.json"
             }
           ]
         }
@@ -639266,7 +639420,8 @@
           "release-0.5-route-landmark-census",
           "release-0.5-workspace-route-census",
           "release-0.5-ui-coverage-collection",
-          "release-0.5-protected-contract-and-finance"
+          "release-0.5-protected-contract-and-finance",
+          "release-0.5-contract-finance-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-financial-and-fulfillment-status-journeys",
@@ -639366,7 +639521,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-invoice-payment.spec.ts",
-              "sha256": "ce6ec6c40eb71c861a8f73e4d7f26b50a43282cd2723498f2994a41670e78e16"
+              "sha256": "3354e3965c328b394e4ce9835e50ce4b7fe8faa6f2e633c4b58fbbcc2cab0707"
             },
             {
               "path": "apps/web/package.json",
@@ -639760,7 +639915,8 @@
             "Bindings renewed by release-0.5-route-landmark-census: the detail change is identifier wrapping and bidi isolation only. Existing exact receipt, authority, navigation and draft checks pass with the new populated layout assertions.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
             "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
-            "Bindings renewed by release-0.5-protected-contract-and-finance: protected fixtures retain all financial, privacy and replay assertions; dynamic password focus is verified on both engines, with unchanged initial focus and gates. Related units and original budgets pass."
+            "Bindings renewed by release-0.5-protected-contract-and-finance: protected fixtures retain all financial, privacy and replay assertions; dynamic password focus is verified on both engines, with unchanged initial focus and gates. Related units and original budgets pass.",
+            "Bindings renewed by release-0.5-contract-finance-coverage: eight native wallet and eight native CRM cases preserve current review, timeout, denial and recovery assertions. Product code is unchanged."
           ],
           "criterion_result": "Exact integer IRR and optional exact toman equivalence, default/large/small display, localized labels/numerals, suffix option, unsafe/fractional input refusal and real financial callers verified.",
           "limitations": [
@@ -639944,6 +640100,11 @@
               "batch": "release-0.5-protected-contract-and-finance",
               "base_commit": "2f42079466bf06df3b2dcee575eb5c2acc183906",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-protected-contract-and-finance/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-contract-finance-coverage",
+              "base_commit": "e0a8b0e35394517f37fac727ca09ec3574c8516e",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-contract-finance-coverage/source-binding.json"
             }
           ]
         }
@@ -639994,7 +640155,8 @@
           "release-0.5-route-landmark-census",
           "release-0.5-workspace-route-census",
           "release-0.5-ui-coverage-collection",
-          "release-0.5-protected-contract-and-finance"
+          "release-0.5-protected-contract-and-finance",
+          "release-0.5-contract-finance-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-financial-and-fulfillment-status-journeys",
@@ -640094,7 +640256,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-invoice-payment.spec.ts",
-              "sha256": "ce6ec6c40eb71c861a8f73e4d7f26b50a43282cd2723498f2994a41670e78e16"
+              "sha256": "3354e3965c328b394e4ce9835e50ce4b7fe8faa6f2e633c4b58fbbcc2cab0707"
             },
             {
               "path": "apps/web/package.json",
@@ -640488,7 +640650,8 @@
             "Bindings renewed by release-0.5-route-landmark-census: the detail change is identifier wrapping and bidi isolation only. Existing exact receipt, authority, navigation and draft checks pass with the new populated layout assertions.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
             "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
-            "Bindings renewed by release-0.5-protected-contract-and-finance: protected fixtures retain all financial, privacy and replay assertions; dynamic password focus is verified on both engines, with unchanged initial focus and gates. Related units and original budgets pass."
+            "Bindings renewed by release-0.5-protected-contract-and-finance: protected fixtures retain all financial, privacy and replay assertions; dynamic password focus is verified on both engines, with unchanged initial focus and gates. Related units and original budgets pass.",
+            "Bindings renewed by release-0.5-contract-finance-coverage: eight native wallet and eight native CRM cases preserve current review, timeout, denial and recovery assertions. Product code is unchanged."
           ],
           "criterion_result": "Available/posted/reserved balances remain distinct, positive reservations only, server integer pending-invoice warning, wallet navigation and charge action verified.",
           "limitations": [
@@ -640672,6 +640835,11 @@
               "batch": "release-0.5-protected-contract-and-finance",
               "base_commit": "2f42079466bf06df3b2dcee575eb5c2acc183906",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-protected-contract-and-finance/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-contract-finance-coverage",
+              "base_commit": "e0a8b0e35394517f37fac727ca09ec3574c8516e",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-contract-finance-coverage/source-binding.json"
             }
           ]
         }
@@ -640724,7 +640892,8 @@
           "release-0.5-route-landmark-census",
           "release-0.5-workspace-route-census",
           "release-0.5-ui-coverage-collection",
-          "release-0.5-protected-contract-and-finance"
+          "release-0.5-protected-contract-and-finance",
+          "release-0.5-contract-finance-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-financial-and-fulfillment-status-journeys",
@@ -640824,7 +640993,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-invoice-payment.spec.ts",
-              "sha256": "ce6ec6c40eb71c861a8f73e4d7f26b50a43282cd2723498f2994a41670e78e16"
+              "sha256": "3354e3965c328b394e4ce9835e50ce4b7fe8faa6f2e633c4b58fbbcc2cab0707"
             },
             {
               "path": "apps/web/package.json",
@@ -641218,7 +641387,8 @@
             "Bindings renewed by release-0.5-route-landmark-census: the detail change is identifier wrapping and bidi isolation only. Existing exact receipt, authority, navigation and draft checks pass with the new populated layout assertions.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
             "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
-            "Bindings renewed by release-0.5-protected-contract-and-finance: protected fixtures retain all financial, privacy and replay assertions; dynamic password focus is verified on both engines, with unchanged initial focus and gates. Related units and original budgets pass."
+            "Bindings renewed by release-0.5-protected-contract-and-finance: protected fixtures retain all financial, privacy and replay assertions; dynamic password focus is verified on both engines, with unchanged initial focus and gates. Related units and original budgets pass.",
+            "Bindings renewed by release-0.5-contract-finance-coverage: eight native wallet and eight native CRM cases preserve current review, timeout, denial and recovery assertions. Product code is unchanged."
           ],
           "criterion_result": "Chronological cursor pagination, signed exact amounts and settlement tones, localized dates/types/state/description, safe invoice references, view switching, recovery and account/profile fencing verified.",
           "limitations": [
@@ -641402,6 +641572,11 @@
               "batch": "release-0.5-protected-contract-and-finance",
               "base_commit": "2f42079466bf06df3b2dcee575eb5c2acc183906",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-protected-contract-and-finance/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-contract-finance-coverage",
+              "base_commit": "e0a8b0e35394517f37fac727ca09ec3574c8516e",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-contract-finance-coverage/source-binding.json"
             }
           ]
         }
@@ -641452,7 +641627,8 @@
           "release-0.5-route-landmark-census",
           "release-0.5-workspace-route-census",
           "release-0.5-ui-coverage-collection",
-          "release-0.5-protected-contract-and-finance"
+          "release-0.5-protected-contract-and-finance",
+          "release-0.5-contract-finance-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-financial-and-fulfillment-status-journeys",
@@ -641552,7 +641728,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-invoice-payment.spec.ts",
-              "sha256": "ce6ec6c40eb71c861a8f73e4d7f26b50a43282cd2723498f2994a41670e78e16"
+              "sha256": "3354e3965c328b394e4ce9835e50ce4b7fe8faa6f2e633c4b58fbbcc2cab0707"
             },
             {
               "path": "apps/web/package.json",
@@ -641946,7 +642122,8 @@
             "Bindings renewed by release-0.5-route-landmark-census: the detail change is identifier wrapping and bidi isolation only. Existing exact receipt, authority, navigation and draft checks pass with the new populated layout assertions.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
             "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
-            "Bindings renewed by release-0.5-protected-contract-and-finance: protected fixtures retain all financial, privacy and replay assertions; dynamic password focus is verified on both engines, with unchanged initial focus and gates. Related units and original budgets pass."
+            "Bindings renewed by release-0.5-protected-contract-and-finance: protected fixtures retain all financial, privacy and replay assertions; dynamic password focus is verified on both engines, with unchanged initial focus and gates. Related units and original budgets pass.",
+            "Bindings renewed by release-0.5-contract-finance-coverage: eight native wallet and eight native CRM cases preserve current review, timeout, denial and recovery assertions. Product code is unchanged."
           ],
           "criterion_result": "Invoice total/paid/remaining and integer progress verified. Authoritative sufficient-balance review, invoice state, current owner, time readiness, step-up, exact confirmation/retry and credit/cancellation guards preserved.",
           "limitations": [
@@ -642130,6 +642307,11 @@
               "batch": "release-0.5-protected-contract-and-finance",
               "base_commit": "2f42079466bf06df3b2dcee575eb5c2acc183906",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-protected-contract-and-finance/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-contract-finance-coverage",
+              "base_commit": "e0a8b0e35394517f37fac727ca09ec3574c8516e",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-contract-finance-coverage/source-binding.json"
             }
           ]
         }
@@ -642180,7 +642362,8 @@
           "release-0.5-route-landmark-census",
           "release-0.5-workspace-route-census",
           "release-0.5-ui-coverage-collection",
-          "release-0.5-protected-contract-and-finance"
+          "release-0.5-protected-contract-and-finance",
+          "release-0.5-contract-finance-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-financial-and-fulfillment-status-journeys",
@@ -642280,7 +642463,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-invoice-payment.spec.ts",
-              "sha256": "ce6ec6c40eb71c861a8f73e4d7f26b50a43282cd2723498f2994a41670e78e16"
+              "sha256": "3354e3965c328b394e4ce9835e50ce4b7fe8faa6f2e633c4b58fbbcc2cab0707"
             },
             {
               "path": "apps/web/package.json",
@@ -642674,7 +642857,8 @@
             "Bindings renewed by release-0.5-route-landmark-census: the detail change is identifier wrapping and bidi isolation only. Existing exact receipt, authority, navigation and draft checks pass with the new populated layout assertions.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
             "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
-            "Bindings renewed by release-0.5-protected-contract-and-finance: protected fixtures retain all financial, privacy and replay assertions; dynamic password focus is verified on both engines, with unchanged initial focus and gates. Related units and original budgets pass."
+            "Bindings renewed by release-0.5-protected-contract-and-finance: protected fixtures retain all financial, privacy and replay assertions; dynamic password focus is verified on both engines, with unchanged initial focus and gates. Related units and original budgets pass.",
+            "Bindings renewed by release-0.5-contract-finance-coverage: eight native wallet and eight native CRM cases preserve current review, timeout, denial and recovery assertions. Product code is unchanged."
           ],
           "criterion_result": "Known state color mapping, neutral completed/resolved/unknown fallback, mandatory localized meaning/title and accessible dot-only display verified.",
           "limitations": [
@@ -642858,6 +643042,11 @@
               "batch": "release-0.5-protected-contract-and-finance",
               "base_commit": "2f42079466bf06df3b2dcee575eb5c2acc183906",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-protected-contract-and-finance/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-contract-finance-coverage",
+              "base_commit": "e0a8b0e35394517f37fac727ca09ec3574c8516e",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-contract-finance-coverage/source-binding.json"
             }
           ]
         }
@@ -642912,7 +643101,8 @@
           "release-0.5-route-landmark-census",
           "release-0.5-workspace-route-census",
           "release-0.5-ui-coverage-collection",
-          "release-0.5-protected-contract-and-finance"
+          "release-0.5-protected-contract-and-finance",
+          "release-0.5-contract-finance-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-financial-and-fulfillment-status-journeys",
@@ -643012,7 +643202,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-invoice-payment.spec.ts",
-              "sha256": "ce6ec6c40eb71c861a8f73e4d7f26b50a43282cd2723498f2994a41670e78e16"
+              "sha256": "3354e3965c328b394e4ce9835e50ce4b7fe8faa6f2e633c4b58fbbcc2cab0707"
             },
             {
               "path": "apps/web/package.json",
@@ -643406,7 +643596,8 @@
             "Bindings renewed by release-0.5-route-landmark-census: the detail change is identifier wrapping and bidi isolation only. Existing exact receipt, authority, navigation and draft checks pass with the new populated layout assertions.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
             "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
-            "Bindings renewed by release-0.5-protected-contract-and-finance: protected fixtures retain all financial, privacy and replay assertions; dynamic password focus is verified on both engines, with unchanged initial focus and gates. Related units and original budgets pass."
+            "Bindings renewed by release-0.5-protected-contract-and-finance: protected fixtures retain all financial, privacy and replay assertions; dynamic password focus is verified on both engines, with unchanged initial focus and gates. Related units and original budgets pass.",
+            "Bindings renewed by release-0.5-contract-finance-coverage: eight native wallet and eight native CRM cases preserve current review, timeout, denial and recovery assertions. Product code is unchanged."
           ],
           "criterion_result": "Actual order, contract-version, invoice-receipt and consultation histories use shared localized state timelines, recorded times, audience-safe actors, literal reason/note, selected version and denial recovery.",
           "limitations": [
@@ -643590,6 +643781,11 @@
               "batch": "release-0.5-protected-contract-and-finance",
               "base_commit": "2f42079466bf06df3b2dcee575eb5c2acc183906",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-protected-contract-and-finance/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-contract-finance-coverage",
+              "base_commit": "e0a8b0e35394517f37fac727ca09ec3574c8516e",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-contract-finance-coverage/source-binding.json"
             }
           ]
         }
@@ -643644,7 +643840,8 @@
           "release-0.5-route-landmark-census",
           "release-0.5-workspace-route-census",
           "release-0.5-ui-coverage-collection",
-          "release-0.5-protected-contract-and-finance"
+          "release-0.5-protected-contract-and-finance",
+          "release-0.5-contract-finance-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-financial-and-fulfillment-status-journeys",
@@ -643744,7 +643941,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-invoice-payment.spec.ts",
-              "sha256": "ce6ec6c40eb71c861a8f73e4d7f26b50a43282cd2723498f2994a41670e78e16"
+              "sha256": "3354e3965c328b394e4ce9835e50ce4b7fe8faa6f2e633c4b58fbbcc2cab0707"
             },
             {
               "path": "apps/web/package.json",
@@ -644138,7 +644335,8 @@
             "Bindings renewed by release-0.5-route-landmark-census: the detail change is identifier wrapping and bidi isolation only. Existing exact receipt, authority, navigation and draft checks pass with the new populated layout assertions.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
             "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
-            "Bindings renewed by release-0.5-protected-contract-and-finance: protected fixtures retain all financial, privacy and replay assertions; dynamic password focus is verified on both engines, with unchanged initial focus and gates. Related units and original budgets pass."
+            "Bindings renewed by release-0.5-protected-contract-and-finance: protected fixtures retain all financial, privacy and replay assertions; dynamic password focus is verified on both engines, with unchanged initial focus and gates. Related units and original budgets pass.",
+            "Bindings renewed by release-0.5-contract-finance-coverage: eight native wallet and eight native CRM cases preserve current review, timeout, denial and recovery assertions. Product code is unchanged."
           ],
           "criterion_result": "Completed/current/pending/skipped step states, connectors, current-step semantics, responsive horizontal/vertical layout and motion preference verified in saving and solar callers.",
           "limitations": [
@@ -644322,6 +644520,11 @@
               "batch": "release-0.5-protected-contract-and-finance",
               "base_commit": "2f42079466bf06df3b2dcee575eb5c2acc183906",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-protected-contract-and-finance/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-contract-finance-coverage",
+              "base_commit": "e0a8b0e35394517f37fac727ca09ec3574c8516e",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-contract-finance-coverage/source-binding.json"
             }
           ]
         }
@@ -644372,7 +644575,8 @@
           "release-0.5-route-landmark-census",
           "release-0.5-workspace-route-census",
           "release-0.5-ui-coverage-collection",
-          "release-0.5-protected-contract-and-finance"
+          "release-0.5-protected-contract-and-finance",
+          "release-0.5-contract-finance-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-financial-and-fulfillment-status-journeys",
@@ -644472,7 +644676,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-invoice-payment.spec.ts",
-              "sha256": "ce6ec6c40eb71c861a8f73e4d7f26b50a43282cd2723498f2994a41670e78e16"
+              "sha256": "3354e3965c328b394e4ce9835e50ce4b7fe8faa6f2e633c4b58fbbcc2cab0707"
             },
             {
               "path": "apps/web/package.json",
@@ -644866,7 +645070,8 @@
             "Bindings renewed by release-0.5-route-landmark-census: the detail change is identifier wrapping and bidi isolation only. Existing exact receipt, authority, navigation and draft checks pass with the new populated layout assertions.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
             "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
-            "Bindings renewed by release-0.5-protected-contract-and-finance: protected fixtures retain all financial, privacy and replay assertions; dynamic password focus is verified on both engines, with unchanged initial focus and gates. Related units and original budgets pass."
+            "Bindings renewed by release-0.5-protected-contract-and-finance: protected fixtures retain all financial, privacy and replay assertions; dynamic password focus is verified on both engines, with unchanged initial focus and gates. Related units and original budgets pass.",
+            "Bindings renewed by release-0.5-contract-finance-coverage: eight native wallet and eight native CRM cases preserve current review, timeout, denial and recovery assertions. Product code is unchanged."
           ],
           "criterion_result": "Customer and staff electricity views keep service/commercial and financial badges separately labeled, with independent tones and neutral localized unknowns.",
           "limitations": [
@@ -645050,6 +645255,11 @@
               "batch": "release-0.5-protected-contract-and-finance",
               "base_commit": "2f42079466bf06df3b2dcee575eb5c2acc183906",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-protected-contract-and-finance/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-contract-finance-coverage",
+              "base_commit": "e0a8b0e35394517f37fac727ca09ec3574c8516e",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-contract-finance-coverage/source-binding.json"
             }
           ]
         }
@@ -645100,7 +645310,8 @@
           "release-0.5-route-landmark-census",
           "release-0.5-workspace-route-census",
           "release-0.5-ui-coverage-collection",
-          "release-0.5-protected-contract-and-finance"
+          "release-0.5-protected-contract-and-finance",
+          "release-0.5-contract-finance-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-financial-and-fulfillment-status-journeys",
@@ -645200,7 +645411,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-invoice-payment.spec.ts",
-              "sha256": "ce6ec6c40eb71c861a8f73e4d7f26b50a43282cd2723498f2994a41670e78e16"
+              "sha256": "3354e3965c328b394e4ce9835e50ce4b7fe8faa6f2e633c4b58fbbcc2cab0707"
             },
             {
               "path": "apps/web/package.json",
@@ -645594,7 +645805,8 @@
             "Bindings renewed by release-0.5-route-landmark-census: the detail change is identifier wrapping and bidi isolation only. Existing exact receipt, authority, navigation and draft checks pass with the new populated layout assertions.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
             "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
-            "Bindings renewed by release-0.5-protected-contract-and-finance: protected fixtures retain all financial, privacy and replay assertions; dynamic password focus is verified on both engines, with unchanged initial focus and gates. Related units and original budgets pass."
+            "Bindings renewed by release-0.5-protected-contract-and-finance: protected fixtures retain all financial, privacy and replay assertions; dynamic password focus is verified on both engines, with unchanged initial focus and gates. Related units and original budgets pass.",
+            "Bindings renewed by release-0.5-contract-finance-coverage: eight native wallet and eight native CRM cases preserve current review, timeout, denial and recovery assertions. Product code is unchanged."
           ],
           "criterion_result": "All six notification classifications retain visible localized label/icon/color in inbox and bell; unknown events use system category.",
           "limitations": [
@@ -645778,6 +645990,11 @@
               "batch": "release-0.5-protected-contract-and-finance",
               "base_commit": "2f42079466bf06df3b2dcee575eb5c2acc183906",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-protected-contract-and-finance/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-contract-finance-coverage",
+              "base_commit": "e0a8b0e35394517f37fac727ca09ec3574c8516e",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-contract-finance-coverage/source-binding.json"
             }
           ]
         }
@@ -645829,7 +646046,8 @@
           "release-0.5-route-landmark-census",
           "release-0.5-workspace-route-census",
           "release-0.5-ui-coverage-collection",
-          "release-0.5-protected-contract-and-finance"
+          "release-0.5-protected-contract-and-finance",
+          "release-0.5-contract-finance-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-financial-and-fulfillment-status-journeys",
@@ -645929,7 +646147,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-invoice-payment.spec.ts",
-              "sha256": "ce6ec6c40eb71c861a8f73e4d7f26b50a43282cd2723498f2994a41670e78e16"
+              "sha256": "3354e3965c328b394e4ce9835e50ce4b7fe8faa6f2e633c4b58fbbcc2cab0707"
             },
             {
               "path": "apps/web/package.json",
@@ -646323,7 +646541,8 @@
             "Bindings renewed by release-0.5-route-landmark-census: the detail change is identifier wrapping and bidi isolation only. Existing exact receipt, authority, navigation and draft checks pass with the new populated layout assertions.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
             "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
-            "Bindings renewed by release-0.5-protected-contract-and-finance: protected fixtures retain all financial, privacy and replay assertions; dynamic password focus is verified on both engines, with unchanged initial focus and gates. Related units and original budgets pass."
+            "Bindings renewed by release-0.5-protected-contract-and-finance: protected fixtures retain all financial, privacy and replay assertions; dynamic password focus is verified on both engines, with unchanged initial focus and gates. Related units and original budgets pass.",
+            "Bindings renewed by release-0.5-contract-finance-coverage: eight native wallet and eight native CRM cases preserve current review, timeout, denial and recovery assertions. Product code is unchanged."
           ],
           "criterion_result": "Solar six-stage tracker composes ProgressStepper with owning E-03 ordering: document review, postal originals, contract signing, work started, delivered, installed. Recorded milestone dates/details and authorized customer/staff history verified; no invented legacy dates or delivery.",
           "limitations": [
@@ -646507,6 +646726,11 @@
               "batch": "release-0.5-protected-contract-and-finance",
               "base_commit": "2f42079466bf06df3b2dcee575eb5c2acc183906",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-protected-contract-and-finance/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-contract-finance-coverage",
+              "base_commit": "e0a8b0e35394517f37fac727ca09ec3574c8516e",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-contract-finance-coverage/source-binding.json"
             }
           ]
         }
@@ -646563,7 +646787,8 @@
           "release-0.5-route-landmark-census",
           "release-0.5-workspace-route-census",
           "release-0.5-ui-coverage-collection",
-          "release-0.5-protected-contract-and-finance"
+          "release-0.5-protected-contract-and-finance",
+          "release-0.5-contract-finance-coverage"
         ],
         "current_acceptance": {
           "kind": "verified-financial-and-fulfillment-status-journeys",
@@ -646663,7 +646888,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-invoice-payment.spec.ts",
-              "sha256": "ce6ec6c40eb71c861a8f73e4d7f26b50a43282cd2723498f2994a41670e78e16"
+              "sha256": "3354e3965c328b394e4ce9835e50ce4b7fe8faa6f2e633c4b58fbbcc2cab0707"
             },
             {
               "path": "apps/web/package.json",
@@ -647057,7 +647282,8 @@
             "Bindings renewed by release-0.5-route-landmark-census: the detail change is identifier wrapping and bidi isolation only. Existing exact receipt, authority, navigation and draft checks pass with the new populated layout assertions.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
             "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
-            "Bindings renewed by release-0.5-protected-contract-and-finance: protected fixtures retain all financial, privacy and replay assertions; dynamic password focus is verified on both engines, with unchanged initial focus and gates. Related units and original budgets pass."
+            "Bindings renewed by release-0.5-protected-contract-and-finance: protected fixtures retain all financial, privacy and replay assertions; dynamic password focus is verified on both engines, with unchanged initial focus and gates. Related units and original budgets pass.",
+            "Bindings renewed by release-0.5-contract-finance-coverage: eight native wallet and eight native CRM cases preserve current review, timeout, denial and recovery assertions. Product code is unchanged."
           ],
           "criterion_result": "Persian/English business labels verified in the selected money/status components and actual electricity, saving, solar, consultation, contract, invoice and notification consumers. Broader product localization remains separately gated.",
           "limitations": [
@@ -647241,6 +647467,11 @@
               "batch": "release-0.5-protected-contract-and-finance",
               "base_commit": "2f42079466bf06df3b2dcee575eb5c2acc183906",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-protected-contract-and-finance/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-contract-finance-coverage",
+              "base_commit": "e0a8b0e35394517f37fac727ca09ec3574c8516e",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-contract-finance-coverage/source-binding.json"
             }
           ]
         }
@@ -657330,7 +657561,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-invoice-payment.spec.ts",
-              "sha256": "ce6ec6c40eb71c861a8f73e4d7f26b50a43282cd2723498f2994a41670e78e16"
+              "sha256": "3354e3965c328b394e4ce9835e50ce4b7fe8faa6f2e633c4b58fbbcc2cab0707"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -657705,7 +657936,8 @@
             "Bindings renewed by release-0.5-route-matrix-reconciliation: exact populated electricity, saving and solar journeys preserve the underlying captured draft, authority, price, receipt and financial confirmation assertions. Only solar fieldset presentation and test observations changed.",
             "Bindings renewed by release-0.5-coverage-remaining-branches: normal manifest behavior and all 27 test assertion bodies are preserved, and exact protected admin and consultation fixture checks pass. No production source changed.",
             "Bindings renewed by release-0.5-protected-journey-proof: the previous failing electricity scenarios pass on Chromium and Mobile Safari with real financial/destructive confirmation, exact values and protected replay. Product code is unchanged.",
-            "Bindings renewed by release-0.5-protected-contract-and-finance: protected fixtures retain all financial, privacy and replay assertions; dynamic password focus is verified on both engines, with unchanged initial focus and gates. Related units and original budgets pass."
+            "Bindings renewed by release-0.5-protected-contract-and-finance: protected fixtures retain all financial, privacy and replay assertions; dynamic password focus is verified on both engines, with unchanged initial focus and gates. Related units and original budgets pass.",
+            "Bindings renewed by release-0.5-contract-finance-coverage: eight native wallet and eight native CRM cases preserve current review, timeout, denial and recovery assertions. Product code is unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/four-service-rehearsal",
           "limitations": [
@@ -658296,6 +658528,11 @@
               "batch": "release-0.5-protected-contract-and-finance",
               "base_commit": "2f42079466bf06df3b2dcee575eb5c2acc183906",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-protected-contract-and-finance/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-contract-finance-coverage",
+              "base_commit": "e0a8b0e35394517f37fac727ca09ec3574c8516e",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-contract-finance-coverage/source-binding.json"
             }
           ]
         },
@@ -658331,7 +658568,8 @@
           "release-0.5-route-matrix-reconciliation",
           "release-0.5-coverage-remaining-branches",
           "release-0.5-protected-journey-proof",
-          "release-0.5-protected-contract-and-finance"
+          "release-0.5-protected-contract-and-finance",
+          "release-0.5-contract-finance-coverage"
         ],
         "inspection": {
           "wallet_history": "R-01.02 accepted separately.",
@@ -659254,7 +659492,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-invoice-payment.spec.ts",
-              "sha256": "ce6ec6c40eb71c861a8f73e4d7f26b50a43282cd2723498f2994a41670e78e16"
+              "sha256": "3354e3965c328b394e4ce9835e50ce4b7fe8faa6f2e633c4b58fbbcc2cab0707"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -659624,7 +659862,8 @@
             "Bindings renewed by release-0.5-route-matrix-reconciliation: exact populated electricity, saving and solar journeys preserve the underlying captured draft, authority, price, receipt and financial confirmation assertions. Only solar fieldset presentation and test observations changed.",
             "Bindings renewed by release-0.5-coverage-remaining-branches: normal manifest behavior and all 27 test assertion bodies are preserved, and exact protected admin and consultation fixture checks pass. No production source changed.",
             "Bindings renewed by release-0.5-protected-journey-proof: the previous failing electricity scenarios pass on Chromium and Mobile Safari with real financial/destructive confirmation, exact values and protected replay. Product code is unchanged.",
-            "Bindings renewed by release-0.5-protected-contract-and-finance: protected fixtures retain all financial, privacy and replay assertions; dynamic password focus is verified on both engines, with unchanged initial focus and gates. Related units and original budgets pass."
+            "Bindings renewed by release-0.5-protected-contract-and-finance: protected fixtures retain all financial, privacy and replay assertions; dynamic password focus is verified on both engines, with unchanged initial focus and gates. Related units and original budgets pass.",
+            "Bindings renewed by release-0.5-contract-finance-coverage: eight native wallet and eight native CRM cases preserve current review, timeout, denial and recovery assertions. Product code is unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/four-service-rehearsal",
           "limitations": [
@@ -660213,6 +660452,11 @@
               "batch": "release-0.5-protected-contract-and-finance",
               "base_commit": "2f42079466bf06df3b2dcee575eb5c2acc183906",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-protected-contract-and-finance/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-contract-finance-coverage",
+              "base_commit": "e0a8b0e35394517f37fac727ca09ec3574c8516e",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-contract-finance-coverage/source-binding.json"
             }
           ]
         },
@@ -660244,7 +660488,8 @@
           "release-0.5-route-matrix-reconciliation",
           "release-0.5-coverage-remaining-branches",
           "release-0.5-protected-journey-proof",
-          "release-0.5-protected-contract-and-finance"
+          "release-0.5-protected-contract-and-finance",
+          "release-0.5-contract-finance-coverage"
         ]
       }
     },
@@ -661338,7 +661583,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-invoice-payment.spec.ts",
-              "sha256": "ce6ec6c40eb71c861a8f73e4d7f26b50a43282cd2723498f2994a41670e78e16"
+              "sha256": "3354e3965c328b394e4ce9835e50ce4b7fe8faa6f2e633c4b58fbbcc2cab0707"
             },
             {
               "path": "apps/web/src/components/WalletInvoicePaymentPanel.tsx",
@@ -661422,7 +661667,7 @@
             },
             {
               "path": "apps/web/e2e/crm-dashboard.spec.ts",
-              "sha256": "6bddbbba0916e11ede96dc54572a8c874da94c7f87d12c450fe802f94fbf1cd2"
+              "sha256": "59e01fcd87a53dcff9e379b98054f0f5017f880961173f22674c371757bfa847"
             },
             {
               "path": "apps/web/src/pages/AdminDashboard.tsx",
@@ -663072,7 +663317,8 @@
             "Bindings renewed by release-0.5-staff-finance-read-recovery: Only staff maintenance and allocation read transport and related test fixtures changed. Scoped browser and unit evidence retains denial, financial review and protected command assertions.",
             "Bindings renewed by release-0.5-coverage-remaining-branches: normal manifest behavior and all 27 test assertion bodies are preserved, and exact protected admin and consultation fixture checks pass. No production source changed.",
             "Bindings renewed by release-0.5-admin-coverage-proof: all affected API files pass with the same product code, append-only evidence protections, financial/security assertions and exact notification occurrences.",
-            "Bindings renewed by release-0.5-protected-contract-and-finance: protected fixtures retain all financial, privacy and replay assertions; dynamic password focus is verified on both engines, with unchanged initial focus and gates. Related units and original budgets pass."
+            "Bindings renewed by release-0.5-protected-contract-and-finance: protected fixtures retain all financial, privacy and replay assertions; dynamic password focus is verified on both engines, with unchanged initial focus and gates. Related units and original budgets pass.",
+            "Bindings renewed by release-0.5-contract-finance-coverage: eight native wallet and eight native CRM cases preserve current review, timeout, denial and recovery assertions. Product code is unchanged."
           ],
           "limitations": [
             "Complete the remaining effective contract/refund/invoice/receipt criteria after the existing owner decisions on engine/callback/credit-trigger/increase representations are dispositioned. Eleven scoped tasks remain partial; six have no current whole-task acceptance. Preserve the separate mathematical-policy, development reload and operational gates. Current35 boundary passes and94 matching accepted tasks do not certify those unresolved requirements."
@@ -664241,6 +664487,11 @@
               "batch": "release-0.5-protected-contract-and-finance",
               "base_commit": "2f42079466bf06df3b2dcee575eb5c2acc183906",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-protected-contract-and-finance/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-contract-finance-coverage",
+              "base_commit": "e0a8b0e35394517f37fac727ca09ec3574c8516e",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-contract-finance-coverage/source-binding.json"
             }
           ]
         },
@@ -664270,7 +664521,8 @@
           "release-0.5-staff-finance-read-recovery",
           "release-0.5-coverage-remaining-branches",
           "release-0.5-admin-coverage-proof",
-          "release-0.5-protected-contract-and-finance"
+          "release-0.5-protected-contract-and-finance",
+          "release-0.5-contract-finance-coverage"
         ]
       }
     },
@@ -676278,7 +676530,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Protected contract cancellation, signature, refund, invoice and wallet routes now pass their affected native checks with current acknowledgements and exact amounts. A newly rendered password challenge receives focus without changing initial action focus or proof requirements. Other route/state matrix coverage is still open."
+        "Verified changed amount/terms reviews, missing breakdowns, timezone recovery, and single in-flight CRM polling with timeout, denial and recovery in both engines. Remaining route and state coverage includes the reproduced unbounded AI admin model and agent reads."
       ],
       "owner": null,
       "depends_on": [],
@@ -676300,7 +676552,8 @@
           "release-0.5-route-matrix-reconciliation",
           "release-0.5-staff-finance-read-recovery",
           "release-0.5-protected-journey-proof",
-          "release-0.5-protected-contract-and-finance"
+          "release-0.5-protected-contract-and-finance",
+          "release-0.5-contract-finance-coverage"
         ]
       }
     },
@@ -676319,7 +676572,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "The complete 25-case electricity browser group now maps at the exact pushed SHA. Contract, finance and password focus regressions pass in targeted native and unit runs. Collect clean full contract/finance and workspace coverage; the isolated API gate and remaining manual evidence are open."
+        "The full 18-case contract group passes and maps cleanly. Four additional wallet scenarios and four CRM polling scenarios pass in both engines after fixture corrections. Collect full clean staff-finance/workspace reports, finish isolated API coverage and renew remaining manual and web branch evidence."
       ],
       "owner": null,
       "depends_on": [],
@@ -676338,7 +676591,8 @@
           "release-0.5-critical-coverage-closure",
           "release-0.5-critical-journey-evidence",
           "release-0.5-protected-journey-proof",
-          "release-0.5-protected-contract-and-finance"
+          "release-0.5-protected-contract-and-finance",
+          "release-0.5-contract-finance-coverage"
         ]
       }
     },
@@ -729305,7 +729559,119 @@
         "release-readiness#R-03.02"
       ],
       "failed_attempts_retained": true,
-      "release_disposition": "Restored protected financial browser proof and repaired the reproduced password focus defect. No release publication."
+      "release_disposition": "Restored protected financial browser proof and repaired the reproduced password focus defect. No release publication.",
+      "push_receipt": {
+        "repository": "barghsadev/barghsa-core",
+        "ref": "refs/heads/main",
+        "commit": "e0a8b0e35394517f37fac727ca09ec3574c8516e",
+        "remote_sha": "e0a8b0e35394517f37fac727ca09ec3574c8516e",
+        "verified_at": "2026-11-07T09:43:21+00:00"
+      }
+    },
+    "release-0.5-contract-finance-coverage": {
+      "batch": "release-0.5-contract-finance-coverage",
+      "base_commit": "e0a8b0e35394517f37fac727ca09ec3574c8516e",
+      "task_keys": [
+        "release-readiness#R-04.02",
+        "release-readiness#R-04.01"
+      ],
+      "accepted_task_keys": [],
+      "partial_task_keys": [
+        "release-readiness#R-04.02",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/confirmation-fixture.ts",
+          "sha256": "8d842de5577a9f43a5ca0efcf8e6a00e18e6ea1fb53116555fac8cbd7608bb61"
+        },
+        {
+          "path": "apps/web/e2e/crm-dashboard.spec.ts",
+          "sha256": "59e01fcd87a53dcff9e379b98054f0f5017f880961173f22674c371757bfa847"
+        },
+        {
+          "path": "apps/web/e2e/wallet-invoice-payment.spec.ts",
+          "sha256": "3354e3965c328b394e4ce9835e50ce4b7fe8faa6f2e633c4b58fbbcc2cab0707"
+        },
+        {
+          "path": "apps/web/src/components/TeamActionDialog.tsx",
+          "sha256": "1f671668a2a4889cae36ce5342ddcaf80d66e00daf4ad7b7050f091fbc83a733"
+        },
+        {
+          "path": "apps/web/src/components/WalletInvoicePaymentPanel.tsx",
+          "sha256": "150991f19b75fbbf2411b2dd1c530db15190629d6b112050f2b9375640fdd268"
+        },
+        {
+          "path": "apps/web/src/hooks/useAsyncData.ts",
+          "sha256": "36177df577f094b5f2c77aabfe76d65826dd6bb36463c57eb4e8cd3f2720b235"
+        },
+        {
+          "path": "apps/web/src/hooks/useStaffDashboardData.ts",
+          "sha256": "a3bb637f5d6a615b02ed7e55cedf26e133558c3bfb197de67328504b1fdac032"
+        },
+        {
+          "path": "apps/web/src/lib/server-query-client.ts",
+          "sha256": "8f339009224962a0219dec6d142c856c7b1e142ce7687a8612c622d0440e1617"
+        },
+        {
+          "path": "apps/web/src/pages/AdminDashboard.tsx",
+          "sha256": "68f1ff2b4d92335a5e4616850eeec90a7066301fc569bd86df9b00c3b8aad2f2"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "0b875687ee1d2f32ea8819c9eb58af72f0c0db3796f5e74f82317d4b7ce46251"
+        }
+      ],
+      "checks": [
+        "18 contract cases pass and map 436 source files at exact e0a8b0e3. The combined diagnostic measures 16145/17873 critical web lines and 19055/23311 branches; general web measures 694/878 lines and 1171/1657 branches. Final web floors remain open.",
+        "The broad runs preserved 38 staff-finance and 40 workspace passing cases but each had four fixture failures, so neither produced passing mapped evidence. The remaining wallet scenarios now acknowledge each exact new review and pass all eight bilingual/theme/engine instances. Exact amounts, identity, timezone blocking, disclosure and replay assertions remain.",
+        "All eight final native CRM cases pass. The fixture proves no overlapping request before the existing deadline, waits for the actual browser abort and one scheduled denial, and preserves error, authorization hiding, stale reply protection and later recovery. An earlier retest advanced the fake clock into the next request deadline; that failed evidence remains.",
+        "AI model and agent GETs reproduce indefinite loading after 15 seconds in Persian and English, with matching compiled runtime source. No API code or build inputs changed; isolated API gate remains in progress. Fixture lint, web typecheck and formatting pass."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-contract-finance-coverage",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-contract-finance-coverage/reviewed-source.diff",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-contract-finance-coverage/source-binding.json",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-contract-finance-coverage/renewed-bindings.json",
+      "renewed_task_keys": [
+        "02-auth-users-admin.md#T-05.05.01",
+        "04-invoices-wallet-contracts.md#T-04.2.03.01",
+        "04-invoices-wallet-contracts.md#T-04.2.03.02",
+        "04-invoices-wallet-contracts.md#T-04.2.03.03",
+        "04-invoices-wallet-contracts.md#T-04.2.03.04",
+        "04-invoices-wallet-contracts.md#T-04.2.04.01",
+        "04-invoices-wallet-contracts.md#T-04.2.04.03",
+        "07-ui-ux-design.md#T-07.05.01.11",
+        "07-ui-ux-design.md#T-07.05.02.01",
+        "07-ui-ux-design.md#T-07.05.02.03",
+        "07-ui-ux-design.md#T-07.19.01.01",
+        "07-ui-ux-design.md#T-07.19.01.02",
+        "07-ui-ux-design.md#T-07.19.01.03",
+        "07-ui-ux-design.md#T-07.19.02.01",
+        "07-ui-ux-design.md#T-07.19.02.02",
+        "07-ui-ux-design.md#T-07.19.02.03",
+        "07-ui-ux-design.md#T-07.19.02.04",
+        "07-ui-ux-design.md#T-07.19.02.05",
+        "07-ui-ux-design.md#T-07.19.02.06",
+        "07-ui-ux-design.md#T-07.19.02.07",
+        "07-ui-ux-design.md#T-07.19.02.08",
+        "07-ui-ux-design.md#T-07.19.02.09",
+        "07-ui-ux-design.md#T-07.26.01.01",
+        "07-ui-ux-design.md#T-07.26.01.02",
+        "07-ui-ux-design.md#T-07.26.01.03",
+        "07-ui-ux-design.md#T-07.26.01.04",
+        "07-ui-ux-design.md#T-07.27.01.01",
+        "07-ui-ux-design.md#T-07.27.01.02",
+        "07-ui-ux-design.md#T-07.27.01.03",
+        "07-ui-ux-design.md#T-07.27.01.04",
+        "07-ui-ux-design.md#T-07.27.01.05",
+        "07-ui-ux-design.md#T-07.27.01.06",
+        "07-ui-ux-design.md#T-07.27.01.07",
+        "release-readiness#R-01.01",
+        "release-readiness#R-01.04",
+        "release-readiness#R-02.01"
+      ],
+      "failed_attempts_retained": true,
+      "release_disposition": "Recorded clean contract coverage and reconciled wallet and CRM browser fixtures. No release publication."
     }
   },
   "historical_improvements": [
@@ -729345,18 +729711,18 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.5-contract-finance-coverage",
+    "id": "release-0.5-staff-workspace-read-closure",
     "release": "0.5.0",
     "task_keys": [
       "release-readiness#R-04.02",
       "release-readiness#R-04.01",
-      "07-ui-ux-design.md#T-07.05.01.08"
+      "07-ui-ux-design.md#T-07.12.01.08"
     ],
-    "goal": "Collect full clean contract and finance browser groups after the focus repair, then use remaining ordinary/critical web coverage deficits to target stable workspace journeys and required manual acceptance. Continue isolated API evidence."
+    "goal": "Map clean complete staff-finance and workspace groups, fix demonstrated AI model/agent read deadlines using existing owned read behavior, and record isolated API evidence."
   },
   "launch_forecast": {
     "status": "deadline_at_risk_until_v0_5_and_operational_gates_close",
-    "next_update_after": "v0.5.0 clean contract and finance coverage with isolated API evidence",
+    "next_update_after": "v0.5.0 clean staff finance and workspace evidence",
     "method": "v0.4.0 staging and Telegram receipts verified. v0.5.0 remains unaccepted: coverage diagnostics are below unchanged web/UI/i18n floors, required route/manual states and two owner decisions remain. v0.6.0 operations and v0.9.0 four-service rehearsal keep November 9 at risk. Production is not authorized."
   },
   "capabilities": [

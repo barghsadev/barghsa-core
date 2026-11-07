@@ -63,11 +63,15 @@ for (const locale of ['fa', 'en'])
         let hold = false;
         await page.route('**/api/crm/dashboard/pending-verification', async (route) => {
           requests++;
-          if (hold)
+          const reply = { status, json: body };
+          if (hold) {
             await new Promise<void>((resolve) => {
               release = resolve;
             });
-          await route.fulfill({ status, json: body });
+            await route.fulfill(reply).catch(() => {});
+            return;
+          }
+          await route.fulfill(reply);
         });
         await page.clock.install();
         await page.goto('/admin');
@@ -130,16 +134,33 @@ for (const locale of ['fa', 'en'])
           await expect(widget).toContainText(dashboardText('widget.error', locale as 'fa' | 'en'));
           await expect(showAll).toHaveCount(0);
         }
+        body = { enabled: true, count: 12, profiles: recentProfiles };
         hold = true;
         await page.clock.runFor(30000);
         await expect.poll(() => release !== null).toBe(true);
         const heldRequests = requests;
-        await page.clock.runFor(60000);
+        const aborted = page.waitForEvent('requestfailed', (request) =>
+          request.url().endsWith('/api/crm/dashboard/pending-verification')
+        );
+        await page.clock.runFor(14900);
         expect(requests).toBe(heldRequests);
+        await page.clock.runFor(200);
+        await aborted;
+        await expect(widget).toContainText(dashboardText('widget.error', locale as 'fa' | 'en'));
+        expect(requests).toBe(heldRequests);
+        hold = false;
         status = 401;
+        const denied = page.waitForResponse(
+          (response) =>
+            response.url().endsWith('/api/crm/dashboard/pending-verification') &&
+            response.status() === 401
+        );
+        await page.clock.runFor(14900);
+        await denied;
+        await expect(widget).toHaveCount(0);
+        expect(requests).toBe(heldRequests + 1);
         release!();
         await expect(widget).toHaveCount(0);
-        hold = false;
         status = 200;
         body = { enabled: true, count: 12, profiles: recentProfiles };
         await page.clock.runFor(30000);

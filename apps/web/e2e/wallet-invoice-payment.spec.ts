@@ -440,8 +440,11 @@ test('a changed invoice amount needs a new review and a newly captured request',
   });
   await page.goto(`/invoices/${invoiceId}`);
   const panel = page.locator('#wallet-invoice-payment');
+  const confirm = page.getByRole('dialog').getByRole('button', { name: 'Confirm', exact: true });
   await panel.getByRole('button', { name: 'Review wallet payment', exact: true }).click();
-  await page.getByRole('dialog').getByRole('button', { name: 'Confirm', exact: true }).click();
+  await expect(confirm).toBeDisabled();
+  await approveRiskConfirmation(page, 'en', 'financial');
+  await confirm.click();
   await expect(page.getByRole('dialog').getByRole('alert')).toContainText(
     'review the latest amount'
   );
@@ -450,7 +453,9 @@ test('a changed invoice amount needs a new review and a newly captured request',
   await expect(panel).toContainText('IRR 80,000');
   await panel.getByRole('button', { name: 'Review wallet payment', exact: true }).click();
   await expect(page.getByRole('dialog')).toContainText('IRR 80,000');
-  await page.getByRole('dialog').getByRole('button', { name: 'Confirm', exact: true }).click();
+  await expect(confirm).toBeDisabled();
+  await approveRiskConfirmation(page, 'en', 'financial');
+  await confirm.click();
   await expect(panel.getByRole('status')).toContainText('IRR 80,000');
   expect(requests[1]!.expectedRemainingAmount).toBe('80000');
   expect(requests[1]!.idempotencyKey).not.toBe(requests[0]!.idempotencyKey);
@@ -496,13 +501,18 @@ test('changed contract conditions require a new review even when the amount is u
   });
   await page.goto(`/invoices/${invoiceId}`);
   const panel = page.locator('#wallet-invoice-payment');
+  const confirm = page.getByRole('dialog').getByRole('button', { name: 'Confirm', exact: true });
   await panel.getByRole('button', { name: 'Review wallet payment', exact: true }).click();
-  await page.getByRole('dialog').getByRole('button', { name: 'Confirm', exact: true }).click();
+  await expect(confirm).toBeDisabled();
+  await approveRiskConfirmation(page, 'en', 'financial');
+  await confirm.click();
   await expect(page.getByRole('dialog').getByRole('alert')).toBeVisible();
   await page.getByRole('dialog').getByRole('button', { name: 'Cancel', exact: true }).click();
   await panel.getByRole('button', { name: 'Review latest amount', exact: true }).click();
   await panel.getByRole('button', { name: 'Review wallet payment', exact: true }).click();
-  await page.getByRole('dialog').getByRole('button', { name: 'Confirm', exact: true }).click();
+  await expect(confirm).toBeDisabled();
+  await approveRiskConfirmation(page, 'en', 'financial');
+  await confirm.click();
   await expect(panel.getByRole('status')).toContainText(transactionId);
   expect(requests[1]!.expectedRemainingAmount).toBe(requests[0]!.expectedRemainingAmount);
   expect(requests[1]!.expectedReviewHash).not.toBe(requests[0]!.expectedReviewHash);
@@ -561,6 +571,8 @@ test('wallet confirmation shares loaded dates and blocks payment while timezone 
   await open.click();
   const dialog = page.getByRole('dialog');
   const confirm = dialog.getByRole('button', { name: 'Confirm', exact: true });
+  await expect(confirm).toBeDisabled();
+  await approveRiskConfirmation(page, 'en', 'financial');
   await expect(confirm).toBeEnabled();
   await expect(dialog).not.toContainText('Time unavailable');
   expect(timezoneReads).toBe(readsBeforeDialog);
@@ -667,6 +679,9 @@ test('legacy invoice reviews disclose missing breakdowns and remaining contract 
   await expect(dialog).toContainText('Signature is required');
   await expect(dialog).toContainText('start date must be reached');
   await expect(dialog).toContainText('Refunds on cancellation require a staff decision');
-  await dialog.getByRole('button', { name: 'Confirm', exact: true }).click();
+  const confirm = dialog.getByRole('button', { name: 'Confirm', exact: true });
+  await expect(confirm).toBeDisabled();
+  await approveRiskConfirmation(page, 'en', 'financial');
+  await confirm.click();
   await expect(panel.getByRole('status')).toContainText(transactionId);
 });
