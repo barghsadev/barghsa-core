@@ -4,9 +4,16 @@ import { shellText } from '@barghsa/i18n/shell';
 
 test('dashboard shows invoices, orders and contracts, then clears them after switching profiles', async ({
   page,
+  baseURL,
 }) => {
   await page.addInitScript(() => localStorage.setItem('barghsa.locale', 'en'));
-  let activeProfileId = 'profile-1';
+  await page
+    .context()
+    .addCookies([{ url: baseURL!, name: 'barghsa_csrf', value: 'dashboard-csrf' }]);
+  const firstProfile = '99111111-1111-4111-8111-111111111111';
+  const secondProfile = '99222222-2222-4222-8222-222222222222';
+  let activeProfileId = firstProfile;
+  let profileSwitches = 0;
   const invoiceId = '01900000-0000-7000-8000-000000000001';
   const futureInvoiceId = '01900000-0000-7000-8000-000000000002';
   const overdueInvoiceId = '01900000-0000-7000-8000-000000000003';
@@ -27,14 +34,20 @@ test('dashboard shows invoices, orders and contracts, then clears them after swi
       json: {
         profiles: [
           {
-            id: 'profile-1',
+            id: firstProfile,
+            isDefault: true,
+            title: null,
+            nationalId: null,
             profileType: 'INDIVIDUAL',
             status: 'ACTIVE',
             firstName: 'Ari',
             lastName: 'Buyer',
           },
           {
-            id: 'profile-2',
+            id: secondProfile,
+            isDefault: false,
+            title: null,
+            nationalId: null,
             profileType: 'LEGAL',
             status: 'ACTIVE',
             firstName: 'Nova',
@@ -46,8 +59,11 @@ test('dashboard shows invoices, orders and contracts, then clears them after swi
       },
     })
   );
-  await page.route('**/api/profiles/switch/profile-2', (route) => {
-    activeProfileId = 'profile-2';
+  await page.route('**/api/profiles/switch/' + secondProfile, (route) => {
+    expect(route.request().method()).toBe('POST');
+    expect(route.request().headers()['x-csrf-token']).toBe('dashboard-csrf');
+    profileSwitches++;
+    activeProfileId = secondProfile;
     return route.fulfill({ json: { activeProfileId } });
   });
   await page.route('**/api/user/settings/timezone', (route) =>
@@ -58,7 +74,7 @@ test('dashboard shows invoices, orders and contracts, then clears them after swi
       json: {
         profile: {
           id: activeProfileId,
-          name: activeProfileId === 'profile-1' ? 'Ari Buyer' : 'Nova Energy',
+          name: activeProfileId === firstProfile ? 'Ari Buyer' : 'Nova Energy',
         },
         access: { wallet: true, invoices: true, orders: true, contracts: true },
         wallet: {
@@ -69,17 +85,17 @@ test('dashboard shows invoices, orders and contracts, then clears them after swi
           lowBalanceWarning: false,
         },
         activeOrders: 0,
-        pendingInvoices: activeProfileId === 'profile-1' ? 3 : 0,
+        pendingInvoices: activeProfileId === firstProfile ? 3 : 0,
         openTickets: 0,
         contracts: { active: 0, total: 0 },
         quickStatus: {
           activeContracts: 0,
           pendingOrders: 0,
           openTickets: 0,
-          unpaidInvoices: activeProfileId === 'profile-1' ? 3 : 0,
+          unpaidInvoices: activeProfileId === firstProfile ? 3 : 0,
         },
         upcomingInvoices:
-          activeProfileId === 'profile-1'
+          activeProfileId === firstProfile
             ? [
                 {
                   invoiceId: overdueInvoiceId,
@@ -97,7 +113,7 @@ test('dashboard shows invoices, orders and contracts, then clears them after swi
               ]
             : [],
         recentOrders:
-          activeProfileId === 'profile-1'
+          activeProfileId === firstProfile
             ? [
                 {
                   kind: 'saving',
@@ -116,7 +132,7 @@ test('dashboard shows invoices, orders and contracts, then clears them after swi
               ]
             : [],
         activeContracts:
-          activeProfileId === 'profile-1'
+          activeProfileId === firstProfile
             ? [
                 {
                   contractId,
@@ -223,8 +239,13 @@ test('dashboard shows invoices, orders and contracts, then clears them after swi
   const menu = page.locator('button[aria-controls="dashboard-navigation"]');
   if ((await menu.isVisible()) && (await menu.getAttribute('aria-expanded')) === 'false')
     await menu.click();
-  await page.getByLabel('Switch active profile').selectOption('profile-2');
+  await page.getByRole('button', { name: 'Switch active profile', exact: true }).click();
+  await page
+    .getByRole('radiogroup', { name: 'Switch active profile' })
+    .locator(`[role=radio][data-profile-id="${secondProfile}"]`)
+    .click();
   await expect(page.getByRole('heading', { name: 'Welcome, Nova Energy' })).toBeVisible();
+  expect(profileSwitches).toBe(1);
   await expect(invoices.getByText('No unpaid invoices for this profile.')).toBeVisible();
   await expect(invoices.getByRole('link', { name: `Pay now · ${invoiceId}` })).toHaveCount(0);
   await expect(orders.getByText('No orders for this profile yet.')).toBeVisible();

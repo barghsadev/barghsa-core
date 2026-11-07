@@ -1,7 +1,7 @@
 import { dashboardText } from '@barghsa/i18n/dashboard';
 import { t } from '@barghsa/i18n/app';
 import AxeBuilder from '@axe-core/playwright';
-import { test, expect } from './coverage-fixture';
+import { test, expect, type Request } from './coverage-fixture';
 
 for (const locale of ['fa', 'en'])
   for (const darkMode of [false, true])
@@ -63,13 +63,26 @@ for (const locale of ['fa', 'en'])
       let status = 200,
         requests = 0;
       let hold = false;
-      let release: (() => void) | undefined;
+      const heldReads = new Map<Request, (deliver: boolean) => void>();
+      let peakHeldReads = 0;
+      let cancelledReads = 0;
+      page.on('requestfailed', (request) => {
+        const release = heldReads.get(request);
+        if (!release) return;
+        heldReads.delete(request);
+        cancelledReads++;
+        release(false);
+      });
       await page.route('**/api/admin/wallet/chargebacks/unresolved-warning', async (route) => {
         requests++;
-        if (hold)
-          await new Promise<void>((resolve) => {
-            release = resolve;
+        if (hold) {
+          const deliver = await new Promise<boolean>((resolve) => {
+            heldReads.set(route.request(), resolve);
+            peakHeldReads = Math.max(peakHeldReads, heldReads.size);
           });
+          heldReads.delete(route.request());
+          if (!deliver) return;
+        }
         await route.fulfill({ status, json: body });
       });
       const clockStart = new Date('2026-09-09T08:00:00Z');
@@ -124,13 +137,22 @@ for (const locale of ['fa', 'en'])
       body = warning;
       hold = true;
       await page.clock.runFor(30000);
-      await expect.poll(() => release !== undefined).toBe(true);
+      await expect.poll(() => heldReads.size).toBe(1);
       const held = requests;
-      await page.clock.runFor(60000);
-      expect(requests).toBe(held);
+      for (const poll of [1, 2]) {
+        await page.clock.runFor(15_001);
+        await expect.poll(() => cancelledReads).toBe(poll);
+        expect(heldReads.size).toBe(0);
+        expect(requests).toBe(held + poll - 1);
+        await expect(banner).toContainText('evt-open');
+        await page.clock.runFor(14_999);
+        await expect.poll(() => requests).toBe(held + poll);
+        expect(heldReads.size).toBe(1);
+      }
+      expect(peakHeldReads).toBe(1);
       status = 403;
       hold = false;
-      release!();
+      heldReads.values().next().value!(true);
       await expect(banner).toHaveCount(0);
       await expect(
         page.getByRole('status').filter({ hasText: locale === 'fa' ? 'شارژبک' : 'chargeback' })

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-07T18:06:30+00:00",
-  "source_commit": "047ac0553ef5c2cd3d0580f235bd921403f32d6c",
+  "updated": "2026-11-07T18:13:35+00:00",
+  "source_commit": "ae06f2106bcf627dbe60ea3d0a03da44ecfb5763",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -141789,7 +141789,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-exact-coverage",
           "release-0.5-final-gates",
-          "release-0.5-final-rehearsal"
+          "release-0.5-final-rehearsal",
+          "release-0.5-dashboard-browser-recovery"
         ],
         "current_acceptance": {
           "kind": "current-wallet-payment-reversal-and-finance-alert-verification",
@@ -141849,7 +141850,7 @@
             },
             {
               "path": "apps/web/e2e/chargeback-dashboard.spec.ts",
-              "sha256": "d2b1ae4fd3509850b8b6302375d54aa95c2469de25643e692c3dde7a51fa4c6f"
+              "sha256": "aee8b8d0853f175cf3f062fe9fd19d52b2eb7896faf1593e2c4cb558fbbd200c"
             },
             {
               "path": "apps/web/e2e/wallet-invoice-payment.spec.ts",
@@ -142538,6 +142539,11 @@
               "batch": "release-0.5-final-rehearsal",
               "base_commit": "dfc9ebe00018c4d59b06f0cae5ca4d06d29523c0",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-final-rehearsal/rehearsal-proof.json"
+            },
+            {
+              "batch": "release-0.5-dashboard-browser-recovery",
+              "base_commit": "ae06f2106bcf627dbe60ea3d0a03da44ecfb5763",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-dashboard-browser-recovery/proof.json"
             }
           ]
         }
@@ -142633,7 +142639,8 @@
           "release-0.5-contract-finance-coverage",
           "release-0.5-dependency-gate-closure",
           "release-0.5-exact-coverage",
-          "release-0.5-final-gates"
+          "release-0.5-final-gates",
+          "release-0.5-dashboard-browser-recovery"
         ],
         "current_acceptance": {
           "kind": "current-wallet-payment-reversal-and-finance-alert-verification",
@@ -142681,7 +142688,7 @@
             },
             {
               "path": "apps/web/e2e/chargeback-dashboard.spec.ts",
-              "sha256": "d2b1ae4fd3509850b8b6302375d54aa95c2469de25643e692c3dde7a51fa4c6f"
+              "sha256": "aee8b8d0853f175cf3f062fe9fd19d52b2eb7896faf1593e2c4cb558fbbd200c"
             },
             {
               "path": "apps/web/e2e/wallet-invoice-payment.spec.ts",
@@ -142847,6 +142854,11 @@
               "batch": "release-0.5-final-gates",
               "base_commit": "9005d5f06a01a1024fb2b6f94d809f893823d90a",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-final-gates/route-read-proof.json"
+            },
+            {
+              "batch": "release-0.5-dashboard-browser-recovery",
+              "base_commit": "ae06f2106bcf627dbe60ea3d0a03da44ecfb5763",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-dashboard-browser-recovery/proof.json"
             }
           ]
         }
@@ -142944,7 +142956,8 @@
           "release-0.5-contract-finance-coverage",
           "release-0.5-dependency-gate-closure",
           "release-0.5-exact-coverage",
-          "release-0.5-final-gates"
+          "release-0.5-final-gates",
+          "release-0.5-dashboard-browser-recovery"
         ],
         "current_acceptance": {
           "kind": "current-wallet-payment-reversal-and-finance-alert-verification",
@@ -142996,7 +143009,7 @@
             },
             {
               "path": "apps/web/e2e/chargeback-dashboard.spec.ts",
-              "sha256": "d2b1ae4fd3509850b8b6302375d54aa95c2469de25643e692c3dde7a51fa4c6f"
+              "sha256": "aee8b8d0853f175cf3f062fe9fd19d52b2eb7896faf1593e2c4cb558fbbd200c"
             },
             {
               "path": "apps/web/e2e/wallet-invoice-payment.spec.ts",
@@ -143166,6 +143179,11 @@
               "batch": "release-0.5-final-gates",
               "base_commit": "9005d5f06a01a1024fb2b6f94d809f893823d90a",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-final-gates/route-read-proof.json"
+            },
+            {
+              "batch": "release-0.5-dashboard-browser-recovery",
+              "base_commit": "ae06f2106bcf627dbe60ea3d0a03da44ecfb5763",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-dashboard-browser-recovery/proof.json"
             }
           ]
         }
@@ -143252,7 +143270,8 @@
           "release-0.5-contract-finance-coverage",
           "release-0.5-dependency-gate-closure",
           "release-0.5-exact-coverage",
-          "release-0.5-final-gates"
+          "release-0.5-final-gates",
+          "release-0.5-dashboard-browser-recovery"
         ],
         "current_acceptance": {
           "kind": "current-wallet-payment-reversal-and-finance-alert-verification",
@@ -143296,7 +143315,7 @@
             },
             {
               "path": "apps/web/e2e/chargeback-dashboard.spec.ts",
-              "sha256": "d2b1ae4fd3509850b8b6302375d54aa95c2469de25643e692c3dde7a51fa4c6f"
+              "sha256": "aee8b8d0853f175cf3f062fe9fd19d52b2eb7896faf1593e2c4cb558fbbd200c"
             },
             {
               "path": "apps/web/e2e/wallet-invoice-payment.spec.ts",
@@ -143462,6 +143481,11 @@
               "batch": "release-0.5-final-gates",
               "base_commit": "9005d5f06a01a1024fb2b6f94d809f893823d90a",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-final-gates/route-read-proof.json"
+            },
+            {
+              "batch": "release-0.5-dashboard-browser-recovery",
+              "base_commit": "ae06f2106bcf627dbe60ea3d0a03da44ecfb5763",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-dashboard-browser-recovery/proof.json"
             }
           ]
         }
@@ -143536,7 +143560,8 @@
           "release-0.5-contract-finance-coverage",
           "release-0.5-dependency-gate-closure",
           "release-0.5-exact-coverage",
-          "release-0.5-final-gates"
+          "release-0.5-final-gates",
+          "release-0.5-dashboard-browser-recovery"
         ],
         "current_acceptance": {
           "kind": "current-wallet-payment-reversal-and-finance-alert-verification",
@@ -143564,7 +143589,7 @@
             },
             {
               "path": "apps/web/e2e/chargeback-dashboard.spec.ts",
-              "sha256": "d2b1ae4fd3509850b8b6302375d54aa95c2469de25643e692c3dde7a51fa4c6f"
+              "sha256": "aee8b8d0853f175cf3f062fe9fd19d52b2eb7896faf1593e2c4cb558fbbd200c"
             },
             {
               "path": "apps/web/e2e/wallet-invoice-payment.spec.ts",
@@ -143738,6 +143763,11 @@
               "batch": "release-0.5-final-gates",
               "base_commit": "9005d5f06a01a1024fb2b6f94d809f893823d90a",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-final-gates/route-read-proof.json"
+            },
+            {
+              "batch": "release-0.5-dashboard-browser-recovery",
+              "base_commit": "ae06f2106bcf627dbe60ea3d0a03da44ecfb5763",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-dashboard-browser-recovery/proof.json"
             }
           ]
         }
@@ -144049,7 +144079,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-exact-coverage",
           "release-0.5-final-gates",
-          "release-0.5-final-acceptance"
+          "release-0.5-final-acceptance",
+          "release-0.5-dashboard-browser-recovery"
         ],
         "current_acceptance": {
           "kind": "current-wallet-payment-reversal-and-finance-alert-verification",
@@ -144081,7 +144112,7 @@
             },
             {
               "path": "apps/web/e2e/chargeback-dashboard.spec.ts",
-              "sha256": "d2b1ae4fd3509850b8b6302375d54aa95c2469de25643e692c3dde7a51fa4c6f"
+              "sha256": "aee8b8d0853f175cf3f062fe9fd19d52b2eb7896faf1593e2c4cb558fbbd200c"
             },
             {
               "path": "apps/web/e2e/crm-dashboard.spec.ts",
@@ -144702,6 +144733,11 @@
               "batch": "release-0.5-final-acceptance",
               "base_commit": "460fdb3e46b92b3086c95b925a6f4735a21fc2ff",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-final-acceptance/customer-interaction-proof.json"
+            },
+            {
+              "batch": "release-0.5-dashboard-browser-recovery",
+              "base_commit": "ae06f2106bcf627dbe60ea3d0a03da44ecfb5763",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-dashboard-browser-recovery/proof.json"
             }
           ]
         }
@@ -510575,7 +510611,8 @@
           "release-0.5-ai-tab-intrinsic-widths",
           "release-0.5-crm-profile-loading-heading",
           "release-0.5-crm-archive-touch-targets",
-          "release-0.5-owned-read-retry-feedback"
+          "release-0.5-owned-read-retry-feedback",
+          "release-0.5-dashboard-browser-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -510623,7 +510660,7 @@
             },
             {
               "path": "apps/web/e2e/chargeback-dashboard.spec.ts",
-              "sha256": "d2b1ae4fd3509850b8b6302375d54aa95c2469de25643e692c3dde7a51fa4c6f"
+              "sha256": "aee8b8d0853f175cf3f062fe9fd19d52b2eb7896faf1593e2c4cb558fbbd200c"
             },
             {
               "path": "apps/web/e2e/consultation-fee-offer-forms.spec.ts",
@@ -511258,6 +511295,11 @@
               "batch": "release-0.5-owned-read-retry-feedback",
               "base_commit": "047ac0553ef5c2cd3d0580f235bd921403f32d6c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-owned-read-retry-feedback/proof.json"
+            },
+            {
+              "batch": "release-0.5-dashboard-browser-recovery",
+              "base_commit": "ae06f2106bcf627dbe60ea3d0a03da44ecfb5763",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-dashboard-browser-recovery/proof.json"
             }
           ]
         }
@@ -511319,7 +511361,8 @@
           "release-0.5-ai-tab-intrinsic-widths",
           "release-0.5-crm-profile-loading-heading",
           "release-0.5-crm-archive-touch-targets",
-          "release-0.5-owned-read-retry-feedback"
+          "release-0.5-owned-read-retry-feedback",
+          "release-0.5-dashboard-browser-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -511367,7 +511410,7 @@
             },
             {
               "path": "apps/web/e2e/chargeback-dashboard.spec.ts",
-              "sha256": "d2b1ae4fd3509850b8b6302375d54aa95c2469de25643e692c3dde7a51fa4c6f"
+              "sha256": "aee8b8d0853f175cf3f062fe9fd19d52b2eb7896faf1593e2c4cb558fbbd200c"
             },
             {
               "path": "apps/web/e2e/consultation-fee-offer-forms.spec.ts",
@@ -512002,6 +512045,11 @@
               "batch": "release-0.5-owned-read-retry-feedback",
               "base_commit": "047ac0553ef5c2cd3d0580f235bd921403f32d6c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-owned-read-retry-feedback/proof.json"
+            },
+            {
+              "batch": "release-0.5-dashboard-browser-recovery",
+              "base_commit": "ae06f2106bcf627dbe60ea3d0a03da44ecfb5763",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-dashboard-browser-recovery/proof.json"
             }
           ]
         }
@@ -512521,7 +512569,8 @@
           "release-0.5-ai-tab-intrinsic-widths",
           "release-0.5-crm-profile-loading-heading",
           "release-0.5-crm-archive-touch-targets",
-          "release-0.5-owned-read-retry-feedback"
+          "release-0.5-owned-read-retry-feedback",
+          "release-0.5-dashboard-browser-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -512569,7 +512618,7 @@
             },
             {
               "path": "apps/web/e2e/chargeback-dashboard.spec.ts",
-              "sha256": "d2b1ae4fd3509850b8b6302375d54aa95c2469de25643e692c3dde7a51fa4c6f"
+              "sha256": "aee8b8d0853f175cf3f062fe9fd19d52b2eb7896faf1593e2c4cb558fbbd200c"
             },
             {
               "path": "apps/web/e2e/consultation-fee-offer-forms.spec.ts",
@@ -513204,6 +513253,11 @@
               "batch": "release-0.5-owned-read-retry-feedback",
               "base_commit": "047ac0553ef5c2cd3d0580f235bd921403f32d6c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-owned-read-retry-feedback/proof.json"
+            },
+            {
+              "batch": "release-0.5-dashboard-browser-recovery",
+              "base_commit": "ae06f2106bcf627dbe60ea3d0a03da44ecfb5763",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-dashboard-browser-recovery/proof.json"
             }
           ]
         }
@@ -582799,7 +582853,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "The staff CRM profile detail has an explicit localized loading heading and uses its retry view whenever a finished read yields no displayable profile. A held read, five distinct failure responses and an exact manual recovery passed. Remaining conditional route states are open."
+        "Current staff chargeback recovery retains open exceptions through two real 15-second timeouts, never overlaps requests and removes private data on the next denial. The dashboard and profile-picker recovery journeys passed in both engines. Remaining conditional route states are open."
       ],
       "owner": null,
       "depends_on": [],
@@ -582822,7 +582876,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-crm-profile-loading-heading"
+          "release-0.5-crm-profile-loading-heading",
+          "release-0.5-dashboard-browser-recovery"
         ],
         "current_acceptance": null
       }
@@ -635938,7 +635993,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
           "release-0.5-route-census-closure",
-          "release-0.5-owned-read-retry-feedback"
+          "release-0.5-owned-read-retry-feedback",
+          "release-0.5-dashboard-browser-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -636026,7 +636082,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-upcoming-invoices.spec.ts",
-              "sha256": "02ef3433fd85169974245b8b515c6d6289e9bffdb6d9570401f1dd1525377c83"
+              "sha256": "b0da1258c80ea743ec1c71c2d7538d8e60bdf1f5afa55185210af062adf2d206"
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
@@ -636505,6 +636561,11 @@
               "batch": "release-0.5-owned-read-retry-feedback",
               "base_commit": "047ac0553ef5c2cd3d0580f235bd921403f32d6c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-owned-read-retry-feedback/proof.json"
+            },
+            {
+              "batch": "release-0.5-dashboard-browser-recovery",
+              "base_commit": "ae06f2106bcf627dbe60ea3d0a03da44ecfb5763",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-dashboard-browser-recovery/proof.json"
             }
           ]
         }
@@ -636554,7 +636615,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
           "release-0.5-route-census-closure",
-          "release-0.5-owned-read-retry-feedback"
+          "release-0.5-owned-read-retry-feedback",
+          "release-0.5-dashboard-browser-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -636642,7 +636704,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-upcoming-invoices.spec.ts",
-              "sha256": "02ef3433fd85169974245b8b515c6d6289e9bffdb6d9570401f1dd1525377c83"
+              "sha256": "b0da1258c80ea743ec1c71c2d7538d8e60bdf1f5afa55185210af062adf2d206"
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
@@ -637121,6 +637183,11 @@
               "batch": "release-0.5-owned-read-retry-feedback",
               "base_commit": "047ac0553ef5c2cd3d0580f235bd921403f32d6c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-owned-read-retry-feedback/proof.json"
+            },
+            {
+              "batch": "release-0.5-dashboard-browser-recovery",
+              "base_commit": "ae06f2106bcf627dbe60ea3d0a03da44ecfb5763",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-dashboard-browser-recovery/proof.json"
             }
           ]
         }
@@ -637170,7 +637237,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
           "release-0.5-route-census-closure",
-          "release-0.5-owned-read-retry-feedback"
+          "release-0.5-owned-read-retry-feedback",
+          "release-0.5-dashboard-browser-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -637258,7 +637326,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-upcoming-invoices.spec.ts",
-              "sha256": "02ef3433fd85169974245b8b515c6d6289e9bffdb6d9570401f1dd1525377c83"
+              "sha256": "b0da1258c80ea743ec1c71c2d7538d8e60bdf1f5afa55185210af062adf2d206"
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
@@ -637737,6 +637805,11 @@
               "batch": "release-0.5-owned-read-retry-feedback",
               "base_commit": "047ac0553ef5c2cd3d0580f235bd921403f32d6c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-owned-read-retry-feedback/proof.json"
+            },
+            {
+              "batch": "release-0.5-dashboard-browser-recovery",
+              "base_commit": "ae06f2106bcf627dbe60ea3d0a03da44ecfb5763",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-dashboard-browser-recovery/proof.json"
             }
           ]
         }
@@ -637784,7 +637857,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
           "release-0.5-route-census-closure",
-          "release-0.5-owned-read-retry-feedback"
+          "release-0.5-owned-read-retry-feedback",
+          "release-0.5-dashboard-browser-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -637872,7 +637946,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-upcoming-invoices.spec.ts",
-              "sha256": "02ef3433fd85169974245b8b515c6d6289e9bffdb6d9570401f1dd1525377c83"
+              "sha256": "b0da1258c80ea743ec1c71c2d7538d8e60bdf1f5afa55185210af062adf2d206"
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
@@ -638351,6 +638425,11 @@
               "batch": "release-0.5-owned-read-retry-feedback",
               "base_commit": "047ac0553ef5c2cd3d0580f235bd921403f32d6c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-owned-read-retry-feedback/proof.json"
+            },
+            {
+              "batch": "release-0.5-dashboard-browser-recovery",
+              "base_commit": "ae06f2106bcf627dbe60ea3d0a03da44ecfb5763",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-dashboard-browser-recovery/proof.json"
             }
           ]
         }
@@ -638398,7 +638477,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
           "release-0.5-route-census-closure",
-          "release-0.5-owned-read-retry-feedback"
+          "release-0.5-owned-read-retry-feedback",
+          "release-0.5-dashboard-browser-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -638486,7 +638566,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-upcoming-invoices.spec.ts",
-              "sha256": "02ef3433fd85169974245b8b515c6d6289e9bffdb6d9570401f1dd1525377c83"
+              "sha256": "b0da1258c80ea743ec1c71c2d7538d8e60bdf1f5afa55185210af062adf2d206"
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
@@ -638965,6 +639045,11 @@
               "batch": "release-0.5-owned-read-retry-feedback",
               "base_commit": "047ac0553ef5c2cd3d0580f235bd921403f32d6c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-owned-read-retry-feedback/proof.json"
+            },
+            {
+              "batch": "release-0.5-dashboard-browser-recovery",
+              "base_commit": "ae06f2106bcf627dbe60ea3d0a03da44ecfb5763",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-dashboard-browser-recovery/proof.json"
             }
           ]
         }
@@ -639014,7 +639099,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
           "release-0.5-route-census-closure",
-          "release-0.5-owned-read-retry-feedback"
+          "release-0.5-owned-read-retry-feedback",
+          "release-0.5-dashboard-browser-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -639102,7 +639188,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-upcoming-invoices.spec.ts",
-              "sha256": "02ef3433fd85169974245b8b515c6d6289e9bffdb6d9570401f1dd1525377c83"
+              "sha256": "b0da1258c80ea743ec1c71c2d7538d8e60bdf1f5afa55185210af062adf2d206"
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
@@ -639581,6 +639667,11 @@
               "batch": "release-0.5-owned-read-retry-feedback",
               "base_commit": "047ac0553ef5c2cd3d0580f235bd921403f32d6c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-owned-read-retry-feedback/proof.json"
+            },
+            {
+              "batch": "release-0.5-dashboard-browser-recovery",
+              "base_commit": "ae06f2106bcf627dbe60ea3d0a03da44ecfb5763",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-dashboard-browser-recovery/proof.json"
             }
           ]
         }
@@ -639629,7 +639720,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
           "release-0.5-route-census-closure",
-          "release-0.5-owned-read-retry-feedback"
+          "release-0.5-owned-read-retry-feedback",
+          "release-0.5-dashboard-browser-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -639717,7 +639809,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-upcoming-invoices.spec.ts",
-              "sha256": "02ef3433fd85169974245b8b515c6d6289e9bffdb6d9570401f1dd1525377c83"
+              "sha256": "b0da1258c80ea743ec1c71c2d7538d8e60bdf1f5afa55185210af062adf2d206"
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
@@ -640196,6 +640288,11 @@
               "batch": "release-0.5-owned-read-retry-feedback",
               "base_commit": "047ac0553ef5c2cd3d0580f235bd921403f32d6c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-owned-read-retry-feedback/proof.json"
+            },
+            {
+              "batch": "release-0.5-dashboard-browser-recovery",
+              "base_commit": "ae06f2106bcf627dbe60ea3d0a03da44ecfb5763",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-dashboard-browser-recovery/proof.json"
             }
           ]
         }
@@ -640244,7 +640341,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
           "release-0.5-route-census-closure",
-          "release-0.5-owned-read-retry-feedback"
+          "release-0.5-owned-read-retry-feedback",
+          "release-0.5-dashboard-browser-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -640332,7 +640430,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-upcoming-invoices.spec.ts",
-              "sha256": "02ef3433fd85169974245b8b515c6d6289e9bffdb6d9570401f1dd1525377c83"
+              "sha256": "b0da1258c80ea743ec1c71c2d7538d8e60bdf1f5afa55185210af062adf2d206"
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
@@ -640811,6 +640909,11 @@
               "batch": "release-0.5-owned-read-retry-feedback",
               "base_commit": "047ac0553ef5c2cd3d0580f235bd921403f32d6c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-owned-read-retry-feedback/proof.json"
+            },
+            {
+              "batch": "release-0.5-dashboard-browser-recovery",
+              "base_commit": "ae06f2106bcf627dbe60ea3d0a03da44ecfb5763",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-dashboard-browser-recovery/proof.json"
             }
           ]
         }
@@ -640859,7 +640962,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
           "release-0.5-route-census-closure",
-          "release-0.5-owned-read-retry-feedback"
+          "release-0.5-owned-read-retry-feedback",
+          "release-0.5-dashboard-browser-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -640947,7 +641051,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-upcoming-invoices.spec.ts",
-              "sha256": "02ef3433fd85169974245b8b515c6d6289e9bffdb6d9570401f1dd1525377c83"
+              "sha256": "b0da1258c80ea743ec1c71c2d7538d8e60bdf1f5afa55185210af062adf2d206"
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
@@ -641426,6 +641530,11 @@
               "batch": "release-0.5-owned-read-retry-feedback",
               "base_commit": "047ac0553ef5c2cd3d0580f235bd921403f32d6c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-owned-read-retry-feedback/proof.json"
+            },
+            {
+              "batch": "release-0.5-dashboard-browser-recovery",
+              "base_commit": "ae06f2106bcf627dbe60ea3d0a03da44ecfb5763",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-dashboard-browser-recovery/proof.json"
             }
           ]
         }
@@ -641474,7 +641583,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
           "release-0.5-route-census-closure",
-          "release-0.5-owned-read-retry-feedback"
+          "release-0.5-owned-read-retry-feedback",
+          "release-0.5-dashboard-browser-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -641562,7 +641672,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-upcoming-invoices.spec.ts",
-              "sha256": "02ef3433fd85169974245b8b515c6d6289e9bffdb6d9570401f1dd1525377c83"
+              "sha256": "b0da1258c80ea743ec1c71c2d7538d8e60bdf1f5afa55185210af062adf2d206"
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
@@ -642041,6 +642151,11 @@
               "batch": "release-0.5-owned-read-retry-feedback",
               "base_commit": "047ac0553ef5c2cd3d0580f235bd921403f32d6c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-owned-read-retry-feedback/proof.json"
+            },
+            {
+              "batch": "release-0.5-dashboard-browser-recovery",
+              "base_commit": "ae06f2106bcf627dbe60ea3d0a03da44ecfb5763",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-dashboard-browser-recovery/proof.json"
             }
           ]
         }
@@ -642089,7 +642204,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
           "release-0.5-route-census-closure",
-          "release-0.5-owned-read-retry-feedback"
+          "release-0.5-owned-read-retry-feedback",
+          "release-0.5-dashboard-browser-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -642177,7 +642293,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-upcoming-invoices.spec.ts",
-              "sha256": "02ef3433fd85169974245b8b515c6d6289e9bffdb6d9570401f1dd1525377c83"
+              "sha256": "b0da1258c80ea743ec1c71c2d7538d8e60bdf1f5afa55185210af062adf2d206"
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
@@ -642656,6 +642772,11 @@
               "batch": "release-0.5-owned-read-retry-feedback",
               "base_commit": "047ac0553ef5c2cd3d0580f235bd921403f32d6c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-owned-read-retry-feedback/proof.json"
+            },
+            {
+              "batch": "release-0.5-dashboard-browser-recovery",
+              "base_commit": "ae06f2106bcf627dbe60ea3d0a03da44ecfb5763",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-dashboard-browser-recovery/proof.json"
             }
           ]
         }
@@ -642704,7 +642825,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
           "release-0.5-route-census-closure",
-          "release-0.5-owned-read-retry-feedback"
+          "release-0.5-owned-read-retry-feedback",
+          "release-0.5-dashboard-browser-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -642792,7 +642914,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-upcoming-invoices.spec.ts",
-              "sha256": "02ef3433fd85169974245b8b515c6d6289e9bffdb6d9570401f1dd1525377c83"
+              "sha256": "b0da1258c80ea743ec1c71c2d7538d8e60bdf1f5afa55185210af062adf2d206"
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
@@ -643271,6 +643393,11 @@
               "batch": "release-0.5-owned-read-retry-feedback",
               "base_commit": "047ac0553ef5c2cd3d0580f235bd921403f32d6c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-owned-read-retry-feedback/proof.json"
+            },
+            {
+              "batch": "release-0.5-dashboard-browser-recovery",
+              "base_commit": "ae06f2106bcf627dbe60ea3d0a03da44ecfb5763",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-dashboard-browser-recovery/proof.json"
             }
           ]
         }
@@ -692592,7 +692719,7 @@
             },
             {
               "path": "apps/web/e2e/chargeback-dashboard.spec.ts",
-              "sha256": "d2b1ae4fd3509850b8b6302375d54aa95c2469de25643e692c3dde7a51fa4c6f"
+              "sha256": "aee8b8d0853f175cf3f062fe9fd19d52b2eb7896faf1593e2c4cb558fbbd200c"
             },
             {
               "path": "apps/web/e2e/wallet-invoice-payment.spec.ts",
@@ -695583,6 +695710,11 @@
               "batch": "release-0.5-invoice-response-feedback",
               "base_commit": "a27bfb6aca1393b091d9e63d4ce00ad7a2eae457",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-response-feedback/invoice-response-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-dashboard-browser-recovery",
+              "base_commit": "ae06f2106bcf627dbe60ea3d0a03da44ecfb5763",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-dashboard-browser-recovery/proof.json"
             }
           ]
         },
@@ -695627,7 +695759,8 @@
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-invoice-response-feedback"
+          "release-0.5-invoice-response-feedback",
+          "release-0.5-dashboard-browser-recovery"
         ]
       }
     },
@@ -707957,7 +708090,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "The current dashboard recovery passed both languages and browsers. The unchanged predecessor reproduced chargeback polling across its read deadline, a retired profile selector in the invoice journey and Safari profile picker asset-reload failures. Resolve those browser gates and remaining conditional adoption."
+        "Ten reproduced dashboard cases now pass with the live radio control and deadline-aware single active poll. Safari profile-picker asset recovery remains open after a real non-cacheable HTTP 503 and document reload. Conditional states and command adoption remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -708007,7 +708140,8 @@
           "release-0.5-saving-address-field-errors",
           "release-0.5-crm-profile-loading-heading",
           "release-0.5-crm-archive-touch-targets",
-          "release-0.5-owned-read-retry-feedback"
+          "release-0.5-owned-read-retry-feedback",
+          "release-0.5-dashboard-browser-recovery"
         ]
       }
     },
@@ -708026,7 +708160,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Dashboard read retry passed 18 related unit and 12 focused browser cases. All 98 gzip budgets passed and electricity ordering measured 254.98 KB against 255 KB. Resolve the 12 reproduced baseline browser failures and run final combined coverage and accessibility."
+        "Twenty related browser cases passed, including ten previously failing cases. Two Safari profile-picker recovery cases remain open. All 575 production assets match the prior accepted scoped build. Final combined coverage and accessibility acceptance remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -708075,7 +708209,8 @@
           "release-0.5-saving-address-field-errors",
           "release-0.5-crm-profile-loading-heading",
           "release-0.5-crm-archive-touch-targets",
-          "release-0.5-owned-read-retry-feedback"
+          "release-0.5-owned-read-retry-feedback",
+          "release-0.5-dashboard-browser-recovery"
         ]
       }
     },
@@ -768336,6 +768471,71 @@
       ],
       "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-owned-read-retry-feedback/renewed-bindings.json",
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-owned-read-retry-feedback",
+      "release_disposition": "Remaining conditional, final candidate and owner policy gates still apply.",
+      "push_receipt": {
+        "verified_at": "2026-11-07T18:06:41.987718+00:00",
+        "local_sha": "ae06f2106bcf627dbe60ea3d0a03da44ecfb5763",
+        "remote_sha": "ae06f2106bcf627dbe60ea3d0a03da44ecfb5763"
+      }
+    },
+    "release-0.5-dashboard-browser-recovery": {
+      "batch": "release-0.5-dashboard-browser-recovery",
+      "base_commit": "ae06f2106bcf627dbe60ea3d0a03da44ecfb5763",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "accepted_task_keys": [],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/chargeback-dashboard.spec.ts",
+          "sha256": "aee8b8d0853f175cf3f062fe9fd19d52b2eb7896faf1593e2c4cb558fbbd200c"
+        },
+        {
+          "path": "apps/web/e2e/dashboard-upcoming-invoices.spec.ts",
+          "sha256": "b0da1258c80ea743ec1c71c2d7538d8e60bdf1f5afa55185210af062adf2d206"
+        }
+      ],
+      "checks": [
+        "The invoice test uses the live profile radio group, asserts one POST with CSRF, and retains all private invoice, order and contract withdrawal assertions.",
+        "The chargeback test directly observes request cancellation and at most one in-flight poll across two real deadlines. The existing denial and open-warning assertions remain.",
+        "20 distinct browser cases passed across the exact related checks. The two Safari profile asset failures are preserved."
+      ],
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-dashboard-browser-recovery/proof.json",
+      "source_scope_proof_sha256": "e7f82650b609e6c7768c351306c64677283b310e23e06a4d40e7516509fce72a",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-dashboard-browser-recovery/reviewed.patch",
+      "renewed_task_keys": [
+        "04-invoices-wallet-contracts.md#T-04.2.03.01",
+        "04-invoices-wallet-contracts.md#T-04.2.03.02",
+        "04-invoices-wallet-contracts.md#T-04.2.03.03",
+        "04-invoices-wallet-contracts.md#T-04.2.03.04",
+        "04-invoices-wallet-contracts.md#T-04.2.04.01",
+        "04-invoices-wallet-contracts.md#T-04.2.04.03",
+        "07-ui-ux-design.md#T-07.05.01.11",
+        "07-ui-ux-design.md#T-07.05.02.01",
+        "07-ui-ux-design.md#T-07.05.02.03",
+        "07-ui-ux-design.md#T-07.19.01.01",
+        "07-ui-ux-design.md#T-07.19.01.02",
+        "07-ui-ux-design.md#T-07.19.01.03",
+        "07-ui-ux-design.md#T-07.19.02.01",
+        "07-ui-ux-design.md#T-07.19.02.02",
+        "07-ui-ux-design.md#T-07.19.02.03",
+        "07-ui-ux-design.md#T-07.19.02.04",
+        "07-ui-ux-design.md#T-07.19.02.05",
+        "07-ui-ux-design.md#T-07.19.02.06",
+        "07-ui-ux-design.md#T-07.19.02.07",
+        "07-ui-ux-design.md#T-07.19.02.08",
+        "07-ui-ux-design.md#T-07.19.02.09",
+        "release-readiness#R-02.01"
+      ],
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-dashboard-browser-recovery/renewed-bindings.json",
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-dashboard-browser-recovery",
       "release_disposition": "Remaining conditional, final candidate and owner policy gates still apply."
     }
   },
