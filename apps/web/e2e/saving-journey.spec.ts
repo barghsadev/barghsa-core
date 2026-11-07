@@ -121,9 +121,22 @@ for (const locale of ['en', 'fa'] as const)
     await page.route(`**/api/profiles/${profileId}/addresses`, (route) => {
       if (route.request().method() === 'POST') {
         addressWrites.push(route.request().postDataJSON() as Record<string, unknown>);
-        return route.fulfill({ status: 201, json: addressWrites.length === 1 ? {} : savedAddress });
+        if (addressWrites.length === 1)
+          return route.fulfill({
+            status: 400,
+            json: {
+              error: {
+                code: 'VALIDATION:INPUT:INVALID',
+                fields: ['postalCode'],
+                message: 'private-saving-address-diagnostic',
+              },
+            },
+          });
+        return route.fulfill({ status: 201, json: addressWrites.length === 2 ? {} : savedAddress });
       }
-      return route.fulfill({ json: { addresses: addressWrites.length ? [savedAddress] : [] } });
+      return route.fulfill({
+        json: { addresses: addressWrites.length === 3 ? [savedAddress] : [] },
+      });
     });
     await page.route('**/api/geography/provinces', (route) =>
       route.fulfill({ json: [{ id: provinceId, nameFa: 'استان', nameEn: 'Province' }] })
@@ -505,24 +518,50 @@ for (const locale of ['en', 'fa'] as const)
     await page
       .getByRole('textbox', { name: savingCopy('postalCode', locale), exact: true })
       .fill(savedAddress.postalCode);
-    await page
-      .getByRole('button', { name: savingCopy('saveAddress', locale), exact: true })
-      .click();
-    await expect(
-      page.getByRole('alert').filter({ hasText: savingCopy('addressUnconfirmed', locale) })
-    ).toBeVisible();
-    await expect(
-      page.getByRole('textbox', { name: savingCopy('fullAddress', locale), exact: true })
-    ).toBeDisabled();
-    await expect(next).toBeDisabled();
+    const saveAddress = page.getByRole('button', {
+      name: savingCopy('saveAddress', locale),
+      exact: true,
+    });
+    const fullAddress = page.getByRole('textbox', {
+      name: savingCopy('fullAddress', locale),
+      exact: true,
+    });
+    const addressError = appCopy('settings.addresses.error.create', locale);
+    const addressUnconfirmed = savingCopy('addressUnconfirmed', locale);
+    const addressSaved = page.locator('[data-sonner-toast][data-type="success"]').filter({
+      hasText: appCopy('settings.addresses.success.create', locale),
+    });
+    const errorToasts = page.locator('[data-sonner-toast][data-type="error"]');
+    await saveAddress.click();
+    await expect(page.getByRole('alert').filter({ hasText: addressError })).toHaveText(
+      addressError
+    );
+    await expect(errorToasts.filter({ hasText: addressError })).toHaveText(addressError);
+    await expect(page.getByText('private-saving-address-diagnostic')).toHaveCount(0);
+    await expect(fullAddress).toBeEditable();
+    await expect(fullAddress).toHaveValue(savedAddress.fullAddress);
+    await expect(addressSaved).toHaveCount(0);
     expect(addressWrites).toHaveLength(1);
-    expect(addressWrites[0]!.idempotencyKey).toMatch(/^[a-f0-9-]{36}$/);
+
+    await saveAddress.click();
+    await expect(page.getByRole('alert').filter({ hasText: addressUnconfirmed })).toBeVisible();
+    await expect(errorToasts.filter({ hasText: addressUnconfirmed })).toHaveText(
+      addressUnconfirmed
+    );
+    await expect(fullAddress).toBeDisabled();
+    await expect(fullAddress).toHaveValue(savedAddress.fullAddress);
+    await expect(next).toBeDisabled();
+    await expect(addressSaved).toHaveCount(0);
+    expect(addressWrites).toHaveLength(2);
+    expect(addressWrites[1]!.idempotencyKey).toMatch(/^[a-f0-9-]{36}$/);
+    expect(addressWrites[1]!.idempotencyKey).not.toBe(addressWrites[0]!.idempotencyKey);
     await page
       .getByRole('button', { name: savingCopy('retryAddress', locale), exact: true })
       .click();
     await expect(page.getByText('Saving Street')).toBeVisible();
-    expect(addressWrites).toHaveLength(2);
-    expect(addressWrites[1]).toEqual(addressWrites[0]);
+    await expect(addressSaved).toHaveCount(1);
+    expect(addressWrites).toHaveLength(3);
+    expect(addressWrites[2]).toEqual(addressWrites[1]);
     await expect(page.locator(`input[name=addressId][value="${addressId}"]`)).toBeChecked();
     await next.click();
     await page.getByRole('checkbox', { name: savingCopy('acceptAgreement', locale) }).check();
@@ -555,7 +594,7 @@ for (const locale of ['en', 'fa'] as const)
     await expect(page.getByRole('main').getByRole('alert').filter({ hasText: error })).toHaveText(
       error
     );
-    await expect(page.locator('[data-sonner-toast][data-type="error"]')).toHaveText(error);
+    await expect(errorToasts.filter({ hasText: error })).toHaveText(error);
     await expect(page.getByText('private-saving-order-diagnostic')).toHaveCount(0);
     await expect(submit).toBeEnabled();
     await submit.click();

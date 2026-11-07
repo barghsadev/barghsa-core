@@ -34,6 +34,7 @@ import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useFormDraft, type DraftSchema } from '../hooks/useFormDraft.js';
 import { useSettingsCommand } from '../hooks/useSettingsCommand.js';
+import { useCommandFeedback } from '../hooks/useCommandFeedback.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
 import { getProfileContextRevision, useProfileContextRevision } from '../lib/profile-context.js';
 import { addressReceipt } from '../lib/settings-form.js';
@@ -283,6 +284,11 @@ function OwnedSavingsOrderPage() {
     () => !!profileId && !loadError && getProfileContextRevision() === contextRevision
   );
   const savingAddress = addressCommand.busy;
+  const addressErrorMessage = addressError ? t('settings.addresses.error.create', locale) : null;
+  useCommandFeedback({
+    error: addressCommand.error ? copy('addressUnconfirmed') : addressErrorMessage,
+    operation: profileId ?? undefined,
+  });
   const [draftSaved, setDraftSaved] = useState(false);
   const draftKey = profileId
     ? `/api/saving/orders/draft?profileId=${encodeURIComponent(profileId)}`
@@ -439,7 +445,10 @@ function OwnedSavingsOrderPage() {
         body: { ...patch, idempotencyKey: crypto.randomUUID() },
         receipt: (value) => addressReceipt(value, profileId, null, patch),
         fields: (names) => {
-          if (!names.length || !names.every((name) => Object.keys(patch).includes(String(name))))
+          if (
+            !names.length ||
+            !names.every((name) => typeof name === 'string' && Object.hasOwn(patch, name))
+          )
             return false;
           setAddressError(true);
           return true;
@@ -453,6 +462,7 @@ function OwnedSavingsOrderPage() {
           setCityId('');
           setFullAddress('');
           setPostalCode('');
+          toast.success(t('settings.addresses.success.create', locale));
         },
       });
     });
@@ -1049,7 +1059,7 @@ function OwnedSavingsOrderPage() {
                       >
                         {addingAddress ? t('electricity.order.cancel', locale) : copy('newAddress')}
                       </Button>
-                      {addressError && <p role="alert">{copy('error')}</p>}
+                      {addressErrorMessage && <p role="alert">{addressErrorMessage}</p>}
                       {addingAddress && (
                         <div className="grid gap-3 rounded-md border p-4 md:grid-cols-2">
                           <div>
