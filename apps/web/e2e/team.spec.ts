@@ -4,6 +4,7 @@ import { cookieResponse } from './cookie-response';
 import AxeBuilder from '@axe-core/playwright';
 import { formatBrowserDate } from './browser-date';
 import { test, expect, type Page } from './coverage-fixture';
+import { confirmationText } from '@barghsa/i18n/confirmation';
 
 const profileId = '00000000-0000-4000-8000-000000000001';
 const transferId = '00000000-0000-4000-8000-000000000002';
@@ -93,6 +94,16 @@ async function chooseOwner(page: Page, locale = 'en') {
   await dialog
     .getByRole('button', { name: locale === 'fa' ? 'ادامه' : 'Continue', exact: true })
     .click();
+}
+
+async function authorizeAction(page: Page, locale: 'en' | 'fa' = 'en') {
+  const dialog = page.getByRole('dialog');
+  await expect(
+    dialog.getByRole('button', { name: confirmationText('confirm', locale), exact: true })
+  ).toBeDisabled();
+  await dialog
+    .getByLabel(confirmationText('typePhrase', locale), { exact: true })
+    .fill(confirmationText('phrase', locale));
 }
 
 for (const locale of ['fa', 'en'] as const) {
@@ -582,6 +593,8 @@ for (const action of [
       requests++;
       expect(route.request().method()).toBe(action.method);
       expect(route.request().postDataJSON()).toEqual(action.body);
+      if (action.suffix === 'transfer-ownership')
+        return route.fulfill({ status: 201, json: { id: transferId } });
       return route.fulfill({
         json: action.suffix.startsWith('invitations/')
           ? { id: 'invitation-one', status: 'Withdrawn' }
@@ -595,6 +608,7 @@ for (const action of [
     expect(requests).toBe(0);
     if (action.suffix === 'transfer-ownership') await chooseOwner(page);
     expect(requests).toBe(0);
+    await authorizeAction(page);
     await page.getByRole('dialog').getByRole('button', { name: 'Confirm', exact: true }).click();
     await expect(page.getByRole('dialog')).toHaveCount(0);
     expect(requests).toBe(1);
@@ -613,6 +627,63 @@ for (const action of [
     );
   });
 }
+
+test('an unconfirmed ownership transfer waits for the current outgoing transfer', async ({
+  page,
+}) => {
+  await shell(page);
+  let transfers = 0;
+  let transferReads = 0;
+  let releaseRead!: () => void;
+  const heldRead = new Promise<void>((resolve) => {
+    releaseRead = resolve;
+  });
+  await page.route('**/api/profiles/ownership-transfers', async (route) => {
+    transferReads++;
+    if (transfers) await heldRead;
+    return route.fulfill({
+      json: {
+        transfers: transfers
+          ? [
+              {
+                id: transferId,
+                profileId,
+                profileName: 'Example company',
+                expiresAt: '2026-09-13T00:00:00Z',
+                direction: 'outgoing',
+              },
+            ]
+          : [],
+      },
+    });
+  });
+  await page.route(`**/api/profiles/${profileId}/transfer-ownership`, (route) => {
+    transfers++;
+    expect(route.request().postDataJSON()).toEqual({ newOwnerUserId: 'member' });
+    return route.fulfill({ status: 201, json: { id: 'invalid-transfer-id' } });
+  });
+  await page.goto('/settings/team');
+  const trigger = page.getByRole('button', { name: 'Transfer ownership', exact: true });
+  await trigger.click();
+  await chooseOwner(page);
+  const dialog = page.getByRole('dialog');
+  const confirm = dialog.getByRole('button', { name: 'Confirm', exact: true });
+  await authorizeAction(page);
+  await confirm.click();
+  try {
+    await expect(dialog.getByRole('alert')).toBeVisible();
+    await expect(confirm).toBeDisabled();
+    await expect(page.getByText(/transfer request sent to/i)).toHaveCount(0);
+    await expect.poll(() => transferReads).toBeGreaterThan(1);
+    await dialog.getByRole('button', { name: 'Cancel', exact: true }).click();
+    await expect(trigger).toBeDisabled();
+  } finally {
+    releaseRead();
+  }
+  await expect(page.getByRole('button', { name: 'Cancel transfer', exact: true })).toBeVisible();
+  await expect(trigger).toBeDisabled();
+  expect(transfers).toBe(1);
+});
 
 for (const locale of ['en', 'fa'] as const) {
   test(`ownership verifies before selection and preserves the recipient through expiry and retry (${locale})`, async ({
@@ -695,6 +766,7 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(dialog).toContainText(recipientName);
     await expect(password).toHaveCount(0);
     expect(attempts).toHaveLength(0);
+    await authorizeAction(page, locale);
     await confirm.click();
     await expect(password).toBeVisible();
     await password.fill('Team-password-123!');
@@ -705,7 +777,10 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(password).toHaveCount(0);
     await confirm.click();
     await expect(dialog).toHaveCount(0);
-    await expect(page.getByText(success, { exact: true })).toBeVisible();
+    await expect(page.getByRole('main').getByText(success, { exact: true })).toBeVisible();
+    await expect(
+      page.locator('[data-sonner-toast]').getByText(success, { exact: true })
+    ).toBeVisible();
     await expect(
       page.getByRole('button', { name: fa ? 'انتقال مالکیت' : 'Transfer ownership', exact: true })
     ).toBeFocused();

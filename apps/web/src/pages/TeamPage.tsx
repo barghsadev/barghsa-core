@@ -84,9 +84,22 @@ function TeamCatalogue() {
     '/api/profiles/ownership-transfers',
     validTransfers
   );
+  const [requestedTransferRead, setRequestedTransferRead] = useState<number | null>(null);
+  const reloadTransfers = () => setRequestedTransferRead(transfers.retry());
   const active = profiles.data?.profiles.find((p) => p.id === profiles.data?.activeProfileId);
   const profileReady = !profiles.loading && !profiles.error && !!profiles.data;
-  const transferReady = !transfers.loading && !transfers.error && !!transfers.data;
+  const transferLoading =
+    transfers.loading ||
+    (!scope.denied &&
+      !transfers.error &&
+      requestedTransferRead !== null &&
+      transfers.readAttempt !== requestedTransferRead);
+  const transferReady = !transferLoading && !transfers.error && !!transfers.data;
+  const transferAllowed =
+    transferReady &&
+    !transfers.data?.transfers.some(
+      (transfer) => transfer.profileId === active?.id && transfer.direction === 'outgoing'
+    );
   const refreshTransfers = useRef<HTMLButtonElement>(null);
   const selected = transfers.data?.transfers.find((row) => row.id === review?.id);
   const stale = !!review && (!selected || transferBasis(selected) !== review.basis);
@@ -117,13 +130,13 @@ function TeamCatalogue() {
             <Button
               ref={refreshTransfers}
               variant="outline"
-              onClick={() => (scope.denied ? scope.recover() : transfers.retry())}
+              onClick={() => (scope.denied ? scope.recover() : reloadTransfers())}
             >
               {word('refreshTransfers')}
             </Button>
           </ListPage.Toolbar>
           <ListPage.Content
-            loading={transfers.loading}
+            loading={transferLoading}
             error={transfers.error || scope.denied}
             retainContent={!!transfers.data?.transfers.length}
             empty={!!transfers.data && !transfers.data.transfers.length}
@@ -205,6 +218,9 @@ function TeamCatalogue() {
                 key={`${scope.version}:${active.id}`}
                 profile={active}
                 profileReady={profileReady}
+                transferAllowed={transferAllowed}
+                transferLoading={transferLoading}
+                refreshTransfers={reloadTransfers}
                 onSessionDenied={scope.deny}
               />
             ) : (
@@ -220,13 +236,13 @@ function TeamCatalogue() {
           confirmationDisabled={!transferReady || stale}
           finalFocus={refreshTransfers}
           summary={
-            <Button variant="outline" disabled={transfers.loading} onClick={transfers.retry}>
+            <Button variant="outline" disabled={transferLoading} onClick={reloadTransfers}>
               {word('refreshTransfers')}
             </Button>
           }
           onSuccess={async () => {
             if (!transferReady || stale) return;
-            transfers.retry();
+            reloadTransfers();
             setNotice(word('saved'));
           }}
         />
@@ -237,10 +253,16 @@ function TeamCatalogue() {
 function TeamMembers({
   profile,
   profileReady,
+  transferAllowed,
+  transferLoading,
+  refreshTransfers,
   onSessionDenied,
 }: {
   profile: { id: string; title?: string | null };
   profileReady: boolean;
+  transferAllowed: boolean;
+  transferLoading: boolean;
+  refreshTransfers: () => void;
   onSessionDenied: () => void;
 }) {
   const time = useAccountTime();
@@ -259,6 +281,7 @@ function TeamMembers({
     | null
   >(null);
   const [ownershipStep, setOwnershipStep] = useState<'verify' | 'select' | 'confirm' | null>(null);
+  const [transferUnconfirmed, setTransferUnconfirmed] = useState(false);
   const [recipientId, setRecipientId] = useState('');
   const transferTrigger = useRef<HTMLButtonElement>(null);
   const recipientSelect = useRef<HTMLSelectElement>(null);
@@ -316,6 +339,7 @@ function TeamMembers({
     setInvitationOpen(false);
     setDetail(null);
     setOwnershipStep(null);
+    setTransferUnconfirmed(false);
     setAction(null);
     resetInvitation({ username: '', role: 'Manager', message: '' });
     setRecipientId('');
@@ -376,17 +400,18 @@ function TeamMembers({
     if (
       !ownershipStep &&
       !loading &&
+      !transferLoading &&
       !focusRefreshPending.current &&
       restoreTransferFocus.current
     ) {
       restoreTransferFocus.current = false;
       (
-        (ready ? transferTrigger.current : null) ??
+        (ready && transferAllowed ? transferTrigger.current : null) ??
         refreshMembers.current ??
         teamHeading.current
       )?.focus();
     }
-  }, [ownershipStep, loading, ready]);
+  }, [ownershipStep, loading, ready, transferAllowed, transferLoading]);
   useEffect(() => {
     if (!invitationOpen && !loading && !focusRefreshPending.current && restoreInviteFocus.current) {
       restoreInviteFocus.current = false;
@@ -558,6 +583,10 @@ function TeamMembers({
       if (!accepted) throw new Error();
       setDetail(null);
     }
+    if (action?.path === `${base}/transfer-ownership`) {
+      if (!z.object({ id: z.uuid() }).safeParse(result).success) throw new Error();
+      refreshTransfers();
+    }
     action?.onConfirmed?.();
     setActivityRevision((value) => value + 1);
     await load();
@@ -603,7 +632,7 @@ function TeamMembers({
       method: 'DELETE',
     });
   const startOwnership = () => {
-    if (!ready || !eligibleOwners.length || action || ownershipStep) return;
+    if (!ready || !transferAllowed || !eligibleOwners.length || action || ownershipStep) return;
     reviewBasis.current = basis;
     setNotice(null);
     setRecipientId('');
@@ -612,6 +641,7 @@ function TeamMembers({
   const closeOwnership = () => {
     restoreTransferFocus.current = true;
     setOwnershipStep(null);
+    setTransferUnconfirmed(false);
     setAction(null);
   };
 
@@ -644,7 +674,13 @@ function TeamMembers({
               <Button
                 ref={transferTrigger}
                 variant="outline"
-                disabled={!ready || !eligibleOwners.length || !!action || !!ownershipStep}
+                disabled={
+                  !ready ||
+                  !transferAllowed ||
+                  !eligibleOwners.length ||
+                  !!action ||
+                  !!ownershipStep
+                }
                 onClick={startOwnership}
               >
                 {word('transfer')}
@@ -731,7 +767,7 @@ function TeamMembers({
                               : undefined
                           }
                           transferRef={transferTrigger}
-                          canTransfer={!!eligibleOwners.length}
+                          canTransfer={transferAllowed && !!eligibleOwners.length}
                           canCommand={ready}
                           locked={!!action || !!ownershipStep}
                           roles={member.roles}
@@ -996,7 +1032,12 @@ function TeamMembers({
         <TeamActionDialog
           focusConfirmation
           onDenied={denyTeam}
-          confirmationDisabled={!ready || staleReview}
+          confirmationDisabled={!ready || staleReview || !transferAllowed || transferUnconfirmed}
+          onUnconfirmed={() => {
+            if (ownershipStep !== 'confirm') return;
+            setTransferUnconfirmed(true);
+            refreshTransfers();
+          }}
           summary={
             <Button variant="outline" disabled={loading} onClick={resource.retry}>
               {word('refreshMembers')}
@@ -1013,7 +1054,8 @@ function TeamMembers({
                       onSubmit={(event) => {
                         event.preventDefault();
                         const member = eligibleOwners.find(([id]) => id === recipientId)?.[1];
-                        if (!ready || !team?.canTransferOwnership || !member) return;
+                        if (!ready || !transferAllowed || !team?.canTransferOwnership || !member)
+                          return;
                         const name =
                           member.entry.name ??
                           (member.entry.username
@@ -1026,6 +1068,7 @@ function TeamMembers({
                           description: word('transferWarning').replace('{name}', name),
                           path: `${base}/transfer-ownership`,
                           method: 'POST',
+                          successStatus: 201,
                           body: { newOwnerUserId: recipientId },
                           successMessage: word('transferSent').replace('{name}', name),
                         });
@@ -1065,7 +1108,7 @@ function TeamMembers({
                         <Button type="button" variant="outline" onClick={closeOwnership}>
                           {word('cancel')}
                         </Button>
-                        <Button type="submit" disabled={!ready || !recipientId}>
+                        <Button type="submit" disabled={!ready || !transferAllowed || !recipientId}>
                           {word('continue')}
                         </Button>
                       </DialogFooter>
