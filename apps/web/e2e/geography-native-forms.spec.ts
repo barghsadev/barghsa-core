@@ -1,6 +1,7 @@
 import { test, expect } from './coverage-fixture';
 import AxeBuilder from '@axe-core/playwright';
 import { crmShell } from './crm-shell-fixture';
+import { approveRiskConfirmation } from './confirmation-fixture';
 import { geographyText } from '@barghsa/i18n/geography';
 import { ErrorCodes } from '@barghsa/shared/errors';
 
@@ -75,7 +76,11 @@ for (const locale of ['en', 'fa'] as const) {
       .click();
     const status = dialog.getByLabel(t('status'), { exact: true });
     await status.selectOption('inactive');
-    await dialog.getByRole('button', { name: t('save'), exact: true }).click();
+    const save = dialog.getByRole('button', { name: t('save'), exact: true });
+    await expect(save).toBeDisabled();
+    expect(writes).toHaveLength(1);
+    await approveRiskConfirmation(page, locale, 'destructive');
+    await save.click();
     await expect(status).toHaveAttribute('aria-invalid', 'true');
     await expect(status).toBeFocused();
     await expect(status).toHaveValue('inactive');

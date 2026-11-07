@@ -68,6 +68,11 @@ for (const locale of ['en', 'fa'] as const)
         ttl = page.locator('#otp-lifetime');
       const button = (key: Parameters<typeof text>[0]) =>
         page.getByRole('button', { name: text(key), exact: true });
+      const status = (key: Parameters<typeof text>[0]) =>
+        page
+          .getByRole('main')
+          .getByRole('status')
+          .filter({ hasText: text(key) });
       const confirm = async () => {
         const dialog = page.getByRole('dialog');
         await dialog
@@ -126,15 +131,18 @@ for (const locale of ['en', 'fa'] as const)
       await button('otpReload').click();
       await expect(ttl).toBeEnabled();
       await button('save').click();
-      await expect(page.getByText(text('saved'), { exact: true })).toBeVisible();
+      await expect(status('saved')).toHaveText(text('saved'));
       await expect(ttl).toHaveValue('120');
       await button('activate').click();
       await confirm();
-      await expect(page.getByText(text('activated'), { exact: true })).toBeVisible();
+      await expect(status('activated')).toHaveText(text('activated'));
       await expect(ttl).toHaveValue('120');
       await button('otpSave').click();
       await confirm();
-      await expect(page.getByText(text('otpSaved'), { exact: true })).toBeVisible();
+      await expect(status('otpSaved')).toHaveText(text('otpSaved'));
+      await expect(
+        page.locator('[data-sonner-toast]').filter({ hasText: text('otpSaved') })
+      ).toHaveCount(1);
       expect(draftWrites).toEqual(
         Array(2).fill({ mode: 'MANUAL', expectedVersion: 0, action: 'draft' })
       );

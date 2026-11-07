@@ -236,7 +236,12 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(value).toBeEnabled();
     await form.getByRole('button', { name: word('save'), exact: true }).click();
     await confirm().click();
-    await expect(page.getByText(word('saved'), { exact: true })).toBeVisible();
+    await expect(
+      page
+        .getByRole('main')
+        .getByRole('status')
+        .filter({ hasText: word('saved') })
+    ).toHaveText(word('saved'));
     expect(writes).toHaveLength(3);
     expect(writes[2]).toMatchObject({
       discountType: 'percentage',

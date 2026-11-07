@@ -4,6 +4,7 @@ import { test, expect } from './coverage-fixture';
 import { tGift } from '@barghsa/i18n/gifts';
 import { t } from '@barghsa/i18n/admin-ui';
 import { crmShell } from './crm-shell-fixture';
+import { approveRiskConfirmation } from './confirmation-fixture';
 import { mockOppositeNumerals } from './number-preference-fixture';
 import { formatBrowserDate } from './browser-date';
 import { giftCode } from '../src/test/gift-code-fixtures';
@@ -212,7 +213,10 @@ for (const locale of ['en', 'fa'] as const) {
     await page.setViewportSize({ width: 900, height: 900 });
     await expect(dialog).toHaveCount(1);
     expect([listReads, writes.length]).toEqual([1, 0]);
-    await dialog.getByRole('button', { name: t('team.confirm', locale), exact: true }).click();
+    const confirm = dialog.getByRole('button', { name: t('team.confirm', locale), exact: true });
+    await expect(confirm).toBeDisabled();
+    await approveRiskConfirmation(page, locale, 'destructive');
+    await confirm.click();
     await expect(dialog).toHaveCount(0);
     expect(writes).toEqual([{ status: 'inactive' }]);
     await expect(

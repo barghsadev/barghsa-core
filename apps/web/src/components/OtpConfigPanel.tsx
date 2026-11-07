@@ -155,8 +155,6 @@ export function OtpConfigPanel() {
         headingId="otp-config-title"
         description={text('otpDescription')}
         className="mt-8 max-w-xl"
-        saved={saved}
-        savedMessage={text('otpSaved')}
         noValidate
         aria-busy={form.pending || undefined}
         onSubmit={(event) => void submit(event)}

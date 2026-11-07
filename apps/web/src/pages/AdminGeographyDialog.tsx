@@ -225,6 +225,7 @@ export function GeographyDialog({
       }}
     >
       <DialogContent
+        className="max-h-[calc(100dvh-2rem)] overflow-y-auto"
         showCloseButton={false}
         initialFocus={deactivating ? cancel : firstField}
         finalFocus={() => modal.trigger}

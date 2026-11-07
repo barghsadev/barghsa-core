@@ -1,6 +1,7 @@
 import { test, expect } from './coverage-fixture';
 import AxeBuilder from '@axe-core/playwright';
 import { mockOtpStepUp } from './otp-step-up-fixture';
+import { approveRiskConfirmation } from './confirmation-fixture';
 import { t } from '@barghsa/i18n/admin-ui';
 
 test.use({ timezoneId: 'America/Los_Angeles' });
@@ -119,7 +120,10 @@ for (const locale of ['en', 'fa'] as const) {
     const dialog = page.getByRole('dialog'),
       word = (key: string) => t(`admin.stepUp.${key}`, locale);
     expect(attempts).toHaveLength(0);
-    await dialog.getByRole('button', { name: word('send'), exact: true }).click();
+    const send = dialog.getByRole('button', { name: word('send'), exact: true });
+    await expect(send).toBeDisabled();
+    await approveRiskConfirmation(page, locale, 'destructive');
+    await send.click();
     const code = dialog.getByLabel(word('code'), { exact: true });
     await code.fill('111111');
     await dialog.getByRole('button', { name: word('verify'), exact: true }).click();

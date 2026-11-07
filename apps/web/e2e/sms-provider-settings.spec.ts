@@ -1,4 +1,5 @@
 import { providerOtpSend, startProviderOtp, providerOtpProof } from './provider-otp-fixture';
+import { approveRiskConfirmation } from './confirmation-fixture';
 import { providerFormText } from '@barghsa/i18n/provider-forms';
 import { crmShell } from './crm-shell-fixture';
 import { cookieResponse } from './cookie-response';
@@ -434,7 +435,10 @@ for (const locale of ['en', 'fa'] as const) {
     await dialog.locator('button[type=submit]').click();
     await expect(dialog).toHaveCount(0);
     await panel.getByRole('button', { name: text('disable'), exact: true }).click();
-    await dialog.locator('button[type=submit]').click();
+    const disable = dialog.locator('button[type=submit]');
+    await expect(disable).toBeDisabled();
+    await approveRiskConfirmation(page, locale, 'destructive');
+    await disable.click();
     await expect(dialog.getByRole('alert')).toBeVisible();
     await page.keyboard.press('Escape');
     row = { ...row, status: 'superseded' };
