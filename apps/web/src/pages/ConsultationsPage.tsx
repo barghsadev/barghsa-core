@@ -834,7 +834,7 @@ export function ConsultationsPage({
                       name="confirm"
                       render={({ field }) => (
                         <FormItem id="consultation-confirmation">
-                          <div className="flex items-start gap-2 text-sm">
+                          <FormLabel className="touch-label flex items-start gap-2 text-sm">
                             <FormControl>
                               <input
                                 type="checkbox"
@@ -849,8 +849,8 @@ export function ConsultationsPage({
                                 className="mt-1"
                               />
                             </FormControl>
-                            <FormLabel>{copy('confirm')}</FormLabel>
-                          </div>
+                            <span>{copy('confirm')}</span>
+                          </FormLabel>
                           <FormDescription>{copy('confirmationHelp')}</FormDescription>
                           <div className="grid">
                             <p

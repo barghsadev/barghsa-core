@@ -203,7 +203,7 @@ function Workspace({
             aria-disabled={locked}
             to="/contracts"
             search={{ state: undefined }}
-            className="text-primary underline underline-offset-4"
+            className="touch-action text-primary underline underline-offset-4"
             aria-current={initialState ? undefined : 'page'}
           >
             {word('all')}
@@ -215,7 +215,7 @@ function Workspace({
             aria-disabled={locked}
             to="/contracts"
             search={{ state: 'Active' }}
-            className="text-primary underline underline-offset-4"
+            className="touch-action text-primary underline underline-offset-4"
             aria-current={initialState ? 'page' : undefined}
           >
             {word('Active')}
@@ -531,7 +531,7 @@ function ContractResults({
               {' · '}
               <a
                 href={`/admin/invoices?invoiceId=${encodeURIComponent(item.initialInvoiceId)}`}
-                className="text-primary underline underline-offset-4"
+                className="touch-action text-primary underline underline-offset-4"
               >
                 {word('openInitialInvoice')}
               </a>
@@ -542,7 +542,7 @@ function ContractResults({
               <Link
                 to="/invoices/$invoiceId"
                 params={{ invoiceId: item.initialInvoiceId }}
-                className="text-primary underline underline-offset-4"
+                className="touch-action text-primary underline underline-offset-4"
               >
                 {word('openInitialInvoice')}
               </Link>
@@ -554,7 +554,7 @@ function ContractResults({
         <Link
           to="/electricity/orders/$orderId"
           params={{ orderId: item.orderId }}
-          className="text-sm text-primary underline underline-offset-4"
+          className="touch-action text-sm text-primary underline underline-offset-4"
         >
           {word('openLinkedOrder')}
         </Link>
@@ -562,7 +562,7 @@ function ContractResults({
       {staff && item.serviceType === 'electricity' && item.orderId ? (
         <a
           href={`/admin/electricity-orders?orderId=${encodeURIComponent(item.orderId)}`}
-          className="text-sm text-primary underline underline-offset-4"
+          className="touch-action text-sm text-primary underline underline-offset-4"
         >
           {word('openLinkedOrder')}
         </a>
@@ -571,14 +571,14 @@ function ContractResults({
         <Link
           to="/savings/orders/$orderId"
           params={{ orderId: item.savingOrderId }}
-          className="text-sm text-primary underline underline-offset-4"
+          className="touch-action text-sm text-primary underline underline-offset-4"
         >
           {word('openLinkedSavingOrder')}
         </Link>
       ) : null}
       {staff && item.serviceType === 'electricity' ? (
         <a
-          className="text-sm text-primary underline"
+          className="touch-action text-sm text-primary underline"
           href={`/admin/electricity-price-adjustments?contractId=${encodeURIComponent(item.id)}`}
         >
           {adminText('admin.electricityPrice.title', locale)}

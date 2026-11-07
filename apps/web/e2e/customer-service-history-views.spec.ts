@@ -1,5 +1,6 @@
 import { test, expect } from './coverage-fixture';
 import { scanCriticalMain } from './critical-accessibility';
+import { checkRoutePresentation } from './route-presentation';
 import AxeBuilder from '@axe-core/playwright';
 import { t } from '@barghsa/i18n/app';
 import { tSaving } from '@barghsa/i18n/saving';
@@ -26,7 +27,7 @@ for (const locale of ['en', 'fa'] as const) {
     test(
       `${kind} views retain pages, workflow links and preferences (${locale})`,
       { tag: '@a11y-critical' },
-      async ({ page }) => {
+      async ({ page }, info) => {
         const mobile = (page.viewportSize()?.width ?? 1280) < 768;
         const config = {
           saving: {
@@ -188,9 +189,19 @@ for (const locale of ['en', 'fa'] as const) {
         ).toBeNull();
         if (kind === 'consultation') {
           await page.getByRole('radio').check();
-          await page
-            .getByRole('checkbox', { name: tConsultation('confirm', locale), exact: true })
-            .check();
+          const confirmation = page.getByRole('checkbox', {
+            name: tConsultation('confirm', locale),
+            exact: true,
+          });
+          if (mobile) {
+            const label = page.locator('label').filter({ has: confirmation });
+            const bounds = await label.boundingBox();
+            expect(bounds?.height).toBeGreaterThanOrEqual(44);
+            await label.tap({ position: { x: bounds!.width / 2, y: bounds!.height - 4 } });
+            await expect(confirmation).toBeChecked();
+          } else {
+            await confirmation.check();
+          }
         }
         await page.getByRole('button', { name: config.more, exact: true }).click();
         await expect(detail(second)).toBeVisible();
@@ -315,6 +326,7 @@ for (const locale of ['en', 'fa'] as const) {
         ).toBe('card');
         await page.setViewportSize({ width: 1280, height: 900 });
         await expect(cardButton).toHaveAttribute('aria-pressed', 'true');
+        await checkRoutePresentation(page, info, locale);
       }
     );
   }

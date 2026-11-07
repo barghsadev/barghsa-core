@@ -2,12 +2,16 @@ import AxeBuilder from '@axe-core/playwright';
 import { test, expect } from './coverage-fixture';
 import { fullNavigation } from './navigation-fixture';
 import { formatBrowserDate } from './browser-date';
+import { checkRoutePresentation } from './route-presentation';
 import { t } from '@barghsa/i18n/app';
 
 const invoiceId = '11111111-1111-7111-8111-111111111111';
+const adjustmentId = '33333333-3333-7333-8333-333333333333';
 for (const locale of ['fa', 'en'] as const)
   for (const darkMode of [false, true])
-    test(`customer sees the deadline reason (${locale}, dark=${darkMode})`, async ({ page }) => {
+    test(`customer sees the deadline reason (${locale}, dark=${darkMode})`, async ({
+      page,
+    }, info) => {
       const fa = locale === 'fa';
       const profileId = '22222222-2222-4222-8222-222222222222';
       await page.addInitScript((value) => localStorage.setItem('barghsa.locale', value), locale);
@@ -60,6 +64,7 @@ for (const locale of ['fa', 'en'] as const)
         route.fulfill({ json: { timezone: 'Asia/Tehran' } })
       );
       const reason = fa ? 'تمدید مهلت به درخواست مشتری' : 'Customer requested more time';
+      const explanation = fa ? 'اصلاح مبلغ پس از بازبینی' : 'Amount corrected after review';
       const invoice = {
         invoiceId,
         role: 'original',
@@ -90,13 +95,33 @@ for (const locale of ['fa', 'en'] as const)
           },
         ],
       };
+      const adjustment = {
+        ...invoice,
+        invoiceId: adjustmentId,
+        role: 'adjustment_charge',
+        state: 'Unpaid',
+        totalAmount: '50000',
+        paidAmount: '0',
+        accountingAmount: '50000',
+        adjustmentKind: 'charge',
+        adjustmentForInvoiceId: invoiceId,
+        dueAtOverrideReason: null,
+        explanation,
+        lines: [
+          {
+            ...invoice.lines[0]!,
+            unitPrice: '50000',
+            lineTotal: '50000',
+          },
+        ],
+      };
       await page.route(`**/api/invoices/${invoiceId}`, (route) =>
         route.fulfill({
           json: {
             viewedInvoiceId: invoiceId,
             originalInvoiceId: invoiceId,
             invoice,
-            chain: [invoice],
+            chain: [invoice, adjustment],
           },
         })
       );
@@ -105,6 +130,9 @@ for (const locale of ['fa', 'en'] as const)
       await expect(page.locator('html')).toHaveClass(darkMode ? /dark/ : /^(?!.*\bdark\b)/);
       const card = page.getByTestId(`invoice-card-${invoiceId}`);
       await expect(card).toBeVisible();
+      await expect(page.getByTestId(`invoice-explanation-${adjustmentId}`)).toContainText(
+        explanation
+      );
       await expect(page.getByTestId(`invoice-due-reason-${invoiceId}`)).toContainText(reason);
       await expect(card).toContainText(fa ? 'توضیح تغییرات' : 'Explanation of changes');
       await expect(
@@ -121,6 +149,11 @@ for (const locale of ['fa', 'en'] as const)
           )
         );
       const lines = card.getByRole('region', { name: t('invoices.details.lines', locale) });
+      const adjustmentLines = page
+        .getByTestId(`invoice-card-${adjustmentId}`)
+        .getByRole('region', { name: t('invoices.details.lines', locale) });
+      await expect(lines).toHaveAccessibleName(new RegExp(invoiceId));
+      await expect(adjustmentLines).toHaveAccessibleName(new RegExp(adjustmentId));
       await lines.focus();
       await expect(lines).toBeFocused();
       if (await lines.evaluate((element) => element.scrollWidth > element.clientWidth)) {
@@ -129,4 +162,5 @@ for (const locale of ['fa', 'en'] as const)
         await expect.poll(() => lines.evaluate((element) => element.scrollLeft)).not.toBe(before);
       }
       expect((await new AxeBuilder({ page }).include('main').analyze()).violations).toEqual([]);
+      await checkRoutePresentation(page, info, locale);
     });

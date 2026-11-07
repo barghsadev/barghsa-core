@@ -1,6 +1,7 @@
 import AxeBuilder from '@axe-core/playwright';
 import { test, expect } from './coverage-fixture';
 import { scanCriticalMain } from './critical-accessibility';
+import { checkRoutePresentation } from './route-presentation';
 import { t } from '@barghsa/i18n/app';
 import { contractText } from '@barghsa/i18n/contracts';
 import {
@@ -133,6 +134,7 @@ for (const locale of ['en', 'fa'] as const) {
         page.getByRole('button', { name: t('electricity.increase.submit', locale), exact: true })
       ).toBeVisible();
       await scanCriticalMain(page);
+      await checkRoutePresentation(page, info, locale);
       await page
         .getByRole('button', { name: t('electricity.increase.submit', locale), exact: true })
         .click();

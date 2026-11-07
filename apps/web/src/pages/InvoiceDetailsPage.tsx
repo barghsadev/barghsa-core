@@ -311,7 +311,7 @@ function InvoiceCard({
       {showExplanation || explanation ? (
         <p
           data-testid={`invoice-explanation-${node.invoiceId}`}
-          className="mb-3 rounded-md bg-warning-soft px-3 py-2 text-sm text-amber-950"
+          className="mb-3 rounded-md bg-warning-soft px-3 py-2 text-sm text-warning"
         >
           <span className="font-medium">{t('invoices.details.explanation', locale)}: </span>
           {explanation ?? t('invoices.details.noExplanation', locale)}
@@ -358,7 +358,7 @@ function InvoiceCard({
         <div
           className="mt-4 overflow-x-auto focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
           role="region"
-          aria-label={t('invoices.details.lines', locale)}
+          aria-label={`${t('invoices.details.lines', locale)} — ${heading} (${node.invoiceId})`}
           // Native horizontal scrolling needs keyboard focus, including Safari.
           // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
           tabIndex={0}
@@ -415,7 +415,7 @@ function InvoiceCard({
           <Link
             to="/invoices/$invoiceId"
             params={{ invoiceId: node.invoiceId }}
-            className="text-sm text-foreground underline underline-offset-4"
+            className="touch-action text-sm text-foreground underline underline-offset-4"
           >
             {t('invoices.details.open', locale)}
           </Link>

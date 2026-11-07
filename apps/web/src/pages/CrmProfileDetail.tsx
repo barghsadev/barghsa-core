@@ -29,6 +29,7 @@ import {
 } from '@barghsa/ui';
 import { useState, useEffect, useId, useRef, type ComponentProps } from 'react';
 import { useParams, Link } from '@tanstack/react-router';
+import { Lock } from 'lucide-react';
 import { t, type Locale } from '@barghsa/i18n/crm';
 import { useLocale } from '../hooks/useLocale.js';
 
@@ -583,7 +584,7 @@ function CrmProfileDetailContent() {
           </Button>
           <Link
             to="/admin/crm/"
-            className="text-blue-700 dark:text-blue-300 hover:underline mt-4 inline-block"
+            className="touch-action text-blue-700 dark:text-blue-300 hover:underline mt-4 inline-block"
           >
             {t('crm.profile.backToUsers', locale)}
           </Link>
@@ -603,7 +604,10 @@ function CrmProfileDetailContent() {
       {time.notice}
       {/* Breadcrumb / Header */}
       <div className="mb-6">
-        <Link to="/admin/crm/" className="text-blue-700 dark:text-blue-300 hover:underline text-sm">
+        <Link
+          to="/admin/crm/"
+          className="touch-action text-blue-700 dark:text-blue-300 hover:underline text-sm"
+        >
           {t('crm.profile.backToUsers', locale)}
         </Link>
         <h1 className="text-2xl font-bold mt-1 flex flex-wrap items-center gap-3">
@@ -655,7 +659,7 @@ function CrmProfileDetailContent() {
                     void handleConfirmSave(event);
                   }}
                   disabled={saving || editDraft.form.formState.isSubmitting}
-                  className="text-sm px-3 py-1 rounded bg-green-600 text-white hover:bg-green-700 transition-colors disabled:opacity-50"
+                  className="text-sm px-3 py-1 rounded bg-success-soft text-success hover:underline disabled:opacity-50"
                 >
                   {saving ? '...' : t('crm.profile.edit.save', locale)}
                 </button>
@@ -760,7 +764,7 @@ function CrmProfileDetailContent() {
       {data.viewerPermissions?.canEditIdentity && !profile.archived && (
         <p className="mb-4">
           <a
-            className="text-blue-700 underline"
+            className="touch-action text-foreground underline"
             href={`/admin/crm/corrections?profileId=${encodeURIComponent(profileId)}`}
           >
             {t('crm.corrections.request', locale)}
@@ -860,19 +864,16 @@ function CrmProfileDetailContent() {
                     ? t('crm.profile.unverified', locale)
                     : t(`crm.list.${profile.status}`, locale)
               }
-              icon="✓"
               colorClass={profile.status === 'VERIFIED' ? 'text-success' : 'text-warning'}
             />
             <SummaryCard
               title={t('crm.profile.summary.activeSessions', locale)}
               value={numbers.number(sessions.count)}
-              icon="⚡"
               colorClass="text-blue-700 dark:text-blue-300"
             />
             <SummaryCard
               title={t('crm.profile.summary.lastLogin', locale)}
               value={user.lastLogin ? time.format(user.lastLogin) : '—'}
-              icon="🔑"
               colorClass="text-muted-foreground"
             />
             <SummaryCard
@@ -882,25 +883,21 @@ function CrmProfileDetailContent() {
                   ? time.format(user.lastPasswordChange)
                   : t('crm.profile.passwordChangeUnknown', locale)
               }
-              icon="🔒"
               colorClass="text-muted-foreground"
             />
             <SummaryCard
               title={t('crm.profile.summary.addresses', locale)}
               value={numbers.number(addresses.length)}
-              icon="📍"
               colorClass="text-purple-700 dark:text-purple-300"
             />
             <SummaryCard
               title={t('crm.profile.summary.otherProfiles', locale)}
               value={numbers.number(siblingProfiles.length)}
-              icon="👤"
               colorClass="text-teal-700 dark:text-teal-300"
             />
             <SummaryCard
               title={t('crm.profile.summary.lastActivity', locale)}
               value={sessions.lastActive ? time.format(sessions.lastActive) : '—'}
-              icon="⏱"
               colorClass="text-muted-foreground"
             />
           </div>
@@ -1031,7 +1028,7 @@ function CrmProfileDetailContent() {
             <DetailRow
               label={t('crm.profile.field.firstName', locale)}
               value={profile.firstName ?? '—'}
-              icon={profile.profileType === 'INDIVIDUAL' ? '🔒' : undefined}
+              locked={profile.profileType === 'INDIVIDUAL'}
               iconTooltip={t('crm.profile.edit.identityLocked', locale)}
               correctionHref={
                 profile.profileType === 'INDIVIDUAL' &&
@@ -1045,7 +1042,7 @@ function CrmProfileDetailContent() {
             <DetailRow
               label={t('crm.profile.field.lastName', locale)}
               value={profile.lastName ?? '—'}
-              icon={profile.profileType === 'INDIVIDUAL' ? '🔒' : undefined}
+              locked={profile.profileType === 'INDIVIDUAL'}
               iconTooltip={t('crm.profile.edit.identityLocked', locale)}
               correctionHref={
                 profile.profileType === 'INDIVIDUAL' &&
@@ -1059,7 +1056,7 @@ function CrmProfileDetailContent() {
             <DetailRow
               label={t('crm.profile.field.nationalId', locale)}
               value={profile.nationalId ?? '—'}
-              icon={profile.profileType === 'INDIVIDUAL' ? '🔒' : undefined}
+              locked={profile.profileType === 'INDIVIDUAL'}
               iconTooltip={t('crm.profile.edit.identityLocked', locale)}
               correctionHref={
                 profile.profileType === 'INDIVIDUAL' &&
@@ -1165,9 +1162,7 @@ function CrmProfileDetailContent() {
                     key={field}
                     label={t('crm.profile.field.' + field, locale)}
                     value={value ?? '—'}
-                    icon={
-                      ['legalName', 'nationalIdentifier'].includes(field ?? '') ? '🔒' : undefined
-                    }
+                    locked={['legalName', 'nationalIdentifier'].includes(field ?? '')}
                     iconTooltip={t('crm.profile.edit.identityLocked', locale)}
                     correctionHref={
                       data.viewerPermissions?.canEditIdentity &&
@@ -1432,7 +1427,7 @@ function CrmProfileDetailContent() {
                   <Link
                     to="/admin/crm/profiles/$profileId"
                     params={{ profileId: sp.id }}
-                    className="text-blue-700 dark:text-blue-300 hover:underline text-sm"
+                    className="touch-action text-blue-700 dark:text-blue-300 hover:underline text-sm"
                   >
                     {t('crm.profile.label.view', locale)}
                   </Link>
@@ -1492,20 +1487,16 @@ function CrmProfileDetailContent() {
 function SummaryCard({
   title,
   value,
-  icon,
   colorClass,
 }: {
   title: string;
   value: string;
-  icon: string;
   colorClass: string;
 }) {
   return (
     <div className="border border-border rounded-lg p-4 bg-card text-card-foreground shadow-sm">
       <p className="text-sm text-muted-foreground mb-1">{title}</p>
-      <p className={`text-2xl font-bold ${colorClass}`}>
-        <span aria-hidden="true">{icon}</span> {value}
-      </p>
+      <p className={`text-2xl font-bold ${colorClass}`}>{value}</p>
     </div>
   );
 }
@@ -1525,7 +1516,7 @@ function DetailRow({
   label,
   value,
   valueClass,
-  icon,
+  locked,
   iconTooltip,
   correctionHref,
   correctionLabel,
@@ -1533,7 +1524,7 @@ function DetailRow({
   label: string;
   value: string;
   valueClass?: string | undefined;
-  icon?: string | undefined;
+  locked?: boolean;
   iconTooltip?: string | undefined;
   correctionHref?: string | undefined;
   correctionLabel?: string | undefined;
@@ -1543,14 +1534,14 @@ function DetailRow({
       <span className="text-xs text-muted-foreground font-medium">{label}</span>
       <span className={`text-sm text-foreground break-words ${valueClass ?? ''}`}>
         {value}
-        {icon && (
+        {locked && (
           <span
-            className="inline-block mr-1"
+            className="ms-1 inline-block align-middle"
             title={iconTooltip ?? ''}
             role="img"
             aria-label={iconTooltip ?? 'locked'}
           >
-            {icon}
+            <Lock aria-hidden="true" className="size-3.5" />
           </span>
         )}
       </span>
@@ -1558,7 +1549,7 @@ function DetailRow({
         <a
           href={correctionHref}
           aria-label={correctionLabel + ': ' + label}
-          className="mt-1 text-sm text-foreground underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+          className="touch-action mt-1 text-sm text-foreground underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
         >
           {correctionLabel}
         </a>

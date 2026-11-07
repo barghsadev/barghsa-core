@@ -22,6 +22,12 @@ reason and owner approval.
 Keep readable content opaque during page and list entrance animations. Even
 a brief fade of the whole row can put its text below the contrast floor.
 
+Measure touch targets on populated pages with a coarse pointer. A native
+checkbox or radio can use its associated label as the target; test the label
+tap as well as the control. Use the shared touch action style for standalone
+links. Give separately scrollable invoice tables distinct names that identify
+their invoices.
+
 The high contrast switch in account settings applies to the current browser.
 It strengthens text, form controls and focus outlines in both light and dark
 themes, and does not send an account setting change. The shared stylesheet

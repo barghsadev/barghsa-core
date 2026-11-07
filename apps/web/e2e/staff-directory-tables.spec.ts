@@ -1,5 +1,6 @@
 import AxeBuilder from '@axe-core/playwright';
 import { test, expect, type Page } from './coverage-fixture';
+import { checkRoutePresentation } from './route-presentation';
 import { crmShell } from './crm-shell-fixture';
 import { t } from '@barghsa/i18n/admin-ui';
 import { t as appText } from '@barghsa/i18n/app';
@@ -64,6 +65,7 @@ for (const locale of ['en', 'fa'] as const) {
       card.getByRole('button', { name: t('admin.roles.effective.inspect', locale), exact: true })
     ).toBeEnabled();
     await inspect(page);
+    await checkRoutePresentation(page, info, locale);
     if (locale === 'fa' && info.project.name === 'mobile-safari')
       await card.screenshot({
         path: '/Users/majid/.local/state/barghsa-manual-batches/staff-directory-tables/staff-card-fa.png',

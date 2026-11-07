@@ -886,6 +886,12 @@
   }
 }
 
+@utility touch-action {
+  @media (pointer: coarse) {
+    @apply inline-flex min-h-11 min-w-11 items-center;
+  }
+}
+
 @media (pointer: coarse) {
   [data-slot='button'],
   [data-slot='input'],
@@ -897,6 +903,13 @@
   [data-slot='tabs-trigger'],
   [data-table-sort],
   [data-table-expander],
+  .app-content
+    :where(
+      button,
+      select,
+      textarea,
+      input:not([type='checkbox'], [type='radio'], [type='range'], [type='hidden'])
+    ):not([data-slot]),
   .touch-label {
     min-block-size: 2.75rem;
     min-inline-size: 2.75rem;

@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-07T06:26:42+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-07T06:39:41+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.4.0**. Next milestone: **v0.5.0**.
 
@@ -39,13 +39,10 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Finish populated customer and staff route evidence across both directions, required widths, touch, headings and contrast. Reuse exact responsive and component evidence and fix only reproduced gaps.
+Finish conditional form semantics and confirmed feedback for ticket and profile verification commands. Reuse current receipt and authority safeguards.
 
-- `07-ui-ux-design.md#T-07.03.01.07`: Test every component and page in both RTL and LTR modes. Persian Lorem ipsum (`لورم ایپسوم`) should render correctly in all containers. Verify no text overflow, clipped content, or misaligned elements.
-- `07-ui-ux-design.md#T-07.04.01.06`: Touch targets: ensure all interactive elements (buttons, links, inputs, toggles) have minimum 44×44px tap area per WCAG 2.5.8.
-- `07-ui-ux-design.md#T-07.04.02.04`: Verify all pages look correct at `320px`, `375px`, `390px`, `414px`, `768px`, `1024px`, `1280px`, and `1920px` viewport widths. No horizontal scroll, no overlapping text, no tiny touch targets.
-- `07-ui-ux-design.md#T-07.05.01.07`: Implement proper heading hierarchy (`h1` → `h2` → `h3` → `h4`) on every page. A single `<h1>` per page. Landmarks: `<header>`, `<nav>`, `<main>`, `<aside>`, `<footer>` with `aria-label` when multiple instances exist.
-- `07-ui-ux-design.md#T-07.05.01.08`: Ensure all color combinations pass WCAG AA contrast ratios: normal text ≥ 4.5:1, large text ≥ 3:1, UI components ≥ 3:1. Verify with automated tools. Provide a "high contrast" mode toggle that strengthens all contrast ratios.
+- `07-ui-ux-design.md#T-07.05.01.05`: Ensure all form inputs have programmatically associated labels (`<label htmlFor>` or `aria-label`). Error messages use `aria-describedby` or `aria-errormessage` to link to the input. Required fields use `aria-required="true"`.
+- `07-ui-ux-design.md#T-07.11.01.03`: Create an API response interceptor that auto-shows toasts for: successful CRUD operations ("Invoice created", "Profile updated", "Order submitted"), API errors (error message from API), network failures ("Connection lost. Retrying...").
 
 ## v0.2.0: Complete customer journeys
 

@@ -4,6 +4,8 @@ import { t } from '@barghsa/i18n/crm';
 import { verifyClippedContrast } from './clipped-contrast';
 import { formatBrowserDate } from './browser-date';
 import { test, expect } from './coverage-fixture';
+import { checkRoutePresentation } from './route-presentation';
+import { approveRiskConfirmation } from './confirmation-fixture';
 import AxeBuilder from '@axe-core/playwright';
 // Protected routes require a staff session independently of the customer permissions.
 const defaultApiResponse = (route: Route) =>
@@ -377,6 +379,9 @@ for (const locale of ['fa', 'en'] as const) {
       await expect(dialog).toContainText('customer@example.test');
       await expect(dialog).toContainText('Lost device');
       const confirm = dialog.getByRole('button', { name: confirmName, exact: true });
+      await expect(confirm).toBeDisabled();
+      expect(bodies).toEqual([]);
+      await approveRiskConfirmation(page, locale, 'destructive');
       await confirm.click();
       const password = dialog.getByLabel(
         locale === 'fa' ? 'رمز عبور خود را تأیید کنید' : 'Confirm your password'
@@ -499,6 +504,8 @@ for (const locale of ['fa', 'en'] as const) {
         await dialog.locator('textarea').fill('Closure requested');
         for (const checkbox of await dialog.getByRole('checkbox').all()) await checkbox.check();
         await dialog.getByRole('button', { name: archive, exact: true }).click();
+        await expect(confirm).toBeDisabled();
+        await approveRiskConfirmation(page, locale, 'destructive');
         await confirm.click();
         await expect(dialog.getByRole('alert')).toBeVisible();
         await expect(page).toHaveURL(new RegExp(`/admin/crm/profiles/${id}$`));
@@ -616,7 +623,7 @@ for (const locale of ['fa', 'en'] as const)
 for (const locale of ['fa', 'en'] as const)
   test(`CRM legal details show localized fields, reference names and calendar dates (${locale})`, async ({
     page,
-  }) => {
+  }, info) => {
     await page.addInitScript((lang) => {
       localStorage.setItem('barghsa.locale', lang);
       if (document.documentElement) document.documentElement.lang = lang;
@@ -626,6 +633,10 @@ for (const locale of ['fa', 'en'] as const)
     }, locale);
     const province = { nameFa: 'استان تهران', nameEn: 'Tehran province' };
     const city = { nameFa: 'شهر تهران', nameEn: 'Tehran city' };
+    const representativeAddress =
+      locale === 'fa'
+        ? 'لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است'
+        : 'Representative street, regional energy and consultation centre, second floor, west entrance';
     const current = {
       ...detail(false, true),
       legalInfo: {
@@ -650,7 +661,7 @@ for (const locale of ['fa', 'en'] as const)
         representativeRelationship: 'Board member',
         representativeProvinceName: province,
         representativeCityName: city,
-        representativeFullAddress: 'Representative street',
+        representativeFullAddress: representativeAddress,
         representativePostalCode: '1234567890',
         createdAt: '2026-08-01T01:00:00Z',
         updatedAt: '2026-08-02T01:00:00Z',
@@ -705,12 +716,13 @@ for (const locale of ['fa', 'en'] as const)
         level: 2,
       })
     ).toBeVisible();
+    await checkRoutePresentation(page, info, locale);
     for (const value of [
       'Example Legal Company',
       'reg-42',
       'Sara',
       '0012345678',
-      'Representative street',
+      representativeAddress,
       '1234567890',
       'Board member',
     ])
@@ -781,7 +793,7 @@ for (const locale of ['fa', 'en'] as const)
     await page.reload();
     await openDetails();
     await expect(registration).toContainText(locale === 'fa' ? 'نامشخص' : 'Unknown');
-    await expect(panel).toContainText('Representative street');
+    await expect(panel).toContainText(representativeAddress);
   });
 
 for (const locale of ['fa', 'en'] as const)
@@ -1172,6 +1184,9 @@ for (const locale of ['fa', 'en'] as const)
         name: locale === 'fa' ? 'تأیید' : 'Confirm',
         exact: true,
       });
+      await expect(confirm).toBeDisabled();
+      expect(bodies).toEqual([]);
+      await approveRiskConfirmation(page, locale, 'destructive');
       await confirm.click();
       await expect(dialog.getByRole('alert')).toHaveText(blocked);
       for (const json of [

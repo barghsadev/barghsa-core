@@ -730,7 +730,7 @@ function ContractDetailContent({
               }}
               to="/electricity/orders/$orderId"
               params={{ orderId: data.contract.orderId }}
-              className="self-start text-sm text-primary underline underline-offset-4"
+              className="touch-action self-start text-sm text-primary underline underline-offset-4"
             >
               {word('openLinkedOrder')}
             </Link>
@@ -761,7 +761,7 @@ function ContractDetailContent({
                 if (blocked()) event.preventDefault();
               }}
               href={`/admin/electricity-orders?orderId=${encodeURIComponent(data.contract.orderId)}`}
-              className="self-start text-sm text-primary underline underline-offset-4"
+              className="touch-action self-start text-sm text-primary underline underline-offset-4"
             >
               {word('openLinkedOrder')}
             </a>
@@ -773,7 +773,7 @@ function ContractDetailContent({
               }}
               to="/savings/orders/$orderId"
               params={{ orderId: data.contract.savingOrderId }}
-              className="self-start text-sm text-primary underline underline-offset-4"
+              className="touch-action self-start text-sm text-primary underline underline-offset-4"
             >
               {word('openLinkedSavingOrder')}
             </Link>

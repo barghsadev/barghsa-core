@@ -12,6 +12,7 @@ import { tWalletReceipts as receiptText } from '@barghsa/i18n/wallet-receipts';
 import { test, expect } from './coverage-fixture';
 import { verifyClippedContrast } from './clipped-contrast';
 import { scanCriticalMain } from './critical-accessibility';
+import { checkRoutePresentation } from './route-presentation';
 
 const profileId = '10000000-0000-4000-8000-000000000001';
 const receiptId = '20000000-0000-4000-8000-000000000001';
@@ -236,6 +237,7 @@ for (const locale of ['en', 'fa'] as const)
         const details = history.locator('[data-slot=wallet-receipt-details]');
         await expect(details).toHaveCount(1);
         await scanCriticalMain(page);
+        await checkRoutePresentation(page, test.info(), locale);
         if (test.info().project.name === 'chromium') {
           const initialReads = reads;
           await page.setViewportSize({ width: 1280, height: 900 });
