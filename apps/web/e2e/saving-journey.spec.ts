@@ -197,6 +197,9 @@ for (const locale of ['en', 'fa'] as const)
     );
     await page.route('**/api/saving/orders', (route) => {
       submissions.push(route.request().postDataJSON() as Record<string, unknown>);
+      if (submissions.length === 1) {
+        return route.fulfill({ status: 503, json: { message: 'private-saving-order-diagnostic' } });
+      }
       return route.fulfill({ status: 201, json: { savingOrderId } });
     });
     await page.route('**/api/saving/orders?*', (route) => {
@@ -542,6 +545,14 @@ for (const locale of ['en', 'fa'] as const)
     await expect(submit).toBeDisabled();
     await approveRiskConfirmation(page, locale, 'financial');
     await submit.click();
+    const error = savingCopy('orderError', locale);
+    await expect(page.getByRole('main').getByRole('alert').filter({ hasText: error })).toHaveText(
+      error
+    );
+    await expect(page.locator('[data-sonner-toast][data-type="error"]')).toHaveText(error);
+    await expect(page.getByText('private-saving-order-diagnostic')).toHaveCount(0);
+    await expect(submit).toBeEnabled();
+    await submit.click();
     await expect(page).toHaveURL(new RegExp(`/savings/orders/${savingOrderId}$`));
     await expect(page.locator(`time[datetime="${submittedAt}"]`).first()).toHaveText(
       new Intl.DateTimeFormat(locale, {
@@ -558,8 +569,10 @@ for (const locale of ['en', 'fa'] as const)
       savingCopy('request_confirmation', locale)
     );
     expect(drafts).toHaveLength(5);
-    expect(submissions).toHaveLength(1);
+    expect(submissions).toHaveLength(2);
+    expect(submissions[1]).toEqual(submissions[0]);
     expect(submissions[0]).toMatchObject({
+      idempotencyKey: expect.stringMatching(/^[a-f0-9-]{36}$/),
       profileId,
       savingPlanId: planId,
       hardwareProductId: hardwareId,

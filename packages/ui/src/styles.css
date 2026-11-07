@@ -924,7 +924,9 @@
 
 @utility touch-action {
   @media (pointer: coarse) {
-    @apply inline-flex min-h-11 min-w-11 items-center;
+    @apply inline-flex items-center;
+    min-block-size: max(44px, calc(var(--spacing) * 11));
+    min-inline-size: max(44px, calc(var(--spacing) * 11));
   }
 }
 

@@ -78,10 +78,24 @@ for (const locale of ['en', 'fa'] as const)
         await page.setViewportSize({ width: 320, height: 900 });
         const invoiceLinks = page.locator('main a[href^="/admin/invoices?invoiceId="]:visible');
         await expect(invoiceLinks).toHaveCount(2);
-        for (const link of await invoiceLinks.all()) {
-          const { width, height } = (await link.boundingBox())!;
-          expect(width).toBeGreaterThanOrEqual(44);
-          expect(height).toBeGreaterThanOrEqual(44);
+        const spacing = await page.evaluate(() =>
+          document.documentElement.style.getPropertyValue('--spacing')
+        );
+        try {
+          for (const density of [spacing, '0.21875rem']) {
+            await page.evaluate((value) => {
+              document.documentElement.style.setProperty('--spacing', value);
+            }, density);
+            for (const link of await invoiceLinks.all()) {
+              const { width, height } = (await link.boundingBox())!;
+              expect(width).toBeGreaterThanOrEqual(44);
+              expect(height).toBeGreaterThanOrEqual(44);
+            }
+          }
+        } finally {
+          await page.evaluate((value) => {
+            document.documentElement.style.setProperty('--spacing', value);
+          }, spacing);
         }
         await page.setViewportSize({ width: 1280, height: 900 });
       }

@@ -1,5 +1,6 @@
 import { readWithDeadline } from '../lib/server-query-client.js';
 import { toast } from '../lib/toast-api.js';
+import { CommandFeedback } from '../components/CommandFeedback.js';
 import { ConfirmationFields } from '@barghsa/ui';
 import { useRiskConfirmation } from '../hooks/useRiskConfirmation.js';
 import { useOwnedIntakeRead } from '../hooks/useOwnedIntakeRead.js';
@@ -1338,11 +1339,11 @@ function OwnedSavingsOrderPage() {
                         />
                         {copy('submitForReview')}
                       </label>
-                      {submitError && (
-                        <p role="alert" className="text-destructive">
-                          {submitError}
-                        </p>
-                      )}
+                      <CommandFeedback
+                        message={submitError || null}
+                        kind="error"
+                        className="text-destructive"
+                      />
                     </section>
                   )}
                 </fieldset>
