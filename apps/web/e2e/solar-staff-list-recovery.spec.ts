@@ -3,6 +3,7 @@ import type { Route } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import { documentText } from '@barghsa/i18n/documents';
 import { tSolar } from '@barghsa/i18n/solar';
+import { checkRoutePresentation } from './route-presentation';
 import {
   firstSolar,
   olderSolar,
@@ -162,6 +163,9 @@ for (const locale of ['en', 'fa'] as const) {
       await guidance.fill('Keep this guidance draft');
       const reads = otherReads.length,
         details = detailReads;
+      await checkRoutePresentation(page, testInfo, locale);
+      await expect(note).toHaveValue('Keep this solar explanation');
+      await expect(guidance).toHaveValue('Keep this guidance draft');
       const moreButton = list.getByRole('button', { name: copy(more), exact: true });
       await moreButton.click();
       await expect.poll(() => !!held).toBe(true);

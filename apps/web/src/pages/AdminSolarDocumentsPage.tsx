@@ -799,6 +799,7 @@ function OwnedAdminSolarDocumentsPage({ queries }: { queries?: SolarDocumentQuer
               {copy('requestAdditional')}
             </Button>
             <Button
+              className="h-auto min-h-11 max-w-full whitespace-normal"
               disabled={editorLocked}
               loading={preparingDecision}
               onClick={() => void prepareSetDecision('advance')}

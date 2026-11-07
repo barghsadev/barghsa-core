@@ -8,6 +8,7 @@ import { tSavingStaffReview } from '@barghsa/i18n/saving-staff-review';
 import { tSavingOperations } from '@barghsa/i18n/saving-operations';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { test, expect } from './coverage-fixture';
+import { checkRoutePresentation } from './route-presentation';
 import {
   setupSavingStaffOperations,
   savingChangeOrder,
@@ -98,6 +99,8 @@ for (const [locale, theme] of [
     await expect(form(page).getByRole('alert')).toContainText(copy('staffReviewError'));
     await expect(page.getByRole('dialog')).toHaveCount(0);
     expect(state.decisionPreviews[0]!.body).toEqual({ action: 'approve', reason: '' });
+    await expect(note).toHaveValue(unused);
+    await checkRoutePresentation(page, info, locale);
     await expect(note).toHaveValue(unused);
     await inspect(
       page,
@@ -270,6 +273,8 @@ for (const [locale, theme] of [
     await expect(handover).toHaveValue(
       intent === 'complete' ? '  Meter and accessories received  ' : ''
     );
+    await checkRoutePresentation(page, info, locale);
+    await expect(note).toHaveValue('  Delivery handover recorded  ');
     expect(state.stagePreviews[0]!.body).toEqual({
       expectedStatus: 'in_progress',
       explanation: 'Delivery handover recorded',

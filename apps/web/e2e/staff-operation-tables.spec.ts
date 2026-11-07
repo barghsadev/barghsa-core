@@ -3,6 +3,8 @@ import { test, expect } from './coverage-fixture';
 import { setupCatalogueForms } from './catalogue-form-fixture';
 import { crmShell } from './crm-shell-fixture';
 import { mockOppositeNumerals } from './number-preference-fixture';
+import { checkRoutePresentation } from './route-presentation';
+import { approveRiskConfirmation } from './confirmation-fixture';
 import { tStaffTeams } from '@barghsa/i18n/staff-team-forms';
 import { tConsultation } from '@barghsa/i18n/consultation';
 import { staffTeam, staffMember, staffRoutingRules } from '../src/test/staff-directory-fixtures';
@@ -119,9 +121,13 @@ for (const locale of ['en', 'fa'] as const)
       await selected.getByRole('button', { name: text('delete'), exact: true }).click();
       const dialog = page.getByRole('dialog');
       await expect(dialog).toContainText(team.name);
-      await dialog
-        .getByRole('button', { name: locale === 'fa' ? 'تأیید' : 'Confirm', exact: true })
-        .click();
+      const confirm = dialog.getByRole('button', {
+        name: locale === 'fa' ? 'تأیید' : 'Confirm',
+        exact: true,
+      });
+      await expect(confirm).toBeDisabled();
+      await approveRiskConfirmation(page, locale, 'destructive');
+      await confirm.click();
       await dialog.locator('input[type=password]').fill('synthetic-password');
       await page.setViewportSize({ width: 390, height: 844 });
       await expect(dialog.locator('input[type=password]')).toHaveValue('synthetic-password');
@@ -157,6 +163,10 @@ for (const locale of ['en', 'fa'] as const)
       const copy = (key: string) => tConsultation(key, locale);
       const rows = consultationContextRows().slice(0, 2);
       rows[0]!.status = 'under_review';
+      if (locale === 'fa') {
+        rows[0]!.profile_name =
+          'لورم ایپسوم دفتر برنامه‌ریزی و مشاورهٔ انرژی برای مجموعه‌های صنعتی و کشاورزی';
+      }
       let reads = 0,
         details = 0,
         writes = 0,
@@ -222,6 +232,7 @@ for (const locale of ['en', 'fa'] as const)
       const reason = detail.getByRole('textbox', { name: copy('note'), exact: true });
       await reason.fill('Private reason retained');
       const detailReads = details;
+      await checkRoutePresentation(page, info, locale);
       await page.setViewportSize({ width: 1280, height: 900 });
       await expect(
         root.getByRole('region', { name: copy('queueCatalogue'), exact: true })

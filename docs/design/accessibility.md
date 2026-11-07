@@ -31,6 +31,9 @@ tap as well as the control. Use the shared touch action style for standalone
 links. Give separately scrollable invoice tables distinct names that identify
 their invoices.
 
+Let long action labels wrap within their container at 320 pixels. Keep the
+44-pixel minimum height so the full label remains visible and easy to tap.
+
 The high contrast switch in account settings applies to the current browser.
 It strengthens text, form controls and focus outlines in both light and dark
 themes, and does not send an account setting change. The shared stylesheet

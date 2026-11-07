@@ -8,6 +8,7 @@ import { test, expect } from './upload-fixture';
 import { documentText as documentCopy } from '../../../packages/i18n/src/documents';
 import { solarContractReview, type SolarCommand } from './solar-contract-issue-form-fixture';
 import { fullNavigation } from './navigation-fixture';
+import { approveRiskConfirmation } from './confirmation-fixture';
 
 const profileId = '11111111-1111-4111-8111-111111111111';
 test.beforeEach(async ({ page }, info) => {
@@ -468,7 +469,10 @@ for (const locale of ['en', 'fa'] as const)
       page.getByRole('heading', { name: solarCopy('reviewTitle', locale) })
     ).toBeVisible();
     await expect(page.getByText(solarCopy('reviewNoContractInvoice', locale))).toBeVisible();
-    await page.getByRole('button', { name: solarCopy('submit', locale) }).click();
+    const submit = page.getByRole('button', { name: solarCopy('submit', locale), exact: true });
+    await expect(submit).toBeDisabled();
+    await approveRiskConfirmation(page, locale, 'financial');
+    await submit.click();
     await expect(page).toHaveURL(new RegExp(`/solar/requests/${requestId}$`));
     expect(submissions).toHaveLength(1);
     expect(submissions[0]).toMatchObject({

@@ -4,6 +4,7 @@ import { test, expect } from './coverage-fixture';
 import { t } from '@barghsa/i18n/app';
 import { tSolar } from '@barghsa/i18n/solar';
 import { setupSolarDocumentForms } from './solar-document-review-form-fixture';
+import { approveRiskConfirmation } from './confirmation-fixture';
 
 test.use({ viewport: { width: 390, height: 844 } });
 
@@ -46,6 +47,8 @@ for (const locale of ['en', 'fa'] as const)
       await reason.fill('ر'.repeat(1000));
       await reject.click();
       let dialog = page.getByRole('dialog', { name: copy('reject'), exact: true });
+      await expect(dialog.locator('button[type=submit]')).toBeDisabled();
+      await approveRiskConfirmation(page, locale, 'destructive');
       await dialog.locator('button[type=submit]').click();
       await expect(dialog).toHaveCount(0);
       await focusedError(reason);
@@ -100,6 +103,7 @@ for (const locale of ['en', 'fa'] as const)
       await reason.fill(captured.reason);
       await reject.click();
       dialog = page.getByRole('dialog', { name: copy('reject'), exact: true });
+      await approveRiskConfirmation(page, locale, 'destructive');
       await dialog.locator('button[type=submit]').click();
       await dialog.locator('input[type=password]').fill('synthetic-password');
       const readsBeforeRejection = state.detailReads.length;
@@ -278,6 +282,7 @@ for (const [locale, theme, invalidReceipt] of [
     state.rejectMode = 'denied';
     await page.getByRole('button', { name: copy('reject'), exact: true }).click();
     dialog = page.getByRole('dialog', { name: copy('reject'), exact: true });
+    await approveRiskConfirmation(page, locale, 'destructive');
     await dialog.locator('button[type=submit]').click();
     await expect(dialog).toHaveCount(0);
     await expect(reason).toHaveCount(0);

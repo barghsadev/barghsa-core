@@ -1,6 +1,8 @@
 import { test, expect } from './coverage-fixture';
 import AxeBuilder from '@axe-core/playwright';
 import { setupCatalogueForms } from './catalogue-form-fixture';
+import { checkRoutePresentation } from './route-presentation';
+import { approveRiskConfirmation } from './confirmation-fixture';
 import { t as adminText } from '@barghsa/i18n/admin-ui';
 import { t as appText } from '@barghsa/i18n/app';
 import {
@@ -25,7 +27,10 @@ for (const locale of ['en', 'fa'] as const)
         const rows = [
           {
             ...correctionStaffOrder(),
-            customerName: 'Operations <script> Buyer',
+            customerName:
+              locale === 'fa'
+                ? 'لورم ایپسوم شرکت بهره‌برداری و توسعهٔ انرژی پایدار برای تأمین برق صنایع <script>'
+                : 'Operations <script> Buyer',
             totalKwh: '900719925474099123',
             totalIrR: '900719925474099321',
             paidIrR: '0',
@@ -182,6 +187,7 @@ for (const locale of ['en', 'fa'] as const)
         await expect(reason).toHaveCount(1);
         await reason.fill('  Keep the exact staff draft  ');
         const selectedReads = detailReads;
+        await checkRoutePresentation(page, info, locale);
         await page.setViewportSize({ width: 1280, height: 900 });
         await expect(reason).toHaveValue('  Keep the exact staff draft  ');
         expect(detailReads).toBe(selectedReads);
@@ -190,9 +196,13 @@ for (const locale of ['en', 'fa'] as const)
         await page.getByRole('button', { name: copy('request-changes'), exact: true }).click();
         const dialog = page.getByRole('dialog');
         await expect(dialog).toBeVisible();
-        await dialog
-          .getByRole('button', { name: locale === 'fa' ? 'تأیید' : 'Confirm', exact: true })
-          .click();
+        const confirm = dialog.getByRole('button', {
+          name: locale === 'fa' ? 'تأیید' : 'Confirm',
+          exact: true,
+        });
+        await expect(confirm).toBeDisabled();
+        await approveRiskConfirmation(page, locale, 'both');
+        await confirm.click();
         await dialog.locator('input[type=password]').fill('synthetic-only-password');
         await page.setViewportSize({ width: 390, height: 844 });
         await expect(dialog.locator('input[type=password]')).toHaveValue('synthetic-only-password');
