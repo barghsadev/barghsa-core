@@ -28,7 +28,7 @@ export function useLoginNativeForm(stage: LoginStage, context: string, locale: L
     async () => {
       const capturedGeneration = generation.current,
         capturedContext = currentContext.current;
-      const module = await import('../lib/contract-review-signature-form-schemas.js');
+      const module = await import('../lib/public-auth-form-schemas.js');
       return alive.current &&
         generation.current === capturedGeneration &&
         currentContext.current === capturedContext

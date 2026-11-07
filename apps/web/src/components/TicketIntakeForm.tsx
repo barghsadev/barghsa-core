@@ -83,7 +83,7 @@ export function TicketIntakeForm({
   const form = useZodForm<TicketIntakeValues>(
     async () => {
       const token = scope;
-      const schema = await import('../lib/contract-review-signature-form-schemas.js');
+      const schema = await import('../lib/ticket-form-schemas.js');
       return alive.current && current.current === token
         ? schema.ticketIntakeSchema(
             copy,

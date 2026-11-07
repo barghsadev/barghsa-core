@@ -134,7 +134,7 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
   const [error, setError] = useState<PageError | null>(null);
   const online = useDraftForm<{ amount: string }>(
     async () => {
-      const { createOnlineTopUpSchema } = await import('../lib/customer-finance-form-schemas.js');
+      const { createOnlineTopUpSchema } = await import('../lib/wallet-top-up-form-schema.js');
       return createOnlineTopUpSchema(advertisedOnlineTopUpLimit(wallet), {
         invalid: t('wallet.page.invalidAmount', locale),
         limit: t('wallet.page.limitExceeded', locale),

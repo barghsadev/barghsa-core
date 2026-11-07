@@ -70,7 +70,7 @@ function ClosureReview({
   const form = useZodForm<ClosureValues>(
     async () => {
       const token = version.current;
-      const schema = await import('../lib/contract-review-signature-form-schemas.js');
+      const schema = await import('../lib/account-settings-form-schemas.js');
       return permitted() && version.current === token
         ? schema.profileClosureSchema(copy)
         : schema.inactiveClosureSchema;

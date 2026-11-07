@@ -105,7 +105,7 @@ export function useAccountSettingsEditor(locale: Locale) {
   const usernameForm = useZodForm<UsernameValues>(
     async () => {
       const token = actor,
-        schema = await import('../lib/contract-review-signature-form-schemas.js');
+        schema = await import('../lib/account-settings-form-schemas.js');
       return permitted(token)
         ? schema.usernameSettingsSchema(copy, !!usernameBinding.current)
         : schema.inactiveAccountSettingsSchema;
@@ -115,7 +115,7 @@ export function useAccountSettingsEditor(locale: Locale) {
   const contactForm = useZodForm<ContactValues>(
     async () => {
       const token = actor,
-        schema = await import('../lib/contract-review-signature-form-schemas.js');
+        schema = await import('../lib/account-settings-form-schemas.js');
       return permitted(token)
         ? schema.contactSettingsSchema(copy, !!contactBinding.current, contactKind.current)
         : schema.inactiveAccountSettingsSchema;

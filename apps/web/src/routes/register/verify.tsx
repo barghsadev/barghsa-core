@@ -30,6 +30,7 @@ function OtpVerifyPage() {
   const model = useRegistrationNativeForm('verify', `verify|${challengeId}`, locale),
     form = model.form;
   const otpRef = useRef<OtpInputHandle>(null),
+    rejectedCodeFocus = useRef<string | null>(null),
     expiryRedirect = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [error, setError] = useState<string | null>(null),
     [resendUntil, setResendUntil] = useState(() => Date.now() + 60_000),
@@ -43,6 +44,7 @@ function OtpVerifyPage() {
     return () => clearInterval(timer);
   }, []);
   useEffect(() => {
+    rejectedCodeFocus.current = null;
     form.reset(emptyRegistration);
     otpRef.current?.reset();
     setError(null);
@@ -56,6 +58,17 @@ function OtpVerifyPage() {
       expiryRedirect.current = null;
     };
   }, [challengeId, form.reset, router]);
+  useEffect(() => {
+    if (
+      !rejectedCodeFocus.current ||
+      rejectedCodeFocus.current !== challengeId ||
+      model.locked ||
+      attemptCooldown > 0
+    )
+      return;
+    rejectedCodeFocus.current = null;
+    otpRef.current?.focus();
+  }, [attemptCooldown, challengeId, model.locked]);
   function verify(event?: FormEvent<HTMLFormElement>) {
     event?.preventDefault();
     if (
@@ -97,7 +110,9 @@ function OtpVerifyPage() {
             rateLimitMessage(response, locale, numbers.numberStyle) ??
               t(keys[code ?? ''] ?? 'auth.otp.error.generic', locale)
           );
-          // Keep the registration flow's rejected-code clearing policy.
+          // Clear immediately, then restore focus after the current attempt unlocks.
+          if (code === 'AUTH:OTP:INVALID' && response.status !== 429)
+            rejectedCodeFocus.current = challengeId;
           form.setValue('otp', '');
           otpRef.current?.reset();
           if (response.status === 429)

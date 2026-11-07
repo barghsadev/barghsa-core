@@ -1,4 +1,5 @@
 import { productionManifest } from './production-manifest';
+import { approveRiskConfirmation } from './confirmation-fixture';
 import AxeBuilder from '@axe-core/playwright';
 import { test, expect, type Page } from './coverage-fixture';
 
@@ -552,18 +553,22 @@ for (const locale of ['en', 'fa'] as const)
       await submit.click();
       const dialog = page.getByRole('dialog');
       await expect(dialog).toHaveCSS('opacity', '1');
-      await dialog
-        .getByRole('button', { name: /تأیید و رفتن به درگاه|Confirm and open gateway/ })
-        .click();
+      const confirm = dialog.getByRole('button', {
+        name: /تأیید و رفتن به درگاه|Confirm and open gateway/,
+      });
+      await expect(confirm).toBeDisabled();
+      expect(writes).toHaveLength(0);
+      await approveRiskConfirmation(page, locale, 'financial');
+      await confirm.click();
       await expect(dialog).toHaveCount(0);
       await expect(page.getByTestId('wallet-error')).toBeVisible();
       await expect(input).toHaveValue('250');
       await expect(submit).toBeEnabled();
       await submit.click();
-      await page
-        .getByRole('dialog')
-        .getByRole('button', { name: /تأیید و رفتن به درگاه|Confirm and open gateway/ })
-        .click();
+      await expect(confirm).toBeDisabled();
+      expect(writes).toHaveLength(1);
+      await approveRiskConfirmation(page, locale, 'financial');
+      await confirm.click();
       await expect.poll(() => writes.length).toBe(2);
       expect(writes[1]).toEqual(writes[0]);
     });
@@ -573,17 +578,22 @@ for (const locale of ['en', 'fa'] as const)
   test(`wallet loads validation assets only on interaction (${locale})`, async ({ page }) => {
     const manifest = (await productionManifest()) as Record<string, { file: string }>;
     const asset = manifest['src/lib/customer-finance-form-schemas.ts']!.file;
+    const topUpAsset = manifest['src/lib/wallet-top-up-form-schema.ts']!.file;
     const paymentReturnAsset = manifest['src/components/OnlinePaymentReturnPanel.tsx']!.file;
     const requests: string[] = [];
     const paymentReturnRequests: string[] = [];
+    const topUpRequests: string[] = [];
     page.on('request', (request) => {
       if (new URL(request.url()).pathname.endsWith('/' + asset)) requests.push(request.url());
+      if (new URL(request.url()).pathname.endsWith('/' + topUpAsset))
+        topUpRequests.push(request.url());
       if (new URL(request.url()).pathname.endsWith('/' + paymentReturnAsset))
         paymentReturnRequests.push(request.url());
     });
     await setup(page, locale, 'wallet', false, 'light', false);
     expect(requests).toHaveLength(0);
     expect(paymentReturnRequests).toHaveLength(0);
+    expect(topUpRequests).toHaveLength(0);
     const payer = page.getByTestId('wallet-receipt-payer-ref');
     await payer.focus();
     await page.getByTestId('wallet-receipt-bank-name').focus();
@@ -592,4 +602,5 @@ for (const locale of ['en', 'fa'] as const)
     await page.getByTestId('wallet-receipt-amount').fill('250');
     await expect(page.getByTestId('wallet-receipt-form')).not.toContainText('private server copy');
     expect(paymentReturnRequests).toHaveLength(0);
+    expect(topUpRequests).toHaveLength(0);
   });

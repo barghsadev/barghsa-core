@@ -83,13 +83,10 @@ async function holdFirstSchema(page: Page) {
   const held = new Promise<void>((resolve) => {
     release = resolve;
   });
-  await page.route(
-    '**/' + manifest['src/lib/contract-review-signature-form-schemas.ts']!.file,
-    async (route) => {
-      await held;
-      await route.continue();
-    }
-  );
+  await page.route('**/' + manifest['src/lib/settings-form-schemas.ts']!.file, async (route) => {
+    await held;
+    await route.continue();
+  });
   return release;
 }
 async function rotateCsrf(page: Page, value: string) {
@@ -217,7 +214,7 @@ for (const locale of ['en', 'fa'] as const) {
     const { state } = fixture;
     const releaseSchema = await holdFirstSchema(page);
     await page.goto('/settings/profile');
-    await expect.poll(() => state.shellProfileReads).toBe(3);
+    await expect.poll(() => state.shellProfileReads).toBe(2);
     await expect
       .poll(() => page.locator('html').evaluate((root) => root.classList.contains('dark')))
       .toBe(locale === 'fa');
@@ -339,9 +336,8 @@ for (const locale of ['en', 'fa'] as const) {
     const { state } = fixture;
     const releaseSchema = await holdFirstSchema(page);
     await page.goto('/settings/addresses?returnTo=%2Felectricity%2Fadvanced');
-    // Root guard, sidebar switcher and lazy default-profile modal each read once on mount.
-    // Wait for all three without excluding any request from the later no-read guard.
-    await expect.poll(() => state.shellProfileReads).toBe(3);
+    // Wait for the guard and modal JSON reads. Later no-read checks count every request.
+    await expect.poll(() => state.shellProfileReads).toBe(2);
     await expect
       .poll(() => page.locator('html').evaluate((root) => root.classList.contains('dark')))
       .toBe(locale === 'fa');
@@ -410,8 +406,20 @@ for (const locale of ['en', 'fa'] as const) {
     fixture.addConcurrentAddress();
     const shellReadsBeforeReload = state.shellProfileReads;
     await page.reload();
-    await expect.poll(() => state.shellProfileReads).toBe(shellReadsBeforeReload + 3);
-    await expect(page.locator('#profile-switcher')).toHaveValue(profileId);
+    await expect.poll(() => state.shellProfileReads).toBe(shellReadsBeforeReload + 2);
+    const switcher = page.locator('#profile-switcher');
+    await expect(switcher).toBeAttached();
+    const compact = !(await switcher.isVisible());
+    const menu = page.locator('button[aria-controls="dashboard-navigation"]');
+    if (compact) await menu.click();
+    await switcher.click();
+    const active = page
+      .getByRole('radiogroup', { name: t('dashboard.profile.switchLabel', locale), exact: true })
+      .locator(`[role="radio"][data-profile-id="${profileId}"]`);
+    await expect(active).toBeChecked();
+    await page.keyboard.press('Escape');
+    await expect(active).toHaveCount(0);
+    if (compact) await menu.click();
     await card
       .getByRole('button', { name: t('settings.addresses.edit', locale), exact: true })
       .click();

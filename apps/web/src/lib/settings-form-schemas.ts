@@ -109,3 +109,10 @@ export function savedAddressSchema(
     );
   });
 }
+
+export {
+  inactivePreferenceSettingsSchema,
+  notificationSettingsSchema,
+  marketingSettingsSchema,
+  timezoneSettingsSchema,
+} from './preference-settings-form-schemas.js';

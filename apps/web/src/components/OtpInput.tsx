@@ -11,6 +11,7 @@ function asciiDigits(value: string): string {
 
 export interface OtpInputHandle {
   reset: () => void;
+  focus: () => void;
 }
 
 export interface OtpInputProps {
@@ -192,8 +193,10 @@ export const OtpInput = forwardRef<OtpInputHandle, OtpInputProps>(function OtpIn
     }
   }, [disabled, focusInput, onChange]);
 
-  // Expose reset method via ref
-  useImperativeHandle(ref, () => ({ reset: handleReset }), [handleReset]);
+  useImperativeHandle(ref, () => ({ reset: handleReset, focus: () => focusInput(0) }), [
+    handleReset,
+    focusInput,
+  ]);
 
   return (
     <div className="space-y-3">

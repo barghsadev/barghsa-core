@@ -35,7 +35,7 @@ export function useSecurityRevocationForm(
     checking = useRef(false);
   const form = useZodForm<SecurityPassword>(
     async () => {
-      const module = await import('../lib/contract-review-signature-form-schemas.js');
+      const module = await import('../lib/account-settings-form-schemas.js');
       return scope.isCurrent()
         ? module.securityPasswordSchema(required.current, text('passwordRequired'))
         : module.inactiveSecurityPasswordSchema;

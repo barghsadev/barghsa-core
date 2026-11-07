@@ -201,13 +201,10 @@ async function holdSchema(page: Page) {
   const held = new Promise<void>((resolve) => {
     release = resolve;
   });
-  await page.route(
-    '**/' + manifest['src/lib/contract-review-signature-form-schemas.ts']!.file,
-    async (route) => {
-      await held;
-      await route.continue();
-    }
-  );
+  await page.route('**/' + manifest['src/lib/settings-form-schemas.ts']!.file, async (route) => {
+    await held;
+    await route.continue();
+  });
   return release;
 }
 async function checkView(page: Page) {

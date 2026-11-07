@@ -82,7 +82,7 @@ export function useProfileSettingsEditor(locale: Locale) {
   const form = useZodForm<ProfileFormValues>(
     async () => {
       const token = identity,
-        schema = await import('../lib/contract-review-signature-form-schemas.js');
+        schema = await import('../lib/settings-form-schemas.js');
       return alive.current && current.current === token && coordinator.current.isCurrent()
         ? schema.profileSettingsSchema(
             copy,

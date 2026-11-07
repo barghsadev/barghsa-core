@@ -53,3 +53,9 @@ export function contactSettingsSchema(copy: Copy, verify: boolean, type: Contact
       ctx.issues.push(issue('otp', copy('otpInvalid'), raw.otp));
   });
 }
+
+export {
+  securityPasswordSchema,
+  inactiveSecurityPasswordSchema,
+} from './security-settings-form-schemas.js';
+export { profileClosureSchema, inactiveClosureSchema } from './profile-lifecycle-form-schemas.js';

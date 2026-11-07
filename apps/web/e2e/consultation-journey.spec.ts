@@ -1,6 +1,7 @@
 import { tConsultation as consultationCopy } from '@barghsa/i18n/consultation';
 import { t as appCopy } from '@barghsa/i18n/app';
 import { fullNavigation } from './navigation-fixture';
+import { approveRiskConfirmation } from './confirmation-fixture';
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Page } from './coverage-fixture';
 import { shellText } from '@barghsa/i18n/shell';
@@ -272,7 +273,10 @@ for (const locale of ['en', 'fa'] as const)
     await expect(feeReview).toContainText('Supply assessment');
     await expect(feeReview).toContainText('Written report');
     await expect(feeReview).toContainText(`${new Intl.NumberFormat(locale).format(500000)} IRR`);
-    await feeReview.getByRole('button', { name: appCopy('team.confirm', locale) }).click();
+    const confirmFee = feeReview.getByRole('button', { name: appCopy('team.confirm', locale) });
+    await expect(confirmFee).toBeDisabled();
+    await approveRiskConfirmation(page, locale, 'financial');
+    await confirmFee.click();
     await expect.poll(() => status).toBe('offer_pending');
     const savedOffer = page.getByRole('region', { name: consultationCopy('savedOffer', locale) });
     await expect(savedOffer).toContainText(`${new Intl.NumberFormat(locale).format(500000)} IRR`);
@@ -328,7 +332,10 @@ for (const locale of ['en', 'fa'] as const)
     await expect(review).toContainText(new Intl.NumberFormat(locale).format(500000));
     await expect(review).toContainText('Supply assessment');
     await expect(review).toContainText('Written report');
-    await review.getByRole('button', { name: consultationCopy('acceptOffer', locale) }).click();
+    const accept = review.getByRole('button', { name: consultationCopy('acceptOffer', locale) });
+    await expect(accept).toBeDisabled();
+    await approveRiskConfirmation(page, locale, 'financial');
+    await accept.click();
     await expect(page).toHaveURL(new RegExp(`/invoices/${invoiceId}$`));
     await expect(
       page.getByRole('heading', { name: appCopy('invoices.details.title', locale) })

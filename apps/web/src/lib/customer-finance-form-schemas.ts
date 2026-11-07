@@ -42,23 +42,3 @@ export function createReceiptFormSchema(
       ctx.issues.push({ code: 'custom', input: file, path: ['file'], message: messages.file });
   });
 }
-export function createOnlineTopUpSchema(
-  limit: number | null,
-  messages: { invalid: string; limit: string }
-): $ZodType<{ amount: string }, { amount: string }> {
-  return z.custom<{ amount: string }>().check((ctx) => {
-    const raw = ctx.value?.amount;
-    const invalid =
-      typeof raw !== 'string' ||
-      !/^\d+$/.test(raw) ||
-      !Number.isSafeInteger(Number(raw)) ||
-      Number(raw) <= 0;
-    if (invalid || limit === null || limit === 0 || Number(raw) > limit)
-      ctx.issues.push({
-        code: 'custom',
-        input: raw,
-        path: ['amount'],
-        message: invalid ? messages.invalid : messages.limit,
-      });
-  });
-}

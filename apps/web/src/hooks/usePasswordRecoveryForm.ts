@@ -57,7 +57,7 @@ export function usePasswordRecoveryForm(
       const capture = owner.current,
         validationGeneration = generation.current,
         selectedStage = capture?.stage ?? uiStage.current;
-      const module = await import('../lib/contract-review-signature-form-schemas.js');
+      const module = await import('../lib/public-auth-form-schemas.js');
       // Releasing an invalid submit must not turn an overlapping blur into a valid draft.
       return alive.current && validationGeneration === generation.current
         ? module.passwordRecoverySchema(

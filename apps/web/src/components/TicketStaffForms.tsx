@@ -73,7 +73,7 @@ export function TicketStaffForms({
   const status = useZodForm<TicketStatusValues>(
     async () => {
       const token = scope;
-      const schema = await import('../lib/contract-review-signature-form-schemas.js');
+      const schema = await import('../lib/ticket-form-schemas.js');
       return current.current === token && coordination.isCurrent()
         ? schema.ticketStatusSchema(copy, () => offered.current)
         : schema.inactiveTicketSchema;
@@ -86,7 +86,7 @@ export function TicketStaffForms({
   const assignment = useZodForm<TicketAssignmentValues>(
     async () => {
       const token = scope;
-      const schema = await import('../lib/contract-review-signature-form-schemas.js');
+      const schema = await import('../lib/ticket-form-schemas.js');
       return current.current === token && coordination.isCurrent()
         ? schema.ticketAssignmentSchema(
             copy,

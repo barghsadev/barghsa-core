@@ -271,7 +271,7 @@ for (const locale of ['en', 'fa'] as const) {
       { password: ' retained raw password ' },
       { password: ' retained raw password ' },
     ]);
-    await expect(page.getByRole('status')).toHaveText(copy('confirmed', locale));
+    await expect(page.getByRole('main').getByRole('status')).toHaveText(copy('confirmed', locale));
     await expect(page.locator('main')).not.toContainText('settings.security.');
   });
   test(`security uncertain writes use authorized reads, retain intent and retire denied state (${locale})`, async ({

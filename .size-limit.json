@@ -24,6 +24,12 @@
     "limitKB": 20
   },
   {
+    "name": "Wallet top-up validation on interaction",
+    "phase": "interaction",
+    "entries": ["src/lib/wallet-top-up-form-schema.ts"],
+    "limitKB": 20
+  },
+  {
     "name": "Login",
     "entries": ["src/routes/login.tsx?tsr-split=component"],
     "limitKB": 150,
@@ -182,6 +188,37 @@
     "phase": "interaction",
     "entries": ["src/lib/contract-review-signature-form-schemas.ts"],
     "limitKB": 20
+  },
+  {
+    "name": "Ticket validation on interaction",
+    "phase": "interaction",
+    "entries": ["src/lib/ticket-form-schemas.ts"],
+    "limitKB": 20
+  },
+  {
+    "name": "Profile and preference validation on interaction",
+    "phase": "interaction",
+    "entries": ["src/lib/settings-form-schemas.ts"],
+    "limitKB": 20
+  },
+  {
+    "name": "Account security and identity validation on interaction",
+    "phase": "interaction",
+    "entries": ["src/lib/account-settings-form-schemas.ts"],
+    "limitKB": 20
+  },
+  {
+    "name": "Public authentication validation on interaction",
+    "phase": "interaction",
+    "entries": ["src/lib/public-auth-form-schemas.ts"],
+    "limitKB": 20
+  },
+  {
+    "name": "Public authentication entry validation on interaction",
+    "phase": "interaction",
+    "entries": ["src/lib/public-auth-form-schemas.ts"],
+    "limitKB": 20,
+    "build": "auth"
   },
   {
     "name": "Cancellation staff decision editor on demand",

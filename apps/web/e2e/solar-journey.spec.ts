@@ -917,7 +917,11 @@ test('staff confirms the reviewed solar contract and exact initial invoice', asy
   await expect(dialog).toContainText('100,000');
   await expect(dialog).toContainText('7 days after issue');
   expect(reviewed).toMatchObject({ profileId, invoiceLines: [{ unitPrice: '100000' }] });
-  await dialog.getByRole('button', { name: 'Confirm' }).click();
+  const confirm = dialog.getByRole('button', { name: 'Confirm' });
+  await expect(confirm).toBeDisabled();
+  expect(issued).toBeNull();
+  await approveRiskConfirmation(page, 'en', 'financial');
+  await confirm.click();
   await expect(
     page.getByRole('status').filter({ hasText: 'Solar contract created' })
   ).toBeVisible();

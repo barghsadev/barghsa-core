@@ -132,7 +132,7 @@ async function holdSchema(page: Page) {
     release = resolve;
   });
   await page.route(
-    '**/' + manifest['src/lib/contract-review-signature-form-schemas.ts']!.file,
+    '**/' + manifest['src/lib/account-settings-form-schemas.ts']!.file,
     async (route) => {
       await held;
       await route.continue();

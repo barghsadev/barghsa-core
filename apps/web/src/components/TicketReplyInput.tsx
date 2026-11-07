@@ -100,7 +100,7 @@ export function TicketReplyInput({
     async () => {
       const token = identity,
         visibility = branch;
-      const schema = await import('../lib/contract-review-signature-form-schemas.js');
+      const schema = await import('../lib/ticket-form-schemas.js');
       return alive.current && current.current === token && branchRef.current === visibility
         ? schema.ticketReplySchema(feedback, isAllowedInvoiceReceiptFile)
         : schema.inactiveTicketSchema;

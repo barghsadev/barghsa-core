@@ -82,7 +82,7 @@ export function useSavedAddressSettingsEditor(locale: Locale) {
   const form = useZodForm<AddressFormValues>(
     async () => {
       const token = identity,
-        schema = await import('../lib/contract-review-signature-form-schemas.js');
+        schema = await import('../lib/settings-form-schemas.js');
       return alive.current && current.current === token && coordination.current.isCurrent()
         ? schema.savedAddressSchema(
             validationCopy,

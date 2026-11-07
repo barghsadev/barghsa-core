@@ -75,7 +75,7 @@ export function usePreferenceSettingsOwner() {
   };
 }
 type Owner = ReturnType<typeof usePreferenceSettingsOwner>;
-type SchemaModule = typeof import('../lib/contract-review-signature-form-schemas.js');
+type SchemaModule = typeof import('../lib/settings-form-schemas.js');
 type Options<Values, Source> = {
   successMessage: string;
   family: string;
@@ -118,7 +118,7 @@ export function usePreferenceSettingsForm<Values extends FieldValues, Source>(
   const [error, setError] = useState<string | null>(null);
   const form = useZodForm<Values>(
     async () => {
-      const module = await import('../lib/contract-review-signature-form-schemas.js');
+      const module = await import('../lib/settings-form-schemas.js');
       return scope.isCurrent()
         ? activeOptions.current.schema(module, source.current)
         : module.inactivePreferenceSettingsSchema<Values>();

@@ -82,13 +82,10 @@ async function holdFirstSchema(page: Page) {
   const held = new Promise<void>((resolve) => {
     release = resolve;
   });
-  await page.route(
-    '**/' + manifest['src/lib/contract-review-signature-form-schemas.ts']!.file,
-    async (route) => {
-      await held;
-      await route.continue();
-    }
-  );
+  await page.route('**/' + manifest['src/lib/ticket-form-schemas.ts']!.file, async (route) => {
+    await held;
+    await route.continue();
+  });
   return release;
 }
 async function lockedCompanions(
