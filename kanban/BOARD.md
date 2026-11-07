@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-07T17:26:16+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-07T17:40:38+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.4.0**. Next milestone: **v0.5.0**.
 
@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 861 | Accepted with unchanged source bindings. |
+| done | 862 | Accepted with unchanged source bindings. |
 | verify | 470 | Existing work may be complete; inspect evidence before building. |
-| partial | 32 | An earlier review found unmet criteria; reconcile later fixes. |
+| partial | 31 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 5 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
 | blocked | 1 | Named owner or external prerequisite. |
@@ -716,7 +716,7 @@ Customer and admin workflows work on desktop/mobile in both languages and themes
 | `07-ui-ux-design.md#T-07.04.02.01` | done | Recorded batch work | On mobile (< `lg`): sidebar becomes a bottom tab bar with 4–5 primary navigation icons (Home, Orders, Wallet, Profile, More). "More" opens a sheet with all remaining navigation items. |
 | `07-ui-ux-design.md#T-07.04.02.02` | done | Recorded batch work | On mobile: topbar shows only hamburger menu, app logo/title, notification bell, and profile avatar. All secondary actions move into the "More" drawer or overflow menus. |
 | `07-ui-ux-design.md#T-07.04.02.03` | done | Recorded batch work | On tablet (`md`–`lg`): sidebar collapses to icon-only rail (60px wide). Expand on hover or tap. |
-| `07-ui-ux-design.md#T-07.04.02.04` | partial | Recorded batch work | Verify all pages look correct at `320px`, `375px`, `390px`, `414px`, `768px`, `1024px`, `1280px`, and `1920px` viewport widths. No horizontal scroll, no overlapping text, no tiny touch targets. |
+| `07-ui-ux-design.md#T-07.04.02.04` | done | Recorded batch work | Verify all pages look correct at `320px`, `375px`, `390px`, `414px`, `768px`, `1024px`, `1280px`, and `1920px` viewport widths. No horizontal scroll, no overlapping text, no tiny touch targets. |
 | `07-ui-ux-design.md#T-07.05.01.01` | done | Recorded batch work | Implement `SkipLink` component (first focusable element on every page, visible on focus: "Skip to main content"). All pages have a `<main>` element with `id="main-content"`. |
 | `07-ui-ux-design.md#T-07.05.01.02` | done | Recorded batch work | Ensure all interactive elements have visible focus indicators. Define a custom focus ring via `:focus-visible` in CSS: `outline: 2px solid var(--ring)`, `outline-offset: 2px`. Never use `outline: none` without a visible replacement. |
 | `07-ui-ux-design.md#T-07.05.01.03` | done | Recorded batch work | Implement a `FocusTrap` component for modals, sheets, and dropdowns. When open, Tab/Shift+Tab cycles within the dialog. Focus returns to trigger on close. |

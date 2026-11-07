@@ -180,6 +180,7 @@ async function submit(form: Locator) {
 }
 async function capture(target: Locator, name: string) {
   await expect(target).toBeVisible();
+  await expect(target).toHaveCSS('opacity', '1');
   expect(
     (
       await new AxeBuilder({ page: target.page() })

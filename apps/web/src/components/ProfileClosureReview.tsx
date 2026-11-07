@@ -393,21 +393,21 @@ function ClosureReview({
                         name="confirmed"
                         render={({ field }) => (
                           <FormItem>
-                            <div className="flex items-start gap-2">
+                            <FormLabel className="touch-label flex items-center gap-2">
                               <FormControl>
                                 <input
-                                  id="closure-confirmed"
                                   type="checkbox"
                                   name={field.name}
                                   ref={field.ref}
+                                  className="shrink-0"
                                   checked={field.value}
                                   disabled={!!pending}
                                   onBlur={field.onBlur}
                                   onChange={(event) => field.onChange(event.target.checked)}
                                 />
                               </FormControl>
-                              <FormLabel htmlFor="closure-confirmed">{label('confirm')}</FormLabel>
-                            </div>
+                              {label('confirm')}
+                            </FormLabel>
                             <FormMessage />
                           </FormItem>
                         )}

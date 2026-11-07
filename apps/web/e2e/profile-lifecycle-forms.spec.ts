@@ -235,7 +235,16 @@ for (const locale of ['en', 'fa'] as const) {
     expect(f.state.closureWrites).toBe(0);
     await quality(page, 'profile-closure-review');
     await capture(page, owner, info.outputPath('closure-native-errors.png'));
-    await confirmed.check();
+    if (await page.evaluate(() => matchMedia('(pointer: coarse)').matches)) {
+      const label = owner.locator('label').filter({ has: page.getByRole('checkbox') });
+      const area = await label.boundingBox();
+      expect(area?.width).toBeGreaterThanOrEqual(44);
+      expect(area?.height).toBeGreaterThanOrEqual(44);
+      await label.tap({ position: { x: 4, y: 40 } });
+      await expect(confirmed).toBeChecked();
+    } else {
+      await confirmed.check();
+    }
     await owner.locator('input[type=password]').fill(rawPassword);
     await form.dispatchEvent('submit');
     await expect(

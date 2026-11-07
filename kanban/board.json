@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-07T17:26:16+00:00",
-  "source_commit": "a23e77940836461988a4643eb61abb9df0746996",
+  "updated": "2026-11-07T17:40:38+00:00",
+  "source_commit": "d0555f77ac44ec5ea209db9407149824031617da",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -190495,7 +190495,8 @@
           "release-0.5-form-and-document-accessibility",
           "release-0.5-workspace-route-census",
           "release-0.5-profile-lifecycle-feedback",
-          "release-0.5-dependency-gate-closure"
+          "release-0.5-dependency-gate-closure",
+          "release-0.5-responsive-width-acceptance"
         ],
         "current_acceptance": {
           "kind": "verified-profile-request-export-and-staff-creation-with-explicit-partial-boundaries",
@@ -190515,7 +190516,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
-              "sha256": "8283237cf810fe5be7a4fbd8e0303aada08c0c2246ffaf0542ac74fa982b1137"
+              "sha256": "607f764dd241f8152498963f373b40b189496e72bdefc078785d416617a5ad2e"
             },
             {
               "path": "apps/web/src/components/jobs/JobProgress.tsx",
@@ -190547,7 +190548,7 @@
             },
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
-              "sha256": "93a35600f3e64446c57ab7d296c33ba543ca601cb69a8e743582ab33caad3dba"
+              "sha256": "c413d4a98a7ebf6c9ca577fc9d5f7b7ea9cc5523c07b22806e4f50565c2bb2d1"
             },
             {
               "path": "apps/web/e2e/operating-context.spec.ts",
@@ -191351,6 +191352,11 @@
               "batch": "release-0.5-dependency-gate-closure",
               "base_commit": "f7f27566c9a204444bb8790e67267ad7373c3ab7",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-dependency-gate-closure/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-responsive-width-acceptance",
+              "base_commit": "d0555f77ac44ec5ea209db9407149824031617da",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-responsive-width-acceptance/closure-touch-width-proof.json"
             }
           ]
         }
@@ -191395,7 +191401,8 @@
           "release-0.5-form-and-document-accessibility",
           "release-0.5-workspace-route-census",
           "release-0.5-profile-lifecycle-feedback",
-          "release-0.5-dependency-gate-closure"
+          "release-0.5-dependency-gate-closure",
+          "release-0.5-responsive-width-acceptance"
         ],
         "current_acceptance": {
           "kind": "verified-profile-request-export-and-staff-creation-with-explicit-partial-boundaries",
@@ -191415,7 +191422,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
-              "sha256": "8283237cf810fe5be7a4fbd8e0303aada08c0c2246ffaf0542ac74fa982b1137"
+              "sha256": "607f764dd241f8152498963f373b40b189496e72bdefc078785d416617a5ad2e"
             },
             {
               "path": "apps/web/src/components/jobs/JobProgress.tsx",
@@ -191447,7 +191454,7 @@
             },
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
-              "sha256": "93a35600f3e64446c57ab7d296c33ba543ca601cb69a8e743582ab33caad3dba"
+              "sha256": "c413d4a98a7ebf6c9ca577fc9d5f7b7ea9cc5523c07b22806e4f50565c2bb2d1"
             },
             {
               "path": "apps/web/e2e/operating-context.spec.ts",
@@ -192251,6 +192258,11 @@
               "batch": "release-0.5-dependency-gate-closure",
               "base_commit": "f7f27566c9a204444bb8790e67267ad7373c3ab7",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-dependency-gate-closure/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-responsive-width-acceptance",
+              "base_commit": "d0555f77ac44ec5ea209db9407149824031617da",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-responsive-width-acceptance/closure-touch-width-proof.json"
             }
           ]
         }
@@ -192295,7 +192307,8 @@
           "release-0.5-form-and-document-accessibility",
           "release-0.5-workspace-route-census",
           "release-0.5-profile-lifecycle-feedback",
-          "release-0.5-dependency-gate-closure"
+          "release-0.5-dependency-gate-closure",
+          "release-0.5-responsive-width-acceptance"
         ],
         "current_acceptance": {
           "kind": "verified-profile-closure-preview-expiry-ownership-retention-and-support",
@@ -192411,7 +192424,7 @@
             },
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
-              "sha256": "93a35600f3e64446c57ab7d296c33ba543ca601cb69a8e743582ab33caad3dba"
+              "sha256": "c413d4a98a7ebf6c9ca577fc9d5f7b7ea9cc5523c07b22806e4f50565c2bb2d1"
             },
             {
               "path": "apps/web/e2e/ticket-forms-fixture.ts",
@@ -192435,7 +192448,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
-              "sha256": "8283237cf810fe5be7a4fbd8e0303aada08c0c2246ffaf0542ac74fa982b1137"
+              "sha256": "607f764dd241f8152498963f373b40b189496e72bdefc078785d416617a5ad2e"
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.test.tsx",
@@ -193276,6 +193289,11 @@
               "batch": "release-0.5-dependency-gate-closure",
               "base_commit": "f7f27566c9a204444bb8790e67267ad7373c3ab7",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-dependency-gate-closure/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-responsive-width-acceptance",
+              "base_commit": "d0555f77ac44ec5ea209db9407149824031617da",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-responsive-width-acceptance/closure-touch-width-proof.json"
             }
           ]
         }
@@ -193331,7 +193349,8 @@
           "release-0.5-workspace-route-census",
           "release-0.5-profile-lifecycle-feedback",
           "release-0.5-dependency-gate-closure",
-          "release-0.5-final-acceptance"
+          "release-0.5-final-acceptance",
+          "release-0.5-responsive-width-acceptance"
         ],
         "current_acceptance": {
           "kind": "validated-immutable-business-acting-context-and-cross-surface-isolation",
@@ -193507,7 +193526,7 @@
             },
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
-              "sha256": "93a35600f3e64446c57ab7d296c33ba543ca601cb69a8e743582ab33caad3dba"
+              "sha256": "c413d4a98a7ebf6c9ca577fc9d5f7b7ea9cc5523c07b22806e4f50565c2bb2d1"
             },
             {
               "path": "apps/web/e2e/saving-fulfillment-history.spec.ts",
@@ -193543,7 +193562,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
-              "sha256": "8283237cf810fe5be7a4fbd8e0303aada08c0c2246ffaf0542ac74fa982b1137"
+              "sha256": "607f764dd241f8152498963f373b40b189496e72bdefc078785d416617a5ad2e"
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.test.tsx",
@@ -195172,6 +195191,11 @@
               "batch": "release-0.5-final-acceptance",
               "base_commit": "460fdb3e46b92b3086c95b925a6f4735a21fc2ff",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-final-acceptance/customer-interaction-proof.json"
+            },
+            {
+              "batch": "release-0.5-responsive-width-acceptance",
+              "base_commit": "d0555f77ac44ec5ea209db9407149824031617da",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-responsive-width-acceptance/closure-touch-width-proof.json"
             }
           ]
         }
@@ -195227,7 +195251,8 @@
           "release-0.5-workspace-route-census",
           "release-0.5-profile-lifecycle-feedback",
           "release-0.5-dependency-gate-closure",
-          "release-0.5-final-acceptance"
+          "release-0.5-final-acceptance",
+          "release-0.5-responsive-width-acceptance"
         ],
         "current_acceptance": {
           "kind": "validated-immutable-business-acting-context-and-cross-surface-isolation",
@@ -195403,7 +195428,7 @@
             },
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
-              "sha256": "93a35600f3e64446c57ab7d296c33ba543ca601cb69a8e743582ab33caad3dba"
+              "sha256": "c413d4a98a7ebf6c9ca577fc9d5f7b7ea9cc5523c07b22806e4f50565c2bb2d1"
             },
             {
               "path": "apps/web/e2e/saving-fulfillment-history.spec.ts",
@@ -195439,7 +195464,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
-              "sha256": "8283237cf810fe5be7a4fbd8e0303aada08c0c2246ffaf0542ac74fa982b1137"
+              "sha256": "607f764dd241f8152498963f373b40b189496e72bdefc078785d416617a5ad2e"
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.test.tsx",
@@ -197068,6 +197093,11 @@
               "batch": "release-0.5-final-acceptance",
               "base_commit": "460fdb3e46b92b3086c95b925a6f4735a21fc2ff",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-final-acceptance/customer-interaction-proof.json"
+            },
+            {
+              "batch": "release-0.5-responsive-width-acceptance",
+              "base_commit": "d0555f77ac44ec5ea209db9407149824031617da",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-responsive-width-acceptance/closure-touch-width-proof.json"
             }
           ]
         }
@@ -197111,7 +197141,8 @@
           "release-0.5-form-and-document-accessibility",
           "release-0.5-workspace-route-census",
           "release-0.5-profile-lifecycle-feedback",
-          "release-0.5-dependency-gate-closure"
+          "release-0.5-dependency-gate-closure",
+          "release-0.5-responsive-width-acceptance"
         ],
         "current_acceptance": {
           "kind": "verified-profile-request-export-and-staff-creation-with-explicit-partial-boundaries",
@@ -197131,7 +197162,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
-              "sha256": "8283237cf810fe5be7a4fbd8e0303aada08c0c2246ffaf0542ac74fa982b1137"
+              "sha256": "607f764dd241f8152498963f373b40b189496e72bdefc078785d416617a5ad2e"
             },
             {
               "path": "apps/web/src/components/jobs/JobProgress.tsx",
@@ -197163,7 +197194,7 @@
             },
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
-              "sha256": "93a35600f3e64446c57ab7d296c33ba543ca601cb69a8e743582ab33caad3dba"
+              "sha256": "c413d4a98a7ebf6c9ca577fc9d5f7b7ea9cc5523c07b22806e4f50565c2bb2d1"
             },
             {
               "path": "apps/web/e2e/operating-context.spec.ts",
@@ -197967,6 +197998,11 @@
               "batch": "release-0.5-dependency-gate-closure",
               "base_commit": "f7f27566c9a204444bb8790e67267ad7373c3ab7",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-dependency-gate-closure/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-responsive-width-acceptance",
+              "base_commit": "d0555f77ac44ec5ea209db9407149824031617da",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-responsive-width-acceptance/closure-touch-width-proof.json"
             }
           ]
         }
@@ -459627,7 +459663,8 @@
           "release-0.5-form-and-document-accessibility",
           "release-0.5-profile-lifecycle-feedback",
           "release-0.5-ui-coverage-collection",
-          "release-0.5-dependency-gate-closure"
+          "release-0.5-dependency-gate-closure",
+          "release-0.5-responsive-width-acceptance"
         ],
         "current_acceptance": {
           "status": "done",
@@ -459687,7 +459724,7 @@
             },
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
-              "sha256": "93a35600f3e64446c57ab7d296c33ba543ca601cb69a8e743582ab33caad3dba"
+              "sha256": "c413d4a98a7ebf6c9ca577fc9d5f7b7ea9cc5523c07b22806e4f50565c2bb2d1"
             },
             {
               "path": "apps/web/e2e/ticket-forms-fixture.ts",
@@ -459927,6 +459964,11 @@
               "batch": "release-0.5-dependency-gate-closure",
               "base_commit": "f7f27566c9a204444bb8790e67267ad7373c3ab7",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-dependency-gate-closure/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-responsive-width-acceptance",
+              "base_commit": "d0555f77ac44ec5ea209db9407149824031617da",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-responsive-width-acceptance/closure-touch-width-proof.json"
             }
           ]
         }
@@ -459962,7 +460004,8 @@
           "release-0.5-form-and-document-accessibility",
           "release-0.5-profile-lifecycle-feedback",
           "release-0.5-ui-coverage-collection",
-          "release-0.5-dependency-gate-closure"
+          "release-0.5-dependency-gate-closure",
+          "release-0.5-responsive-width-acceptance"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -460022,7 +460065,7 @@
             },
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
-              "sha256": "93a35600f3e64446c57ab7d296c33ba543ca601cb69a8e743582ab33caad3dba"
+              "sha256": "c413d4a98a7ebf6c9ca577fc9d5f7b7ea9cc5523c07b22806e4f50565c2bb2d1"
             },
             {
               "path": "apps/web/e2e/ticket-forms-fixture.ts",
@@ -460286,6 +460329,11 @@
               "batch": "release-0.5-dependency-gate-closure",
               "base_commit": "f7f27566c9a204444bb8790e67267ad7373c3ab7",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-dependency-gate-closure/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-responsive-width-acceptance",
+              "base_commit": "d0555f77ac44ec5ea209db9407149824031617da",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-responsive-width-acceptance/closure-touch-width-proof.json"
             }
           ]
         }
@@ -460321,7 +460369,8 @@
           "release-0.5-form-and-document-accessibility",
           "release-0.5-profile-lifecycle-feedback",
           "release-0.5-ui-coverage-collection",
-          "release-0.5-dependency-gate-closure"
+          "release-0.5-dependency-gate-closure",
+          "release-0.5-responsive-width-acceptance"
         ],
         "current_acceptance": {
           "status": "done",
@@ -460381,7 +460430,7 @@
             },
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
-              "sha256": "93a35600f3e64446c57ab7d296c33ba543ca601cb69a8e743582ab33caad3dba"
+              "sha256": "c413d4a98a7ebf6c9ca577fc9d5f7b7ea9cc5523c07b22806e4f50565c2bb2d1"
             },
             {
               "path": "apps/web/e2e/ticket-forms-fixture.ts",
@@ -460621,6 +460670,11 @@
               "batch": "release-0.5-dependency-gate-closure",
               "base_commit": "f7f27566c9a204444bb8790e67267ad7373c3ab7",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-dependency-gate-closure/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-responsive-width-acceptance",
+              "base_commit": "d0555f77ac44ec5ea209db9407149824031617da",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-responsive-width-acceptance/closure-touch-width-proof.json"
             }
           ]
         }
@@ -460657,7 +460711,8 @@
           "release-0.5-form-and-document-accessibility",
           "release-0.5-profile-lifecycle-feedback",
           "release-0.5-ui-coverage-collection",
-          "release-0.5-dependency-gate-closure"
+          "release-0.5-dependency-gate-closure",
+          "release-0.5-responsive-width-acceptance"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -460717,7 +460772,7 @@
             },
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
-              "sha256": "93a35600f3e64446c57ab7d296c33ba543ca601cb69a8e743582ab33caad3dba"
+              "sha256": "c413d4a98a7ebf6c9ca577fc9d5f7b7ea9cc5523c07b22806e4f50565c2bb2d1"
             },
             {
               "path": "apps/web/e2e/ticket-forms-fixture.ts",
@@ -460981,6 +461036,11 @@
               "batch": "release-0.5-dependency-gate-closure",
               "base_commit": "f7f27566c9a204444bb8790e67267ad7373c3ab7",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-dependency-gate-closure/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-responsive-width-acceptance",
+              "base_commit": "d0555f77ac44ec5ea209db9407149824031617da",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-responsive-width-acceptance/closure-touch-width-proof.json"
             }
           ]
         }
@@ -485140,7 +485200,8 @@
           "release-0.5-confirmed-electricity-feedback",
           "release-0.5-native-staff-control-targets",
           "release-0.5-saving-address-response-feedback",
-          "release-0.5-operational-queue-touch"
+          "release-0.5-operational-queue-touch",
+          "release-0.5-responsive-width-acceptance"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -485256,7 +485317,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
-              "sha256": "8283237cf810fe5be7a4fbd8e0303aada08c0c2246ffaf0542ac74fa982b1137"
+              "sha256": "607f764dd241f8152498963f373b40b189496e72bdefc078785d416617a5ad2e"
             },
             {
               "path": "apps/web/src/components/ProfileIdentity.tsx",
@@ -486006,6 +486067,11 @@
               "batch": "release-0.5-operational-queue-touch",
               "base_commit": "a23e77940836461988a4643eb61abb9df0746996",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-operational-queue-touch/operational-queue-touch-proof.json"
+            },
+            {
+              "batch": "release-0.5-responsive-width-acceptance",
+              "base_commit": "d0555f77ac44ec5ea209db9407149824031617da",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-responsive-width-acceptance/closure-touch-width-proof.json"
             }
           ]
         },
@@ -488115,7 +488181,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-native-staff-control-targets"
+          "release-0.5-native-staff-control-targets",
+          "release-0.5-responsive-width-acceptance"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -488159,7 +488226,7 @@
             },
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
-              "sha256": "93a35600f3e64446c57ab7d296c33ba543ca601cb69a8e743582ab33caad3dba"
+              "sha256": "c413d4a98a7ebf6c9ca577fc9d5f7b7ea9cc5523c07b22806e4f50565c2bb2d1"
             },
             {
               "path": "apps/web/e2e/staff-directory-recovery.spec.ts",
@@ -488283,7 +488350,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
-              "sha256": "8283237cf810fe5be7a4fbd8e0303aada08c0c2246ffaf0542ac74fa982b1137"
+              "sha256": "607f764dd241f8152498963f373b40b189496e72bdefc078785d416617a5ad2e"
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.test.tsx",
@@ -488796,6 +488863,11 @@
               "batch": "release-0.5-native-staff-control-targets",
               "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
+            },
+            {
+              "batch": "release-0.5-responsive-width-acceptance",
+              "base_commit": "d0555f77ac44ec5ea209db9407149824031617da",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-responsive-width-acceptance/closure-touch-width-proof.json"
             }
           ]
         }
@@ -488925,7 +488997,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-native-staff-control-targets"
+          "release-0.5-native-staff-control-targets",
+          "release-0.5-responsive-width-acceptance"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -488969,7 +489042,7 @@
             },
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
-              "sha256": "93a35600f3e64446c57ab7d296c33ba543ca601cb69a8e743582ab33caad3dba"
+              "sha256": "c413d4a98a7ebf6c9ca577fc9d5f7b7ea9cc5523c07b22806e4f50565c2bb2d1"
             },
             {
               "path": "apps/web/e2e/staff-directory-recovery.spec.ts",
@@ -489093,7 +489166,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
-              "sha256": "8283237cf810fe5be7a4fbd8e0303aada08c0c2246ffaf0542ac74fa982b1137"
+              "sha256": "607f764dd241f8152498963f373b40b189496e72bdefc078785d416617a5ad2e"
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.test.tsx",
@@ -489606,6 +489679,11 @@
               "batch": "release-0.5-native-staff-control-targets",
               "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
+            },
+            {
+              "batch": "release-0.5-responsive-width-acceptance",
+              "base_commit": "d0555f77ac44ec5ea209db9407149824031617da",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-responsive-width-acceptance/closure-touch-width-proof.json"
             }
           ]
         }
@@ -489676,7 +489754,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-native-staff-control-targets"
+          "release-0.5-native-staff-control-targets",
+          "release-0.5-responsive-width-acceptance"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -489720,7 +489799,7 @@
             },
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
-              "sha256": "93a35600f3e64446c57ab7d296c33ba543ca601cb69a8e743582ab33caad3dba"
+              "sha256": "c413d4a98a7ebf6c9ca577fc9d5f7b7ea9cc5523c07b22806e4f50565c2bb2d1"
             },
             {
               "path": "apps/web/e2e/staff-directory-recovery.spec.ts",
@@ -489844,7 +489923,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
-              "sha256": "8283237cf810fe5be7a4fbd8e0303aada08c0c2246ffaf0542ac74fa982b1137"
+              "sha256": "607f764dd241f8152498963f373b40b189496e72bdefc078785d416617a5ad2e"
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.test.tsx",
@@ -490357,6 +490436,11 @@
               "batch": "release-0.5-native-staff-control-targets",
               "base_commit": "28f49d7d084776ad47df75bff7a48e8d10890d35",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/native-staff-controls-proof.json"
+            },
+            {
+              "batch": "release-0.5-responsive-width-acceptance",
+              "base_commit": "d0555f77ac44ec5ea209db9407149824031617da",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-responsive-width-acceptance/closure-touch-width-proof.json"
             }
           ]
         }
@@ -501273,7 +501357,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "The exact 768px Persian Safari measurement found a 7.18px overlap between the AI policies and agents tab labels. The coarse-pointer tabs now keep their intrinsic widths. The original keyboard navigation and both-language label tests passed. Complete remaining text and conditional samples."
+        "The current 93 populated canonical routes passed all 2,976 width, direction and browser cells. The visible range probes report no overlapping or clipped text after excluding closed native disclosures. Complete component-only and remaining conditional states."
       ],
       "owner": null,
       "depends_on": [],
@@ -501294,7 +501378,8 @@
           "release-0.5-final-acceptance",
           "release-0.5-final-rehearsal",
           "release-0.5-route-census-closure",
-          "release-0.5-ai-tab-intrinsic-widths"
+          "release-0.5-ai-tab-intrinsic-widths",
+          "release-0.5-responsive-width-acceptance"
         ],
         "current_acceptance": null
       }
@@ -504532,7 +504617,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "The failed-job selector was 12 by 12 CSS pixels in Safari, without a larger associated label. The current candidate uses the shared 44px label target. Tapping the label edge selects the same job and retains selection through responsive changes. Review remaining conditional targets at final source."
+        "Staff profile-closure consent now has a 44px label target. Safari in both directions activates the checkbox by tapping the label outside the 12px visual control. Current populated route flags were limited to fractional Safari bounds with computed 44px minima and the full physical size. Complete the remaining conditional controls."
       ],
       "owner": null,
       "depends_on": [],
@@ -504559,7 +504644,8 @@
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-native-staff-control-targets",
-          "release-0.5-operational-queue-touch"
+          "release-0.5-operational-queue-touch",
+          "release-0.5-responsive-width-acceptance"
         ],
         "current_acceptance": null
       }
@@ -504615,7 +504701,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-responsive-width-acceptance"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -504827,7 +504914,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
-              "sha256": "8283237cf810fe5be7a4fbd8e0303aada08c0c2246ffaf0542ac74fa982b1137"
+              "sha256": "607f764dd241f8152498963f373b40b189496e72bdefc078785d416617a5ad2e"
             },
             {
               "path": "apps/web/src/components/ProfileIdentity.tsx",
@@ -505309,6 +505396,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-responsive-width-acceptance",
+              "base_commit": "d0555f77ac44ec5ea209db9407149824031617da",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-responsive-width-acceptance/closure-touch-width-proof.json"
             }
           ]
         }
@@ -505366,7 +505458,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-responsive-width-acceptance"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -505578,7 +505671,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
-              "sha256": "8283237cf810fe5be7a4fbd8e0303aada08c0c2246ffaf0542ac74fa982b1137"
+              "sha256": "607f764dd241f8152498963f373b40b189496e72bdefc078785d416617a5ad2e"
             },
             {
               "path": "apps/web/src/components/ProfileIdentity.tsx",
@@ -506060,6 +506153,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-responsive-width-acceptance",
+              "base_commit": "d0555f77ac44ec5ea209db9407149824031617da",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-responsive-width-acceptance/closure-touch-width-proof.json"
             }
           ]
         }
@@ -506116,7 +506214,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-responsive-width-acceptance"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -506328,7 +506427,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
-              "sha256": "8283237cf810fe5be7a4fbd8e0303aada08c0c2246ffaf0542ac74fa982b1137"
+              "sha256": "607f764dd241f8152498963f373b40b189496e72bdefc078785d416617a5ad2e"
             },
             {
               "path": "apps/web/src/components/ProfileIdentity.tsx",
@@ -506810,6 +506909,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-responsive-width-acceptance",
+              "base_commit": "d0555f77ac44ec5ea209db9407149824031617da",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-responsive-width-acceptance/closure-touch-width-proof.json"
             }
           ]
         }
@@ -506826,12 +506930,10 @@
         "story": "07-ui-ux-design.md#spec-b323af587a93"
       },
       "requirement": "| **T-07.04.02.04** | ⚠️ Verify all pages look correct at `320px`, `375px`, `390px`, `414px`, `768px`, `1024px`, `1280px`, and `1920px` viewport widths. No horizontal scroll, no overlapping text, no tiny touch targets. | L |\n\n---",
-      "status": "partial",
+      "status": "done",
       "release": "0.5.0",
       "launch_required": true,
-      "remaining": [
-        "All 100 previously flagged text cells in failed jobs, failed notifications, staff electricity orders, documents and saving were rechecked at the preceding SHA. The visible range geometry reported no overlap or clipping when closed disclosure bodies were excluded. Renew the populated width matrix on the current source before closing."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -506858,9 +506960,37 @@
           "release-0.5-route-census-closure",
           "release-0.5-native-staff-control-targets",
           "release-0.5-ai-tab-intrinsic-widths",
-          "release-0.5-operational-queue-touch"
+          "release-0.5-operational-queue-touch",
+          "release-0.5-responsive-width-acceptance"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "populated-canonical-viewport-matrix",
+          "base_commit": "d0555f77ac44ec5ea209db9407149824031617da",
+          "source_evidence": [
+            {
+              "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
+              "sha256": "c413d4a98a7ebf6c9ca577fc9d5f7b7ea9cc5523c07b22806e4f50565c2bb2d1"
+            },
+            {
+              "path": "apps/web/e2e/security-settings-forms.spec.ts",
+              "sha256": "7c9a79795955468c4be73edce7df47eed30b13c8a03ff4cf1bc79c12aae8e903"
+            },
+            {
+              "path": "apps/web/src/components/ProfileClosureReview.tsx",
+              "sha256": "607f764dd241f8152498963f373b40b189496e72bdefc078785d416617a5ad2e"
+            }
+          ],
+          "checks": [
+            "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-responsive-width-acceptance/closure-touch-width-proof.json",
+            "332 exact current production-built browser cases and 2,976 populated measurements across 93 canonical routes.",
+            "Original strict overflow, layout, target and landmark assertions retained. Native consent uses a directly tapped 44px label.",
+            "Targeted staff lifecycle passed 28 browser cases and 11 unit cases. Current build, typecheck, lint, formatting and all 98 gzip budgets passed."
+          ],
+          "criterion_result": "All eight required widths passed in English and Persian on Chromium and mobile Safari. No rendered text overlap, clipping or horizontal overflow was reported. All additional fractional touch reports retained both 44px computed minima and at least 44 CSS pixels of physical area.",
+          "limitations": [
+            "The viewport matrix covers populated canonical routes. Conditional component, accessibility, contrast, recovery and command acceptance remain separate tasks."
+          ]
+        }
       }
     },
     {
@@ -508964,7 +509094,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "All 51 missing populated route theme observations were collected at 390px and 1280px in Chromium and mobile Safari, with no contrast violations in the passing samples. Conditional and incomplete contrast checks remain subject to route acceptance."
+        "The source-bound populated theme receipts remain recorded. The revoke-sessions dialog passed its original strict contrast checks in Chromium and Safari after its entrance animation. Complete remaining conditional and all-combination contrast acceptance."
       ],
       "owner": null,
       "depends_on": [],
@@ -508982,7 +509112,8 @@
           "release-0.5-candidate-acceptance",
           "release-0.5-final-rehearsal",
           "release-0.5-route-census-closure",
-          "release-0.5-verified-command-rejection"
+          "release-0.5-verified-command-rejection",
+          "release-0.5-responsive-width-acceptance"
         ],
         "current_acceptance": null
       }
@@ -534365,7 +534496,8 @@
           "release-0.5-confirmed-electricity-feedback",
           "release-0.5-native-staff-control-targets",
           "release-0.5-invoice-response-feedback",
-          "release-0.5-saving-address-response-feedback"
+          "release-0.5-saving-address-response-feedback",
+          "release-0.5-responsive-width-acceptance"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -534397,7 +534529,7 @@
             },
             {
               "path": "apps/web/e2e/security-settings-forms.spec.ts",
-              "sha256": "10488f5d4a3e7b75d711bbad6f76896c81d97c620185e5d5677d751da9fe5f82"
+              "sha256": "7c9a79795955468c4be73edce7df47eed30b13c8a03ff4cf1bc79c12aae8e903"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -536002,6 +536134,11 @@
               "batch": "release-0.5-saving-address-response-feedback",
               "base_commit": "e65ef2058f98eaa3c7b514c395ff7a2c9e2aaa3f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-response-feedback/saving-address-response-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-responsive-width-acceptance",
+              "base_commit": "d0555f77ac44ec5ea209db9407149824031617da",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-responsive-width-acceptance/closure-touch-width-proof.json"
             }
           ]
         },
@@ -536140,7 +536277,8 @@
           "release-0.5-confirmed-electricity-feedback",
           "release-0.5-native-staff-control-targets",
           "release-0.5-invoice-response-feedback",
-          "release-0.5-saving-address-response-feedback"
+          "release-0.5-saving-address-response-feedback",
+          "release-0.5-responsive-width-acceptance"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -536172,7 +536310,7 @@
             },
             {
               "path": "apps/web/e2e/security-settings-forms.spec.ts",
-              "sha256": "10488f5d4a3e7b75d711bbad6f76896c81d97c620185e5d5677d751da9fe5f82"
+              "sha256": "7c9a79795955468c4be73edce7df47eed30b13c8a03ff4cf1bc79c12aae8e903"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -537777,6 +537915,11 @@
               "batch": "release-0.5-saving-address-response-feedback",
               "base_commit": "e65ef2058f98eaa3c7b514c395ff7a2c9e2aaa3f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-response-feedback/saving-address-response-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-responsive-width-acceptance",
+              "base_commit": "d0555f77ac44ec5ea209db9407149824031617da",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-responsive-width-acceptance/closure-touch-width-proof.json"
             }
           ]
         },
@@ -537916,7 +538059,8 @@
           "release-0.5-confirmed-electricity-feedback",
           "release-0.5-native-staff-control-targets",
           "release-0.5-invoice-response-feedback",
-          "release-0.5-saving-address-response-feedback"
+          "release-0.5-saving-address-response-feedback",
+          "release-0.5-responsive-width-acceptance"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -537948,7 +538092,7 @@
             },
             {
               "path": "apps/web/e2e/security-settings-forms.spec.ts",
-              "sha256": "10488f5d4a3e7b75d711bbad6f76896c81d97c620185e5d5677d751da9fe5f82"
+              "sha256": "7c9a79795955468c4be73edce7df47eed30b13c8a03ff4cf1bc79c12aae8e903"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -539553,6 +539697,11 @@
               "batch": "release-0.5-saving-address-response-feedback",
               "base_commit": "e65ef2058f98eaa3c7b514c395ff7a2c9e2aaa3f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-response-feedback/saving-address-response-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-responsive-width-acceptance",
+              "base_commit": "d0555f77ac44ec5ea209db9407149824031617da",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-responsive-width-acceptance/closure-touch-width-proof.json"
             }
           ]
         },
@@ -539661,7 +539810,8 @@
           "release-0.5-confirmed-electricity-feedback",
           "release-0.5-native-staff-control-targets",
           "release-0.5-invoice-response-feedback",
-          "release-0.5-saving-address-response-feedback"
+          "release-0.5-saving-address-response-feedback",
+          "release-0.5-responsive-width-acceptance"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -539693,7 +539843,7 @@
             },
             {
               "path": "apps/web/e2e/security-settings-forms.spec.ts",
-              "sha256": "10488f5d4a3e7b75d711bbad6f76896c81d97c620185e5d5677d751da9fe5f82"
+              "sha256": "7c9a79795955468c4be73edce7df47eed30b13c8a03ff4cf1bc79c12aae8e903"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -541298,6 +541448,11 @@
               "batch": "release-0.5-saving-address-response-feedback",
               "base_commit": "e65ef2058f98eaa3c7b514c395ff7a2c9e2aaa3f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-response-feedback/saving-address-response-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-responsive-width-acceptance",
+              "base_commit": "d0555f77ac44ec5ea209db9407149824031617da",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-responsive-width-acceptance/closure-touch-width-proof.json"
             }
           ]
         },
@@ -541432,7 +541587,8 @@
           "release-0.5-confirmed-electricity-feedback",
           "release-0.5-native-staff-control-targets",
           "release-0.5-invoice-response-feedback",
-          "release-0.5-saving-address-response-feedback"
+          "release-0.5-saving-address-response-feedback",
+          "release-0.5-responsive-width-acceptance"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -541464,7 +541620,7 @@
             },
             {
               "path": "apps/web/e2e/security-settings-forms.spec.ts",
-              "sha256": "10488f5d4a3e7b75d711bbad6f76896c81d97c620185e5d5677d751da9fe5f82"
+              "sha256": "7c9a79795955468c4be73edce7df47eed30b13c8a03ff4cf1bc79c12aae8e903"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -543069,6 +543225,11 @@
               "batch": "release-0.5-saving-address-response-feedback",
               "base_commit": "e65ef2058f98eaa3c7b514c395ff7a2c9e2aaa3f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-response-feedback/saving-address-response-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-responsive-width-acceptance",
+              "base_commit": "d0555f77ac44ec5ea209db9407149824031617da",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-responsive-width-acceptance/closure-touch-width-proof.json"
             }
           ]
         },
@@ -543212,7 +543373,8 @@
           "release-0.5-confirmed-electricity-feedback",
           "release-0.5-native-staff-control-targets",
           "release-0.5-invoice-response-feedback",
-          "release-0.5-saving-address-response-feedback"
+          "release-0.5-saving-address-response-feedback",
+          "release-0.5-responsive-width-acceptance"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -543244,7 +543406,7 @@
             },
             {
               "path": "apps/web/e2e/security-settings-forms.spec.ts",
-              "sha256": "10488f5d4a3e7b75d711bbad6f76896c81d97c620185e5d5677d751da9fe5f82"
+              "sha256": "7c9a79795955468c4be73edce7df47eed30b13c8a03ff4cf1bc79c12aae8e903"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -544849,6 +545011,11 @@
               "batch": "release-0.5-saving-address-response-feedback",
               "base_commit": "e65ef2058f98eaa3c7b514c395ff7a2c9e2aaa3f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-response-feedback/saving-address-response-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-responsive-width-acceptance",
+              "base_commit": "d0555f77ac44ec5ea209db9407149824031617da",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-responsive-width-acceptance/closure-touch-width-proof.json"
             }
           ]
         },
@@ -544965,7 +545132,8 @@
           "release-0.5-confirmed-electricity-feedback",
           "release-0.5-native-staff-control-targets",
           "release-0.5-invoice-response-feedback",
-          "release-0.5-saving-address-response-feedback"
+          "release-0.5-saving-address-response-feedback",
+          "release-0.5-responsive-width-acceptance"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -544997,7 +545165,7 @@
             },
             {
               "path": "apps/web/e2e/security-settings-forms.spec.ts",
-              "sha256": "10488f5d4a3e7b75d711bbad6f76896c81d97c620185e5d5677d751da9fe5f82"
+              "sha256": "7c9a79795955468c4be73edce7df47eed30b13c8a03ff4cf1bc79c12aae8e903"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -546602,6 +546770,11 @@
               "batch": "release-0.5-saving-address-response-feedback",
               "base_commit": "e65ef2058f98eaa3c7b514c395ff7a2c9e2aaa3f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-response-feedback/saving-address-response-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-responsive-width-acceptance",
+              "base_commit": "d0555f77ac44ec5ea209db9407149824031617da",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-responsive-width-acceptance/closure-touch-width-proof.json"
             }
           ]
         },
@@ -546682,7 +546855,8 @@
           "release-0.5-confirmed-electricity-feedback",
           "release-0.5-native-staff-control-targets",
           "release-0.5-invoice-response-feedback",
-          "release-0.5-saving-address-response-feedback"
+          "release-0.5-saving-address-response-feedback",
+          "release-0.5-responsive-width-acceptance"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -546714,7 +546888,7 @@
             },
             {
               "path": "apps/web/e2e/security-settings-forms.spec.ts",
-              "sha256": "10488f5d4a3e7b75d711bbad6f76896c81d97c620185e5d5677d751da9fe5f82"
+              "sha256": "7c9a79795955468c4be73edce7df47eed30b13c8a03ff4cf1bc79c12aae8e903"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -548319,6 +548493,11 @@
               "batch": "release-0.5-saving-address-response-feedback",
               "base_commit": "e65ef2058f98eaa3c7b514c395ff7a2c9e2aaa3f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-response-feedback/saving-address-response-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-responsive-width-acceptance",
+              "base_commit": "d0555f77ac44ec5ea209db9407149824031617da",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-responsive-width-acceptance/closure-touch-width-proof.json"
             }
           ]
         },
@@ -548399,7 +548578,8 @@
           "release-0.5-confirmed-electricity-feedback",
           "release-0.5-native-staff-control-targets",
           "release-0.5-invoice-response-feedback",
-          "release-0.5-saving-address-response-feedback"
+          "release-0.5-saving-address-response-feedback",
+          "release-0.5-responsive-width-acceptance"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -548431,7 +548611,7 @@
             },
             {
               "path": "apps/web/e2e/security-settings-forms.spec.ts",
-              "sha256": "10488f5d4a3e7b75d711bbad6f76896c81d97c620185e5d5677d751da9fe5f82"
+              "sha256": "7c9a79795955468c4be73edce7df47eed30b13c8a03ff4cf1bc79c12aae8e903"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -550036,6 +550216,11 @@
               "batch": "release-0.5-saving-address-response-feedback",
               "base_commit": "e65ef2058f98eaa3c7b514c395ff7a2c9e2aaa3f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-response-feedback/saving-address-response-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-responsive-width-acceptance",
+              "base_commit": "d0555f77ac44ec5ea209db9407149824031617da",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-responsive-width-acceptance/closure-touch-width-proof.json"
             }
           ]
         },
@@ -550117,7 +550302,8 @@
           "release-0.5-confirmed-electricity-feedback",
           "release-0.5-native-staff-control-targets",
           "release-0.5-invoice-response-feedback",
-          "release-0.5-saving-address-response-feedback"
+          "release-0.5-saving-address-response-feedback",
+          "release-0.5-responsive-width-acceptance"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -550149,7 +550335,7 @@
             },
             {
               "path": "apps/web/e2e/security-settings-forms.spec.ts",
-              "sha256": "10488f5d4a3e7b75d711bbad6f76896c81d97c620185e5d5677d751da9fe5f82"
+              "sha256": "7c9a79795955468c4be73edce7df47eed30b13c8a03ff4cf1bc79c12aae8e903"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -551754,6 +551940,11 @@
               "batch": "release-0.5-saving-address-response-feedback",
               "base_commit": "e65ef2058f98eaa3c7b514c395ff7a2c9e2aaa3f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-response-feedback/saving-address-response-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-responsive-width-acceptance",
+              "base_commit": "d0555f77ac44ec5ea209db9407149824031617da",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-responsive-width-acceptance/closure-touch-width-proof.json"
             }
           ]
         },
@@ -551834,7 +552025,8 @@
           "release-0.5-confirmed-electricity-feedback",
           "release-0.5-native-staff-control-targets",
           "release-0.5-invoice-response-feedback",
-          "release-0.5-saving-address-response-feedback"
+          "release-0.5-saving-address-response-feedback",
+          "release-0.5-responsive-width-acceptance"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -551866,7 +552058,7 @@
             },
             {
               "path": "apps/web/e2e/security-settings-forms.spec.ts",
-              "sha256": "10488f5d4a3e7b75d711bbad6f76896c81d97c620185e5d5677d751da9fe5f82"
+              "sha256": "7c9a79795955468c4be73edce7df47eed30b13c8a03ff4cf1bc79c12aae8e903"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -553471,6 +553663,11 @@
               "batch": "release-0.5-saving-address-response-feedback",
               "base_commit": "e65ef2058f98eaa3c7b514c395ff7a2c9e2aaa3f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-response-feedback/saving-address-response-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-responsive-width-acceptance",
+              "base_commit": "d0555f77ac44ec5ea209db9407149824031617da",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-responsive-width-acceptance/closure-touch-width-proof.json"
             }
           ]
         },
@@ -581413,7 +581610,8 @@
           "release-0.5-confirmed-electricity-feedback",
           "release-0.5-native-staff-control-targets",
           "release-0.5-invoice-response-feedback",
-          "release-0.5-saving-address-response-feedback"
+          "release-0.5-saving-address-response-feedback",
+          "release-0.5-responsive-width-acceptance"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -581445,7 +581643,7 @@
             },
             {
               "path": "apps/web/e2e/security-settings-forms.spec.ts",
-              "sha256": "10488f5d4a3e7b75d711bbad6f76896c81d97c620185e5d5677d751da9fe5f82"
+              "sha256": "7c9a79795955468c4be73edce7df47eed30b13c8a03ff4cf1bc79c12aae8e903"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -583050,6 +583248,11 @@
               "batch": "release-0.5-saving-address-response-feedback",
               "base_commit": "e65ef2058f98eaa3c7b514c395ff7a2c9e2aaa3f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-response-feedback/saving-address-response-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-responsive-width-acceptance",
+              "base_commit": "d0555f77ac44ec5ea209db9407149824031617da",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-responsive-width-acceptance/closure-touch-width-proof.json"
             }
           ]
         },
@@ -583126,7 +583329,8 @@
           "release-0.5-confirmed-electricity-feedback",
           "release-0.5-native-staff-control-targets",
           "release-0.5-invoice-response-feedback",
-          "release-0.5-saving-address-response-feedback"
+          "release-0.5-saving-address-response-feedback",
+          "release-0.5-responsive-width-acceptance"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -583158,7 +583362,7 @@
             },
             {
               "path": "apps/web/e2e/security-settings-forms.spec.ts",
-              "sha256": "10488f5d4a3e7b75d711bbad6f76896c81d97c620185e5d5677d751da9fe5f82"
+              "sha256": "7c9a79795955468c4be73edce7df47eed30b13c8a03ff4cf1bc79c12aae8e903"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -584763,6 +584967,11 @@
               "batch": "release-0.5-saving-address-response-feedback",
               "base_commit": "e65ef2058f98eaa3c7b514c395ff7a2c9e2aaa3f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-response-feedback/saving-address-response-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-responsive-width-acceptance",
+              "base_commit": "d0555f77ac44ec5ea209db9407149824031617da",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-responsive-width-acceptance/closure-touch-width-proof.json"
             }
           ]
         },
@@ -584839,7 +585048,8 @@
           "release-0.5-confirmed-electricity-feedback",
           "release-0.5-native-staff-control-targets",
           "release-0.5-invoice-response-feedback",
-          "release-0.5-saving-address-response-feedback"
+          "release-0.5-saving-address-response-feedback",
+          "release-0.5-responsive-width-acceptance"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -584871,7 +585081,7 @@
             },
             {
               "path": "apps/web/e2e/security-settings-forms.spec.ts",
-              "sha256": "10488f5d4a3e7b75d711bbad6f76896c81d97c620185e5d5677d751da9fe5f82"
+              "sha256": "7c9a79795955468c4be73edce7df47eed30b13c8a03ff4cf1bc79c12aae8e903"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -586476,6 +586686,11 @@
               "batch": "release-0.5-saving-address-response-feedback",
               "base_commit": "e65ef2058f98eaa3c7b514c395ff7a2c9e2aaa3f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-response-feedback/saving-address-response-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-responsive-width-acceptance",
+              "base_commit": "d0555f77ac44ec5ea209db9407149824031617da",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-responsive-width-acceptance/closure-touch-width-proof.json"
             }
           ]
         },
@@ -586552,7 +586767,8 @@
           "release-0.5-confirmed-electricity-feedback",
           "release-0.5-native-staff-control-targets",
           "release-0.5-invoice-response-feedback",
-          "release-0.5-saving-address-response-feedback"
+          "release-0.5-saving-address-response-feedback",
+          "release-0.5-responsive-width-acceptance"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -586584,7 +586800,7 @@
             },
             {
               "path": "apps/web/e2e/security-settings-forms.spec.ts",
-              "sha256": "10488f5d4a3e7b75d711bbad6f76896c81d97c620185e5d5677d751da9fe5f82"
+              "sha256": "7c9a79795955468c4be73edce7df47eed30b13c8a03ff4cf1bc79c12aae8e903"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -588189,6 +588405,11 @@
               "batch": "release-0.5-saving-address-response-feedback",
               "base_commit": "e65ef2058f98eaa3c7b514c395ff7a2c9e2aaa3f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-response-feedback/saving-address-response-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-responsive-width-acceptance",
+              "base_commit": "d0555f77ac44ec5ea209db9407149824031617da",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-responsive-width-acceptance/closure-touch-width-proof.json"
             }
           ]
         },
@@ -588265,7 +588486,8 @@
           "release-0.5-confirmed-electricity-feedback",
           "release-0.5-native-staff-control-targets",
           "release-0.5-invoice-response-feedback",
-          "release-0.5-saving-address-response-feedback"
+          "release-0.5-saving-address-response-feedback",
+          "release-0.5-responsive-width-acceptance"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -588297,7 +588519,7 @@
             },
             {
               "path": "apps/web/e2e/security-settings-forms.spec.ts",
-              "sha256": "10488f5d4a3e7b75d711bbad6f76896c81d97c620185e5d5677d751da9fe5f82"
+              "sha256": "7c9a79795955468c4be73edce7df47eed30b13c8a03ff4cf1bc79c12aae8e903"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -589902,6 +590124,11 @@
               "batch": "release-0.5-saving-address-response-feedback",
               "base_commit": "e65ef2058f98eaa3c7b514c395ff7a2c9e2aaa3f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-response-feedback/saving-address-response-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-responsive-width-acceptance",
+              "base_commit": "d0555f77ac44ec5ea209db9407149824031617da",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-responsive-width-acceptance/closure-touch-width-proof.json"
             }
           ]
         },
@@ -589978,7 +590205,8 @@
           "release-0.5-confirmed-electricity-feedback",
           "release-0.5-native-staff-control-targets",
           "release-0.5-invoice-response-feedback",
-          "release-0.5-saving-address-response-feedback"
+          "release-0.5-saving-address-response-feedback",
+          "release-0.5-responsive-width-acceptance"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -590010,7 +590238,7 @@
             },
             {
               "path": "apps/web/e2e/security-settings-forms.spec.ts",
-              "sha256": "10488f5d4a3e7b75d711bbad6f76896c81d97c620185e5d5677d751da9fe5f82"
+              "sha256": "7c9a79795955468c4be73edce7df47eed30b13c8a03ff4cf1bc79c12aae8e903"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -591615,6 +591843,11 @@
               "batch": "release-0.5-saving-address-response-feedback",
               "base_commit": "e65ef2058f98eaa3c7b514c395ff7a2c9e2aaa3f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-response-feedback/saving-address-response-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-responsive-width-acceptance",
+              "base_commit": "d0555f77ac44ec5ea209db9407149824031617da",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-responsive-width-acceptance/closure-touch-width-proof.json"
             }
           ]
         },
@@ -591691,7 +591924,8 @@
           "release-0.5-confirmed-electricity-feedback",
           "release-0.5-native-staff-control-targets",
           "release-0.5-invoice-response-feedback",
-          "release-0.5-saving-address-response-feedback"
+          "release-0.5-saving-address-response-feedback",
+          "release-0.5-responsive-width-acceptance"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -591723,7 +591957,7 @@
             },
             {
               "path": "apps/web/e2e/security-settings-forms.spec.ts",
-              "sha256": "10488f5d4a3e7b75d711bbad6f76896c81d97c620185e5d5677d751da9fe5f82"
+              "sha256": "7c9a79795955468c4be73edce7df47eed30b13c8a03ff4cf1bc79c12aae8e903"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -593328,6 +593562,11 @@
               "batch": "release-0.5-saving-address-response-feedback",
               "base_commit": "e65ef2058f98eaa3c7b514c395ff7a2c9e2aaa3f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-address-response-feedback/saving-address-response-feedback-proof.json"
+            },
+            {
+              "batch": "release-0.5-responsive-width-acceptance",
+              "base_commit": "d0555f77ac44ec5ea209db9407149824031617da",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-responsive-width-acceptance/closure-touch-width-proof.json"
             }
           ]
         },
@@ -597435,7 +597674,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-responsive-width-acceptance"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -597647,7 +597887,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
-              "sha256": "8283237cf810fe5be7a4fbd8e0303aada08c0c2246ffaf0542ac74fa982b1137"
+              "sha256": "607f764dd241f8152498963f373b40b189496e72bdefc078785d416617a5ad2e"
             },
             {
               "path": "apps/web/src/components/ProfileIdentity.tsx",
@@ -598129,6 +598369,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-responsive-width-acceptance",
+              "base_commit": "d0555f77ac44ec5ea209db9407149824031617da",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-responsive-width-acceptance/closure-touch-width-proof.json"
             }
           ]
         }
@@ -598185,7 +598430,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-responsive-width-acceptance"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -598397,7 +598643,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
-              "sha256": "8283237cf810fe5be7a4fbd8e0303aada08c0c2246ffaf0542ac74fa982b1137"
+              "sha256": "607f764dd241f8152498963f373b40b189496e72bdefc078785d416617a5ad2e"
             },
             {
               "path": "apps/web/src/components/ProfileIdentity.tsx",
@@ -598879,6 +599125,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-responsive-width-acceptance",
+              "base_commit": "d0555f77ac44ec5ea209db9407149824031617da",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-responsive-width-acceptance/closure-touch-width-proof.json"
             }
           ]
         }
@@ -598935,7 +599186,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-responsive-width-acceptance"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -599147,7 +599399,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
-              "sha256": "8283237cf810fe5be7a4fbd8e0303aada08c0c2246ffaf0542ac74fa982b1137"
+              "sha256": "607f764dd241f8152498963f373b40b189496e72bdefc078785d416617a5ad2e"
             },
             {
               "path": "apps/web/src/components/ProfileIdentity.tsx",
@@ -599629,6 +599881,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-responsive-width-acceptance",
+              "base_commit": "d0555f77ac44ec5ea209db9407149824031617da",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-responsive-width-acceptance/closure-touch-width-proof.json"
             }
           ]
         }
@@ -599685,7 +599942,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-responsive-width-acceptance"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -599897,7 +600155,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
-              "sha256": "8283237cf810fe5be7a4fbd8e0303aada08c0c2246ffaf0542ac74fa982b1137"
+              "sha256": "607f764dd241f8152498963f373b40b189496e72bdefc078785d416617a5ad2e"
             },
             {
               "path": "apps/web/src/components/ProfileIdentity.tsx",
@@ -600379,6 +600637,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-responsive-width-acceptance",
+              "base_commit": "d0555f77ac44ec5ea209db9407149824031617da",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-responsive-width-acceptance/closure-touch-width-proof.json"
             }
           ]
         }
@@ -600439,7 +600702,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-responsive-width-acceptance"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -600651,7 +600915,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
-              "sha256": "8283237cf810fe5be7a4fbd8e0303aada08c0c2246ffaf0542ac74fa982b1137"
+              "sha256": "607f764dd241f8152498963f373b40b189496e72bdefc078785d416617a5ad2e"
             },
             {
               "path": "apps/web/src/components/ProfileIdentity.tsx",
@@ -601133,6 +601397,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-responsive-width-acceptance",
+              "base_commit": "d0555f77ac44ec5ea209db9407149824031617da",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-responsive-width-acceptance/closure-touch-width-proof.json"
             }
           ]
         }
@@ -601189,7 +601458,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-responsive-width-acceptance"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -601401,7 +601671,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
-              "sha256": "8283237cf810fe5be7a4fbd8e0303aada08c0c2246ffaf0542ac74fa982b1137"
+              "sha256": "607f764dd241f8152498963f373b40b189496e72bdefc078785d416617a5ad2e"
             },
             {
               "path": "apps/web/src/components/ProfileIdentity.tsx",
@@ -601883,6 +602153,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-responsive-width-acceptance",
+              "base_commit": "d0555f77ac44ec5ea209db9407149824031617da",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-responsive-width-acceptance/closure-touch-width-proof.json"
             }
           ]
         }
@@ -601939,7 +602214,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-responsive-width-acceptance"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -602151,7 +602427,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
-              "sha256": "8283237cf810fe5be7a4fbd8e0303aada08c0c2246ffaf0542ac74fa982b1137"
+              "sha256": "607f764dd241f8152498963f373b40b189496e72bdefc078785d416617a5ad2e"
             },
             {
               "path": "apps/web/src/components/ProfileIdentity.tsx",
@@ -602633,6 +602909,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-responsive-width-acceptance",
+              "base_commit": "d0555f77ac44ec5ea209db9407149824031617da",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-responsive-width-acceptance/closure-touch-width-proof.json"
             }
           ]
         }
@@ -602690,7 +602971,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-responsive-width-acceptance"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -602902,7 +603184,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
-              "sha256": "8283237cf810fe5be7a4fbd8e0303aada08c0c2246ffaf0542ac74fa982b1137"
+              "sha256": "607f764dd241f8152498963f373b40b189496e72bdefc078785d416617a5ad2e"
             },
             {
               "path": "apps/web/src/components/ProfileIdentity.tsx",
@@ -603384,6 +603666,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-responsive-width-acceptance",
+              "base_commit": "d0555f77ac44ec5ea209db9407149824031617da",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-responsive-width-acceptance/closure-touch-width-proof.json"
             }
           ]
         }
@@ -603441,7 +603728,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-responsive-width-acceptance"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -603653,7 +603941,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
-              "sha256": "8283237cf810fe5be7a4fbd8e0303aada08c0c2246ffaf0542ac74fa982b1137"
+              "sha256": "607f764dd241f8152498963f373b40b189496e72bdefc078785d416617a5ad2e"
             },
             {
               "path": "apps/web/src/components/ProfileIdentity.tsx",
@@ -604135,6 +604423,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-responsive-width-acceptance",
+              "base_commit": "d0555f77ac44ec5ea209db9407149824031617da",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-responsive-width-acceptance/closure-touch-width-proof.json"
             }
           ]
         }
@@ -604192,7 +604485,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-responsive-width-acceptance"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -604404,7 +604698,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
-              "sha256": "8283237cf810fe5be7a4fbd8e0303aada08c0c2246ffaf0542ac74fa982b1137"
+              "sha256": "607f764dd241f8152498963f373b40b189496e72bdefc078785d416617a5ad2e"
             },
             {
               "path": "apps/web/src/components/ProfileIdentity.tsx",
@@ -604886,6 +605180,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-responsive-width-acceptance",
+              "base_commit": "d0555f77ac44ec5ea209db9407149824031617da",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-responsive-width-acceptance/closure-touch-width-proof.json"
             }
           ]
         }
@@ -604943,7 +605242,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-responsive-width-acceptance"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -605155,7 +605455,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
-              "sha256": "8283237cf810fe5be7a4fbd8e0303aada08c0c2246ffaf0542ac74fa982b1137"
+              "sha256": "607f764dd241f8152498963f373b40b189496e72bdefc078785d416617a5ad2e"
             },
             {
               "path": "apps/web/src/components/ProfileIdentity.tsx",
@@ -605637,6 +605937,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-responsive-width-acceptance",
+              "base_commit": "d0555f77ac44ec5ea209db9407149824031617da",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-responsive-width-acceptance/closure-touch-width-proof.json"
             }
           ]
         }
@@ -605694,7 +605999,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-responsive-width-acceptance"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -605906,7 +606212,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
-              "sha256": "8283237cf810fe5be7a4fbd8e0303aada08c0c2246ffaf0542ac74fa982b1137"
+              "sha256": "607f764dd241f8152498963f373b40b189496e72bdefc078785d416617a5ad2e"
             },
             {
               "path": "apps/web/src/components/ProfileIdentity.tsx",
@@ -606388,6 +606694,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-responsive-width-acceptance",
+              "base_commit": "d0555f77ac44ec5ea209db9407149824031617da",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-responsive-width-acceptance/closure-touch-width-proof.json"
             }
           ]
         }
@@ -606445,7 +606756,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-responsive-width-acceptance"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -606657,7 +606969,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
-              "sha256": "8283237cf810fe5be7a4fbd8e0303aada08c0c2246ffaf0542ac74fa982b1137"
+              "sha256": "607f764dd241f8152498963f373b40b189496e72bdefc078785d416617a5ad2e"
             },
             {
               "path": "apps/web/src/components/ProfileIdentity.tsx",
@@ -607139,6 +607451,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-responsive-width-acceptance",
+              "base_commit": "d0555f77ac44ec5ea209db9407149824031617da",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-responsive-width-acceptance/closure-touch-width-proof.json"
             }
           ]
         }
@@ -607196,7 +607513,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-responsive-width-acceptance"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -607408,7 +607726,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
-              "sha256": "8283237cf810fe5be7a4fbd8e0303aada08c0c2246ffaf0542ac74fa982b1137"
+              "sha256": "607f764dd241f8152498963f373b40b189496e72bdefc078785d416617a5ad2e"
             },
             {
               "path": "apps/web/src/components/ProfileIdentity.tsx",
@@ -607890,6 +608208,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-responsive-width-acceptance",
+              "base_commit": "d0555f77ac44ec5ea209db9407149824031617da",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-responsive-width-acceptance/closure-touch-width-proof.json"
             }
           ]
         }
@@ -607947,7 +608270,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-compact-touch-and-saving-feedback",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-responsive-width-acceptance"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -608159,7 +608483,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
-              "sha256": "8283237cf810fe5be7a4fbd8e0303aada08c0c2246ffaf0542ac74fa982b1137"
+              "sha256": "607f764dd241f8152498963f373b40b189496e72bdefc078785d416617a5ad2e"
             },
             {
               "path": "apps/web/src/components/ProfileIdentity.tsx",
@@ -608641,6 +608965,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-responsive-width-acceptance",
+              "base_commit": "d0555f77ac44ec5ea209db9407149824031617da",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-responsive-width-acceptance/closure-touch-width-proof.json"
             }
           ]
         }
@@ -699413,7 +699742,7 @@
             },
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
-              "sha256": "93a35600f3e64446c57ab7d296c33ba543ca601cb69a8e743582ab33caad3dba"
+              "sha256": "c413d4a98a7ebf6c9ca577fc9d5f7b7ea9cc5523c07b22806e4f50565c2bb2d1"
             },
             {
               "path": "apps/web/e2e/provider-forms.spec.ts",
@@ -701914,6 +702243,11 @@
               "batch": "release-0.5-ai-tab-intrinsic-widths",
               "base_commit": "1a62016b62709882a7d5ddf84af5d3b655ca27ee",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/ai-tab-label-proof.json"
+            },
+            {
+              "batch": "release-0.5-responsive-width-acceptance",
+              "base_commit": "d0555f77ac44ec5ea209db9407149824031617da",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-responsive-width-acceptance/closure-touch-width-proof.json"
             }
           ]
         },
@@ -701953,7 +702287,8 @@
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-native-staff-control-targets",
-          "release-0.5-ai-tab-intrinsic-widths"
+          "release-0.5-ai-tab-intrinsic-widths",
+          "release-0.5-responsive-width-acceptance"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -703258,7 +703593,7 @@
             },
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
-              "sha256": "93a35600f3e64446c57ab7d296c33ba543ca601cb69a8e743582ab33caad3dba"
+              "sha256": "c413d4a98a7ebf6c9ca577fc9d5f7b7ea9cc5523c07b22806e4f50565c2bb2d1"
             },
             {
               "path": "apps/web/e2e/provider-forms.spec.ts",
@@ -705629,6 +705964,11 @@
               "batch": "release-0.5-ai-tab-intrinsic-widths",
               "base_commit": "1a62016b62709882a7d5ddf84af5d3b655ca27ee",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-native-layout/ai-tab-label-proof.json"
+            },
+            {
+              "batch": "release-0.5-responsive-width-acceptance",
+              "base_commit": "d0555f77ac44ec5ea209db9407149824031617da",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-responsive-width-acceptance/closure-touch-width-proof.json"
             }
           ]
         },
@@ -705685,7 +706025,8 @@
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-native-staff-control-targets",
-          "release-0.5-ai-tab-intrinsic-widths"
+          "release-0.5-ai-tab-intrinsic-widths",
+          "release-0.5-responsive-width-acceptance"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -705861,7 +706202,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "The preceding source has a 2,976-cell populated width matrix and source-bound follow-up for all 100 text cells flagged after earlier repairs. The current failed-job selection uses a measured 44px hit area. Conditional UI and command coverage remain open."
+        "The current width gate covers 93 populated canonical routes and all 2,976 required cells. The staff consent touch gap is fixed. Conditional presentation and command adoption remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -705906,7 +706247,8 @@
           "release-0.5-settings-response-feedback",
           "release-0.5-invoice-response-feedback",
           "release-0.5-saving-address-response-feedback",
-          "release-0.5-operational-queue-touch"
+          "release-0.5-operational-queue-touch",
+          "release-0.5-responsive-width-acceptance"
         ]
       }
     },
@@ -705925,7 +706267,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Current queue touch passed 27 unit cases, 52 Chromium and Safari cases and all 98 gzip limits. Electricity ordering was 254.97 KB gzip against 255 KB. Complete final source combined coverage and accessibility gates."
+        "Current responsive acceptance includes 332 browser cases, 28 affected profile lifecycle browser cases, 11 closure unit cases and all 98 route and interaction gzip limits. Complete the final candidate combined coverage and accessibility gates."
       ],
       "owner": null,
       "depends_on": [],
@@ -705969,7 +706311,8 @@
           "release-0.5-settings-response-feedback",
           "release-0.5-invoice-response-feedback",
           "release-0.5-saving-address-response-feedback",
-          "release-0.5-operational-queue-touch"
+          "release-0.5-operational-queue-touch",
+          "release-0.5-responsive-width-acceptance"
         ]
       }
     },
@@ -765648,7 +765991,114 @@
       ],
       "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-operational-queue-touch/operational-touch-renewed-bindings.json",
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-operational-queue-touch",
-      "release_disposition": "Final width, conditional, combined and owner policy gates remain open."
+      "release_disposition": "Final width, conditional, combined and owner policy gates remain open.",
+      "push_receipt": {
+        "local_sha": "d0555f77ac44ec5ea209db9407149824031617da",
+        "remote_sha": "d0555f77ac44ec5ea209db9407149824031617da",
+        "verified_at": "2026-11-07T17:26:28+00:00"
+      }
+    },
+    "release-0.5-responsive-width-acceptance": {
+      "batch": "release-0.5-responsive-width-acceptance",
+      "base_commit": "d0555f77ac44ec5ea209db9407149824031617da",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.04.02.04",
+        "07-ui-ux-design.md#T-07.03.01.07",
+        "07-ui-ux-design.md#T-07.04.01.06",
+        "07-ui-ux-design.md#T-07.05.01.08",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "accepted_task_keys": [
+        "07-ui-ux-design.md#T-07.04.02.04"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.03.01.07",
+        "07-ui-ux-design.md#T-07.04.01.06",
+        "07-ui-ux-design.md#T-07.05.01.08",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
+          "sha256": "c413d4a98a7ebf6c9ca577fc9d5f7b7ea9cc5523c07b22806e4f50565c2bb2d1"
+        },
+        {
+          "path": "apps/web/e2e/security-settings-forms.spec.ts",
+          "sha256": "7c9a79795955468c4be73edce7df47eed30b13c8a03ff4cf1bc79c12aae8e903"
+        },
+        {
+          "path": "apps/web/src/components/ProfileClosureReview.tsx",
+          "sha256": "607f764dd241f8152498963f373b40b189496e72bdefc078785d416617a5ad2e"
+        }
+      ],
+      "checks": [
+        "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-responsive-width-acceptance/closure-touch-width-proof.json",
+        "332 exact current production-built browser cases and 2,976 populated measurements across 93 canonical routes.",
+        "Original strict overflow, layout, target and landmark assertions retained. Native consent uses a directly tapped 44px label.",
+        "Targeted staff lifecycle passed 28 browser cases and 11 unit cases. Current build, typecheck, lint, formatting and all 98 gzip budgets passed."
+      ],
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-responsive-width-acceptance/closure-touch-width-proof.json",
+      "source_scope_proof_sha256": "f582b972ac155c308b8d08a602b083912deb903d036882329d4e76e631bd32f3",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-responsive-width-acceptance/closure-touch-reviewed.patch",
+      "renewed_task_keys": [
+        "02-auth-users-admin.md#T-11.01.01",
+        "02-auth-users-admin.md#T-11.01.02",
+        "02-auth-users-admin.md#T-11.01.03",
+        "02-auth-users-admin.md#T-11.02.01",
+        "02-auth-users-admin.md#T-11.02.02",
+        "02-auth-users-admin.md#T-11.03.01",
+        "05-notifications-documents-ai.md#T-05.24.01",
+        "05-notifications-documents-ai.md#T-05.24.02",
+        "05-notifications-documents-ai.md#T-05.24.03",
+        "05-notifications-documents-ai.md#T-05.24.04",
+        "07-ui-ux-design.md#T-07.01.03.19",
+        "07-ui-ux-design.md#T-07.01.04.02",
+        "07-ui-ux-design.md#T-07.01.04.03",
+        "07-ui-ux-design.md#T-07.01.04.04",
+        "07-ui-ux-design.md#T-07.04.02.01",
+        "07-ui-ux-design.md#T-07.04.02.02",
+        "07-ui-ux-design.md#T-07.04.02.03",
+        "07-ui-ux-design.md#T-07.10.01.01",
+        "07-ui-ux-design.md#T-07.10.01.02",
+        "07-ui-ux-design.md#T-07.10.01.03",
+        "07-ui-ux-design.md#T-07.10.01.04",
+        "07-ui-ux-design.md#T-07.10.01.05",
+        "07-ui-ux-design.md#T-07.10.01.06",
+        "07-ui-ux-design.md#T-07.10.02.01",
+        "07-ui-ux-design.md#T-07.10.02.02",
+        "07-ui-ux-design.md#T-07.10.02.03",
+        "07-ui-ux-design.md#T-07.10.02.04",
+        "07-ui-ux-design.md#T-07.10.02.05",
+        "07-ui-ux-design.md#T-07.13.01.01",
+        "07-ui-ux-design.md#T-07.13.01.02",
+        "07-ui-ux-design.md#T-07.13.01.03",
+        "07-ui-ux-design.md#T-07.13.01.04",
+        "07-ui-ux-design.md#T-07.13.01.05",
+        "07-ui-ux-design.md#T-07.13.01.06",
+        "07-ui-ux-design.md#T-07.13.01.07",
+        "07-ui-ux-design.md#T-07.15.01.01",
+        "07-ui-ux-design.md#T-07.15.01.02",
+        "07-ui-ux-design.md#T-07.15.01.03",
+        "07-ui-ux-design.md#T-07.15.01.04",
+        "07-ui-ux-design.md#T-07.15.01.05",
+        "07-ui-ux-design.md#T-07.16.01.01",
+        "07-ui-ux-design.md#T-07.16.01.02",
+        "07-ui-ux-design.md#T-07.16.01.03",
+        "07-ui-ux-design.md#T-07.16.01.04",
+        "07-ui-ux-design.md#T-07.16.01.05",
+        "07-ui-ux-design.md#T-07.16.01.06",
+        "07-ui-ux-design.md#T-07.16.01.07",
+        "07-ui-ux-design.md#T-07.16.02.01",
+        "07-ui-ux-design.md#T-07.16.02.02",
+        "07-ui-ux-design.md#T-07.16.02.03",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02"
+      ],
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-responsive-width-acceptance/closure-touch-renewed-bindings.json",
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-responsive-width-acceptance",
+      "release_disposition": "Populated width accepted. Conditional, combined and owner policy gates still apply to v0.5.0."
     }
   },
   "historical_improvements": [
@@ -765702,7 +766152,7 @@
   "launch_forecast": {
     "status": "deadline_at_risk_until_v0_5_and_operational_gates_close",
     "next_update_after": "v0.5.0 candidate coverage and owner dispositions",
-    "method": "v0.4.0 staging and Telegram receipts verified. v0.5.0 populated route widths and themes are recorded; exact coverage, conditional acceptance, accessibility merge policy and route reporting still gate release. The November 9 sequence remains at risk. Production is not authorized."
+    "method": "v0.4.0 staging and Telegram receipts verified. v0.5.0 has accepted the 93-route populated width matrix. Conditional acceptance, exact coverage, accessibility merge policy and live route reporting still gate release. The November 9 sequence remains at risk."
   },
   "capabilities": [
     {
