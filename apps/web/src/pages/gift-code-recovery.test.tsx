@@ -1,3 +1,4 @@
+import { approveVisibleConfirmation } from '../test/confirmation.js';
 import { QueryProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
@@ -38,6 +39,7 @@ async function click(name: string, dialog = false) {
     (n) => n.textContent?.trim() === name
   );
   expect(button, name).toBeDefined();
+  await approveVisibleConfirmation();
   await act(async () => button!.click());
 }
 async function fill(value: string) {
@@ -48,6 +50,7 @@ async function fill(value: string) {
   });
 }
 async function submit(dialog = false) {
+  await approveVisibleConfirmation();
   await act(async () =>
     document
       .querySelector(dialog ? '[role=dialog] form' : 'form[aria-label="Gift-code settings"]')!
@@ -246,6 +249,7 @@ it('late command completion cannot supersede an accepted denial', async () => {
   await fill('2222');
   await submit();
   denied = true;
+  await approveVisibleConfirmation();
   await act(async () => {
     const dialog = document.querySelector('[role=dialog]')!;
     [...dialog.querySelectorAll<HTMLButtonElement>('button')]
@@ -282,6 +286,7 @@ it('old filter pages cannot mix into a replaced catalogue', async () => {
         : reply(Array.from({ length: 50 }, (_, i) => giftCode(i)))
   );
   await click('Load more codes');
+  await approveVisibleConfirmation();
   await act(async () => {
     const select = host.querySelector<HTMLSelectElement>('#gift-status-filter')!;
     select.value = 'inactive';
@@ -291,6 +296,7 @@ it('old filter pages cannot mix into a replaced catalogue', async () => {
       .dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
   });
   // Submit after the controlled filter has rendered its new value.
+  await approveVisibleConfirmation();
   await act(async () =>
     host
       .querySelector('form[aria-label="Gift-code filters"]')!

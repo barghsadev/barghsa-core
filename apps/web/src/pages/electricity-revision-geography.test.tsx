@@ -1,3 +1,4 @@
+import { approveVisibleConfirmation } from '../test/confirmation.js';
 import { QueryProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
@@ -91,6 +92,7 @@ it('blocks a changed province until its bound city list recovers and preserves a
   await select(1, 'p2');
   expect(host.querySelectorAll('select')[2]!.disabled).toBe(true);
   expect(preview().disabled).toBe(true);
+  await approveVisibleConfirmation();
   await act(async () =>
     host
       .querySelector('form')!
@@ -98,6 +100,7 @@ it('blocks a changed province until its bound city list recovers and preserves a
   );
   expect(requests.mock.calls.some(([path]) => path.endsWith('/revision-preview'))).toBe(false);
   valid = true;
+  await approveVisibleConfirmation();
   await act(async () =>
     host.querySelector<HTMLButtonElement>('[data-testid=electricity-revision-city-retry]')!.click()
   );
@@ -107,6 +110,7 @@ it('blocks a changed province until its bound city list recovers and preserves a
     [...host.querySelectorAll('input')].some((element) => element.value === 'Retained address')
   ).toBe(true);
   expect(host.querySelector('textarea')!.value).toBe('Reviewed correction');
+  await approveVisibleConfirmation();
   await act(async () => preview().click());
   await vi.waitFor(() =>
     expect(requests.mock.calls.filter(([path]) => path.endsWith('/revision-preview'))).toHaveLength(

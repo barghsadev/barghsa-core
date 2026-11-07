@@ -1,3 +1,7 @@
+import { useAccountUser } from '../hooks/useAccountUser.js';
+import { useProfileContextRevision } from '../lib/profile-context.js';
+import { ConfirmationFields } from '@barghsa/ui';
+import { useRiskConfirmation } from '../hooks/useRiskConfirmation.js';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Button, Dialog, DialogContent, DialogDescription, DialogTitle } from '@barghsa/ui';
 import { t } from '@barghsa/i18n/workspace';
@@ -17,6 +21,13 @@ interface Props {
 export default function WizardLeaveDialog(props: Props) {
   const { onSave, saveDisabled, errorMessage, working, workingLabel, onStay, onLeave } = props;
   const locale = useLocale();
+  const actor = useAccountUser();
+  const profileRevision = useProfileContextRevision();
+  const discardGate = useRiskConfirmation(
+    JSON.stringify([actor, profileRevision]),
+    locale,
+    'destructive'
+  );
   const [saving, setSaving] = useState(false);
   const [failed, setFailed] = useState(false);
   const inFlight = useRef(false);
@@ -53,7 +64,7 @@ export default function WizardLeaveDialog(props: Props) {
     }
   };
   const discardSavedAndLeave = async () => {
-    if (inFlight.current || working || !props.onDiscardSaved) return;
+    if (!discardGate.allowed || inFlight.current || working || !props.onDiscardSaved) return;
     inFlight.current = true;
     setSaving(true);
     setFailed(false);
@@ -107,14 +118,17 @@ export default function WizardLeaveDialog(props: Props) {
             {t('electricity.order.unsaved.leave', locale)}
           </Button>
           {props.onDiscardSaved && (
-            <Button
-              type="button"
-              variant="destructive"
-              disabled={saving || working}
-              onClick={() => void discardSavedAndLeave()}
-            >
-              {t('electricity.order.unsaved.discardSaved', locale)}
-            </Button>
+            <>
+              <ConfirmationFields gate={discardGate} disabled={saving || working} />
+              <Button
+                type="button"
+                variant="destructive"
+                disabled={saving || working || !discardGate.allowed}
+                onClick={() => void discardSavedAndLeave()}
+              >
+                {t('electricity.order.unsaved.discardSaved', locale)}
+              </Button>
+            </>
           )}
         </div>
       </DialogContent>

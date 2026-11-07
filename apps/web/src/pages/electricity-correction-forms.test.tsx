@@ -1,3 +1,4 @@
+import { approveVisibleConfirmation } from '../test/confirmation.js';
 import { QueryProvider } from '../test/query-provider.js';
 import { act, type ReactNode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
@@ -158,6 +159,7 @@ async function change(id: string, value: string) {
   });
 }
 async function submit(testId: string) {
+  await approveVisibleConfirmation();
   await act(async () =>
     host
       .querySelector(`[data-testid=${testId}]`)!
@@ -201,6 +203,7 @@ async function confirmRevision() {
   const button = [...host.querySelectorAll('section [role=status] button')].find(
     (element) => element.textContent === t('electricity.order.correction.submit', 'en')
   )!;
+  await approveVisibleConfirmation();
   await act(async () => (button as HTMLButtonElement).click());
 }
 
@@ -254,11 +257,13 @@ it('retains malformed address receipts and the exact retry while blocking the si
   const cancel = [...host.querySelectorAll('form')].find(
     (form) => form.querySelector('textarea') && !form.hasAttribute('data-testid')
   )!;
+  await approveVisibleConfirmation();
   await act(async () =>
     cancel.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
   );
   expect(calls('/cancel-review')).toHaveLength(0);
   const first = String(calls('/resubmit-address')[0]![1]?.body);
+  await approveVisibleConfirmation();
   await act(async () =>
     (
       host.querySelector('[data-testid=electricity-address-correction-retry]') as HTMLButtonElement
@@ -305,6 +310,7 @@ it('starts a synchronous guard before validation and prevents duplicate correcti
       resolve = done;
     });
   await change('correction-note', 'One command only');
+  await approveVisibleConfirmation();
   await act(async () => {
     const form = host.querySelector('[data-testid=electricity-address-correction-form]')!;
     for (let count = 0; count < 2; count++)
@@ -339,6 +345,7 @@ it('retains a full revision and captured quote digest across uncertain retries w
   await submit('electricity-revision-form');
   expect(calls('/revision-preview')).toHaveLength(1);
   const first = String(calls('/resubmit')[0]![1]?.body);
+  await approveVisibleConfirmation();
   await act(async () =>
     (host.querySelector('[data-testid=electricity-revision-retry]') as HTMLButtonElement).click()
   );
@@ -361,6 +368,7 @@ it('keeps a rejected exact retry uncertain rather than permitting a new command'
   await vi.waitFor(() =>
     expect(host.querySelector('[data-testid=electricity-revision-retry]')).not.toBeNull()
   );
+  await approveVisibleConfirmation();
   await act(async () =>
     (host.querySelector('[data-testid=electricity-revision-retry]') as HTMLButtonElement).click()
   );
@@ -577,6 +585,7 @@ it('rejects an old retry callback before it can borrow a new order attempt', asy
   await vi.waitFor(() => expect(calls('/resubmit-address')).toHaveLength(2));
   await act(async () => oldProps.onClick());
   expect(calls('/resubmit-address')).toHaveLength(2);
+  await approveVisibleConfirmation();
   await act(async () =>
     (
       host.querySelector('[data-testid=electricity-address-correction-retry]') as HTMLButtonElement
@@ -704,6 +713,7 @@ it('keeps parent detail reads manual and preserves exact string amounts on expli
     document.dispatchEvent(new Event('visibilitychange'));
   });
   expect(requests).toHaveBeenCalledTimes(1);
+  await approveVisibleConfirmation();
   await act(async () => host.querySelector<HTMLButtonElement>('[role=alert] button')!.click());
   expect(host.textContent).toContain('9007199254740993');
   const reads = requests.mock.calls.filter(
@@ -794,6 +804,7 @@ it.each(['simple', 'advanced'] as const)(
       document.dispatchEvent(new Event('visibilitychange'));
     });
     expect(reads).toBe(1);
+    await approveVisibleConfirmation();
     await act(async () => {
       retry.click();
       retry.dispatchEvent(new MouseEvent('click', { bubbles: true }));
@@ -834,6 +845,7 @@ it('withdraws the revision and denies read retry when recovery loses authority',
   const onDenied = vi.fn();
   await renderRevision({ ...order, mode: 'advanced' }, vi.fn(), onDenied);
   await change('revision-note', 'Private retained response');
+  await approveVisibleConfirmation();
   await act(async () =>
     host
       .querySelector<HTMLButtonElement>('[data-testid=electricity-revision-options-retry]')!

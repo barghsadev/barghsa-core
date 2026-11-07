@@ -1,7 +1,7 @@
 import type { RefundDecisionReview, RefundRequestReview } from '@barghsa/shared/finance';
 import { FinancialReviewSummary } from '@barghsa/ui';
 import { useLocale } from '../hooks/useLocale.js';
-import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
+import { useFinancialFormatting } from '../hooks/useFinancialFormatting.js';
 import { invoiceFinancialReviewRows } from './InvoiceFinancialReviewRows.js';
 
 export default function RefundFinancialReviewSummary({
@@ -12,7 +12,7 @@ export default function RefundFinancialReviewSummary({
   word: (key: string) => string;
 }) {
   const locale = useLocale();
-  const numbers = useNumberFormatting(locale);
+  const numbers = useFinancialFormatting(locale);
   const decision = 'decision' in review.data ? review.data.decision : null;
   const refund = review.data.refund;
   return (
@@ -40,7 +40,7 @@ export default function RefundFinancialReviewSummary({
         ...(['refunded', 'reserved', 'available', 'availableAfter'] as const).map((key) => ({
           id: key,
           label: word(key),
-          value: numbers.money(
+          value: numbers.reviewMoney(
             refund[
               key === 'refunded'
                 ? 'refundedBefore'
@@ -72,7 +72,7 @@ export default function RefundFinancialReviewSummary({
           ? [{ id: 'bank', label: word('bankReference'), value: decision.bankReference }]
           : []),
       ]}
-      total={{ label: word('requestAmount'), value: numbers.money(refund.amount) }}
+      total={{ label: word('requestAmount'), value: numbers.reviewMoney(refund.amount) }}
     />
   );
 }

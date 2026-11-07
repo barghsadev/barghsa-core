@@ -1,7 +1,8 @@
-import { ConfirmDialog, FinancialReviewSummary } from '@barghsa/ui';
+import { confirmationText } from '@barghsa/i18n/confirmation';
+import { FinancialConfirmDialog, FinancialReviewSummary } from '@barghsa/ui';
 import type { OnlineTopUpReview } from '@barghsa/shared/finance';
 import { t } from '@barghsa/i18n/workspace';
-import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
+import { useFinancialFormatting } from '../hooks/useFinancialFormatting.js';
 
 export default function OnlineTopUpReviewDialog({
   review,
@@ -16,10 +17,12 @@ export default function OnlineTopUpReviewDialog({
   onCancel: () => void;
   onConfirm: () => void;
 }) {
-  const numbers = useNumberFormatting(locale);
+  const numbers = useFinancialFormatting(locale);
   return (
-    <ConfirmDialog
+    <FinancialConfirmDialog
       open
+      scope={review}
+      acknowledgement={confirmationText('acknowledge', locale)}
       onCancel={onCancel}
       onConfirm={onConfirm}
       title={t('wallet.page.reviewTitle', locale)}
@@ -44,15 +47,15 @@ export default function OnlineTopUpReviewDialog({
           {
             id: 'limit',
             label: t('wallet.page.reviewLimit', locale),
-            value: numbers.money(review.data.onlineTopUpLimitIrR),
+            value: numbers.reviewMoney(review.data.onlineTopUpLimitIrR),
           },
         ]}
         total={{
           label: t('wallet.page.reviewAmount', locale),
-          value: numbers.money(review.data.amountIrR),
+          value: numbers.reviewMoney(review.data.amountIrR),
         }}
         notice={<p>{t('wallet.page.reviewCreditRule', locale)}</p>}
       />
-    </ConfirmDialog>
+    </FinancialConfirmDialog>
   );
 }

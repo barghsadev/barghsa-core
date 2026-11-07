@@ -1,3 +1,4 @@
+import { approveVisibleConfirmation } from '../test/confirmation.js';
 import { QueryComponentProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import { createRoot } from 'react-dom/client';
@@ -147,6 +148,7 @@ async function mount(
     vi.waitFor(() => expect(document.querySelector('[role=dialog]')).not.toBeNull());
   const confirm = async () => {
     await dialog();
+    await approveVisibleConfirmation();
     await click(locale === 'en' ? 'Confirm' : 'تأیید', document);
   };
   const writes = () => posts.filter((item) => /\/(paid-fee|fee)$/.test(item.url));
@@ -303,6 +305,7 @@ it('suppresses duplicate lazy preparation and held preview while leaving its con
     override: async (url) => (url.endsWith('/fee-review') ? held.promise : undefined),
   });
   try {
+    await approveVisibleConfirmation();
     await act(async () => {
       const form = view.container.querySelector('form[data-testid=consultation-fee-form]')!;
       for (let i = 0; i < 2; i++)

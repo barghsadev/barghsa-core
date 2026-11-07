@@ -1,3 +1,4 @@
+import { approveVisibleConfirmation } from '../test/confirmation.js';
 import { QueryProvider } from '../test/query-provider.js';
 import { act, useState, type ComponentProps, type ReactNode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
@@ -159,6 +160,7 @@ async function render(
   const item = [...host.querySelectorAll('button')].find((button) =>
     button.textContent?.includes('Buyer Company')
   )!;
+  await approveVisibleConfirmation();
   await act(async () => item.click());
 }
 async function fill(id: string, value: string) {
@@ -181,9 +183,11 @@ async function click(label: string) {
       (['Buyer Company', 'Other customer'].includes(label) && button.textContent?.includes(label))
   );
   expect(button, label).toBeDefined();
+  await approveVisibleConfirmation();
   await act(async () => button!.click());
 }
 async function submit(family: Family = 'hardware') {
+  await approveVisibleConfirmation();
   await act(async () =>
     host
       .querySelector<HTMLFormElement>(`[data-testid="${formId(family)}"] form`)!
@@ -406,6 +410,7 @@ it.each(['hardware', 'cancellation'] as const)(
         : 'Retry captured upgrade cancellation';
     await settled(() => expect(document.body.textContent).toContain(retry));
     expect(addressButton.disabled).toBe(true);
+    await approveVisibleConfirmation();
     await act(async () =>
       addressForm.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
     );

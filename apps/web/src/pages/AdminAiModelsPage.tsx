@@ -385,6 +385,7 @@ function OwnedAiModelsPage({
     commandBasis.current = { id: model.id, basis: modelBasis(model, 'command') };
     setResult(null);
     const next: TeamAction = {
+      ...(kind === 'delete' || kind === 'disable' ? { risk: 'destructive' as const } : {}),
       title: `${label(kind)}: ${model.title}`,
       description: label(
         kind === 'test' ? 'confirmTest' : kind === 'delete' ? 'confirmDelete' : 'confirmToggle'

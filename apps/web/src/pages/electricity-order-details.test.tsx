@@ -1,3 +1,4 @@
+import { approveVisibleConfirmation } from '../test/confirmation.js';
 import { QueryProvider } from '../test/query-provider.js';
 import { act, type ReactNode } from 'react';
 import { createRoot } from 'react-dom/client';
@@ -107,6 +108,7 @@ it('reviews the exact cancellation refund before submitting its hash', async () 
       );
       reason.dispatchEvent(new Event('input', { bubbles: true }));
     });
+    await approveVisibleConfirmation();
     await act(async () =>
       reason
         .closest('form')!
@@ -121,6 +123,7 @@ it('reviews the exact cancellation refund before submitting its hash', async () 
     const confirm = [...document.body.querySelectorAll('button')].find(
       (button) => button.closest('[role="dialog"]') && button.textContent === 'Cancel order'
     );
+    await approveVisibleConfirmation();
     await act(async () => confirm!.click());
     const mutation = fetchMock.mock.calls.find(([url]) => url.endsWith('/cancel'));
     expect(mutation).toBeDefined();
@@ -650,6 +653,7 @@ it('reviews amended electricity terms before submitting a replacement invoice', 
       city.value = '77777777-7777-7777-8777-777777777778';
       city.dispatchEvent(new Event('change', { bubbles: true }));
     });
+    await approveVisibleConfirmation();
     await act(async () =>
       form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
     );
@@ -669,6 +673,7 @@ it('reviews amended electricity terms before submitting a replacement invoice', 
     const submit = Array.from(section.querySelectorAll('button')).find((button) =>
       button.textContent?.includes('Resubmit for review')
     )!;
+    await approveVisibleConfirmation();
     await act(async () => submit.click());
     expect(requests.find((request) => request.url.endsWith('/resubmit'))?.body).toMatchObject({
       totalKwh: '12',

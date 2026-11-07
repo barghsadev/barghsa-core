@@ -359,6 +359,7 @@ export default function AdminSmsProvidersPage() {
     setProtectedAction({
       basis,
       action: {
+        ...(operation === 'disable' ? { risk: 'destructive' as const } : {}),
         title: text(operation),
         description: text(operation === 'rollback' ? 'rollbackNotice' : 'confirm'),
         path: `/api/admin/sms-providers/${encodeURIComponent(row.id)}/${operation}`,

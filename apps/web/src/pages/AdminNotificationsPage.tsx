@@ -1,3 +1,4 @@
+import { useDestructiveConfirm } from '../hooks/useDestructiveConfirm.js';
 import { parseTemplateEventKey } from '@barghsa/shared/notifications';
 import { renderTemplatePreview } from '../lib/template-preview.js';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
@@ -247,6 +248,7 @@ export default function AdminNotificationsPage({
     setTestSendMsg(null);
   }, [resetEditorBusy, resetCatalogueBusy]);
   const scope = useCatalogueScope(clearPrivate);
+  const confirmDestruction = useDestructiveConfirm(uiLocale, scope.version);
   const ready = accepted && !loading && !loadFailed && !scope.denied;
   const selectedTemplate = editId ? templates.find((r) => r.id === editId) : null;
   const stale =
@@ -750,18 +752,22 @@ export default function AdminNotificationsPage({
   }
 
   async function handleUnpublish(id: string) {
-    if (
-      !ready ||
-      protectedAction ||
-      operationInFlight.current ||
-      !window.confirm(t('admin.notifications.unpublishConfirm', uiLocale))
-    )
-      return;
+    if (!ready || protectedAction || operationInFlight.current) return;
     const token = ++busyTokens.current.row;
     operationInFlight.current = true;
     const epoch = scope.version;
     setError(null);
     try {
+      if (
+        !(await confirmDestruction(
+          t('admin.notifications.unpublish', uiLocale),
+          t('admin.notifications.unpublishConfirm', uiLocale)
+        )) ||
+        token !== busyTokens.current.row ||
+        scope.live.current !== epoch ||
+        !mounted.current
+      )
+        return;
       await mutateTemplate(
         { path: `/api/admin/notifications/templates/${id}/unpublish`, method: 'POST' },
         'admin.notifications.unpublish',
@@ -793,18 +799,22 @@ export default function AdminNotificationsPage({
   }
 
   async function handleDelete(id: string) {
-    if (
-      !ready ||
-      protectedAction ||
-      operationInFlight.current ||
-      !window.confirm(t('admin.notifications.deleteConfirm', uiLocale))
-    )
-      return;
+    if (!ready || protectedAction || operationInFlight.current) return;
     const token = ++busyTokens.current.row;
     operationInFlight.current = true;
     const epoch = scope.version;
     setError(null);
     try {
+      if (
+        !(await confirmDestruction(
+          t('admin.notifications.delete', uiLocale),
+          t('admin.notifications.deleteConfirm', uiLocale)
+        )) ||
+        token !== busyTokens.current.row ||
+        scope.live.current !== epoch ||
+        !mounted.current
+      )
+        return;
       await mutateTemplate(
         { path: `/api/admin/notifications/templates/${id}`, method: 'DELETE' },
         'admin.notifications.delete',

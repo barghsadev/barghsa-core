@@ -1,3 +1,5 @@
+import { ConfirmationFields } from '@barghsa/ui';
+import { useRiskConfirmation } from '../hooks/useRiskConfirmation.js';
 import { useQueryClient } from '@tanstack/react-query';
 import { useServerDetailQuery } from '../hooks/useServerQuery.js';
 import { queryKeys } from '../lib/query-keys.js';
@@ -529,8 +531,9 @@ export function ElectricityOrderRevisionForm({
       }
     }
   }
+  const financialGate = useRiskConfirmation(currentReview, locale, 'financial');
   async function send(retrying: boolean) {
-    if (scope.current !== scopeKey) return;
+    if (!financialGate.allowed || scope.current !== scopeKey) return;
     const captured = attempt.current;
     if (!captured || captured.generation !== generation.current) return;
     try {
@@ -581,7 +584,7 @@ export function ElectricityOrderRevisionForm({
     }
   }
   async function resubmit() {
-    if (scope.current !== scopeKey) return;
+    if (!financialGate.allowed || scope.current !== scopeKey) return;
     if (
       !live ||
       !currentReview ||
@@ -622,7 +625,7 @@ export function ElectricityOrderRevisionForm({
     }
   }
   async function retry() {
-    if (scope.current !== scopeKey) return;
+    if (!financialGate.allowed || scope.current !== scopeKey) return;
     if (!live || pending.current || !attempt.current || lock.owner !== 'revision') return;
     const token = generation.current;
     pending.current = true;
@@ -985,7 +988,13 @@ export function ElectricityOrderRevisionForm({
           <p className="text-sm text-muted-foreground">
             {t('electricity.order.revision.replacesInvoice', locale)}
           </p>
-          <Button type="button" disabled={busy || locked} onClick={() => void resubmit()}>
+          <ConfirmationFields gate={financialGate} disabled={busy || locked} />
+          <Button
+            type="button"
+            variant="warning"
+            disabled={busy || locked || !financialGate.allowed}
+            onClick={() => void resubmit()}
+          >
             {t('electricity.order.correction.submit', locale)}
           </Button>
         </div>

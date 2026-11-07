@@ -1,7 +1,8 @@
-import { ConfirmDialog, FinancialReviewSummary } from '@barghsa/ui';
+import { confirmationText } from '@barghsa/i18n/confirmation';
+import { FinancialConfirmDialog, FinancialReviewSummary } from '@barghsa/ui';
 import type { BankReceiptTopUpReview } from '@barghsa/shared/finance';
 import { t } from '@barghsa/i18n/workspace';
-import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
+import { useFinancialFormatting } from '../hooks/useFinancialFormatting.js';
 
 export default function BankReceiptTopUpReviewDialog({
   review,
@@ -16,10 +17,12 @@ export default function BankReceiptTopUpReviewDialog({
   onCancel: () => void;
   onConfirm: () => void;
 }) {
-  const numbers = useNumberFormatting(locale);
+  const numbers = useFinancialFormatting(locale);
   return (
-    <ConfirmDialog
+    <FinancialConfirmDialog
       open
+      scope={review}
+      acknowledgement={confirmationText('acknowledge', locale)}
       onCancel={onCancel}
       onConfirm={onConfirm}
       title={t('wallet.page.receiptReviewTitle', locale)}
@@ -72,10 +75,10 @@ export default function BankReceiptTopUpReviewDialog({
         ]}
         total={{
           label: t('wallet.page.receiptAmountLabel', locale),
-          value: numbers.money(review.data.amountIrR),
+          value: numbers.reviewMoney(review.data.amountIrR),
         }}
         notice={<p>{t('wallet.page.receiptReviewCreditRule', locale)}</p>}
       />
-    </ConfirmDialog>
+    </FinancialConfirmDialog>
   );
 }

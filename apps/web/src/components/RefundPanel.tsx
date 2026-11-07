@@ -406,6 +406,7 @@ function RefundWorkspace({ destination, selectedInvoiceId = '' }: PanelProps) {
           const { default: RefundFinancialReviewSummary } = await loadRefundSummary();
           if (!owns(owner)) return;
           const chosen: TeamAction = {
+            risk: operation === 'reject' ? 'both' : 'financial',
             title: word(operation),
             description: word('confirmDecision'),
             path: actionPath,
@@ -640,6 +641,7 @@ function RefundWorkspace({ destination, selectedInvoiceId = '' }: PanelProps) {
       )}
       {action && (
         <TeamActionDialog
+          risk="financial"
           action={action}
           summary={summary}
           confirmationDisabled={status !== 'ready'}

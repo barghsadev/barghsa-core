@@ -127,6 +127,7 @@ function OwnedContractFinancialReviewDialog({
   );
   return (
     <TeamActionDialog
+      risk="financial"
       action={confirmedAction}
       {...(onPendingChange ? { onPendingChange } : {})}
       {...(onDenied ? { onDenied } : {})}

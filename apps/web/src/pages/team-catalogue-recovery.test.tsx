@@ -1,3 +1,4 @@
+import { approveVisibleConfirmation } from '../test/confirmation.js';
 import { QueryProvider } from '../test/query-provider.js';
 import { validTeamActivity } from '@barghsa/shared/team-activity';
 import { act, StrictMode } from 'react';
@@ -29,6 +30,7 @@ async function click(name: string, dialog = false) {
     (b) => b.textContent?.trim() === name
   );
   expect(button, name).toBeDefined();
+  await approveVisibleConfirmation();
   await act(async () => button!.click());
 }
 async function fill(selector: string, value: string) {
@@ -44,6 +46,7 @@ async function fill(selector: string, value: string) {
   });
 }
 async function submit() {
+  await approveVisibleConfirmation();
   await act(async () =>
     document
       .querySelector('form')!
@@ -149,6 +152,7 @@ it('retains local role choices through read failure and requires reset after sav
         )
       : baseline(path)
   );
+  await approveVisibleConfirmation();
   await act(async () => finance().click());
   fail = true;
   await click('Refresh members');
@@ -169,6 +173,7 @@ it('profile retry keeps member drafts without reloading the independent catalogu
   const requests = await render((path) =>
     path === '/api/profiles' && fail ? reply({}, 503) : baseline(path)
   );
+  await approveVisibleConfirmation();
   await act(async () => finance().click());
   fail = true;
   await click('Refresh profile');
@@ -228,6 +233,7 @@ it('role password review keeps its password during retry and withdraws changed m
           )
         : baseline(path)
   );
+  await approveVisibleConfirmation();
   await act(async () => finance().click());
   await click('Save roles');
   await submit();
@@ -367,6 +373,7 @@ it('confirmed role choices remain current after authoritative membership reload'
         })
       : baseline(path);
   });
+  await approveVisibleConfirmation();
   await act(async () => finance().click());
   await click('Save roles');
   await submit();
@@ -377,6 +384,7 @@ it('confirmed role choices remain current after authoritative membership reload'
 });
 it('mismatched role acknowledgement retains the proposal without reporting success', async () => {
   await render((path, init) => (init?.method ? reply({ roles: ['Legal'] }) : baseline(path)));
+  await approveVisibleConfirmation();
   await act(async () => finance().click());
   await click('Save roles');
   await submit();
@@ -528,6 +536,7 @@ it('keeps accepted activity and the role draft through a failed next page and re
   const choice = [...detailDialog().querySelectorAll<HTMLInputElement>('input')].find(
     (n) => n.parentElement?.textContent === 'Finance'
   )!;
+  await approveVisibleConfirmation();
   await act(async () => choice.click());
   expect(choice.checked).toBe(true);
   await click('Older activity', true);
@@ -574,6 +583,7 @@ it('keeps the detail role draft through a team read failure and requires resetti
     [...detailDialog().querySelectorAll<HTMLInputElement>('input')].find(
       (n) => n.parentElement?.textContent === 'Finance'
     )!;
+  await approveVisibleConfirmation();
   await act(async () => checkbox().click());
   mode = 'error';
   await click('Refresh members', true);
@@ -629,6 +639,7 @@ it('pending detail shows plain-text invitation information without querying a re
   const row = [...host.querySelectorAll('tr')].find((row) =>
     row.textContent?.includes('i***@example.test')
   )!;
+  await approveVisibleConfirmation();
   await act(async () =>
     [...row.querySelectorAll<HTMLButtonElement>('button')]
       .find((button) => button.textContent === 'View details')!
@@ -721,6 +732,7 @@ it.each(['agent', 'invitation'] as const)(
     const row = [...host.querySelectorAll('tr')].find((row) =>
       row.textContent?.includes(type === 'agent' ? 'm***@example.test' : 'i***@example.test')
     )!;
+    await approveVisibleConfirmation();
     await act(async () =>
       [...row.querySelectorAll<HTMLButtonElement>('button')]
         .find((button) => button.textContent === 'View details')!
@@ -853,10 +865,12 @@ it.each([false, true])(
       [...area().querySelectorAll<HTMLInputElement>('input[type=checkbox]')].find(
         (n) => n.parentElement?.textContent === name
       )!;
+    await approveVisibleConfirmation();
     await act(async () => role('Manager').click());
     expect(area().textContent).toContain('Choose at least one valid role');
     await click('Save roles', details);
     expect(requests.mock.calls.some(([, init]) => init?.method === 'PUT')).toBe(false);
+    await approveVisibleConfirmation();
     await act(async () => role('Finance').click());
     expect(area().querySelector('input[aria-invalid=true]')).toBeNull();
     await click('Save roles', details);

@@ -1,3 +1,5 @@
+import { ConfirmationFields } from '@barghsa/ui';
+import { useRiskConfirmation } from '../hooks/useRiskConfirmation.js';
 import { useOwnedIntakeRead } from '../hooks/useOwnedIntakeRead.js';
 import { useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from '../lib/query-keys.js';
@@ -622,7 +624,20 @@ function OwnedSavingsOrderPage() {
             : step === 5
               ? agreementAccepted && giftCode.trim() === appliedGiftCode
               : false;
+  const financialGate = useRiskConfirmation(
+    JSON.stringify([
+      profileId,
+      addressId,
+      quote?.reviewDigest,
+      planId,
+      hardwareId,
+      appliedGiftCode,
+    ]),
+    locale,
+    'financial'
+  );
   async function submit() {
+    if (!financialGate.allowed) return;
     if (
       !profileId ||
       !selectedPlan?.available ||
@@ -805,6 +820,7 @@ function OwnedSavingsOrderPage() {
           saveDisabled={protection.busy || protection.completed.current || addressDirty}
           nextDisabled={!canNext || protection.busy || protection.completed.current}
           submitDisabled={
+            !financialGate.allowed ||
             !quote ||
             quoting ||
             quoteError ||
@@ -1331,6 +1347,7 @@ function OwnedSavingsOrderPage() {
                     {copy('draftSaveError')}
                   </p>
                 )}
+                {step === 6 && <ConfirmationFields gate={financialGate} disabled={submitting} />}
               </CardContent>
             </Card>
           )}

@@ -1,4 +1,5 @@
-import { QueryProvider } from '../test/query-provider.js';
+import { approveVisibleConfirmation } from '../test/confirmation.js';
+import { ConfirmationTestProvider as QueryProvider } from '../test/confirmation.js';
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -6,6 +7,7 @@ import { ErrorCodes } from '@barghsa/shared/errors';
 import AdminWalletReceiptsPage from './AdminWalletReceiptsPage.js';
 import type { BankReceiptConfirmationReview } from '@barghsa/shared/finance';
 import { tWalletReceipts as text } from '@barghsa/i18n/wallet-receipts';
+import { AccountUserProvider } from '../hooks/useAccountUser.js';
 
 const TX_A = 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa';
 const TX_B = 'bbbbbbbb-bbbb-7bbb-8bbb-bbbbbbbbbbbb';
@@ -159,6 +161,21 @@ async function flush() {
     await Promise.resolve();
     await Promise.resolve();
   });
+  await act(async () => {
+    await vi.dynamicImportSettled();
+  });
+  const prompt = document.querySelector('[role=dialog]');
+  if (prompt?.querySelector('[data-slot=financial-confirmation]')) {
+    await approveVisibleConfirmation(prompt);
+    const confirm = [...prompt.querySelectorAll<HTMLButtonElement>('button')].find((v) =>
+      ['Confirm', 'تأیید'].includes(v.textContent?.trim() ?? '')
+    )!;
+    expect(confirm).toBeDefined();
+    await act(async () => confirm.click());
+    await act(async () => {
+      await vi.dynamicImportSettled();
+    });
+  }
 }
 
 describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
@@ -182,6 +199,33 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
     container.remove();
     vi.unstubAllGlobals();
     vi.restoreAllMocks();
+  });
+
+  it('withdraws an unanswered financial approval when the staff account changes', async () => {
+    const render = (actor: string) =>
+      act(async () =>
+        root.render(
+          <QueryProvider>
+            <AccountUserProvider value={actor}>
+              <AdminWalletReceiptsPage />
+            </AccountUserProvider>
+          </QueryProvider>
+        )
+      );
+    await render('staff-one');
+    await flush();
+    await act(async () =>
+      container.querySelector<HTMLButtonElement>('[data-testid=wallet-receipt-confirm]')!.click()
+    );
+    await act(async () => {
+      await vi.dynamicImportSettled();
+    });
+    expect(
+      document.querySelector('[role=dialog] [data-slot=financial-confirmation]')
+    ).not.toBeNull();
+    await render('staff-two');
+    expect(document.querySelector('[role=dialog]')).toBeNull();
+    expect(vi.mocked(fetch).mock.calls.filter(([, init]) => init?.method === 'POST')).toEqual([]);
   });
 
   it('changes views without clearing invoice/rejection drafts or refetching review data', async () => {
@@ -209,7 +253,9 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
       const toggle = [...container.querySelectorAll<HTMLButtonElement>('button')].find(
         (button) => button.textContent === label
       )!;
+      await approveVisibleConfirmation();
       await act(async () => toggle.click());
+      await flush();
       expect(invoice.value).toBe(INVOICE_ID);
       expect(reason.value).toBe('Keep this bank investigation');
       expect(container.querySelector('nav button[aria-current="true"]')).not.toBeNull();
@@ -237,6 +283,7 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
       '[data-testid="wallet-receipt-confirm"]'
     ) as HTMLButtonElement | null;
     expect(confirm).toBeTruthy();
+    await approveVisibleConfirmation();
     await act(async () => {
       confirm!.click();
     });
@@ -281,6 +328,7 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
         root.render(<QueryProvider>{<AdminWalletReceiptsPage />}</QueryProvider>);
       });
       await flush();
+      await approveVisibleConfirmation();
       await act(async () => {
         (
           container.querySelector('[data-testid="wallet-receipt-confirm"]') as HTMLButtonElement
@@ -338,7 +386,9 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
       expect(button).toBeTruthy();
       expect(button.disabled).toBe(false);
       const reason = container.querySelector('#receipt-emergency-reason') as HTMLTextAreaElement;
+      await approveVisibleConfirmation();
       await act(async () => button.click());
+      await flush();
       await vi.waitFor(() => expect(document.activeElement).toBe(reason));
       expect(reason.getAttribute('aria-invalid')).toBe('true');
       expect(bodies).toEqual([]);
@@ -349,11 +399,13 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
         );
         reason.dispatchEvent(new Event('input', { bubbles: true }));
       });
+      await approveVisibleConfirmation();
       await act(async () => {
         button.click();
       });
       await flush();
       expect(reason.disabled).toBe(true);
+      await approveVisibleConfirmation();
       await act(async () => {
         (
           container.querySelector(
@@ -363,6 +415,7 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
       });
       await flush();
       expect(document.activeElement).toBe(button);
+      await approveVisibleConfirmation();
       await act(async () => {
         button.click();
       });
@@ -375,6 +428,7 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
         );
         password.dispatchEvent(new Event('input', { bubbles: true }));
       });
+      await approveVisibleConfirmation();
       await act(async () => {
         (
           container.querySelector(
@@ -405,9 +459,11 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
 
     const form = container.querySelector('#reject-reason')?.closest('form');
     expect(form).toBeTruthy();
+    await approveVisibleConfirmation();
     await act(async () => {
       form!.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
     });
+    await flush();
 
     expect(container.textContent).toContain(
       'Enter a customer-visible reason of 1–2000 characters without control characters.'
@@ -429,12 +485,14 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
     return input;
   }
   async function submitReason() {
+    await approveVisibleConfirmation();
     await act(async () => {
       container
         .querySelector('#reject-reason')!
         .closest('form')!
         .dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
     });
+    await flush();
   }
 
   it.each(['   ', 'bad\u0000reason', 'x'.repeat(2001)])(
@@ -552,11 +610,13 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
     );
     await flush();
     const input = await editReason('Keep this investigation');
+    await approveVisibleConfirmation();
     await act(async () => {
       const form = input.closest('form')!;
       form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
       form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
     });
+    await flush();
     expect(fetcher.mock.calls.filter(([url]) => String(url).endsWith('/reject'))).toHaveLength(1);
     expect(input.disabled).toBe(true);
     const button = container.querySelector<HTMLButtonElement>(
@@ -585,6 +645,7 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
       setter?.call(textarea, '  Illegible scan  ');
       textarea!.dispatchEvent(new Event('input', { bubbles: true }));
     });
+    await approveVisibleConfirmation();
     await act(async () => {
       container
         .querySelector('[data-testid="wallet-receipt-reject"]')
@@ -642,6 +703,7 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
         .disabled
     ).toBe(false);
 
+    await approveVisibleConfirmation();
     await act(async () => {
       (
         container.querySelector('[data-testid="wallet-receipt-confirm"]') as HTMLButtonElement
@@ -759,6 +821,7 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
     await flush();
     await flush();
 
+    await approveVisibleConfirmation();
     await act(async () => {
       (
         container.querySelector('[data-testid="wallet-receipt-confirm"]') as HTMLButtonElement
@@ -777,6 +840,7 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
       setter?.call(password, 'secret');
       password.dispatchEvent(new Event('input', { bubbles: true }));
     });
+    await approveVisibleConfirmation();
     await act(async () => {
       (
         container.querySelector(
@@ -823,11 +887,13 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
           reason.dispatchEvent(new Event('input', { bubbles: true }));
         });
       }
+      await approveVisibleConfirmation();
       await act(async () => {
         (
           container.querySelector(`[data-testid="wallet-receipt-${decision}"]`) as HTMLButtonElement
         ).click();
       });
+      await flush();
       await act(async () => {
         Array.from(container.querySelectorAll('nav button'))
           .find((button) => button.textContent?.includes('TRK-bbbb'))!
@@ -846,6 +912,7 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
         );
         password.dispatchEvent(new Event('input', { bubbles: true }));
       });
+      await approveVisibleConfirmation();
       await act(async () => {
         (
           container.querySelector(
@@ -893,6 +960,7 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
     });
     await flush();
 
+    await approveVisibleConfirmation();
     await act(async () => {
       (
         container.querySelector('[data-testid="wallet-receipt-confirm"]') as HTMLButtonElement
@@ -912,6 +980,7 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
       setter?.call(password, 'secret');
       password.dispatchEvent(new Event('input', { bubbles: true }));
     });
+    await approveVisibleConfirmation();
     await act(async () => {
       (
         container.querySelector(
@@ -943,12 +1012,14 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
     const confirm = container.querySelector(
       '[data-testid="wallet-receipt-confirm"]'
     ) as HTMLButtonElement;
+    await approveVisibleConfirmation();
     await act(async () => {
       confirm.click();
     });
     await flush();
     expect(container.querySelector('[data-testid="wallet-receipt-step-up-dialog"]')).not.toBeNull();
 
+    await approveVisibleConfirmation();
     await act(async () => {
       (
         container.querySelector(
@@ -998,6 +1069,7 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
       setter?.call(textarea, 'Illegible scan');
       textarea.dispatchEvent(new Event('input', { bubbles: true }));
     });
+    await approveVisibleConfirmation();
     await act(async () => {
       textarea
         .closest('form')!
@@ -1019,6 +1091,7 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
       setter?.call(password, 'secret');
       password.dispatchEvent(new Event('input', { bubbles: true }));
     });
+    await approveVisibleConfirmation();
     await act(async () => {
       (
         container.querySelector(
@@ -1062,6 +1135,7 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
       setter?.call(textarea, 'Payer name does not match');
       textarea.dispatchEvent(new Event('input', { bubbles: true }));
     });
+    await approveVisibleConfirmation();
     await act(async () => {
       textarea
         .closest('form')!
@@ -1070,6 +1144,7 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
     await flush();
     expect(container.querySelector('[data-testid="wallet-receipt-step-up-dialog"]')).not.toBeNull();
 
+    await approveVisibleConfirmation();
     await act(async () => {
       (
         container.querySelector(
@@ -1116,9 +1191,11 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
       root.render(<QueryProvider>{<AdminWalletReceiptsPage />}</QueryProvider>)
     );
     await flush();
+    await approveVisibleConfirmation();
     await act(async () =>
       container.querySelector<HTMLButtonElement>('[data-testid="wallet-receipt-confirm"]')!.click()
     );
+    await flush();
     expect(container.querySelector('[role=alert]')?.textContent).toBeTruthy();
     expect(container.textContent).toContain('TRK-aaaa');
     expect(container.querySelector('[data-testid="wallet-receipt-step-up-dialog"]')).toBeNull();
@@ -1164,11 +1241,13 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
         root.render(<QueryProvider>{<AdminWalletReceiptsPage />}</QueryProvider>)
       );
       await flush();
+      await approveVisibleConfirmation();
       await act(async () =>
         container
           .querySelector<HTMLButtonElement>('[data-testid="wallet-receipt-confirm"]')!
           .click()
       );
+      await flush();
       const password = container.querySelector<HTMLInputElement>(
         '[data-testid="wallet-receipt-step-up-password"]'
       )!;
@@ -1179,11 +1258,13 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
         );
         password.dispatchEvent(new Event('input', { bubbles: true }));
       });
+      await approveVisibleConfirmation();
       await act(async () =>
         container
           .querySelector<HTMLButtonElement>('[data-testid="wallet-receipt-step-up-submit"]')!
           .click()
       );
+      await flush();
       expect(confirms).toBe(kind === 'expired-again' ? 2 : 1);
       const dialog = container.querySelector<HTMLElement>(
         '[data-testid="wallet-receipt-step-up-dialog"]'
@@ -1268,11 +1349,13 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
         root.render(<QueryProvider>{<AdminWalletReceiptsPage />}</QueryProvider>)
       );
       await flush();
+      await approveVisibleConfirmation();
       await act(async () =>
         container
           .querySelector<HTMLButtonElement>('[data-testid="wallet-receipt-confirm"]')!
           .click()
       );
+      await flush();
       expect(container.querySelector('[role=alert]')).not.toBeNull();
       expect(container.textContent).toContain('TRK-aaaa');
     }
@@ -1329,6 +1412,7 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
     await vi.waitFor(() => expect(confirmNode(emergency)?.disabled).toBe(false));
   }
   async function submitConfirmation(emergency = false, times = 1) {
+    await approveVisibleConfirmation();
     await act(async () => {
       for (let index = 0; index < times; index++)
         confirmNode(emergency)
@@ -1582,7 +1666,9 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
     const refresh = [...container.querySelectorAll('button')].find(
       (node) => node.textContent === text('admin.walletReceipts.review.refresh', 'en')
     )!;
+    await approveVisibleConfirmation();
     await act(async () => refresh.click());
+    await flush();
     await vi.waitFor(() => expect(confirmNode().disabled).toBe(false));
     expect(feedback(field)).toBeUndefined();
     expect((field as HTMLInputElement).value).toBe(` ${INVOICE_ID} `);

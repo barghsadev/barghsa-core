@@ -63,6 +63,8 @@ export { cn } from './lib/utils';
 
 export * from './components/ui/workflow';
 export * from './components/ui/confirm-dialog';
+export * from './components/ui/confirmation-gate';
+export * from './components/ui/use-confirm';
 export * from './components/ui/input-group';
 export * from './components/ui/pagination';
 export * from './components/ui/status-filter';

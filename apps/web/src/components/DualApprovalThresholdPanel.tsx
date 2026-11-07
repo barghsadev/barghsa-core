@@ -74,6 +74,7 @@ export default function DualApprovalThresholdPanel(props: CatalogueEditorProps =
           className="space-y-3"
           onSubmit={(event) =>
             void editor.submit(event, (draft) => ({
+              ...(limitAmount(draft.thresholdIrR) === 0 ? { risk: 'destructive' as const } : {}),
               title: label('save'),
               description: label(
                 limitAmount(draft.thresholdIrR) === 0 ? 'disabled' : 'description'

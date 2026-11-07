@@ -324,6 +324,7 @@ function OwnedInvoiceBankReceiptQueue({
       }
     }
     const proposal: TeamAction = {
+      risk: kind === 'confirm' ? 'financial' : 'both',
       title: word(kind),
       description: kind === 'confirm' ? word('confirmNotice') : word('rejectNotice'),
       path: `${base}/${encodeURIComponent(detail.receiptId)}/${kind}`,

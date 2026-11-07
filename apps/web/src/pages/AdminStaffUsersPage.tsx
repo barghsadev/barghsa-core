@@ -466,6 +466,7 @@ export default function AdminStaffUsersPage({ queries }: { queries?: ListQueryBi
         const value = roleForm.form.getValues();
         openAction({
           pageOffset: offset,
+          risk: 'destructive',
           title: label('editRoles'),
           description: `${name(target)} (${target.username}). ${label('roles')}: ${roleSummary(value.roleIds)}. ${label('reason')}: ${value.reason.trim()}. ${label('rolesHelp')}`,
           path: `/api/admin/users/${encodeURIComponent(target.userId)}/roles`,
@@ -681,6 +682,7 @@ export default function AdminStaffUsersPage({ queries }: { queries?: ListQueryBi
                 setSaved(false);
                 openAction({
                   pageOffset: offset,
+                  risk: 'destructive',
                   title: label('disable'),
                   description: `${name(staff)} (${staff.username}). ${label('disableHelp')}`,
                   path: `/api/admin/staff/${encodeURIComponent(staff.userId)}/disable`,

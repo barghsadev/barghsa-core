@@ -130,6 +130,7 @@ function OwnedDocumentDestructionQueue() {
     }
     setInvalid(false);
     setAction({
+      risk: 'destructive',
       title: word('destructionApprove'),
       description: word('destructionWarning'),
       path: `/api/admin/document-retention/destruction/${selected.id}/approve`,

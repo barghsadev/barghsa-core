@@ -1,3 +1,4 @@
+import { approveVisibleConfirmation } from '../test/confirmation.js';
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -92,8 +93,10 @@ it('requests the captured second approval, waits, then confirms every funded inv
     'Request second approval'
   );
   expect(document.body.querySelector('[role=dialog]')!.textContent).toContain(invoiceId);
+  await approveVisibleConfirmation();
   await act(async () => confirm().click());
   expect(container.textContent).toContain('financial approval queue');
+  await approveVisibleConfirmation();
   await act(async () =>
     container
       .querySelector('form')!
@@ -101,12 +104,14 @@ it('requests the captured second approval, waits, then confirms every funded inv
   );
   expect(document.body.querySelector('[role=dialog]')).toBeNull();
   status = 'approved';
+  await approveVisibleConfirmation();
   await act(async () =>
     container
       .querySelector('form')!
       .dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
   );
   expect(document.body.querySelector('[role=dialog]')!.textContent).toContain('Full wallet return');
+  await approveVisibleConfirmation();
   await act(async () => confirm().click());
   const mutation = fetcher.mock.calls.find(([u]) => String(u).endsWith('/draft-terminal'));
   expect(mutation).toBeDefined();
@@ -138,6 +143,7 @@ it('keeps the captured funded decision when a receipt omits the mandatory wallet
   vi.stubGlobal('fetch', fetcher);
   await open();
   await review();
+  await approveVisibleConfirmation();
   await act(async () => confirm().click());
   expect(document.body.querySelector('[role=dialog]')).not.toBeNull();
   expect(fetcher.mock.calls.filter(([u]) => String(u).endsWith('/draft-terminal'))).toHaveLength(1);
@@ -219,6 +225,7 @@ async function open() {
   });
 }
 async function review() {
+  await approveVisibleConfirmation();
   await act(async () =>
     [...container.querySelectorAll('button')].find((b) => b.textContent === 'Reject draft')!.click()
   );
@@ -230,6 +237,7 @@ async function review() {
     );
     textarea.dispatchEvent(new Event('input', { bubbles: true }));
   });
+  await approveVisibleConfirmation();
   await act(async () =>
     container
       .querySelector('form')!
@@ -255,8 +263,10 @@ it('projects safe queue metadata and confirms captured reason, identity and exac
   expect(dialog.textContent).toContain(orderId);
   expect(dialog.textContent).toContain(profileId);
   expect(dialog.textContent).toContain('Reviewed reason');
+  await approveVisibleConfirmation();
   await act(async () => confirm().click());
   expect(confirm()).toBeDefined();
+  await approveVisibleConfirmation();
   await act(async () => confirm().click());
   const mutations = fetcher.mock.calls.filter(([u]) => String(u).endsWith('/draft-terminal'));
   expect(mutations).toHaveLength(2);
@@ -318,6 +328,7 @@ it('uses Persian RTL copy, labelled reason controls and a native keyboard disclo
   expect(container.querySelector('details')!.dir).toBe('rtl');
   expect(container.querySelector('summary')!.textContent).toMatch(/[\u0600-\u06ff]/);
   const buttons = [...container.querySelectorAll('button')];
+  await approveVisibleConfirmation();
   await act(async () => buttons[1]!.click());
   const textarea = container.querySelector('textarea')!;
   expect(container.querySelector('label')!.htmlFor).toBe(textarea.id);
@@ -353,11 +364,13 @@ it('shows the existing exhausted refund and refuses a mismatched adoption', asyn
   expect(dialog.textContent).toContain(refundId);
   expect(dialog.textContent).toContain('finance-authorized manual retry');
   expect(dialog.textContent).toContain('Failed');
+  await approveVisibleConfirmation();
   await act(async () => {
     const buttons = Array.from(dialog.querySelectorAll('button'));
     buttons.find((b) => b.textContent?.includes('Cancel'))!.click();
   });
   amount = '99';
+  await approveVisibleConfirmation();
   await act(async () =>
     container
       .querySelector('form')!
@@ -407,9 +420,11 @@ it('keeps the captured adoption open when acknowledgement substitutes its refund
   );
   await open();
   await review();
+  await approveVisibleConfirmation();
   await act(async () => confirm().click());
   expect(document.body.querySelector('[role=dialog]')).not.toBeNull();
   wrong = false;
+  await approveVisibleConfirmation();
   await act(async () => confirm().click());
   expect(document.body.querySelector('[role=dialog]')).toBeNull();
   expect(commands).toHaveLength(2);

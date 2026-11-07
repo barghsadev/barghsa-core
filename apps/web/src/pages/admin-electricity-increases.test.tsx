@@ -1,3 +1,4 @@
+import { approveVisibleConfirmation } from '../test/confirmation.js';
 import { QueryProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import { createRoot } from 'react-dom/client';
@@ -68,6 +69,7 @@ it('shows expired finance cases in the staff queue without review actions', asyn
     const expired = Array.from(container.querySelectorAll('button')).find((button) =>
       button.textContent?.includes('Expired')
     );
+    await approveVisibleConfirmation();
     await act(async () => expired?.click());
     expect(fetchMock).toHaveBeenCalledWith(
       '/api/staff/electricity/increase-requests?status=expired',
@@ -170,6 +172,7 @@ it('shows each staff increase decision review and submits its exact hash', async
       (item) => item.textContent?.trim() === label
     );
     expect(button, label).toBeDefined();
+    await approveVisibleConfirmation();
     await act(async () => button!.click());
     await vi.waitFor(async () => {
       await act(async () => {});
@@ -181,6 +184,7 @@ it('shows each staff increase decision review and submits its exact hash', async
       ...document.body.querySelectorAll<HTMLButtonElement>('[role="dialog"] button'),
     ].find((item) => item.textContent?.includes('Confirm'));
     expect(button).toBeDefined();
+    await approveVisibleConfirmation();
     await act(async () => button!.click());
     await vi.waitFor(async () => {
       await act(async () => {});

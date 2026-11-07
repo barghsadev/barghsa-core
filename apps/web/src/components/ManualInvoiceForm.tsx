@@ -1,3 +1,5 @@
+import { ConfirmationFields } from '@barghsa/ui';
+import { useRiskConfirmation } from '../hooks/useRiskConfirmation.js';
 import { useOwnedInvoiceReview } from '../hooks/useOwnedInvoiceReview.js';
 import { useOwnedStaffServiceRead } from '../hooks/useOwnedStaffServiceRead.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
@@ -40,7 +42,7 @@ import {
   type ManualInvoiceReview,
 } from '@barghsa/shared/finance';
 import { useLocale } from '../hooks/useLocale.js';
-import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
+import { useFinancialFormatting } from '../hooks/useFinancialFormatting.js';
 import { withCsrf } from '../lib/csrf.js';
 import { authErrorCode } from '../lib/auth-errors.js';
 import { isInvoiceUuid } from '../lib/invoice-uuid.js';
@@ -112,7 +114,7 @@ function OwnedManualInvoiceForm({
   const readStaff = useOwnedStaffServiceRead(actor, profileRevision);
   const readReview = useOwnedInvoiceReview(actor, profileRevision);
   const locale = useLocale(),
-    numbers = useNumberFormatting(locale);
+    numbers = useFinancialFormatting(locale);
   const unavailable = Boolean(correction?.unavailable);
   const text = (key: string) =>
     (correction
@@ -199,6 +201,17 @@ function OwnedManualInvoiceForm({
   const [adjustmentReview, setAdjustmentReview] = useState<InvoiceAdjustmentReview | null>(null);
   const [replacementReview, setReplacementReview] = useState<InvoiceReplacementReview | null>(null);
   const [manualReview, setManualReview] = useState<ManualInvoiceReview | null>(null);
+  const financialGate = useRiskConfirmation(
+    JSON.stringify([
+      request.current?.idempotencyKey,
+      request.current?.expectedReviewHash,
+      request.current?.correction?.expectedReviewHash,
+    ]),
+    locale,
+    'financial'
+  );
+  const authorized = useRef(financialGate.allowed);
+  authorized.current = financialGate.allowed;
   const submitButton = useRef<HTMLButtonElement>(null);
   const signed = /^-?\d{1,19}$/.test(digits(amount)) ? BigInt(digits(amount)) : 0n;
   const validAdjustment =
@@ -343,7 +356,7 @@ function OwnedManualInvoiceForm({
   }
   async function send(): Promise<'done' | 'step-up' | 'error'> {
     const submitted = request.current;
-    if (!submitted) return 'error';
+    if (!submitted || !authorized.current) return 'error';
     try {
       const path = submitted.correction
         ? `/api/admin/invoices/${submitted.correction.invoiceId}/corrections`
@@ -663,6 +676,7 @@ function OwnedManualInvoiceForm({
   }
   async function confirmCorrectionReview() {
     if (
+      !authorized.current ||
       busy.current ||
       unavailable ||
       !live.current ||
@@ -688,7 +702,15 @@ function OwnedManualInvoiceForm({
     }
   }
   async function confirmManualReview() {
-    if (busy.current || unavailable || !live.current || !request.current || !manualReview) return;
+    if (
+      !authorized.current ||
+      busy.current ||
+      unavailable ||
+      !live.current ||
+      !request.current ||
+      !manualReview
+    )
+      return;
     setManualReview(null);
     busy.current = true;
     setActing(true);
@@ -1107,13 +1129,13 @@ function OwnedManualInvoiceForm({
                   value: (
                     <span className="flex flex-col gap-1">
                       <span>
-                        {numbers.number(line.quantity)} × {numbers.money(line.unitPrice)}
+                        {numbers.number(line.quantity)} × {numbers.reviewMoney(line.unitPrice)}
                       </span>
                       <span>
-                        {text('manualReviewSubtotal')}: {numbers.money(line.lineTotal)}
+                        {text('manualReviewSubtotal')}: {numbers.reviewMoney(line.lineTotal)}
                       </span>
                       <span>
-                        {text('manualReviewVat')}: {numbers.money(line.vatAmount)}
+                        {text('manualReviewVat')}: {numbers.reviewMoney(line.vatAmount)}
                       </span>
                     </span>
                   ),
@@ -1121,12 +1143,12 @@ function OwnedManualInvoiceForm({
                 {
                   id: 'subtotal',
                   label: text('manualReviewSubtotal'),
-                  value: numbers.money(manualReview.data.totals.subtotal),
+                  value: numbers.reviewMoney(manualReview.data.totals.subtotal),
                 },
                 {
                   id: 'vat',
                   label: text('manualReviewVat'),
-                  value: numbers.money(manualReview.data.totals.vat),
+                  value: numbers.reviewMoney(manualReview.data.totals.vat),
                 },
                 {
                   id: 'due',
@@ -1134,10 +1156,14 @@ function OwnedManualInvoiceForm({
                   value: `${numbers.number(manualReview.data.dueRule.configDays)} ${text('manualReviewDueDays')}`,
                 },
               ]}
-              total={{ label: text('total'), value: numbers.money(manualReview.data.totals.total) }}
+              total={{
+                label: text('total'),
+                value: numbers.reviewMoney(manualReview.data.totals.total),
+              }}
               notice={text('manualReviewOutcome')}
             />
           )}
+          <ConfirmationFields gate={financialGate} disabled={acting || unavailable} />
           <DialogFooter>
             <Button
               type="button"
@@ -1150,7 +1176,7 @@ function OwnedManualInvoiceForm({
             <Button
               type="button"
               onClick={() => void confirmManualReview()}
-              disabled={acting || unavailable}
+              disabled={acting || unavailable || !financialGate.allowed}
             >
               {text('manualReviewConfirm')}
             </Button>
@@ -1207,10 +1233,11 @@ function OwnedManualInvoiceForm({
               ]}
               total={{
                 label: text('amount'),
-                value: numbers.money(adjustmentReview.data.adjustment.absoluteAmount),
+                value: numbers.reviewMoney(adjustmentReview.data.adjustment.absoluteAmount),
               }}
             />
           )}
+          <ConfirmationFields gate={financialGate} disabled={acting || unavailable} />
           <DialogFooter>
             <Button
               type="button"
@@ -1223,7 +1250,8 @@ function OwnedManualInvoiceForm({
             <Button
               type="button"
               onClick={() => void confirmCorrectionReview()}
-              disabled={acting || unavailable}
+              variant="warning"
+              disabled={acting || unavailable || !financialGate.allowed}
             >
               {text('reviewConfirm')}
             </Button>
@@ -1260,13 +1288,13 @@ function OwnedManualInvoiceForm({
                   value: (
                     <span className="flex flex-col gap-1">
                       <span>
-                        {numbers.number(line.quantity)} × {numbers.money(line.unitPrice)}
+                        {numbers.number(line.quantity)} × {numbers.reviewMoney(line.unitPrice)}
                       </span>
                       <span>
-                        {text('replacementReviewSubtotal')}: {numbers.money(line.subtotal)}
+                        {text('replacementReviewSubtotal')}: {numbers.reviewMoney(line.subtotal)}
                       </span>
                       <span>
-                        {text('replacementReviewVat')}: {numbers.money(line.vatAmount)}
+                        {text('replacementReviewVat')}: {numbers.reviewMoney(line.vatAmount)}
                       </span>
                     </span>
                   ),
@@ -1287,10 +1315,11 @@ function OwnedManualInvoiceForm({
               ]}
               total={{
                 label: text('total'),
-                value: numbers.money(replacementReview.data.replacement.totals.total),
+                value: numbers.reviewMoney(replacementReview.data.replacement.totals.total),
               }}
             />
           )}
+          <ConfirmationFields gate={financialGate} disabled={acting || unavailable} />
           <DialogFooter>
             <Button
               type="button"
@@ -1303,7 +1332,8 @@ function OwnedManualInvoiceForm({
             <Button
               type="button"
               onClick={() => void confirmCorrectionReview()}
-              disabled={acting || unavailable}
+              variant="warning"
+              disabled={acting || unavailable || !financialGate.allowed}
             >
               {text('replacementReviewConfirm')}
             </Button>
@@ -1342,6 +1372,7 @@ function OwnedManualInvoiceForm({
                 <AlertDescription>{text(stepError)}</AlertDescription>
               </Alert>
             )}
+            <ConfirmationFields gate={financialGate} disabled={acting || unavailable} />
             <DialogFooter>
               <Button
                 type="button"
@@ -1351,7 +1382,7 @@ function OwnedManualInvoiceForm({
               >
                 {text('cancel')}
               </Button>
-              <Button type="submit" disabled={acting || !password}>
+              <Button type="submit" disabled={acting || !password || !financialGate.allowed}>
                 {text('verify')}
               </Button>
             </DialogFooter>

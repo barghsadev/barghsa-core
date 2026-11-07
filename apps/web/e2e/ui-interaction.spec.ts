@@ -67,6 +67,94 @@ async function inViewport(tab: Locator, viewport: Locator) {
 for (const fa of [false, true])
   for (const theme of ['light', 'dark']) {
     const mode = (fa ? 'fa' : 'en') + ', ' + theme;
+    test(`typed destructive confirmation withdraws changed targets and traps focus (${mode})`, async ({
+      page,
+    }) => {
+      await page.setViewportSize(fa ? { width: 390, height: 844 } : { width: 1280, height: 900 });
+      await story(page, 'workflows--protected-confirmations', fa, theme);
+      const trigger = page.getByRole('button', {
+        name: fa ? 'حذف نمونه' : 'Remove sample',
+        exact: true,
+      });
+      await trigger.click();
+      const dialog = page.getByRole('dialog');
+      const cancel = dialog.getByRole('button', { name: fa ? 'انصراف' : 'Cancel', exact: true });
+      const confirm = dialog.getByRole('button', {
+        name: fa ? 'تأیید اقدام' : 'Confirm action',
+        exact: true,
+      });
+      await expect(cancel).toBeFocused();
+      await expect(confirm).toBeDisabled();
+      await dialog.getByRole('textbox').fill(fa ? 'تایید' : 'confirm');
+      await expect(confirm).toBeDisabled();
+      await dialog.getByRole('textbox').fill(fa ? 'تأیید' : 'CONFIRM');
+      await expect(confirm).toBeEnabled();
+      await dialog.getByRole('button', { name: fa ? 'تغییر منبع' : 'Change resource' }).click();
+      await expect(confirm).toBeDisabled();
+      await expect(dialog.getByRole('textbox')).toHaveValue('');
+      for (let index = 0; index < 8; index++) {
+        await page.keyboard.press(index % 2 ? 'Shift+Tab' : 'Tab');
+        expect(await dialog.evaluate((element) => element.contains(document.activeElement))).toBe(
+          true
+        );
+      }
+      expect(
+        (
+          await new AxeBuilder({ page })
+            .include('[role=dialog]')
+            .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
+            .analyze()
+        ).violations
+      ).toEqual([]);
+      await page.keyboard.press('Escape');
+      await expect(dialog).toBeHidden();
+      await expect(trigger).toBeFocused();
+      await trigger.click();
+      await expect(
+        page
+          .getByRole('dialog')
+          .getByRole('button', { name: fa ? 'تأیید اقدام' : 'Confirm action', exact: true })
+      ).toBeDisabled();
+    });
+    test(`financial confirmation requires acknowledgement and preserves exact amounts (${mode})`, async ({
+      page,
+    }, info) => {
+      await page.setViewportSize(fa ? { width: 390, height: 844 } : { width: 1280, height: 900 });
+      await story(page, 'workflows--protected-confirmations', fa, theme);
+      await page
+        .getByRole('button', { name: fa ? 'پرداخت نمونه' : 'Review payment', exact: true })
+        .click();
+      const dialog = page.getByRole('dialog');
+      const confirm = dialog.getByRole('button', {
+        name: fa ? 'تأیید اقدام' : 'Confirm action',
+        exact: true,
+      });
+      await expect(
+        dialog.getByRole('button', { name: fa ? 'انصراف' : 'Cancel', exact: true })
+      ).toBeFocused();
+      await expect(confirm).toBeDisabled();
+      await expect(dialog).toContainText('9,007,199,254,740,993 IRR · 900,719,925,474,099.3 toman');
+      await dialog.getByRole('checkbox').check();
+      await expect(confirm).toBeEnabled();
+      expect(
+        (
+          await new AxeBuilder({ page })
+            .include('[role=dialog]')
+            .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
+            .analyze()
+        ).violations
+      ).toEqual([]);
+      expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
+        true
+      );
+      await page.screenshot({
+        path: info.outputPath('financial-confirmation.png'),
+        fullPage: true,
+      });
+      await confirm.click();
+      await expect(dialog).toBeHidden();
+      await expect(page.getByRole('status')).toContainText(fa ? 'تأیید شد' : 'Confirmed');
+    });
     test(`tooltip descriptions retain focus, placement and disabled guidance (${mode})`, async ({
       page,
     }, info) => {

@@ -1,3 +1,4 @@
+import { approveVisibleConfirmation } from '../test/confirmation.js';
 import { QueryComponentProvider as QueryProvider } from '../test/query-provider.js';
 import { act, type ComponentProps, type ReactNode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
@@ -166,6 +167,7 @@ async function render(
   const row = [...host.querySelectorAll('button')].find((button) =>
     button.textContent?.includes('Buyer Company')
   )!;
+  await approveVisibleConfirmation();
   await act(async () => row.click());
 }
 async function fill(id: string, value: string) {
@@ -186,9 +188,11 @@ async function click(label: string) {
     (item) => item.textContent?.trim() === label
   );
   expect(button, label).toBeDefined();
+  await approveVisibleConfirmation();
   await act(async () => button!.click());
 }
 async function submit() {
+  await approveVisibleConfirmation();
   await act(async () =>
     host
       .querySelector('[data-testid="saving-staff-operation-form"] form')!
@@ -451,19 +455,23 @@ it.each(['decision', 'stage'] as const)(
     await click('Fulfillment');
     expect(fetcher.mock.calls.filter(([, init]) => !init?.method)).toHaveLength(reads);
     await submit();
-    if (kind === 'stage')
+    if (kind === 'stage') {
+      await approveVisibleConfirmation();
       await act(async () =>
         host
           .querySelector('[data-testid="saving-staff-address-form"] form')!
           .dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
       );
+    }
     expect(fetcher.mock.calls.some(([path]) => path.endsWith('/amend-address-review'))).toBe(false);
-    if (kind === 'stage')
+    if (kind === 'stage') {
+      await approveVisibleConfirmation();
       await act(async () =>
         host
           .querySelector('[data-testid="saving-staff-hardware-form"] form')!
           .dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
       );
+    }
     expect(fetcher.mock.calls.some(([path]) => path.endsWith('/amend-hardware-review'))).toBe(
       false
     );

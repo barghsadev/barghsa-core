@@ -23,7 +23,7 @@ import { tSaving } from '@barghsa/i18n/saving';
 import { tSavingStaffReview } from '@barghsa/i18n/saving-staff-review';
 import { tSavingHardware } from '@barghsa/i18n/saving-hardware';
 import { useLocale } from '../hooks/useLocale.js';
-import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
+import { useFinancialFormatting } from '../hooks/useFinancialFormatting.js';
 import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
 import { withCsrf } from '../lib/csrf.js';
 import { TeamActionDialog, type TeamAction } from './TeamActionDialog.js';
@@ -92,7 +92,7 @@ function OwnedSavingHardwareCommandForm({
     JSON.stringify([scope, baseScope, order, upgrade])
   );
   const locale = useLocale();
-  const numbers = useNumberFormatting(locale);
+  const numbers = useFinancialFormatting(locale);
   const copy = (key: string) => tSavingStaffReview(key, locale) ?? tSaving(key, locale);
   const formCopy = (key: string) => tSavingHardware(key, locale);
   const cancellation = !!upgrade;
@@ -314,6 +314,7 @@ function OwnedSavingHardwareCommandForm({
           const financialReview = matchedSavingHardwareReview(value, order, draft, upgrade);
           if (!financialReview) throw new Error('review mismatch');
           const ownedAction: TeamAction = {
+            risk: cancellation ? 'both' : 'financial',
             title: copy(cancellation ? 'hardwareUpgradeCancel' : 'staffAmendHardware'),
             description: copy(
               cancellation ? 'staffUpgradeCancellationConfirm' : 'staffHardwareReviewConfirm'
@@ -536,7 +537,7 @@ function HardwareReviewSummary({
   hardwareReview: SavingHardwareAmendmentReview;
 }) {
   const locale = useLocale();
-  const money = useNumberFormatting(locale);
+  const money = useFinancialFormatting(locale);
   const copy = (key: string) => tSavingStaffReview(key, locale) ?? tSaving(key, locale);
   return (
     <FinancialReviewSummary
@@ -575,7 +576,7 @@ function HardwareReviewSummary({
         {
           id: 'paid',
           label: copy('staffPaid'),
-          value: money.money(hardwareReview.data.paidAmount),
+          value: money.reviewMoney(hardwareReview.data.paidAmount),
         },
         {
           id: 'current-hardware',
@@ -585,7 +586,7 @@ function HardwareReviewSummary({
         {
           id: 'current-price',
           label: copy('staffHardwareCurrentPrice'),
-          value: money.money(hardwareReview.data.currentHardwarePriceIrR),
+          value: money.reviewMoney(hardwareReview.data.currentHardwarePriceIrR),
         },
         {
           id: 'current-vat',
@@ -595,7 +596,7 @@ function HardwareReviewSummary({
         {
           id: 'current-total',
           label: copy('staffHardwareCurrentTotal'),
-          value: money.money(hardwareReview.data.currentOrderTotalIrR),
+          value: money.reviewMoney(hardwareReview.data.currentOrderTotalIrR),
         },
         {
           id: 'target-hardware',
@@ -605,7 +606,7 @@ function HardwareReviewSummary({
         {
           id: 'target-price',
           label: copy('staffHardwareTargetPrice'),
-          value: money.money(hardwareReview.data.targetHardwarePriceIrR),
+          value: money.reviewMoney(hardwareReview.data.targetHardwarePriceIrR),
         },
         {
           id: 'target-vat',
@@ -620,7 +621,7 @@ function HardwareReviewSummary({
         {
           id: 'delta',
           label: copy('staffHardwareDelta'),
-          value: money.money(
+          value: money.reviewMoney(
             (hardwareReview.data.priceDeltaIrR.startsWith('-')
               ? -BigInt(hardwareReview.data.priceDeltaIrR)
               : BigInt(hardwareReview.data.priceDeltaIrR)
@@ -639,7 +640,7 @@ function HardwareReviewSummary({
       ]}
       total={{
         label: copy('staffHardwareTargetTotal'),
-        value: money.money(hardwareReview.data.targetOrderTotalIrR),
+        value: money.reviewMoney(hardwareReview.data.targetOrderTotalIrR),
       }}
       notice={
         <div className="space-y-2">
@@ -658,7 +659,7 @@ function UpgradeCancellationReviewSummary({
   upgradeCancellationReview: SavingHardwareUpgradeCancellationReview;
 }) {
   const locale = useLocale();
-  const money = useNumberFormatting(locale);
+  const money = useFinancialFormatting(locale);
   const copy = (key: string) => tSavingStaffReview(key, locale) ?? tSaving(key, locale);
   return (
     <FinancialReviewSummary
@@ -710,12 +711,12 @@ function UpgradeCancellationReviewSummary({
         {
           id: 'paid',
           label: copy('staffPaid'),
-          value: money.money(upgradeCancellationReview.data.invoicePaidIrR),
+          value: money.reviewMoney(upgradeCancellationReview.data.invoicePaidIrR),
         },
         {
           id: 'charge',
           label: copy('hardwareAdditionalCharge'),
-          value: money.money(upgradeCancellationReview.data.additionalChargeIrR),
+          value: money.reviewMoney(upgradeCancellationReview.data.additionalChargeIrR),
         },
         {
           id: 'reservation',
@@ -729,7 +730,7 @@ function UpgradeCancellationReviewSummary({
       ]}
       total={{
         label: copy('staffTotal'),
-        value: money.money(upgradeCancellationReview.data.invoiceTotalIrR),
+        value: money.reviewMoney(upgradeCancellationReview.data.invoiceTotalIrR),
       }}
       notice={
         <div className="space-y-2">

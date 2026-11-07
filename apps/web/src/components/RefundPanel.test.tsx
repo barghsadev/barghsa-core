@@ -1,3 +1,4 @@
+import { approveVisibleConfirmation } from '../test/confirmation.js';
 import { act, useEffect, type ReactNode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -177,6 +178,7 @@ async function click(label: string) {
     (node) => node.textContent?.trim() === label
   );
   expect(button, label).toBeDefined();
+  await approveVisibleConfirmation();
   await act(async () => button!.click());
   await vi.waitFor(() =>
     expect(!!host.querySelector('[aria-busy=true]') && !host.querySelector('[role=dialog]')).toBe(

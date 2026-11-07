@@ -1,3 +1,5 @@
+import { QueryProvider } from '../test/query-provider.js';
+import { approveVisibleConfirmation } from '../test/confirmation.js';
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { beforeEach, afterEach, expect, it, vi } from 'vitest';
@@ -54,7 +56,13 @@ afterEach(async () => {
   vi.unstubAllGlobals();
 });
 async function render(Page: typeof Users | typeof Teams) {
-  await act(async () => root.render(<Page />));
+  await act(async () =>
+    root.render(
+      <QueryProvider>
+        <Page />
+      </QueryProvider>
+    )
+  );
   await tick();
 }
 async function tick() {
@@ -67,6 +75,7 @@ async function click(label: string) {
     (b) => b.textContent?.trim() === label
   );
   expect(button, label).toBeDefined();
+  await approveVisibleConfirmation();
   await act(async () => button!.click());
   if (label === 'Save team' || label === 'Save assignment rules' || label === 'Save roles') {
     await vi.dynamicImportSettled();
@@ -454,6 +463,7 @@ it('withdrawn roles can be removed without losing a staff explanation', async ()
   const input = host.querySelector<HTMLInputElement>('label input[type="checkbox"]')!;
   expect(input).not.toBeNull();
   expect(host.textContent).toContain('Role no longer available');
+  await approveVisibleConfirmation();
   await act(async () => input.click());
   await click('Save roles');
   expect(captured.action?.body).toEqual({ roleIds: [], reason: 'Retain this explanation' });
@@ -511,6 +521,7 @@ it('malformed staff creation confirmation retains input instead of claiming an a
   await fill('#staff-username', 'new.staff@example.test');
   await fill('#staff-firstName', 'New');
   await fill('#staff-lastName', 'Staff');
+  await approveVisibleConfirmation();
   await act(async () =>
     host.querySelector<HTMLButtonElement>('form button[type="submit"]')!.click()
   );
@@ -536,6 +547,7 @@ it('an actor change removes the prior creator one-time password even when both a
   await fill('#staff-username', 'new.staff@example.test');
   await fill('#staff-firstName', 'New');
   await fill('#staff-lastName', 'Staff');
+  await approveVisibleConfirmation();
   await act(async () =>
     host.querySelector<HTMLButtonElement>('form button[type="submit"]')!.click()
   );

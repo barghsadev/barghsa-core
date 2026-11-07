@@ -1,3 +1,4 @@
+import { approveRiskConfirmation } from './confirmation-fixture';
 import { readFileSync } from 'node:fs';
 import AxeBuilder from '@axe-core/playwright';
 import { test, expect, type Page } from './coverage-fixture';
@@ -470,6 +471,7 @@ for (const locale of ['en', 'fa'] as const)
       });
       await page.goto(`${path(mode)}?step=5`);
       const submit = button(page, 'electricity.order.submit', locale);
+      await approveRiskConfirmation(page, locale, 'financial');
       await expect(submit).toBeEnabled();
       await submit.click();
       await leave(page, locale);
@@ -480,6 +482,7 @@ for (const locale of ['en', 'fa'] as const)
       await actions.stay.click();
       expect(state.orders).toHaveLength(1);
       finish();
+      await approveRiskConfirmation(page, locale, 'financial');
       await expect(submit).toBeEnabled();
       await expect(page).toHaveURL(/\?step=5$/);
       state.invalidOrder = false;
@@ -540,6 +543,7 @@ test('simple order submission waits for the financial review code to load', asyn
     release();
   }
   await expect(page.getByRole('region', { name: 'Review Order', exact: true })).toBeVisible();
+  await approveRiskConfirmation(page, 'en', 'financial');
   await expect(button(page, 'electricity.order.submit', 'en')).toBeEnabled();
 });
 
@@ -617,6 +621,8 @@ for (const locale of ['en', 'fa'] as const)
           ? r.fulfill({ status: 503, json: {} })
           : r.fallback()
       );
+      await expect(action).toBeDisabled();
+      await approveRiskConfirmation(page, locale, 'destructive');
       await action.click();
       await expect(controls(page, locale).dialog.getByRole('alert')).toBeVisible();
       await expect(field(page, mode)).toHaveValue('130');

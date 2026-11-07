@@ -1,3 +1,4 @@
+import { approveVisibleConfirmation } from '../test/confirmation.js';
 import { QueryProvider, QueryComponentProvider } from '../test/query-provider.js';
 import { AccountUserProvider } from '../hooks/useAccountUser.js';
 import { act } from 'react';
@@ -225,6 +226,7 @@ it('shows manual entry, period dates and the server price before one submission'
   await advance();
   expect(container.textContent).toContain(t('electricity.order.giftCode', 'en'));
   await advance();
+  await approveVisibleConfirmation();
   expect(submit().disabled).toBe(false);
   expect(
     container.querySelector(`[aria-label="${t('electricity.order.total', 'en')}"]`)
@@ -236,6 +238,7 @@ it('shows manual entry, period dates and the server price before one submission'
     new Promise((resolve) => {
       complete = resolve;
     });
+  await approveVisibleConfirmation();
   await act(async () => {
     submit().click();
     submit().click();
@@ -286,6 +289,7 @@ it('retries an unavailable estimate without clearing a manual quantity', async (
   const retry = [...container.querySelectorAll('button')].find(
     (button) => button.textContent === t('electricity.order.retryBillData', 'en')
   )!;
+  await approveVisibleConfirmation();
   await act(async () => retry.click());
   expect(container.querySelector<HTMLInputElement>('#electricity-kwh')?.value).toBe('10');
   expect(container.textContent).toContain('Bill consumption data');
@@ -339,10 +343,12 @@ it('retries a failed submission with the same idempotency key', async () => {
   orderReply = async () => {
     throw new TypeError('offline');
   };
+  await approveVisibleConfirmation();
   await act(async () => submit().click());
   const first = JSON.parse(orderCalls()[0]![1]!.body as string);
   orderReply = async () => response(saved, 201);
   draftReply = async (input) => response(input);
+  await approveVisibleConfirmation();
   await act(async () => submit().click());
   const second = JSON.parse(orderCalls()[1]![1]!.body as string);
   expect(second.idempotencyKey).toBe(first.idempotencyKey);
@@ -384,6 +390,7 @@ it('saves an unfinished first step and restores it from a direct URL', async () 
   const save = [...container.querySelectorAll('button')].find(
     (button) => button.textContent === t('electricity.order.saveDraft', 'en')
   )!;
+  await approveVisibleConfirmation();
   await act(async () => save.click());
   expect(draft).toMatchObject({ currentStep: 1, data: { period: 'next_week' } });
   window.history.replaceState({}, '', '?step=1');
@@ -423,6 +430,7 @@ it('freezes the draft snapshot and sends one save until confirmation arrives', a
     });
   await mount();
   await settlePreview();
+  await approveVisibleConfirmation();
   await act(async () => {
     next().click();
     next().click();
@@ -440,11 +448,14 @@ it('retains the submission key when a success response has invalid order referen
   orderReply = async () => response({ ...saved, contractId: '' }, 201);
   await mount();
   await settlePreview();
+  await approveVisibleConfirmation();
   await act(async () => submit().click());
   expect(navigate).not.toHaveBeenCalled();
+  await approveVisibleConfirmation();
   expect(submit().disabled).toBe(false);
   const first = JSON.parse(orderCalls()[0]![1]!.body as string);
   orderReply = async () => response(saved, 201);
+  await approveVisibleConfirmation();
   await act(async () => submit().click());
   const second = JSON.parse(orderCalls()[1]![1]!.body as string);
   expect(second.idempotencyKey).toBe(first.idempotencyKey);
@@ -462,6 +473,7 @@ it('ignores a draft acknowledgement after the order form has unmounted', async (
       finish = resolve;
     });
   await mount();
+  await approveVisibleConfirmation();
   await act(async () => next().click());
   expect(
     fetchMock.mock.calls.filter(([url]) => url === '/api/electricity/drafts/simple')

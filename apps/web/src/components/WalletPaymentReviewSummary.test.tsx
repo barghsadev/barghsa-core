@@ -78,7 +78,7 @@ it.each([true, false])(
     expect(host.textContent).toContain(formatCurrencyIrr(vat, 'en'));
     expect(host.textContent).toContain(formatPercent(taxable ? 0.09 : 0, 'en'));
     expect(host.querySelector('dl:last-of-type dd')?.textContent).toBe(
-      formatCurrencyIrr('104000', 'en')
+      `${formatCurrencyIrr('104000', 'en')} · 10,400 toman`
     );
     expect(host.textContent).toContain(formatCurrencyIrr('96000', 'en'));
   }

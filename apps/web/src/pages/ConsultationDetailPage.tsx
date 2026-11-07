@@ -1,3 +1,5 @@
+import { ConfirmationFields } from '@barghsa/ui';
+import { useRiskConfirmation } from '../hooks/useRiskConfirmation.js';
 import { OrderWalletBalance } from '../components/OrderWalletBalance.js';
 import { historyContextText } from '../lib/history-context.js';
 import { useEffect, useId, useRef, useState, type FormEvent } from 'react';
@@ -395,8 +397,19 @@ export function ConsultationDetailPage() {
     }
   }
 
+  const financialGate = useRiskConfirmation(
+    decisionReview,
+    locale,
+    decisionReview?.data.decision === 'decline' ? 'both' : 'financial'
+  );
   async function decide() {
-    if (actionPending.current || informationForm.isSubmissionPending() || !decisionReview) return;
+    if (
+      !financialGate.allowed ||
+      actionPending.current ||
+      informationForm.isSubmissionPending() ||
+      !decisionReview
+    )
+      return;
     const capturedGeneration = generation.current;
     actionPending.current = true;
     const { decision, hash } = {
@@ -802,6 +815,7 @@ export function ConsultationDetailPage() {
               />
             </>
           )}
+          <ConfirmationFields gate={financialGate} disabled={sending} />
           <DialogFooter>
             <Button
               type="button"
@@ -811,7 +825,12 @@ export function ConsultationDetailPage() {
             >
               {copy('decisionReviewClose')}
             </Button>
-            <Button type="button" disabled={sending} onClick={() => void decide()}>
+            <Button
+              type="button"
+              variant={decisionReview?.data.decision === 'decline' ? 'destructive' : 'warning'}
+              disabled={sending || !financialGate.allowed}
+              onClick={() => void decide()}
+            >
               {copy(decisionReview?.data.decision === 'decline' ? 'declineOffer' : 'acceptOffer')}
             </Button>
           </DialogFooter>

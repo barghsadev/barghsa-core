@@ -1,3 +1,4 @@
+import { approveVisibleConfirmation } from '../test/confirmation.js';
 import { QueryProvider } from '../test/query-provider.js';
 import { act, type ReactNode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
@@ -97,6 +98,7 @@ async function click(label: string) {
     (item) => item.textContent?.trim() === label
   );
   expect(button, label).toBeDefined();
+  await approveVisibleConfirmation();
   await act(async () => button!.click());
 }
 async function set(id: string, value: string) {
@@ -116,6 +118,7 @@ async function proposal() {
   await set('price-effective', '2026-10-06T12:00');
   await set('price-reason', 'Draft reason');
   await set('price-basis', 'Draft basis');
+  await approveVisibleConfirmation();
   await act(async () =>
     container
       .querySelectorAll('form')[1]!

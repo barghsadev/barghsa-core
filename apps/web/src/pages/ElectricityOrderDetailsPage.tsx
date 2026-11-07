@@ -1,3 +1,5 @@
+import { ConfirmationFields } from '@barghsa/ui';
+import { useRiskConfirmation } from '../hooks/useRiskConfirmation.js';
 import { useQueryClient } from '@tanstack/react-query';
 import { useServerDetailQuery } from '../hooks/useServerQuery.js';
 import { queryKeys } from '../lib/query-keys.js';
@@ -619,8 +621,11 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
     }
   }
 
+  const cancelFocus = useRef<HTMLButtonElement>(null);
+  const financialGate = useRiskConfirmation(cancelReview, locale, 'both');
   async function confirmCancellation() {
     if (
+      !financialGate.allowed ||
       !cancelReview ||
       correctionLock.owner ||
       cancelling ||
@@ -1224,6 +1229,7 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
             className="max-h-[90dvh] overflow-y-auto"
             dir={locale === 'fa' ? 'rtl' : 'ltr'}
             showCloseButton={!cancelling}
+            initialFocus={cancelFocus}
           >
             <DialogHeader>
               <DialogTitle>{t('electricity.order.detail.cancelReviewTitle', locale)}</DialogTitle>
@@ -1330,13 +1336,19 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
                 </div>
               }
             />
+            <ConfirmationFields gate={financialGate} disabled={cancelling} />
             <DialogFooter>
-              <Button variant="outline" disabled={cancelling} onClick={() => setCancelReview(null)}>
+              <Button
+                ref={cancelFocus}
+                variant="outline"
+                disabled={cancelling}
+                onClick={() => setCancelReview(null)}
+              >
                 {t('electricity.order.detail.cancelReviewBack', locale)}
               </Button>
               <Button
                 variant="destructive"
-                disabled={!!correctionLock.owner || cancelling}
+                disabled={!financialGate.allowed || !!correctionLock.owner || cancelling}
                 onClick={() => void confirmCancellation()}
               >
                 {t('electricity.order.detail.cancel', locale)}

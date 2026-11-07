@@ -322,6 +322,9 @@ export default function AdminGiftCodesPage({
       basis: row ? giftCodeBasis(row) : editorBasis!,
       path,
       method,
+      ...(body && typeof body === 'object' && 'status' in body && body.status === 'inactive'
+        ? { risk: 'destructive' as const }
+        : {}),
       title,
       description,
       body,

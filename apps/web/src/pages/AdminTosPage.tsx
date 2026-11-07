@@ -1,3 +1,4 @@
+import { useDestructiveConfirm } from '../hooks/useDestructiveConfirm.js';
 import { contentFormText } from '@barghsa/i18n/content-forms';
 import { useWizardForm } from '../hooks/useWizardForm.js';
 import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
@@ -163,6 +164,7 @@ export default function AdminTosPage() {
     setError({ key: 'denied' });
   }, [resetEditorBusy, resetTerms]);
   const scope = useCatalogueScope(clearPrivate);
+  const confirmDestruction = useDestructiveConfirm(locale, scope.version);
   useEffect(() => {
     mounted.current = true;
     return () => {
@@ -570,7 +572,6 @@ export default function AdminTosPage() {
       setError({ key: 'previewRequired' });
       return;
     }
-    if (!window.confirm(text.confirmDiscard)) return;
 
     const epoch = scope.version;
     const current = () => mounted.current && scope.live.current === epoch;
@@ -578,6 +579,8 @@ export default function AdminTosPage() {
     discardInFlight.current = true;
     setDiscarding(true);
     try {
+      if (!(await confirmDestruction(text.confirmDiscard, text.confirmDiscard)) || !current())
+        return;
       const res = await fetch(
         `/api/admin/tos/versions/${version.id}?expectedRevision=${encodeURIComponent(version.revision)}`,
         {

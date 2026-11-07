@@ -1,4 +1,5 @@
-import { QueryProvider } from '../test/query-provider.js';
+import { approveVisibleConfirmation } from '../test/confirmation.js';
+import { ConfirmationTestProvider as QueryProvider } from '../test/confirmation.js';
 import { act, useEffect, StrictMode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -68,6 +69,7 @@ async function click(name: string, dialog = false) {
     (n) => n.textContent?.trim() === name
   );
   expect(node, name).toBeDefined();
+  await approveVisibleConfirmation();
   await act(async () => node!.click());
 }
 async function fill(selector: string, value: string) {
@@ -83,6 +85,7 @@ async function fill(selector: string, value: string) {
   });
 }
 async function submit(dialog = false) {
+  await approveVisibleConfirmation();
   await act(async () =>
     document
       .querySelector(dialog ? '[role=dialog] form' : 'form:not(:has(#notification-event-filter))')!
@@ -346,6 +349,12 @@ it.each([200, 204])('password-protected delete requires HTTP 204, received %i', 
     return reply(deleted ? [] : [notificationTemplate()]);
   });
   await click('Delete');
+  await approveVisibleConfirmation();
+  await act(async () =>
+    [...document.querySelectorAll<HTMLButtonElement>('[role=dialog] button')]
+      .find((button) => button.textContent?.trim() === 'Confirm')!
+      .click()
+  );
   const password = document.querySelector<HTMLInputElement>('[role=dialog] input[type=password]')!;
   await act(async () => {
     Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!.call(

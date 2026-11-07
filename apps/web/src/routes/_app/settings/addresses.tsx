@@ -1,3 +1,5 @@
+import { useRiskConfirmation } from '../../../hooks/useRiskConfirmation.js';
+import { ConfirmationFields } from '@barghsa/ui';
 import { Skeleton } from '@barghsa/ui';
 import { useRef } from 'react';
 import { createFileRoute, Link } from '@tanstack/react-router';
@@ -137,6 +139,11 @@ function SettingsAddressesPage() {
 
   // ── Render ─────────────────────────────────────────────────────────
   const deletingAddress = addresses.find((address) => address.id === deleteConfirmId);
+  const deletionGate = useRiskConfirmation(
+    JSON.stringify([profileId, deleteConfirmId]),
+    locale,
+    'destructive'
+  );
 
   return (
     <div
@@ -315,6 +322,7 @@ function SettingsAddressesPage() {
               : addressesText('removalHistory', locale)}
           </DialogDescription>
           {command.locked === 'delete' && recovery()}
+          <ConfirmationFields gate={deletionGate} disabled={locked} />
           <div className="flex justify-end gap-2">
             <Button
               ref={cancelDeleteRef}
@@ -327,9 +335,10 @@ function SettingsAddressesPage() {
             {!deletingAddress?.mainAddress && (
               <Button
                 variant="destructive"
-                disabled={locked || !profileId}
+                disabled={locked || !profileId || !deletionGate.allowed}
                 onClick={() => {
-                  if (deletingAddress) void handleDelete(deletingAddress.id);
+                  if (deletingAddress && deletionGate.allowed)
+                    void handleDelete(deletingAddress.id);
                 }}
               >
                 {t('settings.addresses.delete', locale)}

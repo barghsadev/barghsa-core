@@ -1,3 +1,5 @@
+import { ConfirmProvider } from '@barghsa/ui';
+import { useDestructiveConfirm } from '../hooks/useDestructiveConfirm.js';
 import { useOwnedGateRead } from '../hooks/useOwnedGateRead.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
@@ -19,12 +21,23 @@ import {
 
 type Scope = ReturnType<typeof usePreferenceSettingsOwner>;
 type Action = 'create' | 'confirm' | 'revoke';
-export default function TelegramLinkPanel({ scope }: { scope: Scope }) {
+export default function TelegramLinkPanel(props: { scope: Scope }) {
+  return (
+    <ConfirmProvider>
+      <OwnedTelegramLinkPanel {...props} />
+    </ConfirmProvider>
+  );
+}
+function OwnedTelegramLinkPanel({ scope }: { scope: Scope }) {
   const actor = useAccountUser();
   const revision = useProfileContextRevision();
   const readGate = useOwnedGateRead(JSON.stringify([scope.key, scope.denied]), actor, revision);
   const locale = useLocale(),
     id = useId();
+  const confirmDestruction = useDestructiveConfirm(
+    locale,
+    JSON.stringify([scope.key, scope.denied])
+  );
   const copy = (key: Parameters<typeof telegramText>[0]) => telegramText(key, locale);
   const [data, setData] = useState<{ key: string; value: TelegramStatus } | null>(null);
   const [url, setUrl] = useState<{ id: string; value: string } | null>(null);
@@ -111,6 +124,11 @@ export default function TelegramLinkPanel({ scope }: { scope: Scope }) {
     sequence.current++;
     setError(null);
     try {
+      if (
+        action === 'revoke' &&
+        (!(await confirmDestruction(copy('revoke'), copy('revoke'))) || !scope.owns(family))
+      )
+        return;
       if (action === 'confirm' && !/^\d{6}$/.test(captured.code)) {
         setError(copy('invalidCode'));
         codeInput.current?.focus();

@@ -8,6 +8,7 @@ import {
   type ReactNode,
 } from 'react';
 import { t } from '@barghsa/i18n/workspace';
+import { confirmationText } from '@barghsa/i18n/confirmation';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import {
   Alert,
@@ -20,6 +21,8 @@ import {
   DialogFooter,
   Input,
   Label,
+  ConfirmationFields,
+  useConfirmationGate,
 } from '@barghsa/ui';
 import { useLocale } from '../hooks/useLocale.js';
 import { withCsrf } from '../lib/csrf.js';
@@ -30,6 +33,7 @@ export interface TeamAction {
   description: string;
   path: string;
   method: 'POST' | 'PUT' | 'PATCH' | 'DELETE';
+  risk?: 'destructive' | 'financial' | 'both';
   body?: unknown;
   successStatus?: number;
   signsOut?: boolean;
@@ -55,6 +59,7 @@ export function TeamActionDialog({
   onValidationError,
   onUnconfirmed,
   onPendingChange,
+  risk: reviewRisk,
 }: (
   | { action: TeamAction; verification?: never; selection?: never }
   | {
@@ -73,17 +78,34 @@ export function TeamActionDialog({
   onValidationError?: (fields: unknown[]) => boolean;
   onUnconfirmed?: () => void;
   onPendingChange?: (pending: boolean) => void;
+  /** For verification-only flows, the caller owns the reviewed command. */
+  risk?: TeamAction['risk'];
 }) {
   const locale = useLocale();
   const copy = action ?? verification;
+  const risk = action?.risk ?? reviewRisk;
+  const destructive = risk === 'destructive' || risk === 'both' || action?.method === 'DELETE';
+  const financial = risk === 'financial' || risk === 'both';
+  const gate = useConfirmationGate(action ?? verification, {
+    ...(destructive
+      ? {
+          confirmation: {
+            phrase: confirmationText('phrase', locale),
+            label: confirmationText('typePhrase', locale),
+          },
+        }
+      : {}),
+    ...(financial ? { acknowledgement: confirmationText('acknowledge', locale) } : {}),
+  });
+  const cancel = useRef<HTMLButtonElement>(null);
   const numbers = useNumberFormatting(locale);
   const [busy, setBusy] = useState(false);
   const inFlight = useRef(false);
   const mounted = useRef(false);
   const currentAction = useRef(action);
-  const canConfirm = useRef(!confirmationDisabled);
+  const canConfirm = useRef(!confirmationDisabled && gate.allowed);
   currentAction.current = action;
-  canConfirm.current = !confirmationDisabled;
+  canConfirm.current = !confirmationDisabled && gate.allowed;
   useEffect(() => {
     mounted.current = true;
     return () => {
@@ -122,7 +144,7 @@ export function TeamActionDialog({
   async function submit(event?: FormEvent, otpVerified = false) {
     event?.preventDefault();
     if (needsOtp && !otpVerified) return;
-    if (confirmationDisabled || inFlight.current || retryAt > Date.now()) return;
+    if (!canConfirm.current || inFlight.current || retryAt > Date.now()) return;
     inFlight.current = true;
     setBusy(true);
     onPendingChange?.(true);
@@ -241,6 +263,7 @@ export function TeamActionDialog({
         showCloseButton={!busy}
         dir={locale === 'fa' ? 'rtl' : 'ltr'}
         finalFocus={finalFocus}
+        {...(destructive || financial ? { initialFocus: cancel } : {})}
       >
         {needsOtp ? (
           <div className="space-y-4">
@@ -249,8 +272,9 @@ export function TeamActionDialog({
               <DialogDescription>{copy.description}</DialogDescription>
             </DialogHeader>
             {summary}
+            <ConfirmationFields gate={gate} disabled={busy} />
             <StepUpAuthGate
-              disabled={confirmationDisabled || busy}
+              disabled={confirmationDisabled || !gate.allowed || busy}
               {...(onDenied ? { onDenied } : {})}
               onVerified={async () => {
                 if (!mounted.current || !canConfirm.current || currentAction.current !== action)
@@ -260,7 +284,7 @@ export function TeamActionDialog({
                 await submit(undefined, true);
               }}
             />
-            <Button type="button" variant="outline" disabled={busy} onClick={onClose}>
+            <Button ref={cancel} type="button" variant="outline" disabled={busy} onClick={onClose}>
               {t('team.cancel', locale)}
             </Button>
           </div>
@@ -274,6 +298,7 @@ export function TeamActionDialog({
             </DialogHeader>
             {error && <Alert variant="destructive">{error}</Alert>}
             {summary}
+            <ConfirmationFields gate={gate} disabled={busy} />
             {needsPassword && (
               <div className="space-y-2">
                 <Label htmlFor="team-step-up-password">{t('team.password', locale)}</Label>
@@ -282,7 +307,7 @@ export function TeamActionDialog({
                   type="password"
                   autoComplete="current-password"
                   required
-                  autoFocus
+                  autoFocus={!destructive && !financial}
                   value={password}
                   disabled={busy}
                   onChange={(event) => setPassword(event.target.value)}
@@ -295,15 +320,26 @@ export function TeamActionDialog({
               </p>
             )}
             <DialogFooter>
-              <Button type="button" variant="outline" disabled={busy} onClick={onClose}>
+              <Button
+                ref={cancel}
+                type="button"
+                variant="outline"
+                disabled={busy}
+                onClick={onClose}
+              >
                 {t('team.cancel', locale)}
               </Button>
               <Button
                 type="submit"
                 aria-busy={busy || undefined}
-                autoFocus={focusConfirmation && !needsPassword}
+                autoFocus={focusConfirmation && !needsPassword && !destructive && !financial}
+                variant={destructive ? 'destructive' : financial ? 'warning' : 'default'}
                 disabled={
-                  confirmationDisabled || busy || remaining > 0 || (needsPassword && !password)
+                  confirmationDisabled ||
+                  !gate.allowed ||
+                  busy ||
+                  remaining > 0 ||
+                  (needsPassword && !password)
                 }
               >
                 {busy && (

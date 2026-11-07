@@ -146,6 +146,7 @@ function TeamCatalogue() {
                             id: transfer.id,
                             basis: transferBasis(transfer),
                             action: {
+                              risk: 'destructive',
                               title: word(decision),
                               description: word(
                                 decision === 'accept' ? 'acceptWarning' : 'decisionWarning'
@@ -557,6 +558,7 @@ function TeamMembers({
     onValidationError: (fields: unknown[]) => boolean
   ) =>
     openAction({
+      risk: 'destructive',
       title: word('saveRoles'),
       description: word('rolesTargetWarning')
         .replace('{name}', teamMemberLabel(entry, word('unnamed')))
@@ -985,6 +987,7 @@ function TeamMembers({
                             : word('unnamed'));
                         setOwnershipStep('confirm');
                         openAction({
+                          risk: 'destructive',
                           title: word('transfer'),
                           description: word('transferWarning').replace('{name}', name),
                           path: `${base}/transfer-ownership`,

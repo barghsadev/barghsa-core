@@ -19,7 +19,8 @@ export function useSecurityRevocationForm(
   lists: SecurityLists,
   operation: SecurityOperation,
   locale: Locale,
-  done: () => void
+  done: () => void,
+  authorized: () => boolean
 ) {
   const text = (key: string) => securitySettingsText(key, locale);
   const family = 'security:' + operation.kind;
@@ -92,7 +93,7 @@ export function useSecurityRevocationForm(
   }
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (held.current || !scope.isCurrent() || scope.isLocked()) return;
+    if (!authorized() || held.current || !scope.isCurrent() || scope.isLocked()) return;
     if (
       !lists.ready('sessions') ||
       (operation.kind === 'trust' && !lists.ready('devices')) ||
@@ -106,7 +107,7 @@ export function useSecurityRevocationForm(
     setError(null);
     try {
       await form.handleSubmit(async (values) => {
-        if (!scope.owns(family)) return;
+        if (!scope.owns(family) || !authorized()) return;
         const capture = { password: values.password, checked: false };
         held.current = capture;
         try {
@@ -139,6 +140,11 @@ export function useSecurityRevocationForm(
               unknown();
               return;
             }
+          }
+          if (!authorized()) {
+            held.current = null;
+            scope.release(family);
+            return;
           }
           const path =
             operation.kind === 'others'

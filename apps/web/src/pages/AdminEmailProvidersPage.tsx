@@ -1,3 +1,4 @@
+import { useDestructiveConfirm } from '../hooks/useDestructiveConfirm.js';
 import { LoadingStatus, Button, DateCell, ListPage, TextCell } from '@barghsa/ui';
 import { useCatalogueScope } from '../hooks/useCatalogueResource.js';
 import {
@@ -164,6 +165,7 @@ export default function AdminEmailProvidersPage() {
     setBusy(false);
   }, [resetForm, editor.setValidationPending]);
   const scope = useCatalogueScope(clearPrivate);
+  const confirmDestruction = useDestructiveConfirm(uiLocale, scope.version);
   const catalogue = useProviderCatalogue(scope, listProviders);
   const providers = catalogue.data ?? [];
   useEffect(() => {
@@ -514,7 +516,6 @@ export default function AdminEmailProvidersPage() {
   }
 
   async function handleDisable(p: EmailProvider) {
-    if (!window.confirm(providerText('admin.providers.disableConfirm', uiLocale))) return;
     if (inFlight.current || protectedAction || loading || loadFailed || scope.denied) return;
     inFlight.current = true;
     const ticket = ++generation.current;
@@ -524,6 +525,14 @@ export default function AdminEmailProvidersPage() {
     setError(null);
     setNotice(null);
     try {
+      if (
+        !(await confirmDestruction(
+          providerText('admin.providers.disable', uiLocale),
+          providerText('admin.providers.disableConfirm', uiLocale)
+        )) ||
+        !current()
+      )
+        return;
       await disableProvider(p.id);
       if (!current()) return;
       await fetchAll();
@@ -556,7 +565,6 @@ export default function AdminEmailProvidersPage() {
   }
 
   async function handleRollback(p: EmailProvider) {
-    if (!window.confirm(providerText('admin.providers.rollbackConfirm', uiLocale))) return;
     if (inFlight.current || protectedAction || loading || loadFailed || scope.denied) return;
     inFlight.current = true;
     const ticket = ++generation.current;
@@ -566,6 +574,14 @@ export default function AdminEmailProvidersPage() {
     setError(null);
     setNotice(null);
     try {
+      if (
+        !(await confirmDestruction(
+          providerText('admin.providers.rollback', uiLocale),
+          providerText('admin.providers.rollbackConfirm', uiLocale)
+        )) ||
+        !current()
+      )
+        return;
       await rollbackProvider(p.id);
       if (!current()) return;
       setNotice(providerText('admin.providers.rollback', uiLocale));

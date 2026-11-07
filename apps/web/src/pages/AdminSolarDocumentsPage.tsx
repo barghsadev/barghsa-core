@@ -425,6 +425,7 @@ function OwnedAdminSolarDocumentsPage({ queries }: { queries?: SolarDocumentQuer
       if (generation !== reviewRequest.current) return;
       setError(false);
       propose({
+        ...(decision === 'reject' ? { risk: 'destructive' as const } : {}),
         title: copy(decision),
         description: document.file_name,
         path: `/api/admin/solar/requests/${requestId}/documents/${document.document_id}/${decision}`,

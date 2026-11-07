@@ -1,3 +1,4 @@
+import { approveVisibleConfirmation } from '../test/confirmation.js';
 import { QueryComponentProvider } from '../test/query-provider.js';
 import { act, type ReactNode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
@@ -146,6 +147,7 @@ async function click(label: string) {
     (b) => b.textContent === label
   );
   expect(button, label).toBeTruthy();
+  await approveVisibleConfirmation();
   await act(async () => button!.click());
   const w = h.locale === 'fa' ? fa : en;
   if (label === w.cancellationReview)
@@ -244,6 +246,7 @@ it('validates explicit custom refunds before opening the confirmation', async ()
   h.preview!.serviceType = 'solar';
   await render();
   await click(en.cancellationReview);
+  await approveVisibleConfirmation();
   await act(async () =>
     container.querySelector<HTMLInputElement>('input[type="checkbox"]')!.click()
   );
@@ -260,7 +263,7 @@ it('validates explicit custom refunds before opening the confirmation', async ()
       refunds: [{ invoiceId: 'invoice', amount: '40', destination: 'wallet' }],
     },
   });
-  expect(container.textContent).toContain('40 IRR');
+  expect(container.textContent).toContain('IRR\u00a040 · 4 toman');
   expect(container.textContent).toContain(en.cancellationFinancialReview);
 });
 it('shows failed customer returns separately from cancelled service', async () => {
@@ -323,6 +326,7 @@ it('requires a reason even for an explicit zero discretionary return', async () 
   h.preview!.serviceType = 'solar';
   await render();
   await click(en.cancellationReview);
+  await approveVisibleConfirmation();
   await act(async () =>
     container.querySelector<HTMLInputElement>('input[type="checkbox"]')!.click()
   );
@@ -358,6 +362,7 @@ async function prepareDraft() {
   await input('#cancellation-reason', '  Raw cancellation draft  ');
 }
 async function submitDecision() {
+  await approveVisibleConfirmation();
   await act(async () =>
     container
       .querySelector('form')!
@@ -373,6 +378,7 @@ async function submitDecision() {
 it('preserves custom amounts and destinations across unchanged and changed financial refreshes', async () => {
   h.preview!.serviceType = 'solar';
   await prepareDraft();
+  await approveVisibleConfirmation();
   await act(async () => container.querySelector<HTMLInputElement>('input[type=checkbox]')!.click());
   await input('input[inputmode=numeric]', '40');
   await act(async () => {
@@ -411,6 +417,7 @@ it('maps a submitted refund index to the filtered invoice and rejects mixed meta
   h.preview!.serviceType = 'solar';
   h.preview!.invoices.unshift({ ...h.preview!.invoices[0]!, id: 'zero' });
   await prepareDraft();
+  await approveVisibleConfirmation();
   await act(async () => container.querySelector<HTMLInputElement>('input[type=checkbox]')!.click());
   await input('#return-zero', '0');
   await input('#return-invoice', '40');
@@ -431,8 +438,10 @@ it('maps a submitted refund index to the filtered invoice and rejects mixed meta
 it('does not validate hidden custom amounts for a full wallet decision', async () => {
   h.preview!.serviceType = 'solar';
   await prepareDraft();
+  await approveVisibleConfirmation();
   await act(async () => container.querySelector<HTMLInputElement>('input[type=checkbox]')!.click());
   await input('#return-invoice', 'bad');
+  await approveVisibleConfirmation();
   await act(async () => container.querySelector<HTMLInputElement>('input[type=checkbox]')!.click());
   await submitDecision();
   expect(h.action?.body).toMatchObject({ refundDecision: { mode: 'full_wallet' } });
@@ -452,6 +461,7 @@ it('keeps drafts through a failed financial read and ordinary dismissal', async 
 it('locks amounts, destination, mode and reason while retaining one command', async () => {
   h.preview!.serviceType = 'solar';
   await prepareDraft();
+  await approveVisibleConfirmation();
   await act(async () => container.querySelector<HTMLInputElement>('input[type=checkbox]')!.click());
   await submitDecision();
   const captured = h.action;

@@ -1,3 +1,4 @@
+import { approveVisibleConfirmation } from '../test/confirmation.js';
 import { QueryComponentProvider as QueryProvider } from '../test/query-provider.js';
 import { act, type ReactNode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
@@ -96,6 +97,7 @@ async function choose() {
   await select('installationAddressId', ids.nextAddress);
 }
 async function submit() {
+  await approveVisibleConfirmation();
   await act(async () =>
     host
       .querySelector('form')!
@@ -107,6 +109,7 @@ async function click(label: string) {
     (item) => item.textContent?.trim() === label
   );
   expect(button, label).toBeDefined();
+  await approveVisibleConfirmation();
   await act(async () => button!.click());
 }
 const writes = (mock: ReturnType<typeof vi.fn>, suffix: string) =>
@@ -283,6 +286,7 @@ it('retains exact captured body/key through unknown receipt, attempted edits, du
   const button = [...host.querySelectorAll('button')].find(
     (item) => item.textContent === 'Confirm changes'
   )!;
+  await approveVisibleConfirmation();
   await act(async () => {
     button.click();
     button.click();

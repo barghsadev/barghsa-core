@@ -273,6 +273,7 @@ function ApprovalWorkspace({
     selected.current = request;
     setReview(request);
     setAction({
+      risk: decision === 'reject' ? 'both' : 'financial',
       title: t(`admin.approvals.${decision}`, locale),
       description: `${t('admin.approvals.confirm', locale)} ${request.id} · ${numbers.money(approvalAmount(request))} ${decision === 'reject' ? `· ${reason}` : request.details?.invoiceAdjustment ? tInvoiceCorrections('approvalEffect', locale) : ''}`,
       path: `/api/admin/approval-requests/${encodeURIComponent(request.id)}/${decision}`,

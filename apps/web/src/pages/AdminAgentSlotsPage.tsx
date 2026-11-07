@@ -298,6 +298,7 @@ export default function AdminAgentSlotsPage() {
                               agentId,
                               basis: reviewBasis(slot.slotKey, agentId),
                               epoch: scope.version,
+                              ...(!agentId ? { risk: 'destructive' as const } : {}),
                               title: label('save'),
                               description: `${label(slot.slotKey)}: ${slot.agent?.title ?? label('unassigned')} → ${selected?.title ?? label('unassigned')}. ${selected && !selected.enabled ? label('disabledHelp') : ''} ${shared.length ? `${label('shared')}: ${shared.join(locale === 'fa' ? '، ' : ', ')}. ` : ''}${label('confirm')}`,
                               path: `/api/admin/agent-slots/${slot.slotKey}/agent`,

@@ -1,3 +1,4 @@
+import { approveVisibleConfirmation } from '../test/confirmation.js';
 import { QueryComponentProvider } from '../test/query-provider.js';
 import { AccountUserProvider } from '../hooks/useAccountUser.js';
 import { refreshProfileContext } from '../lib/profile-context.js';
@@ -122,6 +123,7 @@ async function click(text: string) {
   )!;
   expect(button).toBeDefined();
   expect(button.disabled).toBe(false);
+  await approveVisibleConfirmation();
   await act(async () => button.click());
 }
 it.each(['unmount', 'actor', 'profile-context', 'close'])(

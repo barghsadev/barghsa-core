@@ -1,4 +1,5 @@
-import { QueryProvider } from '../test/query-provider.js';
+import { approveVisibleConfirmation } from '../test/confirmation.js';
+import { ConfirmationTestProvider as QueryProvider } from '../test/confirmation.js';
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -40,6 +41,7 @@ async function click(label: string, scope: ParentNode = document) {
     (item) => item.textContent?.trim() === label
   );
   expect(button, label).toBeDefined();
+  await approveVisibleConfirmation();
   await act(async () => button!.click());
 }
 async function fill(selector: string, value: string) {
@@ -150,7 +152,9 @@ it('financial review retry keeps invoice and reason and binds confirmation to th
   );
   reviewStatus = 200;
   await click('Review latest details');
+  await approveVisibleConfirmation();
   await act(async () => confirm().click());
+  await confirmWalletDecision();
   expect(bodies).toEqual([{ invoiceId: paymentInvoiceId, expectedReviewHash: 'b'.repeat(64) }]);
 });
 it('a queue denial clears private work and ignores a late financial review', async () => {
@@ -203,6 +207,7 @@ it('an obsolete financial denial cannot clear a newer selected receipt', async (
   const select = [...container.querySelectorAll<HTMLButtonElement>('nav button')].find((b) =>
     b.textContent?.includes('TRK-second')
   )!;
+  await approveVisibleConfirmation();
   await act(async () => select.click());
   await fill('#reject-reason', 'Second receipt note');
   await act(async () => pending.resolve(Response.json({}, { status: 403 })));
@@ -221,7 +226,9 @@ it('uncertain write errors remain visible through successful queue reads', async
     })
   );
   await act(async () => root.render(<QueryProvider>{<Receipts />}</QueryProvider>));
+  await approveVisibleConfirmation();
   await act(async () => confirm().click());
+  await confirmWalletDecision();
   expect(container.textContent).toContain('Failed to save');
   await click('Refresh receipt queue');
   expect(container.textContent).toContain('Failed to save');
@@ -388,6 +395,7 @@ it('malformed rejection success cannot discard a review draft or claim a saved d
   await act(async () => root.render(<QueryProvider>{<Receipts />}</QueryProvider>));
   await fill('#reject-reason', 'Receipt reference does not match');
   await click('Reject receipt');
+  await confirmWalletDecision();
   expect(container.textContent).toContain('Failed to save');
   expect(document.querySelector<HTMLTextAreaElement>('#reject-reason')!.value).toBe(
     'Receipt reference does not match'
@@ -414,12 +422,30 @@ it('a financial refresh cannot invalidate an in-flight rejection because decisio
     (button) => button.textContent?.trim() === 'Reject receipt'
   )!;
   expect(reject.disabled).toBe(true);
+  await approveVisibleConfirmation();
   await act(async () => reject.click());
+  await confirmWalletDecision();
   expect(fetcher.mock.calls.some(([, init]) => init?.method === 'POST')).toBe(false);
   const review = bankReceiptReview(receiptId);
   review.hash = 'c'.repeat(64);
   await act(async () => pending.resolve(Response.json(review)));
   expect(reject.disabled).toBe(false);
+  await approveVisibleConfirmation();
   await act(async () => reject.click());
+  await confirmWalletDecision();
   expect(container.textContent).toContain('Receipt rejected; balance unchanged');
 });
+
+async function confirmWalletDecision() {
+  await act(async () => {
+    await vi.dynamicImportSettled();
+  });
+  const prompt = document.querySelector('[role=dialog]');
+  if (!prompt?.querySelector('[data-slot=financial-confirmation]')) return;
+  await approveVisibleConfirmation(prompt);
+  await act(async () =>
+    [...prompt.querySelectorAll<HTMLButtonElement>('button')]
+      .find((v) => ['Confirm', 'تأیید'].includes(v.textContent?.trim() ?? ''))!
+      .click()
+  );
+}

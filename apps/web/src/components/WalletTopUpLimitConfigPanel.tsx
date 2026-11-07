@@ -86,6 +86,7 @@ export default function WalletTopUpLimitConfigPanel(props: CatalogueEditorProps 
           className="space-y-4"
           onSubmit={(event) =>
             void editor.submit(event, (draft) => ({
+              ...(limitAmount(draft.limitIrR) === 0 ? { risk: 'destructive' as const } : {}),
               title: label('save'),
               description: label('warning'),
               path,

@@ -8,6 +8,8 @@ Vazirmatn is used throughout, including Latin text. It is self-hosted in `packag
 
 This work changes the authentication, customer application and admin shells. Existing feature page sections, forms, lists and workflow order remain in place. Their shared controls, feedback colors and table treatments now follow this system.
 
+See [forms and final confirmation](forms-and-confirmation.md) for field validation, saved wizard reviews, typed destructive approval and financial acknowledgement.
+
 ## Source of truth
 
 | Concern                                            | Source                                          |

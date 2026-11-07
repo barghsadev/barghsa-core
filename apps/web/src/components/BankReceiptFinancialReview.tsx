@@ -4,7 +4,7 @@ import { tWalletReceipts as t } from '@barghsa/i18n/wallet-receipts';
 import { tWorkspace as adminText } from '@barghsa/i18n/workspace-admin';
 import { t as appText } from '@barghsa/i18n/workspace';
 import { useLocale } from '../hooks/useLocale.js';
-import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
+import { useFinancialFormatting } from '../hooks/useFinancialFormatting.js';
 import { invoiceFinancialReviewRows } from './InvoiceFinancialReviewRows.js';
 
 export function BankReceiptFinancialReview({
@@ -17,7 +17,7 @@ export function BankReceiptFinancialReview({
   formatPaymentDate: (value: string | null) => string;
 }) {
   const locale = useLocale(),
-    numbers = useNumberFormatting(locale),
+    numbers = useFinancialFormatting(locale),
     data = review.data;
   const text = (key: string) => t(`admin.walletReceipts.${key}`, locale);
   return (
@@ -70,22 +70,22 @@ export function BankReceiptFinancialReview({
         {
           id: 'invoiceAllocation',
           label: text('invoiceAllocation'),
-          value: numbers.money(data.allocation.invoiceAmount),
+          value: numbers.reviewMoney(data.allocation.invoiceAmount),
         },
         {
           id: 'walletCredit',
           label: text(data.invoice ? 'overpaymentCredit' : 'review.walletCredit'),
-          value: numbers.money(data.allocation.walletCredit),
+          value: numbers.reviewMoney(data.allocation.walletCredit),
         },
         {
           id: 'before',
           label: text('review.before'),
-          value: numbers.money(data.wallet.availableBefore),
+          value: numbers.reviewMoney(data.wallet.availableBefore),
         },
         {
           id: 'after',
           label: text('review.after'),
-          value: numbers.money(data.wallet.availableAfter),
+          value: numbers.reviewMoney(data.wallet.availableAfter),
         },
         {
           id: 'approval',
@@ -107,11 +107,11 @@ export function BankReceiptFinancialReview({
               {
                 id: 'threshold',
                 label: text('review.threshold'),
-                value: numbers.money(data.approval.thresholdAmount),
+                value: numbers.reviewMoney(data.approval.thresholdAmount),
               },
             ]),
       ]}
-      total={{ label: text('review.total'), value: numbers.money(data.receipt.amount) }}
+      total={{ label: text('review.total'), value: numbers.reviewMoney(data.receipt.amount) }}
       notice={`${data.invoice && BigInt(data.allocation.walletCredit) > 0n ? text('overpaymentPreview') + ' ' : ''}${text('review.notice')}`}
     />
   );

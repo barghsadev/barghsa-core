@@ -1,3 +1,4 @@
+import { approveVisibleConfirmation } from '../test/confirmation.js';
 import { QueryComponentProvider } from '../test/query-provider.js';
 import { act, type ReactNode } from 'react';
 import { createRoot } from 'react-dom/client';
@@ -161,6 +162,7 @@ it('opens a disclosed proposal from the staff contract link and starts finalizat
     const finalize = Array.from(container.querySelectorAll('button')).find((button) =>
       button.textContent?.includes('Finalize and issue adjustment')
     );
+    await approveVisibleConfirmation();
     await act(async () => finalize?.click());
     expect(container.textContent).toContain(
       `/api/staff/electricity/price-adjustments/${priceAdjustmentId}/finalize`
@@ -278,6 +280,7 @@ it('reviews the server price before preparing the exact publish command', async 
     await set('#price-effective', '2026-10-06T12:00');
     await set('#price-reason', 'Tariff change');
     await set('#price-basis', 'Clause 7');
+    await approveVisibleConfirmation();
     await act(async () =>
       container
         .querySelectorAll('form')[1]!

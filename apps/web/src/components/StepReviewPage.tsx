@@ -9,7 +9,7 @@ export interface ReviewSection {
 }
 
 /** Review values are supplied by the form or its verified server snapshot. */
-export function StepReviewPage({
+export function FormReview({
   title,
   description,
   sections,
@@ -76,3 +76,6 @@ export function StepReviewPage({
     </section>
   );
 }
+
+/** Existing wizard callers retain their established import. */
+export const StepReviewPage = FormReview;

@@ -1,3 +1,5 @@
+import { QueryProvider } from '../test/query-provider.js';
+import { approveVisibleConfirmation } from '../test/confirmation.js';
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { beforeEach, afterEach, expect, it, vi } from 'vitest';
@@ -59,7 +61,13 @@ afterEach(async () => {
   vi.unstubAllGlobals();
 });
 async function mount(Page: typeof Users | typeof Roles) {
-  await act(async () => root.render(<Page />));
+  await act(async () =>
+    root.render(
+      <QueryProvider>
+        <Page />
+      </QueryProvider>
+    )
+  );
 }
 async function settle() {
   await act(async () => {
@@ -72,6 +80,7 @@ async function click(text: string) {
     (button) => button.textContent?.trim() === text
   )!;
   expect(button).toBeDefined();
+  await approveVisibleConfirmation();
   await act(async () => button.click());
 }
 async function fill(id: string, value: string) {
@@ -84,6 +93,7 @@ async function fill(id: string, value: string) {
 }
 async function submit(times = 1) {
   const form = host.querySelector('form')!;
+  await approveVisibleConfirmation();
   await act(async () => {
     for (let i = 0; i < times; i++)
       form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
@@ -147,6 +157,7 @@ for (const locale of ['en', 'fa'] as const) {
     await submit();
     expect(captured.actions).toHaveLength(0);
     expect(host.textContent).toContain(label('invalidActivation'));
+    await approveVisibleConfirmation();
     await act(async () =>
       host.querySelector<HTMLInputElement>('input[value="tempPassword"]')!.click()
     );

@@ -1,3 +1,5 @@
+import { ConfirmationFields } from '@barghsa/ui';
+import { useRiskConfirmation } from '../hooks/useRiskConfirmation.js';
 import { Skeleton } from '@barghsa/ui';
 import { useOwnedIntakeRead } from '../hooks/useOwnedIntakeRead.js';
 import { useQueryClient } from '@tanstack/react-query';
@@ -1048,7 +1050,13 @@ function OwnedSimpleElectricityOrderPage() {
 
   // ── Submit order ────────────────────────────────────────────────────
 
+  const financialGate = useRiskConfirmation(
+    JSON.stringify([activeProfileId, selectedAddressId, quote?.reviewDigest]),
+    locale,
+    'financial'
+  );
   const handleSubmitOrder = useCallback(async () => {
+    if (!financialGate.allowed) return;
     if (
       orderSaveInFlight.current ||
       addressSaveInFlight.current ||
@@ -1148,6 +1156,7 @@ function OwnedSimpleElectricityOrderPage() {
       }
     }
   }, [
+    financialGate.allowed,
     selectedProductId,
     showNewAddressForm,
     products,
@@ -1425,6 +1434,7 @@ function OwnedSimpleElectricityOrderPage() {
                 !addresses.some((address) => address.id === selectedAddressId)))
           }
           submitDisabled={
+            !financialGate.allowed ||
             draftLoading ||
             draftError ||
             savingDraft ||
@@ -2081,6 +2091,7 @@ function OwnedSimpleElectricityOrderPage() {
                   onEdit={(target) => void saveDraft(false, target)}
                 />
               )}
+              {step === 5 && <ConfirmationFields gate={financialGate} disabled={submitting} />}
             </fieldset>
           )}
         </ValidatedFormWizard>

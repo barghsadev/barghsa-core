@@ -1,3 +1,4 @@
+import { useFinancialFormatting } from '../hooks/useFinancialFormatting.js';
 import { useOwnedContractRead } from '../hooks/useOwnedContractRead.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
@@ -244,6 +245,7 @@ function OwnedCancellationEditor({
       reason: reason.trim(),
     });
     const command: TeamAction = {
+      risk: 'financial',
       title: word('cancellationSave'),
       description: word('cancellationPrepareNotice'),
       path: `/api/admin/contracts/${id}/cancellations`,
@@ -282,6 +284,7 @@ function OwnedCancellationEditor({
       .reduce((sum, line) => sum + BigInt(line.amount), 0n)
       .toString();
     const command: TeamAction = {
+      risk: 'both',
       title: word('cancellationConfirm'),
       description: `${word('cancellationIrreversible')} ${word('cancellationReturn')}: ${money(amount)} ${word('irr')}. ${intent.reason}`,
       path: `/api/admin/contracts/${id}/cancellations/execute`,
@@ -616,8 +619,7 @@ function CancellationFinancialReview({
         : key,
       locale
     );
-  const money = (value: string) =>
-    `${new Intl.NumberFormat(locale).format(BigInt(value))} ${word('irr')}`;
+  const money = useFinancialFormatting(locale).reviewMoney;
   const total = decision.refunds.reduce((sum, refund) => sum + BigInt(refund.amount), 0n);
   return (
     <FinancialReviewSummary

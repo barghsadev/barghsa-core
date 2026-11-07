@@ -44,7 +44,7 @@ import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialo
 import { useLocale } from '../hooks/useLocale.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
-import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
+import { useFinancialFormatting } from '../hooks/useFinancialFormatting.js';
 import { withCsrf } from '../lib/csrf.js';
 import type { ListQueryBinding } from '../hooks/useListQuery.js';
 import { staffOrderId } from '../lib/staff-order-list-query.js';
@@ -90,7 +90,7 @@ interface CapturedPriceAction {
   rejected: boolean;
 }
 const emptyDraft: PriceDraft = { percentage: '', effectiveFrom: '', reason: '', basis: '' };
-function bpsToPercent(value: string, format: ReturnType<typeof useNumberFormatting>['number']) {
+function bpsToPercent(value: string, format: ReturnType<typeof useFinancialFormatting>['number']) {
   const signed = BigInt(value);
   const absolute = signed < 0n ? -signed : signed;
   const whole = format(absolute / 100n);
@@ -272,7 +272,7 @@ function PriceWorkspace({
 }) {
   const locale = useLocale();
   const actor = useAccountUser();
-  const numbers = useNumberFormatting(locale);
+  const numbers = useFinancialFormatting(locale);
   const time = useAccountTime(locale);
   const timezone = time.status === 'ready' ? time.timezone : null;
   const currentTimezone = useRef(timezone);
@@ -641,6 +641,7 @@ function PriceWorkspace({
             periodEnd: source.periodEnd,
             rejected: false,
             action: {
+              risk: 'financial',
               title: copy('publish'),
               description: copy('publishConfirm'),
               path: `/api/staff/electricity/contracts/${encodeURIComponent(contractId)}/price-adjustments`,
@@ -707,6 +708,7 @@ function PriceWorkspace({
       periodEnd: adjustment.periodEnd,
       rejected: false,
       action: {
+        risk: operation === 'cancel' ? 'both' : 'financial',
         title: copy(operation),
         description: copy(`${operation}Confirm`),
         path: `/api/staff/electricity/price-adjustments/${encodeURIComponent(adjustment.adjustmentId)}/${operation}`,
@@ -1258,8 +1260,8 @@ function PriceAdjustmentFinancialReview({
   locale: 'en' | 'fa';
 }) {
   const copy = (key: string) => t(`admin.electricityPrice.${key}`, locale);
-  const numbers = useNumberFormatting(locale);
-  const money = numbers.money;
+  const numbers = useFinancialFormatting(locale);
+  const money = numbers.reviewMoney;
   const { quote } = calculation;
   return (
     <>

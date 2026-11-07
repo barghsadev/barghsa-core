@@ -1,3 +1,4 @@
+import { confirmationText } from '@barghsa/i18n/confirmation';
 import AxeBuilder from '@axe-core/playwright';
 import type { Page, Route, Locator } from '@playwright/test';
 import { test, expect } from './coverage-fixture';
@@ -37,6 +38,26 @@ async function setup(page: Page, locale: Locale) {
         canSwitchContext: false,
         requiresTosAcceptance: false,
         navigation: fullNavigation('customer', 'LEGAL'),
+      },
+    })
+  );
+  await page.route('**/api/profiles', (route) =>
+    route.fulfill({
+      json: {
+        activeProfileId: '11111111-1111-4111-8111-111111111111',
+        hasDefault: true,
+        profiles: [
+          {
+            id: '11111111-1111-4111-8111-111111111111',
+            profileType: 'INDIVIDUAL',
+            title: 'Customer',
+            firstName: null,
+            lastName: null,
+            nationalId: null,
+            status: 'ACTIVE',
+            isDefault: true,
+          },
+        ],
       },
     })
   );
@@ -148,6 +169,11 @@ async function setup(page: Page, locale: Locale) {
   return state;
 }
 async function submit(form: Locator) {
+  const phrase = form.locator('[data-slot=destructive-confirmation] input');
+  if (await phrase.isEnabled()) {
+    const locale = (await form.page().locator('html').getAttribute('lang')) === 'fa' ? 'fa' : 'en';
+    await phrase.fill(confirmationText('phrase', locale));
+  }
   await form.evaluate((node: HTMLFormElement) => {
     node.requestSubmit();
   });
@@ -263,6 +289,9 @@ for (const locale of ['en', 'fa'] as const) {
       .click();
     let dialog = page.getByRole('dialog');
     state.mode = 'hold';
+    await dialog
+      .getByLabel(confirmationText('typePhrase', locale), { exact: true })
+      .fill(confirmationText('phrase', locale));
     await dialog.locator('form').evaluate((form: HTMLFormElement) => {
       form.requestSubmit();
       form.requestSubmit();

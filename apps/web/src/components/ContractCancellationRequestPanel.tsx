@@ -154,6 +154,7 @@ function RequestWorkspace({
       if (!captured || (staff ? captured.request?.status !== 'Pending' : !captured.canRequest))
         return;
       const command: TeamAction = {
+        risk: 'destructive',
         title: word(staff ? 'cancellationRequestReject' : 'cancellationRequestSubmit'),
         description: word(staff ? 'cancellationRequestRejectNotice' : 'cancellationRequestNotice'),
         path: staff

@@ -1,3 +1,4 @@
+import { approveVisibleConfirmation } from '../test/confirmation.js';
 import { QueryComponentProvider } from '../test/query-provider.js';
 import { AccountUserProvider } from '../hooks/useAccountUser.js';
 import { refreshProfileContext } from '../lib/profile-context.js';
@@ -241,6 +242,7 @@ async function prepare() {
     )!;
     expect(button).not.toBeNull();
     expect(button.disabled).toBe(false);
+    await approveVisibleConfirmation();
     await act(async () => button.click());
   } else {
     const input = host.querySelector<HTMLInputElement>('form input')!;
@@ -252,6 +254,7 @@ async function prepare() {
       );
       input.dispatchEvent(new Event('input', { bubbles: true }));
     });
+    await approveVisibleConfirmation();
     await act(async () =>
       host
         .querySelector('form')!

@@ -1,12 +1,12 @@
 import type { WalletPaymentReviewData } from '@barghsa/shared/finance';
 import { tInvoiceFinancialReview as t } from '@barghsa/i18n/invoice-financial-review';
 import { contractText } from '@barghsa/i18n/contracts';
-import type { useNumberFormatting } from '../hooks/useNumberFormatting.js';
+import type { useFinancialFormatting } from '../hooks/useFinancialFormatting.js';
 
 export function invoiceFinancialReviewRows(
   data: Omit<WalletPaymentReviewData, 'payment'>,
   locale: 'fa' | 'en',
-  numbers: ReturnType<typeof useNumberFormatting>,
+  numbers: ReturnType<typeof useFinancialFormatting>,
   formatDate: (value: string) => string
 ) {
   const text = (key: Parameters<typeof t>[0]) => t(key, locale);
@@ -30,16 +30,16 @@ export function invoiceFinancialReviewRows(
       value: (
         <span className="flex flex-col gap-1">
           <span>
-            {numbers.number(line.quantity)} × {numbers.money(line.unitPrice)}
+            {numbers.number(line.quantity)} × {numbers.reviewMoney(line.unitPrice)}
           </span>
           <span>
-            {text('discount')}: {numbers.money(line.discount)}
+            {text('discount')}: {numbers.reviewMoney(line.discount)}
           </span>
           <span>
-            {text('subtotal')}: {numbers.money(line.subtotal)}
+            {text('subtotal')}: {numbers.reviewMoney(line.subtotal)}
           </span>
           <span>
-            {text('vat')}: {numbers.money(line.vatAmount)} ·{' '}
+            {text('vat')}: {numbers.reviewMoney(line.vatAmount)} ·{' '}
             {numbers.percent(line.taxable ? line.vatRate / 10_000 : 0)}
           </span>
         </span>
@@ -47,17 +47,25 @@ export function invoiceFinancialReviewRows(
     })),
     ...(data.totals
       ? [
-          { id: 'discount', label: text('discount'), value: numbers.money(data.totals.discount) },
-          { id: 'subtotal', label: text('subtotal'), value: numbers.money(data.totals.subtotal) },
-          { id: 'vat', label: text('vat'), value: numbers.money(data.totals.vat) },
+          {
+            id: 'discount',
+            label: text('discount'),
+            value: numbers.reviewMoney(data.totals.discount),
+          },
+          {
+            id: 'subtotal',
+            label: text('subtotal'),
+            value: numbers.reviewMoney(data.totals.subtotal),
+          },
+          { id: 'vat', label: text('vat'), value: numbers.reviewMoney(data.totals.vat) },
         ]
       : [{ id: 'breakdown', label: text('breakdown'), value: text('legacyBreakdown') }]),
     {
       id: 'invoiceTotal',
       label: text('invoiceTotal'),
-      value: numbers.money(data.invoice.totalAmount),
+      value: numbers.reviewMoney(data.invoice.totalAmount),
     },
-    { id: 'paid', label: text('alreadyPaid'), value: numbers.money(data.invoice.paidAmount) },
+    { id: 'paid', label: text('alreadyPaid'), value: numbers.reviewMoney(data.invoice.paidAmount) },
     ...data.contracts.map((contract) => ({
       id: contract.id,
       label: `${text('contract')} · ${contractText(contract.serviceType, locale)} · ${contract.id.slice(-8)}`,

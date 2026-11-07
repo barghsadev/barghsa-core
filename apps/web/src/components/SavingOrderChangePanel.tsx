@@ -1,3 +1,5 @@
+import { ConfirmationFields } from '@barghsa/ui';
+import { useRiskConfirmation } from '../hooks/useRiskConfirmation.js';
 import { useOwnedFinancialRead } from '../hooks/useOwnedFinancialRead.js';
 import { useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from '../lib/query-keys.js';
@@ -320,8 +322,10 @@ function ChangeWorkspace(props: Props & { scope: string; currentScope: RefObject
       }
     }
   }
+  const financialGate = useRiskConfirmation(quote, locale, 'financial');
   async function send(captured: Command) {
-    if (!active() || writing.current || command.current !== captured) return;
+    if (!financialGate.allowed || !active() || writing.current || command.current !== captured)
+      return;
     writing.current = true;
     setBusy(true);
     setError('');
@@ -374,6 +378,7 @@ function ChangeWorkspace(props: Props & { scope: string; currentScope: RefObject
     }
   }
   function confirm() {
+    if (!financialGate.allowed) return;
     if (!active() || preparing.current || writing.current || command.current || !quote) return;
     const draft = form.getValues();
     if (
@@ -501,6 +506,7 @@ function ChangeWorkspace(props: Props & { scope: string; currentScope: RefObject
                   )}
                 />
               </div>
+              <ConfirmationFields gate={financialGate} disabled={busy || frozen} />
               {!frozen && (
                 <Link
                   to="/settings/addresses"
@@ -575,8 +581,14 @@ function ChangeWorkspace(props: Props & { scope: string; currentScope: RefObject
               <summary>{quote.agreement.title}</summary>
               <p className="whitespace-pre-wrap">{quote.agreement.body}</p>
             </details>
+            <ConfirmationFields gate={financialGate} disabled={busy || frozen} />
             {!frozen && (
-              <Button type="button" disabled={busy} onClick={confirm}>
+              <Button
+                type="button"
+                variant="warning"
+                disabled={busy || !financialGate.allowed}
+                onClick={confirm}
+              >
                 {copy('confirmChange')}
               </Button>
             )}

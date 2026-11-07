@@ -1,3 +1,4 @@
+import { approveVisibleConfirmation } from '../test/confirmation.js';
 import { QueryComponentProvider } from '../test/query-provider.js';
 import { act, useLayoutEffect, type ComponentProps } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
@@ -150,6 +151,7 @@ async function click(label: string) {
     (item) => item.textContent?.trim() === label
   );
   expect(button, label).toBeDefined();
+  await approveVisibleConfirmation();
   await act(async () => button!.click());
 }
 async function fill(id: string, value: string) {
@@ -168,6 +170,7 @@ async function draft() {
   await fill('price-basis', 'Clause 7');
 }
 async function submitProposal() {
+  await approveVisibleConfirmation();
   await act(async () =>
     host
       .querySelector<HTMLFormElement>('[data-testid="electricity-price-proposal-form"]')!
@@ -325,6 +328,7 @@ it('retains an exact unknown publish and accepts its progressed full-row replay 
   expect(host.querySelector<HTMLInputElement>('#electricity-price-contract')!.disabled).toBe(true);
   const count = fetchMock.mock.calls.length;
   await click('Refresh');
+  await approveVisibleConfirmation();
   await act(async () =>
     host
       .querySelector<HTMLFormElement>('[data-testid="electricity-price-contract-form"]')!

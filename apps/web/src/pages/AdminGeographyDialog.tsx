@@ -1,3 +1,5 @@
+import { useRiskConfirmation } from '../hooks/useRiskConfirmation.js';
+import { ConfirmationFields } from '@barghsa/ui';
 import { useEffect, useRef, useState } from 'react';
 import {
   Alert,
@@ -76,6 +78,7 @@ export function GeographyDialog({
       locale
     );
   const firstField = useRef<HTMLInputElement>(null);
+  const cancel = useRef<HTMLButtonElement>(null);
   const native = useWizardForm<GeographyDraft>(
     async () =>
       (await import('../lib/geography-form-schemas.js')).geographySchema({
@@ -137,9 +140,19 @@ export function GeographyDialog({
     }
   }, [busy, native.errors, native.form]);
   const deactivating = modal.kind === 'deactivate';
+  const destructive =
+    deactivating ||
+    (modal.kind === 'edit' && modal.province?.status === 'active' && status === 'inactive');
+  const gate = useRiskConfirmation(
+    JSON.stringify([provinceId, modal.kind, modal.province?.id, destructive]),
+    locale,
+    'destructive'
+  );
+  const authorized = useRef(gate.allowed);
+  authorized.current = gate.allowed;
   async function submit(event: React.FormEvent) {
     event.preventDefault();
-    if (busy || inFlight.current || !readReady) return;
+    if ((destructive && !authorized.current) || busy || inFlight.current || !readReady) return;
     inFlight.current = true;
     const generation = latest.current.generation;
     native.setValidationPending(true);
@@ -162,6 +175,7 @@ export function GeographyDialog({
           return;
         }
       }
+      if (destructive && !authorized.current) return;
       const draft = native.form.getValues();
       if (deactivating && modal.province) {
         if (provinceId) await deactivateCity(provinceId, modal.province.id);
@@ -212,7 +226,7 @@ export function GeographyDialog({
     >
       <DialogContent
         showCloseButton={false}
-        initialFocus={deactivating ? undefined : firstField}
+        initialFocus={deactivating ? cancel : firstField}
         finalFocus={() => modal.trigger}
         dir={locale === 'fa' ? 'rtl' : 'ltr'}
       >
@@ -310,8 +324,10 @@ export function GeographyDialog({
             </fieldset>
           )}
           {recovery}
+          {destructive && <ConfirmationFields gate={gate} disabled={busy} />}
           <DialogFooter>
             <Button
+              ref={cancel}
               type="button"
               variant="outline"
               disabled={busy}
@@ -325,7 +341,7 @@ export function GeographyDialog({
               <Button
                 type="submit"
                 variant={deactivating ? 'destructive' : 'default'}
-                disabled={busy || !readReady}
+                disabled={busy || !readReady || (destructive && !gate.allowed)}
                 aria-busy={busy || undefined}
               >
                 {busy && (
@@ -350,7 +366,7 @@ export function GeographyDialog({
               <CatalogueSaveButton
                 label={t(busy ? 'saving' : modal.kind === 'add' ? 'create' : 'save')}
                 pending={busy}
-                disabled={busy || !readReady}
+                disabled={busy || !readReady || (destructive && !gate.allowed)}
               />
             )}
           </DialogFooter>

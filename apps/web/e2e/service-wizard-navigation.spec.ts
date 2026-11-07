@@ -1,3 +1,4 @@
+import { approveRiskConfirmation } from './confirmation-fixture';
 import AxeBuilder from '@axe-core/playwright';
 import { test, expect, type Page } from './coverage-fixture';
 import { t } from '@barghsa/i18n/app';
@@ -112,6 +113,9 @@ async function fixture(page: Page, mode: Mode, locale: Locale, savedStep = 1) {
             id: profileId,
             profileType: 'INDIVIDUAL',
             title: 'Buyer',
+            firstName: null,
+            lastName: null,
+            nationalId: null,
             status: 'ACTIVE',
             isDefault: true,
           },
@@ -512,6 +516,7 @@ for (const mode of ['saving', 'solar'] as const)
         name: mode === 'saving' ? tSaving('submit', locale) : tSolar('submit', locale),
         exact: true,
       });
+      await approveRiskConfirmation(page, locale, 'financial');
       state.invalidOrder = true;
       await submit.click();
       await expect(page.getByRole('alert')).toContainText(
@@ -610,6 +615,7 @@ for (const mode of ['saving', 'solar'] as const)
   test(`${mode} protects browser Back while the final command is pending`, async ({ page }) => {
     const state = await fixture(page, mode, 'en');
     await review(page, mode, 'en');
+    await approveRiskConfirmation(page, 'en', 'financial');
     let finish!: () => void;
     state.orderGate = new Promise<void>((resolve) => {
       finish = resolve;
@@ -652,6 +658,7 @@ test('solar keeps departure blocked while its authoritative review is pending', 
   await dialogButton(page, 'electricity.order.unsaved.stay', 'en').click();
   finish();
   await expect(page).toHaveURL(/step=4$/);
+  await approveRiskConfirmation(page, 'en', 'financial');
   await expect(
     page.getByRole('button', { name: tSolar('submit', 'en'), exact: true })
   ).toBeEnabled();

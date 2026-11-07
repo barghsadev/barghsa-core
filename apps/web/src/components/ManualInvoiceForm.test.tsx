@@ -1,3 +1,4 @@
+import { approveVisibleConfirmation } from '../test/confirmation.js';
 import { QueryComponentProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
@@ -100,6 +101,7 @@ async function click(text: string) {
     (value) => value.textContent?.trim() === text || value.getAttribute('aria-label') === text
   );
   expect(button).toBeTruthy();
+  await approveVisibleConfirmation();
   await act(async () => button!.click());
 }
 async function fill() {
@@ -265,6 +267,7 @@ it('claims one review before deferred validation and ignores duplicate submits',
     return original(url, options);
   });
   const form = host.querySelector('form[aria-label]')!;
+  await approveVisibleConfirmation();
   await act(async () => {
     form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
     form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));

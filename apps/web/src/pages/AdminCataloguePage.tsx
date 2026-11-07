@@ -533,6 +533,13 @@ export default function AdminCataloguePage({
     setAction({
       path,
       method,
+      ...(method === 'PUT' &&
+      body &&
+      typeof body === 'object' &&
+      'status' in body &&
+      body.status === 'inactive'
+        ? { risk: 'destructive' as const }
+        : {}),
       ...(method === 'DELETE' ? { successStatus: 204 } : {}),
       title: heading,
       description,

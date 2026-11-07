@@ -408,6 +408,11 @@
       "types": "./dist/calendar.d.ts",
       "import": "./dist/calendar.js",
       "default": "./dist/calendar.js"
+    },
+    "./confirmation": {
+      "types": "./dist/confirmation.d.ts",
+      "import": "./dist/confirmation.js",
+      "default": "./dist/confirmation.js"
     }
   },
   "scripts": {

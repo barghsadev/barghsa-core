@@ -1,3 +1,4 @@
+import { approveVisibleConfirmation } from '../test/confirmation.js';
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -227,6 +228,7 @@ it('retains the selected native address radio across form rerenders', async () =
   );
   expect(choices.map((choice) => choice.value)).toEqual(['address-1', 'address-2']);
   expect(choices[0]?.checked).toBe(true);
+  await approveVisibleConfirmation();
   await act(async () => choices[1]!.click());
   await mount();
   expect(choices[0]?.checked).toBe(false);
@@ -282,6 +284,7 @@ it('keeps an unavailable draft closed until a retry restores the saved step', as
   const retry = [...container.querySelectorAll('button')].find(
     (button) => button.textContent === t('electricity.order.retry', 'en')
   );
+  await approveVisibleConfirmation();
   await act(async () => retry?.click());
   expect(container.querySelector('li[aria-current="step"]')?.textContent).toContain(
     t('electricity.advanced.stepProducts', 'en')
@@ -295,6 +298,7 @@ it('retries initial order context before opening the wizard', async () => {
   const retry = [...container.querySelectorAll('button')].find(
     (button) => button.textContent === t('electricity.order.retry', 'en')
   );
+  await approveVisibleConfirmation();
   await act(async () => retry?.click());
   expect(container.querySelector('li[aria-current="step"]')?.textContent).toContain(
     t('electricity.advanced.stepProducts', 'en')
@@ -311,6 +315,7 @@ it('does not advance until the server confirms the saved step', async () => {
     [...container.querySelectorAll('button')].find(
       (button) => button.textContent === t('electricity.order.next', 'en')
     );
+  await approveVisibleConfirmation();
   await act(async () => next()?.click());
   expect(container.querySelector('li[aria-current="step"]')?.textContent).toContain(
     t('electricity.advanced.stepDates', 'en')
@@ -320,6 +325,7 @@ it('does not advance until the server confirms the saved step', async () => {
   );
 
   savedStepOverride = null;
+  await approveVisibleConfirmation();
   await act(async () => next()?.click());
   expect(container.querySelector('li[aria-current="step"]')?.textContent).toContain(
     t('electricity.advanced.stepProducts', 'en')
@@ -351,10 +357,12 @@ it('saves the address step before opening address settings', async () => {
     [...container.querySelectorAll('button')].find(
       (button) => button.textContent === t('electricity.order.addAddress', 'en')
     );
+  await approveVisibleConfirmation();
   await act(async () => addAddress()?.click());
   expect(navigateMock).not.toHaveBeenCalled();
 
   savedStepOverride = null;
+  await approveVisibleConfirmation();
   await act(async () => addAddress()?.click());
   expect(navigateMock).toHaveBeenCalledWith({
     to: '/settings/addresses',
@@ -424,6 +432,7 @@ it('refreshes the advanced contract terms after a submission conflict', async ()
   const submit = [...container.querySelectorAll('button')].find(
     (button) => button.textContent === t('electricity.order.submit', 'en')
   );
+  await approveVisibleConfirmation();
   await act(async () => submit?.click());
   await settlePreview();
   expect(container.textContent).toContain('Updated terms');
@@ -444,6 +453,7 @@ it('does not advance when the saved bundle differs from the reviewed quantities'
   const next = [...container.querySelectorAll('button')].find(
     (button) => button.textContent === t('electricity.order.next', 'en')
   )!;
+  await approveVisibleConfirmation();
   await act(async () => next.click());
   expect(window.location.search).toBe('?step=2');
   expect(container.querySelector<HTMLInputElement>('#advanced-thermal')?.value).toBe('100');
@@ -474,6 +484,7 @@ it('sends one submission and retains its key until all order references are conf
     [...container.querySelectorAll('button')].find(
       (button) => button.textContent === t('electricity.order.submit', 'en')
     )!;
+  await approveVisibleConfirmation();
   await act(async () => {
     submit().click();
     submit().click();
@@ -486,6 +497,7 @@ it('sends one submission and retains its key until all order references are conf
   expect(navigateMock).not.toHaveBeenCalled();
   expect(submit().disabled).toBe(false);
   orderReply = null;
+  await approveVisibleConfirmation();
   await act(async () => submit().click());
   expect(JSON.parse(orderCalls()[1]![1]!.body as string).idempotencyKey).toBe(
     JSON.parse(orderCalls()[0]![1]!.body as string).idempotencyKey
@@ -520,6 +532,7 @@ it('ignores an order receipt after the advanced form has unmounted', async () =>
   const submit = [...container.querySelectorAll('button')].find(
     (button) => button.textContent === t('electricity.order.submit', 'en')
   )!;
+  await approveVisibleConfirmation();
   await act(async () => submit.click());
   await act(async () => root.render(null));
   await act(async () =>

@@ -392,6 +392,9 @@ function AdminSolarPostalWorkspace({ queries }: { queries?: ListQueryBinding } =
         )
           throw new Error('review');
         propose({
+          ...(['reject', 'close-no-contract'].includes(options.decision)
+            ? { risk: 'destructive' as const }
+            : {}),
           title: options.title,
           description: options.requestId,
           path: options.path,

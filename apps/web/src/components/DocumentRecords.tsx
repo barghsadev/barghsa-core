@@ -293,6 +293,7 @@ function OwnedDocumentList({
                   key,
                   documentId: item.id,
                   action: {
+                    risk: 'destructive',
                     title: word('remove'),
                     description: item.originalName,
                     path: `${documentBase(staff)}/${encodeURIComponent(item.id)}/remove`,

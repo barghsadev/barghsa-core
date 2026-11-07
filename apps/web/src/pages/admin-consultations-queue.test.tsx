@@ -1,3 +1,4 @@
+import { approveVisibleConfirmation } from '../test/confirmation.js';
 import { QueryComponentProvider } from '../test/query-provider.js';
 import { t } from '@barghsa/i18n/app';
 import { act } from 'react';
@@ -110,6 +111,7 @@ it('keeps earlier consultation work visible after loading another queue page', a
       (button) => button.textContent?.trim() === 'More work'
     );
     expect(more).toBeDefined();
+    await approveVisibleConfirmation();
     await act(async () => more?.click());
     expect(container.textContent).toContain('first-work');
     expect(container.textContent).toContain('older-work');
@@ -207,15 +209,18 @@ it('submits a staff offer deadline in the saved account timezone', async () => {
     await act(async () =>
       root.render(<QueryComponentProvider>{<AdminConsultationsPage />}</QueryComponentProvider>)
     );
+    await approveVisibleConfirmation();
     await act(async () => button('buyer-one')?.click());
     expect(container.querySelector<HTMLInputElement>('input[type="datetime-local"]')?.value).toBe(
       '2099-01-02T02:30'
     );
+    await approveVisibleConfirmation();
     await act(async () => button('Issue fee offer and invoice')?.click());
     await vi.waitFor(async () => {
       await act(async () => {});
       expect(document.body.textContent).toContain('Review fee offer and invoice');
     });
+    await approveVisibleConfirmation();
     await act(async () => button('Confirm')?.click());
     expect(submitted).toHaveLength(1);
     expect(submitted[0]?.validUntil).toBe('2099-01-01T12:30:00.000Z');
@@ -362,6 +367,7 @@ it('confirms the reviewed paid-fee charge before sending the staff adjustment', 
     await act(async () =>
       root.render(<QueryComponentProvider>{<AdminConsultationsPage />}</QueryComponentProvider>)
     );
+    await approveVisibleConfirmation();
     await act(async () => button('buyer-two')?.click());
     const feeInput = Array.from(
       container.querySelectorAll<HTMLInputElement>('input[type="text"]')
@@ -378,12 +384,14 @@ it('confirms the reviewed paid-fee charge before sending the staff adjustment', 
     await act(async () => {
       fill(reason!, 'Additional review');
     });
+    await approveVisibleConfirmation();
     await act(async () => button('Adjust paid fee')?.click());
     await vi.waitFor(async () => {
       await act(async () => {});
       expect(document.body.textContent).toContain('Review paid fee adjustment');
     });
     expect(document.body.textContent).toContain('100,000 IRR');
+    await approveVisibleConfirmation();
     await act(async () => button('Confirm')?.click());
     expect(submitted).toHaveLength(1);
     expect(submitted[0]?.expectedReviewHash).toBe('b'.repeat(64));
@@ -396,12 +404,14 @@ it('confirms the reviewed paid-fee charge before sending the staff adjustment', 
     const closeReason = container.querySelector<HTMLTextAreaElement>('#consultation-reason');
     expect(closeReason).toBeDefined();
     await act(async () => fill(closeReason!, 'Customer requested cancellation'));
+    await approveVisibleConfirmation();
     await act(async () => button('Cancel request')?.click());
     await vi.waitFor(() =>
       expect(document.body.textContent).toContain('Review paid consultation decision')
     );
     expect(document.body.textContent).toContain('Review paid consultation decision');
     expect(document.body.textContent).toContain('500,000 IRR');
+    await approveVisibleConfirmation();
     await act(async () => button('Confirm')?.click());
     expect(submitted).toHaveLength(2);
     expect(submitted[1]?.expectedReviewHash).toBe('c'.repeat(64));
@@ -456,6 +466,7 @@ it.each(['en', 'fa'] as const)(
         const queueAssignment = rows[index]!.querySelector('[data-slot=consultation-assignment]')!;
         expect(queueAssignment.textContent).toContain(expectedOwner);
         if (request.staff_team) expect(queueAssignment.textContent).toContain(request.staff_team);
+        await approveVisibleConfirmation();
         await act(async () =>
           rows[index]!.querySelector<HTMLButtonElement>('button[aria-pressed]')!.click()
         );

@@ -398,6 +398,7 @@ export default function AdminUploadPoliciesPage() {
     actionGeneration.current = generation.current;
     setNotice(false);
     const next: TeamAction = {
+      risk: 'destructive',
       title: label('end'),
       description: `${label('endConfirm')} ${label(`category.${limit.category}`)}: ${limit.allowedExtensions.join(', ')} · ${size(limit.maxSizeBytes)}`,
       path: `/api/admin/upload-policies/${policy.id}/end`,

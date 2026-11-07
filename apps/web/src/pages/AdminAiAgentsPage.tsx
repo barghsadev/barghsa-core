@@ -503,6 +503,13 @@ function OwnedAiAgentsPage({
     const next: TeamAction = {
       path,
       method,
+      ...(method === 'PUT' &&
+      body &&
+      typeof body === 'object' &&
+      'enabled' in body &&
+      body.enabled === false
+        ? { risk: 'destructive' as const }
+        : {}),
       successStatus: method === 'DELETE' ? 204 : method === 'POST' ? 201 : 200,
       title,
       description,

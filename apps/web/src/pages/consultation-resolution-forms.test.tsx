@@ -1,3 +1,4 @@
+import { approveVisibleConfirmation } from '../test/confirmation.js';
 import { QueryComponentProvider } from '../test/query-provider.js';
 import { act, useState, type ComponentProps } from 'react';
 import { createRoot } from 'react-dom/client';
@@ -192,6 +193,7 @@ async function mount(
     vi.waitFor(() => expect(document.querySelector('[role=dialog]')).not.toBeNull());
   const confirm = async () => {
     await dialog();
+    await approveVisibleConfirmation();
     await click(locale === 'en' ? 'Confirm' : 'تأیید', document);
   };
   const retry = async () =>
@@ -232,6 +234,7 @@ it('owns paid preparation synchronously across a held lazy import, rejects edite
   try {
     await view.change('reason', ' Raw reason ');
     const cancel = button(view.container, tConsultation('cancel', 'en'));
+    await approveVisibleConfirmation();
     await act(async () => {
       cancel.click();
       cancel.click();
@@ -426,6 +429,7 @@ it.each([
       );
       const reads = view.reads.length;
       expect(button(view.container, tConsultation('refresh', 'en')).disabled).toBe(true);
+      await approveVisibleConfirmation();
       await act(async () =>
         view.container
           .querySelector('form[data-testid=consultation-fee-form]')!
@@ -526,6 +530,7 @@ it('password step-up resends exactly the captured paid body and duplicate confir
       fill(document.querySelector<HTMLInputElement>('#team-step-up-password')!, 'password')
     );
     const confirm = button(document, 'Confirm');
+    await approveVisibleConfirmation();
     await act(async () => {
       confirm.click();
       confirm.click();

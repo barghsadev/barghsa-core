@@ -510,6 +510,9 @@ function OwnedKnowledgeBasesPage({
     setAction({
       path,
       method,
+      ...(method === 'PUT' && record(body) && body.isEnabled === false
+        ? { risk: 'destructive' as const }
+        : {}),
       ...(formCapture.current
         ? { successStatus: method === 'POST' ? 201 : 200, conflictMessage: copy('changed') }
         : {}),

@@ -237,6 +237,7 @@ function OwnedWalletInvoicePaymentPanel({
       {open && intent && paymentAction && (
         <Suspense fallback={<p role="status">{text('loading')}</p>}>
           <TeamActionDialog
+            risk="financial"
             confirmationDisabled={time.status !== 'ready'}
             action={paymentAction}
             summary={

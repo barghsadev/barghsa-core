@@ -1,3 +1,4 @@
+import { approveVisibleConfirmation } from '../test/confirmation.js';
 import { QueryProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import { createRoot } from 'react-dom/client';
@@ -167,6 +168,7 @@ it('shows the staff queue, order financial facts, product lines and decisions', 
       button.textContent?.includes('Electricity Buyer')
     );
     expect(queueButton).toBeDefined();
+    await approveVisibleConfirmation();
     await act(async () => queueButton!.click());
     expect(new URLSearchParams(window.location.search).get('orderId')).toBe(
       '84000000-0000-4000-8000-000000000001'
@@ -238,6 +240,7 @@ it('shows the staff queue, order financial facts, product lines and decisions', 
       (button) => button.textContent === 'More orders'
     );
     expect(more).toBeDefined();
+    await approveVisibleConfirmation();
     await act(async () => more!.click());
     expect(fetchMock).toHaveBeenCalledWith(
       '/api/staff/electricity/orders?after=84000000-0000-4000-8000-000000000001',
@@ -249,6 +252,7 @@ it('shows the staff queue, order financial facts, product lines and decisions', 
       (button) => button.textContent === 'Order conversations'
     );
     expect(conversations).toBeDefined();
+    await approveVisibleConfirmation();
     await act(async () => conversations!.click());
     expect(fetchMock).toHaveBeenCalledWith(
       '/api/staff/electricity/orders/conversations',
@@ -257,6 +261,7 @@ it('shows the staff queue, order financial facts, product lines and decisions', 
     const conversationOrder = [...container.querySelectorAll('button')].find((button) =>
       button.textContent?.includes('Electricity Buyer')
     );
+    await approveVisibleConfirmation();
     await act(async () => conversationOrder!.click());
     expect(container.textContent).toContain('Please confirm delivery.');
     expect(container.textContent).toContain('Visible to');
@@ -376,6 +381,7 @@ it.each(['awaiting_staff_review', 'submitted', 'changes_requested', 'approved'] 
       const queueButton = [...container.querySelectorAll('button')].find((button) =>
         button.textContent?.includes('Electricity Buyer')
       );
+      await approveVisibleConfirmation();
       await act(async () => queueButton!.click());
       const reason = container.querySelector<HTMLTextAreaElement>('#electricity-review-reason')!;
       await act(async () => {
@@ -396,6 +402,7 @@ it.each(['awaiting_staff_review', 'submitted', 'changes_requested', 'approved'] 
         expect(decisions).toHaveLength(2);
         expect(decisions.every((item) => item.disabled)).toBe(true);
       }
+      await approveVisibleConfirmation();
       await act(async () => reject!.click());
       await vi.waitFor(() => expect(document.querySelector('[role=dialog]')).not.toBeNull());
       expect(fetchMock).toHaveBeenCalledWith(
@@ -407,6 +414,7 @@ it.each(['awaiting_staff_review', 'submitted', 'changes_requested', 'approved'] 
       const confirm = [...document.body.querySelectorAll('button')].find(
         (button) => button.textContent === 'Confirm'
       );
+      await approveVisibleConfirmation();
       await act(async () => confirm!.click());
       const mutation = fetchMock.mock.calls.find(([url]) => url.endsWith('/reject'));
       expect(mutation).toBeDefined();
@@ -520,6 +528,7 @@ it('opens a linked order directly even when it is no longer in the review queue'
         Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!.call(lookup, id);
         lookup.dispatchEvent(new Event('input', { bubbles: true }));
       });
+      await approveVisibleConfirmation();
       await act(async () => {
         form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
       });
@@ -543,6 +552,7 @@ it('opens a linked order directly even when it is no longer in the review queue'
     const retry = [...container.querySelectorAll('button')].find(
       (button) => button.textContent === 'Retry'
     );
+    await approveVisibleConfirmation();
     await act(async () => retry!.click());
     expect(container.textContent).toContain('Electricity Buyer');
     expect(container.textContent).not.toContain('Order details were not found or are unavailable.');

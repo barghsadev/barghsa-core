@@ -1,4 +1,4 @@
-import { useRef, useState, useId, type ReactNode } from 'react';
+import { useRef, type ReactNode } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -8,10 +8,13 @@ import {
   DialogFooter,
 } from './dialog';
 import { Button } from './button';
-import { Input } from './input';
-import { Label } from './label';
+import {
+  ConfirmationFields,
+  useConfirmationGate,
+  type ConfirmationRequirements,
+} from './confirmation-gate';
 
-export interface ConfirmDialogProps {
+export interface ConfirmDialogProps extends ConfirmationRequirements {
   open: boolean;
   onCancel: () => void;
   onConfirm: () => void;
@@ -21,9 +24,11 @@ export interface ConfirmDialogProps {
   cancelLabel: string;
   loading?: boolean;
   destructive?: boolean;
+  variant?: 'primary' | 'destructive' | 'warning';
+  /** Captured target/review identity; changing it withdraws previous approval. */
+  scope?: unknown;
   children?: ReactNode;
   /** The caller supplies translated phrase instructions, including the exact phrase. */
-  confirmation?: { phrase: string; label: string };
 }
 /** Controlled dialog. Keep errors in children and close only after a verified write. */
 export function ConfirmDialog(props: ConfirmDialogProps) {
@@ -47,12 +52,14 @@ function ConfirmContent({
   onCancel,
   loading = false,
   destructive = false,
+  variant = destructive ? 'destructive' : 'primary',
+  scope,
   confirmation,
+  acknowledgement,
   children,
 }: ConfirmDialogProps) {
-  const [phrase, setPhrase] = useState('');
+  const gate = useConfirmationGate(scope, { confirmation, acknowledgement });
   const cancel = useRef<HTMLButtonElement>(null);
-  const id = useId();
   return (
     <DialogContent
       showCloseButton={false}
@@ -64,33 +71,39 @@ function ConfirmContent({
         <DialogDescription>{description}</DialogDescription>
       </DialogHeader>
       {children}
-      {confirmation ? (
-        <div className="flex flex-col gap-2">
-          <Label htmlFor={id}>{confirmation.label}</Label>
-          <Input
-            id={id}
-            autoComplete="off"
-            value={phrase}
-            disabled={loading}
-            onChange={(event) => setPhrase(event.target.value)}
-          />
-        </div>
-      ) : null}
+      <ConfirmationFields gate={gate} disabled={loading} />
       <DialogFooter>
         <Button ref={cancel} variant="outline" disabled={loading} onClick={onCancel}>
           {cancelLabel}
         </Button>
         <Button
-          variant={destructive ? 'destructive' : 'default'}
+          variant={variant === 'primary' ? 'default' : variant}
           loading={loading}
-          disabled={Boolean(
-            confirmation && (!confirmation.phrase || phrase !== confirmation.phrase)
-          )}
-          onClick={onConfirm}
+          disabled={!gate.allowed}
+          onClick={() => {
+            if (!loading && gate.allowed) onConfirm();
+          }}
         >
           {confirmLabel}
         </Button>
       </DialogFooter>
     </DialogContent>
   );
+}
+
+export function DestructiveConfirmDialog(
+  props: Omit<ConfirmDialogProps, 'variant' | 'destructive'> & {
+    confirmation: NonNullable<ConfirmDialogProps['confirmation']>;
+  }
+) {
+  return <ConfirmDialog {...props} variant="destructive" />;
+}
+
+export function FinancialConfirmDialog(
+  props: Omit<ConfirmDialogProps, 'variant'> & {
+    acknowledgement: string;
+    children: ReactNode;
+  }
+) {
+  return <ConfirmDialog {...props} variant={props.destructive ? 'destructive' : 'warning'} />;
 }

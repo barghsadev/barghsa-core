@@ -1,4 +1,5 @@
-import { QueryProvider } from '../test/query-provider.js';
+import { approveVisibleConfirmation } from '../test/confirmation.js';
+import { ConfirmationTestProvider as QueryProvider } from '../test/confirmation.js';
 import ManualInvoiceForm from '../components/ManualInvoiceForm.js';
 import { act, type ComponentType } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
@@ -140,6 +141,7 @@ for (const locale of ['en', 'fa']) {
         /^(Add|Create|New|افزودن|ایجاد)/.test(button.textContent?.trim() ?? '')
       );
       if (create) {
+        await approveVisibleConfirmation();
         await act(async () => create.click());
         await act(async () => {
           await Promise.resolve();
@@ -355,6 +357,7 @@ it.each(invalidEffective.map((data) => ({ data })))(
     const catalogueBidi = [...host.querySelectorAll('bdi')].map((item) => item.textContent);
     const lookup = host.querySelector('#staffUserId')!.closest('section')!;
     await setInput(host.querySelector<HTMLInputElement>('#staffUserId')!, 'staff-one');
+    await approveVisibleConfirmation();
     await act(async () =>
       host
         .querySelector('form')!
@@ -389,6 +392,7 @@ it.each([404, 503, 'network'] as const)(
     );
     await act(async () => root.render(<QueryProvider>{<AdminRolesPage />}</QueryProvider>));
     await setInput(host.querySelector<HTMLInputElement>('#staffUserId')!, 'staff-one');
+    await approveVisibleConfirmation();
     await act(async () =>
       host
         .querySelector('form')!
@@ -424,6 +428,7 @@ async function openTemplate() {
     root.render(<QueryProvider>{<AdminContractTemplatesPage />}</QueryProvider>)
   );
   const open = host.querySelector<HTMLButtonElement>('button[aria-label$="Agreement"]')!;
+  await approveVisibleConfirmation();
   await act(async () => open.click());
   expect(host.querySelector('#template-file')).not.toBeNull();
 }
@@ -503,6 +508,7 @@ it('discards a slow file read after the editor closes', async () => {
   const cancel = Array.from(host.querySelectorAll('button')).find(
     (button) => button.textContent === 'Cancel'
   )!;
+  await approveVisibleConfirmation();
   await act(async () => cancel.click());
   await act(async () => resolve(new TextEncoder().encode('Hello').buffer));
   expect(host.textContent).not.toContain('late.txt');
@@ -514,6 +520,7 @@ async function clickText(text: string) {
     (button) => button.textContent?.trim() === text
   );
   expect(button, text).toBeTruthy();
+  await approveVisibleConfirmation();
   await act(async () => button!.click());
 }
 const smtp = {
@@ -569,6 +576,7 @@ it.each(['', 'replacement-secret'])(
     await setInput(host.querySelector<HTMLInputElement>('#email-provider-label')!, 'Updated mail');
     const passwordInput = host.querySelector<HTMLInputElement>('input[type=password]')!;
     if (password) await setInput(passwordInput, password);
+    await approveVisibleConfirmation();
     await act(async () =>
       host
         .querySelector('form')!
@@ -619,6 +627,7 @@ it.each(
   );
   await act(async () => root.render(<QueryProvider>{<AdminTosPage />}</QueryProvider>));
   await clickText('Edit');
+  await approveVisibleConfirmation();
   await act(async () =>
     host
       .querySelector('form')!
@@ -645,6 +654,15 @@ it.each([204, 409, 503, 'cancel', 'no-revision'] as const)(
     try {
       await act(async () => root.render(<QueryProvider>{<AdminTosPage />}</QueryProvider>));
       await clickText('Discard');
+      if (status !== 'no-revision') {
+        const confirmationLabel = status === 'cancel' ? 'Cancel' : 'Confirm';
+        if (status !== 'cancel') await approveVisibleConfirmation();
+        await act(async () =>
+          [...document.querySelectorAll<HTMLButtonElement>('[role=dialog] button')]
+            .find((button) => button.textContent?.trim() === confirmationLabel)!
+            .click()
+        );
+      }
       const deletes = vi.mocked(fetch).mock.calls.filter(([, init]) => init?.method === 'DELETE');
       if (status === 'cancel' || status === 'no-revision') expect(deletes).toHaveLength(0);
       else {
@@ -700,6 +718,7 @@ it.each([
     (button) => button.textContent === 'Publish'
   )!;
   expect(publish.disabled).toBe(false);
+  await approveVisibleConfirmation();
   await act(async () => publish.click());
   const request = vi.mocked(fetch).mock.calls.find(([, init]) => init?.method === 'POST')!;
   expect(JSON.parse(String(request[1]?.body))).toEqual({
@@ -730,6 +749,7 @@ it.each([200, 409, 503, 'network'] as const)(
     );
     await act(async () => root.render(<QueryProvider>{<AdminTosPage />}</QueryProvider>));
     await clickText('Edit');
+    await approveVisibleConfirmation();
     await act(async () =>
       host
         .querySelector('form')!
@@ -811,6 +831,7 @@ it('previews and saves bounded brand layout settings', async () => {
     });
   }
   await clickText('Save Draft');
+  await approveVisibleConfirmation();
   await act(async () =>
     document
       .querySelector('[role=dialog] form')!
@@ -886,6 +907,7 @@ it.each([
   await setInput(host.querySelector<HTMLInputElement>('#correction-reason')!, 'Correct invoice');
   await setInput(host.querySelector<HTMLInputElement>(`[id^="manual-${field}-"]`)!, value);
   expect(host.querySelector<HTMLButtonElement>('button[type=submit]')?.disabled).toBe(false);
+  await approveVisibleConfirmation();
   await act(async () =>
     host
       .querySelector('form')!
@@ -1010,6 +1032,7 @@ it.each([
     root.render(<QueryProvider>{<ManualInvoiceForm correction={correction} />}</QueryProvider>)
   );
   await setInput(host.querySelector<HTMLInputElement>('#correction-reason')!, 'Correct invoice');
+  await approveVisibleConfirmation();
   await act(async () => host.querySelector<HTMLButtonElement>('button[type=submit]')!.click());
   await vi.waitFor(() =>
     expect(
@@ -1022,6 +1045,7 @@ it.each([
     document.querySelectorAll<HTMLButtonElement>('[role=dialog] button')
   ).find((button) => button.textContent?.trim() === 'Cancel and issue replacement');
   expect(confirm).toBeTruthy();
+  await approveVisibleConfirmation();
   await act(async () => confirm!.click());
   expect(fetch).toHaveBeenCalledTimes(2);
   if (scenario.success) {
@@ -1032,6 +1056,7 @@ it.each([
     if (!scenario.status || scenario.status >= 500) {
       expect(host.querySelector<HTMLInputElement>('#correction-reason')?.disabled).toBe(true);
       const first = vi.mocked(fetch).mock.calls[1]![1]?.body;
+      await approveVisibleConfirmation();
       await act(async () => host.querySelector<HTMLButtonElement>('button[type=submit]')!.click());
       expect(vi.mocked(fetch).mock.calls[2]![1]?.body).toBe(first);
     } else if (scenario.status === 403) expect(host.querySelector('#correction-reason')).toBeNull();
@@ -1090,6 +1115,7 @@ it.each(
   );
   await act(async () => root.render(<QueryProvider>{<AdminRolesPage />}</QueryProvider>));
   await setInput(host.querySelector<HTMLInputElement>('#staffUserId')!, 'staff-one');
+  await approveVisibleConfirmation();
   await act(async () =>
     host
       .querySelector('form')!
@@ -1130,6 +1156,7 @@ it.each([
   try {
     await act(async () => root.render(<QueryProvider>{<AdminBrandingConfig />}</QueryProvider>));
     await clickText('Activate');
+    await approveVisibleConfirmation();
     await act(async () =>
       document
         .querySelector('[role=dialog] form')!
@@ -1171,6 +1198,7 @@ it.each([
   );
   await act(async () => root.render(<QueryProvider>{<AdminTosPage />}</QueryProvider>));
   await clickText('Edit');
+  await approveVisibleConfirmation();
   await act(async () =>
     host
       .querySelector('form')!
@@ -1223,6 +1251,7 @@ it.each([
     'Updated brand'
   );
   await clickText('Save Draft');
+  await approveVisibleConfirmation();
   await act(async () =>
     document
       .querySelector('[role=dialog] form')!
@@ -1279,6 +1308,7 @@ it('abandons an effective permission lookup when the staff identity changes', as
   vi.stubGlobal('fetch', requests);
   await act(async () => root.render(<QueryProvider>{<AdminRolesPage />}</QueryProvider>));
   await setInput(host.querySelector<HTMLInputElement>('#staffUserId')!, 'staff-one');
+  await approveVisibleConfirmation();
   await act(async () =>
     host
       .querySelector('form')!
@@ -1380,11 +1410,13 @@ it.each([
   );
   await setInput(host.querySelector<HTMLInputElement>('#correction-reason')!, 'Correct amount');
   await setInput(host.querySelector<HTMLInputElement>('#correction-amount')!, '-100');
+  await approveVisibleConfirmation();
   await act(async () => host.querySelector<HTMLButtonElement>('button[type=submit]')!.click());
   const confirm = Array.from(
     document.querySelectorAll<HTMLButtonElement>('[role=dialog] button')
   ).find((button) => button.textContent?.trim() === 'Confirm adjustment');
   expect(confirm).toBeTruthy();
+  await approveVisibleConfirmation();
   await act(async () => confirm!.click());
   expect(fetch).toHaveBeenCalledTimes(2);
   if (scenario.success) {
@@ -1408,6 +1440,7 @@ it.each([revisionTerms, publishedTerms].map((version) => ({ version })))(
     const dialog = document.querySelector('[role=dialog]')!;
     expect(dialog).not.toBeNull();
     for (const label of ['فارسی', 'English']) {
+      await approveVisibleConfirmation();
       await act(async () =>
         Array.from(dialog.querySelectorAll('button'))
           .find((button) => button.textContent === label)!
@@ -1417,6 +1450,7 @@ it.each([revisionTerms, publishedTerms].map((version) => ({ version })))(
         label === 'English' ? version.contentEn : version.contentFa
       );
     }
+    await approveVisibleConfirmation();
     await act(async () => dialog.querySelector<HTMLButtonElement>('[aria-label="Close"]')!.click());
     expect(document.querySelector('[role=dialog]')).toBeNull();
     for (const [, init] of vi.mocked(fetch).mock.calls) expect(init?.method ?? 'GET').toBe('GET');

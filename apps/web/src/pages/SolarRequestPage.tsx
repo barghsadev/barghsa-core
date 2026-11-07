@@ -1,3 +1,5 @@
+import { ConfirmationFields } from '@barghsa/ui';
+import { useRiskConfirmation } from '../hooks/useRiskConfirmation.js';
 import { OrderWalletBalance } from '../components/OrderWalletBalance.js';
 import { commercialFetch as fetch } from '../lib/commercial-fetch.js';
 import { StepReviewPage } from '../components/StepReviewPage.js';
@@ -470,7 +472,13 @@ export function SolarRequestPage() {
       }
     });
   }
+  const financialGate = useRiskConfirmation(
+    JSON.stringify([review?.hash, fingerprint]),
+    locale,
+    'financial'
+  );
   async function confirmSubmission() {
+    if (!financialGate.allowed) return;
     if (
       !review ||
       !reviewInput ||
@@ -613,7 +621,9 @@ export function SolarRequestPage() {
           saveDisabled={protection.completed.current}
           backDisabled={protection.completed.current}
           nextDisabled={!canNext}
-          submitDisabled={!review || !agreementAccepted || protection.completed.current}
+          submitDisabled={
+            !financialGate.allowed || !review || !agreementAccepted || protection.completed.current
+          }
           onBack={() => {
             void protection.save(step - 1);
           }}
@@ -1038,6 +1048,7 @@ export function SolarRequestPage() {
                 </Card>
               )}
               {submitError && step !== 4 && <p role="alert">{copy('submitError')}</p>}
+              {step === 4 && <ConfirmationFields gate={financialGate} disabled={submitting} />}
             </fieldset>
           )}
         </ValidatedFormWizard>

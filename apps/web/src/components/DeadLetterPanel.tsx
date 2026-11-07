@@ -313,6 +313,7 @@ export default function DeadLetterPanel({
       row: structuredClone(row),
       trigger: document.activeElement instanceof HTMLElement ? document.activeElement : null,
       kind,
+      ...(kind === 'dismiss' ? { risk: 'destructive' as const } : {}),
       title: label(kind),
       description: `${label(`${kind}Confirm`)} ${row.eventKey} · ${channelLabel(row.channel, uiLocale)} · ${row.recipientKey ?? ''}`,
       path: `/api/admin/failed-notifications/${row.id}/${kind}`,

@@ -299,6 +299,7 @@ function Queue() {
           stage,
           hash: raw.hash,
           target: owned.action === 'reject' ? 'rejected' : 'cancelled',
+          risk: 'both',
           title: copy(stage === 'approval' ? 'requestApproval' : owned.action),
           description: copy(stage === 'approval' ? 'approvalSummary' : 'summary'),
           path:

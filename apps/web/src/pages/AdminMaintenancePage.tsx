@@ -152,6 +152,7 @@ export default function AdminMaintenancePage() {
         const body = maintenancePayload(value, draftZone, selected.version);
         captured.current = { capability: selected.capability, body, generation: current };
         setAction({
+          ...(value.active ? { risk: 'destructive' as const } : {}),
           title: copy('save'),
           description: copy('confirm'),
           path: `/api/admin/maintenance/${selected.capability}`,

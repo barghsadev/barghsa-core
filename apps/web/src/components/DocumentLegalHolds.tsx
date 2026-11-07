@@ -113,6 +113,7 @@ function OwnedDocumentLegalHolds({ document }: { document: BusinessDocument }) {
     }
     setInvalid(false);
     setAction({
+      risk: 'destructive',
       title: word('releaseHold'),
       description: hold.reason,
       path: `/api/admin/document-retention/holds/${hold.id}/release`,

@@ -1,3 +1,4 @@
+import { ConfirmProvider } from '@barghsa/ui';
 import { contractText } from '@barghsa/i18n/contracts';
 import { Outlet, useRouteContext } from '@tanstack/react-router';
 import {
@@ -59,7 +60,9 @@ export function AdminContextLayout() {
   return (
     <AccountUserProvider value={userId}>
       <NavigationProvider configuration={navigation} revision={navigationRevision}>
-        <AdminLayout />
+        <ConfirmProvider>
+          <AdminLayout />
+        </ConfirmProvider>
       </NavigationProvider>
     </AccountUserProvider>
   );

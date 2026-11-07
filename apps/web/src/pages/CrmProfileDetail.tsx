@@ -439,6 +439,7 @@ function CrmProfileDetailContent() {
     setShowForcePwChange(false);
     queueAction(
       {
+        risk: 'destructive',
         title: t('crm.profile.admin.forcePasswordChange', locale),
         description: `${data.user.username} · ${forcePwChangeReason.trim()}`,
         path: `/api/crm/users/${encodeURIComponent(data.user.userId)}/force-password-change`,
@@ -453,6 +454,7 @@ function CrmProfileDetailContent() {
     setShowExpireSessions(false);
     queueAction(
       {
+        risk: 'destructive',
         title: t('crm.profile.admin.expireSessions', locale),
         description: `${data.user.username} · ${expireSessionsReason.trim()}`,
         path: `/api/crm/users/${encodeURIComponent(data.user.userId)}/expire-sessions`,

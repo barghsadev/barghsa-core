@@ -304,6 +304,9 @@ function OwnedSavingStaffOperationForm({
               : null;
           if (!review) throw new Error('Review mismatch');
           const ownedAction: TeamAction = {
+            ...(currentIntent.kind === 'decision' && currentIntent.action === 'reject'
+              ? { risk: 'both' as const }
+              : { risk: 'financial' as const }),
             title: copy(
               currentIntent.kind === 'decision'
                 ? currentIntent.action === 'approve'

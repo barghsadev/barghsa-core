@@ -1,3 +1,5 @@
+import { ConfirmationFields } from '@barghsa/ui';
+import { useRiskConfirmation } from '../hooks/useRiskConfirmation.js';
 import { commercialFetch as fetch } from '../lib/commercial-fetch.js';
 import { lazy, Suspense, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { useBlocker, useNavigate } from '@tanstack/react-router';
@@ -16,7 +18,7 @@ import {
   type ElectricityContractTermsSnapshot,
 } from '../components/ElectricityContractTerms.js';
 import { useLocale } from '../hooks/useLocale.js';
-import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
+import { useFinancialFormatting } from '../hooks/useFinancialFormatting.js';
 import { withCsrf } from '../lib/csrf.js';
 import { useWizardStep } from '../hooks/useWizardStep.js';
 import { confirmedDraftReceipt, electricityOrderReceipt } from '../lib/form-receipt.js';
@@ -161,7 +163,7 @@ export function JalaliTimeInput({
 
 export function AdvancedElectricityOrderPage() {
   const locale = useLocale();
-  const numbers = useNumberFormatting(locale);
+  const numbers = useFinancialFormatting(locale);
   const navigate = useNavigate();
   const [profileId, setProfileId] = useState('');
   const [profileName, setProfileName] = useState<string | null>(null);
@@ -542,7 +544,13 @@ export function AdvancedElectricityOrderPage() {
     await navigate({ to: '/settings/addresses', search: { returnTo: '/electricity/advanced' } });
   }
 
+  const financialGate = useRiskConfirmation(
+    JSON.stringify([profileId, addressId, quote?.reviewDigest]),
+    locale,
+    'financial'
+  );
   async function submit() {
+    if (!financialGate.allowed) return;
     if (
       command.current ||
       completed.current ||
@@ -735,6 +743,7 @@ export function AdvancedElectricityOrderPage() {
           (step === 4 && !selectedAddress)
         }
         submitDisabled={
+          !financialGate.allowed ||
           completed.current ||
           !quote ||
           !selectedAddress ||
@@ -975,7 +984,7 @@ export function AdvancedElectricityOrderPage() {
                                   title={t('electricity.order.total', locale)}
                                   quote={quote}
                                   locale={locale}
-                                  formatMoney={numbers.money}
+                                  formatMoney={numbers.reviewMoney}
                                   formatQuantity={numbers.irrDigits}
                                 />
                               ),
@@ -1054,7 +1063,7 @@ export function AdvancedElectricityOrderPage() {
                             title={t('electricity.order.total', locale)}
                             quote={quote}
                             locale={locale}
-                            formatMoney={numbers.money}
+                            formatMoney={numbers.reviewMoney}
                             formatQuantity={numbers.irrDigits}
                           />
                         </>
@@ -1074,6 +1083,7 @@ export function AdvancedElectricityOrderPage() {
                 </CardContent>
               </Card>
             )}
+            {step === 5 && <ConfirmationFields gate={financialGate} disabled={submitting} />}
           </fieldset>
         )}
       </ValidatedFormWizard>

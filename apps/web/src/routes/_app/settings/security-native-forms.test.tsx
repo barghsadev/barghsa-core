@@ -1,3 +1,4 @@
+import { approveVisibleConfirmation } from '../../../test/confirmation.js';
 import { QueryProvider } from '../../../test/query-provider.js';
 import { act, type ComponentType } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
@@ -147,13 +148,14 @@ async function open(kind: 'session' | 'trust' | 'others') {
   await act(async () => button(label, host).click());
 }
 async function password(value: string) {
-  const input = dialog().querySelector<HTMLInputElement>('input')!;
+  const input = dialog().querySelector<HTMLInputElement>('input[type=password]')!;
   await act(async () => {
     Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!.call(input, value);
     input.dispatchEvent(new Event('input', { bubbles: true }));
   });
 }
 async function submit() {
+  await approveVisibleConfirmation();
   await act(async () => {
     dialog()
       .querySelector('form')!
@@ -169,6 +171,12 @@ it('revokes the captured other session with encoded ID and current CSRF, leaving
   document.cookie = 'barghsa_csrf=security-current';
   await mount();
   await open('session');
+  await act(async () =>
+    dialog()
+      .querySelector('form')!
+      .dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
+  );
+  expect(state.requests.filter((v) => v.method !== 'GET')).toEqual([]);
   await submit();
   expect(state.requests.filter((v) => v.method !== 'GET')).toEqual([
     {
@@ -206,7 +214,9 @@ it('preserves raw rejected password and never renders a private backend message'
       { status: 422 }
     );
   await submit();
-  expect(dialog().querySelector<HTMLInputElement>('input')!.value).toBe('  wrong password  ');
+  expect(dialog().querySelector<HTMLInputElement>('input[type=password]')!.value).toBe(
+    '  wrong password  '
+  );
   expect(dialog().textContent).toContain(copy('invalidPassword', 'en'));
   expect(document.body.textContent).not.toContain('private account detail');
   const rejectedSample = ['  wrong', 'password  '].join(' ');
@@ -250,6 +260,7 @@ it('holds one synchronous owner across duplicates, companion controls and uncert
   await mount();
   await open('session');
   state.override = () => held.promise;
+  await approveVisibleConfirmation();
   await act(async () => {
     const form = dialog().querySelector('form')!;
     form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
@@ -292,7 +303,9 @@ it('invalidates old restart eligibility during a new read, preserves raw passwor
   await act(async () => held.resolve(Response.json(state.sessions)));
   state.override = undefined;
   await click('restart');
-  expect(dialog().querySelector<HTMLInputElement>('input')!.value).toBe(' raw password ');
+  expect(dialog().querySelector<HTMLInputElement>('input[type=password]')!.value).toBe(
+    ' raw password '
+  );
 });
 it('never sends the target DELETE after an unknown password-verification result', async () => {
   const state = fixture();
@@ -307,7 +320,9 @@ it('never sends the target DELETE after an unknown password-verification result'
   expect(state.requests.filter((v) => v.path.endsWith('step-up'))).toHaveLength(1);
   state.override = undefined;
   await click('check');
-  expect(dialog().querySelector<HTMLInputElement>('input')!.value).toBe(' raw password ');
+  expect(dialog().querySelector<HTMLInputElement>('input[type=password]')!.value).toBe(
+    ' raw password '
+  );
 });
 it('fences old-account writes and isolates the new account source without stale success or focus', async () => {
   const state = fixture(),

@@ -795,6 +795,7 @@ function OwnedAdminConsultationsPage({ queries }: { queries?: ConsultationListQu
       return;
     const next: TeamAction = {
       title,
+      ...(['cancel', 'reject'].includes(path) ? { risk: 'destructive' as const } : {}),
       description: `${detail?.request.profile_name ?? ''} · ${title}`,
       path: `/api/admin/consultations/requests/${selectedId}/${path}`,
       method: 'POST',
@@ -932,6 +933,7 @@ function OwnedAdminConsultationsPage({ queries }: { queries?: ConsultationListQu
           if (!review) throw new Error('fee-review');
           const path = paid ? 'paid-fee' : 'fee';
           const next: TeamAction = {
+            risk: 'financial',
             title: copy(
               paid ? 'adjustPaidFee' : capturedSource.invoice_id ? 'replaceFee' : 'issueFee'
             ),
@@ -1110,6 +1112,7 @@ function OwnedAdminConsultationsPage({ queries }: { queries?: ConsultationListQu
           : null;
       if (!review) throw new Error('paid-resolution-review');
       const next: TeamAction = {
+        risk: 'both',
         title,
         description: `${source.profile_name} · ${title}`,
         path: `/api/admin/consultations/requests/${source.id}/${intent === 'recover_refund' ? 'refund-recovery' : `paid-${intent}`}`,

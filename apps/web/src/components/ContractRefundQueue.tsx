@@ -384,6 +384,7 @@ function OwnedContractRefundQueue() {
       </ListPage>
       {action && (
         <TeamActionDialog
+          risk="financial"
           action={action}
           summary={summary}
           confirmationDisabled={loading || error || accessDenied.current}

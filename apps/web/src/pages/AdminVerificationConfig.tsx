@@ -145,6 +145,7 @@ export default function AdminVerificationConfig() {
         const body = { mode: value.mode, expectedVersion: current.version, action: kind };
         if (kind === 'activate') {
           const next: TeamAction = {
+            ...(value.mode === 'DISABLED' ? { risk: 'destructive' as const } : {}),
             title: text('activate'),
             description: `${text('warning')} ${text('draftMode')}: ${text(value.mode)}`,
             path: '/api/admin/config/profile-verification-mode',

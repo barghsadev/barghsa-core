@@ -680,6 +680,7 @@ function OwnedSolarContractForm({
         )}
         {action && captured && review && shown && current(captured) && (
           <TeamActionDialog
+            risk="financial"
             action={action}
             onPendingChange={(value) => {
               if (current(captured)) {

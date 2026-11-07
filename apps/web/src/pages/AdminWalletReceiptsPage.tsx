@@ -9,7 +9,7 @@ import {
 import type { ListQueryBinding } from '../hooks/useListQuery.js';
 import type { FinanceCursor } from '../lib/finance-list-query.js';
 import { t as adminText } from '@barghsa/i18n/admin-ui';
-import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
+import { useFinancialFormatting } from '../hooks/useFinancialFormatting.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import {
   useCallback,
@@ -40,6 +40,10 @@ import { StaffReceiptAttachmentPreview } from '../components/StaffReceiptAttachm
 import { useLocale } from '../hooks/useLocale.js';
 import { withCsrf } from '../lib/csrf.js';
 import { isTransactionUuid } from '../lib/bank-receipt-confirmation.js';
+import { useConfirm, FinancialReviewSummary } from '@barghsa/ui';
+import { confirmationText } from '@barghsa/i18n/confirmation';
+import { useAccountUser } from '../hooks/useAccountUser.js';
+import { useProfileContextRevision } from '../lib/profile-context.js';
 import WalletTopUpLimitConfigPanel from '../components/WalletTopUpLimitConfigPanel.js';
 
 /**
@@ -223,7 +227,7 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
   const [nextCursor, setNextCursor] = useState<FinanceCursor | null>(null);
   const time = useAccountTime();
   const locale = useLocale();
-  const numbers = useNumberFormatting(locale);
+  const numbers = useFinancialFormatting(locale);
   const isRtl = locale === 'fa';
   const { view, setView } = useListView('staff-wallet-receipts-pending');
   const [items, setItems] = useState<BankReceiptReviewDto[]>([]);
@@ -568,9 +572,25 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
     statusRef.current?.focus();
   }, [stepUpOpen, selectedId, status]);
 
+  const confirmationActor = useAccountUser();
+  const confirmationRevision = useProfileContextRevision();
+  const confirmationAuthority = JSON.stringify([confirmationActor, confirmationRevision]);
+  const currentAuthority = useRef(confirmationAuthority);
+  currentAuthority.current = confirmationAuthority;
+  const confirmDecision = useConfirm(
+    JSON.stringify([confirmationAuthority, workGeneration.current, denied, selectedId])
+  );
+  const approvedDecision = useRef<{ action: PendingAction; authority: string } | null>(null);
   async function postDecision(
     action: PendingAction
   ): Promise<'step_up' | 'ok' | 'error' | 'obsolete'> {
+    if (
+      approvedDecision.current?.action !== action ||
+      approvedDecision.current.authority !== currentAuthority.current ||
+      action.generation !== workGeneration.current ||
+      accessDenied.current
+    )
+      return 'obsolete';
     const path =
       action.kind === 'confirm'
         ? `/api/admin/wallet/bank-receipt-top-ups/${action.transactionId}/confirm`
@@ -664,12 +684,70 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
   }
 
   async function runAction(action: PendingAction) {
-    if (writeOwner.current) return;
+    const receipt = selectedRef.current;
+    if (writeOwner.current || !receipt || receipt.transactionId !== action.transactionId) return;
     writeOwner.current = action;
     setActing(true);
     setError(null);
     setStatus(null);
     try {
+      const accepted = await confirmDecision({
+        title: t(
+          action.kind === 'confirm'
+            ? 'admin.walletReceipts.confirm'
+            : 'admin.walletReceipts.reject',
+          locale
+        ),
+        description: action.transactionId,
+        confirmLabel: confirmationText('confirm', locale),
+        cancelLabel: confirmationText('cancel', locale),
+        variant: action.kind === 'reject' ? 'destructive' : 'warning',
+        acknowledgement: confirmationText('acknowledge', locale),
+        ...(action.kind === 'reject'
+          ? {
+              confirmation: {
+                phrase: confirmationText('phrase', locale),
+                label: confirmationText('typePhrase', locale),
+              },
+            }
+          : {}),
+        children:
+          action.kind === 'confirm' ? (
+            <BankReceiptFinancialReview
+              review={action.review}
+              formatDate={time.format}
+              formatPaymentDate={(value) => formatPaymentDate(value, locale)}
+            />
+          ) : (
+            <FinancialReviewSummary
+              title={t('admin.walletReceipts.reason', locale)}
+              rows={[
+                {
+                  id: 'receipt',
+                  label: t('admin.walletReceipts.review.refresh', locale),
+                  value: action.transactionId,
+                },
+                {
+                  id: 'reason',
+                  label: t('admin.walletReceipts.reason', locale),
+                  value: action.reason,
+                },
+              ]}
+              total={{
+                label: t('admin.walletReceipts.amount', locale),
+                value: numbers.reviewMoney(receipt.amount),
+              }}
+            />
+          ),
+      });
+      if (
+        !accepted ||
+        writeOwner.current !== action ||
+        action.generation !== workGeneration.current ||
+        accessDenied.current
+      )
+        return;
+      approvedDecision.current = { action, authority: confirmationAuthority };
       const outcome = await postDecision(action);
       if (action.generation !== workGeneration.current || accessDenied.current) return;
       if (outcome === 'step_up') {

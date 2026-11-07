@@ -2,6 +2,78 @@ import { useContext, useState } from 'react';
 import type { Story } from '@ladle/react';
 import * as UI from '../src/index';
 import { StoryLocale, useStoryText } from './story-context';
+export const ProtectedConfirmations: Story = () => {
+  const text = useStoryText();
+  const [kind, setKind] = useState<'delete' | 'payment' | null>(null);
+  const [target, setTarget] = useState(1);
+  const [result, setResult] = useState('');
+  const common = {
+    open: kind !== null,
+    scope: target,
+    title: text('بررسی اقدام', 'Review action'),
+    description: text(
+      'داده نمایشی، بدون درخواست مالی.',
+      'Sample data, without a financial request.'
+    ),
+    confirmLabel: text('تأیید اقدام', 'Confirm action'),
+    cancelLabel: text('انصراف', 'Cancel'),
+    onCancel: () => setKind(null),
+    onConfirm: () => {
+      setResult(text('تأیید شد', 'Confirmed'));
+      setKind(null);
+    },
+  };
+  return (
+    <div className="space-y-4">
+      <UI.Button onClick={() => setKind('delete')}>{text('حذف نمونه', 'Remove sample')}</UI.Button>
+      <UI.Button onClick={() => setKind('payment')}>
+        {text('پرداخت نمونه', 'Review payment')}
+      </UI.Button>
+      <p role="status">{result}</p>
+      {kind === 'delete' && (
+        <UI.DestructiveConfirmDialog
+          {...common}
+          confirmation={{
+            phrase: text('تأیید', 'CONFIRM'),
+            label: text('عبارت تأیید را وارد کنید.', 'Type CONFIRM.'),
+          }}
+        >
+          <p>
+            {text('منبع', 'Resource')} {target}
+          </p>
+          <UI.Button variant="outline" onClick={() => setTarget(target + 1)}>
+            {text('تغییر منبع', 'Change resource')}
+          </UI.Button>
+        </UI.DestructiveConfirmDialog>
+      )}
+      {kind === 'payment' && (
+        <UI.FinancialConfirmDialog
+          {...common}
+          acknowledgement={text(
+            'مبالغ و قوانین بازپرداخت را درک می‌کنم.',
+            'I understand the amounts and refund rules.'
+          )}
+        >
+          <UI.FinancialReviewSummary
+            title={text('مبلغ نمونه', 'Sample amount')}
+            rows={[
+              {
+                id: 'source',
+                label: text('روش پرداخت', 'Payment source'),
+                value: text('کیف پول', 'Wallet'),
+              },
+            ]}
+            total={{
+              label: text('جمع', 'Total'),
+              value: '9,007,199,254,740,993 IRR · 900,719,925,474,099.3 toman',
+            }}
+            notice={text('هیچ مبلغی دریافت نمی‌شود.', 'No funds will move.')}
+          />
+        </UI.FinancialConfirmDialog>
+      )}
+    </div>
+  );
+};
 export const Statuses: Story = () => {
   const text = useStoryText();
   return (

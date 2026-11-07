@@ -160,6 +160,9 @@ function OwnedDocumentDetail({
     }
     setReasonMissing(false);
     setAction({
+      ...(['remove', 'quarantine', 'reject'].includes(next)
+        ? { risk: 'destructive' as const }
+        : {}),
       title: word(next),
       description: document.originalName,
       path: `${documentBase(staff)}/${document.id}/${next}`,

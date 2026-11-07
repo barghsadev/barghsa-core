@@ -1,3 +1,4 @@
+import { approveVisibleConfirmation } from '../test/confirmation.js';
 import { QueryComponentProvider } from '../test/query-provider.js';
 import { act, type ReactNode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
@@ -150,6 +151,7 @@ async function click(text: string) {
     (node) => node.textContent === text
   );
   if (!button) throw new Error(`Missing button: ${text}`);
+  await approveVisibleConfirmation();
   await act(async () => button.click());
 }
 it('switches receipt views without refetching or clearing an open rejection draft', async () => {
@@ -424,6 +426,7 @@ it('local list retry preserves a selected receipt draft and does not rerun its a
   const retry = [...container.querySelectorAll('[data-slot="list-content"] button')].find(
     (button) => button.textContent === 'Retry'
   ) as HTMLButtonElement;
+  await approveVisibleConfirmation();
   await act(async () => retry.click());
   expect(container.querySelector('textarea')).toBe(draft);
   expect(draft.value).toBe('Keep this explanation');
@@ -453,6 +456,7 @@ it('a forbidden list refresh removes retained receipts and their selected review
   );
   expect(container.querySelector('textarea')).not.toBeNull();
   forbidden = true;
+  await approveVisibleConfirmation();
   await act(async () =>
     (
       [...container.querySelectorAll('button')].find(
@@ -597,6 +601,7 @@ it('does not open a rejection when the selected receipt closes during validation
   await render();
   await click('Review receipt');
   const input = await editRejection('Obsolete rejection');
+  await approveVisibleConfirmation();
   await act(async () => {
     input.closest('form')!.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
     [...container.querySelectorAll('button')]

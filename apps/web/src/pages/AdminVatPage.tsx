@@ -499,6 +499,7 @@ export default function AdminVatPage() {
           const command: TeamAction = {
             path: `/api/admin/finance/vat${path}`,
             method: 'POST',
+            ...(ending ? { risk: 'destructive' as const } : {}),
             title: label(ending ? 'end' : 'save'),
             description: label(ending ? 'confirmEnd' : 'confirmSave'),
             body,

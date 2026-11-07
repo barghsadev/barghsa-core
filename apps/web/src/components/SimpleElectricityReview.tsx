@@ -1,7 +1,7 @@
 import { Card, CardContent } from '@barghsa/ui';
 import { t } from '@barghsa/i18n/workspace';
 import { useLocale } from '../hooks/useLocale.js';
-import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
+import { useFinancialFormatting } from '../hooks/useFinancialFormatting.js';
 import type { PriceQuote } from '../routes/_app/electricity/order.js';
 import { ElectricityQuoteErrorNotice } from './ElectricityQuoteErrorNotice.js';
 import { ElectricityFinancialReviewSummary } from './ElectricityFinancialReviewSummary.js';
@@ -42,7 +42,7 @@ export default function SimpleElectricityReview({
   editDisabled,
 }: Props) {
   const locale = useLocale();
-  const numbers = useNumberFormatting(locale);
+  const numbers = useFinancialFormatting(locale);
   const copy = (key: string) => t(`electricity.order.${key}`, locale);
   const price = quoting ? (
     <p role="status">{copy('previewLoading')}</p>
@@ -55,7 +55,7 @@ export default function SimpleElectricityReview({
         title={step === 5 ? copy('total') : copy('step3')}
         quote={quote}
         locale={locale}
-        formatMoney={numbers.money}
+        formatMoney={numbers.reviewMoney}
         formatQuantity={numbers.irrDigits}
       />
     </>

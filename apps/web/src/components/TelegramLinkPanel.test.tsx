@@ -1,4 +1,5 @@
-import { QueryProvider } from '../test/query-provider.js';
+import { approveVisibleConfirmation } from '../test/confirmation.js';
+import { ConfirmationTestProvider as QueryProvider } from '../test/confirmation.js';
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -47,6 +48,7 @@ function button(key: Parameters<typeof copy>[0]) {
   )!;
 }
 async function click(key: Parameters<typeof copy>[0]) {
+  await approveVisibleConfirmation();
   await act(async () => button(key).click());
 }
 async function input(value: string, type = 'text') {
@@ -60,6 +62,7 @@ async function input(value: string, type = 'text') {
   return field;
 }
 async function submit() {
+  await approveVisibleConfirmation();
   await act(async () =>
     host
       .querySelector('form')!
@@ -127,6 +130,12 @@ it('displays only a freshly scoped link and confirms normalized digits with live
   });
   expect(host.textContent).toContain(copy('linked', 'en'));
   await click('revoke');
+  await approveVisibleConfirmation();
+  await act(async () =>
+    [...document.querySelectorAll<HTMLButtonElement>('[role=dialog] button')]
+      .find((v) => v.textContent === 'Confirm')!
+      .click()
+  );
   expect(host.textContent).not.toContain(copy('linked', 'en'));
 });
 it('focuses invalid code and sends no malformed confirmation', async () => {

@@ -1,7 +1,8 @@
-import { ConfirmDialog, FinancialReviewSummary } from '@barghsa/ui';
+import { confirmationText } from '@barghsa/i18n/confirmation';
+import { FinancialConfirmDialog, FinancialReviewSummary } from '@barghsa/ui';
 import type { InvoiceBankReceiptSubmissionReview } from '@barghsa/shared/finance';
 import { t } from '@barghsa/i18n/workspace';
-import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
+import { useFinancialFormatting } from '../hooks/useFinancialFormatting.js';
 
 export default function InvoiceBankReceiptSubmissionReviewDialog({
   review,
@@ -16,10 +17,12 @@ export default function InvoiceBankReceiptSubmissionReviewDialog({
   onCancel: () => void;
   onConfirm: () => void;
 }) {
-  const numbers = useNumberFormatting(locale);
+  const numbers = useFinancialFormatting(locale);
   return (
-    <ConfirmDialog
+    <FinancialConfirmDialog
       open
+      scope={review}
+      acknowledgement={confirmationText('acknowledge', locale)}
       onCancel={onCancel}
       onConfirm={onConfirm}
       title={t('invoices.details.receiptReviewTitle', locale)}
@@ -44,17 +47,17 @@ export default function InvoiceBankReceiptSubmissionReviewDialog({
           {
             id: 'total',
             label: t('invoices.details.receiptReviewTotal', locale),
-            value: numbers.money(review.data.invoiceTotalIrR),
+            value: numbers.reviewMoney(review.data.invoiceTotalIrR),
           },
           {
             id: 'paid',
             label: t('invoices.details.receiptReviewPaid', locale),
-            value: numbers.money(review.data.invoicePaidIrR),
+            value: numbers.reviewMoney(review.data.invoicePaidIrR),
           },
           {
             id: 'remaining',
             label: t('invoices.details.receiptReviewRemaining', locale),
-            value: numbers.money(review.data.invoiceRemainingIrR),
+            value: numbers.reviewMoney(review.data.invoiceRemainingIrR),
           },
           {
             id: 'date',
@@ -92,10 +95,10 @@ export default function InvoiceBankReceiptSubmissionReviewDialog({
         ]}
         total={{
           label: t('invoices.details.receiptAmountLabel', locale),
-          value: numbers.money(review.data.amountIrR),
+          value: numbers.reviewMoney(review.data.amountIrR),
         }}
         notice={<p>{t('invoices.details.receiptReviewSettlementRule', locale)}</p>}
       />
-    </ConfirmDialog>
+    </FinancialConfirmDialog>
   );
 }

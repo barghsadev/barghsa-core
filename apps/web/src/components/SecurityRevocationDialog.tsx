@@ -1,4 +1,4 @@
-import type { RefObject } from 'react';
+import { useRef, type RefObject } from 'react';
 import { Button, Input, Dialog, DialogContent, DialogTitle, DialogDescription } from '@barghsa/ui';
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from '@barghsa/ui/form';
 import { t, type Locale } from '@barghsa/i18n/app';
@@ -7,6 +7,8 @@ import { securitySettingsText } from '@barghsa/i18n/security-settings-forms';
 import type { SecurityOwner, SecurityLists } from '../hooks/useSecuritySettings.js';
 import { useSecurityRevocationForm } from '../hooks/useSecurityRevocationForm.js';
 import type { SecurityOperation } from '../lib/security-settings-form.js';
+import { ConfirmationFields } from '@barghsa/ui';
+import { useRiskConfirmation } from '../hooks/useRiskConfirmation.js';
 export function SecurityRevocationDialog({
   scope,
   lists,
@@ -28,7 +30,17 @@ export function SecurityRevocationDialog({
   deviceName: (value: string | undefined, locale: Locale) => string;
   formatTimestamp: (value: string) => string;
 }) {
-  const model = useSecurityRevocationForm(scope, lists, operation, locale, done);
+  const gate = useRiskConfirmation(operation, locale, 'destructive');
+  const authorized = useRef(gate.allowed);
+  authorized.current = gate.allowed;
+  const model = useSecurityRevocationForm(
+    scope,
+    lists,
+    operation,
+    locale,
+    done,
+    () => authorized.current
+  );
   const text = (key: string) => securitySettingsText(key, locale);
   const title =
     operation.kind === 'trust'
@@ -124,6 +136,7 @@ export function SecurityRevocationDialog({
                 {model.error}
               </p>
             )}
+            <ConfirmationFields gate={gate} disabled={scope.locked} />
             {model.uncertain && (
               <div className="space-y-2">
                 <Button
@@ -162,13 +175,13 @@ export function SecurityRevocationDialog({
               </Button>
               <Button
                 type="submit"
-                variant={operation.kind === 'trust' ? 'outline' : 'destructive'}
+                variant="destructive"
                 className={
                   operation.kind === 'trust'
                     ? undefined
                     : 'bg-red-700 text-white hover:bg-red-800 dark:bg-red-700 dark:text-white dark:hover:bg-red-800'
                 }
-                disabled={scope.locked}
+                disabled={scope.locked || !gate.allowed}
               >
                 {model.busy
                   ? t(

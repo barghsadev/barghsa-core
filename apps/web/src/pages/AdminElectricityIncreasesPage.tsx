@@ -653,6 +653,7 @@ function OwnedAdminElectricityIncreasesPage({ queries }: { queries?: ListQueryBi
             rejected: false,
             unconfirmed: false,
             action: {
+              risk: decision === 'approve' ? 'financial' : 'both',
               title: copy(decision),
               description: copy('reviewConfirm'),
               path,

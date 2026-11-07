@@ -441,6 +441,9 @@ function OwnedAiPoliciesPage({
     setAction({
       path,
       method,
+      ...(method === 'PUT' && record(body) && body.enabled === false
+        ? { risk: 'destructive' as const }
+        : {}),
       ...(formCapture.current
         ? { successStatus: method === 'POST' ? 201 : 200, conflictMessage: copy('changed') }
         : {}),

@@ -609,6 +609,7 @@ function OwnedAdminElectricityOrdersPage({ queries }: { queries?: StaffOrderList
           rejected: false,
           unconfirmed: false,
           action: {
+            risk: decision === 'approve' ? 'financial' : 'both',
             title: copy(decision),
             description: copy('confirm'),
             path: `/api/staff/electricity/orders/${encodeURIComponent(order.orderId)}/${decision}`,

@@ -1,3 +1,4 @@
+import { approveVisibleConfirmation } from '../test/confirmation.js';
 import { QueryProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
@@ -30,6 +31,7 @@ async function click(name: string, dialog = false) {
     (node) => node.textContent?.trim() === name
   );
   expect(button, name).toBeDefined();
+  await approveVisibleConfirmation();
   await act(async () => button!.click());
 }
 async function choose(key = 'individual_chatbot', value = agent.id) {
@@ -47,6 +49,7 @@ async function fill(selector: string, value: string) {
   });
 }
 async function submit(selector = 'form') {
+  await approveVisibleConfirmation();
   await act(async () =>
     document
       .querySelector(selector)!
@@ -257,6 +260,7 @@ it('slot unassignment acknowledgement must confirm null for the chosen slot', as
   });
   await renderSlots();
   await choose('staff_chatbot', '');
+  await approveVisibleConfirmation();
   await act(async () =>
     host
       .querySelector<HTMLSelectElement>('#slot-staff_chatbot')!
@@ -268,6 +272,7 @@ it('slot unassignment acknowledgement must confirm null for the chosen slot', as
   valid = true;
   await click('Reset to saved settings');
   await choose('staff_chatbot', '');
+  await approveVisibleConfirmation();
   await act(async () =>
     host
       .querySelector<HTMLSelectElement>('#slot-staff_chatbot')!
