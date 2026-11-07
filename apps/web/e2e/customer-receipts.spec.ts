@@ -423,6 +423,13 @@ for (const locale of ['en', 'fa'] as const)
         const payer = page.getByTestId(`${prefix}-payer-ref`),
           bank = page.getByTestId(`${prefix}-bank-name`),
           submit = page.getByTestId(`${prefix}-submit`);
+        for (const name of ['amount', 'date', 'payer-ref', 'file'])
+          await expect(page.getByTestId(`${prefix}-${name}`)).toHaveAttribute(
+            'aria-required',
+            'true'
+          );
+        for (const field of [bank, page.getByTestId(`${prefix}-note`)])
+          await expect(field).not.toHaveAttribute('aria-required', 'true');
         await payer.fill('');
         await bank.focus();
         await expect(payer).toHaveAttribute('aria-invalid', 'true');

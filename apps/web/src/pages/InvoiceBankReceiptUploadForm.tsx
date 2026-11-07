@@ -241,6 +241,7 @@ function InvoiceReceiptForm({ invoiceId, onSubmitted }: InvoiceBankReceiptUpload
           </label>
           <input
             {...draft.bind('amount')}
+            aria-required="true"
             id="invoice-receipt-amount"
             data-testid="invoice-receipt-amount"
             name="amount"
@@ -272,6 +273,7 @@ function InvoiceReceiptForm({ invoiceId, onSubmitted }: InvoiceBankReceiptUpload
           </label>
           <input
             {...draft.bind('paymentDate')}
+            aria-required="true"
             id="invoice-receipt-date"
             data-testid="invoice-receipt-date"
             name="paymentDate"
@@ -301,6 +303,7 @@ function InvoiceReceiptForm({ invoiceId, onSubmitted }: InvoiceBankReceiptUpload
           </label>
           <input
             {...draft.bind('payerReference')}
+            aria-required="true"
             id="invoice-receipt-payer-ref"
             data-testid="invoice-receipt-payer-ref"
             name="payerReference"
@@ -371,6 +374,7 @@ function InvoiceReceiptForm({ invoiceId, onSubmitted }: InvoiceBankReceiptUpload
                 }}
                 onBlur={field.onBlur}
                 aria-invalid={!!draft.errors.file || undefined}
+                aria-required="true"
                 id="invoice-receipt-file"
                 data-testid="invoice-receipt-file"
                 name="receiptFile"

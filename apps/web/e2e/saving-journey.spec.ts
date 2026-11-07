@@ -530,22 +530,36 @@ for (const locale of ['en', 'fa'] as const)
     await catalogueAgreement.click();
     await page.getByRole('link', { name: savingCopy('startOrder', locale) }).click();
     const next = page.getByRole('button', { name: savingCopy('next', locale), exact: true });
+    const choice = (key: string) =>
+      page.getByRole('radiogroup', { name: savingCopy(key, locale), exact: true });
+    const checkbox = (key: string) =>
+      page.getByRole('checkbox', { name: savingCopy(key, locale), exact: true });
+    await expect(choice('choosePlan')).toHaveAttribute('aria-required', 'true');
     await page
       .getByRole('radio', {
         name: new RegExp(locale === 'fa' ? 'طرح صرفه‌جویی خانه' : 'Home saving plan'),
       })
       .check();
     await next.click();
+    await expect(choice('chooseHardware')).toHaveAttribute('aria-required', 'true');
     await page
       .getByRole('radio', {
         name: new RegExp(locale === 'fa' ? 'دستگاه کم‌مصرف' : 'Efficient device'),
       })
       .check();
-    await page.getByRole('checkbox', { name: savingCopy('confirmHardware', locale) }).check();
+    await expect(checkbox('confirmHardware')).toHaveAttribute('aria-required', 'true');
+    await checkbox('confirmHardware').check();
     await next.click();
-    await page
-      .getByRole('textbox', { name: savingCopy('billIdentifier', locale) })
-      .fill('1234567890123');
+    const bill = page.getByRole('textbox', { name: savingCopy('billIdentifier', locale) });
+    await expect(bill).toHaveAttribute('aria-required', 'true');
+    await bill.fill('1');
+    await expect(bill).toHaveAttribute('aria-invalid', 'true');
+    await expect(bill).toHaveAccessibleDescription(savingCopy('invalidBill', locale));
+    await expect(
+      page.getByRole('button', { name: savingCopy('verifyBill', locale) })
+    ).toBeDisabled();
+    await bill.fill('1234567890123');
+    await expect(bill).not.toHaveAttribute('aria-invalid', 'true');
     await page.getByRole('button', { name: savingCopy('verifyBill', locale) }).click();
     await expect(next).toBeEnabled();
     await next.click();
@@ -621,10 +635,12 @@ for (const locale of ['en', 'fa'] as const)
     await expect(addressSaved).toHaveCount(1);
     expect(addressWrites).toHaveLength(3);
     expect(addressWrites[2]).toEqual(addressWrites[1]);
+    await expect(choice('chooseAddress')).toHaveAttribute('aria-required', 'true');
     await expect(page.locator(`input[name=addressId][value="${addressId}"]`)).toBeChecked();
     await next.click();
     await checkAgreementPresentation(page, termsBody, termsDirection);
-    await page.getByRole('checkbox', { name: savingCopy('acceptAgreement', locale) }).check();
+    await expect(checkbox('acceptAgreement')).toHaveAttribute('aria-required', 'true');
+    await checkbox('acceptAgreement').check();
     await next.click();
     await expect(page.getByText(`${savingCopy('walletBalance', locale)}:`)).toContainText(
       new Intl.NumberFormat(locale).format(500000)
@@ -646,7 +662,8 @@ for (const locale of ['en', 'fa'] as const)
     await expect(financialReview).toContainText('The quoted agreement body.');
     await checkAgreementPresentation(page, quotedTermsBody, termsDirection);
     await checkRoutePresentation(page, info, locale);
-    await page.getByRole('checkbox', { name: savingCopy('submitForReview', locale) }).check();
+    await expect(checkbox('submitForReview')).toHaveAttribute('aria-required', 'true');
+    await checkbox('submitForReview').check();
     const submit = page.getByRole('button', { name: savingCopy('submit', locale), exact: true });
     await expect(submit).toBeDisabled();
     await approveRiskConfirmation(page, locale, 'financial');

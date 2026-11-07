@@ -761,6 +761,7 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
                 </label>
                 <input
                   {...receipt.bind('amount')}
+                  aria-required="true"
                   id="receipt-amount"
                   data-testid="wallet-receipt-amount"
                   name="receiptAmount"
@@ -802,6 +803,7 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
                 </label>
                 <input
                   {...receipt.bind('paymentDate')}
+                  aria-required="true"
                   id="receipt-date"
                   data-testid="wallet-receipt-date"
                   name="paymentDate"
@@ -834,6 +836,7 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
                 </label>
                 <input
                   {...receipt.bind('payerReference')}
+                  aria-required="true"
                   id="receipt-payer-ref"
                   data-testid="wallet-receipt-payer-ref"
                   name="payerReference"
@@ -904,6 +907,7 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
                       }}
                       onBlur={field.onBlur}
                       aria-invalid={!!receipt.errors.file || undefined}
+                      aria-required="true"
                       id="receipt-file"
                       data-testid="wallet-receipt-file"
                       name="receiptFile"

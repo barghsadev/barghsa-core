@@ -224,6 +224,8 @@ function OwnedSavingsOrderPage() {
   const [hardwareId, setHardwareId] = fields.field('hardwareId');
   const [hardwareConfirmed, setHardwareConfirmed] = fields.field('hardwareConfirmed');
   const [billIdentifier, setBillIdentifier] = fields.field('billIdentifier');
+  const validBill = /^[0-9]{6,13}$/.test(billIdentifier);
+  const invalidBill = billIdentifier !== '' && !validBill;
   const [duplicateAcknowledged, setDuplicateAcknowledged] = fields.field('duplicateAcknowledged');
   const [duplicateChecking, setDuplicateChecking] = useState(false);
   const [duplicateError, setDuplicateError] = useState(false);
@@ -889,75 +891,94 @@ function OwnedSavingsOrderPage() {
                 >
                   {step === 1 && (
                     <section className="space-y-3">
-                      <h2 className="text-xl font-semibold">{copy('choosePlan')}</h2>
-                      {plans.map((plan) => (
-                        <label
-                          key={plan.id}
-                          className={`flex gap-3 rounded-md border p-4 ${!plan.available ? 'opacity-60' : 'cursor-pointer'}`}
-                        >
-                          <input
-                            type="radio"
-                            {...fields.bind('planId')}
-                            value={plan.id}
-                            checked={planId === plan.id}
-                            disabled={!plan.available}
-                            onChange={() => {
-                              setPlanId(plan.id);
-                              setHardwareId('');
-                              setHardwareConfirmed(false);
-                              setAgreementAccepted(false);
-                            }}
-                          />
-                          <span className="space-y-1">
-                            <span className="block font-medium">{title(plan)}</span>
-                            <span className="block text-sm text-muted-foreground">
-                              {plan.description?.[locale]}
+                      <h2 id="saving-plan-title" className="text-xl font-semibold">
+                        {copy('choosePlan')}
+                      </h2>
+                      <div
+                        role="radiogroup"
+                        aria-labelledby="saving-plan-title"
+                        aria-required="true"
+                        className="space-y-3"
+                      >
+                        {plans.map((plan) => (
+                          <label
+                            key={plan.id}
+                            className={`flex gap-3 rounded-md border p-4 ${!plan.available ? 'opacity-60' : 'cursor-pointer'}`}
+                          >
+                            <input
+                              type="radio"
+                              {...fields.bind('planId')}
+                              value={plan.id}
+                              checked={planId === plan.id}
+                              disabled={!plan.available}
+                              onChange={() => {
+                                setPlanId(plan.id);
+                                setHardwareId('');
+                                setHardwareConfirmed(false);
+                                setAgreementAccepted(false);
+                              }}
+                            />
+                            <span className="space-y-1">
+                              <span className="block font-medium">{title(plan)}</span>
+                              <span className="block text-sm text-muted-foreground">
+                                {plan.description?.[locale]}
+                              </span>
+                              <bdi className="block text-sm">
+                                {plan.price ? numbers.money(plan.price) : copy('unpriced')}
+                              </bdi>
                             </span>
-                            <bdi className="block text-sm">
-                              {plan.price ? numbers.money(plan.price) : copy('unpriced')}
-                            </bdi>
-                          </span>
-                        </label>
-                      ))}
+                          </label>
+                        ))}
+                      </div>
                     </section>
                   )}
                   {step === 2 && (
                     <section className="space-y-3">
-                      <h2 className="text-xl font-semibold">{copy('chooseHardware')}</h2>
-                      {selectedPlan?.hardware.map((item) => (
-                        <label key={item.id} className="flex gap-3 rounded-md border p-4">
-                          <input
-                            type="radio"
-                            {...fields.bind('hardwareId')}
-                            value={item.id}
-                            checked={hardwareId === item.id}
-                            disabled={
-                              item.status !== 'active' ||
-                              (!!item.stock_tracking && (item.available_count ?? 0) < 1)
-                            }
-                            onChange={() => {
-                              setHardwareId(item.id);
-                              setHardwareConfirmed(false);
-                            }}
-                          />
-                          <span>
-                            <span className="block font-medium">{title(item)}</span>
-                            <span className="block text-sm">{item.description?.[locale]}</span>
-                            <bdi>{item.price ? numbers.money(item.price) : copy('unpriced')}</bdi>
-                            <span className="block text-sm text-muted-foreground">
-                              {item.stock_tracking
-                                ? (item.available_count ?? 0) > 0
-                                  ? copy('inStock')
-                                  : copy('outOfStock')
-                                : copy('subjectToConfirmation')}
+                      <h2 id="saving-hardware-title" className="text-xl font-semibold">
+                        {copy('chooseHardware')}
+                      </h2>
+                      <div
+                        role="radiogroup"
+                        aria-labelledby="saving-hardware-title"
+                        aria-required="true"
+                        className="space-y-3"
+                      >
+                        {selectedPlan?.hardware.map((item) => (
+                          <label key={item.id} className="flex gap-3 rounded-md border p-4">
+                            <input
+                              type="radio"
+                              {...fields.bind('hardwareId')}
+                              value={item.id}
+                              checked={hardwareId === item.id}
+                              disabled={
+                                item.status !== 'active' ||
+                                (!!item.stock_tracking && (item.available_count ?? 0) < 1)
+                              }
+                              onChange={() => {
+                                setHardwareId(item.id);
+                                setHardwareConfirmed(false);
+                              }}
+                            />
+                            <span>
+                              <span className="block font-medium">{title(item)}</span>
+                              <span className="block text-sm">{item.description?.[locale]}</span>
+                              <bdi>{item.price ? numbers.money(item.price) : copy('unpriced')}</bdi>
+                              <span className="block text-sm text-muted-foreground">
+                                {item.stock_tracking
+                                  ? (item.available_count ?? 0) > 0
+                                    ? copy('inStock')
+                                    : copy('outOfStock')
+                                  : copy('subjectToConfirmation')}
+                              </span>
                             </span>
-                          </span>
-                        </label>
-                      ))}
+                          </label>
+                        ))}
+                      </div>
                       <label className="touch-label flex items-center gap-2">
                         <input
                           type="checkbox"
                           {...fields.bind('hardwareConfirmed')}
+                          aria-required="true"
                           checked={hardwareConfirmed}
                           onChange={(event) => setHardwareConfirmed(event.target.checked)}
                         />
@@ -974,6 +995,19 @@ function OwnedSavingsOrderPage() {
                         pattern="[0-9]*"
                         maxLength={13}
                         {...fields.bind('billIdentifier')}
+                        aria-required="true"
+                        aria-invalid={
+                          invalidBill ||
+                          fields.form.getFieldState('billIdentifier').invalid ||
+                          undefined
+                        }
+                        aria-describedby={
+                          invalidBill
+                            ? 'saving-bill-error'
+                            : fields.form.getFieldState('billIdentifier').invalid
+                              ? fields.errorId('billIdentifier')
+                              : undefined
+                        }
                         value={billIdentifier}
                         onChange={(event) => {
                           setBillIdentifier(
@@ -984,8 +1018,10 @@ function OwnedSavingsOrderPage() {
                         className="w-full rounded-md border bg-background p-3"
                         dir="ltr"
                       />
-                      {billIdentifier && !/^[0-9]{6,13}$/.test(billIdentifier) && (
-                        <p className="text-sm text-destructive">{copy('invalidBill')}</p>
+                      {invalidBill && (
+                        <p id="saving-bill-error" className="text-sm text-destructive">
+                          {copy('invalidBill')}
+                        </p>
                       )}
                       {duplicateError && (
                         <div role="alert" className="space-y-2 text-sm text-destructive">
@@ -1001,9 +1037,7 @@ function OwnedSavingsOrderPage() {
                       )}
                       <Button
                         variant="outline"
-                        disabled={
-                          !/^[0-9]{6,13}$/.test(billIdentifier) || verification === 'checking'
-                        }
+                        disabled={!validBill || verification === 'checking'}
                         onClick={() => void verifyBill()}
                       >
                         {copy('verifyBill')}
@@ -1038,6 +1072,7 @@ function OwnedSavingsOrderPage() {
                               <input
                                 type="checkbox"
                                 {...fields.bind('duplicateAcknowledged')}
+                                aria-required="true"
                                 checked={duplicateAcknowledged}
                                 onChange={(event) => setDuplicateAcknowledged(event.target.checked)}
                               />
@@ -1050,21 +1085,32 @@ function OwnedSavingsOrderPage() {
                   )}
                   {step === 4 && (
                     <section className="space-y-3">
-                      <h2 className="text-xl font-semibold">{copy('chooseAddress')}</h2>
-                      {addresses.map((address) => (
-                        <label key={address.id} className="flex gap-3 rounded-md border p-3">
-                          <input
-                            type="radio"
-                            {...fields.bind('addressId')}
-                            value={address.id}
-                            checked={addressId === address.id}
-                            onChange={() => setAddressId(address.id)}
-                          />
-                          <span>
-                            {address.fullAddress} · <bdi>{address.postalCode}</bdi>
-                          </span>
-                        </label>
-                      ))}
+                      <h2 id="saving-address-title" className="text-xl font-semibold">
+                        {copy('chooseAddress')}
+                      </h2>
+                      {addresses.length > 0 && (
+                        <div
+                          role="radiogroup"
+                          aria-labelledby="saving-address-title"
+                          aria-required="true"
+                          className="space-y-3"
+                        >
+                          {addresses.map((address) => (
+                            <label key={address.id} className="flex gap-3 rounded-md border p-3">
+                              <input
+                                type="radio"
+                                {...fields.bind('addressId')}
+                                value={address.id}
+                                checked={addressId === address.id}
+                                onChange={() => setAddressId(address.id)}
+                              />
+                              <span>
+                                {address.fullAddress} · <bdi>{address.postalCode}</bdi>
+                              </span>
+                            </label>
+                          ))}
+                        </div>
+                      )}
                       <Button
                         variant="outline"
                         onClick={() => {
@@ -1197,6 +1243,7 @@ function OwnedSavingsOrderPage() {
                         <input
                           type="checkbox"
                           {...fields.bind('agreementAccepted')}
+                          aria-required="true"
                           checked={agreementAccepted}
                           onChange={(event) => setAgreementAccepted(event.target.checked)}
                         />
@@ -1376,6 +1423,7 @@ function OwnedSavingsOrderPage() {
                         <input
                           type="checkbox"
                           {...fields.bind('submitForReview')}
+                          aria-required="true"
                           checked={submitForReview}
                           onChange={(event) => setSubmitForReview(event.target.checked)}
                         />
