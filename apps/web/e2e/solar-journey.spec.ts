@@ -9,7 +9,7 @@ import { documentText as documentCopy } from '../../../packages/i18n/src/documen
 import { solarContractReview, type SolarCommand } from './solar-contract-issue-form-fixture';
 import { fullNavigation } from './navigation-fixture';
 import { approveRiskConfirmation } from './confirmation-fixture';
-import { checkRoutePresentation } from './route-presentation';
+import { checkRoutePresentation, checkChoiceTarget } from './route-presentation';
 
 const profileId = '11111111-1111-4111-8111-111111111111';
 test.beforeEach(async ({ page }, info) => {
@@ -466,7 +466,7 @@ for (const locale of ['en', 'fa'] as const)
     await page
       .getByRole('button', { name: appCopy('onboarding.type.continue', locale), exact: true })
       .click();
-    await page.getByLabel(solarCopy('agreement', locale)).check();
+    await checkChoiceTarget(page.getByLabel(solarCopy('agreement', locale)));
     await page
       .getByRole('button', { name: appCopy('onboarding.type.continue', locale), exact: true })
       .click();
@@ -1126,7 +1126,7 @@ for (const locale of ['en', 'fa'] as const)
       name: solarCopy('allUploaded', locale),
       exact: true,
     });
-    await checkbox.check();
+    await checkChoiceTarget(checkbox);
     guidanceReady = true;
     await retry.focus();
     await page.keyboard.press('Enter');

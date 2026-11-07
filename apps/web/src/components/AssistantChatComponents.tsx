@@ -194,7 +194,7 @@ export function ChatInput({
             // WebKit restores scroll on textarea blur; keep the tap target stable until click.
             event.preventDefault();
           }}
-          className="inline-flex min-h-10 items-center gap-2 rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground disabled:opacity-50"
+          className="inline-flex min-h-10 items-center gap-2 rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground disabled:opacity-50 pointer-coarse:min-h-[45px]!"
         >
           {busy ? (
             <span

@@ -961,6 +961,7 @@
       textarea,
       input:not([type='checkbox'], [type='radio'], [type='range'], [type='hidden'])
     ):not([data-slot]),
+  :where(label:has(> input:is([type='checkbox'], [type='radio']))),
   .touch-label {
     min-block-size: 2.75rem;
     min-inline-size: 2.75rem;

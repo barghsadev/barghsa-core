@@ -11,14 +11,11 @@ interface RouteSkeletonProps {
 export function RouteSkeleton({ layout = 'default' }: RouteSkeletonProps) {
   const locale = useLocale();
   const admin = layout === 'admin';
-  const content = (
-    <PageLoading
-      label={loadingText(admin ? 'loadingAdmin' : 'loading', locale)}
-      className={admin ? 'flex-1' : 'min-h-screen'}
-    />
-  );
+  const label = loadingText(admin ? 'loadingAdmin' : 'loading', locale);
+  const content = <PageLoading label={label} className={admin ? 'flex-1' : 'min-h-screen'} />;
   return (
     <RouteFallbackLandmark>
+      <h1 className="sr-only">{label}</h1>
       {admin ? (
         <div className="flex min-h-screen bg-background">
           <div

@@ -419,7 +419,7 @@ function OwnedSolarContractForm({
       name={name}
       render={({ field }) => (
         <FormItem id={id}>
-          <FormLabel>{label}</FormLabel>
+          <FormLabel className={kind === 'checkbox' ? 'touch-label' : undefined}>{label}</FormLabel>
           <FormControl>
             {kind === 'checkbox' ? (
               <input
@@ -790,7 +790,7 @@ function OwnedSolarContractForm({
                         <p>{copy('solarReviewOutcome')}</p>
                         <details className="mt-2">
                           <summary className="cursor-pointer">{copy('solarContractText')}</summary>
-                          <p className="mt-2 whitespace-pre-wrap break-words">
+                          <p dir="auto" className="mt-2 whitespace-pre-wrap break-words">
                             {review.data.template?.text ?? review.data.text}
                           </p>
                         </details>

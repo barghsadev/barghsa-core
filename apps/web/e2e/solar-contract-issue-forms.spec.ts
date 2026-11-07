@@ -8,6 +8,7 @@ import { tSolar } from '@barghsa/i18n/solar';
 import { contractText } from '@barghsa/i18n/contracts';
 import { formatCurrencyIrr } from '@barghsa/i18n/numbers';
 import { test, expect } from './coverage-fixture';
+import { checkChoiceTarget } from './route-presentation';
 import {
   setupSolarContractIssue,
   firstSolar,
@@ -139,7 +140,10 @@ for (const [locale, theme] of [
       await line(0, 'quantity').fill(kind === 'template' ? '2' : '3');
       await line(0, 'unit-price').fill(kind === 'template' ? '125000' : '00005');
       await line(0, 'vat-rate').fill(kind === 'template' ? '900' : '1000');
-      await line(0, 'taxable').check();
+      await checkChoiceTarget(
+        line(0, 'taxable'),
+        form.locator('label[for="solar-contract-line-0-taxable"]')
+      );
       if (kind === 'document') {
         await page.getByTestId('solar-contract-add-line').click();
         await line(1, 'description').fill('  Non-taxable permit  ');
@@ -286,6 +290,7 @@ for (const [locale, theme] of [
       await expect(dialog).toContainText('7 ' + copy('solarReviewDaysAfterIssue'));
       await dialog.getByText(copy('solarContractText'), { exact: true }).click();
       await expect(dialog).toContainText(terms);
+      await expect(dialog.getByText(terms, { exact: false })).toHaveCSS('direction', 'ltr');
       if (kind === 'template')
         await expect(dialog).toContainText('Rendered template source terms.');
       await expect(dialog).toContainText(contractText('prerequisite.signature', locale));

@@ -42,14 +42,19 @@ it.each([
   { name: 'spinner', element: <RouteSpinner />, fa: 'در حال بارگذاری صفحه', en: 'Loading page' },
 ])(
   'localizes the $name loading announcement live without requiring matchMedia',
-  async ({ element, fa, en }) => {
+  async ({ name, element, fa, en }) => {
     vi.stubGlobal('matchMedia', undefined);
     await act(async () => root.render(element));
     expect(container.querySelector('[role="status"]')?.getAttribute('aria-label')).toBe(fa);
+    if (name !== 'spinner') {
+      expect(container.querySelectorAll('h1')).toHaveLength(1);
+      expect(container.querySelector('main h1')?.textContent).toBe(fa);
+    }
     await act(async () => {
       document.documentElement.lang = 'en';
     });
     expect(container.querySelector('[role="status"]')?.getAttribute('aria-label')).toBe(en);
+    if (name !== 'spinner') expect(container.querySelector('main h1')?.textContent).toBe(en);
     expect(container.querySelector('[aria-hidden="true"]')).not.toBeNull();
   }
 );

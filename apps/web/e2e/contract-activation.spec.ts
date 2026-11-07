@@ -1,4 +1,5 @@
 import { test, expect } from './coverage-fixture';
+import { checkChoiceTarget } from './route-presentation';
 import { en, fa } from '../../../packages/i18n/src/contracts';
 import { t } from '../../../packages/i18n/src/app';
 for (const locale of ['en', 'fa'] as const) {
@@ -82,9 +83,9 @@ for (const locale of ['en', 'fa'] as const) {
           .getByRole('checkbox', { name: words['rule.signatureRequired'], exact: false })
       ).toBeDisabled();
       await expect(group.getByRole('button', { name: words.saveActivationRules })).toBeDisabled();
-      await group
-        .getByRole('checkbox', { name: words['rule.signatureRequired'], exact: true })
-        .check();
+      await checkChoiceTarget(
+        group.getByRole('checkbox', { name: words['rule.signatureRequired'], exact: true })
+      );
       await group.getByRole('button', { name: words.saveActivationRules }).click();
       const dialog = page.getByRole('dialog');
       await dialog.getByRole('button', { name: t('team.confirm', locale), exact: true }).click();

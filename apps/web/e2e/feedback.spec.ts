@@ -101,6 +101,9 @@ for (const locale of ['en', 'fa'] as const) {
         })
       ).toBeVisible();
       await expect(main).toHaveAttribute('id', 'main-content');
+      const heading = main.getByRole('heading', { level: 1 });
+      await expect(heading).toHaveCount(1);
+      await expect(heading).toHaveText(locale === 'fa' ? 'در حال بارگذاری صفحه' : 'Loading page');
       await page.keyboard.press(browserName === 'webkit' ? 'Alt+Tab' : 'Tab');
       await expect(skip).toBeFocused();
       await page.keyboard.press('Enter');

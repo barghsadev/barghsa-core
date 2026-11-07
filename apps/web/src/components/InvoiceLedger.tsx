@@ -291,7 +291,7 @@ function OwnedInvoiceLedger({
   const openInvoice = (item: InvoiceRow) => (
     <button
       type="button"
-      className="inline-flex min-h-11 min-w-11 items-center font-mono text-primary underline underline-offset-2"
+      className="inline-flex min-h-11 min-w-11 items-center font-mono text-primary underline underline-offset-2 pointer-coarse:min-h-[45px]!"
       dir="ltr"
       aria-label={`${word('detail')}: ${item.invoiceId}`}
       onClick={() => setSelectedId(item.invoiceId)}

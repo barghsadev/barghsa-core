@@ -1,6 +1,23 @@
-import { expect, type Page, type TestInfo } from './coverage-fixture';
+import { expect, type Locator, type Page, type TestInfo } from './coverage-fixture';
 
 const widths = [320, 375, 390, 414, 768, 1024, 1280, 1920];
+
+export async function checkChoiceTarget(
+  input: Locator,
+  label = input.locator('xpath=parent::label')
+) {
+  if (!(await input.page().evaluate(() => matchMedia('(pointer: coarse)').matches))) {
+    await input.check();
+    return;
+  }
+  await expect(label).toBeVisible();
+  const box = (await label.boundingBox())!;
+  expect(box.width).toBeGreaterThanOrEqual(44);
+  expect(box.height).toBeGreaterThanOrEqual(44);
+  // Tap below the native control to check the label's extended hit area.
+  await label.tap({ position: { x: box.width / 2, y: box.height - 3 } });
+  await expect(input).toBeChecked();
+}
 
 /** Probe the existing populated journey without resetting its profile, records, or draft. */
 export async function checkRoutePresentation(page: Page, info: TestInfo, locale: 'en' | 'fa') {
