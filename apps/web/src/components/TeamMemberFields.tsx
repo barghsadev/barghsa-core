@@ -138,7 +138,7 @@ export function TeamRoleFields({
           >
             <legend className="sr-only">{word('roles')}</legend>
             {TEAM_ROLES.map((role, index) => (
-              <label key={role} className="flex items-center gap-2">
+              <label key={role} className="touch-label flex items-center gap-2">
                 <input
                   ref={index === 0 ? field.ref : undefined}
                   name={field.name}

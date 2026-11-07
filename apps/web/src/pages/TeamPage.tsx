@@ -1,6 +1,14 @@
 import { useCommandFeedback } from '../hooks/useCommandFeedback.js';
+import { useCompactRecords } from '../hooks/useCompactRecords.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
-import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type ComponentProps,
+  type FormEvent,
+} from 'react';
 import { t } from '@barghsa/i18n/team';
 import {
   LoadingStatus,
@@ -9,6 +17,7 @@ import {
   Badge,
   Textarea,
   ListPage,
+  cn,
   Button,
   Dialog,
   DialogContent,
@@ -236,6 +245,7 @@ function TeamMembers({
 }) {
   const time = useAccountTime();
   const locale = useLocale();
+  const compact = useCompactRecords();
   const [detail, setDetail] = useState<{ type: 'agent' | 'invitation'; id: string } | null>(null);
   const detailTrigger = useRef<HTMLButtonElement | null>(null);
   const [activityRevision, setActivityRevision] = useState(0);
@@ -673,11 +683,14 @@ function TeamMembers({
                   aria-label={word('members')}
                   // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- Keyboard scrolling for the overflowing table.
                   tabIndex={0}
-                  className="overflow-x-auto rounded-lg border bg-card text-card-foreground"
+                  className="min-w-0 md:overflow-x-auto md:rounded-lg md:border md:bg-card md:text-card-foreground"
                 >
-                  <table className="w-full text-start text-sm">
+                  <table
+                    role={compact ? 'presentation' : undefined}
+                    className="block w-full text-start text-sm md:table"
+                  >
                     <caption className="sr-only">{word('members')}</caption>
-                    <thead>
+                    <thead className="hidden md:table-header-group">
                       <tr className="border-b">
                         {[
                           word('agent'),
@@ -694,18 +707,23 @@ function TeamMembers({
                         ))}
                       </tr>
                     </thead>
-                    <tbody>
+                    <tbody
+                      role={compact ? 'list' : undefined}
+                      aria-label={compact ? word('members') : undefined}
+                      className="block space-y-3 md:table-row-group md:space-y-0"
+                    >
                       {members.size === 0 && invitations.length === 0 && (
-                        <tr>
-                          <td colSpan={7} className="p-3">
+                        <tr role={compact ? 'listitem' : undefined} className="block md:table-row">
+                          <TeamRecordCell compact={compact} colSpan={7}>
                             {word('empty')}
-                          </td>
+                          </TeamRecordCell>
                         </tr>
                       )}
                       {Array.from(members, ([userId, member]) => (
                         <Member
                           formatJoinedAt={(value) => time.format(value, { dateStyle: 'medium' })}
                           key={userId}
+                          compact={compact}
                           entry={member.entry}
                           onTransfer={
                             team.canTransferOwnership && member.roles.includes('Owner')
@@ -728,22 +746,35 @@ function TeamMembers({
                         />
                       ))}
                       {invitations.map((entry) => (
-                        <tr key={entry.id} className="border-t align-top">
-                          <td className="p-3">
+                        <tr
+                          key={entry.id}
+                          role={compact ? 'listitem' : undefined}
+                          className={teamRecordClass}
+                        >
+                          <TeamRecordCell compact={compact}>
                             <TeamIdentity entry={entry} />
-                          </td>
-                          <td className="p-3">
+                          </TeamRecordCell>
+                          <TeamRecordCell compact={compact} label={word('roles')}>
                             <Badge variant="secondary">{word(entry.role)}</Badge>
-                          </td>
-                          <td className="p-3">{word('pending')}</td>
-                          <td className="p-3">
+                          </TeamRecordCell>
+                          <TeamRecordCell compact={compact} label={word('status')}>
+                            {word('pending')}
+                          </TeamRecordCell>
+                          <TeamRecordCell compact={compact} label={word('invitedOn')}>
                             <time dateTime={entry.createdAt}>
                               {time.format(entry.createdAt, { dateStyle: 'medium' })}
                             </time>
-                          </td>
-                          <td className="p-3">—</td>
-                          <td className="p-3">—</td>
-                          <td className="p-3">
+                          </TeamRecordCell>
+                          <TeamRecordCell compact={compact} className="hidden md:table-cell">
+                            —
+                          </TeamRecordCell>
+                          <TeamRecordCell compact={compact} className="hidden md:table-cell">
+                            —
+                          </TeamRecordCell>
+                          <TeamRecordCell
+                            compact={compact}
+                            className="flex flex-wrap gap-2 md:table-cell"
+                          >
                             <Button
                               variant="outline"
                               disabled={!ready || !!action || !!ownershipStep}
@@ -761,7 +792,7 @@ function TeamMembers({
                             >
                               {word('withdraw')}
                             </Button>
-                          </td>
+                          </TeamRecordCell>
                         </tr>
                       ))}
                     </tbody>
@@ -1051,9 +1082,32 @@ function TeamMembers({
     </section>
   );
 }
+const teamRecordClass =
+  'block min-w-0 rounded-lg border bg-card text-card-foreground [overflow-wrap:anywhere] md:table-row md:rounded-none md:border-x-0 md:border-b-0 md:align-top';
+
+function TeamRecordCell({
+  compact,
+  label,
+  className,
+  children,
+  ...props
+}: ComponentProps<'td'> & { compact: boolean; label?: string }) {
+  return (
+    <td
+      role={compact ? 'presentation' : undefined}
+      className={cn('block min-w-0 p-3 md:table-cell', className)}
+      {...props}
+    >
+      {label && <p className="font-medium text-muted-foreground md:hidden">{label}</p>}
+      {children}
+    </td>
+  );
+}
+
 function Member({
   entry,
   roles,
+  compact,
   onSave,
   onRemove,
   formatJoinedAt,
@@ -1065,6 +1119,7 @@ function Member({
   onDetails,
 }: {
   entry: Entry;
+  compact: boolean;
   onDetails: (button: HTMLButtonElement) => void;
   onTransfer: (() => void) | undefined;
   transferRef: React.RefObject<HTMLButtonElement | null>;
@@ -1088,11 +1143,11 @@ function Member({
   liveCanSave.current = canCommand && !locked && !stale && !owner;
   const word = (key: string) => t(`team.${key}`, locale);
   return (
-    <tr className="border-t align-top">
-      <td className="p-3">
+    <tr role={compact ? 'listitem' : undefined} className={teamRecordClass}>
+      <TeamRecordCell compact={compact}>
         <TeamIdentity entry={entry} owner={owner} />
-      </td>
-      <td className="p-3 min-w-44">
+      </TeamRecordCell>
+      <TeamRecordCell compact={compact} label={word('roles')} className="md:min-w-44">
         <div className="mb-2 flex flex-wrap gap-1">
           {roles.map((role) => (
             <Badge key={role} variant="secondary">
@@ -1101,30 +1156,37 @@ function Member({
           ))}
         </div>
         {!owner && <TeamRoleFields draft={draft} locked={locked} canCommand={canCommand} />}
-      </td>
-      <td className="p-3">{word('active')}</td>
-      <td className="p-3 whitespace-nowrap">
+      </TeamRecordCell>
+      <TeamRecordCell compact={compact} label={word('status')}>
+        {word('active')}
+      </TeamRecordCell>
+      <TeamRecordCell compact={compact} label={word('invitedOn')} className="md:whitespace-nowrap">
         {entry.invitedAt ? (
           <time dateTime={entry.invitedAt}>{formatJoinedAt(entry.invitedAt)}</time>
         ) : (
           '—'
         )}
-      </td>
-      <td className="p-3 whitespace-nowrap">
+      </TeamRecordCell>
+      <TeamRecordCell compact={compact} label={word('joined')} className="md:whitespace-nowrap">
         {entry.joinedAt ? (
           <time dateTime={entry.joinedAt}>{formatJoinedAt(entry.joinedAt)}</time>
         ) : (
           '—'
         )}
-      </td>
-      <td className="p-3 whitespace-nowrap" title={word('lastActiveHint')}>
+      </TeamRecordCell>
+      <TeamRecordCell
+        compact={compact}
+        label={word('lastActive')}
+        className="md:whitespace-nowrap"
+        title={word('lastActiveHint')}
+      >
         {entry.lastActiveAt ? (
           <time dateTime={entry.lastActiveAt}>{formatJoinedAt(entry.lastActiveAt)}</time>
         ) : (
           '—'
         )}
-      </td>
-      <td className="p-3 min-w-80">
+      </TeamRecordCell>
+      <TeamRecordCell compact={compact} className="md:min-w-80">
         <div className="flex flex-wrap gap-2">
           <Button
             variant="outline"
@@ -1165,7 +1227,7 @@ function Member({
           </Button>
         </div>
         {owner && <p className="mt-2 text-sm text-muted-foreground">{word('lastOwner')}</p>}
-      </td>
+      </TeamRecordCell>
     </tr>
   );
 }

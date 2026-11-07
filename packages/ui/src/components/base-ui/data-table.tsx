@@ -329,6 +329,7 @@ function DataTable<T extends object>({
     return (
       <button
         type="button"
+        data-table-expander=""
         aria-expanded={open}
         aria-controls={open ? detailId(row, mode) : undefined}
         aria-label={open ? labels.collapseRow(name) : labels.expandRow(name)}
@@ -534,13 +535,15 @@ function DataTable<T extends object>({
           )}
           {selectable && (
             <div className="flex items-center gap-3 px-3 py-2 text-sm">
-              <Checkbox
-                disabled={loading || !data.length}
-                checked={allSelected}
-                indeterminate={someSelected}
-                onCheckedChange={toggleAll}
-                aria-label={allSelected ? labels.deselectAll : labels.selectAll}
-              />
+              <span className="grid size-11 shrink-0 place-items-center">
+                <Checkbox
+                  disabled={loading || !data.length}
+                  checked={allSelected}
+                  indeterminate={someSelected}
+                  onCheckedChange={toggleAll}
+                  aria-label={allSelected ? labels.deselectAll : labels.selectAll}
+                />
+              </span>
               <span>{allSelected ? labels.deselectAll : labels.selectAll}</span>
             </div>
           )}

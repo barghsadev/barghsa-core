@@ -791,13 +791,23 @@
 @media (pointer: coarse) {
   [data-slot='button'],
   [data-slot='input'],
+  [data-slot='combobox-input'],
+  [data-slot='combobox-trigger'],
+  [data-slot='number-field-input'],
   [data-slot='native-select'],
   [data-slot='select-trigger'],
-  [data-slot='tabs-trigger'] {
-    min-height: 2.75rem;
+  [data-slot='tabs-trigger'],
+  [data-table-sort],
+  [data-table-expander],
+  .touch-label {
+    min-block-size: 2.75rem;
+    min-inline-size: 2.75rem;
   }
-  [data-slot='button'][data-size^='icon'] {
-    min-width: 2.75rem;
+  :is([data-slot='checkbox'], [data-slot='radio-group-item'], [data-slot='switch'])::after {
+    inset: 50% auto auto 50%;
+    width: max(100%, 2.75rem);
+    height: max(100%, 2.75rem);
+    translate: -50% -50%;
   }
 }
 

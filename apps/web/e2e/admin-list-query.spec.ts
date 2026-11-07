@@ -150,7 +150,11 @@ for (const locale of ['en', 'fa'] as const)
       await page.goto(
         '/admin/crm?q=Customer&type=LEGAL&verification=PENDING&staffOnly=true&dateFrom=2026-02-28&dateTo=2026-03-01&sort=username&order=asc&cursor=restored'
       );
-      await expect(page.getByRole('table')).toBeVisible();
+      await expect(
+        page
+          .locator('[data-slot=card-list-view]')
+          .filter({ has: page.getByRole('heading', { name: crmUser.username, exact: true }) })
+      ).toBeVisible();
       await expect(page.locator('#crm-search')).toHaveValue('Customer');
       await expect(page.locator('#crm-type')).toHaveValue('LEGAL');
       await expect(page.locator('#crm-verification')).toHaveValue('PENDING');
@@ -167,7 +171,11 @@ for (const locale of ['en', 'fa'] as const)
         page.getByRole('button', { name: label('previous'), exact: true })
       ).toBeEnabled();
       await page.reload();
-      await expect(page.getByRole('table')).toBeVisible();
+      await expect(
+        page
+          .locator('[data-slot=card-list-view]')
+          .filter({ has: page.getByRole('heading', { name: crmUser.username, exact: true }) })
+      ).toBeVisible();
       expect(reads.at(-1)!.searchParams.get('cursor')).toBe('next');
       await expect(
         page.getByRole('button', { name: label('previous'), exact: true })

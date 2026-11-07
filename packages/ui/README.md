@@ -83,3 +83,10 @@ for a wrapping row. Gaps use Tailwind spacing units (for example,
 `columns={{ base: 1, sm: 2, lg: 3 }}`; missing widths inherit the previous
 setting. Keep record semantics in the native table or card list. Use the grid
 for surrounding controls, dashboard widgets and other content groups.
+
+On record list pages, show the key fields and available actions in a card at
+narrow widths. Keep the accepted records, sorting, selection and pagination
+outside the layout switch. Account history pages preserve an explicit table
+preference. The team directory keeps one set of editable rows mounted so a
+viewport change preserves role drafts, and exposes those rows as a named card
+list on mobile.

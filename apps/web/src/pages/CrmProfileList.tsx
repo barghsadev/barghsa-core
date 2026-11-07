@@ -1,3 +1,4 @@
+import { useCompactRecords } from '../hooks/useCompactRecords.js';
 import { useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from '../lib/query-keys.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
@@ -10,6 +11,7 @@ import { t } from '@barghsa/i18n/crm';
 import {
   LoadingStatus,
   Button,
+  CardListView,
   Input,
   Label,
   DatePicker,
@@ -39,6 +41,14 @@ const emptyFilters = {
   order: 'desc',
   staffOnly: false,
 };
+const columns = [
+  ['username', 'username'],
+  ['', 'type'],
+  ['createdAt', 'registered'],
+  ['lastLogin', 'lastLogin'],
+  ['', 'verification'],
+  ['profileCount', 'profiles'],
+] as const;
 export default function CrmProfileList(props: { query?: ListQueryBinding } = {}) {
   const actor = useAccountUser();
   const contextRevision = useProfileContextRevision();
@@ -51,6 +61,7 @@ function OwnedCrmProfileList({ query }: { query?: ListQueryBinding } = {}) {
   const contextRevision = useProfileContextRevision();
   const sequence = useRef(0);
   const locale = useLocale();
+  const compact = useCompactRecords();
   const numbers = useNumberFormatting(locale);
   const preference = useTimezone();
   const search = useSearch({ from: '/admin/crm/' });
@@ -112,10 +123,10 @@ function OwnedCrmProfileList({ query }: { query?: ListQueryBinding } = {}) {
   const sortFocus = useRef<string | null>(null);
   useEffect(() => {
     if (loading || !result || !sortFocus.current) return;
-    const sort = sortFocus.current;
+    const target = sortFocus.current;
     const frame = requestAnimationFrame(() => {
-      if (sortFocus.current !== sort) return;
-      const button = document.getElementById('crm-sort-' + sort);
+      if (sortFocus.current !== target) return;
+      const button = document.getElementById(target);
       if (!button) return;
       sortFocus.current = null;
       const active = document.activeElement;
@@ -309,6 +320,103 @@ function OwnedCrmProfileList({ query }: { query?: ListQueryBinding } = {}) {
         }).format(new Date(value))
       : '—';
   }
+  const label = (key: string) => t('crm.list.' + key, locale);
+  function sortButton(sort: string, name: string, card = false) {
+    const id = (card ? 'crm-sort-card-' : 'crm-sort-') + sort;
+    return (
+      <button
+        key={sort}
+        id={id}
+        type="button"
+        className="inline-flex min-h-11 min-w-11 items-center gap-1 underline-offset-4 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+        aria-pressed={card ? filters.sort === sort : undefined}
+        aria-description={
+          card && filters.sort === sort
+            ? label(filters.order === 'asc' ? 'sortAscending' : 'sortDescending')
+            : undefined
+        }
+        onClick={() => {
+          sortFocus.current = id;
+          const order = filters.sort === sort && filters.order === 'asc' ? 'desc' : 'asc';
+          if (query) query.setQuery({ sort, order });
+          else
+            setFilters((previous) => ({
+              ...previous,
+              sort,
+              order: previous.sort === sort && previous.order === 'asc' ? 'desc' : 'asc',
+            }));
+          setCursors(['']);
+        }}
+      >
+        {label(name)}
+        {filters.sort === sort &&
+          (filters.order === 'asc' ? (
+            <ArrowUp aria-hidden="true" className="size-4" />
+          ) : (
+            <ArrowDown aria-hidden="true" className="size-4" />
+          ))}
+      </button>
+    );
+  }
+  function types(user: User) {
+    return (
+      <div className="flex flex-wrap gap-2">
+        {(['INDIVIDUAL', 'LEGAL'] as const)
+          .filter((type) => user.profiles.some((profile) => profile.profileType === type))
+          .map((type) => (
+            <span key={type} className="inline-flex items-center gap-1">
+              {type === 'LEGAL' ? (
+                <Building2 aria-hidden="true" className="size-4" />
+              ) : (
+                <UserRound aria-hidden="true" className="size-4" />
+              )}
+              {label(type)}
+            </span>
+          ))}
+        {user.profileCount === 0 && '—'}
+      </div>
+    );
+  }
+  const verification = (user: User) =>
+    label(
+      user.hasVerifiedProfile
+        ? 'VERIFIED'
+        : user.profiles.some((profile) => profile.status === 'PENDING_VERIFICATION')
+          ? 'PENDING'
+          : 'UNVERIFIED'
+    );
+  function toggleProfiles(user: User, id: string) {
+    return (
+      <Button
+        variant="outline"
+        disabled={user.profileCount === 0}
+        aria-expanded={!!expanded[user.userId]}
+        aria-controls={expanded[user.userId] ? id : undefined}
+        onClick={() =>
+          setExpanded((previous) => ({ ...previous, [user.userId]: !previous[user.userId] }))
+        }
+      >
+        {label('profiles')}: {numbers.number(user.profileCount)}
+      </Button>
+    );
+  }
+  function profileLinks(user: User, id: string) {
+    return (
+      <ul id={id} className="min-w-0 space-y-2 [overflow-wrap:anywhere]">
+        {user.profiles.map((profile) => (
+          <li key={profile.id}>
+            <a
+              className="inline-flex min-h-11 min-w-11 items-center text-blue-700 underline dark:text-blue-300"
+              href={'/admin/crm/profiles/' + encodeURIComponent(profile.id)}
+            >
+              {profile.title || label(profile.profileType)} · {label('view')}
+            </a>
+            <span className="ms-2">{label(profile.status)}</span>
+          </li>
+        ))}
+      </ul>
+    );
+  }
   return (
     <section className="space-y-6" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
       <h1 className="text-2xl font-semibold">{t('crm.list.title', locale)}</h1>
@@ -488,182 +596,113 @@ function OwnedCrmProfileList({ query }: { query?: ListQueryBinding } = {}) {
               </div>
             }
           >
-            {!!result?.users.length && (
-              <ScrollArea
-                scrollbarOrientation="horizontal"
-                className="max-w-full min-w-0 rounded-lg border bg-card text-card-foreground"
-                role="region"
-                aria-label={t('crm.list.title', locale)}
-              >
-                <table className="w-full min-w-[48rem] text-start text-sm">
-                  <caption className="sr-only">{t('crm.list.title', locale)}</caption>
-                  <thead>
-                    <tr className="border-b">
-                      {[
-                        ['username', 'username'],
-                        ['', 'type'],
-                        ['createdAt', 'registered'],
-                        ['lastLogin', 'lastLogin'],
-                        ['', 'verification'],
-                        ['profileCount', 'profiles'],
-                      ].map(([sort, label]) => (
-                        <th
-                          key={label}
-                          scope="col"
-                          className="p-3 text-start font-semibold"
-                          aria-sort={
-                            sort
-                              ? filters.sort === sort
-                                ? filters.order === 'asc'
-                                  ? 'ascending'
-                                  : 'descending'
-                                : 'none'
-                              : undefined
-                          }
-                        >
-                          {sort ? (
-                            <button
-                              id={'crm-sort-' + sort}
-                              type="button"
-                              className="inline-flex items-center gap-1 underline-offset-4 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
-                              onClick={() => {
-                                sortFocus.current = sort;
-                                if (query)
-                                  query.setQuery({
-                                    sort: sort!,
-                                    order:
-                                      filters.sort === sort && filters.order === 'asc'
-                                        ? 'desc'
-                                        : 'asc',
-                                  });
-                                else
-                                  setFilters((previous) => ({
-                                    ...previous,
-                                    sort: sort!,
-                                    order:
-                                      previous.sort === sort && previous.order === 'asc'
-                                        ? 'desc'
-                                        : 'asc',
-                                  }));
-                                setCursors(['']);
-                              }}
-                            >
-                              {t('crm.list.' + label, locale)}
-                              {filters.sort === sort &&
-                                (filters.order === 'asc' ? (
-                                  <ArrowUp aria-hidden="true" className="size-4" />
-                                ) : (
-                                  <ArrowDown aria-hidden="true" className="size-4" />
-                                ))}
-                            </button>
-                          ) : (
-                            t('crm.list.' + label, locale)
-                          )}
-                        </th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {result.users.map((user) => {
-                      const profileListId = 'profiles-' + encodeURIComponent(user.userId);
+            {!!result?.users.length &&
+              (compact ? (
+                <div className="space-y-3">
+                  <div className="flex flex-wrap gap-3">
+                    {columns.map(([sort, name]) => sort && sortButton(sort, name, true))}
+                  </div>
+                  <CardListView
+                    data={result.users}
+                    keyExtractor={(user) => user.userId}
+                    locale={locale}
+                    label={label('title')}
+                    renderCard={(user) => {
+                      const id = 'profiles-card-' + encodeURIComponent(user.userId);
                       return (
-                        <Fragment key={user.userId}>
-                          <tr className="border-b">
-                            <th scope="row" className="p-3 text-start font-medium">
-                              <span dir="auto" className="break-all">
-                                {user.username}
-                              </span>
-                            </th>
-                            <td className="p-3">
-                              <div className="flex flex-wrap gap-2">
-                                {(['INDIVIDUAL', 'LEGAL'] as const)
-                                  .filter((type) =>
-                                    user.profiles.some((profile) => profile.profileType === type)
-                                  )
-                                  .map((type) => (
-                                    <span
-                                      key={type}
-                                      className="inline-flex items-center gap-1 whitespace-nowrap"
-                                    >
-                                      {type === 'LEGAL' ? (
-                                        <Building2 aria-hidden="true" className="size-4" />
-                                      ) : (
-                                        <UserRound aria-hidden="true" className="size-4" />
-                                      )}
-                                      {t('crm.list.' + type, locale)}
-                                    </span>
-                                  ))}
-                                {user.profileCount === 0 && '—'}
-                              </div>
-                            </td>
-                            <td className="p-3">{date(user.registrationDate)}</td>
-                            <td className="p-3">{date(user.lastLogin)}</td>
-                            <td className="p-3">
-                              {t(
-                                'crm.list.' +
-                                  (user.hasVerifiedProfile
-                                    ? 'VERIFIED'
-                                    : user.profiles.some(
-                                          (profile) => profile.status === 'PENDING_VERIFICATION'
-                                        )
-                                      ? 'PENDING'
-                                      : 'UNVERIFIED'),
-                                locale
-                              )}
-                            </td>
-                            <td className="p-3">
-                              <Button
-                                variant="outline"
-                                disabled={user.profileCount === 0}
-                                aria-expanded={!!expanded[user.userId]}
-                                aria-controls={profileListId}
-                                onClick={() =>
-                                  setExpanded((previous) => ({
-                                    ...previous,
-                                    [user.userId]: !previous[user.userId],
-                                  }))
-                                }
-                              >
-                                {t('crm.list.profiles', locale)}:{' '}
-                                {numbers.number(user.profileCount)}
-                              </Button>
-                            </td>
-                          </tr>
-                          {expanded[user.userId] && (
-                            <tr className="border-b">
-                              <td colSpan={6} className="p-3">
-                                <ul
-                                  id={profileListId}
-                                  className="sticky start-0 w-fit max-w-[calc(100vw-4rem)] space-y-2 break-words"
-                                >
-                                  {user.profiles.map((profile) => (
-                                    <li key={profile.id}>
-                                      <a
-                                        className="text-blue-700 dark:text-blue-300 underline"
-                                        href={
-                                          '/admin/crm/profiles/' + encodeURIComponent(profile.id)
-                                        }
-                                      >
-                                        {profile.title ||
-                                          t('crm.list.' + profile.profileType, locale)}{' '}
-                                        · {t('crm.list.view', locale)}
-                                      </a>
-                                      <span className="ms-2">
-                                        {t('crm.list.' + profile.status, locale)}
-                                      </span>
-                                    </li>
-                                  ))}
-                                </ul>
-                              </td>
-                            </tr>
-                          )}
-                        </Fragment>
+                        <div className="space-y-3 [overflow-wrap:anywhere]">
+                          <h2 className="font-semibold" dir="auto">
+                            {user.username}
+                          </h2>
+                          <dl className="space-y-2 text-sm">
+                            <div>
+                              <dt className="font-medium">{label('type')}</dt>
+                              <dd>{types(user)}</dd>
+                            </div>
+                            <div>
+                              <dt className="font-medium">{label('registered')}</dt>
+                              <dd>{date(user.registrationDate)}</dd>
+                            </div>
+                            <div>
+                              <dt className="font-medium">{label('lastLogin')}</dt>
+                              <dd>{date(user.lastLogin)}</dd>
+                            </div>
+                            <div>
+                              <dt className="font-medium">{label('verification')}</dt>
+                              <dd>{verification(user)}</dd>
+                            </div>
+                          </dl>
+                          {toggleProfiles(user, id)}
+                          {expanded[user.userId] && profileLinks(user, id)}
+                        </div>
                       );
-                    })}
-                  </tbody>
-                </table>
-              </ScrollArea>
-            )}
+                    }}
+                  />
+                </div>
+              ) : (
+                <ScrollArea
+                  scrollbarOrientation="horizontal"
+                  className="max-w-full min-w-0 rounded-lg border bg-card text-card-foreground"
+                  role="region"
+                  aria-label={label('title')}
+                >
+                  <table className="w-full min-w-[48rem] text-start text-sm">
+                    <caption className="sr-only">{label('title')}</caption>
+                    <thead>
+                      <tr className="border-b">
+                        {columns.map(([sort, name]) => (
+                          <th
+                            key={name}
+                            scope="col"
+                            className="p-3 text-start font-semibold"
+                            aria-sort={
+                              sort
+                                ? filters.sort === sort
+                                  ? filters.order === 'asc'
+                                    ? 'ascending'
+                                    : 'descending'
+                                  : 'none'
+                                : undefined
+                            }
+                          >
+                            {sort ? sortButton(sort, name) : label(name)}
+                          </th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {result.users.map((user) => {
+                        const id = 'profiles-' + encodeURIComponent(user.userId);
+                        return (
+                          <Fragment key={user.userId}>
+                            <tr className="border-b">
+                              <th scope="row" className="p-3 text-start font-medium">
+                                <span dir="auto" className="break-all">
+                                  {user.username}
+                                </span>
+                              </th>
+                              <td className="p-3">{types(user)}</td>
+                              <td className="p-3">{date(user.registrationDate)}</td>
+                              <td className="p-3">{date(user.lastLogin)}</td>
+                              <td className="p-3">{verification(user)}</td>
+                              <td className="p-3">{toggleProfiles(user, id)}</td>
+                            </tr>
+                            {expanded[user.userId] && (
+                              <tr className="border-b">
+                                <td colSpan={6} className="p-3">
+                                  <div className="sticky start-0 w-fit max-w-[calc(100vw-4rem)]">
+                                    {profileLinks(user, id)}
+                                  </div>
+                                </td>
+                              </tr>
+                            )}
+                          </Fragment>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </ScrollArea>
+              ))}
           </ListPage.Content>
           <nav aria-label={t('crm.list.title', locale)} className="flex gap-2">
             <Button

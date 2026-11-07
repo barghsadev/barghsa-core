@@ -63,10 +63,25 @@ for (const locale of ['en', 'fa'] as const) {
     });
     await browse.click();
     const dialog = page.getByRole('dialog');
-    await expect(dialog.locator('tbody tr')).toHaveCount(25);
+    const cards = dialog.getByRole('list', {
+      name: fa ? 'تاریخچه تلاش‌های ارسال' : 'Delivery attempt history',
+      exact: true,
+    });
+    await expect(cards.getByRole('listitem')).toHaveCount(25);
     await expect(
-      dialog.getByRole('columnheader', { name: fa ? 'نوبت پردازش' : 'Processing attempt' })
+      cards.getByText(fa ? 'نوبت پردازش' : 'Processing attempt', { exact: true })
+    ).toHaveCount(25);
+    await page.setViewportSize({ width: 1024, height: 844 });
+    await expect(
+      dialog
+        .getByRole('table')
+        .getByRole('columnheader', { name: fa ? 'نوبت پردازش' : 'Processing attempt' })
     ).toBeVisible();
+    await expect(dialog.getByRole('table').locator('tbody tr')).toHaveCount(25);
+    await expect(cards).toHaveCount(0);
+    await page.setViewportSize({ width: 390, height: 844 });
+    await expect(cards.getByRole('listitem')).toHaveCount(25);
+    expect(queries).toHaveLength(1);
     await expect(dialog).toContainText(fa ? 'بدون ارسال دوباره' : 'without sending again');
     expect(queries.at(-1)?.has('notificationId')).toBe(false);
     expect(queries.at(-1)?.has('channel')).toBe(false);
@@ -79,7 +94,9 @@ for (const locale of ['en', 'fa'] as const) {
     ).toEqual([]);
     expect(await dialog.evaluate((e) => e.scrollWidth <= e.clientWidth + 1)).toBe(true);
     await dialog.getByRole('button', { name: fa ? 'بعدی' : 'Next', exact: true }).click();
-    await expect(dialog.locator('tbody tr')).toHaveCount(1);
+    await expect(
+      dialog.locator('table:visible tbody tr, [data-slot=card-list-view]:visible > li')
+    ).toHaveCount(1);
     expect(queries.at(-1)?.get('offset')).toBe('25');
     const id = dialog.getByRole('textbox', { name: fa ? 'شناسه اعلان' : 'Notification ID' });
     await id.fill('invalid');
@@ -99,14 +116,18 @@ for (const locale of ['en', 'fa'] as const) {
     await search.click();
     const error = dialog.getByRole('alert');
     await expect(error).toBeVisible();
-    await expect(dialog.locator('tbody tr')).toHaveCount(0);
+    await expect(
+      dialog.locator('table:visible tbody tr, [data-slot=card-list-view]:visible > li')
+    ).toHaveCount(0);
     expect(queries.at(-1)?.get('offset')).toBe('0');
     expect(queries.at(-1)?.get('notificationId')).toBe(notificationId.toUpperCase());
     expect(queries.at(-1)?.get('channel')).toBe('email');
     expect(queries.at(-1)?.get('status')).toBe('delivered');
     mode = 'valid';
     await error.getByRole('button').click();
-    await expect(dialog.locator('tbody tr')).toHaveCount(1);
+    await expect(
+      dialog.locator('table:visible tbody tr, [data-slot=card-list-view]:visible > li')
+    ).toHaveCount(1);
     mode = 'uncertain';
     for (const [status, text] of [
       ['sending', fa ? 'آغاز شده؛ نتیجه ثبت نشده' : 'Started; outcome not recorded'],
@@ -116,14 +137,18 @@ for (const locale of ['en', 'fa'] as const) {
         .getByRole('combobox', { name: fa ? 'نتیجه' : 'Outcome', exact: true })
         .selectOption(status!);
       await search.click();
-      await expect(dialog.locator('tbody tr')).toHaveCount(1);
-      await expect(dialog.locator('tbody')).toContainText(text!);
+      await expect(
+        dialog.locator('table:visible tbody tr, [data-slot=card-list-view]:visible > li')
+      ).toHaveCount(1);
+      await expect(cards.getByRole('listitem')).toContainText(text!);
       expect(queries.at(-1)?.get('status')).toBe(status);
     }
     mode = 'denied';
     await search.click();
     await expect(error).toBeVisible();
-    await expect(dialog.locator('tbody tr')).toHaveCount(0);
+    await expect(
+      dialog.locator('table:visible tbody tr, [data-slot=card-list-view]:visible > li')
+    ).toHaveCount(0);
     mode = 'empty';
     await error.getByRole('button').click();
     await expect(dialog).toContainText(

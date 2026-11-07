@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-07T04:50:33+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-07T05:04:14+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.4.0**. Next milestone: **v0.5.0**.
 
@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 849 | Accepted with unchanged source bindings. |
+| done | 850 | Accepted with unchanged source bindings. |
 | verify | 485 | Existing work may be complete; inspect evidence before building. |
-| partial | 27 | An earlier review found unmet criteria; reconcile later fixes. |
+| partial | 26 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 7 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
 | blocked | 1 | Named owner or external prerequisite. |
@@ -39,12 +39,16 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Complete responsive record views and measured touch hit areas, then bind the populated route and component layout matrix. Reuse existing table/card and route evidence; target demonstrated gaps and preserve all financial controls and original budgets.
+Verify the critical login, dashboard, order, wallet and contract journeys for landmarks, focus, announcements and keyboard interaction. Keep existing native semantics and all aXe assertions. Close the critical CI gate gap in the existing workflow, without duplicating the full browser suite.
 
-- `07-ui-ux-design.md#T-07.04.01.05`: All list pages must have a mobile card view as an alternative to the desktop table view. When viewport < `md`, switch from `<DataTable>` to `<CardList>` where each card shows key fields.
-- `07-ui-ux-design.md#T-07.04.01.06`: Touch targets: ensure all interactive elements (buttons, links, inputs, toggles) have minimum 44×44px tap area per WCAG 2.5.8.
-- `07-ui-ux-design.md#T-07.04.02.04`: Verify all pages look correct at `320px`, `375px`, `390px`, `414px`, `768px`, `1024px`, `1280px`, and `1920px` viewport widths. No horizontal scroll, no overlapping text, no tiny touch targets.
-- `07-ui-ux-design.md#T-07.03.01.07`: Test every component and page in both RTL and LTR modes. Persian Lorem ipsum (`لورم ایپسوم`) should render correctly in all containers. Verify no text overflow, clipped content, or misaligned elements.
+- `07-ui-ux-design.md#T-07.05.01.01`: Implement `SkipLink` component (first focusable element on every page, visible on focus: "Skip to main content"). All pages have a `<main>` element with `id="main-content"`.
+- `07-ui-ux-design.md#T-07.05.01.02`: Ensure all interactive elements have visible focus indicators. Define a custom focus ring via `:focus-visible` in CSS: `outline: 2px solid var(--ring)`, `outline-offset: 2px`. Never use `outline: none` without a visible replacement.
+- `07-ui-ux-design.md#T-07.05.01.03`: Implement a `FocusTrap` component for modals, sheets, and dropdowns. When open, Tab/Shift+Tab cycles within the dialog. Focus returns to trigger on close.
+- `07-ui-ux-design.md#T-07.05.01.04`: Add `aria-live="polite"` region for dynamic content updates (toast messages, notifications count, form submission status). `aria-live="assertive"` for critical errors (payment failures, session expiry).
+- `07-ui-ux-design.md#T-07.05.01.11`: Add `sr-only` utility class (visually hidden, available to screen readers) and use it for descriptive labels on icon-only buttons, status indicators, and progress information.
+- `07-ui-ux-design.md#T-07.05.02.01`: Install `@axe-core/playwright` and configure in Playwright test suite. Add `AxeBuilder` to critical page E2E tests (login, dashboard, order list, wallet, contract detail). Verify zero violations for WCAG AA.
+- `07-ui-ux-design.md#T-07.05.02.03`: Write keyboard-navigation E2E tests for critical flows: Tab through login form, navigate dashboard with arrow keys, open/close modal with Escape, select from combobox with keyboard.
+- `07-ui-ux-design.md#T-07.05.02.04`: Add CI gate: a11y violations on critical pages block PR merge. Non-critical pages warn but do not block. Violations must be triaged with reason or exemption.
 
 ## v0.2.0: Complete customer journeys
 
@@ -710,7 +714,7 @@ Customer and admin workflows work on desktop/mobile in both languages and themes
 | `07-ui-ux-design.md#T-07.04.01.02` | done | Recorded batch work | Create `ResponsiveContainer` component: max-width container with responsive padding. `full` on mobile → `container mx-auto` on desktop. |
 | `07-ui-ux-design.md#T-07.04.01.03` | done | Recorded batch work | Create `Stack` and `Inline` layout primitives: `Stack` (vertical, with gap), `Inline` (horizontal, wraps on mobile). Responsive gap: different gap values per breakpoint. |
 | `07-ui-ux-design.md#T-07.04.01.04` | done | Recorded batch work | Create `Grid` responsive layout component: `columns` prop accepts object `{ base: 1, sm: 2, lg: 3 }` mapping to CSS grid. Used for dashboard card grids, admin table layouts. |
-| `07-ui-ux-design.md#T-07.04.01.05` | partial | Recorded batch work | All list pages must have a mobile card view as an alternative to the desktop table view. When viewport < `md`, switch from `<DataTable>` to `<CardList>` where each card shows key fields. |
+| `07-ui-ux-design.md#T-07.04.01.05` | done | Recorded batch work | All list pages must have a mobile card view as an alternative to the desktop table view. When viewport < `md`, switch from `<DataTable>` to `<CardList>` where each card shows key fields. |
 | `07-ui-ux-design.md#T-07.04.01.06` | partial | Recorded batch work | Touch targets: ensure all interactive elements (buttons, links, inputs, toggles) have minimum 44×44px tap area per WCAG 2.5.8. |
 | `07-ui-ux-design.md#T-07.04.02.01` | done | Recorded batch work | On mobile (< `lg`): sidebar becomes a bottom tab bar with 4–5 primary navigation icons (Home, Orders, Wallet, Profile, More). "More" opens a sheet with all remaining navigation items. |
 | `07-ui-ux-design.md#T-07.04.02.02` | done | Recorded batch work | On mobile: topbar shows only hamburger menu, app logo/title, notification bell, and profile avatar. All secondary actions move into the "More" drawer or overflow menus. |

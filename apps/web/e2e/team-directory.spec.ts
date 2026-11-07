@@ -98,6 +98,7 @@ for (const locale of ['en', 'fa'] as const)
           json: attempts === 1 ? {} : { id: 'new-note' },
         });
       });
+      await page.setViewportSize({ width: 900, height: 844 });
       await page.goto('/settings/team');
       const table = page.getByRole('table');
       await expect(table).toContainText(fa ? 'عضو نمونه' : 'Example Member');
@@ -122,6 +123,28 @@ for (const locale of ['en', 'fa'] as const)
         (await new AxeBuilder({ page }).include('#dashboard-content').analyze()).violations
       ).toEqual([]);
       expect((await owner.boundingBox())!.height).toBeLessThan(240);
+      const role = table
+        .getByRole('row')
+        .filter({ hasText: fa ? 'عضو نمونه' : 'Example Member' })
+        .locator('input[type=checkbox]:not(:checked)')
+        .first();
+      const roleValue = await role.getAttribute('value');
+      await role.check();
+      await page.setViewportSize({ width: 390, height: 844 });
+      const cards = page.getByRole('list', {
+        name: fa ? 'اعضا و دعوت‌نامه‌ها' : 'Members and invitations',
+        exact: true,
+      });
+      await expect(table).toHaveCount(0);
+      await expect(cards.getByRole('listitem')).toHaveCount(3);
+      await expect(cards).toContainText('m***@example.test');
+      await expect(cards).not.toContainText('member@example.test');
+      const mobileRole = cards.locator(`input[value="${roleValue}"]`);
+      await expect(mobileRole).toBeChecked();
+      await mobileRole.uncheck();
+      expect(
+        (await new AxeBuilder({ page }).include('#dashboard-content').analyze()).violations
+      ).toEqual([]);
       expect(
         await page.evaluate(
           () => document.documentElement.scrollWidth <= document.documentElement.clientWidth + 1
@@ -142,6 +165,13 @@ for (const locale of ['en', 'fa'] as const)
       await expect(dialog.locator('#invite-message')).toBeFocused();
       await dialog.locator('#invite-message').fill(note);
       await expect(dialog.locator('#invite-message')).toHaveAttribute('maxlength', '1000');
+      await expect
+        .poll(() =>
+          dialog.evaluate((node) =>
+            node.getAnimations().every((animation) => animation.playState !== 'running')
+          )
+        )
+        .toBe(true);
       expect(
         (await new AxeBuilder({ page }).include('[role=dialog]').analyze()).violations
       ).toEqual([]);

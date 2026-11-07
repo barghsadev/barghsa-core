@@ -21,6 +21,7 @@ const user = {
 };
 for (const locale of ['en', 'fa'])
   test(`CRM filters, profile links and cursor navigation (${locale})`, async ({ page }) => {
+    await page.setViewportSize({ width: 900, height: 844 });
     await crmShell(page, locale);
     await mockOppositeNumerals(page, locale);
     await page.route('**/api/user/settings/timezone', (route) =>
@@ -236,6 +237,7 @@ for (const locale of ['fa', 'en'])
         darkMode +
         ')',
       async ({ page }, testInfo) => {
+        await page.setViewportSize({ width: 900, height: 844 });
         await crmShell(page, locale);
         await page.route('**/api/public/branding/config', (route) =>
           route.fulfill({
@@ -355,6 +357,25 @@ for (const locale of ['fa', 'en'])
         await toggle.click();
         await expect(toggle).toHaveAttribute('aria-expanded', 'true');
         await expect(table.getByRole('link', { name: /Company profile/ })).toBeVisible();
+        await page.setViewportSize({ width: 320, height: 844 });
+        const cards = main.getByRole('list', {
+          name: locale === 'fa' ? 'کاربران مدیریت مشتریان' : 'CRM users',
+          exact: true,
+        });
+        await expect(
+          cards.getByRole('heading', { name: user.username, exact: true })
+        ).toBeVisible();
+        await expect(cards.getByRole('link', { name: /Company profile/ })).toBeVisible();
+        await expect(main.locator('#crm-sort-card-createdAt')).toHaveAccessibleDescription(
+          locale === 'fa' ? 'نزولی' : 'Descending'
+        );
+        await expect(table).toHaveCount(0);
+        expect(
+          await main.evaluate((node) => node.scrollWidth - node.clientWidth)
+        ).toBeLessThanOrEqual(1);
+        await page.setViewportSize({ width: 900, height: 844 });
+        await expect(table.getByRole('link', { name: /Company profile/ })).toBeVisible();
+        await expect(cards).toHaveCount(0);
         const scan = await new AxeBuilder({ page })
           .include('#admin-content')
           .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])

@@ -26,6 +26,7 @@ for (const locale of ['en', 'fa'] as const) {
   test(`CRM directory retains expansion and exact cursor through recovery (${locale})`, async ({
     page,
   }, info) => {
+    await page.setViewportSize({ width: 768, height: 844 });
     await crmShell(page, locale);
     let failed = false,
       denied = false;
@@ -50,10 +51,14 @@ for (const locale of ['en', 'fa'] as const) {
     const position = await viewport.evaluate((node) => node.scrollLeft);
     await viewport.press(locale === 'fa' ? 'ArrowLeft' : 'ArrowRight');
     await expect.poll(() => viewport.evaluate((node) => node.scrollLeft)).not.toBe(position);
+    await page.setViewportSize({ width: 390, height: 844 });
+    const cards = page.getByRole('list', { name: label('crm.list.title'), exact: true });
+    await expect(cards.getByRole('link', { name: /Customer profile/ })).toBeVisible();
+    await expect(table).toHaveCount(0);
     failed = true;
     await page.getByRole('button', { name: label('crm.list.next'), exact: true }).click();
     await expect(page.getByRole('alert')).toBeVisible();
-    await expect(table.getByRole('link', { name: /Customer profile/ })).toBeVisible();
+    await expect(cards.getByRole('link', { name: /Customer profile/ })).toBeVisible();
     const failedPath = requests.at(-1);
     expect(new URL(failedPath!).searchParams.get('cursor')).toBe('page-two');
     await inspect(page, 'directory', locale, info.project.name);
@@ -61,14 +66,14 @@ for (const locale of ['en', 'fa'] as const) {
     await page.getByRole('button', { name: label('crm.list.retry'), exact: true }).click();
     await expect(page.getByRole('alert')).toHaveCount(0);
     expect(requests.at(-1)).toBe(failedPath);
-    await expect(table.getByRole('link', { name: /Customer profile/ })).toBeVisible();
+    await expect(cards.getByRole('link', { name: /Customer profile/ })).toBeVisible();
     denied = true;
     await page.getByRole('button', { name: label('crm.list.refresh'), exact: true }).click();
-    await expect(table).toHaveCount(0);
+    await expect(cards).toHaveCount(0);
     await expect(page.getByRole('alert')).toContainText(label('crm.profile.error.accessDenied'));
     denied = false;
     await page.getByRole('button', { name: label('crm.list.refresh'), exact: true }).click();
-    await expect(table).toBeVisible();
+    await expect(cards).toBeVisible();
   });
   test(`CRM correction review recovers resources independently and invalidates changed evidence (${locale})`, async ({
     page,

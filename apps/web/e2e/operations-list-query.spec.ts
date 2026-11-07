@@ -228,7 +228,9 @@ for (const locale of ['en', 'fa'] as const)
         const id = dialog.getByRole('textbox', { name: word('notificationId'), exact: true });
         const channel = dialog.getByRole('combobox', { name: word('channel'), exact: true });
         const status = dialog.getByRole('combobox', { name: word('status'), exact: true });
-        await expect(dialog.locator('tbody tr')).toHaveCount(1);
+        await expect(
+          dialog.locator('table:visible tbody tr, [data-slot=card-list-view]:visible > li')
+        ).toHaveCount(1);
         await expect(id).toHaveValue(deadLetter.outboxId);
         await expect(channel).toHaveValue('email');
         await expect(status).toHaveValue('delivered');
@@ -252,7 +254,9 @@ for (const locale of ['en', 'fa'] as const)
         expect(reads).toHaveLength(initialReads);
         await dialog.getByRole('button', { name: word('search'), exact: true }).click();
         await expect.poll(() => reads.at(-1)?.searchParams.get('notificationId')).toBe(newId);
-        await expect(dialog.locator('tbody tr')).toHaveCount(25);
+        await expect(
+          dialog.locator('table:visible tbody tr, [data-slot=card-list-view]:visible > li')
+        ).toHaveCount(25);
         expect(params(page).get('failed_page')).toBe('2');
         expect(params(page).has('history_page')).toBe(false);
         if (path === 'notifications') {
@@ -266,10 +270,14 @@ for (const locale of ['en', 'fa'] as const)
         const failedQuery = reads.at(-1)!.search;
         fail = false;
         await dialog.getByRole('button', { name: common('reload'), exact: true }).click();
-        await expect(dialog.locator('tbody tr')).toHaveCount(1);
+        await expect(
+          dialog.locator('table:visible tbody tr, [data-slot=card-list-view]:visible > li')
+        ).toHaveCount(1);
         expect(reads.at(-1)!.search).toBe(failedQuery);
         await page.reload();
-        await expect(dialog.locator('tbody tr')).toHaveCount(1);
+        await expect(
+          dialog.locator('table:visible tbody tr, [data-slot=card-list-view]:visible > li')
+        ).toHaveCount(1);
         await expect(id).toHaveValue(newId);
         await expect(channel).toHaveValue('sms');
         await expect(status).toHaveValue('failed');
@@ -277,7 +285,9 @@ for (const locale of ['en', 'fa'] as const)
         await expect(dialog).toHaveCount(0);
         expect(params(page).has('history_mode')).toBe(false);
         await page.goBack();
-        await expect(dialog.locator('tbody tr')).toHaveCount(1);
+        await expect(
+          dialog.locator('table:visible tbody tr, [data-slot=card-list-view]:visible > li')
+        ).toHaveCount(1);
         await expect(id).toHaveValue(newId);
         await page.keyboard.press('Escape');
         await expect(dialog).toHaveCount(0);
@@ -292,14 +302,18 @@ for (const locale of ['en', 'fa'] as const)
           .last();
         await queue.locator('summary:visible').click();
         await queue.getByRole('button', { name: word('title'), exact: true }).click();
-        await expect(dialog.locator('tbody tr')).toHaveCount(25);
+        await expect(
+          dialog.locator('table:visible tbody tr, [data-slot=card-list-view]:visible > li')
+        ).toHaveCount(25);
         await expect(dialog.getByRole('textbox')).toHaveCount(0);
         expect(params(page).get('history_mode')).toBe('target');
         expect(params(page).get('history_notificationId')).toBe(deadLetter.outboxId);
         expect(params(page).get('history_channel')).toBe('email');
         expect(params(page).has('history_status')).toBe(false);
         await page.reload();
-        await expect(dialog.locator('tbody tr')).toHaveCount(25);
+        await expect(
+          dialog.locator('table:visible tbody tr, [data-slot=card-list-view]:visible > li')
+        ).toHaveCount(25);
         await expect(dialog.getByRole('textbox')).toHaveCount(0);
         expect(Object.fromEntries(reads.at(-1)!.searchParams)).toEqual({
           notificationId: deadLetter.outboxId,

@@ -1,5 +1,8 @@
+import { useCompactRecords } from '../hooks/useCompactRecords.js';
+import { RecordFields } from './RecordFields.js';
+import type { HistoryColumn } from './HistoryTable.js';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { LoadingStatus, Button, ListPage, ScrollArea } from '@barghsa/ui';
+import { LoadingStatus, Button, CardListView, ListPage, ScrollArea } from '@barghsa/ui';
 import type { FormEvent } from 'react';
 import { tWorkspace as t } from '@barghsa/i18n/workspace-admin';
 import { t as appText } from '@barghsa/i18n/workspace';
@@ -117,6 +120,7 @@ function OwnedInvoiceLedger({
   const deepLinkId =
     query?.query.filters.invoiceId ?? (isInvoiceUuid(initialInvoiceId) ? initialInvoiceId : '');
   const locale = useLocale();
+  const compact = useCompactRecords();
   const time = useAccountTime(locale);
   const numbers = useNumberFormatting(locale);
   const word = (key: string) => t(`admin.invoices.ledger.${key}`, locale);
@@ -276,6 +280,36 @@ function OwnedInvoiceLedger({
   const current = pages.at(-1);
   const items = pages.flatMap((page) => page.items);
   const vat = detail?.lines.reduce((sum, line) => sum + BigInt(line.vatAmount), 0n) ?? 0n;
+  const openInvoice = (item: InvoiceRow) => (
+    <button
+      type="button"
+      className="inline-flex min-h-11 min-w-11 items-center font-mono text-primary underline underline-offset-2"
+      dir="ltr"
+      aria-label={`${word('detail')}: ${item.invoiceId}`}
+      onClick={() => setSelectedId(item.invoiceId)}
+    >
+      {item.invoiceId.slice(0, 8)}…
+    </button>
+  );
+  const columns: HistoryColumn<InvoiceRow>[] = [
+    { id: 'type', label: word('type'), render: (item) => invoiceType(item.type) },
+    {
+      id: 'state',
+      label: word('state'),
+      render: (item) => appText(`invoices.state.${item.state}`, locale),
+    },
+    { id: 'amount', label: word('amount'), render: (item) => numbers.money(item.totalAmount) },
+    { id: 'paid', label: word('paid'), render: (item) => numbers.money(item.paidAmount) },
+    { id: 'due', label: word('due'), render: (item) => time.format(item.dueAt) },
+    {
+      id: 'period',
+      label: word('period'),
+      render: (item) =>
+        item.periodStart && item.periodEnd
+          ? formatInvoiceServicePeriod(item.periodStart, item.periodEnd, time.format)
+          : '—',
+    },
+  ];
 
   return (
     <section
@@ -388,57 +422,57 @@ function OwnedInvoiceLedger({
           }
         >
           {items.length ? (
-            <ScrollArea
-              scrollbarOrientation="horizontal"
-              role="group"
-              aria-label={word('title')}
-              className="min-w-0 max-w-full"
-            >
-              <table className="w-full min-w-[700px] text-start text-sm">
-                <thead className="border-b text-muted-foreground">
-                  <tr>
-                    <th className="p-2 text-start">{word('invoice')}</th>
-                    <th className="p-2 text-start">{word('type')}</th>
-                    <th className="p-2 text-start">{word('state')}</th>
-                    <th className="p-2 text-start">{word('amount')}</th>
-                    <th className="p-2 text-start">{word('paid')}</th>
-                    <th className="p-2 text-start">{word('due')}</th>
-                    <th className="p-2 text-start">{word('period')}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {items.map((item) => (
-                    <tr key={item.invoiceId} className="border-b last:border-0">
-                      <td className="p-2">
-                        <button
-                          type="button"
-                          className="font-mono text-primary underline underline-offset-2"
-                          dir="ltr"
-                          aria-label={`${word('detail')}: ${item.invoiceId}`}
-                          onClick={() => setSelectedId(item.invoiceId)}
-                        >
-                          {item.invoiceId.slice(0, 8)}…
-                        </button>
-                      </td>
-                      <td className="p-2">{invoiceType(item.type)}</td>
-                      <td className="p-2">{appText(`invoices.state.${item.state}`, locale)}</td>
-                      <td className="p-2 whitespace-nowrap">{numbers.money(item.totalAmount)}</td>
-                      <td className="p-2 whitespace-nowrap">{numbers.money(item.paidAmount)}</td>
-                      <td className="p-2 whitespace-nowrap">{time.format(item.dueAt)}</td>
-                      <td className="p-2 whitespace-nowrap">
-                        {item.periodStart && item.periodEnd
-                          ? formatInvoiceServicePeriod(
-                              item.periodStart,
-                              item.periodEnd,
-                              time.format
-                            )
-                          : '—'}
-                      </td>
+            compact ? (
+              <CardListView
+                data={items}
+                keyExtractor={(item) => item.invoiceId}
+                label={word('title')}
+                locale={locale}
+                renderCard={(item) => (
+                  <>
+                    <h3 className="font-semibold">{openInvoice(item)}</h3>
+                    <RecordFields item={item} columns={columns} />
+                  </>
+                )}
+              />
+            ) : (
+              <ScrollArea
+                scrollbarOrientation="horizontal"
+                role="group"
+                aria-label={word('title')}
+                className="min-w-0 max-w-full"
+              >
+                <table className="w-full min-w-[700px] text-start text-sm">
+                  <caption className="sr-only">{word('title')}</caption>
+                  <thead className="border-b text-muted-foreground">
+                    <tr>
+                      <th scope="col" className="p-2 text-start">
+                        {word('invoice')}
+                      </th>
+                      {columns.map((column) => (
+                        <th key={column.id} scope="col" className="p-2 text-start">
+                          {column.label}
+                        </th>
+                      ))}
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </ScrollArea>
+                  </thead>
+                  <tbody>
+                    {items.map((item) => (
+                      <tr key={item.invoiceId} className="border-b last:border-0">
+                        <th scope="row" className="p-2 text-start">
+                          {openInvoice(item)}
+                        </th>
+                        {columns.map((column) => (
+                          <td key={column.id} className="p-2">
+                            {column.render(item)}
+                          </td>
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </ScrollArea>
+            )
           ) : null}
         </ListPage.Content>
         <ListPage.Pagination

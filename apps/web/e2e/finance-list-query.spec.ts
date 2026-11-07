@@ -121,19 +121,25 @@ for (const locale of ['en', 'fa'] as const)
       await expect(
         ledger.getByRole('textbox', { name: ledgerWord('searchOrderId'), exact: true })
       ).toHaveValue(order);
-      await expect(content.locator('tbody tr')).toHaveCount(1);
+      await expect(
+        content.locator('table:visible tbody tr, [data-slot=card-list-view]:visible > li')
+      ).toHaveCount(1);
       expect(reads.at(-1)!.searchParams.get('invoiceId')).toBe(first);
       await id.fill('');
       await ledger.getByRole('button', { name: ledgerWord('search'), exact: true }).click();
       await expect.poll(() => params(page).get('invoiceId')).toBeNull();
-      await expect(content.locator('tbody tr')).toHaveCount(1);
+      await expect(
+        content.locator('table:visible tbody tr, [data-slot=card-list-view]:visible > li')
+      ).toHaveCount(1);
       await ledger
         .getByRole('button', { name: `${ledgerWord('detail')}: ${first}`, exact: true })
         .click();
       const detail = ledger.getByRole('region', { name: ledgerWord('detail'), exact: true });
       await expect(detail.getByText(first, { exact: true })).toBeVisible();
       await ledger.getByRole('button', { name: ledgerWord('more'), exact: true }).click();
-      await expect(content.locator('tbody tr')).toHaveCount(2);
+      await expect(
+        content.locator('table:visible tbody tr, [data-slot=card-list-view]:visible > li')
+      ).toHaveCount(2);
       expect(decodeFinanceCursor(JSON.parse(params(page).get('cursor') ?? 'null'))).toEqual({
         beforeAt: stamp,
         beforeId: first,
@@ -147,7 +153,9 @@ for (const locale of ['en', 'fa'] as const)
         ledger.getByRole('button', { name: ledgerWord('previous'), exact: true })
       ).toBeEnabled();
       await page.reload();
-      await expect(content.locator('tbody tr')).toHaveCount(1);
+      await expect(
+        content.locator('table:visible tbody tr, [data-slot=card-list-view]:visible > li')
+      ).toHaveCount(1);
       await expect(
         content.getByRole('button', { name: `${ledgerWord('detail')}: ${older}`, exact: true })
       ).toBeVisible();
@@ -161,14 +169,20 @@ for (const locale of ['en', 'fa'] as const)
       await expect(
         content.getByRole('button', { name: `${ledgerWord('detail')}: ${first}`, exact: true })
       ).toBeVisible();
-      await expect(content.locator('tbody tr')).toHaveCount(1);
+      await expect(
+        content.locator('table:visible tbody tr, [data-slot=card-list-view]:visible > li')
+      ).toHaveCount(1);
       await page.goForward();
-      await expect(content.locator('tbody tr')).toHaveCount(2);
+      await expect(
+        content.locator('table:visible tbody tr, [data-slot=card-list-view]:visible > li')
+      ).toHaveCount(2);
       await ledger
         .getByRole('combobox', { name: ledgerWord('state'), exact: true })
         .selectOption('Unpaid');
       await expect.poll(() => params(page).get('cursor')).toBeNull();
-      await expect(content.locator('tbody tr')).toHaveCount(1);
+      await expect(
+        content.locator('table:visible tbody tr, [data-slot=card-list-view]:visible > li')
+      ).toHaveCount(1);
       expect(params(page).get('profileId')).toBe(profile);
       expect(params(page).get('receipt_state')).toBe('Confirmed');
       await page.goBack();

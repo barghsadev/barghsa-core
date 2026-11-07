@@ -45,6 +45,38 @@ test.afterAll(async () => {
     await rm(outDir, { recursive: true, force: true });
 });
 
+test.describe('coarse pointer table controls', () => {
+  test.use({ hasTouch: true, viewport: { width: 390, height: 844 } });
+  test('sort, disclosure and selection have real 44px touch targets', async ({ page }) => {
+    await page.goto(`${url}?responsive&advanced`);
+    expect(await page.evaluate(() => matchMedia('(pointer: coarse)').matches)).toBe(true);
+    const sort = page.locator('[data-table-sort]:visible').first();
+    const expander = page.locator('[data-table-expander]:visible').first();
+    for (const button of [sort, expander]) {
+      const box = (await button.boundingBox())!;
+      expect(box.width).toBeGreaterThanOrEqual(44);
+      expect(box.height).toBeGreaterThanOrEqual(44);
+    }
+    const checkbox = page.getByRole('checkbox', { name: 'Select all rows', exact: true });
+    await checkbox.scrollIntoViewIfNeeded();
+    const edge = await checkbox.evaluate((node) => {
+      const { x, y, width, height } = node.getBoundingClientRect();
+      const center = { x: x + width / 2, y: y + height / 2 };
+      const points = [-21, 21].flatMap((dx) =>
+        [-21, 21].map((dy) => ({ x: center.x + dx, y: center.y + dy }))
+      );
+      return {
+        ...points[3]!,
+        hit: points.every(({ x, y }) => node.contains(document.elementFromPoint(x, y))),
+      };
+    });
+    expect(edge.hit).toBe(true);
+    await page.touchscreen.tap(edge.x, edge.y);
+    await expect(page.getByRole('checkbox', { name: 'Deselect all rows' })).toBeChecked();
+    await expect(page.getByRole('status', { name: 'Selection events' })).toHaveText('1');
+  });
+});
+
 test('keyboard sorting announces direction, preserves fixed columns and emits once per action', async ({
   page,
 }) => {

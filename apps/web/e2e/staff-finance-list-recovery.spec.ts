@@ -109,7 +109,9 @@ for (const locale of ['en', 'fa'] as const) {
     await more.click();
     await expect.poll(() => !!held).toBe(true);
     await expect(content).toHaveAttribute('aria-busy', 'true');
-    await expect(content.locator('tbody tr')).toHaveCount(1);
+    await expect(
+      content.locator('table:visible tbody tr, [data-slot=card-list-view]:visible > li')
+    ).toHaveCount(1);
     await expect(more).toBeDisabled();
     await expect(detail.getByText(first, { exact: true })).toBeVisible();
     await held!.fulfill({ status: 503, json: {} });
@@ -118,7 +120,9 @@ for (const locale of ['en', 'fa'] as const) {
     const failed = queries.at(-1);
     fail = false;
     await retry.click();
-    await expect(content.locator('tbody tr')).toHaveCount(2);
+    await expect(
+      content.locator('table:visible tbody tr, [data-slot=card-list-view]:visible > li')
+    ).toHaveCount(2);
     expect(queries.at(-1)).toBe(failed);
     expect(new URLSearchParams(failed).get('beforeAt')).toBe(stamp);
     expect(detailReads).toBe(1);

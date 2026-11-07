@@ -86,10 +86,14 @@ for (const locale of ['en', 'fa'] as const) {
     mode = 'wrong-record';
     await error.getByRole('button').click();
     await expect(error).toBeVisible();
-    await expect(dialog.locator('tbody tr')).toHaveCount(0);
+    await expect(
+      dialog.locator('table:visible tbody tr, [data-slot=card-list-view]:visible > li')
+    ).toHaveCount(0);
     mode = 'valid';
     await error.getByRole('button').click();
-    await expect(dialog.locator('tbody tr')).toHaveCount(25);
+    await expect(
+      dialog.locator('table:visible tbody tr, [data-slot=card-list-view]:visible > li')
+    ).toHaveCount(25);
     await expect(dialog).toContainText('receipt-26');
     await expect(dialog).toContainText('<img src=x onerror=alert(1)> token=***');
     await expect(dialog.locator('img')).toHaveCount(0);
@@ -103,10 +107,14 @@ for (const locale of ['en', 'fa'] as const) {
       true
     );
     await dialog.getByRole('button', { name: fa ? 'بعدی' : 'Next', exact: true }).click();
-    await expect(dialog.locator('tbody tr')).toHaveCount(1);
+    await expect(
+      dialog.locator('table:visible tbody tr, [data-slot=card-list-view]:visible > li')
+    ).toHaveCount(1);
     expect(queries.at(-1)?.get('offset')).toBe('25');
     await dialog.getByRole('button', { name: fa ? 'قبلی' : 'Previous', exact: true }).click();
-    await expect(dialog.locator('tbody tr')).toHaveCount(25);
+    await expect(
+      dialog.locator('table:visible tbody tr, [data-slot=card-list-view]:visible > li')
+    ).toHaveCount(25);
     for (const query of queries) {
       expect(query.get('notificationId')).toBe(row.outboxId);
       expect(query.get('channel')).toBe('email');

@@ -1,6 +1,7 @@
 import { test, expect } from './coverage-fixture';
 import { crmShell } from './crm-shell-fixture';
 import AxeBuilder from '@axe-core/playwright';
+import { approveRiskConfirmation } from './confirmation-fixture';
 import {
   teamCatalogue,
   teamProfiles,
@@ -100,6 +101,7 @@ for (const locale of ['en', 'fa'] as const)
       await expect(save).toBeEnabled();
       await save.click();
       let dialog = page.getByRole('dialog');
+      await approveRiskConfirmation(page, locale, 'destructive');
       await dialog.getByRole('button', { name: fa ? 'تأیید' : 'Confirm', exact: true }).click();
       const password = dialog.locator('input[type=password]');
       await password.fill('synthetic-password');
@@ -183,6 +185,7 @@ for (const locale of ['en', 'fa'] as const)
         .getByRole('button', { name: fa ? 'رد درخواست' : 'Decline request', exact: true })
         .click();
       dialog = page.getByRole('dialog');
+      await approveRiskConfirmation(page, locale, 'destructive');
       transferFailed = true;
       await dialog.getByRole('button', { name: refreshTransfers, exact: true }).click();
       await expect(
@@ -212,14 +215,29 @@ for (const locale of ['en', 'fa'] as const)
       await page.screenshot({ path: `/tmp/barghsa-team-${locale}-${theme}.png` });
       memberDenied = true;
       await page.getByRole('button', { name: refreshMembers, exact: true }).click();
-      await expect(page.getByRole('table')).toHaveCount(0);
+      await expect(
+        page.getByRole('list', {
+          name: locale === 'fa' ? 'اعضا و دعوت‌نامه‌ها' : 'Members and invitations',
+          exact: true,
+        })
+      ).toHaveCount(0);
       await expect(page.getByText('Transfer company', { exact: true })).toBeVisible();
       memberDenied = false;
       await page.getByRole('button', { name: refreshMembers, exact: true }).click();
-      await expect(page.getByRole('table')).toBeVisible();
+      await expect(
+        page.getByRole('list', {
+          name: locale === 'fa' ? 'اعضا و دعوت‌نامه‌ها' : 'Members and invitations',
+          exact: true,
+        })
+      ).toBeVisible();
       accountDenied = true;
       await page.getByRole('button', { name: refreshProfiles, exact: true }).click();
-      await expect(page.getByRole('table')).toHaveCount(0);
+      await expect(
+        page.getByRole('list', {
+          name: locale === 'fa' ? 'اعضا و دعوت‌نامه‌ها' : 'Members and invitations',
+          exact: true,
+        })
+      ).toHaveCount(0);
       await expect(page.getByText('Transfer company', { exact: true })).toHaveCount(0);
       expect(
         (await new AxeBuilder({ page }).include('#dashboard-content').analyze()).violations
@@ -227,14 +245,29 @@ for (const locale of ['en', 'fa'] as const)
       expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
       accountDenied = false;
       await page.getByRole('button', { name: refreshProfiles, exact: true }).click();
-      await expect(page.getByRole('table')).toBeVisible();
+      await expect(
+        page.getByRole('list', {
+          name: locale === 'fa' ? 'اعضا و دعوت‌نامه‌ها' : 'Members and invitations',
+          exact: true,
+        })
+      ).toBeVisible();
       memberDenied = true;
       memberStatus = 401;
       await page.getByRole('button', { name: refreshMembers, exact: true }).click();
-      await expect(page.getByRole('table')).toHaveCount(0);
+      await expect(
+        page.getByRole('list', {
+          name: locale === 'fa' ? 'اعضا و دعوت‌نامه‌ها' : 'Members and invitations',
+          exact: true,
+        })
+      ).toHaveCount(0);
       await expect(page.getByText('Transfer company', { exact: true })).toHaveCount(0);
       memberDenied = false;
       await page.getByRole('button', { name: refreshProfiles, exact: true }).click();
-      await expect(page.getByRole('table')).toBeVisible();
+      await expect(
+        page.getByRole('list', {
+          name: locale === 'fa' ? 'اعضا و دعوت‌نامه‌ها' : 'Members and invitations',
+          exact: true,
+        })
+      ).toBeVisible();
     });
   }
