@@ -1468,7 +1468,10 @@ function OwnedSimpleElectricityOrderPage() {
               {step === 1 && (
                 <Card className="mb-6">
                   <CardContent className="pt-6">
-                    <h2 className="mb-4 text-lg font-semibold flex items-center gap-2">
+                    <h2
+                      id="electricity-product-title"
+                      className="mb-4 text-lg font-semibold flex items-center gap-2"
+                    >
                       <PackageIcon className="h-5 w-5" />
                       {t('electricity.order.selectProduct', locale)}
                     </h2>
@@ -1506,7 +1509,12 @@ function OwnedSimpleElectricityOrderPage() {
                         }
                       />
                     ) : (
-                      <div className="space-y-2">
+                      <div
+                        role="radiogroup"
+                        aria-labelledby="electricity-product-title"
+                        aria-required="true"
+                        className="space-y-2"
+                      >
                         {products.map((product) => (
                           <label
                             key={product.id}
@@ -1566,6 +1574,7 @@ function OwnedSimpleElectricityOrderPage() {
                             </label>
                             <select
                               id="electricity-period-type"
+                              aria-required="true"
                               value={period.includes('month') ? 'monthly' : 'weekly'}
                               disabled={submitting}
                               onChange={(event) =>
@@ -1596,6 +1605,7 @@ function OwnedSimpleElectricityOrderPage() {
                               <MonthPicker
                                 id="electricity-period"
                                 {...fields.bind('period')}
+                                aria-required="true"
                                 value={period}
                                 disabled={submitting || periodOptions.length === 0}
                                 onChange={(event) => setPeriod(event.target.value as SimplePeriod)}
@@ -1611,6 +1621,7 @@ function OwnedSimpleElectricityOrderPage() {
                               <select
                                 id="electricity-period"
                                 {...fields.bind('period')}
+                                aria-required="true"
                                 value={period}
                                 disabled={submitting || periodOptions.length === 0}
                                 onChange={(event) => setPeriod(event.target.value as SimplePeriod)}
@@ -1659,6 +1670,7 @@ function OwnedSimpleElectricityOrderPage() {
                           <input
                             id="electricity-kwh"
                             {...fields.bind('totalKwh')}
+                            aria-required="true"
                             type="text"
                             inputMode="numeric"
                             pattern="[1-9][0-9]*"
@@ -1668,9 +1680,11 @@ function OwnedSimpleElectricityOrderPage() {
                             className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
                             aria-describedby={[
                               'electricity-kwh-hint',
-                              fields.form.getFieldState('totalKwh').invalid
-                                ? fields.errorId('totalKwh')
-                                : undefined,
+                              quantityError
+                                ? 'electricity-kwh-error'
+                                : fields.form.getFieldState('totalKwh').invalid
+                                  ? fields.errorId('totalKwh')
+                                  : undefined,
                             ]
                               .filter(Boolean)
                               .join(' ')}
@@ -1687,7 +1701,11 @@ function OwnedSimpleElectricityOrderPage() {
                               `${selectedProduct.limits.minKwh}–${selectedProduct.limits.maxKwh === '0' ? '∞' : selectedProduct.limits.maxKwh} kWh`}
                           </p>
                           {quantityError && (
-                            <p role="alert" className="mt-1 text-sm text-destructive">
+                            <p
+                              id="electricity-kwh-error"
+                              role="alert"
+                              className="mt-1 text-sm text-destructive"
+                            >
                               {t('electricity.order.quantityInvalid', locale)}
                             </p>
                           )}
@@ -1806,7 +1824,10 @@ function OwnedSimpleElectricityOrderPage() {
               {step === 4 && (
                 <Card className="mb-6">
                   <CardContent className="pt-6">
-                    <h2 className="mb-4 text-lg font-semibold flex items-center gap-2">
+                    <h2
+                      id="electricity-address-title"
+                      className="mb-4 text-lg font-semibold flex items-center gap-2"
+                    >
                       <MapPinIcon className="h-5 w-5" />
                       {t('electricity.order.selectAddress', locale)}
                     </h2>
@@ -1843,52 +1864,59 @@ function OwnedSimpleElectricityOrderPage() {
                         {/* Existing addresses */}
                         {addresses.length > 0 && !showNewAddressForm && (
                           <div className="space-y-2 mb-4">
-                            {addresses.map((address) => (
-                              <label
-                                key={address.id}
-                                htmlFor={`order-address-${address.id}`}
-                                className={`flex cursor-pointer items-start gap-3 rounded-lg border p-3 transition-colors ${
-                                  selectedAddressId === address.id
-                                    ? 'border-primary bg-primary/5'
-                                    : 'border-input hover:bg-muted'
-                                }`}
-                              >
-                                <input
-                                  type="radio"
-                                  id={`order-address-${address.id}`}
-                                  {...fields.bind('selectedAddressId')}
-                                  value={address.id}
-                                  checked={selectedAddressId === address.id}
-                                  disabled={submitting}
-                                  onChange={() => {
-                                    setSelectedAddressId(address.id);
-                                    setAddressTouched(true);
-                                  }}
-                                  className="mt-1 h-4 w-4 shrink-0 accent-primary"
-                                />
-                                <div className="flex-1 min-w-0">
-                                  <div className="flex items-center gap-2 mb-1">
-                                    <span className="text-sm font-medium">
-                                      {getProvinceName(address.provinceId)}،{' '}
-                                      {getCityName(address.cityId)}
-                                    </span>
-                                    {address.mainAddress && (
-                                      <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 text-primary text-xs font-medium px-2 py-0.5">
-                                        <HomeIcon className="h-3 w-3" />
-                                        {t('electricity.order.mainAddress', locale)}
+                            <div
+                              role="radiogroup"
+                              aria-labelledby="electricity-address-title"
+                              aria-required="true"
+                              className="space-y-2"
+                            >
+                              {addresses.map((address) => (
+                                <label
+                                  key={address.id}
+                                  htmlFor={`order-address-${address.id}`}
+                                  className={`flex cursor-pointer items-start gap-3 rounded-lg border p-3 transition-colors ${
+                                    selectedAddressId === address.id
+                                      ? 'border-primary bg-primary/5'
+                                      : 'border-input hover:bg-muted'
+                                  }`}
+                                >
+                                  <input
+                                    type="radio"
+                                    id={`order-address-${address.id}`}
+                                    {...fields.bind('selectedAddressId')}
+                                    value={address.id}
+                                    checked={selectedAddressId === address.id}
+                                    disabled={submitting}
+                                    onChange={() => {
+                                      setSelectedAddressId(address.id);
+                                      setAddressTouched(true);
+                                    }}
+                                    className="mt-1 h-4 w-4 shrink-0 accent-primary"
+                                  />
+                                  <div className="flex-1 min-w-0">
+                                    <div className="flex items-center gap-2 mb-1">
+                                      <span className="text-sm font-medium">
+                                        {getProvinceName(address.provinceId)}،{' '}
+                                        {getCityName(address.cityId)}
                                       </span>
-                                    )}
+                                      {address.mainAddress && (
+                                        <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 text-primary text-xs font-medium px-2 py-0.5">
+                                          <HomeIcon className="h-3 w-3" />
+                                          {t('electricity.order.mainAddress', locale)}
+                                        </span>
+                                      )}
+                                    </div>
+                                    <p className="text-sm text-muted-foreground truncate">
+                                      {address.fullAddress}
+                                    </p>
+                                    <p className="text-xs text-muted-foreground">
+                                      {t('electricity.order.postalCode', locale)}:{' '}
+                                      {address.postalCode}
+                                    </p>
                                   </div>
-                                  <p className="text-sm text-muted-foreground truncate">
-                                    {address.fullAddress}
-                                  </p>
-                                  <p className="text-xs text-muted-foreground">
-                                    {t('electricity.order.postalCode', locale)}:{' '}
-                                    {address.postalCode}
-                                  </p>
-                                </div>
-                              </label>
-                            ))}
+                                </label>
+                              ))}
+                            </div>
 
                             <Button
                               variant="outline"
@@ -1936,6 +1964,7 @@ function OwnedSimpleElectricityOrderPage() {
                               <select
                                 id="order-address-province"
                                 {...fields.bind('formProvinceId')}
+                                aria-required="true"
                                 disabled={loadingProvinces || provinceError || savingAddress}
                                 value={formProvinceId}
                                 onChange={(e) => {
@@ -1967,6 +1996,7 @@ function OwnedSimpleElectricityOrderPage() {
                               <DependentSelect
                                 id="order-address-city"
                                 {...fields.bind('formCityId')}
+                                aria-required="true"
                                 dependencyValue={formProvinceId}
                                 value={formCityId}
                                 ready={cityOptions.ready}
@@ -1995,6 +2025,7 @@ function OwnedSimpleElectricityOrderPage() {
                               <textarea
                                 id="order-address-fullAddress"
                                 {...fields.bind('formFullAddress')}
+                                aria-required="true"
                                 disabled={savingAddress}
                                 value={formFullAddress}
                                 onChange={(e) => setFormFullAddress(e.target.value)}
@@ -2020,6 +2051,7 @@ function OwnedSimpleElectricityOrderPage() {
                                 type="text"
                                 id="order-address-postalCode"
                                 {...fields.bind('formPostalCode')}
+                                aria-required="true"
                                 disabled={savingAddress}
                                 value={formPostalCode}
                                 onChange={(e) => setFormPostalCode(e.target.value)}

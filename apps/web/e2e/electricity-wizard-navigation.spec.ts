@@ -70,9 +70,17 @@ for (const locale of ['en', 'fa'] as const)
       });
     });
     await page.goto('/electricity/order?step=4');
+    await expect(
+      page.getByRole('radiogroup', {
+        name: t('electricity.order.selectAddress', locale),
+        exact: true,
+      })
+    ).toHaveAttribute('aria-required', 'true');
     await page
       .getByRole('button', { name: t('electricity.order.addNewAddress', locale), exact: true })
       .click();
+    for (const id of ['province', 'city', 'fullAddress', 'postalCode'])
+      await expect(page.locator(`#order-address-${id}`)).toHaveAttribute('aria-required', 'true');
     await page.locator('#order-address-province').selectOption(provinceId);
     const city = page.locator('#order-address-city');
     await expect(city).toBeDisabled();
@@ -362,7 +370,16 @@ for (const locale of ['en', 'fa'] as const)
       await page.goto(`${path(mode)}?step=2`);
       const quantity = field(page, mode);
       await expect(quantity).toHaveValue('100');
+      if (mode === 'simple') await expect(quantity).toHaveAttribute('aria-required', 'true');
+      else await expect(quantity).not.toHaveAttribute('aria-required', 'true');
       await quantity.fill('0');
+      if (mode === 'simple') {
+        await expect(quantity).toHaveAttribute('aria-invalid', 'true');
+        await expect(quantity).toHaveAttribute('aria-describedby', /electricity-kwh-error/);
+        await expect(page.locator('#electricity-kwh-error')).toHaveText(
+          t('electricity.order.quantityInvalid', locale)
+        );
+      }
       await quantity.blur();
       await expect(quantity).toHaveAttribute('aria-invalid', 'true');
       const errorId = await quantity.getAttribute('aria-describedby');
@@ -424,6 +441,25 @@ for (const locale of ['en', 'fa'] as const)
       await expect(page.locator('li[aria-current="step"]')).toContainText(
         t(mode === 'simple' ? 'electricity.order.step1' : 'electricity.advanced.stepDates', locale)
       );
+      if (mode === 'simple') {
+        await expect(
+          page.getByRole('radiogroup', {
+            name: t('electricity.order.selectProduct', locale),
+            exact: true,
+          })
+        ).toHaveAttribute('aria-required', 'true');
+        await expect(page.locator('#electricity-period-type')).toHaveAttribute(
+          'aria-required',
+          'true'
+        );
+        await expect(page.locator('#electricity-period')).toHaveAttribute('aria-required', 'true');
+      } else {
+        for (const id of ['start', 'end'])
+          await expect(page.locator(`#advanced-${id}-date`)).toHaveAttribute(
+            'aria-required',
+            'true'
+          );
+      }
       await page.goto(`${path(mode)}?step=2`);
       await expect(field(page, mode)).toHaveValue('120');
     });

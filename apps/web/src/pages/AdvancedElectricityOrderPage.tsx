@@ -153,7 +153,8 @@ export function JalaliTimeInput({
     <DateTimePicker
       id={id}
       label={label}
-      {...(binding ? { triggerProps: binding, onBlur: binding.onBlur } : {})}
+      triggerProps={{ ...binding, 'aria-required': true }}
+      {...(binding ? { onBlur: binding.onBlur } : {})}
       locale={locale}
       timezone="Asia/Tehran"
       value={instant ? new Date(instant) : undefined}
@@ -897,21 +898,32 @@ export function AdvancedElectricityOrderPage() {
             {step === 4 && (
               <Card className="mb-6">
                 <CardContent className="space-y-3 pt-6">
-                  <h2 className="font-semibold">{t('electricity.order.selectAddress', locale)}</h2>
-                  {addresses.map((address) => (
-                    <label key={address.id} className="flex gap-3 rounded-lg border p-3">
-                      <input
-                        type="radio"
-                        {...fields.bind('addressId')}
-                        value={address.id}
-                        checked={addressId === address.id}
-                        onChange={() => setAddressId(address.id)}
-                      />
-                      <span>
-                        {address.fullAddress} · {address.postalCode}
-                      </span>
-                    </label>
-                  ))}
+                  <h2 id="advanced-address-title" className="font-semibold">
+                    {t('electricity.order.selectAddress', locale)}
+                  </h2>
+                  {addresses.length > 0 && (
+                    <div
+                      role="radiogroup"
+                      aria-labelledby="advanced-address-title"
+                      aria-required="true"
+                      className="space-y-3"
+                    >
+                      {addresses.map((address) => (
+                        <label key={address.id} className="flex gap-3 rounded-lg border p-3">
+                          <input
+                            type="radio"
+                            {...fields.bind('addressId')}
+                            value={address.id}
+                            checked={addressId === address.id}
+                            onChange={() => setAddressId(address.id)}
+                          />
+                          <span>
+                            {address.fullAddress} · {address.postalCode}
+                          </span>
+                        </label>
+                      ))}
+                    </div>
+                  )}
                   <Button
                     type="button"
                     variant="link"

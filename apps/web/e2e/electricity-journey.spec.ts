@@ -465,6 +465,12 @@ for (const locale of ['en', 'fa'] as const) {
       .click();
     await expect(page).toHaveURL(/\/electricity\/advanced\?step=4$/);
     await expect(wizard).toContainText(addedAddress.fullAddress);
+    await expect(
+      wizard.getByRole('radiogroup', {
+        name: t('electricity.order.selectAddress', locale),
+        exact: true,
+      })
+    ).toHaveAttribute('aria-required', 'true');
     await page.locator('input[name="addressId"]').nth(1).check();
     await next.click();
     await expect(wizard.getByText('Advanced Buyer Ltd', { exact: true })).toBeVisible();

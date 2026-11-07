@@ -36,7 +36,7 @@ interface DatePickerBaseProps {
   /** Form binding and feedback belong to the visible trigger. */
   triggerProps?: Pick<
     React.ComponentProps<typeof Button>,
-    'ref' | 'name' | 'aria-describedby' | 'aria-labelledby' | 'aria-invalid'
+    'ref' | 'name' | 'aria-describedby' | 'aria-labelledby' | 'aria-invalid' | 'aria-required'
   >;
   onBlur?: () => void;
 }
