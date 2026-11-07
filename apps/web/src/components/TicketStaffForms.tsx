@@ -269,7 +269,7 @@ export function TicketStaffForms({
                     <FormItem id="ticket-assignee">
                       <FormLabel>{text('assignee')}</FormLabel>
                       <FormControl>
-                        <NativeSelect {...field} disabled={locked}>
+                        <NativeSelect {...field} aria-required="true" disabled={locked}>
                           <option value="">{text('choose')}</option>
                           {people
                             .filter(
@@ -320,7 +320,7 @@ export function TicketStaffForms({
                   <FormItem id="ticket-next-status">
                     <FormLabel>{text('changeStatus')}</FormLabel>
                     <FormControl>
-                      <NativeSelect {...field} disabled={locked}>
+                      <NativeSelect {...field} aria-required="true" disabled={locked}>
                         {!transitions.includes(statusTarget) && (
                           <option value={statusTarget} disabled>
                             {text(statusTarget)}

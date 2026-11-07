@@ -6,6 +6,7 @@ import { TicketStaffForms } from '../components/TicketStaffForms.js';
 import { useTicketCommand } from '../hooks/useTicketCommand.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
+import { sendToast } from '../lib/toast-api.js';
 import { tTicketForms } from '@barghsa/i18n/ticket-forms';
 import {
   ticketRecord,
@@ -247,7 +248,8 @@ function Tickets({ staff, queries }: { staff: boolean; queries?: SupportListQuer
       setEditorRevision((v) => v + 1);
       setSaved(false);
     },
-    (owner) => authority.current(owner)
+    (owner) => authority.current(owner),
+    () => sendToast('warning', tTicketForms('uncertain', locale))
   );
   const commandRef = useRef(command);
   commandRef.current = command;
@@ -696,7 +698,10 @@ function Tickets({ staff, queries }: { staff: boolean; queries?: SupportListQuer
           </Button>
         </div>
       )}
-      {command.error && !command.uncertain && <p role="alert">{text(command.error)}</p>}
+      <CommandFeedback
+        kind="error"
+        message={command.error && !command.uncertain ? text(command.error) : null}
+      />
       {error && (
         <p role="alert">{text(['conflict', 'forbidden'].includes(error) ? error : 'error')}</p>
       )}

@@ -266,6 +266,7 @@ export function TicketIntakeForm({
               {choices ? (
                 <NativeSelect
                   {...field}
+                  aria-required={name === 'category' || name === 'priority' || undefined}
                   disabled={pending}
                   onChange={(e) => {
                     if (coordination.isLocked()) return;

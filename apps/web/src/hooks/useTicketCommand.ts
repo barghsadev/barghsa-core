@@ -5,7 +5,8 @@ import type { TicketCommand, TicketCoordination, TicketOwner } from '../lib/tick
 export function useTicketCommand(
   scope: string,
   denied: () => void,
-  authorized: (owner: TicketOwner) => boolean = () => true
+  authorized: (owner: TicketOwner) => boolean = () => true,
+  onUnconfirmed?: () => void
 ) {
   const current = useRef(scope);
   current.current = scope;
@@ -85,6 +86,13 @@ export function useTicketCommand(
     sending.current = true;
     setBusy(true);
     setError('');
+    const unconfirmed = (message: string) => {
+      const first = !held.uncertain;
+      held.uncertain = true;
+      setUncertain(true);
+      setError(message);
+      if (first) onUnconfirmed?.();
+    };
     try {
       const response = await fetch(held.command.path, {
         method: held.command.method,
@@ -138,15 +146,12 @@ export function useTicketCommand(
         setError('');
         return false;
       }
-      held.uncertain = true;
-      setUncertain(true);
-      setError(response.status === 409 ? 'conflict' : 'error');
+      unconfirmed(response.status === 409 ? 'conflict' : 'error');
       return false;
     } catch {
       if (isCurrent() && capture.current === held) {
-        held.uncertain = true;
-        setUncertain(true);
-        setError('error');
+        if (authorized(held.command.owner)) unconfirmed('error');
+        else coordination.denied();
       }
       return false;
     } finally {

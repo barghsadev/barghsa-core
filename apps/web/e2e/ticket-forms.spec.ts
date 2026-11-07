@@ -204,6 +204,8 @@ for (const [locale, theme] of [
     await page.getByRole('button', { name: text('create'), exact: true }).click();
     const intake = form(page, 'ticket-intake-form');
     await expect(intake).toBeVisible();
+    await expect(intake.locator('#ticket-category')).toHaveAttribute('aria-required', 'true');
+    await expect(intake.locator('#ticket-priority')).toHaveAttribute('aria-required', 'true');
     await intake.locator('#ticket-subject').fill('   ');
     await intake.locator('#ticket-body').fill('  Explain this contract and attachment  ');
     await intake.locator('#ticket-subject').press('Enter');
@@ -241,7 +243,17 @@ for (const [locale, theme] of [
     await intake.locator('#ticket-subject').fill('  Ticket form journey  ');
     state.modes.create = 'mixed';
     await submit(intake).click();
-    await expect(page.getByText(tTicketForms('uncertain', locale), { exact: true })).toBeVisible();
+    const warning = page
+      .locator('[data-sonner-toast][data-type=warning]')
+      .filter({ hasText: tTicketForms('uncertain', locale) });
+    const success = page.locator('[data-sonner-toast][data-type=success]').filter({
+      hasText: text('saved'),
+    });
+    await expect(
+      page.getByRole('main').getByText(tTicketForms('uncertain', locale), { exact: true })
+    ).toBeVisible();
+    await expect(warning).toHaveCount(1);
+    await expect(success).toHaveCount(0);
     await expect(page.getByText('MUST-NOT-ECHO-SERVER-INPUT', { exact: false })).toHaveCount(0);
     const capturedCreate = state.writes.at(-1)!;
     expect(capturedCreate.body).toMatchObject({
@@ -265,12 +277,15 @@ for (const [locale, theme] of [
     state.modes.create = 'rejected';
     await retry(page, locale).click();
     await expect(retry(page, locale)).toBeEnabled();
+    await expect(success).toHaveCount(0);
+    expect(await warning.count()).toBeLessThanOrEqual(1);
     state.modes.create = 'success';
     await retry(page, locale).click();
     await expect(
       page.getByRole('heading', { name: 'Ticket form journey', level: 2 })
     ).toBeVisible();
     await expect(intake).toBeHidden();
+    await expect(success).toHaveCount(1);
     exactRetry(state.writes, 'create', capturedCreate);
     expect(state.effects.create).toBe(1);
     expect(state.uploadedNames).toEqual(['first-proof.pdf', 'second-proof.pdf']);
@@ -278,6 +293,10 @@ for (const [locale, theme] of [
     // Defense in depth: even a complete but wrongly projected internal row stays private.
     fixture.injectCustomerPrivateNote();
     const reply = form(page, 'ticket-reply-input');
+    await expect(reply.locator('#ticket-reply')).toHaveAccessibleDescription(
+      `${tTicketForms('replyInvalid', locale)} ${text('formatHelp')}`
+    );
+    await expect(reply.locator('#ticket-reply')).not.toHaveAttribute('aria-required', 'true');
     await reply.locator('#ticket-reply').fill('  **Public evidence** remains ordered  ');
     await reply
       .locator('#ticket-reply-files')
@@ -376,6 +395,8 @@ for (const [locale, theme] of [
     const status = form(page, 'ticket-status-form'),
       assignment = form(page, 'ticket-assignment-form'),
       reply = form(page, 'ticket-reply-input');
+    await expect(status.locator('#ticket-next-status')).toHaveAttribute('aria-required', 'true');
+    await expect(assignment.locator('#ticket-assignee')).toHaveAttribute('aria-required', 'true');
     await status.locator('#ticket-status-reason').fill('   ');
     await status.locator('#ticket-next-status').focus();
     releaseSchema();

@@ -410,6 +410,7 @@ function CrmProfileDetailContent() {
     action: TeamAction,
     kind: 'edit' | 'password' | 'sessions' | 'verification' | 'archive'
   ) {
+    setActionSuccess(null);
     setPendingAction({
       action: {
         ...action,
@@ -790,14 +791,10 @@ function CrmProfileDetailContent() {
       )}
 
       {/* Action success / error flash messages */}
-      {actionSuccess && (
-        <div
-          className="mb-4 p-3 bg-success-soft border border-success/20 text-success rounded-md text-sm"
-          role="alert"
-        >
-          {actionSuccess}
-        </div>
-      )}
+      <CommandFeedback
+        className="mb-4 p-3 bg-success-soft border border-success/20 text-success rounded-md text-sm"
+        message={actionSuccess}
+      />
       {actionError && (
         <div
           className="mb-4 p-3 bg-danger-soft border border-destructive/20 text-destructive rounded-md text-sm"

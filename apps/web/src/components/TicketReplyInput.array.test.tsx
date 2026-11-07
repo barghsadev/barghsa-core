@@ -29,7 +29,7 @@ afterEach(async () => {
   host.remove();
   vi.unstubAllGlobals();
 });
-async function render(busy = false) {
+async function render(busy = false, body = ' Retained reply ') {
   await act(async () =>
     root.render(
       <QueryProvider>
@@ -40,7 +40,7 @@ async function render(busy = false) {
             locale="en"
             staff={false}
             busy={busy}
-            body=" Retained reply "
+            body={body}
             onBodyChange={bodyChange}
             internal={false}
             onInternalChange={() => {}}
@@ -67,6 +67,15 @@ async function submit() {
     await vi.dynamicImportSettled();
   });
 }
+it('accepts an attachment-only reply after refusing a completely empty reply', async () => {
+  await render(false, '');
+  await submit();
+  expect(payloads).toHaveLength(0);
+  await choose([first]);
+  await submit();
+  expect(payloads).toHaveLength(1);
+  expect(payloads[0]).toMatchObject({ body: '', attachments: ['first.pdf-key'] });
+});
 it('sends reordered attachment keys, reuses verified uploads and rotates the submission ID only for changed content', async () => {
   await render();
   await choose([first, second]);

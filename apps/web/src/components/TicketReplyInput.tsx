@@ -302,7 +302,9 @@ export function TicketReplyInput({
                   }}
                 />
               </FormControl>
-              <FormDescription>{copy('formatHelp')}</FormDescription>
+              <FormDescription>
+                {feedback('replyInvalid')} {copy('formatHelp')}
+              </FormDescription>
               <FormMessage />
             </FormItem>
           )}

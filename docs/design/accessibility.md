@@ -44,3 +44,9 @@ types and limits in its accessible description, and link any file-specific
 error to the same control. Native file inputs keep their visible labels and
 descriptions. A decorative required marker stays hidden from assistive
 technology; the control announces the required state itself.
+
+State either-or requirements before submission. A ticket reply can contain
+text, an attachment, or both, so its text field is not individually required.
+On an uncertain save, keep the original request and a visible recovery
+action. Announce the uncertainty once per captured request; show success only
+after the matching receipt passes validation.

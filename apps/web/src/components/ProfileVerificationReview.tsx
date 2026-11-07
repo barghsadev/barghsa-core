@@ -144,6 +144,7 @@ export function ProfileVerificationReview({
       <Label htmlFor="crm-verify-reason">{t('crm.profile.verification.reason', locale)}</Label>
       <textarea
         id="crm-verify-reason"
+        aria-required={action !== 'verify' || undefined}
         className="block w-full rounded border bg-background p-2"
         maxLength={1000}
         value={reason}

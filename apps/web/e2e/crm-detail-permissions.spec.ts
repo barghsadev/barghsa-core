@@ -467,6 +467,9 @@ for (const locale of ['fa', 'en'] as const) {
       await page
         .getByLabel(locale === 'fa' ? 'عملیات تأیید هویت' : 'Verification action', { exact: true })
         .selectOption(action);
+      if (action === 'verify')
+        await expect(reasonField).not.toHaveAttribute('aria-required', 'true');
+      else await expect(reasonField).toHaveAttribute('aria-required', 'true');
       await review.click();
       const dialog = page.getByRole('dialog');
       await expect(dialog).toHaveAttribute('dir', locale === 'fa' ? 'rtl' : 'ltr');
@@ -478,9 +481,14 @@ for (const locale of ['fa', 'en'] as const) {
       await confirm.click();
       await expect(dialog.getByRole('alert')).toBeVisible();
       await expect(reasonField).toHaveValue(reason);
+      const success = page
+        .locator('[data-sonner-toast][data-type=success]')
+        .filter({ hasText: t('crm.profile.verification.saved', locale) });
+      await expect(success).toHaveCount(0);
       acknowledged = true;
       await confirm.click();
       await expect(dialog).toHaveCount(0);
+      await expect(success).toHaveCount(1);
       const statusText =
         newStatus === 'VERIFIED'
           ? locale === 'fa'

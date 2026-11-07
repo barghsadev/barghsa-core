@@ -562,7 +562,9 @@ for (const locale of ['en', 'fa'])
       .click();
     await expect(page.locator('#ticket-subject')).toHaveValue(item.subject);
     await expect(page.locator('#ticket-category')).toHaveValue(category);
-    await expect(page.getByRole('alert')).toBeVisible();
+    await expect(
+      page.getByRole('alert').getByText(tTicketForms('uncertain', locale), { exact: true })
+    ).toBeVisible();
     await page
       .getByRole('button', { name: tTicketForms('retryOriginal', locale), exact: true })
       .click();
