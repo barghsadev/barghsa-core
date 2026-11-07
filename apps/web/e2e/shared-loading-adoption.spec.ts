@@ -55,14 +55,17 @@ for (const locale of ['en', 'fa'] as const) {
       release = resolve;
     });
     const amount = '9007199254740993';
+    let balanceReads = 0;
     await page.route(`**/api/wallet/${profileId}`, async (route) => {
       expect(route.request().method()).toBe('GET');
+      ++balanceReads;
       await held;
       await route.fulfill({
         json: { balance: amount, currency: 'IRR', onlineTopUpLimit: 0, configVersion: 1 },
       });
     });
     try {
+      await page.clock.install();
       await page.goto('/wallet');
       const main = page.locator('main[data-area=dashboard]');
       const skeleton = main.getByTestId('wallet-loading');
@@ -76,6 +79,18 @@ for (const locale of ['en', 'fa'] as const) {
         path: info.outputPath(`wallet-pending-${locale}.png`),
         fullPage: true,
       });
+      await expect.poll(() => balanceReads).toBe(1);
+      await page.clock.fastForward(15_001);
+      await expect(
+        main.getByText(t('wallet.page.loadError', locale), { exact: true })
+      ).toBeVisible();
+      await expect(skeleton).toHaveCount(0);
+      await expect(main).not.toContainText(formatCurrencyIrr(amount, locale));
+      await expect(main.getByTestId('wallet-submit')).toBeDisabled();
+      expect(writes).toEqual([]);
+      expect(balanceReads).toBe(1);
+      await main.getByRole('button', { name: t('wallet.page.retry', locale), exact: true }).click();
+      await expect.poll(() => balanceReads).toBe(2);
       release();
       await expect(skeleton).toHaveCount(0);
       await expect(main).toContainText(formatCurrencyIrr(amount, locale));

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useId, useRef } from 'react';
 import { keepPreviousData, skipToken, useQuery, useQueryClient } from '@tanstack/react-query';
 import { sameServerList, type ServerQueryKey } from '../lib/query-keys.js';
-import { financialQueryResources } from '../lib/server-query-client.js';
+import { financialQueryResources, readWithDeadline } from '../lib/server-query-client.js';
 
 interface ServerRead<T> {
   queryKey: ServerQueryKey | null;
@@ -29,7 +29,7 @@ function readPolicy(key: ServerQueryKey | null, manual = false) {
 export function useServerDetailQuery<T>({ queryKey, read, enabled = true, manual }: ServerRead<T>) {
   return useQuery({
     queryKey: queryKey ?? [],
-    queryFn: queryKey ? ({ signal }) => read(signal) : skipToken,
+    queryFn: queryKey ? ({ signal }) => readWithDeadline(signal, read) : skipToken,
     enabled: enabled && queryKey !== null,
     ...readPolicy(queryKey, manual),
   });
@@ -38,7 +38,7 @@ export function useServerDetailQuery<T>({ queryKey, read, enabled = true, manual
 export function useServerListQuery<T>({ queryKey, read, enabled = true, manual }: ServerRead<T>) {
   return useQuery({
     queryKey: queryKey ?? [],
-    queryFn: queryKey ? ({ signal }) => read(signal) : skipToken,
+    queryFn: queryKey ? ({ signal }) => readWithDeadline(signal, read) : skipToken,
     enabled: enabled && queryKey !== null,
     placeholderData: (previous, previousQuery) =>
       queryKey && previousQuery && sameServerList(previousQuery.queryKey, queryKey)
@@ -67,7 +67,7 @@ export function useManualServerRead() {
         const data = await client.fetchQuery({
           queryKey,
           ...manualRead,
-          queryFn: ({ signal: querySignal }) => read(querySignal),
+          queryFn: ({ signal: querySignal }) => readWithDeadline(querySignal, read),
         });
         signal.throwIfAborted();
         return data;

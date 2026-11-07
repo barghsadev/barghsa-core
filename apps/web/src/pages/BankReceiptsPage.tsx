@@ -2,6 +2,7 @@ import { LoadingStatus, ListPage, ListToolbar } from '@barghsa/ui';
 import { useEffect, useId, useMemo, useRef, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { queryKeys, type ServerQueryKey } from '../lib/query-keys.js';
+import { readWithDeadline } from '../lib/server-query-client.js';
 import { Link } from '@tanstack/react-router';
 import { Loader2Icon, ReceiptText } from 'lucide-react';
 import {
@@ -137,7 +138,7 @@ function ReceiptHistory({
         staleTime: 0,
         gcTime: 0,
         retry: false,
-        queryFn: ({ signal }) => read(signal),
+        queryFn: ({ signal }) => readWithDeadline(signal, read),
       });
     } finally {
       request.signal.removeEventListener('abort', abort);

@@ -13,6 +13,7 @@ for (const locale of ['en', 'fa'] as const) {
     page,
   }) => {
     await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await page.route('**/api/auth/user', (route) => route.fulfill({ status: 401, json: {} }));
     await page.goto('/support');
     // Change this document only. No init script restores it after navigation.
     await page.evaluate((language) => {

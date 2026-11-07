@@ -19,6 +19,7 @@ import type { DateRangeFilterValue } from '@barghsa/shared/validation';
 import { useEffect, useId, useRef, useState, type FormEvent } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { queryKeys, type ServerQueryKey } from '../lib/query-keys.js';
+import { readWithDeadline } from '../lib/server-query-client.js';
 import { Link, useNavigate } from '@tanstack/react-router';
 import {
   Alert,
@@ -274,14 +275,15 @@ export function ConsultationsPage({
         staleTime: 0,
         gcTime: 0,
         retry: false,
-        queryFn: async ({ signal }) => {
-          const response = await fetch(path, { credentials: 'include', signal });
-          return {
-            ok: response.ok,
-            status: response.status,
-            value: response.ok ? ((await response.json()) as unknown) : null,
-          };
-        },
+        queryFn: ({ signal }) =>
+          readWithDeadline(signal, async (signal) => {
+            const response = await fetch(path, { credentials: 'include', signal });
+            return {
+              ok: response.ok,
+              status: response.status,
+              value: response.ok ? ((await response.json()) as unknown) : null,
+            };
+          }),
       });
     } finally {
       controller.signal.removeEventListener('abort', abort);

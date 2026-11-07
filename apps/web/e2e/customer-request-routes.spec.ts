@@ -1,4 +1,6 @@
 import { test, expect } from './coverage-fixture';
+import { fullNavigation } from './navigation-fixture';
+import { approveRiskConfirmation } from './confirmation-fixture';
 
 const profileId = '11111111-1111-4111-8111-111111111111';
 const solarId = '22222222-2222-4222-8222-222222222222';
@@ -34,14 +36,37 @@ const solarRequest = {
 };
 
 test.beforeEach(async ({ page }) => {
+  await page.addInitScript(() => {
+    localStorage.setItem('barghsa.list-view:buyer:solar-requests', 'card');
+    localStorage.setItem('barghsa.list-view:buyer:consultations', 'card');
+  });
   await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
   await page.route('**/api/auth/user', (route) =>
-    route.fulfill({ json: { isStaff: false, userId: 'buyer', requiresTosAcceptance: false } })
+    route.fulfill({
+      json: {
+        isStaff: false,
+        userId: 'buyer',
+        operatingContext: 'customer',
+        navigation: { ...fullNavigation('customer', 'LEGAL'), profileId },
+        requiresTosAcceptance: false,
+      },
+    })
   );
   await page.route('**/api/profiles', (route) =>
     route.fulfill({
       json: {
-        profiles: [{ id: profileId, profileType: 'LEGAL', title: 'Buyer' }],
+        profiles: [
+          {
+            id: profileId,
+            profileType: 'LEGAL',
+            title: 'Buyer',
+            firstName: null,
+            lastName: null,
+            nationalId: null,
+            isDefault: true,
+            status: 'ACTIVE',
+          },
+        ],
         activeProfileId: profileId,
         hasDefault: true,
       },
@@ -60,6 +85,12 @@ test.beforeEach(async ({ page }) => {
   await page.route('**/api/user/settings/timezone', (route) =>
     route.fulfill({ json: { timezone: 'Asia/Tehran' } })
   );
+  await page.route(`**/api/solar/requests/${solarId}/documents`, (route) =>
+    route.fulfill({
+      json: { guidance: { en: '', fa: '', suggestions: [] }, requestedDocuments: [] },
+    })
+  );
+  await page.route('**/api/documents?*', (route) => route.fulfill({ json: { documents: [] } }));
 });
 
 test('solar list opens intake and detail routes', async ({ page }) => {
@@ -186,6 +217,7 @@ test('consultation list opens its request detail route', async ({ page }) => {
       json: {
         request: {
           id: consultationId,
+          profile_id: profileId,
           status: 'submitted',
           product_snapshot: { title: { en: 'Site advice', fa: 'مشاوره مکان' } },
           submitted_at: '2026-09-23T10:00:00.000Z',
@@ -218,12 +250,12 @@ test('consultation list opens its request detail route', async ({ page }) => {
   await expect(page.getByRole('heading', { name: 'Consultation details' })).toBeVisible();
   await expect(page.locator('time[datetime="2026-09-23T10:00:00.000Z"]')).toHaveText('09/24/2026');
   await expect(page.getByRole('region', { name: 'Status and next action' })).toBeVisible();
-  await page.getByRole('link', { name: 'Back to consultations' }).click();
+  await page.getByRole('link', { name: 'Back to consultations', exact: true }).click();
   await expect(page.getByRole('heading', { name: 'Consultations' })).toBeVisible();
 
   await page.route('**/api/consultations/requests', (route) => {
     submissions.push(route.request().postDataJSON() as Record<string, unknown>);
-    return route.fulfill({ status: 201, json: { requestId: consultationId } });
+    return route.fulfill({ status: 201, json: { requestId: consultationId, status: 'submitted' } });
   });
   await page.goto('/consultations');
   await page.getByRole('radio', { name: 'Site advice' }).check();
@@ -246,6 +278,7 @@ test('consultation list and detail show assigned staff and the payment action', 
 }) => {
   const offer = {
     id: consultationId,
+    profile_id: profileId,
     status: 'offer_pending',
     product_snapshot: { title: { en: 'Site advice', fa: 'مشاوره مکان' } },
     submitted_at: '2026-09-23T10:00:00.000Z',
@@ -262,7 +295,7 @@ test('consultation list and detail show assigned staff and the payment action', 
     route.fulfill({ json: { products: [] } })
   );
   await page.route('**/api/consultations/requests?*', (route) =>
-    route.fulfill({ json: { requests: [offer] } })
+    route.fulfill({ json: { requests: [offer], nextBefore: null } })
   );
   await page.route(`**/api/consultations/requests/${consultationId}`, (route) =>
     route.fulfill({
@@ -313,6 +346,7 @@ test('accepting a consultation offer opens its invoice without reloading the app
       json: {
         request: {
           id: consultationId,
+          profile_id: profileId,
           status: 'offer_pending',
           product_snapshot: { title: { en: 'Site advice', fa: 'مشاوره مکان' } },
           submitted_at: '2026-09-23T10:00:00.000Z',
@@ -376,6 +410,7 @@ test('accepting a consultation offer opens its invoice without reloading the app
     (window as Window & { __consultationNavigation?: string }).__consultationNavigation = 'kept';
   });
   await page.getByRole('button', { name: 'Accept offer and pay' }).click();
+  await approveRiskConfirmation(page, 'en', 'financial');
   await page
     .getByRole('dialog', { name: 'Review consultation offer' })
     .getByRole('button', { name: 'Accept offer and pay' })

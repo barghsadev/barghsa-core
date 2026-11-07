@@ -6,6 +6,30 @@ export class ServerQueryError extends Error {
   }
 }
 
+/** A stalled read is an error; changing its owner still cancels it. */
+export async function readWithDeadline<T>(
+  parent: AbortSignal,
+  read: (signal: AbortSignal) => Promise<T>
+): Promise<T> {
+  parent.throwIfAborted();
+  const transport = new AbortController();
+  const signal = transport.signal;
+  const cancel = () => transport.abort(parent.reason);
+  parent.addEventListener('abort', cancel, { once: true });
+  const deadline = setTimeout(() => transport.abort(new DOMException('', 'TimeoutError')), 15_000);
+  try {
+    const abandoned = new Promise<never>((_resolve, reject) => {
+      signal.addEventListener('abort', () => reject(signal.reason), { once: true });
+    });
+    const value = await Promise.race([abandoned, (async () => read(signal))()]);
+    signal.throwIfAborted();
+    return value;
+  } finally {
+    clearTimeout(deadline);
+    parent.removeEventListener('abort', cancel);
+  }
+}
+
 export const financialQueryResources = [
   'wallet',
   'invoices',
@@ -27,6 +51,7 @@ export function createServerQueryClient() {
         gcTime: 5 * 60_000,
         retry: (count, error) =>
           count < 2 &&
+          error?.name !== 'TimeoutError' &&
           !(
             error instanceof ServerQueryError &&
             error.status >= 400 &&

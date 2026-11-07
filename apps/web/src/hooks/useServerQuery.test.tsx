@@ -5,7 +5,28 @@ import { expect, it, vi } from 'vitest';
 import { queryKeys, sameServerList } from '../lib/query-keys.js';
 import { QueryProvider } from '../providers/QueryProvider.js';
 import { useServerDetailQuery, useServerListQuery } from './useServerQuery.js';
-import { ServerQueryError } from '../lib/server-query-client.js';
+import { readWithDeadline, ServerQueryError } from '../lib/server-query-client.js';
+
+it('ends a stalled read at its deadline even when the reader never settles', async () => {
+  vi.useFakeTimers();
+  try {
+    const owner = new AbortController();
+    let transport!: AbortSignal;
+    const pending = readWithDeadline(owner.signal, (signal) => {
+      transport = signal;
+      return new Promise<string>(() => {});
+    });
+    const result = expect(pending).rejects.toMatchObject({ name: 'TimeoutError' });
+    await vi.advanceTimersByTimeAsync(14_999);
+    expect(transport.aborted).toBe(false);
+    await vi.advanceTimersByTimeAsync(1);
+    await result;
+    expect(transport.aborted).toBe(true);
+    expect(owner.signal.aborted).toBe(false);
+  } finally {
+    vi.useRealTimers();
+  }
+});
 
 it('separates owners and contexts, canonicalizes filters, and retains rows only across pagination', () => {
   const scope = { context: 'customer' as const, ownerId: 'profile-a', revision: 1 };

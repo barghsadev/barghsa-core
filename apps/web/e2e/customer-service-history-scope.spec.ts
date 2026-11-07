@@ -8,6 +8,7 @@ import { fullNavigation } from './navigation-fixture';
 
 const first = '89000000-0000-4000-8000-000000000001';
 const older = '89000000-0000-4000-8000-000000000003';
+const third = '89000000-0000-4000-8000-000000000007';
 const current = '89000000-0000-4000-8000-000000000005';
 const profileA = '89000000-0000-4000-8000-000000000002';
 const profileB = '89000000-0000-4000-8000-000000000004';
@@ -102,6 +103,9 @@ for (const locale of ['en', 'fa'] as const)
                 profileType: 'INDIVIDUAL',
                 firstName: locale === 'fa' ? 'پروفایل' : 'Profile',
                 lastName: 'A',
+                title: null,
+                nationalId: null,
+                isDefault: true,
                 status: 'ACTIVE',
               },
               {
@@ -109,6 +113,9 @@ for (const locale of ['en', 'fa'] as const)
                 profileType: 'INDIVIDUAL',
                 firstName: locale === 'fa' ? 'پروفایل' : 'Profile',
                 lastName: 'B',
+                title: null,
+                nationalId: null,
+                isDefault: false,
                 status: 'ACTIVE',
               },
             ],
@@ -138,7 +145,7 @@ for (const locale of ['en', 'fa'] as const)
               nextCursor: next ? { beforeAt, beforeId: next } : null,
             }
           : { [config.items]: [row(id)], nextBefore: next };
-      let mode: 'success' | 'held' | 'denied' | 'switch' = 'success';
+      let mode: 'success' | 'held' | 'denied' | 'switch' | 'empty' = 'success';
       let held: Route | undefined, currentHeld: Route | undefined;
       const reads: URLSearchParams[] = [];
       const owners = new Map<URLSearchParams, string>();
@@ -147,6 +154,13 @@ for (const locale of ['en', 'fa'] as const)
         reads.push(query);
         owners.set(query, activeProfile);
         if (implicitProfile) expect(query.has('profileId')).toBe(false);
+        if (mode === 'empty')
+          return route.fulfill({
+            json:
+              kind === 'receipt'
+                ? { items: [], nextCursor: null }
+                : { [config.items]: [], nextBefore: null },
+          });
         if ((implicitProfile ? activeProfile : query.get('profileId')) === profileB) {
           currentHeld = route;
           return;
@@ -168,12 +182,15 @@ for (const locale of ['en', 'fa'] as const)
           });
         return route.fulfill({
           json:
-            query.has('before') || query.has('beforeId')
-              ? response(older, older)
-              : response(first, first),
+            (query.get('before') ?? query.get('beforeId')) === older
+              ? response(third, third)
+              : query.has('before') || query.has('beforeId')
+                ? response(older, older)
+                : response(first, first),
         });
       });
       await page.setViewportSize({ width: 1280, height: 900 });
+      await page.clock.install();
       await page.goto(`${config.path}?statuses=${status}`);
       const main = page.getByRole('main').last();
       const historyRegion =
@@ -213,6 +230,28 @@ for (const locale of ['en', 'fa'] as const)
       await retry().click();
       await expect(record(older)).toBeVisible();
       expect(reads.at(-1)!.toString()).toBe(failedQuery);
+
+      mode = 'held';
+      await more().click();
+      await expect.poll(() => !!held).toBe(true);
+      const stalled = held!;
+      held = undefined;
+      const stalledQuery = reads.at(-1)!.toString();
+      const beforeTimeout = reads.length;
+      await expect(more()).toBeDisabled();
+      await page.clock.fastForward(15_001);
+      await expect(retry()).toBeVisible();
+      await expect(record(first)).toBeVisible();
+      await expect(record(older)).toBeVisible();
+      expect(reads).toHaveLength(beforeTimeout);
+      mode = 'success';
+      await retry().click();
+      await expect(record(third)).toBeVisible();
+      await expect(more()).toBeEnabled();
+      expect(reads.at(-1)!.toString()).toBe(stalledQuery);
+      await stalled.fulfill({ json: response(current, null) });
+      await expect(record(current)).toHaveCount(0);
+
       mode = 'denied';
       await more().click();
       await expect(content.getByRole('alert')).toContainText(
@@ -220,6 +259,7 @@ for (const locale of ['en', 'fa'] as const)
       );
       await expect(record(first)).toHaveCount(0);
       await expect(record(older)).toHaveCount(0);
+      await expect(record(third)).toHaveCount(0);
       await expect(main).not.toContainText('PRIVATE_DENIAL_MESSAGE');
       await expect(
         main.getByRole('navigation', { name: copy('historyPagination.label'), exact: true })
@@ -264,7 +304,11 @@ for (const locale of ['en', 'fa'] as const)
       await more().click();
       await expect.poll(() => !!held).toBe(true);
       const obsolete = held!;
-      await page.locator('#profile-switcher:visible').selectOption(profileB);
+      await page.locator('#profile-switcher:visible').click();
+      await page
+        .getByRole('radiogroup')
+        .locator(`[role=radio][data-profile-id="${profileB}"]`)
+        .click();
       await expect.poll(() => !!currentHeld).toBe(true);
       await expect(record(first)).toHaveCount(0);
       await expect(record(older)).toHaveCount(0);
@@ -326,5 +370,12 @@ for (const locale of ['en', 'fa'] as const)
             path: `${process.env.BARGHSA_SCREENSHOT_DIR}/consultation-history-profile-fa.png`,
           });
       }
+      mode = 'empty';
+      await page.reload();
+      await expect(content).toContainText(
+        copy(kind === 'receipt' ? 'invoices.receipts.empty' : 'historyDates.empty')
+      );
+      await expect(record(current)).toHaveCount(0);
+      await expect(more()).toHaveCount(0);
     });
   }

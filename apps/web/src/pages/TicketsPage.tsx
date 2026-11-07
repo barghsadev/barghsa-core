@@ -1,6 +1,7 @@
 import { CommandFeedback } from '../components/CommandFeedback.js';
 import { useQueryClient } from '@tanstack/react-query';
 import { queryKeys, type ServerQueryKey } from '../lib/query-keys.js';
+import { readWithDeadline } from '../lib/server-query-client.js';
 import { TicketIntakeForm } from '../components/TicketIntakeForm.js';
 import { TicketStaffForms } from '../components/TicketStaffForms.js';
 import { useTicketCommand } from '../hooks/useTicketCommand.js';
@@ -104,19 +105,20 @@ function Tickets({ staff, queries }: { staff: boolean; queries?: SupportListQuer
           staleTime: 0,
           gcTime: 0,
           retry: false,
-          queryFn: async ({ signal }) => {
-            const transport = new AbortController();
-            const abort = () => transport.abort();
-            if (signal.aborted) abort();
-            signal.addEventListener('abort', abort, { once: true });
-            try {
-              return await read(transport.signal);
-            } finally {
-              // Bound response bodies and abort sibling reads when a grouped read fails.
-              transport.abort();
-              signal.removeEventListener('abort', abort);
-            }
-          },
+          queryFn: ({ signal }) =>
+            readWithDeadline(signal, async (signal) => {
+              const transport = new AbortController();
+              const abort = () => transport.abort();
+              if (signal.aborted) abort();
+              signal.addEventListener('abort', abort, { once: true });
+              try {
+                return await read(transport.signal);
+              } finally {
+                // Bound response bodies and abort sibling reads when a grouped read fails.
+                transport.abort();
+                signal.removeEventListener('abort', abort);
+              }
+            }),
         });
       } finally {
         signal?.removeEventListener('abort', abort);

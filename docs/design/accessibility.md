@@ -50,3 +50,8 @@ text, an attachment, or both, so its text field is not individually required.
 On an uncertain save, keep the original request and a visible recovery
 action. Announce the uncertainty once per captured request; show success only
 after the matching receipt passes validation.
+
+Shared list, detail and widget reads stop after 15 seconds and surface the
+page's retry action. A timeout keeps already verified rows only in the same
+scope. A profile change or access denial withdraws them. This deadline is
+for reads; a submitted command still needs its own receipt and recovery rules.

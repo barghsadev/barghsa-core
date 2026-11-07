@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-07T06:45:55+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-07T06:59:30+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.4.0**. Next milestone: **v0.5.0**.
 
@@ -12,8 +12,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 | --- | ---: | --- |
 | done | 861 | Accepted with unchanged source bindings. |
 | verify | 470 | Existing work may be complete; inspect evidence before building. |
-| partial | 30 | An earlier review found unmet criteria; reconcile later fixes. |
-| todo | 7 | New, concrete work or release checks. |
+| partial | 31 | An earlier review found unmet criteria; reconcile later fixes. |
+| todo | 6 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
 | blocked | 1 | Named owner or external prerequisite. |
 | superseded | 3 | Explicit approved scope disposition. |
@@ -39,9 +39,8 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Reconcile populated route loading, empty and retry states against current source and exact existing browser evidence. Repair demonstrated missing states for customer and staff.
+Repair the reproduced Mobile Safari keyboard scrolling failure without weakening focus, key behavior or the existing bundle limits. Verify the exact keyboard assertion in both languages and preserve native controls.
 
-- `07-ui-ux-design.md#T-07.12.01.08`: Every list page, detail page, dashboard widget, and admin page must implement the loading/empty/error pattern. No view renders a blank white page or infinite spinner.
 - `release-readiness#R-04.01`: Verify full customer and admin UI adoption
 
 ## v0.2.0: Complete customer journeys
@@ -638,7 +637,7 @@ Customer and admin workflows work on desktop/mobile in both languages and themes
 
 | Qualified task | State | Build evidence | Required work |
 | --- | --- | --- | --- |
-| `release-readiness#R-04.01` | todo | Inventory needed | Verify full customer and admin UI adoption |
+| `release-readiness#R-04.01` | partial | Recorded batch work | Verify full customer and admin UI adoption |
 | `release-readiness#R-04.02` | todo | Inventory needed | Renew accessibility and performance evidence |
 | `02-auth-users-admin.md#T-09.01.01` | done | Earlier partial | Branding settings page |
 | `02-auth-users-admin.md#T-09.01.02` | done | Earlier acceptance_verified | Theme application |

@@ -75,6 +75,7 @@ for (const locale of ['en', 'fa'] as const) {
         return route.fulfill({ json: { profileId, data } });
       });
       try {
+        await page.clock.install();
         await page.goto('/app');
         const orders = page.getByRole('region', { name: dashboardText('orders.title', locale) });
         const invoices = page.getByRole('region', { name: dashboardText('invoice.title', locale) });
@@ -106,6 +107,12 @@ for (const locale of ['en', 'fa'] as const) {
         expect(reads.orders).toBe(previousReads.orders! + 1);
         for (const widget of ['wallet', 'status', 'invoices', 'contracts'])
           expect(reads[widget]).toBe(previousReads[widget]);
+        await page.clock.fastForward(15_001);
+        await expect(invoices.getByRole('alert')).toBeVisible();
+        await expect(orders.getByText(dashboardText('orders.empty', locale))).toBeVisible();
+        expect(reads.invoices).toBe(previousReads.invoices);
+        await invoices.getByRole('button', { name: dashboardText('widget.retry', locale) }).click();
+        await expect.poll(() => reads.invoices).toBe(previousReads.invoices! + 1);
         releaseInvoices();
         await expect(invoices.getByText(dashboardText('invoice.empty', locale))).toBeVisible();
         const after = await orders.evaluate(position);
