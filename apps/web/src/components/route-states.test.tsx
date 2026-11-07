@@ -65,6 +65,10 @@ it.each([
     error: new TypeError('Failed to fetch dynamically imported module'),
     title: 'Failed to load this page',
   },
+  {
+    error: new TypeError('Importing a module script failed.'),
+    title: 'Failed to load this page',
+  },
   { error: new TypeError('module loading failed'), title: 'Failed to load this page' },
   { error: new TypeError('ChunkLoadError'), title: 'Failed to load this page' },
   { error: new TypeError('private SQL password'), title: 'Something went wrong' },
@@ -72,11 +76,16 @@ it.each([
   const reset = vi.fn();
   await act(async () => root.render(<RouteErrorBoundary error={error} reset={reset} />));
   expect(container.textContent).toContain('تلاش دوباره');
+  expect(container.textContent).toContain('بارگذاری دوباره صفحه');
   expect(container.textContent).not.toContain(error.message);
   await act(async () => {
     document.documentElement.lang = 'en';
   });
   expect(container.querySelector('[role="alert"]')?.textContent).toContain(title);
+  expect([...container.querySelectorAll('button')].map((button) => button.textContent)).toEqual([
+    'Try again',
+    'Reload page',
+  ]);
   expect([...container.querySelectorAll('a')].map((link) => link.getAttribute('href'))).toEqual([
     '/support',
     '/',

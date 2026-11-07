@@ -13,6 +13,7 @@ export function RouteErrorBoundary({ error, reset }: ErrorComponentProps) {
   const isChunkLoadError =
     error instanceof TypeError &&
     (error.message.includes('Failed to fetch') ||
+      error.message === 'Importing a module script failed.' ||
       error.message.includes('loading') ||
       error.message.includes('ChunkLoadError'));
   return (
@@ -42,15 +43,13 @@ export function RouteErrorBoundary({ error, reset }: ErrorComponentProps) {
             <Link to="/" className="underline underline-offset-4">
               {feedbackText('home', locale)}
             </Link>
-            {isChunkLoadError && (
-              <button
-                type="button"
-                onClick={() => window.location.reload()}
-                className="min-h-11 cursor-pointer underline underline-offset-4"
-              >
-                {feedbackText('reload', locale)}
-              </button>
-            )}
+            <button
+              type="button"
+              onClick={() => window.location.reload()}
+              className="min-h-11 cursor-pointer underline underline-offset-4"
+            >
+              {feedbackText('reload', locale)}
+            </button>
           </>
         }
       />

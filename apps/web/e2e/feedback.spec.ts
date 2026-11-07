@@ -1,9 +1,13 @@
 import { mockPublicAuthCsrf } from './public-auth-fixture';
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 import AxeBuilder from '@axe-core/playwright';
 import { test, expect, type Page } from './coverage-fixture';
 import { crmShell } from './crm-shell-fixture';
 import { fullNavigation } from './navigation-fixture';
 import { DEFAULT_BRAND_CONFIG } from '../src/lib/brand-config';
+import { feedbackText } from '@barghsa/i18n/feedback';
+import { tSolar } from '@barghsa/i18n/solar';
 
 const baseBrand = {
   ...DEFAULT_BRAND_CONFIG,
@@ -180,6 +184,84 @@ for (const locale of ['en', 'fa'] as const) {
     await page.keyboard.press('Enter');
     await expect(main).toBeFocused();
     await expect(main.getByRole('link')).toHaveAttribute('href', '/');
+  });
+
+  test(`a missing route and recovery chunk leave a localized reload path (${locale})`, async ({
+    page,
+  }, info) => {
+    await feedbackWorkspace(page, locale);
+    const dist = process.env['BARGHSA_BROWSER_COVERAGE'] === '1' ? 'dist-coverage' : 'dist';
+    const manifest = JSON.parse(readFileSync(resolve(dist, '.vite/manifest.json'), 'utf8'));
+    const routeChunk = manifest['src/pages/SolarRequestDetailPage.tsx']?.file;
+    const recoveryChunk = manifest['src/components/RouteErrorBoundary.tsx']?.file;
+    expect(routeChunk).toBeTruthy();
+    expect(recoveryChunk).toBeTruthy();
+    let routeFailures = 0;
+    let recoveryFailures = 0;
+    let stale = true;
+    const detailPath = '/solar/requests/10000000-0000-4000-8000-000000000002';
+    const missingAsset = { status: 404, headers: { 'cache-control': 'no-store' } };
+    await page.route(
+      (url) => url.pathname === detailPath,
+      async (route) => {
+        if (!stale) return route.continue();
+        const response = await route.fetch();
+        const body = (await response.text()).replaceAll('"/assets/', '"/stale-assets/');
+        return route.fulfill({ response, body });
+      }
+    );
+    // Serve the previous document's asset paths, except for its missing page and error UI.
+    await page.route('**/stale-assets/**', async (route) => {
+      const url = new URL(route.request().url());
+      const asset = url.pathname.replace(/^\/stale-assets\//, 'assets/');
+      if (asset === routeChunk) {
+        routeFailures++;
+        return route.fulfill(missingAsset);
+      }
+      if (asset === recoveryChunk) {
+        recoveryFailures++;
+        return route.fulfill(missingAsset);
+      }
+      url.pathname = `/${asset}`;
+      return route.fulfill({ response: await route.fetch({ url: url.href }) });
+    });
+
+    await page.goto(detailPath);
+    const main = page.getByRole('main');
+    await expect(
+      main.getByRole('heading', {
+        level: 1,
+        name: feedbackText('chunkTitle', locale),
+        exact: true,
+      })
+    ).toBeVisible();
+    expect(routeFailures).toBeGreaterThan(0);
+    expect(recoveryFailures).toBeGreaterThan(0);
+    await expect(main).toHaveCount(1);
+    await expect(page.locator('#main-content')).toHaveCount(1);
+    await expect(page.getByRole('button', { name: 'Show Error', exact: true })).toHaveCount(0);
+    const skip = page.getByRole('link', {
+      name: locale === 'fa' ? 'رفتن به محتوای اصلی' : 'Skip to main content',
+      exact: true,
+    });
+    await skip.press('Enter');
+    await expect(main).toBeFocused();
+    expect(
+      (
+        await new AxeBuilder({ page })
+          .include('#main-content')
+          .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
+          .analyze()
+      ).violations
+    ).toEqual([]);
+    if (locale === 'fa' && info.project.name === 'mobile-safari')
+      await page.screenshot({ path: info.outputPath('stale-route-recovery-fa.png') });
+
+    stale = false;
+    await main.getByRole('button', { name: feedbackText('reload', locale), exact: true }).click();
+    await expect(
+      main.getByRole('heading', { level: 1, name: tSolar('details', locale), exact: true })
+    ).toBeVisible();
   });
 }
 

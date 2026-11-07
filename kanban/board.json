@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-07T20:23:01+00:00",
-  "source_commit": "0e3c581025a102eb58d5f7a966777418b7cd9d7f",
+  "updated": "2026-11-07T20:39:36+00:00",
+  "source_commit": "94be7274bd388df53b01dd860f3e6e0c23775e92",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -493958,7 +493958,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-owned-staff-solar-review",
-          "release-0.5-consultation-staff-command-receipts"
+          "release-0.5-consultation-staff-command-receipts",
+          "release-0.5-stale-route-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -494394,7 +494395,7 @@
             },
             {
               "path": "packages/i18n/src/loading-feedback.ts",
-              "sha256": "05061d8773cde356e884ac9207258a283ee89838e25968b79ff5bd20adb9f95c"
+              "sha256": "f9506ea444ffa515afef51e2d0938abaef5f83dfaebbb9b9effa1b27ac775ce7"
             },
             {
               "path": "packages/ui/README.md",
@@ -494623,6 +494624,11 @@
               "batch": "release-0.5-consultation-staff-command-receipts",
               "base_commit": "adcd42ca9ef2cf48acbae6368d92749970029e65",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-staff-command-receipts/proof.json"
+            },
+            {
+              "batch": "release-0.5-stale-route-recovery",
+              "base_commit": "94be7274bd388df53b01dd860f3e6e0c23775e92",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-stale-route-recovery/proof.json"
             }
           ]
         }
@@ -511290,7 +511296,8 @@
           "release-0.5-profile-picker-preload-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-solar-and-consultation-feedback",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-stale-route-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -511326,7 +511333,7 @@
             },
             {
               "path": "apps/web/e2e/feedback.spec.ts",
-              "sha256": "e8492bc489ab019df50aeb692becba89037a1ae5fa0a92aef79c4e8dc071fcac"
+              "sha256": "437285df1c50e39fa61fab089b1835e518304e3a3e55c749578369b86b8c357e"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -511386,11 +511393,11 @@
             },
             {
               "path": "apps/web/src/components/RouteErrorBoundary.tsx",
-              "sha256": "127e7248dda06c0f76c2a75bb99f52cb5a34df8ed718d80415c761444a034371"
+              "sha256": "d441781374866feb0d79c49687132ba72e43e5e818d06d6995018df308dd2477"
             },
             {
               "path": "apps/web/src/components/RouteFallbackLandmark.tsx",
-              "sha256": "566ef17a0e52dd61b7aa14183c44496dc92f87ab60c221d55d34385629b90a78"
+              "sha256": "92f2454ab22bf6803f53fe5d7efb7d757c2b1fa6606046b9a3a8a257af3eaaa9"
             },
             {
               "path": "apps/web/src/components/RouteSkeleton.tsx",
@@ -511406,7 +511413,7 @@
             },
             {
               "path": "apps/web/src/components/route-states.test.tsx",
-              "sha256": "6979eebaec7ac098e0d8560ca7a73b8ea41a4e6de7fd4b364af44a02418790cc"
+              "sha256": "f256bcfca2c9e97b8c4c49f896eb92585f559d7e5a9427118b6fdf63ea2af6a4"
             },
             {
               "path": "apps/web/src/lib/auth-bootstrap-read.test.ts",
@@ -511442,7 +511449,7 @@
             },
             {
               "path": "apps/web/src/router.tsx",
-              "sha256": "df44ea939e76acde4c8b5aea9bec0995ae7e219e18c03e2c9d093efa09f12122"
+              "sha256": "e5c231ac2cfe159fe99a0c2503fdf35170868683c6a91ac05e767375511c8fee"
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
@@ -511490,7 +511497,7 @@
             },
             {
               "path": "packages/i18n/src/feedback.ts",
-              "sha256": "b1f4ea7e198d512663ac94cffd577f7c3429a483e54dc80b85d4c1fa5eb656eb"
+              "sha256": "144729daa5cc47be87f93723292417b5e508ba38d906ed52ce82db1b243093ad"
             },
             {
               "path": "packages/i18n/src/login-forms.ts",
@@ -511656,6 +511663,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-stale-route-recovery",
+              "base_commit": "94be7274bd388df53b01dd860f3e6e0c23775e92",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-stale-route-recovery/proof.json"
             }
           ]
         }
@@ -512572,7 +512584,8 @@
           "release-0.5-profile-picker-preload-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-solar-and-consultation-feedback",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-stale-route-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -512608,7 +512621,7 @@
             },
             {
               "path": "apps/web/e2e/feedback.spec.ts",
-              "sha256": "e8492bc489ab019df50aeb692becba89037a1ae5fa0a92aef79c4e8dc071fcac"
+              "sha256": "437285df1c50e39fa61fab089b1835e518304e3a3e55c749578369b86b8c357e"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -512668,11 +512681,11 @@
             },
             {
               "path": "apps/web/src/components/RouteErrorBoundary.tsx",
-              "sha256": "127e7248dda06c0f76c2a75bb99f52cb5a34df8ed718d80415c761444a034371"
+              "sha256": "d441781374866feb0d79c49687132ba72e43e5e818d06d6995018df308dd2477"
             },
             {
               "path": "apps/web/src/components/RouteFallbackLandmark.tsx",
-              "sha256": "566ef17a0e52dd61b7aa14183c44496dc92f87ab60c221d55d34385629b90a78"
+              "sha256": "92f2454ab22bf6803f53fe5d7efb7d757c2b1fa6606046b9a3a8a257af3eaaa9"
             },
             {
               "path": "apps/web/src/components/RouteSkeleton.tsx",
@@ -512688,7 +512701,7 @@
             },
             {
               "path": "apps/web/src/components/route-states.test.tsx",
-              "sha256": "6979eebaec7ac098e0d8560ca7a73b8ea41a4e6de7fd4b364af44a02418790cc"
+              "sha256": "f256bcfca2c9e97b8c4c49f896eb92585f559d7e5a9427118b6fdf63ea2af6a4"
             },
             {
               "path": "apps/web/src/lib/auth-bootstrap-read.test.ts",
@@ -512724,7 +512737,7 @@
             },
             {
               "path": "apps/web/src/router.tsx",
-              "sha256": "df44ea939e76acde4c8b5aea9bec0995ae7e219e18c03e2c9d093efa09f12122"
+              "sha256": "e5c231ac2cfe159fe99a0c2503fdf35170868683c6a91ac05e767375511c8fee"
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
@@ -512772,7 +512785,7 @@
             },
             {
               "path": "packages/i18n/src/feedback.ts",
-              "sha256": "b1f4ea7e198d512663ac94cffd577f7c3429a483e54dc80b85d4c1fa5eb656eb"
+              "sha256": "144729daa5cc47be87f93723292417b5e508ba38d906ed52ce82db1b243093ad"
             },
             {
               "path": "packages/i18n/src/login-forms.ts",
@@ -512938,6 +512951,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-stale-route-recovery",
+              "base_commit": "94be7274bd388df53b01dd860f3e6e0c23775e92",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-stale-route-recovery/proof.json"
             }
           ]
         }
@@ -513476,7 +513494,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Customer saving detail retains one localized level-one heading while its exact read is pending and then recovers a mismatched response. Prior lazy-route and populated landmark evidence remains recorded. Other conditional heading and landmark cases are open."
+        "The stale-route fallback preserves a single localized level-one heading and the existing main/skip target in Chromium and mobile Safari. Prior saving, lazy-route and populated landmark evidence remains recorded. Other conditional heading and landmark cases are open."
       ],
       "owner": null,
       "depends_on": [],
@@ -513499,7 +513517,8 @@
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-crm-profile-loading-heading",
           "release-0.5-conditional-native-choices",
-          "release-0.5-saving-conditional-agreement"
+          "release-0.5-saving-conditional-agreement",
+          "release-0.5-stale-route-recovery"
         ],
         "current_acceptance": null
       }
@@ -560137,7 +560156,8 @@
           "release-0.5-owned-staff-solar-review",
           "release-0.5-essential-control-contrast",
           "release-0.5-saving-conditional-agreement",
-          "release-0.5-solar-guidance-ready"
+          "release-0.5-solar-guidance-ready",
+          "release-0.5-stale-route-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -560185,7 +560205,7 @@
             },
             {
               "path": "apps/web/e2e/feedback.spec.ts",
-              "sha256": "e8492bc489ab019df50aeb692becba89037a1ae5fa0a92aef79c4e8dc071fcac"
+              "sha256": "437285df1c50e39fa61fab089b1835e518304e3a3e55c749578369b86b8c357e"
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
@@ -560341,7 +560361,7 @@
             },
             {
               "path": "apps/web/src/components/RouteErrorBoundary.tsx",
-              "sha256": "127e7248dda06c0f76c2a75bb99f52cb5a34df8ed718d80415c761444a034371"
+              "sha256": "d441781374866feb0d79c49687132ba72e43e5e818d06d6995018df308dd2477"
             },
             {
               "path": "apps/web/src/components/RouteSkeleton.tsx",
@@ -560501,7 +560521,7 @@
             },
             {
               "path": "apps/web/src/components/route-states.test.tsx",
-              "sha256": "6979eebaec7ac098e0d8560ca7a73b8ea41a4e6de7fd4b364af44a02418790cc"
+              "sha256": "f256bcfca2c9e97b8c4c49f896eb92585f559d7e5a9427118b6fdf63ea2af6a4"
             },
             {
               "path": "apps/web/src/components/saving-change-query.test.tsx",
@@ -561125,7 +561145,7 @@
             },
             {
               "path": "apps/web/src/router.tsx",
-              "sha256": "df44ea939e76acde4c8b5aea9bec0995ae7e219e18c03e2c9d093efa09f12122"
+              "sha256": "e5c231ac2cfe159fe99a0c2503fdf35170868683c6a91ac05e767375511c8fee"
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
@@ -561181,11 +561201,11 @@
             },
             {
               "path": "packages/i18n/src/feedback.ts",
-              "sha256": "b1f4ea7e198d512663ac94cffd577f7c3429a483e54dc80b85d4c1fa5eb656eb"
+              "sha256": "144729daa5cc47be87f93723292417b5e508ba38d906ed52ce82db1b243093ad"
             },
             {
               "path": "packages/i18n/src/loading-feedback.ts",
-              "sha256": "05061d8773cde356e884ac9207258a283ee89838e25968b79ff5bd20adb9f95c"
+              "sha256": "f9506ea444ffa515afef51e2d0938abaef5f83dfaebbb9b9effa1b27ac775ce7"
             },
             {
               "path": "packages/i18n/src/notification-feedback.ts",
@@ -561928,6 +561948,11 @@
               "batch": "release-0.5-solar-guidance-ready",
               "base_commit": "0e3c581025a102eb58d5f7a966777418b7cd9d7f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-solar-guidance-ready/proof.json"
+            },
+            {
+              "batch": "release-0.5-stale-route-recovery",
+              "base_commit": "94be7274bd388df53b01dd860f3e6e0c23775e92",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-stale-route-recovery/proof.json"
             }
           ]
         }
@@ -562007,7 +562032,8 @@
           "release-0.5-owned-staff-solar-review",
           "release-0.5-essential-control-contrast",
           "release-0.5-saving-conditional-agreement",
-          "release-0.5-solar-guidance-ready"
+          "release-0.5-solar-guidance-ready",
+          "release-0.5-stale-route-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -562055,7 +562081,7 @@
             },
             {
               "path": "apps/web/e2e/feedback.spec.ts",
-              "sha256": "e8492bc489ab019df50aeb692becba89037a1ae5fa0a92aef79c4e8dc071fcac"
+              "sha256": "437285df1c50e39fa61fab089b1835e518304e3a3e55c749578369b86b8c357e"
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
@@ -562211,7 +562237,7 @@
             },
             {
               "path": "apps/web/src/components/RouteErrorBoundary.tsx",
-              "sha256": "127e7248dda06c0f76c2a75bb99f52cb5a34df8ed718d80415c761444a034371"
+              "sha256": "d441781374866feb0d79c49687132ba72e43e5e818d06d6995018df308dd2477"
             },
             {
               "path": "apps/web/src/components/RouteSkeleton.tsx",
@@ -562371,7 +562397,7 @@
             },
             {
               "path": "apps/web/src/components/route-states.test.tsx",
-              "sha256": "6979eebaec7ac098e0d8560ca7a73b8ea41a4e6de7fd4b364af44a02418790cc"
+              "sha256": "f256bcfca2c9e97b8c4c49f896eb92585f559d7e5a9427118b6fdf63ea2af6a4"
             },
             {
               "path": "apps/web/src/components/saving-change-query.test.tsx",
@@ -562995,7 +563021,7 @@
             },
             {
               "path": "apps/web/src/router.tsx",
-              "sha256": "df44ea939e76acde4c8b5aea9bec0995ae7e219e18c03e2c9d093efa09f12122"
+              "sha256": "e5c231ac2cfe159fe99a0c2503fdf35170868683c6a91ac05e767375511c8fee"
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
@@ -563051,11 +563077,11 @@
             },
             {
               "path": "packages/i18n/src/feedback.ts",
-              "sha256": "b1f4ea7e198d512663ac94cffd577f7c3429a483e54dc80b85d4c1fa5eb656eb"
+              "sha256": "144729daa5cc47be87f93723292417b5e508ba38d906ed52ce82db1b243093ad"
             },
             {
               "path": "packages/i18n/src/loading-feedback.ts",
-              "sha256": "05061d8773cde356e884ac9207258a283ee89838e25968b79ff5bd20adb9f95c"
+              "sha256": "f9506ea444ffa515afef51e2d0938abaef5f83dfaebbb9b9effa1b27ac775ce7"
             },
             {
               "path": "packages/i18n/src/notification-feedback.ts",
@@ -563798,6 +563824,11 @@
               "batch": "release-0.5-solar-guidance-ready",
               "base_commit": "0e3c581025a102eb58d5f7a966777418b7cd9d7f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-solar-guidance-ready/proof.json"
+            },
+            {
+              "batch": "release-0.5-stale-route-recovery",
+              "base_commit": "94be7274bd388df53b01dd860f3e6e0c23775e92",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-stale-route-recovery/proof.json"
             }
           ]
         }
@@ -563925,7 +563956,8 @@
           "release-0.5-owned-staff-solar-review",
           "release-0.5-essential-control-contrast",
           "release-0.5-saving-conditional-agreement",
-          "release-0.5-solar-guidance-ready"
+          "release-0.5-solar-guidance-ready",
+          "release-0.5-stale-route-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -563973,7 +564005,7 @@
             },
             {
               "path": "apps/web/e2e/feedback.spec.ts",
-              "sha256": "e8492bc489ab019df50aeb692becba89037a1ae5fa0a92aef79c4e8dc071fcac"
+              "sha256": "437285df1c50e39fa61fab089b1835e518304e3a3e55c749578369b86b8c357e"
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
@@ -564129,7 +564161,7 @@
             },
             {
               "path": "apps/web/src/components/RouteErrorBoundary.tsx",
-              "sha256": "127e7248dda06c0f76c2a75bb99f52cb5a34df8ed718d80415c761444a034371"
+              "sha256": "d441781374866feb0d79c49687132ba72e43e5e818d06d6995018df308dd2477"
             },
             {
               "path": "apps/web/src/components/RouteSkeleton.tsx",
@@ -564289,7 +564321,7 @@
             },
             {
               "path": "apps/web/src/components/route-states.test.tsx",
-              "sha256": "6979eebaec7ac098e0d8560ca7a73b8ea41a4e6de7fd4b364af44a02418790cc"
+              "sha256": "f256bcfca2c9e97b8c4c49f896eb92585f559d7e5a9427118b6fdf63ea2af6a4"
             },
             {
               "path": "apps/web/src/components/saving-change-query.test.tsx",
@@ -564913,7 +564945,7 @@
             },
             {
               "path": "apps/web/src/router.tsx",
-              "sha256": "df44ea939e76acde4c8b5aea9bec0995ae7e219e18c03e2c9d093efa09f12122"
+              "sha256": "e5c231ac2cfe159fe99a0c2503fdf35170868683c6a91ac05e767375511c8fee"
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
@@ -564969,11 +565001,11 @@
             },
             {
               "path": "packages/i18n/src/feedback.ts",
-              "sha256": "b1f4ea7e198d512663ac94cffd577f7c3429a483e54dc80b85d4c1fa5eb656eb"
+              "sha256": "144729daa5cc47be87f93723292417b5e508ba38d906ed52ce82db1b243093ad"
             },
             {
               "path": "packages/i18n/src/loading-feedback.ts",
-              "sha256": "05061d8773cde356e884ac9207258a283ee89838e25968b79ff5bd20adb9f95c"
+              "sha256": "f9506ea444ffa515afef51e2d0938abaef5f83dfaebbb9b9effa1b27ac775ce7"
             },
             {
               "path": "packages/i18n/src/notification-feedback.ts",
@@ -565716,6 +565748,11 @@
               "batch": "release-0.5-solar-guidance-ready",
               "base_commit": "0e3c581025a102eb58d5f7a966777418b7cd9d7f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-solar-guidance-ready/proof.json"
+            },
+            {
+              "batch": "release-0.5-stale-route-recovery",
+              "base_commit": "94be7274bd388df53b01dd860f3e6e0c23775e92",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-stale-route-recovery/proof.json"
             }
           ]
         }
@@ -565795,7 +565832,8 @@
           "release-0.5-owned-staff-solar-review",
           "release-0.5-essential-control-contrast",
           "release-0.5-saving-conditional-agreement",
-          "release-0.5-solar-guidance-ready"
+          "release-0.5-solar-guidance-ready",
+          "release-0.5-stale-route-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -565843,7 +565881,7 @@
             },
             {
               "path": "apps/web/e2e/feedback.spec.ts",
-              "sha256": "e8492bc489ab019df50aeb692becba89037a1ae5fa0a92aef79c4e8dc071fcac"
+              "sha256": "437285df1c50e39fa61fab089b1835e518304e3a3e55c749578369b86b8c357e"
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
@@ -565999,7 +566037,7 @@
             },
             {
               "path": "apps/web/src/components/RouteErrorBoundary.tsx",
-              "sha256": "127e7248dda06c0f76c2a75bb99f52cb5a34df8ed718d80415c761444a034371"
+              "sha256": "d441781374866feb0d79c49687132ba72e43e5e818d06d6995018df308dd2477"
             },
             {
               "path": "apps/web/src/components/RouteSkeleton.tsx",
@@ -566159,7 +566197,7 @@
             },
             {
               "path": "apps/web/src/components/route-states.test.tsx",
-              "sha256": "6979eebaec7ac098e0d8560ca7a73b8ea41a4e6de7fd4b364af44a02418790cc"
+              "sha256": "f256bcfca2c9e97b8c4c49f896eb92585f559d7e5a9427118b6fdf63ea2af6a4"
             },
             {
               "path": "apps/web/src/components/saving-change-query.test.tsx",
@@ -566783,7 +566821,7 @@
             },
             {
               "path": "apps/web/src/router.tsx",
-              "sha256": "df44ea939e76acde4c8b5aea9bec0995ae7e219e18c03e2c9d093efa09f12122"
+              "sha256": "e5c231ac2cfe159fe99a0c2503fdf35170868683c6a91ac05e767375511c8fee"
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
@@ -566839,11 +566877,11 @@
             },
             {
               "path": "packages/i18n/src/feedback.ts",
-              "sha256": "b1f4ea7e198d512663ac94cffd577f7c3429a483e54dc80b85d4c1fa5eb656eb"
+              "sha256": "144729daa5cc47be87f93723292417b5e508ba38d906ed52ce82db1b243093ad"
             },
             {
               "path": "packages/i18n/src/loading-feedback.ts",
-              "sha256": "05061d8773cde356e884ac9207258a283ee89838e25968b79ff5bd20adb9f95c"
+              "sha256": "f9506ea444ffa515afef51e2d0938abaef5f83dfaebbb9b9effa1b27ac775ce7"
             },
             {
               "path": "packages/i18n/src/notification-feedback.ts",
@@ -567586,6 +567624,11 @@
               "batch": "release-0.5-solar-guidance-ready",
               "base_commit": "0e3c581025a102eb58d5f7a966777418b7cd9d7f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-solar-guidance-ready/proof.json"
+            },
+            {
+              "batch": "release-0.5-stale-route-recovery",
+              "base_commit": "94be7274bd388df53b01dd860f3e6e0c23775e92",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-stale-route-recovery/proof.json"
             }
           ]
         }
@@ -567665,7 +567708,8 @@
           "release-0.5-owned-staff-solar-review",
           "release-0.5-essential-control-contrast",
           "release-0.5-saving-conditional-agreement",
-          "release-0.5-solar-guidance-ready"
+          "release-0.5-solar-guidance-ready",
+          "release-0.5-stale-route-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -567713,7 +567757,7 @@
             },
             {
               "path": "apps/web/e2e/feedback.spec.ts",
-              "sha256": "e8492bc489ab019df50aeb692becba89037a1ae5fa0a92aef79c4e8dc071fcac"
+              "sha256": "437285df1c50e39fa61fab089b1835e518304e3a3e55c749578369b86b8c357e"
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
@@ -567869,7 +567913,7 @@
             },
             {
               "path": "apps/web/src/components/RouteErrorBoundary.tsx",
-              "sha256": "127e7248dda06c0f76c2a75bb99f52cb5a34df8ed718d80415c761444a034371"
+              "sha256": "d441781374866feb0d79c49687132ba72e43e5e818d06d6995018df308dd2477"
             },
             {
               "path": "apps/web/src/components/RouteSkeleton.tsx",
@@ -568029,7 +568073,7 @@
             },
             {
               "path": "apps/web/src/components/route-states.test.tsx",
-              "sha256": "6979eebaec7ac098e0d8560ca7a73b8ea41a4e6de7fd4b364af44a02418790cc"
+              "sha256": "f256bcfca2c9e97b8c4c49f896eb92585f559d7e5a9427118b6fdf63ea2af6a4"
             },
             {
               "path": "apps/web/src/components/saving-change-query.test.tsx",
@@ -568653,7 +568697,7 @@
             },
             {
               "path": "apps/web/src/router.tsx",
-              "sha256": "df44ea939e76acde4c8b5aea9bec0995ae7e219e18c03e2c9d093efa09f12122"
+              "sha256": "e5c231ac2cfe159fe99a0c2503fdf35170868683c6a91ac05e767375511c8fee"
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
@@ -568709,11 +568753,11 @@
             },
             {
               "path": "packages/i18n/src/feedback.ts",
-              "sha256": "b1f4ea7e198d512663ac94cffd577f7c3429a483e54dc80b85d4c1fa5eb656eb"
+              "sha256": "144729daa5cc47be87f93723292417b5e508ba38d906ed52ce82db1b243093ad"
             },
             {
               "path": "packages/i18n/src/loading-feedback.ts",
-              "sha256": "05061d8773cde356e884ac9207258a283ee89838e25968b79ff5bd20adb9f95c"
+              "sha256": "f9506ea444ffa515afef51e2d0938abaef5f83dfaebbb9b9effa1b27ac775ce7"
             },
             {
               "path": "packages/i18n/src/notification-feedback.ts",
@@ -569456,6 +569500,11 @@
               "batch": "release-0.5-solar-guidance-ready",
               "base_commit": "0e3c581025a102eb58d5f7a966777418b7cd9d7f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-solar-guidance-ready/proof.json"
+            },
+            {
+              "batch": "release-0.5-stale-route-recovery",
+              "base_commit": "94be7274bd388df53b01dd860f3e6e0c23775e92",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-stale-route-recovery/proof.json"
             }
           ]
         }
@@ -569535,7 +569584,8 @@
           "release-0.5-owned-staff-solar-review",
           "release-0.5-essential-control-contrast",
           "release-0.5-saving-conditional-agreement",
-          "release-0.5-solar-guidance-ready"
+          "release-0.5-solar-guidance-ready",
+          "release-0.5-stale-route-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -569583,7 +569633,7 @@
             },
             {
               "path": "apps/web/e2e/feedback.spec.ts",
-              "sha256": "e8492bc489ab019df50aeb692becba89037a1ae5fa0a92aef79c4e8dc071fcac"
+              "sha256": "437285df1c50e39fa61fab089b1835e518304e3a3e55c749578369b86b8c357e"
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
@@ -569739,7 +569789,7 @@
             },
             {
               "path": "apps/web/src/components/RouteErrorBoundary.tsx",
-              "sha256": "127e7248dda06c0f76c2a75bb99f52cb5a34df8ed718d80415c761444a034371"
+              "sha256": "d441781374866feb0d79c49687132ba72e43e5e818d06d6995018df308dd2477"
             },
             {
               "path": "apps/web/src/components/RouteSkeleton.tsx",
@@ -569899,7 +569949,7 @@
             },
             {
               "path": "apps/web/src/components/route-states.test.tsx",
-              "sha256": "6979eebaec7ac098e0d8560ca7a73b8ea41a4e6de7fd4b364af44a02418790cc"
+              "sha256": "f256bcfca2c9e97b8c4c49f896eb92585f559d7e5a9427118b6fdf63ea2af6a4"
             },
             {
               "path": "apps/web/src/components/saving-change-query.test.tsx",
@@ -570523,7 +570573,7 @@
             },
             {
               "path": "apps/web/src/router.tsx",
-              "sha256": "df44ea939e76acde4c8b5aea9bec0995ae7e219e18c03e2c9d093efa09f12122"
+              "sha256": "e5c231ac2cfe159fe99a0c2503fdf35170868683c6a91ac05e767375511c8fee"
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
@@ -570579,11 +570629,11 @@
             },
             {
               "path": "packages/i18n/src/feedback.ts",
-              "sha256": "b1f4ea7e198d512663ac94cffd577f7c3429a483e54dc80b85d4c1fa5eb656eb"
+              "sha256": "144729daa5cc47be87f93723292417b5e508ba38d906ed52ce82db1b243093ad"
             },
             {
               "path": "packages/i18n/src/loading-feedback.ts",
-              "sha256": "05061d8773cde356e884ac9207258a283ee89838e25968b79ff5bd20adb9f95c"
+              "sha256": "f9506ea444ffa515afef51e2d0938abaef5f83dfaebbb9b9effa1b27ac775ce7"
             },
             {
               "path": "packages/i18n/src/notification-feedback.ts",
@@ -571326,6 +571376,11 @@
               "batch": "release-0.5-solar-guidance-ready",
               "base_commit": "0e3c581025a102eb58d5f7a966777418b7cd9d7f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-solar-guidance-ready/proof.json"
+            },
+            {
+              "batch": "release-0.5-stale-route-recovery",
+              "base_commit": "94be7274bd388df53b01dd860f3e6e0c23775e92",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-stale-route-recovery/proof.json"
             }
           ]
         }
@@ -571405,7 +571460,8 @@
           "release-0.5-owned-staff-solar-review",
           "release-0.5-essential-control-contrast",
           "release-0.5-saving-conditional-agreement",
-          "release-0.5-solar-guidance-ready"
+          "release-0.5-solar-guidance-ready",
+          "release-0.5-stale-route-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -571453,7 +571509,7 @@
             },
             {
               "path": "apps/web/e2e/feedback.spec.ts",
-              "sha256": "e8492bc489ab019df50aeb692becba89037a1ae5fa0a92aef79c4e8dc071fcac"
+              "sha256": "437285df1c50e39fa61fab089b1835e518304e3a3e55c749578369b86b8c357e"
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
@@ -571609,7 +571665,7 @@
             },
             {
               "path": "apps/web/src/components/RouteErrorBoundary.tsx",
-              "sha256": "127e7248dda06c0f76c2a75bb99f52cb5a34df8ed718d80415c761444a034371"
+              "sha256": "d441781374866feb0d79c49687132ba72e43e5e818d06d6995018df308dd2477"
             },
             {
               "path": "apps/web/src/components/RouteSkeleton.tsx",
@@ -571769,7 +571825,7 @@
             },
             {
               "path": "apps/web/src/components/route-states.test.tsx",
-              "sha256": "6979eebaec7ac098e0d8560ca7a73b8ea41a4e6de7fd4b364af44a02418790cc"
+              "sha256": "f256bcfca2c9e97b8c4c49f896eb92585f559d7e5a9427118b6fdf63ea2af6a4"
             },
             {
               "path": "apps/web/src/components/saving-change-query.test.tsx",
@@ -572393,7 +572449,7 @@
             },
             {
               "path": "apps/web/src/router.tsx",
-              "sha256": "df44ea939e76acde4c8b5aea9bec0995ae7e219e18c03e2c9d093efa09f12122"
+              "sha256": "e5c231ac2cfe159fe99a0c2503fdf35170868683c6a91ac05e767375511c8fee"
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
@@ -572449,11 +572505,11 @@
             },
             {
               "path": "packages/i18n/src/feedback.ts",
-              "sha256": "b1f4ea7e198d512663ac94cffd577f7c3429a483e54dc80b85d4c1fa5eb656eb"
+              "sha256": "144729daa5cc47be87f93723292417b5e508ba38d906ed52ce82db1b243093ad"
             },
             {
               "path": "packages/i18n/src/loading-feedback.ts",
-              "sha256": "05061d8773cde356e884ac9207258a283ee89838e25968b79ff5bd20adb9f95c"
+              "sha256": "f9506ea444ffa515afef51e2d0938abaef5f83dfaebbb9b9effa1b27ac775ce7"
             },
             {
               "path": "packages/i18n/src/notification-feedback.ts",
@@ -573196,6 +573252,11 @@
               "batch": "release-0.5-solar-guidance-ready",
               "base_commit": "0e3c581025a102eb58d5f7a966777418b7cd9d7f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-solar-guidance-ready/proof.json"
+            },
+            {
+              "batch": "release-0.5-stale-route-recovery",
+              "base_commit": "94be7274bd388df53b01dd860f3e6e0c23775e92",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-stale-route-recovery/proof.json"
             }
           ]
         }
@@ -573275,7 +573336,8 @@
           "release-0.5-owned-staff-solar-review",
           "release-0.5-essential-control-contrast",
           "release-0.5-saving-conditional-agreement",
-          "release-0.5-solar-guidance-ready"
+          "release-0.5-solar-guidance-ready",
+          "release-0.5-stale-route-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -573323,7 +573385,7 @@
             },
             {
               "path": "apps/web/e2e/feedback.spec.ts",
-              "sha256": "e8492bc489ab019df50aeb692becba89037a1ae5fa0a92aef79c4e8dc071fcac"
+              "sha256": "437285df1c50e39fa61fab089b1835e518304e3a3e55c749578369b86b8c357e"
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
@@ -573479,7 +573541,7 @@
             },
             {
               "path": "apps/web/src/components/RouteErrorBoundary.tsx",
-              "sha256": "127e7248dda06c0f76c2a75bb99f52cb5a34df8ed718d80415c761444a034371"
+              "sha256": "d441781374866feb0d79c49687132ba72e43e5e818d06d6995018df308dd2477"
             },
             {
               "path": "apps/web/src/components/RouteSkeleton.tsx",
@@ -573639,7 +573701,7 @@
             },
             {
               "path": "apps/web/src/components/route-states.test.tsx",
-              "sha256": "6979eebaec7ac098e0d8560ca7a73b8ea41a4e6de7fd4b364af44a02418790cc"
+              "sha256": "f256bcfca2c9e97b8c4c49f896eb92585f559d7e5a9427118b6fdf63ea2af6a4"
             },
             {
               "path": "apps/web/src/components/saving-change-query.test.tsx",
@@ -574263,7 +574325,7 @@
             },
             {
               "path": "apps/web/src/router.tsx",
-              "sha256": "df44ea939e76acde4c8b5aea9bec0995ae7e219e18c03e2c9d093efa09f12122"
+              "sha256": "e5c231ac2cfe159fe99a0c2503fdf35170868683c6a91ac05e767375511c8fee"
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
@@ -574319,11 +574381,11 @@
             },
             {
               "path": "packages/i18n/src/feedback.ts",
-              "sha256": "b1f4ea7e198d512663ac94cffd577f7c3429a483e54dc80b85d4c1fa5eb656eb"
+              "sha256": "144729daa5cc47be87f93723292417b5e508ba38d906ed52ce82db1b243093ad"
             },
             {
               "path": "packages/i18n/src/loading-feedback.ts",
-              "sha256": "05061d8773cde356e884ac9207258a283ee89838e25968b79ff5bd20adb9f95c"
+              "sha256": "f9506ea444ffa515afef51e2d0938abaef5f83dfaebbb9b9effa1b27ac775ce7"
             },
             {
               "path": "packages/i18n/src/notification-feedback.ts",
@@ -575066,6 +575128,11 @@
               "batch": "release-0.5-solar-guidance-ready",
               "base_commit": "0e3c581025a102eb58d5f7a966777418b7cd9d7f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-solar-guidance-ready/proof.json"
+            },
+            {
+              "batch": "release-0.5-stale-route-recovery",
+              "base_commit": "94be7274bd388df53b01dd860f3e6e0c23775e92",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-stale-route-recovery/proof.json"
             }
           ]
         }
@@ -575145,7 +575212,8 @@
           "release-0.5-owned-staff-solar-review",
           "release-0.5-essential-control-contrast",
           "release-0.5-saving-conditional-agreement",
-          "release-0.5-solar-guidance-ready"
+          "release-0.5-solar-guidance-ready",
+          "release-0.5-stale-route-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -575193,7 +575261,7 @@
             },
             {
               "path": "apps/web/e2e/feedback.spec.ts",
-              "sha256": "e8492bc489ab019df50aeb692becba89037a1ae5fa0a92aef79c4e8dc071fcac"
+              "sha256": "437285df1c50e39fa61fab089b1835e518304e3a3e55c749578369b86b8c357e"
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
@@ -575349,7 +575417,7 @@
             },
             {
               "path": "apps/web/src/components/RouteErrorBoundary.tsx",
-              "sha256": "127e7248dda06c0f76c2a75bb99f52cb5a34df8ed718d80415c761444a034371"
+              "sha256": "d441781374866feb0d79c49687132ba72e43e5e818d06d6995018df308dd2477"
             },
             {
               "path": "apps/web/src/components/RouteSkeleton.tsx",
@@ -575509,7 +575577,7 @@
             },
             {
               "path": "apps/web/src/components/route-states.test.tsx",
-              "sha256": "6979eebaec7ac098e0d8560ca7a73b8ea41a4e6de7fd4b364af44a02418790cc"
+              "sha256": "f256bcfca2c9e97b8c4c49f896eb92585f559d7e5a9427118b6fdf63ea2af6a4"
             },
             {
               "path": "apps/web/src/components/saving-change-query.test.tsx",
@@ -576133,7 +576201,7 @@
             },
             {
               "path": "apps/web/src/router.tsx",
-              "sha256": "df44ea939e76acde4c8b5aea9bec0995ae7e219e18c03e2c9d093efa09f12122"
+              "sha256": "e5c231ac2cfe159fe99a0c2503fdf35170868683c6a91ac05e767375511c8fee"
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
@@ -576189,11 +576257,11 @@
             },
             {
               "path": "packages/i18n/src/feedback.ts",
-              "sha256": "b1f4ea7e198d512663ac94cffd577f7c3429a483e54dc80b85d4c1fa5eb656eb"
+              "sha256": "144729daa5cc47be87f93723292417b5e508ba38d906ed52ce82db1b243093ad"
             },
             {
               "path": "packages/i18n/src/loading-feedback.ts",
-              "sha256": "05061d8773cde356e884ac9207258a283ee89838e25968b79ff5bd20adb9f95c"
+              "sha256": "f9506ea444ffa515afef51e2d0938abaef5f83dfaebbb9b9effa1b27ac775ce7"
             },
             {
               "path": "packages/i18n/src/notification-feedback.ts",
@@ -576936,6 +577004,11 @@
               "batch": "release-0.5-solar-guidance-ready",
               "base_commit": "0e3c581025a102eb58d5f7a966777418b7cd9d7f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-solar-guidance-ready/proof.json"
+            },
+            {
+              "batch": "release-0.5-stale-route-recovery",
+              "base_commit": "94be7274bd388df53b01dd860f3e6e0c23775e92",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-stale-route-recovery/proof.json"
             }
           ]
         }
@@ -577015,7 +577088,8 @@
           "release-0.5-owned-staff-solar-review",
           "release-0.5-essential-control-contrast",
           "release-0.5-saving-conditional-agreement",
-          "release-0.5-solar-guidance-ready"
+          "release-0.5-solar-guidance-ready",
+          "release-0.5-stale-route-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -577063,7 +577137,7 @@
             },
             {
               "path": "apps/web/e2e/feedback.spec.ts",
-              "sha256": "e8492bc489ab019df50aeb692becba89037a1ae5fa0a92aef79c4e8dc071fcac"
+              "sha256": "437285df1c50e39fa61fab089b1835e518304e3a3e55c749578369b86b8c357e"
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
@@ -577219,7 +577293,7 @@
             },
             {
               "path": "apps/web/src/components/RouteErrorBoundary.tsx",
-              "sha256": "127e7248dda06c0f76c2a75bb99f52cb5a34df8ed718d80415c761444a034371"
+              "sha256": "d441781374866feb0d79c49687132ba72e43e5e818d06d6995018df308dd2477"
             },
             {
               "path": "apps/web/src/components/RouteSkeleton.tsx",
@@ -577379,7 +577453,7 @@
             },
             {
               "path": "apps/web/src/components/route-states.test.tsx",
-              "sha256": "6979eebaec7ac098e0d8560ca7a73b8ea41a4e6de7fd4b364af44a02418790cc"
+              "sha256": "f256bcfca2c9e97b8c4c49f896eb92585f559d7e5a9427118b6fdf63ea2af6a4"
             },
             {
               "path": "apps/web/src/components/saving-change-query.test.tsx",
@@ -578003,7 +578077,7 @@
             },
             {
               "path": "apps/web/src/router.tsx",
-              "sha256": "df44ea939e76acde4c8b5aea9bec0995ae7e219e18c03e2c9d093efa09f12122"
+              "sha256": "e5c231ac2cfe159fe99a0c2503fdf35170868683c6a91ac05e767375511c8fee"
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
@@ -578059,11 +578133,11 @@
             },
             {
               "path": "packages/i18n/src/feedback.ts",
-              "sha256": "b1f4ea7e198d512663ac94cffd577f7c3429a483e54dc80b85d4c1fa5eb656eb"
+              "sha256": "144729daa5cc47be87f93723292417b5e508ba38d906ed52ce82db1b243093ad"
             },
             {
               "path": "packages/i18n/src/loading-feedback.ts",
-              "sha256": "05061d8773cde356e884ac9207258a283ee89838e25968b79ff5bd20adb9f95c"
+              "sha256": "f9506ea444ffa515afef51e2d0938abaef5f83dfaebbb9b9effa1b27ac775ce7"
             },
             {
               "path": "packages/i18n/src/notification-feedback.ts",
@@ -578806,6 +578880,11 @@
               "batch": "release-0.5-solar-guidance-ready",
               "base_commit": "0e3c581025a102eb58d5f7a966777418b7cd9d7f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-solar-guidance-ready/proof.json"
+            },
+            {
+              "batch": "release-0.5-stale-route-recovery",
+              "base_commit": "94be7274bd388df53b01dd860f3e6e0c23775e92",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-stale-route-recovery/proof.json"
             }
           ]
         }
@@ -578885,7 +578964,8 @@
           "release-0.5-owned-staff-solar-review",
           "release-0.5-essential-control-contrast",
           "release-0.5-saving-conditional-agreement",
-          "release-0.5-solar-guidance-ready"
+          "release-0.5-solar-guidance-ready",
+          "release-0.5-stale-route-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -578933,7 +579013,7 @@
             },
             {
               "path": "apps/web/e2e/feedback.spec.ts",
-              "sha256": "e8492bc489ab019df50aeb692becba89037a1ae5fa0a92aef79c4e8dc071fcac"
+              "sha256": "437285df1c50e39fa61fab089b1835e518304e3a3e55c749578369b86b8c357e"
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
@@ -579089,7 +579169,7 @@
             },
             {
               "path": "apps/web/src/components/RouteErrorBoundary.tsx",
-              "sha256": "127e7248dda06c0f76c2a75bb99f52cb5a34df8ed718d80415c761444a034371"
+              "sha256": "d441781374866feb0d79c49687132ba72e43e5e818d06d6995018df308dd2477"
             },
             {
               "path": "apps/web/src/components/RouteSkeleton.tsx",
@@ -579249,7 +579329,7 @@
             },
             {
               "path": "apps/web/src/components/route-states.test.tsx",
-              "sha256": "6979eebaec7ac098e0d8560ca7a73b8ea41a4e6de7fd4b364af44a02418790cc"
+              "sha256": "f256bcfca2c9e97b8c4c49f896eb92585f559d7e5a9427118b6fdf63ea2af6a4"
             },
             {
               "path": "apps/web/src/components/saving-change-query.test.tsx",
@@ -579873,7 +579953,7 @@
             },
             {
               "path": "apps/web/src/router.tsx",
-              "sha256": "df44ea939e76acde4c8b5aea9bec0995ae7e219e18c03e2c9d093efa09f12122"
+              "sha256": "e5c231ac2cfe159fe99a0c2503fdf35170868683c6a91ac05e767375511c8fee"
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
@@ -579929,11 +580009,11 @@
             },
             {
               "path": "packages/i18n/src/feedback.ts",
-              "sha256": "b1f4ea7e198d512663ac94cffd577f7c3429a483e54dc80b85d4c1fa5eb656eb"
+              "sha256": "144729daa5cc47be87f93723292417b5e508ba38d906ed52ce82db1b243093ad"
             },
             {
               "path": "packages/i18n/src/loading-feedback.ts",
-              "sha256": "05061d8773cde356e884ac9207258a283ee89838e25968b79ff5bd20adb9f95c"
+              "sha256": "f9506ea444ffa515afef51e2d0938abaef5f83dfaebbb9b9effa1b27ac775ce7"
             },
             {
               "path": "packages/i18n/src/notification-feedback.ts",
@@ -580676,6 +580756,11 @@
               "batch": "release-0.5-solar-guidance-ready",
               "base_commit": "0e3c581025a102eb58d5f7a966777418b7cd9d7f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-solar-guidance-ready/proof.json"
+            },
+            {
+              "batch": "release-0.5-stale-route-recovery",
+              "base_commit": "94be7274bd388df53b01dd860f3e6e0c23775e92",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-stale-route-recovery/proof.json"
             }
           ]
         }
@@ -580755,7 +580840,8 @@
           "release-0.5-owned-staff-solar-review",
           "release-0.5-essential-control-contrast",
           "release-0.5-saving-conditional-agreement",
-          "release-0.5-solar-guidance-ready"
+          "release-0.5-solar-guidance-ready",
+          "release-0.5-stale-route-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -580803,7 +580889,7 @@
             },
             {
               "path": "apps/web/e2e/feedback.spec.ts",
-              "sha256": "e8492bc489ab019df50aeb692becba89037a1ae5fa0a92aef79c4e8dc071fcac"
+              "sha256": "437285df1c50e39fa61fab089b1835e518304e3a3e55c749578369b86b8c357e"
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
@@ -580959,7 +581045,7 @@
             },
             {
               "path": "apps/web/src/components/RouteErrorBoundary.tsx",
-              "sha256": "127e7248dda06c0f76c2a75bb99f52cb5a34df8ed718d80415c761444a034371"
+              "sha256": "d441781374866feb0d79c49687132ba72e43e5e818d06d6995018df308dd2477"
             },
             {
               "path": "apps/web/src/components/RouteSkeleton.tsx",
@@ -581119,7 +581205,7 @@
             },
             {
               "path": "apps/web/src/components/route-states.test.tsx",
-              "sha256": "6979eebaec7ac098e0d8560ca7a73b8ea41a4e6de7fd4b364af44a02418790cc"
+              "sha256": "f256bcfca2c9e97b8c4c49f896eb92585f559d7e5a9427118b6fdf63ea2af6a4"
             },
             {
               "path": "apps/web/src/components/saving-change-query.test.tsx",
@@ -581743,7 +581829,7 @@
             },
             {
               "path": "apps/web/src/router.tsx",
-              "sha256": "df44ea939e76acde4c8b5aea9bec0995ae7e219e18c03e2c9d093efa09f12122"
+              "sha256": "e5c231ac2cfe159fe99a0c2503fdf35170868683c6a91ac05e767375511c8fee"
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
@@ -581799,11 +581885,11 @@
             },
             {
               "path": "packages/i18n/src/feedback.ts",
-              "sha256": "b1f4ea7e198d512663ac94cffd577f7c3429a483e54dc80b85d4c1fa5eb656eb"
+              "sha256": "144729daa5cc47be87f93723292417b5e508ba38d906ed52ce82db1b243093ad"
             },
             {
               "path": "packages/i18n/src/loading-feedback.ts",
-              "sha256": "05061d8773cde356e884ac9207258a283ee89838e25968b79ff5bd20adb9f95c"
+              "sha256": "f9506ea444ffa515afef51e2d0938abaef5f83dfaebbb9b9effa1b27ac775ce7"
             },
             {
               "path": "packages/i18n/src/notification-feedback.ts",
@@ -582546,6 +582632,11 @@
               "batch": "release-0.5-solar-guidance-ready",
               "base_commit": "0e3c581025a102eb58d5f7a966777418b7cd9d7f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-solar-guidance-ready/proof.json"
+            },
+            {
+              "batch": "release-0.5-stale-route-recovery",
+              "base_commit": "94be7274bd388df53b01dd860f3e6e0c23775e92",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-stale-route-recovery/proof.json"
             }
           ]
         }
@@ -582625,7 +582716,8 @@
           "release-0.5-owned-staff-solar-review",
           "release-0.5-essential-control-contrast",
           "release-0.5-saving-conditional-agreement",
-          "release-0.5-solar-guidance-ready"
+          "release-0.5-solar-guidance-ready",
+          "release-0.5-stale-route-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -582673,7 +582765,7 @@
             },
             {
               "path": "apps/web/e2e/feedback.spec.ts",
-              "sha256": "e8492bc489ab019df50aeb692becba89037a1ae5fa0a92aef79c4e8dc071fcac"
+              "sha256": "437285df1c50e39fa61fab089b1835e518304e3a3e55c749578369b86b8c357e"
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
@@ -582829,7 +582921,7 @@
             },
             {
               "path": "apps/web/src/components/RouteErrorBoundary.tsx",
-              "sha256": "127e7248dda06c0f76c2a75bb99f52cb5a34df8ed718d80415c761444a034371"
+              "sha256": "d441781374866feb0d79c49687132ba72e43e5e818d06d6995018df308dd2477"
             },
             {
               "path": "apps/web/src/components/RouteSkeleton.tsx",
@@ -582989,7 +583081,7 @@
             },
             {
               "path": "apps/web/src/components/route-states.test.tsx",
-              "sha256": "6979eebaec7ac098e0d8560ca7a73b8ea41a4e6de7fd4b364af44a02418790cc"
+              "sha256": "f256bcfca2c9e97b8c4c49f896eb92585f559d7e5a9427118b6fdf63ea2af6a4"
             },
             {
               "path": "apps/web/src/components/saving-change-query.test.tsx",
@@ -583613,7 +583705,7 @@
             },
             {
               "path": "apps/web/src/router.tsx",
-              "sha256": "df44ea939e76acde4c8b5aea9bec0995ae7e219e18c03e2c9d093efa09f12122"
+              "sha256": "e5c231ac2cfe159fe99a0c2503fdf35170868683c6a91ac05e767375511c8fee"
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
@@ -583669,11 +583761,11 @@
             },
             {
               "path": "packages/i18n/src/feedback.ts",
-              "sha256": "b1f4ea7e198d512663ac94cffd577f7c3429a483e54dc80b85d4c1fa5eb656eb"
+              "sha256": "144729daa5cc47be87f93723292417b5e508ba38d906ed52ce82db1b243093ad"
             },
             {
               "path": "packages/i18n/src/loading-feedback.ts",
-              "sha256": "05061d8773cde356e884ac9207258a283ee89838e25968b79ff5bd20adb9f95c"
+              "sha256": "f9506ea444ffa515afef51e2d0938abaef5f83dfaebbb9b9effa1b27ac775ce7"
             },
             {
               "path": "packages/i18n/src/notification-feedback.ts",
@@ -584416,6 +584508,11 @@
               "batch": "release-0.5-solar-guidance-ready",
               "base_commit": "0e3c581025a102eb58d5f7a966777418b7cd9d7f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-solar-guidance-ready/proof.json"
+            },
+            {
+              "batch": "release-0.5-stale-route-recovery",
+              "base_commit": "94be7274bd388df53b01dd860f3e6e0c23775e92",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-stale-route-recovery/proof.json"
             }
           ]
         }
@@ -584478,7 +584575,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-owned-staff-solar-review",
-          "release-0.5-consultation-staff-command-receipts"
+          "release-0.5-consultation-staff-command-receipts",
+          "release-0.5-stale-route-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -584914,7 +585012,7 @@
             },
             {
               "path": "packages/i18n/src/loading-feedback.ts",
-              "sha256": "05061d8773cde356e884ac9207258a283ee89838e25968b79ff5bd20adb9f95c"
+              "sha256": "f9506ea444ffa515afef51e2d0938abaef5f83dfaebbb9b9effa1b27ac775ce7"
             },
             {
               "path": "packages/ui/README.md",
@@ -585143,6 +585241,11 @@
               "batch": "release-0.5-consultation-staff-command-receipts",
               "base_commit": "adcd42ca9ef2cf48acbae6368d92749970029e65",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-staff-command-receipts/proof.json"
+            },
+            {
+              "batch": "release-0.5-stale-route-recovery",
+              "base_commit": "94be7274bd388df53b01dd860f3e6e0c23775e92",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-stale-route-recovery/proof.json"
             }
           ]
         }
@@ -585222,7 +585325,8 @@
           "release-0.5-owned-staff-solar-review",
           "release-0.5-essential-control-contrast",
           "release-0.5-saving-conditional-agreement",
-          "release-0.5-solar-guidance-ready"
+          "release-0.5-solar-guidance-ready",
+          "release-0.5-stale-route-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -585270,7 +585374,7 @@
             },
             {
               "path": "apps/web/e2e/feedback.spec.ts",
-              "sha256": "e8492bc489ab019df50aeb692becba89037a1ae5fa0a92aef79c4e8dc071fcac"
+              "sha256": "437285df1c50e39fa61fab089b1835e518304e3a3e55c749578369b86b8c357e"
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
@@ -585426,7 +585530,7 @@
             },
             {
               "path": "apps/web/src/components/RouteErrorBoundary.tsx",
-              "sha256": "127e7248dda06c0f76c2a75bb99f52cb5a34df8ed718d80415c761444a034371"
+              "sha256": "d441781374866feb0d79c49687132ba72e43e5e818d06d6995018df308dd2477"
             },
             {
               "path": "apps/web/src/components/RouteSkeleton.tsx",
@@ -585586,7 +585690,7 @@
             },
             {
               "path": "apps/web/src/components/route-states.test.tsx",
-              "sha256": "6979eebaec7ac098e0d8560ca7a73b8ea41a4e6de7fd4b364af44a02418790cc"
+              "sha256": "f256bcfca2c9e97b8c4c49f896eb92585f559d7e5a9427118b6fdf63ea2af6a4"
             },
             {
               "path": "apps/web/src/components/saving-change-query.test.tsx",
@@ -586210,7 +586314,7 @@
             },
             {
               "path": "apps/web/src/router.tsx",
-              "sha256": "df44ea939e76acde4c8b5aea9bec0995ae7e219e18c03e2c9d093efa09f12122"
+              "sha256": "e5c231ac2cfe159fe99a0c2503fdf35170868683c6a91ac05e767375511c8fee"
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
@@ -586266,11 +586370,11 @@
             },
             {
               "path": "packages/i18n/src/feedback.ts",
-              "sha256": "b1f4ea7e198d512663ac94cffd577f7c3429a483e54dc80b85d4c1fa5eb656eb"
+              "sha256": "144729daa5cc47be87f93723292417b5e508ba38d906ed52ce82db1b243093ad"
             },
             {
               "path": "packages/i18n/src/loading-feedback.ts",
-              "sha256": "05061d8773cde356e884ac9207258a283ee89838e25968b79ff5bd20adb9f95c"
+              "sha256": "f9506ea444ffa515afef51e2d0938abaef5f83dfaebbb9b9effa1b27ac775ce7"
             },
             {
               "path": "packages/i18n/src/notification-feedback.ts",
@@ -587013,6 +587117,11 @@
               "batch": "release-0.5-solar-guidance-ready",
               "base_commit": "0e3c581025a102eb58d5f7a966777418b7cd9d7f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-solar-guidance-ready/proof.json"
+            },
+            {
+              "batch": "release-0.5-stale-route-recovery",
+              "base_commit": "94be7274bd388df53b01dd860f3e6e0c23775e92",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-stale-route-recovery/proof.json"
             }
           ]
         }
@@ -587092,7 +587201,8 @@
           "release-0.5-owned-staff-solar-review",
           "release-0.5-essential-control-contrast",
           "release-0.5-saving-conditional-agreement",
-          "release-0.5-solar-guidance-ready"
+          "release-0.5-solar-guidance-ready",
+          "release-0.5-stale-route-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -587140,7 +587250,7 @@
             },
             {
               "path": "apps/web/e2e/feedback.spec.ts",
-              "sha256": "e8492bc489ab019df50aeb692becba89037a1ae5fa0a92aef79c4e8dc071fcac"
+              "sha256": "437285df1c50e39fa61fab089b1835e518304e3a3e55c749578369b86b8c357e"
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
@@ -587296,7 +587406,7 @@
             },
             {
               "path": "apps/web/src/components/RouteErrorBoundary.tsx",
-              "sha256": "127e7248dda06c0f76c2a75bb99f52cb5a34df8ed718d80415c761444a034371"
+              "sha256": "d441781374866feb0d79c49687132ba72e43e5e818d06d6995018df308dd2477"
             },
             {
               "path": "apps/web/src/components/RouteSkeleton.tsx",
@@ -587456,7 +587566,7 @@
             },
             {
               "path": "apps/web/src/components/route-states.test.tsx",
-              "sha256": "6979eebaec7ac098e0d8560ca7a73b8ea41a4e6de7fd4b364af44a02418790cc"
+              "sha256": "f256bcfca2c9e97b8c4c49f896eb92585f559d7e5a9427118b6fdf63ea2af6a4"
             },
             {
               "path": "apps/web/src/components/saving-change-query.test.tsx",
@@ -588080,7 +588190,7 @@
             },
             {
               "path": "apps/web/src/router.tsx",
-              "sha256": "df44ea939e76acde4c8b5aea9bec0995ae7e219e18c03e2c9d093efa09f12122"
+              "sha256": "e5c231ac2cfe159fe99a0c2503fdf35170868683c6a91ac05e767375511c8fee"
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
@@ -588136,11 +588246,11 @@
             },
             {
               "path": "packages/i18n/src/feedback.ts",
-              "sha256": "b1f4ea7e198d512663ac94cffd577f7c3429a483e54dc80b85d4c1fa5eb656eb"
+              "sha256": "144729daa5cc47be87f93723292417b5e508ba38d906ed52ce82db1b243093ad"
             },
             {
               "path": "packages/i18n/src/loading-feedback.ts",
-              "sha256": "05061d8773cde356e884ac9207258a283ee89838e25968b79ff5bd20adb9f95c"
+              "sha256": "f9506ea444ffa515afef51e2d0938abaef5f83dfaebbb9b9effa1b27ac775ce7"
             },
             {
               "path": "packages/i18n/src/notification-feedback.ts",
@@ -588883,6 +588993,11 @@
               "batch": "release-0.5-solar-guidance-ready",
               "base_commit": "0e3c581025a102eb58d5f7a966777418b7cd9d7f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-solar-guidance-ready/proof.json"
+            },
+            {
+              "batch": "release-0.5-stale-route-recovery",
+              "base_commit": "94be7274bd388df53b01dd860f3e6e0c23775e92",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-stale-route-recovery/proof.json"
             }
           ]
         }
@@ -588903,7 +589018,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Solar guidance now shows pending and retry states and holds review submission until current guidance is accepted. Uploads and the checklist draft remain usable. The saving, consultation and solar recovery evidence remains recorded. Other conditional states are open."
+        "The stale-route fallback preserves a usable reload when both chunks are missing and returns to the requested route on a fresh deployment. Prior saving, consultation and solar conditional recovery evidence remains recorded. Other conditional states are open."
       ],
       "owner": null,
       "depends_on": [],
@@ -588934,7 +589049,8 @@
           "release-0.5-owned-staff-solar-review",
           "release-0.5-consultation-staff-command-receipts",
           "release-0.5-saving-conditional-agreement",
-          "release-0.5-solar-guidance-ready"
+          "release-0.5-solar-guidance-ready",
+          "release-0.5-stale-route-recovery"
         ],
         "current_acceptance": null
       }
@@ -588954,7 +589070,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Route boundaries now preserve the main landmark, a safe reference and ordinary retry; chunk failures additionally offer a full document reload. Route diagnostics still require a configured destination and an actual receipt. Owner decision pending on Grafana/Loki equivalent versus protected Sentry configuration."
+        "The standard boundary preserves its safe support reference and retry, classifies WebKit module errors, and offers a full document reload. When the detailed boundary is also missing, the bundled localized fallback keeps one main and one heading and reloads to the fresh deployment. The remaining route diagnostics criterion needs a protected Sentry configuration or the pending owner decision on Grafana/Loki, followed by an actual receipt."
       ],
       "owner": null,
       "depends_on": [],
@@ -588963,7 +589079,8 @@
         "changed_paths": [],
         "batches": [
           "release-0.5-notification-recovery-journey",
-          "release-0.5-route-fallback-and-announcement"
+          "release-0.5-route-fallback-and-announcement",
+          "release-0.5-stale-route-recovery"
         ],
         "current_acceptance": null
       }
@@ -643450,7 +643567,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-owned-read-retry-feedback",
           "release-0.5-dashboard-browser-recovery",
-          "release-0.5-owned-solar-and-consultation-feedback"
+          "release-0.5-owned-solar-and-consultation-feedback",
+          "release-0.5-stale-route-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -643774,7 +643892,7 @@
             },
             {
               "path": "packages/i18n/src/feedback.ts",
-              "sha256": "b1f4ea7e198d512663ac94cffd577f7c3429a483e54dc80b85d4c1fa5eb656eb"
+              "sha256": "144729daa5cc47be87f93723292417b5e508ba38d906ed52ce82db1b243093ad"
             },
             {
               "path": "packages/i18n/src/numbers.ts",
@@ -644027,6 +644145,11 @@
               "batch": "release-0.5-owned-solar-and-consultation-feedback",
               "base_commit": "f239f203fcc8f74f8fbf9b44652aef6264030aa8",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-owned-solar-and-consultation-feedback/proof.json"
+            },
+            {
+              "batch": "release-0.5-stale-route-recovery",
+              "base_commit": "94be7274bd388df53b01dd860f3e6e0c23775e92",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-stale-route-recovery/proof.json"
             }
           ]
         }
@@ -644078,7 +644201,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-owned-read-retry-feedback",
           "release-0.5-dashboard-browser-recovery",
-          "release-0.5-owned-solar-and-consultation-feedback"
+          "release-0.5-owned-solar-and-consultation-feedback",
+          "release-0.5-stale-route-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -644402,7 +644526,7 @@
             },
             {
               "path": "packages/i18n/src/feedback.ts",
-              "sha256": "b1f4ea7e198d512663ac94cffd577f7c3429a483e54dc80b85d4c1fa5eb656eb"
+              "sha256": "144729daa5cc47be87f93723292417b5e508ba38d906ed52ce82db1b243093ad"
             },
             {
               "path": "packages/i18n/src/numbers.ts",
@@ -644655,6 +644779,11 @@
               "batch": "release-0.5-owned-solar-and-consultation-feedback",
               "base_commit": "f239f203fcc8f74f8fbf9b44652aef6264030aa8",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-owned-solar-and-consultation-feedback/proof.json"
+            },
+            {
+              "batch": "release-0.5-stale-route-recovery",
+              "base_commit": "94be7274bd388df53b01dd860f3e6e0c23775e92",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-stale-route-recovery/proof.json"
             }
           ]
         }
@@ -644706,7 +644835,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-owned-read-retry-feedback",
           "release-0.5-dashboard-browser-recovery",
-          "release-0.5-owned-solar-and-consultation-feedback"
+          "release-0.5-owned-solar-and-consultation-feedback",
+          "release-0.5-stale-route-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -645030,7 +645160,7 @@
             },
             {
               "path": "packages/i18n/src/feedback.ts",
-              "sha256": "b1f4ea7e198d512663ac94cffd577f7c3429a483e54dc80b85d4c1fa5eb656eb"
+              "sha256": "144729daa5cc47be87f93723292417b5e508ba38d906ed52ce82db1b243093ad"
             },
             {
               "path": "packages/i18n/src/numbers.ts",
@@ -645283,6 +645413,11 @@
               "batch": "release-0.5-owned-solar-and-consultation-feedback",
               "base_commit": "f239f203fcc8f74f8fbf9b44652aef6264030aa8",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-owned-solar-and-consultation-feedback/proof.json"
+            },
+            {
+              "batch": "release-0.5-stale-route-recovery",
+              "base_commit": "94be7274bd388df53b01dd860f3e6e0c23775e92",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-stale-route-recovery/proof.json"
             }
           ]
         }
@@ -645332,7 +645467,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-owned-read-retry-feedback",
           "release-0.5-dashboard-browser-recovery",
-          "release-0.5-owned-solar-and-consultation-feedback"
+          "release-0.5-owned-solar-and-consultation-feedback",
+          "release-0.5-stale-route-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -645656,7 +645792,7 @@
             },
             {
               "path": "packages/i18n/src/feedback.ts",
-              "sha256": "b1f4ea7e198d512663ac94cffd577f7c3429a483e54dc80b85d4c1fa5eb656eb"
+              "sha256": "144729daa5cc47be87f93723292417b5e508ba38d906ed52ce82db1b243093ad"
             },
             {
               "path": "packages/i18n/src/numbers.ts",
@@ -645909,6 +646045,11 @@
               "batch": "release-0.5-owned-solar-and-consultation-feedback",
               "base_commit": "f239f203fcc8f74f8fbf9b44652aef6264030aa8",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-owned-solar-and-consultation-feedback/proof.json"
+            },
+            {
+              "batch": "release-0.5-stale-route-recovery",
+              "base_commit": "94be7274bd388df53b01dd860f3e6e0c23775e92",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-stale-route-recovery/proof.json"
             }
           ]
         }
@@ -645958,7 +646099,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-owned-read-retry-feedback",
           "release-0.5-dashboard-browser-recovery",
-          "release-0.5-owned-solar-and-consultation-feedback"
+          "release-0.5-owned-solar-and-consultation-feedback",
+          "release-0.5-stale-route-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -646282,7 +646424,7 @@
             },
             {
               "path": "packages/i18n/src/feedback.ts",
-              "sha256": "b1f4ea7e198d512663ac94cffd577f7c3429a483e54dc80b85d4c1fa5eb656eb"
+              "sha256": "144729daa5cc47be87f93723292417b5e508ba38d906ed52ce82db1b243093ad"
             },
             {
               "path": "packages/i18n/src/numbers.ts",
@@ -646535,6 +646677,11 @@
               "batch": "release-0.5-owned-solar-and-consultation-feedback",
               "base_commit": "f239f203fcc8f74f8fbf9b44652aef6264030aa8",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-owned-solar-and-consultation-feedback/proof.json"
+            },
+            {
+              "batch": "release-0.5-stale-route-recovery",
+              "base_commit": "94be7274bd388df53b01dd860f3e6e0c23775e92",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-stale-route-recovery/proof.json"
             }
           ]
         }
@@ -646586,7 +646733,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-owned-read-retry-feedback",
           "release-0.5-dashboard-browser-recovery",
-          "release-0.5-owned-solar-and-consultation-feedback"
+          "release-0.5-owned-solar-and-consultation-feedback",
+          "release-0.5-stale-route-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -646910,7 +647058,7 @@
             },
             {
               "path": "packages/i18n/src/feedback.ts",
-              "sha256": "b1f4ea7e198d512663ac94cffd577f7c3429a483e54dc80b85d4c1fa5eb656eb"
+              "sha256": "144729daa5cc47be87f93723292417b5e508ba38d906ed52ce82db1b243093ad"
             },
             {
               "path": "packages/i18n/src/numbers.ts",
@@ -647163,6 +647311,11 @@
               "batch": "release-0.5-owned-solar-and-consultation-feedback",
               "base_commit": "f239f203fcc8f74f8fbf9b44652aef6264030aa8",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-owned-solar-and-consultation-feedback/proof.json"
+            },
+            {
+              "batch": "release-0.5-stale-route-recovery",
+              "base_commit": "94be7274bd388df53b01dd860f3e6e0c23775e92",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-stale-route-recovery/proof.json"
             }
           ]
         }
@@ -647213,7 +647366,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-owned-read-retry-feedback",
           "release-0.5-dashboard-browser-recovery",
-          "release-0.5-owned-solar-and-consultation-feedback"
+          "release-0.5-owned-solar-and-consultation-feedback",
+          "release-0.5-stale-route-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -647537,7 +647691,7 @@
             },
             {
               "path": "packages/i18n/src/feedback.ts",
-              "sha256": "b1f4ea7e198d512663ac94cffd577f7c3429a483e54dc80b85d4c1fa5eb656eb"
+              "sha256": "144729daa5cc47be87f93723292417b5e508ba38d906ed52ce82db1b243093ad"
             },
             {
               "path": "packages/i18n/src/numbers.ts",
@@ -647790,6 +647944,11 @@
               "batch": "release-0.5-owned-solar-and-consultation-feedback",
               "base_commit": "f239f203fcc8f74f8fbf9b44652aef6264030aa8",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-owned-solar-and-consultation-feedback/proof.json"
+            },
+            {
+              "batch": "release-0.5-stale-route-recovery",
+              "base_commit": "94be7274bd388df53b01dd860f3e6e0c23775e92",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-stale-route-recovery/proof.json"
             }
           ]
         }
@@ -647840,7 +647999,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-owned-read-retry-feedback",
           "release-0.5-dashboard-browser-recovery",
-          "release-0.5-owned-solar-and-consultation-feedback"
+          "release-0.5-owned-solar-and-consultation-feedback",
+          "release-0.5-stale-route-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -648164,7 +648324,7 @@
             },
             {
               "path": "packages/i18n/src/feedback.ts",
-              "sha256": "b1f4ea7e198d512663ac94cffd577f7c3429a483e54dc80b85d4c1fa5eb656eb"
+              "sha256": "144729daa5cc47be87f93723292417b5e508ba38d906ed52ce82db1b243093ad"
             },
             {
               "path": "packages/i18n/src/numbers.ts",
@@ -648417,6 +648577,11 @@
               "batch": "release-0.5-owned-solar-and-consultation-feedback",
               "base_commit": "f239f203fcc8f74f8fbf9b44652aef6264030aa8",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-owned-solar-and-consultation-feedback/proof.json"
+            },
+            {
+              "batch": "release-0.5-stale-route-recovery",
+              "base_commit": "94be7274bd388df53b01dd860f3e6e0c23775e92",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-stale-route-recovery/proof.json"
             }
           ]
         }
@@ -648467,7 +648632,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-owned-read-retry-feedback",
           "release-0.5-dashboard-browser-recovery",
-          "release-0.5-owned-solar-and-consultation-feedback"
+          "release-0.5-owned-solar-and-consultation-feedback",
+          "release-0.5-stale-route-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -648791,7 +648957,7 @@
             },
             {
               "path": "packages/i18n/src/feedback.ts",
-              "sha256": "b1f4ea7e198d512663ac94cffd577f7c3429a483e54dc80b85d4c1fa5eb656eb"
+              "sha256": "144729daa5cc47be87f93723292417b5e508ba38d906ed52ce82db1b243093ad"
             },
             {
               "path": "packages/i18n/src/numbers.ts",
@@ -649044,6 +649210,11 @@
               "batch": "release-0.5-owned-solar-and-consultation-feedback",
               "base_commit": "f239f203fcc8f74f8fbf9b44652aef6264030aa8",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-owned-solar-and-consultation-feedback/proof.json"
+            },
+            {
+              "batch": "release-0.5-stale-route-recovery",
+              "base_commit": "94be7274bd388df53b01dd860f3e6e0c23775e92",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-stale-route-recovery/proof.json"
             }
           ]
         }
@@ -649094,7 +649265,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-owned-read-retry-feedback",
           "release-0.5-dashboard-browser-recovery",
-          "release-0.5-owned-solar-and-consultation-feedback"
+          "release-0.5-owned-solar-and-consultation-feedback",
+          "release-0.5-stale-route-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -649418,7 +649590,7 @@
             },
             {
               "path": "packages/i18n/src/feedback.ts",
-              "sha256": "b1f4ea7e198d512663ac94cffd577f7c3429a483e54dc80b85d4c1fa5eb656eb"
+              "sha256": "144729daa5cc47be87f93723292417b5e508ba38d906ed52ce82db1b243093ad"
             },
             {
               "path": "packages/i18n/src/numbers.ts",
@@ -649671,6 +649843,11 @@
               "batch": "release-0.5-owned-solar-and-consultation-feedback",
               "base_commit": "f239f203fcc8f74f8fbf9b44652aef6264030aa8",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-owned-solar-and-consultation-feedback/proof.json"
+            },
+            {
+              "batch": "release-0.5-stale-route-recovery",
+              "base_commit": "94be7274bd388df53b01dd860f3e6e0c23775e92",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-stale-route-recovery/proof.json"
             }
           ]
         }
@@ -649721,7 +649898,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-owned-read-retry-feedback",
           "release-0.5-dashboard-browser-recovery",
-          "release-0.5-owned-solar-and-consultation-feedback"
+          "release-0.5-owned-solar-and-consultation-feedback",
+          "release-0.5-stale-route-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -650045,7 +650223,7 @@
             },
             {
               "path": "packages/i18n/src/feedback.ts",
-              "sha256": "b1f4ea7e198d512663ac94cffd577f7c3429a483e54dc80b85d4c1fa5eb656eb"
+              "sha256": "144729daa5cc47be87f93723292417b5e508ba38d906ed52ce82db1b243093ad"
             },
             {
               "path": "packages/i18n/src/numbers.ts",
@@ -650298,6 +650476,11 @@
               "batch": "release-0.5-owned-solar-and-consultation-feedback",
               "base_commit": "f239f203fcc8f74f8fbf9b44652aef6264030aa8",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-owned-solar-and-consultation-feedback/proof.json"
+            },
+            {
+              "batch": "release-0.5-stale-route-recovery",
+              "base_commit": "94be7274bd388df53b01dd860f3e6e0c23775e92",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-stale-route-recovery/proof.json"
             }
           ]
         }
@@ -650348,7 +650531,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-owned-read-retry-feedback",
           "release-0.5-dashboard-browser-recovery",
-          "release-0.5-owned-solar-and-consultation-feedback"
+          "release-0.5-owned-solar-and-consultation-feedback",
+          "release-0.5-stale-route-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -650672,7 +650856,7 @@
             },
             {
               "path": "packages/i18n/src/feedback.ts",
-              "sha256": "b1f4ea7e198d512663ac94cffd577f7c3429a483e54dc80b85d4c1fa5eb656eb"
+              "sha256": "144729daa5cc47be87f93723292417b5e508ba38d906ed52ce82db1b243093ad"
             },
             {
               "path": "packages/i18n/src/numbers.ts",
@@ -650925,6 +651109,11 @@
               "batch": "release-0.5-owned-solar-and-consultation-feedback",
               "base_commit": "f239f203fcc8f74f8fbf9b44652aef6264030aa8",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-owned-solar-and-consultation-feedback/proof.json"
+            },
+            {
+              "batch": "release-0.5-stale-route-recovery",
+              "base_commit": "94be7274bd388df53b01dd860f3e6e0c23775e92",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-stale-route-recovery/proof.json"
             }
           ]
         }
@@ -716781,7 +716970,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "The solar customer document journey now shows held guidance and enables review only after the owned read succeeds. The full upload, staff review and postal journey and shared caller workflows pass. Remaining conditional UI and command adoption are open."
+        "The shared router now recovers from a stale page and recovery chunk without displaying raw error details. Customer auth, registration and owned contract callers passed on both browser engines. Remaining conditional UI and command adoption are open."
       ],
       "owner": null,
       "depends_on": [],
@@ -716839,7 +717028,8 @@
           "release-0.5-owned-staff-solar-review",
           "release-0.5-consultation-staff-command-receipts",
           "release-0.5-saving-conditional-agreement",
-          "release-0.5-solar-guidance-ready"
+          "release-0.5-solar-guidance-ready",
+          "release-0.5-stale-route-recovery"
         ]
       }
     },
@@ -716858,7 +717048,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "The solar guidance/shared status batch passed 40 Chromium/mobile Safari cases, 55 affected web unit cases and all 98 bundle limits. Official combined coverage remains bound to dd9c6d87. Final candidate coverage and remaining accessibility gates are open."
+        "The route-recovery batch passed 48 targeted Chromium/mobile Safari cases, 11 route-state unit cases, 130 i18n cases and all 98 bundle limits. Official combined coverage remains bound to dd9c6d87. Final candidate coverage and remaining accessibility gates are open."
       ],
       "owner": null,
       "depends_on": [],
@@ -716918,7 +717108,8 @@
           "release-0.5-consultation-staff-command-receipts",
           "release-0.5-component-direction-matrix",
           "release-0.5-saving-conditional-agreement",
-          "release-0.5-solar-guidance-ready"
+          "release-0.5-solar-guidance-ready",
+          "release-0.5-stale-route-recovery"
         ]
       }
     },
@@ -779247,6 +779438,99 @@
       ],
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-solar-guidance-ready",
       "release_disposition": "Solar guidance and shared workflow presentation evidence renewed. Conditional product routes and final candidate gates remain open."
+    },
+    "release-0.5-stale-route-recovery": {
+      "batch": "release-0.5-stale-route-recovery",
+      "base_commit": "94be7274bd388df53b01dd860f3e6e0c23775e92",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.09",
+        "07-ui-ux-design.md#T-07.05.01.07",
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "accepted_task_keys": [],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.09",
+        "07-ui-ux-design.md#T-07.05.01.07",
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/feedback.spec.ts",
+          "sha256": "437285df1c50e39fa61fab089b1835e518304e3a3e55c749578369b86b8c357e"
+        },
+        {
+          "path": "apps/web/src/components/RouteErrorBoundary.tsx",
+          "sha256": "d441781374866feb0d79c49687132ba72e43e5e818d06d6995018df308dd2477"
+        },
+        {
+          "path": "apps/web/src/components/RouteFallbackLandmark.tsx",
+          "sha256": "92f2454ab22bf6803f53fe5d7efb7d757c2b1fa6606046b9a3a8a257af3eaaa9"
+        },
+        {
+          "path": "apps/web/src/components/route-states.test.tsx",
+          "sha256": "f256bcfca2c9e97b8c4c49f896eb92585f559d7e5a9427118b6fdf63ea2af6a4"
+        },
+        {
+          "path": "apps/web/src/router.tsx",
+          "sha256": "e5c231ac2cfe159fe99a0c2503fdf35170868683c6a91ac05e767375511c8fee"
+        },
+        {
+          "path": "packages/i18n/src/feedback.ts",
+          "sha256": "144729daa5cc47be87f93723292417b5e508ba38d906ed52ce82db1b243093ad"
+        },
+        {
+          "path": "packages/i18n/src/loading-feedback.ts",
+          "sha256": "f9506ea444ffa515afef51e2d0938abaef5f83dfaebbb9b9effa1b27ac775ce7"
+        }
+      ],
+      "checks": [
+        "Both stale assets return 404. The bundled fallback keeps one main and heading, keyboard access and clean scoped axe checks in Persian and English. Its reload opens the requested fresh route on Chromium and mobile Safari.",
+        "The standard route error UI keeps retry and the safe support reference, handles the WebKit module error and offers full reload for all ordinary route errors.",
+        "48 production-build browser cases, 11 web route-state and 130 i18n unit cases, typecheck, lint, formatting, build and all 98 gzip limits passed."
+      ],
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-stale-route-recovery/proof.json",
+      "source_scope_proof_sha256": "e372e9f2c4ca05ce3c918f0fed7a3bd1370b8945ca7863ba6d5b24552e0b1b26",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-stale-route-recovery/reviewed.patch",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-stale-route-recovery/renewed-bindings.json",
+      "renewed_task_keys": [
+        "07-ui-ux-design.md#T-07.01.04.05",
+        "07-ui-ux-design.md#T-07.05.01.01",
+        "07-ui-ux-design.md#T-07.05.01.04",
+        "07-ui-ux-design.md#T-07.11.01.01",
+        "07-ui-ux-design.md#T-07.11.01.02",
+        "07-ui-ux-design.md#T-07.11.01.04",
+        "07-ui-ux-design.md#T-07.11.01.05",
+        "07-ui-ux-design.md#T-07.11.02.01",
+        "07-ui-ux-design.md#T-07.11.02.02",
+        "07-ui-ux-design.md#T-07.11.02.03",
+        "07-ui-ux-design.md#T-07.11.02.04",
+        "07-ui-ux-design.md#T-07.11.02.05",
+        "07-ui-ux-design.md#T-07.12.01.01",
+        "07-ui-ux-design.md#T-07.12.01.02",
+        "07-ui-ux-design.md#T-07.12.01.03",
+        "07-ui-ux-design.md#T-07.12.01.04",
+        "07-ui-ux-design.md#T-07.12.01.05",
+        "07-ui-ux-design.md#T-07.12.01.06",
+        "07-ui-ux-design.md#T-07.12.01.07",
+        "07-ui-ux-design.md#T-07.19.01.01",
+        "07-ui-ux-design.md#T-07.19.01.02",
+        "07-ui-ux-design.md#T-07.19.01.03",
+        "07-ui-ux-design.md#T-07.19.02.01",
+        "07-ui-ux-design.md#T-07.19.02.02",
+        "07-ui-ux-design.md#T-07.19.02.03",
+        "07-ui-ux-design.md#T-07.19.02.04",
+        "07-ui-ux-design.md#T-07.19.02.05",
+        "07-ui-ux-design.md#T-07.19.02.06",
+        "07-ui-ux-design.md#T-07.19.02.07",
+        "07-ui-ux-design.md#T-07.19.02.08",
+        "07-ui-ux-design.md#T-07.19.02.09"
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-stale-route-recovery",
+      "release_disposition": "Route reload evidence renewed. The live route diagnostics receipt, owner merge policy, other conditional UI and final candidate gates remain open."
     }
   },
   "historical_improvements": [
