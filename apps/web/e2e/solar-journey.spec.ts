@@ -447,15 +447,38 @@ for (const locale of ['en', 'fa'] as const)
 
     await expect(page.getByRole('heading', { name: solarCopy('title', locale) })).toBeVisible();
     await expect(
-      page.getByRole('group', { name: solarCopy('instruction', locale), exact: true })
-    ).toBeVisible();
+      page.getByRole('radiogroup', { name: solarCopy('instruction', locale), exact: true })
+    ).toHaveAttribute('aria-required', 'true');
+    for (const key of [
+      'propertyForm',
+      'structuralFrame',
+      'completionDate',
+      'totalUnits',
+      'address',
+    ])
+      await expect(page.getByLabel(solarCopy(key, locale), { exact: true })).toHaveAttribute(
+        'aria-required',
+        'true'
+      );
     await page.getByLabel(solarCopy('propertyForm', locale)).selectOption('villa');
+    await expect(page.getByLabel(solarCopy('totalUnits', locale), { exact: true })).toHaveCount(0);
     await page.getByLabel(solarCopy('completionDate', locale)).fill('2020-01-01');
     await checkRoutePresentation(page, info, locale);
     await page
       .getByRole('button', { name: appCopy('onboarding.type.continue', locale), exact: true })
       .click();
+    await expect(
+      page.getByRole('radiogroup', { name: solarCopy('gridType', locale), exact: true })
+    ).toHaveAttribute('aria-required', 'true');
+    const bill = page.getByLabel(solarCopy('billIdentifier', locale), { exact: true });
+    await expect(bill).toHaveAttribute('aria-required', 'true');
+    await bill.focus();
+    await bill.blur();
+    await expect(bill).toHaveAccessibleDescription(
+      `${solarCopy('billIdentifier', locale)}: ${appCopy('formWizard.invalidField', locale)}`
+    );
     await page.getByLabel(solarCopy('offGrid', locale)).check();
+    await expect(bill).toHaveCount(0);
     await page.getByRole('button', { name: solarCopy('saveDraft', locale) }).click();
     await expect(
       page.getByRole('status').filter({ hasText: solarCopy('draftSaved', locale) })
@@ -476,7 +499,9 @@ for (const locale of ['en', 'fa'] as const)
     await page
       .getByRole('button', { name: appCopy('onboarding.type.continue', locale), exact: true })
       .click();
-    await checkChoiceTarget(page.getByLabel(solarCopy('agreement', locale)));
+    const agreement = page.getByLabel(solarCopy('agreement', locale));
+    await expect(agreement).toHaveAttribute('aria-required', 'true');
+    await checkChoiceTarget(agreement);
     await page
       .getByRole('button', { name: appCopy('onboarding.type.continue', locale), exact: true })
       .click();
@@ -775,9 +800,17 @@ for (const locale of ['en', 'fa'] as const)
           .getByRole('link', { name: t('settings.addresses.returnToSolarRequest', locale) })
           .click();
         await expect(page).toHaveURL(/\/solar\/requests\/new\?step=1$/);
-        if (buildingType === 'non_household')
+        if (buildingType === 'non_household') {
           await expect(page.locator('#solar-area')).toHaveValue('250');
-        else await expect(page.locator('#solar-completion')).toHaveValue('2020-01-01');
+          for (const key of ['siteCategory', 'installationSurface', 'usableArea', 'relationship'])
+            await expect(page.getByLabel(tSolar(key, locale), { exact: true })).toHaveAttribute(
+              'aria-required',
+              'true'
+            );
+          await expect(
+            page.getByLabel(tSolar('description', locale), { exact: true })
+          ).not.toHaveAttribute('aria-required', 'true');
+        } else await expect(page.locator('#solar-completion')).toHaveValue('2020-01-01');
         await page.getByLabel(tSolar('address', locale)).selectOption(siteAddress.id);
         await expect(page.getByLabel(tSolar('address', locale))).toHaveValue(siteAddress.id);
         expect((await new AxeBuilder({ page }).include('main').analyze()).violations).toEqual([]);

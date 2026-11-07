@@ -725,15 +725,16 @@ export function ConsultationsPage({
                 <FormField
                   control={intake.control}
                   name="productId"
-                  render={({ field }) => (
+                  render={({ field, fieldState }) => (
                     <FormItem id="consultation-product">
-                      <FormLabel id="consultation-product-label" className="text-xl font-semibold">
+                      <p id="consultation-product-label" className="text-xl font-semibold">
                         {copy('available')}
-                      </FormLabel>
+                      </p>
                       <FormControl>
                         <div
                           role="radiogroup"
                           aria-labelledby="consultation-product-label"
+                          aria-required="true"
                           onBlur={field.onBlur}
                         >
                           <ListPage>
@@ -795,7 +796,11 @@ export function ConsultationsPage({
                                       productsError ||
                                       productsDenied
                                     }
-                                    aria-describedby="consultation-product-description consultation-product-message"
+                                    aria-describedby={
+                                      fieldState.error
+                                        ? 'consultation-product-description consultation-product-message'
+                                        : 'consultation-product-description'
+                                    }
                                     onChange={() => {
                                       field.onChange(product.id);
                                       submissionKey.current = null;
@@ -843,6 +848,7 @@ export function ConsultationsPage({
                             <FormControl>
                               <input
                                 type="checkbox"
+                                aria-required="true"
                                 ref={field.ref}
                                 name={field.name}
                                 checked={field.value}

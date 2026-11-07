@@ -663,8 +663,15 @@ export function SolarRequestPage() {
             >
               {step === 1 && (
                 <>
-                  <fieldset className="grid min-w-0 gap-3 sm:grid-cols-2">
-                    <legend className="sr-only">{copy('instruction')}</legend>
+                  <fieldset
+                    role="radiogroup"
+                    aria-labelledby="solar-building-type-label"
+                    aria-required="true"
+                    className="grid min-w-0 gap-3 sm:grid-cols-2"
+                  >
+                    <legend id="solar-building-type-label" className="sr-only">
+                      {copy('instruction')}
+                    </legend>
                     <p aria-hidden="true" className="break-words font-semibold sm:col-span-2">
                       {copy('instruction')}
                     </p>
@@ -702,6 +709,7 @@ export function SolarRequestPage() {
                               id="solar-property-form"
                               className="w-full"
                               {...fields.bind('propertyForm')}
+                              aria-required="true"
                               value={propertyForm}
                               onChange={(e) =>
                                 setPropertyForm(e.target.value as typeof propertyForm)
@@ -719,6 +727,7 @@ export function SolarRequestPage() {
                               id="solar-structural-frame"
                               className="w-full"
                               {...fields.bind('structuralFrame')}
+                              aria-required="true"
                               value={structuralFrame}
                               onChange={(e) =>
                                 setStructuralFrame(e.target.value as typeof structuralFrame)
@@ -741,6 +750,7 @@ export function SolarRequestPage() {
                               max={new Date().toISOString().slice(0, 10)}
                               onChange={(e) => setBuildingCompletionDate(e.target.value)}
                               required
+                              aria-required="true"
                             />
                           </div>
                           {age !== null && (
@@ -760,6 +770,7 @@ export function SolarRequestPage() {
                                 value={totalUnits}
                                 onChange={(e) => setTotalUnits(e.target.value)}
                                 required
+                                aria-required="true"
                               />
                             </div>
                           )}
@@ -772,6 +783,7 @@ export function SolarRequestPage() {
                               id="solar-site-category"
                               className="w-full"
                               {...fields.bind('siteCategory')}
+                              aria-required="true"
                               value={siteCategory}
                               onChange={(e) =>
                                 setSiteCategory(e.target.value as typeof siteCategory)
@@ -792,6 +804,7 @@ export function SolarRequestPage() {
                               id="solar-installation-surface"
                               className="w-full"
                               {...fields.bind('installationSurface')}
+                              aria-required="true"
                               value={installationSurface}
                               onChange={(e) =>
                                 setInstallationSurface(e.target.value as typeof installationSurface)
@@ -816,6 +829,7 @@ export function SolarRequestPage() {
                               value={usableAreaSqm}
                               onChange={(e) => setUsableAreaSqm(e.target.value)}
                               required
+                              aria-required="true"
                             />
                           </div>
                           <div className="space-y-1">
@@ -824,6 +838,7 @@ export function SolarRequestPage() {
                               id="solar-site-relationship"
                               className="w-full"
                               {...fields.bind('siteRelationship')}
+                              aria-required="true"
                               value={siteRelationship}
                               onChange={(e) =>
                                 setSiteRelationship(e.target.value as typeof siteRelationship)
@@ -859,6 +874,7 @@ export function SolarRequestPage() {
                           value={siteAddressId}
                           onChange={(e) => setSiteAddressId(e.target.value)}
                           required
+                          aria-required="true"
                         >
                           <option value="">—</option>
                           {addresses.map((address) => (
@@ -885,8 +901,15 @@ export function SolarRequestPage() {
               )}
               {step === 2 && (
                 <>
-                  <fieldset className="space-y-3">
-                    <legend className="font-semibold">{copy('gridType')}</legend>
+                  <fieldset
+                    role="radiogroup"
+                    aria-labelledby="solar-grid-type-label"
+                    aria-required="true"
+                    className="space-y-3"
+                  >
+                    <legend id="solar-grid-type-label" className="font-semibold">
+                      {copy('gridType')}
+                    </legend>
                     {(['on_grid', 'off_grid'] as const).map((type) => (
                       <label key={type} className="block rounded-xl border p-4">
                         <input
@@ -919,6 +942,7 @@ export function SolarRequestPage() {
                         value={billIdentifier}
                         onChange={(e) => setBillIdentifier(e.target.value)}
                         required
+                        aria-required="true"
                       />
                     </div>
                   )}
@@ -942,6 +966,7 @@ export function SolarRequestPage() {
                       checked={agreementAccepted}
                       onChange={(e) => setAgreementAccepted(e.target.checked)}
                       required
+                      aria-required="true"
                     />
                     {copy('agreement')}
                   </label>

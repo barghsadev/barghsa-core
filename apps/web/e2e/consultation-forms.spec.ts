@@ -71,6 +71,10 @@ for (const [locale, theme] of settings) {
     const submit = group.locator('button[type=submit]');
     const errorToast = (message: string) =>
       page.locator('[data-sonner-toast][data-type="error"]').filter({ hasText: message }).last();
+    await expect(productGroup).toHaveAttribute('aria-required', 'true');
+    await expect(product).toHaveAccessibleDescription(copy('productHelp'));
+    await expect(product).toHaveAttribute('aria-describedby', 'consultation-product-description');
+    await expect(confirmation).toHaveAttribute('aria-required', 'true');
     await submit.click();
     await expect(submit).toBeDisabled();
     await form.dispatchEvent('submit');
@@ -78,9 +82,15 @@ for (const [locale, theme] of settings) {
     expect(state.intakeWrites).toEqual([]);
     release();
     await focusedError(product, productGroup);
+    await expect(product).toHaveAccessibleDescription(
+      `${copy('productHelp')} ${copy('productInvalid')}`
+    );
     await product.check();
     await submit.click();
     await focusedError(confirmation);
+    await expect(confirmation).toHaveAccessibleDescription(
+      `${copy('confirmationHelp')} ${copy('confirmationInvalid')}`
+    );
     expect(state.intakeWrites).toEqual([]);
     await confirmation.check();
     await submit.click();

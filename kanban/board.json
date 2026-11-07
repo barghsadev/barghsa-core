@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-07T22:39:20+00:00",
-  "source_commit": "e69e8927f705fc65836e970df661ef5f188896c6",
+  "updated": "2026-11-07T22:45:25+00:00",
+  "source_commit": "5cece8f5eee5ca62d82a3006912e3d56283af7f7",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -37329,7 +37329,7 @@
             },
             {
               "path": "apps/web/e2e/solar-journey.spec.ts",
-              "sha256": "60650abe5692c071d829b438eb1863de6c7e200764b85829a5401afd05d74318"
+              "sha256": "9231a7c558f5da5f550169d646859c84f3009a6fca4da1c18e50b1db670b13e5"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -37369,7 +37369,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "d0cfb8bba5f551e76b4b29e8a6cb9e19c3d03fb44889b52ceee4354637de9d23"
+              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
@@ -38710,7 +38710,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "76ac2b673ec77fa1593ac9c10ce66dc9c8557e34ce02247ec46621489a82ef16"
+              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
             },
             {
               "path": "apps/web/src/pages/DashboardLayout.tsx",
@@ -38726,7 +38726,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "d0cfb8bba5f551e76b4b29e8a6cb9e19c3d03fb44889b52ceee4354637de9d23"
+              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
             },
             {
               "path": "apps/web/src/routes/terms.tsx",
@@ -40066,7 +40066,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "76ac2b673ec77fa1593ac9c10ce66dc9c8557e34ce02247ec46621489a82ef16"
+              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
             },
             {
               "path": "apps/web/src/pages/DashboardLayout.tsx",
@@ -40082,7 +40082,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "d0cfb8bba5f551e76b4b29e8a6cb9e19c3d03fb44889b52ceee4354637de9d23"
+              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
             },
             {
               "path": "apps/web/src/routes/terms.tsx",
@@ -41430,7 +41430,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "76ac2b673ec77fa1593ac9c10ce66dc9c8557e34ce02247ec46621489a82ef16"
+              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
             },
             {
               "path": "apps/web/src/pages/DashboardLayout.tsx",
@@ -41446,7 +41446,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "d0cfb8bba5f551e76b4b29e8a6cb9e19c3d03fb44889b52ceee4354637de9d23"
+              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
             },
             {
               "path": "apps/web/src/routes/terms.tsx",
@@ -199960,7 +199960,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "76ac2b673ec77fa1593ac9c10ce66dc9c8557e34ce02247ec46621489a82ef16"
+              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -201312,7 +201312,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "76ac2b673ec77fa1593ac9c10ce66dc9c8557e34ce02247ec46621489a82ef16"
+              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -202664,7 +202664,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "76ac2b673ec77fa1593ac9c10ce66dc9c8557e34ce02247ec46621489a82ef16"
+              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -204017,7 +204017,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "76ac2b673ec77fa1593ac9c10ce66dc9c8557e34ce02247ec46621489a82ef16"
+              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -205329,7 +205329,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "76ac2b673ec77fa1593ac9c10ce66dc9c8557e34ce02247ec46621489a82ef16"
+              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -206641,7 +206641,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "76ac2b673ec77fa1593ac9c10ce66dc9c8557e34ce02247ec46621489a82ef16"
+              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -207953,7 +207953,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "76ac2b673ec77fa1593ac9c10ce66dc9c8557e34ce02247ec46621489a82ef16"
+              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -209265,7 +209265,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "76ac2b673ec77fa1593ac9c10ce66dc9c8557e34ce02247ec46621489a82ef16"
+              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -210577,7 +210577,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "76ac2b673ec77fa1593ac9c10ce66dc9c8557e34ce02247ec46621489a82ef16"
+              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -211889,7 +211889,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "76ac2b673ec77fa1593ac9c10ce66dc9c8557e34ce02247ec46621489a82ef16"
+              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -213202,7 +213202,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "76ac2b673ec77fa1593ac9c10ce66dc9c8557e34ce02247ec46621489a82ef16"
+              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -214514,7 +214514,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "76ac2b673ec77fa1593ac9c10ce66dc9c8557e34ce02247ec46621489a82ef16"
+              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -215827,7 +215827,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "76ac2b673ec77fa1593ac9c10ce66dc9c8557e34ce02247ec46621489a82ef16"
+              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -217139,7 +217139,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "76ac2b673ec77fa1593ac9c10ce66dc9c8557e34ce02247ec46621489a82ef16"
+              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -218451,7 +218451,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "76ac2b673ec77fa1593ac9c10ce66dc9c8557e34ce02247ec46621489a82ef16"
+              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -219763,7 +219763,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "76ac2b673ec77fa1593ac9c10ce66dc9c8557e34ce02247ec46621489a82ef16"
+              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -221075,7 +221075,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "76ac2b673ec77fa1593ac9c10ce66dc9c8557e34ce02247ec46621489a82ef16"
+              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -222387,7 +222387,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "76ac2b673ec77fa1593ac9c10ce66dc9c8557e34ce02247ec46621489a82ef16"
+              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -223700,7 +223700,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "76ac2b673ec77fa1593ac9c10ce66dc9c8557e34ce02247ec46621489a82ef16"
+              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -225012,7 +225012,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "76ac2b673ec77fa1593ac9c10ce66dc9c8557e34ce02247ec46621489a82ef16"
+              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -226324,7 +226324,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "76ac2b673ec77fa1593ac9c10ce66dc9c8557e34ce02247ec46621489a82ef16"
+              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -227636,7 +227636,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "76ac2b673ec77fa1593ac9c10ce66dc9c8557e34ce02247ec46621489a82ef16"
+              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -228948,7 +228948,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "76ac2b673ec77fa1593ac9c10ce66dc9c8557e34ce02247ec46621489a82ef16"
+              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -230260,7 +230260,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "76ac2b673ec77fa1593ac9c10ce66dc9c8557e34ce02247ec46621489a82ef16"
+              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -231573,7 +231573,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "76ac2b673ec77fa1593ac9c10ce66dc9c8557e34ce02247ec46621489a82ef16"
+              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -232886,7 +232886,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "76ac2b673ec77fa1593ac9c10ce66dc9c8557e34ce02247ec46621489a82ef16"
+              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -234199,7 +234199,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "76ac2b673ec77fa1593ac9c10ce66dc9c8557e34ce02247ec46621489a82ef16"
+              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -235511,7 +235511,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "76ac2b673ec77fa1593ac9c10ce66dc9c8557e34ce02247ec46621489a82ef16"
+              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -236823,7 +236823,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "76ac2b673ec77fa1593ac9c10ce66dc9c8557e34ce02247ec46621489a82ef16"
+              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -238135,7 +238135,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "76ac2b673ec77fa1593ac9c10ce66dc9c8557e34ce02247ec46621489a82ef16"
+              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -253238,7 +253238,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-forms.spec.ts",
-              "sha256": "40567e2dbff528d18532584dde04f293aff02c43ada9f9d0fae0e6ada21fe71d"
+              "sha256": "98ddc4b599f6993707e09db89339e4dc6806586dc339d30418ae23d154487d3e"
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
@@ -253326,7 +253326,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "76ac2b673ec77fa1593ac9c10ce66dc9c8557e34ce02247ec46621489a82ef16"
+              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -254376,7 +254376,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-forms.spec.ts",
-              "sha256": "40567e2dbff528d18532584dde04f293aff02c43ada9f9d0fae0e6ada21fe71d"
+              "sha256": "98ddc4b599f6993707e09db89339e4dc6806586dc339d30418ae23d154487d3e"
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
@@ -254464,7 +254464,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "76ac2b673ec77fa1593ac9c10ce66dc9c8557e34ce02247ec46621489a82ef16"
+              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -255510,7 +255510,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-forms.spec.ts",
-              "sha256": "40567e2dbff528d18532584dde04f293aff02c43ada9f9d0fae0e6ada21fe71d"
+              "sha256": "98ddc4b599f6993707e09db89339e4dc6806586dc339d30418ae23d154487d3e"
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
@@ -255598,7 +255598,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "76ac2b673ec77fa1593ac9c10ce66dc9c8557e34ce02247ec46621489a82ef16"
+              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -256643,7 +256643,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-forms.spec.ts",
-              "sha256": "40567e2dbff528d18532584dde04f293aff02c43ada9f9d0fae0e6ada21fe71d"
+              "sha256": "98ddc4b599f6993707e09db89339e4dc6806586dc339d30418ae23d154487d3e"
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
@@ -256731,7 +256731,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "76ac2b673ec77fa1593ac9c10ce66dc9c8557e34ce02247ec46621489a82ef16"
+              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -257777,7 +257777,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-forms.spec.ts",
-              "sha256": "40567e2dbff528d18532584dde04f293aff02c43ada9f9d0fae0e6ada21fe71d"
+              "sha256": "98ddc4b599f6993707e09db89339e4dc6806586dc339d30418ae23d154487d3e"
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
@@ -257865,7 +257865,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "76ac2b673ec77fa1593ac9c10ce66dc9c8557e34ce02247ec46621489a82ef16"
+              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -258911,7 +258911,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-forms.spec.ts",
-              "sha256": "40567e2dbff528d18532584dde04f293aff02c43ada9f9d0fae0e6ada21fe71d"
+              "sha256": "98ddc4b599f6993707e09db89339e4dc6806586dc339d30418ae23d154487d3e"
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
@@ -258999,7 +258999,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "76ac2b673ec77fa1593ac9c10ce66dc9c8557e34ce02247ec46621489a82ef16"
+              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -260050,7 +260050,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-forms.spec.ts",
-              "sha256": "40567e2dbff528d18532584dde04f293aff02c43ada9f9d0fae0e6ada21fe71d"
+              "sha256": "98ddc4b599f6993707e09db89339e4dc6806586dc339d30418ae23d154487d3e"
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
@@ -260138,7 +260138,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "76ac2b673ec77fa1593ac9c10ce66dc9c8557e34ce02247ec46621489a82ef16"
+              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -261187,7 +261187,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-forms.spec.ts",
-              "sha256": "40567e2dbff528d18532584dde04f293aff02c43ada9f9d0fae0e6ada21fe71d"
+              "sha256": "98ddc4b599f6993707e09db89339e4dc6806586dc339d30418ae23d154487d3e"
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
@@ -261275,7 +261275,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "76ac2b673ec77fa1593ac9c10ce66dc9c8557e34ce02247ec46621489a82ef16"
+              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -262322,7 +262322,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-forms.spec.ts",
-              "sha256": "40567e2dbff528d18532584dde04f293aff02c43ada9f9d0fae0e6ada21fe71d"
+              "sha256": "98ddc4b599f6993707e09db89339e4dc6806586dc339d30418ae23d154487d3e"
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
@@ -262410,7 +262410,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "76ac2b673ec77fa1593ac9c10ce66dc9c8557e34ce02247ec46621489a82ef16"
+              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -263460,7 +263460,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-forms.spec.ts",
-              "sha256": "40567e2dbff528d18532584dde04f293aff02c43ada9f9d0fae0e6ada21fe71d"
+              "sha256": "98ddc4b599f6993707e09db89339e4dc6806586dc339d30418ae23d154487d3e"
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
@@ -263548,7 +263548,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "76ac2b673ec77fa1593ac9c10ce66dc9c8557e34ce02247ec46621489a82ef16"
+              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -264600,7 +264600,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-forms.spec.ts",
-              "sha256": "40567e2dbff528d18532584dde04f293aff02c43ada9f9d0fae0e6ada21fe71d"
+              "sha256": "98ddc4b599f6993707e09db89339e4dc6806586dc339d30418ae23d154487d3e"
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
@@ -264688,7 +264688,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "76ac2b673ec77fa1593ac9c10ce66dc9c8557e34ce02247ec46621489a82ef16"
+              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -265735,7 +265735,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-forms.spec.ts",
-              "sha256": "40567e2dbff528d18532584dde04f293aff02c43ada9f9d0fae0e6ada21fe71d"
+              "sha256": "98ddc4b599f6993707e09db89339e4dc6806586dc339d30418ae23d154487d3e"
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
@@ -265823,7 +265823,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "76ac2b673ec77fa1593ac9c10ce66dc9c8557e34ce02247ec46621489a82ef16"
+              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -266869,7 +266869,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-forms.spec.ts",
-              "sha256": "40567e2dbff528d18532584dde04f293aff02c43ada9f9d0fae0e6ada21fe71d"
+              "sha256": "98ddc4b599f6993707e09db89339e4dc6806586dc339d30418ae23d154487d3e"
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
@@ -266957,7 +266957,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "76ac2b673ec77fa1593ac9c10ce66dc9c8557e34ce02247ec46621489a82ef16"
+              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -268004,7 +268004,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-forms.spec.ts",
-              "sha256": "40567e2dbff528d18532584dde04f293aff02c43ada9f9d0fae0e6ada21fe71d"
+              "sha256": "98ddc4b599f6993707e09db89339e4dc6806586dc339d30418ae23d154487d3e"
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
@@ -268092,7 +268092,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "76ac2b673ec77fa1593ac9c10ce66dc9c8557e34ce02247ec46621489a82ef16"
+              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -269139,7 +269139,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-forms.spec.ts",
-              "sha256": "40567e2dbff528d18532584dde04f293aff02c43ada9f9d0fae0e6ada21fe71d"
+              "sha256": "98ddc4b599f6993707e09db89339e4dc6806586dc339d30418ae23d154487d3e"
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
@@ -269227,7 +269227,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "76ac2b673ec77fa1593ac9c10ce66dc9c8557e34ce02247ec46621489a82ef16"
+              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -270275,7 +270275,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-forms.spec.ts",
-              "sha256": "40567e2dbff528d18532584dde04f293aff02c43ada9f9d0fae0e6ada21fe71d"
+              "sha256": "98ddc4b599f6993707e09db89339e4dc6806586dc339d30418ae23d154487d3e"
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
@@ -270363,7 +270363,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "76ac2b673ec77fa1593ac9c10ce66dc9c8557e34ce02247ec46621489a82ef16"
+              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -386314,7 +386314,7 @@
             },
             {
               "path": "apps/web/e2e/solar-journey.spec.ts",
-              "sha256": "60650abe5692c071d829b438eb1863de6c7e200764b85829a5401afd05d74318"
+              "sha256": "9231a7c558f5da5f550169d646859c84f3009a6fca4da1c18e50b1db670b13e5"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -386326,7 +386326,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "d0cfb8bba5f551e76b4b29e8a6cb9e19c3d03fb44889b52ceee4354637de9d23"
+              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
             },
             {
               "path": "apps/web/src/pages/solar-request.test.tsx",
@@ -387083,7 +387083,7 @@
             },
             {
               "path": "apps/web/e2e/solar-journey.spec.ts",
-              "sha256": "60650abe5692c071d829b438eb1863de6c7e200764b85829a5401afd05d74318"
+              "sha256": "9231a7c558f5da5f550169d646859c84f3009a6fca4da1c18e50b1db670b13e5"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -387095,7 +387095,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "d0cfb8bba5f551e76b4b29e8a6cb9e19c3d03fb44889b52ceee4354637de9d23"
+              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
             },
             {
               "path": "apps/web/src/pages/solar-request.test.tsx",
@@ -387852,7 +387852,7 @@
             },
             {
               "path": "apps/web/e2e/solar-journey.spec.ts",
-              "sha256": "60650abe5692c071d829b438eb1863de6c7e200764b85829a5401afd05d74318"
+              "sha256": "9231a7c558f5da5f550169d646859c84f3009a6fca4da1c18e50b1db670b13e5"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -387864,7 +387864,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "d0cfb8bba5f551e76b4b29e8a6cb9e19c3d03fb44889b52ceee4354637de9d23"
+              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
             },
             {
               "path": "apps/web/src/pages/solar-request.test.tsx",
@@ -388623,7 +388623,7 @@
             },
             {
               "path": "apps/web/e2e/solar-journey.spec.ts",
-              "sha256": "60650abe5692c071d829b438eb1863de6c7e200764b85829a5401afd05d74318"
+              "sha256": "9231a7c558f5da5f550169d646859c84f3009a6fca4da1c18e50b1db670b13e5"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -388635,7 +388635,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "d0cfb8bba5f551e76b4b29e8a6cb9e19c3d03fb44889b52ceee4354637de9d23"
+              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
             },
             {
               "path": "apps/web/src/pages/solar-request.test.tsx",
@@ -389379,7 +389379,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "d0cfb8bba5f551e76b4b29e8a6cb9e19c3d03fb44889b52ceee4354637de9d23"
+              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
             },
             {
               "path": "apps/web/src/pages/solar-request.test.tsx",
@@ -389387,7 +389387,7 @@
             },
             {
               "path": "apps/web/e2e/solar-journey.spec.ts",
-              "sha256": "60650abe5692c071d829b438eb1863de6c7e200764b85829a5401afd05d74318"
+              "sha256": "9231a7c558f5da5f550169d646859c84f3009a6fca4da1c18e50b1db670b13e5"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -390019,7 +390019,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "d0cfb8bba5f551e76b4b29e8a6cb9e19c3d03fb44889b52ceee4354637de9d23"
+              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
             },
             {
               "path": "apps/web/src/pages/solar-request.test.tsx",
@@ -390027,7 +390027,7 @@
             },
             {
               "path": "apps/web/e2e/solar-journey.spec.ts",
-              "sha256": "60650abe5692c071d829b438eb1863de6c7e200764b85829a5401afd05d74318"
+              "sha256": "9231a7c558f5da5f550169d646859c84f3009a6fca4da1c18e50b1db670b13e5"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -390671,7 +390671,7 @@
             },
             {
               "path": "apps/web/e2e/solar-journey.spec.ts",
-              "sha256": "60650abe5692c071d829b438eb1863de6c7e200764b85829a5401afd05d74318"
+              "sha256": "9231a7c558f5da5f550169d646859c84f3009a6fca4da1c18e50b1db670b13e5"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -390683,7 +390683,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "d0cfb8bba5f551e76b4b29e8a6cb9e19c3d03fb44889b52ceee4354637de9d23"
+              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
             },
             {
               "path": "apps/web/src/pages/solar-request.test.tsx",
@@ -391440,7 +391440,7 @@
             },
             {
               "path": "apps/web/e2e/solar-journey.spec.ts",
-              "sha256": "60650abe5692c071d829b438eb1863de6c7e200764b85829a5401afd05d74318"
+              "sha256": "9231a7c558f5da5f550169d646859c84f3009a6fca4da1c18e50b1db670b13e5"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -391452,7 +391452,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "d0cfb8bba5f551e76b4b29e8a6cb9e19c3d03fb44889b52ceee4354637de9d23"
+              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
             },
             {
               "path": "apps/web/src/pages/solar-request.test.tsx",
@@ -392209,7 +392209,7 @@
             },
             {
               "path": "apps/web/e2e/solar-journey.spec.ts",
-              "sha256": "60650abe5692c071d829b438eb1863de6c7e200764b85829a5401afd05d74318"
+              "sha256": "9231a7c558f5da5f550169d646859c84f3009a6fca4da1c18e50b1db670b13e5"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -392221,7 +392221,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "d0cfb8bba5f551e76b4b29e8a6cb9e19c3d03fb44889b52ceee4354637de9d23"
+              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
             },
             {
               "path": "apps/web/src/pages/solar-request.test.tsx",
@@ -392979,7 +392979,7 @@
             },
             {
               "path": "apps/web/e2e/solar-journey.spec.ts",
-              "sha256": "60650abe5692c071d829b438eb1863de6c7e200764b85829a5401afd05d74318"
+              "sha256": "9231a7c558f5da5f550169d646859c84f3009a6fca4da1c18e50b1db670b13e5"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -392991,7 +392991,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "d0cfb8bba5f551e76b4b29e8a6cb9e19c3d03fb44889b52ceee4354637de9d23"
+              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
             },
             {
               "path": "apps/web/src/pages/solar-request.test.tsx",
@@ -393749,7 +393749,7 @@
             },
             {
               "path": "apps/web/e2e/solar-journey.spec.ts",
-              "sha256": "60650abe5692c071d829b438eb1863de6c7e200764b85829a5401afd05d74318"
+              "sha256": "9231a7c558f5da5f550169d646859c84f3009a6fca4da1c18e50b1db670b13e5"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -393761,7 +393761,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "d0cfb8bba5f551e76b4b29e8a6cb9e19c3d03fb44889b52ceee4354637de9d23"
+              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
             },
             {
               "path": "apps/web/src/pages/solar-request.test.tsx",
@@ -394520,7 +394520,7 @@
             },
             {
               "path": "apps/web/e2e/solar-journey.spec.ts",
-              "sha256": "60650abe5692c071d829b438eb1863de6c7e200764b85829a5401afd05d74318"
+              "sha256": "9231a7c558f5da5f550169d646859c84f3009a6fca4da1c18e50b1db670b13e5"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -394532,7 +394532,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "d0cfb8bba5f551e76b4b29e8a6cb9e19c3d03fb44889b52ceee4354637de9d23"
+              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
             },
             {
               "path": "apps/web/src/pages/solar-request.test.tsx",
@@ -395295,7 +395295,7 @@
             },
             {
               "path": "apps/web/e2e/solar-journey.spec.ts",
-              "sha256": "60650abe5692c071d829b438eb1863de6c7e200764b85829a5401afd05d74318"
+              "sha256": "9231a7c558f5da5f550169d646859c84f3009a6fca4da1c18e50b1db670b13e5"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -395307,7 +395307,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "d0cfb8bba5f551e76b4b29e8a6cb9e19c3d03fb44889b52ceee4354637de9d23"
+              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
             },
             {
               "path": "apps/web/src/pages/solar-request.test.tsx",
@@ -396064,7 +396064,7 @@
             },
             {
               "path": "apps/web/e2e/solar-journey.spec.ts",
-              "sha256": "60650abe5692c071d829b438eb1863de6c7e200764b85829a5401afd05d74318"
+              "sha256": "9231a7c558f5da5f550169d646859c84f3009a6fca4da1c18e50b1db670b13e5"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -396076,7 +396076,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "d0cfb8bba5f551e76b4b29e8a6cb9e19c3d03fb44889b52ceee4354637de9d23"
+              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
             },
             {
               "path": "apps/web/src/pages/solar-request.test.tsx",
@@ -396833,7 +396833,7 @@
             },
             {
               "path": "apps/web/e2e/solar-journey.spec.ts",
-              "sha256": "60650abe5692c071d829b438eb1863de6c7e200764b85829a5401afd05d74318"
+              "sha256": "9231a7c558f5da5f550169d646859c84f3009a6fca4da1c18e50b1db670b13e5"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -396845,7 +396845,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "d0cfb8bba5f551e76b4b29e8a6cb9e19c3d03fb44889b52ceee4354637de9d23"
+              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
             },
             {
               "path": "apps/web/src/pages/solar-request.test.tsx",
@@ -421502,7 +421502,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "76ac2b673ec77fa1593ac9c10ce66dc9c8557e34ce02247ec46621489a82ef16"
+              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
             },
             {
               "path": "apps/web/src/pages/ElectricityIncreasePanel.tsx",
@@ -421530,7 +421530,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "d0cfb8bba5f551e76b4b29e8a6cb9e19c3d03fb44889b52ceee4354637de9d23"
+              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
             },
             {
               "path": "apps/web/src/pages/electricity-increase-forms.test.tsx",
@@ -491258,7 +491258,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "76ac2b673ec77fa1593ac9c10ce66dc9c8557e34ce02247ec46621489a82ef16"
+              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
             },
             {
               "path": "apps/web/src/pages/CrmCorrectionsPage.tsx",
@@ -491330,7 +491330,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "d0cfb8bba5f551e76b4b29e8a6cb9e19c3d03fb44889b52ceee4354637de9d23"
+              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
             },
             {
               "path": "apps/web/src/pages/SolarRequestsPage.tsx",
@@ -494377,7 +494377,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "76ac2b673ec77fa1593ac9c10ce66dc9c8557e34ce02247ec46621489a82ef16"
+              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
             },
             {
               "path": "apps/web/src/pages/CrmCorrectionsPage.tsx",
@@ -495259,7 +495259,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "76ac2b673ec77fa1593ac9c10ce66dc9c8557e34ce02247ec46621489a82ef16"
+              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
             },
             {
               "path": "apps/web/src/pages/CrmCorrectionsPage.tsx",
@@ -496082,7 +496082,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "76ac2b673ec77fa1593ac9c10ce66dc9c8557e34ce02247ec46621489a82ef16"
+              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
             },
             {
               "path": "apps/web/src/pages/CrmCorrectionsPage.tsx",
@@ -508250,7 +508250,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "76ac2b673ec77fa1593ac9c10ce66dc9c8557e34ce02247ec46621489a82ef16"
+              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
@@ -511563,7 +511563,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "76ac2b673ec77fa1593ac9c10ce66dc9c8557e34ce02247ec46621489a82ef16"
+              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
@@ -512253,7 +512253,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "76ac2b673ec77fa1593ac9c10ce66dc9c8557e34ce02247ec46621489a82ef16"
+              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
@@ -512301,7 +512301,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "d0cfb8bba5f551e76b4b29e8a6cb9e19c3d03fb44889b52ceee4354637de9d23"
+              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
@@ -516704,7 +516704,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "The shared contract signature form exposes required state for both approved documents and the acknowledgement. Its exact localized validation error is associated with the input, which receives focus. Both customer and staff checks preserve the protected receipt. Other conditional forms remain open."
+        "Solar property, grid, site address, bill and agreement and consultation intake product and acknowledgement now announce the required state and their localized errors. Both journeys preserve draft and receipt boundaries. Other conditional forms, including electricity checkout and staff provider settings, remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -516722,7 +516722,8 @@
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.5-saving-address-field-errors",
           "release-0.5-required-input-semantics",
-          "release-0.5-signature-target-and-fields"
+          "release-0.5-signature-target-and-fields",
+          "release-0.5-solar-consultation-required"
         ],
         "current_acceptance": null
       }
@@ -517453,7 +517454,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "76ac2b673ec77fa1593ac9c10ce66dc9c8557e34ce02247ec46621489a82ef16"
+              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
@@ -518674,7 +518675,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-forms.spec.ts",
-              "sha256": "40567e2dbff528d18532584dde04f293aff02c43ada9f9d0fae0e6ada21fe71d"
+              "sha256": "98ddc4b599f6993707e09db89339e4dc6806586dc339d30418ae23d154487d3e"
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
@@ -519502,7 +519503,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-forms.spec.ts",
-              "sha256": "40567e2dbff528d18532584dde04f293aff02c43ada9f9d0fae0e6ada21fe71d"
+              "sha256": "98ddc4b599f6993707e09db89339e4dc6806586dc339d30418ae23d154487d3e"
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
@@ -520830,7 +520831,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-forms.spec.ts",
-              "sha256": "40567e2dbff528d18532584dde04f293aff02c43ada9f9d0fae0e6ada21fe71d"
+              "sha256": "98ddc4b599f6993707e09db89339e4dc6806586dc339d30418ae23d154487d3e"
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
@@ -545231,7 +545232,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "d0cfb8bba5f551e76b4b29e8a6cb9e19c3d03fb44889b52ceee4354637de9d23"
+              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
@@ -547096,7 +547097,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "d0cfb8bba5f551e76b4b29e8a6cb9e19c3d03fb44889b52ceee4354637de9d23"
+              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
@@ -548962,7 +548963,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "d0cfb8bba5f551e76b4b29e8a6cb9e19c3d03fb44889b52ceee4354637de9d23"
+              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
@@ -550797,7 +550798,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "d0cfb8bba5f551e76b4b29e8a6cb9e19c3d03fb44889b52ceee4354637de9d23"
+              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
@@ -552658,7 +552659,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "d0cfb8bba5f551e76b4b29e8a6cb9e19c3d03fb44889b52ceee4354637de9d23"
+              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
@@ -554528,7 +554529,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "d0cfb8bba5f551e76b4b29e8a6cb9e19c3d03fb44889b52ceee4354637de9d23"
+              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
@@ -556371,7 +556372,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "d0cfb8bba5f551e76b4b29e8a6cb9e19c3d03fb44889b52ceee4354637de9d23"
+              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
@@ -558178,7 +558179,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "d0cfb8bba5f551e76b4b29e8a6cb9e19c3d03fb44889b52ceee4354637de9d23"
+              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
@@ -559985,7 +559986,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "d0cfb8bba5f551e76b4b29e8a6cb9e19c3d03fb44889b52ceee4354637de9d23"
+              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
@@ -561793,7 +561794,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "d0cfb8bba5f551e76b4b29e8a6cb9e19c3d03fb44889b52ceee4354637de9d23"
+              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
@@ -563600,7 +563601,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "d0cfb8bba5f551e76b4b29e8a6cb9e19c3d03fb44889b52ceee4354637de9d23"
+              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
@@ -565449,7 +565450,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "d0cfb8bba5f551e76b4b29e8a6cb9e19c3d03fb44889b52ceee4354637de9d23"
+              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
@@ -567343,7 +567344,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "d0cfb8bba5f551e76b4b29e8a6cb9e19c3d03fb44889b52ceee4354637de9d23"
+              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
@@ -569287,7 +569288,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "d0cfb8bba5f551e76b4b29e8a6cb9e19c3d03fb44889b52ceee4354637de9d23"
+              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
@@ -571181,7 +571182,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "d0cfb8bba5f551e76b4b29e8a6cb9e19c3d03fb44889b52ceee4354637de9d23"
+              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
@@ -573075,7 +573076,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "d0cfb8bba5f551e76b4b29e8a6cb9e19c3d03fb44889b52ceee4354637de9d23"
+              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
@@ -574969,7 +574970,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "d0cfb8bba5f551e76b4b29e8a6cb9e19c3d03fb44889b52ceee4354637de9d23"
+              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
@@ -576863,7 +576864,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "d0cfb8bba5f551e76b4b29e8a6cb9e19c3d03fb44889b52ceee4354637de9d23"
+              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
@@ -578757,7 +578758,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "d0cfb8bba5f551e76b4b29e8a6cb9e19c3d03fb44889b52ceee4354637de9d23"
+              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
@@ -580651,7 +580652,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "d0cfb8bba5f551e76b4b29e8a6cb9e19c3d03fb44889b52ceee4354637de9d23"
+              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
@@ -582545,7 +582546,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "d0cfb8bba5f551e76b4b29e8a6cb9e19c3d03fb44889b52ceee4354637de9d23"
+              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
@@ -584439,7 +584440,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "d0cfb8bba5f551e76b4b29e8a6cb9e19c3d03fb44889b52ceee4354637de9d23"
+              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
@@ -586333,7 +586334,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "d0cfb8bba5f551e76b4b29e8a6cb9e19c3d03fb44889b52ceee4354637de9d23"
+              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
@@ -588227,7 +588228,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "d0cfb8bba5f551e76b4b29e8a6cb9e19c3d03fb44889b52ceee4354637de9d23"
+              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
@@ -590860,7 +590861,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "d0cfb8bba5f551e76b4b29e8a6cb9e19c3d03fb44889b52ceee4354637de9d23"
+              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
@@ -592754,7 +592755,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "d0cfb8bba5f551e76b4b29e8a6cb9e19c3d03fb44889b52ceee4354637de9d23"
+              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
@@ -594688,7 +594689,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "d0cfb8bba5f551e76b4b29e8a6cb9e19c3d03fb44889b52ceee4354637de9d23"
+              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
@@ -596491,7 +596492,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "d0cfb8bba5f551e76b4b29e8a6cb9e19c3d03fb44889b52ceee4354637de9d23"
+              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
@@ -598294,7 +598295,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "d0cfb8bba5f551e76b4b29e8a6cb9e19c3d03fb44889b52ceee4354637de9d23"
+              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
@@ -600097,7 +600098,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "d0cfb8bba5f551e76b4b29e8a6cb9e19c3d03fb44889b52ceee4354637de9d23"
+              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
@@ -601900,7 +601901,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "d0cfb8bba5f551e76b4b29e8a6cb9e19c3d03fb44889b52ceee4354637de9d23"
+              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
@@ -603703,7 +603704,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "d0cfb8bba5f551e76b4b29e8a6cb9e19c3d03fb44889b52ceee4354637de9d23"
+              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
@@ -605506,7 +605507,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "d0cfb8bba5f551e76b4b29e8a6cb9e19c3d03fb44889b52ceee4354637de9d23"
+              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
@@ -633152,7 +633153,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "76ac2b673ec77fa1593ac9c10ce66dc9c8557e34ce02247ec46621489a82ef16"
+              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
             },
             {
               "path": "apps/web/src/pages/CrmCorrectionsPage.tsx",
@@ -634276,7 +634277,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "76ac2b673ec77fa1593ac9c10ce66dc9c8557e34ce02247ec46621489a82ef16"
+              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
             },
             {
               "path": "apps/web/src/pages/CrmCorrectionsPage.tsx",
@@ -635400,7 +635401,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "76ac2b673ec77fa1593ac9c10ce66dc9c8557e34ce02247ec46621489a82ef16"
+              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
             },
             {
               "path": "apps/web/src/pages/CrmCorrectionsPage.tsx",
@@ -636527,7 +636528,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "76ac2b673ec77fa1593ac9c10ce66dc9c8557e34ce02247ec46621489a82ef16"
+              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
             },
             {
               "path": "apps/web/src/pages/CrmCorrectionsPage.tsx",
@@ -637654,7 +637655,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "76ac2b673ec77fa1593ac9c10ce66dc9c8557e34ce02247ec46621489a82ef16"
+              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
             },
             {
               "path": "apps/web/src/pages/CrmCorrectionsPage.tsx",
@@ -638808,7 +638809,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "76ac2b673ec77fa1593ac9c10ce66dc9c8557e34ce02247ec46621489a82ef16"
+              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
             },
             {
               "path": "apps/web/src/pages/CrmCorrectionsPage.tsx",
@@ -639931,7 +639932,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "76ac2b673ec77fa1593ac9c10ce66dc9c8557e34ce02247ec46621489a82ef16"
+              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
             },
             {
               "path": "apps/web/src/pages/CrmCorrectionsPage.tsx",
@@ -641054,7 +641055,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "76ac2b673ec77fa1593ac9c10ce66dc9c8557e34ce02247ec46621489a82ef16"
+              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
             },
             {
               "path": "apps/web/src/pages/CrmCorrectionsPage.tsx",
@@ -642178,7 +642179,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "76ac2b673ec77fa1593ac9c10ce66dc9c8557e34ce02247ec46621489a82ef16"
+              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
             },
             {
               "path": "apps/web/src/pages/CrmCorrectionsPage.tsx",
@@ -643320,7 +643321,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "76ac2b673ec77fa1593ac9c10ce66dc9c8557e34ce02247ec46621489a82ef16"
+              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
             },
             {
               "path": "apps/web/src/pages/CrmCorrectionsPage.tsx",
@@ -644445,7 +644446,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "76ac2b673ec77fa1593ac9c10ce66dc9c8557e34ce02247ec46621489a82ef16"
+              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
             },
             {
               "path": "apps/web/src/pages/CrmCorrectionsPage.tsx",
@@ -665895,7 +665896,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "d0cfb8bba5f551e76b4b29e8a6cb9e19c3d03fb44889b52ceee4354637de9d23"
+              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
@@ -666563,7 +666564,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "d0cfb8bba5f551e76b4b29e8a6cb9e19c3d03fb44889b52ceee4354637de9d23"
+              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
@@ -667230,7 +667231,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "d0cfb8bba5f551e76b4b29e8a6cb9e19c3d03fb44889b52ceee4354637de9d23"
+              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
@@ -667899,7 +667900,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "d0cfb8bba5f551e76b4b29e8a6cb9e19c3d03fb44889b52ceee4354637de9d23"
+              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
@@ -668568,7 +668569,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "d0cfb8bba5f551e76b4b29e8a6cb9e19c3d03fb44889b52ceee4354637de9d23"
+              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
@@ -669234,7 +669235,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "d0cfb8bba5f551e76b4b29e8a6cb9e19c3d03fb44889b52ceee4354637de9d23"
+              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
@@ -669900,7 +669901,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "d0cfb8bba5f551e76b4b29e8a6cb9e19c3d03fb44889b52ceee4354637de9d23"
+              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
@@ -670567,7 +670568,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "d0cfb8bba5f551e76b4b29e8a6cb9e19c3d03fb44889b52ceee4354637de9d23"
+              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
@@ -671233,7 +671234,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "d0cfb8bba5f551e76b4b29e8a6cb9e19c3d03fb44889b52ceee4354637de9d23"
+              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
@@ -671900,7 +671901,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "d0cfb8bba5f551e76b4b29e8a6cb9e19c3d03fb44889b52ceee4354637de9d23"
+              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
@@ -675945,7 +675946,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "76ac2b673ec77fa1593ac9c10ce66dc9c8557e34ce02247ec46621489a82ef16"
+              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
             },
             {
               "path": "apps/web/src/pages/CrmCorrectionsPage.tsx",
@@ -677067,7 +677068,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "76ac2b673ec77fa1593ac9c10ce66dc9c8557e34ce02247ec46621489a82ef16"
+              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
             },
             {
               "path": "apps/web/src/pages/CrmCorrectionsPage.tsx",
@@ -678189,7 +678190,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "76ac2b673ec77fa1593ac9c10ce66dc9c8557e34ce02247ec46621489a82ef16"
+              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
             },
             {
               "path": "apps/web/src/pages/CrmCorrectionsPage.tsx",
@@ -679311,7 +679312,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "76ac2b673ec77fa1593ac9c10ce66dc9c8557e34ce02247ec46621489a82ef16"
+              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
             },
             {
               "path": "apps/web/src/pages/CrmCorrectionsPage.tsx",
@@ -703790,7 +703791,7 @@
             },
             {
               "path": "apps/web/e2e/solar-journey.spec.ts",
-              "sha256": "60650abe5692c071d829b438eb1863de6c7e200764b85829a5401afd05d74318"
+              "sha256": "9231a7c558f5da5f550169d646859c84f3009a6fca4da1c18e50b1db670b13e5"
             },
             {
               "path": "apps/web/e2e/upload-fixture.ts",
@@ -705612,7 +705613,7 @@
           "source_evidence": [
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "76ac2b673ec77fa1593ac9c10ce66dc9c8557e34ce02247ec46621489a82ef16"
+              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
             },
             {
               "path": "apps/web/src/pages/customer-consultation-history-scope.test.tsx",
@@ -705866,7 +705867,7 @@
             },
             {
               "path": "apps/web/e2e/solar-journey.spec.ts",
-              "sha256": "60650abe5692c071d829b438eb1863de6c7e200764b85829a5401afd05d74318"
+              "sha256": "9231a7c558f5da5f550169d646859c84f3009a6fca4da1c18e50b1db670b13e5"
             },
             {
               "path": "apps/web/e2e/upload-fixture.ts",
@@ -711885,7 +711886,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-forms.spec.ts",
-              "sha256": "40567e2dbff528d18532584dde04f293aff02c43ada9f9d0fae0e6ada21fe71d"
+              "sha256": "98ddc4b599f6993707e09db89339e4dc6806586dc339d30418ae23d154487d3e"
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
@@ -711969,7 +711970,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "76ac2b673ec77fa1593ac9c10ce66dc9c8557e34ce02247ec46621489a82ef16"
+              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -713005,7 +713006,7 @@
             },
             {
               "path": "apps/web/e2e/solar-journey.spec.ts",
-              "sha256": "60650abe5692c071d829b438eb1863de6c7e200764b85829a5401afd05d74318"
+              "sha256": "9231a7c558f5da5f550169d646859c84f3009a6fca4da1c18e50b1db670b13e5"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -713017,7 +713018,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "d0cfb8bba5f551e76b4b29e8a6cb9e19c3d03fb44889b52ceee4354637de9d23"
+              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
             },
             {
               "path": "apps/web/src/pages/solar-request.test.tsx",
@@ -723587,7 +723588,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "The populated and conditional touch evidence now includes the shared popup controls and customer/staff signature acknowledgement. Remaining conditional form, contrast, command feedback and route states are open."
+        "Solar and consultation intake form semantics pass in Persian and English on desktop Chromium and mobile Safari. Other conditional form, contrast, command feedback and route state verification remains open."
       ],
       "owner": null,
       "depends_on": [],
@@ -723655,7 +723656,8 @@
           "release-0.5-consultation-offer-layout",
           "release-0.5-conditional-heading-acceptance",
           "release-0.5-popup-touch-targets",
-          "release-0.5-signature-target-and-fields"
+          "release-0.5-signature-target-and-fields",
+          "release-0.5-solar-consultation-required"
         ]
       }
     },
@@ -724727,7 +724729,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "76ac2b673ec77fa1593ac9c10ce66dc9c8557e34ce02247ec46621489a82ef16"
+              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
             },
             {
               "path": "apps/web/src/pages/CrmCorrectionsPage.tsx",
@@ -724811,7 +724813,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "d0cfb8bba5f551e76b4b29e8a6cb9e19c3d03fb44889b52ceee4354637de9d23"
+              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
             },
             {
               "path": "apps/web/src/pages/SolarRequestsPage.tsx",
@@ -725163,7 +725165,8 @@
             "Consultation offer layout renewal retained exact coverage, critical payment assertions, cold authentication transfers and all bundle limits. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-offer-layout/proof.json",
             "Conditional admin headings and loading recovery renewed the coverage, browser and measured bundle evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-conditional-heading-acceptance/proof.json",
             "Popup touch changes passed the production bundle and cold-auth transfer budgets. Eight coverage groups reuse the unchanged eligible source and coverage inputs. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-popup-touch-targets/proof.json",
-            "Signature label and required semantics passed the exact source coverage and production performance checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-signature-target-and-fields/proof.json"
+            "Signature label and required semantics passed the exact source coverage and production performance checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-signature-target-and-fields/proof.json",
+            "Solar and consultation intake semantics passed current source coverage, production size and cold authentication checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-solar-consultation-required/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -791080,6 +791083,49 @@
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-signature-target-and-fields/reviewed.patch",
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-signature-target-and-fields",
       "release_disposition": "Touch acceptance recorded. The remaining v0.5.0 milestone criteria and policy gates remain open."
+    },
+    "release-0.5-solar-consultation-required": {
+      "batch": "release-0.5-solar-consultation-required",
+      "base_commit": "5cece8f5eee5ca62d82a3006912e3d56283af7f7",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.05.01.05",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.05.01.05",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/consultation-forms.spec.ts",
+          "sha256": "98ddc4b599f6993707e09db89339e4dc6806586dc339d30418ae23d154487d3e"
+        },
+        {
+          "path": "apps/web/e2e/solar-journey.spec.ts",
+          "sha256": "9231a7c558f5da5f550169d646859c84f3009a6fca4da1c18e50b1db670b13e5"
+        },
+        {
+          "path": "apps/web/src/pages/ConsultationsPage.tsx",
+          "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
+        },
+        {
+          "path": "apps/web/src/pages/SolarRequestPage.tsx",
+          "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
+        }
+      ],
+      "checks": [
+        "Solar required-state checks cover the property and grid radio groups, apartment/villa fields, non-household fields, installation address, on-grid bill and agreement. Non-household description stays optional. The on-grid bill exposes the exact localized error through its live association, and choosing off-grid removes the bill field.",
+        "Consultation product choices and agreement expose their required state. Product help remains associated throughout editing and the field error joins it only while the error exists. The focused product and confirmation controls announce the exact localized error.",
+        "32 distinct browser cases and 30 unit cases passed. Solar checks preserve the saved site, draft restoration, uploaded document workflow and exact postal receipt. Consultation checks preserve the lazy validation, stale scope, retries, captured requests and staff command protections.",
+        "The production build, all eight coverage groups, formatting, scoped lint, typecheck, all 98 bundle budgets and three measured cold authentication transfers passed."
+      ],
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-solar-consultation-required/proof.json",
+      "source_scope_proof_sha256": "826b13d93dea96e6a66f0e7b8d3e1504d004f9dc962667a88adc1362c096ea72",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-solar-consultation-required/renewed-bindings.json",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-solar-consultation-required/reviewed.patch",
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-solar-consultation-required",
+      "release_disposition": "Solar and consultation intake form evidence recorded. Other v0.5.0 criteria remain open."
     }
   },
   "historical_improvements": [
