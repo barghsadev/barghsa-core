@@ -68,6 +68,10 @@ for (const locale of ['en', 'fa'])
       await category.press('ArrowDown');
       const option = page.getByRole('option', { name: billing, exact: true });
       await expect(option).toHaveAttribute('data-highlighted', '');
+      if (await page.evaluate(() => matchMedia('(pointer: coarse)').matches)) {
+        await expect(option).toHaveCSS('min-block-size', '44px');
+        await expect(option).toHaveCSS('min-inline-size', '44px');
+      }
       await expect(option).not.toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
       await category.press('Enter');
       await expect(category).toHaveValue(billing);
@@ -172,35 +176,39 @@ for (const locale of ['en', 'fa'])
     });
   }
 
-test('self-hosted fonts follow language changes without overriding code', async ({ page }) => {
+test('both languages use self-hosted Vazirmatn without overriding code', async ({ page }) => {
   const fontResponses: string[] = [];
   page.on('response', (response) => {
     if (response.url().endsWith('.woff2') && response.ok()) fontResponses.push(response.url());
   });
   await page.goto(`${url}?locale=en`);
   const sample = page.locator('#font-sample');
-  await expect(sample).toHaveCSS(
-    'font-family',
-    /^(?:Inter Variable|"Inter Variable"), sans-serif$/
-  );
-  await expect(page.locator('#nested-language')).toHaveCSS(
-    'font-family',
-    /^(?:Vazirmatn|"Vazirmatn"), sans-serif$/
-  );
+  const vazirmatn = /^(?:Vazirmatn|"Vazirmatn"), sans-serif$/;
+  await expect(page.locator('html')).toHaveAttribute('lang', 'en');
+  await expect(sample).toHaveCSS('font-family', vazirmatn);
+  await expect(page.locator('#nested-language')).toHaveCSS('font-family', vazirmatn);
   await expect(page.locator('code')).toHaveCSS('font-family', /monospace/);
-  await expect
-    .poll(() =>
-      page.evaluate(
-        async () => (await document.fonts.load('400 16px "Inter Variable"', 'English')).length
+  for (const [subset, text] of [
+    ['latin', 'English'],
+    ['arabic', 'فارسی'],
+  ] as const) {
+    await expect
+      .poll(() =>
+        page.evaluate(
+          async (sample) => (await document.fonts.load('400 16px Vazirmatn', sample)).length,
+          text
+        )
       )
-    )
-    .toBeGreaterThan(0);
-  expect(
-    fontResponses.some(
-      (value) => new URL(value).origin === new URL(url).origin && value.includes('inter-latin')
-    )
-  ).toBe(true);
+      .toBeGreaterThan(0);
+    expect(
+      fontResponses.some(
+        (value) =>
+          new URL(value).origin === new URL(url).origin && value.includes(`vazirmatn-${subset}`)
+      )
+    ).toBe(true);
+  }
   await page.getByRole('button', { name: 'Switch language' }).click();
-  await expect(sample).toHaveCSS('font-family', /^(?:Vazirmatn|"Vazirmatn"), sans-serif$/);
+  await expect(page.locator('html')).toHaveAttribute('lang', 'fa');
+  await expect(sample).toHaveCSS('font-family', vazirmatn);
   await expect(page.locator('code')).toHaveCSS('font-family', /monospace/);
 });

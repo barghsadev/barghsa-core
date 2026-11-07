@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-07T22:25:15+00:00",
-  "source_commit": "270eedb3bbf6fd2df6679e4a7a49b821290ecfe2",
+  "updated": "2026-11-07T22:33:47+00:00",
+  "source_commit": "89c1bd3d4559fe96c6bba32840f15b06b9f9fb0d",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -19683,7 +19683,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -20509,7 +20509,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -21378,7 +21378,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -22170,7 +22170,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -29241,7 +29241,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -35351,7 +35351,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "af9ab06e7d0c5b5600bac3882ac54be5b52498a7db381c24b0b4ecb44c7338a2"
+              "sha256": "f1bd9442fabf40b108a45ad9b1e8bd5c4358c4acce1472bd88000fdacb9a738d"
             },
             {
               "path": "apps/web/e2e/timezone-settings.spec.ts",
@@ -35595,7 +35595,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -63044,7 +63044,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "af9ab06e7d0c5b5600bac3882ac54be5b52498a7db381c24b0b4ecb44c7338a2"
+              "sha256": "f1bd9442fabf40b108a45ad9b1e8bd5c4358c4acce1472bd88000fdacb9a738d"
             },
             {
               "path": "apps/web/e2e/timezone-settings.spec.ts",
@@ -63300,7 +63300,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -253418,7 +253418,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -254556,7 +254556,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -255690,7 +255690,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -256823,7 +256823,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -257957,7 +257957,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -259091,7 +259091,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -260230,7 +260230,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -261367,7 +261367,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -262502,7 +262502,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -263640,7 +263640,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -264780,7 +264780,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -265915,7 +265915,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -267049,7 +267049,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -268184,7 +268184,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -269319,7 +269319,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -270455,7 +270455,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -476508,7 +476508,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/src/toast-api.test.tsx",
@@ -477193,7 +477193,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "af9ab06e7d0c5b5600bac3882ac54be5b52498a7db381c24b0b4ecb44c7338a2"
+              "sha256": "f1bd9442fabf40b108a45ad9b1e8bd5c4358c4acce1472bd88000fdacb9a738d"
             },
             {
               "path": "apps/web/e2e/ui-identity-loading.spec.ts",
@@ -477617,7 +477617,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/src/toast-api.test.tsx",
@@ -478047,7 +478047,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "af9ab06e7d0c5b5600bac3882ac54be5b52498a7db381c24b0b4ecb44c7338a2"
+              "sha256": "f1bd9442fabf40b108a45ad9b1e8bd5c4358c4acce1472bd88000fdacb9a738d"
             },
             {
               "path": "apps/web/e2e/ui-identity-loading.spec.ts",
@@ -478471,7 +478471,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/src/toast-api.test.tsx",
@@ -479193,7 +479193,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/src/toast-api.test.tsx",
@@ -479658,7 +479658,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "af9ab06e7d0c5b5600bac3882ac54be5b52498a7db381c24b0b4ecb44c7338a2"
+              "sha256": "f1bd9442fabf40b108a45ad9b1e8bd5c4358c4acce1472bd88000fdacb9a738d"
             },
             {
               "path": "apps/web/e2e/ui-identity-loading.spec.ts",
@@ -480082,7 +480082,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/src/toast-api.test.tsx",
@@ -480806,7 +480806,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/src/toast-api.test.tsx",
@@ -481271,7 +481271,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "af9ab06e7d0c5b5600bac3882ac54be5b52498a7db381c24b0b4ecb44c7338a2"
+              "sha256": "f1bd9442fabf40b108a45ad9b1e8bd5c4358c4acce1472bd88000fdacb9a738d"
             },
             {
               "path": "apps/web/e2e/ui-identity-loading.spec.ts",
@@ -481695,7 +481695,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/src/toast-api.test.tsx",
@@ -482014,7 +482014,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "af9ab06e7d0c5b5600bac3882ac54be5b52498a7db381c24b0b4ecb44c7338a2"
+              "sha256": "f1bd9442fabf40b108a45ad9b1e8bd5c4358c4acce1472bd88000fdacb9a738d"
             },
             {
               "path": "apps/web/e2e/ui-identity-loading.spec.ts",
@@ -482438,7 +482438,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/src/toast-api.test.tsx",
@@ -482756,7 +482756,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "af9ab06e7d0c5b5600bac3882ac54be5b52498a7db381c24b0b4ecb44c7338a2"
+              "sha256": "f1bd9442fabf40b108a45ad9b1e8bd5c4358c4acce1472bd88000fdacb9a738d"
             },
             {
               "path": "apps/web/e2e/ui-identity-loading.spec.ts",
@@ -482808,7 +482808,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/stories/primitives.stories.tsx",
@@ -483165,7 +483165,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/src/workflow.test.tsx",
@@ -483757,7 +483757,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/src/workflow.test.tsx",
@@ -484349,7 +484349,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/src/workflow.test.tsx",
@@ -484941,7 +484941,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/src/workflow.test.tsx",
@@ -485463,7 +485463,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/stories/overlays.stories.tsx",
@@ -485783,7 +485783,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/stories/overlays.stories.tsx",
@@ -486103,7 +486103,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/stories/overlays.stories.tsx",
@@ -486423,7 +486423,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/stories/overlays.stories.tsx",
@@ -486712,7 +486712,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "af9ab06e7d0c5b5600bac3882ac54be5b52498a7db381c24b0b4ecb44c7338a2"
+              "sha256": "f1bd9442fabf40b108a45ad9b1e8bd5c4358c4acce1472bd88000fdacb9a738d"
             },
             {
               "path": "apps/web/e2e/ui-identity-loading.spec.ts",
@@ -486768,7 +486768,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/stories/overlays.stories.tsx",
@@ -486994,7 +486994,7 @@
           "source_evidence": [
             {
               "path": "apps/web/e2e/combo-box-component.spec.ts",
-              "sha256": "b2c7de99c0c10efcf1387e4e45d6b8af6e570da64cd946b9ef36a93828657819"
+              "sha256": "6d1e83ea8fd7d67b2426e8cede0fba6a11b38ba7c1c107f4661b55575f81ef76"
             },
             {
               "path": "apps/web/e2e/email-provider-settings.spec.ts",
@@ -487236,7 +487236,7 @@
           "source_evidence": [
             {
               "path": "apps/web/e2e/combo-box-component.spec.ts",
-              "sha256": "b2c7de99c0c10efcf1387e4e45d6b8af6e570da64cd946b9ef36a93828657819"
+              "sha256": "6d1e83ea8fd7d67b2426e8cede0fba6a11b38ba7c1c107f4661b55575f81ef76"
             },
             {
               "path": "apps/web/e2e/email-provider-settings.spec.ts",
@@ -487478,7 +487478,7 @@
           "source_evidence": [
             {
               "path": "apps/web/e2e/combo-box-component.spec.ts",
-              "sha256": "b2c7de99c0c10efcf1387e4e45d6b8af6e570da64cd946b9ef36a93828657819"
+              "sha256": "6d1e83ea8fd7d67b2426e8cede0fba6a11b38ba7c1c107f4661b55575f81ef76"
             },
             {
               "path": "apps/web/e2e/email-provider-settings.spec.ts",
@@ -487817,7 +487817,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/stories/controls.stories.tsx",
@@ -488117,7 +488117,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/stories/controls.stories.tsx",
@@ -488417,7 +488417,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/stories/controls.stories.tsx",
@@ -488717,7 +488717,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/stories/controls.stories.tsx",
@@ -489017,7 +489017,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/stories/controls.stories.tsx",
@@ -489993,7 +489993,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/stories/navigation.stories.tsx",
@@ -490267,7 +490267,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/stories/navigation.stories.tsx",
@@ -490520,7 +490520,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "af9ab06e7d0c5b5600bac3882ac54be5b52498a7db381c24b0b4ecb44c7338a2"
+              "sha256": "f1bd9442fabf40b108a45ad9b1e8bd5c4358c4acce1472bd88000fdacb9a738d"
             },
             {
               "path": "apps/web/e2e/ui-identity-loading.spec.ts",
@@ -490584,7 +490584,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/tailwind.config.ts",
@@ -490894,7 +490894,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "af9ab06e7d0c5b5600bac3882ac54be5b52498a7db381c24b0b4ecb44c7338a2"
+              "sha256": "f1bd9442fabf40b108a45ad9b1e8bd5c4358c4acce1472bd88000fdacb9a738d"
             },
             {
               "path": "apps/web/e2e/ui-identity-loading.spec.ts",
@@ -491418,7 +491418,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/stories/identity.stories.tsx",
@@ -491907,7 +491907,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "af9ab06e7d0c5b5600bac3882ac54be5b52498a7db381c24b0b4ecb44c7338a2"
+              "sha256": "f1bd9442fabf40b108a45ad9b1e8bd5c4358c4acce1472bd88000fdacb9a738d"
             },
             {
               "path": "apps/web/e2e/ui-identity-loading.spec.ts",
@@ -491971,7 +491971,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/tailwind.config.ts",
@@ -498870,7 +498870,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "af9ab06e7d0c5b5600bac3882ac54be5b52498a7db381c24b0b4ecb44c7338a2"
+              "sha256": "f1bd9442fabf40b108a45ad9b1e8bd5c4358c4acce1472bd88000fdacb9a738d"
             },
             {
               "path": "apps/web/index.html",
@@ -499006,7 +499006,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/tailwind.config.ts",
@@ -499414,7 +499414,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "af9ab06e7d0c5b5600bac3882ac54be5b52498a7db381c24b0b4ecb44c7338a2"
+              "sha256": "f1bd9442fabf40b108a45ad9b1e8bd5c4358c4acce1472bd88000fdacb9a738d"
             },
             {
               "path": "apps/web/index.html",
@@ -499550,7 +499550,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/tailwind.config.ts",
@@ -499958,7 +499958,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "af9ab06e7d0c5b5600bac3882ac54be5b52498a7db381c24b0b4ecb44c7338a2"
+              "sha256": "f1bd9442fabf40b108a45ad9b1e8bd5c4358c4acce1472bd88000fdacb9a738d"
             },
             {
               "path": "apps/web/index.html",
@@ -500094,7 +500094,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/tailwind.config.ts",
@@ -500502,7 +500502,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "af9ab06e7d0c5b5600bac3882ac54be5b52498a7db381c24b0b4ecb44c7338a2"
+              "sha256": "f1bd9442fabf40b108a45ad9b1e8bd5c4358c4acce1472bd88000fdacb9a738d"
             },
             {
               "path": "apps/web/index.html",
@@ -500638,7 +500638,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/tailwind.config.ts",
@@ -501046,7 +501046,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "af9ab06e7d0c5b5600bac3882ac54be5b52498a7db381c24b0b4ecb44c7338a2"
+              "sha256": "f1bd9442fabf40b108a45ad9b1e8bd5c4358c4acce1472bd88000fdacb9a738d"
             },
             {
               "path": "apps/web/index.html",
@@ -501182,7 +501182,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/tailwind.config.ts",
@@ -501590,7 +501590,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "af9ab06e7d0c5b5600bac3882ac54be5b52498a7db381c24b0b4ecb44c7338a2"
+              "sha256": "f1bd9442fabf40b108a45ad9b1e8bd5c4358c4acce1472bd88000fdacb9a738d"
             },
             {
               "path": "apps/web/index.html",
@@ -501726,7 +501726,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/tailwind.config.ts",
@@ -502134,7 +502134,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "af9ab06e7d0c5b5600bac3882ac54be5b52498a7db381c24b0b4ecb44c7338a2"
+              "sha256": "f1bd9442fabf40b108a45ad9b1e8bd5c4358c4acce1472bd88000fdacb9a738d"
             },
             {
               "path": "apps/web/index.html",
@@ -502270,7 +502270,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/tailwind.config.ts",
@@ -502678,7 +502678,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "af9ab06e7d0c5b5600bac3882ac54be5b52498a7db381c24b0b4ecb44c7338a2"
+              "sha256": "f1bd9442fabf40b108a45ad9b1e8bd5c4358c4acce1472bd88000fdacb9a738d"
             },
             {
               "path": "apps/web/index.html",
@@ -502814,7 +502814,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/tailwind.config.ts",
@@ -503222,7 +503222,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "af9ab06e7d0c5b5600bac3882ac54be5b52498a7db381c24b0b4ecb44c7338a2"
+              "sha256": "f1bd9442fabf40b108a45ad9b1e8bd5c4358c4acce1472bd88000fdacb9a738d"
             },
             {
               "path": "apps/web/index.html",
@@ -503358,7 +503358,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/tailwind.config.ts",
@@ -503766,7 +503766,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "af9ab06e7d0c5b5600bac3882ac54be5b52498a7db381c24b0b4ecb44c7338a2"
+              "sha256": "f1bd9442fabf40b108a45ad9b1e8bd5c4358c4acce1472bd88000fdacb9a738d"
             },
             {
               "path": "apps/web/index.html",
@@ -503902,7 +503902,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/tailwind.config.ts",
@@ -504310,7 +504310,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "af9ab06e7d0c5b5600bac3882ac54be5b52498a7db381c24b0b4ecb44c7338a2"
+              "sha256": "f1bd9442fabf40b108a45ad9b1e8bd5c4358c4acce1472bd88000fdacb9a738d"
             },
             {
               "path": "apps/web/index.html",
@@ -504446,7 +504446,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/tailwind.config.ts",
@@ -504854,7 +504854,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "af9ab06e7d0c5b5600bac3882ac54be5b52498a7db381c24b0b4ecb44c7338a2"
+              "sha256": "f1bd9442fabf40b108a45ad9b1e8bd5c4358c4acce1472bd88000fdacb9a738d"
             },
             {
               "path": "apps/web/index.html",
@@ -504990,7 +504990,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/tailwind.config.ts",
@@ -505398,7 +505398,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "af9ab06e7d0c5b5600bac3882ac54be5b52498a7db381c24b0b4ecb44c7338a2"
+              "sha256": "f1bd9442fabf40b108a45ad9b1e8bd5c4358c4acce1472bd88000fdacb9a738d"
             },
             {
               "path": "apps/web/index.html",
@@ -505534,7 +505534,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/tailwind.config.ts",
@@ -505942,7 +505942,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "af9ab06e7d0c5b5600bac3882ac54be5b52498a7db381c24b0b4ecb44c7338a2"
+              "sha256": "f1bd9442fabf40b108a45ad9b1e8bd5c4358c4acce1472bd88000fdacb9a738d"
             },
             {
               "path": "apps/web/index.html",
@@ -506078,7 +506078,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/tailwind.config.ts",
@@ -508330,7 +508330,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/stories/feedback.stories.tsx",
@@ -510131,7 +510131,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/stories/primitives.stories.tsx",
@@ -510441,7 +510441,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/stories/primitives.stories.tsx",
@@ -510751,7 +510751,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/stories/primitives.stories.tsx",
@@ -511061,7 +511061,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/stories/primitives.stories.tsx",
@@ -511635,7 +511635,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/tailwind.config.ts",
@@ -511878,7 +511878,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Solar detail recovery verifies the existing back-link target and the 44px touch label for the independent upload checkbox on the coarse-pointer path. Prior mobile conditional targets remain recorded. Other conditional controls are open."
+        "Shared select, searchable options, menu and command actions meet the 44px mobile minimum in the tested popup states. A source audit found that the native signature acknowledgement on the staff record-signature form has a separate label with no touch sizing. Verify and close that conditional control with the existing protected signature journey."
       ],
       "owner": null,
       "depends_on": [],
@@ -511909,7 +511909,8 @@
           "release-0.5-responsive-width-acceptance",
           "release-0.5-crm-archive-touch-targets",
           "release-0.5-conditional-native-choices",
-          "release-0.5-solar-guidance-ready"
+          "release-0.5-solar-guidance-ready",
+          "release-0.5-popup-touch-targets"
         ],
         "current_acceptance": null
       }
@@ -512429,7 +512430,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -513228,7 +513229,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -514026,7 +514027,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -514723,7 +514724,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -515119,7 +515120,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/stories/controls.stories.tsx",
@@ -515558,7 +515559,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/stories/controls.stories.tsx",
@@ -516029,7 +516030,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -516547,7 +516548,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/vitest.config.ts",
@@ -517045,7 +517046,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/stories/feedback.stories.tsx",
@@ -517344,7 +517345,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/stories/controls.stories.tsx",
@@ -517868,7 +517869,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/vitest.config.ts",
@@ -518566,7 +518567,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/stories/overlays.stories.tsx",
@@ -519394,7 +519395,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/stories/overlays.stories.tsx",
@@ -520024,7 +520025,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/vitest.config.ts",
@@ -520722,7 +520723,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/stories/overlays.stories.tsx",
@@ -521204,7 +521205,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "af9ab06e7d0c5b5600bac3882ac54be5b52498a7db381c24b0b4ecb44c7338a2"
+              "sha256": "f1bd9442fabf40b108a45ad9b1e8bd5c4358c4acce1472bd88000fdacb9a738d"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -521736,7 +521737,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/src/toast-api.test.tsx",
@@ -522111,7 +522112,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "af9ab06e7d0c5b5600bac3882ac54be5b52498a7db381c24b0b4ecb44c7338a2"
+              "sha256": "f1bd9442fabf40b108a45ad9b1e8bd5c4358c4acce1472bd88000fdacb9a738d"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -522643,7 +522644,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/src/toast-api.test.tsx",
@@ -523018,7 +523019,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "af9ab06e7d0c5b5600bac3882ac54be5b52498a7db381c24b0b4ecb44c7338a2"
+              "sha256": "f1bd9442fabf40b108a45ad9b1e8bd5c4358c4acce1472bd88000fdacb9a738d"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -523550,7 +523551,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/src/toast-api.test.tsx",
@@ -523925,7 +523926,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "af9ab06e7d0c5b5600bac3882ac54be5b52498a7db381c24b0b4ecb44c7338a2"
+              "sha256": "f1bd9442fabf40b108a45ad9b1e8bd5c4358c4acce1472bd88000fdacb9a738d"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -524457,7 +524458,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/src/toast-api.test.tsx",
@@ -524832,7 +524833,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "af9ab06e7d0c5b5600bac3882ac54be5b52498a7db381c24b0b4ecb44c7338a2"
+              "sha256": "f1bd9442fabf40b108a45ad9b1e8bd5c4358c4acce1472bd88000fdacb9a738d"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -525364,7 +525365,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/src/toast-api.test.tsx",
@@ -525739,7 +525740,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "af9ab06e7d0c5b5600bac3882ac54be5b52498a7db381c24b0b4ecb44c7338a2"
+              "sha256": "f1bd9442fabf40b108a45ad9b1e8bd5c4358c4acce1472bd88000fdacb9a738d"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -526271,7 +526272,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/src/toast-api.test.tsx",
@@ -526646,7 +526647,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "af9ab06e7d0c5b5600bac3882ac54be5b52498a7db381c24b0b4ecb44c7338a2"
+              "sha256": "f1bd9442fabf40b108a45ad9b1e8bd5c4358c4acce1472bd88000fdacb9a738d"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -527178,7 +527179,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/src/toast-api.test.tsx",
@@ -527553,7 +527554,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "af9ab06e7d0c5b5600bac3882ac54be5b52498a7db381c24b0b4ecb44c7338a2"
+              "sha256": "f1bd9442fabf40b108a45ad9b1e8bd5c4358c4acce1472bd88000fdacb9a738d"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -528085,7 +528086,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/src/toast-api.test.tsx",
@@ -528460,7 +528461,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "af9ab06e7d0c5b5600bac3882ac54be5b52498a7db381c24b0b4ecb44c7338a2"
+              "sha256": "f1bd9442fabf40b108a45ad9b1e8bd5c4358c4acce1472bd88000fdacb9a738d"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -528992,7 +528993,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/src/toast-api.test.tsx",
@@ -529367,7 +529368,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "af9ab06e7d0c5b5600bac3882ac54be5b52498a7db381c24b0b4ecb44c7338a2"
+              "sha256": "f1bd9442fabf40b108a45ad9b1e8bd5c4358c4acce1472bd88000fdacb9a738d"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -529899,7 +529900,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/src/toast-api.test.tsx",
@@ -530274,7 +530275,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "af9ab06e7d0c5b5600bac3882ac54be5b52498a7db381c24b0b4ecb44c7338a2"
+              "sha256": "f1bd9442fabf40b108a45ad9b1e8bd5c4358c4acce1472bd88000fdacb9a738d"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -530806,7 +530807,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/src/toast-api.test.tsx",
@@ -531181,7 +531182,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "af9ab06e7d0c5b5600bac3882ac54be5b52498a7db381c24b0b4ecb44c7338a2"
+              "sha256": "f1bd9442fabf40b108a45ad9b1e8bd5c4358c4acce1472bd88000fdacb9a738d"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -531713,7 +531714,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/src/toast-api.test.tsx",
@@ -532088,7 +532089,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "af9ab06e7d0c5b5600bac3882ac54be5b52498a7db381c24b0b4ecb44c7338a2"
+              "sha256": "f1bd9442fabf40b108a45ad9b1e8bd5c4358c4acce1472bd88000fdacb9a738d"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -532620,7 +532621,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/src/toast-api.test.tsx",
@@ -532995,7 +532996,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "af9ab06e7d0c5b5600bac3882ac54be5b52498a7db381c24b0b4ecb44c7338a2"
+              "sha256": "f1bd9442fabf40b108a45ad9b1e8bd5c4358c4acce1472bd88000fdacb9a738d"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -533527,7 +533528,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/src/toast-api.test.tsx",
@@ -533902,7 +533903,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "af9ab06e7d0c5b5600bac3882ac54be5b52498a7db381c24b0b4ecb44c7338a2"
+              "sha256": "f1bd9442fabf40b108a45ad9b1e8bd5c4358c4acce1472bd88000fdacb9a738d"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -534434,7 +534435,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/src/toast-api.test.tsx",
@@ -534809,7 +534810,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "af9ab06e7d0c5b5600bac3882ac54be5b52498a7db381c24b0b4ecb44c7338a2"
+              "sha256": "f1bd9442fabf40b108a45ad9b1e8bd5c4358c4acce1472bd88000fdacb9a738d"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -535341,7 +535342,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/src/toast-api.test.tsx",
@@ -535716,7 +535717,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "af9ab06e7d0c5b5600bac3882ac54be5b52498a7db381c24b0b4ecb44c7338a2"
+              "sha256": "f1bd9442fabf40b108a45ad9b1e8bd5c4358c4acce1472bd88000fdacb9a738d"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -536248,7 +536249,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/src/toast-api.test.tsx",
@@ -536623,7 +536624,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "af9ab06e7d0c5b5600bac3882ac54be5b52498a7db381c24b0b4ecb44c7338a2"
+              "sha256": "f1bd9442fabf40b108a45ad9b1e8bd5c4358c4acce1472bd88000fdacb9a738d"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -537155,7 +537156,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/src/toast-api.test.tsx",
@@ -537530,7 +537531,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "af9ab06e7d0c5b5600bac3882ac54be5b52498a7db381c24b0b4ecb44c7338a2"
+              "sha256": "f1bd9442fabf40b108a45ad9b1e8bd5c4358c4acce1472bd88000fdacb9a738d"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -538062,7 +538063,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/src/toast-api.test.tsx",
@@ -538437,7 +538438,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "af9ab06e7d0c5b5600bac3882ac54be5b52498a7db381c24b0b4ecb44c7338a2"
+              "sha256": "f1bd9442fabf40b108a45ad9b1e8bd5c4358c4acce1472bd88000fdacb9a738d"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -538969,7 +538970,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/src/toast-api.test.tsx",
@@ -545495,7 +545496,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/src/toast-api.test.tsx",
@@ -547360,7 +547361,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/src/toast-api.test.tsx",
@@ -549226,7 +549227,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/src/toast-api.test.tsx",
@@ -551061,7 +551062,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/src/toast-api.test.tsx",
@@ -552922,7 +552923,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/src/toast-api.test.tsx",
@@ -554792,7 +554793,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/src/toast-api.test.tsx",
@@ -556635,7 +556636,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/src/toast-api.test.tsx",
@@ -558442,7 +558443,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/src/toast-api.test.tsx",
@@ -560249,7 +560250,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/src/toast-api.test.tsx",
@@ -562057,7 +562058,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/src/toast-api.test.tsx",
@@ -563864,7 +563865,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/src/toast-api.test.tsx",
@@ -565781,7 +565782,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/src/toast-api.test.tsx",
@@ -567675,7 +567676,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/src/toast-api.test.tsx",
@@ -569619,7 +569620,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/src/toast-api.test.tsx",
@@ -571513,7 +571514,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/src/toast-api.test.tsx",
@@ -573407,7 +573408,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/src/toast-api.test.tsx",
@@ -575301,7 +575302,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/src/toast-api.test.tsx",
@@ -577195,7 +577196,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/src/toast-api.test.tsx",
@@ -579089,7 +579090,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/src/toast-api.test.tsx",
@@ -580983,7 +580984,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/src/toast-api.test.tsx",
@@ -582877,7 +582878,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/src/toast-api.test.tsx",
@@ -584771,7 +584772,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/src/toast-api.test.tsx",
@@ -586665,7 +586666,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/src/toast-api.test.tsx",
@@ -588559,7 +588560,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/src/toast-api.test.tsx",
@@ -591192,7 +591193,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/src/toast-api.test.tsx",
@@ -593086,7 +593087,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/src/toast-api.test.tsx",
@@ -594952,7 +594953,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/src/toast-api.test.tsx",
@@ -596755,7 +596756,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/src/toast-api.test.tsx",
@@ -598558,7 +598559,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/src/toast-api.test.tsx",
@@ -600361,7 +600362,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/src/toast-api.test.tsx",
@@ -602164,7 +602165,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/src/toast-api.test.tsx",
@@ -603967,7 +603968,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/src/toast-api.test.tsx",
@@ -605770,7 +605771,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/src/toast-api.test.tsx",
@@ -610795,7 +610796,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -611593,7 +611594,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -612391,7 +612392,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -613189,7 +613190,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -613991,7 +613992,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -614789,7 +614790,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -615587,7 +615588,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -616386,7 +616387,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -617185,7 +617186,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -617984,7 +617985,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -618783,7 +618784,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -619582,7 +619583,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -620381,7 +620382,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -621180,7 +621181,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -621979,7 +621980,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -632980,7 +632981,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/tsup.config.ts",
@@ -634104,7 +634105,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/tsup.config.ts",
@@ -635228,7 +635229,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/tsup.config.ts",
@@ -636355,7 +636356,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/tsup.config.ts",
@@ -637482,7 +637483,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/tsup.config.ts",
@@ -638636,7 +638637,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/tsup.config.ts",
@@ -639759,7 +639760,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/tsup.config.ts",
@@ -640882,7 +640883,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/tsup.config.ts",
@@ -642006,7 +642007,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/tsup.config.ts",
@@ -643148,7 +643149,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/tsup.config.ts",
@@ -644273,7 +644274,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/tsup.config.ts",
@@ -675773,7 +675774,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/tsup.config.ts",
@@ -676895,7 +676896,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/tsup.config.ts",
@@ -678017,7 +678018,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/tsup.config.ts",
@@ -679139,7 +679140,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/tsup.config.ts",
@@ -683418,7 +683419,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/src/workflow.test.tsx",
@@ -684259,7 +684260,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/src/workflow.test.tsx",
@@ -685102,7 +685103,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/src/workflow.test.tsx",
@@ -685943,7 +685944,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/src/workflow.test.tsx",
@@ -686784,7 +686785,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/src/workflow.test.tsx",
@@ -687629,7 +687630,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/src/workflow.test.tsx",
@@ -688474,7 +688475,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/src/workflow.test.tsx",
@@ -689315,7 +689316,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/src/workflow.test.tsx",
@@ -690156,7 +690157,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/src/workflow.test.tsx",
@@ -690998,7 +690999,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/src/workflow.test.tsx",
@@ -691845,7 +691846,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "packages/ui/src/workflow.test.tsx",
@@ -711565,7 +711566,7 @@
             },
             {
               "path": "packages/ui/src/styles.css",
-              "sha256": "3515d6873de2b459afc90cce146bdf1d7a0fabf2f11bf825cb8068d8946d08d6"
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             },
             {
               "path": "apps/api/src/common/business-transition.ts",
@@ -723095,7 +723096,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "The populated matrix verifies heading order and landmark names across all 93 canonical routes. Native browser tests also cover held branding reads and the notification editor and publish prompt. Remaining conditional touch, form, contrast and command adoption is open."
+        "Shared popup touch targets pass in both directions and both mobile engines. The staff signature acknowledgement still needs its touch check. Remaining conditional form, contrast and command adoption stays open."
       ],
       "owner": null,
       "depends_on": [],
@@ -723161,7 +723162,8 @@
           "release-0.5-required-input-semantics",
           "release-0.5-geography-retry-feedback",
           "release-0.5-consultation-offer-layout",
-          "release-0.5-conditional-heading-acceptance"
+          "release-0.5-conditional-heading-acceptance",
+          "release-0.5-popup-touch-targets"
         ]
       }
     },
@@ -724654,6 +724656,10 @@
             {
               "path": "apps/web/src/hooks/useGeographyOptions.ts",
               "sha256": "520091b3c30a4f9686760ec8d5691f5f9f7818521c6555efe059ae7ac4333225"
+            },
+            {
+              "path": "packages/ui/src/styles.css",
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
             }
           ],
           "checks": [
@@ -724663,7 +724669,8 @@
             "The production build passed all 98 bundle limits. Cold Chromium transfers for login, register and recovery were 147.86, 149.93 and 147.06 KB gzip, each below 150 KB. The current solar test correction changed no runtime, build configuration or dependency.",
             "The geography retry update renewed official coverage, native accessibility, cold authentication transfers and all bundle budgets at the verified source. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-geography-retry-feedback/proof.json",
             "Consultation offer layout renewal retained exact coverage, critical payment assertions, cold authentication transfers and all bundle limits. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-offer-layout/proof.json",
-            "Conditional admin headings and loading recovery renewed the coverage, browser and measured bundle evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-conditional-heading-acceptance/proof.json"
+            "Conditional admin headings and loading recovery renewed the coverage, browser and measured bundle evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-conditional-heading-acceptance/proof.json",
+            "Popup touch changes passed the production bundle and cold-auth transfer budgets. Eight coverage groups reuse the unchanged eligible source and coverage inputs. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-popup-touch-targets/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -790502,6 +790509,45 @@
       ],
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-conditional-heading-acceptance",
       "release_disposition": "Heading and landmark evidence accepted. Milestone adoption and policy gates remain open."
+    },
+    "release-0.5-popup-touch-targets": {
+      "batch": "release-0.5-popup-touch-targets",
+      "base_commit": "89c1bd3d4559fe96c6bba32840f15b06b9f9fb0d",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.04.01.06",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.04.01.06",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/combo-box-component.spec.ts",
+          "sha256": "6d1e83ea8fd7d67b2426e8cede0fba6a11b38ba7c1c107f4661b55575f81ef76"
+        },
+        {
+          "path": "apps/web/e2e/theme-components.spec.ts",
+          "sha256": "f1bd9442fabf40b108a45ad9b1e8bd5c4358c4acce1472bd88000fdacb9a738d"
+        },
+        {
+          "path": "packages/ui/src/styles.css",
+          "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
+        }
+      ],
+      "checks": [
+        "Reproduced shared select choices at 28 CSS pixels and confirmed the searchable combo option lacked the mobile minimum. The common coarse-pointer rules now cover ARIA option and menu action roles without affecting native option layout or desktop geometry.",
+        "184 distinct browser cases passed across Chromium, mobile Chrome and mobile Safari. The four English/Persian mobile cases measure opened select, menu and command targets and perform actual taps. Two mobile-only cases are excluded from desktop Chromium. Contract filters, receipt filters, table actions, multiselect and theme assertions passed.",
+        "Three obsolete Inter checks failed against the approved default typography. The replacement test passed on all three engines and verifies both same-origin Vazirmatn font subsets, language switching and the existing monospace assertion. All other tested assertions and test inputs remained intact.",
+        "Scoped formatting, lint and web typecheck passed. The production build passed all 98 bundle budgets and three measured cold-auth transfers. No JavaScript or TypeScript runtime source or coverage inputs changed since the accepted eight-group coverage report."
+      ],
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-popup-touch-targets/proof.json",
+      "source_scope_proof_sha256": "f59dbee4386a255978c900eaa6e3eea97b2779e8da7096aad6dae10a86926f9c",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-popup-touch-targets/renewed-bindings.json",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-popup-touch-targets/reviewed.patch",
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-popup-touch-targets",
+      "release_disposition": "Popup and typography checks pass. The remaining milestone tasks and policy gates remain open."
     }
   },
   "historical_improvements": [
