@@ -795,6 +795,7 @@ const brand = {
   updatedAt: validTerms.updatedAt,
 };
 it('previews and saves bounded brand layout settings', async () => {
+  document.documentElement.lang = 'en';
   const requests = vi.fn(async (_url: string, init?: RequestInit) => {
     if (init?.method === 'PUT') {
       const body = JSON.parse(String(init.body)) as { config: typeof brandConfig };
@@ -823,11 +824,12 @@ it('previews and saves bounded brand layout settings', async () => {
     ['Spacing scale', '1.125'],
   ] as const) {
     const select = Array.from(host.querySelectorAll('select')).find((element) =>
-      element.parentElement?.textContent?.includes(label)
-    )!;
+      Array.from(element.labels ?? []).some((name) => name.textContent?.trim() === label)
+    );
+    expect(select).toBeDefined();
     await act(async () => {
-      select.value = value;
-      select.dispatchEvent(new Event('change', { bubbles: true }));
+      select!.value = value;
+      select!.dispatchEvent(new Event('change', { bubbles: true }));
     });
   }
   await clickText('Save Draft');

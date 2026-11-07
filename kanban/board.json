@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-07T14:19:36+00:00",
-  "source_commit": "054e9d662b3f017f4ba07154000ef26ad167ae29",
+  "updated": "2026-11-07T14:24:05+00:00",
+  "source_commit": "802c488a903a538b1b29b72e17fcc79a950004fd",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -504377,7 +504377,8 @@
           "release-0.5-required-form-and-action-closure",
           "release-0.5-solar-guidance-required",
           "release-0.5-final-ui-evidence",
-          "release-0.5-route-census-closure"
+          "release-0.5-route-census-closure",
+          "release-0.5-brand-label-fixture"
         ],
         "current_acceptance": null
       }
@@ -529571,7 +529572,8 @@
           "release-0.5-final-gates",
           "release-0.5-final-acceptance",
           "release-0.5-final-rehearsal",
-          "release-0.5-route-census-closure"
+          "release-0.5-route-census-closure",
+          "release-0.5-brand-label-fixture"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -530171,7 +530173,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "b78907a74faca07b8967b52563b54802121d6d60fb95444fd622abbbcaf64d34"
+              "sha256": "e7b2cd52d420f0a2d6dad2f434d479b8e2bf16e5cb8f9fed6fedd96c4172d869"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -531297,7 +531299,8 @@
           "release-0.5-final-gates",
           "release-0.5-final-acceptance",
           "release-0.5-final-rehearsal",
-          "release-0.5-route-census-closure"
+          "release-0.5-route-census-closure",
+          "release-0.5-brand-label-fixture"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -531897,7 +531900,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "b78907a74faca07b8967b52563b54802121d6d60fb95444fd622abbbcaf64d34"
+              "sha256": "e7b2cd52d420f0a2d6dad2f434d479b8e2bf16e5cb8f9fed6fedd96c4172d869"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -533024,7 +533027,8 @@
           "release-0.5-final-gates",
           "release-0.5-final-acceptance",
           "release-0.5-final-rehearsal",
-          "release-0.5-route-census-closure"
+          "release-0.5-route-census-closure",
+          "release-0.5-brand-label-fixture"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -533624,7 +533628,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "b78907a74faca07b8967b52563b54802121d6d60fb95444fd622abbbcaf64d34"
+              "sha256": "e7b2cd52d420f0a2d6dad2f434d479b8e2bf16e5cb8f9fed6fedd96c4172d869"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -534720,7 +534724,8 @@
           "release-0.5-final-gates",
           "release-0.5-final-acceptance",
           "release-0.5-final-rehearsal",
-          "release-0.5-route-census-closure"
+          "release-0.5-route-census-closure",
+          "release-0.5-brand-label-fixture"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -535320,7 +535325,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "b78907a74faca07b8967b52563b54802121d6d60fb95444fd622abbbcaf64d34"
+              "sha256": "e7b2cd52d420f0a2d6dad2f434d479b8e2bf16e5cb8f9fed6fedd96c4172d869"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -536442,7 +536447,8 @@
           "release-0.5-final-gates",
           "release-0.5-final-acceptance",
           "release-0.5-final-rehearsal",
-          "release-0.5-route-census-closure"
+          "release-0.5-route-census-closure",
+          "release-0.5-brand-label-fixture"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -537042,7 +537048,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "b78907a74faca07b8967b52563b54802121d6d60fb95444fd622abbbcaf64d34"
+              "sha256": "e7b2cd52d420f0a2d6dad2f434d479b8e2bf16e5cb8f9fed6fedd96c4172d869"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -538173,7 +538179,8 @@
           "release-0.5-final-gates",
           "release-0.5-final-acceptance",
           "release-0.5-final-rehearsal",
-          "release-0.5-route-census-closure"
+          "release-0.5-route-census-closure",
+          "release-0.5-brand-label-fixture"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -538773,7 +538780,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "b78907a74faca07b8967b52563b54802121d6d60fb95444fd622abbbcaf64d34"
+              "sha256": "e7b2cd52d420f0a2d6dad2f434d479b8e2bf16e5cb8f9fed6fedd96c4172d869"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -539877,7 +539884,8 @@
           "release-0.5-final-gates",
           "release-0.5-final-acceptance",
           "release-0.5-final-rehearsal",
-          "release-0.5-route-census-closure"
+          "release-0.5-route-census-closure",
+          "release-0.5-brand-label-fixture"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -540477,7 +540485,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "b78907a74faca07b8967b52563b54802121d6d60fb95444fd622abbbcaf64d34"
+              "sha256": "e7b2cd52d420f0a2d6dad2f434d479b8e2bf16e5cb8f9fed6fedd96c4172d869"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -541545,7 +541553,8 @@
           "release-0.5-final-gates",
           "release-0.5-final-acceptance",
           "release-0.5-final-rehearsal",
-          "release-0.5-route-census-closure"
+          "release-0.5-route-census-closure",
+          "release-0.5-brand-label-fixture"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -542145,7 +542154,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "b78907a74faca07b8967b52563b54802121d6d60fb95444fd622abbbcaf64d34"
+              "sha256": "e7b2cd52d420f0a2d6dad2f434d479b8e2bf16e5cb8f9fed6fedd96c4172d869"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -543213,7 +543222,8 @@
           "release-0.5-final-gates",
           "release-0.5-final-acceptance",
           "release-0.5-final-rehearsal",
-          "release-0.5-route-census-closure"
+          "release-0.5-route-census-closure",
+          "release-0.5-brand-label-fixture"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -543813,7 +543823,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "b78907a74faca07b8967b52563b54802121d6d60fb95444fd622abbbcaf64d34"
+              "sha256": "e7b2cd52d420f0a2d6dad2f434d479b8e2bf16e5cb8f9fed6fedd96c4172d869"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -544882,7 +544892,8 @@
           "release-0.5-final-gates",
           "release-0.5-final-acceptance",
           "release-0.5-final-rehearsal",
-          "release-0.5-route-census-closure"
+          "release-0.5-route-census-closure",
+          "release-0.5-brand-label-fixture"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -545482,7 +545493,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "b78907a74faca07b8967b52563b54802121d6d60fb95444fd622abbbcaf64d34"
+              "sha256": "e7b2cd52d420f0a2d6dad2f434d479b8e2bf16e5cb8f9fed6fedd96c4172d869"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -546550,7 +546561,8 @@
           "release-0.5-final-gates",
           "release-0.5-final-acceptance",
           "release-0.5-final-rehearsal",
-          "release-0.5-route-census-closure"
+          "release-0.5-route-census-closure",
+          "release-0.5-brand-label-fixture"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -547150,7 +547162,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "b78907a74faca07b8967b52563b54802121d6d60fb95444fd622abbbcaf64d34"
+              "sha256": "e7b2cd52d420f0a2d6dad2f434d479b8e2bf16e5cb8f9fed6fedd96c4172d869"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -548211,7 +548223,8 @@
           "release-0.5-final-gates",
           "release-0.5-final-acceptance",
           "release-0.5-final-rehearsal",
-          "release-0.5-route-census-closure"
+          "release-0.5-route-census-closure",
+          "release-0.5-brand-label-fixture"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -548875,7 +548888,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "b78907a74faca07b8967b52563b54802121d6d60fb95444fd622abbbcaf64d34"
+              "sha256": "e7b2cd52d420f0a2d6dad2f434d479b8e2bf16e5cb8f9fed6fedd96c4172d869"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -549960,7 +549973,8 @@
           "release-0.5-final-gates",
           "release-0.5-final-acceptance",
           "release-0.5-final-rehearsal",
-          "release-0.5-route-census-closure"
+          "release-0.5-route-census-closure",
+          "release-0.5-brand-label-fixture"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -550624,7 +550638,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "b78907a74faca07b8967b52563b54802121d6d60fb95444fd622abbbcaf64d34"
+              "sha256": "e7b2cd52d420f0a2d6dad2f434d479b8e2bf16e5cb8f9fed6fedd96c4172d869"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -551747,7 +551761,8 @@
           "release-0.5-final-gates",
           "release-0.5-final-acceptance",
           "release-0.5-final-rehearsal",
-          "release-0.5-route-census-closure"
+          "release-0.5-route-census-closure",
+          "release-0.5-brand-label-fixture"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -552411,7 +552426,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "b78907a74faca07b8967b52563b54802121d6d60fb95444fd622abbbcaf64d34"
+              "sha256": "e7b2cd52d420f0a2d6dad2f434d479b8e2bf16e5cb8f9fed6fedd96c4172d869"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -553496,7 +553511,8 @@
           "release-0.5-final-gates",
           "release-0.5-final-acceptance",
           "release-0.5-final-rehearsal",
-          "release-0.5-route-census-closure"
+          "release-0.5-route-census-closure",
+          "release-0.5-brand-label-fixture"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -554160,7 +554176,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "b78907a74faca07b8967b52563b54802121d6d60fb95444fd622abbbcaf64d34"
+              "sha256": "e7b2cd52d420f0a2d6dad2f434d479b8e2bf16e5cb8f9fed6fedd96c4172d869"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -555245,7 +555261,8 @@
           "release-0.5-final-gates",
           "release-0.5-final-acceptance",
           "release-0.5-final-rehearsal",
-          "release-0.5-route-census-closure"
+          "release-0.5-route-census-closure",
+          "release-0.5-brand-label-fixture"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -555909,7 +555926,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "b78907a74faca07b8967b52563b54802121d6d60fb95444fd622abbbcaf64d34"
+              "sha256": "e7b2cd52d420f0a2d6dad2f434d479b8e2bf16e5cb8f9fed6fedd96c4172d869"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -556994,7 +557011,8 @@
           "release-0.5-final-gates",
           "release-0.5-final-acceptance",
           "release-0.5-final-rehearsal",
-          "release-0.5-route-census-closure"
+          "release-0.5-route-census-closure",
+          "release-0.5-brand-label-fixture"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -557658,7 +557676,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "b78907a74faca07b8967b52563b54802121d6d60fb95444fd622abbbcaf64d34"
+              "sha256": "e7b2cd52d420f0a2d6dad2f434d479b8e2bf16e5cb8f9fed6fedd96c4172d869"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -558743,7 +558761,8 @@
           "release-0.5-final-gates",
           "release-0.5-final-acceptance",
           "release-0.5-final-rehearsal",
-          "release-0.5-route-census-closure"
+          "release-0.5-route-census-closure",
+          "release-0.5-brand-label-fixture"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -559407,7 +559426,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "b78907a74faca07b8967b52563b54802121d6d60fb95444fd622abbbcaf64d34"
+              "sha256": "e7b2cd52d420f0a2d6dad2f434d479b8e2bf16e5cb8f9fed6fedd96c4172d869"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -560492,7 +560511,8 @@
           "release-0.5-final-gates",
           "release-0.5-final-acceptance",
           "release-0.5-final-rehearsal",
-          "release-0.5-route-census-closure"
+          "release-0.5-route-census-closure",
+          "release-0.5-brand-label-fixture"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -561156,7 +561176,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "b78907a74faca07b8967b52563b54802121d6d60fb95444fd622abbbcaf64d34"
+              "sha256": "e7b2cd52d420f0a2d6dad2f434d479b8e2bf16e5cb8f9fed6fedd96c4172d869"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -562241,7 +562261,8 @@
           "release-0.5-final-gates",
           "release-0.5-final-acceptance",
           "release-0.5-final-rehearsal",
-          "release-0.5-route-census-closure"
+          "release-0.5-route-census-closure",
+          "release-0.5-brand-label-fixture"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -562905,7 +562926,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "b78907a74faca07b8967b52563b54802121d6d60fb95444fd622abbbcaf64d34"
+              "sha256": "e7b2cd52d420f0a2d6dad2f434d479b8e2bf16e5cb8f9fed6fedd96c4172d869"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -563990,7 +564011,8 @@
           "release-0.5-final-gates",
           "release-0.5-final-acceptance",
           "release-0.5-final-rehearsal",
-          "release-0.5-route-census-closure"
+          "release-0.5-route-census-closure",
+          "release-0.5-brand-label-fixture"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -564654,7 +564676,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "b78907a74faca07b8967b52563b54802121d6d60fb95444fd622abbbcaf64d34"
+              "sha256": "e7b2cd52d420f0a2d6dad2f434d479b8e2bf16e5cb8f9fed6fedd96c4172d869"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -565739,7 +565761,8 @@
           "release-0.5-final-gates",
           "release-0.5-final-acceptance",
           "release-0.5-final-rehearsal",
-          "release-0.5-route-census-closure"
+          "release-0.5-route-census-closure",
+          "release-0.5-brand-label-fixture"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -566403,7 +566426,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "b78907a74faca07b8967b52563b54802121d6d60fb95444fd622abbbcaf64d34"
+              "sha256": "e7b2cd52d420f0a2d6dad2f434d479b8e2bf16e5cb8f9fed6fedd96c4172d869"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -567488,7 +567511,8 @@
           "release-0.5-final-gates",
           "release-0.5-final-acceptance",
           "release-0.5-final-rehearsal",
-          "release-0.5-route-census-closure"
+          "release-0.5-route-census-closure",
+          "release-0.5-brand-label-fixture"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -568152,7 +568176,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "b78907a74faca07b8967b52563b54802121d6d60fb95444fd622abbbcaf64d34"
+              "sha256": "e7b2cd52d420f0a2d6dad2f434d479b8e2bf16e5cb8f9fed6fedd96c4172d869"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -569237,7 +569261,8 @@
           "release-0.5-final-gates",
           "release-0.5-final-acceptance",
           "release-0.5-final-rehearsal",
-          "release-0.5-route-census-closure"
+          "release-0.5-route-census-closure",
+          "release-0.5-brand-label-fixture"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -569901,7 +569926,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "b78907a74faca07b8967b52563b54802121d6d60fb95444fd622abbbcaf64d34"
+              "sha256": "e7b2cd52d420f0a2d6dad2f434d479b8e2bf16e5cb8f9fed6fedd96c4172d869"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -571647,7 +571672,8 @@
           "release-0.5-final-gates",
           "release-0.5-final-acceptance",
           "release-0.5-final-rehearsal",
-          "release-0.5-route-census-closure"
+          "release-0.5-route-census-closure",
+          "release-0.5-brand-label-fixture"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -572311,7 +572337,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "b78907a74faca07b8967b52563b54802121d6d60fb95444fd622abbbcaf64d34"
+              "sha256": "e7b2cd52d420f0a2d6dad2f434d479b8e2bf16e5cb8f9fed6fedd96c4172d869"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -573396,7 +573422,8 @@
           "release-0.5-final-gates",
           "release-0.5-final-acceptance",
           "release-0.5-final-rehearsal",
-          "release-0.5-route-census-closure"
+          "release-0.5-route-census-closure",
+          "release-0.5-brand-label-fixture"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -574060,7 +574087,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "b78907a74faca07b8967b52563b54802121d6d60fb95444fd622abbbcaf64d34"
+              "sha256": "e7b2cd52d420f0a2d6dad2f434d479b8e2bf16e5cb8f9fed6fedd96c4172d869"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -575217,7 +575244,8 @@
           "release-0.5-final-gates",
           "release-0.5-final-acceptance",
           "release-0.5-final-rehearsal",
-          "release-0.5-route-census-closure"
+          "release-0.5-route-census-closure",
+          "release-0.5-brand-label-fixture"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -575817,7 +575845,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "b78907a74faca07b8967b52563b54802121d6d60fb95444fd622abbbcaf64d34"
+              "sha256": "e7b2cd52d420f0a2d6dad2f434d479b8e2bf16e5cb8f9fed6fedd96c4172d869"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -576881,7 +576909,8 @@
           "release-0.5-final-gates",
           "release-0.5-final-acceptance",
           "release-0.5-final-rehearsal",
-          "release-0.5-route-census-closure"
+          "release-0.5-route-census-closure",
+          "release-0.5-brand-label-fixture"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -577481,7 +577510,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "b78907a74faca07b8967b52563b54802121d6d60fb95444fd622abbbcaf64d34"
+              "sha256": "e7b2cd52d420f0a2d6dad2f434d479b8e2bf16e5cb8f9fed6fedd96c4172d869"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -578545,7 +578574,8 @@
           "release-0.5-final-gates",
           "release-0.5-final-acceptance",
           "release-0.5-final-rehearsal",
-          "release-0.5-route-census-closure"
+          "release-0.5-route-census-closure",
+          "release-0.5-brand-label-fixture"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -579145,7 +579175,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "b78907a74faca07b8967b52563b54802121d6d60fb95444fd622abbbcaf64d34"
+              "sha256": "e7b2cd52d420f0a2d6dad2f434d479b8e2bf16e5cb8f9fed6fedd96c4172d869"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -580209,7 +580239,8 @@
           "release-0.5-final-gates",
           "release-0.5-final-acceptance",
           "release-0.5-final-rehearsal",
-          "release-0.5-route-census-closure"
+          "release-0.5-route-census-closure",
+          "release-0.5-brand-label-fixture"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -580809,7 +580840,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "b78907a74faca07b8967b52563b54802121d6d60fb95444fd622abbbcaf64d34"
+              "sha256": "e7b2cd52d420f0a2d6dad2f434d479b8e2bf16e5cb8f9fed6fedd96c4172d869"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -581873,7 +581904,8 @@
           "release-0.5-final-gates",
           "release-0.5-final-acceptance",
           "release-0.5-final-rehearsal",
-          "release-0.5-route-census-closure"
+          "release-0.5-route-census-closure",
+          "release-0.5-brand-label-fixture"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -582473,7 +582505,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "b78907a74faca07b8967b52563b54802121d6d60fb95444fd622abbbcaf64d34"
+              "sha256": "e7b2cd52d420f0a2d6dad2f434d479b8e2bf16e5cb8f9fed6fedd96c4172d869"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -583537,7 +583569,8 @@
           "release-0.5-final-gates",
           "release-0.5-final-acceptance",
           "release-0.5-final-rehearsal",
-          "release-0.5-route-census-closure"
+          "release-0.5-route-census-closure",
+          "release-0.5-brand-label-fixture"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -584137,7 +584170,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "b78907a74faca07b8967b52563b54802121d6d60fb95444fd622abbbcaf64d34"
+              "sha256": "e7b2cd52d420f0a2d6dad2f434d479b8e2bf16e5cb8f9fed6fedd96c4172d869"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -585201,7 +585234,8 @@
           "release-0.5-final-gates",
           "release-0.5-final-acceptance",
           "release-0.5-final-rehearsal",
-          "release-0.5-route-census-closure"
+          "release-0.5-route-census-closure",
+          "release-0.5-brand-label-fixture"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -585801,7 +585835,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "b78907a74faca07b8967b52563b54802121d6d60fb95444fd622abbbcaf64d34"
+              "sha256": "e7b2cd52d420f0a2d6dad2f434d479b8e2bf16e5cb8f9fed6fedd96c4172d869"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -755182,7 +755216,73 @@
       ],
       "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-census-closure/route-census-renewed-bindings.json",
       "failed_attempts_retained": true,
-      "release_disposition": "Candidate route repairs verified. Release requires exact combined coverage, remaining conditional evidence and the pending owner decisions for critical accessibility merge enforcement and route error reporting."
+      "release_disposition": "Candidate route repairs verified. Release requires exact combined coverage, remaining conditional evidence and the pending owner decisions for critical accessibility merge enforcement and route error reporting.",
+      "push_receipt": {
+        "commit": "802c488a903a538b1b29b72e17fcc79a950004fd",
+        "remote_sha": "802c488a903a538b1b29b72e17fcc79a950004fd",
+        "time_utc": "2026-11-07T14:20:13+00:00",
+        "milestone_release": false,
+        "staging_job": null,
+        "telegram": null
+      }
+    },
+    "release-0.5-brand-label-fixture": {
+      "batch": "release-0.5-brand-label-fixture",
+      "base_commit": "802c488a903a538b1b29b72e17fcc79a950004fd",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.05.01.05"
+      ],
+      "accepted_task_keys": [],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.05.01.05"
+      ],
+      "renewed_task_keys": [
+        "07-ui-ux-design.md#T-07.10.01.01",
+        "07-ui-ux-design.md#T-07.10.01.02",
+        "07-ui-ux-design.md#T-07.10.01.03",
+        "07-ui-ux-design.md#T-07.10.01.04",
+        "07-ui-ux-design.md#T-07.10.01.05",
+        "07-ui-ux-design.md#T-07.10.01.06",
+        "07-ui-ux-design.md#T-07.10.02.01",
+        "07-ui-ux-design.md#T-07.10.02.02",
+        "07-ui-ux-design.md#T-07.10.02.03",
+        "07-ui-ux-design.md#T-07.10.02.04",
+        "07-ui-ux-design.md#T-07.10.02.05",
+        "07-ui-ux-design.md#T-07.11.01.01",
+        "07-ui-ux-design.md#T-07.11.01.02",
+        "07-ui-ux-design.md#T-07.11.01.04",
+        "07-ui-ux-design.md#T-07.11.01.05",
+        "07-ui-ux-design.md#T-07.11.02.01",
+        "07-ui-ux-design.md#T-07.11.02.02",
+        "07-ui-ux-design.md#T-07.11.02.03",
+        "07-ui-ux-design.md#T-07.11.02.04",
+        "07-ui-ux-design.md#T-07.11.02.05",
+        "07-ui-ux-design.md#T-07.12.01.01",
+        "07-ui-ux-design.md#T-07.12.01.02",
+        "07-ui-ux-design.md#T-07.12.01.03",
+        "07-ui-ux-design.md#T-07.12.01.04",
+        "07-ui-ux-design.md#T-07.12.01.06",
+        "07-ui-ux-design.md#T-07.12.01.07",
+        "07-ui-ux-design.md#T-07.13.01.01",
+        "07-ui-ux-design.md#T-07.13.01.02",
+        "07-ui-ux-design.md#T-07.13.01.03",
+        "07-ui-ux-design.md#T-07.13.01.04",
+        "07-ui-ux-design.md#T-07.13.01.05",
+        "07-ui-ux-design.md#T-07.13.01.06",
+        "07-ui-ux-design.md#T-07.13.01.07"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/src/pages/admin-boundaries.test.tsx",
+          "sha256": "e7b2cd52d420f0a2d6dad2f434d479b8e2bf16e5cb8f9fed6fedd96c4172d869"
+        }
+      ],
+      "checks": [
+        "Isolated English branding test passed using the select label association. All saved configuration and confirmation assertions remain unchanged."
+      ],
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-final-gate-reconciliation/brand-label-fixture-proof.json",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-final-gate-reconciliation/brand-label-reviewed.diff",
+      "release_disposition": "Test fixture only; no change to implementation, runtime assets or release gates."
     }
   },
   "historical_improvements": [
