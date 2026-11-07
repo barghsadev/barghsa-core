@@ -51,6 +51,8 @@ for (const locale of ['fa', 'en'])
         const username = page.locator('#username'),
           password = page.locator('#password'),
           submit = page.locator('button[type=submit]');
+        // The route's loading page also has a main landmark. Wait for the form.
+        await expect(username).toBeVisible();
         await skipToMain(page, locale);
         await page.keyboard.press('Tab');
         await expect(username).toBeFocused();

@@ -641,9 +641,16 @@ for (const locale of ['en', 'fa'] as const) {
     const state = await fixture(page, locale, 'INDIVIDUAL');
     await page.goto(`/onboarding/individual/${profileId}`);
     await next(page, locale, false);
-    await expect(page.locator('#firstName')).toBeFocused();
+    const firstName = page.locator('#firstName');
+    await expect(firstName).toBeFocused();
+    await expect(firstName).toHaveAccessibleName(t('onboarding.individual.firstName', locale));
+    await expect(firstName).toHaveAttribute('required', '');
+    await expect(firstName).toHaveAttribute('aria-invalid', 'true');
+    await expect(firstName).toHaveAccessibleDescription(
+      t('onboarding.individual.error.required', locale)
+    );
     expect(state.submissions).toHaveLength(0);
-    await page.locator('#firstName').fill(individual.firstName);
+    await firstName.fill(individual.firstName);
     await page.locator('#lastName').fill(individual.lastName);
     await page.locator('#nationalId').fill(locale === 'fa' ? '۱۲۳۴۵۶۷۸۹۱' : '١٢٣٤٥٦٧٨٩١');
     state.saveStatus = 503;
@@ -662,8 +669,16 @@ for (const locale of ['en', 'fa'] as const) {
     await next(page, locale);
     await expect(page.locator('#provinceId')).toBeVisible();
     expect(state.draft.data).toMatchObject({ firstName: 'Person', nationalId: '1234567891' });
-    await page.locator('#provinceId').selectOption(provinceId);
-    await page.locator('#cityId').selectOption(cityId);
+    const province = page.locator('#provinceId');
+    const city = page.locator('#cityId');
+    await expect(province).toHaveAccessibleName(t('onboarding.individual.province', locale));
+    await expect(city).toHaveAccessibleName(t('onboarding.individual.city', locale));
+    await expect(province).toHaveAttribute('aria-required', 'true');
+    await expect(city).toHaveAttribute('aria-required', 'true');
+    await expect(city).toBeDisabled();
+    await province.selectOption(provinceId);
+    await expect(city).toBeEnabled();
+    await city.selectOption(cityId);
     await page.locator('#fullAddress').fill(individual.fullAddress);
     await page.locator('#postalCode').fill('۱۲۳۴۵۶۷۸۹۰');
     await next(page, locale);
@@ -724,7 +739,18 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(page.locator('#representativeFirstName')).toHaveValue('Person');
     await next(page, locale);
     await expect(page.locator('#legalName')).toHaveValue('Saved Company');
+    const companyType = page.locator('#companyTypeId');
+    await expect(companyType).toHaveAccessibleName(locale === 'fa' ? 'نوع شرکت' : 'Company Type');
+    await expect(companyType).toHaveAttribute('aria-required', 'true');
+    await companyType.selectOption('');
+    await next(page, locale, false);
+    await expect(companyType).toBeFocused();
+    await expect(companyType).toHaveAccessibleDescription(
+      locale === 'fa' ? 'نوع شرکت الزامی است' : 'Company type is required'
+    );
+    await companyType.selectOption(legal.companyTypeId);
     const date = page.locator('#registrationDate');
+    await expect(date).not.toHaveAttribute('aria-required', 'true');
     await date.click();
     const dialog = page.getByRole('dialog');
     await expect(dialog.getByRole('grid')).toHaveAttribute(
@@ -735,6 +761,17 @@ for (const locale of ['en', 'fa'] as const) {
       .getByRole('button', { name: locale === 'fa' ? / ۲-ام فروردین ۱۴۰۵/ : /March 22nd/ })
       .click();
     await next(page, locale);
+    const postal = page.locator('#officialPostalCode');
+    await expect(postal).toHaveAccessibleName(locale === 'fa' ? 'کد پستی' : 'Postal Code');
+    await expect(postal).toHaveAttribute('aria-required', 'true');
+    await expect(page.locator('#officialCityId')).toBeEnabled();
+    await postal.clear();
+    await next(page, locale, false);
+    await expect(postal).toBeFocused();
+    await expect(postal).toHaveAccessibleDescription(
+      t('onboarding.legal.required.postalCode', locale)
+    );
+    await postal.fill(legal.officialPostalCode);
     await next(page, locale);
     await next(page, locale);
     expect(state.submissions).toHaveLength(0);

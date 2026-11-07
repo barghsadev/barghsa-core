@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-07T21:29:47+00:00",
-  "source_commit": "da098d1244ba0ec10ccdd0b199f87474757fb3fb",
+  "updated": "2026-11-07T21:45:24+00:00",
+  "source_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -19610,7 +19610,8 @@
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-essential-control-contrast",
-          "release-0.5-review-preview-deadlines"
+          "release-0.5-review-preview-deadlines",
+          "release-0.5-required-input-semantics"
         ],
         "current_acceptance": {
           "kind": "verified-login-session-recovery-and-staging-edge",
@@ -19642,7 +19643,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "d942295700559ceb6571acb19c3bdb60c48224be51f1631323d44348431c2ec5"
+              "sha256": "a91d9497fe05a10b3a1ff412989ee7444fbeb7cfb208ef6a5b6af5ae13109b6f"
             },
             {
               "path": "apps/web/src/components/AuthLayout.tsx",
@@ -20208,6 +20209,11 @@
               "batch": "release-0.5-review-preview-deadlines",
               "base_commit": "da098d1244ba0ec10ccdd0b199f87474757fb3fb",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-review-preview-deadlines/proof.json"
+            },
+            {
+              "batch": "release-0.5-required-input-semantics",
+              "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
           ]
         }
@@ -20398,7 +20404,8 @@
           "release-0.5-owned-read-retry-feedback",
           "release-0.5-conditional-native-choices",
           "release-0.5-essential-control-contrast",
-          "release-0.5-review-preview-deadlines"
+          "release-0.5-review-preview-deadlines",
+          "release-0.5-required-input-semantics"
         ],
         "current_acceptance": {
           "kind": "verified-login-session-recovery-and-staging-edge",
@@ -20458,7 +20465,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "d942295700559ceb6571acb19c3bdb60c48224be51f1631323d44348431c2ec5"
+              "sha256": "a91d9497fe05a10b3a1ff412989ee7444fbeb7cfb208ef6a5b6af5ae13109b6f"
             },
             {
               "path": "apps/web/src/components/TrustedDevices.tsx",
@@ -21112,6 +21119,11 @@
               "batch": "release-0.5-review-preview-deadlines",
               "base_commit": "da098d1244ba0ec10ccdd0b199f87474757fb3fb",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-review-preview-deadlines/proof.json"
+            },
+            {
+              "batch": "release-0.5-required-input-semantics",
+              "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
           ]
         }
@@ -21277,7 +21289,8 @@
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-essential-control-contrast",
-          "release-0.5-review-preview-deadlines"
+          "release-0.5-review-preview-deadlines",
+          "release-0.5-required-input-semantics"
         ],
         "current_acceptance": {
           "kind": "verified-login-session-recovery-and-staging-edge",
@@ -21341,7 +21354,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "d942295700559ceb6571acb19c3bdb60c48224be51f1631323d44348431c2ec5"
+              "sha256": "a91d9497fe05a10b3a1ff412989ee7444fbeb7cfb208ef6a5b6af5ae13109b6f"
             },
             {
               "path": "apps/web/src/routes/login.tsx",
@@ -21883,6 +21896,11 @@
               "batch": "release-0.5-review-preview-deadlines",
               "base_commit": "da098d1244ba0ec10ccdd0b199f87474757fb3fb",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-review-preview-deadlines/proof.json"
+            },
+            {
+              "batch": "release-0.5-required-input-semantics",
+              "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
           ]
         }
@@ -22055,7 +22073,8 @@
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-essential-control-contrast",
-          "release-0.5-review-preview-deadlines"
+          "release-0.5-review-preview-deadlines",
+          "release-0.5-required-input-semantics"
         ],
         "current_acceptance": {
           "kind": "verified-login-session-recovery-and-staging-edge",
@@ -22115,7 +22134,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "d942295700559ceb6571acb19c3bdb60c48224be51f1631323d44348431c2ec5"
+              "sha256": "a91d9497fe05a10b3a1ff412989ee7444fbeb7cfb208ef6a5b6af5ae13109b6f"
             },
             {
               "path": "apps/web/src/components/PasswordField.tsx",
@@ -22682,6 +22701,11 @@
               "batch": "release-0.5-review-preview-deadlines",
               "base_commit": "da098d1244ba0ec10ccdd0b199f87474757fb3fb",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-review-preview-deadlines/proof.json"
+            },
+            {
+              "batch": "release-0.5-required-input-semantics",
+              "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
           ]
         }
@@ -29096,7 +29120,8 @@
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-conditional-native-choices",
           "release-0.5-essential-control-contrast",
-          "release-0.5-review-preview-deadlines"
+          "release-0.5-review-preview-deadlines",
+          "release-0.5-required-input-semantics"
         ],
         "current_acceptance": {
           "kind": "verified-login-session-recovery-and-staging-edge",
@@ -29152,7 +29177,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "d942295700559ceb6571acb19c3bdb60c48224be51f1631323d44348431c2ec5"
+              "sha256": "a91d9497fe05a10b3a1ff412989ee7444fbeb7cfb208ef6a5b6af5ae13109b6f"
             },
             {
               "path": "apps/web/src/components/AuthLayout.tsx",
@@ -29761,6 +29786,11 @@
               "batch": "release-0.5-review-preview-deadlines",
               "base_commit": "da098d1244ba0ec10ccdd0b199f87474757fb3fb",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-review-preview-deadlines/proof.json"
+            },
+            {
+              "batch": "release-0.5-required-input-semantics",
+              "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
           ]
         }
@@ -29843,7 +29873,8 @@
           "release-0.5-final-rehearsal",
           "release-0.5-route-census-closure",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-review-preview-deadlines"
+          "release-0.5-review-preview-deadlines",
+          "release-0.5-required-input-semantics"
         ],
         "current_acceptance": {
           "kind": "verified-profile-onboarding-and-persistent-context",
@@ -29867,7 +29898,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "c57c88cc2b23e867e1f34f0773695c2c26573324bfdb300035668c4623e1e189"
+              "sha256": "68856b464ec0a88460cbce094b40418f8329d4ccb1ff6b531dcb0af6f2d57e0d"
             },
             {
               "path": "apps/web/e2e/profile-display-name.spec.ts",
@@ -30462,6 +30493,11 @@
               "batch": "release-0.5-review-preview-deadlines",
               "base_commit": "da098d1244ba0ec10ccdd0b199f87474757fb3fb",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-review-preview-deadlines/proof.json"
+            },
+            {
+              "batch": "release-0.5-required-input-semantics",
+              "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
           ]
         }
@@ -30560,7 +30596,8 @@
           "release-0.5-final-acceptance",
           "release-0.5-final-rehearsal",
           "release-0.5-native-staff-touch-and-electricity-recovery",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-required-input-semantics"
         ],
         "current_acceptance": {
           "kind": "verified-profile-onboarding-and-persistent-context",
@@ -30616,7 +30653,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "c57c88cc2b23e867e1f34f0773695c2c26573324bfdb300035668c4623e1e189"
+              "sha256": "68856b464ec0a88460cbce094b40418f8329d4ccb1ff6b531dcb0af6f2d57e0d"
             },
             {
               "path": "apps/web/e2e/verification-banner.spec.ts",
@@ -31147,6 +31184,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-required-input-semantics",
+              "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
           ]
         }
@@ -31210,7 +31252,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-gates",
           "release-0.5-final-rehearsal",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-required-input-semantics"
         ],
         "current_acceptance": {
           "kind": "verified-profile-onboarding-and-persistent-context",
@@ -31226,7 +31269,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "c57c88cc2b23e867e1f34f0773695c2c26573324bfdb300035668c4623e1e189"
+              "sha256": "68856b464ec0a88460cbce094b40418f8329d4ccb1ff6b531dcb0af6f2d57e0d"
             },
             {
               "path": "apps/web/src/routes/onboarding/index.tsx",
@@ -31349,6 +31392,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-required-input-semantics",
+              "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
           ]
         }
@@ -31427,7 +31475,8 @@
           "release-0.5-final-rehearsal",
           "release-0.5-route-census-closure",
           "release-0.5-native-staff-touch-and-electricity-recovery",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-required-input-semantics"
         ],
         "current_acceptance": {
           "kind": "verified-profile-onboarding-and-persistent-context",
@@ -31451,7 +31500,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "c57c88cc2b23e867e1f34f0773695c2c26573324bfdb300035668c4623e1e189"
+              "sha256": "68856b464ec0a88460cbce094b40418f8329d4ccb1ff6b531dcb0af6f2d57e0d"
             },
             {
               "path": "apps/web/src/lib/profile-digits.ts",
@@ -31459,7 +31508,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/individual/$profileId.tsx",
-              "sha256": "24c42173f222318652b78c8524d5f7a88d1c3e9314e1918a6d83fc0b9fdb5fda"
+              "sha256": "373898cf434decfe0d983b59d5485d9200aa002de62dd331d3108f782b95aa1c"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -31592,6 +31641,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-required-input-semantics",
+              "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
           ]
         }
@@ -31678,7 +31732,8 @@
           "release-0.5-final-rehearsal",
           "release-0.5-route-census-closure",
           "release-0.5-native-staff-touch-and-electricity-recovery",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-required-input-semantics"
         ],
         "current_acceptance": {
           "kind": "verified-profile-onboarding-and-persistent-context",
@@ -31706,7 +31761,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "c57c88cc2b23e867e1f34f0773695c2c26573324bfdb300035668c4623e1e189"
+              "sha256": "68856b464ec0a88460cbce094b40418f8329d4ccb1ff6b531dcb0af6f2d57e0d"
             },
             {
               "path": "apps/web/src/hooks/useOnboardingDraft.ts",
@@ -31718,7 +31773,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/legal/$profileId.tsx",
-              "sha256": "697b9278fca85fe63707e5ba484bac814900554fdec9e32898dd856e82ecf276"
+              "sha256": "2924fb024590e4ee6abb927411fff9c269eb16cc72d2a7acce8768dac2283da7"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -31843,6 +31898,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-required-input-semantics",
+              "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
           ]
         }
@@ -31904,7 +31964,8 @@
           "release-0.5-form-and-document-accessibility",
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-rehearsal",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-required-input-semantics"
         ],
         "current_acceptance": {
           "kind": "verified-profile-onboarding-and-persistent-context",
@@ -31920,7 +31981,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "c57c88cc2b23e867e1f34f0773695c2c26573324bfdb300035668c4623e1e189"
+              "sha256": "68856b464ec0a88460cbce094b40418f8329d4ccb1ff6b531dcb0af6f2d57e0d"
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
@@ -32039,6 +32100,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-required-input-semantics",
+              "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
           ]
         }
@@ -32112,7 +32178,8 @@
           "release-0.5-final-acceptance",
           "release-0.5-final-rehearsal",
           "release-0.5-route-census-closure",
-          "release-0.5-native-touch-and-setup-recovery"
+          "release-0.5-native-touch-and-setup-recovery",
+          "release-0.5-required-input-semantics"
         ],
         "current_acceptance": {
           "kind": "verified-profile-onboarding-and-persistent-context",
@@ -32128,7 +32195,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "c57c88cc2b23e867e1f34f0773695c2c26573324bfdb300035668c4623e1e189"
+              "sha256": "68856b464ec0a88460cbce094b40418f8329d4ccb1ff6b531dcb0af6f2d57e0d"
             },
             {
               "path": "apps/web/e2e/profile-display-name.spec.ts",
@@ -32330,6 +32397,11 @@
               "batch": "release-0.5-native-touch-and-setup-recovery",
               "base_commit": "55cbf6e5e2c8caeb1580d3bd4e8581ba27b7c92f",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-touch-saving-verified/native-recovery-source-proof.json"
+            },
+            {
+              "batch": "release-0.5-required-input-semantics",
+              "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
           ]
         }
@@ -32415,7 +32487,8 @@
           "release-0.5-final-rehearsal",
           "release-0.5-route-census-closure",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-review-preview-deadlines"
+          "release-0.5-review-preview-deadlines",
+          "release-0.5-required-input-semantics"
         ],
         "current_acceptance": {
           "kind": "verified-profile-onboarding-and-persistent-context",
@@ -32439,7 +32512,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "c57c88cc2b23e867e1f34f0773695c2c26573324bfdb300035668c4623e1e189"
+              "sha256": "68856b464ec0a88460cbce094b40418f8329d4ccb1ff6b531dcb0af6f2d57e0d"
             },
             {
               "path": "apps/web/e2e/profile-display-name.spec.ts",
@@ -33006,6 +33079,11 @@
               "batch": "release-0.5-review-preview-deadlines",
               "base_commit": "da098d1244ba0ec10ccdd0b199f87474757fb3fb",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-review-preview-deadlines/proof.json"
+            },
+            {
+              "batch": "release-0.5-required-input-semantics",
+              "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
           ]
         }
@@ -490513,7 +490591,8 @@
           "release-0.5-solar-guidance-ready",
           "release-0.5-ownership-transfer-receipt",
           "release-0.5-action-contrast",
-          "release-0.5-review-preview-deadlines"
+          "release-0.5-review-preview-deadlines",
+          "release-0.5-required-input-semantics"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -491013,11 +491092,11 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/individual/$profileId.tsx",
-              "sha256": "24c42173f222318652b78c8524d5f7a88d1c3e9314e1918a6d83fc0b9fdb5fda"
+              "sha256": "373898cf434decfe0d983b59d5485d9200aa002de62dd331d3108f782b95aa1c"
             },
             {
               "path": "apps/web/src/routes/onboarding/legal/$profileId.tsx",
-              "sha256": "697b9278fca85fe63707e5ba484bac814900554fdec9e32898dd856e82ecf276"
+              "sha256": "2924fb024590e4ee6abb927411fff9c269eb16cc72d2a7acce8768dac2283da7"
             },
             {
               "path": "apps/web/src/routes/terms.tsx",
@@ -491454,6 +491533,11 @@
               "batch": "release-0.5-review-preview-deadlines",
               "base_commit": "da098d1244ba0ec10ccdd0b199f87474757fb3fb",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-review-preview-deadlines/proof.json"
+            },
+            {
+              "batch": "release-0.5-required-input-semantics",
+              "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
           ]
         },
@@ -498382,7 +498466,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.5-essential-control-contrast",
           "release-0.5-solar-guidance-ready",
-          "release-0.5-action-contrast"
+          "release-0.5-action-contrast",
+          "release-0.5-required-input-semantics"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -498470,7 +498555,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "d942295700559ceb6571acb19c3bdb60c48224be51f1631323d44348431c2ec5"
+              "sha256": "a91d9497fe05a10b3a1ff412989ee7444fbeb7cfb208ef6a5b6af5ae13109b6f"
             },
             {
               "path": "apps/web/e2e/navigation-fixture.ts",
@@ -498819,6 +498904,11 @@
               "batch": "release-0.5-action-contrast",
               "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-required-input-semantics",
+              "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
           ]
         }
@@ -498914,7 +499004,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.5-essential-control-contrast",
           "release-0.5-solar-guidance-ready",
-          "release-0.5-action-contrast"
+          "release-0.5-action-contrast",
+          "release-0.5-required-input-semantics"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -499002,7 +499093,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "d942295700559ceb6571acb19c3bdb60c48224be51f1631323d44348431c2ec5"
+              "sha256": "a91d9497fe05a10b3a1ff412989ee7444fbeb7cfb208ef6a5b6af5ae13109b6f"
             },
             {
               "path": "apps/web/e2e/navigation-fixture.ts",
@@ -499351,6 +499442,11 @@
               "batch": "release-0.5-action-contrast",
               "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-required-input-semantics",
+              "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
           ]
         }
@@ -499446,7 +499542,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.5-essential-control-contrast",
           "release-0.5-solar-guidance-ready",
-          "release-0.5-action-contrast"
+          "release-0.5-action-contrast",
+          "release-0.5-required-input-semantics"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -499534,7 +499631,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "d942295700559ceb6571acb19c3bdb60c48224be51f1631323d44348431c2ec5"
+              "sha256": "a91d9497fe05a10b3a1ff412989ee7444fbeb7cfb208ef6a5b6af5ae13109b6f"
             },
             {
               "path": "apps/web/e2e/navigation-fixture.ts",
@@ -499883,6 +499980,11 @@
               "batch": "release-0.5-action-contrast",
               "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-required-input-semantics",
+              "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
           ]
         }
@@ -499978,7 +500080,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.5-essential-control-contrast",
           "release-0.5-solar-guidance-ready",
-          "release-0.5-action-contrast"
+          "release-0.5-action-contrast",
+          "release-0.5-required-input-semantics"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -500066,7 +500169,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "d942295700559ceb6571acb19c3bdb60c48224be51f1631323d44348431c2ec5"
+              "sha256": "a91d9497fe05a10b3a1ff412989ee7444fbeb7cfb208ef6a5b6af5ae13109b6f"
             },
             {
               "path": "apps/web/e2e/navigation-fixture.ts",
@@ -500415,6 +500518,11 @@
               "batch": "release-0.5-action-contrast",
               "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-required-input-semantics",
+              "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
           ]
         }
@@ -500510,7 +500618,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.5-essential-control-contrast",
           "release-0.5-solar-guidance-ready",
-          "release-0.5-action-contrast"
+          "release-0.5-action-contrast",
+          "release-0.5-required-input-semantics"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -500598,7 +500707,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "d942295700559ceb6571acb19c3bdb60c48224be51f1631323d44348431c2ec5"
+              "sha256": "a91d9497fe05a10b3a1ff412989ee7444fbeb7cfb208ef6a5b6af5ae13109b6f"
             },
             {
               "path": "apps/web/e2e/navigation-fixture.ts",
@@ -500947,6 +501056,11 @@
               "batch": "release-0.5-action-contrast",
               "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-required-input-semantics",
+              "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
           ]
         }
@@ -501042,7 +501156,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.5-essential-control-contrast",
           "release-0.5-solar-guidance-ready",
-          "release-0.5-action-contrast"
+          "release-0.5-action-contrast",
+          "release-0.5-required-input-semantics"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -501130,7 +501245,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "d942295700559ceb6571acb19c3bdb60c48224be51f1631323d44348431c2ec5"
+              "sha256": "a91d9497fe05a10b3a1ff412989ee7444fbeb7cfb208ef6a5b6af5ae13109b6f"
             },
             {
               "path": "apps/web/e2e/navigation-fixture.ts",
@@ -501479,6 +501594,11 @@
               "batch": "release-0.5-action-contrast",
               "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-required-input-semantics",
+              "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
           ]
         }
@@ -501574,7 +501694,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.5-essential-control-contrast",
           "release-0.5-solar-guidance-ready",
-          "release-0.5-action-contrast"
+          "release-0.5-action-contrast",
+          "release-0.5-required-input-semantics"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -501662,7 +501783,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "d942295700559ceb6571acb19c3bdb60c48224be51f1631323d44348431c2ec5"
+              "sha256": "a91d9497fe05a10b3a1ff412989ee7444fbeb7cfb208ef6a5b6af5ae13109b6f"
             },
             {
               "path": "apps/web/e2e/navigation-fixture.ts",
@@ -502011,6 +502132,11 @@
               "batch": "release-0.5-action-contrast",
               "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-required-input-semantics",
+              "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
           ]
         }
@@ -502106,7 +502232,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.5-essential-control-contrast",
           "release-0.5-solar-guidance-ready",
-          "release-0.5-action-contrast"
+          "release-0.5-action-contrast",
+          "release-0.5-required-input-semantics"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -502194,7 +502321,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "d942295700559ceb6571acb19c3bdb60c48224be51f1631323d44348431c2ec5"
+              "sha256": "a91d9497fe05a10b3a1ff412989ee7444fbeb7cfb208ef6a5b6af5ae13109b6f"
             },
             {
               "path": "apps/web/e2e/navigation-fixture.ts",
@@ -502543,6 +502670,11 @@
               "batch": "release-0.5-action-contrast",
               "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-required-input-semantics",
+              "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
           ]
         }
@@ -502638,7 +502770,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.5-essential-control-contrast",
           "release-0.5-solar-guidance-ready",
-          "release-0.5-action-contrast"
+          "release-0.5-action-contrast",
+          "release-0.5-required-input-semantics"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -502726,7 +502859,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "d942295700559ceb6571acb19c3bdb60c48224be51f1631323d44348431c2ec5"
+              "sha256": "a91d9497fe05a10b3a1ff412989ee7444fbeb7cfb208ef6a5b6af5ae13109b6f"
             },
             {
               "path": "apps/web/e2e/navigation-fixture.ts",
@@ -503075,6 +503208,11 @@
               "batch": "release-0.5-action-contrast",
               "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-required-input-semantics",
+              "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
           ]
         }
@@ -503170,7 +503308,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.5-essential-control-contrast",
           "release-0.5-solar-guidance-ready",
-          "release-0.5-action-contrast"
+          "release-0.5-action-contrast",
+          "release-0.5-required-input-semantics"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -503258,7 +503397,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "d942295700559ceb6571acb19c3bdb60c48224be51f1631323d44348431c2ec5"
+              "sha256": "a91d9497fe05a10b3a1ff412989ee7444fbeb7cfb208ef6a5b6af5ae13109b6f"
             },
             {
               "path": "apps/web/e2e/navigation-fixture.ts",
@@ -503607,6 +503746,11 @@
               "batch": "release-0.5-action-contrast",
               "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-required-input-semantics",
+              "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
           ]
         }
@@ -503702,7 +503846,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.5-essential-control-contrast",
           "release-0.5-solar-guidance-ready",
-          "release-0.5-action-contrast"
+          "release-0.5-action-contrast",
+          "release-0.5-required-input-semantics"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -503790,7 +503935,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "d942295700559ceb6571acb19c3bdb60c48224be51f1631323d44348431c2ec5"
+              "sha256": "a91d9497fe05a10b3a1ff412989ee7444fbeb7cfb208ef6a5b6af5ae13109b6f"
             },
             {
               "path": "apps/web/e2e/navigation-fixture.ts",
@@ -504139,6 +504284,11 @@
               "batch": "release-0.5-action-contrast",
               "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-required-input-semantics",
+              "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
           ]
         }
@@ -504234,7 +504384,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.5-essential-control-contrast",
           "release-0.5-solar-guidance-ready",
-          "release-0.5-action-contrast"
+          "release-0.5-action-contrast",
+          "release-0.5-required-input-semantics"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -504322,7 +504473,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "d942295700559ceb6571acb19c3bdb60c48224be51f1631323d44348431c2ec5"
+              "sha256": "a91d9497fe05a10b3a1ff412989ee7444fbeb7cfb208ef6a5b6af5ae13109b6f"
             },
             {
               "path": "apps/web/e2e/navigation-fixture.ts",
@@ -504671,6 +504822,11 @@
               "batch": "release-0.5-action-contrast",
               "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-required-input-semantics",
+              "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
           ]
         }
@@ -504766,7 +504922,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.5-essential-control-contrast",
           "release-0.5-solar-guidance-ready",
-          "release-0.5-action-contrast"
+          "release-0.5-action-contrast",
+          "release-0.5-required-input-semantics"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -504854,7 +505011,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "d942295700559ceb6571acb19c3bdb60c48224be51f1631323d44348431c2ec5"
+              "sha256": "a91d9497fe05a10b3a1ff412989ee7444fbeb7cfb208ef6a5b6af5ae13109b6f"
             },
             {
               "path": "apps/web/e2e/navigation-fixture.ts",
@@ -505203,6 +505360,11 @@
               "batch": "release-0.5-action-contrast",
               "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-required-input-semantics",
+              "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
           ]
         }
@@ -505298,7 +505460,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.5-essential-control-contrast",
           "release-0.5-solar-guidance-ready",
-          "release-0.5-action-contrast"
+          "release-0.5-action-contrast",
+          "release-0.5-required-input-semantics"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -505386,7 +505549,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "d942295700559ceb6571acb19c3bdb60c48224be51f1631323d44348431c2ec5"
+              "sha256": "a91d9497fe05a10b3a1ff412989ee7444fbeb7cfb208ef6a5b6af5ae13109b6f"
             },
             {
               "path": "apps/web/e2e/navigation-fixture.ts",
@@ -505735,6 +505898,11 @@
               "batch": "release-0.5-action-contrast",
               "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-required-input-semantics",
+              "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
           ]
         }
@@ -511141,7 +511309,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.5-essential-control-contrast",
           "release-0.5-solar-guidance-ready",
-          "release-0.5-review-preview-deadlines"
+          "release-0.5-review-preview-deadlines",
+          "release-0.5-required-input-semantics"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -511241,7 +511410,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "d942295700559ceb6571acb19c3bdb60c48224be51f1631323d44348431c2ec5"
+              "sha256": "a91d9497fe05a10b3a1ff412989ee7444fbeb7cfb208ef6a5b6af5ae13109b6f"
             },
             {
               "path": "apps/web/e2e/mobile-navigation.spec.ts",
@@ -511870,6 +512039,11 @@
               "batch": "release-0.5-review-preview-deadlines",
               "base_commit": "da098d1244ba0ec10ccdd0b199f87474757fb3fb",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-review-preview-deadlines/proof.json"
+            },
+            {
+              "batch": "release-0.5-required-input-semantics",
+              "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
           ]
         }
@@ -511934,7 +512108,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.5-essential-control-contrast",
           "release-0.5-solar-guidance-ready",
-          "release-0.5-review-preview-deadlines"
+          "release-0.5-review-preview-deadlines",
+          "release-0.5-required-input-semantics"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -512034,7 +512209,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "d942295700559ceb6571acb19c3bdb60c48224be51f1631323d44348431c2ec5"
+              "sha256": "a91d9497fe05a10b3a1ff412989ee7444fbeb7cfb208ef6a5b6af5ae13109b6f"
             },
             {
               "path": "apps/web/e2e/mobile-navigation.spec.ts",
@@ -512663,6 +512838,11 @@
               "batch": "release-0.5-review-preview-deadlines",
               "base_commit": "da098d1244ba0ec10ccdd0b199f87474757fb3fb",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-review-preview-deadlines/proof.json"
+            },
+            {
+              "batch": "release-0.5-required-input-semantics",
+              "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
           ]
         }
@@ -512726,7 +512906,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.5-essential-control-contrast",
           "release-0.5-solar-guidance-ready",
-          "release-0.5-review-preview-deadlines"
+          "release-0.5-review-preview-deadlines",
+          "release-0.5-required-input-semantics"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -512826,7 +513007,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "d942295700559ceb6571acb19c3bdb60c48224be51f1631323d44348431c2ec5"
+              "sha256": "a91d9497fe05a10b3a1ff412989ee7444fbeb7cfb208ef6a5b6af5ae13109b6f"
             },
             {
               "path": "apps/web/e2e/mobile-navigation.spec.ts",
@@ -513455,6 +513636,11 @@
               "batch": "release-0.5-review-preview-deadlines",
               "base_commit": "da098d1244ba0ec10ccdd0b199f87474757fb3fb",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-review-preview-deadlines/proof.json"
+            },
+            {
+              "batch": "release-0.5-required-input-semantics",
+              "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
           ]
         }
@@ -513661,7 +513847,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-essential-control-contrast",
-          "release-0.5-stale-route-recovery"
+          "release-0.5-stale-route-recovery",
+          "release-0.5-required-input-semantics"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -513705,7 +513892,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "d942295700559ceb6571acb19c3bdb60c48224be51f1631323d44348431c2ec5"
+              "sha256": "a91d9497fe05a10b3a1ff412989ee7444fbeb7cfb208ef6a5b6af5ae13109b6f"
             },
             {
               "path": "apps/web/e2e/mobile-navigation.spec.ts",
@@ -514032,6 +514219,11 @@
               "batch": "release-0.5-stale-route-recovery",
               "base_commit": "94be7274bd388df53b01dd860f3e6e0c23775e92",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-stale-route-recovery/proof.json"
+            },
+            {
+              "batch": "release-0.5-required-input-semantics",
+              "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
           ]
         }
@@ -514087,7 +514279,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-essential-control-contrast",
-          "release-0.5-component-direction-matrix"
+          "release-0.5-component-direction-matrix",
+          "release-0.5-required-input-semantics"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -514143,7 +514336,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "d942295700559ceb6571acb19c3bdb60c48224be51f1631323d44348431c2ec5"
+              "sha256": "a91d9497fe05a10b3a1ff412989ee7444fbeb7cfb208ef6a5b6af5ae13109b6f"
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
@@ -514465,6 +514658,11 @@
               "batch": "release-0.5-component-direction-matrix",
               "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
+            },
+            {
+              "batch": "release-0.5-required-input-semantics",
+              "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
           ]
         }
@@ -514520,7 +514718,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-essential-control-contrast",
-          "release-0.5-component-direction-matrix"
+          "release-0.5-component-direction-matrix",
+          "release-0.5-required-input-semantics"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -514576,7 +514775,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "d942295700559ceb6571acb19c3bdb60c48224be51f1631323d44348431c2ec5"
+              "sha256": "a91d9497fe05a10b3a1ff412989ee7444fbeb7cfb208ef6a5b6af5ae13109b6f"
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
@@ -514898,6 +515097,11 @@
               "batch": "release-0.5-component-direction-matrix",
               "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
+            },
+            {
+              "batch": "release-0.5-required-input-semantics",
+              "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
           ]
         }
@@ -514949,7 +515153,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-essential-control-contrast",
-          "release-0.5-stale-route-recovery"
+          "release-0.5-stale-route-recovery",
+          "release-0.5-required-input-semantics"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -514993,7 +515198,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "d942295700559ceb6571acb19c3bdb60c48224be51f1631323d44348431c2ec5"
+              "sha256": "a91d9497fe05a10b3a1ff412989ee7444fbeb7cfb208ef6a5b6af5ae13109b6f"
             },
             {
               "path": "apps/web/e2e/mobile-navigation.spec.ts",
@@ -515320,6 +515525,11 @@
               "batch": "release-0.5-stale-route-recovery",
               "base_commit": "94be7274bd388df53b01dd860f3e6e0c23775e92",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-stale-route-recovery/proof.json"
+            },
+            {
+              "batch": "release-0.5-required-input-semantics",
+              "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
           ]
         }
@@ -515340,7 +515550,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Current bilingual native evidence links safe server feedback to the exact owned saving address field and identifies all four required controls. Unrelated controls are valid and the original retry stays locked after an uncertain write. Remaining conditional form states are open."
+        "Four validator-required onboarding fields now expose their required state. Labels hide decorative markers and error descriptions refer to rendered errors. The official postal error leaves Continue in place so one click validates and focuses the input. Current saving address evidence remains recorded. Other conditional forms are open."
       ],
       "owner": null,
       "depends_on": [],
@@ -515356,7 +515566,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-brand-label-fixture",
           "release-0.5-native-staff-touch-and-electricity-recovery",
-          "release-0.5-saving-address-field-errors"
+          "release-0.5-saving-address-field-errors",
+          "release-0.5-required-input-semantics"
         ],
         "current_acceptance": null
       }
@@ -515407,7 +515618,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.5-essential-control-contrast",
           "release-0.5-component-direction-matrix",
-          "release-0.5-action-contrast"
+          "release-0.5-action-contrast",
+          "release-0.5-required-input-semantics"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -515615,7 +515827,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/legal/$profileId.tsx",
-              "sha256": "697b9278fca85fe63707e5ba484bac814900554fdec9e32898dd856e82ecf276"
+              "sha256": "2924fb024590e4ee6abb927411fff9c269eb16cc72d2a7acce8768dac2283da7"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -515844,6 +516056,11 @@
               "batch": "release-0.5-action-contrast",
               "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-required-input-semantics",
+              "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
           ]
         }
@@ -515983,7 +516200,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-essential-control-contrast",
-          "release-0.5-component-direction-matrix"
+          "release-0.5-component-direction-matrix",
+          "release-0.5-required-input-semantics"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -516039,7 +516257,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "d942295700559ceb6571acb19c3bdb60c48224be51f1631323d44348431c2ec5"
+              "sha256": "a91d9497fe05a10b3a1ff412989ee7444fbeb7cfb208ef6a5b6af5ae13109b6f"
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
@@ -516361,6 +516579,11 @@
               "batch": "release-0.5-component-direction-matrix",
               "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
+            },
+            {
+              "batch": "release-0.5-required-input-semantics",
+              "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
           ]
         }
@@ -516412,7 +516635,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.5-essential-control-contrast",
           "release-0.5-component-direction-matrix",
-          "release-0.5-action-contrast"
+          "release-0.5-action-contrast",
+          "release-0.5-required-input-semantics"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -516620,7 +516844,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/legal/$profileId.tsx",
-              "sha256": "697b9278fca85fe63707e5ba484bac814900554fdec9e32898dd856e82ecf276"
+              "sha256": "2924fb024590e4ee6abb927411fff9c269eb16cc72d2a7acce8768dac2283da7"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -516849,6 +517073,11 @@
               "batch": "release-0.5-action-contrast",
               "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-required-input-semantics",
+              "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
           ]
         }
@@ -516921,7 +517150,8 @@
           "release-0.5-saving-conditional-agreement",
           "release-0.5-ownership-transfer-receipt",
           "release-0.5-action-contrast",
-          "release-0.5-review-preview-deadlines"
+          "release-0.5-review-preview-deadlines",
+          "release-0.5-required-input-semantics"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -517077,7 +517307,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "d942295700559ceb6571acb19c3bdb60c48224be51f1631323d44348431c2ec5"
+              "sha256": "a91d9497fe05a10b3a1ff412989ee7444fbeb7cfb208ef6a5b6af5ae13109b6f"
             },
             {
               "path": "apps/web/e2e/mobile-navigation.spec.ts",
@@ -517085,7 +517315,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "c57c88cc2b23e867e1f34f0773695c2c26573324bfdb300035668c4623e1e189"
+              "sha256": "68856b464ec0a88460cbce094b40418f8329d4ccb1ff6b531dcb0af6f2d57e0d"
             },
             {
               "path": "apps/web/e2e/order-comment-forms.spec.ts",
@@ -517659,6 +517889,11 @@
               "batch": "release-0.5-review-preview-deadlines",
               "base_commit": "da098d1244ba0ec10ccdd0b199f87474757fb3fb",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-review-preview-deadlines/proof.json"
+            },
+            {
+              "batch": "release-0.5-required-input-semantics",
+              "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
           ]
         }
@@ -517731,7 +517966,8 @@
           "release-0.5-saving-conditional-agreement",
           "release-0.5-ownership-transfer-receipt",
           "release-0.5-action-contrast",
-          "release-0.5-review-preview-deadlines"
+          "release-0.5-review-preview-deadlines",
+          "release-0.5-required-input-semantics"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -517887,7 +518123,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "d942295700559ceb6571acb19c3bdb60c48224be51f1631323d44348431c2ec5"
+              "sha256": "a91d9497fe05a10b3a1ff412989ee7444fbeb7cfb208ef6a5b6af5ae13109b6f"
             },
             {
               "path": "apps/web/e2e/mobile-navigation.spec.ts",
@@ -517895,7 +518131,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "c57c88cc2b23e867e1f34f0773695c2c26573324bfdb300035668c4623e1e189"
+              "sha256": "68856b464ec0a88460cbce094b40418f8329d4ccb1ff6b531dcb0af6f2d57e0d"
             },
             {
               "path": "apps/web/e2e/order-comment-forms.spec.ts",
@@ -518469,6 +518705,11 @@
               "batch": "release-0.5-review-preview-deadlines",
               "base_commit": "da098d1244ba0ec10ccdd0b199f87474757fb3fb",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-review-preview-deadlines/proof.json"
+            },
+            {
+              "batch": "release-0.5-required-input-semantics",
+              "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
           ]
         }
@@ -518520,7 +518761,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.5-essential-control-contrast",
           "release-0.5-component-direction-matrix",
-          "release-0.5-action-contrast"
+          "release-0.5-action-contrast",
+          "release-0.5-required-input-semantics"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -518728,7 +518970,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/legal/$profileId.tsx",
-              "sha256": "697b9278fca85fe63707e5ba484bac814900554fdec9e32898dd856e82ecf276"
+              "sha256": "2924fb024590e4ee6abb927411fff9c269eb16cc72d2a7acce8768dac2283da7"
             },
             {
               "path": "apps/web/vite.config.ts",
@@ -518957,6 +519199,11 @@
               "batch": "release-0.5-action-contrast",
               "base_commit": "a60f978b63e08684d552db116f9aa8f7d0a84cb6",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-action-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-required-input-semantics",
+              "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
           ]
         }
@@ -519029,7 +519276,8 @@
           "release-0.5-saving-conditional-agreement",
           "release-0.5-ownership-transfer-receipt",
           "release-0.5-action-contrast",
-          "release-0.5-review-preview-deadlines"
+          "release-0.5-review-preview-deadlines",
+          "release-0.5-required-input-semantics"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -519185,7 +519433,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "d942295700559ceb6571acb19c3bdb60c48224be51f1631323d44348431c2ec5"
+              "sha256": "a91d9497fe05a10b3a1ff412989ee7444fbeb7cfb208ef6a5b6af5ae13109b6f"
             },
             {
               "path": "apps/web/e2e/mobile-navigation.spec.ts",
@@ -519193,7 +519441,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "c57c88cc2b23e867e1f34f0773695c2c26573324bfdb300035668c4623e1e189"
+              "sha256": "68856b464ec0a88460cbce094b40418f8329d4ccb1ff6b531dcb0af6f2d57e0d"
             },
             {
               "path": "apps/web/e2e/order-comment-forms.spec.ts",
@@ -519767,6 +520015,11 @@
               "batch": "release-0.5-review-preview-deadlines",
               "base_commit": "da098d1244ba0ec10ccdd0b199f87474757fb3fb",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-review-preview-deadlines/proof.json"
+            },
+            {
+              "batch": "release-0.5-required-input-semantics",
+              "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
           ]
         }
@@ -519787,7 +520040,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "GitHub ran the strict fast-mode critical accessibility step successfully on dd9c6d87. The workflow credential scope is resolved. Main is unprotected and has no required checks. Merge policy and treatment of existing noncritical assertions still require the separate owner decision."
+        "The strict fast accessibility workflow is on main and workflow scope is active. The da098d12 hosted step passed. On b811d149 the hosted login test was flaky when it could traverse the loading page. The updated test waits for the real form and preserves the keyboard and axe assertions. Hosted verification of this correction and the owner merge-policy decision remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -519798,7 +520051,8 @@
           "release-0.5-critical-accessibility",
           "release-0.5-ci-workflow",
           "release-0.5-conditional-native-choices",
-          "release-0.5-main-exact-source-coverage"
+          "release-0.5-main-exact-source-coverage",
+          "release-0.5-required-input-semantics"
         ],
         "current_acceptance": null
       }
@@ -604401,7 +604655,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-profile-picker-preload-recovery",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-required-input-semantics"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -604629,7 +604884,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "d942295700559ceb6571acb19c3bdb60c48224be51f1631323d44348431c2ec5"
+              "sha256": "a91d9497fe05a10b3a1ff412989ee7444fbeb7cfb208ef6a5b6af5ae13109b6f"
             },
             {
               "path": "apps/web/e2e/navigation-fixture.ts",
@@ -605172,6 +605427,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-required-input-semantics",
+              "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
           ]
         }
@@ -605222,7 +605482,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-profile-picker-preload-recovery",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-required-input-semantics"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -605450,7 +605711,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "d942295700559ceb6571acb19c3bdb60c48224be51f1631323d44348431c2ec5"
+              "sha256": "a91d9497fe05a10b3a1ff412989ee7444fbeb7cfb208ef6a5b6af5ae13109b6f"
             },
             {
               "path": "apps/web/e2e/navigation-fixture.ts",
@@ -605993,6 +606254,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-required-input-semantics",
+              "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
           ]
         }
@@ -606043,7 +606309,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-profile-picker-preload-recovery",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-required-input-semantics"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -606271,7 +606538,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "d942295700559ceb6571acb19c3bdb60c48224be51f1631323d44348431c2ec5"
+              "sha256": "a91d9497fe05a10b3a1ff412989ee7444fbeb7cfb208ef6a5b6af5ae13109b6f"
             },
             {
               "path": "apps/web/e2e/navigation-fixture.ts",
@@ -606814,6 +607081,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-required-input-semantics",
+              "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
           ]
         }
@@ -606864,7 +607136,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-profile-picker-preload-recovery",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-required-input-semantics"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -607092,7 +607365,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "d942295700559ceb6571acb19c3bdb60c48224be51f1631323d44348431c2ec5"
+              "sha256": "a91d9497fe05a10b3a1ff412989ee7444fbeb7cfb208ef6a5b6af5ae13109b6f"
             },
             {
               "path": "apps/web/e2e/navigation-fixture.ts",
@@ -607635,6 +607908,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-required-input-semantics",
+              "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
           ]
         }
@@ -607685,7 +607963,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-profile-picker-preload-recovery",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-required-input-semantics"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -607913,7 +608192,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "d942295700559ceb6571acb19c3bdb60c48224be51f1631323d44348431c2ec5"
+              "sha256": "a91d9497fe05a10b3a1ff412989ee7444fbeb7cfb208ef6a5b6af5ae13109b6f"
             },
             {
               "path": "apps/web/e2e/navigation-fixture.ts",
@@ -608456,6 +608735,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-required-input-semantics",
+              "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
           ]
         }
@@ -608519,7 +608803,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.5-essential-control-contrast",
           "release-0.5-solar-guidance-ready",
-          "release-0.5-review-preview-deadlines"
+          "release-0.5-review-preview-deadlines",
+          "release-0.5-required-input-semantics"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -608619,7 +608904,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "d942295700559ceb6571acb19c3bdb60c48224be51f1631323d44348431c2ec5"
+              "sha256": "a91d9497fe05a10b3a1ff412989ee7444fbeb7cfb208ef6a5b6af5ae13109b6f"
             },
             {
               "path": "apps/web/e2e/mobile-navigation.spec.ts",
@@ -609248,6 +609533,11 @@
               "batch": "release-0.5-review-preview-deadlines",
               "base_commit": "da098d1244ba0ec10ccdd0b199f87474757fb3fb",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-review-preview-deadlines/proof.json"
+            },
+            {
+              "batch": "release-0.5-required-input-semantics",
+              "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
           ]
         }
@@ -609311,7 +609601,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.5-essential-control-contrast",
           "release-0.5-solar-guidance-ready",
-          "release-0.5-review-preview-deadlines"
+          "release-0.5-review-preview-deadlines",
+          "release-0.5-required-input-semantics"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -609411,7 +609702,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "d942295700559ceb6571acb19c3bdb60c48224be51f1631323d44348431c2ec5"
+              "sha256": "a91d9497fe05a10b3a1ff412989ee7444fbeb7cfb208ef6a5b6af5ae13109b6f"
             },
             {
               "path": "apps/web/e2e/mobile-navigation.spec.ts",
@@ -610040,6 +610331,11 @@
               "batch": "release-0.5-review-preview-deadlines",
               "base_commit": "da098d1244ba0ec10ccdd0b199f87474757fb3fb",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-review-preview-deadlines/proof.json"
+            },
+            {
+              "batch": "release-0.5-required-input-semantics",
+              "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
           ]
         }
@@ -610103,7 +610399,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.5-essential-control-contrast",
           "release-0.5-solar-guidance-ready",
-          "release-0.5-review-preview-deadlines"
+          "release-0.5-review-preview-deadlines",
+          "release-0.5-required-input-semantics"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -610203,7 +610500,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "d942295700559ceb6571acb19c3bdb60c48224be51f1631323d44348431c2ec5"
+              "sha256": "a91d9497fe05a10b3a1ff412989ee7444fbeb7cfb208ef6a5b6af5ae13109b6f"
             },
             {
               "path": "apps/web/e2e/mobile-navigation.spec.ts",
@@ -610832,6 +611129,11 @@
               "batch": "release-0.5-review-preview-deadlines",
               "base_commit": "da098d1244ba0ec10ccdd0b199f87474757fb3fb",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-review-preview-deadlines/proof.json"
+            },
+            {
+              "batch": "release-0.5-required-input-semantics",
+              "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
           ]
         }
@@ -610895,7 +611197,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.5-essential-control-contrast",
           "release-0.5-solar-guidance-ready",
-          "release-0.5-review-preview-deadlines"
+          "release-0.5-review-preview-deadlines",
+          "release-0.5-required-input-semantics"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -610995,7 +611298,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "d942295700559ceb6571acb19c3bdb60c48224be51f1631323d44348431c2ec5"
+              "sha256": "a91d9497fe05a10b3a1ff412989ee7444fbeb7cfb208ef6a5b6af5ae13109b6f"
             },
             {
               "path": "apps/web/e2e/mobile-navigation.spec.ts",
@@ -611624,6 +611927,11 @@
               "batch": "release-0.5-review-preview-deadlines",
               "base_commit": "da098d1244ba0ec10ccdd0b199f87474757fb3fb",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-review-preview-deadlines/proof.json"
+            },
+            {
+              "batch": "release-0.5-required-input-semantics",
+              "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
           ]
         }
@@ -611691,7 +611999,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.5-essential-control-contrast",
           "release-0.5-solar-guidance-ready",
-          "release-0.5-review-preview-deadlines"
+          "release-0.5-review-preview-deadlines",
+          "release-0.5-required-input-semantics"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -611791,7 +612100,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "d942295700559ceb6571acb19c3bdb60c48224be51f1631323d44348431c2ec5"
+              "sha256": "a91d9497fe05a10b3a1ff412989ee7444fbeb7cfb208ef6a5b6af5ae13109b6f"
             },
             {
               "path": "apps/web/e2e/mobile-navigation.spec.ts",
@@ -612420,6 +612729,11 @@
               "batch": "release-0.5-review-preview-deadlines",
               "base_commit": "da098d1244ba0ec10ccdd0b199f87474757fb3fb",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-review-preview-deadlines/proof.json"
+            },
+            {
+              "batch": "release-0.5-required-input-semantics",
+              "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
           ]
         }
@@ -612483,7 +612797,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.5-essential-control-contrast",
           "release-0.5-solar-guidance-ready",
-          "release-0.5-review-preview-deadlines"
+          "release-0.5-review-preview-deadlines",
+          "release-0.5-required-input-semantics"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -612583,7 +612898,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "d942295700559ceb6571acb19c3bdb60c48224be51f1631323d44348431c2ec5"
+              "sha256": "a91d9497fe05a10b3a1ff412989ee7444fbeb7cfb208ef6a5b6af5ae13109b6f"
             },
             {
               "path": "apps/web/e2e/mobile-navigation.spec.ts",
@@ -613212,6 +613527,11 @@
               "batch": "release-0.5-review-preview-deadlines",
               "base_commit": "da098d1244ba0ec10ccdd0b199f87474757fb3fb",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-review-preview-deadlines/proof.json"
+            },
+            {
+              "batch": "release-0.5-required-input-semantics",
+              "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
           ]
         }
@@ -613275,7 +613595,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.5-essential-control-contrast",
           "release-0.5-solar-guidance-ready",
-          "release-0.5-review-preview-deadlines"
+          "release-0.5-review-preview-deadlines",
+          "release-0.5-required-input-semantics"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -613375,7 +613696,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "d942295700559ceb6571acb19c3bdb60c48224be51f1631323d44348431c2ec5"
+              "sha256": "a91d9497fe05a10b3a1ff412989ee7444fbeb7cfb208ef6a5b6af5ae13109b6f"
             },
             {
               "path": "apps/web/e2e/mobile-navigation.spec.ts",
@@ -614004,6 +614325,11 @@
               "batch": "release-0.5-review-preview-deadlines",
               "base_commit": "da098d1244ba0ec10ccdd0b199f87474757fb3fb",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-review-preview-deadlines/proof.json"
+            },
+            {
+              "batch": "release-0.5-required-input-semantics",
+              "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
           ]
         }
@@ -614068,7 +614394,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.5-essential-control-contrast",
           "release-0.5-solar-guidance-ready",
-          "release-0.5-review-preview-deadlines"
+          "release-0.5-review-preview-deadlines",
+          "release-0.5-required-input-semantics"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -614168,7 +614495,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "d942295700559ceb6571acb19c3bdb60c48224be51f1631323d44348431c2ec5"
+              "sha256": "a91d9497fe05a10b3a1ff412989ee7444fbeb7cfb208ef6a5b6af5ae13109b6f"
             },
             {
               "path": "apps/web/e2e/mobile-navigation.spec.ts",
@@ -614797,6 +615124,11 @@
               "batch": "release-0.5-review-preview-deadlines",
               "base_commit": "da098d1244ba0ec10ccdd0b199f87474757fb3fb",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-review-preview-deadlines/proof.json"
+            },
+            {
+              "batch": "release-0.5-required-input-semantics",
+              "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
           ]
         }
@@ -614861,7 +615193,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.5-essential-control-contrast",
           "release-0.5-solar-guidance-ready",
-          "release-0.5-review-preview-deadlines"
+          "release-0.5-review-preview-deadlines",
+          "release-0.5-required-input-semantics"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -614961,7 +615294,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "d942295700559ceb6571acb19c3bdb60c48224be51f1631323d44348431c2ec5"
+              "sha256": "a91d9497fe05a10b3a1ff412989ee7444fbeb7cfb208ef6a5b6af5ae13109b6f"
             },
             {
               "path": "apps/web/e2e/mobile-navigation.spec.ts",
@@ -615590,6 +615923,11 @@
               "batch": "release-0.5-review-preview-deadlines",
               "base_commit": "da098d1244ba0ec10ccdd0b199f87474757fb3fb",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-review-preview-deadlines/proof.json"
+            },
+            {
+              "batch": "release-0.5-required-input-semantics",
+              "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
           ]
         }
@@ -615654,7 +615992,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.5-essential-control-contrast",
           "release-0.5-solar-guidance-ready",
-          "release-0.5-review-preview-deadlines"
+          "release-0.5-review-preview-deadlines",
+          "release-0.5-required-input-semantics"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -615754,7 +616093,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "d942295700559ceb6571acb19c3bdb60c48224be51f1631323d44348431c2ec5"
+              "sha256": "a91d9497fe05a10b3a1ff412989ee7444fbeb7cfb208ef6a5b6af5ae13109b6f"
             },
             {
               "path": "apps/web/e2e/mobile-navigation.spec.ts",
@@ -616383,6 +616722,11 @@
               "batch": "release-0.5-review-preview-deadlines",
               "base_commit": "da098d1244ba0ec10ccdd0b199f87474757fb3fb",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-review-preview-deadlines/proof.json"
+            },
+            {
+              "batch": "release-0.5-required-input-semantics",
+              "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
           ]
         }
@@ -616447,7 +616791,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.5-essential-control-contrast",
           "release-0.5-solar-guidance-ready",
-          "release-0.5-review-preview-deadlines"
+          "release-0.5-review-preview-deadlines",
+          "release-0.5-required-input-semantics"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -616547,7 +616892,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "d942295700559ceb6571acb19c3bdb60c48224be51f1631323d44348431c2ec5"
+              "sha256": "a91d9497fe05a10b3a1ff412989ee7444fbeb7cfb208ef6a5b6af5ae13109b6f"
             },
             {
               "path": "apps/web/e2e/mobile-navigation.spec.ts",
@@ -617176,6 +617521,11 @@
               "batch": "release-0.5-review-preview-deadlines",
               "base_commit": "da098d1244ba0ec10ccdd0b199f87474757fb3fb",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-review-preview-deadlines/proof.json"
+            },
+            {
+              "batch": "release-0.5-required-input-semantics",
+              "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
           ]
         }
@@ -617240,7 +617590,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.5-essential-control-contrast",
           "release-0.5-solar-guidance-ready",
-          "release-0.5-review-preview-deadlines"
+          "release-0.5-review-preview-deadlines",
+          "release-0.5-required-input-semantics"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -617340,7 +617691,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "d942295700559ceb6571acb19c3bdb60c48224be51f1631323d44348431c2ec5"
+              "sha256": "a91d9497fe05a10b3a1ff412989ee7444fbeb7cfb208ef6a5b6af5ae13109b6f"
             },
             {
               "path": "apps/web/e2e/mobile-navigation.spec.ts",
@@ -617969,6 +618320,11 @@
               "batch": "release-0.5-review-preview-deadlines",
               "base_commit": "da098d1244ba0ec10ccdd0b199f87474757fb3fb",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-review-preview-deadlines/proof.json"
+            },
+            {
+              "batch": "release-0.5-required-input-semantics",
+              "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
           ]
         }
@@ -618033,7 +618389,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.5-essential-control-contrast",
           "release-0.5-solar-guidance-ready",
-          "release-0.5-review-preview-deadlines"
+          "release-0.5-review-preview-deadlines",
+          "release-0.5-required-input-semantics"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -618133,7 +618490,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "d942295700559ceb6571acb19c3bdb60c48224be51f1631323d44348431c2ec5"
+              "sha256": "a91d9497fe05a10b3a1ff412989ee7444fbeb7cfb208ef6a5b6af5ae13109b6f"
             },
             {
               "path": "apps/web/e2e/mobile-navigation.spec.ts",
@@ -618762,6 +619119,11 @@
               "batch": "release-0.5-review-preview-deadlines",
               "base_commit": "da098d1244ba0ec10ccdd0b199f87474757fb3fb",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-review-preview-deadlines/proof.json"
+            },
+            {
+              "batch": "release-0.5-required-input-semantics",
+              "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
           ]
         }
@@ -618826,7 +619188,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.5-essential-control-contrast",
           "release-0.5-solar-guidance-ready",
-          "release-0.5-review-preview-deadlines"
+          "release-0.5-review-preview-deadlines",
+          "release-0.5-required-input-semantics"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -618926,7 +619289,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "d942295700559ceb6571acb19c3bdb60c48224be51f1631323d44348431c2ec5"
+              "sha256": "a91d9497fe05a10b3a1ff412989ee7444fbeb7cfb208ef6a5b6af5ae13109b6f"
             },
             {
               "path": "apps/web/e2e/mobile-navigation.spec.ts",
@@ -619555,6 +619918,11 @@
               "batch": "release-0.5-review-preview-deadlines",
               "base_commit": "da098d1244ba0ec10ccdd0b199f87474757fb3fb",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-review-preview-deadlines/proof.json"
+            },
+            {
+              "batch": "release-0.5-required-input-semantics",
+              "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
           ]
         }
@@ -619619,7 +619987,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.5-essential-control-contrast",
           "release-0.5-solar-guidance-ready",
-          "release-0.5-review-preview-deadlines"
+          "release-0.5-review-preview-deadlines",
+          "release-0.5-required-input-semantics"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -619719,7 +620088,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "d942295700559ceb6571acb19c3bdb60c48224be51f1631323d44348431c2ec5"
+              "sha256": "a91d9497fe05a10b3a1ff412989ee7444fbeb7cfb208ef6a5b6af5ae13109b6f"
             },
             {
               "path": "apps/web/e2e/mobile-navigation.spec.ts",
@@ -620348,6 +620717,11 @@
               "batch": "release-0.5-review-preview-deadlines",
               "base_commit": "da098d1244ba0ec10ccdd0b199f87474757fb3fb",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-review-preview-deadlines/proof.json"
+            },
+            {
+              "batch": "release-0.5-required-input-semantics",
+              "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
           ]
         }
@@ -620398,7 +620772,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-profile-picker-preload-recovery",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-required-input-semantics"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -620626,7 +621001,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "d942295700559ceb6571acb19c3bdb60c48224be51f1631323d44348431c2ec5"
+              "sha256": "a91d9497fe05a10b3a1ff412989ee7444fbeb7cfb208ef6a5b6af5ae13109b6f"
             },
             {
               "path": "apps/web/e2e/navigation-fixture.ts",
@@ -621169,6 +621544,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-required-input-semantics",
+              "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
           ]
         }
@@ -621219,7 +621599,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-profile-picker-preload-recovery",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-required-input-semantics"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -621447,7 +621828,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "d942295700559ceb6571acb19c3bdb60c48224be51f1631323d44348431c2ec5"
+              "sha256": "a91d9497fe05a10b3a1ff412989ee7444fbeb7cfb208ef6a5b6af5ae13109b6f"
             },
             {
               "path": "apps/web/e2e/navigation-fixture.ts",
@@ -621990,6 +622371,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-required-input-semantics",
+              "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
           ]
         }
@@ -622040,7 +622426,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-profile-picker-preload-recovery",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-required-input-semantics"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -622268,7 +622655,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "d942295700559ceb6571acb19c3bdb60c48224be51f1631323d44348431c2ec5"
+              "sha256": "a91d9497fe05a10b3a1ff412989ee7444fbeb7cfb208ef6a5b6af5ae13109b6f"
             },
             {
               "path": "apps/web/e2e/navigation-fixture.ts",
@@ -622811,6 +623198,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-required-input-semantics",
+              "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
           ]
         }
@@ -622861,7 +623253,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-profile-picker-preload-recovery",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-required-input-semantics"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -623089,7 +623482,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "d942295700559ceb6571acb19c3bdb60c48224be51f1631323d44348431c2ec5"
+              "sha256": "a91d9497fe05a10b3a1ff412989ee7444fbeb7cfb208ef6a5b6af5ae13109b6f"
             },
             {
               "path": "apps/web/e2e/navigation-fixture.ts",
@@ -623632,6 +624025,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-required-input-semantics",
+              "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
           ]
         }
@@ -623682,7 +624080,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-profile-picker-preload-recovery",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-required-input-semantics"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -623910,7 +624309,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "d942295700559ceb6571acb19c3bdb60c48224be51f1631323d44348431c2ec5"
+              "sha256": "a91d9497fe05a10b3a1ff412989ee7444fbeb7cfb208ef6a5b6af5ae13109b6f"
             },
             {
               "path": "apps/web/e2e/navigation-fixture.ts",
@@ -624453,6 +624852,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-required-input-semantics",
+              "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
           ]
         }
@@ -624503,7 +624907,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-profile-picker-preload-recovery",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-required-input-semantics"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -624731,7 +625136,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "d942295700559ceb6571acb19c3bdb60c48224be51f1631323d44348431c2ec5"
+              "sha256": "a91d9497fe05a10b3a1ff412989ee7444fbeb7cfb208ef6a5b6af5ae13109b6f"
             },
             {
               "path": "apps/web/e2e/navigation-fixture.ts",
@@ -625274,6 +625679,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-required-input-semantics",
+              "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
           ]
         }
@@ -625324,7 +625734,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-profile-picker-preload-recovery",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-required-input-semantics"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -625552,7 +625963,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "d942295700559ceb6571acb19c3bdb60c48224be51f1631323d44348431c2ec5"
+              "sha256": "a91d9497fe05a10b3a1ff412989ee7444fbeb7cfb208ef6a5b6af5ae13109b6f"
             },
             {
               "path": "apps/web/e2e/navigation-fixture.ts",
@@ -626095,6 +626506,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-required-input-semantics",
+              "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
           ]
         }
@@ -626145,7 +626561,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-profile-picker-preload-recovery",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-required-input-semantics"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -626373,7 +626790,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "d942295700559ceb6571acb19c3bdb60c48224be51f1631323d44348431c2ec5"
+              "sha256": "a91d9497fe05a10b3a1ff412989ee7444fbeb7cfb208ef6a5b6af5ae13109b6f"
             },
             {
               "path": "apps/web/e2e/navigation-fixture.ts",
@@ -626916,6 +627333,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-required-input-semantics",
+              "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
           ]
         }
@@ -626966,7 +627388,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-profile-picker-preload-recovery",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-required-input-semantics"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -627194,7 +627617,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "d942295700559ceb6571acb19c3bdb60c48224be51f1631323d44348431c2ec5"
+              "sha256": "a91d9497fe05a10b3a1ff412989ee7444fbeb7cfb208ef6a5b6af5ae13109b6f"
             },
             {
               "path": "apps/web/e2e/navigation-fixture.ts",
@@ -627737,6 +628160,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-required-input-semantics",
+              "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
           ]
         }
@@ -627787,7 +628215,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-profile-picker-preload-recovery",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-required-input-semantics"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -628015,7 +628444,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "d942295700559ceb6571acb19c3bdb60c48224be51f1631323d44348431c2ec5"
+              "sha256": "a91d9497fe05a10b3a1ff412989ee7444fbeb7cfb208ef6a5b6af5ae13109b6f"
             },
             {
               "path": "apps/web/e2e/navigation-fixture.ts",
@@ -628558,6 +628987,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-required-input-semantics",
+              "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
           ]
         }
@@ -628608,7 +629042,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-profile-picker-preload-recovery",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-required-input-semantics"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -628836,7 +629271,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "d942295700559ceb6571acb19c3bdb60c48224be51f1631323d44348431c2ec5"
+              "sha256": "a91d9497fe05a10b3a1ff412989ee7444fbeb7cfb208ef6a5b6af5ae13109b6f"
             },
             {
               "path": "apps/web/e2e/navigation-fixture.ts",
@@ -629379,6 +629814,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-required-input-semantics",
+              "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
           ]
         }
@@ -629429,7 +629869,8 @@
           "release-0.5-route-census-closure",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-profile-picker-preload-recovery",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.5-required-input-semantics"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -629657,7 +630098,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "d942295700559ceb6571acb19c3bdb60c48224be51f1631323d44348431c2ec5"
+              "sha256": "a91d9497fe05a10b3a1ff412989ee7444fbeb7cfb208ef6a5b6af5ae13109b6f"
             },
             {
               "path": "apps/web/e2e/navigation-fixture.ts",
@@ -630200,6 +630641,11 @@
               "batch": "release-0.5-essential-control-contrast",
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
+            },
+            {
+              "batch": "release-0.5-required-input-semantics",
+              "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
           ]
         }
@@ -663098,7 +663544,8 @@
           "release-0.5-saving-address-field-errors",
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-owned-staff-solar-review",
-          "release-0.5-saving-conditional-agreement"
+          "release-0.5-saving-conditional-agreement",
+          "release-0.5-required-input-semantics"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -663194,7 +663641,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "c57c88cc2b23e867e1f34f0773695c2c26573324bfdb300035668c4623e1e189"
+              "sha256": "68856b464ec0a88460cbce094b40418f8329d4ccb1ff6b531dcb0af6f2d57e0d"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -663402,11 +663849,11 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/individual/$profileId.tsx",
-              "sha256": "24c42173f222318652b78c8524d5f7a88d1c3e9314e1918a6d83fc0b9fdb5fda"
+              "sha256": "373898cf434decfe0d983b59d5485d9200aa002de62dd331d3108f782b95aa1c"
             },
             {
               "path": "apps/web/src/routes/onboarding/legal/$profileId.tsx",
-              "sha256": "697b9278fca85fe63707e5ba484bac814900554fdec9e32898dd856e82ecf276"
+              "sha256": "2924fb024590e4ee6abb927411fff9c269eb16cc72d2a7acce8768dac2283da7"
             },
             {
               "path": "apps/web/src/test/query-provider.tsx",
@@ -663698,6 +664145,11 @@
               "batch": "release-0.5-saving-conditional-agreement",
               "base_commit": "5829eaff544bddcf4044c8a021055497684ee48e",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-conditional-agreement/proof.json"
+            },
+            {
+              "batch": "release-0.5-required-input-semantics",
+              "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
           ]
         }
@@ -663754,7 +664206,8 @@
           "release-0.5-saving-address-field-errors",
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-owned-staff-solar-review",
-          "release-0.5-saving-conditional-agreement"
+          "release-0.5-saving-conditional-agreement",
+          "release-0.5-required-input-semantics"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -663850,7 +664303,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "c57c88cc2b23e867e1f34f0773695c2c26573324bfdb300035668c4623e1e189"
+              "sha256": "68856b464ec0a88460cbce094b40418f8329d4ccb1ff6b531dcb0af6f2d57e0d"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -664058,11 +664511,11 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/individual/$profileId.tsx",
-              "sha256": "24c42173f222318652b78c8524d5f7a88d1c3e9314e1918a6d83fc0b9fdb5fda"
+              "sha256": "373898cf434decfe0d983b59d5485d9200aa002de62dd331d3108f782b95aa1c"
             },
             {
               "path": "apps/web/src/routes/onboarding/legal/$profileId.tsx",
-              "sha256": "697b9278fca85fe63707e5ba484bac814900554fdec9e32898dd856e82ecf276"
+              "sha256": "2924fb024590e4ee6abb927411fff9c269eb16cc72d2a7acce8768dac2283da7"
             },
             {
               "path": "apps/web/src/test/query-provider.tsx",
@@ -664354,6 +664807,11 @@
               "batch": "release-0.5-saving-conditional-agreement",
               "base_commit": "5829eaff544bddcf4044c8a021055497684ee48e",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-conditional-agreement/proof.json"
+            },
+            {
+              "batch": "release-0.5-required-input-semantics",
+              "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
           ]
         }
@@ -664409,7 +664867,8 @@
           "release-0.5-saving-address-field-errors",
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-owned-staff-solar-review",
-          "release-0.5-saving-conditional-agreement"
+          "release-0.5-saving-conditional-agreement",
+          "release-0.5-required-input-semantics"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -664505,7 +664964,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "c57c88cc2b23e867e1f34f0773695c2c26573324bfdb300035668c4623e1e189"
+              "sha256": "68856b464ec0a88460cbce094b40418f8329d4ccb1ff6b531dcb0af6f2d57e0d"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -664713,11 +665172,11 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/individual/$profileId.tsx",
-              "sha256": "24c42173f222318652b78c8524d5f7a88d1c3e9314e1918a6d83fc0b9fdb5fda"
+              "sha256": "373898cf434decfe0d983b59d5485d9200aa002de62dd331d3108f782b95aa1c"
             },
             {
               "path": "apps/web/src/routes/onboarding/legal/$profileId.tsx",
-              "sha256": "697b9278fca85fe63707e5ba484bac814900554fdec9e32898dd856e82ecf276"
+              "sha256": "2924fb024590e4ee6abb927411fff9c269eb16cc72d2a7acce8768dac2283da7"
             },
             {
               "path": "apps/web/src/test/query-provider.tsx",
@@ -665009,6 +665468,11 @@
               "batch": "release-0.5-saving-conditional-agreement",
               "base_commit": "5829eaff544bddcf4044c8a021055497684ee48e",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-conditional-agreement/proof.json"
+            },
+            {
+              "batch": "release-0.5-required-input-semantics",
+              "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
           ]
         }
@@ -665066,7 +665530,8 @@
           "release-0.5-saving-address-field-errors",
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-owned-staff-solar-review",
-          "release-0.5-saving-conditional-agreement"
+          "release-0.5-saving-conditional-agreement",
+          "release-0.5-required-input-semantics"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -665162,7 +665627,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "c57c88cc2b23e867e1f34f0773695c2c26573324bfdb300035668c4623e1e189"
+              "sha256": "68856b464ec0a88460cbce094b40418f8329d4ccb1ff6b531dcb0af6f2d57e0d"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -665370,11 +665835,11 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/individual/$profileId.tsx",
-              "sha256": "24c42173f222318652b78c8524d5f7a88d1c3e9314e1918a6d83fc0b9fdb5fda"
+              "sha256": "373898cf434decfe0d983b59d5485d9200aa002de62dd331d3108f782b95aa1c"
             },
             {
               "path": "apps/web/src/routes/onboarding/legal/$profileId.tsx",
-              "sha256": "697b9278fca85fe63707e5ba484bac814900554fdec9e32898dd856e82ecf276"
+              "sha256": "2924fb024590e4ee6abb927411fff9c269eb16cc72d2a7acce8768dac2283da7"
             },
             {
               "path": "apps/web/src/test/query-provider.tsx",
@@ -665666,6 +666131,11 @@
               "batch": "release-0.5-saving-conditional-agreement",
               "base_commit": "5829eaff544bddcf4044c8a021055497684ee48e",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-conditional-agreement/proof.json"
+            },
+            {
+              "batch": "release-0.5-required-input-semantics",
+              "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
           ]
         }
@@ -665723,7 +666193,8 @@
           "release-0.5-saving-address-field-errors",
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-owned-staff-solar-review",
-          "release-0.5-saving-conditional-agreement"
+          "release-0.5-saving-conditional-agreement",
+          "release-0.5-required-input-semantics"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -665819,7 +666290,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "c57c88cc2b23e867e1f34f0773695c2c26573324bfdb300035668c4623e1e189"
+              "sha256": "68856b464ec0a88460cbce094b40418f8329d4ccb1ff6b531dcb0af6f2d57e0d"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -666027,11 +666498,11 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/individual/$profileId.tsx",
-              "sha256": "24c42173f222318652b78c8524d5f7a88d1c3e9314e1918a6d83fc0b9fdb5fda"
+              "sha256": "373898cf434decfe0d983b59d5485d9200aa002de62dd331d3108f782b95aa1c"
             },
             {
               "path": "apps/web/src/routes/onboarding/legal/$profileId.tsx",
-              "sha256": "697b9278fca85fe63707e5ba484bac814900554fdec9e32898dd856e82ecf276"
+              "sha256": "2924fb024590e4ee6abb927411fff9c269eb16cc72d2a7acce8768dac2283da7"
             },
             {
               "path": "apps/web/src/test/query-provider.tsx",
@@ -666323,6 +666794,11 @@
               "batch": "release-0.5-saving-conditional-agreement",
               "base_commit": "5829eaff544bddcf4044c8a021055497684ee48e",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-conditional-agreement/proof.json"
+            },
+            {
+              "batch": "release-0.5-required-input-semantics",
+              "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
           ]
         }
@@ -666377,7 +666853,8 @@
           "release-0.5-saving-address-field-errors",
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-owned-staff-solar-review",
-          "release-0.5-saving-conditional-agreement"
+          "release-0.5-saving-conditional-agreement",
+          "release-0.5-required-input-semantics"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -666473,7 +666950,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "c57c88cc2b23e867e1f34f0773695c2c26573324bfdb300035668c4623e1e189"
+              "sha256": "68856b464ec0a88460cbce094b40418f8329d4ccb1ff6b531dcb0af6f2d57e0d"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -666681,11 +667158,11 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/individual/$profileId.tsx",
-              "sha256": "24c42173f222318652b78c8524d5f7a88d1c3e9314e1918a6d83fc0b9fdb5fda"
+              "sha256": "373898cf434decfe0d983b59d5485d9200aa002de62dd331d3108f782b95aa1c"
             },
             {
               "path": "apps/web/src/routes/onboarding/legal/$profileId.tsx",
-              "sha256": "697b9278fca85fe63707e5ba484bac814900554fdec9e32898dd856e82ecf276"
+              "sha256": "2924fb024590e4ee6abb927411fff9c269eb16cc72d2a7acce8768dac2283da7"
             },
             {
               "path": "apps/web/src/test/query-provider.tsx",
@@ -666977,6 +667454,11 @@
               "batch": "release-0.5-saving-conditional-agreement",
               "base_commit": "5829eaff544bddcf4044c8a021055497684ee48e",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-conditional-agreement/proof.json"
+            },
+            {
+              "batch": "release-0.5-required-input-semantics",
+              "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
           ]
         }
@@ -667031,7 +667513,8 @@
           "release-0.5-saving-address-field-errors",
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-owned-staff-solar-review",
-          "release-0.5-saving-conditional-agreement"
+          "release-0.5-saving-conditional-agreement",
+          "release-0.5-required-input-semantics"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -667127,7 +667610,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "c57c88cc2b23e867e1f34f0773695c2c26573324bfdb300035668c4623e1e189"
+              "sha256": "68856b464ec0a88460cbce094b40418f8329d4ccb1ff6b531dcb0af6f2d57e0d"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -667335,11 +667818,11 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/individual/$profileId.tsx",
-              "sha256": "24c42173f222318652b78c8524d5f7a88d1c3e9314e1918a6d83fc0b9fdb5fda"
+              "sha256": "373898cf434decfe0d983b59d5485d9200aa002de62dd331d3108f782b95aa1c"
             },
             {
               "path": "apps/web/src/routes/onboarding/legal/$profileId.tsx",
-              "sha256": "697b9278fca85fe63707e5ba484bac814900554fdec9e32898dd856e82ecf276"
+              "sha256": "2924fb024590e4ee6abb927411fff9c269eb16cc72d2a7acce8768dac2283da7"
             },
             {
               "path": "apps/web/src/test/query-provider.tsx",
@@ -667631,6 +668114,11 @@
               "batch": "release-0.5-saving-conditional-agreement",
               "base_commit": "5829eaff544bddcf4044c8a021055497684ee48e",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-conditional-agreement/proof.json"
+            },
+            {
+              "batch": "release-0.5-required-input-semantics",
+              "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
           ]
         }
@@ -667686,7 +668174,8 @@
           "release-0.5-saving-address-field-errors",
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-owned-staff-solar-review",
-          "release-0.5-saving-conditional-agreement"
+          "release-0.5-saving-conditional-agreement",
+          "release-0.5-required-input-semantics"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -667782,7 +668271,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "c57c88cc2b23e867e1f34f0773695c2c26573324bfdb300035668c4623e1e189"
+              "sha256": "68856b464ec0a88460cbce094b40418f8329d4ccb1ff6b531dcb0af6f2d57e0d"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -667990,11 +668479,11 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/individual/$profileId.tsx",
-              "sha256": "24c42173f222318652b78c8524d5f7a88d1c3e9314e1918a6d83fc0b9fdb5fda"
+              "sha256": "373898cf434decfe0d983b59d5485d9200aa002de62dd331d3108f782b95aa1c"
             },
             {
               "path": "apps/web/src/routes/onboarding/legal/$profileId.tsx",
-              "sha256": "697b9278fca85fe63707e5ba484bac814900554fdec9e32898dd856e82ecf276"
+              "sha256": "2924fb024590e4ee6abb927411fff9c269eb16cc72d2a7acce8768dac2283da7"
             },
             {
               "path": "apps/web/src/test/query-provider.tsx",
@@ -668286,6 +668775,11 @@
               "batch": "release-0.5-saving-conditional-agreement",
               "base_commit": "5829eaff544bddcf4044c8a021055497684ee48e",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-conditional-agreement/proof.json"
+            },
+            {
+              "batch": "release-0.5-required-input-semantics",
+              "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
           ]
         }
@@ -668340,7 +668834,8 @@
           "release-0.5-saving-address-field-errors",
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-owned-staff-solar-review",
-          "release-0.5-saving-conditional-agreement"
+          "release-0.5-saving-conditional-agreement",
+          "release-0.5-required-input-semantics"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -668436,7 +668931,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "c57c88cc2b23e867e1f34f0773695c2c26573324bfdb300035668c4623e1e189"
+              "sha256": "68856b464ec0a88460cbce094b40418f8329d4ccb1ff6b531dcb0af6f2d57e0d"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -668644,11 +669139,11 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/individual/$profileId.tsx",
-              "sha256": "24c42173f222318652b78c8524d5f7a88d1c3e9314e1918a6d83fc0b9fdb5fda"
+              "sha256": "373898cf434decfe0d983b59d5485d9200aa002de62dd331d3108f782b95aa1c"
             },
             {
               "path": "apps/web/src/routes/onboarding/legal/$profileId.tsx",
-              "sha256": "697b9278fca85fe63707e5ba484bac814900554fdec9e32898dd856e82ecf276"
+              "sha256": "2924fb024590e4ee6abb927411fff9c269eb16cc72d2a7acce8768dac2283da7"
             },
             {
               "path": "apps/web/src/test/query-provider.tsx",
@@ -668940,6 +669435,11 @@
               "batch": "release-0.5-saving-conditional-agreement",
               "base_commit": "5829eaff544bddcf4044c8a021055497684ee48e",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-conditional-agreement/proof.json"
+            },
+            {
+              "batch": "release-0.5-required-input-semantics",
+              "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
           ]
         }
@@ -668995,7 +669495,8 @@
           "release-0.5-saving-address-field-errors",
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-owned-staff-solar-review",
-          "release-0.5-saving-conditional-agreement"
+          "release-0.5-saving-conditional-agreement",
+          "release-0.5-required-input-semantics"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -669091,7 +669592,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "c57c88cc2b23e867e1f34f0773695c2c26573324bfdb300035668c4623e1e189"
+              "sha256": "68856b464ec0a88460cbce094b40418f8329d4ccb1ff6b531dcb0af6f2d57e0d"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -669299,11 +669800,11 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/individual/$profileId.tsx",
-              "sha256": "24c42173f222318652b78c8524d5f7a88d1c3e9314e1918a6d83fc0b9fdb5fda"
+              "sha256": "373898cf434decfe0d983b59d5485d9200aa002de62dd331d3108f782b95aa1c"
             },
             {
               "path": "apps/web/src/routes/onboarding/legal/$profileId.tsx",
-              "sha256": "697b9278fca85fe63707e5ba484bac814900554fdec9e32898dd856e82ecf276"
+              "sha256": "2924fb024590e4ee6abb927411fff9c269eb16cc72d2a7acce8768dac2283da7"
             },
             {
               "path": "apps/web/src/test/query-provider.tsx",
@@ -669595,6 +670096,11 @@
               "batch": "release-0.5-saving-conditional-agreement",
               "base_commit": "5829eaff544bddcf4044c8a021055497684ee48e",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-conditional-agreement/proof.json"
+            },
+            {
+              "batch": "release-0.5-required-input-semantics",
+              "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
           ]
         }
@@ -689892,7 +690398,8 @@
           "release-0.5-final-rehearsal",
           "release-0.5-route-census-closure",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-ownership-transfer-receipt"
+          "release-0.5-ownership-transfer-receipt",
+          "release-0.5-required-input-semantics"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -690036,7 +690543,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "c57c88cc2b23e867e1f34f0773695c2c26573324bfdb300035668c4623e1e189"
+              "sha256": "68856b464ec0a88460cbce094b40418f8329d4ccb1ff6b531dcb0af6f2d57e0d"
             },
             {
               "path": "apps/web/e2e/team-catalogue-recovery.spec.ts",
@@ -690240,11 +690747,11 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/individual/$profileId.tsx",
-              "sha256": "24c42173f222318652b78c8524d5f7a88d1c3e9314e1918a6d83fc0b9fdb5fda"
+              "sha256": "373898cf434decfe0d983b59d5485d9200aa002de62dd331d3108f782b95aa1c"
             },
             {
               "path": "apps/web/src/routes/onboarding/legal/$profileId.tsx",
-              "sha256": "697b9278fca85fe63707e5ba484bac814900554fdec9e32898dd856e82ecf276"
+              "sha256": "2924fb024590e4ee6abb927411fff9c269eb16cc72d2a7acce8768dac2283da7"
             },
             {
               "path": "apps/web/vitest.config.ts",
@@ -690463,6 +690970,11 @@
               "batch": "release-0.5-ownership-transfer-receipt",
               "base_commit": "62d119ac5a90125645f8d4fa24c858fc9df096b3",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ownership-transfer-receipt/proof.json"
+            },
+            {
+              "batch": "release-0.5-required-input-semantics",
+              "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
           ]
         }
@@ -690510,7 +691022,8 @@
           "release-0.5-final-rehearsal",
           "release-0.5-route-census-closure",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-ownership-transfer-receipt"
+          "release-0.5-ownership-transfer-receipt",
+          "release-0.5-required-input-semantics"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -690654,7 +691167,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "c57c88cc2b23e867e1f34f0773695c2c26573324bfdb300035668c4623e1e189"
+              "sha256": "68856b464ec0a88460cbce094b40418f8329d4ccb1ff6b531dcb0af6f2d57e0d"
             },
             {
               "path": "apps/web/e2e/team-catalogue-recovery.spec.ts",
@@ -690858,11 +691371,11 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/individual/$profileId.tsx",
-              "sha256": "24c42173f222318652b78c8524d5f7a88d1c3e9314e1918a6d83fc0b9fdb5fda"
+              "sha256": "373898cf434decfe0d983b59d5485d9200aa002de62dd331d3108f782b95aa1c"
             },
             {
               "path": "apps/web/src/routes/onboarding/legal/$profileId.tsx",
-              "sha256": "697b9278fca85fe63707e5ba484bac814900554fdec9e32898dd856e82ecf276"
+              "sha256": "2924fb024590e4ee6abb927411fff9c269eb16cc72d2a7acce8768dac2283da7"
             },
             {
               "path": "apps/web/vitest.config.ts",
@@ -691081,6 +691594,11 @@
               "batch": "release-0.5-ownership-transfer-receipt",
               "base_commit": "62d119ac5a90125645f8d4fa24c858fc9df096b3",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ownership-transfer-receipt/proof.json"
+            },
+            {
+              "batch": "release-0.5-required-input-semantics",
+              "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
           ]
         }
@@ -691128,7 +691646,8 @@
           "release-0.5-final-rehearsal",
           "release-0.5-route-census-closure",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-ownership-transfer-receipt"
+          "release-0.5-ownership-transfer-receipt",
+          "release-0.5-required-input-semantics"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -691272,7 +691791,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "c57c88cc2b23e867e1f34f0773695c2c26573324bfdb300035668c4623e1e189"
+              "sha256": "68856b464ec0a88460cbce094b40418f8329d4ccb1ff6b531dcb0af6f2d57e0d"
             },
             {
               "path": "apps/web/e2e/team-catalogue-recovery.spec.ts",
@@ -691476,11 +691995,11 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/individual/$profileId.tsx",
-              "sha256": "24c42173f222318652b78c8524d5f7a88d1c3e9314e1918a6d83fc0b9fdb5fda"
+              "sha256": "373898cf434decfe0d983b59d5485d9200aa002de62dd331d3108f782b95aa1c"
             },
             {
               "path": "apps/web/src/routes/onboarding/legal/$profileId.tsx",
-              "sha256": "697b9278fca85fe63707e5ba484bac814900554fdec9e32898dd856e82ecf276"
+              "sha256": "2924fb024590e4ee6abb927411fff9c269eb16cc72d2a7acce8768dac2283da7"
             },
             {
               "path": "apps/web/vitest.config.ts",
@@ -691699,6 +692218,11 @@
               "batch": "release-0.5-ownership-transfer-receipt",
               "base_commit": "62d119ac5a90125645f8d4fa24c858fc9df096b3",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ownership-transfer-receipt/proof.json"
+            },
+            {
+              "batch": "release-0.5-required-input-semantics",
+              "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
           ]
         }
@@ -691747,7 +692271,8 @@
           "release-0.5-final-rehearsal",
           "release-0.5-route-census-closure",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-ownership-transfer-receipt"
+          "release-0.5-ownership-transfer-receipt",
+          "release-0.5-required-input-semantics"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -691891,7 +692416,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "c57c88cc2b23e867e1f34f0773695c2c26573324bfdb300035668c4623e1e189"
+              "sha256": "68856b464ec0a88460cbce094b40418f8329d4ccb1ff6b531dcb0af6f2d57e0d"
             },
             {
               "path": "apps/web/e2e/team-catalogue-recovery.spec.ts",
@@ -692095,11 +692620,11 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/individual/$profileId.tsx",
-              "sha256": "24c42173f222318652b78c8524d5f7a88d1c3e9314e1918a6d83fc0b9fdb5fda"
+              "sha256": "373898cf434decfe0d983b59d5485d9200aa002de62dd331d3108f782b95aa1c"
             },
             {
               "path": "apps/web/src/routes/onboarding/legal/$profileId.tsx",
-              "sha256": "697b9278fca85fe63707e5ba484bac814900554fdec9e32898dd856e82ecf276"
+              "sha256": "2924fb024590e4ee6abb927411fff9c269eb16cc72d2a7acce8768dac2283da7"
             },
             {
               "path": "apps/web/vitest.config.ts",
@@ -692318,6 +692843,11 @@
               "batch": "release-0.5-ownership-transfer-receipt",
               "base_commit": "62d119ac5a90125645f8d4fa24c858fc9df096b3",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ownership-transfer-receipt/proof.json"
+            },
+            {
+              "batch": "release-0.5-required-input-semantics",
+              "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
           ]
         }
@@ -692365,7 +692895,8 @@
           "release-0.5-final-rehearsal",
           "release-0.5-route-census-closure",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-ownership-transfer-receipt"
+          "release-0.5-ownership-transfer-receipt",
+          "release-0.5-required-input-semantics"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -692509,7 +693040,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "c57c88cc2b23e867e1f34f0773695c2c26573324bfdb300035668c4623e1e189"
+              "sha256": "68856b464ec0a88460cbce094b40418f8329d4ccb1ff6b531dcb0af6f2d57e0d"
             },
             {
               "path": "apps/web/e2e/team-catalogue-recovery.spec.ts",
@@ -692713,11 +693244,11 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/individual/$profileId.tsx",
-              "sha256": "24c42173f222318652b78c8524d5f7a88d1c3e9314e1918a6d83fc0b9fdb5fda"
+              "sha256": "373898cf434decfe0d983b59d5485d9200aa002de62dd331d3108f782b95aa1c"
             },
             {
               "path": "apps/web/src/routes/onboarding/legal/$profileId.tsx",
-              "sha256": "697b9278fca85fe63707e5ba484bac814900554fdec9e32898dd856e82ecf276"
+              "sha256": "2924fb024590e4ee6abb927411fff9c269eb16cc72d2a7acce8768dac2283da7"
             },
             {
               "path": "apps/web/vitest.config.ts",
@@ -692936,6 +693467,11 @@
               "batch": "release-0.5-ownership-transfer-receipt",
               "base_commit": "62d119ac5a90125645f8d4fa24c858fc9df096b3",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ownership-transfer-receipt/proof.json"
+            },
+            {
+              "batch": "release-0.5-required-input-semantics",
+              "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
           ]
         }
@@ -692983,7 +693519,8 @@
           "release-0.5-final-rehearsal",
           "release-0.5-route-census-closure",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-ownership-transfer-receipt"
+          "release-0.5-ownership-transfer-receipt",
+          "release-0.5-required-input-semantics"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -693127,7 +693664,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "c57c88cc2b23e867e1f34f0773695c2c26573324bfdb300035668c4623e1e189"
+              "sha256": "68856b464ec0a88460cbce094b40418f8329d4ccb1ff6b531dcb0af6f2d57e0d"
             },
             {
               "path": "apps/web/e2e/team-catalogue-recovery.spec.ts",
@@ -693331,11 +693868,11 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/individual/$profileId.tsx",
-              "sha256": "24c42173f222318652b78c8524d5f7a88d1c3e9314e1918a6d83fc0b9fdb5fda"
+              "sha256": "373898cf434decfe0d983b59d5485d9200aa002de62dd331d3108f782b95aa1c"
             },
             {
               "path": "apps/web/src/routes/onboarding/legal/$profileId.tsx",
-              "sha256": "697b9278fca85fe63707e5ba484bac814900554fdec9e32898dd856e82ecf276"
+              "sha256": "2924fb024590e4ee6abb927411fff9c269eb16cc72d2a7acce8768dac2283da7"
             },
             {
               "path": "apps/web/vitest.config.ts",
@@ -693554,6 +694091,11 @@
               "batch": "release-0.5-ownership-transfer-receipt",
               "base_commit": "62d119ac5a90125645f8d4fa24c858fc9df096b3",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ownership-transfer-receipt/proof.json"
+            },
+            {
+              "batch": "release-0.5-required-input-semantics",
+              "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
           ]
         }
@@ -693601,7 +694143,8 @@
           "release-0.5-final-rehearsal",
           "release-0.5-route-census-closure",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-ownership-transfer-receipt"
+          "release-0.5-ownership-transfer-receipt",
+          "release-0.5-required-input-semantics"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -693745,7 +694288,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "c57c88cc2b23e867e1f34f0773695c2c26573324bfdb300035668c4623e1e189"
+              "sha256": "68856b464ec0a88460cbce094b40418f8329d4ccb1ff6b531dcb0af6f2d57e0d"
             },
             {
               "path": "apps/web/e2e/team-catalogue-recovery.spec.ts",
@@ -693949,11 +694492,11 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/individual/$profileId.tsx",
-              "sha256": "24c42173f222318652b78c8524d5f7a88d1c3e9314e1918a6d83fc0b9fdb5fda"
+              "sha256": "373898cf434decfe0d983b59d5485d9200aa002de62dd331d3108f782b95aa1c"
             },
             {
               "path": "apps/web/src/routes/onboarding/legal/$profileId.tsx",
-              "sha256": "697b9278fca85fe63707e5ba484bac814900554fdec9e32898dd856e82ecf276"
+              "sha256": "2924fb024590e4ee6abb927411fff9c269eb16cc72d2a7acce8768dac2283da7"
             },
             {
               "path": "apps/web/vitest.config.ts",
@@ -694172,6 +694715,11 @@
               "batch": "release-0.5-ownership-transfer-receipt",
               "base_commit": "62d119ac5a90125645f8d4fa24c858fc9df096b3",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ownership-transfer-receipt/proof.json"
+            },
+            {
+              "batch": "release-0.5-required-input-semantics",
+              "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
           ]
         }
@@ -694220,7 +694768,8 @@
           "release-0.5-final-rehearsal",
           "release-0.5-route-census-closure",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-ownership-transfer-receipt"
+          "release-0.5-ownership-transfer-receipt",
+          "release-0.5-required-input-semantics"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -694364,7 +694913,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "c57c88cc2b23e867e1f34f0773695c2c26573324bfdb300035668c4623e1e189"
+              "sha256": "68856b464ec0a88460cbce094b40418f8329d4ccb1ff6b531dcb0af6f2d57e0d"
             },
             {
               "path": "apps/web/e2e/team-catalogue-recovery.spec.ts",
@@ -694568,11 +695117,11 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/individual/$profileId.tsx",
-              "sha256": "24c42173f222318652b78c8524d5f7a88d1c3e9314e1918a6d83fc0b9fdb5fda"
+              "sha256": "373898cf434decfe0d983b59d5485d9200aa002de62dd331d3108f782b95aa1c"
             },
             {
               "path": "apps/web/src/routes/onboarding/legal/$profileId.tsx",
-              "sha256": "697b9278fca85fe63707e5ba484bac814900554fdec9e32898dd856e82ecf276"
+              "sha256": "2924fb024590e4ee6abb927411fff9c269eb16cc72d2a7acce8768dac2283da7"
             },
             {
               "path": "apps/web/vitest.config.ts",
@@ -694791,6 +695340,11 @@
               "batch": "release-0.5-ownership-transfer-receipt",
               "base_commit": "62d119ac5a90125645f8d4fa24c858fc9df096b3",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ownership-transfer-receipt/proof.json"
+            },
+            {
+              "batch": "release-0.5-required-input-semantics",
+              "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
           ]
         }
@@ -694838,7 +695392,8 @@
           "release-0.5-final-rehearsal",
           "release-0.5-route-census-closure",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-ownership-transfer-receipt"
+          "release-0.5-ownership-transfer-receipt",
+          "release-0.5-required-input-semantics"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -694982,7 +695537,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "c57c88cc2b23e867e1f34f0773695c2c26573324bfdb300035668c4623e1e189"
+              "sha256": "68856b464ec0a88460cbce094b40418f8329d4ccb1ff6b531dcb0af6f2d57e0d"
             },
             {
               "path": "apps/web/e2e/team-catalogue-recovery.spec.ts",
@@ -695186,11 +695741,11 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/individual/$profileId.tsx",
-              "sha256": "24c42173f222318652b78c8524d5f7a88d1c3e9314e1918a6d83fc0b9fdb5fda"
+              "sha256": "373898cf434decfe0d983b59d5485d9200aa002de62dd331d3108f782b95aa1c"
             },
             {
               "path": "apps/web/src/routes/onboarding/legal/$profileId.tsx",
-              "sha256": "697b9278fca85fe63707e5ba484bac814900554fdec9e32898dd856e82ecf276"
+              "sha256": "2924fb024590e4ee6abb927411fff9c269eb16cc72d2a7acce8768dac2283da7"
             },
             {
               "path": "apps/web/vitest.config.ts",
@@ -695409,6 +695964,11 @@
               "batch": "release-0.5-ownership-transfer-receipt",
               "base_commit": "62d119ac5a90125645f8d4fa24c858fc9df096b3",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ownership-transfer-receipt/proof.json"
+            },
+            {
+              "batch": "release-0.5-required-input-semantics",
+              "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
           ]
         }
@@ -695456,7 +696016,8 @@
           "release-0.5-final-rehearsal",
           "release-0.5-route-census-closure",
           "release-0.5-native-touch-and-setup-recovery",
-          "release-0.5-ownership-transfer-receipt"
+          "release-0.5-ownership-transfer-receipt",
+          "release-0.5-required-input-semantics"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -695600,7 +696161,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "c57c88cc2b23e867e1f34f0773695c2c26573324bfdb300035668c4623e1e189"
+              "sha256": "68856b464ec0a88460cbce094b40418f8329d4ccb1ff6b531dcb0af6f2d57e0d"
             },
             {
               "path": "apps/web/e2e/team-catalogue-recovery.spec.ts",
@@ -695804,11 +696365,11 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/individual/$profileId.tsx",
-              "sha256": "24c42173f222318652b78c8524d5f7a88d1c3e9314e1918a6d83fc0b9fdb5fda"
+              "sha256": "373898cf434decfe0d983b59d5485d9200aa002de62dd331d3108f782b95aa1c"
             },
             {
               "path": "apps/web/src/routes/onboarding/legal/$profileId.tsx",
-              "sha256": "697b9278fca85fe63707e5ba484bac814900554fdec9e32898dd856e82ecf276"
+              "sha256": "2924fb024590e4ee6abb927411fff9c269eb16cc72d2a7acce8768dac2283da7"
             },
             {
               "path": "apps/web/vitest.config.ts",
@@ -696027,6 +696588,11 @@
               "batch": "release-0.5-ownership-transfer-receipt",
               "base_commit": "62d119ac5a90125645f8d4fa24c858fc9df096b3",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ownership-transfer-receipt/proof.json"
+            },
+            {
+              "batch": "release-0.5-required-input-semantics",
+              "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
           ]
         }
@@ -720592,7 +721158,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Verified deadline and retry behavior for staff electricity, consultation, solar, documents and contracts, with the saving queue as an unchanged comparison. Bilingual solar and electricity decision previews keep review and write separate. Remaining conditional UI and command adoption are open."
+        "Bilingual personal and legal onboarding checks cover native names, required states, validation focus, geography readiness, draft recovery and receipt boundaries. Prior staff deadline and command evidence remains recorded. Remaining conditional UI and command adoption are open."
       ],
       "owner": null,
       "depends_on": [],
@@ -720654,7 +721220,8 @@
           "release-0.5-stale-route-recovery",
           "release-0.5-ownership-transfer-receipt",
           "release-0.5-action-contrast",
-          "release-0.5-review-preview-deadlines"
+          "release-0.5-review-preview-deadlines",
+          "release-0.5-required-input-semantics"
         ]
       }
     },
@@ -720673,7 +721240,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "The owned-read batch passed 60 browser and 203 unit cases. The preview batch passed 60 browser and 103 unit cases. The runs overlap and are scoped separately. The final build passed all 98 bundle limits. The full combined predecessor run is bound to da098d12. Final candidate coverage and remaining accessibility gates are open."
+        "The combined da098d12 gate passed all configured floors with 1,145 distinct Chromium cases across 53 groups and source-bound unit reports. The onboarding batch passed 118 browser cases, 38 unit cases and all 98 bundle limits. The separate login keyboard run passed 24 executions across eight browser, locale and theme combinations. Final candidate coverage and outstanding accessibility gates remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -720737,7 +721304,8 @@
           "release-0.5-stale-route-recovery",
           "release-0.5-ownership-transfer-receipt",
           "release-0.5-action-contrast",
-          "release-0.5-review-preview-deadlines"
+          "release-0.5-review-preview-deadlines",
+          "release-0.5-required-input-semantics"
         ]
       }
     },
@@ -783958,6 +784526,148 @@
       ],
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-review-preview-deadlines",
       "release_disposition": "Scoped read and decision-preview recovery evidence renewed. Final candidate and remaining conditional accessibility gates are open."
+    },
+    "release-0.5-required-input-semantics": {
+      "batch": "release-0.5-required-input-semantics",
+      "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.05.01.05",
+        "07-ui-ux-design.md#T-07.05.02.04",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "accepted_task_keys": [],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.05.01.05",
+        "07-ui-ux-design.md#T-07.05.02.04",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/login-ui.spec.ts",
+          "sha256": "a91d9497fe05a10b3a1ff412989ee7444fbeb7cfb208ef6a5b6af5ae13109b6f"
+        },
+        {
+          "path": "apps/web/e2e/onboarding-wizard.spec.ts",
+          "sha256": "68856b464ec0a88460cbce094b40418f8329d4ccb1ff6b531dcb0af6f2d57e0d"
+        },
+        {
+          "path": "apps/web/src/routes/onboarding/individual/$profileId.tsx",
+          "sha256": "373898cf434decfe0d983b59d5485d9200aa002de62dd331d3108f782b95aa1c"
+        },
+        {
+          "path": "apps/web/src/routes/onboarding/legal/$profileId.tsx",
+          "sha256": "2924fb024590e4ee6abb927411fff9c269eb16cc72d2a7acce8768dac2283da7"
+        }
+      ],
+      "checks": [
+        "The predecessor gate passed on da098d12. Exact browser maps and unit source bindings are retained in the external evidence. Playwright IDs distinguish the timezone suites with identical test titles.",
+        "Four original browser failures reproduced direct continuation after clearing the official postal code. A pointer trace showed the blur error moved Continue before click. The final build reserves error space and passes the same direct-focus assertions in both locales and browsers.",
+        "118 distinct onboarding cases and 38 related unit cases passed. All 98 bundle limits, typecheck, lint and formatting passed. A separate login run passed 24 executions across eight cases with zero retries."
+      ],
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json",
+      "source_scope_proof_sha256": "cdea85b4c3c056d1013cc3fb3053bec3d2cf0e9c33c112fa0746d1e538408d8a",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/reviewed.patch",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/renewed-bindings.json",
+      "renewed_task_keys": [
+        "02-auth-users-admin.md#T-02.01.01",
+        "02-auth-users-admin.md#T-02.01.02",
+        "02-auth-users-admin.md#T-02.01.03",
+        "02-auth-users-admin.md#T-02.01.04",
+        "02-auth-users-admin.md#T-02.04.01",
+        "02-auth-users-admin.md#T-03.01.01",
+        "02-auth-users-admin.md#T-03.01.02",
+        "02-auth-users-admin.md#T-03.02.01",
+        "02-auth-users-admin.md#T-03.02.02",
+        "02-auth-users-admin.md#T-03.02.03",
+        "02-auth-users-admin.md#T-03.02.04",
+        "02-auth-users-admin.md#T-03.03.01",
+        "02-auth-users-admin.md#T-03.03.02",
+        "07-ui-ux-design.md#T-07.01.03.19",
+        "07-ui-ux-design.md#T-07.02.01.01",
+        "07-ui-ux-design.md#T-07.02.01.02",
+        "07-ui-ux-design.md#T-07.02.01.03",
+        "07-ui-ux-design.md#T-07.02.01.04",
+        "07-ui-ux-design.md#T-07.02.01.05",
+        "07-ui-ux-design.md#T-07.02.01.06",
+        "07-ui-ux-design.md#T-07.02.01.07",
+        "07-ui-ux-design.md#T-07.02.02.01",
+        "07-ui-ux-design.md#T-07.02.02.02",
+        "07-ui-ux-design.md#T-07.02.02.03",
+        "07-ui-ux-design.md#T-07.02.02.04",
+        "07-ui-ux-design.md#T-07.03.01.01",
+        "07-ui-ux-design.md#T-07.03.01.02",
+        "07-ui-ux-design.md#T-07.03.01.03",
+        "07-ui-ux-design.md#T-07.04.02.01",
+        "07-ui-ux-design.md#T-07.04.02.02",
+        "07-ui-ux-design.md#T-07.04.02.03",
+        "07-ui-ux-design.md#T-07.05.01.01",
+        "07-ui-ux-design.md#T-07.05.01.02",
+        "07-ui-ux-design.md#T-07.05.01.03",
+        "07-ui-ux-design.md#T-07.05.01.04",
+        "07-ui-ux-design.md#T-07.05.01.06",
+        "07-ui-ux-design.md#T-07.05.01.09",
+        "07-ui-ux-design.md#T-07.05.01.10",
+        "07-ui-ux-design.md#T-07.05.01.11",
+        "07-ui-ux-design.md#T-07.05.02.01",
+        "07-ui-ux-design.md#T-07.05.02.02",
+        "07-ui-ux-design.md#T-07.05.02.03",
+        "07-ui-ux-design.md#T-07.14.01.01",
+        "07-ui-ux-design.md#T-07.14.01.02",
+        "07-ui-ux-design.md#T-07.14.01.03",
+        "07-ui-ux-design.md#T-07.14.01.04",
+        "07-ui-ux-design.md#T-07.14.01.05",
+        "07-ui-ux-design.md#T-07.15.01.01",
+        "07-ui-ux-design.md#T-07.15.01.02",
+        "07-ui-ux-design.md#T-07.15.01.03",
+        "07-ui-ux-design.md#T-07.15.01.04",
+        "07-ui-ux-design.md#T-07.15.01.05",
+        "07-ui-ux-design.md#T-07.16.01.01",
+        "07-ui-ux-design.md#T-07.16.01.02",
+        "07-ui-ux-design.md#T-07.16.01.03",
+        "07-ui-ux-design.md#T-07.16.01.04",
+        "07-ui-ux-design.md#T-07.16.01.05",
+        "07-ui-ux-design.md#T-07.16.01.06",
+        "07-ui-ux-design.md#T-07.16.01.07",
+        "07-ui-ux-design.md#T-07.16.02.01",
+        "07-ui-ux-design.md#T-07.16.02.02",
+        "07-ui-ux-design.md#T-07.16.02.03",
+        "07-ui-ux-design.md#T-07.17.01.01",
+        "07-ui-ux-design.md#T-07.17.01.02",
+        "07-ui-ux-design.md#T-07.17.01.03",
+        "07-ui-ux-design.md#T-07.17.01.04",
+        "07-ui-ux-design.md#T-07.17.01.05",
+        "07-ui-ux-design.md#T-07.17.02.01",
+        "07-ui-ux-design.md#T-07.17.02.02",
+        "07-ui-ux-design.md#T-07.17.02.03",
+        "07-ui-ux-design.md#T-07.17.02.04",
+        "07-ui-ux-design.md#T-07.17.02.05",
+        "07-ui-ux-design.md#T-07.17.02.06",
+        "07-ui-ux-design.md#T-07.17.02.07",
+        "07-ui-ux-design.md#T-07.22.01.01",
+        "07-ui-ux-design.md#T-07.22.01.02",
+        "07-ui-ux-design.md#T-07.22.01.03",
+        "07-ui-ux-design.md#T-07.22.01.04",
+        "07-ui-ux-design.md#T-07.22.01.05",
+        "07-ui-ux-design.md#T-07.22.02.01",
+        "07-ui-ux-design.md#T-07.22.02.02",
+        "07-ui-ux-design.md#T-07.22.02.03",
+        "07-ui-ux-design.md#T-07.22.02.04",
+        "07-ui-ux-design.md#T-07.22.02.05",
+        "07-ui-ux-design.md#T-07.28.01.01",
+        "07-ui-ux-design.md#T-07.28.01.02",
+        "07-ui-ux-design.md#T-07.28.01.03",
+        "07-ui-ux-design.md#T-07.28.01.04",
+        "07-ui-ux-design.md#T-07.28.01.05",
+        "07-ui-ux-design.md#T-07.29.01.01",
+        "07-ui-ux-design.md#T-07.29.01.02",
+        "07-ui-ux-design.md#T-07.29.01.03",
+        "07-ui-ux-design.md#T-07.29.01.04",
+        "07-ui-ux-design.md#T-07.29.01.05"
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics",
+      "release_disposition": "Scoped evidence renewed. Final candidate coverage and outstanding acceptance gates remain open."
     }
   },
   "historical_improvements": [

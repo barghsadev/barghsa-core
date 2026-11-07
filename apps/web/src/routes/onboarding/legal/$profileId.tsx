@@ -591,7 +591,7 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
         <Label htmlFor={field}>
           {label}
           {options?.required && (
-            <span aria-hidden="true" className="text-destructive ml-0.5">
+            <span aria-hidden="true" className="text-destructive ms-0.5">
               *
             </span>
           )}
@@ -610,7 +610,7 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
               onBlur={() => handleBlur(field)}
               disabled={submitting}
               aria-invalid={isTouched && !!error}
-              aria-describedby={error ? `${field}-error` : undefined}
+              aria-describedby={isTouched && error ? `${field}-error` : undefined}
               className="flex min-h-20 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
             />
             <p className="text-xs text-muted-foreground text-end">
@@ -624,7 +624,7 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
             triggerProps={{
               ref: form.register(field).ref,
               'aria-invalid': isTouched && !!error,
-              'aria-describedby': error ? `${field}-error` : undefined,
+              'aria-describedby': isTouched && error ? `${field}-error` : undefined,
             }}
             onBlur={() => handleBlur(field)}
             locale={locale}
@@ -654,7 +654,7 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
             disabled={submitting}
             placeholder={options?.placeholder}
             aria-invalid={isTouched && !!error}
-            aria-describedby={error ? `${field}-error` : undefined}
+            aria-describedby={isTouched && error ? `${field}-error` : undefined}
           />
         )}
         {isTouched && error && (
@@ -771,7 +771,12 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
                       {(['representativeProvinceId', 'representativeCityId'] as const).map(
                         (field) => (
                           <div key={field} className="space-y-2">
-                            <Label htmlFor={field}>{t(`onboarding.legal.${field}`, locale)}</Label>
+                            <Label htmlFor={field}>
+                              {t(`onboarding.legal.${field}`, locale)}
+                              <span aria-hidden="true" className="text-destructive ms-0.5">
+                                *
+                              </span>
+                            </Label>
                             {field === 'representativeCityId' ? (
                               <DependentSelect
                                 className="h-11 pointer-coarse:min-h-[45px]!"
@@ -819,7 +824,9 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
                                 }
                                 onBlur={() => handleBlur(field)}
                                 aria-invalid={touched[field] && !!errors[field]}
-                                aria-describedby={errors[field] ? `${field}-error` : undefined}
+                                aria-describedby={
+                                  touched[field] && errors[field] ? `${field}-error` : undefined
+                                }
                                 className="flex h-11 w-full pointer-coarse:min-h-[45px]! rounded-md border border-input bg-background px-3 py-2 text-sm"
                               >
                                 <option value="">{t(`onboarding.legal.${field}`, locale)}</option>
@@ -947,7 +954,9 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
                         <div className="space-y-2">
                           <Label htmlFor="companyTypeId">
                             {isRtl ? 'نوع شرکت' : 'Company Type'}
-                            <span className="text-destructive ml-0.5">*</span>
+                            <span aria-hidden="true" className="text-destructive ms-0.5">
+                              *
+                            </span>
                           </Label>
                           {loadingCompanyTypes ? (
                             <div className="flex h-10 items-center gap-2 text-sm text-muted-foreground">
@@ -970,6 +979,7 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
                           ) : (
                             <select
                               id="companyTypeId"
+                              aria-required="true"
                               ref={form.register('companyTypeId').ref}
                               value={companyTypeId}
                               onChange={(e) => setCompanyTypeId(e.target.value)}
@@ -978,7 +988,9 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
                               className="flex h-11 w-full pointer-coarse:min-h-[45px]! rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                               aria-invalid={touched.companyTypeId && !!errors.companyTypeId}
                               aria-describedby={
-                                errors.companyTypeId ? 'companyTypeId-error' : undefined
+                                touched.companyTypeId && errors.companyTypeId
+                                  ? 'companyTypeId-error'
+                                  : undefined
                               }
                             >
                               <option value="">
@@ -1076,7 +1088,12 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
                     <div className="grid gap-4 sm:grid-cols-2">
                       {/* Province */}
                       <div className="space-y-2">
-                        <Label htmlFor="officialProvinceId">{isRtl ? 'استان' : 'Province'}</Label>
+                        <Label htmlFor="officialProvinceId">
+                          {isRtl ? 'استان' : 'Province'}
+                          <span aria-hidden="true" className="text-destructive ms-0.5">
+                            *
+                          </span>
+                        </Label>
                         {loadingProvinces ? (
                           <div className="flex h-10 items-center gap-2 text-sm text-muted-foreground">
                             <Skeleton className="h-6 w-20 shrink-0" />
@@ -1095,7 +1112,9 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
                             onBlur={() => handleBlur('officialProvinceId')}
                             aria-invalid={touched.officialProvinceId && !!errors.officialProvinceId}
                             aria-describedby={
-                              errors.officialProvinceId ? 'officialProvinceId-error' : undefined
+                              touched.officialProvinceId && errors.officialProvinceId
+                                ? 'officialProvinceId-error'
+                                : undefined
                             }
                             disabled={submitting || !provinceOptions.ready}
                             className="flex h-11 w-full pointer-coarse:min-h-[45px]! rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
@@ -1123,7 +1142,12 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
 
                       {/* City */}
                       <div className="space-y-2">
-                        <Label htmlFor="officialCityId">{isRtl ? 'شهر' : 'City'}</Label>
+                        <Label htmlFor="officialCityId">
+                          {isRtl ? 'شهر' : 'City'}
+                          <span aria-hidden="true" className="text-destructive ms-0.5">
+                            *
+                          </span>
+                        </Label>
                         <DependentSelect
                           className="h-11 pointer-coarse:min-h-[45px]!"
                           id="officialCityId"
@@ -1171,6 +1195,9 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
                     <div className="mt-4 space-y-2">
                       <Label htmlFor="officialFullAddress">
                         {isRtl ? 'آدرس کامل' : 'Full Address'}
+                        <span aria-hidden="true" className="text-destructive ms-0.5">
+                          *
+                        </span>
                       </Label>
                       <textarea
                         id="officialFullAddress"
@@ -1186,7 +1213,9 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
                         className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                         aria-invalid={touched.officialFullAddress && !!errors.officialFullAddress}
                         aria-describedby={
-                          errors.officialFullAddress ? 'officialFullAddress-error' : undefined
+                          touched.officialFullAddress && errors.officialFullAddress
+                            ? 'officialFullAddress-error'
+                            : undefined
                         }
                       />
                       <p className="text-xs text-muted-foreground">
@@ -1207,9 +1236,13 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
                     <div className="mt-4 space-y-2">
                       <Label htmlFor="officialPostalCode">
                         {isRtl ? 'کد پستی' : 'Postal Code'}
+                        <span aria-hidden="true" className="text-destructive ms-0.5">
+                          *
+                        </span>
                       </Label>
                       <Input
                         id="officialPostalCode"
+                        aria-required="true"
                         ref={form.register('officialPostalCode').ref}
                         type="text"
                         inputMode="numeric"
@@ -1226,18 +1259,22 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
                         placeholder={isRtl ? 'کد پستی ۱۰ رقمی' : '10-digit postal code'}
                         aria-invalid={touched.officialPostalCode && !!errors.officialPostalCode}
                         aria-describedby={
-                          errors.officialPostalCode ? 'officialPostalCode-error' : undefined
+                          touched.officialPostalCode && errors.officialPostalCode
+                            ? 'officialPostalCode-error'
+                            : undefined
                         }
                       />
-                      {touched.officialPostalCode && errors.officialPostalCode && (
-                        <p
-                          id="officialPostalCode-error"
-                          className="text-sm text-destructive"
-                          role="alert"
-                        >
-                          {errors.officialPostalCode}
-                        </p>
-                      )}
+                      <div className="min-h-10">
+                        {touched.officialPostalCode && errors.officialPostalCode && (
+                          <p
+                            id="officialPostalCode-error"
+                            className="text-sm text-destructive"
+                            role="alert"
+                          >
+                            {errors.officialPostalCode}
+                          </p>
+                        )}
+                      </div>
                     </div>
                   </fieldset>
                 </>

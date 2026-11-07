@@ -334,7 +334,7 @@ function IndividualProfileForm({ profileId }: { profileId: string }) {
                       disabled={submitting}
                       placeholder={t('onboarding.individual.title.placeholder', locale)}
                       aria-invalid={touched.title && !!errors.title}
-                      aria-describedby={errors.title ? 'title-error' : undefined}
+                      aria-describedby={touched.title && errors.title ? 'title-error' : undefined}
                     />
                     {touched.title && errors.title && (
                       <p id="title-error" className="text-sm text-destructive" role="alert">
@@ -348,7 +348,9 @@ function IndividualProfileForm({ profileId }: { profileId: string }) {
                     <div className="space-y-2">
                       <Label htmlFor="firstName">
                         {t('onboarding.individual.firstName', locale)}
-                        <span className="text-destructive ml-0.5">*</span>
+                        <span aria-hidden="true" className="text-destructive ms-0.5">
+                          *
+                        </span>
                       </Label>
                       <Input
                         id="firstName"
@@ -362,7 +364,9 @@ function IndividualProfileForm({ profileId }: { profileId: string }) {
                         disabled={submitting}
                         placeholder={t('onboarding.individual.firstName.placeholder', locale)}
                         aria-invalid={touched.firstName && !!errors.firstName}
-                        aria-describedby={errors.firstName ? 'firstName-error' : undefined}
+                        aria-describedby={
+                          touched.firstName && errors.firstName ? 'firstName-error' : undefined
+                        }
                       />
                       {touched.firstName && errors.firstName && (
                         <p id="firstName-error" className="text-sm text-destructive" role="alert">
@@ -375,7 +379,9 @@ function IndividualProfileForm({ profileId }: { profileId: string }) {
                     <div className="space-y-2">
                       <Label htmlFor="lastName">
                         {t('onboarding.individual.lastName', locale)}
-                        <span className="text-destructive ml-0.5">*</span>
+                        <span aria-hidden="true" className="text-destructive ms-0.5">
+                          *
+                        </span>
                       </Label>
                       <Input
                         id="lastName"
@@ -389,7 +395,9 @@ function IndividualProfileForm({ profileId }: { profileId: string }) {
                         disabled={submitting}
                         placeholder={t('onboarding.individual.lastName.placeholder', locale)}
                         aria-invalid={touched.lastName && !!errors.lastName}
-                        aria-describedby={errors.lastName ? 'lastName-error' : undefined}
+                        aria-describedby={
+                          touched.lastName && errors.lastName ? 'lastName-error' : undefined
+                        }
                       />
                       {touched.lastName && errors.lastName && (
                         <p id="lastName-error" className="text-sm text-destructive" role="alert">
@@ -402,7 +410,9 @@ function IndividualProfileForm({ profileId }: { profileId: string }) {
                   <div className="space-y-2">
                     <Label htmlFor="nationalId">
                       {t('onboarding.individual.nationalId', locale)}
-                      <span className="text-destructive ml-0.5">*</span>
+                      <span aria-hidden="true" className="text-destructive ms-0.5">
+                        *
+                      </span>
                     </Label>
                     <Input
                       id="nationalId"
@@ -422,7 +432,9 @@ function IndividualProfileForm({ profileId }: { profileId: string }) {
                       disabled={submitting}
                       placeholder={t('onboarding.individual.nationalId.placeholder', locale)}
                       aria-invalid={touched.nationalId && !!errors.nationalId}
-                      aria-describedby={errors.nationalId ? 'nationalId-error' : undefined}
+                      aria-describedby={
+                        touched.nationalId && errors.nationalId ? 'nationalId-error' : undefined
+                      }
                     />
                     {touched.nationalId && errors.nationalId && (
                       <p id="nationalId-error" className="text-sm text-destructive" role="alert">
@@ -445,7 +457,9 @@ function IndividualProfileForm({ profileId }: { profileId: string }) {
                     <div className="space-y-2">
                       <Label htmlFor="provinceId">
                         {t('onboarding.individual.province', locale)}
-                        <span className="text-destructive ml-0.5">*</span>
+                        <span aria-hidden="true" className="text-destructive ms-0.5">
+                          *
+                        </span>
                       </Label>
                       {loadingProvinces ? (
                         <div className="flex h-10 items-center gap-2 text-sm text-muted-foreground">
@@ -455,6 +469,7 @@ function IndividualProfileForm({ profileId }: { profileId: string }) {
                       ) : (
                         <select
                           id="provinceId"
+                          aria-required="true"
                           ref={form.register('provinceId').ref}
                           value={selectedProvinceId}
                           onChange={(e) => {
@@ -465,7 +480,9 @@ function IndividualProfileForm({ profileId }: { profileId: string }) {
                           disabled={submitting || !provinceOptions.ready}
                           className="flex h-11 w-full pointer-coarse:min-h-[45px]! rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                           aria-invalid={touched.provinceId && !!errors.provinceId}
-                          aria-describedby={errors.provinceId ? 'provinceId-error' : undefined}
+                          aria-describedby={
+                            touched.provinceId && errors.provinceId ? 'provinceId-error' : undefined
+                          }
                         >
                           <option value="">
                             {t('onboarding.individual.province.placeholder', locale)}
@@ -488,11 +505,14 @@ function IndividualProfileForm({ profileId }: { profileId: string }) {
                     <div className="space-y-2">
                       <Label htmlFor="cityId">
                         {t('onboarding.individual.city', locale)}
-                        <span className="text-destructive ml-0.5">*</span>
+                        <span aria-hidden="true" className="text-destructive ms-0.5">
+                          *
+                        </span>
                       </Label>
                       <DependentSelect
                         className="h-11 pointer-coarse:min-h-[45px]!"
                         id="cityId"
+                        aria-required="true"
                         ref={form.register('cityId').ref}
                         dependencyValue={selectedProvinceId}
                         value={selectedCityId}
@@ -529,7 +549,9 @@ function IndividualProfileForm({ profileId }: { profileId: string }) {
                   <div className="space-y-2">
                     <Label htmlFor="fullAddress">
                       {t('onboarding.individual.address', locale)}
-                      <span className="text-destructive ml-0.5">*</span>
+                      <span aria-hidden="true" className="text-destructive ms-0.5">
+                        *
+                      </span>
                     </Label>
                     <textarea
                       id="fullAddress"
@@ -544,7 +566,9 @@ function IndividualProfileForm({ profileId }: { profileId: string }) {
                       placeholder={t('onboarding.individual.address.placeholder', locale)}
                       className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                       aria-invalid={touched.fullAddress && !!errors.fullAddress}
-                      aria-describedby={errors.fullAddress ? 'fullAddress-error' : undefined}
+                      aria-describedby={
+                        touched.fullAddress && errors.fullAddress ? 'fullAddress-error' : undefined
+                      }
                     />
                     <p className="text-xs text-muted-foreground">
                       {numbers.number(fullAddress.length)}/{numbers.number(500)}
@@ -559,7 +583,9 @@ function IndividualProfileForm({ profileId }: { profileId: string }) {
                   <div className="space-y-2">
                     <Label htmlFor="postalCode">
                       {t('onboarding.individual.postalCode', locale)}
-                      <span className="text-destructive ml-0.5">*</span>
+                      <span aria-hidden="true" className="text-destructive ms-0.5">
+                        *
+                      </span>
                     </Label>
                     <Input
                       id="postalCode"
@@ -579,7 +605,9 @@ function IndividualProfileForm({ profileId }: { profileId: string }) {
                       disabled={submitting}
                       placeholder={t('onboarding.individual.postalCode.placeholder', locale)}
                       aria-invalid={touched.postalCode && !!errors.postalCode}
-                      aria-describedby={errors.postalCode ? 'postalCode-error' : undefined}
+                      aria-describedby={
+                        touched.postalCode && errors.postalCode ? 'postalCode-error' : undefined
+                      }
                     />
                     {touched.postalCode && errors.postalCode && (
                       <p id="postalCode-error" className="text-sm text-destructive" role="alert">
