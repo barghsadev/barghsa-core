@@ -235,6 +235,9 @@ const en: Record<string, string> = {
   sendReview: 'Send documents for review',
   reviewSent: 'Document set sent for review.',
   documentError: 'Could not update the document stage.',
+  documentReadError: 'Could not load the document instructions.',
+  documentUnconfirmed:
+    'Submission for review could not be confirmed. Check the request before sending it again.',
   staffTitle: 'Solar document review',
   staffQueue: 'Requests awaiting documents',
   staffQueueLoadError: 'Could not load this request queue.',
@@ -604,6 +607,9 @@ const fa: Record<string, string> = {
   sendReview: 'ارسال مدارک برای بررسی',
   reviewSent: 'مجموعه مدارک برای بررسی ارسال شد.',
   documentError: 'مرحله مدارک به‌روزرسانی نشد.',
+  documentReadError: 'دستورالعمل مدارک بارگذاری نشد.',
+  documentUnconfirmed:
+    'ارسال مدارک برای بررسی تأیید نشد. پیش از ارسال دوباره، وضعیت درخواست را بررسی کنید.',
   staffTitle: 'بررسی مدارک نیروگاه خورشیدی',
   staffQueue: 'درخواست‌های در انتظار مدارک',
   staffQueueLoadError: 'دریافت صف درخواست‌ها انجام نشد.',

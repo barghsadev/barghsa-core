@@ -5,13 +5,11 @@ import { dashboardText } from '@barghsa/i18n/dashboard';
 import { loadingText } from '@barghsa/i18n/loading-feedback';
 import type { Locale } from '@barghsa/i18n/app';
 import type { AsyncData } from '../../hooks/useAsyncData.js';
-import { sendToast } from '../../lib/toast-api.js';
+import { announceReadRetry } from '../../lib/read-retry-feedback.js';
 
 export function retryDashboardRead(resource: AsyncData<unknown>, locale: Locale) {
   if (resource.status === 'error' && resource.error.code === 'READ_NETWORK')
-    sendToast('info', dashboardText('widget.connectionRetry', locale), {
-      id: 'read-connection-retry',
-    });
+    announceReadRetry(locale);
   resource.retry();
 }
 

@@ -1,6 +1,7 @@
 import { test, expect } from './coverage-fixture';
 import AxeBuilder from '@axe-core/playwright';
 import { dashboardText } from '@barghsa/i18n/dashboard';
+import { loadingText } from '@barghsa/i18n/loading-feedback';
 import { t } from '@barghsa/i18n/app';
 import { tSaving } from '@barghsa/i18n/saving';
 import { formatCurrencyIrr } from '@barghsa/i18n/numbers';
@@ -86,7 +87,7 @@ for (const locale of ['en', 'fa'] as const) {
         await expect(retryContext).toBeVisible();
         const connectionNotice = page
           .locator('[data-sonner-toast][data-type="info"]')
-          .filter({ hasText: dashboardText('widget.connectionRetry', locale) });
+          .filter({ hasText: loadingText('connectionRetry', locale) });
         await expect(connectionNotice).toHaveCount(0);
         await page.clock.fastForward(5_000);
         expect(contextReads).toBe(1);

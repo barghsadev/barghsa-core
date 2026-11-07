@@ -4,6 +4,7 @@ import { act, type ReactNode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { afterEach, expect, it, vi } from 'vitest';
 import { SolarRequestDetailPage } from './SolarRequestDetailPage.js';
+import { toast } from '../lib/toast-api.js';
 import { tSolar } from '@barghsa/i18n/solar';
 
 vi.mock('@tanstack/react-router', () => ({
@@ -124,12 +125,16 @@ it('allows an empty solar document set to be sent for review', async () => {
     expect(button.disabled).toBe(true);
     await act(async () => checkbox.click());
     expect(button.disabled).toBe(false);
-    await act(async () => button.click());
-    const posted = fetchMock.mock.calls.find(
+    await act(async () => {
+      button.click();
+      button.click();
+    });
+    const posted = fetchMock.mock.calls.filter(
       ([url, options]) =>
         url === '/api/solar/requests/request-1/documents/complete' && options?.method === 'POST'
     );
-    expect(JSON.parse(posted![1]!.body as string)).toEqual({ allDocumentsUploaded: true });
+    expect(posted).toHaveLength(1);
+    expect(JSON.parse(posted[0]![1]!.body as string)).toEqual({ allDocumentsUploaded: true });
     expect(container.textContent).toContain('Document set sent for review.');
   } finally {
     await act(async () => root.unmount());
@@ -317,6 +322,7 @@ it('cancels old account guidance and suppresses its late private reply without r
 });
 
 it('does not publish an old document submission into a replacement account view', async () => {
+  const announce = vi.spyOn(toast, 'success');
   let finish!: (response: Response) => void,
     next = false;
   const fetcher = vi.fn(async (url: string, init?: RequestInit) => {
@@ -343,9 +349,11 @@ it('does not publish an old document submission into a replacement account view'
     await act(async () => finish(Response.json({ status: 'documents_under_review' })));
     expect(view.host.textContent).toContain('New guidance');
     expect(view.host.textContent).not.toContain('Document set sent for review.');
+    expect(announce).not.toHaveBeenCalled();
     expect(solarButton(view.host, 'Send documents for review').disabled).toBe(true);
     expect(fetcher.mock.calls.filter(([, init]) => init?.method === 'POST')).toHaveLength(1);
   } finally {
+    announce.mockRestore();
     await view.close();
   }
 });

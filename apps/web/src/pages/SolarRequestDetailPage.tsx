@@ -1,11 +1,14 @@
-import { CommandFeedback } from '../components/CommandFeedback.js';
+import { toast } from '../lib/toast-api.js';
 import { LoadingStatus } from '@barghsa/ui';
 import { historyContextText } from '../lib/history-context.js';
 import { useEffect, useId, useMemo, useRef, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { useServerDetailQuery } from '../hooks/useServerQuery.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
-import { useProfileContextRevision } from '../lib/profile-context.js';
+import { getProfileContextRevision, useProfileContextRevision } from '../lib/profile-context.js';
+import { ServerQueryError } from '../lib/server-query-client.js';
+import { readAsyncResponse } from '../hooks/useAsyncData.js';
+import { announceReadRetry } from '../lib/read-retry-feedback.js';
 import { queryKeys } from '../lib/query-keys.js';
 import { Link, useParams } from '@tanstack/react-router';
 import { tSolar } from '@barghsa/i18n/solar';
@@ -49,6 +52,14 @@ interface SolarRequest {
   submitted_at: string;
 }
 
+function readFailure(reason: unknown) {
+  if (reason instanceof ServerQueryError) {
+    if ([401, 403, 404].includes(reason.status)) return 'denied';
+    if (reason.status === 0) return 'network';
+  }
+  return 'unavailable';
+}
+
 export function SolarRequestDetailPage() {
   const { requestId } = useParams({ from: '/_app/solar/requests/$requestId' });
   const actor = useAccountUser();
@@ -83,11 +94,12 @@ function SolarRequestDetail({
   >([]);
   const [progress, setProgress] = useState<SolarProgress | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
-  const [readDenied, setReadDenied] = useState(false);
+  const [detailError, setDetailError] = useState<ReturnType<typeof readFailure> | null>(null);
   const [detailVersion, setDetailVersion] = useState(0);
   const [documentsVersion, setDocumentsVersion] = useState(0);
-  const [documentReadError, setDocumentReadError] = useState(false);
+  const [documentReadError, setDocumentReadError] = useState<ReturnType<typeof readFailure> | null>(
+    null
+  );
   const detailPending = useRef(false);
   const documentsPending = useRef(false);
   const [documentsInfo, setDocumentsInfo] = useState<{
@@ -95,9 +107,12 @@ function SolarRequestDetail({
     requestedDocuments: Array<{ id: string; description: string }>;
   } | null>(null);
   const [allUploaded, setAllUploaded] = useState(false);
-  const [documentError, setDocumentError] = useState(false);
-  const [documentSent, setDocumentSent] = useState(false);
+  const [documentOutcome, setDocumentOutcome] = useState<
+    'reviewSent' | 'documentError' | 'documentUnconfirmed' | null
+  >(null);
+  const documentSection = useRef<HTMLElement | null>(null);
   const [sendingDocuments, setSendingDocuments] = useState(false);
+  const completionPending = useRef(false);
   const filters = useMemo<DocumentFilters>(
     () => ({
       kind: 'solar_request',
@@ -127,12 +142,11 @@ function SolarRequestDetail({
     enabled: false,
     manual: true,
     read: async (signal) => {
-      const response = await fetch(`/api/solar/requests/${encodeURIComponent(requestId)}`, {
-        credentials: 'include',
-        signal,
-      });
-      if ([401, 403, 404].includes(response.status)) throw new Error('forbidden');
-      if (!response.ok) throw new Error('request');
+      const response = await readAsyncResponse(
+        `/api/solar/requests/${encodeURIComponent(requestId)}`,
+        signal
+      );
+      if (!response.ok) throw new ServerQueryError(response.status);
       return response.json();
     },
   });
@@ -158,15 +172,11 @@ function SolarRequestDetail({
     enabled: false,
     manual: true,
     read: async (signal) => {
-      const response = await fetch(
+      const response = await readAsyncResponse(
         `/api/solar/requests/${encodeURIComponent(requestId)}/documents`,
-        {
-          credentials: 'include',
-          signal,
-        }
+        signal
       );
-      if ([401, 403, 404].includes(response.status)) throw new Error('forbidden');
-      if (!response.ok) throw new Error('documents');
+      if (!response.ok) throw new ServerQueryError(response.status);
       return response.json();
     },
   });
@@ -178,8 +188,7 @@ function SolarRequestDetail({
     setHistory([]);
     setDocumentsInfo(null);
     setLoading(true);
-    setError(false);
-    setReadDenied(false);
+    setDetailError(null);
     void detailQuery
       .refetch()
       .then((reply) => {
@@ -200,8 +209,7 @@ function SolarRequestDetail({
       .catch((reason: unknown) => {
         if (!controller.signal.aborted) {
           detailPending.current = false;
-          setReadDenied(reason instanceof Error && reason.message === 'forbidden');
-          setError(true);
+          setDetailError(readFailure(reason));
         }
       })
       .finally(() => {
@@ -220,8 +228,7 @@ function SolarRequestDetail({
     const controller = new AbortController();
     documentsPending.current = true;
     setDocumentsInfo(null);
-    setDocumentReadError(false);
-    setDocumentError(false);
+    setDocumentReadError(null);
     void documentsQuery
       .refetch()
       .then((reply) => {
@@ -247,16 +254,15 @@ function SolarRequestDetail({
       .catch((reason: unknown) => {
         if (!controller.signal.aborted) {
           documentsPending.current = false;
-          if (reason instanceof Error && reason.message === 'forbidden') {
+          const failure = readFailure(reason);
+          if (failure === 'denied') {
             setRequest(null);
             setProgress(null);
             setHistory([]);
             setDocumentsInfo(null);
-            setReadDenied(true);
-            setError(true);
+            setDetailError(failure);
           } else {
-            setDocumentReadError(true);
-            setDocumentError(true);
+            setDocumentReadError(failure);
           }
         }
       })
@@ -270,9 +276,22 @@ function SolarRequestDetail({
   }, [requestId, request?.id, showDocuments, documentsVersion]);
 
   async function completeDocuments() {
-    if (!allUploaded || sendingDocuments) return;
+    if (!allUploaded || completionPending.current) return;
+    completionPending.current = true;
     setSendingDocuments(true);
-    setDocumentError(false);
+    setDocumentOutcome(null);
+    function settle(outcome: NonNullable<typeof documentOutcome>) {
+      if (!documentSection.current || getProfileContextRevision() !== profileRevision) return;
+      setDocumentOutcome(outcome);
+      if (outcome === 'reviewSent') {
+        setRequest((current) =>
+          current ? { ...current, status: 'documents_under_review' } : null
+        );
+        toast.success(copy(outcome), { id: reader });
+      } else {
+        toast.error(copy(outcome), { id: reader });
+      }
+    }
     try {
       const response = await fetch(
         `/api/solar/requests/${encodeURIComponent(requestId)}/documents/complete`,
@@ -283,12 +302,23 @@ function SolarRequestDetail({
           body: JSON.stringify({ allDocumentsUploaded: true }),
         }
       );
-      if (!response.ok) throw new Error('documents');
-      setRequest((current) => (current ? { ...current, status: 'documents_under_review' } : null));
-      setDocumentSent(true);
+      if ([400, 401, 403, 404, 409, 429].includes(response.status)) {
+        settle('documentError');
+        return;
+      }
+      const receipt: unknown = response.ok ? await response.json() : null;
+      if (
+        !receipt ||
+        typeof receipt !== 'object' ||
+        !('status' in receipt) ||
+        receipt.status !== 'documents_under_review'
+      )
+        throw new Error('Unconfirmed document submission');
+      settle('reviewSent');
     } catch {
-      setDocumentError(true);
+      settle('documentUnconfirmed');
     } finally {
+      completionPending.current = false;
       setSendingDocuments(false);
     }
   }
@@ -311,16 +341,17 @@ function SolarRequestDetail({
       <h1 className="text-3xl font-semibold">{copy('details')}</h1>
       {time.notice}
       {loading && <LoadingStatus>{copy('loading')}</LoadingStatus>}
-      {error && (
+      {detailError && (
         <div className="space-y-2">
           <p role="alert">{copy('notFound')}</p>
-          {!readDenied && (
+          {detailError !== 'denied' && (
             <button
               type="button"
               className="rounded-md border px-4 py-2"
               onClick={() => {
                 if (detailPending.current) return;
                 detailPending.current = true;
+                if (detailError === 'network') announceReadRetry(locale);
                 setDetailVersion((value) => value + 1);
               }}
             >
@@ -418,6 +449,7 @@ function SolarRequestDetail({
             'changes_requested',
           ].includes(request.status) && (
             <section
+              ref={documentSection}
               id="solar-documents"
               className="space-y-4 rounded-xl border p-5"
               aria-label={copy('documentGuidance')}
@@ -470,21 +502,28 @@ function SolarRequestDetail({
               >
                 {copy('sendReview')}
               </button>
-              <CommandFeedback message={documentSent ? copy('reviewSent') : null} />
-              {documentError && <p role="alert">{copy('documentError')}</p>}
+              {documentOutcome && (
+                <p role={documentOutcome === 'reviewSent' ? 'status' : 'alert'}>
+                  {copy(documentOutcome)}
+                </p>
+              )}
               {documentReadError && (
-                <button
-                  type="button"
-                  className="rounded-md border px-4 py-2"
-                  disabled={sendingDocuments}
-                  onClick={() => {
-                    if (documentsPending.current || sendingDocuments) return;
-                    documentsPending.current = true;
-                    setDocumentsVersion((value) => value + 1);
-                  }}
-                >
-                  {copy('retry')}
-                </button>
+                <div>
+                  <p role="alert">{copy('documentReadError')}</p>
+                  <button
+                    type="button"
+                    className="rounded-md border px-4 py-2"
+                    disabled={sendingDocuments}
+                    onClick={() => {
+                      if (documentsPending.current || completionPending.current) return;
+                      documentsPending.current = true;
+                      if (documentReadError === 'network') announceReadRetry(locale);
+                      setDocumentsVersion((value) => value + 1);
+                    }}
+                  >
+                    {copy('retry')}
+                  </button>
+                </div>
               )}
             </section>
           )}

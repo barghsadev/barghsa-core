@@ -4,6 +4,7 @@ import type { Locator, Page } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import { test, expect } from './coverage-fixture';
 import { t } from '@barghsa/i18n/app';
+import { confirmationText } from '@barghsa/i18n/confirmation';
 import { tConsultation } from '@barghsa/i18n/consultation';
 import { checkRoutePresentation } from './route-presentation';
 import {
@@ -68,6 +69,8 @@ for (const [locale, theme] of settings) {
     const productGroup = page.getByRole('radiogroup', { name: copy('available'), exact: true });
     const confirmation = page.locator('#consultation-confirmation');
     const submit = group.locator('button[type=submit]');
+    const errorToast = (message: string) =>
+      page.locator('[data-sonner-toast][data-type="error"]').filter({ hasText: message }).last();
     await submit.click();
     await expect(submit).toBeDisabled();
     await form.dispatchEvent('submit');
@@ -82,6 +85,7 @@ for (const [locale, theme] of settings) {
     await confirmation.check();
     await submit.click();
     await focusedError(product, productGroup);
+    await expect(errorToast(copy('submitError'))).toBeVisible();
     await expect(product).toBeChecked();
     await expect(confirmation).toBeChecked();
     expect(state.intakeWrites).toHaveLength(1);
@@ -94,6 +98,10 @@ for (const [locale, theme] of settings) {
     await submit.click();
     await expect.poll(() => state.intakeWrites.length).toBe(2);
     await expect(group.getByText(copy('submitError'), { exact: true })).toBeVisible();
+    await expect(errorToast(copy('submitError'))).toBeVisible();
+    await expect(page.locator('[data-sonner-toaster]')).not.toContainText(
+      'PRIVATE_SERVER_VALIDATION_TEXT'
+    );
     await expect(submit).toBeEnabled();
     await expect(group).not.toContainText('submissionKey');
     await expect(group).not.toContainText('PRIVATE_SERVER_VALIDATION_TEXT');
@@ -115,6 +123,8 @@ for (const [locale, theme] of settings) {
     state.created = true;
     await state.intake!.fulfill({ status: 503, json: {} });
     await expect(group).toContainText(copy('intakeUnconfirmed'));
+    await expect(errorToast(copy('intakeUnconfirmed'))).toBeVisible();
+    await expect(errorToast(copy('submitError'))).toHaveCount(0);
     await expect(submit).toBeEnabled();
     state.intakeMode = 'malformed';
     await submit.click();
@@ -122,10 +132,17 @@ for (const [locale, theme] of settings) {
     await expect(group).toContainText(copy('intakeUnconfirmed'));
     await expect(submit).toBeEnabled();
     await expect(page).toHaveURL(/\/consultations$/);
+    await expect(page.locator('[data-sonner-toast][data-type="success"]')).toHaveCount(0);
     expect(state.intakeWrites.at(-1)).toEqual(captured);
     state.intakeMode = 'success';
     await submit.click();
     await expect(page).toHaveURL(new RegExp(`/consultations/${createdRequest}$`));
+    await expect(errorToast(copy('intakeUnconfirmed'))).toHaveCount(0);
+    await expect(
+      page.locator('[data-sonner-toast][data-type="success"]').filter({
+        hasText: confirmationText('recorded', locale),
+      })
+    ).toBeVisible();
     expect(state.intakeWrites.slice(beforeDuplicate - 1)).toEqual([captured, captured, captured]);
     await expect(page.getByText(copy('noFee'), { exact: true })).toBeVisible();
 

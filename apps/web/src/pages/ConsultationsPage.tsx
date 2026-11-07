@@ -543,6 +543,7 @@ export function ConsultationsPage({
           ) {
             pendingIntake.current = null;
             setIntakeUnconfirmed(false);
+            toast.error(copy('submitError'), { id: reader });
             return;
           }
           if ([401, 403, 404].includes(response.status)) {
@@ -553,6 +554,7 @@ export function ConsultationsPage({
             pendingIntake.current = null;
             setIntakeUnconfirmed(false);
             setSubmitError(true);
+            toast.error(copy('submitError'), { id: reader });
             return;
           }
           throw new Error('submit');
@@ -561,7 +563,7 @@ export function ConsultationsPage({
         pendingIntake.current = null;
         setIntakeUnconfirmed(false);
         completed = true;
-        toast.success(confirmationText('recorded', locale));
+        toast.success(confirmationText('recorded', locale), { id: reader });
         void navigate({
           to: '/consultations/$requestId',
           params: { requestId: result.requestId },
@@ -570,6 +572,7 @@ export function ConsultationsPage({
         if (currentContext() && capturedGeneration === generation.current) {
           setSubmitError(true);
           setIntakeUnconfirmed(true);
+          toast.error(copy('intakeUnconfirmed'), { id: reader });
         }
       } finally {
         if (currentContext() && capturedGeneration === generation.current && !completed)

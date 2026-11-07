@@ -2,6 +2,7 @@ import { tSolar as solarCopy } from '@barghsa/i18n/solar';
 import { t as appCopy } from '@barghsa/i18n/app';
 import { tSolar } from '@barghsa/i18n/solar';
 import { t } from '@barghsa/i18n/app';
+import { loadingText } from '@barghsa/i18n/loading-feedback';
 import AxeBuilder from '@axe-core/playwright';
 import { documentUploadPolicy } from '../src/test/document-list-fixtures.js';
 import { test, expect } from './upload-fixture';
@@ -1024,6 +1025,7 @@ for (const locale of ['en', 'fa'] as const)
       reads = 0,
       documentReads = 0,
       writes = 0;
+    let completion: 'malformed' | 'rejected' | 'verified' = 'malformed';
     await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
     await page.route('**/api/auth/user', (route) =>
       route.fulfill({
@@ -1090,28 +1092,33 @@ for (const locale of ['en', 'fa'] as const)
     });
     await page.route(`**/api/solar/requests/${requestId}/documents`, (route) => {
       documentReads++;
-      return route.fulfill(
-        guidanceReady
-          ? {
-              json: {
-                guidance: {
-                  fa: 'مدارک محل را بارگذاری کنید',
-                  en: 'Upload site evidence',
-                  suggestions: [],
-                },
-                requestedDocuments: [],
-              },
-            }
-          : { status: 503, json: {} }
-      );
+      if (!guidanceReady) return route.abort('failed');
+      return route.fulfill({
+        json: {
+          guidance: {
+            fa: 'مدارک محل را بارگذاری کنید',
+            en: 'Upload site evidence',
+            suggestions: [],
+          },
+          requestedDocuments: [],
+        },
+      });
     });
     await page.route(`**/api/solar/requests/${requestId}/documents/complete`, (route) => {
       writes++;
+      expect(route.request().postDataJSON()).toEqual({ allDocumentsUploaded: true });
+      if (completion === 'malformed')
+        return route.fulfill({ json: { status: 'submitted', message: 'PRIVATE_WRONG_RECEIPT' } });
+      if (completion === 'rejected')
+        return route.fulfill({ status: 409, json: { message: 'PRIVATE_REJECTION' } });
       return route.fulfill({ json: { status: 'documents_under_review' } });
     });
     await page.goto(`/solar/requests/${requestId}`);
     const main = page.getByRole('main').last();
     const retry = main.getByRole('button', { name: solarCopy('retry', locale), exact: true });
+    const connectionNotice = page
+      .locator('[data-sonner-toast][data-type="info"]')
+      .filter({ hasText: loadingText('connectionRetry', locale) });
     await expect(retry).toBeVisible();
     expect(reads).toBe(1);
     expect(documentReads).toBe(0);
@@ -1122,6 +1129,10 @@ for (const locale of ['en', 'fa'] as const)
     await expect(retry).toBeVisible();
     expect(reads).toBe(2);
     expect(documentReads).toBe(1);
+    await expect(connectionNotice).toHaveCount(0);
+    await expect(
+      main.getByRole('alert').filter({ hasText: solarCopy('documentReadError', locale) })
+    ).toBeVisible();
     const checkbox = main.getByRole('checkbox', {
       name: solarCopy('allUploaded', locale),
       exact: true,
@@ -1130,11 +1141,13 @@ for (const locale of ['en', 'fa'] as const)
     guidanceReady = true;
     await retry.focus();
     await page.keyboard.press('Enter');
+    await expect(connectionNotice).toBeVisible();
     await expect(
       main.getByText(locale === 'fa' ? 'مدارک محل را بارگذاری کنید' : 'Upload site evidence', {
         exact: true,
       })
     ).toBeVisible();
+    await connectionNotice.getByRole('button').click();
     await expect(checkbox).toBeChecked();
     expect(reads).toBe(2);
     expect(documentReads).toBe(2);
@@ -1151,4 +1164,37 @@ for (const locale of ['en', 'fa'] as const)
       true
     );
     expect((await new AxeBuilder({ page }).include('main').analyze()).violations).toEqual([]);
+
+    const send = main.getByRole('button', { name: solarCopy('sendReview', locale), exact: true });
+    const sent = page
+      .locator('[data-sonner-toast][data-type="success"]')
+      .filter({ hasText: solarCopy('reviewSent', locale) });
+    const errorToast = (key: string) =>
+      page.locator('[data-sonner-toast][data-type="error"]').filter({
+        hasText: solarCopy(key, locale),
+      });
+    await send.click();
+    await expect(errorToast('documentUnconfirmed')).toBeVisible();
+    await expect(sent).toHaveCount(0);
+    expect(writes).toBe(1);
+    await expect(checkbox).toBeChecked();
+    completion = 'rejected';
+    await send.click();
+    await expect(errorToast('documentError')).toBeVisible();
+    await expect(errorToast('documentUnconfirmed')).toHaveCount(0);
+    await expect(sent).toHaveCount(0);
+    expect(writes).toBe(2);
+    completion = 'verified';
+    await send.click();
+    await expect(sent).toBeVisible();
+    await expect(errorToast('documentError')).toHaveCount(0);
+    await expect(
+      main.getByRole('status').filter({ hasText: solarCopy('reviewSent', locale) })
+    ).toBeVisible();
+    expect(writes).toBe(3);
+    expect(reads).toBe(2);
+    expect(documentReads).toBe(2);
+    await expect(page.locator('[data-sonner-toaster]')).not.toContainText(/PRIVATE_/);
+    await expect(connectionNotice).toHaveCount(0);
+    await page.screenshot({ path: test.info().outputPath(`solar-document-review-${locale}.png`) });
   });
