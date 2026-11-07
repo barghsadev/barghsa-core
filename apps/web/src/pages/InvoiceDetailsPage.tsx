@@ -80,7 +80,7 @@ export function InvoiceDetailsPage({ invoiceId }: InvoiceDetailsPageProps) {
       <nav aria-label={t('invoices.details.back', locale)}>
         <Link
           to="/invoices"
-          className="inline-flex items-center gap-2 text-sm text-foreground underline underline-offset-4"
+          className="touch-action inline-flex items-center gap-2 text-sm text-foreground underline underline-offset-4"
         >
           <ArrowRightIcon className={`h-4 w-4 ${isRtl ? '' : 'rotate-180'}`} aria-hidden="true" />
           {t('invoices.details.back', locale)}
@@ -88,7 +88,7 @@ export function InvoiceDetailsPage({ invoiceId }: InvoiceDetailsPageProps) {
       </nav>
       {details?.consultationId && (
         <Link
-          className="text-sm text-primary underline"
+          className="touch-action text-sm text-primary underline"
           to="/consultations/$requestId"
           params={{ requestId: details.consultationId }}
         >
@@ -97,7 +97,7 @@ export function InvoiceDetailsPage({ invoiceId }: InvoiceDetailsPageProps) {
       )}
       {details?.electricityOrderId && (
         <Link
-          className="text-sm text-primary underline"
+          className="touch-action text-sm text-primary underline"
           to="/electricity/orders/$orderId"
           params={{ orderId: details.electricityOrderId }}
         >
@@ -106,7 +106,7 @@ export function InvoiceDetailsPage({ invoiceId }: InvoiceDetailsPageProps) {
       )}
       {details?.savingOrderId && (
         <Link
-          className="text-sm text-primary underline"
+          className="touch-action text-sm text-primary underline"
           to="/savings/orders/$orderId"
           params={{ orderId: details.savingOrderId }}
         >
@@ -115,7 +115,7 @@ export function InvoiceDetailsPage({ invoiceId }: InvoiceDetailsPageProps) {
       )}
       {details?.solarRequestId && (
         <Link
-          className="text-sm text-primary underline"
+          className="touch-action text-sm text-primary underline"
           to="/solar/requests/$requestId"
           params={{ requestId: details.solarRequestId }}
         >

@@ -228,6 +228,15 @@ for (const locale of ['en', 'fa'] as const)
       await selected.getByRole('button', { name: new RegExp(copy('openRequest')) }).click();
       const detail = page.getByRole('region', { name: copy('details'), exact: true });
       await expect(detail).toBeVisible();
+      if (await page.evaluate(() => matchMedia('(pointer: coarse)').matches)) {
+        for (const key of ['filterStatus', 'filterAssignment', 'priority', 'age', 'team']) {
+          const select = page.getByRole('combobox', { name: copy(key), exact: true });
+          await expect(select).toBeEnabled();
+          const box = await select.boundingBox();
+          expect(box?.width, key).toBeGreaterThanOrEqual(44);
+          expect(box?.height, key).toBeGreaterThanOrEqual(44);
+        }
+      }
       await detail.getByRole('button', { name: copy('reject'), exact: true }).click();
       const reason = detail.getByRole('textbox', { name: copy('note'), exact: true });
       await reason.fill('Private reason retained');

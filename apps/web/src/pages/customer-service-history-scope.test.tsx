@@ -5,6 +5,7 @@ import { ElectricityOrdersPage } from './ElectricityOrdersPage.js';
 import { SavingOrdersPage } from './SavingOrdersPage.js';
 import { SolarRequestsPage } from './SolarRequestsPage.js';
 import { AccountUserProvider } from '../hooks/useAccountUser.js';
+import { QueryComponentProvider } from '../test/query-provider.js';
 import { DEFAULT_HISTORY_SORT } from '@barghsa/shared/validation';
 
 vi.mock('@tanstack/react-router', () => ({
@@ -106,7 +107,9 @@ for (const scenario of scenarios)
         await act(async () =>
           root!.render(
             <AccountUserProvider value="customer-1">
-              <Page query={{ q: 'saved filter', sort: DEFAULT_HISTORY_SORT }} />
+              <QueryComponentProvider>
+                <Page query={{ q: 'saved filter', sort: DEFAULT_HISTORY_SORT }} />
+              </QueryComponentProvider>
             </AccountUserProvider>
           )
         );

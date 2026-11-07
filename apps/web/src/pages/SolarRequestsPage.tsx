@@ -171,7 +171,7 @@ export function SolarRequestsPage({
       <h1 className="text-3xl font-semibold">{copy('myRequests')}</h1>
       <Link
         to="/solar/requests/new"
-        className="inline-block rounded-md bg-primary px-4 py-2 text-primary-foreground"
+        className="touch-action inline-block rounded-md bg-primary px-4 py-2 text-primary-foreground"
       >
         {copy('submit')}
       </Link>

@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-07T07:28:33+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-07T07:33:01+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.4.0**. Next milestone: **v0.5.0**.
 
@@ -39,11 +39,12 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Use the existing populated width reports to repair short standalone launch-service links and the staff consultation team selector. Verify their actual coarse-pointer hit targets, authorization, navigation and existing financial assertions.
+Close the remaining measured electricity and wallet disclosure controls. Renew the critical browser, keyboard and contrast gate on the resulting source and reuse passing current bundle and coverage evidence where valid.
 
 - `07-ui-ux-design.md#T-07.04.01.06`: Touch targets: ensure all interactive elements (buttons, links, inputs, toggles) have minimum 44×44px tap area per WCAG 2.5.8.
-- `07-ui-ux-design.md#T-07.04.02.04`: Verify all pages look correct at `320px`, `375px`, `390px`, `414px`, `768px`, `1024px`, `1280px`, and `1920px` viewport widths. No horizontal scroll, no overlapping text, no tiny touch targets.
+- `07-ui-ux-design.md#T-07.05.01.08`: Ensure all color combinations pass WCAG AA contrast ratios: normal text ≥ 4.5:1, large text ≥ 3:1, UI components ≥ 3:1. Verify with automated tools. Provide a "high contrast" mode toggle that strengthens all contrast ratios.
 - `release-readiness#R-04.01`: Verify full customer and admin UI adoption
+- `release-readiness#R-04.02`: Renew accessibility and performance evidence
 
 ## v0.2.0: Complete customer journeys
 

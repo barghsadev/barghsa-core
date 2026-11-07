@@ -1250,7 +1250,7 @@ function OwnedAdminConsultationsPage({ queries }: { queries?: ConsultationListQu
               <label className="space-y-1 text-sm">
                 <span>{copy('filterStatus')}</span>
                 <select
-                  className="w-full rounded-md border bg-background p-2"
+                  className="h-11 min-w-11 w-full rounded-md border bg-background p-2"
                   value={appliedStatus}
                   disabled={navigationBlocked()}
                   onChange={(event) => {
@@ -1273,7 +1273,7 @@ function OwnedAdminConsultationsPage({ queries }: { queries?: ConsultationListQu
               <label className="space-y-1 text-sm">
                 <span>{copy('filterAssignment')}</span>
                 <select
-                  className="w-full rounded-md border bg-background p-2"
+                  className="h-11 min-w-11 w-full rounded-md border bg-background p-2"
                   value={appliedAssignment}
                   disabled={navigationBlocked()}
                   onChange={(event) => {
@@ -1293,7 +1293,7 @@ function OwnedAdminConsultationsPage({ queries }: { queries?: ConsultationListQu
               <label className="space-y-1 text-sm">
                 <span>{copy('priority')}</span>
                 <select
-                  className="w-full rounded-md border bg-background p-2"
+                  className="h-11 min-w-11 w-full rounded-md border bg-background p-2"
                   value={appliedPriority}
                   disabled={navigationBlocked()}
                   onChange={(event) => {
@@ -1313,7 +1313,7 @@ function OwnedAdminConsultationsPage({ queries }: { queries?: ConsultationListQu
               <label className="space-y-1 text-sm">
                 <span>{copy('age')}</span>
                 <select
-                  className="w-full rounded-md border bg-background p-2"
+                  className="h-11 min-w-11 w-full rounded-md border bg-background p-2"
                   value={appliedMinAgeDays}
                   disabled={navigationBlocked()}
                   onChange={(event) => {
@@ -1728,7 +1728,7 @@ function OwnedAdminConsultationsPage({ queries }: { queries?: ConsultationListQu
                       value={team}
                       disabled={editorLocked || unconfirmed}
                       onChange={(event) => setTeam(event.target.value)}
-                      className="w-full rounded-md border bg-background p-2"
+                      className="h-11 min-w-11 w-full rounded-md border bg-background p-2"
                     >
                       <option value="">{copy('selectTeam')}</option>
                       {teams.map((name) => (

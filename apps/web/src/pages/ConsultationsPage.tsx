@@ -660,7 +660,7 @@ export function ConsultationsPage({
               <Link
                 to="/invoices/$invoiceId"
                 params={{ invoiceId: request.invoice_id }}
-                className="font-medium text-primary underline underline-offset-4"
+                className="touch-action font-medium text-primary underline underline-offset-4"
               >
                 {copy('viewInvoice')}
               </Link>
@@ -1052,7 +1052,7 @@ export function ConsultationsPage({
                             <Link
                               to="/invoices/$invoiceId"
                               params={{ invoiceId: request.invoice_id }}
-                              className="mt-2 inline-block text-sm font-medium text-primary underline underline-offset-2 focus-visible:outline-2 focus-visible:outline-primary"
+                              className="touch-action mt-2 inline-block text-sm font-medium text-primary underline underline-offset-2 focus-visible:outline-2 focus-visible:outline-primary"
                             >
                               {copy('viewInvoice')}
                             </Link>

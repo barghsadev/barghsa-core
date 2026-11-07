@@ -1010,7 +1010,7 @@ function OwnedAdminElectricityOrdersPage({ queries }: { queries?: StaffOrderList
                     <dt className="text-muted-foreground">{copy('revision.invoice')}</dt>
                     <dd>
                       <a
-                        className="text-primary underline underline-offset-2"
+                        className="touch-action text-primary underline underline-offset-2"
                         href={`/admin/invoices?invoiceId=${encodeURIComponent(detail.invoiceId)}`}
                       >
                         {copy('openInvoice')}
@@ -1022,7 +1022,7 @@ function OwnedAdminElectricityOrdersPage({ queries }: { queries?: StaffOrderList
                       <dt className="text-muted-foreground">{copy('contract')}</dt>
                       <dd>
                         <a
-                          className="text-primary underline underline-offset-2"
+                          className="touch-action text-primary underline underline-offset-2"
                           href={`/admin/contracts?contractId=${encodeURIComponent(detail.contractId)}`}
                         >
                           {copy('openContract')}

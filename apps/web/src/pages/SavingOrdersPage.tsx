@@ -109,7 +109,7 @@ export function SavingOrdersPage({
         <Link
           to="/savings/orders/$orderId"
           params={{ orderId: order.id }}
-          className="text-primary underline underline-offset-4"
+          className="touch-action text-primary underline underline-offset-4"
         >
           <bdi dir="ltr" className="break-all">
             {order.id}
@@ -175,7 +175,10 @@ export function SavingOrdersPage({
       render: (order) => {
         const action = savingNextAction(order);
         return action.href ? (
-          <Link className="font-medium text-primary underline underline-offset-4" to={action.href}>
+          <Link
+            className="touch-action font-medium text-primary underline underline-offset-4"
+            to={action.href}
+          >
             {copy('action.' + action.kind)}
           </Link>
         ) : (
@@ -190,7 +193,7 @@ export function SavingOrdersPage({
       dir={locale === 'fa' ? 'rtl' : 'ltr'}
     >
       <header className="space-y-2">
-        <Link to="/savings" className="text-sm text-primary hover:underline">
+        <Link to="/savings" className="touch-action text-sm text-primary hover:underline">
           {copy('title')}
         </Link>
         <h1 className="text-3xl font-semibold">{copy('orders')}</h1>
@@ -206,7 +209,7 @@ export function SavingOrdersPage({
             q: undefined,
             sort: undefined,
           }}
-          className="text-primary underline underline-offset-4"
+          className="touch-action text-primary underline underline-offset-4"
           aria-current={
             pendingOnly || statuses.length || dateRange.from || dateRange.to || query.q
               ? undefined
@@ -225,7 +228,7 @@ export function SavingOrdersPage({
             q: undefined,
             sort: undefined,
           }}
-          className="text-primary underline underline-offset-4"
+          className="touch-action text-primary underline underline-offset-4"
           aria-current={pendingOnly ? 'page' : undefined}
         >
           {copy('pendingOrders')}
@@ -370,7 +373,7 @@ export function SavingOrdersPage({
                         {copy('nextAction')}:{' '}
                         {action.href ? (
                           <Link
-                            className="font-medium text-primary hover:underline"
+                            className="touch-action font-medium text-primary hover:underline"
                             to={action.href}
                           >
                             {copy('action.' + action.kind)}
@@ -382,7 +385,7 @@ export function SavingOrdersPage({
                       <Link
                         to="/savings/orders/$orderId"
                         params={{ orderId: order.id }}
-                        className="inline-block text-sm font-medium text-primary hover:underline"
+                        className="touch-action inline-block text-sm font-medium text-primary hover:underline"
                       >
                         {copy('orderDetail')}
                       </Link>

@@ -171,7 +171,7 @@ export function ElectricityOrdersPage({
         <Link
           to="/electricity/orders/$orderId"
           params={{ orderId: order.orderId }}
-          className="break-all font-semibold text-primary underline underline-offset-4"
+          className="touch-action max-w-full break-all font-semibold text-primary underline underline-offset-4"
         >
           {t('electricity.orders.view', locale)} · <bdi dir="ltr">{order.orderId}</bdi>
         </Link>
@@ -214,7 +214,7 @@ export function ElectricityOrdersPage({
             </p>
             {action && (
               <a
-                className="font-medium text-primary underline underline-offset-4"
+                className="touch-action font-medium text-primary underline underline-offset-4"
                 href={action.href}
               >
                 {t(action.label, locale)}
@@ -239,7 +239,7 @@ export function ElectricityOrdersPage({
         </div>
         <Link
           to="/electricity/order"
-          className="rounded-md border px-4 py-2 text-sm text-primary underline underline-offset-4"
+          className="touch-action rounded-md border px-4 py-2 text-sm text-primary underline underline-offset-4"
         >
           {t('electricity.orders.new', locale)}
         </Link>
@@ -255,7 +255,7 @@ export function ElectricityOrdersPage({
             q: undefined,
             sort: undefined,
           }}
-          className="text-primary underline underline-offset-4"
+          className="touch-action text-primary underline underline-offset-4"
           aria-current={
             pendingOnly || statuses.length || dateRange.from || dateRange.to || query.q
               ? undefined
@@ -274,7 +274,7 @@ export function ElectricityOrdersPage({
             q: undefined,
             sort: undefined,
           }}
-          className="text-primary underline underline-offset-4"
+          className="touch-action text-primary underline underline-offset-4"
           aria-current={pendingOnly ? 'page' : undefined}
         >
           {t('electricity.orders.pending', locale)}
@@ -384,7 +384,7 @@ export function ElectricityOrdersPage({
                         <Link
                           to="/electricity/orders/$orderId"
                           params={{ orderId: order.orderId }}
-                          className="break-all font-semibold text-primary underline underline-offset-4"
+                          className="touch-action max-w-full break-all font-semibold text-primary underline underline-offset-4"
                         >
                           {t('electricity.orders.view', locale)} · <bdi>{order.orderId}</bdi>
                         </Link>
@@ -407,7 +407,7 @@ export function ElectricityOrdersPage({
                         </p>
                         {action ? (
                           <a
-                            className="font-medium text-primary underline underline-offset-4"
+                            className="touch-action font-medium text-primary underline underline-offset-4"
                             href={action.href}
                           >
                             {t(action.label, locale)}
