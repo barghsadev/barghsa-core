@@ -38,33 +38,34 @@ export function AdminSettingsLayout({
   const navigationLabel = t('admin.settings.navigation', locale);
   return (
     <div className="flex min-w-0 flex-col gap-6 lg:flex-row" data-testid="admin-settings-layout">
-      <aside className="hidden w-48 shrink-0 lg:sticky lg:top-0 lg:block lg:max-h-[calc(100dvh-10rem)] lg:self-start lg:overflow-y-auto">
-        <nav aria-label={navigationLabel} className="flex flex-col gap-5">
-          {settings.map((group) => (
-            <div key={group.label}>
-              <p className="mb-2 px-3 text-xs font-medium text-muted-foreground">{group.label}</p>
-              <ul className="flex flex-col gap-1">
-                {group.items.map(({ to, label: pageLabel }) => (
-                  <li key={to}>
-                    <Link
-                      ref={current === to ? activeLink : undefined}
-                      to={to}
-                      className="shell-navigation-link"
-                      aria-current={current === to ? 'page' : undefined}
-                      onClick={(event) => {
-                        if (!event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey)
-                          requested.current = to;
-                      }}
-                    >
-                      {pageLabel}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </nav>
-      </aside>
+      <nav
+        aria-label={navigationLabel}
+        className="hidden w-48 shrink-0 flex-col gap-5 lg:sticky lg:top-0 lg:flex lg:max-h-[calc(100dvh-10rem)] lg:self-start lg:overflow-y-auto"
+      >
+        {settings.map((group) => (
+          <div key={group.label}>
+            <p className="mb-2 px-3 text-xs font-medium text-muted-foreground">{group.label}</p>
+            <ul className="flex flex-col gap-1">
+              {group.items.map(({ to, label: pageLabel }) => (
+                <li key={to}>
+                  <Link
+                    ref={current === to ? activeLink : undefined}
+                    to={to}
+                    className="shell-navigation-link"
+                    aria-current={current === to ? 'page' : undefined}
+                    onClick={(event) => {
+                      if (!event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey)
+                        requested.current = to;
+                    }}
+                  >
+                    {pageLabel}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </nav>
       <div className="flex min-w-0 flex-1 flex-col gap-6">
         <div className="flex flex-col gap-2 lg:hidden">
           <Label htmlFor="admin-settings-section">{navigationLabel}</Label>

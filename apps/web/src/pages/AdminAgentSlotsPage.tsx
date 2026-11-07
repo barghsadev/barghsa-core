@@ -198,7 +198,7 @@ export default function AdminAgentSlotsPage() {
         >
           <ScrollArea
             scrollbarOrientation="horizontal"
-            className="max-w-full min-w-0 rounded-lg border bg-background"
+            className="max-w-full min-w-0 rounded-lg border bg-background [&>[data-slot=scroll-area-viewport]]:relative"
             role="region"
             aria-label={copy('slotsTable')}
           >

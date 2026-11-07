@@ -250,7 +250,7 @@ export function TicketQueueRecords({
                   </div>
                   <details open={expanded.has(item.id)}>
                     <summary
-                      className="cursor-pointer rounded py-2 text-sm font-medium focus-visible:outline-2 focus-visible:outline-ring"
+                      className="cursor-pointer rounded py-2 text-sm font-medium focus-visible:outline-2 focus-visible:outline-ring pointer-coarse:min-h-11 pointer-coarse:py-3"
                       aria-label={`${text('queueDetails')}: ${item.subject}`}
                       onClick={(event) => {
                         // Native toggle events are deferred and can be lost during a view change.

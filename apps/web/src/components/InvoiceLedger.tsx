@@ -2,7 +2,15 @@ import { useCompactRecords } from '../hooks/useCompactRecords.js';
 import { RecordFields } from './RecordFields.js';
 import type { HistoryColumn } from './HistoryTable.js';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { LoadingStatus, Button, CardListView, ListPage, ScrollArea } from '@barghsa/ui';
+import {
+  LoadingStatus,
+  Button,
+  CardListView,
+  Label,
+  ListPage,
+  NativeSelect,
+  ScrollArea,
+} from '@barghsa/ui';
 import type { FormEvent } from 'react';
 import { tWorkspace as t } from '@barghsa/i18n/workspace-admin';
 import { t as appText } from '@barghsa/i18n/workspace';
@@ -326,10 +334,11 @@ function OwnedInvoiceLedger({
         <ListPage.Toolbar
           filters={
             <div className="flex min-w-0 flex-wrap items-end gap-3">
-              <label className="grid min-w-40 gap-1 text-sm">
-                <span>{word('state')}</span>
-                <select
-                  className="rounded-md border border-input bg-background px-3 py-2"
+              <div className="grid min-w-40 gap-1">
+                <Label htmlFor="invoice-ledger-state">{word('state')}</Label>
+                <NativeSelect
+                  id="invoice-ledger-state"
+                  className="w-full"
                   value={state}
                   onChange={(event) => {
                     setPages([]);
@@ -346,8 +355,8 @@ function OwnedInvoiceLedger({
                       {appText(`invoices.state.${value}`, locale)}
                     </option>
                   ))}
-                </select>
-              </label>
+                </NativeSelect>
+              </div>
               <form
                 onSubmit={lookup}
                 className="flex min-w-0 flex-1 basis-full flex-wrap items-end gap-2 sm:basis-60"

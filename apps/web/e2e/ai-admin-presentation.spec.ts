@@ -1,3 +1,4 @@
+import { checkRoutePresentation } from './route-presentation';
 import { test, expect } from './coverage-fixture';
 import { setupCatalogueForms } from './catalogue-form-fixture';
 import { aiDetail, aiOptions, aiAgent } from '../src/test/ai-catalogue-fixtures';
@@ -59,6 +60,7 @@ for (const locale of ['en', 'fa'] as const)
         .filter({ has: page.locator('dt').filter({ hasText: copy('linkedKbs') }) })
         .locator('dd');
       await expect(count).toHaveText(locale === 'fa' ? '۱' : '1');
+      await checkRoutePresentation(page, info, locale);
       await expect(
         item
           .locator('dl > div')
@@ -191,6 +193,7 @@ for (const locale of ['en', 'fa'] as const)
       const region = page.getByRole('region', { name: copy('slotsTable'), exact: true }),
         viewport = region.locator('[data-slot=scroll-area-viewport]');
       await expect(region.locator('tbody tr')).toHaveCount(5);
+      await checkRoutePresentation(page, info, locale);
       await expect(region.locator('thead')).toContainText(copy('lastChanged'));
       await expect(region.locator('time').first()).toHaveAttribute(
         'datetime',
@@ -199,11 +202,24 @@ for (const locale of ['en', 'fa'] as const)
       await expect(region.locator('time').first()).toHaveText(
         timezoneText('display.pending', locale)
       );
+      await page.setViewportSize({ width: 1024, height: 900 });
+      await expect
+        .poll(() => viewport.evaluate((node) => node.scrollWidth - node.clientWidth))
+        .toBeGreaterThan(0);
       await viewport.focus();
+      await expect(viewport).toBeFocused();
       await viewport.press(locale === 'fa' ? 'ArrowLeft' : 'ArrowRight');
       await expect
         .poll(() => viewport.evaluate((node) => Math.abs(node.scrollLeft)))
         .toBeGreaterThan(0);
+      await expect
+        .poll(() =>
+          page.locator('main#main-content').evaluate((node) => ({
+            scroll: node.scrollLeft,
+            overflow: node.scrollWidth - node.clientWidth,
+          }))
+        )
+        .toEqual({ scroll: 0, overflow: 0 });
       const choice = page.locator('#slot-individual_chatbot');
       await choice.selectOption(assignmentAgent.id);
       await expect(choice).toHaveValue(assignmentAgent.id);

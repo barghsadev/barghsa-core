@@ -351,7 +351,7 @@ export function TicketReplyInput({
             </Button>
           ))}
           <details className="min-w-0">
-            <summary className="cursor-pointer rounded-md border px-3 py-2 text-sm">
+            <summary className="cursor-pointer rounded-md border px-3 py-2 text-sm pointer-coarse:min-h-11 pointer-coarse:py-3">
               <LinkIcon aria-hidden="true" className="inline size-4" /> {copy('insertLink')}
             </summary>
             <div className="mt-2 flex flex-wrap items-end gap-2">
@@ -379,7 +379,7 @@ export function TicketReplyInput({
 
         {body.trim() && (
           <details>
-            <summary className="cursor-pointer text-sm text-primary">
+            <summary className="cursor-pointer text-sm text-primary pointer-coarse:min-h-11 pointer-coarse:py-3">
               {copy('previewReply')}
             </summary>
             <div className="mt-2 rounded-md border bg-card p-3">
@@ -489,7 +489,7 @@ export function TicketReplyInput({
           </p>
         )}
         {staff && (
-          <Label className="flex items-center gap-2">
+          <Label className="touch-label flex items-center gap-2">
             <input
               type="checkbox"
               disabled={locked}

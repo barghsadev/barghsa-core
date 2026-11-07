@@ -1,3 +1,4 @@
+import { checkRoutePresentation } from './route-presentation';
 import { test, expect } from './coverage-fixture';
 import { crmShell } from './crm-shell-fixture';
 import { t } from '@barghsa/i18n/admin-ui';
@@ -86,6 +87,7 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(page.getByText(transaction.description, { exact: true })).toBeVisible();
     const exact = formatNumber(-BigInt(amount), locale);
     await expect(page.getByText(exact, { exact: true })).toBeVisible();
+    await checkRoutePresentation(page, info, locale);
     const section = page.locator('section').filter({
       has: page.getByRole('heading', {
         name: walletText('wallet.history.title', locale),
@@ -101,6 +103,7 @@ for (const locale of ['en', 'fa'] as const) {
       .getByRole('button', { name: walletText('historyView.table', locale), exact: true })
       .click();
     await expect(section.getByRole('table')).toBeVisible();
+    await checkRoutePresentation(page, info, locale);
     await section
       .getByRole('button', { name: walletText('historyView.card', locale), exact: true })
       .click();
@@ -108,7 +111,7 @@ for (const locale of ['en', 'fa'] as const) {
     expect(reads).toHaveLength(initialReads);
     if (locale === 'fa')
       await page.screenshot({
-        path: `/Users/majid/.local/state/barghsa-manual-batches/financial-operations-promotion/staff-wallet-ledger-${info.project.name}-fa.png`,
+        path: info.outputPath('staff-wallet-ledger-fa.png'),
         fullPage: true,
       });
     await section.getByRole('link', { name: new RegExp(paymentInvoiceId) }).click();
@@ -120,6 +123,7 @@ for (const locale of ['en', 'fa'] as const) {
       })
       .click();
     await expect(page.getByText(paymentInvoiceId, { exact: true })).toBeVisible();
+    await checkRoutePresentation(page, info, locale);
     await expect(
       page.getByText(formatCurrencyIrr(amount, locale), { exact: true }).first()
     ).toBeVisible();

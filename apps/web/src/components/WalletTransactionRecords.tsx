@@ -142,7 +142,7 @@ export function WalletTransactionRecords({
   const reference = (item: WalletTransaction) =>
     item.type === 'payment' && item.refId && isInvoiceUuid(item.refId) ? (
       <a
-        className="text-primary underline underline-offset-2"
+        className="touch-action text-primary underline underline-offset-2"
         href={
           staff
             ? `/admin/invoices?invoiceId=${encodeURIComponent(item.refId)}`

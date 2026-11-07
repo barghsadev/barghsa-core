@@ -81,7 +81,7 @@ export async function checkRoutePresentation(page: Page, info: TestInfo, locale:
                   }))
               : [];
           const checkedTargets =
-            '.touch-action, button:not([data-slot]), input[type=file], .touch-label input';
+            '.touch-action, button:not([data-slot]), input[type=file], .touch-label input, #ticket-filter, #ticket-sort, #invoice-ledger-state, [class~="pointer-coarse:min-h-11"]';
           const smallControls = touch
             ? [
                 ...(main?.querySelectorAll(

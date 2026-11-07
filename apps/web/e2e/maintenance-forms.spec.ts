@@ -1,3 +1,4 @@
+import { checkRoutePresentation } from './route-presentation';
 import { test, expect, type Page } from './coverage-fixture';
 import { crmShell } from './crm-shell-fixture';
 import { approveRiskConfirmation } from './confirmation-fixture';
@@ -128,6 +129,7 @@ for (const locale of ['en', 'fa'] as const) {
     page,
   }, info) => {
     const { word, confirmPause, save, row } = await setup(page, locale);
+    await checkRoutePresentation(page, info, locale);
     const writes: Record<string, unknown>[] = [];
     let release!: () => void;
     const pending = new Promise<void>((resolve) => {

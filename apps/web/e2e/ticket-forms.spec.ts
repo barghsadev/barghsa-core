@@ -1,3 +1,4 @@
+import { checkRoutePresentation } from './route-presentation';
 import { productionManifest } from './production-manifest';
 import AxeBuilder from '@axe-core/playwright';
 import type { Locator, Page } from '@playwright/test';
@@ -199,6 +200,7 @@ for (const [locale, theme] of [
     await page.getByRole('button', { name: text('create'), exact: true }).click();
     const intake = form(page, 'ticket-intake-form');
     await expect(intake).toBeVisible();
+    await checkRoutePresentation(page, testInfo, locale);
     await expect(intake.locator('#ticket-category')).toHaveAttribute('aria-required', 'true');
     await expect(intake.locator('#ticket-priority')).toHaveAttribute('aria-required', 'true');
     await intake.locator('#ticket-subject').fill('   ');
@@ -392,6 +394,7 @@ for (const [locale, theme] of [
       reply = form(page, 'ticket-reply-input');
     await expect(status.locator('#ticket-next-status')).toHaveAttribute('aria-required', 'true');
     await expect(assignment.locator('#ticket-assignee')).toHaveAttribute('aria-required', 'true');
+    await checkRoutePresentation(page, testInfo, locale);
     await status.locator('#ticket-status-reason').fill('   ');
     await status.locator('#ticket-next-status').focus();
     releaseSchema();

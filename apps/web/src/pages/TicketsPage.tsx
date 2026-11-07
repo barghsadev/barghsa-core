@@ -22,7 +22,15 @@ import { FilePreview } from '../components/FilePreview.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useCallback, useEffect, useId, useRef, useState } from 'react';
 import { Link, useSearch } from '@tanstack/react-router';
-import { LoadingStatus, Button, Input, Label, ListPage, ListViewToggle } from '@barghsa/ui';
+import {
+  LoadingStatus,
+  Button,
+  Input,
+  Label,
+  ListPage,
+  ListViewToggle,
+  NativeSelect,
+} from '@barghsa/ui';
 import { t } from '@barghsa/i18n/app';
 import { useLocale } from '../hooks/useLocale.js';
 import type { SupportListQuery } from '../lib/support-list-query.js';
@@ -759,9 +767,9 @@ function Tickets({ staff, queries }: { staff: boolean; queries?: SupportListQuer
               </div>
               <div>
                 <Label htmlFor="ticket-filter">{text('status')}</Label>
-                <select
+                <NativeSelect
                   id="ticket-filter"
-                  className="block rounded border border-input bg-background text-foreground p-2"
+                  className="max-w-full"
                   value={filter}
                   onChange={(event) => {
                     setFilter(event.target.value);
@@ -775,13 +783,13 @@ function Tickets({ staff, queries }: { staff: boolean; queries?: SupportListQuer
                       {text(value)}
                     </option>
                   ))}
-                </select>
+                </NativeSelect>
               </div>
               <div>
                 <Label htmlFor="ticket-sort">{text('sort')}</Label>
-                <select
+                <NativeSelect
                   id="ticket-sort"
-                  className="block rounded border border-input bg-background text-foreground p-2"
+                  className="max-w-full"
                   value={sort}
                   onChange={(event) => {
                     setSort(event.target.value);
@@ -790,7 +798,7 @@ function Tickets({ staff, queries }: { staff: boolean; queries?: SupportListQuer
                 >
                   <option value="desc">{text('newest')}</option>
                   <option value="asc">{text('oldest')}</option>
-                </select>
+                </NativeSelect>
               </div>
               <Button variant="outline" disabled={loading} onClick={() => void load()}>
                 {text('refresh')}
@@ -956,7 +964,7 @@ function Tickets({ staff, queries }: { staff: boolean; queries?: SupportListQuer
                           {detail.customer.profile.title ?? text('unnamed')}
                         </span>
                         <a
-                          className="text-blue-700 dark:text-blue-300 underline"
+                          className="touch-action text-blue-700 dark:text-blue-300 underline"
                           href={`/admin/crm/profiles/${encodeURIComponent(detail.customer.profile.id)}`}
                         >
                           {text('openProfile')}
