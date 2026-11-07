@@ -5,6 +5,7 @@ import { t } from '@barghsa/i18n/app';
 import { tSolar } from '@barghsa/i18n/solar';
 import { postalReceipt, setupSolarPostalForms } from './solar-postal-form-fixture';
 import { approveRiskConfirmation } from './confirmation-fixture';
+import { checkRoutePresentation } from './route-presentation';
 
 test.use({ viewport: { width: 390, height: 844 } });
 const settings = [
@@ -71,6 +72,8 @@ for (const [locale, theme] of settings) {
     await tracking.fill('  CAPTURED-TRACKING  ');
     await receipt.selectOption(postalReceipt);
     await inspectForm(page, form, '[aria-label="' + copy('postalStage') + '"]');
+    await checkRoutePresentation(page, info, locale);
+    await expect(tracking).toHaveValue('  CAPTURED-TRACKING  ');
     if (locale === 'en' && info.project.name === 'chromium')
       await postal.screenshot({ path: info.outputPath('solar-postal-customer-en-light.png') });
     const captured = {

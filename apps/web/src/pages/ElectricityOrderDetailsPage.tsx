@@ -1213,21 +1213,21 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
               <Link
                 to="/contracts"
                 search={{ contractId: detail.contractId }}
-                className="rounded-md border px-4 py-2 text-sm text-primary underline underline-offset-4"
+                className="max-w-full rounded-md border px-4 py-2 text-sm text-primary underline underline-offset-4 [overflow-wrap:anywhere]"
               >
-                {t('electricity.order.success.contract', locale)}: {detail.contractId}
+                {t('electricity.order.success.contract', locale)}: <bdi>{detail.contractId}</bdi>
               </Link>
             ) : (
-              <span className="rounded-md border px-4 py-2 text-sm text-muted-foreground">
-                {t('electricity.order.contractPending', locale)}: {detail.contractId}
+              <span className="max-w-full rounded-md border px-4 py-2 text-sm text-muted-foreground [overflow-wrap:anywhere]">
+                {t('electricity.order.contractPending', locale)}: <bdi>{detail.contractId}</bdi>
               </span>
             )}
             <Link
               to="/invoices/$invoiceId"
               params={{ invoiceId: detail.invoiceId }}
-              className="rounded-md border px-4 py-2 text-sm text-primary underline underline-offset-4"
+              className="max-w-full rounded-md border px-4 py-2 text-sm text-primary underline underline-offset-4 [overflow-wrap:anywhere]"
             >
-              {t('electricity.order.financialReviewLink', locale)}: {detail.invoiceId}
+              {t('electricity.order.financialReviewLink', locale)}: <bdi>{detail.invoiceId}</bdi>
             </Link>
           </div>
           {!['rejected', 'cancelled', 'changes_requested'].includes(detail.electricityStatus) &&

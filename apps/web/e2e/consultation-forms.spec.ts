@@ -4,6 +4,7 @@ import AxeBuilder from '@axe-core/playwright';
 import { test, expect } from './coverage-fixture';
 import { t } from '@barghsa/i18n/app';
 import { tConsultation } from '@barghsa/i18n/consultation';
+import { checkRoutePresentation } from './route-presentation';
 import {
   setupConsultationForms,
   consultationProfile,
@@ -178,6 +179,8 @@ for (const [locale, theme] of settings) {
     await expect(group).not.toContainText('PRIVATE_SERVER_VALIDATION_TEXT');
     await expect(information).toHaveValue('  Captured private information  ');
     await inspectForm(page, group, `[aria-label="${copy('information')}"]`);
+    await checkRoutePresentation(page, info, locale);
+    await expect(information).toHaveValue('  Captured private information  ');
     await group.screenshot({
       path: info.outputPath(`consultation-information-${locale}-${theme}.png`),
     });

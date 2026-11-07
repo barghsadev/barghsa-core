@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-07T07:41:56+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-07T07:48:11+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.4.0**. Next milestone: **v0.5.0**.
 
@@ -39,7 +39,7 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Use the 98-route inventory and actual existing case receipts to complete the route landmark census. Identify unresolved populated and conditional states, then repair reproduced heading, landmark and direction defects.
+Use actual browser observations for the remaining workspace routes. Repair the demonstrated English-only chart/video copy and any reproduced headings, unnamed landmarks or direction issues without changing their domain behavior.
 
 - `07-ui-ux-design.md#T-07.03.01.07`: Test every component and page in both RTL and LTR modes. Persian Lorem ipsum (`لورم ایپسوم`) should render correctly in all containers. Verify no text overflow, clipped content, or misaligned elements.
 - `07-ui-ux-design.md#T-07.04.02.04`: Verify all pages look correct at `320px`, `375px`, `390px`, `414px`, `768px`, `1024px`, `1280px`, and `1920px` viewport widths. No horizontal scroll, no overlapping text, no tiny touch targets.

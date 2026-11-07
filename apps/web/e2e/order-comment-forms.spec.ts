@@ -6,6 +6,7 @@ import { tOrderComments } from '@barghsa/i18n/order-comments';
 import { tSaving } from '@barghsa/i18n/saving';
 import { test, expect } from './coverage-fixture';
 import { completeOtp } from './otp-step-up-fixture';
+import { checkRoutePresentation } from './route-presentation';
 import {
   setupOrderCommentForms,
   electricityOrder,
@@ -112,6 +113,8 @@ for (const [locale, theme] of [
     });
     await expect(section).not.toContainText('PRIVATE_SERVER_COMMENT_TEXT');
     await inspect(page, section);
+    await checkRoutePresentation(page, info, locale);
+    await expect(body).toHaveValue('  Existing <script> reply  ');
     await body
       .locator('..')
       .screenshot({ path: info.outputPath(`comment-customer-${locale}-${theme}.png`) });
@@ -167,6 +170,8 @@ for (const [locale, theme] of [
     body = page.locator('#saving-comment-customer');
     await expect(form.locator('select')).toHaveCount(0);
     await body.fill('  Saving customer <script> message  ');
+    await checkRoutePresentation(page, info, locale);
+    await expect(body).toHaveValue('  Saving customer <script> message  ');
     send = form.getByRole('button', { name: tSaving('sendComment', locale), exact: true });
     await send.click();
     dialog = page.getByRole('dialog');

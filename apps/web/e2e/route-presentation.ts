@@ -24,6 +24,37 @@ export async function checkRoutePresentation(page: Page, info: TestInfo, locale:
             getComputedStyle(node).visibility === 'visible' &&
             !node.closest('[hidden], [aria-hidden=true], [inert], [role=dialog]');
           const main = document.querySelector('main#main-content');
+          const roles: Record<string, string> = {
+            MAIN: 'main',
+            NAV: 'navigation',
+            ASIDE: 'complementary',
+            HEADER: 'banner',
+            FOOTER: 'contentinfo',
+          };
+          const landmarks = [
+            ...document.querySelectorAll(
+              'main,nav,aside,header,footer,[role=main],[role=navigation],[role=complementary],[role=banner],[role=contentinfo]'
+            ),
+          ].flatMap((node) => {
+            if (!visible(node)) return [];
+            const explicit = node.getAttribute('role');
+            const role = explicit ?? roles[node.tagName];
+            if (!role || !Object.values(roles).includes(role)) return [];
+            if (
+              !explicit &&
+              (role === 'banner' || role === 'contentinfo') &&
+              node.parentElement?.closest('main,nav,aside,article,section')
+            )
+              return [];
+            const labelledBy = node
+              .getAttribute('aria-labelledby')
+              ?.split(/\s+/)
+              .map((id) => document.getElementById(id)?.textContent?.trim())
+              .filter(Boolean)
+              .join(' ');
+            const name = labelledBy || node.getAttribute('aria-label')?.trim() || '';
+            return [{ role, name, id: node.id }];
+          });
           const headings = [...(main?.querySelectorAll('h1,h2,h3,h4,h5,h6,[role=heading]') ?? [])]
             .filter(visible)
             .map((node) => ({
@@ -31,6 +62,24 @@ export async function checkRoutePresentation(page: Page, info: TestInfo, locale:
               text: node.textContent?.trim().slice(0, 80) ?? '',
             }));
           const touch = matchMedia('(pointer: coarse)').matches;
+          const mainBox = main?.getBoundingClientRect();
+          const overflowElements =
+            main && mainBox && main.scrollWidth - main.clientWidth > 1
+              ? [...main.querySelectorAll('*')]
+                  .filter((node) => {
+                    if (!visible(node) || node.closest('[data-slot=table-scroll-region]'))
+                      return false;
+                    const rect = node.getBoundingClientRect();
+                    return rect.right > mainBox.right + 1 || rect.left < mainBox.left - 1;
+                  })
+                  .slice(0, 12)
+                  .map((node) => ({
+                    tag: node.tagName,
+                    id: node.id,
+                    className: node.getAttribute('class'),
+                    text: node.textContent?.trim().slice(0, 70),
+                  }))
+              : [];
           const checkedTargets =
             '.touch-action, button:not([data-slot]), input[type=file], .touch-label input';
           const smallControls = touch
@@ -74,6 +123,11 @@ export async function checkRoutePresentation(page: Page, info: TestInfo, locale:
             documentOverflow: document.documentElement.scrollWidth - innerWidth,
             mainOverflow: main ? main.scrollWidth - main.clientWidth : null,
             mains: document.querySelectorAll('main#main-content').length,
+            pageTitles: [...document.querySelectorAll('h1,[role=heading][aria-level="1"]')].filter(
+              visible
+            ).length,
+            landmarks,
+            overflowElements,
             headings,
             smallControls,
           };
@@ -91,6 +145,21 @@ export async function checkRoutePresentation(page: Page, info: TestInfo, locale:
     const scope = `${pathname} ${locale} at ${row.width}px`;
     expect.soft(row.direction, scope).toBe(locale === 'fa' ? 'rtl' : 'ltr');
     expect.soft(row.mains, scope).toBe(1);
+    expect.soft(row.pageTitles, scope).toBe(1);
+    expect
+      .soft(
+        row.landmarks.filter(({ role }) => role === 'main'),
+        scope
+      )
+      .toHaveLength(1);
+    expect
+      .soft(
+        row.landmarks.filter(
+          ({ role, name }) => !name && row.landmarks.filter((item) => item.role === role).length > 1
+        ),
+        scope
+      )
+      .toEqual([]);
     expect.soft(row.documentOverflow, scope).toBeLessThanOrEqual(1);
     expect.soft(row.mainOverflow, scope).not.toBeNull();
     expect.soft(row.mainOverflow ?? Infinity, scope).toBeLessThanOrEqual(1);
