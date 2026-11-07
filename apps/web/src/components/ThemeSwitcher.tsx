@@ -77,7 +77,6 @@ export function ThemeSwitcher() {
   return (
     <label className="inline-flex max-w-full flex-wrap items-center gap-1.5 text-sm">
       <Icon className="size-4 shrink-0" aria-hidden="true" />
-      <span className="sr-only">{shellText('theme', locale)}</span>
       <NativeSelect
         aria-label={shellText('theme', locale)}
         value={shownMode === 'system' ? 'default' : shownMode}

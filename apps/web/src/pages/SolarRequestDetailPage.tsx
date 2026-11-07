@@ -276,7 +276,8 @@ function SolarRequestDetail({
   }, [requestId, request?.id, showDocuments, documentsVersion]);
 
   async function completeDocuments() {
-    if (!allUploaded || completionPending.current) return;
+    if (!allUploaded || !documentsInfo || documentsPending.current || completionPending.current)
+      return;
     completionPending.current = true;
     setSendingDocuments(true);
     setDocumentOutcome(null);
@@ -455,6 +456,9 @@ function SolarRequestDetail({
               aria-label={copy('documentGuidance')}
             >
               <h2 className="text-xl font-semibold">{copy('documentGuidance')}</h2>
+              {!documentsInfo && !documentReadError && (
+                <LoadingStatus>{copy('loading')}</LoadingStatus>
+              )}
               {documentsInfo && (
                 <>
                   <p>{documentsInfo.guidance[locale]}</p>
@@ -473,7 +477,9 @@ function SolarRequestDetail({
                       <h3 className="font-medium">{copy('requestedDocuments')}</h3>
                       <ul className="list-inside list-disc">
                         {documentsInfo.requestedDocuments.map((item) => (
-                          <li key={item.id}>{item.description}</li>
+                          <li key={item.id} className="wrap-anywhere">
+                            <bdi>{item.description}</bdi>
+                          </li>
                         ))}
                       </ul>
                     </>
@@ -497,7 +503,7 @@ function SolarRequestDetail({
               <button
                 type="button"
                 className="rounded-md bg-primary px-4 py-2 text-primary-foreground disabled:opacity-50"
-                disabled={!allUploaded || sendingDocuments}
+                disabled={!allUploaded || !documentsInfo || sendingDocuments}
                 onClick={() => void completeDocuments()}
               >
                 {copy('sendReview')}

@@ -1034,6 +1034,16 @@ for (const locale of ['en', 'fa'] as const)
       reads = 0,
       documentReads = 0,
       writes = 0;
+    let releaseGuidance!: () => void;
+    const heldGuidance = new Promise<void>((resolve) => {
+      releaseGuidance = resolve;
+    });
+    const direction = locale === 'fa' ? 'ltr' : 'rtl';
+    const reference = 'SOLAR-EVIDENCE-'.repeat(12);
+    const update =
+      locale === 'fa' ? `Send the site plan. ${reference}` : `نقشه محل را بفرستید. ${reference}`;
+    const requested =
+      locale === 'fa' ? `Site ownership document ${reference}` : `مدرک مالکیت محل ${reference}`;
     let completion: 'malformed' | 'rejected' | 'verified' = 'malformed';
     await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
     await page.route('**/api/auth/user', (route) =>
@@ -1085,6 +1095,7 @@ for (const locale of ['en', 'fa'] as const)
                   id: requestId,
                   profile_id: profileId,
                   status: 'submitted',
+                  status_reason: update,
                   building_type: 'building_apartment',
                   grid_type: 'off_grid',
                   site_address: 'Recovery site',
@@ -1099,9 +1110,10 @@ for (const locale of ['en', 'fa'] as const)
           : { status: 503, json: {} }
       );
     });
-    await page.route(`**/api/solar/requests/${requestId}/documents`, (route) => {
+    await page.route(`**/api/solar/requests/${requestId}/documents`, async (route) => {
       documentReads++;
       if (!guidanceReady) return route.abort('failed');
+      await heldGuidance;
       return route.fulfill({
         json: {
           guidance: {
@@ -1109,7 +1121,7 @@ for (const locale of ['en', 'fa'] as const)
             en: 'Upload site evidence',
             suggestions: [],
           },
-          requestedDocuments: [],
+          requestedDocuments: [{ id: documentId, description: requested }],
         },
       });
     });
@@ -1125,6 +1137,13 @@ for (const locale of ['en', 'fa'] as const)
     await page.goto(`/solar/requests/${requestId}`);
     const main = page.getByRole('main').last();
     const retry = main.getByRole('button', { name: solarCopy('retry', locale), exact: true });
+    if (await page.evaluate(() => matchMedia('(pointer: coarse)').matches)) {
+      const back = main.getByRole('link', { name: solarCopy('back', locale), exact: true });
+      await expect(back).toBeVisible();
+      const bounds = (await back.boundingBox())!;
+      expect(bounds.width).toBeGreaterThanOrEqual(44);
+      expect(bounds.height).toBeGreaterThanOrEqual(44);
+    }
     const connectionNotice = page
       .locator('[data-sonner-toast][data-type="info"]')
       .filter({ hasText: loadingText('connectionRetry', locale) });
@@ -1147,10 +1166,22 @@ for (const locale of ['en', 'fa'] as const)
       exact: true,
     });
     await checkChoiceTarget(checkbox);
+    const send = main.getByRole('button', { name: solarCopy('sendReview', locale), exact: true });
+    await expect(send).toBeDisabled();
     guidanceReady = true;
     await retry.focus();
     await page.keyboard.press('Enter');
     await expect(connectionNotice).toBeVisible();
+    const documents = main.getByRole('region', { name: solarCopy('documentGuidance', locale) });
+    try {
+      await expect(
+        documents.getByText(solarCopy('loading', locale), { exact: true })
+      ).toBeVisible();
+      await expect(send).toBeDisabled();
+      expect(writes).toBe(0);
+    } finally {
+      releaseGuidance();
+    }
     await expect(
       main.getByText(locale === 'fa' ? 'مدارک محل را بارگذاری کنید' : 'Upload site evidence', {
         exact: true,
@@ -1158,6 +1189,7 @@ for (const locale of ['en', 'fa'] as const)
     ).toBeVisible();
     await connectionNotice.getByRole('button').click();
     await expect(checkbox).toBeChecked();
+    await expect(send).toBeEnabled();
     expect(reads).toBe(2);
     expect(documentReads).toBe(2);
     expect(writes).toBe(0);
@@ -1174,7 +1206,20 @@ for (const locale of ['en', 'fa'] as const)
     );
     expect((await new AxeBuilder({ page }).include('main').analyze()).violations).toEqual([]);
 
-    const send = main.getByRole('button', { name: solarCopy('sendReview', locale), exact: true });
+    const original = page.viewportSize()!;
+    try {
+      await page.setViewportSize({ width: 320, height: original.height });
+      for (const text of [update, requested]) {
+        const content = main.getByText(text, { exact: true });
+        await expect(content).toBeVisible();
+        await expect(content).toHaveCSS('direction', direction);
+      }
+      expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
+        true
+      );
+    } finally {
+      await page.setViewportSize(original);
+    }
     const sent = page
       .locator('[data-sonner-toast][data-type="success"]')
       .filter({ hasText: solarCopy('reviewSent', locale) });

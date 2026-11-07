@@ -50,8 +50,8 @@ export function WorkflowStatusBanner({
           description={`${t('workflow.owner', locale)}: ${t('workflow.owner.staff', locale)}`}
           submittedAt={submittedAt ?? workflowFeedback('submissionUnknown', locale)}
           update={
-            <p>
-              {t('workflow.happened', locale)}: {happened}
+            <p className="wrap-anywhere">
+              {t('workflow.happened', locale)}: <bdi>{happened}</bdi>
             </p>
           }
           expectedResponse={expectedResponse ?? workflowFeedback('responseUnknown', locale)}
@@ -82,7 +82,7 @@ export function WorkflowStatusBanner({
         <dl className="grid gap-4 text-sm sm:grid-cols-2">
           <div>
             <dt className="font-medium">{t('workflow.happened', locale)}</dt>
-            <dd className="mt-1 text-muted-foreground" dir="auto">
+            <dd className="mt-1 text-muted-foreground wrap-anywhere" dir="auto">
               {happened}
             </dd>
           </div>
