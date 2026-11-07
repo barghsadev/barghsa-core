@@ -1,3 +1,4 @@
+import { useCommandFeedback } from '../hooks/useCommandFeedback.js';
 import { useOwnedFinancialRead } from '../hooks/useOwnedFinancialRead.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
@@ -91,6 +92,7 @@ function OwnedWalletInvoicePaymentPanel({
     [open, setOpen] = useState(false);
   const [result, setResult] = useState<{ amount: string; transactionId: string } | null>(null),
     [refreshError, setRefreshError] = useState(false);
+  useCommandFeedback({ success: result ? text('paid') : null, operation: invoiceId });
   const dialogAmount = intent ? numbers.money(intent.remainingAmount) : '';
   const paymentAction = useMemo(
     () =>

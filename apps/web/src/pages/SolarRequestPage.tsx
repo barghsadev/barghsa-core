@@ -1,3 +1,5 @@
+import { toast } from '../lib/toast-api.js';
+import { CommandFeedback } from '../components/CommandFeedback.js';
 import { ConfirmationFields } from '@barghsa/ui';
 import { useRiskConfirmation } from '../hooks/useRiskConfirmation.js';
 import { OrderWalletBalance } from '../components/OrderWalletBalance.js';
@@ -504,6 +506,7 @@ export function SolarRequestPage() {
         if (!current()) return;
         protection.completed.current = true;
         protection.blocker.reset?.();
+        toast.success(copy('history_solar.request.submitted'));
         await navigate({ to: '/solar/requests/$requestId', params: { requestId } });
       } catch {
         if (current()) {
@@ -557,9 +560,13 @@ export function SolarRequestPage() {
         </div>
       )}
       {(draftSaveError || protection.saveError) && <p role="alert">{copy('draftSaveError')}</p>}
-      {draftSaved && !protection.dirty && !draftSaveError && !protection.saveError && (
-        <p role="status">{copy('draftSaved')}</p>
-      )}
+      <CommandFeedback
+        message={
+          draftSaved && !protection.dirty && !draftSaveError && !protection.saveError
+            ? copy('draftSaved')
+            : null
+        }
+      />
       {!loading && profileId && draftHydrated && !draftError && (
         <ValidatedFormWizard
           form={fields.form}

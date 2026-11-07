@@ -5,6 +5,7 @@ import { RouteSkeleton, RouteSpinner } from './RouteSkeleton.js';
 import { RouteErrorBoundary } from './RouteErrorBoundary.js';
 
 vi.mock('@tanstack/react-router', () => ({
+  useRouter: () => ({ invalidate: async () => {} }),
   Link: ({ to, children, className }: { to: string; children: ReactNode; className?: string }) => (
     <a href={to} className={className}>
       {children}

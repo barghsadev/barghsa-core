@@ -31,10 +31,7 @@
   },
   {
     "name": "Register",
-    "entries": [
-      "src/routes/register.tsx?tsr-split=component",
-      "src/routes/register/index.tsx?tsr-split=component"
-    ],
+    "entries": ["src/routes/register.tsx?tsr-split=component", "chunk:index"],
     "limitKB": 150,
     "build": "auth"
   },

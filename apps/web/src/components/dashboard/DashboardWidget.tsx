@@ -2,7 +2,7 @@ import { useId, type ReactNode } from 'react';
 import type { LucideIcon } from 'lucide-react';
 import { Button, Card, CardHeader, CardContent, LoadingSkeleton } from '@barghsa/ui';
 import { dashboardText } from '@barghsa/i18n/dashboard';
-import { feedbackText } from '@barghsa/i18n/feedback';
+import { loadingText } from '@barghsa/i18n/loading-feedback';
 import type { Locale } from '@barghsa/i18n/app';
 import type { AsyncData } from '../../hooks/useAsyncData.js';
 
@@ -37,7 +37,7 @@ export function DashboardWidget<T>({
       </CardHeader>
       <CardContent className="min-h-0 flex-1 overflow-y-auto" tabIndex={0}>
         {resource.status === 'loading' ? (
-          <LoadingSkeleton label={feedbackText('loading', locale)} variant="table" />
+          <LoadingSkeleton label={loadingText('loading', locale)} variant="table" />
         ) : resource.status === 'error' ? (
           <div role="alert" className="space-y-3">
             <p className="text-sm text-muted-foreground">{dashboardText('widget.error', locale)}</p>

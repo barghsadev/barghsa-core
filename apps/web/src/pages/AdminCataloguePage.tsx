@@ -1,3 +1,4 @@
+import { CommandFeedback } from '../components/CommandFeedback.js';
 import { ProductCatalogueFilters } from '../components/ProductCatalogueFilters.js';
 import type { ListQueryBinding } from '../hooks/useListQuery.js';
 import { OperationalQueueTable } from '../components/OperationalQueueTable.js';
@@ -700,7 +701,7 @@ export default function AdminCataloguePage({
     >
       <h1 className="text-2xl font-semibold">{label('title')}</h1>
       {uncertainCreate && !action && <p role="alert">{label('unverifiedCreate')}</p>}
-      {saved && <p role="status">{label('saved')}</p>}
+      <CommandFeedback message={saved ? label('saved') : null} />
       <div>
         <div className="max-w-full overflow-x-auto pb-2">
           <div role="tablist" aria-label={label('title')} className="flex w-max gap-2">

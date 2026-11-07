@@ -134,11 +134,21 @@ async function submit(receipt = false) {
     await act(async () => new Promise((resolve) => setTimeout(resolve, 10)));
   }
 }
+async function acknowledgeFinancialReview() {
+  const checkbox = document.querySelector<HTMLElement>('[role="dialog"] [role="checkbox"]');
+  expect(checkbox).not.toBeNull();
+  if (checkbox!.getAttribute('aria-checked') !== 'true') {
+    await act(async () => checkbox!.click());
+  }
+  expect(checkbox!.getAttribute('aria-checked')).toBe('true');
+}
+
 async function confirmReceipt() {
   const confirm = [...document.querySelectorAll<HTMLButtonElement>('[role="dialog"] button')].find(
     (button) => button.textContent?.includes('Confirm and submit receipt')
   );
   expect(confirm).toBeDefined();
+  await acknowledgeFinancialReview();
   await act(async () => confirm!.click());
 }
 async function receiptFields({
@@ -218,6 +228,7 @@ it.each(['not a url', 'https://user:pass@pay.test/', 'http://pay.test/', ''])(
       ...document.querySelectorAll<HTMLButtonElement>('[role="dialog"] button'),
     ].find((button) => button.textContent?.includes('Confirm'));
     expect(confirm).toBeDefined();
+    await acknowledgeFinancialReview();
     await act(async () => confirm!.click());
     expect(element('wallet-error').textContent).toBeTruthy();
     expect(assign).not.toHaveBeenCalled();

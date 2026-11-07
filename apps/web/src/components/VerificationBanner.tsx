@@ -1,3 +1,4 @@
+import { feedbackText } from '@barghsa/i18n/feedback';
 import { useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from '../lib/query-keys.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
@@ -6,6 +7,9 @@ import { withCsrf } from '../lib/csrf.js';
 import { useEffect, useId, useRef, useState } from 'react';
 import { Link, useLocation, useRouter } from '@tanstack/react-router';
 import { t } from '@barghsa/i18n/workspace';
+import { WaitingForBarghsa } from '@barghsa/ui';
+import { workflowFeedback } from '@barghsa/i18n/workflow-feedback';
+import { useAccountTime } from '../hooks/useAccountTime.js';
 
 interface VerificationStatusResponse {
   activeProfileId: string | null;
@@ -14,6 +18,7 @@ interface VerificationStatusResponse {
   verificationRequired: boolean;
   verificationMethod: 'api' | 'manual';
   canAutoVerify: boolean;
+  verificationSubmittedAt?: string | null;
   verificationNotice?: {
     id: string;
     localizedContent: Record<string, { title: string; body: string }>;
@@ -141,6 +146,21 @@ function OwnedVerificationBanner({
       : null;
   const bannerKey = noticeKey ?? status.activeProfileId;
   if (!bannerKey || dismissed === bannerKey) return null;
+  if (
+    status.profileStatus === 'PENDING_VERIFICATION' &&
+    !status.isVerified &&
+    status.verificationRequired
+  ) {
+    return (
+      <VerificationWaiting
+        status={status}
+        locale={locale}
+        title={noticeContent?.title}
+        body={noticeContent?.body}
+        onDismiss={() => setDismissed(bannerKey)}
+      />
+    );
+  }
   if (noticeKey && noticeContent) {
     return (
       <section
@@ -274,5 +294,62 @@ function OwnedVerificationBanner({
         </div>
       </div>
     </div>
+  );
+}
+
+function VerificationWaiting({
+  status,
+  locale,
+  title,
+  body,
+  onDismiss,
+}: {
+  status: VerificationStatusResponse;
+  locale: 'en' | 'fa';
+  title: string | undefined;
+  body: string | undefined;
+  onDismiss: () => void;
+}) {
+  const time = useAccountTime(locale);
+  return (
+    <section
+      data-testid="verification-notice"
+      dir={locale === 'fa' ? 'rtl' : 'ltr'}
+      className="relative border-b px-4 py-3 pe-16"
+    >
+      {time.notice}
+      <WaitingForBarghsa
+        title={workflowFeedback('waiting', locale)}
+        description={body ?? t('verification.banner.manualHelp', locale)}
+        update={title ?? t('verification.banner.title', locale)}
+        submittedAt={
+          status.verificationSubmittedAt
+            ? `${workflowFeedback('submitted', locale)}: ${time.format(status.verificationSubmittedAt)}`
+            : workflowFeedback('submissionUnknown', locale)
+        }
+        expectedResponse={workflowFeedback('responseUnknown', locale)}
+        help={
+          <div className="flex flex-wrap gap-4">
+            <Link to="/settings/profile" className="underline">
+              {t('settings.profile.title', locale)}
+            </Link>
+            <Link to="/tickets" className="underline">
+              {feedbackText('support', locale)}
+            </Link>
+            <Link to="/notifications" className="underline">
+              {t('notifications.viewAll', locale)}
+            </Link>
+          </div>
+        }
+      />
+      <button
+        type="button"
+        onClick={onDismiss}
+        aria-label={t('verification.banner.dismiss', locale)}
+        className="absolute end-5 top-5 size-11 rounded focus-visible:outline-2 focus-visible:outline-ring"
+      >
+        ✕
+      </button>
+    </section>
   );
 }

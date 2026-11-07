@@ -1,3 +1,4 @@
+import { CommandFeedback } from './CommandFeedback.js';
 import { useOwnedStaffServiceRead } from '../hooks/useOwnedStaffServiceRead.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
@@ -347,11 +348,7 @@ function OwnedServiceDuePeriodPanel() {
           </FieldSet>
         </form>
       )}
-      {saved && (
-        <p role="status" className="text-sm">
-          {t('saved', locale)}
-        </p>
-      )}
+      <CommandFeedback className="text-sm" message={saved ? t('saved', locale) : null} />
       {pending && (
         <TeamActionDialog
           action={pending.action}

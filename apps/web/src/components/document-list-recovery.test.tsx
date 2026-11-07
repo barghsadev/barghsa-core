@@ -18,6 +18,14 @@ import {
   destructionQueue,
 } from '../test/document-list-fixtures.js';
 
+vi.mock('@tanstack/react-router', () => ({
+  Link: ({ to, children, ...props }: { to: string; children: ReactNode }) => (
+    <a href={to} {...props}>
+      {children}
+    </a>
+  ),
+}));
+
 vi.mock('../hooks/useAccountTime.js', () => ({
   useAccountTime: () => ({ format: (value: string) => value, notice: null }),
 }));

@@ -1,3 +1,4 @@
+import { CommandFeedback } from '../components/CommandFeedback.js';
 import { contentFormText } from '@barghsa/i18n/content-forms';
 import { LoadingStatus, Alert } from '@barghsa/ui';
 import { useWizardForm } from '../hooks/useWizardForm.js';
@@ -427,7 +428,7 @@ export default function AdminContractTemplatesPage() {
           {label('refresh')}
         </Button>
       </div>
-      {saved && <p role="status">{label('saved')}</p>}
+      <CommandFeedback message={saved ? label('saved') : null} />
       <ListPage>
         {scope.denied && <p role="alert">{label('denied')}</p>}
         <ListPage.Content

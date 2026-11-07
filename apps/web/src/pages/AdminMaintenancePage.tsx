@@ -1,3 +1,4 @@
+import { CommandFeedback } from '../components/CommandFeedback.js';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { LoadingStatus, Button, DatePicker, Input, Label } from '@barghsa/ui';
 import {
@@ -222,7 +223,7 @@ export default function AdminMaintenancePage() {
         </Button>
       </header>
       {time.notice}
-      {saved && <p role="status">{copy('saved')}</p>}
+      <CommandFeedback message={saved ? copy('saved') : null} />
       {state === 'loading' && <LoadingStatus>{copy('loading')}</LoadingStatus>}
       {state === 'denied' && <p role="alert">{copy('denied')}</p>}
       {state === 'error' && <p role="alert">{copy('loadError')}</p>}

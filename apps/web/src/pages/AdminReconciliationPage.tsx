@@ -1,3 +1,4 @@
+import { CommandFeedback } from '../components/CommandFeedback.js';
 import { OperationalQueueTable } from '../components/OperationalQueueTable.js';
 import type { ListQueryBinding } from '../hooks/useListQuery.js';
 import { reconciliationApiQuery, reconciliationLocalTime } from '../lib/decision-queue-query.js';
@@ -522,7 +523,7 @@ export default function AdminReconciliationPage({ queries }: { queries?: ListQue
             </Button>
           </div>
         )}
-        {saved && <p role="status">{label('saved')}</p>}
+        <CommandFeedback message={saved ? label('saved') : null} />
         <ListPage.Content
           loading={loading || accessLoading}
           error={error || (!accessLoading && !accessError && !canView)}

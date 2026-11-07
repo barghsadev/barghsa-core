@@ -1,3 +1,4 @@
+import { CommandFeedback } from './CommandFeedback.js';
 import { OperationalQueueTable, QueueRecordDetails } from './OperationalQueueTable.js';
 import { OperationalCommandReview } from './OperationalCommandReview.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
@@ -358,7 +359,7 @@ export default function DeadLetterPanel({
           {t('admin.jobs.refresh', uiLocale)}
         </Button>
       </div>
-      {notice && <p role="status">{label(`${notice}Notice`)}</p>}
+      <CommandFeedback message={notice ? label(`${notice}Notice`) : null} />
       <ListPage>
         <ListPage.Toolbar>
           <div className="flex flex-wrap gap-3">

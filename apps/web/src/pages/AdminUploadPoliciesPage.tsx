@@ -1,3 +1,4 @@
+import { CommandFeedback } from '../components/CommandFeedback.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useEffect, useState, useRef, useCallback, type FormEvent } from 'react';
@@ -464,7 +465,7 @@ export default function AdminUploadPoliciesPage() {
           <p className="mt-2 max-w-2xl text-sm text-muted-foreground">{label('description')}</p>
         </div>
       </header>
-      {notice && <p role="status">{label('saved')}</p>}
+      <CommandFeedback message={notice ? label('saved') : null} />
       {uncertain && !editor && (
         <div className="space-y-2">
           <Alert variant="destructive">{text('unverified')}</Alert>

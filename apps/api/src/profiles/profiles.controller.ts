@@ -250,6 +250,7 @@ export class ProfilesController {
         verificationRequired: { type: 'boolean' },
         verificationMethod: { type: 'string', enum: ['api', 'manual'] },
         canAutoVerify: { type: 'boolean' },
+        verificationSubmittedAt: { type: 'string', format: 'date-time', nullable: true },
         verificationNotice: {
           type: 'object',
           nullable: true,

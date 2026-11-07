@@ -1,3 +1,4 @@
+import { toast } from '../lib/toast-api.js';
 import { ConfirmationFields } from '@barghsa/ui';
 import { useRiskConfirmation } from '../hooks/useRiskConfirmation.js';
 import { useOwnedIntakeRead } from '../hooks/useOwnedIntakeRead.js';
@@ -402,7 +403,10 @@ function OwnedSavingsOrderPage() {
   }, [step, hardwareConfirmed, agreementAccepted, wizard.restore]);
   async function saveNow() {
     const saved = await protection.save();
-    if (saved) setDraftSaved(true);
+    if (saved) {
+      setDraftSaved(true);
+      toast.success(t('electricity.order.draftSaved', locale));
+    }
     return saved;
   }
   async function advanceStep() {
@@ -682,6 +686,7 @@ function OwnedSavingsOrderPage() {
         if (!current()) return;
         protection.completed.current = true;
         protection.blocker.reset?.();
+        toast.success(copy('orderSubmitted'));
         await navigate({ to: '/savings/orders/$orderId', params: { orderId } });
       } catch (error) {
         if (!current()) return;

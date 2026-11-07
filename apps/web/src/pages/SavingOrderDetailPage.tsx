@@ -33,6 +33,7 @@ import {
 } from '../components/SavingHardwareUpgradeHistory.js';
 import { savingNextAction, type SavingActionContext } from '../lib/saving-next-action.js';
 import { WorkflowStatusBanner } from '../components/WorkflowStatusBanner.js';
+import { workflowFeedback } from '@barghsa/i18n/workflow-feedback';
 import { AcceptedSavingAgreement } from '../components/AcceptedSavingAgreement.js';
 import { SavingFulfillmentProgress } from '../components/SavingFulfillmentProgress.js';
 import type { SavingFulfillmentEvent, SavingFulfillmentStage } from '../lib/saving-fulfillment.js';
@@ -180,6 +181,7 @@ export function SavingOrderDetailPage() {
         <>
           <WorkflowStatusBanner
             locale={locale}
+            submittedAt={`${workflowFeedback('submitted', locale)}: ${time.format(detail.submitted_at)}`}
             status={copy(
               detail.status === 'awaiting_staff_review'
                 ? 'staffReview'

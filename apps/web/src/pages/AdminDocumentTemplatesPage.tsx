@@ -1,3 +1,4 @@
+import { CommandFeedback } from '../components/CommandFeedback.js';
 import { useOwnedDocumentRead } from '../hooks/useOwnedDocumentRead.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
@@ -422,7 +423,7 @@ function OwnedAdminDocumentTemplatesPage({ queries }: { queries?: ListQueryBindi
           {word('refresh')}
         </Button>
       </header>
-      {saved ? <p role="status">{word('saved')}</p> : null}
+      <CommandFeedback message={saved ? word('saved') : null} />
       {linkError ? <p role="alert">{word('linkError')}</p> : null}
       {uncertain && (
         <div role="alert" className="space-y-2">

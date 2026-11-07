@@ -1,3 +1,4 @@
+import { CommandFeedback } from './CommandFeedback.js';
 import { notificationFormText } from '@barghsa/i18n/notification-forms';
 import { TeamActionDialog, type TeamAction } from './TeamActionDialog.js';
 import {
@@ -351,11 +352,11 @@ export default function DeliveryWindowConfigPanel({ uiLocale }: { uiLocale: Loca
               disabled={!ready || busy}
               label={label(saving || editor.pending ? 'saving' : 'save')}
             />
-            {saved && (
-              <span role="status" className="text-sm text-success">
-                {label('saved')}
-              </span>
-            )}
+            <CommandFeedback
+              as="span"
+              className="text-sm text-success"
+              message={saved ? label('saved') : null}
+            />
           </div>
         </form>
       )}

@@ -1,3 +1,4 @@
+import { CommandFeedback } from '../components/CommandFeedback.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useCallback, useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react';
 import {
@@ -480,7 +481,7 @@ export default function AdminGiftCodesPage({
             </Button>
           </form>
         </ListPage.Toolbar>
-        {saved && <p role="status">{label('saved')}</p>}
+        <CommandFeedback message={saved ? label('saved') : null} />
         {uncertain && (
           <div role="alert" className="space-y-2">
             <p>{label('uncertain')}</p>

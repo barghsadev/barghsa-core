@@ -1,3 +1,4 @@
+import { toast } from '../lib/toast-api.js';
 import { useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from '../lib/query-keys.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
@@ -868,6 +869,7 @@ function OwnedAiModelsPage({
                   model,
                 ];
                 setModels(previousModels.current);
+                toast.success(label('success'));
               }
               const data = value as {
                 test?: { ok: boolean; responsePreview?: string; error?: string };

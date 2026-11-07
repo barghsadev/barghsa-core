@@ -1,3 +1,4 @@
+import { CommandFeedback } from '../components/CommandFeedback.js';
 import { LoadingStatus } from '@barghsa/ui';
 import { historyContextText } from '../lib/history-context.js';
 import { useEffect, useId, useMemo, useRef, useState } from 'react';
@@ -16,6 +17,7 @@ import { SolarPostalPanel } from '../components/SolarPostalPanel.js';
 import { SolarStageProgress } from '../components/SolarStageProgress.js';
 import type { SolarProgress } from '../lib/solar-progress.js';
 import { WorkflowStatusBanner } from '../components/WorkflowStatusBanner.js';
+import { workflowFeedback } from '@barghsa/i18n/workflow-feedback';
 import { solarNextAction } from '../lib/solar-next-action.js';
 
 interface SolarRequest {
@@ -331,6 +333,7 @@ function SolarRequestDetail({
         <>
           <WorkflowStatusBanner
             locale={locale}
+            submittedAt={`${workflowFeedback('submitted', locale)}: ${time.format(request.submitted_at)}`}
             status={copy(`status_${request.status}`)}
             happened={
               request.status_reason ??
@@ -467,7 +470,7 @@ function SolarRequestDetail({
               >
                 {copy('sendReview')}
               </button>
-              {documentSent && <p role="status">{copy('reviewSent')}</p>}
+              <CommandFeedback message={documentSent ? copy('reviewSent') : null} />
               {documentError && <p role="alert">{copy('documentError')}</p>}
               {documentReadError && (
                 <button

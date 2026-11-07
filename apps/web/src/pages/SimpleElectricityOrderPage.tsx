@@ -1,4 +1,6 @@
+import { serviceFeedback } from '@barghsa/i18n/service-feedback';
 import { ConfirmationFields } from '@barghsa/ui';
+import { NoDeadEndBanner } from '@barghsa/ui';
 import { useRiskConfirmation } from '../hooks/useRiskConfirmation.js';
 import { Skeleton } from '@barghsa/ui';
 import { useOwnedIntakeRead } from '../hooks/useOwnedIntakeRead.js';
@@ -19,7 +21,7 @@ import {
   useId,
   useRef,
 } from 'react';
-import { useBlocker, useNavigate } from '@tanstack/react-router';
+import { Link, useBlocker, useNavigate } from '@tanstack/react-router';
 import { toast } from '../lib/toast-api.js';
 import { t } from '@barghsa/i18n/app';
 import { MapPinIcon, PlusIcon, Loader2Icon, CheckIcon, HomeIcon, PackageIcon } from 'lucide-react';
@@ -1481,9 +1483,25 @@ function OwnedSimpleElectricityOrderPage() {
                         </Button>
                       </div>
                     ) : products.length === 0 ? (
-                      <p className="text-sm text-muted-foreground">
-                        {t('electricity.order.noProducts', locale)}
-                      </p>
+                      <NoDeadEndBanner
+                        title={t('electricity.order.noProducts', locale)}
+                        description={serviceFeedback('next', locale)}
+                        responsibleTeam={serviceFeedback('team', locale)}
+                        action={
+                          <Button
+                            type="button"
+                            variant="outline"
+                            onClick={() => void fetchProducts()}
+                          >
+                            {t('electricity.order.retry', locale)}
+                          </Button>
+                        }
+                        help={
+                          <Link to="/tickets" className="underline">
+                            {serviceFeedback('support', locale)}
+                          </Link>
+                        }
+                      />
                     ) : (
                       <div className="space-y-2">
                         {products.map((product) => (

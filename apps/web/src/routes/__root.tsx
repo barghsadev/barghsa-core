@@ -12,21 +12,29 @@ import { isAuthEntryPath } from '../../entry-routes.js';
 import { rememberEntryLocale } from '../lib/entry-locale.js';
 import { TanStackRouterDevtools } from '@tanstack/router-devtools';
 import { lazy, Suspense, useEffect } from 'react';
-const VerificationBanner = lazy(() =>
-  import('../components/VerificationBanner.js').then((module) => ({
-    default: module.VerificationBanner,
-  }))
-);
-const ProfileAvailabilityGuard = lazy(() =>
-  import('../components/ProfileAvailabilityGuard.js').then((module) => ({
-    default: module.ProfileAvailabilityGuard,
-  }))
-);
-const DefaultProfileModal = lazy(() =>
-  import('../components/DefaultProfileModal.js').then((module) => ({
-    default: module.DefaultProfileModal,
-  }))
-);
+// Auth entry routes hand off to the application before any customer workspace mounts.
+const authEntry = import.meta.env.PROD && __BARGHSA_AUTH_ENTRY__;
+const VerificationBanner = authEntry
+  ? () => null
+  : lazy(() =>
+      import('../components/VerificationBanner.js').then((module) => ({
+        default: module.VerificationBanner,
+      }))
+    );
+const ProfileAvailabilityGuard = authEntry
+  ? () => null
+  : lazy(() =>
+      import('../components/ProfileAvailabilityGuard.js').then((module) => ({
+        default: module.ProfileAvailabilityGuard,
+      }))
+    );
+const DefaultProfileModal = authEntry
+  ? () => null
+  : lazy(() =>
+      import('../components/DefaultProfileModal.js').then((module) => ({
+        default: module.DefaultProfileModal,
+      }))
+    );
 import { UiDirectionProvider } from '../providers/UiDirectionProvider.js';
 import { BrandThemeProvider } from '../providers/BrandThemeProvider.js';
 import { ApplicationToaster } from '../components/ApplicationToaster.js';
@@ -100,6 +108,7 @@ function RootComponent() {
     (match) => (match.context as { isStaff?: unknown }).isStaff === true
   );
   const showCustomerBanner =
+    !authEntry &&
     !isStaff &&
     !AUTH_ROUTE_PREFIXES.some((prefix) => pathname.startsWith(prefix)) &&
     pathname !== '/support' &&
@@ -115,7 +124,7 @@ function RootComponent() {
             <VerificationBanner accountId={accountId} />
           </Suspense>
         )}
-        {needsProfile(pathname, isStaff) && (
+        {!authEntry && needsProfile(pathname, isStaff) && (
           <Suspense fallback={null}>
             <ProfileAvailabilityGuard
               accountId={accountId}

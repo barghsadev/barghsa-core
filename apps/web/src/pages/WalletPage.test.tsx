@@ -126,6 +126,15 @@ describe('WalletPage (T-04.2.02.01 / T-04.2.02.03)', () => {
     }
   }
 
+  async function acknowledgeFinancialReview() {
+    const checkbox = document.querySelector<HTMLElement>('[role="dialog"] [role="checkbox"]');
+    expect(checkbox).not.toBeNull();
+    if (checkbox!.getAttribute('aria-checked') !== 'true') {
+      await act(async () => checkbox!.click());
+    }
+    expect(checkbox!.getAttribute('aria-checked')).toBe('true');
+  }
+
   async function confirmOnlineReview() {
     const button = await vi.waitFor(
       async () => {
@@ -140,6 +149,7 @@ describe('WalletPage (T-04.2.02.01 / T-04.2.02.03)', () => {
       },
       { timeout: 2000 }
     );
+    await acknowledgeFinancialReview();
     await act(async () => button.click());
     await flushFetches();
   }
@@ -620,6 +630,7 @@ describe('WalletPage (T-04.2.02.01 / T-04.2.02.03)', () => {
         ...document.querySelectorAll<HTMLButtonElement>('[role="dialog"] button'),
       ].find((button) => button.textContent?.includes('Confirm and submit receipt'));
       expect(confirm).toBeDefined();
+      await acknowledgeFinancialReview();
       await act(async () => confirm!.click());
       for (let i = 0; i < 20; i++) {
         await flushFetches();

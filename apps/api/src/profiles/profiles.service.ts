@@ -88,6 +88,7 @@ export interface VerificationStatusDto {
   verificationRequired: boolean;
   verificationMethod: 'api' | 'manual';
   canAutoVerify: boolean;
+  verificationSubmittedAt: string | null;
   verificationNotice: {
     id: string;
     localizedContent: Record<string, { title: string; body: string }>;
@@ -317,16 +318,31 @@ export class ProfilesService {
         verificationRequired: mode !== 'DISABLED',
         verificationMethod: mode === 'API' ? 'api' : 'manual',
         canAutoVerify: false,
+        verificationSubmittedAt: null,
         verificationNotice: null,
       };
     }
 
     const policy = (await readVerificationPolicyConfig()).active;
     const rule = policy[defaultProfile.profileType];
-    const stamp =
-      (await getDbPool().query('SELECT verified_at FROM profiles WHERE id=$1', [defaultProfile.id]))
-        .rows[0]?.verified_at ?? null;
-    const isVerified = verificationIsCurrent(defaultProfile.status, stamp, rule);
+    const stamp = (
+      await getDbPool().query(
+        `SELECT verified_at,
+          CASE WHEN user_id=$2 AND NOT archived THEN
+            (SELECT a.created_at FROM audit_log a
+           WHERE (CASE WHEN a.metadata IS JSON OBJECT THEN a.metadata::jsonb ELSE '{}'::jsonb END)->>'profileId'=$1::text
+             AND a.event IN ('individual_profile_saved','legal_profile_saved','profile_onboarding_completed')
+             ORDER BY a.created_at DESC,a.id DESC LIMIT 1)
+          END AS onboarding_submitted_at
+         FROM profiles WHERE id=$1::uuid`,
+        [defaultProfile.id, userId]
+      )
+    ).rows[0];
+    const isVerified = verificationIsCurrent(
+      defaultProfile.status,
+      stamp?.verified_at ?? null,
+      rule
+    );
     const verificationRequired = mode !== 'DISABLED' && rule.required;
     const verificationMethod = mode === 'API' ? 'api' : 'manual';
 
@@ -334,7 +350,7 @@ export class ProfilesService {
     // Read the latest transition first: reading a newer notice must not revive an older one.
     const notice = (
       await getDbPool().query(
-        `SELECT n.id,n.localized_content,n.is_read,n.type,p.status
+        `SELECT n.id,n.localized_content,n.is_read,n.type,n.created_at,p.status
        FROM in_app_notifications n JOIN profiles p ON p.id=n.profile_id
        LEFT JOIN user_profile_contexts c ON c.user_id=$1
        WHERE n.recipient_user_id=$1 AND p.user_id=$1 AND p.id=$2 AND p.archived=false
@@ -373,6 +389,18 @@ export class ProfilesService {
       verificationMethod,
       // No real provider has been selected. Never offer simulated approval.
       canAutoVerify: false,
+      verificationSubmittedAt: (() => {
+        // Initial onboarding has an immutable audit entry; later pending transitions have a notice.
+        // An inconsistent newer transition never revives the earlier onboarding timestamp.
+        const submitted = notice
+          ? notice.type === 'profile_pending' && notice.status === 'PENDING_VERIFICATION'
+            ? notice.created_at
+            : null
+          : stamp?.onboarding_submitted_at;
+        return defaultProfile.status === 'PENDING_VERIFICATION' && submitted
+          ? new Date(submitted as string | Date).toISOString()
+          : null;
+      })(),
       verificationNotice,
     };
   }

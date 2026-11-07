@@ -1,19 +1,14 @@
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { lazy, Suspense, useCallback, useEffect, useRef, useState } from 'react';
-import { Link, useNavigate, type NavigateOptions } from '@tanstack/react-router';
+import { useNavigate, type NavigateOptions } from '@tanstack/react-router';
 import { t } from '@barghsa/i18n/workspace';
-import { BellIcon, CheckCheckIcon } from 'lucide-react';
-import {
-  LoadingSkeleton,
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-  PopoverTitle,
-} from '@barghsa/ui';
+import { BellIcon } from 'lucide-react';
+import { LoadingSkeleton, Popover, PopoverTrigger, PopoverContent } from '@barghsa/ui';
 import { useNotificationAccessDenied } from '../hooks/useNotificationAccessDenied.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { useUnreadCount } from '../hooks/useUnreadCount.js';
 import { useUnreadDocumentTitle } from '../hooks/useUnreadDocumentTitle.js';
+import { sendToast } from '../lib/toast-api.js';
 import {
   fetchNotifications,
   isNotificationDenied,
@@ -22,9 +17,7 @@ import {
   toNavigationTarget,
   type NotificationItem,
 } from '../lib/notifications.js';
-const NotificationRow = lazy(() =>
-  import('./NotificationRow.js').then((module) => ({ default: module.NotificationRow }))
-);
+const NotificationDropdown = lazy(() => import('./NotificationDropdown.js'));
 
 const DROPDOWN_SIZE = 10;
 
@@ -154,6 +147,7 @@ export function NotificationBell({
       setItems(previousItems);
       setUnreadCount(previousCount);
       setError('write');
+      sendToast('warning', t('notifications.error.write', locale));
       return;
     } finally {
       if (requestVersion.current === version) {
@@ -186,7 +180,8 @@ export function NotificationBell({
         <BellIcon className="h-5 w-5" aria-hidden="true" />
         {unreadCount > 0 && (
           <span
-            className="absolute -top-1 -end-1 inline-flex min-w-4 items-center justify-center rounded-full bg-destructive px-1 text-[10px] font-semibold leading-4 text-destructive-foreground"
+            key={unreadCount}
+            className="barghsa-notification-count absolute -top-1 -end-1 inline-flex min-w-4 items-center justify-center rounded-full bg-destructive px-1 text-[10px] font-semibold leading-4 text-destructive-foreground"
             role="status"
           >
             {badgeLabel}
@@ -195,104 +190,30 @@ export function NotificationBell({
       </PopoverTrigger>
 
       <PopoverContent align="start" className="w-96 max-w-[90vw]" data-testid="notification-panel">
-        <div className="flex items-center justify-between px-1.5 py-1">
-          <PopoverTitle className="text-sm font-medium text-foreground">
-            {t('notifications.bellLabel', locale)}
-          </PopoverTitle>
-          <button
-            type="button"
-            tabIndex={0}
-            onClick={() => void markRead()}
-            className="inline-flex items-center gap-1 rounded px-1.5 py-1 text-xs text-foreground hover:bg-primary/5 disabled:opacity-50"
-            disabled={
-              unreadCount === 0 ||
-              writing ||
-              loading ||
-              !!error ||
-              denied ||
-              acceptedContext !== operatingContext
+        {open && (
+          <Suspense
+            fallback={
+              <div className="p-3">
+                <LoadingSkeleton label={t('notifications.loading', locale)} variant="table" />
+              </div>
             }
           >
-            <CheckCheckIcon className="h-3.5 w-3.5" aria-hidden="true" />
-            {t('notifications.markAllRead', locale)}
-          </button>
-        </div>
-        <hr className="my-1 border-border" />
-
-        {loading && (
-          <div className="p-3">
-            <LoadingSkeleton label={t('notifications.loading', locale)} variant="table" />
-          </div>
+            <NotificationDropdown
+              locale={locale}
+              unreadCount={unreadCount}
+              writing={writing}
+              loading={loading}
+              error={error}
+              denied={denied}
+              acceptedContext={acceptedContext}
+              operatingContext={operatingContext}
+              items={items}
+              markRead={markRead}
+              load={load}
+              onNavigate={() => setOpen(false)}
+            />
+          </Suspense>
         )}
-        {error && (
-          <div className="p-3 text-sm text-destructive" role="alert">
-            <p>
-              {t(
-                denied
-                  ? 'notifications.error.denied'
-                  : error === 'write'
-                    ? 'notifications.error.write'
-                    : 'notifications.error.load',
-                locale
-              )}
-            </p>
-            <button
-              type="button"
-              tabIndex={0}
-              disabled={loading || writing}
-              onClick={() => void load()}
-              className="mt-2 underline"
-            >
-              {t('notifications.retry', locale)}
-            </button>
-          </div>
-        )}
-        {acceptedContext === operatingContext && items.length > 0 && (
-          <ul className="max-h-80 overflow-y-auto p-1">
-            {items.map((item) => (
-              <li key={item.id}>
-                <button
-                  type="button"
-                  tabIndex={0}
-                  onClick={() => void markRead(item)}
-                  disabled={
-                    writing || loading || !!error || denied || acceptedContext !== operatingContext
-                  }
-                  className="flex w-full items-start gap-3 rounded-md px-1.5 py-2 text-start hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                  dir={locale === 'fa' ? 'rtl' : 'ltr'}
-                >
-                  <Suspense
-                    fallback={<span role="status">{t('notifications.loading', locale)}</span>}
-                  >
-                    <NotificationRow
-                      item={item}
-                      locale={locale}
-                      unread={!item.isRead}
-                      operatingContext={operatingContext}
-                    />
-                  </Suspense>
-                </button>
-              </li>
-            ))}
-          </ul>
-        )}
-        {!loading && !error && acceptedContext === operatingContext && items.length === 0 && (
-          <p className="px-3 py-6 text-center text-sm text-muted-foreground">
-            {t('notifications.empty.title', locale)}
-          </p>
-        )}
-
-        <hr className="my-1 border-border" />
-        <div className="px-1.5 py-1">
-          <Link
-            tabIndex={0}
-            to={operatingContext === 'staff' ? '/admin/inbox' : '/notifications'}
-            onClick={() => setOpen(false)}
-            className="block rounded-md px-1.5 py-1.5 text-center text-sm font-medium text-foreground hover:bg-primary/5"
-          >
-            {t('notifications.viewAll', locale)}
-          </Link>
-        </div>
       </PopoverContent>
     </Popover>
   );

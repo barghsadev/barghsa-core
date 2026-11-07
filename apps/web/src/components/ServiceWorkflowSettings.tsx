@@ -1,3 +1,4 @@
+import { CommandFeedback } from './CommandFeedback.js';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { LoadingStatus, Alert, Button, Input, Label } from '@barghsa/ui';
 import { tServiceSettings } from '@barghsa/i18n/service-settings';
@@ -285,7 +286,7 @@ export function ServiceWorkflowSettings({ disabled = false, onBusyChange }: Cata
       {state.resource.loading && <LoadingStatus>{text('loading')}</LoadingStatus>}
       {state.resource.error && <Alert variant="destructive">{text('error')}</Alert>}
       {state.scope.denied && <Alert variant="destructive">{text('forbidden')}</Alert>}
-      {saved && <p role="status">{text('saved')}</p>}
+      <CommandFeedback message={saved ? text('saved') : null} />
       {(state.changed || state.uncertain) && (
         <Alert variant="destructive">{text(state.uncertain ? 'unverified' : 'changed')}</Alert>
       )}

@@ -1,3 +1,4 @@
+import { CommandFeedback } from '../components/CommandFeedback.js';
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
 import { useNavigate, useSearch } from '@tanstack/react-router';
 import { t } from '@barghsa/i18n/crm';
@@ -669,7 +670,7 @@ function Corrections({
               {t('crm.list.refresh', locale)}
             </Button>
           </div>
-          {saved && <p role="status">{t('crm.corrections.saved', locale)}</p>}
+          <CommandFeedback message={saved ? t('crm.corrections.saved', locale) : null} />
           {error && <p role="alert">{t('crm.corrections.error', locale)}</p>}
           {queueForbidden ? (
             <p>{t('crm.corrections.queueForbidden', locale)}</p>

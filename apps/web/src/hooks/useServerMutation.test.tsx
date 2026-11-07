@@ -34,7 +34,14 @@ async function setup(
     error = vi.fn(),
     dismiss = vi.fn();
   toast.dismiss();
-  const disconnect = connectToast({ success, error, dismiss });
+  const disconnect = connectToast({
+    success,
+    error,
+    dismiss,
+    warning: vi.fn(),
+    info: vi.fn(),
+    loading: vi.fn(),
+  });
   let mutation!: ReturnType<typeof useServerMutation<string, string>>;
   function Harness({ owner }: { owner: string | null }) {
     mutation = useServerMutation({

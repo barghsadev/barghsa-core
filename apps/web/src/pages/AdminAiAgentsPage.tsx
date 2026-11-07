@@ -1,3 +1,4 @@
+import { CommandFeedback } from '../components/CommandFeedback.js';
 import { useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from '../lib/query-keys.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
@@ -593,7 +594,7 @@ function OwnedAiAgentsPage({
           <p role="alert">{label('denied')}</p>
         ) : (
           <>
-            {saved && <p role="status">{label('saved')}</p>}
+            <CommandFeedback message={saved ? label('saved') : null} />
             {optionsLoading && <LoadingStatus>{label('optionsLoading')}</LoadingStatus>}
             {optionsError && (
               <div role="alert">

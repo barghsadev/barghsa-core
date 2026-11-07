@@ -1,3 +1,4 @@
+import { CommandFeedback } from '../components/CommandFeedback.js';
 import type { ListQueryBinding } from '../hooks/useListQuery.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
@@ -727,7 +728,7 @@ export default function AdminStaffUsersPage({ queries }: { queries?: ListQueryBi
           </Button>
         )}
       </header>
-      {saved && <p role="status">{label('saved')}</p>}
+      <CommandFeedback message={saved ? label('saved') : null} />
       {activationNotice && <p role="status">{label('linkQueued')}</p>}
       {created && (
         <section className="space-y-3 rounded-lg border bg-card p-4" aria-label={label('created')}>

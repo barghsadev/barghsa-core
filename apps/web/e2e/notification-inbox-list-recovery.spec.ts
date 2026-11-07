@@ -7,6 +7,71 @@ import {
   notificationPage as data,
   notificationCursor,
 } from '../src/test/notification-inbox-fixtures';
+import { notificationFeedback } from '@barghsa/i18n/notification-feedback';
+
+for (const locale of ['en', 'fa'] as const) {
+  test(`notification date groups recover a saved time zone without losing rows (${locale})`, async ({
+    page,
+  }, info) => {
+    await crmShell(page, locale);
+    await page.clock.setFixedTime(new Date('2026-11-05T12:00:00Z'));
+    let zoneFailed = true;
+    await page.route('**/api/user/settings/timezone', (route) =>
+      route.fulfill({
+        status: zoneFailed ? 503 : 200,
+        json: { timezone: 'Asia/Tehran' },
+      })
+    );
+    const rows = [
+      '2026-11-05T06:00:00Z',
+      '2026-11-04T06:00:00Z',
+      '2026-11-03T06:00:00Z',
+      '2026-10-28T06:00:00Z',
+    ].map((date, index) => ({
+      ...item(`Date notice ${index}`, `10000000-0000-4000-8000-00000000000${index + 1}`),
+      createdAt: date,
+    }));
+    await page.route('**/api/v1/notifications?*', (route) =>
+      route.fulfill({ json: { data: rows, next_cursor: null, unread_count: 4 } })
+    );
+    await page.route('**/api/v1/notifications/unread-count', (route) =>
+      route.fulfill({ json: { unread_count: 4 } })
+    );
+    await page.goto('/admin/inbox');
+    const main = page.getByRole('main');
+    await expect(main.getByRole('button', { name: /Date notice/ })).toHaveCount(4);
+    await expect(main).toContainText(notificationFeedback('datesUnavailable', locale));
+    zoneFailed = false;
+    await main
+      .getByRole('button', { name: notificationFeedback('retry', locale), exact: true })
+      .click();
+    for (const [index, key] of (['today', 'yesterday', 'week', 'older'] as const).entries()) {
+      const group = main.getByRole('region', {
+        name: notificationFeedback(key, locale),
+        exact: true,
+      });
+      await expect(
+        group.getByRole('heading', { name: notificationFeedback(key, locale), exact: true })
+      ).toBeVisible();
+      await expect(
+        group.getByRole('button', { name: new RegExp(`Date notice ${index}`) })
+      ).toBeVisible();
+    }
+    await expect(main.getByRole('button', { name: /Date notice/ })).toHaveCount(4);
+    expect(
+      (
+        await new AxeBuilder({ page })
+          .include('main')
+          .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
+          .analyze()
+      ).violations
+    ).toEqual([]);
+    await page.screenshot({
+      path: info.outputPath('notification-date-groups.png'),
+      fullPage: true,
+    });
+  });
+}
 test.use({ viewport: { width: 390, height: 844 } });
 for (const context of ['customer', 'staff'] as const)
   for (const locale of ['en', 'fa'] as const)
@@ -113,6 +178,14 @@ for (const context of ['customer', 'staff'] as const)
           .click();
         await current.click();
         await expect(main.getByRole('alert')).toContainText(text('error.write'));
+        await expect(page.locator('[data-sonner-toast][data-type="warning"]')).toBeVisible();
+        const header = await page.locator('header').first().boundingBox();
+        const warning = await page
+          .locator('[data-sonner-toast][data-type="warning"]')
+          .boundingBox();
+        expect(header).not.toBeNull();
+        expect(warning).not.toBeNull();
+        expect(warning!.y).toBeGreaterThanOrEqual(header!.y + header!.height + 8);
         await expect(current).toBeVisible();
         writeFailed = false;
         await main

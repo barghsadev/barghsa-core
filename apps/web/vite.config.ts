@@ -88,7 +88,7 @@ export default defineConfig(({ mode }) => {
             ['/_app', '/_app/electricity/', '/_app/electricity/order', '/_app/savings'].includes(
               routeId
             )
-              ? []
+              ? [['errorComponent'], ['pendingComponent']]
               : undefined,
         },
       }),

@@ -1,3 +1,4 @@
+import { CommandFeedback } from '../components/CommandFeedback.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
 import {
@@ -598,7 +599,7 @@ export default function AdminVatPage() {
       {scope.denied && <p role="alert">{label('denied')}</p>}
       {!scope.denied && (
         <>
-          {saved && <p role="status">{label('saved')}</p>}
+          <CommandFeedback message={saved ? label('saved') : null} />
           {preference.status === 'loading' && (
             <LoadingStatus>{label('timezoneLoading')}</LoadingStatus>
           )}

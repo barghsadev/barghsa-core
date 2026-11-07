@@ -1,7 +1,7 @@
+import { ErrorState, type ErrorStateProps } from './error-state';
+export { ErrorState, type ErrorStateProps } from './error-state';
 import { Component, type ErrorInfo, type ReactNode } from 'react';
 import { cn } from '../../lib/utils';
-import { Alert, AlertDescription, AlertTitle } from './alert';
-import { Button } from './button';
 import {
   Empty,
   EmptyContent,
@@ -48,40 +48,6 @@ export function PageLoading({ label, className }: { label: string; className?: s
         <Skeleton className="h-4 w-2/3" />
         <Skeleton className="h-48 w-full" />
       </div>
-    </div>
-  );
-}
-
-/** Safe, localized render-error content; never displays raw exception details. */
-export interface ErrorStateProps {
-  title: string;
-  description: string;
-  retryLabel: string;
-  /** Product-provided contact instructions or a support link. */
-  supportContact: ReactNode;
-  onRetry: () => void;
-}
-export function ErrorState({
-  title,
-  description,
-  retryLabel,
-  supportContact,
-  onRetry,
-}: ErrorStateProps) {
-  return (
-    <div className="mx-auto w-full max-w-lg p-6">
-      <Alert variant="destructive">
-        <AlertTitle>{title}</AlertTitle>
-        <AlertDescription>
-          <p>{description}</p>
-          <div className="flex flex-wrap items-center gap-3">
-            <Button type="button" variant="outline" onClick={onRetry}>
-              {retryLabel}
-            </Button>
-            {supportContact}
-          </div>
-        </AlertDescription>
-      </Alert>
     </div>
   );
 }

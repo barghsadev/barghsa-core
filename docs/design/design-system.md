@@ -10,6 +10,8 @@ This work changes the authentication, customer application and admin shells. Exi
 
 See [forms and final confirmation](forms-and-confirmation.md) for field validation, saved wizard reviews, typed destructive approval and financial acknowledgement.
 
+See [notifications and recovery](notification-recovery.md) for receipt-driven feedback, inbox date groups, waiting states and safe support references.
+
 ## Source of truth
 
 | Concern                                            | Source                                          |

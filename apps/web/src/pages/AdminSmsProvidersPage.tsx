@@ -1,3 +1,4 @@
+import { CommandFeedback } from '../components/CommandFeedback.js';
 import { useCatalogueScope } from '../hooks/useCatalogueResource.js';
 import {
   useProviderCatalogue,
@@ -604,7 +605,7 @@ export default function AdminSmsProvidersPage() {
           {error}
         </p>
       )}
-      {notice && <p role="status">{notice}</p>}
+      <CommandFeedback message={notice ? notice : null} />
       <ListPage>
         <ListPage.Toolbar>{recovery}</ListPage.Toolbar>
         <ListPage.Content

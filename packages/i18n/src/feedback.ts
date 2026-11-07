@@ -1,9 +1,9 @@
+import { loadingText } from './loading-feedback.js';
+
 const messages = {
   en: {
     region: 'Application messages',
     close: 'Dismiss message',
-    loading: 'Loading page',
-    loadingAdmin: 'Loading admin dashboard',
     errorTitle: 'Something went wrong',
     errorDescription: 'Please try again. If the problem persists, contact support.',
     chunkTitle: 'Failed to load this page',
@@ -11,12 +11,12 @@ const messages = {
     retry: 'Try again',
     support: 'Contact support',
     home: 'Go home',
+    details: 'Support details',
+    reference: 'Reference',
   },
   fa: {
     region: 'پیام‌های برنامه',
     close: 'بستن پیام',
-    loading: 'در حال بارگذاری صفحه',
-    loadingAdmin: 'در حال بارگذاری پنل مدیریت',
     errorTitle: 'خطایی رخ داد',
     errorDescription: 'دوباره تلاش کنید. اگر مشکل ادامه داشت، با پشتیبانی تماس بگیرید.',
     chunkTitle: 'بارگذاری صفحه ناموفق بود',
@@ -24,9 +24,16 @@ const messages = {
     retry: 'تلاش دوباره',
     support: 'تماس با پشتیبانی',
     home: 'صفحه اصلی',
+    details: 'جزئیات برای پشتیبانی',
+    reference: 'شناسه پیگیری',
   },
 } as const;
 
-export function feedbackText(key: keyof typeof messages.en, locale: 'en' | 'fa'): string {
-  return messages[locale][key];
+export function feedbackText(
+  key: keyof typeof messages.en | 'loading' | 'loadingAdmin',
+  locale: 'en' | 'fa'
+): string {
+  return key === 'loading' || key === 'loadingAdmin'
+    ? loadingText(key, locale)
+    : messages[locale][key];
 }

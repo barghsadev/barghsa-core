@@ -1,3 +1,4 @@
+import { CommandFeedback } from '../components/CommandFeedback.js';
 import { lazy, Suspense, useState, useEffect, useCallback, useRef, type FormEvent } from 'react';
 import type { TeamAction } from '../components/TeamActionDialog.js';
 import { verificationConfigText } from '@barghsa/i18n/verification-config';
@@ -239,7 +240,7 @@ export default function AdminVerificationConfig() {
         </Alert>
       )}
       {saveFailed && <Alert variant="destructive">{text('saveFailed')}</Alert>}
-      {saved && <p role="status">{text('saved')}</p>}
+      <CommandFeedback message={saved ? text('saved') : null} />
       {activated && <p role="status">{text('activated')}</p>}
       {(state.changed || state.uncertain) && (
         <Alert variant="destructive">{text(state.uncertain ? 'unverified' : 'changedDraft')}</Alert>

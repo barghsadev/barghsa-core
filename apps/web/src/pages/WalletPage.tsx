@@ -33,7 +33,7 @@ import {
 import { rememberWalletInvoiceReturn } from '../lib/wallet-invoice-return.js';
 import { useMaintenance } from '../hooks/useMaintenance.js';
 import { MaintenanceNotice } from '../components/MaintenanceNotice.js';
-import { feedbackText } from '@barghsa/i18n/feedback';
+import { loadingText } from '@barghsa/i18n/loading-feedback';
 import { tPublicMaintenance as tMaintenance } from '@barghsa/i18n/maintenance-public';
 
 const OnlineTopUpReviewDialog = lazy(() => import('../components/OnlineTopUpReviewDialog.js'));
@@ -635,7 +635,7 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
       )}
 
       {loading ? (
-        <div role="status" aria-label={feedbackText('loading', locale)}>
+        <div role="status" aria-label={loadingText('loading', locale)}>
           <Skeleton className="h-40 rounded-lg" data-testid="wallet-loading" />
         </div>
       ) : (

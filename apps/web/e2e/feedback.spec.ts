@@ -1,6 +1,142 @@
 import { mockPublicAuthCsrf } from './public-auth-fixture';
 import AxeBuilder from '@axe-core/playwright';
-import { test, expect } from './coverage-fixture';
+import { test, expect, type Page } from './coverage-fixture';
+import { crmShell } from './crm-shell-fixture';
+import { fullNavigation } from './navigation-fixture';
+import { DEFAULT_BRAND_CONFIG } from '../src/lib/brand-config';
+
+const baseBrand = {
+  ...DEFAULT_BRAND_CONFIG,
+  supportEmail: 'support@example.test',
+  supportPhone: '+982112345678',
+  supportMobile: '+989121234567',
+};
+
+async function feedbackWorkspace(page: Page, locale: 'en' | 'fa') {
+  await crmShell(page, locale);
+  await page.route('**/api/public/branding/config', (route) => route.fulfill({ json: baseBrand }));
+  const profileId = '10000000-0000-4000-8000-000000000001';
+  await page.route('**/api/auth/user', (route) =>
+    route.fulfill({
+      json: {
+        userId: 'feedback-user',
+        isStaff: false,
+        operatingContext: 'customer',
+        navigation: fullNavigation('customer'),
+        canSwitchContext: false,
+        requiresTosAcceptance: false,
+      },
+    })
+  );
+  await page.route('**/api/profiles', (route) =>
+    route.fulfill({
+      json: {
+        activeProfileId: profileId,
+        hasDefault: true,
+        profiles: [
+          {
+            id: profileId,
+            profileType: 'INDIVIDUAL',
+            status: 'ACTIVE',
+            isDefault: true,
+            title: null,
+            firstName: 'Feedback',
+            lastName: 'Owner',
+            nationalId: null,
+          },
+        ],
+      },
+    })
+  );
+  await page.route('**/api/profiles/verification-status', (route) =>
+    route.fulfill({
+      json: {
+        activeProfileId: profileId,
+        profileStatus: 'ACTIVE',
+        isVerified: true,
+        verificationRequired: false,
+        verificationMethod: 'manual',
+        canAutoVerify: false,
+      },
+    })
+  );
+}
+
+for (const locale of ['en', 'fa'] as const) {
+  test(`auth bootstrap errors provide safe details, retry and a support reference (${locale})`, async ({
+    page,
+  }) => {
+    await page.addInitScript((value) => {
+      if (document.documentElement) document.documentElement.lang = value;
+      new MutationObserver(() => {
+        document.documentElement.lang = value;
+      }).observe(document, { childList: true });
+    }, locale);
+    await feedbackWorkspace(page, locale);
+    await mockPublicAuthCsrf(page);
+    let failed = true;
+    let release!: () => void;
+    const pending = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    await page.route('**/api/auth/user', async (route) => {
+      if (failed) await pending;
+      await route.fulfill({
+        status: failed ? 503 : 401,
+        json: { error: 'PRIVATE-DATABASE-DETAIL' },
+      });
+    });
+    await page.goto('/register');
+    try {
+      await expect(
+        page.getByRole('status', {
+          name: locale === 'fa' ? 'در حال بارگذاری صفحه' : 'Loading page',
+          exact: true,
+        })
+      ).toBeVisible();
+    } finally {
+      release();
+    }
+    const alert = page.getByRole('alert');
+    await expect(alert).toContainText(locale === 'fa' ? 'خطایی رخ داد' : 'Something went wrong');
+    await expect(page.locator('body')).not.toContainText('PRIVATE-DATABASE-DETAIL');
+    const details = alert.locator('details');
+    await expect(details).not.toHaveAttribute('open');
+    await details.locator('summary').click();
+    await expect(details).toContainText('ROUTE_RENDER_FAILED');
+    const reference = (await details.textContent())!.match(
+      /[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/i
+    )![0];
+    const support = alert.getByRole('link', {
+      name: locale === 'fa' ? 'تماس با پشتیبانی' : 'Contact support',
+      exact: true,
+    });
+    await expect(support).toHaveAttribute('href', `/support?reference=${reference}`);
+    expect(
+      (
+        await new AxeBuilder({ page })
+          .include('[role="alert"]')
+          .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
+          .analyze()
+      ).violations
+    ).toEqual([]);
+    await page.screenshot({
+      path: test.info().outputPath('route-error-safe-details.png'),
+      fullPage: true,
+    });
+    failed = false;
+    await alert
+      .getByRole('button', { name: locale === 'fa' ? 'تلاش دوباره' : 'Try again', exact: true })
+      .click();
+    await expect(page.locator('#username')).toBeVisible();
+    await page.goto(`/support?reference=${reference}`);
+    await expect(page.getByRole('main')).toContainText(reference);
+    await expect(page.locator('a[href^="mailto:"]')).toHaveAttribute(
+      'href',
+      new RegExp(encodeURIComponent(reference))
+    );
+  });
+}
 
 for (const locale of ['en', 'fa'] as const) {
   for (const darkMode of [false, true]) {
@@ -13,11 +149,13 @@ for (const locale of ['en', 'fa'] as const) {
           if (document.documentElement) document.documentElement.lang = value;
         }).observe(document, { childList: true });
       }, locale);
-      await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+      await feedbackWorkspace(page, locale);
+      await page.emulateMedia({ colorScheme: darkMode ? 'dark' : 'light' });
       await mockPublicAuthCsrf(page);
       await page.route('**/api/public/branding/config', (route) =>
         route.fulfill({
           json: {
+            ...baseBrand,
             appTitle: 'Feedback test',
             slogan: '',
             primaryColor: '#2563eb',
@@ -26,6 +164,7 @@ for (const locale of ['en', 'fa'] as const) {
             logoUrl: null,
             faviconUrl: null,
             darkMode,
+            themeMode: darkMode ? 'dark' : 'light',
             numberStyle: 'locale',
           },
         })
@@ -60,6 +199,28 @@ for (const locale of ['en', 'fa'] as const) {
         locale === 'fa' ? 'حساب شما با موفقیت ایجاد شد' : 'Account created successfully'
       );
       await expect(notice).toHaveCount(1);
+      await test.info().attach('toast-layout', {
+        contentType: 'application/json',
+        body: JSON.stringify(
+          await page.evaluate(() => ({
+            overlays: [
+              ...document.querySelectorAll('[role="dialog"], [data-slot="popover-content"]'),
+            ].map((node) => ({
+              slot: node.getAttribute('data-slot'),
+              open: node.hasAttribute('data-open'),
+              display: getComputedStyle(node).display,
+              visibility: getComputedStyle(node).visibility,
+            })),
+            toast: [...document.querySelectorAll('[data-sonner-toast]')].map((node) => ({
+              visibility: getComputedStyle(node).visibility,
+              display: getComputedStyle(node).display,
+              rect: node.getBoundingClientRect().toJSON(),
+            })),
+          }))
+        ),
+      });
+      await expect(notice).toBeVisible();
+      await notice.hover();
       await expect(messages).toHaveAttribute('aria-live', 'polite');
       const list = messages.locator('[data-sonner-toaster]');
       await expect(list).toHaveAttribute('dir', locale === 'fa' ? 'rtl' : 'ltr');
@@ -87,7 +248,7 @@ for (const locale of ['en', 'fa'] as const) {
 
 for (const trusted of [false, true]) {
   test(`login submits keyboard-selected trusted device (${trusted})`, async ({ page }) => {
-    await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await feedbackWorkspace(page, 'fa');
     await mockPublicAuthCsrf(page);
     const challengeId = '00000000-0000-4000-8000-000000000001';
     await page.route('**/api/auth/login', (route) =>
@@ -126,6 +287,7 @@ for (const trusted of [false, true]) {
     }
     const inputs = page.locator('input[inputmode="numeric"]');
     for (let index = 0; index < 6; index++) await inputs.nth(index).fill(String(index + 1));
+    await page.locator('button[type="submit"]').click();
     await expect(page).toHaveURL(/\/app$/);
     await expect(page.locator('[data-sonner-toast]')).toHaveCount(1);
     expect(submitted).toBe(true);
@@ -140,7 +302,7 @@ for (const locale of ['en', 'fa'] as const) {
         if (document.documentElement) document.documentElement.lang = value;
       }).observe(document, { childList: true });
     }, locale);
-    await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await feedbackWorkspace(page, locale);
     await mockPublicAuthCsrf(page);
     await page.route('**/api/auth/register/verify', (route) =>
       route.fulfill({ status: 400, json: { error: { code: 'AUTH:OTP:EXPIRED' } } })
@@ -163,11 +325,12 @@ for (const locale of ['en', 'fa'] as const) {
 }
 
 test('dashboard shell uses configured brand title and exposes navigation', async ({ page }) => {
-  await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+  await feedbackWorkspace(page, 'en');
   await mockPublicAuthCsrf(page);
   await page.route('**/api/public/branding/config', (route) =>
     route.fulfill({
       json: {
+        ...baseBrand,
         appTitle: 'Configured company',
         slogan: '',
         primaryColor: '#2563eb',
@@ -181,8 +344,10 @@ test('dashboard shell uses configured brand title and exposes navigation', async
     })
   );
   await page.goto('/dashboard');
-  await expect(page.locator('header a[href="/dashboard"]')).toHaveText('Configured company');
   const menu = page.locator('button[aria-controls="dashboard-navigation"]');
   if (await menu.isVisible()) await menu.click();
-  await expect(page.locator('#dashboard-navigation a[href="/dashboard"]')).toBeVisible();
+  await expect(page.locator('#dashboard-navigation > a[href="/app"]')).toHaveText(
+    'Configured company'
+  );
+  await expect(page.locator('#dashboard-navigation nav a[href="/app"]')).toBeVisible();
 });

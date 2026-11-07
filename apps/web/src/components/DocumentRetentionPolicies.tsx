@@ -1,3 +1,4 @@
+import { CommandFeedback } from './CommandFeedback.js';
 import { useOwnedDocumentRead } from '../hooks/useOwnedDocumentRead.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
@@ -185,7 +186,7 @@ function OwnedDocumentRetentionPolicies() {
             </Button>
           </form>
         ) : null}
-        {saved ? <p role="status">{word('policyUpdated')}</p> : null}
+        <CommandFeedback message={saved ? word('policyUpdated') : null} />
       </div>
       {action ? (
         <TeamActionDialog

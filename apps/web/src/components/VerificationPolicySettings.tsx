@@ -1,3 +1,4 @@
+import { CommandFeedback } from './CommandFeedback.js';
 import { t as settingsText } from '@barghsa/i18n/admin-ui';
 import { useCallback, useRef, useState } from 'react';
 import { LoadingStatus, Alert, Button, Input, Label } from '@barghsa/ui';
@@ -145,7 +146,7 @@ export function VerificationPolicySettings() {
       {state.resource.loading && <LoadingStatus>{text('loading')}</LoadingStatus>}
       {state.resource.error && <Alert variant="destructive">{text('loadFailed')}</Alert>}
       {state.scope.denied && <Alert variant="destructive">{text('forbidden')}</Alert>}
-      {saved && <p role="status">{text('policySaved')}</p>}
+      <CommandFeedback message={saved ? text('policySaved') : null} />
       {(state.changed || state.uncertain) && (
         <Alert variant="destructive">{text(state.uncertain ? 'unverified' : 'changedDraft')}</Alert>
       )}

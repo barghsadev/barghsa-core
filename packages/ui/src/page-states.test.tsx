@@ -1,7 +1,7 @@
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
-import { EmptyState, ErrorBoundary, PageLoading } from './components/ui/page-states';
+import { EmptyState, ErrorBoundary, ErrorState, PageLoading } from './components/ui/page-states';
 
 let container: HTMLDivElement;
 let root: Root;
@@ -24,6 +24,53 @@ const labels = {
   retryLabel: 'Retry',
   supportContact: <a href="mailto:support@example.com">Support</a>,
 };
+
+it('exposes only a safe support code and opaque reference in collapsed details', async () => {
+  await act(async () =>
+    root.render(
+      <ErrorState
+        {...labels}
+        onRetry={() => {}}
+        details={{
+          label: 'Support details',
+          code: 'ROUTE_RENDER_FAILED',
+          referenceLabel: 'Reference',
+          reference: '10000000-0000-4000-8000-000000000001',
+        }}
+      />
+    )
+  );
+  const details = container.querySelector('details');
+  expect(details).not.toBeNull();
+  expect(details?.open).toBe(false);
+  expect(details?.querySelector('summary')?.textContent).toBe('Support details');
+  expect(details?.textContent).toContain('ROUTE_RENDER_FAILED');
+  expect(details?.textContent).toContain('10000000-0000-4000-8000-000000000001');
+  expect(container.querySelector('svg')?.getAttribute('aria-hidden')).toBe('true');
+});
+
+it.each(['private SQL password', 'x'.repeat(81)])(
+  'refuses unsafe diagnostic details: %s',
+  async (code) => {
+    await act(async () =>
+      root.render(
+        <ErrorState
+          {...labels}
+          onRetry={() => {}}
+          details={{
+            label: 'Support details',
+            code,
+            referenceLabel: 'Reference',
+            reference: 'safe-reference',
+          }}
+        />
+      )
+    );
+    expect(container.querySelector('details')).toBeNull();
+    expect(container.textContent).not.toContain(code);
+    expect(container.querySelector('button')?.textContent).toBe('Retry');
+  }
+);
 function Fragile({ broken }: { broken: boolean }) {
   if (broken) throw new Error('private database connection details');
   return <p>Recovered content</p>;

@@ -27,6 +27,7 @@ import {
 import { useLocale } from '../hooks/useLocale.js';
 import { withCsrf } from '../lib/csrf.js';
 import { StepUpAuthGate } from './StepUpAuthGate.js';
+import { useCommandFeedback } from '../hooks/useCommandFeedback.js';
 
 export interface TeamAction {
   title: string;
@@ -117,6 +118,7 @@ export function TeamActionDialog({
   const [needsOtp, setNeedsOtp] = useState(action?.requiresOtp === true);
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
+  useCommandFeedback({ error, operation: action?.path });
 
   const [retryAt, setRetryAt] = useState(0),
     [remaining, setRemaining] = useState(0);

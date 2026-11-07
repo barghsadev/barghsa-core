@@ -1,3 +1,4 @@
+import { CommandFeedback } from './CommandFeedback.js';
 import { lazy, Suspense, useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
 import type { TeamAction } from './TeamActionDialog.js';
 import { verificationConfigText } from '@barghsa/i18n/verification-config';
@@ -189,7 +190,7 @@ export function OtpConfigPanel() {
         }
       >
         {feedback}
-        {saved && <p role="status">{text('otpSaved')}</p>}
+        <CommandFeedback message={saved ? text('otpSaved') : null} />
         <fieldset disabled={blocked || busy} className="space-y-2 min-w-0">
           <legend className="sr-only">{text('otpTitle')}</legend>
           <Label htmlFor="otp-lifetime">{text('otpLabel')}</Label>

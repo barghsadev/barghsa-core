@@ -1,3 +1,4 @@
+import { CommandFeedback } from '../components/CommandFeedback.js';
 import { ProfileVerificationReview } from '../components/ProfileVerificationReview.js';
 import { DEFAULT_VERIFICATION_POLICY, type VerificationPolicy } from '@barghsa/shared/verification';
 import { z } from 'zod';
@@ -1086,7 +1087,7 @@ function CrmProfileDetailContent() {
 
           {legalInfo && (
             <Section title={t('crm.profile.section.legalEntity', locale)}>
-              {legalSaved && <p role="status">{t('crm.profile.edit.saved', locale)}</p>}
+              <CommandFeedback message={legalSaved ? t('crm.profile.edit.saved', locale) : null} />
               {data.viewerPermissions?.canEdit &&
                 !profile.archived &&
                 !isEditing &&

@@ -60,6 +60,7 @@ import { withCsrf } from '../lib/csrf.js';
 import { ElectricityIncreasePanel } from './ElectricityIncreasePanel.js';
 import { ElectricityPriceAdjustmentsPanel } from './ElectricityPriceAdjustmentsPanel.js';
 import { WorkflowStatusBanner } from '../components/WorkflowStatusBanner.js';
+import { workflowFeedback } from '@barghsa/i18n/workflow-feedback';
 import { ElectricityOrderComments } from '../components/SavingOrderComments.js';
 import {
   commercialStatusTone,
@@ -726,6 +727,11 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
         <>
           <WorkflowStatusBanner
             locale={locale}
+            submittedAt={
+              detail.submittedAt
+                ? `${workflowFeedback('submitted', locale)}: ${time.format(detail.submittedAt)}`
+                : undefined
+            }
             status={t(electricityStatusKey(detail.electricityStatus, 'commercial'), locale)}
             happened={t(
               latestEvent

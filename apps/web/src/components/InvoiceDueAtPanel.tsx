@@ -1,3 +1,4 @@
+import { CommandFeedback } from './CommandFeedback.js';
 import { useOwnedStaffServiceRead } from '../hooks/useOwnedStaffServiceRead.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
@@ -558,11 +559,11 @@ function OwnedInvoiceDueAtPanel({
                     )}
                     {t(saving ? 'admin.invoices.saving' : 'admin.invoices.submit', locale)}
                   </Button>
-                  {saved && (
-                    <span className="text-sm text-success" role="status">
-                      {t('admin.invoices.saved', locale)}
-                    </span>
-                  )}
+                  <CommandFeedback
+                    as="span"
+                    className="text-sm text-success"
+                    message={saved ? t('admin.invoices.saved', locale) : null}
+                  />
                 </div>
               </form>
             )}

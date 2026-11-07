@@ -1,3 +1,4 @@
+import { CommandFeedback } from '../components/CommandFeedback.js';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { LoadingStatus, Alert, Button, ListPage, ScrollArea } from '@barghsa/ui';
 import { t } from '@barghsa/i18n/admin-ui';
@@ -170,7 +171,7 @@ export default function AdminAgentSlotsPage() {
         <p className="mt-2">{label('description')}</p>
       </header>
       {time.notice}
-      {saved && <p role="status">{label('saved')}</p>}
+      <CommandFeedback message={saved ? label('saved') : null} />
       {uncertainSlot && (
         <>
           <Alert variant="destructive">{copy('uncertain')}</Alert>

@@ -17,6 +17,10 @@ import {
 } from '../lib/notifications.js';
 import { NotificationRow } from '../components/NotificationRow.js';
 import type { ListQueryBinding } from '../hooks/useListQuery.js';
+import { useTimezone } from '../hooks/useTimezone.js';
+import { notificationFeedback } from '@barghsa/i18n/notification-feedback';
+import { notificationDateGroups } from '../lib/notification-date-groups.js';
+import { sendToast } from '../lib/toast-api.js';
 
 const PAGE_SIZE = 20;
 
@@ -36,6 +40,12 @@ export function NotificationCenterPage({
   queries?: ListQueryBinding;
 }) {
   const locale = useLocale();
+  const zone = useTimezone();
+  const [now, setNow] = useState(Date.now);
+  useEffect(() => {
+    const timer = window.setInterval(() => setNow(Date.now()), 60_000);
+    return () => window.clearInterval(timer);
+  }, []);
   const navigate = useNavigate();
 
   const [items, setItems] = useState<NotificationItem[]>([]);
@@ -202,6 +212,7 @@ export function NotificationCenterPage({
         setItems(previousItems);
         setUnreadCount(previousCount);
         setError('write');
+        sendToast('warning', t('notifications.error.write', locale));
       }
     } finally {
       if (current()) {
@@ -212,6 +223,10 @@ export function NotificationCenterPage({
   };
 
   const isRtl = locale === 'fa';
+  const groups =
+    zone.status === 'ready'
+      ? notificationDateGroups(items, zone.timezone, now, locale)
+      : [{ key: 'ungrouped' as const, items }];
 
   return (
     <section className="mx-auto min-w-0 max-w-3xl space-y-5" dir={isRtl ? 'rtl' : 'ltr'}>
@@ -235,6 +250,14 @@ export function NotificationCenterPage({
           {t('notifications.markAllRead', locale)}
         </Button>
       </header>
+      {zone.status === 'error' && (
+        <p role="status">
+          {notificationFeedback('datesUnavailable', locale)}{' '}
+          <Button type="button" variant="outline" onClick={zone.retry}>
+            {notificationFeedback('retry', locale)}
+          </Button>
+        </p>
+      )}
       <ListPage>
         <ListPage.Toolbar>
           <Button
@@ -318,29 +341,38 @@ export function NotificationCenterPage({
           }
         >
           {acceptedKey === key && items.length > 0 && (
-            <ul className="divide-y divide-border rounded-lg border bg-card text-card-foreground">
-              {items.map((item) => (
-                <li key={item.id}>
-                  <button
-                    type="button"
-                    onClick={() => void markRead(item)}
-                    disabled={!ready}
-                    className="flex w-full min-w-0 items-start gap-3 px-4 py-3 text-start transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary"
-                    aria-label={`${t('notifications.markReadAria', locale)} — ${notificationContent(item, locale).title}`}
-                  >
-                    <span className="min-w-0 flex-1">
-                      <NotificationRow
-                        item={item}
-                        locale={locale}
-                        unread={!item.isRead}
-                        muted={item.isRead}
-                        operatingContext={operatingContext}
-                      />
-                    </span>
-                  </button>
-                </li>
+            <div className="space-y-5">
+              {groups.map((group) => (
+                <section key={group.key} aria-label={notificationFeedback(group.key, locale)}>
+                  <h2 className="mb-2 text-sm font-semibold">
+                    {notificationFeedback(group.key, locale)}
+                  </h2>
+                  <ul className="divide-y divide-border rounded-lg border bg-card text-card-foreground">
+                    {group.items.map((item) => (
+                      <li key={item.id}>
+                        <button
+                          type="button"
+                          onClick={() => void markRead(item)}
+                          disabled={!ready}
+                          className="flex w-full min-w-0 items-start gap-3 px-4 py-3 text-start transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary"
+                          aria-label={`${t('notifications.markReadAria', locale)} — ${notificationContent(item, locale).title}`}
+                        >
+                          <span className="min-w-0 flex-1">
+                            <NotificationRow
+                              item={item}
+                              locale={locale}
+                              unread={!item.isRead}
+                              muted={item.isRead}
+                              operatingContext={operatingContext}
+                            />
+                          </span>
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                </section>
               ))}
-            </ul>
+            </div>
           )}
         </ListPage.Content>
         <ListPage.Pagination

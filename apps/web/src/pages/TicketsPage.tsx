@@ -1,3 +1,4 @@
+import { CommandFeedback } from '../components/CommandFeedback.js';
 import { useQueryClient } from '@tanstack/react-query';
 import { queryKeys, type ServerQueryKey } from '../lib/query-keys.js';
 import { TicketIntakeForm } from '../components/TicketIntakeForm.js';
@@ -699,7 +700,7 @@ function Tickets({ staff, queries }: { staff: boolean; queries?: SupportListQuer
       {error && (
         <p role="alert">{text(['conflict', 'forbidden'].includes(error) ? error : 'error')}</p>
       )}
-      {saved && <p role="status">{text('saved')}</p>}
+      <CommandFeedback message={saved ? text('saved') : null} />
       {!staff && !queueAccessDenied && (
         <div hidden={!creating}>
           <TicketIntakeForm

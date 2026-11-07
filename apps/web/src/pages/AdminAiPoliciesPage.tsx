@@ -1,3 +1,4 @@
+import { CommandFeedback } from '../components/CommandFeedback.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { useCatalogueConfirmationRead } from '../hooks/useCatalogueConfirmationRead.js';
@@ -649,7 +650,7 @@ function OwnedAiPoliciesPage({
           <p role="alert">{label('denied')}</p>
         ) : (
           <>
-            {notice && <p role="status">{label('saved')}</p>}
+            <CommandFeedback message={notice ? label('saved') : null} />
             <ListPage.Toolbar>
               <Button
                 disabled={disabled || form.pending || !!action || pending || uncertain}

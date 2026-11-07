@@ -7,13 +7,20 @@ import { brandName, useBrandConfig } from '../providers/BrandThemeProvider.js';
 import { Card, CardContent } from '@barghsa/ui';
 import { MailIcon, PhoneIcon, ClockIcon, ArrowLeftIcon, ArrowRightIcon } from 'lucide-react';
 import { PublicKnowledgeAssistant } from '../components/PublicKnowledgeAssistant.js';
+import { feedbackText } from '@barghsa/i18n/feedback';
 
 export const Route = createFileRoute('/support')({
+  validateSearch: (search: Record<string, unknown>): { reference?: string } =>
+    typeof search.reference === 'string' &&
+    /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(search.reference)
+      ? { reference: search.reference }
+      : {},
   component: SupportPage,
 });
 
 function SupportPage() {
   const locale = useLocale();
+  const { reference } = Route.useSearch();
   const { brandConfig } = useBrandConfig();
   const name = brandName(brandConfig, locale);
   const phoneHref = (value: string) => {
@@ -87,6 +94,12 @@ function SupportPage() {
                 </p>
               </div>
 
+              {reference && (
+                <p className="break-all text-sm">
+                  {feedbackText('reference', locale)}: <bdi>{reference}</bdi>
+                </p>
+              )}
+
               {/* Recovery process */}
               <div className="rounded-lg border border-border bg-muted/30 p-4 space-y-3">
                 <p className="text-sm leading-relaxed">{t('auth.support.steps', locale)}</p>
@@ -99,7 +112,7 @@ function SupportPage() {
                   <div className="space-y-0.5">
                     <p className="text-sm font-medium">{t('auth.support.contactEmail', locale)}</p>
                     <a
-                      href={`mailto:${brandConfig.supportEmail}`}
+                      href={`mailto:${brandConfig.supportEmail}${reference ? `?subject=${encodeURIComponent(`${feedbackText('reference', locale)}: ${reference}`)}` : ''}`}
                       className="text-sm text-primary underline-offset-4 hover:underline"
                     >
                       {brandConfig.supportEmail}

@@ -1,12 +1,16 @@
 type ToastOptions = Parameters<typeof import('sonner').toast.success>[1];
-type ToastDispatcher = Pick<typeof import('sonner').toast, 'success' | 'error' | 'dismiss'>;
-type ToastRequest = { kind: 'success' | 'error'; message: string; options?: ToastOptions };
+type ToastKind = 'success' | 'error' | 'warning' | 'info' | 'loading';
+type ToastDispatcher = Record<ToastKind, (message: string, options?: ToastOptions) => unknown> &
+  Pick<typeof import('sonner').toast, 'dismiss'>;
+type ToastRequest = { kind: ToastKind; message: string; options?: ToastOptions };
 
 let dispatcher: ToastDispatcher | null = null;
 let pending: ToastRequest[] = [];
 const listeners = new Set<() => void>();
+let revision = 0;
+export const getToastRevision = () => revision;
 
-function send(kind: ToastRequest['kind'], message: string, options?: ToastOptions) {
+export function sendToast(kind: ToastKind, message: string, options?: ToastOptions) {
   if (dispatcher) {
     dispatcher[kind](message, options);
     return;
@@ -17,12 +21,13 @@ function send(kind: ToastRequest['kind'], message: string, options?: ToastOption
 
 export const toast = {
   success(message: string, options?: ToastOptions) {
-    send('success', message, options);
+    sendToast('success', message, options);
   },
   error(message: string, options?: ToastOptions) {
-    send('error', message, options);
+    sendToast('error', message, options);
   },
   dismiss() {
+    revision++;
     pending = [];
     dispatcher?.dismiss();
   },

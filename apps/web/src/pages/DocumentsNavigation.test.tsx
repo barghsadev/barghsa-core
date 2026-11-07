@@ -122,7 +122,14 @@ it('makes the implemented document workspaces reachable from both existing shell
         </QueryProvider>
       )
     );
-    expect(container.querySelector('a[href="/documents"]')?.textContent).toBe('Documents');
+    for (let i = 0; i < 100 && !container.querySelector('a[href="/documents"]'); i++) {
+      await act(async () => {
+        await new Promise((resolve) => setTimeout(resolve, 10));
+      });
+    }
+    expect(container.querySelector('a[href="/documents"]')?.textContent, container.innerHTML).toBe(
+      'Documents'
+    );
   } finally {
     await act(async () => root.unmount());
     container.remove();

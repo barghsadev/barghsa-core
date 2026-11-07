@@ -1,3 +1,4 @@
+import { CommandFeedback } from '../components/CommandFeedback.js';
 import { OperationalQueueTable } from '../components/OperationalQueueTable.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { AssignmentFallbackEditor } from '../components/AssignmentFallbackEditor.js';
@@ -510,7 +511,7 @@ export default function AdminStaffTeamsPage() {
         <h1 className="text-2xl font-semibold">{label('title')}</h1>
         <p className="mt-2 text-sm text-muted-foreground">{label('description')}</p>
       </header>
-      {saved && <p role="status">{label('saved')}</p>}
+      <CommandFeedback message={saved ? label('saved') : null} />
       <ListPage>
         <ListPage.Toolbar>
           <h2 className="text-lg font-semibold">{label('teams')}</h2>

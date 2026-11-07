@@ -7,7 +7,7 @@ import {
   LoadingSkeleton,
 } from '@barghsa/ui';
 import { shellText } from '@barghsa/i18n/shell';
-import { feedbackText } from '@barghsa/i18n/feedback';
+import { loadingText } from '@barghsa/i18n/loading-feedback';
 import { dashboardText } from '@barghsa/i18n/dashboard';
 import { ArrowUpRight, Wallet, Gauge, ReceiptText, Package, FileCheck2 } from 'lucide-react';
 import { useLocale } from '../hooks/useLocale.js';
@@ -212,7 +212,7 @@ export function DashboardPage({ locale: localeOverride }: { locale?: Locale } = 
         description={shellText('dashboardDescription', locale)}
       />
       {context.status === 'loading' ? (
-        <LoadingSkeleton label={feedbackText('loading', locale)} variant="cards" />
+        <LoadingSkeleton label={loadingText('loading', locale)} variant="cards" />
       ) : !ready ? (
         <Alert variant="destructive">
           <AlertDescription>

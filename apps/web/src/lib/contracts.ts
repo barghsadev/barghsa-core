@@ -85,6 +85,7 @@ export interface ContractSummary {
   pendingAmendmentState?: 'Draft' | 'AwaitingCustomerAcceptance' | 'AwaitingSignature' | null;
 }
 export interface ContractDetailData extends Omit<ContractSummary, 'versionId' | 'versionNumber'> {
+  submittedAt?: string | null;
   profileId: string;
   currentVersionId?: string;
   currentVersion?: ContractVersion;

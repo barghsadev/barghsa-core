@@ -1,7 +1,7 @@
 import { approveVisibleConfirmation } from '../test/confirmation.js';
 import { QueryProvider, QueryComponentProvider } from '../test/query-provider.js';
 import { AccountUserProvider } from '../hooks/useAccountUser.js';
-import { act } from 'react';
+import { act, type ReactNode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { t } from '@barghsa/i18n/app';
@@ -25,6 +25,11 @@ const wizardNavigate = async (options: {
 };
 vi.mock('../lib/toast-api.js', () => ({ toast: notices }));
 vi.mock('@tanstack/react-router', () => ({
+  Link: ({ to, children, className }: { to: string; children: ReactNode; className?: string }) => (
+    <a href={to} className={className}>
+      {children}
+    </a>
+  ),
   createFileRoute: () => (options: unknown) => ({ options }),
   useBlocker: () => ({ status: 'idle' }),
   useNavigate: () => wizardNavigate,

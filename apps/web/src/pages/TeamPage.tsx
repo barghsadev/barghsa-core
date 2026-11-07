@@ -1,3 +1,4 @@
+import { useCommandFeedback } from '../hooks/useCommandFeedback.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
 import { t } from '@barghsa/i18n/team';
@@ -62,6 +63,7 @@ function TeamCatalogue() {
     null
   );
   const [notice, setNotice] = useState<string | null>(null);
+  useCommandFeedback({ success: notice });
   const clearPrivate = useCallback(() => {
     setReview(null);
     setNotice(null);
@@ -286,6 +288,7 @@ function TeamMembers({
   const restoreInviteFocus = useRef(false);
   const focusRefreshPending = useRef(false);
   const [notice, setNotice] = useState<string | null>(null);
+  useCommandFeedback({ success: notice });
   const generation = useRef(0);
   const mounted = useRef(false);
   const reviewBasis = useRef<string | null>(null);

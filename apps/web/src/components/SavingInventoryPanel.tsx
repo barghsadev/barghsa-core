@@ -1,3 +1,4 @@
+import { CommandFeedback } from './CommandFeedback.js';
 import { useCallback } from 'react';
 import { LoadingStatus, Button, Input, Label, Alert } from '@barghsa/ui';
 import { tCatalogue } from '@barghsa/i18n/catalogue';
@@ -73,7 +74,7 @@ export function SavingInventoryPanel({
       {editor.denied && <Alert variant="destructive">{label('denied')}</Alert>}
       {editor.resource.error && <Alert variant="destructive">{label('inventoryLoadError')}</Alert>}
       {editor.resource.loading && <LoadingStatus>{label('loading')}</LoadingStatus>}
-      {editor.saved && <p role="status">{label('saved')}</p>}
+      <CommandFeedback message={editor.saved ? label('saved') : null} />
       {editor.uncertain && <Alert variant="destructive">{label('unverifiedSaving')}</Alert>}
       {inventory && (
         <form

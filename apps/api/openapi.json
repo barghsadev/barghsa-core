@@ -34202,6 +34202,11 @@
                     },
                     "verificationRequired": {
                       "type": "boolean"
+                    },
+                    "verificationSubmittedAt": {
+                      "format": "date-time",
+                      "nullable": true,
+                      "type": "string"
                     }
                   },
                   "type": "object"

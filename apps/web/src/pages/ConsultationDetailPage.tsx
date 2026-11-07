@@ -1,3 +1,4 @@
+import { CommandFeedback } from '../components/CommandFeedback.js';
 import { ConfirmationFields } from '@barghsa/ui';
 import { useRiskConfirmation } from '../hooks/useRiskConfirmation.js';
 import { OrderWalletBalance } from '../components/OrderWalletBalance.js';
@@ -53,6 +54,7 @@ import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { withCsrf } from '../lib/csrf.js';
 import { WorkflowStatusBanner } from '../components/WorkflowStatusBanner.js';
+import { workflowFeedback } from '@barghsa/i18n/workflow-feedback';
 import { consultationNextAction } from '../lib/consultation-next-action.js';
 
 interface Detail {
@@ -493,6 +495,7 @@ export function ConsultationDetailPage() {
         <>
           <WorkflowStatusBanner
             locale={locale}
+            submittedAt={`${workflowFeedback('submitted', locale)}: ${time.format(request.submitted_at)}`}
             status={copy(`status_${request.status}`)}
             happened={
               latestEvent?.reason ??
@@ -706,7 +709,7 @@ export function ConsultationDetailPage() {
               </div>
             </Form>
           )}
-          {infoSent && <p role="status">{copy('infoSent')}</p>}
+          <CommandFeedback message={infoSent ? copy('infoSent') : null} />
           <section className="space-y-3">
             <h2 className="text-xl font-semibold">{copy('history')}</h2>
             <StatusTimeline

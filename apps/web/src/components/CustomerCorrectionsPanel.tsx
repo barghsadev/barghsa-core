@@ -1,3 +1,4 @@
+import { CommandFeedback } from './CommandFeedback.js';
 import { useEffect, useId, useState } from 'react';
 import { LoadingStatus, Button } from '@barghsa/ui';
 import { tWorkspace as t, type Locale } from '@barghsa/i18n/workspace-admin';
@@ -142,7 +143,7 @@ export default function CustomerCorrectionsPanel({ locale }: { locale: Locale })
           {label('refresh')}
         </Button>
       </div>
-      {notice && <p role="status">{label('saved')}</p>}
+      <CommandFeedback message={notice ? label('saved') : null} />
       {loading ? (
         <LoadingStatus>{label('loading')}</LoadingStatus>
       ) : error ? (

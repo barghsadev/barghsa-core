@@ -1,3 +1,4 @@
+import { CommandFeedback } from '../components/CommandFeedback.js';
 import { contractText } from '@barghsa/i18n/contracts';
 import type { ListQueryBinding } from '../hooks/useListQuery.js';
 import { tInvoiceCorrections } from '@barghsa/i18n/invoice-corrections';
@@ -352,13 +353,15 @@ function ApprovalWorkspace({
             </Button>
           </div>
         </ListPage.Toolbar>
-        {saved && (
-          <p role="status">
-            {adjustmentDecision
-              ? tInvoiceCorrections('decisionSaved', locale)
-              : t('admin.approvals.saved', locale)}
-          </p>
-        )}
+        <CommandFeedback
+          message={
+            saved
+              ? adjustmentDecision
+                ? (tInvoiceCorrections('decisionSaved', locale) ?? null)
+                : t('admin.approvals.saved', locale)
+              : null
+          }
+        />
         <ListPage.Content
           loading={loading}
           error={error}

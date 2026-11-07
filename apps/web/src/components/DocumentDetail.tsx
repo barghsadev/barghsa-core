@@ -1,3 +1,4 @@
+import { feedbackText } from '@barghsa/i18n/feedback';
 import { useOwnedDocumentRead } from '../hooks/useOwnedDocumentRead.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useEffect, useRef, useState } from 'react';
@@ -10,8 +11,11 @@ import {
   PageLoading,
   Textarea,
   Timeline,
+  WaitingForBarghsa,
 } from '@barghsa/ui';
 import { documentText } from '@barghsa/i18n/documents';
+import { workflowFeedback } from '@barghsa/i18n/workflow-feedback';
+import { Link } from '@tanstack/react-router';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
@@ -243,6 +247,26 @@ function OwnedDocumentDetail({
             locale={locale}
             reason={isQuarantinedDocument(document) ? null : document.rejectionReason}
           />
+          {!staff && document.state === 'SubmittedForReview' && (
+            <WaitingForBarghsa
+              title={workflowFeedback('waiting', locale)}
+              description={word(document.state)}
+              submittedAt={(() => {
+                const event = document.history
+                  .filter((row) => row.state === 'SubmittedForReview')
+                  .sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt))[0];
+                return event
+                  ? `${workflowFeedback('submitted', locale)}: ${time.format(event.createdAt)}`
+                  : workflowFeedback('submissionUnknown', locale);
+              })()}
+              expectedResponse={workflowFeedback('responseUnknown', locale)}
+              help={
+                <Link to="/tickets" className="underline">
+                  {feedbackText('support', locale)}
+                </Link>
+              }
+            />
+          )}
           <dl className="grid gap-3 text-sm sm:grid-cols-2">
             <div>
               <dt className="text-muted-foreground">{word('kind')}</dt>

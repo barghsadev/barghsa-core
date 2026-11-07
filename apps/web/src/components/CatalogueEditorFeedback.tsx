@@ -2,6 +2,7 @@ import { LoadingStatus, Alert, Button } from '@barghsa/ui';
 import type { CSSProperties } from 'react';
 import { DANGER_TEXT_COLORS } from '../lib/brand-config.js';
 import { getBrandTextColor, useBrandConfig } from '../providers/BrandThemeProvider.js';
+import { useCommandFeedback } from '../hooks/useCommandFeedback.js';
 type Copy = (key: string) => string;
 /** Reserve localized feedback space so blur validation cannot move a tap target. */
 export function CatalogueFieldFeedback({
@@ -51,6 +52,16 @@ export function CatalogueEditorStatus({
   refresh: () => void;
   busy: boolean;
 }) {
+  useCommandFeedback({
+    success: saved && !denied && !uncertain && !error ? label('saved') : null,
+    error: uncertain
+      ? label('unverified')
+      : denied
+        ? label('forbidden')
+        : error
+          ? label('readError')
+          : null,
+  });
   return (
     <>
       {loading && <LoadingStatus>{label('loading')}</LoadingStatus>}

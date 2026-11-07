@@ -1,3 +1,4 @@
+import { CommandFeedback } from '../components/CommandFeedback.js';
 import { useCallback } from 'react';
 import { tCatalogue } from '@barghsa/i18n/catalogue';
 import { LoadingStatus, Button, Label, Input, Textarea, Alert } from '@barghsa/ui';
@@ -88,7 +89,7 @@ export function SavingAgreementEditor({
       {editor.denied && <Alert variant="destructive">{label('denied')}</Alert>}
       {editor.resource.loading && <LoadingStatus>{label('loading')}</LoadingStatus>}
       {editor.resource.error && <Alert variant="destructive">{label('agreementLoadError')}</Alert>}
-      {editor.saved && <p role="status">{label('saved')}</p>}
+      <CommandFeedback message={editor.saved ? label('saved') : null} />
       {editor.uncertain && <Alert variant="destructive">{label('unverifiedSaving')}</Alert>}
       {config && (
         <>

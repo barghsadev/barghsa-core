@@ -1,4 +1,6 @@
-import { LoadingStatus } from '@barghsa/ui';
+import { serviceFeedback } from '@barghsa/i18n/service-feedback';
+import { LoadingStatus, NoDeadEndBanner, Button } from '@barghsa/ui';
+import { Link } from '@tanstack/react-router';
 import { useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from '../lib/query-keys.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
@@ -97,20 +99,49 @@ function OwnedAIChat() {
       {status === 'unavailable' && (
         <section className="rounded-2xl border bg-card p-6">
           <h1 className="text-xl font-semibold">{t('assistant.title', locale)}</h1>
-          <p className="mt-2 text-muted-foreground">{t('assistant.page.unavailable', locale)}</p>
+          <NoDeadEndBanner
+            title={t('assistant.page.unavailable', locale)}
+            description={serviceFeedback('next', locale)}
+            responsibleTeam={serviceFeedback('team', locale)}
+            action={
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setRetry((value) => value + 1)}
+              >
+                {t('assistant.retry', locale)}
+              </Button>
+            }
+            help={
+              <Link to="/tickets" className="underline">
+                {serviceFeedback('support', locale)}
+              </Link>
+            }
+          />
         </section>
       )}
       {status === 'error' && (
-        <section className="rounded-2xl border bg-card p-6" role="alert">
+        <section className="rounded-2xl border bg-card p-6">
           <h1 className="text-xl font-semibold">{t('assistant.title', locale)}</h1>
-          <p className="mt-2 text-muted-foreground">{t('assistant.page.error', locale)}</p>
-          <button
-            type="button"
-            className="mt-4 rounded-md border px-4 py-2 font-medium text-primary"
-            onClick={() => setRetry((value) => value + 1)}
-          >
-            {t('assistant.retry', locale)}
-          </button>
+          <NoDeadEndBanner
+            title={t('assistant.page.error', locale)}
+            description={serviceFeedback('next', locale)}
+            responsibleTeam={serviceFeedback('team', locale)}
+            action={
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setRetry((value) => value + 1)}
+              >
+                {t('assistant.retry', locale)}
+              </Button>
+            }
+            help={
+              <Link to="/tickets" className="underline">
+                {serviceFeedback('support', locale)}
+              </Link>
+            }
+          />
         </section>
       )}
       {status === 'ready' &&

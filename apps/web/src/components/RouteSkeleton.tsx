@@ -1,5 +1,5 @@
 import { PageLoading, Skeleton } from '@barghsa/ui';
-import { feedbackText } from '@barghsa/i18n/feedback';
+import { loadingText } from '@barghsa/i18n/loading-feedback';
 import { useLocale } from '../hooks/useLocale.js';
 
 interface RouteSkeletonProps {
@@ -9,7 +9,14 @@ interface RouteSkeletonProps {
 /** Responsive route placeholders use CSS motion preferences, including first paint. */
 export function RouteSkeleton({ layout = 'default' }: RouteSkeletonProps) {
   const locale = useLocale();
-  if (layout === 'admin')
+  const admin = layout === 'admin';
+  const content = (
+    <PageLoading
+      label={loadingText(admin ? 'loadingAdmin' : 'loading', locale)}
+      className={admin ? 'flex-1' : 'min-h-screen'}
+    />
+  );
+  if (admin)
     return (
       <div className="flex min-h-screen bg-background">
         <div
@@ -20,16 +27,16 @@ export function RouteSkeleton({ layout = 'default' }: RouteSkeletonProps) {
             <Skeleton key={i} className="h-4" style={{ width: `${width}%` }} />
           ))}
         </div>
-        <PageLoading label={feedbackText('loadingAdmin', locale)} className="flex-1" />
+        {content}
       </div>
     );
-  return <PageLoading label={feedbackText('loading', locale)} className="min-h-screen" />;
+  return content;
 }
 
 /** Static reduced-motion indicator retains the same accessible loading status. */
 export function RouteSpinner() {
   const locale = useLocale();
-  const label = feedbackText('loading', locale);
+  const label = loadingText('loading', locale);
   return (
     <div className="flex min-h-48 items-center justify-center" role="status" aria-label={label}>
       <span className="sr-only">{label}</span>

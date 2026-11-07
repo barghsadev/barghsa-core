@@ -32,6 +32,7 @@ import { ContractDraftEditor } from './ContractDraftEditor.js';
 import { DocumentResults, type DocumentFilters } from './DocumentsWorkspace.js';
 import { DocumentUpload, type ContractDocumentAssociation } from './DocumentUpload.js';
 import { WorkflowStatusBanner } from './WorkflowStatusBanner.js';
+import { workflowFeedback } from '@barghsa/i18n/workflow-feedback';
 import { t } from '@barghsa/i18n/workspace';
 import { customerContractNextAction } from '../lib/contract-guidance.js';
 
@@ -644,6 +645,11 @@ function ContractDetailContent({
           {!staff && isCurrent ? (
             <WorkflowStatusBanner
               locale={locale}
+              submittedAt={
+                signatureStatus?.request?.requestedAt || data.contract.submittedAt
+                  ? `${workflowFeedback('submitted', locale)}: ${time.format(signatureStatus?.request?.requestedAt ?? data.contract.submittedAt!)}`
+                  : undefined
+              }
               status={word(data.contract.state)}
               happened={
                 signatureStatus?.signature

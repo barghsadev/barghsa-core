@@ -869,6 +869,14 @@ describe('InvoiceDetailsPage (T-04.1.05.04)', () => {
         ...document.querySelectorAll<HTMLButtonElement>('[role="dialog"] button'),
       ].find((button) => button.textContent?.includes('Confirm and submit receipt'));
       expect(confirm, document.body.textContent ?? '').toBeDefined();
+      expect(confirm!.disabled).toBe(true);
+      const acknowledgement = document.querySelector<HTMLElement>(
+        '[role="dialog"] [role="checkbox"]'
+      );
+      expect(acknowledgement).not.toBeNull();
+      await act(async () => acknowledgement!.click());
+      expect(acknowledgement!.getAttribute('aria-checked')).toBe('true');
+      expect(confirm!.disabled).toBe(false);
       await act(async () => confirm!.click());
       for (let i = 0; i < 100; i++) {
         await act(async () => {

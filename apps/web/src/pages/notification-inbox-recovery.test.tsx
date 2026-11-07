@@ -44,7 +44,12 @@ function arrange(
   const calls = vi.fn((input: RequestInfo | URL, init?: RequestInit) =>
     init?.method === 'PATCH' ? write() : read(new URL(String(input), 'https://example.test'))
   );
-  vi.stubGlobal('fetch', calls);
+  // Keep the existing cursor/write spy scoped to notification transport.
+  vi.stubGlobal('fetch', (input: RequestInfo | URL, init?: RequestInit) =>
+    String(input) === '/api/user/settings/timezone'
+      ? Promise.resolve(reply({ timezone: 'Asia/Tehran' }))
+      : calls(input, init)
+  );
   return calls;
 }
 it('failed next-page retry retains accepted rows and repeats the exact cursor, with unique merged rows', async () => {

@@ -328,7 +328,14 @@ it('toasts only a confirmed preference save and labels a lost result without cla
     success = vi.fn(),
     error = vi.fn();
   toast.dismiss();
-  const disconnect = connectToast({ success, error, dismiss: vi.fn() });
+  const disconnect = connectToast({
+    success,
+    error,
+    dismiss: vi.fn(),
+    warning: vi.fn(),
+    info: vi.fn(),
+    loading: vi.fn(),
+  });
   try {
     await mount(true);
     await zone('Europe/Istanbul');

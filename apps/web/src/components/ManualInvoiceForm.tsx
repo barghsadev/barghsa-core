@@ -1,3 +1,4 @@
+import { useCommandFeedback } from '../hooks/useCommandFeedback.js';
 import { ConfirmationFields } from '@barghsa/ui';
 import { useRiskConfirmation } from '../hooks/useRiskConfirmation.js';
 import { useOwnedInvoiceReview } from '../hooks/useOwnedInvoiceReview.js';
@@ -198,6 +199,11 @@ function OwnedManualInvoiceForm({
     [stepError, setStepError] = useState<string | null>(null);
   const [result, setResult] = useState<{ invoiceId: string; totalAmount: string } | null>(null);
   const [approval, setApproval] = useState<{ id: string; amount: string } | null>(null);
+  useCommandFeedback({
+    success: approval ? text('pendingApproval') : result ? text('created') : null,
+    error: error ? text(error) : null,
+    operation: correction?.invoiceId,
+  });
   const [adjustmentReview, setAdjustmentReview] = useState<InvoiceAdjustmentReview | null>(null);
   const [replacementReview, setReplacementReview] = useState<InvoiceReplacementReview | null>(null);
   const [manualReview, setManualReview] = useState<ManualInvoiceReview | null>(null);

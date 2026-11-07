@@ -1,3 +1,4 @@
+import { useCommandFeedback } from '../hooks/useCommandFeedback.js';
 import {
   DEFAULT_BRAND_CONFIG,
   brandColor,
@@ -114,6 +115,10 @@ export default function AdminBrandingConfig() {
     actionRef = useRef<TeamAction | null>(null);
   const word = (key: string) => t(`admin.settings.${key}`, locale);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  useCommandFeedback({
+    success: message?.type === 'success' ? message.text : null,
+    error: message?.type === 'error' ? message.text : null,
+  });
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
   const [logoUploadKey, setLogoUploadKey] = useState<string | null>(null);

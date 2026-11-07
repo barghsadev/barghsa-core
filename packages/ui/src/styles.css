@@ -943,3 +943,20 @@
     transition: none !important;
   }
 }
+
+/* Keep transient feedback clear of modal and popover interactions. Persistent page feedback remains. */
+body:has([data-slot='popover-content'][data-open]) [data-sonner-toaster],
+body:has([role='dialog'][data-open]) [data-sonner-toaster] {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.barghsa-notification-count {
+  animation: barghsa-scale-in var(--duration-fast) var(--ease-out);
+}
+
+/* Fade at the reserved top edge instead of sliding across the header. */
+[data-sonner-toast][data-y-position='top'][data-mounted='false'],
+[data-sonner-toast][data-y-position='top'][data-removed='true'][data-swipe-out='false'][data-front='true'] {
+  --y: translateY(0);
+}

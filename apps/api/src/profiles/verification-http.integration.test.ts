@@ -72,13 +72,49 @@ it.each(['API', 'MANUAL', 'DISABLED'])(
       status: mode === 'DISABLED' ? 'ACTIVE' : 'PENDING_VERIFICATION',
     });
     const context = await fetch(`${http.base}/api/profiles/verification-status`, { headers });
-    expect(context.status).toBe(200);
-    expect(await context.json()).toMatchObject({
+    expect(context.status, http.logs()).toBe(200);
+    const contextBody = (await context.json()) as Record<string, unknown>;
+    expect(contextBody).toMatchObject({
       activeProfileId: profileId,
       verificationRequired: mode !== 'DISABLED',
       canAutoVerify: false,
       isVerified: false,
     });
+    const submission = (
+      await http.pool.query(
+        `SELECT created_at FROM audit_log WHERE event IN ('individual_profile_saved','profile_onboarding_completed')
+         AND metadata::jsonb->>'profileId'=$1::text ORDER BY created_at DESC,id DESC LIMIT 1`,
+        [profileId]
+      )
+    ).rows[0];
+    if (mode === 'DISABLED') {
+      expect(contextBody.verificationSubmittedAt).toBeNull();
+    } else {
+      expect(submission).toBeDefined();
+      expect(contextBody.verificationSubmittedAt).toBe(submission.created_at.toISOString());
+      await http.pool.query(
+        "UPDATE in_app_notifications SET is_read=true WHERE recipient_user_id='verification-user'"
+      );
+      expect(
+        await (await fetch(`${http.base}/api/profiles/verification-status`, { headers })).json()
+      ).toMatchObject({
+        verificationSubmittedAt: contextBody.verificationSubmittedAt,
+        verificationNotice: null,
+      });
+      const later = new Date(submission.created_at.getTime() + 60_000).toISOString();
+      await http.pool.query(
+        `INSERT INTO users(user_id,username,password_hash) VALUES ('other-verification-user','other-verification@example.test','test-only')`
+      );
+      await http.pool.query(
+        `INSERT INTO in_app_notifications(id,recipient_user_id,profile_id,type,title_i18n_key,body_i18n_key,is_read,created_at)
+         VALUES (uuid_generate_v7(),'verification-user',$1,'profile_pending','pending','pending',true,$2),
+                (uuid_generate_v7(),'other-verification-user',$1,'profile_pending','private','private',false,$2::timestamptz+INTERVAL '1 minute')`,
+        [profileId, later]
+      );
+      expect(
+        await (await fetch(`${http.base}/api/profiles/verification-status`, { headers })).json()
+      ).toMatchObject({ verificationSubmittedAt: later, verificationNotice: null });
+    }
     for (let i = 0; i < 2; i++) {
       const result = await post(`profiles/${profileId}/verify`);
       expect(result.status).toBe(503);
