@@ -100,9 +100,13 @@ it('saves an independent immutable draft while retaining the published version a
   await render();
   expect(title()!.matches(':disabled')).toBe(true);
   await click('Edit');
+  expect(save().disabled).toBe(true);
   await fill('Saved draft');
   await click('Save Draft');
-  expect(capture.action?.body).toEqual({ config: draftBrand.config, expectedVersion: 2 });
+  expect(capture.action?.body).toEqual({
+    config: { ...draftBrand.config, logoDarkUrl: null },
+    expectedVersion: 2,
+  });
   await act(async () => capture.success!(draftBrand));
   expect(title()!.matches(':disabled')).toBe(true);
   expect(host.textContent).toContain('Published brand');
@@ -218,9 +222,13 @@ it('previews published defaults without inventing saved history', async () => {
   expect(save().disabled).toBe(false);
 });
 
-async function upload(target: 'logo' | 'favicon') {
+async function upload(target: 'logo' | 'favicon' | 'logoDark') {
   const input = host.querySelector<HTMLInputElement>(
-    target === 'logo' ? '#adminbrandingconfig-field-4' : '#branding-favicon-upload'
+    target === 'logo'
+      ? '#adminbrandingconfig-field-4'
+      : target === 'logoDark'
+        ? '#branding-dark-logo-upload'
+        : '#branding-favicon-upload'
   )!;
   Object.defineProperty(input, 'files', {
     configurable: true,
@@ -229,12 +237,16 @@ async function upload(target: 'logo' | 'favicon') {
   await act(async () => input.dispatchEvent(new Event('change', { bubbles: true })));
   return input;
 }
-it('keeps two verified image previews separate and accepts only their canonical saved receipt', async () => {
+it('keeps three verified image previews separate and accepts only their canonical saved receipt', async () => {
   await render();
   await click('Edit');
   const input = await upload('favicon');
   expect(input.value).toBe('');
   await upload('logo');
+  await upload('logoDark');
+  expect(host.querySelector<HTMLImageElement>('img[alt="Dark-theme logo preview"]')?.src).toBe(
+    'blob:preview-logoDark.png'
+  );
   expect(host.querySelector<HTMLImageElement>('img[alt="Favicon preview"]')?.src).toBe(
     'blob:preview-favicon.png'
   );
@@ -243,8 +255,9 @@ it('keeps two verified image previews separate and accepts only their canonical 
   );
   await click('Save Draft');
   expect(capture.action?.body).toEqual({
-    config: publishedBrand.config,
+    config: { ...publishedBrand.config, logoDarkUrl: null },
     expectedVersion: 2,
+    logoDarkUploadKey: 'uploads/image/logoDark.png',
     logoUploadKey: 'uploads/image/logo.png',
     faviconUploadKey: 'uploads/image/favicon.png',
   });
@@ -252,6 +265,7 @@ it('keeps two verified image previews separate and accepts only their canonical 
     ...draftBrand,
     config: {
       ...publishedBrand.config,
+      logoDarkUrl: `/api/public/branding/assets/${draftBrand.id}/${'c'.repeat(64)}`,
       logoUrl: `/api/public/branding/assets/${draftBrand.id}/${'a'.repeat(64)}`,
       faviconUrl: `/api/public/branding/assets/${draftBrand.id}/${'b'.repeat(64)}`,
     },
@@ -265,6 +279,12 @@ it('keeps two verified image previews separate and accepts only their canonical 
   await expect(
     capture.success!({ ...receipt, config: { ...receipt.config, appTitle: 'Unconfirmed change' } })
   ).rejects.toThrow('Unconfirmed branding settings');
+  await expect(
+    capture.success!({
+      ...receipt,
+      config: { ...receipt.config, logoDarkUrl: 'https://example.test/unconfirmed-dark.png' },
+    })
+  ).rejects.toThrow('Unconfirmed branding asset');
   await act(async () => capture.success!(receipt));
   expect(host.textContent).toContain('Changes saved.');
   expect(
@@ -272,6 +292,7 @@ it('keeps two verified image previews separate and accepts only their canonical 
   ).toBe(receipt.config.faviconUrl.replace('/public/', '/admin/'));
   expect(URL.revokeObjectURL).toHaveBeenCalledWith('blob:preview-favicon.png');
   expect(URL.revokeObjectURL).toHaveBeenCalledWith('blob:preview-logo.png');
+  expect(URL.revokeObjectURL).toHaveBeenCalledWith('blob:preview-logoDark.png');
 });
 it('fences a pending favicon after a foreign revision and clears it only on explicit reset', async () => {
   await render();
@@ -318,7 +339,7 @@ it('preserves a legacy fixed theme while editing an unrelated field', async () =
   await fill('Legacy title');
   await click('Save Draft');
   expect(capture.action?.body).toEqual({
-    config: { ...legacy, appTitle: 'Legacy title', themeMode: 'dark' },
+    config: { ...legacy, appTitle: 'Legacy title', themeMode: 'dark', logoDarkUrl: null },
     expectedVersion: 2,
   });
 });

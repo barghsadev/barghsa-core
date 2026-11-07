@@ -121,7 +121,8 @@ export class BrandConfigService {
     userId: string,
     expectedVersion: number,
     logoUploadKey?: string,
-    faviconUploadKey?: string
+    faviconUploadKey?: string,
+    logoDarkUploadKey?: string
   ): Promise<BrandConfigDto> {
     return this.withHistoryLock(userId, async (client) => {
       const version = await this.currentVersion(client);
@@ -134,6 +135,7 @@ export class BrandConfigService {
       for (const [field, uploadKey] of [
         ['logoUrl', logoUploadKey],
         ['faviconUrl', faviconUploadKey],
+        ['logoDarkUrl', logoDarkUploadKey],
       ] as const) {
         if (uploadKey) {
           if (!this.attachments)
@@ -152,7 +154,7 @@ export class BrandConfigService {
           config[field].startsWith('/api/public/branding/assets/')
         ) {
           const known = await client.query(
-            "SELECT 1 FROM brand_config WHERE config->>'logoUrl'=$1 OR config->>'faviconUrl'=$1 LIMIT 1",
+            "SELECT 1 FROM brand_config WHERE config->>'logoUrl'=$1 OR config->>'faviconUrl'=$1 OR config->>'logoDarkUrl'=$1 LIMIT 1",
             [config[field]]
           );
           if (!known.rows[0]) throw new BadRequestException('Unknown branding asset');

@@ -97,6 +97,7 @@ describe('branding authority and version boundaries', () => {
       'trusted-actor',
       2,
       'upload-key',
+      undefined,
       undefined
     );
     expect(save.mock.calls[0]?.[0]).not.toHaveProperty('status');
@@ -145,6 +146,7 @@ describe('branding authority and version boundaries', () => {
       'trusted-actor',
       2,
       undefined,
+      undefined,
       undefined
     );
   });
@@ -161,7 +163,8 @@ it('forwards a favicon upload with the trusted actor and validates its type and 
     'trusted-actor',
     2,
     undefined,
-    'verified-favicon'
+    'verified-favicon',
+    undefined
   );
   for (const faviconUploadKey of [42, 'x'.repeat(256)]) {
     await expect(
@@ -184,7 +187,55 @@ it.each(['light', 'dark', 'system'] as const)(
       'trusted-actor',
       2,
       undefined,
+      undefined,
       undefined
     );
   }
 );
+
+it('forwards only validated dark branding and the trusted editor to the existing transaction', async () => {
+  const { controller, save } = fixture();
+  await controller.upsertBrandConfig(
+    {
+      expectedVersion: 2,
+      logoDarkUploadKey: 'verified-dark-logo',
+      config: {
+        darkPrimaryColor: '#abcdef',
+        darkSecondaryColor: '#234567',
+        darkAccentColor: '#567890',
+      },
+      actor: 'forged',
+    },
+    request()
+  );
+  expect(save).toHaveBeenCalledWith(
+    expect.objectContaining({
+      darkPrimaryColor: '#abcdef',
+      darkSecondaryColor: '#234567',
+      darkAccentColor: '#567890',
+    }),
+    'trusted-actor',
+    2,
+    undefined,
+    undefined,
+    'verified-dark-logo'
+  );
+  for (const field of [
+    'darkPrimaryColor',
+    'darkSecondaryColor',
+    'darkAccentColor',
+    'logoDarkUrl',
+  ]) {
+    await expect(
+      controller.upsertBrandConfig(
+        { expectedVersion: 2, config: { [field]: 'javascript:alert(1)' } },
+        request()
+      )
+    ).rejects.toMatchObject({ status: 400 });
+  }
+  for (const logoDarkUploadKey of [42, 'x'.repeat(256)])
+    await expect(
+      controller.upsertBrandConfig({ expectedVersion: 2, logoDarkUploadKey, config: {} }, request())
+    ).rejects.toMatchObject({ status: 400 });
+  expect(save).toHaveBeenCalledOnce();
+});

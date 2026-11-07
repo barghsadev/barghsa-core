@@ -170,3 +170,5 @@ The catalogue switches between Persian/English and light/dark, and includes cont
 See [the current task board](../../kanban/BOARD.md) for accepted scope, linked evidence and exact remaining criteria. The old dated validation and epic-progress reports are retired. Run the shared package tests, web typecheck and build, repository lint and the affected auth, theme, shell and profile-switch browser suites before changing these foundations.
 
 Language detection, calendar adapters, timestamp displays and server-offered month selection follow [the localization design](localisation.md). Retain the native dictionary/locale pipeline and account timezone authority; a new translation framework or profile timezone store is not required.
+
+Published light/dark palettes, protected logo variants, native theme preferences, previews, print rules and reduced motion follow [the appearance design](appearance.md).

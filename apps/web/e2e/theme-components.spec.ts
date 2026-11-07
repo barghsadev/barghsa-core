@@ -530,3 +530,140 @@ for (const locale of ['fa', 'en'] as const) {
     await expect(toast).toBeHidden();
   });
 }
+
+for (const locale of ['fa', 'en'] as const) {
+  test(`live palettes, logos and motion preserve readable work (${locale})`, async ({
+    page,
+  }, info) => {
+    await page.emulateMedia({ colorScheme: 'dark', reducedMotion: 'no-preference' });
+    let reads = 0;
+    const config = {
+      appTitle: 'Appearance',
+      appTitleFa: 'آزمون ظاهر',
+      supportEmail: 'support@example.test',
+      supportPhone: '02126658042',
+      supportMobile: '09002550292',
+      slogan: '',
+      primaryColor: '#176b5b',
+      secondaryColor: '#547467',
+      accentColor: '#d6a74e',
+      darkPrimaryColor: '#abcdef',
+      darkSecondaryColor: '#fedcba',
+      darkAccentColor: '#567890',
+      logoUrl: 'https://assets.example.test/light.png',
+      logoDarkUrl: 'https://assets.example.test/dark.png',
+      faviconUrl: null,
+      darkMode: false,
+      themeMode: 'system',
+    };
+    await page.route('**/api/public/branding/config', (route) => {
+      reads++;
+      return route.fulfill({ json: config });
+    });
+    await page.route('https://assets.example.test/**', (route) =>
+      route.fulfill({
+        contentType: 'image/png',
+        body: Buffer.from(
+          'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+ip1sAAAAASUVORK5CYII=',
+          'base64'
+        ),
+      })
+    );
+    await page.goto(`${url}?${locale}`);
+    const section = page.getByRole('region', { name: 'Appearance and motion' });
+    const image = section.locator('[data-slot=brand-logo]');
+    await expect(image).toHaveAttribute('src', config.logoDarkUrl);
+    await expect(page.locator('html')).toHaveCSS('--primary', '#abcdef');
+    await page.getByRole('button', { name: 'Light notice theme', exact: true }).click();
+    await expect(image).toHaveAttribute('src', config.logoUrl);
+    await expect(page.locator('html')).toHaveCSS('--primary', '#176b5b');
+    await page.getByRole('button', { name: 'Device notice theme', exact: true }).click();
+    await expect(image).toHaveAttribute('src', config.logoDarkUrl);
+    const preference = section.getByRole('status', { name: 'Motion preference' });
+    await expect(preference).toHaveText('full');
+    const route = page.getByTestId('motion-route');
+    await expect(route).toHaveCSS('animation-name', 'barghsa-slide-up');
+    await expect(route).toHaveCSS('animation-duration', '0.2s');
+    const input = section.getByRole('textbox', { name: 'Retained draft', exact: true });
+    await input.fill('captured-order-9007199254740993-edited');
+    await route.evaluate((node) => node.setAttribute('data-retained-node', 'yes'));
+    const geometry = await route.evaluate((node) => ({
+      width: (node as HTMLElement).offsetWidth,
+      height: (node as HTMLElement).offsetHeight,
+    }));
+    await expect
+      .poll(() => route.evaluate((node) => node.getAnimations()[0]?.playState))
+      .toBe('finished');
+    const start = await route.evaluate((node) => Number(node.getAnimations()[0]?.startTime));
+    await section.getByRole('button', { name: 'Replay transition', exact: true }).click();
+    await expect
+      .poll(() => route.evaluate((node) => Number(node.getAnimations()[0]?.startTime)))
+      .toBeGreaterThan(start);
+    await expect(route).toHaveAttribute('data-retained-node', 'yes');
+    await expect(input).toHaveValue('captured-order-9007199254740993-edited');
+    expect(
+      await route.evaluate((node) => ({
+        width: (node as HTMLElement).offsetWidth,
+        height: node.offsetHeight,
+      }))
+    ).toEqual(geometry);
+    for (const variant of ['fade', 'slide', 'scale', 'shimmer']) {
+      const content = page.getByTestId('motion-' + variant);
+      await expect(content).toContainText('Immediately readable');
+      expect(
+        Number(await content.evaluate((node) => getComputedStyle(node).opacity))
+      ).toBeGreaterThanOrEqual(0.85);
+    }
+    const card = section.locator('[data-slot=card][data-variant=interactive]');
+    await card.hover();
+    await expect(card).toHaveCSS('translate', '0px -2px');
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await expect(preference).toHaveText('reduced');
+    await expect(route).toHaveCSS('animation-name', 'none');
+    await expect(route).not.toHaveAttribute('data-motion');
+    await expect(card).toHaveCSS('translate', 'none');
+    expect(
+      await page
+        .getByTestId('motion-shimmer')
+        .evaluate((node) => getComputedStyle(node, '::after').animationName)
+    ).toBe('none');
+    const spinner = section.locator('.animate-spin');
+    await expect(spinner).toHaveCSS('animation-name', 'spin');
+    await expect(spinner).toHaveCSS('animation-duration', '2s');
+    await expect(input).toHaveValue('captured-order-9007199254740993-edited');
+    expect(reads).toBe(1);
+    expect(
+      (
+        await new AxeBuilder({ page })
+          .include('main')
+          .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
+          .analyze()
+      ).violations
+    ).toEqual([]);
+    await page.screenshot({
+      path: info.outputPath(`appearance-motion-${locale}.png`),
+      fullPage: true,
+    });
+    await page.emulateMedia({ media: 'print' });
+    expect(await page.evaluate(() => localStorage.getItem('barghsa.theme.v1'))).toBe('system');
+    await expect(page.locator('body')).toHaveCSS('background-color', 'rgb(255, 255, 255)');
+    await expect(page.locator('body')).toHaveCSS('color', 'rgb(32, 54, 49)');
+    await expect(page.locator('html')).toHaveCSS('color-scheme', 'light');
+    await expect(spinner).toHaveCSS('animation-name', 'none');
+    await expect(image).toBeHidden();
+    const printImage = section.locator('[data-slot=brand-logo-print]');
+    await expect(printImage).toBeVisible();
+    await expect
+      .poll(() => printImage.evaluate((node) => (node as HTMLImageElement).currentSrc))
+      .toBe(config.logoUrl);
+    await expect
+      .poll(() => printImage.evaluate((node) => (node as HTMLImageElement).naturalWidth))
+      .toBeGreaterThan(0);
+    await page.emulateMedia({ media: 'screen', colorScheme: 'dark', reducedMotion: 'reduce' });
+    await expect(page.locator('html')).toHaveClass(/dark/);
+    await expect(image).toBeVisible();
+    await expect(image).toHaveAttribute('src', config.logoDarkUrl);
+    await expect(printImage).toBeHidden();
+    await expect(input).toHaveValue('captured-order-9007199254740993-edited');
+  });
+}

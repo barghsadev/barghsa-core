@@ -11,7 +11,7 @@ import { useNumberFormatting } from '../../hooks/useNumberFormatting.js';
 import { useRegistrationNativeForm } from '../../hooks/useRegistrationNativeForm.js';
 import { publicAuthFetch } from '../../lib/public-auth-fetch.js';
 import { authErrorCode, rateLimitMessage } from '../../lib/auth-errors.js';
-import { normalizeRecoveryUsername as normalizeUsername } from '../../lib/password-recovery-form.js';
+import { normalizeRecoveryUsername as normalizeUsername } from '../../lib/auth-username.js';
 import {
   registrationTerms,
   registrationChallenge,

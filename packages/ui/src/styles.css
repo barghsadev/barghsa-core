@@ -757,3 +757,189 @@
     min-width: 2.75rem;
   }
 }
+
+/* Transform/opacity animations leave document geometry and readable content intact. */
+@keyframes barghsa-fade-in {
+  from {
+    opacity: 0.85;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes barghsa-fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0.85;
+  }
+}
+@keyframes barghsa-slide-up {
+  from {
+    transform: translateY(20px);
+    opacity: 0.85;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+@keyframes barghsa-slide-down {
+  from {
+    transform: translateY(-20px);
+    opacity: 0.85;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+@keyframes barghsa-slide-left {
+  from {
+    transform: translateX(20px);
+    opacity: 0.85;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+@keyframes barghsa-slide-right {
+  from {
+    transform: translateX(-20px);
+    opacity: 0.85;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+@keyframes barghsa-scale-in {
+  from {
+    transform: scale(0.98);
+    opacity: 0.85;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+@keyframes barghsa-scale-out {
+  from {
+    transform: none;
+    opacity: 1;
+  }
+  to {
+    transform: scale(0.98);
+    opacity: 0.85;
+  }
+}
+
+[data-slot='animated'][data-motion] {
+  animation: barghsa-fade-in var(--duration-normal) var(--ease-out) both;
+}
+[data-slot='animated']:is([data-motion='slide'], [data-motion='page']) {
+  animation-name: barghsa-slide-up;
+}
+[data-slot='animated'][data-motion='scale'] {
+  animation-name: barghsa-scale-in;
+}
+[data-slot='animated'][data-motion='shimmer'] {
+  position: relative;
+  overflow: hidden;
+  animation: none;
+}
+[data-slot='animated'][data-motion='shimmer']::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in srgb, var(--foreground) 10%, transparent),
+    transparent
+  );
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+.app-content :where(tbody tr, [data-slot='list-item']) {
+  animation: barghsa-fade-in var(--duration-normal) var(--ease-out) backwards;
+}
+.app-content [data-slot='card'][data-variant='widget'] {
+  animation: barghsa-scale-in var(--duration-normal) var(--ease-out) backwards;
+}
+.app-content
+  :where(tbody tr, [data-slot='list-item'], [data-slot='card'][data-variant='widget']):nth-child(
+    2
+  ) {
+  animation-delay: 30ms;
+}
+.app-content
+  :where(tbody tr, [data-slot='list-item'], [data-slot='card'][data-variant='widget']):nth-child(
+    3
+  ) {
+  animation-delay: 60ms;
+}
+.app-content
+  :where(tbody tr, [data-slot='list-item'], [data-slot='card'][data-variant='widget']):nth-child(
+    n + 4
+  ) {
+  animation-delay: 90ms;
+}
+[data-slot='button']:not(:disabled):active {
+  scale: 0.97;
+}
+[data-slot='card'][data-variant='interactive'] {
+  transition:
+    translate var(--duration-fast),
+    box-shadow var(--duration-fast);
+}
+[data-slot='card'][data-variant='interactive']:hover {
+  translate: 0 -2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-slot='button'],
+  [data-slot='card'][data-variant='interactive'] {
+    scale: none !important;
+    translate: none !important;
+  }
+  .animate-spin {
+    animation: spin 2s linear infinite !important;
+  }
+  [data-slot='progress-indicator'] {
+    transition: width 600ms linear !important;
+  }
+}
+
+@media print {
+  :root,
+  :root.dark {
+    --background: white !important;
+    --foreground: #203631 !important;
+    --card: white !important;
+    --card-foreground: #203631 !important;
+    --popover: white !important;
+    --popover-foreground: #203631 !important;
+    --muted: #edf0eb !important;
+    --muted-foreground: #475e54 !important;
+    --sidebar: white !important;
+    --sidebar-foreground: #203631 !important;
+    --border: #b0bbb5 !important;
+    --brand-primary-text-light: #203631 !important;
+    --brand-primary-text-dark: #203631 !important;
+    color-scheme: light;
+  }
+  body {
+    background: white !important;
+    color: #203631 !important;
+  }
+  *,
+  *::before,
+  *::after,
+  .animate-spin {
+    animation: none !important;
+    transition: none !important;
+  }
+}

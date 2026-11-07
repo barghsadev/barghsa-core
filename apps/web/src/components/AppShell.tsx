@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, useSyncExternalStore, type ReactNode } from 'react';
 import { Link, useLocation, useRouter } from '@tanstack/react-router';
-import { cn, Separator } from '@barghsa/ui';
+import { cn, Separator, Animated } from '@barghsa/ui';
 import { ArrowUpRight, type LucideIcon } from 'lucide-react';
 import { BrandMark } from './BrandMark.js';
 import { Topbar } from './Topbar.js';
@@ -197,7 +197,13 @@ export function AppShell({
           tabIndex={-1}
           className="app-content min-h-0 min-w-0 flex-1 overflow-auto p-4 md:p-8 lg:p-10"
         >
-          <div className="mx-auto w-full max-w-(--container-max-width)">{children}</div>
+          <Animated
+            variant="page"
+            motionKey={pathname}
+            className="mx-auto w-full max-w-(--container-max-width)"
+          >
+            {children}
+          </Animated>
         </main>
       </div>
       {compact &&

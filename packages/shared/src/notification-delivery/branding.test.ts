@@ -2,6 +2,60 @@ import { describe, expect, it, vi } from 'vitest';
 import { loadEmailBranding, normalizeEmailBranding, renderBrandedEmail } from './branding.js';
 
 describe('email branding', () => {
+  it('offers a safe client dark-mode adaptation for system policy and keeps a fixed policy fixed', () => {
+    const brand = normalizeEmailBranding({
+      themeMode: 'system',
+      darkMode: false,
+      logoUrl: 'https://assets.example.test/light.png',
+      logoDarkUrl: 'https://assets.example.test/dark.png',
+      darkPrimaryColor: '#abcdef',
+    });
+    const system = renderBrandedEmail('<p>Body &amp; company</p>', brand, 'en');
+    expect(system).toContain('@media (prefers-color-scheme:dark)');
+    expect(system).toContain('class="barghsa-email-logo-light"');
+    expect(system).toContain('class="barghsa-email-logo-dark"');
+    expect(system).toContain('background:#ffffff;color:#111827');
+    expect(system).toContain('border-top-color:#abcdef!important');
+    expect(system).toContain('<p>Body &amp; company</p>');
+    expect(renderBrandedEmail('Body', { ...brand, themeMode: 'light' }, 'en')).not.toContain(
+      '@media'
+    );
+  });
+  it('uses the published dark palette and sealed dark logo without changing escaped message content', () => {
+    const path =
+      '/api/public/branding/assets/00000000-0000-4000-8000-000000000001/' + 'a'.repeat(64);
+    const brand = normalizeEmailBranding(
+      {
+        logoUrl: 'https://assets.example.test/light.png',
+        logoDarkUrl: path,
+        darkPrimaryColor: '#abcdef',
+        darkSecondaryColor: '#123456',
+        darkAccentColor: '#fedcba',
+        darkMode: true,
+      },
+      'https://stg.example.test'
+    );
+    const dark = renderBrandedEmail('<p>Owner &amp; company</p>', brand, 'fa');
+    expect(dark).toContain('src="https://stg.example.test' + path + '"');
+    expect(dark).not.toContain('light.png');
+    for (const color of ['#abcdef', '#123456', '#fedcba']) expect(dark).toContain(color);
+    expect(dark).toContain('<p>Owner &amp; company</p>');
+    const light = renderBrandedEmail('Body', { ...brand, darkMode: false }, 'en');
+    expect(light).toContain('src="https://assets.example.test/light.png"');
+    expect(
+      normalizeEmailBranding({
+        logoDarkUrl: 'javascript:alert(1)',
+        darkPrimaryColor: '#fff;url(evil)',
+      })
+    ).toMatchObject({ logoDarkUrl: null });
+    expect(
+      renderBrandedEmail(
+        'Body',
+        normalizeEmailBranding({ logoDarkUrl: 'javascript:alert(1)', darkMode: true }),
+        'en'
+      )
+    ).not.toContain('<img');
+  });
   it.each(['fa', 'en'] as const)(
     'uses the configured %s title without HTML or subject injection',
     (locale) => {

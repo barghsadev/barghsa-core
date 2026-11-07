@@ -992,6 +992,23 @@
                   "config": {
                     "description": "Brand config JSON (appTitle, colors, etc.)",
                     "properties": {
+                      "darkAccentColor": {
+                        "pattern": "^#[a-fA-F0-9]{6}$",
+                        "type": "string"
+                      },
+                      "darkPrimaryColor": {
+                        "pattern": "^#[a-fA-F0-9]{6}$",
+                        "type": "string"
+                      },
+                      "darkSecondaryColor": {
+                        "pattern": "^#[a-fA-F0-9]{6}$",
+                        "type": "string"
+                      },
+                      "logoDarkUrl": {
+                        "description": "Persistent HTTPS or owned sealed branding image; absent uses the light logo",
+                        "nullable": true,
+                        "type": "string"
+                      },
                       "numberStyle": {
                         "default": "locale",
                         "enum": [
@@ -1011,6 +1028,11 @@
                   },
                   "faviconUploadKey": {
                     "description": "Verified branding_logo image upload for the favicon, owned by the editor",
+                    "type": "string"
+                  },
+                  "logoDarkUploadKey": {
+                    "description": "Verified branding_logo image upload for dark mode, owned by the editor",
+                    "maxLength": 255,
                     "type": "string"
                   },
                   "logoUploadKey": {
@@ -35010,8 +35032,24 @@
                 "schema": {
                   "additionalProperties": true,
                   "properties": {
+                    "darkAccentColor": {
+                      "pattern": "^#[a-fA-F0-9]{6}$",
+                      "type": "string"
+                    },
                     "darkMode": {
                       "type": "boolean"
+                    },
+                    "darkPrimaryColor": {
+                      "pattern": "^#[a-fA-F0-9]{6}$",
+                      "type": "string"
+                    },
+                    "darkSecondaryColor": {
+                      "pattern": "^#[a-fA-F0-9]{6}$",
+                      "type": "string"
+                    },
+                    "logoDarkUrl": {
+                      "nullable": true,
+                      "type": "string"
                     },
                     "themeMode": {
                       "enum": [

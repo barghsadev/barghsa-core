@@ -327,3 +327,33 @@ export const Months: Story = () => {
     </div>
   );
 };
+
+export const Motion: Story = () => {
+  const text = useStoryText();
+  const [revision, setRevision] = useState(0);
+  const reduced = UI.useReducedMotion();
+  return (
+    <div className="space-y-4">
+      <p>
+        {reduced
+          ? text('حرکت کاهش یافته است', 'Reduced motion')
+          : text('حرکت معمول', 'Standard motion')}
+      </p>
+      <UI.Button onClick={() => setRevision((value) => value + 1)}>
+        {text('نمایش دوباره', 'Replay')}
+      </UI.Button>
+      {(['fade', 'slide', 'scale', 'shimmer', 'page'] as const).map((variant) => (
+        <UI.Animated
+          key={variant}
+          variant={variant}
+          motionKey={String(revision)}
+          className="rounded-lg border border-border p-4"
+        >
+          <p>
+            {text('محتوا همیشه خوانا است', 'Content stays readable')} · {variant}
+          </p>
+        </UI.Animated>
+      ))}
+    </div>
+  );
+};

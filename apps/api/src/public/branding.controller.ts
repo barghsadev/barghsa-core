@@ -19,12 +19,16 @@ export interface PublicBrandConfigDto {
   primaryColor: string;
   secondaryColor: string;
   accentColor: string;
+  darkPrimaryColor: string;
+  darkSecondaryColor: string;
+  darkAccentColor: string;
   backgroundColor: string;
   darkBackgroundColor: string;
   fontFamily: 'vazirmatn' | 'tahoma';
   borderRadiusRem: number;
   spacingScale: number;
   logoUrl: string | null;
+  logoDarkUrl: string | null;
   faviconUrl: string | null;
   darkMode: boolean;
   themeMode: 'light' | 'dark' | 'system';
@@ -64,6 +68,10 @@ export class PublicBrandingController {
       properties: {
         themeMode: { type: 'string', enum: ['light', 'dark', 'system'] },
         darkMode: { type: 'boolean' },
+        darkPrimaryColor: { type: 'string', pattern: '^#[a-fA-F0-9]{6}$' },
+        darkSecondaryColor: { type: 'string', pattern: '^#[a-fA-F0-9]{6}$' },
+        darkAccentColor: { type: 'string', pattern: '^#[a-fA-F0-9]{6}$' },
+        logoDarkUrl: { type: 'string', nullable: true },
       },
       additionalProperties: true,
     },
@@ -84,6 +92,16 @@ export class PublicBrandingController {
       primaryColor: (brandConfig.primaryColor as string) ?? '#176b5b',
       secondaryColor: (brandConfig.secondaryColor as string) ?? '#547467',
       accentColor: (brandConfig.accentColor as string) ?? '#d6a74e',
+      darkPrimaryColor:
+        (brandConfig.darkPrimaryColor as string) ??
+        (brandConfig.primaryColor as string) ??
+        '#176b5b',
+      darkSecondaryColor:
+        (brandConfig.darkSecondaryColor as string) ??
+        (brandConfig.secondaryColor as string) ??
+        '#547467',
+      darkAccentColor:
+        (brandConfig.darkAccentColor as string) ?? (brandConfig.accentColor as string) ?? '#d6a74e',
       backgroundColor: (brandConfig.backgroundColor as string) ?? '#f6f7f4',
       darkBackgroundColor: (brandConfig.darkBackgroundColor as string) ?? '#15201c',
       fontFamily: brandConfig.fontFamily === 'tahoma' ? 'tahoma' : 'vazirmatn',
@@ -91,6 +109,7 @@ export class PublicBrandingController {
         typeof brandConfig.borderRadiusRem === 'number' ? brandConfig.borderRadiusRem : 0.75,
       spacingScale: typeof brandConfig.spacingScale === 'number' ? brandConfig.spacingScale : 1,
       logoUrl: (brandConfig.logoUrl as string | null) ?? null,
+      logoDarkUrl: (brandConfig.logoDarkUrl as string | null) ?? null,
       faviconUrl: (brandConfig.faviconUrl as string | null) ?? null,
       darkMode: (brandConfig.darkMode as boolean) ?? false,
       themeMode:

@@ -1,4 +1,9 @@
-import { DEFAULT_BRAND_CONFIG } from '../lib/brand-config.js';
+import {
+  DEFAULT_BRAND_CONFIG,
+  brandColor,
+  getBrandTextColor,
+  BRAND_SURFACES,
+} from '../lib/brand-config.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import {
   LoadingSkeleton,
@@ -112,6 +117,9 @@ export default function AdminBrandingConfig() {
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
   const [logoUploadKey, setLogoUploadKey] = useState<string | null>(null);
+  const [logoDarkFile, setLogoDarkFile] = useState<File | null>(null);
+  const [logoDarkPreview, setLogoDarkPreview] = useState<string | null>(null);
+  const [logoDarkUploadKey, setLogoDarkUploadKey] = useState<string | null>(null);
   const [faviconFile, setFaviconFile] = useState<File | null>(null);
   const [faviconPreview, setFaviconPreview] = useState<string | null>(null);
   const [faviconUploadKey, setFaviconUploadKey] = useState<string | null>(null);
@@ -137,6 +145,16 @@ export default function AdminBrandingConfig() {
     return () => URL.revokeObjectURL(url);
   }, [faviconFile]);
 
+  useEffect(() => {
+    if (!logoDarkFile) {
+      setLogoDarkPreview(null);
+      return;
+    }
+    const url = URL.createObjectURL(logoDarkFile);
+    setLogoDarkPreview(url);
+    return () => URL.revokeObjectURL(url);
+  }, [logoDarkFile]);
+
   const closeAction = useCallback(() => {
     generation.current++;
     actionRef.current = null;
@@ -149,6 +167,8 @@ export default function AdminBrandingConfig() {
     accepted.current = null;
     setLogoFile(null);
     setLogoUploadKey(null);
+    setLogoDarkFile(null);
+    setLogoDarkUploadKey(null);
     setFaviconFile(null);
     setFaviconUploadKey(null);
     setMessage(null);
@@ -175,8 +195,15 @@ export default function AdminBrandingConfig() {
     coherent;
   const draftInfo =
     activeConfig?.status === 'draft' && activeConfig.version > 0 ? activeConfig : null;
-  const work = useRef({ config, editing, logoUploadKey, faviconUploadKey, ready });
-  work.current = { config, editing, logoUploadKey, faviconUploadKey, ready };
+  const work = useRef({
+    config,
+    editing,
+    logoUploadKey,
+    logoDarkUploadKey,
+    faviconUploadKey,
+    ready,
+  });
+  work.current = { config, editing, logoUploadKey, logoDarkUploadKey, faviconUploadKey, ready };
   useEffect(() => {
     if (
       activeConfig &&
@@ -201,6 +228,7 @@ export default function AdminBrandingConfig() {
         previous &&
         work.current.editing &&
         (work.current.logoUploadKey ||
+          work.current.logoDarkUploadKey ||
           work.current.faviconUploadKey ||
           JSON.stringify(work.current.config) !== JSON.stringify(parseBrandConfig(previous.config)))
       )
@@ -209,6 +237,8 @@ export default function AdminBrandingConfig() {
         setConfig(parseBrandConfig(activeConfig.config)!);
         setLogoFile(null);
         setLogoUploadKey(null);
+        setLogoDarkFile(null);
+        setLogoDarkUploadKey(null);
         setFaviconFile(null);
         setFaviconUploadKey(null);
         setNeedsReset(false);
@@ -228,6 +258,8 @@ export default function AdminBrandingConfig() {
     setConfig(parseBrandConfig(activeConfig.config)!);
     setLogoFile(null);
     setLogoUploadKey(null);
+    setLogoDarkFile(null);
+    setLogoDarkUploadKey(null);
     setFaviconFile(null);
     setFaviconUploadKey(null);
     setNeedsReset(false);
@@ -264,6 +296,7 @@ export default function AdminBrandingConfig() {
         config: { ...config },
         expectedVersion: activeConfig.version,
         ...(logoUploadKey ? { logoUploadKey } : {}),
+        ...(logoDarkUploadKey ? { logoDarkUploadKey } : {}),
         ...(faviconUploadKey ? { faviconUploadKey } : {}),
       },
       conflictMessage: text('changed'),
@@ -284,7 +317,7 @@ export default function AdminBrandingConfig() {
 
   const handleImageUpload = async (
     e: React.ChangeEvent<HTMLInputElement>,
-    target: 'logo' | 'favicon'
+    target: 'logo' | 'logoDark' | 'favicon'
   ) => {
     const file = e.target.files?.[0];
     e.currentTarget.value = '';
@@ -293,8 +326,14 @@ export default function AdminBrandingConfig() {
     const controller = new AbortController();
     uploadRequest.current = controller;
     setUploading(true);
-    const setKey = target === 'logo' ? setLogoUploadKey : setFaviconUploadKey;
-    const setFile = target === 'logo' ? setLogoFile : setFaviconFile;
+    const setKey =
+      target === 'logo'
+        ? setLogoUploadKey
+        : target === 'logoDark'
+          ? setLogoDarkUploadKey
+          : setFaviconUploadKey;
+    const setFile =
+      target === 'logo' ? setLogoFile : target === 'logoDark' ? setLogoDarkFile : setFaviconFile;
     setKey(null);
     setFile(null);
     setMessage(null);
@@ -307,7 +346,7 @@ export default function AdminBrandingConfig() {
       if (!controller.signal.aborted)
         setMessage({
           type: 'error',
-          text: text(target === 'logo' ? 'uploadFailed' : 'faviconUploadFailed'),
+          text: text(target === 'favicon' ? 'faviconUploadFailed' : 'uploadFailed'),
         });
     } finally {
       if (!controller.signal.aborted) setUploading(false);
@@ -322,12 +361,18 @@ export default function AdminBrandingConfig() {
     );
   }
 
+  const savedConfig = activeConfig ? parseBrandConfig(activeConfig.config) : null;
+  const changedConfig =
+    !savedConfig ||
+    Object.keys({ ...savedConfig, ...config }).some((name) => {
+      const key = name as keyof BrandConfig;
+      return config[key] !== savedConfig[key];
+    });
   const isDirty =
     Boolean(logoUploadKey) ||
+    Boolean(logoDarkUploadKey) ||
     Boolean(faviconUploadKey) ||
-    (activeConfig && activeConfig.version > 0
-      ? JSON.stringify(config) !== JSON.stringify({ ...DEFAULT_CONFIG, ...activeConfig.config })
-      : true);
+    (activeConfig && activeConfig.version > 0 ? changedConfig : true);
   const validConfig = parseBrandConfig(config) !== null;
 
   const displayedLogo =
@@ -335,6 +380,10 @@ export default function AdminBrandingConfig() {
     (config.logoUrl?.startsWith('/api/public/branding/assets/')
       ? config.logoUrl.replace('/api/public/', '/api/admin/')
       : config.logoUrl);
+  const displayedLogoDark =
+    logoDarkPreview ??
+    config.logoDarkUrl?.replace('/api/public/branding/assets/', '/api/admin/branding/assets/') ??
+    null;
   const displayedFavicon =
     faviconPreview ??
     (config.faviconUrl?.startsWith('/api/public/branding/assets/')
@@ -372,6 +421,7 @@ export default function AdminBrandingConfig() {
               draftId?: string;
               config?: BrandConfig;
               logoUploadKey?: string;
+              logoDarkUploadKey?: string;
               faviconUploadKey?: string;
             };
             if (action.method === 'PUT') {
@@ -385,6 +435,7 @@ export default function AdminBrandingConfig() {
               for (const key of Object.keys(submitted.config) as Array<keyof BrandConfig>) {
                 if (
                   (key === 'logoUrl' && submitted.logoUploadKey) ||
+                  (key === 'logoDarkUrl' && submitted.logoDarkUploadKey) ||
                   (key === 'faviconUrl' && submitted.faviconUploadKey)
                 ) {
                   if (!dto.config[key]?.startsWith('/api/public/branding/assets/'))
@@ -395,7 +446,8 @@ export default function AdminBrandingConfig() {
                   throw new Error('Unconfirmed branding settings');
               }
             } else if (
-              JSON.stringify(dto.config) !== JSON.stringify(activeConfig?.config) ||
+              JSON.stringify(dto.config) !==
+                JSON.stringify(parseBrandConfig(activeConfig?.config)) ||
               dto.status !== 'active' ||
               dto.id !== submitted.draftId ||
               dto.version !== submitted.expectedVersion
@@ -406,6 +458,8 @@ export default function AdminBrandingConfig() {
               window.dispatchEvent(new Event('barghsa:branding-activated'));
             setLogoFile(null);
             setLogoUploadKey(null);
+            setLogoDarkFile(null);
+            setLogoDarkUploadKey(null);
             setFaviconFile(null);
             setFaviconUploadKey(null);
             accepted.current = dto;
@@ -682,6 +736,32 @@ export default function AdminBrandingConfig() {
               value={config.accentColor}
               onChange={(v) => updateConfig('accentColor', v)}
             />
+            {(['primary', 'secondary', 'accent'] as const).map((color) => {
+              const field = {
+                primary: 'darkPrimaryColor',
+                secondary: 'darkSecondaryColor',
+                accent: 'darkAccentColor',
+              } as const;
+              return (
+                <ColorInput
+                  key={color}
+                  label={text(field[color])}
+                  value={brandColor(config, color, 'dark')}
+                  onChange={(value) => updateConfig(field[color], value)}
+                />
+              );
+            })}
+            {(['light', 'dark'] as const).some(
+              (mode) =>
+                getBrandTextColor(brandColor(config, 'primary', mode), [
+                  mode === 'dark' ? config.darkBackgroundColor : config.backgroundColor,
+                  ...BRAND_SURFACES[mode],
+                ]) === 'var(--foreground)'
+            ) && (
+              <p role="status" className="text-sm text-muted-foreground">
+                {text('contrastAdjusted')}
+              </p>
+            )}
             <ColorInput
               label={text('background')}
               value={config.backgroundColor}
@@ -786,6 +866,45 @@ export default function AdminBrandingConfig() {
                       updateConfig('logoUrl', null);
                     }}
                     className="text-xs text-destructive underline mt-1"
+                  >
+                    {text('remove')}
+                  </Button>
+                </div>
+              )}
+            </div>
+
+            <div className="space-y-2">
+              <label htmlFor="branding-dark-logo-upload" className="block text-sm font-medium">
+                {text('uploadDarkLogo')}
+              </label>
+              <input
+                id="branding-dark-logo-upload"
+                type="file"
+                accept="image/png,image/jpeg,image/webp"
+                disabled={action !== null}
+                onChange={(event) => void handleImageUpload(event, 'logoDark')}
+                aria-describedby="branding-dark-logo-hint"
+                className="block w-full text-sm file:me-4 file:rounded-lg file:border-0 file:bg-muted file:px-4 file:py-2 file:text-foreground"
+              />
+              <p id="branding-dark-logo-hint" className="text-xs text-muted-foreground">
+                {text('logoHint')} {text('darkLogoHint')}
+              </p>
+              {displayedLogoDark && (
+                <div>
+                  <img
+                    src={displayedLogoDark}
+                    alt={text('darkLogoPreview')}
+                    className="max-h-16 max-w-32 rounded border border-border object-contain"
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    disabled={action !== null || uploading}
+                    onClick={() => {
+                      setLogoDarkFile(null);
+                      setLogoDarkUploadKey(null);
+                      updateConfig('logoDarkUrl', null);
+                    }}
                   >
                     {text('remove')}
                   </Button>
@@ -917,7 +1036,14 @@ export default function AdminBrandingConfig() {
               <p>{word('noActive')}</p>
             )
           }
-          draft={<BrandingPreview config={config} locale={locale} logo={displayedLogo} />}
+          draft={
+            <BrandingPreview
+              config={config}
+              locale={locale}
+              logo={displayedLogo}
+              logoDark={displayedLogoDark}
+            />
+          }
         />
       )}
       {!scope.denied && activeConfig && (
@@ -935,10 +1061,12 @@ function BrandingPreview({
   config,
   locale,
   logo,
+  logoDark,
 }: {
   config: BrandConfig;
   locale: 'fa' | 'en';
   logo?: string | null;
+  logoDark?: string | null;
 }) {
   const safe = parseBrandConfig(config) ?? DEFAULT_CONFIG;
   const { systemTheme } = useBrandConfig();
@@ -947,14 +1075,19 @@ function BrandingPreview({
       ? systemTheme === 'dark'
       : (safe.themeMode ?? (safe.darkMode ? 'dark' : 'light')) === 'dark';
   const image =
-    logo ?? safe.logoUrl?.replace('/api/public/branding/assets/', '/api/admin/branding/assets/');
+    (previewDark
+      ? (logoDark ??
+        safe.logoDarkUrl?.replace('/api/public/branding/assets/', '/api/admin/branding/assets/'))
+      : null) ??
+    logo ??
+    safe.logoUrl?.replace('/api/public/branding/assets/', '/api/admin/branding/assets/');
   return (
     <div
       className="flex min-w-0 flex-col gap-4 rounded-lg border p-5"
       style={{
         backgroundColor: previewDark ? safe.darkBackgroundColor : safe.backgroundColor,
         color: previewDark ? 'var(--theme-dark-foreground)' : 'var(--theme-light-foreground)',
-        borderColor: safe.primaryColor,
+        borderColor: brandColor(safe, 'primary', previewDark ? 'dark' : 'light'),
         borderRadius: `${safe.borderRadiusRem}rem`,
         padding: `${1.25 * safe.spacingScale}rem`,
         fontFamily: safe.fontFamily === 'tahoma' ? 'Tahoma, sans-serif' : 'Vazirmatn, sans-serif',
@@ -981,8 +1114,8 @@ function BrandingPreview({
             key={key}
             className="rounded px-3 py-2"
             style={{
-              backgroundColor: safe[`${key}Color`],
-              color: getContrastForeground(safe[`${key}Color`]),
+              backgroundColor: brandColor(safe, key, previewDark ? 'dark' : 'light'),
+              color: getContrastForeground(brandColor(safe, key, previewDark ? 'dark' : 'light')),
             }}
           >
             {brandingText(key, locale)}

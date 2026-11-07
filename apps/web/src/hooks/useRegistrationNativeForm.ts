@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { useZodForm } from '@barghsa/ui/form';
 import { t, type Locale } from '@barghsa/i18n/auth';
 import { registrationFormText } from '@barghsa/i18n/registration-forms';
-import { normalizeRecoveryUsername } from '../lib/password-recovery-form.js';
+import { normalizeRecoveryUsername } from '../lib/auth-username.js';
 import {
   emptyRegistration,
   registrationPasswordValid,

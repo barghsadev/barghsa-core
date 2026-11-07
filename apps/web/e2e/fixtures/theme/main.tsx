@@ -1,3 +1,5 @@
+import { Animated, Card, CardContent, useReducedMotion } from '@barghsa/ui';
+import { BrandMark } from '../../../src/components/BrandMark';
 import SonnerToaster from '../../../src/components/SonnerToaster';
 import { useTheme } from '../../../src/hooks/useTheme';
 import { toast as appToast } from '../../../src/lib/toast-api';
@@ -73,6 +75,35 @@ import {
 import { Toaster, toast } from '../../../../../packages/ui/src/components/ui/toast';
 import { Skeleton } from '../../../../../packages/ui/src/components/ui/skeleton';
 import { PageLoading } from '../../../../../packages/ui/src/components/ui/page-states';
+function MotionControls() {
+  const [revision, setRevision] = React.useState(0);
+  const reduced = useReducedMotion();
+  return (
+    <section aria-label="Appearance and motion" className="app-content space-y-4">
+      <BrandMark />
+      <output aria-label="Motion preference">{reduced ? 'reduced' : 'full'}</output>
+      <Animated variant="page" motionKey={String(revision)} data-testid="motion-route">
+        <label>
+          Retained draft
+          <Input defaultValue="captured-order-9007199254740993" />
+        </label>
+        <Button onClick={() => setRevision((value) => value + 1)}>Replay transition</Button>
+      </Animated>
+      {(['fade', 'slide', 'scale', 'shimmer'] as const).map((variant) => (
+        <Animated key={variant} variant={variant} data-testid={'motion-' + variant}>
+          <p>Immediately readable {variant}</p>
+        </Animated>
+      ))}
+      <Card variant="interactive">
+        <CardContent>Interactive card</CardContent>
+      </Card>
+      <Card variant="widget">
+        <CardContent>Dashboard card</CardContent>
+      </Card>
+      <Button loading>Pending operation</Button>
+    </section>
+  );
+}
 function NoticeControls() {
   const { setTheme } = useTheme();
   return (
@@ -144,7 +175,7 @@ function Auxiliary() {
         >
           Show toast
         </Button>
-        <div aria-label="Placeholder shapes" className="flex flex-col gap-3">
+        <div role="group" aria-label="Placeholder shapes" className="flex flex-col gap-3">
           <Skeleton className="h-32 w-full" />
           <Skeleton className="h-10 w-full" />
           <Skeleton className="h-8 w-full" />
@@ -308,6 +339,7 @@ createRoot(document.getElementById('root')!).render(
         <Controls />
         <Auxiliary />
         <NoticeControls />
+        <MotionControls />
       </main>
     </BrandThemeProvider>
   </UiDirectionProvider>

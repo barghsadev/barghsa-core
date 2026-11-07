@@ -2,6 +2,84 @@ import { test, expect } from './coverage-fixture';
 import { crmShell } from './crm-shell-fixture';
 import { notificationTemplate } from '../src/test/content-catalogue-fixtures';
 
+for (const locale of ['en', 'fa'] as const) {
+  test(`system-policy email follows client theme inside its sandbox (${locale})`, async ({
+    page,
+  }) => {
+    await page.emulateMedia({ colorScheme: 'dark', reducedMotion: 'reduce' });
+    await crmShell(page, locale);
+    await page.route('**/api/public/branding/config', (route) =>
+      route.fulfill({
+        json: {
+          appTitle: 'Adaptive email',
+          appTitleFa: 'رایانامه سازگار',
+          supportEmail: 'support@example.test',
+          supportPhone: '02126658042',
+          supportMobile: '09002550292',
+          slogan: '',
+          primaryColor: '#176b5b',
+          secondaryColor: '#547467',
+          accentColor: '#d6a74e',
+          darkPrimaryColor: '#abcdef',
+          darkSecondaryColor: '#fedcba',
+          darkAccentColor: '#567890',
+          backgroundColor: '#ffffff',
+          darkBackgroundColor: '#15201c',
+          logoUrl: 'https://assets.example.test/light.png',
+          logoDarkUrl: 'https://assets.example.test/dark.png',
+          faviconUrl: null,
+          darkMode: false,
+          themeMode: 'system',
+        },
+      })
+    );
+    await page.route('https://assets.example.test/**', (route) =>
+      route.fulfill({
+        contentType: 'image/png',
+        body: Buffer.from(
+          'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+ip1sAAAAASUVORK5CYII=',
+          'base64'
+        ),
+      })
+    );
+    await page.route('**/api/admin/notifications/templates', (route) =>
+      route.fulfill({
+        json: [
+          {
+            ...notificationTemplate(),
+            id: 'adaptive-email',
+            channel: 'email',
+            locale,
+            bodyTemplate: '<p>Captured message body</p>',
+            variables: [],
+          },
+        ],
+      })
+    );
+    await page.goto('/admin/notifications');
+    const iframe = page.locator('iframe').first();
+    const frame = page.frameLocator('iframe').first();
+    await expect(iframe).toHaveAttribute('sandbox', '');
+    await expect(iframe).toHaveAttribute('referrerpolicy', 'no-referrer');
+    await expect(frame.getByText('Captured message body')).toBeVisible();
+    await expect(frame.locator('.barghsa-email')).toHaveCSS('background-color', 'rgb(21, 32, 28)');
+    await expect(frame.locator('.barghsa-email-table')).toHaveCSS(
+      'border-top-color',
+      'rgb(171, 205, 239)'
+    );
+    await expect(frame.locator('.barghsa-email-logo-dark')).toBeVisible();
+    await expect(frame.locator('.barghsa-email-logo-light')).toBeHidden();
+    await page.emulateMedia({ colorScheme: 'light' });
+    await expect(frame.locator('.barghsa-email')).toHaveCSS(
+      'background-color',
+      'rgb(255, 255, 255)'
+    );
+    await expect(frame.locator('.barghsa-email-logo-light')).toBeVisible();
+    await expect(frame.locator('.barghsa-email-logo-dark')).toBeHidden();
+    await expect(frame.getByText('Captured message body')).toBeVisible();
+  });
+}
+
 for (const locale of ['en', 'fa'] as const)
   for (const darkMode of [false, true]) {
     test(`branded email previews stay isolated (${locale}, dark=${darkMode})`, async ({ page }) => {

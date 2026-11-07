@@ -11,12 +11,29 @@ export function BrandMark({
   inverse?: boolean;
   compact?: boolean;
 }) {
-  const { brandConfig } = useBrandConfig();
+  const { brandConfig, resolvedTheme } = useBrandConfig();
+  const logo =
+    resolvedTheme === 'dark'
+      ? (brandConfig.logoDarkUrl ?? brandConfig.logoUrl)
+      : brandConfig.logoUrl;
   const locale = useLocale();
   return (
     <span className="inline-flex min-w-0 items-center gap-3">
-      {brandConfig.logoUrl ? (
-        <img src={brandConfig.logoUrl} alt="" className="h-9 max-w-24 object-contain" />
+      {logo ? (
+        <>
+          <picture className={brandConfig.logoUrl ? 'print:hidden' : undefined}>
+            <img data-slot="brand-logo" src={logo} alt="" className="h-9 max-w-24 object-contain" />
+          </picture>
+          {brandConfig.logoUrl && (
+            <img
+              data-slot="brand-logo-print"
+              fetchPriority="low"
+              src={brandConfig.logoUrl}
+              alt=""
+              className="hidden h-9 max-w-24 object-contain print:block"
+            />
+          )}
+        </>
       ) : (
         <span
           className={cn(

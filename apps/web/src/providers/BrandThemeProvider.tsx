@@ -2,6 +2,7 @@ import {
   DEFAULT_BRAND_CONFIG,
   BRAND_SURFACES,
   brandName,
+  brandColor,
   getContrastForeground,
   getBrandTextColor,
   parseBrandConfig,
@@ -9,6 +10,7 @@ import {
 } from '../lib/brand-config.js';
 export {
   brandName,
+  brandColor,
   getContrastForeground,
   getBrandTextColor,
   parseBrandConfig,
@@ -165,14 +167,6 @@ export function BrandThemeProvider({ children }: { children: ReactNode }) {
       const policy = config.themeMode ?? (config.darkMode ? 'dark' : 'light');
       storeTheme(THEME_POLICY_STORAGE_KEY, policy);
       setThemePolicy(policy);
-      for (const color of colors) {
-        const background = config[`${color}Color`],
-          foreground = getContrastForeground(background);
-        root.style.setProperty(`--brand-${color}`, background);
-        root.style.setProperty(`--brand-${color}-foreground`, foreground);
-        root.style.setProperty(`--${color}`, background);
-        root.style.setProperty(`--${color}-foreground`, foreground);
-      }
       root.style.setProperty('--brand-light-background', config.backgroundColor);
       root.style.setProperty('--brand-dark-background', config.darkBackgroundColor);
       root.style.setProperty(
@@ -181,7 +175,10 @@ export function BrandThemeProvider({ children }: { children: ReactNode }) {
       );
       root.style.setProperty(
         '--brand-primary-text-dark',
-        getBrandTextColor(config.primaryColor, [config.darkBackgroundColor, ...BRAND_SURFACES.dark])
+        getBrandTextColor(brandColor(config, 'primary', 'dark'), [
+          config.darkBackgroundColor,
+          ...BRAND_SURFACES.dark,
+        ])
       );
       root.style.setProperty(
         '--app-font',
@@ -236,8 +233,17 @@ export function BrandThemeProvider({ children }: { children: ReactNode }) {
     };
   }, []);
   useEffect(() => {
-    document.documentElement.classList.toggle('dark', resolvedTheme === 'dark');
-  }, [resolvedTheme]);
+    const root = document.documentElement;
+    root.classList.toggle('dark', resolvedTheme === 'dark');
+    for (const color of ['primary', 'secondary', 'accent'] as const) {
+      const background = brandColor(brandConfig, color, resolvedTheme);
+      const foreground = getContrastForeground(background);
+      root.style.setProperty(`--brand-${color}`, background);
+      root.style.setProperty(`--brand-${color}-foreground`, foreground);
+      root.style.setProperty(`--${color}`, background);
+      root.style.setProperty(`--${color}-foreground`, foreground);
+    }
+  }, [resolvedTheme, brandConfig]);
   const value = useMemo(
     () => ({
       brandConfig,

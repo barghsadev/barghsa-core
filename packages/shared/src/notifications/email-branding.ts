@@ -7,8 +7,13 @@ export interface EmailBranding {
   primaryColor: string;
   secondaryColor: string;
   accentColor: string;
+  darkPrimaryColor?: string;
+  darkSecondaryColor?: string;
+  darkAccentColor?: string;
   logoUrl: string | null;
+  logoDarkUrl?: string | null;
   darkMode: boolean;
+  themeMode?: 'light' | 'dark' | 'system';
   backgroundColor?: string;
   darkBackgroundColor?: string;
 }
@@ -41,6 +46,10 @@ function logoUrl(value: unknown, publicUrl?: string): string | null {
 /** Defensive normalization also protects delivery from malformed historical config. */
 export function normalizeEmailBranding(value: unknown, publicUrl?: string): EmailBranding {
   const config = value && typeof value === 'object' ? (value as Record<string, unknown>) : {};
+  const themeMode =
+    config.themeMode === 'light' || config.themeMode === 'dark' || config.themeMode === 'system'
+      ? config.themeMode
+      : undefined;
   const text = (name: string, fallback: string, limit: number): string =>
     typeof config[name] === 'string' && config[name].trim()
       ? config[name]
@@ -60,7 +69,16 @@ export function normalizeEmailBranding(value: unknown, publicUrl?: string): Emai
     secondaryColor: color('secondaryColor', '#64748b'),
     accentColor: color('accentColor', '#f59e0b'),
     logoUrl: logoUrl(config.logoUrl, publicUrl),
-    darkMode: config.darkMode === true,
+    ...(config.logoDarkUrl !== undefined
+      ? { logoDarkUrl: logoUrl(config.logoDarkUrl, publicUrl) }
+      : {}),
+    ...(isColor(config.darkPrimaryColor) ? { darkPrimaryColor: config.darkPrimaryColor } : {}),
+    ...(isColor(config.darkSecondaryColor)
+      ? { darkSecondaryColor: config.darkSecondaryColor }
+      : {}),
+    ...(isColor(config.darkAccentColor) ? { darkAccentColor: config.darkAccentColor } : {}),
+    darkMode: themeMode ? themeMode === 'dark' : config.darkMode === true,
+    ...(themeMode ? { themeMode } : {}),
     ...(isColor(config.backgroundColor) ? { backgroundColor: config.backgroundColor } : {}),
     ...(isColor(config.darkBackgroundColor)
       ? { darkBackgroundColor: config.darkBackgroundColor }
@@ -84,13 +102,32 @@ export function renderBrandedEmail(
     : brand.darkMode
       ? '#f8fafc'
       : '#111827';
-  const logo = brand.logoUrl
-    ? `<img src="${escapeHtml(brand.logoUrl)}" alt="${title}" width="160" style="max-width:160px;height:auto;border:0">`
+  const image = brand.darkMode ? (brand.logoDarkUrl ?? brand.logoUrl) : brand.logoUrl;
+  const primary = brand.darkMode
+    ? (brand.darkPrimaryColor ?? brand.primaryColor)
+    : brand.primaryColor;
+  const secondary = brand.darkMode
+    ? (brand.darkSecondaryColor ?? brand.secondaryColor)
+    : brand.secondaryColor;
+  const accent = brand.darkMode ? (brand.darkAccentColor ?? brand.accentColor) : brand.accentColor;
+  const logo = image
+    ? `<img src="${escapeHtml(image)}" alt="${title}" width="160" style="max-width:160px;height:auto;border:0">`
+    : '';
+  // Clients without dark-media support retain the readable inline light fallback.
+  const adaptive = brand.themeMode === 'system';
+  const darkBackground = brand.darkBackgroundColor ?? '#0f172a';
+  const darkLogo = brand.logoDarkUrl ?? brand.logoUrl;
+  const adaptiveLogo =
+    adaptive && darkLogo
+      ? `<img class="barghsa-email-logo-dark" src="${escapeHtml(darkLogo)}" alt="${title}" width="160" style="display:none;max-width:160px;height:auto;border:0">`
+      : '';
+  const adaptiveStyle = adaptive
+    ? `<style>@media (prefers-color-scheme:dark){.barghsa-email{background:${darkBackground}!important;color:${emailForeground(darkBackground)}!important}.barghsa-email-table{border-top-color:${brand.darkPrimaryColor ?? brand.primaryColor}!important;border-bottom-color:${brand.darkAccentColor ?? brand.accentColor}!important}.barghsa-email-header{border-bottom-color:${brand.darkSecondaryColor ?? brand.secondaryColor}!important}.barghsa-email-logo-light{display:none!important}.barghsa-email-logo-dark{display:block!important}}</style>`
     : '';
   // Colors decorate borders, not text, so arbitrary brand colors cannot erase labels.
-  return `<div lang="${locale}" dir="${locale === 'fa' ? 'rtl' : 'ltr'}" style="background:${background};color:${foreground};font-family:Arial,sans-serif;line-height:1.6;padding:24px">
-<table role="presentation" style="width:100%;max-width:640px;margin:0 auto;border-collapse:collapse;border-top:6px solid ${brand.primaryColor};border-bottom:3px solid ${brand.accentColor}"><tbody>
-<tr><td style="padding:20px;border-bottom:1px solid ${brand.secondaryColor}">${logo}<p style="font-size:22px;font-weight:bold;margin:8px 0">${title}</p>${slogan ? `<p style="margin:0">${slogan}</p>` : ''}</td></tr>
+  return `${adaptiveStyle}<div class="barghsa-email" lang="${locale}" dir="${locale === 'fa' ? 'rtl' : 'ltr'}" style="background:${background};color:${foreground};font-family:Arial,sans-serif;line-height:1.6;padding:24px">
+<table class="barghsa-email-table" role="presentation" style="width:100%;max-width:640px;margin:0 auto;border-collapse:collapse;border-top:6px solid ${primary};border-bottom:3px solid ${accent}"><tbody>
+<tr><td class="barghsa-email-header" style="padding:20px;border-bottom:1px solid ${secondary}">${adaptive ? logo.replace('<img ', '<img class="barghsa-email-logo-light" ') : logo}${adaptiveLogo}<p style="font-size:22px;font-weight:bold;margin:8px 0">${title}</p>${slogan ? `<p style="margin:0">${slogan}</p>` : ''}</td></tr>
 <tr><td style="padding:20px">${body}</td></tr>
 </tbody></table></div>`;
 }

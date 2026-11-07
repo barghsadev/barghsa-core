@@ -151,6 +151,7 @@ export const UpsertBrandConfigSchema = z.object({
   expectedVersion: z.number().int().min(0).max(2147483647),
   logoUploadKey: z.string().max(255).optional(),
   faviconUploadKey: z.string().max(255).optional(),
+  logoDarkUploadKey: z.string().max(255).optional(),
   config: z
     .object({
       appTitle: z.string().min(1).max(100).optional().default('Barghsa'),
@@ -182,6 +183,9 @@ export const UpsertBrandConfigSchema = z.object({
         .regex(hexColorRe, 'Must be a valid 6-char hex color')
         .optional()
         .default('#d6a74e'),
+      darkPrimaryColor: z.string().regex(hexColorRe).optional(),
+      darkSecondaryColor: z.string().regex(hexColorRe).optional(),
+      darkAccentColor: z.string().regex(hexColorRe).optional(),
       backgroundColor: z
         .string()
         .regex(hexColorRe)
@@ -198,6 +202,7 @@ export const UpsertBrandConfigSchema = z.object({
       borderRadiusRem: z.number().min(0).max(1.5).optional().default(0.75),
       spacingScale: z.number().min(0.875).max(1.25).optional().default(1),
       logoUrl: assetUrl.nullable().optional().default(null),
+      logoDarkUrl: assetUrl.nullable().optional().default(null),
       faviconUrl: assetUrl.nullable().optional().default(null),
       darkMode: z.boolean().optional().default(false),
       themeMode: z.enum(['light', 'dark', 'system']).optional(),
@@ -1029,10 +1034,24 @@ export class AdminController {
           type: 'string',
           description: 'Verified branding_logo image upload for the favicon, owned by the editor',
         },
+        logoDarkUploadKey: {
+          type: 'string',
+          maxLength: 255,
+          description: 'Verified branding_logo image upload for dark mode, owned by the editor',
+        },
         config: {
           type: 'object',
           description: 'Brand config JSON (appTitle, colors, etc.)',
           properties: {
+            darkPrimaryColor: { type: 'string', pattern: '^#[a-fA-F0-9]{6}$' },
+            darkSecondaryColor: { type: 'string', pattern: '^#[a-fA-F0-9]{6}$' },
+            darkAccentColor: { type: 'string', pattern: '^#[a-fA-F0-9]{6}$' },
+            logoDarkUrl: {
+              type: 'string',
+              nullable: true,
+              description:
+                'Persistent HTTPS or owned sealed branding image; absent uses the light logo',
+            },
             numberStyle: {
               type: 'string',
               enum: ['locale', 'persian', 'western'],
@@ -1078,7 +1097,8 @@ export class AdminController {
       req.session.userId,
       parsed.data.expectedVersion,
       parsed.data.logoUploadKey,
-      parsed.data.faviconUploadKey
+      parsed.data.faviconUploadKey,
+      parsed.data.logoDarkUploadKey
     );
   }
 

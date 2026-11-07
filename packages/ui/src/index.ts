@@ -79,3 +79,5 @@ export * from './components/ui/list-toolbar';
 export * from './components/ui/list-page';
 
 export * from './components/base-ui/month-picker';
+export * from './components/base-ui/animated';
+export * from './hooks/use-reduced-motion';

@@ -335,9 +335,51 @@ async function logoUpload(purpose = 'branding_logo', bytes = png) {
   );
   return upload.key;
 }
-describe.each(['logo', 'favicon'] as const)('%s asset boundaries', (asset) => {
-  const uploadField = asset === 'logo' ? 'logoUploadKey' : 'faviconUploadKey';
-  const urlField = asset === 'logo' ? 'logoUrl' : 'faviconUrl';
+
+it('publishes the exact reviewed dark palette only after activation', async () => {
+  const palette = {
+    darkPrimaryColor: '#abcdef',
+    darkSecondaryColor: '#fedcba',
+    darkAccentColor: '#567890',
+  };
+  const draft = await saved(
+    await request('admin/branding/config', 'PUT', {
+      expectedVersion: 0,
+      config: { appTitle: 'Two palettes', ...palette },
+    })
+  );
+  const publicRead = () => fetch(`${http.base}/api/public/branding/config`).then((r) => r.json());
+  expect(await publicRead()).not.toMatchObject(palette);
+  expect(
+    (
+      await request('admin/branding/activate', 'POST', {
+        draftId: draft.id,
+        expectedVersion: draft.version,
+      })
+    ).status
+  ).toBe(200);
+  expect(await publicRead()).toMatchObject(palette);
+  expect(draft.config).toMatchObject(palette);
+  for (const field of Object.keys(palette))
+    expect(
+      (
+        await request('admin/branding/config', 'PUT', {
+          expectedVersion: 1,
+          config: { [field]: 'red;url(evil)' },
+        })
+      ).status
+    ).toBe(400);
+  expect((await http.pool.query('SELECT id FROM brand_config')).rows).toHaveLength(1);
+});
+describe.each(['logo', 'favicon', 'logoDark'] as const)('%s asset boundaries', (asset) => {
+  const uploadField =
+    asset === 'logo'
+      ? 'logoUploadKey'
+      : asset === 'logoDark'
+        ? 'logoDarkUploadKey'
+        : 'faviconUploadKey';
+  const urlField =
+    asset === 'logo' ? 'logoUrl' : asset === 'logoDark' ? 'logoDarkUrl' : 'faviconUrl';
   it('seals a verified logo, protects draft previews and retains exact bytes after the source changes', async () => {
     const key = await logoUpload();
     const draft = await saved(

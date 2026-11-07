@@ -4,6 +4,7 @@ import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { useTheme } from '../hooks/useTheme.js';
 import { THEME_STORAGE_KEY, THEME_POLICY_STORAGE_KEY } from '../lib/theme.js';
 import { BrandThemeProvider, getBrandTextColor, useBrandConfig } from './BrandThemeProvider.js';
+import { BrandMark } from '../components/BrandMark.js';
 let root: Root, host: HTMLDivElement;
 const config = {
   appTitle: 'Saved brand',
@@ -37,6 +38,45 @@ function Consumer() {
     <p data-number-style={brandConfig.numberStyle}>{loading ? 'Loading' : brandConfig.appTitle}</p>
   );
 }
+
+it('changes palette and logo together on a live theme change while retaining existing input', async () => {
+  localStorage.setItem(THEME_STORAGE_KEY, 'dark');
+  const dark = {
+    ...config,
+    themeMode: 'system',
+    darkPrimaryColor: '#abcdef',
+    darkSecondaryColor: '#fedcba',
+    darkAccentColor: '#567890',
+    logoUrl: 'https://assets.example.test/light.png',
+    logoDarkUrl: 'https://assets.example.test/dark.png',
+  };
+  const fetcher = vi.fn().mockResolvedValue(new Response(JSON.stringify(dark)));
+  vi.stubGlobal('fetch', fetcher);
+  function Live() {
+    const { setTheme } = useTheme();
+    return (
+      <>
+        <BrandMark />
+        <input aria-label="Draft" defaultValue="captured" />
+        <button onClick={() => setTheme('light')}>Light</button>
+      </>
+    );
+  }
+  await act(async () =>
+    root.render(
+      <BrandThemeProvider>
+        <Live />
+      </BrandThemeProvider>
+    )
+  );
+  expect(host.querySelector('img')?.src).toBe(dark.logoDarkUrl);
+  expect(document.documentElement.style.getPropertyValue('--primary')).toBe('#abcdef');
+  await act(async () => host.querySelector('button')!.click());
+  expect(host.querySelector('img')?.src).toBe(dark.logoUrl);
+  expect(document.documentElement.style.getPropertyValue('--primary')).toBe(config.primaryColor);
+  expect(host.querySelector('input')?.value).toBe('captured');
+  expect(fetcher).toHaveBeenCalledOnce();
+});
 async function mount() {
   await act(async () => {
     root.render(
@@ -146,7 +186,7 @@ it('ignores malformed branding instead of partially applying it', async () => {
   );
   await mount();
   expect(document.title).toBe('Original app');
-  expect(host.textContent).toBe('');
+  expect(host.textContent).toBe('Barghsa');
 });
 
 it('restores preexisting document styles, title and icon after a successful mount', async () => {

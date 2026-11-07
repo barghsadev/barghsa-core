@@ -11,12 +11,16 @@ export interface BrandConfig {
   primaryColor: string;
   secondaryColor: string;
   accentColor: string;
+  darkPrimaryColor?: string;
+  darkSecondaryColor?: string;
+  darkAccentColor?: string;
   backgroundColor: string;
   darkBackgroundColor: string;
   fontFamily: 'vazirmatn' | 'tahoma';
   borderRadiusRem: number;
   spacingScale: number;
   logoUrl: string | null;
+  logoDarkUrl?: string | null;
   faviconUrl: string | null;
   darkMode: boolean;
   themeMode?: ThemeMode;
@@ -24,8 +28,8 @@ export interface BrandConfig {
 }
 
 export const DEFAULT_BRAND_CONFIG: BrandConfig = {
-  appTitle: '',
-  appTitleFa: '',
+  appTitle: 'Barghsa',
+  appTitleFa: 'برقسا',
   supportEmail: '',
   supportPhone: '',
   supportMobile: '',
@@ -39,6 +43,7 @@ export const DEFAULT_BRAND_CONFIG: BrandConfig = {
   borderRadiusRem: 0.75,
   spacingScale: 1,
   logoUrl: null,
+  logoDarkUrl: null,
   faviconUrl: null,
   darkMode: false,
   themeMode: 'system',
@@ -55,6 +60,20 @@ export const DANGER_TEXT_COLORS = ['#a42c35', '#ffafb2'] as const;
 
 export function brandName(config: BrandConfig, locale: 'fa' | 'en'): string {
   return locale === 'fa' ? config.appTitleFa : config.appTitle;
+}
+
+/** Old published revisions keep their existing colors until an explicit dark palette is saved. */
+export function brandColor(
+  config: BrandConfig,
+  color: 'primary' | 'secondary' | 'accent',
+  theme: 'light' | 'dark'
+): string {
+  const dark = {
+    primary: 'darkPrimaryColor',
+    secondary: 'darkSecondaryColor',
+    accent: 'darkAccentColor',
+  } as const;
+  return (theme === 'dark' ? config[dark[color]] : undefined) ?? config[`${color}Color`];
 }
 
 function colorLuminance(hex: string): number {
@@ -121,6 +140,8 @@ export function parseBrandConfig(value: unknown): BrandConfig | null {
     return null;
   for (const field of ['primaryColor', 'secondaryColor', 'accentColor'])
     if (!validColor(data[field])) return null;
+  for (const field of ['darkPrimaryColor', 'darkSecondaryColor', 'darkAccentColor'])
+    if (data[field] !== undefined && !validColor(data[field])) return null;
   const backgroundColor = data.backgroundColor ?? DEFAULT_BRAND_CONFIG.backgroundColor;
   const darkBackgroundColor = data.darkBackgroundColor ?? DEFAULT_BRAND_CONFIG.darkBackgroundColor;
   if (
@@ -146,12 +167,14 @@ export function parseBrandConfig(value: unknown): BrandConfig | null {
   )
     return null;
   if (!validAsset(data.logoUrl) || !validAsset(data.faviconUrl)) return null;
+  if (data.logoDarkUrl !== undefined && !validAsset(data.logoDarkUrl)) return null;
   const numberStyle = data.numberStyle ?? 'locale';
   if (typeof numberStyle !== 'string' || !['locale', 'persian', 'western'].includes(numberStyle))
     return null;
   if (data.themeMode !== undefined && !isThemeMode(data.themeMode)) return null;
   return {
     ...data,
+    logoDarkUrl: data.logoDarkUrl ?? null,
     backgroundColor,
     darkBackgroundColor,
     fontFamily,

@@ -341,9 +341,9 @@
 
 | ID | Task | Complexity |
 |----|------|------------|
-| **T-07.06.01.01** | Build `ThemeToggle` component: sun/moon icon button in topbar. Cycles: `light` → `dark` → `system` → `light`. Shows current icon based on resolved theme. | S |
-| **T-07.06.01.02** | Persist theme choice: localStorage key `barghsa-theme`. On server render, read from cookie (set by middleware or client script) to prevent flash. | S |
-| **T-07.06.01.03** | ⚠️ Verify dark mode colors pass contrast checks. Dark backgrounds must not be pure `#000` (use `#0a0a0a` or similar). Dark foregrounds must not be pure `#fff` (use `#f5f5f5`). All surface colors appropriate for their role. | M |
+| **T-07.06.01.01** | Retain the native `ThemeSwitcher` selector in the topbar account menu, offering light, dark and device modes with a sun/moon icon for the resolved theme. Keep server-confirmed preference writes and published administrator policy precedence. | S |
+| **T-07.06.01.02** | Persist through the existing account preference and `barghsa.theme.v1` browser key. Retain `barghsa.theme-policy.v1` and the nonce-bound blocking head script for the approved Vite SPA, establishing appearance before React without a flash. | S |
+| **T-07.06.01.03** | ⚠️ Verify dark mode colors pass contrast checks. Default dark backgrounds must not be pure `#000` and default dark foregrounds must not be pure `#fff`. Validated custom brand choices retain their configured colors and enforced readable foregrounds. All surface colors appropriate for their role. | M |
 | **T-07.06.01.04** | ⚠️ Check all shadcn/ui components for missing dark mode variants. Common issues: shadows too harsh in dark mode, borders invisible, subtle backgrounds not dark enough. | M |
 | **T-07.06.01.05** | ⚠️ Verify dark mode renders correctly in all browsers (Chrome, Firefox, Safari, Edge) on desktop and mobile. Verify print stylesheet overrides dark mode to light. | M |
 
@@ -367,11 +367,11 @@
 
 | ID | Task | Complexity |
 |----|------|------------|
-| **T-07.07.01.01** | Build `BrandConfigProvider`: on app mount, fetch `GET /api/v1/branding` (cached, long TTL). Set CSS custom properties on `:root` based on response. Support `primary`, `secondary`, `accent` colors separately for light and dark themes. | M |
+| **T-07.07.01.01** | Retain `BrandThemeProvider`: on app mount, read validated active config from `GET /api/public/branding/config`, retaining the last valid config on later failures and refreshing on confirmed activation. Set CSS custom properties on `:root` based on response. Support `primary`, `secondary`, `accent` colors separately for light and dark themes. | M |
 | **T-07.07.01.02** | Support brand logo upload: `logoUrl` (light variant), `logoDarkUrl` (dark variant), `faviconUrl`. Swap logo in topbar, auth pages, and email templates based on current theme. | M |
-| **T-07.07.01.03** | Support `appTitle` (brand name shown in topbar, browser tab title, auth pages). `appTitleEn` and `appTitleFa` for bilingual display. | S |
+| **T-07.07.01.03** | Support `appTitle` (English) and `appTitleFa` (Persian) in the shell, browser title, auth pages and email. Keep the existing English field name; react to language and published-config changes. | S |
 | **T-07.07.01.04** | ⚠️ Validate admin-configured colors have sufficient contrast against backgrounds. If an admin sets primary to a low-contrast value, show a warning before activation. Use WCAG contrast formula to check. | M |
-| **T-07.07.01.05** | ⚠️ Branding changes use Draft → Active lifecycle. When a new branding version is saved as Draft, show a "Preview brand" button that temporarily applies Draft tokens so admin can see before activating. | M |
+| **T-07.07.01.05** | ⚠️ Branding changes retain immutable draft revisions and explicit activation. Show current and local draft previews side by side, including draft tokens and private asset variants before publication; do not replace the active application tokens during preview. | M |
 | **T-07.07.01.06** | ⚠️ Fallback: if branding API is unreachable or returns invalid data, use hardcoded defaults. Never crash the app on branding load failure. | S |
 
 ---
@@ -398,7 +398,7 @@
 | **T-07.08.01.03** | Create `Animated` wrapper component: `fade`, `slide`, `scale`, `shimmer` variants. Respects `reducedMotion` — uses instant show/hide instead of animate when reduced motion is preferred. | M |
 | **T-07.08.01.04** | Apply entrance animations to: page transitions (subtle fade + slide up), list items appearing (staggered fade), dashboard cards (staggered scale + fade), skeleton loading (shimmer). | M |
 | **T-07.08.01.05** | Apply micro-interactions: button press scale(0.97), card hover lift, switch toggle slide, accordion chevron rotate, progress bar fill, toast slide-in from top-right (LTR) / top-left (RTL). | M |
-| **T-07.08.01.06** | ⚠️ `prefers-reduced-motion: reduce` must disable: all entrance animations, hover transitions, parallax, shimmer (show flat gray instead), scale/rotate transforms. Keep only: loading spinner (reduced speed), progress bar fill (reduced speed), toast appear (instant, no slide). | M |
+| **T-07.08.01.06** | ⚠️ `prefers-reduced-motion: reduce` must disable: all entrance animations, hover transitions, parallax, shimmer (show flat gray instead), non-essential scale/rotate transforms; retain semantic RTL mirroring and checked-state positions. Keep only: loading spinner (reduced speed), progress bar fill (reduced speed), toast appear (instant, no slide). | M |
 
 ---
 

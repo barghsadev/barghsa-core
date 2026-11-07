@@ -65,6 +65,24 @@ export default defineConfig({
       name: 'mobile-safari',
       use: { ...devices['iPhone 13'] },
     },
+    // Explicit desktop-channel gates; ordinary local/CI matrices retain their five projects.
+    ...(process.env['BARGHSA_DESKTOP_CHANNELS'] === '1'
+      ? [
+          {
+            name: 'chrome-stable',
+            use: { ...devices['Desktop Chrome'], channel: 'chrome' as const },
+          },
+          {
+            name: 'edge-stable',
+            use: {
+              ...devices['Desktop Edge'],
+              ...(process.env['BARGHSA_EDGE_EXECUTABLE']
+                ? { launchOptions: { executablePath: process.env['BARGHSA_EDGE_EXECUTABLE'] } }
+                : { channel: 'msedge' as const }),
+            },
+          },
+        ]
+      : []),
   ],
 
   /* Auto-start local dev server when no external URL is configured */

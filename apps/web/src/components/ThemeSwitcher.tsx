@@ -1,4 +1,4 @@
-import { Moon, Sun, Monitor } from 'lucide-react';
+import { Moon, Sun } from 'lucide-react';
 import { useEffect, useRef, useState, useId } from 'react';
 import { NativeSelect } from '@barghsa/ui';
 import { shellText } from '@barghsa/i18n/shell';
@@ -17,7 +17,7 @@ function readMode(value: unknown): ThemeMode | undefined {
 /** Keep account preference writes authoritative; published administrator policy wins. */
 export function ThemeSwitcher() {
   const locale = useLocale();
-  const { userMode, setUserMode, themePolicy, loading } = useBrandConfig();
+  const { userMode, setUserMode, themePolicy, loading, resolvedTheme } = useBrandConfig();
   const managed = themePolicy !== 'system';
   const descriptionId = useId();
   const [ready, setReady] = useState(false);
@@ -69,7 +69,7 @@ export function ThemeSwitcher() {
   };
 
   const shownMode = managed ? themePolicy : userMode;
-  const Icon = shownMode === 'light' ? Sun : shownMode === 'dark' ? Moon : Monitor;
+  const Icon = resolvedTheme === 'dark' ? Moon : Sun;
   return (
     <label className="inline-flex max-w-full flex-wrap items-center gap-1.5 text-sm">
       <Icon className="size-4 shrink-0" aria-hidden="true" />
