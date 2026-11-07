@@ -24,3 +24,9 @@ The high contrast switch in account settings applies to the current browser.
 It strengthens text, form controls and focus outlines in both light and dark
 themes, and does not send an account setting change. The shared stylesheet
 also keeps a visible focus outline when the operating system forces colors.
+
+Standalone loading, error and not-found views keep the same skip link and
+main landmark as ordinary pages. A fallback inside the workspace reuses its
+main landmark. When an already verified session is denied on the next
+protected navigation, sign-in announces that the session ended. The notice is
+used once; a normal visit to sign-in has no expiry warning.

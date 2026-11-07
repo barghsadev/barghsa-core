@@ -9,6 +9,11 @@ export const router = createRouter({
   defaultPendingMs: 100,
   defaultPendingMinMs: 500,
   defaultErrorComponent: lazy(() => import('./components/RouteErrorBoundary.js')),
+  defaultNotFoundComponent: lazy(() =>
+    import('./components/RouteErrorBoundary.js').then((module) => ({
+      default: module.RouteNotFound,
+    }))
+  ),
   defaultPendingComponent: lazy(() =>
     import('./components/RouteSkeleton.js').then((module) => ({ default: module.RouteSkeleton }))
   ),

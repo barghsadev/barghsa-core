@@ -1,7 +1,11 @@
 import { afterEach, expect, it, vi } from 'vitest';
 import { readSessionContext, readProfileAvailability } from './session-role.js';
 import { refreshProfileContext, getProfileContextRevision } from './profile-context.js';
-afterEach(() => vi.unstubAllGlobals());
+import { readRouteBootstrap } from './route-bootstrap-read.js';
+afterEach(() => {
+  vi.useRealTimers();
+  vi.unstubAllGlobals();
+});
 for (const path of ['/api/auth/user', '/api/profiles'] as const) {
   const read = (signal: AbortSignal) =>
     path === '/api/auth/user'
@@ -111,4 +115,26 @@ it('refuses an availability read based on an obsolete verified session revision'
     readProfileAvailability(new AbortController().signal, 'old-account', revision)
   ).rejects.toMatchObject({ name: 'AbortError' });
   expect(fetch).not.toHaveBeenCalled();
+});
+
+it('withdraws a stalled protected route read and surfaces a recoverable timeout', async () => {
+  vi.useFakeTimers();
+  const fetcher = vi.fn(
+    (_path: string, { signal }: { signal: AbortSignal }) =>
+      new Promise((_resolve, reject) => {
+        signal.addEventListener('abort', () => reject(signal.reason), { once: true });
+      })
+  );
+  vi.stubGlobal('fetch', fetcher);
+  const request = readRouteBootstrap(
+    '/api/profiles',
+    undefined,
+    'account-one',
+    getProfileContextRevision()
+  );
+  const rejection = expect(request).rejects.toThrow('Authority check timed out');
+  await vi.advanceTimersByTimeAsync(15_000);
+  await rejection;
+  expect(fetcher).toHaveBeenCalledTimes(1);
+  expect(fetcher.mock.calls[0]![1].signal.aborted).toBe(true);
 });

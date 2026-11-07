@@ -10,8 +10,9 @@ import {
 } from '@tanstack/react-router';
 import { isAuthEntryPath } from '../../entry-routes.js';
 import { rememberEntryLocale } from '../lib/entry-locale.js';
+import { rememberSessionEnded } from '../lib/session-ended-notice.js';
 import { TanStackRouterDevtools } from '@tanstack/router-devtools';
-import { lazy, Suspense, useEffect } from 'react';
+import { lazy, Suspense, useEffect, type ReactNode } from 'react';
 // Auth entry routes hand off to the application before any customer workspace mounts.
 const authEntry = import.meta.env.PROD && __BARGHSA_AUTH_ENTRY__;
 const VerificationBanner = authEntry
@@ -52,7 +53,10 @@ export const Route = createRootRoute({
     }
     if (location.pathname === '/app' || location.pathname.startsWith('/app/')) {
       const session = await readSessionContext(abortController.signal);
-      if (session === null) throw redirect({ to: '/login', replace: true });
+      if (session === null) {
+        rememberSessionEnded(preload);
+        throw redirect({ to: '/login', replace: true });
+      }
       const isStaff = session.operatingContext === 'staff';
       if (!isStaff) {
         const available = await readProfileAvailability(
@@ -60,15 +64,28 @@ export const Route = createRootRoute({
           session.userId ?? null,
           session.navigationRevision
         );
-        if (available === null) throw redirect({ to: '/login', replace: true });
+        if (available === null) {
+          rememberSessionEnded(preload);
+          throw redirect({ to: '/login', replace: true });
+        }
         if (!available) throw redirect({ to: '/onboarding', replace: true });
       }
       return { appSession: session, isStaff };
     }
     return { appSession: null, isStaff: false };
   },
+  shellComponent: RouteShell,
   component: RootComponent,
 });
+
+function RouteShell({ children }: { children: ReactNode }) {
+  return (
+    <>
+      <SkipLink />
+      {children}
+    </>
+  );
+}
 
 /**
  * Auth route path prefixes that should skip the profile check.
@@ -120,7 +137,6 @@ function RootComponent() {
   return (
     <UiDirectionProvider>
       <BrandThemeProvider key={profileRevision}>
-        <SkipLink />
         {showCustomerBanner && (
           <Suspense fallback={null}>
             <VerificationBanner accountId={accountId} />

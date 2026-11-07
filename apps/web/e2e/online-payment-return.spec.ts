@@ -123,6 +123,15 @@ for (const locale of ['en', 'fa']) {
     const login = page.getByTestId('payment-return').locator('a');
     await expect(login).toHaveAttribute('href', '/login');
     await expect(login).toHaveAttribute('target', '_blank');
+    await page.evaluate(() => document.documentElement.classList.add('dark'));
+    expect(
+      (
+        await new AxeBuilder({ page })
+          .include('[data-testid="payment-return"]')
+          .withRules(['color-contrast'])
+          .analyze()
+      ).violations
+    ).toEqual([]);
     await button.click();
     await expect(page.getByTestId('payment-return-status')).toHaveText(
       locale === 'fa'

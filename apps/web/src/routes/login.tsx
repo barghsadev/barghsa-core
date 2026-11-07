@@ -22,6 +22,7 @@ import { normalizeRecoveryUsername as normalizeUsername } from '../lib/password-
 import { emptyLogin, type LoginStage } from '../lib/login-form.js';
 import { toast } from '../lib/toast-api.js';
 import { rememberAuthSuccess } from '../lib/auth-entry-feedback.js';
+import { clearSessionEndedNotice, hasSessionEndedNotice } from '../lib/session-ended-notice.js';
 export const Route = createFileRoute('/login')({ component: LoginPage });
 const ERROR_CODE_I18N_MAP: Record<string, string> = {
   'AUTH:LOGIN:INVALID_CREDENTIALS': 'auth.login.error.invalidCredentials',
@@ -42,6 +43,8 @@ function LoginPage() {
     locale = useLocale(),
     numbers = useNumberFormatting(locale);
   const [stage, setStage] = useState<LoginStage>('credentials');
+  const [sessionEnded] = useState(hasSessionEndedNotice);
+  const sessionNotice = useRef<HTMLParagraphElement>(null);
   const [challenge, setChallenge] = useState<{ id: string; destination: string } | null>(null);
   const [passwordChangeToken, setPasswordChangeToken] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -58,6 +61,12 @@ function LoginPage() {
   const touched = !!form.formState.touchedFields.username || form.formState.isSubmitted;
   const cooldown = Math.max(0, Math.ceil((resendUntil - now) / 1000)),
     attemptCooldown = Math.max(0, Math.ceil((attemptUntil - now) / 1000));
+  useEffect(() => {
+    if (sessionEnded) {
+      clearSessionEndedNotice();
+      sessionNotice.current?.focus();
+    }
+  }, [sessionEnded]);
   useEffect(() => {
     const timer = setInterval(() => setNow(Date.now()), 1000);
     return () => clearInterval(timer);
@@ -390,6 +399,16 @@ function LoginPage() {
             </p>
           )}
         </div>
+        {sessionEnded && stage === 'credentials' && (
+          <p
+            ref={sessionNotice}
+            tabIndex={-1}
+            role="alert"
+            className="rounded-lg border border-destructive bg-danger-soft p-3 text-sm text-destructive"
+          >
+            {loginFormText('sessionEnded', locale)}
+          </p>
+        )}
         <Form {...form}>
           <form
             key={`${stage}|${model.draftKey}`}

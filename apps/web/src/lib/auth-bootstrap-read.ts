@@ -8,9 +8,16 @@ export async function readAuthBootstrap(
 ) {
   const controller = new AbortController();
   const cancel = () => controller.abort();
+  let timedOut = false;
+  const deadline = setTimeout(() => {
+    timedOut = true;
+    cancel();
+  }, 15_000);
   const unsubscribe = subscribeProfileContext(cancel);
   external?.addEventListener('abort', cancel, { once: true });
   const check = () => {
+    if (timedOut && !external?.aborted && revision === getProfileContextRevision())
+      throw new Error('Authority check timed out');
     if (external?.aborted || controller.signal.aborted || revision !== getProfileContextRevision())
       throw new DOMException(
         path === '/api/profiles' ? 'Profile check cancelled' : 'Session check cancelled',
@@ -32,6 +39,7 @@ export async function readAuthBootstrap(
     check();
     throw error;
   } finally {
+    clearTimeout(deadline);
     unsubscribe();
     external?.removeEventListener('abort', cancel);
   }

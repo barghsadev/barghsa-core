@@ -2,7 +2,10 @@ import { afterEach, expect, it, vi } from 'vitest';
 import { readAuthBootstrap } from './auth-bootstrap-read.js';
 import { getProfileContextRevision, refreshProfileContext } from './profile-context.js';
 
-afterEach(() => vi.unstubAllGlobals());
+afterEach(() => {
+  vi.useRealTimers();
+  vi.unstubAllGlobals();
+});
 
 it.each(['route', 'profile context'])(
   'rejects late auth data after %s replacement',
@@ -55,4 +58,21 @@ it('never dispatches a stale auth attempt and reads a current anonymous response
   expect(response).toMatchObject({ ok: false, status: 401 });
   expect(json).not.toHaveBeenCalled();
   expect(read).toHaveBeenCalledTimes(1);
+});
+
+it('times out a stalled authority check without granting access or retrying', async () => {
+  vi.useFakeTimers();
+  const fetcher = vi.fn(
+    (_path: string, { signal }: { signal: AbortSignal }) =>
+      new Promise((_resolve, reject) => {
+        signal.addEventListener('abort', () => reject(signal.reason), { once: true });
+      })
+  );
+  vi.stubGlobal('fetch', fetcher);
+  const request = readAuthBootstrap('/api/auth/user', undefined, getProfileContextRevision());
+  const rejection = expect(request).rejects.toThrow('Authority check timed out');
+  await vi.advanceTimersByTimeAsync(15_000);
+  await rejection;
+  expect(fetcher).toHaveBeenCalledTimes(1);
+  expect(fetcher.mock.calls[0]![1].signal.aborted).toBe(true);
 });

@@ -771,6 +771,24 @@
   .app-content :where(textarea) {
     border-radius: var(--radius-md);
   }
+  .app-shell {
+    @apply flex h-dvh flex-col bg-background text-foreground [--mobile-navigation-height:calc(4rem+env(safe-area-inset-bottom))] lg:[--mobile-navigation-height:0px];
+  }
+  .app-shell[data-no-navigation='true'] {
+    --mobile-navigation-height: 0px;
+  }
+  .app-shell-sidebar {
+    @apply hidden max-h-[55dvh] shrink-0 overflow-y-auto overscroll-contain border-b border-e bg-sidebar p-4 text-sidebar-foreground md:block md:max-h-none md:w-[60px] md:border-b-0 md:px-1.5 md:py-2 md:hover:w-(--sidebar-width) md:focus-within:w-(--sidebar-width) lg:w-(--sidebar-width) lg:p-4;
+  }
+  .app-shell-sidebar[data-expanded='true'] {
+    @apply block md:w-(--sidebar-width);
+  }
+  .shell-sidebar-panel {
+    @apply md:hidden md:group-hover/sidebar:block md:group-focus-within/sidebar:block md:group-data-[expanded=true]/sidebar:block lg:block;
+  }
+  .shell-sidebar-label {
+    @apply md:hidden md:group-hover/sidebar:inline md:group-focus-within/sidebar:inline md:group-data-[expanded=true]/sidebar:inline lg:inline;
+  }
   .shell-navigation-link {
     display: flex;
     align-items: center;
@@ -782,6 +800,7 @@
     font-size: 0.875rem;
     text-decoration: none;
     transition: background-color var(--duration-fast);
+    @apply md:px-2 md:group-hover/sidebar:px-3 md:group-focus-within/sidebar:px-3 md:group-data-[expanded=true]/sidebar:px-3 lg:px-3;
   }
   .shell-navigation-link:hover,
   .shell-navigation-link[aria-current='page'] {

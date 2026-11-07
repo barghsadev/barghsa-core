@@ -1,3 +1,4 @@
+import AxeBuilder from '@axe-core/playwright';
 import { test, expect, type Page } from './coverage-fixture';
 import { fullNavigation } from './navigation-fixture';
 
@@ -21,7 +22,7 @@ async function authenticatedShell(page: Page) {
           {
             id: '11111111-1111-4111-8111-111111111111',
             profileType: 'INDIVIDUAL',
-            status: 'PENDING_VERIFICATION',
+            status: 'ACTIVE',
             isDefault: true,
             title: null,
             firstName: 'Mina',
@@ -52,7 +53,7 @@ for (const locale of ['fa', 'en'] as const)
       route.fulfill({
         json: {
           activeProfileId: '11111111-1111-4111-8111-111111111111',
-          profileStatus: 'PENDING_VERIFICATION',
+          profileStatus: 'ACTIVE',
           isVerified: false,
           verificationRequired: true,
           verificationMethod: 'api',
@@ -89,7 +90,7 @@ test('verification banner changes language on the mounted page', async ({ page }
     route.fulfill({
       json: {
         activeProfileId: '11111111-1111-4111-8111-111111111111',
-        profileStatus: 'PENDING_VERIFICATION',
+        profileStatus: 'ACTIVE',
         isVerified: false,
         verificationRequired: true,
         verificationMethod: 'manual',
@@ -111,4 +112,59 @@ test('verification banner changes language on the mounted page', async ({ page }
     page.getByRole('alert').filter({ hasText: 'پروفایل شما تأیید نشده است' })
   ).toHaveAttribute('dir', 'rtl');
   await expect(page.getByRole('link', { name: 'پیگیری تأیید از پشتیبانی' })).toBeVisible();
+});
+
+test('the available verification action has readable text in both themes', async ({ page }) => {
+  await authenticatedShell(page);
+  await page.route('**/api/profiles/verification-status', (route) =>
+    route.fulfill({
+      json: {
+        activeProfileId: '11111111-1111-4111-8111-111111111111',
+        profileStatus: 'ACTIVE',
+        isVerified: false,
+        verificationRequired: true,
+        verificationMethod: 'api',
+        canAutoVerify: true,
+      },
+    })
+  );
+  await page.goto('/tickets');
+  const verify = page.getByRole('button', { name: /^(تأیید خودکار|Auto-verify)$/ });
+  await expect(verify).toBeEnabled();
+  for (const dark of [false, true]) {
+    await page.evaluate((mode) => document.documentElement.classList.toggle('dark', mode), dark);
+    expect(
+      (
+        await new AxeBuilder({ page })
+          .include('[role="alert"][dir]')
+          .withRules(['color-contrast'])
+          .analyze()
+      ).violations
+    ).toEqual([]);
+  }
+});
+
+test('pending verification stays in the waiting state and does not offer auto-approval', async ({
+  page,
+}) => {
+  await authenticatedShell(page);
+  await page.route('**/api/profiles/verification-status', (route) =>
+    route.fulfill({
+      json: {
+        activeProfileId: '11111111-1111-4111-8111-111111111111',
+        profileStatus: 'PENDING_VERIFICATION',
+        isVerified: false,
+        verificationRequired: true,
+        verificationMethod: 'api',
+        canAutoVerify: false,
+      },
+    })
+  );
+  await page.goto('/tickets');
+  const notice = page.getByTestId('verification-notice');
+  await expect(notice).toBeVisible();
+  await expect(
+    notice.getByRole('link', { name: /^(تماس با پشتیبانی|Contact support)$/ })
+  ).toHaveAttribute('href', '/tickets');
+  await expect(notice.getByRole('button', { name: /^(تأیید خودکار|Auto-verify)$/ })).toHaveCount(0);
 });

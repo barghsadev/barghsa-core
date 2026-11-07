@@ -277,7 +277,7 @@ function OwnedVerificationBanner({
             <button
               onClick={handleAutoVerify}
               disabled={verifying}
-              className="rounded bg-amber-600 px-3 py-1 text-xs font-medium text-white hover:bg-amber-700 disabled:opacity-50"
+              className="min-h-11 rounded bg-foreground px-3 py-1 text-xs font-medium text-background hover:underline disabled:opacity-50"
             >
               {verifying
                 ? t('verification.banner.verifying', locale)

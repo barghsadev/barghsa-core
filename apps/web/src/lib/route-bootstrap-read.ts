@@ -18,6 +18,11 @@ export async function readRouteBootstrap(
     controller.abort();
     void client.cancelQueries({ queryKey: key, exact: true });
   };
+  let timedOut = false;
+  const deadline = setTimeout(() => {
+    timedOut = true;
+    cancel();
+  }, 15_000);
   const unsubscribe = subscribeProfileContext(cancel);
   external?.addEventListener('abort', cancel, { once: true });
   const current = () =>
@@ -46,6 +51,8 @@ export async function readRouteBootstrap(
     if (!current()) throw new Error('Obsolete bootstrap read');
     return { ok: packet.ok, status: packet.status, json: async () => packet.data };
   } catch (error) {
+    if (timedOut && !external?.aborted && revision === getProfileContextRevision())
+      throw new Error('Authority check timed out');
     if (!current())
       throw new DOMException(
         path === '/api/profiles' ? 'Profile check cancelled' : 'Session check cancelled',
@@ -53,6 +60,7 @@ export async function readRouteBootstrap(
       );
     throw error;
   } finally {
+    clearTimeout(deadline);
     unsubscribe();
     external?.removeEventListener('abort', cancel);
     client.clear();

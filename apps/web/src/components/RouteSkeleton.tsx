@@ -1,6 +1,7 @@
 import { PageLoading, Skeleton } from '@barghsa/ui';
 import { loadingText } from '@barghsa/i18n/loading-feedback';
 import { useLocale } from '../hooks/useLocale.js';
+import { RouteFallbackLandmark } from './RouteFallbackLandmark.js';
 
 interface RouteSkeletonProps {
   layout?: 'default' | 'admin';
@@ -16,21 +17,25 @@ export function RouteSkeleton({ layout = 'default' }: RouteSkeletonProps) {
       className={admin ? 'flex-1' : 'min-h-screen'}
     />
   );
-  if (admin)
-    return (
-      <div className="flex min-h-screen bg-background">
-        <div
-          aria-hidden="true"
-          className="hidden w-64 shrink-0 flex-col gap-4 border-e p-4 md:flex"
-        >
-          {[70, 50, 80, 55, 65, 75].map((width, i) => (
-            <Skeleton key={i} className="h-4" style={{ width: `${width}%` }} />
-          ))}
+  return (
+    <RouteFallbackLandmark>
+      {admin ? (
+        <div className="flex min-h-screen bg-background">
+          <div
+            aria-hidden="true"
+            className="hidden w-64 shrink-0 flex-col gap-4 border-e p-4 md:flex"
+          >
+            {[70, 50, 80, 55, 65, 75].map((width, i) => (
+              <Skeleton key={i} className="h-4" style={{ width: `${width}%` }} />
+            ))}
+          </div>
+          {content}
         </div>
-        {content}
-      </div>
-    );
-  return content;
+      ) : (
+        content
+      )}
+    </RouteFallbackLandmark>
+  );
 }
 
 /** Static reduced-motion indicator retains the same accessible loading status. */

@@ -6,6 +6,7 @@ const en = {
   uncertain:
     'The sign-in result is not confirmed. This request will not be sent again automatically. Start a new sign-in to continue.',
   restart: 'Start a new sign-in',
+  sessionEnded: 'Your session has ended. Sign in again to continue.',
 };
 const fa: Record<keyof typeof en, string> = {
   passwordRequired: 'رمز عبور را وارد کنید',
@@ -14,6 +15,7 @@ const fa: Record<keyof typeof en, string> = {
   uncertain:
     'نتیجه ورود تأیید نشده است. این درخواست خودکار دوباره ارسال نمی‌شود. برای ادامه، ورود تازه‌ای شروع کنید.',
   restart: 'شروع ورود تازه',
+  sessionEnded: 'نشست شما پایان یافته است. برای ادامه دوباره وارد شوید.',
 };
 export function loginFormText(key: keyof typeof en, locale: Locale): string {
   return (locale === 'fa' ? fa : en)[key];

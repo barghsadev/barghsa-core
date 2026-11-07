@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState, useSyncExternalStore, type ReactNode } from 'react';
 import { Link, useLocation, useRouter } from '@tanstack/react-router';
-import { cn, Separator, Animated } from '@barghsa/ui';
+import { Separator, Animated } from '@barghsa/ui';
 import { ArrowUpRight, type LucideIcon } from 'lucide-react';
 import { BrandMark } from './BrandMark.js';
 import { Topbar } from './Topbar.js';
 import { shellText } from '@barghsa/i18n/shell';
 import { BreadcrumbBar } from './BreadcrumbBar.js';
+import { InsideRouteMain } from './RouteFallbackLandmark.js';
 import { currentNavigation } from '../lib/shell-navigation.js';
 import {
   AnalyticsConsentBanner,
@@ -83,10 +84,8 @@ export function AppShell({
   const current = currentNavigation(groups, pathname);
   const shell = (
     <div
-      className={cn(
-        'flex h-dvh flex-col bg-background text-foreground [--mobile-navigation-height:calc(4rem+env(safe-area-inset-bottom))] lg:[--mobile-navigation-height:0px]',
-        !groups.length && '[--mobile-navigation-height:0px]'
-      )}
+      className="app-shell"
+      data-no-navigation={groups.length === 0 || undefined}
       dir={locale === 'fa' ? 'rtl' : 'ltr'}
     >
       {banners}
@@ -109,10 +108,7 @@ export function AppShell({
         <aside
           id={`${area}-navigation`}
           data-expanded={menuOpen}
-          className={cn(
-            'group/sidebar max-h-[55dvh] shrink-0 overflow-y-auto overscroll-contain border-b border-e bg-sidebar p-4 text-sidebar-foreground md:block md:max-h-none md:border-b-0 md:px-1.5 md:py-2 md:hover:w-(--sidebar-width) md:focus-within:w-(--sidebar-width) lg:w-(--sidebar-width) lg:p-4',
-            menuOpen ? 'block md:w-(--sidebar-width)' : 'hidden md:w-[60px]'
-          )}
+          className="group/sidebar app-shell-sidebar"
         >
           <Link
             to="/app"
@@ -122,7 +118,7 @@ export function AppShell({
             <BrandMark compact={compact && !menuOpen} />
           </Link>
           {profile ? (
-            <div className="mb-5 md:hidden md:group-hover/sidebar:block md:group-focus-within/sidebar:block md:group-data-[expanded=true]/sidebar:block lg:block">
+            <div className="mb-5 shell-sidebar-panel">
               {profile}
               <Separator aria-hidden="true" className="mt-4" />
             </div>
@@ -142,7 +138,7 @@ export function AppShell({
             )}
             {groups.map((group) => (
               <div key={group.label}>
-                <p className="mb-2 px-3 text-xs font-medium text-muted-foreground md:hidden md:group-hover/sidebar:block md:group-focus-within/sidebar:block md:group-data-[expanded=true]/sidebar:block lg:block">
+                <p className="mb-2 px-3 text-xs font-medium text-muted-foreground shell-sidebar-panel">
                   {group.label}
                 </p>
                 <ul className="flex flex-col gap-1">
@@ -151,7 +147,7 @@ export function AppShell({
                       <Link
                         to={to}
                         activeOptions={{ exact: true }}
-                        className="shell-navigation-link md:px-2 md:group-hover/sidebar:px-3 md:group-focus-within/sidebar:px-3 md:group-data-[expanded=true]/sidebar:px-3 lg:px-3"
+                        className="shell-navigation-link"
                         aria-label={label}
                         title={label}
                         aria-current={current?.to === to ? 'page' : undefined}
@@ -162,9 +158,7 @@ export function AppShell({
                           strokeWidth={1.7}
                           aria-hidden="true"
                         />
-                        <span className="md:hidden md:group-hover/sidebar:inline md:group-focus-within/sidebar:inline md:group-data-[expanded=true]/sidebar:inline lg:inline">
-                          {label}
-                        </span>
+                        <span className="shell-sidebar-label">{label}</span>
                       </Link>
                     </li>
                   ))}
@@ -177,14 +171,12 @@ export function AppShell({
               <Separator aria-hidden="true" className="mb-4" />
               <Link
                 to="/tickets"
-                className="shell-navigation-link md:px-2 md:group-hover/sidebar:px-3 md:group-focus-within/sidebar:px-3 md:group-data-[expanded=true]/sidebar:px-3 lg:px-3"
+                className="shell-navigation-link"
                 aria-label={shellText('support', locale)}
                 title={shellText('support', locale)}
               >
                 <ArrowUpRight className="size-4 shrink-0 rtl:-rotate-90" aria-hidden="true" />
-                <span className="md:hidden md:group-hover/sidebar:inline md:group-focus-within/sidebar:inline md:group-data-[expanded=true]/sidebar:inline lg:inline">
-                  {shellText('support', locale)}
-                </span>
+                <span className="shell-sidebar-label">{shellText('support', locale)}</span>
               </Link>
             </div>
           )}
@@ -196,7 +188,7 @@ export function AppShell({
           className="app-content min-h-0 min-w-0 flex-1 overflow-auto"
         >
           <Animated variant="page" motionKey={pathname} className="responsive-container">
-            {children}
+            <InsideRouteMain value={true}>{children}</InsideRouteMain>
           </Animated>
         </main>
       </div>

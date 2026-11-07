@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-07T05:41:03+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-07T05:53:40+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.4.0**. Next milestone: **v0.5.0**.
 
@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 856 | Accepted with unchanged source bindings. |
+| done | 858 | Accepted with unchanged source bindings. |
 | verify | 475 | Existing work may be complete; inspect evidence before building. |
-| partial | 30 | An earlier review found unmet criteria; reconcile later fixes. |
+| partial | 28 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 7 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
 | blocked | 1 | Named owner or external prerequisite. |
@@ -39,13 +39,13 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Close real route fallback, session expiry announcements and contrast defects in error and verification states. Bind exact route state evidence and keep the separately pending telemetry destination decision open.
+Audit populated form and document journeys for label, error, heading, media and upload semantics. Reuse verified component and browser evidence; fix demonstrated gaps.
 
-- `07-ui-ux-design.md#T-07.05.01.01`: Implement `SkipLink` component (first focusable element on every page, visible on focus: "Skip to main content"). All pages have a `<main>` element with `id="main-content"`.
-- `07-ui-ux-design.md#T-07.05.01.04`: Add `aria-live="polite"` region for dynamic content updates (toast messages, notifications count, form submission status). `aria-live="assertive"` for critical errors (payment failures, session expiry).
-- `07-ui-ux-design.md#T-07.05.01.08`: Ensure all color combinations pass WCAG AA contrast ratios: normal text ≥ 4.5:1, large text ≥ 3:1, UI components ≥ 3:1. Verify with automated tools. Provide a "high contrast" mode toggle that strengthens all contrast ratios.
-- `07-ui-ux-design.md#T-07.12.01.08`: Every list page, detail page, dashboard widget, and admin page must implement the loading/empty/error pattern. No view renders a blank white page or infinite spinner.
-- `07-ui-ux-design.md#T-07.12.01.09`: Error boundaries per route: React Error Boundary catches unhandled render errors. Shows `ErrorState` with "Something went wrong" + reload button. Logs error to Sentry.
+- `07-ui-ux-design.md#T-07.05.01.05`: Ensure all form inputs have programmatically associated labels (`<label htmlFor>` or `aria-label`). Error messages use `aria-describedby` or `aria-errormessage` to link to the input. Required fields use `aria-required="true"`.
+- `07-ui-ux-design.md#T-07.05.01.06`: Ensure all images have meaningful `alt` text. Decorative icons use `aria-hidden="true"`. Status icons (success/error/warning) have screen-reader-visible text (visually hidden `sr-only` label).
+- `07-ui-ux-design.md#T-07.05.01.07`: Implement proper heading hierarchy (`h1` → `h2` → `h3` → `h4`) on every page. A single `<h1>` per page. Landmarks: `<header>`, `<nav>`, `<main>`, `<aside>`, `<footer>` with `aria-label` when multiple instances exist.
+- `07-ui-ux-design.md#T-07.05.01.10`: Ensure custom file upload inputs are keyboard accessible and have clear screen-reader instructions. Drop zones must announce "drop files here or click to browse".
+- `07-ui-ux-design.md#T-07.05.02.02`: Add component-level a11y tests in React Testing Library using `jest-axe` or testing-library's `toBeInTheDocument` + role queries. Every component must pass basic role/name/value checks.
 
 ## v0.2.0: Complete customer journeys
 
@@ -717,10 +717,10 @@ Customer and admin workflows work on desktop/mobile in both languages and themes
 | `07-ui-ux-design.md#T-07.04.02.02` | done | Recorded batch work | On mobile: topbar shows only hamburger menu, app logo/title, notification bell, and profile avatar. All secondary actions move into the "More" drawer or overflow menus. |
 | `07-ui-ux-design.md#T-07.04.02.03` | done | Recorded batch work | On tablet (`md`–`lg`): sidebar collapses to icon-only rail (60px wide). Expand on hover or tap. |
 | `07-ui-ux-design.md#T-07.04.02.04` | partial | Recorded batch work | Verify all pages look correct at `320px`, `375px`, `390px`, `414px`, `768px`, `1024px`, `1280px`, and `1920px` viewport widths. No horizontal scroll, no overlapping text, no tiny touch targets. |
-| `07-ui-ux-design.md#T-07.05.01.01` | partial | Recorded batch work | Implement `SkipLink` component (first focusable element on every page, visible on focus: "Skip to main content"). All pages have a `<main>` element with `id="main-content"`. |
+| `07-ui-ux-design.md#T-07.05.01.01` | done | Recorded batch work | Implement `SkipLink` component (first focusable element on every page, visible on focus: "Skip to main content"). All pages have a `<main>` element with `id="main-content"`. |
 | `07-ui-ux-design.md#T-07.05.01.02` | done | Recorded batch work | Ensure all interactive elements have visible focus indicators. Define a custom focus ring via `:focus-visible` in CSS: `outline: 2px solid var(--ring)`, `outline-offset: 2px`. Never use `outline: none` without a visible replacement. |
 | `07-ui-ux-design.md#T-07.05.01.03` | done | Recorded batch work | Implement a `FocusTrap` component for modals, sheets, and dropdowns. When open, Tab/Shift+Tab cycles within the dialog. Focus returns to trigger on close. |
-| `07-ui-ux-design.md#T-07.05.01.04` | partial | Recorded batch work | Add `aria-live="polite"` region for dynamic content updates (toast messages, notifications count, form submission status). `aria-live="assertive"` for critical errors (payment failures, session expiry). |
+| `07-ui-ux-design.md#T-07.05.01.04` | done | Recorded batch work | Add `aria-live="polite"` region for dynamic content updates (toast messages, notifications count, form submission status). `aria-live="assertive"` for critical errors (payment failures, session expiry). |
 | `07-ui-ux-design.md#T-07.05.01.05` | verify | Inventory needed | Ensure all form inputs have programmatically associated labels (`<label htmlFor>` or `aria-label`). Error messages use `aria-describedby` or `aria-errormessage` to link to the input. Required fields use `aria-required="true"`. |
 | `07-ui-ux-design.md#T-07.05.01.06` | verify | Inventory needed | Ensure all images have meaningful `alt` text. Decorative icons use `aria-hidden="true"`. Status icons (success/error/warning) have screen-reader-visible text (visually hidden `sr-only` label). |
 | `07-ui-ux-design.md#T-07.05.01.07` | verify | Inventory needed | Implement proper heading hierarchy (`h1` → `h2` → `h3` → `h4`) on every page. A single `<h1>` per page. Landmarks: `<header>`, `<nav>`, `<main>`, `<aside>`, `<footer>` with `aria-label` when multiple instances exist. |

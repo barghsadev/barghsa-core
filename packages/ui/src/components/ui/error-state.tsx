@@ -3,6 +3,7 @@ import type { ReactNode } from 'react';
 /** Safe, localized render-error content; never displays raw exception details. */
 export interface ErrorStateProps {
   title: string;
+  heading?: 'h1' | 'h2';
   description: string;
   retryLabel: string;
   /** Product-provided contact instructions or a support link. */
@@ -13,6 +14,7 @@ export interface ErrorStateProps {
 }
 export function ErrorState({
   title,
+  heading: Heading = 'h2',
   description,
   retryLabel,
   supportContact,
@@ -38,7 +40,7 @@ export function ErrorState({
           <path d="m10.3 3.9-8 14a2 2 0 0 0 1.7 3h16a2 2 0 0 0 1.7-3l-8-14a2 2 0 0 0-3.4 0Z" />
           <path d="M12 9v4m0 4h.01" />
         </svg>
-        <h2 className="font-semibold">{title}</h2>
+        <Heading className="font-semibold">{title}</Heading>
         <div className="space-y-3 text-sm">
           <p>{description}</p>
           {details &&

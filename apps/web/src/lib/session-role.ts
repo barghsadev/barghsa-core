@@ -1,6 +1,7 @@
 import { getProfileContextRevision } from './profile-context.js';
 import { parseNavigation, type NavigationConfiguration } from './navigation-config.js';
 import { readAuthBootstrap } from './auth-bootstrap-read.js';
+import { recordVerifiedSession } from './session-ended-notice.js';
 
 export interface SessionContext {
   userId?: string;
@@ -22,7 +23,9 @@ export async function readSessionContext(signal?: AbortSignal): Promise<SessionC
   const user: unknown = await response.json();
   if (signal?.aborted || navigationRevision !== getProfileContextRevision())
     throw new DOMException('Session check cancelled', 'AbortError');
-  return { ...parseSessionContext(user), navigationRevision };
+  const session = parseSessionContext(user);
+  recordVerifiedSession();
+  return { ...session, navigationRevision };
 }
 
 export function parseSessionContext(user: unknown): SessionContext {

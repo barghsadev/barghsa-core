@@ -3,6 +3,7 @@ import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { RouteSkeleton, RouteSpinner } from './RouteSkeleton.js';
 import { RouteErrorBoundary } from './RouteErrorBoundary.js';
+import { InsideRouteMain } from './RouteFallbackLandmark.js';
 
 vi.mock('@tanstack/react-router', () => ({
   useRouter: () => ({ invalidate: async () => {} }),
@@ -77,4 +78,19 @@ it.each([
   ]);
   await act(async () => container.querySelector('button')!.click());
   expect(reset).toHaveBeenCalledTimes(1);
+});
+
+it.each([
+  <RouteSkeleton key="pending" />,
+  <RouteErrorBoundary key="error" error={new Error('failure')} reset={() => {}} />,
+])('keeps only the existing main inside a mounted shell', async (element) => {
+  await act(async () =>
+    root.render(
+      <main id="main-content">
+        <InsideRouteMain value>{element}</InsideRouteMain>
+      </main>
+    )
+  );
+  expect(container.querySelectorAll('main')).toHaveLength(1);
+  expect(container.querySelectorAll('#main-content')).toHaveLength(1);
 });

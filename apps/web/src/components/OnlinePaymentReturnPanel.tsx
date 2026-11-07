@@ -79,7 +79,7 @@ export function OnlinePaymentReturnPanel({
           href="/login"
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-block text-blue-800 underline"
+          className="inline-flex min-h-11 items-center text-foreground underline"
         >
           {t('wallet.return.login', locale)}
         </a>

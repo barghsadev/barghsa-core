@@ -65,6 +65,7 @@ async function feedbackWorkspace(page: Page, locale: 'en' | 'fa') {
 for (const locale of ['en', 'fa'] as const) {
   test(`auth bootstrap errors provide safe details, retry and a support reference (${locale})`, async ({
     page,
+    browserName,
   }) => {
     await page.addInitScript((value) => {
       if (document.documentElement) document.documentElement.lang = value;
@@ -87,6 +88,11 @@ for (const locale of ['en', 'fa'] as const) {
       });
     });
     await page.goto('/register');
+    const main = page.getByRole('main');
+    const skip = page.getByRole('link', {
+      name: locale === 'fa' ? 'رفتن به محتوای اصلی' : 'Skip to main content',
+      exact: true,
+    });
     try {
       await expect(
         page.getByRole('status', {
@@ -94,11 +100,20 @@ for (const locale of ['en', 'fa'] as const) {
           exact: true,
         })
       ).toBeVisible();
+      await expect(main).toHaveAttribute('id', 'main-content');
+      await page.keyboard.press(browserName === 'webkit' ? 'Alt+Tab' : 'Tab');
+      await expect(skip).toBeFocused();
+      await page.keyboard.press('Enter');
+      await expect(main).toBeFocused();
     } finally {
       release();
     }
     const alert = page.getByRole('alert');
     await expect(alert).toContainText(locale === 'fa' ? 'خطایی رخ داد' : 'Something went wrong');
+    await expect(main.getByRole('heading', { level: 1 })).toBeVisible();
+    await expect(page.locator('#main-content')).toHaveCount(1);
+    await skip.press('Enter');
+    await expect(main).toBeFocused();
     await expect(page.locator('body')).not.toContainText('PRIVATE-DATABASE-DETAIL');
     const details = alert.locator('details');
     await expect(details).not.toHaveAttribute('open');
@@ -135,6 +150,33 @@ for (const locale of ['en', 'fa'] as const) {
       'href',
       new RegExp(encodeURIComponent(reference))
     );
+  });
+
+  test(`unknown routes keep one localized main and the first skip target (${locale})`, async ({
+    page,
+    browserName,
+  }) => {
+    await page.addInitScript((lang) => localStorage.setItem('barghsa.locale', lang), locale);
+    await page.route('**/api/**', (route) => route.fulfill({ status: 401, json: {} }));
+    await page.goto('/unmatched-route-for-accessibility');
+    const main = page.getByRole('main');
+    await expect(
+      main.getByRole('heading', {
+        name: locale === 'fa' ? 'صفحه پیدا نشد' : 'Page not found',
+        level: 1,
+        exact: true,
+      })
+    ).toBeVisible();
+    await expect(page.locator('#main-content')).toHaveCount(1);
+    const skip = page.getByRole('link', {
+      name: locale === 'fa' ? 'رفتن به محتوای اصلی' : 'Skip to main content',
+      exact: true,
+    });
+    await page.keyboard.press(browserName === 'webkit' ? 'Alt+Tab' : 'Tab');
+    await expect(skip).toBeFocused();
+    await page.keyboard.press('Enter');
+    await expect(main).toBeFocused();
+    await expect(main.getByRole('link')).toHaveAttribute('href', '/');
   });
 }
 
