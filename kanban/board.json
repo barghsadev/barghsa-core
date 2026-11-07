@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-07T09:02:18+00:00",
-  "source_commit": "5acf1ae93ea5e0fbf7e79b7e12fac33db9591af9",
+  "updated": "2026-11-07T09:11:53+00:00",
+  "source_commit": "93d5840d54bb0a4754c3169306ede6f167581f44",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -65515,7 +65515,8 @@
           "release-0.5-workspace-route-census",
           "release-0.5-coverage-deficits",
           "release-0.5-ui-coverage-collection",
-          "release-0.5-coverage-remaining-branches"
+          "release-0.5-coverage-remaining-branches",
+          "release-0.5-admin-coverage-proof"
         ],
         "current_acceptance": {
           "kind": "accepted-durable-native-business-producers",
@@ -66127,7 +66128,7 @@
             },
             {
               "path": "apps/api/src/session/session.service.test.ts",
-              "sha256": "2d402886f9af69ab4c5c081cfedd87abf8a197ef9015eb9265e8d829b15dc5f0"
+              "sha256": "0a277a4b865c189cceb2b888ee8c611192973e425ae35e40d0d9b4d8d2afe988"
             },
             {
               "path": "apps/api/src/profiles/invitation-acceptance-http.integration.test.ts",
@@ -66147,7 +66148,7 @@
             },
             {
               "path": "apps/api/src/wallet/bank-receipt-confirmation.service.test.ts",
-              "sha256": "87ec24a6a323093e62959bb5782046feeb1ccf33af8adf9d60f664d05848c6db"
+              "sha256": "9c1b2e8aa5cbc4b5fcdf7fa9de0439277acc90ebe758cfaac91a0ae61b7d3f4c"
             },
             {
               "path": "packages/db/drizzle/production/0266_online_topup_notifications.sql",
@@ -66688,7 +66689,8 @@
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
             "Bindings renewed by release-0.5-coverage-deficits: exact DB blocker evidence and original post-lock status/persistence assertions pass. Coverage mapper follows existing package source maps and rejects missing intermediates.",
             "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
-            "Bindings renewed by release-0.5-coverage-remaining-branches: normal manifest behavior and all 27 test assertion bodies are preserved, and exact protected admin and consultation fixture checks pass. No production source changed."
+            "Bindings renewed by release-0.5-coverage-remaining-branches: normal manifest behavior and all 27 test assertion bodies are preserved, and exact protected admin and consultation fixture checks pass. No production source changed.",
+            "Bindings renewed by release-0.5-admin-coverage-proof: all affected API files pass with the same product code, append-only evidence protections, financial/security assertions and exact notification occurrences."
           ],
           "limitations": [],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/database-native-active-inbox-templates",
@@ -67793,6 +67795,11 @@
               "batch": "release-0.5-coverage-remaining-branches",
               "base_commit": "5acf1ae93ea5e0fbf7e79b7e12fac33db9591af9",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-coverage-remaining-branches/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-admin-coverage-proof",
+              "base_commit": "93d5840d54bb0a4754c3169306ede6f167581f44",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-admin-coverage-proof/source-binding.json"
             }
           ]
         },
@@ -137150,7 +137157,8 @@
           "release-0.5-form-and-document-accessibility",
           "release-0.5-populated-route-presentation",
           "release-0.5-measured-action-targets",
-          "release-0.5-workspace-route-census"
+          "release-0.5-workspace-route-census",
+          "release-0.5-admin-coverage-proof"
         ],
         "current_acceptance": {
           "kind": "current-wallet-payment-reversal-and-finance-alert-verification",
@@ -137166,7 +137174,7 @@
             },
             {
               "path": "apps/api/src/wallet/chargeback-alert.integration.test.ts",
-              "sha256": "4820f4b80571e2dffb9442b023b191e8ce4404ab26b893386546cc70e0eab35a"
+              "sha256": "b18832989d06b51f5680db87e91450d342c929bbc682f5e13c058020e873c590"
             },
             {
               "path": "apps/api/src/wallet/customer-wallet-invoice-payment-http.integration.test.ts",
@@ -137405,7 +137413,8 @@
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
             "Bindings renewed by release-0.5-measured-action-targets: target sizing changes pass exact populated route browsers and scoped invoice, saving and customer-history ownership units. Navigation, authority, receipt and money behavior are unchanged.",
-            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass."
+            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
+            "Bindings renewed by release-0.5-admin-coverage-proof: all affected API files pass with the same product code, append-only evidence protections, financial/security assertions and exact notification occurrences."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/wallet-payments-reversals",
           "limitations": [
@@ -137857,6 +137866,11 @@
               "batch": "release-0.5-workspace-route-census",
               "base_commit": "7cf95f840a7e65c722f95b10e486bd02c435d498",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-workspace-route-census/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-admin-coverage-proof",
+              "base_commit": "93d5840d54bb0a4754c3169306ede6f167581f44",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-admin-coverage-proof/source-binding.json"
             }
           ]
         }
@@ -137946,7 +137960,8 @@
           "release-0.5-language-calendar-journey",
           "release-0.5-appearance-motion-journey",
           "release-0.5-critical-accessibility",
-          "release-0.5-form-and-document-accessibility"
+          "release-0.5-form-and-document-accessibility",
+          "release-0.5-admin-coverage-proof"
         ],
         "current_acceptance": {
           "kind": "current-wallet-payment-reversal-and-finance-alert-verification",
@@ -137958,7 +137973,7 @@
             },
             {
               "path": "apps/api/src/wallet/chargeback-alert.integration.test.ts",
-              "sha256": "4820f4b80571e2dffb9442b023b191e8ce4404ab26b893386546cc70e0eab35a"
+              "sha256": "b18832989d06b51f5680db87e91450d342c929bbc682f5e13c058020e873c590"
             },
             {
               "path": "apps/api/src/wallet/customer-wallet-invoice-payment-http.integration.test.ts",
@@ -138047,7 +138062,8 @@
             "Current binding renewed by release-0.5-language-calendar-journey: additive exact locked calendar imports/export, native language detection/label and directional presentation, server-offered MonthPicker and documented retained representation. Existing domain bodies/guards/actions and package exports remain;125 distinct native browser cases,33 related units,8 distribution checks and91 unchanged budgets cover affected behavior. Prior domain evidence reused for unchanged sources only.",
             "Current bindings renewed by release-0.5-appearance-motion-journey: optional branding JSON fields/asset variant only; exact API AST proof preserves unrelated handlers/guards/transactions. Original CSS bytes and shell command bodies remain; pure username normalizer moved verbatim with old export retained. Current274 native cases, affected caller checks, real asset boundaries and91 unchanged budgets cover the delta. Prior domain evidence retained for unchanged behavior only.",
             "Bindings renewed by release-0.5-critical-accessibility: audited canonical landmarks, retained command calls and validated auth-entry authority. Exact targeted unit/browser and original performance evidence passes.",
-            "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only."
+            "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
+            "Bindings renewed by release-0.5-admin-coverage-proof: all affected API files pass with the same product code, append-only evidence protections, financial/security assertions and exact notification occurrences."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/wallet-payments-reversals",
           "limitations": [
@@ -138124,6 +138140,11 @@
               "batch": "release-0.5-form-and-document-accessibility",
               "base_commit": "bc50e458e469d4fae48336f6384692b2a0a93251",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-form-and-document-accessibility/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-admin-coverage-proof",
+              "base_commit": "93d5840d54bb0a4754c3169306ede6f167581f44",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-admin-coverage-proof/source-binding.json"
             }
           ]
         }
@@ -138215,7 +138236,8 @@
           "release-0.5-language-calendar-journey",
           "release-0.5-appearance-motion-journey",
           "release-0.5-critical-accessibility",
-          "release-0.5-form-and-document-accessibility"
+          "release-0.5-form-and-document-accessibility",
+          "release-0.5-admin-coverage-proof"
         ],
         "current_acceptance": {
           "kind": "current-wallet-payment-reversal-and-finance-alert-verification",
@@ -138235,7 +138257,7 @@
             },
             {
               "path": "apps/api/src/wallet/chargeback-alert.integration.test.ts",
-              "sha256": "4820f4b80571e2dffb9442b023b191e8ce4404ab26b893386546cc70e0eab35a"
+              "sha256": "b18832989d06b51f5680db87e91450d342c929bbc682f5e13c058020e873c590"
             },
             {
               "path": "apps/api/src/wallet/customer-wallet-invoice-payment.service.ts",
@@ -138324,7 +138346,8 @@
             "Current binding renewed by release-0.5-language-calendar-journey: additive exact locked calendar imports/export, native language detection/label and directional presentation, server-offered MonthPicker and documented retained representation. Existing domain bodies/guards/actions and package exports remain;125 distinct native browser cases,33 related units,8 distribution checks and91 unchanged budgets cover affected behavior. Prior domain evidence reused for unchanged sources only.",
             "Current bindings renewed by release-0.5-appearance-motion-journey: optional branding JSON fields/asset variant only; exact API AST proof preserves unrelated handlers/guards/transactions. Original CSS bytes and shell command bodies remain; pure username normalizer moved verbatim with old export retained. Current274 native cases, affected caller checks, real asset boundaries and91 unchanged budgets cover the delta. Prior domain evidence retained for unchanged behavior only.",
             "Bindings renewed by release-0.5-critical-accessibility: audited canonical landmarks, retained command calls and validated auth-entry authority. Exact targeted unit/browser and original performance evidence passes.",
-            "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only."
+            "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
+            "Bindings renewed by release-0.5-admin-coverage-proof: all affected API files pass with the same product code, append-only evidence protections, financial/security assertions and exact notification occurrences."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/wallet-payments-reversals",
           "limitations": [
@@ -138401,6 +138424,11 @@
               "batch": "release-0.5-form-and-document-accessibility",
               "base_commit": "bc50e458e469d4fae48336f6384692b2a0a93251",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-form-and-document-accessibility/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-admin-coverage-proof",
+              "base_commit": "93d5840d54bb0a4754c3169306ede6f167581f44",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-admin-coverage-proof/source-binding.json"
             }
           ]
         }
@@ -138481,7 +138509,8 @@
           "release-0.5-language-calendar-journey",
           "release-0.5-appearance-motion-journey",
           "release-0.5-critical-accessibility",
-          "release-0.5-form-and-document-accessibility"
+          "release-0.5-form-and-document-accessibility",
+          "release-0.5-admin-coverage-proof"
         ],
         "current_acceptance": {
           "kind": "current-wallet-payment-reversal-and-finance-alert-verification",
@@ -138489,7 +138518,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/wallet/chargeback-alert.integration.test.ts",
-              "sha256": "4820f4b80571e2dffb9442b023b191e8ce4404ab26b893386546cc70e0eab35a"
+              "sha256": "b18832989d06b51f5680db87e91450d342c929bbc682f5e13c058020e873c590"
             },
             {
               "path": "apps/api/src/wallet/customer-wallet-invoice-payment-http.integration.test.ts",
@@ -138578,7 +138607,8 @@
             "Current binding renewed by release-0.5-language-calendar-journey: additive exact locked calendar imports/export, native language detection/label and directional presentation, server-offered MonthPicker and documented retained representation. Existing domain bodies/guards/actions and package exports remain;125 distinct native browser cases,33 related units,8 distribution checks and91 unchanged budgets cover affected behavior. Prior domain evidence reused for unchanged sources only.",
             "Current bindings renewed by release-0.5-appearance-motion-journey: optional branding JSON fields/asset variant only; exact API AST proof preserves unrelated handlers/guards/transactions. Original CSS bytes and shell command bodies remain; pure username normalizer moved verbatim with old export retained. Current274 native cases, affected caller checks, real asset boundaries and91 unchanged budgets cover the delta. Prior domain evidence retained for unchanged behavior only.",
             "Bindings renewed by release-0.5-critical-accessibility: audited canonical landmarks, retained command calls and validated auth-entry authority. Exact targeted unit/browser and original performance evidence passes.",
-            "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only."
+            "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
+            "Bindings renewed by release-0.5-admin-coverage-proof: all affected API files pass with the same product code, append-only evidence protections, financial/security assertions and exact notification occurrences."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/wallet-payments-reversals",
           "limitations": [
@@ -138655,6 +138685,11 @@
               "batch": "release-0.5-form-and-document-accessibility",
               "base_commit": "bc50e458e469d4fae48336f6384692b2a0a93251",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-form-and-document-accessibility/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-admin-coverage-proof",
+              "base_commit": "93d5840d54bb0a4754c3169306ede6f167581f44",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-admin-coverage-proof/source-binding.json"
             }
           ]
         }
@@ -138723,7 +138758,8 @@
           "release-0.5-language-calendar-journey",
           "release-0.5-appearance-motion-journey",
           "release-0.5-critical-accessibility",
-          "release-0.5-form-and-document-accessibility"
+          "release-0.5-form-and-document-accessibility",
+          "release-0.5-admin-coverage-proof"
         ],
         "current_acceptance": {
           "kind": "current-wallet-payment-reversal-and-finance-alert-verification",
@@ -138731,7 +138767,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/wallet/chargeback-alert.integration.test.ts",
-              "sha256": "4820f4b80571e2dffb9442b023b191e8ce4404ab26b893386546cc70e0eab35a"
+              "sha256": "b18832989d06b51f5680db87e91450d342c929bbc682f5e13c058020e873c590"
             },
             {
               "path": "apps/api/src/wallet/customer-wallet-invoice-payment.service.ts",
@@ -138812,7 +138848,8 @@
             "Current binding renewed by release-0.5-language-calendar-journey: additive exact locked calendar imports/export, native language detection/label and directional presentation, server-offered MonthPicker and documented retained representation. Existing domain bodies/guards/actions and package exports remain;125 distinct native browser cases,33 related units,8 distribution checks and91 unchanged budgets cover affected behavior. Prior domain evidence reused for unchanged sources only.",
             "Current bindings renewed by release-0.5-appearance-motion-journey: optional branding JSON fields/asset variant only; exact API AST proof preserves unrelated handlers/guards/transactions. Original CSS bytes and shell command bodies remain; pure username normalizer moved verbatim with old export retained. Current274 native cases, affected caller checks, real asset boundaries and91 unchanged budgets cover the delta. Prior domain evidence retained for unchanged behavior only.",
             "Bindings renewed by release-0.5-critical-accessibility: audited canonical landmarks, retained command calls and validated auth-entry authority. Exact targeted unit/browser and original performance evidence passes.",
-            "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only."
+            "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
+            "Bindings renewed by release-0.5-admin-coverage-proof: all affected API files pass with the same product code, append-only evidence protections, financial/security assertions and exact notification occurrences."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/wallet-payments-reversals",
           "limitations": [
@@ -138889,6 +138926,11 @@
               "batch": "release-0.5-form-and-document-accessibility",
               "base_commit": "bc50e458e469d4fae48336f6384692b2a0a93251",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-form-and-document-accessibility/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-admin-coverage-proof",
+              "base_commit": "93d5840d54bb0a4754c3169306ede6f167581f44",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-admin-coverage-proof/source-binding.json"
             }
           ]
         }
@@ -139193,7 +139235,8 @@
           "release-0.5-query-and-command-completion",
           "release-0.5-critical-accessibility",
           "release-0.5-form-and-document-accessibility",
-          "release-0.5-workspace-route-census"
+          "release-0.5-workspace-route-census",
+          "release-0.5-admin-coverage-proof"
         ],
         "current_acceptance": {
           "kind": "current-wallet-payment-reversal-and-finance-alert-verification",
@@ -139209,7 +139252,7 @@
             },
             {
               "path": "apps/api/src/wallet/chargeback-alert.integration.test.ts",
-              "sha256": "4820f4b80571e2dffb9442b023b191e8ce4404ab26b893386546cc70e0eab35a"
+              "sha256": "b18832989d06b51f5680db87e91450d342c929bbc682f5e13c058020e873c590"
             },
             {
               "path": "apps/api/src/wallet/chargeback-alert.service.ts",
@@ -139460,7 +139503,8 @@
             "Source bindings renewed by release-0.5-query-and-command-completion: affected owned read, permission, financial review and browser cases pass; writes/CSRF, original budget rules and financial assertions are preserved.",
             "Bindings renewed by release-0.5-critical-accessibility: audited canonical landmarks, retained command calls and validated auth-entry authority. Exact targeted unit/browser and original performance evidence passes.",
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
-            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass."
+            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
+            "Bindings renewed by release-0.5-admin-coverage-proof: all affected API files pass with the same product code, append-only evidence protections, financial/security assertions and exact notification occurrences."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/wallet-payments-reversals",
           "limitations": [
@@ -139804,6 +139848,11 @@
               "batch": "release-0.5-workspace-route-census",
               "base_commit": "7cf95f840a7e65c722f95b10e486bd02c435d498",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-workspace-route-census/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-admin-coverage-proof",
+              "base_commit": "93d5840d54bb0a4754c3169306ede6f167581f44",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-admin-coverage-proof/source-binding.json"
             }
           ]
         }
@@ -139875,7 +139924,8 @@
           "release-0.5-populated-route-presentation",
           "release-0.5-measured-action-targets",
           "release-0.5-source-coverage-gate",
-          "release-0.5-coverage-remaining-branches"
+          "release-0.5-coverage-remaining-branches",
+          "release-0.5-admin-coverage-proof"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -139903,7 +139953,7 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.test.ts",
-              "sha256": "a148e570ce6ba7a4b69982117c034bdf098e798121cdc0d6fecfb136c0f3465c"
+              "sha256": "a1a9ef08684c18aea02bf177f7cc224c0d76cb69d30502e280a17c790c88652b"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
@@ -139911,7 +139961,7 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-cross-flow.integration.test.ts",
-              "sha256": "d3e48551959cc2a704d44087c59889a88b422d9b22eea2547255d0452b652d73"
+              "sha256": "15b4898e3fe693fb5ef728521cb149ede47d566a332666dcde48fb2f0ac848d6"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-dual-approval.integration.test.ts",
@@ -139923,7 +139973,7 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.integration.test.ts",
-              "sha256": "6764a352b3c9b8a5395267adf168f16dddafd75b0c12d090b58b72bd18a53f9d"
+              "sha256": "ff9f5c1a0e8e53e9e0a23e0066feb6b82b7b7864e1d43ef34ca3efb26cd15207"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.test.ts",
@@ -140140,7 +140190,8 @@
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
             "Bindings renewed by release-0.5-measured-action-targets: target sizing changes pass exact populated route browsers and scoped invoice, saving and customer-history ownership units. Navigation, authority, receipt and money behavior are unchanged.",
             "Bindings renewed by release-0.5-source-coverage-gate: test fixtures now exercise actual acknowledgement, current query/account context and nonoverlapping polls before the bounded read deadline; 61 focused tests passed and application source was unchanged.",
-            "Bindings renewed by release-0.5-coverage-remaining-branches: normal manifest behavior and all 27 test assertion bodies are preserved, and exact protected admin and consultation fixture checks pass. No production source changed."
+            "Bindings renewed by release-0.5-coverage-remaining-branches: normal manifest behavior and all 27 test assertion bodies are preserved, and exact protected admin and consultation fixture checks pass. No production source changed.",
+            "Bindings renewed by release-0.5-admin-coverage-proof: all affected API files pass with the same product code, append-only evidence protections, financial/security assertions and exact notification occurrences."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/bank-receipts-financial-history",
           "limitations": [
@@ -140285,6 +140336,11 @@
               "batch": "release-0.5-coverage-remaining-branches",
               "base_commit": "5acf1ae93ea5e0fbf7e79b7e12fac33db9591af9",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-coverage-remaining-branches/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-admin-coverage-proof",
+              "base_commit": "93d5840d54bb0a4754c3169306ede6f167581f44",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-admin-coverage-proof/source-binding.json"
             }
           ]
         }
@@ -140410,7 +140466,8 @@
           "release-0.5-populated-route-presentation",
           "release-0.5-measured-action-targets",
           "release-0.5-source-coverage-gate",
-          "release-0.5-coverage-remaining-branches"
+          "release-0.5-coverage-remaining-branches",
+          "release-0.5-admin-coverage-proof"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -140458,7 +140515,7 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.test.ts",
-              "sha256": "a148e570ce6ba7a4b69982117c034bdf098e798121cdc0d6fecfb136c0f3465c"
+              "sha256": "a1a9ef08684c18aea02bf177f7cc224c0d76cb69d30502e280a17c790c88652b"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
@@ -140466,7 +140523,7 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-cross-flow.integration.test.ts",
-              "sha256": "d3e48551959cc2a704d44087c59889a88b422d9b22eea2547255d0452b652d73"
+              "sha256": "15b4898e3fe693fb5ef728521cb149ede47d566a332666dcde48fb2f0ac848d6"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-dual-approval.integration.test.ts",
@@ -140478,7 +140535,7 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.integration.test.ts",
-              "sha256": "6764a352b3c9b8a5395267adf168f16dddafd75b0c12d090b58b72bd18a53f9d"
+              "sha256": "ff9f5c1a0e8e53e9e0a23e0066feb6b82b7b7864e1d43ef34ca3efb26cd15207"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.test.ts",
@@ -140717,7 +140774,8 @@
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
             "Bindings renewed by release-0.5-measured-action-targets: target sizing changes pass exact populated route browsers and scoped invoice, saving and customer-history ownership units. Navigation, authority, receipt and money behavior are unchanged.",
             "Bindings renewed by release-0.5-source-coverage-gate: test fixtures now exercise actual acknowledgement, current query/account context and nonoverlapping polls before the bounded read deadline; 61 focused tests passed and application source was unchanged.",
-            "Bindings renewed by release-0.5-coverage-remaining-branches: normal manifest behavior and all 27 test assertion bodies are preserved, and exact protected admin and consultation fixture checks pass. No production source changed."
+            "Bindings renewed by release-0.5-coverage-remaining-branches: normal manifest behavior and all 27 test assertion bodies are preserved, and exact protected admin and consultation fixture checks pass. No production source changed.",
+            "Bindings renewed by release-0.5-admin-coverage-proof: all affected API files pass with the same product code, append-only evidence protections, financial/security assertions and exact notification occurrences."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/bank-receipts-financial-history",
           "limitations": [
@@ -140863,6 +140921,11 @@
               "batch": "release-0.5-coverage-remaining-branches",
               "base_commit": "5acf1ae93ea5e0fbf7e79b7e12fac33db9591af9",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-coverage-remaining-branches/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-admin-coverage-proof",
+              "base_commit": "93d5840d54bb0a4754c3169306ede6f167581f44",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-admin-coverage-proof/source-binding.json"
             }
           ]
         }
@@ -140987,7 +141050,8 @@
           "release-0.5-populated-route-presentation",
           "release-0.5-measured-action-targets",
           "release-0.5-source-coverage-gate",
-          "release-0.5-coverage-remaining-branches"
+          "release-0.5-coverage-remaining-branches",
+          "release-0.5-admin-coverage-proof"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -141043,7 +141107,7 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.test.ts",
-              "sha256": "a148e570ce6ba7a4b69982117c034bdf098e798121cdc0d6fecfb136c0f3465c"
+              "sha256": "a1a9ef08684c18aea02bf177f7cc224c0d76cb69d30502e280a17c790c88652b"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
@@ -141051,7 +141115,7 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-cross-flow.integration.test.ts",
-              "sha256": "d3e48551959cc2a704d44087c59889a88b422d9b22eea2547255d0452b652d73"
+              "sha256": "15b4898e3fe693fb5ef728521cb149ede47d566a332666dcde48fb2f0ac848d6"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-dual-approval.integration.test.ts",
@@ -141063,7 +141127,7 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.integration.test.ts",
-              "sha256": "6764a352b3c9b8a5395267adf168f16dddafd75b0c12d090b58b72bd18a53f9d"
+              "sha256": "ff9f5c1a0e8e53e9e0a23e0066feb6b82b7b7864e1d43ef34ca3efb26cd15207"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.test.ts",
@@ -141298,7 +141362,8 @@
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
             "Bindings renewed by release-0.5-measured-action-targets: target sizing changes pass exact populated route browsers and scoped invoice, saving and customer-history ownership units. Navigation, authority, receipt and money behavior are unchanged.",
             "Bindings renewed by release-0.5-source-coverage-gate: test fixtures now exercise actual acknowledgement, current query/account context and nonoverlapping polls before the bounded read deadline; 61 focused tests passed and application source was unchanged.",
-            "Bindings renewed by release-0.5-coverage-remaining-branches: normal manifest behavior and all 27 test assertion bodies are preserved, and exact protected admin and consultation fixture checks pass. No production source changed."
+            "Bindings renewed by release-0.5-coverage-remaining-branches: normal manifest behavior and all 27 test assertion bodies are preserved, and exact protected admin and consultation fixture checks pass. No production source changed.",
+            "Bindings renewed by release-0.5-admin-coverage-proof: all affected API files pass with the same product code, append-only evidence protections, financial/security assertions and exact notification occurrences."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/bank-receipts-financial-history",
           "limitations": [
@@ -141443,6 +141508,11 @@
               "batch": "release-0.5-coverage-remaining-branches",
               "base_commit": "5acf1ae93ea5e0fbf7e79b7e12fac33db9591af9",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-coverage-remaining-branches/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-admin-coverage-proof",
+              "base_commit": "93d5840d54bb0a4754c3169306ede6f167581f44",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-admin-coverage-proof/source-binding.json"
             }
           ]
         }
@@ -141588,7 +141658,8 @@
           "release-0.5-populated-route-presentation",
           "release-0.5-measured-action-targets",
           "release-0.5-source-coverage-gate",
-          "release-0.5-coverage-remaining-branches"
+          "release-0.5-coverage-remaining-branches",
+          "release-0.5-admin-coverage-proof"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -141644,7 +141715,7 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.test.ts",
-              "sha256": "a148e570ce6ba7a4b69982117c034bdf098e798121cdc0d6fecfb136c0f3465c"
+              "sha256": "a1a9ef08684c18aea02bf177f7cc224c0d76cb69d30502e280a17c790c88652b"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
@@ -141652,7 +141723,7 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-cross-flow.integration.test.ts",
-              "sha256": "d3e48551959cc2a704d44087c59889a88b422d9b22eea2547255d0452b652d73"
+              "sha256": "15b4898e3fe693fb5ef728521cb149ede47d566a332666dcde48fb2f0ac848d6"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-dual-approval.integration.test.ts",
@@ -141664,7 +141735,7 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.integration.test.ts",
-              "sha256": "6764a352b3c9b8a5395267adf168f16dddafd75b0c12d090b58b72bd18a53f9d"
+              "sha256": "ff9f5c1a0e8e53e9e0a23e0066feb6b82b7b7864e1d43ef34ca3efb26cd15207"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.test.ts",
@@ -141971,7 +142042,8 @@
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
             "Bindings renewed by release-0.5-measured-action-targets: target sizing changes pass exact populated route browsers and scoped invoice, saving and customer-history ownership units. Navigation, authority, receipt and money behavior are unchanged.",
             "Bindings renewed by release-0.5-source-coverage-gate: test fixtures now exercise actual acknowledgement, current query/account context and nonoverlapping polls before the bounded read deadline; 61 focused tests passed and application source was unchanged.",
-            "Bindings renewed by release-0.5-coverage-remaining-branches: normal manifest behavior and all 27 test assertion bodies are preserved, and exact protected admin and consultation fixture checks pass. No production source changed."
+            "Bindings renewed by release-0.5-coverage-remaining-branches: normal manifest behavior and all 27 test assertion bodies are preserved, and exact protected admin and consultation fixture checks pass. No production source changed.",
+            "Bindings renewed by release-0.5-admin-coverage-proof: all affected API files pass with the same product code, append-only evidence protections, financial/security assertions and exact notification occurrences."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/bank-receipts-financial-history",
           "limitations": [
@@ -142169,6 +142241,11 @@
               "batch": "release-0.5-coverage-remaining-branches",
               "base_commit": "5acf1ae93ea5e0fbf7e79b7e12fac33db9591af9",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-coverage-remaining-branches/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-admin-coverage-proof",
+              "base_commit": "93d5840d54bb0a4754c3169306ede6f167581f44",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-admin-coverage-proof/source-binding.json"
             }
           ]
         }
@@ -142286,7 +142363,8 @@
           "release-0.5-populated-route-presentation",
           "release-0.5-measured-action-targets",
           "release-0.5-source-coverage-gate",
-          "release-0.5-coverage-remaining-branches"
+          "release-0.5-coverage-remaining-branches",
+          "release-0.5-admin-coverage-proof"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -142342,7 +142420,7 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.test.ts",
-              "sha256": "a148e570ce6ba7a4b69982117c034bdf098e798121cdc0d6fecfb136c0f3465c"
+              "sha256": "a1a9ef08684c18aea02bf177f7cc224c0d76cb69d30502e280a17c790c88652b"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
@@ -142350,7 +142428,7 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-cross-flow.integration.test.ts",
-              "sha256": "d3e48551959cc2a704d44087c59889a88b422d9b22eea2547255d0452b652d73"
+              "sha256": "15b4898e3fe693fb5ef728521cb149ede47d566a332666dcde48fb2f0ac848d6"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-dual-approval.integration.test.ts",
@@ -142362,7 +142440,7 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.integration.test.ts",
-              "sha256": "6764a352b3c9b8a5395267adf168f16dddafd75b0c12d090b58b72bd18a53f9d"
+              "sha256": "ff9f5c1a0e8e53e9e0a23e0066feb6b82b7b7864e1d43ef34ca3efb26cd15207"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.test.ts",
@@ -142597,7 +142675,8 @@
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
             "Bindings renewed by release-0.5-measured-action-targets: target sizing changes pass exact populated route browsers and scoped invoice, saving and customer-history ownership units. Navigation, authority, receipt and money behavior are unchanged.",
             "Bindings renewed by release-0.5-source-coverage-gate: test fixtures now exercise actual acknowledgement, current query/account context and nonoverlapping polls before the bounded read deadline; 61 focused tests passed and application source was unchanged.",
-            "Bindings renewed by release-0.5-coverage-remaining-branches: normal manifest behavior and all 27 test assertion bodies are preserved, and exact protected admin and consultation fixture checks pass. No production source changed."
+            "Bindings renewed by release-0.5-coverage-remaining-branches: normal manifest behavior and all 27 test assertion bodies are preserved, and exact protected admin and consultation fixture checks pass. No production source changed.",
+            "Bindings renewed by release-0.5-admin-coverage-proof: all affected API files pass with the same product code, append-only evidence protections, financial/security assertions and exact notification occurrences."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/bank-receipts-financial-history",
           "limitations": [
@@ -142742,6 +142821,11 @@
               "batch": "release-0.5-coverage-remaining-branches",
               "base_commit": "5acf1ae93ea5e0fbf7e79b7e12fac33db9591af9",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-coverage-remaining-branches/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-admin-coverage-proof",
+              "base_commit": "93d5840d54bb0a4754c3169306ede6f167581f44",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-admin-coverage-proof/source-binding.json"
             }
           ]
         }
@@ -142781,7 +142865,8 @@
           "release-0.5-populated-route-presentation",
           "release-0.5-measured-action-targets",
           "release-0.5-source-coverage-gate",
-          "release-0.5-coverage-remaining-branches"
+          "release-0.5-coverage-remaining-branches",
+          "release-0.5-admin-coverage-proof"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -142809,7 +142894,7 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.test.ts",
-              "sha256": "a148e570ce6ba7a4b69982117c034bdf098e798121cdc0d6fecfb136c0f3465c"
+              "sha256": "a1a9ef08684c18aea02bf177f7cc224c0d76cb69d30502e280a17c790c88652b"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
@@ -142817,7 +142902,7 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-cross-flow.integration.test.ts",
-              "sha256": "d3e48551959cc2a704d44087c59889a88b422d9b22eea2547255d0452b652d73"
+              "sha256": "15b4898e3fe693fb5ef728521cb149ede47d566a332666dcde48fb2f0ac848d6"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-dual-approval.integration.test.ts",
@@ -142829,7 +142914,7 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.integration.test.ts",
-              "sha256": "6764a352b3c9b8a5395267adf168f16dddafd75b0c12d090b58b72bd18a53f9d"
+              "sha256": "ff9f5c1a0e8e53e9e0a23e0066feb6b82b7b7864e1d43ef34ca3efb26cd15207"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.test.ts",
@@ -143042,7 +143127,8 @@
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
             "Bindings renewed by release-0.5-measured-action-targets: target sizing changes pass exact populated route browsers and scoped invoice, saving and customer-history ownership units. Navigation, authority, receipt and money behavior are unchanged.",
             "Bindings renewed by release-0.5-source-coverage-gate: test fixtures now exercise actual acknowledgement, current query/account context and nonoverlapping polls before the bounded read deadline; 61 focused tests passed and application source was unchanged.",
-            "Bindings renewed by release-0.5-coverage-remaining-branches: normal manifest behavior and all 27 test assertion bodies are preserved, and exact protected admin and consultation fixture checks pass. No production source changed."
+            "Bindings renewed by release-0.5-coverage-remaining-branches: normal manifest behavior and all 27 test assertion bodies are preserved, and exact protected admin and consultation fixture checks pass. No production source changed.",
+            "Bindings renewed by release-0.5-admin-coverage-proof: all affected API files pass with the same product code, append-only evidence protections, financial/security assertions and exact notification occurrences."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/bank-receipts-financial-history",
           "limitations": [
@@ -143187,6 +143273,11 @@
               "batch": "release-0.5-coverage-remaining-branches",
               "base_commit": "5acf1ae93ea5e0fbf7e79b7e12fac33db9591af9",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-coverage-remaining-branches/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-admin-coverage-proof",
+              "base_commit": "93d5840d54bb0a4754c3169306ede6f167581f44",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-admin-coverage-proof/source-binding.json"
             }
           ]
         }
@@ -143226,7 +143317,8 @@
           "release-0.5-populated-route-presentation",
           "release-0.5-measured-action-targets",
           "release-0.5-source-coverage-gate",
-          "release-0.5-coverage-remaining-branches"
+          "release-0.5-coverage-remaining-branches",
+          "release-0.5-admin-coverage-proof"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -143254,7 +143346,7 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.test.ts",
-              "sha256": "a148e570ce6ba7a4b69982117c034bdf098e798121cdc0d6fecfb136c0f3465c"
+              "sha256": "a1a9ef08684c18aea02bf177f7cc224c0d76cb69d30502e280a17c790c88652b"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
@@ -143262,7 +143354,7 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-cross-flow.integration.test.ts",
-              "sha256": "d3e48551959cc2a704d44087c59889a88b422d9b22eea2547255d0452b652d73"
+              "sha256": "15b4898e3fe693fb5ef728521cb149ede47d566a332666dcde48fb2f0ac848d6"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-dual-approval.integration.test.ts",
@@ -143274,7 +143366,7 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.integration.test.ts",
-              "sha256": "6764a352b3c9b8a5395267adf168f16dddafd75b0c12d090b58b72bd18a53f9d"
+              "sha256": "ff9f5c1a0e8e53e9e0a23e0066feb6b82b7b7864e1d43ef34ca3efb26cd15207"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.test.ts",
@@ -143487,7 +143579,8 @@
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
             "Bindings renewed by release-0.5-measured-action-targets: target sizing changes pass exact populated route browsers and scoped invoice, saving and customer-history ownership units. Navigation, authority, receipt and money behavior are unchanged.",
             "Bindings renewed by release-0.5-source-coverage-gate: test fixtures now exercise actual acknowledgement, current query/account context and nonoverlapping polls before the bounded read deadline; 61 focused tests passed and application source was unchanged.",
-            "Bindings renewed by release-0.5-coverage-remaining-branches: normal manifest behavior and all 27 test assertion bodies are preserved, and exact protected admin and consultation fixture checks pass. No production source changed."
+            "Bindings renewed by release-0.5-coverage-remaining-branches: normal manifest behavior and all 27 test assertion bodies are preserved, and exact protected admin and consultation fixture checks pass. No production source changed.",
+            "Bindings renewed by release-0.5-admin-coverage-proof: all affected API files pass with the same product code, append-only evidence protections, financial/security assertions and exact notification occurrences."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/bank-receipts-financial-history",
           "limitations": [
@@ -143632,6 +143725,11 @@
               "batch": "release-0.5-coverage-remaining-branches",
               "base_commit": "5acf1ae93ea5e0fbf7e79b7e12fac33db9591af9",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-coverage-remaining-branches/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-admin-coverage-proof",
+              "base_commit": "93d5840d54bb0a4754c3169306ede6f167581f44",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-admin-coverage-proof/source-binding.json"
             }
           ]
         }
@@ -143672,7 +143770,8 @@
           "release-0.5-populated-route-presentation",
           "release-0.5-measured-action-targets",
           "release-0.5-source-coverage-gate",
-          "release-0.5-coverage-remaining-branches"
+          "release-0.5-coverage-remaining-branches",
+          "release-0.5-admin-coverage-proof"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -143700,7 +143799,7 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.test.ts",
-              "sha256": "a148e570ce6ba7a4b69982117c034bdf098e798121cdc0d6fecfb136c0f3465c"
+              "sha256": "a1a9ef08684c18aea02bf177f7cc224c0d76cb69d30502e280a17c790c88652b"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
@@ -143708,7 +143807,7 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-cross-flow.integration.test.ts",
-              "sha256": "d3e48551959cc2a704d44087c59889a88b422d9b22eea2547255d0452b652d73"
+              "sha256": "15b4898e3fe693fb5ef728521cb149ede47d566a332666dcde48fb2f0ac848d6"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-dual-approval.integration.test.ts",
@@ -143720,7 +143819,7 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.integration.test.ts",
-              "sha256": "6764a352b3c9b8a5395267adf168f16dddafd75b0c12d090b58b72bd18a53f9d"
+              "sha256": "ff9f5c1a0e8e53e9e0a23e0066feb6b82b7b7864e1d43ef34ca3efb26cd15207"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.test.ts",
@@ -143933,7 +144032,8 @@
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
             "Bindings renewed by release-0.5-measured-action-targets: target sizing changes pass exact populated route browsers and scoped invoice, saving and customer-history ownership units. Navigation, authority, receipt and money behavior are unchanged.",
             "Bindings renewed by release-0.5-source-coverage-gate: test fixtures now exercise actual acknowledgement, current query/account context and nonoverlapping polls before the bounded read deadline; 61 focused tests passed and application source was unchanged.",
-            "Bindings renewed by release-0.5-coverage-remaining-branches: normal manifest behavior and all 27 test assertion bodies are preserved, and exact protected admin and consultation fixture checks pass. No production source changed."
+            "Bindings renewed by release-0.5-coverage-remaining-branches: normal manifest behavior and all 27 test assertion bodies are preserved, and exact protected admin and consultation fixture checks pass. No production source changed.",
+            "Bindings renewed by release-0.5-admin-coverage-proof: all affected API files pass with the same product code, append-only evidence protections, financial/security assertions and exact notification occurrences."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/bank-receipts-financial-history",
           "limitations": [
@@ -144078,6 +144178,11 @@
               "batch": "release-0.5-coverage-remaining-branches",
               "base_commit": "5acf1ae93ea5e0fbf7e79b7e12fac33db9591af9",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-coverage-remaining-branches/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-admin-coverage-proof",
+              "base_commit": "93d5840d54bb0a4754c3169306ede6f167581f44",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-admin-coverage-proof/source-binding.json"
             }
           ]
         }
@@ -144119,7 +144224,8 @@
           "release-0.5-populated-route-presentation",
           "release-0.5-measured-action-targets",
           "release-0.5-source-coverage-gate",
-          "release-0.5-coverage-remaining-branches"
+          "release-0.5-coverage-remaining-branches",
+          "release-0.5-admin-coverage-proof"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -144147,7 +144253,7 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.test.ts",
-              "sha256": "a148e570ce6ba7a4b69982117c034bdf098e798121cdc0d6fecfb136c0f3465c"
+              "sha256": "a1a9ef08684c18aea02bf177f7cc224c0d76cb69d30502e280a17c790c88652b"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
@@ -144155,7 +144261,7 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-cross-flow.integration.test.ts",
-              "sha256": "d3e48551959cc2a704d44087c59889a88b422d9b22eea2547255d0452b652d73"
+              "sha256": "15b4898e3fe693fb5ef728521cb149ede47d566a332666dcde48fb2f0ac848d6"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-dual-approval.integration.test.ts",
@@ -144167,7 +144273,7 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.integration.test.ts",
-              "sha256": "6764a352b3c9b8a5395267adf168f16dddafd75b0c12d090b58b72bd18a53f9d"
+              "sha256": "ff9f5c1a0e8e53e9e0a23e0066feb6b82b7b7864e1d43ef34ca3efb26cd15207"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.test.ts",
@@ -144380,7 +144486,8 @@
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
             "Bindings renewed by release-0.5-measured-action-targets: target sizing changes pass exact populated route browsers and scoped invoice, saving and customer-history ownership units. Navigation, authority, receipt and money behavior are unchanged.",
             "Bindings renewed by release-0.5-source-coverage-gate: test fixtures now exercise actual acknowledgement, current query/account context and nonoverlapping polls before the bounded read deadline; 61 focused tests passed and application source was unchanged.",
-            "Bindings renewed by release-0.5-coverage-remaining-branches: normal manifest behavior and all 27 test assertion bodies are preserved, and exact protected admin and consultation fixture checks pass. No production source changed."
+            "Bindings renewed by release-0.5-coverage-remaining-branches: normal manifest behavior and all 27 test assertion bodies are preserved, and exact protected admin and consultation fixture checks pass. No production source changed.",
+            "Bindings renewed by release-0.5-admin-coverage-proof: all affected API files pass with the same product code, append-only evidence protections, financial/security assertions and exact notification occurrences."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/bank-receipts-financial-history",
           "limitations": [
@@ -144525,6 +144632,11 @@
               "batch": "release-0.5-coverage-remaining-branches",
               "base_commit": "5acf1ae93ea5e0fbf7e79b7e12fac33db9591af9",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-coverage-remaining-branches/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-admin-coverage-proof",
+              "base_commit": "93d5840d54bb0a4754c3169306ede6f167581f44",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-admin-coverage-proof/source-binding.json"
             }
           ]
         }
@@ -144574,7 +144686,8 @@
           "release-0.5-populated-route-presentation",
           "release-0.5-measured-action-targets",
           "release-0.5-source-coverage-gate",
-          "release-0.5-coverage-remaining-branches"
+          "release-0.5-coverage-remaining-branches",
+          "release-0.5-admin-coverage-proof"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -144602,7 +144715,7 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.test.ts",
-              "sha256": "a148e570ce6ba7a4b69982117c034bdf098e798121cdc0d6fecfb136c0f3465c"
+              "sha256": "a1a9ef08684c18aea02bf177f7cc224c0d76cb69d30502e280a17c790c88652b"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
@@ -144610,7 +144723,7 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-cross-flow.integration.test.ts",
-              "sha256": "d3e48551959cc2a704d44087c59889a88b422d9b22eea2547255d0452b652d73"
+              "sha256": "15b4898e3fe693fb5ef728521cb149ede47d566a332666dcde48fb2f0ac848d6"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-dual-approval.integration.test.ts",
@@ -144622,7 +144735,7 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.integration.test.ts",
-              "sha256": "6764a352b3c9b8a5395267adf168f16dddafd75b0c12d090b58b72bd18a53f9d"
+              "sha256": "ff9f5c1a0e8e53e9e0a23e0066feb6b82b7b7864e1d43ef34ca3efb26cd15207"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.test.ts",
@@ -144835,7 +144948,8 @@
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
             "Bindings renewed by release-0.5-measured-action-targets: target sizing changes pass exact populated route browsers and scoped invoice, saving and customer-history ownership units. Navigation, authority, receipt and money behavior are unchanged.",
             "Bindings renewed by release-0.5-source-coverage-gate: test fixtures now exercise actual acknowledgement, current query/account context and nonoverlapping polls before the bounded read deadline; 61 focused tests passed and application source was unchanged.",
-            "Bindings renewed by release-0.5-coverage-remaining-branches: normal manifest behavior and all 27 test assertion bodies are preserved, and exact protected admin and consultation fixture checks pass. No production source changed."
+            "Bindings renewed by release-0.5-coverage-remaining-branches: normal manifest behavior and all 27 test assertion bodies are preserved, and exact protected admin and consultation fixture checks pass. No production source changed.",
+            "Bindings renewed by release-0.5-admin-coverage-proof: all affected API files pass with the same product code, append-only evidence protections, financial/security assertions and exact notification occurrences."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/bank-receipts-financial-history",
           "limitations": [
@@ -144980,6 +145094,11 @@
               "batch": "release-0.5-coverage-remaining-branches",
               "base_commit": "5acf1ae93ea5e0fbf7e79b7e12fac33db9591af9",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-coverage-remaining-branches/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-admin-coverage-proof",
+              "base_commit": "93d5840d54bb0a4754c3169306ede6f167581f44",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-admin-coverage-proof/source-binding.json"
             }
           ]
         }
@@ -145021,7 +145140,8 @@
           "release-0.5-populated-route-presentation",
           "release-0.5-measured-action-targets",
           "release-0.5-source-coverage-gate",
-          "release-0.5-coverage-remaining-branches"
+          "release-0.5-coverage-remaining-branches",
+          "release-0.5-admin-coverage-proof"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -145049,7 +145169,7 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.test.ts",
-              "sha256": "a148e570ce6ba7a4b69982117c034bdf098e798121cdc0d6fecfb136c0f3465c"
+              "sha256": "a1a9ef08684c18aea02bf177f7cc224c0d76cb69d30502e280a17c790c88652b"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
@@ -145057,7 +145177,7 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-cross-flow.integration.test.ts",
-              "sha256": "d3e48551959cc2a704d44087c59889a88b422d9b22eea2547255d0452b652d73"
+              "sha256": "15b4898e3fe693fb5ef728521cb149ede47d566a332666dcde48fb2f0ac848d6"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-dual-approval.integration.test.ts",
@@ -145069,7 +145189,7 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.integration.test.ts",
-              "sha256": "6764a352b3c9b8a5395267adf168f16dddafd75b0c12d090b58b72bd18a53f9d"
+              "sha256": "ff9f5c1a0e8e53e9e0a23e0066feb6b82b7b7864e1d43ef34ca3efb26cd15207"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.test.ts",
@@ -145282,7 +145402,8 @@
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
             "Bindings renewed by release-0.5-measured-action-targets: target sizing changes pass exact populated route browsers and scoped invoice, saving and customer-history ownership units. Navigation, authority, receipt and money behavior are unchanged.",
             "Bindings renewed by release-0.5-source-coverage-gate: test fixtures now exercise actual acknowledgement, current query/account context and nonoverlapping polls before the bounded read deadline; 61 focused tests passed and application source was unchanged.",
-            "Bindings renewed by release-0.5-coverage-remaining-branches: normal manifest behavior and all 27 test assertion bodies are preserved, and exact protected admin and consultation fixture checks pass. No production source changed."
+            "Bindings renewed by release-0.5-coverage-remaining-branches: normal manifest behavior and all 27 test assertion bodies are preserved, and exact protected admin and consultation fixture checks pass. No production source changed.",
+            "Bindings renewed by release-0.5-admin-coverage-proof: all affected API files pass with the same product code, append-only evidence protections, financial/security assertions and exact notification occurrences."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/bank-receipts-financial-history",
           "limitations": [
@@ -145427,6 +145548,11 @@
               "batch": "release-0.5-coverage-remaining-branches",
               "base_commit": "5acf1ae93ea5e0fbf7e79b7e12fac33db9591af9",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-coverage-remaining-branches/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-admin-coverage-proof",
+              "base_commit": "93d5840d54bb0a4754c3169306ede6f167581f44",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-admin-coverage-proof/source-binding.json"
             }
           ]
         }
@@ -658445,7 +658571,7 @@
             },
             {
               "path": "apps/api/src/wallet/chargeback-alert.integration.test.ts",
-              "sha256": "4820f4b80571e2dffb9442b023b191e8ce4404ab26b893386546cc70e0eab35a"
+              "sha256": "b18832989d06b51f5680db87e91450d342c929bbc682f5e13c058020e873c590"
             },
             {
               "path": "apps/api/src/wallet/customer-wallet-invoice-payment-http.integration.test.ts",
@@ -658605,7 +658731,7 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.test.ts",
-              "sha256": "a148e570ce6ba7a4b69982117c034bdf098e798121cdc0d6fecfb136c0f3465c"
+              "sha256": "a1a9ef08684c18aea02bf177f7cc224c0d76cb69d30502e280a17c790c88652b"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
@@ -658613,7 +658739,7 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-cross-flow.integration.test.ts",
-              "sha256": "d3e48551959cc2a704d44087c59889a88b422d9b22eea2547255d0452b652d73"
+              "sha256": "15b4898e3fe693fb5ef728521cb149ede47d566a332666dcde48fb2f0ac848d6"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-dual-approval.integration.test.ts",
@@ -658625,7 +658751,7 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.integration.test.ts",
-              "sha256": "6764a352b3c9b8a5395267adf168f16dddafd75b0c12d090b58b72bd18a53f9d"
+              "sha256": "ff9f5c1a0e8e53e9e0a23e0066feb6b82b7b7864e1d43ef34ca3efb26cd15207"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.test.ts",
@@ -660217,7 +660343,8 @@
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
             "Bindings renewed by release-0.5-source-coverage-gate: test fixtures now exercise actual acknowledgement, current query/account context and nonoverlapping polls before the bounded read deadline; 61 focused tests passed and application source was unchanged.",
             "Bindings renewed by release-0.5-staff-finance-read-recovery: Only staff maintenance and allocation read transport and related test fixtures changed. Scoped browser and unit evidence retains denial, financial review and protected command assertions.",
-            "Bindings renewed by release-0.5-coverage-remaining-branches: normal manifest behavior and all 27 test assertion bodies are preserved, and exact protected admin and consultation fixture checks pass. No production source changed."
+            "Bindings renewed by release-0.5-coverage-remaining-branches: normal manifest behavior and all 27 test assertion bodies are preserved, and exact protected admin and consultation fixture checks pass. No production source changed.",
+            "Bindings renewed by release-0.5-admin-coverage-proof: all affected API files pass with the same product code, append-only evidence protections, financial/security assertions and exact notification occurrences."
           ],
           "limitations": [
             "Complete the remaining effective contract/refund/invoice/receipt criteria after the existing owner decisions on engine/callback/credit-trigger/increase representations are dispositioned. Eleven scoped tasks remain partial; six have no current whole-task acceptance. Preserve the separate mathematical-policy, development reload and operational gates. Current35 boundary passes and94 matching accepted tasks do not certify those unresolved requirements."
@@ -661376,6 +661503,11 @@
               "batch": "release-0.5-coverage-remaining-branches",
               "base_commit": "5acf1ae93ea5e0fbf7e79b7e12fac33db9591af9",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-coverage-remaining-branches/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-admin-coverage-proof",
+              "base_commit": "93d5840d54bb0a4754c3169306ede6f167581f44",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-admin-coverage-proof/source-binding.json"
             }
           ]
         },
@@ -661403,7 +661535,8 @@
           "release-0.5-workspace-route-census",
           "release-0.5-source-coverage-gate",
           "release-0.5-staff-finance-read-recovery",
-          "release-0.5-coverage-remaining-branches"
+          "release-0.5-coverage-remaining-branches",
+          "release-0.5-admin-coverage-proof"
         ]
       }
     },
@@ -666748,7 +666881,7 @@
             },
             {
               "path": "apps/api/src/session/session.service.test.ts",
-              "sha256": "2d402886f9af69ab4c5c081cfedd87abf8a197ef9015eb9265e8d829b15dc5f0"
+              "sha256": "0a277a4b865c189cceb2b888ee8c611192973e425ae35e40d0d9b4d8d2afe988"
             },
             {
               "path": "apps/api/src/session/session.service.ts",
@@ -666964,7 +667097,7 @@
             },
             {
               "path": "apps/api/src/wallet/bank-receipt-confirmation.service.test.ts",
-              "sha256": "87ec24a6a323093e62959bb5782046feeb1ccf33af8adf9d60f664d05848c6db"
+              "sha256": "9c1b2e8aa5cbc4b5fcdf7fa9de0439277acc90ebe758cfaac91a0ae61b7d3f4c"
             },
             {
               "path": "apps/api/src/wallet/bank-receipt-confirmation.service.ts",
@@ -668966,7 +669099,8 @@
             "Bindings renewed by release-0.5-profile-lifecycle-feedback: exact lifecycle browsers and units verify timeout, current scope, protected consent, duplicate prevention and receipts after the bounded preview/feedback change.",
             "Bindings renewed by release-0.5-coverage-deficits: exact DB blocker evidence and original post-lock status/persistence assertions pass. Coverage mapper follows existing package source maps and rejects missing intermediates.",
             "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
-            "Bindings renewed by release-0.5-coverage-remaining-branches: normal manifest behavior and all 27 test assertion bodies are preserved, and exact protected admin and consultation fixture checks pass. No production source changed."
+            "Bindings renewed by release-0.5-coverage-remaining-branches: normal manifest behavior and all 27 test assertion bodies are preserved, and exact protected admin and consultation fixture checks pass. No production source changed.",
+            "Bindings renewed by release-0.5-admin-coverage-proof: all affected API files pass with the same product code, append-only evidence protections, financial/security assertions and exact notification occurrences."
           ],
           "limitations": [],
           "operational_limits": [
@@ -669560,6 +669694,11 @@
               "batch": "release-0.5-coverage-remaining-branches",
               "base_commit": "5acf1ae93ea5e0fbf7e79b7e12fac33db9591af9",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-coverage-remaining-branches/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-admin-coverage-proof",
+              "base_commit": "93d5840d54bb0a4754c3169306ede6f167581f44",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-admin-coverage-proof/source-binding.json"
             }
           ]
         },
@@ -669582,7 +669721,8 @@
           "release-0.5-profile-lifecycle-feedback",
           "release-0.5-coverage-deficits",
           "release-0.5-ui-coverage-collection",
-          "release-0.5-coverage-remaining-branches"
+          "release-0.5-coverage-remaining-branches",
+          "release-0.5-admin-coverage-proof"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -670479,7 +670619,7 @@
             },
             {
               "path": "apps/api/src/session/session.service.test.ts",
-              "sha256": "2d402886f9af69ab4c5c081cfedd87abf8a197ef9015eb9265e8d829b15dc5f0"
+              "sha256": "0a277a4b865c189cceb2b888ee8c611192973e425ae35e40d0d9b4d8d2afe988"
             },
             {
               "path": "apps/api/src/session/session.service.ts",
@@ -670695,7 +670835,7 @@
             },
             {
               "path": "apps/api/src/wallet/bank-receipt-confirmation.service.test.ts",
-              "sha256": "87ec24a6a323093e62959bb5782046feeb1ccf33af8adf9d60f664d05848c6db"
+              "sha256": "9c1b2e8aa5cbc4b5fcdf7fa9de0439277acc90ebe758cfaac91a0ae61b7d3f4c"
             },
             {
               "path": "apps/api/src/wallet/bank-receipt-confirmation.service.ts",
@@ -672694,7 +672834,8 @@
             "Bindings renewed by release-0.5-profile-lifecycle-feedback: exact lifecycle browsers and units verify timeout, current scope, protected consent, duplicate prevention and receipts after the bounded preview/feedback change.",
             "Bindings renewed by release-0.5-coverage-deficits: exact DB blocker evidence and original post-lock status/persistence assertions pass. Coverage mapper follows existing package source maps and rejects missing intermediates.",
             "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
-            "Bindings renewed by release-0.5-coverage-remaining-branches: normal manifest behavior and all 27 test assertion bodies are preserved, and exact protected admin and consultation fixture checks pass. No production source changed."
+            "Bindings renewed by release-0.5-coverage-remaining-branches: normal manifest behavior and all 27 test assertion bodies are preserved, and exact protected admin and consultation fixture checks pass. No production source changed.",
+            "Bindings renewed by release-0.5-admin-coverage-proof: all affected API files pass with the same product code, append-only evidence protections, financial/security assertions and exact notification occurrences."
           ],
           "limitations": [
             "Current staging is v0.3.0/2ac708c11225a1239156787cddfdd3ab094fb8f8, API/web/worker healthy and Redis/object storage readiness verified. After effective v0.4.0 criteria are accepted, deploy its immutable candidate and verify actual AI routing, slot isolation and notification/storage operations. Earlier v0.1.29/forced-TLS warning description is stale and does not dispatch a rebuild.",
@@ -673161,6 +673302,11 @@
               "batch": "release-0.5-coverage-remaining-branches",
               "base_commit": "5acf1ae93ea5e0fbf7e79b7e12fac33db9591af9",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-coverage-remaining-branches/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-admin-coverage-proof",
+              "base_commit": "93d5840d54bb0a4754c3169306ede6f167581f44",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-admin-coverage-proof/source-binding.json"
             }
           ]
         },
@@ -673200,7 +673346,8 @@
           "release-0.5-profile-lifecycle-feedback",
           "release-0.5-coverage-deficits",
           "release-0.5-ui-coverage-collection",
-          "release-0.5-coverage-remaining-branches"
+          "release-0.5-coverage-remaining-branches",
+          "release-0.5-admin-coverage-proof"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -673415,7 +673562,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "The 27 lazy chunk fixtures now target the active build and protected admin/consultation regressions pass in focused checks. Collect a clean admin report, continue the independent API run and close the measured source/complex manual gaps. No original threshold or product assertion changed."
+        "The 55 admin browser cases now have clean mapped evidence and the ten failed API files pass in a focused run. Renew full API coverage using prebuilt sources; close the measured web, shared UI and critical i18n floor deficits and the remaining complex manual accessibility states."
       ],
       "owner": null,
       "depends_on": [],
@@ -673429,7 +673576,8 @@
           "release-0.5-coverage-deficits",
           "release-0.5-ui-coverage-collection",
           "release-0.5-mapped-coverage-gate",
-          "release-0.5-coverage-remaining-branches"
+          "release-0.5-coverage-remaining-branches",
+          "release-0.5-admin-coverage-proof"
         ]
       }
     },
@@ -725461,7 +725609,146 @@
         "release-readiness#R-03.02"
       ],
       "failed_attempts_retained": true,
-      "release_disposition": "Repaired coverage-mode manifest and protected fixture expectations. No release publication."
+      "release_disposition": "Repaired coverage-mode manifest and protected fixture expectations. No release publication.",
+      "push_receipt": {
+        "commit": "93d5840d54bb0a4754c3169306ede6f167581f44",
+        "remote_sha": "93d5840d54bb0a4754c3169306ede6f167581f44",
+        "ref": "refs/heads/main",
+        "verified_at": "2026-11-07T09:02:59+00:00",
+        "method": "GitHub CLI API read after authenticated HTTPS Git push"
+      }
+    },
+    "release-0.5-admin-coverage-proof": {
+      "batch": "release-0.5-admin-coverage-proof",
+      "base_commit": "93d5840d54bb0a4754c3169306ede6f167581f44",
+      "task_keys": [
+        "release-readiness#R-04.02"
+      ],
+      "accepted_task_keys": [],
+      "partial_task_keys": [
+        "release-readiness#R-04.02"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/auth/session-notifications.ts",
+          "sha256": "804030204fc1a4530a1caa6a5a9690ec577857ab2a5f828179f8f85577c0143f"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.test.ts",
+          "sha256": "a1a9ef08684c18aea02bf177f7cc224c0d76cb69d30502e280a17c790c88652b"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
+          "sha256": "56574daf22310f900bd243e755ae23b90393f19afbaed0bca6ce49df2284a9a7"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-bank-receipt-cross-flow.integration.test.ts",
+          "sha256": "15b4898e3fe693fb5ef728521cb149ede47d566a332666dcde48fb2f0ac848d6"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-bank-receipt-upload.integration.test.ts",
+          "sha256": "ff9f5c1a0e8e53e9e0a23e0066feb6b82b7b7864e1d43ef34ca3efb26cd15207"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.ts",
+          "sha256": "8b2ac42e90e9e5d703c6669f67c044cb959bb29cc0d654d2b690d0a8a1b31249"
+        },
+        {
+          "path": "apps/api/src/notifications/notifications.service.ts",
+          "sha256": "09960a7fc5e377d35fdfd2dbda50ea7c8e287ec04f6a462c5a2f12eb5b19413b"
+        },
+        {
+          "path": "apps/api/src/session/session.service.test.ts",
+          "sha256": "0a277a4b865c189cceb2b888ee8c611192973e425ae35e40d0d9b4d8d2afe988"
+        },
+        {
+          "path": "apps/api/src/session/session.service.ts",
+          "sha256": "705eb6e4fdab9a953d928b354ac44899e4027fd2756cc0b20ba257ba7a24214d"
+        },
+        {
+          "path": "apps/api/src/test/build-http-app.ts",
+          "sha256": "316df2e398f44063465dae16ebc2decbf88b4c64b95be47c3bd3735c0158a8b0"
+        },
+        {
+          "path": "apps/api/src/test/http-fixture.ts",
+          "sha256": "b11b691680a16cfd244d5430449a7c91c918a09f5f3e5b5c09ed31299d80359c"
+        },
+        {
+          "path": "apps/api/src/wallet/bank-receipt-confirmation.service.test.ts",
+          "sha256": "9c1b2e8aa5cbc4b5fcdf7fa9de0439277acc90ebe758cfaac91a0ae61b7d3f4c"
+        },
+        {
+          "path": "apps/api/src/wallet/bank-receipt-confirmation.service.ts",
+          "sha256": "31e8f68411a3bc083817bf70b35a52225b9898bf0f93786451b7739900e52023"
+        },
+        {
+          "path": "apps/api/src/wallet/chargeback-alert.integration.test.ts",
+          "sha256": "b18832989d06b51f5680db87e91450d342c929bbc682f5e13c058020e873c590"
+        },
+        {
+          "path": "apps/api/src/wallet/chargeback-detection.service.ts",
+          "sha256": "9ad1a18ec7dcb699cc1dd87474f2e60d807e02aa2985710053563deb091fb08a"
+        },
+        {
+          "path": "docs/changed-coverage.md",
+          "sha256": "0f60c27fa4a7f72130afbacc3a226712a2f8b42d837b67fdf6b77f99909ead89"
+        },
+        {
+          "path": "packages/db/drizzle/production/0266_online_topup_notifications.sql",
+          "sha256": "36138a941dd03d9842b47d2d361de52f5984dfb09f03893f7994db4f799465e0"
+        },
+        {
+          "path": "packages/db/drizzle/production/0271_document_access_log.sql",
+          "sha256": "770c659f79d8664416d32cf8ca7f1d8bdcc3e9a5ffebca0e7c44d5df3169f578"
+        },
+        {
+          "path": "packages/db/src/test/migrated-db.ts",
+          "sha256": "b4ffc68618775ab4247a5d0b514d21fb5c4dbe5efd49b2de8793d800cd3d5afe"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "0b875687ee1d2f32ea8819c9eb58af72f0c0db3796f5e74f82317d4b7ce46251"
+        },
+        {
+          "path": "scripts/check-changed-coverage.py",
+          "sha256": "721aa5763bb62336c0e4c454b8e36e2f15ff1e14bf4b0136c7c7946424bbd736"
+        }
+      ],
+      "checks": [
+        "All 55 Chromium admin cases pass without retry and produce clean mapped evidence bound to 93d5840d: 13 notification cases and 42 email-provider and catalogue cases. Scope is only those passing tests.",
+        "The first bounded full API run completed 458 passing and 10 failing files (7734 passing, 30 failing cases). Its coverage output is preserved as diagnostic evidence. Parallel standalone runs had rebuilt shared outputs in place; the failing HTTP startup logs show missing compiled modules. Other failures reproduced stale fixture expectations and a cleanup TRUNCATE forbidden by append-only evidence.",
+        "All ten affected API files pass in the focused prebuilt run (146 cases). The final HTTP source is unchanged and the five affected HTTP/worker files also pass against its exact fixture. The invoice unit file passes again after its mock signature correction. Append-only evidence, single-claim races, byte validation, exact chargeback recipients and replay, and revocation audit linkage remain exercised. Lint and API typecheck pass.",
+        "The combined report is diagnostic and remains below the original web ordinary (671/849 lines and 1097/1551 branches), web critical (16040/17862 and 18688/23120), shared UI (104/112 and 94/127) and critical i18n (3/3 and 5/6) floors. API package changed-source groups measure above floor in the failing suite and do not certify the full API gate."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-admin-coverage-proof",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-admin-coverage-proof/reviewed-source.diff",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-admin-coverage-proof/source-binding.json",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-admin-coverage-proof/renewed-bindings.json",
+      "renewed_task_keys": [
+        "05-notifications-documents-ai.md#T-05.01.02",
+        "04-invoices-wallet-contracts.md#T-04.2.03.01",
+        "04-invoices-wallet-contracts.md#T-04.2.03.02",
+        "04-invoices-wallet-contracts.md#T-04.2.03.03",
+        "04-invoices-wallet-contracts.md#T-04.2.03.04",
+        "04-invoices-wallet-contracts.md#T-04.2.04.01",
+        "04-invoices-wallet-contracts.md#T-04.2.04.03",
+        "04-invoices-wallet-contracts.md#T-04.3.01.01",
+        "04-invoices-wallet-contracts.md#T-04.3.01.02",
+        "04-invoices-wallet-contracts.md#T-04.3.01.03",
+        "04-invoices-wallet-contracts.md#T-04.3.01.04",
+        "04-invoices-wallet-contracts.md#T-04.3.01.05",
+        "04-invoices-wallet-contracts.md#T-04.3.01.06",
+        "04-invoices-wallet-contracts.md#T-04.3.01.07",
+        "04-invoices-wallet-contracts.md#T-04.3.02.01",
+        "04-invoices-wallet-contracts.md#T-04.3.02.02",
+        "04-invoices-wallet-contracts.md#T-04.3.02.03",
+        "04-invoices-wallet-contracts.md#T-04.3.02.04",
+        "release-readiness#R-02.01",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02"
+      ],
+      "failed_attempts_retained": true,
+      "release_disposition": "Mapped corrected admin coverage, restored API release fixtures, and retained the unresolved gate. No release publication."
     }
   },
   "historical_improvements": [
@@ -725501,17 +725788,18 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.5-admin-coverage-proof",
+    "id": "release-0.5-critical-coverage-closure",
     "release": "0.5.0",
     "task_keys": [
       "release-readiness#R-04.02",
-      "07-ui-ux-design.md#T-07.05.01.08"
+      "07-ui-ux-design.md#T-07.05.01.08",
+      "07-ui-ux-design.md#T-07.04.01.06"
     ],
-    "goal": "Collect clean admin branch coverage after the fixture corrections, finish and diagnose the independent API run, and use exact remaining branch deficits for targeted component/route evidence."
+    "goal": "Renew the full API gate with immutable prebuilt dependencies; verify the remaining core UI keyboard, touch and recovery behavior and collect changed-source coverage against v0.4.0."
   },
   "launch_forecast": {
     "status": "deadline_at_risk_until_v0_5_and_operational_gates_close",
-    "next_update_after": "v0.5.0 clean admin source coverage and remaining gates",
+    "next_update_after": "v0.5.0 exact API and critical browser gate reconciliation",
     "method": "v0.4.0 staging and Telegram receipts verified. v0.5.0 remains unaccepted: coverage diagnostics are below unchanged web/UI/i18n floors, required route/manual states and two owner decisions remain. v0.6.0 operations and v0.9.0 four-service rehearsal keep November 9 at risk. Production is not authorized."
   },
   "capabilities": [

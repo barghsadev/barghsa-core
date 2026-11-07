@@ -429,14 +429,32 @@ describe('SessionService', () => {
 
   describe('revokeSession', () => {
     it('revokes a session and consumes its family tokens', async () => {
+      let outbox: { id: unknown; userId: unknown; event: unknown; payload: unknown } | undefined;
       mockClient.query.mockImplementation(async (sql: string, params?: unknown[]) => {
         if (sql === 'COMMIT') return { rows: [] };
         if (sql.startsWith('ROLLBACK')) return { rows: [] };
         if (sql.startsWith('SELECT family_id')) return { rows: [makeSessionRow()] };
+        if (sql.includes('INSERT INTO notification_outbox')) {
+          const [id, userId, event, payload] = params!;
+          outbox = { id, userId, event, payload };
+          return { rowCount: 1, rows: [{ id }] };
+        }
+        if (sql.includes('SELECT payload FROM notification_outbox')) {
+          const [id, userId, profileId, event] = params!;
+          return {
+            rows:
+              outbox &&
+              id === outbox.id &&
+              userId === outbox.userId &&
+              profileId === null &&
+              event === outbox.event
+                ? [{ payload: outbox.payload }]
+                : [],
+          };
+        }
         if (
           sql.includes('INSERT INTO audit_log') ||
           sql.includes('SELECT id FROM audit_log') ||
-          sql.includes('INSERT INTO notification_outbox') ||
           sql.includes('INSERT INTO in_app_notifications')
         )
           return { rowCount: 1, rows: [{ id: params![0] }] };
@@ -461,6 +479,11 @@ describe('SessionService', () => {
         String(call[0]).includes('INSERT INTO audit_log')
       );
       expect(JSON.parse(audit![1][2])).toEqual({ reason: 'logout', changedSessionCount: 1 });
+      expect(outbox).toMatchObject({
+        userId: makeSessionRow().user_id,
+        event: 'auth.session_revoked',
+        payload: { auditId: audit![1][0], link_route: '/settings/security' },
+      });
     });
 
     it('does nothing for a nonexistent session', async () => {

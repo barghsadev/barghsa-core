@@ -14,7 +14,7 @@ import { Pool } from 'pg';
  *   4. Concurrent wallet + invoice: exactly one flow wins.
  */
 
-import { describe, it, expect, beforeAll, afterAll, beforeEach, vi } from 'vitest';
+import { describe, it, expect, afterEach, beforeEach, vi } from 'vitest';
 import { ConflictException } from '@nestjs/common';
 import { createMigratedTestDb } from '../../../../packages/db/src/test/migrated-db';
 import {
@@ -62,7 +62,9 @@ describe('bank-receipt attachment cross-flow claims — real PostgreSQL (T-04.3.
   let walletTopUp: BankReceiptTopUpService;
   const objects = new Map<string, Uint8Array>();
 
-  beforeAll(async () => {
+  beforeEach(async () => {
+    // Each case owns a migrated database; receipt evidence is append-only.
+    objects.clear();
     ctx = await createMigratedTestDb();
     poolHolder.pool = ctx.pool;
     invoiceUpload = new InvoiceBankReceiptUploadService(
@@ -84,25 +86,18 @@ describe('bank-receipt attachment cross-flow claims — real PostgreSQL (T-04.3.
       "INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline) VALUES ($1,$2,$3,$1,NOW()+INTERVAL '1 hour',NOW()+INTERVAL '30 minutes')",
       [SESSION_ID, ACTOR_ID, CSRF_TOKEN]
     );
-  }, 60_000);
-
-  afterAll(async () => {
-    poolHolder.pool = null;
-    await ctx.close();
-  }, 60_000);
-
-  beforeEach(async () => {
-    objects.clear();
-    await ctx.pool.query(
-      `TRUNCATE bank_receipts, bank_receipt_attachment_claims, wallet_transactions,
-                invoices, storage_records CASCADE`
-    );
     await ctx.pool.query(
       `INSERT INTO invoices (id, profile_id, state, total_amount)
        VALUES ($1, $2, 'Unpaid', 5000000)`,
       [INVOICE_A, PROFILE_A]
     );
-  });
+  }, 60_000);
+
+  afterEach(async () => {
+    if (!poolHolder.pool) return;
+    poolHolder.pool = null;
+    await ctx.close();
+  }, 60_000);
 
   async function insertReceiptFile(storageKey: string): Promise<void> {
     await ctx.pool.query(

@@ -75,6 +75,11 @@ API and worker coverage use `scripts/process-v8-provider.mjs` to merge child-pro
 
 Process records are retained under `coverage/process-v8`. After an API fixture exits, it retains every V8 range for compiled API modules and removes the dependency ranges the provider already excludes. This keeps long coverage runs from accumulating full dependency traces. An interrupted run still cannot satisfy the gate.
 
+Before running API or worker suites in parallel, build the exact checkout once and
+set `BARGHSA_TEST_PREBUILT=1` on every consumer. A standalone HTTP test run without
+that flag rebuilds shared outputs in place. Running it alongside coverage can
+remove files that the compiled HTTP process is still loading.
+
 Worker tests rebuild the worker and workspace dependencies before starting a compiled process against an isolated PostgreSQL database migrated by the production command. The process suite exercises health/readiness/metrics, recurring jobs, database outage and recovery, invalid interval defaults, SIGINT/SIGTERM drain, and the forced shutdown deadline. Fixture database controls never target an existing application database. Missing system-actor failures and recovery are asserted explicitly.
 
 Run `pnpm --filter @barghsa/worker test:coverage` to collect both unit and compiled-process evidence. A focused process run is useful for diagnostics but does not replace the full package report used by the acceptance gate.

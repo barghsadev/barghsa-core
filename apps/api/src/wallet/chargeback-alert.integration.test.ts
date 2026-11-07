@@ -294,14 +294,23 @@ describe('ChargebackAlertService — real PostgreSQL (T-04.2.04.03)', () => {
         originalTransactionId: credit.id,
       });
       expect(await detector.handle(request)).toMatchObject({ reversed: true, processed: false });
-      const outbox = await ctx.pool.query('SELECT event_key,payload FROM notification_outbox');
-      expect(outbox.rows).toHaveLength(2);
-      expect(
-        outbox.rows.every(
-          (row) =>
-            row.event_key === 'finance.chargeback_reversed' && row.payload.status === 'reversed'
-        )
-      ).toBe(true);
+      const outbox = await ctx.pool.query(
+        'SELECT event_key,user_id,profile_id,payload FROM notification_outbox ORDER BY event_key,user_id'
+      );
+      expect(outbox.rows).toEqual([
+        ...[ADMIN_USER, FINANCE_USER].map((userId) => ({
+          event_key: 'finance.chargeback_reversed',
+          user_id: userId,
+          profile_id: null,
+          payload: expect.objectContaining({ status: 'reversed' }),
+        })),
+        {
+          event_key: 'payment.wallet_topup_completed',
+          user_id: FINANCE_USER,
+          profile_id: FINANCE_PROFILE,
+          payload: { transactionId: credit.id, amount: '75000', link_route: '/wallet' },
+        },
+      ]);
       expect(
         (
           await ctx.pool.query(

@@ -141,7 +141,7 @@ function thresholdRows(opts: ScriptOptions): { rows: Array<{ value: unknown }> }
 }
 
 function script(opts: ScriptOptions = {}) {
-  mockClient.query.mockImplementation(async (sql: string) => {
+  mockClient.query.mockImplementation(async (sql: string, params: unknown[]) => {
     if (sql.includes("->> 'remainingBefore' AS remaining_before")) {
       return { rows: [{ remaining_before: opts.recordedRemaining }] };
     }
@@ -249,8 +249,17 @@ function script(opts: ScriptOptions = {}) {
     if (sql.includes('FROM notification_outbox WHERE idempotency_key')) {
       return { rows: [{ id: 'outbox-1' }] };
     }
+    if (sql.includes('INSERT INTO in_app_notifications')) {
+      return { rows: [{ id: params[0] }], rowCount: 1 };
+    }
+    if (sql.includes('UPDATE in_app_notifications SET delivery_key')) {
+      return { rows: [], rowCount: 1 };
+    }
+    if (sql.includes('INSERT INTO notification_delivery_log')) {
+      return { rows: [], rowCount: 1 };
+    }
     if (sql.includes('INSERT INTO notification_job')) {
-      return { rows: [] };
+      return { rows: [], rowCount: 1 };
     }
     if (sql.includes('FROM invoices') && sql.includes('FOR UPDATE')) {
       if (opts.invoice === null) return { rows: [] };

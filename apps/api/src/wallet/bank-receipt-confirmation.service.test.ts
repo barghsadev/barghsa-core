@@ -127,6 +127,7 @@ type ScriptOptions = {
 };
 
 function script(opts: ScriptOptions = {}) {
+  let outbox: { profileId: unknown; userId: unknown; event: unknown; payload: unknown } | undefined;
   mockClient.query.mockImplementation(async (sql: string, params: unknown[]) => {
     if (sql.startsWith('SELECT id, archived FROM profiles')) {
       return { rows: [{ id: PROFILE_ID, archived: false }] };
@@ -206,8 +207,24 @@ function script(opts: ScriptOptions = {}) {
     }
     if (sql.includes('INSERT INTO notification_outbox')) {
       if (opts.outboxInserted === false) return { rows: [] };
+      const [profileId, userId, event, payload] = params;
+      outbox = { profileId, userId, event, payload };
       return { rows: [{ id: 'outbox-1' }] };
     }
+    if (sql.includes('SELECT payload FROM notification_outbox')) {
+      const [id, userId, profileId, event] = params;
+      return {
+        rows:
+          outbox &&
+          id === 'outbox-1' &&
+          userId === outbox.userId &&
+          profileId === outbox.profileId &&
+          event === outbox.event
+            ? [{ payload: outbox.payload }]
+            : [],
+      };
+    }
+    if (sql.includes('FROM notification_templates')) return { rows: [] };
     if (sql.includes('FROM notification_outbox WHERE idempotency_key')) {
       return { rows: [{ id: 'outbox-1' }] };
     }
