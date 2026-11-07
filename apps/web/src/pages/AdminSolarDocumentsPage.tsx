@@ -43,6 +43,7 @@ import {
   type SolarReviewIntent,
 } from '../lib/solar-document-form.js';
 import type { SolarDocumentQueries } from '../lib/solar-staff-query.js';
+import { readWithDeadline } from '../lib/server-query-client.js';
 
 interface RequestRow {
   id: string;
@@ -276,6 +277,7 @@ function OwnedAdminSolarDocumentsPage({ queries }: { queries?: SolarDocumentQuer
   const [detailRevision, setDetailRevision] = useState(0);
   const [guidanceRevision, setGuidanceRevision] = useState(0);
   const reviewRequest = useRef(0);
+  const previewAbort = useRef<AbortController | null>(null);
   const commandGeneration = useRef(0);
   function busy() {
     return (
@@ -296,6 +298,7 @@ function OwnedAdminSolarDocumentsPage({ queries }: { queries?: SolarDocumentQuer
   }
   function invalidateReview() {
     reviewRequest.current += 1;
+    previewAbort.current?.abort();
     commandPendingRef.current = false;
     setCommandPending(false);
     actionRef.current = null;
@@ -331,6 +334,7 @@ function OwnedAdminSolarDocumentsPage({ queries }: { queries?: SolarDocumentQuer
   useEffect(
     () => () => {
       ++reviewRequest.current;
+      previewAbort.current?.abort();
     },
     []
   );
@@ -583,20 +587,29 @@ function OwnedAdminSolarDocumentsPage({ queries }: { queries?: SolarDocumentQuer
       preparingDecisionRef.current = true;
       setPreparingDecision(true);
       setError(false);
+      const previewController = new AbortController();
+      previewAbort.current = previewController;
       try {
-        const response = await fetch(
-          `/api/admin/solar/requests/${encodeURIComponent(requestId)}/documents/review-set-decision`,
-          {
-            method: 'POST',
-            credentials: 'include',
-            headers: withCsrf({ 'Content-Type': 'application/json' }),
-            body: JSON.stringify({
-              decision,
-              ...(reason === null ? {} : { description: reason }),
-            }),
+        const { response, value } = await readWithDeadline(
+          previewController.signal,
+          async (signal) => {
+            const response = await fetch(
+              `/api/admin/solar/requests/${encodeURIComponent(requestId)}/documents/review-set-decision`,
+              {
+                signal,
+                method: 'POST',
+                credentials: 'include',
+                headers: withCsrf({ 'Content-Type': 'application/json' }),
+                body: JSON.stringify({
+                  decision,
+                  ...(reason === null ? {} : { description: reason }),
+                }),
+              }
+            );
+            const value = await response.json().catch(() => null);
+            return { response, value };
           }
         );
-        const value = await response.json().catch(() => null);
         if (request !== reviewRequest.current) return;
         if (!response.ok) {
           if (
@@ -666,6 +679,7 @@ function OwnedAdminSolarDocumentsPage({ queries }: { queries?: SolarDocumentQuer
       } catch {
         if (request === reviewRequest.current) setError(true);
       } finally {
+        if (previewAbort.current === previewController) previewAbort.current = null;
         if (request === reviewRequest.current) {
           preparingDecisionRef.current = false;
           setPreparingDecision(false);

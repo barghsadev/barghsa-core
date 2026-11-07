@@ -49,6 +49,7 @@ import { withCsrf } from '../lib/csrf.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import type { ListQueryBinding } from '../hooks/useListQuery.js';
+import { readWithDeadline } from '../lib/server-query-client.js';
 
 interface IncreaseRequest {
   requestId: string;
@@ -297,6 +298,7 @@ function OwnedAdminElectricityIncreasesPage({ queries }: { queries?: ListQueryBi
   const [reviewLoading, setReviewLoading] = useState(false);
   const [reviewError, setReviewError] = useState(false);
   const reviewRequest = useRef(0);
+  const previewAbort = useRef<AbortController | null>(null);
   const preparing = useRef(false);
   const pending = useRef(false);
   const captured = useRef<CapturedDecision | null>(null);
@@ -442,6 +444,7 @@ function OwnedAdminElectricityIncreasesPage({ queries }: { queries?: ListQueryBi
   }
   function clearReview() {
     ++reviewRequest.current;
+    previewAbort.current?.abort();
     preparing.current = false;
     pending.current = false;
     captured.current = null;
@@ -458,6 +461,7 @@ function OwnedAdminElectricityIncreasesPage({ queries }: { queries?: ListQueryBi
     mounted.current = true;
     return () => {
       mounted.current = false;
+      previewAbort.current?.abort();
       ++reviewRequest.current;
     };
   }, []);
@@ -619,13 +623,25 @@ function OwnedAdminElectricityIncreasesPage({ queries }: { queries?: ListQueryBi
           ...(effectiveFrom ? { effectiveFrom } : {}),
         };
         const path = `/api/staff/electricity/increase-requests/${encodeURIComponent(request.requestId)}/${decision}`;
+        const previewController = new AbortController();
+        previewAbort.current = previewController;
         try {
-          const response = await fetch(`${path}/review`, {
-            method: 'POST',
-            credentials: 'include',
-            headers: withCsrf({ 'Content-Type': 'application/json' }),
-            body: JSON.stringify(previewInput),
-          });
+          const { response, value } = await readWithDeadline(
+            previewController.signal,
+            async (signal) => {
+              const response = await fetch(`${path}/review`, {
+                signal,
+                method: 'POST',
+                credentials: 'include',
+                headers: withCsrf({ 'Content-Type': 'application/json' }),
+                body: JSON.stringify(previewInput),
+              });
+              const value: unknown = [401, 403, 404].includes(response.status)
+                ? null
+                : await response.json().catch(() => null);
+              return { response, value };
+            }
+          );
           if (!authorized()) return;
           if ([401, 403].includes(response.status)) {
             deny();
@@ -635,7 +651,6 @@ function OwnedAdminElectricityIncreasesPage({ queries }: { queries?: ListQueryBi
             missing(request.requestId);
             return;
           }
-          const value: unknown = await response.json().catch(() => null);
           if (!fresh()) return;
           if (response.status === 400 && definitiveStaffDecisionRejection(value)) {
             const owned = (value as { error: { fields?: unknown[] } }).error.fields;
@@ -680,6 +695,8 @@ function OwnedAdminElectricityIncreasesPage({ queries }: { queries?: ListQueryBi
             setDecisionReview(null);
             setReviewError(true);
           }
+        } finally {
+          if (previewAbort.current === previewController) previewAbort.current = null;
         }
       })()
       .finally(() => {

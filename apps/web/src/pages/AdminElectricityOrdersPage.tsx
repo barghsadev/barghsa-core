@@ -62,6 +62,7 @@ import {
 import { electricityTimelineKey, electricityTimelineState } from '../lib/electricity-timeline.js';
 import { withCsrf } from '../lib/csrf.js';
 import { staffOrderId, type StaffOrderListQuery } from '../lib/staff-order-list-query.js';
+import { readWithDeadline } from '../lib/server-query-client.js';
 
 interface ReviewOrder {
   orderId: string;
@@ -233,6 +234,7 @@ function OwnedAdminElectricityOrdersPage({ queries }: { queries?: StaffOrderList
   const [reviewLoading, setReviewLoading] = useState(false);
   const [reviewError, setReviewError] = useState(false);
   const reviewRequest = useRef(0);
+  const previewAbort = useRef<AbortController | null>(null);
   const currentScope = useRef(scope);
   const currentActor = useRef(actor);
   const accessDenied = useRef(false);
@@ -271,6 +273,7 @@ function OwnedAdminElectricityOrdersPage({ queries }: { queries?: StaffOrderList
     mounted.current = true;
     return () => {
       mounted.current = false;
+      previewAbort.current?.abort();
       ++reviewRequest.current;
     };
   }, []);
@@ -290,6 +293,7 @@ function OwnedAdminElectricityOrdersPage({ queries }: { queries?: StaffOrderList
   }
   function invalidate() {
     ++reviewRequest.current;
+    previewAbort.current?.abort();
     captured.current = null;
     preparing.current = false;
     pending.current = false;
@@ -564,14 +568,26 @@ function OwnedAdminElectricityOrdersPage({ queries }: { queries?: StaffOrderList
       (decision === 'approve' || form.getValues('reason') === rawReason);
     async function prepare(decisionReason: string) {
       if (!fresh()) return;
+      const previewController = new AbortController();
+      previewAbort.current = previewController;
       try {
-        const response = await fetch(
-          `/api/staff/electricity/orders/${encodeURIComponent(order.orderId)}/financial-review`,
-          {
-            method: 'POST',
-            credentials: 'include',
-            headers: withCsrf({ 'Content-Type': 'application/json' }),
-            body: JSON.stringify({ action: decision, reason: decisionReason }),
+        const { response, value } = await readWithDeadline(
+          previewController.signal,
+          async (signal) => {
+            const response = await fetch(
+              `/api/staff/electricity/orders/${encodeURIComponent(order.orderId)}/financial-review`,
+              {
+                signal,
+                method: 'POST',
+                credentials: 'include',
+                headers: withCsrf({ 'Content-Type': 'application/json' }),
+                body: JSON.stringify({ action: decision, reason: decisionReason }),
+              }
+            );
+            const value: unknown = [401, 403, 404].includes(response.status)
+              ? null
+              : await response.json().catch(() => null);
+            return { response, value };
           }
         );
         if (!fresh()) return;
@@ -583,8 +599,6 @@ function OwnedAdminElectricityOrdersPage({ queries }: { queries?: StaffOrderList
           missing();
           return;
         }
-        const value: unknown = await response.json().catch(() => null);
-        if (!fresh()) return;
         if (
           response.status === 400 &&
           decision !== 'approve' &&
@@ -635,6 +649,8 @@ function OwnedAdminElectricityOrdersPage({ queries }: { queries?: StaffOrderList
           setReviewError(true);
           setDecisionReview(null);
         }
+      } finally {
+        if (previewAbort.current === previewController) previewAbort.current = null;
       }
     }
     const operation =

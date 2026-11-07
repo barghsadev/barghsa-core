@@ -2,6 +2,7 @@ import { useCallback, useEffect, useId, useRef } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { queryKeys, type ServerQueryKey } from '../lib/query-keys.js';
 import { documentRequest } from '../lib/documents.js';
+import { readWithDeadline } from '../lib/server-query-client.js';
 
 /** Explicit private document GETs, including audited signed-link requests. */
 export function useOwnedDocumentRead(
@@ -119,12 +120,13 @@ export function useOwnedDocumentRead(
           staleTime: 0,
           gcTime: 0,
           retry: false,
-          queryFn: async ({ signal }) => {
-            const ownedSignal = external ? AbortSignal.any([external, signal]) : signal;
-            const value = await decode(path, { ...options, signal: ownedSignal });
-            if (!current() || signal.aborted) throw new Error('Obsolete document read');
-            return value;
-          },
+          queryFn: ({ signal: querySignal }) =>
+            readWithDeadline(querySignal, async (signal) => {
+              const ownedSignal = external ? AbortSignal.any([external, signal]) : signal;
+              const value = await decode(path, { ...options, signal: ownedSignal });
+              if (!current() || signal.aborted) throw new Error('Obsolete document read');
+              return value;
+            }),
         });
         if (!current()) throw new Error('Obsolete document read');
         return data;

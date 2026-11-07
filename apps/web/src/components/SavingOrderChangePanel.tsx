@@ -42,6 +42,7 @@ import {
   type SavingChangeHardware,
   type SavingChangeAddress,
 } from '../lib/saving-change-form.js';
+import { readWithDeadline } from '../lib/server-query-client.js';
 
 type Props = SavingChangeSource & {
   onChanged: () => void;
@@ -216,14 +217,15 @@ function ChangeWorkspace(props: Props & { scope: string; currentScope: RefObject
             staleTime: 0,
             gcTime: 0,
             retry: false,
-            queryFn: async ({ signal }) => {
-              const response = await fetch(path, { credentials: 'include', signal });
-              return {
-                ok: response.ok,
-                status: response.status,
-                data: response.ok ? ((await response.json()) as unknown) : null,
-              };
-            },
+            queryFn: ({ signal: querySignal }) =>
+              readWithDeadline(querySignal, async (signal) => {
+                const response = await fetch(path, { credentials: 'include', signal });
+                return {
+                  ok: response.ok,
+                  status: response.status,
+                  data: response.ok ? ((await response.json()) as unknown) : null,
+                };
+              }),
           })
         )
       );

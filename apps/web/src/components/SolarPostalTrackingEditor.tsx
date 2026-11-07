@@ -54,6 +54,7 @@ import {
 } from '../lib/solar-tracking-form.js';
 import { SolarPostalTrackingSummary } from './SolarPostalTrackingSummary.js';
 import { TeamActionDialog, type TeamAction } from './TeamActionDialog.js';
+import { readWithDeadline } from '../lib/server-query-client.js';
 
 function TrackingDateControl({
   id,
@@ -112,6 +113,7 @@ function OwnedSolarPostalTrackingEditor({
   const scopeKey = JSON.stringify([actor, requestId]);
   const scope = useRef(scopeKey);
   const generation = useRef(0);
+  const previewAbort = useRef<AbortController | null>(null);
   if (scope.current !== scopeKey) {
     scope.current = scopeKey;
     ++generation.current;
@@ -174,6 +176,7 @@ function OwnedSolarPostalTrackingEditor({
   }
   function deny() {
     ++generation.current;
+    previewAbort.current?.abort();
     detailRef.current = null;
     setDetail(null);
     setAcceptedScope(null);
@@ -200,6 +203,7 @@ function OwnedSolarPostalTrackingEditor({
     setPreparing(false);
     return () => {
       ++generation.current;
+      previewAbort.current?.abort();
     };
   }, [scopeKey]);
   useEffect(() => {
@@ -221,14 +225,15 @@ function OwnedSolarPostalTrackingEditor({
         staleTime: 0,
         gcTime: 0,
         retry: false,
-        queryFn: async ({ signal }) => {
-          const response = await fetch(path, { credentials: 'include', signal });
-          return {
-            ok: response.ok,
-            status: response.status,
-            data: response.ok ? ((await response.json()) as unknown) : null,
-          };
-        },
+        queryFn: ({ signal: querySignal }) =>
+          readWithDeadline(querySignal, async (signal) => {
+            const response = await fetch(path, { credentials: 'include', signal });
+            return {
+              ok: response.ok,
+              status: response.status,
+              data: response.ok ? ((await response.json()) as unknown) : null,
+            };
+          }),
       })
       .then(async (response) => {
         if (controller.signal.aborted || token !== generation.current) return null;
@@ -289,6 +294,7 @@ function OwnedSolarPostalTrackingEditor({
     if (commandPendingRef.current) return;
     closeProposal();
     ++generation.current;
+    previewAbort.current?.abort();
     preparingRef.current = false;
     setPreparing(false);
     detailRef.current = null;
@@ -312,6 +318,8 @@ function OwnedSolarPostalTrackingEditor({
     preparingRef.current = true;
     setPreparing(true);
     setError(null);
+    const previewController = new AbortController();
+    previewAbort.current = previewController;
     try {
       await form.handleSubmit(
         async () => {
@@ -323,13 +331,20 @@ function OwnedSolarPostalTrackingEditor({
           )
             return;
           const body = solarTrackingCommand(raw, captured.revision, crypto.randomUUID());
-          const response = await fetch(`${path}/review`, {
-            method: 'POST',
-            credentials: 'include',
-            headers: withCsrf({ 'Content-Type': 'application/json' }),
-            body: JSON.stringify(body),
-          });
-          const value: unknown = await response.json().catch(() => null);
+          const { response, value } = await readWithDeadline(
+            previewController.signal,
+            async (signal) => {
+              const response = await fetch(`${path}/review`, {
+                signal,
+                method: 'POST',
+                credentials: 'include',
+                headers: withCsrf({ 'Content-Type': 'application/json' }),
+                body: JSON.stringify(body),
+              });
+              const value: unknown = await response.json().catch(() => null);
+              return { response, value };
+            }
+          );
           if (token !== generation.current) return;
           if ([401, 403, 404].includes(response.status)) {
             deny();
@@ -402,6 +417,7 @@ function OwnedSolarPostalTrackingEditor({
     } catch {
       if (token === generation.current) setError('save');
     } finally {
+      if (previewAbort.current === previewController) previewAbort.current = null;
       if (token === generation.current) {
         preparingRef.current = false;
         setPreparing(false);

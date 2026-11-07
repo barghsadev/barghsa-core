@@ -1,5 +1,9 @@
 import { test, expect } from './coverage-fixture';
 import { fullNavigation } from './navigation-fixture';
+import { crmShell } from './crm-shell-fixture';
+import { tSolar } from '@barghsa/i18n/solar';
+import { documentText } from '@barghsa/i18n/documents';
+import { contractText } from '@barghsa/i18n/contracts';
 import { formatCurrencyIrr } from '@barghsa/i18n/numbers';
 import { t } from '@barghsa/i18n/app';
 
@@ -102,4 +106,86 @@ for (const locale of ['en', 'fa'] as const) {
       release();
     }
   });
+}
+
+for (const locale of ['en', 'fa'] as const) {
+  const solar = (key: string) => tSolar(key, locale);
+  const documents = (key: string) => documentText(key, locale);
+  const contracts = (key: string) => contractText(key, locale);
+  for (const surface of [
+    {
+      route: '/admin/solar-postal',
+      endpoint: '/api/admin/solar/postal-queue',
+      loading: solar('loading'),
+      failure: solar('staffQueueLoadError'),
+      retry: solar('retry'),
+      empty: solar('postalStaffEmpty'),
+      response: { requests: [], nextBefore: null },
+    },
+    {
+      route: '/admin/documents',
+      endpoint: '/api/admin/documents',
+      loading: documents('loading'),
+      failure: documents('listError'),
+      retry: documents('retry'),
+      empty: documents('empty'),
+      response: { documents: [], nextBefore: null },
+    },
+    {
+      route: '/admin/contracts',
+      endpoint: '/api/admin/contracts',
+      loading: contracts('loading'),
+      failure: contracts('error'),
+      retry: t('historyPagination.retry', locale),
+      empty: contracts('empty'),
+      response: { contracts: [], nextBefore: null },
+    },
+  ]) {
+    test(`an owned read times out and recovers only on explicit retry (${surface.route}, ${locale})`, async ({
+      page,
+    }) => {
+      await crmShell(page, locale);
+      await page.clock.install();
+      let releaseFirst!: () => void;
+      const held = new Promise<void>((resolve) => {
+        releaseFirst = resolve;
+      });
+      const requests: string[] = [];
+      await page.route(
+        (url) => url.pathname === surface.endpoint,
+        async (route) => {
+          requests.push(route.request().method());
+          if (requests.length === 1) {
+            await held;
+            // The already-timed-out transport may have been closed by the browser.
+            await route.fulfill({ json: surface.response }).catch(() => {});
+          } else {
+            await route.fulfill({ json: surface.response });
+          }
+        }
+      );
+      try {
+        await page.goto(surface.route);
+        const main = page.getByRole('main');
+        const loading = main.getByText(surface.loading, { exact: true });
+        const failure = main.getByRole('alert').filter({ hasText: surface.failure });
+        await expect(loading).toBeVisible();
+        await expect(loading.locator('..')).toHaveAttribute('role', 'status');
+        await expect.poll(() => requests).toEqual(['GET']);
+        await page.clock.fastForward(15_200);
+        await expect(failure).toBeVisible();
+        await expect(loading).toHaveCount(0);
+        expect(requests).toEqual(['GET']);
+        releaseFirst();
+        await expect(failure).toBeVisible();
+        const retrySection = surface.route === '/admin/documents' ? failure : failure.locator('..');
+        await retrySection.getByRole('button', { name: surface.retry, exact: true }).click();
+        await expect(main.getByText(surface.empty, { exact: true })).toBeVisible();
+        await expect(failure).toHaveCount(0);
+        expect(requests).toEqual(['GET', 'GET']);
+      } finally {
+        releaseFirst();
+      }
+    });
+  }
 }

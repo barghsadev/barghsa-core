@@ -1,6 +1,7 @@
 import { useEffect, useId, useRef } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { queryKeys, type ServerQueryScope } from '../lib/query-keys.js';
+import { readWithDeadline } from '../lib/server-query-client.js';
 
 /** Fresh profile reads for settings commands whose confirmation must be awaitable. */
 export function useOwnedProfileRead(
@@ -61,18 +62,19 @@ export function useOwnedProfileRead(
         staleTime: 0,
         gcTime: 0,
         retry: false,
-        queryFn: async ({ signal }) => {
-          const response = await fetch(path, { credentials: 'include', signal });
-          if (!current() || signal.aborted) throw new Error('Obsolete profile read');
-          if ([401, 403, 404].includes(response.status)) {
-            denied();
-            throw new Error('Profile unavailable');
-          }
-          if (!response.ok) throw new Error('Profile read failed');
-          const value: unknown = await response.json();
-          if (!current() || signal.aborted) throw new Error('Obsolete profile read');
-          return { value };
-        },
+        queryFn: ({ signal: querySignal }) =>
+          readWithDeadline(querySignal, async (signal) => {
+            const response = await fetch(path, { credentials: 'include', signal });
+            if (!current() || signal.aborted) throw new Error('Obsolete profile read');
+            if ([401, 403, 404].includes(response.status)) {
+              denied();
+              throw new Error('Profile unavailable');
+            }
+            if (!response.ok) throw new Error('Profile read failed');
+            const value: unknown = await response.json();
+            if (!current() || signal.aborted) throw new Error('Obsolete profile read');
+            return { value };
+          }),
       });
       if (!current()) throw new Error('Obsolete profile read');
       return result.value;

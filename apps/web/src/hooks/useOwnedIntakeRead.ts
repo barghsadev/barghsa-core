@@ -2,6 +2,7 @@ import { useCallback, useEffect, useId, useRef } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { commercialFetch } from '../lib/commercial-fetch.js';
 import type { ServerQueryKey } from '../lib/query-keys.js';
+import { readWithDeadline } from '../lib/server-query-client.js';
 
 /** Awaitable GET companions for the electricity and saving intake workspaces. */
 export function useOwnedIntakeRead(identity: string) {
@@ -66,14 +67,15 @@ export function useOwnedIntakeRead(identity: string) {
           staleTime: 0,
           gcTime: 0,
           retry: false,
-          queryFn: async ({ signal }) => {
-            const response = await commercialFetch(path, { ...options, signal });
-            if (!current() || signal.aborted) throw new Error('Obsolete intake read');
-            if (!response.ok) throw new Error(failure);
-            const value = (await response.json()) as T;
-            if (!current() || signal.aborted) throw new Error('Obsolete intake read');
-            return { value };
-          },
+          queryFn: ({ signal: querySignal }) =>
+            readWithDeadline(querySignal, async (signal) => {
+              const response = await commercialFetch(path, { ...options, signal });
+              if (!current() || signal.aborted) throw new Error('Obsolete intake read');
+              if (!response.ok) throw new Error(failure);
+              const value = (await response.json()) as T;
+              if (!current() || signal.aborted) throw new Error('Obsolete intake read');
+              return { value };
+            }),
         });
         if (!current()) throw new Error('Obsolete intake read');
         return result.value;

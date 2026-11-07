@@ -33,6 +33,7 @@ import {
   type CommentKind,
   type OrderComment,
 } from '../lib/order-comment-form.js';
+import { readWithDeadline } from '../lib/server-query-client.js';
 
 interface CommentProps {
   orderId: string;
@@ -202,17 +203,18 @@ function CommentWorkspace({
         staleTime: 0,
         gcTime: 0,
         retry: false,
-        queryFn: async ({ signal }) => {
-          const response = await fetch(
-            cursor ? `${base}?before=${encodeURIComponent(cursor)}` : base,
-            { credentials: 'include', signal }
-          );
-          return {
-            ok: response.ok,
-            status: response.status,
-            data: response.ok ? ((await response.json()) as unknown) : null,
-          };
-        },
+        queryFn: ({ signal: querySignal }) =>
+          readWithDeadline(querySignal, async (signal) => {
+            const response = await fetch(
+              cursor ? `${base}?before=${encodeURIComponent(cursor)}` : base,
+              { credentials: 'include', signal }
+            );
+            return {
+              ok: response.ok,
+              status: response.status,
+              data: response.ok ? ((await response.json()) as unknown) : null,
+            };
+          }),
       })
       .then(async (response) => {
         if (!fresh()) return;

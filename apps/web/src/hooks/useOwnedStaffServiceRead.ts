@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useId, useRef } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { queryKeys, type ServerQueryKey } from '../lib/query-keys.js';
+import { readWithDeadline } from '../lib/server-query-client.js';
 
 /** Fresh GET packets for staff electricity, consultation and solar queues. */
 export function useOwnedStaffServiceRead(actor: string | null, revision: number) {
@@ -68,12 +69,13 @@ export function useOwnedStaffServiceRead(actor: string | null, revision: number)
           staleTime: 0,
           gcTime: 0,
           retry: false,
-          queryFn: async ({ signal }) => {
-            const response = await fetch(path, { credentials: 'include', signal });
-            const data = response.ok ? ((await response.json()) as unknown) : null;
-            if (!current() || signal.aborted) throw new Error('Obsolete staff read');
-            return { ok: response.ok, status: response.status, data };
-          },
+          queryFn: ({ signal: querySignal }) =>
+            readWithDeadline(querySignal, async (signal) => {
+              const response = await fetch(path, { credentials: 'include', signal });
+              const data = response.ok ? ((await response.json()) as unknown) : null;
+              if (!current() || signal.aborted) throw new Error('Obsolete staff read');
+              return { ok: response.ok, status: response.status, data };
+            }),
         });
         if (!current()) throw new Error('Obsolete staff read');
         return { ok: packet.ok, status: packet.status, json: async () => packet.data };

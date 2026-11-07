@@ -43,6 +43,7 @@ import { postalCalendarDate } from '../lib/solar-postal-tracking.js';
 import { SolarContractForm } from '../components/SolarContractForm.js';
 import { withCsrf } from '../lib/csrf.js';
 import type { ListQueryBinding } from '../hooks/useListQuery.js';
+import { readWithDeadline } from '../lib/server-query-client.js';
 
 interface Guidance {
   fa: string;
@@ -183,6 +184,7 @@ function AdminSolarPostalWorkspace({ queries }: { queries?: ListQueryBinding } =
   const trackingAccessDenied = useRef(false);
   const [guidanceError, setGuidanceError] = useState(false);
   const reviewRequest = useRef(0);
+  const previewAbort = useRef<AbortController | null>(null);
   const commandGeneration = useRef(0);
   function busy() {
     return (
@@ -204,6 +206,7 @@ function AdminSolarPostalWorkspace({ queries }: { queries?: ListQueryBinding } =
   }
   function invalidateReview() {
     reviewRequest.current += 1;
+    previewAbort.current?.abort();
     commandPendingRef.current = false;
     setCommandPending(false);
     actionRef.current = null;
@@ -236,6 +239,7 @@ function AdminSolarPostalWorkspace({ queries }: { queries?: ListQueryBinding } =
   useEffect(
     () => () => {
       ++reviewRequest.current;
+      previewAbort.current?.abort();
     },
     []
   );
@@ -364,14 +368,23 @@ function AdminSolarPostalWorkspace({ queries }: { queries?: ListQueryBinding } =
       setPreparingDecision(true);
       setError(false);
       const body = options.required ? { reason: reason.trim() } : {};
+      const previewController = new AbortController();
+      previewAbort.current = previewController;
       try {
-        const response = await fetch(options.previewPath, {
-          method: 'POST',
-          credentials: 'include',
-          headers: withCsrf({ 'Content-Type': 'application/json' }),
-          body: JSON.stringify({ decision: options.decision, ...body }),
-        });
-        const value = await response.json().catch(() => null);
+        const { response, value } = await readWithDeadline(
+          previewController.signal,
+          async (signal) => {
+            const response = await fetch(options.previewPath, {
+              signal,
+              method: 'POST',
+              credentials: 'include',
+              headers: withCsrf({ 'Content-Type': 'application/json' }),
+              body: JSON.stringify({ decision: options.decision, ...body }),
+            });
+            const value = await response.json().catch(() => null);
+            return { response, value };
+          }
+        );
         if (request !== reviewRequest.current) return;
         if (!response.ok) {
           if (
@@ -410,6 +423,7 @@ function AdminSolarPostalWorkspace({ queries }: { queries?: ListQueryBinding } =
       } catch {
         if (request === reviewRequest.current) setError(true);
       } finally {
+        if (previewAbort.current === previewController) previewAbort.current = null;
         if (request === reviewRequest.current) {
           preparingRef.current = false;
           setPreparingDecision(false);

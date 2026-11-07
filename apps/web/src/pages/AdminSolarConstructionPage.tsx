@@ -43,6 +43,7 @@ import {
 import { withCsrf } from '../lib/csrf.js';
 import { SolarStageProgress } from '../components/SolarStageProgress.js';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
+import { readWithDeadline } from '../lib/server-query-client.js';
 interface Row {
   requestId: string;
   contractId: string;
@@ -108,6 +109,7 @@ function OwnedAdminSolarConstructionPage({
   const [saveError, setSaveError] = useState(false);
   const [action, setAction] = useState<TeamAction | null>(null);
   const generation = useRef(0);
+  const previewAbort = useRef<AbortController | null>(null);
   const mounted = useRef(false);
   const accessDenied = useRef(false);
   const q = queries.query.search,
@@ -149,11 +151,13 @@ function OwnedAdminSolarConstructionPage({
     mounted.current = true;
     return () => {
       mounted.current = false;
+      previewAbort.current?.abort();
       generation.current += 1;
     };
   }, []);
   function invalidate() {
     generation.current += 1;
+    previewAbort.current?.abort();
     setAction(null);
     reviewed.current = null;
     preparingRef.current = false;
@@ -324,14 +328,26 @@ function OwnedAdminSolarConstructionPage({
       preparingRef.current = true;
       setPreparing(true);
       setSaveError(false);
+      const previewController = new AbortController();
+      previewAbort.current = previewController;
       try {
-        const response = await fetch(
-          `/api/admin/solar/construction/${encodeURIComponent(captured.requestId)}/review`,
-          {
-            method: 'POST',
-            credentials: 'include',
-            headers: withCsrf({ 'Content-Type': 'application/json' }),
-            body: JSON.stringify(captured.command),
+        const { response, result } = await readWithDeadline(
+          previewController.signal,
+          async (signal) => {
+            const response = await fetch(
+              `/api/admin/solar/construction/${encodeURIComponent(captured.requestId)}/review`,
+              {
+                signal,
+                method: 'POST',
+                credentials: 'include',
+                headers: withCsrf({ 'Content-Type': 'application/json' }),
+                body: JSON.stringify(captured.command),
+              }
+            );
+            const result: unknown = [401, 403, 404].includes(response.status)
+              ? null
+              : await response.json().catch(() => null);
+            return { response, result };
           }
         );
         if (
@@ -345,14 +361,6 @@ function OwnedAdminSolarConstructionPage({
           deny();
           return;
         }
-        const result: unknown = await response.json().catch(() => null);
-        if (
-          !mounted.current ||
-          generation.current !== token ||
-          currentScope.current !== scope ||
-          form.getValues('note') !== rawNote
-        )
-          return;
         if (response.status === 400 && result && typeof result === 'object') {
           const error = (result as { error?: { code?: string; fields?: unknown[] } }).error;
           if (
@@ -406,6 +414,7 @@ function OwnedAdminSolarConstructionPage({
       } catch {
         if (mounted.current && generation.current === token) setSaveError(true);
       } finally {
+        if (previewAbort.current === previewController) previewAbort.current = null;
         if (mounted.current && generation.current === token) {
           preparingRef.current = false;
           setPreparing(false);

@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useId, useRef } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { queryKeys, type ServerQueryKey } from '../lib/query-keys.js';
+import { readWithDeadline } from '../lib/server-query-client.js';
 
 /** Explicit readonly invoice POST previews. Never accepts command endpoints. */
 export function useOwnedInvoiceReview(actor: string | null, revision: number) {
@@ -59,12 +60,14 @@ export function useOwnedInvoiceReview(actor: string | null, revision: number) {
           staleTime: 0,
           gcTime: 0,
           retry: false,
-          queryFn: async ({ signal }) => {
-            const response = await fetch(path, { ...init, signal });
-            const data = response.ok || decodeErrors ? ((await response.json()) as unknown) : null;
-            if (!current() || signal.aborted) throw new Error('Obsolete invoice review');
-            return { ok: response.ok, status: response.status, data };
-          },
+          queryFn: ({ signal: querySignal }) =>
+            readWithDeadline(querySignal, async (signal) => {
+              const response = await fetch(path, { ...init, signal });
+              const data =
+                response.ok || decodeErrors ? ((await response.json()) as unknown) : null;
+              if (!current() || signal.aborted) throw new Error('Obsolete invoice review');
+              return { ok: response.ok, status: response.status, data };
+            }),
         });
         if (!current()) throw new Error('Obsolete invoice review');
         return { ok: packet.ok, status: packet.status, json: async () => packet.data };

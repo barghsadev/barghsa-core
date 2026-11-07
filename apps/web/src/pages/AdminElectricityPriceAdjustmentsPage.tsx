@@ -63,6 +63,7 @@ import {
   type StaffPriceState,
 } from '../lib/electricity-price-form.js';
 import type { ElectricityPriceAdjustmentRow } from '../lib/electricity-price-adjustment-row.js';
+import { readWithDeadline } from '../lib/server-query-client.js';
 export { percentToBps } from '../lib/electricity-price-form.js';
 
 interface WorkspaceOwner {
@@ -299,6 +300,7 @@ function PriceWorkspace({
   const [loadError, setLoadError] = useState<'load' | 'forbidden' | null>(null);
   const accessDenied = useRef(false);
   const reviewGeneration = useRef(0);
+  const previewAbort = useRef<AbortController | null>(null);
   const readGeneration = useRef(0);
   const readAbort = useRef<AbortController | null>(null);
   const acceptedData = useRef<StaffPriceState | null>(null);
@@ -361,6 +363,7 @@ function PriceWorkspace({
   }
   function invalidate() {
     ++reviewGeneration.current;
+    previewAbort.current?.abort();
     if (owner.current === operationOwner.current) {
       owner.current = null;
       notify();
@@ -400,6 +403,7 @@ function PriceWorkspace({
     mounted.current = true;
     return () => {
       mounted.current = false;
+      previewAbort.current?.abort();
       ++reviewGeneration.current;
       ++readGeneration.current;
       if (owner.current === operationOwner.current) owner.current = null;
@@ -600,14 +604,26 @@ function PriceWorkspace({
           reason: draft.reason.trim(),
           contractualBasis: draft.basis.trim(),
         };
+        const previewController = new AbortController();
+        previewAbort.current = previewController;
         try {
-          const response = await fetch(
-            `/api/staff/electricity/contracts/${encodeURIComponent(contractId)}/price-adjustments/review`,
-            {
-              method: 'POST',
-              credentials: 'include',
-              headers: withCsrf({ 'Content-Type': 'application/json' }),
-              body: JSON.stringify(proposal),
+          const { response, value } = await readWithDeadline(
+            previewController.signal,
+            async (signal) => {
+              const response = await fetch(
+                `/api/staff/electricity/contracts/${encodeURIComponent(contractId)}/price-adjustments/review`,
+                {
+                  signal,
+                  method: 'POST',
+                  credentials: 'include',
+                  headers: withCsrf({ 'Content-Type': 'application/json' }),
+                  body: JSON.stringify(proposal),
+                }
+              );
+              const value: unknown = [401, 403, 404].includes(response.status)
+                ? null
+                : await response.json().catch(() => null);
+              return { response, value };
             }
           );
           if (!authorized()) return;
@@ -619,7 +635,6 @@ function PriceWorkspace({
             withdraw('load');
             return;
           }
-          const value: unknown = await response.json().catch(() => null);
           if (!fresh()) return;
           if (response.status === 400 && definitivePriceRejection(value)) {
             const fields = (value as { error: { fields?: unknown[] } }).error.fields;
@@ -659,6 +674,8 @@ function PriceWorkspace({
           });
         } catch {
           if (fresh()) setError('reviewError');
+        } finally {
+          if (previewAbort.current === previewController) previewAbort.current = null;
         }
       })()
       .finally(() => {

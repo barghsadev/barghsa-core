@@ -12,6 +12,7 @@ import { authErrorCode } from '../lib/auth-errors.js';
 import { useChatRetryAfter } from '../hooks/useChatRetryAfter.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { withCsrf } from '../lib/csrf.js';
+import { readWithDeadline } from '../lib/server-query-client.js';
 
 /** A public, stateless question. No account request, cookie or conversation history is sent. */
 export function PublicKnowledgeAssistant({ locale }: { locale: Locale }) {
@@ -83,10 +84,11 @@ function OwnedKnowledgeQuestionAssistant({ locale, staff }: { locale: Locale; st
         staleTime: 0,
         gcTime: 0,
         retry: false,
-        queryFn: async ({ signal }) => {
-          const response = await fetch(endpoint + '/availability', { credentials, signal });
-          return { ok: response.ok, value: (await response.json()) as unknown };
-        },
+        queryFn: ({ signal: querySignal }) =>
+          readWithDeadline(querySignal, async (signal) => {
+            const response = await fetch(endpoint + '/availability', { credentials, signal });
+            return { ok: response.ok, value: (await response.json()) as unknown };
+          }),
       })
       .then(async (response) => {
         const data: unknown = response.value;

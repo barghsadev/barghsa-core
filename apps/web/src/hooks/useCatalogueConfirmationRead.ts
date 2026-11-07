@@ -4,6 +4,7 @@ import { useAccountUser } from './useAccountUser.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { queryKeys, type ServerQueryKey } from '../lib/query-keys.js';
 import type { useCatalogueScope } from './useCatalogueResource.js';
+import { readWithDeadline } from '../lib/server-query-client.js';
 
 /** Fresh follow-up reads for verified group membership and knowledge document writes. */
 export function useCatalogueConfirmationRead(scope: ReturnType<typeof useCatalogueScope>) {
@@ -40,13 +41,14 @@ export function useCatalogueConfirmationRead(scope: ReturnType<typeof useCatalog
           staleTime: 0,
           gcTime: 0,
           retry: false,
-          queryFn: async ({ signal }) => {
-            const response = await fetch(path, { credentials: 'include', signal });
-            return {
-              status: response.status,
-              value: response.status === 200 ? ((await response.json()) as unknown) : null,
-            };
-          },
+          queryFn: ({ signal: querySignal }) =>
+            readWithDeadline(querySignal, async (signal) => {
+              const response = await fetch(path, { credentials: 'include', signal });
+              return {
+                status: response.status,
+                value: response.status === 200 ? ((await response.json()) as unknown) : null,
+              };
+            }),
         });
         if (!alive.current || live.current !== version)
           throw new Error('Obsolete catalogue confirmation');
