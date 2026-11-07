@@ -613,7 +613,7 @@ export function ContractSignaturePanel({
                     <FormItem id="signature-original">
                       <FormLabel>{word('approvedOriginal')}</FormLabel>
                       <FormControl>
-                        <NativeSelect {...field} disabled={locked}>
+                        <NativeSelect {...field} aria-required="true" disabled={locked}>
                           <option value="">{word('selectDocument')}</option>
                           {originals.map((doc) => (
                             <option key={doc.id} value={doc.id}>
@@ -657,6 +657,7 @@ export function ContractSignaturePanel({
                       <FormControl>
                         <NativeSelect
                           {...field}
+                          aria-required="true"
                           disabled={locked}
                           onChange={(event) => {
                             field.onChange(event);
@@ -681,10 +682,13 @@ export function ContractSignaturePanel({
                   name="acknowledged"
                   render={({ field }) => (
                     <FormItem id="signature-acknowledgement">
-                      <FormLabel>{word('signatureAcknowledgement')}</FormLabel>
+                      <FormLabel className="touch-action">
+                        {word('signatureAcknowledgement')}
+                      </FormLabel>
                       <FormControl>
                         <input
                           type="checkbox"
+                          aria-required="true"
                           name={field.name}
                           ref={field.ref}
                           checked={field.value}

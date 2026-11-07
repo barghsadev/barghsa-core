@@ -1,8 +1,10 @@
 import { contractReview, ORIGINAL, SIGNED, REQUEST } from './contract-review-fixture';
 import { test, expect } from './coverage-fixture';
 import { approveRiskConfirmation } from './confirmation-fixture';
+import { checkChoiceTarget } from './route-presentation';
 import { en, fa } from '../../../packages/i18n/src/contracts';
 import { t } from '../../../packages/i18n/src/app';
+import { tContractReviewSignature } from '../../../packages/i18n/src/contract-review-signature';
 const ID = '11111111-1111-4111-8111-111111111111',
   PROFILE = '22222222-2222-4222-8222-222222222222',
   VERSION = '33333333-3333-4333-8333-333333333333';
@@ -176,7 +178,9 @@ for (const locale of ['en', 'fa'] as const)
       const dialog = page.getByRole('dialog');
       const confirm = dialog.getByRole('button', { name: t('team.confirm', locale), exact: true });
       if (staff) {
-        await panel.getByLabel(words.approvedOriginal, { exact: true }).selectOption(ORIGINAL);
+        const original = panel.getByLabel(words.approvedOriginal, { exact: true });
+        await expect(original).toHaveAttribute('aria-required', 'true');
+        await original.selectOption(ORIGINAL);
         await panel.getByRole('button', { name: words.prepareSignature, exact: true }).click();
         await expect(confirm).toBeDisabled();
         await approveRiskConfirmation(page, locale, 'financial');
@@ -184,14 +188,23 @@ for (const locale of ['en', 'fa'] as const)
         await expect(dialog).toHaveCount(0);
       }
       await expect(panel.getByText('original.pdf', { exact: false }).first()).toBeVisible();
-      await panel.getByLabel(words.approvedSigned, { exact: true }).selectOption(SIGNED);
+      const signed = panel.getByLabel(words.approvedSigned, { exact: true });
+      await expect(signed).toHaveAttribute('aria-required', 'true');
+      await signed.selectOption(SIGNED);
       await panel.getByRole('button', { name: words.recordSignature, exact: true }).click();
       const acknowledgement = panel.getByRole('checkbox', { name: words.signatureAcknowledgement });
+      await expect(acknowledgement).toHaveAttribute('aria-required', 'true');
       await expect(acknowledgement).toHaveAttribute('aria-invalid', 'true');
+      const validation = tContractReviewSignature('acknowledgementInvalid', locale);
+      await expect(panel.getByRole('alert').filter({ hasText: validation })).toBeVisible();
+      await expect(acknowledgement).toHaveAccessibleDescription(validation);
       await expect(acknowledgement).toBeFocused();
       await expect(dialog).toHaveCount(0);
       expect(attempts).toHaveLength(0);
-      await acknowledgement.check();
+      await checkChoiceTarget(
+        acknowledgement,
+        panel.locator('label[for="signature-acknowledgement"]')
+      );
       await panel.getByRole('button', { name: words.recordSignature, exact: true }).click();
       await expect(confirm).toBeDisabled();
       await approveRiskConfirmation(page, locale, 'financial');

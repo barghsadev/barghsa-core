@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-07T22:33:47+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-07T22:39:20+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.4.0**. Next milestone: **v0.5.0**.
 
@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 865 | Accepted with unchanged source bindings. |
+| done | 866 | Accepted with unchanged source bindings. |
 | verify | 470 | Existing work may be complete; inspect evidence before building. |
-| partial | 28 | An earlier review found unmet criteria; reconcile later fixes. |
+| partial | 27 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 5 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
 | blocked | 1 | Named owner or external prerequisite. |
@@ -712,7 +712,7 @@ Customer and admin workflows work on desktop/mobile in both languages and themes
 | `07-ui-ux-design.md#T-07.04.01.03` | done | Recorded batch work | Create `Stack` and `Inline` layout primitives: `Stack` (vertical, with gap), `Inline` (horizontal, wraps on mobile). Responsive gap: different gap values per breakpoint. |
 | `07-ui-ux-design.md#T-07.04.01.04` | done | Recorded batch work | Create `Grid` responsive layout component: `columns` prop accepts object `{ base: 1, sm: 2, lg: 3 }` mapping to CSS grid. Used for dashboard card grids, admin table layouts. |
 | `07-ui-ux-design.md#T-07.04.01.05` | done | Recorded batch work | All list pages must have a mobile card view as an alternative to the desktop table view. When viewport < `md`, switch from `<DataTable>` to `<CardList>` where each card shows key fields. |
-| `07-ui-ux-design.md#T-07.04.01.06` | partial | Recorded batch work | Touch targets: ensure all interactive elements (buttons, links, inputs, toggles) have minimum 44×44px tap area per WCAG 2.5.8. |
+| `07-ui-ux-design.md#T-07.04.01.06` | done | Recorded batch work | Touch targets: ensure all interactive elements (buttons, links, inputs, toggles) have minimum 44×44px tap area per WCAG 2.5.8. |
 | `07-ui-ux-design.md#T-07.04.02.01` | done | Recorded batch work | On mobile (< `lg`): sidebar becomes a bottom tab bar with 4–5 primary navigation icons (Home, Orders, Wallet, Profile, More). "More" opens a sheet with all remaining navigation items. |
 | `07-ui-ux-design.md#T-07.04.02.02` | done | Recorded batch work | On mobile: topbar shows only hamburger menu, app logo/title, notification bell, and profile avatar. All secondary actions move into the "More" drawer or overflow menus. |
 | `07-ui-ux-design.md#T-07.04.02.03` | done | Recorded batch work | On tablet (`md`–`lg`): sidebar collapses to icon-only rail (60px wide). Expand on hover or tap. |
