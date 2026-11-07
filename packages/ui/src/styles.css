@@ -929,11 +929,9 @@
 @keyframes barghsa-slide-up {
   from {
     transform: translateY(20px);
-    opacity: 0.85;
   }
   to {
     transform: none;
-    opacity: 1;
   }
 }
 @keyframes barghsa-slide-down {
@@ -969,11 +967,17 @@
 @keyframes barghsa-scale-in {
   from {
     transform: scale(0.98);
-    opacity: 0.85;
   }
   to {
     transform: none;
-    opacity: 1;
+  }
+}
+@keyframes barghsa-row-enter {
+  from {
+    transform: translateY(4px);
+  }
+  to {
+    transform: none;
   }
 }
 @keyframes barghsa-scale-out {
@@ -1015,7 +1019,7 @@
   animation: shimmer 1.5s ease-in-out infinite;
 }
 .app-content :where(tbody tr, [data-slot='list-item']) {
-  animation: barghsa-fade-in var(--duration-normal) var(--ease-out) backwards;
+  animation: barghsa-row-enter var(--duration-normal) var(--ease-out) backwards;
 }
 .app-content [data-slot='card'][data-variant='widget'] {
   animation: barghsa-scale-in var(--duration-normal) var(--ease-out) backwards;

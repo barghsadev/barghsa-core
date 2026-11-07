@@ -118,8 +118,19 @@ jobs:
       - run: pnpm check:contract
       - run: pnpm check:db-snapshot
       - name: Install production browser check runtime
-        if: env.FULL_CI == 'true'
         run: pnpm --filter @barghsa/web exec playwright install --with-deps chromium
+      - name: Enforce critical page accessibility
+        if: env.FULL_CI != 'true'
+        run: |
+          node scripts/run-production-browser.mjs \
+            e2e/login-ui.spec.ts \
+            e2e/dashboard-widget-loading.spec.ts \
+            e2e/customer-service-history-views.spec.ts \
+            e2e/wallet-receipt-timeline.spec.ts \
+            e2e/contract-quantity-increase.spec.ts \
+            --grep @a11y-critical
+        env:
+          BARGHSA_TEST_PREBUILT: '1'
       - name: Verify actual cold authentication transfers
         if: env.FULL_CI == 'true'
         run: node scripts/check-auth-transfer.mjs
@@ -253,7 +264,7 @@ jobs:
           TEST_RESULT: ${{ needs.test.result }}
           INTEGRITY_RESULT: ${{ needs.integrity.result }}
         run: |
-          echo "Fast mode: browser and coverage checks temporarily disabled. Affected tests and integrity checks remain required. Restore with CI_FULL_CHECKS=true." >> "$GITHUB_STEP_SUMMARY"
+          echo "Fast mode runs critical accessibility, affected tests and integrity checks. Restore the full browser suite and coverage with CI_FULL_CHECKS=true." >> "$GITHUB_STEP_SUMMARY"
           test "$TEST_RESULT" = success
           test "$INTEGRITY_RESULT" = success
       - uses: actions/checkout@v4

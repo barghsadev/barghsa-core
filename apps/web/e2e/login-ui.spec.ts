@@ -64,9 +64,11 @@ for (const locale of ['fa', 'en'])
         await submit.click();
         expect(requests).toHaveLength(0);
         await expect(username).toHaveAttribute('aria-invalid', 'true');
+        await expect(username).toBeFocused();
         await expect(page.locator('a[href="/register"]')).toBeVisible();
         await expect(page.locator('a[href="/forgot-password"]')).toBeVisible();
         await password.fill('Saved-password-123!');
+        await expect(password).toHaveValue('Saved-password-123!');
         const toggle = page.getByRole('button', {
           name: locale === 'fa' ? 'نمایش یا مخفی‌سازی رمز عبور' : 'Toggle password visibility',
         });

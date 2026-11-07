@@ -584,6 +584,12 @@ for (const locale of ['fa', 'en'] as const) {
     const route = page.getByTestId('motion-route');
     await expect(route).toHaveCSS('animation-name', 'barghsa-slide-up');
     await expect(route).toHaveCSS('animation-duration', '0.2s');
+    const entrance = await route.evaluate((node) => {
+      const effect = node.getAnimations()[0]?.effect;
+      return effect instanceof KeyframeEffect ? effect.getKeyframes() : [];
+    });
+    expect(entrance).toHaveLength(2);
+    expect(entrance.every(({ opacity }) => opacity === undefined || opacity === '1')).toBe(true);
     const input = section.getByRole('textbox', { name: 'Retained draft', exact: true });
     await input.fill('captured-order-9007199254740993-edited');
     await route.evaluate((node) => node.setAttribute('data-retained-node', 'yes'));
