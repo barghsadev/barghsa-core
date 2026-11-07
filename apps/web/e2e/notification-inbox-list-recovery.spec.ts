@@ -157,13 +157,13 @@ for (const context of ['customer', 'staff'] as const)
         await expect(current).toBeVisible();
         failed = true;
         await main.getByRole('button', { name: text('loadMore'), exact: true }).click();
+        const pageError = main.getByRole('alert').filter({ hasText: text('error.load') });
+        const retryPage = pageError.getByRole('button', { name: text('retry'), exact: true });
+        await expect(retryPage).toBeVisible();
         await expect(current).toBeVisible();
         await expect(current).toBeDisabled();
         failed = false;
-        await main
-          .getByRole('alert')
-          .getByRole('button', { name: text('retry'), exact: true })
-          .click();
+        await retryPage.click();
         await expect(main.getByRole('button', { name: /Older notice/ })).toBeVisible();
         expect(cursors.slice(0, 3)).toEqual([null, notificationCursor(), notificationCursor()]);
         // Refresh remains independent of a retry for the failed older page.

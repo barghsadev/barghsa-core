@@ -221,10 +221,13 @@ for (const locale of ['en', 'fa'] as const) {
       );
       const panel = page.getByRole('region', { name: words.activationTitle, exact: true });
       await expect(panel.getByRole('listitem')).toHaveCount(5);
-      await expect(panel.getByRole('link', { name: words.openInitialInvoice })).toHaveAttribute(
-        'href',
-        `/invoices/${invoiceId}`
-      );
+      const invoiceLink = panel.getByRole('link', { name: words.openInitialInvoice });
+      await expect(invoiceLink).toHaveAttribute('href', `/invoices/${invoiceId}`);
+      if (await page.evaluate(() => matchMedia('(pointer: coarse)').matches)) {
+        const { width, height } = (await invoiceLink.boundingBox())!;
+        expect(width).toBeGreaterThanOrEqual(44);
+        expect(height).toBeGreaterThanOrEqual(44);
+      }
       await expect(panel.getByText(words['prerequisite.unmet'], { exact: true })).toBeVisible();
       await expect(panel.getByText(words.activationNotice)).toBeVisible();
       paid = true;

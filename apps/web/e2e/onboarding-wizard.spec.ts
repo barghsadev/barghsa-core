@@ -1167,23 +1167,57 @@ test('unfinished profile pages retain accepted rows and retry the same cursor', 
   await expect(section.getByRole('listitem')).toHaveCount(51);
   expect(cursors).toEqual([id(51), id(51)]);
 });
-test('a failed draft directory read blocks new profiles until retry succeeds', async ({ page }) => {
+test('a stalled or failed draft directory blocks new profiles until retry succeeds', async ({
+  page,
+}) => {
   const state = await combinedFixture(page, 'en');
+  await page.clock.install();
   let reads = 0;
-  await page.route('**/api/onboarding/drafts', (r) =>
-    reads++ === 0
-      ? r.fulfill({ status: 503, json: {} })
-      : r.fulfill({ json: { drafts: [], nextAfter: null } })
-  );
+  let release!: () => void;
+  const held = new Promise<void>((resolve) => {
+    release = resolve;
+  });
+  let finish!: () => void;
+  const lateResponseAttempted = new Promise<void>((resolve) => {
+    finish = resolve;
+  });
+  await page.route('**/api/onboarding/drafts', async (route) => {
+    if (++reads === 1) {
+      await held;
+      await route
+        .fulfill({ json: { drafts: [draftSummary(profileId, 'INDIVIDUAL')], nextAfter: null } })
+        .catch(() => {})
+        .finally(finish);
+      return;
+    }
+    if (reads === 2) return route.fulfill({ status: 503, json: {} });
+    return route.fulfill({ json: { drafts: [], nextAfter: null } });
+  });
   await page.goto('/onboarding');
   await page.getByRole('checkbox', { name: 'Individual', exact: true }).check();
-  await expect(page.getByRole('button', { name: 'Continue', exact: true })).toBeDisabled();
-  expect(state.starts).toHaveLength(0);
-  await page
-    .getByRole('region', { name: 'Unfinished profiles' })
-    .getByRole('button', { name: 'Retry' })
-    .click();
-  await expect(page.getByRole('button', { name: 'Continue', exact: true })).toBeEnabled();
+  const proceed = page.getByRole('button', { name: 'Continue', exact: true });
+  const section = page.getByRole('region', { name: 'Unfinished profiles' });
+  const retry = section.getByRole('button', { name: 'Retry' });
+  try {
+    await expect.poll(() => reads).toBe(1);
+    await expect(proceed).toBeDisabled();
+    await page.clock.fastForward(15_001);
+    await expect(retry).toBeVisible();
+    await expect(proceed).toBeDisabled();
+    expect(state.starts).toHaveLength(0);
+    await retry.click();
+    await expect.poll(() => reads).toBe(2);
+    await expect(retry).toBeVisible();
+    await expect(proceed).toBeDisabled();
+    await retry.click();
+    await expect(proceed).toBeEnabled();
+    expect(reads).toBe(3);
+    expect(state.starts).toHaveLength(0);
+  } finally {
+    release();
+  }
+  await lateResponseAttempted;
+  await expect(section).toHaveCount(0);
 });
 test('an existing setup remains resumable when the separate draft list is unavailable', async ({
   page,

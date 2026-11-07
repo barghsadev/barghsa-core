@@ -492,7 +492,13 @@ for (const locale of ['en', 'fa'] as const)
     await next.click();
     await page.getByRole('button', { name: savingCopy('newAddress', locale), exact: true }).click();
     await page.locator('#saving-address-province').selectOption(provinceId);
-    await page.locator('#saving-address-city').selectOption(cityId);
+    const city = page.locator('#saving-address-city');
+    await city.selectOption(cityId);
+    if (await page.evaluate(() => matchMedia('(pointer: coarse)').matches)) {
+      const { width, height } = (await city.boundingBox())!;
+      expect(width).toBeGreaterThanOrEqual(44);
+      expect(height).toBeGreaterThanOrEqual(44);
+    }
     await page
       .getByRole('textbox', { name: savingCopy('fullAddress', locale), exact: true })
       .fill(savedAddress.fullAddress);

@@ -651,6 +651,11 @@
 }
 
 @layer base {
+  @media (pointer: coarse) {
+    a[href] {
+      display: inline-block;
+    }
+  }
   * {
     @apply border-border;
   }
@@ -931,6 +936,14 @@
 }
 
 @media (pointer: coarse) {
+  /* WebKit ignores min-height on single-row selects with native appearance. */
+  [data-slot='dependent-select'],
+  select:not([data-slot], [multiple], [size]) {
+    block-size: max(44px, calc(var(--spacing) * 11));
+    min-inline-size: 44px;
+  }
+  a[href],
+  button,
   [data-slot='button'],
   [data-slot='input'],
   [data-slot='combobox-input'],
@@ -944,7 +957,6 @@
   .app-content summary,
   .app-content
     :where(
-      button,
       select,
       textarea,
       input:not([type='checkbox'], [type='radio'], [type='range'], [type='hidden'])

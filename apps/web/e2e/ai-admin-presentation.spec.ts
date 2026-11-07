@@ -61,6 +61,16 @@ for (const locale of ['en', 'fa'] as const)
         .locator('dd');
       await expect(count).toHaveText(locale === 'fa' ? '۱' : '1');
       await checkRoutePresentation(page, info, locale);
+      if (await page.evaluate(() => matchMedia('(pointer: coarse)').matches)) {
+        for (const id of ['test-chat-agent', 'test-chat-slot']) {
+          const select = page.locator('#' + id);
+          await expect(select).toBeVisible();
+          await expect(select).toHaveCSS('appearance', 'auto');
+          const { width, height } = (await select.boundingBox())!;
+          expect(width).toBeGreaterThanOrEqual(44);
+          expect(height).toBeGreaterThanOrEqual(44);
+        }
+      }
       await expect(
         item
           .locator('dl > div')

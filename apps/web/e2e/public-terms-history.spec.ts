@@ -144,6 +144,18 @@ for (const locale of ['en', 'fa'] as const)
       await expect(page.getByText(t('tos.page.loading', locale), { exact: true })).toBeVisible();
       await page.clock.fastForward(15_100);
       await expect(retry).toBeVisible();
+      if (await page.evaluate(() => matchMedia('(pointer: coarse)').matches)) {
+        const home = page.getByRole('main').getByRole('link', {
+          name: t('tos.page.backToHome', locale),
+          exact: true,
+        });
+        await expect(home).toBeVisible();
+        for (const target of [retry, home]) {
+          const { width, height } = (await target.boundingBox())!;
+          expect(width).toBeGreaterThanOrEqual(44);
+          expect(height).toBeGreaterThanOrEqual(44);
+        }
+      }
       await expect(page.getByRole('article')).toHaveCount(0);
       await retry.click();
       await expect(page.getByRole('article')).toContainText('Published current terms');

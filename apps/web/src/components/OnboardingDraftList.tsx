@@ -3,6 +3,7 @@ import { Link } from '@tanstack/react-router';
 import { LoadingStatus, Button } from '@barghsa/ui';
 import { t, type Locale } from '@barghsa/i18n/onboarding-drafts';
 import { useAccountTime } from '../hooks/useAccountTime.js';
+import { readWithDeadline } from '../lib/server-query-client.js';
 import {
   parseOnboardingDraftPage,
   type OnboardingDraftPage,
@@ -29,25 +30,25 @@ export default function OnboardingDraftList({
     setLoading(true);
     setError(null);
     const url = '/api/onboarding/drafts' + (request.after ? `?after=${request.after}` : '');
-    fetch(url, { credentials: 'include', signal: controller.signal })
-      .then(async (response) => {
-        if (response.status === 401 || response.status === 403) {
-          if (!controller.signal.aborted) {
-            setPage(null);
-            setError('denied');
-            onReady(false);
-          }
+    void readWithDeadline(controller.signal, async (signal) => {
+      const response = await fetch(url, { credentials: 'include', signal });
+      if (response.status === 401 || response.status === 403) return null;
+      if (!response.ok) throw new Error('Unable to list drafts');
+      return parseOnboardingDraftPage(await response.json(), request.after);
+    })
+      .then((next) => {
+        if (controller.signal.aborted) return;
+        if (next === null) {
+          setPage(null);
+          setError('denied');
+          onReady(false);
           return;
         }
-        if (!response.ok) throw new Error('Unable to list drafts');
-        const next = parseOnboardingDraftPage(await response.json(), request.after);
-        if (!controller.signal.aborted) {
-          setPage((previous) => ({
-            drafts: request.after ? [...(previous?.drafts ?? []), ...next.drafts] : next.drafts,
-            nextAfter: next.nextAfter,
-          }));
-          onReady(true);
-        }
+        setPage((previous) => ({
+          drafts: request.after ? [...(previous?.drafts ?? []), ...next.drafts] : next.drafts,
+          nextAfter: next.nextAfter,
+        }));
+        onReady(true);
       })
       .catch(() => {
         if (!controller.signal.aborted) setError('load');
