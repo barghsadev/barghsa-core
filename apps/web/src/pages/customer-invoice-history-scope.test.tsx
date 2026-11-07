@@ -3,6 +3,7 @@ import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, expect, it, vi } from 'vitest';
 import { InvoicesPage } from './InvoicesPage.js';
 import { AccountUserProvider } from '../hooks/useAccountUser.js';
+import { QueryComponentProvider } from '../test/query-provider.js';
 import { DEFAULT_INVOICE_LIST_SORT } from '@barghsa/shared/validation';
 
 vi.mock('@tanstack/react-router', () => ({
@@ -83,13 +84,15 @@ for (const scenario of scenarios)
         await act(async () =>
           root!.render(
             <AccountUserProvider value="customer-1">
-              <Page
-                unpaidOnly
-                statuses={['Unpaid']}
-                dateRange={{ from: '2026-10-01T00:00:00Z', to: '2026-11-01T00:00:00Z' }}
-                amountRange={{ min: '100000', max: '9007199254740993' }}
-                query={{ q: 'saved filter', sort: DEFAULT_INVOICE_LIST_SORT }}
-              />
+              <QueryComponentProvider>
+                <Page
+                  unpaidOnly
+                  statuses={['Unpaid']}
+                  dateRange={{ from: '2026-10-01T00:00:00Z', to: '2026-11-01T00:00:00Z' }}
+                  amountRange={{ min: '100000', max: '9007199254740993' }}
+                  query={{ q: 'saved filter', sort: DEFAULT_INVOICE_LIST_SORT }}
+                />
+              </QueryComponentProvider>
             </AccountUserProvider>
           )
         );

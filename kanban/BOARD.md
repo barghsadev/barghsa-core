@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-07T08:16:15+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-07T08:24:23+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.4.0**. Next milestone: **v0.5.0**.
 
@@ -39,7 +39,7 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Run the existing changed-source coverage gate against the accepted v0.4.0 base using clean revision-bound unit and browser source coverage. Diagnose actual failures without changing thresholds, rerunning unrelated passes, or certifying broader manual acceptance.
+Finish the independent web and API coverage reports, preserve the original base and floors, and measure the concrete changed-source deficits. Reuse matching scope without claiming the incomplete baseline succeeded.
 
 - `release-readiness#R-04.02`: Renew accessibility and performance evidence
 

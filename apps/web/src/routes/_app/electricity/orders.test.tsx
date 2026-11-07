@@ -2,6 +2,16 @@ import { act, type ReactNode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { expect, it, vi } from 'vitest';
 import { ElectricityOrdersPage } from '../../../pages/ElectricityOrdersPage.js';
+import { AccountUserProvider } from '../../../hooks/useAccountUser.js';
+import { QueryComponentProvider } from '../../../test/query-provider.js';
+
+function HistoryFixture({ children }: { children: ReactNode }) {
+  return (
+    <AccountUserProvider value="customer-1">
+      <QueryComponentProvider>{children}</QueryComponentProvider>
+    </AccountUserProvider>
+  );
+}
 
 vi.mock('@tanstack/react-router', () => ({
   createFileRoute: () => (options: unknown) => ({ options }),
@@ -89,7 +99,13 @@ it('keeps earlier profile orders visible when more history loads', async () => {
   document.body.append(container);
   const root = createRoot(container);
   try {
-    await act(async () => root.render(<ElectricityOrdersPage />));
+    await act(async () =>
+      root.render(
+        <HistoryFixture>
+          <ElectricityOrdersPage />
+        </HistoryFixture>
+      )
+    );
     expect(request).toHaveBeenCalledWith(
       '/api/electricity/orders?profileId=profile-1',
       expect.any(Object)
@@ -138,7 +154,13 @@ it('requests pending orders when opened from the dashboard', async () => {
   document.body.append(container);
   const root = createRoot(container);
   try {
-    await act(async () => root.render(<ElectricityOrdersPage pendingOnly />));
+    await act(async () =>
+      root.render(
+        <HistoryFixture>
+          <ElectricityOrdersPage pendingOnly />
+        </HistoryFixture>
+      )
+    );
     expect(request).toHaveBeenCalledWith(
       '/api/electricity/orders?profileId=profile-1&status=pending',
       expect.any(Object)
@@ -203,7 +225,13 @@ it('opens the next invoice, contract or correction step from the order list', as
   document.body.append(container);
   const root = createRoot(container);
   try {
-    await act(async () => root.render(<ElectricityOrdersPage />));
+    await act(async () =>
+      root.render(
+        <HistoryFixture>
+          <ElectricityOrdersPage />
+        </HistoryFixture>
+      )
+    );
     expect(container.querySelector(`a[href="/invoices/${invoiceId}"]`)?.textContent).toBe(
       'View and pay invoice'
     );

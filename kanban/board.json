@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-07T08:16:15+00:00",
-  "source_commit": "9482df25f6361c4078bb846690f80bd26786cabe",
+  "updated": "2026-11-07T08:24:23+00:00",
+  "source_commit": "dfff68a0dbdcca3c04403ec979466750be35207a",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -139376,7 +139376,8 @@
           "release-0.5-critical-accessibility",
           "release-0.5-form-and-document-accessibility",
           "release-0.5-populated-route-presentation",
-          "release-0.5-measured-action-targets"
+          "release-0.5-measured-action-targets",
+          "release-0.5-source-coverage-gate"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -139532,7 +139533,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.test.tsx",
-              "sha256": "27721bba11725f67fab6f943b1a4ed2fccac78a70a8e44714fe70bb203155adb"
+              "sha256": "fa67167559ed98e41462d9ffd7c5b66316f8c443cec5793ddda0c65798f855d1"
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
@@ -139544,7 +139545,7 @@
             },
             {
               "path": "apps/web/src/pages/customer-invoice-history-scope.test.tsx",
-              "sha256": "a6fd01304ecd99cab0e23a70740708068f797c273ffaae8fb1425489f8277810"
+              "sha256": "a743fd8af9852d77d3633539966595c208623749835e08da20b4884ee52db3e8"
             },
             {
               "path": "apps/worker/src/notifications/receipt-notices.integration.test.ts",
@@ -139639,7 +139640,8 @@
             "Bindings renewed by release-0.5-critical-accessibility: audited canonical landmarks, retained command calls and validated auth-entry authority. Exact targeted unit/browser and original performance evidence passes.",
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
-            "Bindings renewed by release-0.5-measured-action-targets: target sizing changes pass exact populated route browsers and scoped invoice, saving and customer-history ownership units. Navigation, authority, receipt and money behavior are unchanged."
+            "Bindings renewed by release-0.5-measured-action-targets: target sizing changes pass exact populated route browsers and scoped invoice, saving and customer-history ownership units. Navigation, authority, receipt and money behavior are unchanged.",
+            "Bindings renewed by release-0.5-source-coverage-gate: test fixtures now exercise actual acknowledgement, current query/account context and nonoverlapping polls before the bounded read deadline; 61 focused tests passed and application source was unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/bank-receipts-financial-history",
           "limitations": [
@@ -139774,6 +139776,11 @@
               "batch": "release-0.5-measured-action-targets",
               "base_commit": "498c940695f79a7721f39018e521574ba3dc1067",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-measured-action-targets/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-source-coverage-gate",
+              "base_commit": "dfff68a0dbdcca3c04403ec979466750be35207a",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-source-coverage-gate/source-binding.json"
             }
           ]
         }
@@ -139897,7 +139904,8 @@
           "release-0.5-critical-accessibility",
           "release-0.5-form-and-document-accessibility",
           "release-0.5-populated-route-presentation",
-          "release-0.5-measured-action-targets"
+          "release-0.5-measured-action-targets",
+          "release-0.5-source-coverage-gate"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -140081,7 +140089,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.test.tsx",
-              "sha256": "27721bba11725f67fab6f943b1a4ed2fccac78a70a8e44714fe70bb203155adb"
+              "sha256": "fa67167559ed98e41462d9ffd7c5b66316f8c443cec5793ddda0c65798f855d1"
             },
             {
               "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.tsx",
@@ -140097,7 +140105,7 @@
             },
             {
               "path": "apps/web/src/pages/customer-invoice-history-scope.test.tsx",
-              "sha256": "a6fd01304ecd99cab0e23a70740708068f797c273ffaae8fb1425489f8277810"
+              "sha256": "a743fd8af9852d77d3633539966595c208623749835e08da20b4884ee52db3e8"
             },
             {
               "path": "apps/worker/src/notifications/receipt-notices.integration.test.ts",
@@ -140202,7 +140210,8 @@
             "Bindings renewed by release-0.5-critical-accessibility: audited canonical landmarks, retained command calls and validated auth-entry authority. Exact targeted unit/browser and original performance evidence passes.",
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
-            "Bindings renewed by release-0.5-measured-action-targets: target sizing changes pass exact populated route browsers and scoped invoice, saving and customer-history ownership units. Navigation, authority, receipt and money behavior are unchanged."
+            "Bindings renewed by release-0.5-measured-action-targets: target sizing changes pass exact populated route browsers and scoped invoice, saving and customer-history ownership units. Navigation, authority, receipt and money behavior are unchanged.",
+            "Bindings renewed by release-0.5-source-coverage-gate: test fixtures now exercise actual acknowledgement, current query/account context and nonoverlapping polls before the bounded read deadline; 61 focused tests passed and application source was unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/bank-receipts-financial-history",
           "limitations": [
@@ -140338,6 +140347,11 @@
               "batch": "release-0.5-measured-action-targets",
               "base_commit": "498c940695f79a7721f39018e521574ba3dc1067",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-measured-action-targets/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-source-coverage-gate",
+              "base_commit": "dfff68a0dbdcca3c04403ec979466750be35207a",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-source-coverage-gate/source-binding.json"
             }
           ]
         }
@@ -140460,7 +140474,8 @@
           "release-0.5-critical-accessibility",
           "release-0.5-form-and-document-accessibility",
           "release-0.5-populated-route-presentation",
-          "release-0.5-measured-action-targets"
+          "release-0.5-measured-action-targets",
+          "release-0.5-source-coverage-gate"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -140644,7 +140659,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.test.tsx",
-              "sha256": "27721bba11725f67fab6f943b1a4ed2fccac78a70a8e44714fe70bb203155adb"
+              "sha256": "fa67167559ed98e41462d9ffd7c5b66316f8c443cec5793ddda0c65798f855d1"
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
@@ -140656,7 +140671,7 @@
             },
             {
               "path": "apps/web/src/pages/customer-invoice-history-scope.test.tsx",
-              "sha256": "a6fd01304ecd99cab0e23a70740708068f797c273ffaae8fb1425489f8277810"
+              "sha256": "a743fd8af9852d77d3633539966595c208623749835e08da20b4884ee52db3e8"
             },
             {
               "path": "apps/worker/src/notifications/receipt-notices.integration.test.ts",
@@ -140769,7 +140784,8 @@
             "Bindings renewed by release-0.5-critical-accessibility: audited canonical landmarks, retained command calls and validated auth-entry authority. Exact targeted unit/browser and original performance evidence passes.",
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
-            "Bindings renewed by release-0.5-measured-action-targets: target sizing changes pass exact populated route browsers and scoped invoice, saving and customer-history ownership units. Navigation, authority, receipt and money behavior are unchanged."
+            "Bindings renewed by release-0.5-measured-action-targets: target sizing changes pass exact populated route browsers and scoped invoice, saving and customer-history ownership units. Navigation, authority, receipt and money behavior are unchanged.",
+            "Bindings renewed by release-0.5-source-coverage-gate: test fixtures now exercise actual acknowledgement, current query/account context and nonoverlapping polls before the bounded read deadline; 61 focused tests passed and application source was unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/bank-receipts-financial-history",
           "limitations": [
@@ -140904,6 +140920,11 @@
               "batch": "release-0.5-measured-action-targets",
               "base_commit": "498c940695f79a7721f39018e521574ba3dc1067",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-measured-action-targets/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-source-coverage-gate",
+              "base_commit": "dfff68a0dbdcca3c04403ec979466750be35207a",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-source-coverage-gate/source-binding.json"
             }
           ]
         }
@@ -141047,7 +141068,8 @@
           "release-0.5-critical-accessibility",
           "release-0.5-form-and-document-accessibility",
           "release-0.5-populated-route-presentation",
-          "release-0.5-measured-action-targets"
+          "release-0.5-measured-action-targets",
+          "release-0.5-source-coverage-gate"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -141231,7 +141253,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.test.tsx",
-              "sha256": "27721bba11725f67fab6f943b1a4ed2fccac78a70a8e44714fe70bb203155adb"
+              "sha256": "fa67167559ed98e41462d9ffd7c5b66316f8c443cec5793ddda0c65798f855d1"
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
@@ -141243,7 +141265,7 @@
             },
             {
               "path": "apps/web/src/pages/customer-invoice-history-scope.test.tsx",
-              "sha256": "a6fd01304ecd99cab0e23a70740708068f797c273ffaae8fb1425489f8277810"
+              "sha256": "a743fd8af9852d77d3633539966595c208623749835e08da20b4884ee52db3e8"
             },
             {
               "path": "apps/worker/src/notifications/receipt-notices.integration.test.ts",
@@ -141428,7 +141450,8 @@
             "Bindings renewed by release-0.5-critical-accessibility: audited canonical landmarks, retained command calls and validated auth-entry authority. Exact targeted unit/browser and original performance evidence passes.",
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
-            "Bindings renewed by release-0.5-measured-action-targets: target sizing changes pass exact populated route browsers and scoped invoice, saving and customer-history ownership units. Navigation, authority, receipt and money behavior are unchanged."
+            "Bindings renewed by release-0.5-measured-action-targets: target sizing changes pass exact populated route browsers and scoped invoice, saving and customer-history ownership units. Navigation, authority, receipt and money behavior are unchanged.",
+            "Bindings renewed by release-0.5-source-coverage-gate: test fixtures now exercise actual acknowledgement, current query/account context and nonoverlapping polls before the bounded read deadline; 61 focused tests passed and application source was unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/bank-receipts-financial-history",
           "limitations": [
@@ -141616,6 +141639,11 @@
               "batch": "release-0.5-measured-action-targets",
               "base_commit": "498c940695f79a7721f39018e521574ba3dc1067",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-measured-action-targets/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-source-coverage-gate",
+              "base_commit": "dfff68a0dbdcca3c04403ec979466750be35207a",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-source-coverage-gate/source-binding.json"
             }
           ]
         }
@@ -141731,7 +141759,8 @@
           "release-0.5-critical-accessibility",
           "release-0.5-form-and-document-accessibility",
           "release-0.5-populated-route-presentation",
-          "release-0.5-measured-action-targets"
+          "release-0.5-measured-action-targets",
+          "release-0.5-source-coverage-gate"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -141915,7 +141944,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.test.tsx",
-              "sha256": "27721bba11725f67fab6f943b1a4ed2fccac78a70a8e44714fe70bb203155adb"
+              "sha256": "fa67167559ed98e41462d9ffd7c5b66316f8c443cec5793ddda0c65798f855d1"
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
@@ -141927,7 +141956,7 @@
             },
             {
               "path": "apps/web/src/pages/customer-invoice-history-scope.test.tsx",
-              "sha256": "a6fd01304ecd99cab0e23a70740708068f797c273ffaae8fb1425489f8277810"
+              "sha256": "a743fd8af9852d77d3633539966595c208623749835e08da20b4884ee52db3e8"
             },
             {
               "path": "apps/worker/src/notifications/receipt-notices.integration.test.ts",
@@ -142040,7 +142069,8 @@
             "Bindings renewed by release-0.5-critical-accessibility: audited canonical landmarks, retained command calls and validated auth-entry authority. Exact targeted unit/browser and original performance evidence passes.",
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
-            "Bindings renewed by release-0.5-measured-action-targets: target sizing changes pass exact populated route browsers and scoped invoice, saving and customer-history ownership units. Navigation, authority, receipt and money behavior are unchanged."
+            "Bindings renewed by release-0.5-measured-action-targets: target sizing changes pass exact populated route browsers and scoped invoice, saving and customer-history ownership units. Navigation, authority, receipt and money behavior are unchanged.",
+            "Bindings renewed by release-0.5-source-coverage-gate: test fixtures now exercise actual acknowledgement, current query/account context and nonoverlapping polls before the bounded read deadline; 61 focused tests passed and application source was unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/bank-receipts-financial-history",
           "limitations": [
@@ -142175,6 +142205,11 @@
               "batch": "release-0.5-measured-action-targets",
               "base_commit": "498c940695f79a7721f39018e521574ba3dc1067",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-measured-action-targets/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-source-coverage-gate",
+              "base_commit": "dfff68a0dbdcca3c04403ec979466750be35207a",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-source-coverage-gate/source-binding.json"
             }
           ]
         }
@@ -142212,7 +142247,8 @@
           "release-0.5-critical-accessibility",
           "release-0.5-form-and-document-accessibility",
           "release-0.5-populated-route-presentation",
-          "release-0.5-measured-action-targets"
+          "release-0.5-measured-action-targets",
+          "release-0.5-source-coverage-gate"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -142368,7 +142404,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.test.tsx",
-              "sha256": "27721bba11725f67fab6f943b1a4ed2fccac78a70a8e44714fe70bb203155adb"
+              "sha256": "fa67167559ed98e41462d9ffd7c5b66316f8c443cec5793ddda0c65798f855d1"
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
@@ -142380,7 +142416,7 @@
             },
             {
               "path": "apps/web/src/pages/customer-invoice-history-scope.test.tsx",
-              "sha256": "a6fd01304ecd99cab0e23a70740708068f797c273ffaae8fb1425489f8277810"
+              "sha256": "a743fd8af9852d77d3633539966595c208623749835e08da20b4884ee52db3e8"
             },
             {
               "path": "apps/worker/src/notifications/receipt-notices.integration.test.ts",
@@ -142471,7 +142507,8 @@
             "Bindings renewed by release-0.5-critical-accessibility: audited canonical landmarks, retained command calls and validated auth-entry authority. Exact targeted unit/browser and original performance evidence passes.",
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
-            "Bindings renewed by release-0.5-measured-action-targets: target sizing changes pass exact populated route browsers and scoped invoice, saving and customer-history ownership units. Navigation, authority, receipt and money behavior are unchanged."
+            "Bindings renewed by release-0.5-measured-action-targets: target sizing changes pass exact populated route browsers and scoped invoice, saving and customer-history ownership units. Navigation, authority, receipt and money behavior are unchanged.",
+            "Bindings renewed by release-0.5-source-coverage-gate: test fixtures now exercise actual acknowledgement, current query/account context and nonoverlapping polls before the bounded read deadline; 61 focused tests passed and application source was unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/bank-receipts-financial-history",
           "limitations": [
@@ -142606,6 +142643,11 @@
               "batch": "release-0.5-measured-action-targets",
               "base_commit": "498c940695f79a7721f39018e521574ba3dc1067",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-measured-action-targets/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-source-coverage-gate",
+              "base_commit": "dfff68a0dbdcca3c04403ec979466750be35207a",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-source-coverage-gate/source-binding.json"
             }
           ]
         }
@@ -142643,7 +142685,8 @@
           "release-0.5-critical-accessibility",
           "release-0.5-form-and-document-accessibility",
           "release-0.5-populated-route-presentation",
-          "release-0.5-measured-action-targets"
+          "release-0.5-measured-action-targets",
+          "release-0.5-source-coverage-gate"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -142799,7 +142842,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.test.tsx",
-              "sha256": "27721bba11725f67fab6f943b1a4ed2fccac78a70a8e44714fe70bb203155adb"
+              "sha256": "fa67167559ed98e41462d9ffd7c5b66316f8c443cec5793ddda0c65798f855d1"
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
@@ -142811,7 +142854,7 @@
             },
             {
               "path": "apps/web/src/pages/customer-invoice-history-scope.test.tsx",
-              "sha256": "a6fd01304ecd99cab0e23a70740708068f797c273ffaae8fb1425489f8277810"
+              "sha256": "a743fd8af9852d77d3633539966595c208623749835e08da20b4884ee52db3e8"
             },
             {
               "path": "apps/worker/src/notifications/receipt-notices.integration.test.ts",
@@ -142902,7 +142945,8 @@
             "Bindings renewed by release-0.5-critical-accessibility: audited canonical landmarks, retained command calls and validated auth-entry authority. Exact targeted unit/browser and original performance evidence passes.",
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
-            "Bindings renewed by release-0.5-measured-action-targets: target sizing changes pass exact populated route browsers and scoped invoice, saving and customer-history ownership units. Navigation, authority, receipt and money behavior are unchanged."
+            "Bindings renewed by release-0.5-measured-action-targets: target sizing changes pass exact populated route browsers and scoped invoice, saving and customer-history ownership units. Navigation, authority, receipt and money behavior are unchanged.",
+            "Bindings renewed by release-0.5-source-coverage-gate: test fixtures now exercise actual acknowledgement, current query/account context and nonoverlapping polls before the bounded read deadline; 61 focused tests passed and application source was unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/bank-receipts-financial-history",
           "limitations": [
@@ -143037,6 +143081,11 @@
               "batch": "release-0.5-measured-action-targets",
               "base_commit": "498c940695f79a7721f39018e521574ba3dc1067",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-measured-action-targets/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-source-coverage-gate",
+              "base_commit": "dfff68a0dbdcca3c04403ec979466750be35207a",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-source-coverage-gate/source-binding.json"
             }
           ]
         }
@@ -143075,7 +143124,8 @@
           "release-0.5-critical-accessibility",
           "release-0.5-form-and-document-accessibility",
           "release-0.5-populated-route-presentation",
-          "release-0.5-measured-action-targets"
+          "release-0.5-measured-action-targets",
+          "release-0.5-source-coverage-gate"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -143231,7 +143281,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.test.tsx",
-              "sha256": "27721bba11725f67fab6f943b1a4ed2fccac78a70a8e44714fe70bb203155adb"
+              "sha256": "fa67167559ed98e41462d9ffd7c5b66316f8c443cec5793ddda0c65798f855d1"
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
@@ -143243,7 +143293,7 @@
             },
             {
               "path": "apps/web/src/pages/customer-invoice-history-scope.test.tsx",
-              "sha256": "a6fd01304ecd99cab0e23a70740708068f797c273ffaae8fb1425489f8277810"
+              "sha256": "a743fd8af9852d77d3633539966595c208623749835e08da20b4884ee52db3e8"
             },
             {
               "path": "apps/worker/src/notifications/receipt-notices.integration.test.ts",
@@ -143334,7 +143384,8 @@
             "Bindings renewed by release-0.5-critical-accessibility: audited canonical landmarks, retained command calls and validated auth-entry authority. Exact targeted unit/browser and original performance evidence passes.",
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
-            "Bindings renewed by release-0.5-measured-action-targets: target sizing changes pass exact populated route browsers and scoped invoice, saving and customer-history ownership units. Navigation, authority, receipt and money behavior are unchanged."
+            "Bindings renewed by release-0.5-measured-action-targets: target sizing changes pass exact populated route browsers and scoped invoice, saving and customer-history ownership units. Navigation, authority, receipt and money behavior are unchanged.",
+            "Bindings renewed by release-0.5-source-coverage-gate: test fixtures now exercise actual acknowledgement, current query/account context and nonoverlapping polls before the bounded read deadline; 61 focused tests passed and application source was unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/bank-receipts-financial-history",
           "limitations": [
@@ -143469,6 +143520,11 @@
               "batch": "release-0.5-measured-action-targets",
               "base_commit": "498c940695f79a7721f39018e521574ba3dc1067",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-measured-action-targets/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-source-coverage-gate",
+              "base_commit": "dfff68a0dbdcca3c04403ec979466750be35207a",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-source-coverage-gate/source-binding.json"
             }
           ]
         }
@@ -143508,7 +143564,8 @@
           "release-0.5-critical-accessibility",
           "release-0.5-form-and-document-accessibility",
           "release-0.5-populated-route-presentation",
-          "release-0.5-measured-action-targets"
+          "release-0.5-measured-action-targets",
+          "release-0.5-source-coverage-gate"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -143664,7 +143721,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.test.tsx",
-              "sha256": "27721bba11725f67fab6f943b1a4ed2fccac78a70a8e44714fe70bb203155adb"
+              "sha256": "fa67167559ed98e41462d9ffd7c5b66316f8c443cec5793ddda0c65798f855d1"
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
@@ -143676,7 +143733,7 @@
             },
             {
               "path": "apps/web/src/pages/customer-invoice-history-scope.test.tsx",
-              "sha256": "a6fd01304ecd99cab0e23a70740708068f797c273ffaae8fb1425489f8277810"
+              "sha256": "a743fd8af9852d77d3633539966595c208623749835e08da20b4884ee52db3e8"
             },
             {
               "path": "apps/worker/src/notifications/receipt-notices.integration.test.ts",
@@ -143767,7 +143824,8 @@
             "Bindings renewed by release-0.5-critical-accessibility: audited canonical landmarks, retained command calls and validated auth-entry authority. Exact targeted unit/browser and original performance evidence passes.",
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
-            "Bindings renewed by release-0.5-measured-action-targets: target sizing changes pass exact populated route browsers and scoped invoice, saving and customer-history ownership units. Navigation, authority, receipt and money behavior are unchanged."
+            "Bindings renewed by release-0.5-measured-action-targets: target sizing changes pass exact populated route browsers and scoped invoice, saving and customer-history ownership units. Navigation, authority, receipt and money behavior are unchanged.",
+            "Bindings renewed by release-0.5-source-coverage-gate: test fixtures now exercise actual acknowledgement, current query/account context and nonoverlapping polls before the bounded read deadline; 61 focused tests passed and application source was unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/bank-receipts-financial-history",
           "limitations": [
@@ -143902,6 +143960,11 @@
               "batch": "release-0.5-measured-action-targets",
               "base_commit": "498c940695f79a7721f39018e521574ba3dc1067",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-measured-action-targets/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-source-coverage-gate",
+              "base_commit": "dfff68a0dbdcca3c04403ec979466750be35207a",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-source-coverage-gate/source-binding.json"
             }
           ]
         }
@@ -143949,7 +144012,8 @@
           "release-0.5-critical-accessibility",
           "release-0.5-form-and-document-accessibility",
           "release-0.5-populated-route-presentation",
-          "release-0.5-measured-action-targets"
+          "release-0.5-measured-action-targets",
+          "release-0.5-source-coverage-gate"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -144105,7 +144169,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.test.tsx",
-              "sha256": "27721bba11725f67fab6f943b1a4ed2fccac78a70a8e44714fe70bb203155adb"
+              "sha256": "fa67167559ed98e41462d9ffd7c5b66316f8c443cec5793ddda0c65798f855d1"
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
@@ -144117,7 +144181,7 @@
             },
             {
               "path": "apps/web/src/pages/customer-invoice-history-scope.test.tsx",
-              "sha256": "a6fd01304ecd99cab0e23a70740708068f797c273ffaae8fb1425489f8277810"
+              "sha256": "a743fd8af9852d77d3633539966595c208623749835e08da20b4884ee52db3e8"
             },
             {
               "path": "apps/worker/src/notifications/receipt-notices.integration.test.ts",
@@ -144208,7 +144272,8 @@
             "Bindings renewed by release-0.5-critical-accessibility: audited canonical landmarks, retained command calls and validated auth-entry authority. Exact targeted unit/browser and original performance evidence passes.",
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
-            "Bindings renewed by release-0.5-measured-action-targets: target sizing changes pass exact populated route browsers and scoped invoice, saving and customer-history ownership units. Navigation, authority, receipt and money behavior are unchanged."
+            "Bindings renewed by release-0.5-measured-action-targets: target sizing changes pass exact populated route browsers and scoped invoice, saving and customer-history ownership units. Navigation, authority, receipt and money behavior are unchanged.",
+            "Bindings renewed by release-0.5-source-coverage-gate: test fixtures now exercise actual acknowledgement, current query/account context and nonoverlapping polls before the bounded read deadline; 61 focused tests passed and application source was unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/bank-receipts-financial-history",
           "limitations": [
@@ -144343,6 +144408,11 @@
               "batch": "release-0.5-measured-action-targets",
               "base_commit": "498c940695f79a7721f39018e521574ba3dc1067",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-measured-action-targets/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-source-coverage-gate",
+              "base_commit": "dfff68a0dbdcca3c04403ec979466750be35207a",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-source-coverage-gate/source-binding.json"
             }
           ]
         }
@@ -144382,7 +144452,8 @@
           "release-0.5-critical-accessibility",
           "release-0.5-form-and-document-accessibility",
           "release-0.5-populated-route-presentation",
-          "release-0.5-measured-action-targets"
+          "release-0.5-measured-action-targets",
+          "release-0.5-source-coverage-gate"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -144538,7 +144609,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.test.tsx",
-              "sha256": "27721bba11725f67fab6f943b1a4ed2fccac78a70a8e44714fe70bb203155adb"
+              "sha256": "fa67167559ed98e41462d9ffd7c5b66316f8c443cec5793ddda0c65798f855d1"
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
@@ -144550,7 +144621,7 @@
             },
             {
               "path": "apps/web/src/pages/customer-invoice-history-scope.test.tsx",
-              "sha256": "a6fd01304ecd99cab0e23a70740708068f797c273ffaae8fb1425489f8277810"
+              "sha256": "a743fd8af9852d77d3633539966595c208623749835e08da20b4884ee52db3e8"
             },
             {
               "path": "apps/worker/src/notifications/receipt-notices.integration.test.ts",
@@ -144641,7 +144712,8 @@
             "Bindings renewed by release-0.5-critical-accessibility: audited canonical landmarks, retained command calls and validated auth-entry authority. Exact targeted unit/browser and original performance evidence passes.",
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
-            "Bindings renewed by release-0.5-measured-action-targets: target sizing changes pass exact populated route browsers and scoped invoice, saving and customer-history ownership units. Navigation, authority, receipt and money behavior are unchanged."
+            "Bindings renewed by release-0.5-measured-action-targets: target sizing changes pass exact populated route browsers and scoped invoice, saving and customer-history ownership units. Navigation, authority, receipt and money behavior are unchanged.",
+            "Bindings renewed by release-0.5-source-coverage-gate: test fixtures now exercise actual acknowledgement, current query/account context and nonoverlapping polls before the bounded read deadline; 61 focused tests passed and application source was unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/bank-receipts-financial-history",
           "limitations": [
@@ -144776,6 +144848,11 @@
               "batch": "release-0.5-measured-action-targets",
               "base_commit": "498c940695f79a7721f39018e521574ba3dc1067",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-measured-action-targets/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-source-coverage-gate",
+              "base_commit": "dfff68a0dbdcca3c04403ec979466750be35207a",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-source-coverage-gate/source-binding.json"
             }
           ]
         }
@@ -472563,7 +472640,8 @@
           "release-0.5-measured-action-targets",
           "release-0.5-critical-accessibility-renewal",
           "release-0.5-solar-guidance-required",
-          "release-0.5-staff-direct-reads"
+          "release-0.5-staff-direct-reads",
+          "release-0.5-source-coverage-gate"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -472759,7 +472837,7 @@
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.test.tsx",
-              "sha256": "1ceaafd1e1c6adf32324b4373f5f76bd911050641447bad0e95e5b59a70e4c7a"
+              "sha256": "a2756401c67e1dc0e00d08c103c059fbd8d008e355dbb682c449074b098617a0"
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.ts",
@@ -473037,7 +473115,8 @@
             "Bindings renewed by release-0.5-measured-action-targets: target sizing changes pass exact populated route browsers and scoped invoice, saving and customer-history ownership units. Navigation, authority, receipt and money behavior are unchanged.",
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
             "Bindings renewed by release-0.5-solar-guidance-required: required announcements match existing staff guidance schemas; exact browser and unit checks preserve protected commands and receipts.",
-            "Bindings renewed by release-0.5-staff-direct-reads: bounded saving and team reads pass exact browser and unit checks with current ownership, retained drafts and protected commands."
+            "Bindings renewed by release-0.5-staff-direct-reads: bounded saving and team reads pass exact browser and unit checks with current ownership, retained drafts and protected commands.",
+            "Bindings renewed by release-0.5-source-coverage-gate: test fixtures now exercise actual acknowledgement, current query/account context and nonoverlapping polls before the bounded read deadline; 61 focused tests passed and application source was unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-query-and-command-completion",
           "limitations": [
@@ -473113,6 +473192,11 @@
               "batch": "release-0.5-staff-direct-reads",
               "base_commit": "7cc237db497473c99d049a9e591ae9475aec6cde",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-direct-reads/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-source-coverage-gate",
+              "base_commit": "dfff68a0dbdcca3c04403ec979466750be35207a",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-source-coverage-gate/source-binding.json"
             }
           ]
         }
@@ -528696,7 +528780,8 @@
           "release-0.5-workspace-route-census",
           "release-0.5-staff-direct-reads",
           "release-0.5-staff-terms-reads",
-          "release-0.5-route-matrix-reconciliation"
+          "release-0.5-route-matrix-reconciliation",
+          "release-0.5-source-coverage-gate"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -529096,7 +529181,7 @@
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.test.tsx",
-              "sha256": "1ceaafd1e1c6adf32324b4373f5f76bd911050641447bad0e95e5b59a70e4c7a"
+              "sha256": "a2756401c67e1dc0e00d08c103c059fbd8d008e355dbb682c449074b098617a0"
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.ts",
@@ -530208,7 +530293,8 @@
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
             "Bindings renewed by release-0.5-staff-direct-reads: bounded saving and team reads pass exact browser and unit checks with current ownership, retained drafts and protected commands.",
             "Bindings renewed by release-0.5-staff-terms-reads: Only wizard read transport and fixture assertions changed; exact electricity and solar browser/unit cases retain current ownership, persisted progress, financial confirmation and command safeguards.",
-            "Bindings renewed by release-0.5-route-matrix-reconciliation: exact populated electricity, saving and solar journeys preserve the underlying captured draft, authority, price, receipt and financial confirmation assertions. Only solar fieldset presentation and test observations changed."
+            "Bindings renewed by release-0.5-route-matrix-reconciliation: exact populated electricity, saving and solar journeys preserve the underlying captured draft, authority, price, receipt and financial confirmation assertions. Only solar fieldset presentation and test observations changed.",
+            "Bindings renewed by release-0.5-source-coverage-gate: test fixtures now exercise actual acknowledgement, current query/account context and nonoverlapping polls before the bounded read deadline; 61 focused tests passed and application source was unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-recovery-journey",
           "limitations": [
@@ -530309,6 +530395,11 @@
               "batch": "release-0.5-route-matrix-reconciliation",
               "base_commit": "9482df25f6361c4078bb846690f80bd26786cabe",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-matrix-reconciliation/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-source-coverage-gate",
+              "base_commit": "dfff68a0dbdcca3c04403ec979466750be35207a",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-source-coverage-gate/source-binding.json"
             }
           ]
         }
@@ -530354,7 +530445,8 @@
           "release-0.5-workspace-route-census",
           "release-0.5-staff-direct-reads",
           "release-0.5-staff-terms-reads",
-          "release-0.5-route-matrix-reconciliation"
+          "release-0.5-route-matrix-reconciliation",
+          "release-0.5-source-coverage-gate"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -530754,7 +530846,7 @@
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.test.tsx",
-              "sha256": "1ceaafd1e1c6adf32324b4373f5f76bd911050641447bad0e95e5b59a70e4c7a"
+              "sha256": "a2756401c67e1dc0e00d08c103c059fbd8d008e355dbb682c449074b098617a0"
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.ts",
@@ -531866,7 +531958,8 @@
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
             "Bindings renewed by release-0.5-staff-direct-reads: bounded saving and team reads pass exact browser and unit checks with current ownership, retained drafts and protected commands.",
             "Bindings renewed by release-0.5-staff-terms-reads: Only wizard read transport and fixture assertions changed; exact electricity and solar browser/unit cases retain current ownership, persisted progress, financial confirmation and command safeguards.",
-            "Bindings renewed by release-0.5-route-matrix-reconciliation: exact populated electricity, saving and solar journeys preserve the underlying captured draft, authority, price, receipt and financial confirmation assertions. Only solar fieldset presentation and test observations changed."
+            "Bindings renewed by release-0.5-route-matrix-reconciliation: exact populated electricity, saving and solar journeys preserve the underlying captured draft, authority, price, receipt and financial confirmation assertions. Only solar fieldset presentation and test observations changed.",
+            "Bindings renewed by release-0.5-source-coverage-gate: test fixtures now exercise actual acknowledgement, current query/account context and nonoverlapping polls before the bounded read deadline; 61 focused tests passed and application source was unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-recovery-journey",
           "limitations": [
@@ -531967,6 +532060,11 @@
               "batch": "release-0.5-route-matrix-reconciliation",
               "base_commit": "9482df25f6361c4078bb846690f80bd26786cabe",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-matrix-reconciliation/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-source-coverage-gate",
+              "base_commit": "dfff68a0dbdcca3c04403ec979466750be35207a",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-source-coverage-gate/source-binding.json"
             }
           ]
         }
@@ -532044,7 +532142,8 @@
           "release-0.5-workspace-route-census",
           "release-0.5-staff-direct-reads",
           "release-0.5-staff-terms-reads",
-          "release-0.5-route-matrix-reconciliation"
+          "release-0.5-route-matrix-reconciliation",
+          "release-0.5-source-coverage-gate"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -532444,7 +532543,7 @@
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.test.tsx",
-              "sha256": "1ceaafd1e1c6adf32324b4373f5f76bd911050641447bad0e95e5b59a70e4c7a"
+              "sha256": "a2756401c67e1dc0e00d08c103c059fbd8d008e355dbb682c449074b098617a0"
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.ts",
@@ -533556,7 +533655,8 @@
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
             "Bindings renewed by release-0.5-staff-direct-reads: bounded saving and team reads pass exact browser and unit checks with current ownership, retained drafts and protected commands.",
             "Bindings renewed by release-0.5-staff-terms-reads: Only wizard read transport and fixture assertions changed; exact electricity and solar browser/unit cases retain current ownership, persisted progress, financial confirmation and command safeguards.",
-            "Bindings renewed by release-0.5-route-matrix-reconciliation: exact populated electricity, saving and solar journeys preserve the underlying captured draft, authority, price, receipt and financial confirmation assertions. Only solar fieldset presentation and test observations changed."
+            "Bindings renewed by release-0.5-route-matrix-reconciliation: exact populated electricity, saving and solar journeys preserve the underlying captured draft, authority, price, receipt and financial confirmation assertions. Only solar fieldset presentation and test observations changed.",
+            "Bindings renewed by release-0.5-source-coverage-gate: test fixtures now exercise actual acknowledgement, current query/account context and nonoverlapping polls before the bounded read deadline; 61 focused tests passed and application source was unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-recovery-journey",
           "limitations": [
@@ -533657,6 +533757,11 @@
               "batch": "release-0.5-route-matrix-reconciliation",
               "base_commit": "9482df25f6361c4078bb846690f80bd26786cabe",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-matrix-reconciliation/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-source-coverage-gate",
+              "base_commit": "dfff68a0dbdcca3c04403ec979466750be35207a",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-source-coverage-gate/source-binding.json"
             }
           ]
         }
@@ -533702,7 +533807,8 @@
           "release-0.5-workspace-route-census",
           "release-0.5-staff-direct-reads",
           "release-0.5-staff-terms-reads",
-          "release-0.5-route-matrix-reconciliation"
+          "release-0.5-route-matrix-reconciliation",
+          "release-0.5-source-coverage-gate"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -534102,7 +534208,7 @@
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.test.tsx",
-              "sha256": "1ceaafd1e1c6adf32324b4373f5f76bd911050641447bad0e95e5b59a70e4c7a"
+              "sha256": "a2756401c67e1dc0e00d08c103c059fbd8d008e355dbb682c449074b098617a0"
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.ts",
@@ -535214,7 +535320,8 @@
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
             "Bindings renewed by release-0.5-staff-direct-reads: bounded saving and team reads pass exact browser and unit checks with current ownership, retained drafts and protected commands.",
             "Bindings renewed by release-0.5-staff-terms-reads: Only wizard read transport and fixture assertions changed; exact electricity and solar browser/unit cases retain current ownership, persisted progress, financial confirmation and command safeguards.",
-            "Bindings renewed by release-0.5-route-matrix-reconciliation: exact populated electricity, saving and solar journeys preserve the underlying captured draft, authority, price, receipt and financial confirmation assertions. Only solar fieldset presentation and test observations changed."
+            "Bindings renewed by release-0.5-route-matrix-reconciliation: exact populated electricity, saving and solar journeys preserve the underlying captured draft, authority, price, receipt and financial confirmation assertions. Only solar fieldset presentation and test observations changed.",
+            "Bindings renewed by release-0.5-source-coverage-gate: test fixtures now exercise actual acknowledgement, current query/account context and nonoverlapping polls before the bounded read deadline; 61 focused tests passed and application source was unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-recovery-journey",
           "limitations": [
@@ -535315,6 +535422,11 @@
               "batch": "release-0.5-route-matrix-reconciliation",
               "base_commit": "9482df25f6361c4078bb846690f80bd26786cabe",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-matrix-reconciliation/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-source-coverage-gate",
+              "base_commit": "dfff68a0dbdcca3c04403ec979466750be35207a",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-source-coverage-gate/source-binding.json"
             }
           ]
         }
@@ -535360,7 +535472,8 @@
           "release-0.5-workspace-route-census",
           "release-0.5-staff-direct-reads",
           "release-0.5-staff-terms-reads",
-          "release-0.5-route-matrix-reconciliation"
+          "release-0.5-route-matrix-reconciliation",
+          "release-0.5-source-coverage-gate"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -535760,7 +535873,7 @@
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.test.tsx",
-              "sha256": "1ceaafd1e1c6adf32324b4373f5f76bd911050641447bad0e95e5b59a70e4c7a"
+              "sha256": "a2756401c67e1dc0e00d08c103c059fbd8d008e355dbb682c449074b098617a0"
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.ts",
@@ -536872,7 +536985,8 @@
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
             "Bindings renewed by release-0.5-staff-direct-reads: bounded saving and team reads pass exact browser and unit checks with current ownership, retained drafts and protected commands.",
             "Bindings renewed by release-0.5-staff-terms-reads: Only wizard read transport and fixture assertions changed; exact electricity and solar browser/unit cases retain current ownership, persisted progress, financial confirmation and command safeguards.",
-            "Bindings renewed by release-0.5-route-matrix-reconciliation: exact populated electricity, saving and solar journeys preserve the underlying captured draft, authority, price, receipt and financial confirmation assertions. Only solar fieldset presentation and test observations changed."
+            "Bindings renewed by release-0.5-route-matrix-reconciliation: exact populated electricity, saving and solar journeys preserve the underlying captured draft, authority, price, receipt and financial confirmation assertions. Only solar fieldset presentation and test observations changed.",
+            "Bindings renewed by release-0.5-source-coverage-gate: test fixtures now exercise actual acknowledgement, current query/account context and nonoverlapping polls before the bounded read deadline; 61 focused tests passed and application source was unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-recovery-journey",
           "limitations": [
@@ -536973,6 +537087,11 @@
               "batch": "release-0.5-route-matrix-reconciliation",
               "base_commit": "9482df25f6361c4078bb846690f80bd26786cabe",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-matrix-reconciliation/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-source-coverage-gate",
+              "base_commit": "dfff68a0dbdcca3c04403ec979466750be35207a",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-source-coverage-gate/source-binding.json"
             }
           ]
         }
@@ -537018,7 +537137,8 @@
           "release-0.5-workspace-route-census",
           "release-0.5-staff-direct-reads",
           "release-0.5-staff-terms-reads",
-          "release-0.5-route-matrix-reconciliation"
+          "release-0.5-route-matrix-reconciliation",
+          "release-0.5-source-coverage-gate"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -537418,7 +537538,7 @@
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.test.tsx",
-              "sha256": "1ceaafd1e1c6adf32324b4373f5f76bd911050641447bad0e95e5b59a70e4c7a"
+              "sha256": "a2756401c67e1dc0e00d08c103c059fbd8d008e355dbb682c449074b098617a0"
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.ts",
@@ -538530,7 +538650,8 @@
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
             "Bindings renewed by release-0.5-staff-direct-reads: bounded saving and team reads pass exact browser and unit checks with current ownership, retained drafts and protected commands.",
             "Bindings renewed by release-0.5-staff-terms-reads: Only wizard read transport and fixture assertions changed; exact electricity and solar browser/unit cases retain current ownership, persisted progress, financial confirmation and command safeguards.",
-            "Bindings renewed by release-0.5-route-matrix-reconciliation: exact populated electricity, saving and solar journeys preserve the underlying captured draft, authority, price, receipt and financial confirmation assertions. Only solar fieldset presentation and test observations changed."
+            "Bindings renewed by release-0.5-route-matrix-reconciliation: exact populated electricity, saving and solar journeys preserve the underlying captured draft, authority, price, receipt and financial confirmation assertions. Only solar fieldset presentation and test observations changed.",
+            "Bindings renewed by release-0.5-source-coverage-gate: test fixtures now exercise actual acknowledgement, current query/account context and nonoverlapping polls before the bounded read deadline; 61 focused tests passed and application source was unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-recovery-journey",
           "limitations": [
@@ -538631,6 +538752,11 @@
               "batch": "release-0.5-route-matrix-reconciliation",
               "base_commit": "9482df25f6361c4078bb846690f80bd26786cabe",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-matrix-reconciliation/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-source-coverage-gate",
+              "base_commit": "dfff68a0dbdcca3c04403ec979466750be35207a",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-source-coverage-gate/source-binding.json"
             }
           ]
         }
@@ -538676,7 +538802,8 @@
           "release-0.5-workspace-route-census",
           "release-0.5-staff-direct-reads",
           "release-0.5-staff-terms-reads",
-          "release-0.5-route-matrix-reconciliation"
+          "release-0.5-route-matrix-reconciliation",
+          "release-0.5-source-coverage-gate"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -539076,7 +539203,7 @@
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.test.tsx",
-              "sha256": "1ceaafd1e1c6adf32324b4373f5f76bd911050641447bad0e95e5b59a70e4c7a"
+              "sha256": "a2756401c67e1dc0e00d08c103c059fbd8d008e355dbb682c449074b098617a0"
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.ts",
@@ -540188,7 +540315,8 @@
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
             "Bindings renewed by release-0.5-staff-direct-reads: bounded saving and team reads pass exact browser and unit checks with current ownership, retained drafts and protected commands.",
             "Bindings renewed by release-0.5-staff-terms-reads: Only wizard read transport and fixture assertions changed; exact electricity and solar browser/unit cases retain current ownership, persisted progress, financial confirmation and command safeguards.",
-            "Bindings renewed by release-0.5-route-matrix-reconciliation: exact populated electricity, saving and solar journeys preserve the underlying captured draft, authority, price, receipt and financial confirmation assertions. Only solar fieldset presentation and test observations changed."
+            "Bindings renewed by release-0.5-route-matrix-reconciliation: exact populated electricity, saving and solar journeys preserve the underlying captured draft, authority, price, receipt and financial confirmation assertions. Only solar fieldset presentation and test observations changed.",
+            "Bindings renewed by release-0.5-source-coverage-gate: test fixtures now exercise actual acknowledgement, current query/account context and nonoverlapping polls before the bounded read deadline; 61 focused tests passed and application source was unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-recovery-journey",
           "limitations": [
@@ -540289,6 +540417,11 @@
               "batch": "release-0.5-route-matrix-reconciliation",
               "base_commit": "9482df25f6361c4078bb846690f80bd26786cabe",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-matrix-reconciliation/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-source-coverage-gate",
+              "base_commit": "dfff68a0dbdcca3c04403ec979466750be35207a",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-source-coverage-gate/source-binding.json"
             }
           ]
         }
@@ -540334,7 +540467,8 @@
           "release-0.5-workspace-route-census",
           "release-0.5-staff-direct-reads",
           "release-0.5-staff-terms-reads",
-          "release-0.5-route-matrix-reconciliation"
+          "release-0.5-route-matrix-reconciliation",
+          "release-0.5-source-coverage-gate"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -540734,7 +540868,7 @@
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.test.tsx",
-              "sha256": "1ceaafd1e1c6adf32324b4373f5f76bd911050641447bad0e95e5b59a70e4c7a"
+              "sha256": "a2756401c67e1dc0e00d08c103c059fbd8d008e355dbb682c449074b098617a0"
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.ts",
@@ -541846,7 +541980,8 @@
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
             "Bindings renewed by release-0.5-staff-direct-reads: bounded saving and team reads pass exact browser and unit checks with current ownership, retained drafts and protected commands.",
             "Bindings renewed by release-0.5-staff-terms-reads: Only wizard read transport and fixture assertions changed; exact electricity and solar browser/unit cases retain current ownership, persisted progress, financial confirmation and command safeguards.",
-            "Bindings renewed by release-0.5-route-matrix-reconciliation: exact populated electricity, saving and solar journeys preserve the underlying captured draft, authority, price, receipt and financial confirmation assertions. Only solar fieldset presentation and test observations changed."
+            "Bindings renewed by release-0.5-route-matrix-reconciliation: exact populated electricity, saving and solar journeys preserve the underlying captured draft, authority, price, receipt and financial confirmation assertions. Only solar fieldset presentation and test observations changed.",
+            "Bindings renewed by release-0.5-source-coverage-gate: test fixtures now exercise actual acknowledgement, current query/account context and nonoverlapping polls before the bounded read deadline; 61 focused tests passed and application source was unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-recovery-journey",
           "limitations": [
@@ -541947,6 +542082,11 @@
               "batch": "release-0.5-route-matrix-reconciliation",
               "base_commit": "9482df25f6361c4078bb846690f80bd26786cabe",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-matrix-reconciliation/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-source-coverage-gate",
+              "base_commit": "dfff68a0dbdcca3c04403ec979466750be35207a",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-source-coverage-gate/source-binding.json"
             }
           ]
         }
@@ -541992,7 +542132,8 @@
           "release-0.5-workspace-route-census",
           "release-0.5-staff-direct-reads",
           "release-0.5-staff-terms-reads",
-          "release-0.5-route-matrix-reconciliation"
+          "release-0.5-route-matrix-reconciliation",
+          "release-0.5-source-coverage-gate"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -542392,7 +542533,7 @@
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.test.tsx",
-              "sha256": "1ceaafd1e1c6adf32324b4373f5f76bd911050641447bad0e95e5b59a70e4c7a"
+              "sha256": "a2756401c67e1dc0e00d08c103c059fbd8d008e355dbb682c449074b098617a0"
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.ts",
@@ -543504,7 +543645,8 @@
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
             "Bindings renewed by release-0.5-staff-direct-reads: bounded saving and team reads pass exact browser and unit checks with current ownership, retained drafts and protected commands.",
             "Bindings renewed by release-0.5-staff-terms-reads: Only wizard read transport and fixture assertions changed; exact electricity and solar browser/unit cases retain current ownership, persisted progress, financial confirmation and command safeguards.",
-            "Bindings renewed by release-0.5-route-matrix-reconciliation: exact populated electricity, saving and solar journeys preserve the underlying captured draft, authority, price, receipt and financial confirmation assertions. Only solar fieldset presentation and test observations changed."
+            "Bindings renewed by release-0.5-route-matrix-reconciliation: exact populated electricity, saving and solar journeys preserve the underlying captured draft, authority, price, receipt and financial confirmation assertions. Only solar fieldset presentation and test observations changed.",
+            "Bindings renewed by release-0.5-source-coverage-gate: test fixtures now exercise actual acknowledgement, current query/account context and nonoverlapping polls before the bounded read deadline; 61 focused tests passed and application source was unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-recovery-journey",
           "limitations": [
@@ -543605,6 +543747,11 @@
               "batch": "release-0.5-route-matrix-reconciliation",
               "base_commit": "9482df25f6361c4078bb846690f80bd26786cabe",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-matrix-reconciliation/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-source-coverage-gate",
+              "base_commit": "dfff68a0dbdcca3c04403ec979466750be35207a",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-source-coverage-gate/source-binding.json"
             }
           ]
         }
@@ -543650,7 +543797,8 @@
           "release-0.5-workspace-route-census",
           "release-0.5-staff-direct-reads",
           "release-0.5-staff-terms-reads",
-          "release-0.5-route-matrix-reconciliation"
+          "release-0.5-route-matrix-reconciliation",
+          "release-0.5-source-coverage-gate"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -544050,7 +544198,7 @@
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.test.tsx",
-              "sha256": "1ceaafd1e1c6adf32324b4373f5f76bd911050641447bad0e95e5b59a70e4c7a"
+              "sha256": "a2756401c67e1dc0e00d08c103c059fbd8d008e355dbb682c449074b098617a0"
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.ts",
@@ -545162,7 +545310,8 @@
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
             "Bindings renewed by release-0.5-staff-direct-reads: bounded saving and team reads pass exact browser and unit checks with current ownership, retained drafts and protected commands.",
             "Bindings renewed by release-0.5-staff-terms-reads: Only wizard read transport and fixture assertions changed; exact electricity and solar browser/unit cases retain current ownership, persisted progress, financial confirmation and command safeguards.",
-            "Bindings renewed by release-0.5-route-matrix-reconciliation: exact populated electricity, saving and solar journeys preserve the underlying captured draft, authority, price, receipt and financial confirmation assertions. Only solar fieldset presentation and test observations changed."
+            "Bindings renewed by release-0.5-route-matrix-reconciliation: exact populated electricity, saving and solar journeys preserve the underlying captured draft, authority, price, receipt and financial confirmation assertions. Only solar fieldset presentation and test observations changed.",
+            "Bindings renewed by release-0.5-source-coverage-gate: test fixtures now exercise actual acknowledgement, current query/account context and nonoverlapping polls before the bounded read deadline; 61 focused tests passed and application source was unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-recovery-journey",
           "limitations": [
@@ -545263,6 +545412,11 @@
               "batch": "release-0.5-route-matrix-reconciliation",
               "base_commit": "9482df25f6361c4078bb846690f80bd26786cabe",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-matrix-reconciliation/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-source-coverage-gate",
+              "base_commit": "dfff68a0dbdcca3c04403ec979466750be35207a",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-source-coverage-gate/source-binding.json"
             }
           ]
         }
@@ -545308,7 +545462,8 @@
           "release-0.5-workspace-route-census",
           "release-0.5-staff-direct-reads",
           "release-0.5-staff-terms-reads",
-          "release-0.5-route-matrix-reconciliation"
+          "release-0.5-route-matrix-reconciliation",
+          "release-0.5-source-coverage-gate"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -545708,7 +545863,7 @@
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.test.tsx",
-              "sha256": "1ceaafd1e1c6adf32324b4373f5f76bd911050641447bad0e95e5b59a70e4c7a"
+              "sha256": "a2756401c67e1dc0e00d08c103c059fbd8d008e355dbb682c449074b098617a0"
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.ts",
@@ -546820,7 +546975,8 @@
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
             "Bindings renewed by release-0.5-staff-direct-reads: bounded saving and team reads pass exact browser and unit checks with current ownership, retained drafts and protected commands.",
             "Bindings renewed by release-0.5-staff-terms-reads: Only wizard read transport and fixture assertions changed; exact electricity and solar browser/unit cases retain current ownership, persisted progress, financial confirmation and command safeguards.",
-            "Bindings renewed by release-0.5-route-matrix-reconciliation: exact populated electricity, saving and solar journeys preserve the underlying captured draft, authority, price, receipt and financial confirmation assertions. Only solar fieldset presentation and test observations changed."
+            "Bindings renewed by release-0.5-route-matrix-reconciliation: exact populated electricity, saving and solar journeys preserve the underlying captured draft, authority, price, receipt and financial confirmation assertions. Only solar fieldset presentation and test observations changed.",
+            "Bindings renewed by release-0.5-source-coverage-gate: test fixtures now exercise actual acknowledgement, current query/account context and nonoverlapping polls before the bounded read deadline; 61 focused tests passed and application source was unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-recovery-journey",
           "limitations": [
@@ -546921,6 +547077,11 @@
               "batch": "release-0.5-route-matrix-reconciliation",
               "base_commit": "9482df25f6361c4078bb846690f80bd26786cabe",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-matrix-reconciliation/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-source-coverage-gate",
+              "base_commit": "dfff68a0dbdcca3c04403ec979466750be35207a",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-source-coverage-gate/source-binding.json"
             }
           ]
         }
@@ -546966,7 +547127,8 @@
           "release-0.5-workspace-route-census",
           "release-0.5-staff-direct-reads",
           "release-0.5-staff-terms-reads",
-          "release-0.5-route-matrix-reconciliation"
+          "release-0.5-route-matrix-reconciliation",
+          "release-0.5-source-coverage-gate"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -547366,7 +547528,7 @@
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.test.tsx",
-              "sha256": "1ceaafd1e1c6adf32324b4373f5f76bd911050641447bad0e95e5b59a70e4c7a"
+              "sha256": "a2756401c67e1dc0e00d08c103c059fbd8d008e355dbb682c449074b098617a0"
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.ts",
@@ -548478,7 +548640,8 @@
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
             "Bindings renewed by release-0.5-staff-direct-reads: bounded saving and team reads pass exact browser and unit checks with current ownership, retained drafts and protected commands.",
             "Bindings renewed by release-0.5-staff-terms-reads: Only wizard read transport and fixture assertions changed; exact electricity and solar browser/unit cases retain current ownership, persisted progress, financial confirmation and command safeguards.",
-            "Bindings renewed by release-0.5-route-matrix-reconciliation: exact populated electricity, saving and solar journeys preserve the underlying captured draft, authority, price, receipt and financial confirmation assertions. Only solar fieldset presentation and test observations changed."
+            "Bindings renewed by release-0.5-route-matrix-reconciliation: exact populated electricity, saving and solar journeys preserve the underlying captured draft, authority, price, receipt and financial confirmation assertions. Only solar fieldset presentation and test observations changed.",
+            "Bindings renewed by release-0.5-source-coverage-gate: test fixtures now exercise actual acknowledgement, current query/account context and nonoverlapping polls before the bounded read deadline; 61 focused tests passed and application source was unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-recovery-journey",
           "limitations": [
@@ -548579,6 +548742,11 @@
               "batch": "release-0.5-route-matrix-reconciliation",
               "base_commit": "9482df25f6361c4078bb846690f80bd26786cabe",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-matrix-reconciliation/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-source-coverage-gate",
+              "base_commit": "dfff68a0dbdcca3c04403ec979466750be35207a",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-source-coverage-gate/source-binding.json"
             }
           ]
         }
@@ -548624,7 +548792,8 @@
           "release-0.5-workspace-route-census",
           "release-0.5-staff-direct-reads",
           "release-0.5-staff-terms-reads",
-          "release-0.5-route-matrix-reconciliation"
+          "release-0.5-route-matrix-reconciliation",
+          "release-0.5-source-coverage-gate"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -549024,7 +549193,7 @@
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.test.tsx",
-              "sha256": "1ceaafd1e1c6adf32324b4373f5f76bd911050641447bad0e95e5b59a70e4c7a"
+              "sha256": "a2756401c67e1dc0e00d08c103c059fbd8d008e355dbb682c449074b098617a0"
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.ts",
@@ -550136,7 +550305,8 @@
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
             "Bindings renewed by release-0.5-staff-direct-reads: bounded saving and team reads pass exact browser and unit checks with current ownership, retained drafts and protected commands.",
             "Bindings renewed by release-0.5-staff-terms-reads: Only wizard read transport and fixture assertions changed; exact electricity and solar browser/unit cases retain current ownership, persisted progress, financial confirmation and command safeguards.",
-            "Bindings renewed by release-0.5-route-matrix-reconciliation: exact populated electricity, saving and solar journeys preserve the underlying captured draft, authority, price, receipt and financial confirmation assertions. Only solar fieldset presentation and test observations changed."
+            "Bindings renewed by release-0.5-route-matrix-reconciliation: exact populated electricity, saving and solar journeys preserve the underlying captured draft, authority, price, receipt and financial confirmation assertions. Only solar fieldset presentation and test observations changed.",
+            "Bindings renewed by release-0.5-source-coverage-gate: test fixtures now exercise actual acknowledgement, current query/account context and nonoverlapping polls before the bounded read deadline; 61 focused tests passed and application source was unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-recovery-journey",
           "limitations": [
@@ -550237,6 +550407,11 @@
               "batch": "release-0.5-route-matrix-reconciliation",
               "base_commit": "9482df25f6361c4078bb846690f80bd26786cabe",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-matrix-reconciliation/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-source-coverage-gate",
+              "base_commit": "dfff68a0dbdcca3c04403ec979466750be35207a",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-source-coverage-gate/source-binding.json"
             }
           ]
         }
@@ -550278,7 +550453,8 @@
           "release-0.5-measured-action-targets",
           "release-0.5-critical-accessibility-renewal",
           "release-0.5-solar-guidance-required",
-          "release-0.5-staff-direct-reads"
+          "release-0.5-staff-direct-reads",
+          "release-0.5-source-coverage-gate"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -550474,7 +550650,7 @@
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.test.tsx",
-              "sha256": "1ceaafd1e1c6adf32324b4373f5f76bd911050641447bad0e95e5b59a70e4c7a"
+              "sha256": "a2756401c67e1dc0e00d08c103c059fbd8d008e355dbb682c449074b098617a0"
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.ts",
@@ -550752,7 +550928,8 @@
             "Bindings renewed by release-0.5-measured-action-targets: target sizing changes pass exact populated route browsers and scoped invoice, saving and customer-history ownership units. Navigation, authority, receipt and money behavior are unchanged.",
             "Bindings renewed by release-0.5-critical-accessibility-renewal: disclosure/support sizing and stable login validation geometry pass exact current browser and unit checks with existing keyboard, authority, financial and auth assertions.",
             "Bindings renewed by release-0.5-solar-guidance-required: required announcements match existing staff guidance schemas; exact browser and unit checks preserve protected commands and receipts.",
-            "Bindings renewed by release-0.5-staff-direct-reads: bounded saving and team reads pass exact browser and unit checks with current ownership, retained drafts and protected commands."
+            "Bindings renewed by release-0.5-staff-direct-reads: bounded saving and team reads pass exact browser and unit checks with current ownership, retained drafts and protected commands.",
+            "Bindings renewed by release-0.5-source-coverage-gate: test fixtures now exercise actual acknowledgement, current query/account context and nonoverlapping polls before the bounded read deadline; 61 focused tests passed and application source was unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-query-and-command-completion",
           "limitations": [
@@ -550828,6 +551005,11 @@
               "batch": "release-0.5-staff-direct-reads",
               "base_commit": "7cc237db497473c99d049a9e591ae9475aec6cde",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-direct-reads/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-source-coverage-gate",
+              "base_commit": "dfff68a0dbdcca3c04403ec979466750be35207a",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-source-coverage-gate/source-binding.json"
             }
           ]
         }
@@ -550873,7 +551055,8 @@
           "release-0.5-workspace-route-census",
           "release-0.5-staff-direct-reads",
           "release-0.5-staff-terms-reads",
-          "release-0.5-route-matrix-reconciliation"
+          "release-0.5-route-matrix-reconciliation",
+          "release-0.5-source-coverage-gate"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -551273,7 +551456,7 @@
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.test.tsx",
-              "sha256": "1ceaafd1e1c6adf32324b4373f5f76bd911050641447bad0e95e5b59a70e4c7a"
+              "sha256": "a2756401c67e1dc0e00d08c103c059fbd8d008e355dbb682c449074b098617a0"
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.ts",
@@ -552385,7 +552568,8 @@
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
             "Bindings renewed by release-0.5-staff-direct-reads: bounded saving and team reads pass exact browser and unit checks with current ownership, retained drafts and protected commands.",
             "Bindings renewed by release-0.5-staff-terms-reads: Only wizard read transport and fixture assertions changed; exact electricity and solar browser/unit cases retain current ownership, persisted progress, financial confirmation and command safeguards.",
-            "Bindings renewed by release-0.5-route-matrix-reconciliation: exact populated electricity, saving and solar journeys preserve the underlying captured draft, authority, price, receipt and financial confirmation assertions. Only solar fieldset presentation and test observations changed."
+            "Bindings renewed by release-0.5-route-matrix-reconciliation: exact populated electricity, saving and solar journeys preserve the underlying captured draft, authority, price, receipt and financial confirmation assertions. Only solar fieldset presentation and test observations changed.",
+            "Bindings renewed by release-0.5-source-coverage-gate: test fixtures now exercise actual acknowledgement, current query/account context and nonoverlapping polls before the bounded read deadline; 61 focused tests passed and application source was unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-recovery-journey",
           "limitations": [
@@ -552486,6 +552670,11 @@
               "batch": "release-0.5-route-matrix-reconciliation",
               "base_commit": "9482df25f6361c4078bb846690f80bd26786cabe",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-matrix-reconciliation/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-source-coverage-gate",
+              "base_commit": "dfff68a0dbdcca3c04403ec979466750be35207a",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-source-coverage-gate/source-binding.json"
             }
           ]
         }
@@ -552531,7 +552720,8 @@
           "release-0.5-workspace-route-census",
           "release-0.5-staff-direct-reads",
           "release-0.5-staff-terms-reads",
-          "release-0.5-route-matrix-reconciliation"
+          "release-0.5-route-matrix-reconciliation",
+          "release-0.5-source-coverage-gate"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -552931,7 +553121,7 @@
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.test.tsx",
-              "sha256": "1ceaafd1e1c6adf32324b4373f5f76bd911050641447bad0e95e5b59a70e4c7a"
+              "sha256": "a2756401c67e1dc0e00d08c103c059fbd8d008e355dbb682c449074b098617a0"
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.ts",
@@ -554043,7 +554233,8 @@
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
             "Bindings renewed by release-0.5-staff-direct-reads: bounded saving and team reads pass exact browser and unit checks with current ownership, retained drafts and protected commands.",
             "Bindings renewed by release-0.5-staff-terms-reads: Only wizard read transport and fixture assertions changed; exact electricity and solar browser/unit cases retain current ownership, persisted progress, financial confirmation and command safeguards.",
-            "Bindings renewed by release-0.5-route-matrix-reconciliation: exact populated electricity, saving and solar journeys preserve the underlying captured draft, authority, price, receipt and financial confirmation assertions. Only solar fieldset presentation and test observations changed."
+            "Bindings renewed by release-0.5-route-matrix-reconciliation: exact populated electricity, saving and solar journeys preserve the underlying captured draft, authority, price, receipt and financial confirmation assertions. Only solar fieldset presentation and test observations changed.",
+            "Bindings renewed by release-0.5-source-coverage-gate: test fixtures now exercise actual acknowledgement, current query/account context and nonoverlapping polls before the bounded read deadline; 61 focused tests passed and application source was unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-recovery-journey",
           "limitations": [
@@ -554144,6 +554335,11 @@
               "batch": "release-0.5-route-matrix-reconciliation",
               "base_commit": "9482df25f6361c4078bb846690f80bd26786cabe",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-matrix-reconciliation/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-source-coverage-gate",
+              "base_commit": "dfff68a0dbdcca3c04403ec979466750be35207a",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-source-coverage-gate/source-binding.json"
             }
           ]
         }
@@ -602540,7 +602736,8 @@
           "release-0.5-form-and-document-accessibility",
           "release-0.5-route-state-closure",
           "release-0.5-safari-main-keyboard",
-          "release-0.5-workspace-route-census"
+          "release-0.5-workspace-route-census",
+          "release-0.5-source-coverage-gate"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -602740,7 +602937,7 @@
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.test.tsx",
-              "sha256": "1ceaafd1e1c6adf32324b4373f5f76bd911050641447bad0e95e5b59a70e4c7a"
+              "sha256": "a2756401c67e1dc0e00d08c103c059fbd8d008e355dbb682c449074b098617a0"
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.ts",
@@ -602934,7 +603131,8 @@
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
             "Bindings renewed by release-0.5-route-state-closure: bounded reads, existing authorization and caller behavior checked with targeted units, browser journeys and original bundle limits.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
-            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass."
+            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
+            "Bindings renewed by release-0.5-source-coverage-gate: test fixtures now exercise actual acknowledgement, current query/account context and nonoverlapping polls before the bounded read deadline; 61 focused tests passed and application source was unchanged."
           ],
           "criterion_result": "Responsive1/2/3-column DashboardLayout, mounted Card headers with icon/title/optional navigation and independently rendered customer/staff bodies verified.",
           "limitations": [
@@ -603066,6 +603264,11 @@
               "batch": "release-0.5-workspace-route-census",
               "base_commit": "7cf95f840a7e65c722f95b10e486bd02c435d498",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-workspace-route-census/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-source-coverage-gate",
+              "base_commit": "dfff68a0dbdcca3c04403ec979466750be35207a",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-source-coverage-gate/source-binding.json"
             }
           ]
         }
@@ -603108,7 +603311,8 @@
           "release-0.5-form-and-document-accessibility",
           "release-0.5-route-state-closure",
           "release-0.5-safari-main-keyboard",
-          "release-0.5-workspace-route-census"
+          "release-0.5-workspace-route-census",
+          "release-0.5-source-coverage-gate"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -603308,7 +603512,7 @@
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.test.tsx",
-              "sha256": "1ceaafd1e1c6adf32324b4373f5f76bd911050641447bad0e95e5b59a70e4c7a"
+              "sha256": "a2756401c67e1dc0e00d08c103c059fbd8d008e355dbb682c449074b098617a0"
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.ts",
@@ -603502,7 +603706,8 @@
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
             "Bindings renewed by release-0.5-route-state-closure: bounded reads, existing authorization and caller behavior checked with targeted units, browser journeys and original bundle limits.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
-            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass."
+            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
+            "Bindings renewed by release-0.5-source-coverage-gate: test fixtures now exercise actual acknowledgement, current query/account context and nonoverlapping polls before the bounded read deadline; 61 focused tests passed and application source was unchanged."
           ],
           "criterion_result": "Each authorized widget owns loading/error/retry/empty/data behavior. Customer server-query and staff useAsyncData readers independently fetch, validate ownership and fence account/profile changes. No sibling read depends on a failed resource.",
           "limitations": [
@@ -603634,6 +603839,11 @@
               "batch": "release-0.5-workspace-route-census",
               "base_commit": "7cf95f840a7e65c722f95b10e486bd02c435d498",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-workspace-route-census/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-source-coverage-gate",
+              "base_commit": "dfff68a0dbdcca3c04403ec979466750be35207a",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-source-coverage-gate/source-binding.json"
             }
           ]
         }
@@ -603676,7 +603886,8 @@
           "release-0.5-form-and-document-accessibility",
           "release-0.5-route-state-closure",
           "release-0.5-safari-main-keyboard",
-          "release-0.5-workspace-route-census"
+          "release-0.5-workspace-route-census",
+          "release-0.5-source-coverage-gate"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -603876,7 +604087,7 @@
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.test.tsx",
-              "sha256": "1ceaafd1e1c6adf32324b4373f5f76bd911050641447bad0e95e5b59a70e4c7a"
+              "sha256": "a2756401c67e1dc0e00d08c103c059fbd8d008e355dbb682c449074b098617a0"
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.ts",
@@ -604070,7 +604281,8 @@
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
             "Bindings renewed by release-0.5-route-state-closure: bounded reads, existing authorization and caller behavior checked with targeted units, browser journeys and original bundle limits.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
-            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass."
+            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
+            "Bindings renewed by release-0.5-source-coverage-gate: test fixtures now exercise actual acknowledgement, current query/account context and nonoverlapping polls before the bounded read deadline; 61 focused tests passed and application source was unchanged."
           ],
           "criterion_result": "Mounted widgets reserve32rem card height across loading/error/empty/ready; browser geometry checks verify unchanged coordinates and sizes during independent widget loads, with keyboard-scrollable long bodies.",
           "limitations": [
@@ -604202,6 +604414,11 @@
               "batch": "release-0.5-workspace-route-census",
               "base_commit": "7cf95f840a7e65c722f95b10e486bd02c435d498",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-workspace-route-census/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-source-coverage-gate",
+              "base_commit": "dfff68a0dbdcca3c04403ec979466750be35207a",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-source-coverage-gate/source-binding.json"
             }
           ]
         }
@@ -604242,7 +604459,8 @@
           "release-0.5-form-and-document-accessibility",
           "release-0.5-route-state-closure",
           "release-0.5-safari-main-keyboard",
-          "release-0.5-workspace-route-census"
+          "release-0.5-workspace-route-census",
+          "release-0.5-source-coverage-gate"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -604442,7 +604660,7 @@
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.test.tsx",
-              "sha256": "1ceaafd1e1c6adf32324b4373f5f76bd911050641447bad0e95e5b59a70e4c7a"
+              "sha256": "a2756401c67e1dc0e00d08c103c059fbd8d008e355dbb682c449074b098617a0"
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.ts",
@@ -604636,7 +604854,8 @@
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
             "Bindings renewed by release-0.5-route-state-closure: bounded reads, existing authorization and caller behavior checked with targeted units, browser journeys and original bundle limits.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
-            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass."
+            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
+            "Bindings renewed by release-0.5-source-coverage-gate: test fixtures now exercise actual acknowledgement, current query/account context and nonoverlapping polls before the bounded read deadline; 61 focused tests passed and application source was unchanged."
           ],
           "criterion_result": "Exact available/posted/reserved IRR and toman, all-outstanding-invoice low-funds warning, charge navigation and isolated failed-wallet alert/retry verified using current native and shared money evidence.",
           "limitations": [
@@ -604768,6 +604987,11 @@
               "batch": "release-0.5-workspace-route-census",
               "base_commit": "7cf95f840a7e65c722f95b10e486bd02c435d498",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-workspace-route-census/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-source-coverage-gate",
+              "base_commit": "dfff68a0dbdcca3c04403ec979466750be35207a",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-source-coverage-gate/source-binding.json"
             }
           ]
         }
@@ -604808,7 +605032,8 @@
           "release-0.5-form-and-document-accessibility",
           "release-0.5-route-state-closure",
           "release-0.5-safari-main-keyboard",
-          "release-0.5-workspace-route-census"
+          "release-0.5-workspace-route-census",
+          "release-0.5-source-coverage-gate"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -605008,7 +605233,7 @@
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.test.tsx",
-              "sha256": "1ceaafd1e1c6adf32324b4373f5f76bd911050641447bad0e95e5b59a70e4c7a"
+              "sha256": "a2756401c67e1dc0e00d08c103c059fbd8d008e355dbb682c449074b098617a0"
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.ts",
@@ -605202,7 +605427,8 @@
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
             "Bindings renewed by release-0.5-route-state-closure: bounded reads, existing authorization and caller behavior checked with targeted units, browser journeys and original bundle limits.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
-            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass."
+            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
+            "Bindings renewed by release-0.5-source-coverage-gate: test fixtures now exercise actual acknowledgement, current query/account context and nonoverlapping polls before the bounded read deadline; 61 focused tests passed and application source was unchanged."
           ],
           "criterion_result": "Four localized counts with icons/color and exact filtered navigation: active contracts, orders in progress, customer open tickets, unpaid invoices. Current permissions and native no-double-count union retained.",
           "limitations": [
@@ -605334,6 +605560,11 @@
               "batch": "release-0.5-workspace-route-census",
               "base_commit": "7cf95f840a7e65c722f95b10e486bd02c435d498",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-workspace-route-census/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-source-coverage-gate",
+              "base_commit": "dfff68a0dbdcca3c04403ec979466750be35207a",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-source-coverage-gate/source-binding.json"
             }
           ]
         }
@@ -605376,7 +605607,8 @@
           "release-0.5-form-and-document-accessibility",
           "release-0.5-route-state-closure",
           "release-0.5-safari-main-keyboard",
-          "release-0.5-workspace-route-census"
+          "release-0.5-workspace-route-census",
+          "release-0.5-source-coverage-gate"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -605576,7 +605808,7 @@
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.test.tsx",
-              "sha256": "1ceaafd1e1c6adf32324b4373f5f76bd911050641447bad0e95e5b59a70e4c7a"
+              "sha256": "a2756401c67e1dc0e00d08c103c059fbd8d008e355dbb682c449074b098617a0"
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.ts",
@@ -605770,7 +606002,8 @@
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
             "Bindings renewed by release-0.5-route-state-closure: bounded reads, existing authorization and caller behavior checked with targeted units, browser journeys and original bundle limits.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
-            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass."
+            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
+            "Bindings renewed by release-0.5-source-coverage-gate: test fixtures now exercise actual acknowledgement, current query/account context and nonoverlapping polls before the bounded read deadline; 61 focused tests passed and application source was unchanged."
           ],
           "criterion_result": "Current crm:verify permission, policy-enabled pending count, latest five non-archived profiles with deterministic timestamp ties, detail/show-all navigation, empty/disabled/malformed/denied behavior verified.",
           "limitations": [
@@ -605902,6 +606135,11 @@
               "batch": "release-0.5-workspace-route-census",
               "base_commit": "7cf95f840a7e65c722f95b10e486bd02c435d498",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-workspace-route-census/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-source-coverage-gate",
+              "base_commit": "dfff68a0dbdcca3c04403ec979466750be35207a",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-source-coverage-gate/source-binding.json"
             }
           ]
         }
@@ -605943,7 +606181,8 @@
           "release-0.5-form-and-document-accessibility",
           "release-0.5-route-state-closure",
           "release-0.5-safari-main-keyboard",
-          "release-0.5-workspace-route-census"
+          "release-0.5-workspace-route-census",
+          "release-0.5-source-coverage-gate"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -606143,7 +606382,7 @@
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.test.tsx",
-              "sha256": "1ceaafd1e1c6adf32324b4373f5f76bd911050641447bad0e95e5b59a70e4c7a"
+              "sha256": "a2756401c67e1dc0e00d08c103c059fbd8d008e355dbb682c449074b098617a0"
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.ts",
@@ -606337,7 +606576,8 @@
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
             "Bindings renewed by release-0.5-route-state-closure: bounded reads, existing authorization and caller behavior checked with targeted units, browser journeys and original bundle limits.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
-            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass."
+            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
+            "Bindings renewed by release-0.5-source-coverage-gate: test fixtures now exercise actual acknowledgement, current query/account context and nonoverlapping polls before the bounded read deadline; 61 focused tests passed and application source was unchanged."
           ],
           "criterion_result": "Account-bound customer invitations persist above shared dashboard header until explicit accept/decline; previously accepted bilingual private-details, recovery, native invitation and owner-bound action evidence matches current sources.",
           "limitations": [
@@ -606469,6 +606709,11 @@
               "batch": "release-0.5-workspace-route-census",
               "base_commit": "7cf95f840a7e65c722f95b10e486bd02c435d498",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-workspace-route-census/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-source-coverage-gate",
+              "base_commit": "dfff68a0dbdcca3c04403ec979466750be35207a",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-source-coverage-gate/source-binding.json"
             }
           ]
         }
@@ -606510,7 +606755,8 @@
           "release-0.5-form-and-document-accessibility",
           "release-0.5-route-state-closure",
           "release-0.5-safari-main-keyboard",
-          "release-0.5-workspace-route-census"
+          "release-0.5-workspace-route-census",
+          "release-0.5-source-coverage-gate"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -606710,7 +606956,7 @@
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.test.tsx",
-              "sha256": "1ceaafd1e1c6adf32324b4373f5f76bd911050641447bad0e95e5b59a70e4c7a"
+              "sha256": "a2756401c67e1dc0e00d08c103c059fbd8d008e355dbb682c449074b098617a0"
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.ts",
@@ -606904,7 +607150,8 @@
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
             "Bindings renewed by release-0.5-route-state-closure: bounded reads, existing authorization and caller behavior checked with targeted units, browser journeys and original bundle limits.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
-            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass."
+            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
+            "Bindings renewed by release-0.5-source-coverage-gate: test fixtures now exercise actual acknowledgement, current query/account context and nonoverlapping polls before the bounded read deadline; 61 focused tests passed and application source was unchanged."
           ],
           "criterion_result": "Latest five submitted electricity/saving orders merge in deterministic chronological order with localized status/date, exact invoice amount or explicit missing amount and service-specific view-all/detail links. Electricity submit transaction atomically establishes contract/invoice, so pre-publication submitted orders are included.",
           "limitations": [
@@ -607036,6 +607283,11 @@
               "batch": "release-0.5-workspace-route-census",
               "base_commit": "7cf95f840a7e65c722f95b10e486bd02c435d498",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-workspace-route-census/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-source-coverage-gate",
+              "base_commit": "dfff68a0dbdcca3c04403ec979466750be35207a",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-source-coverage-gate/source-binding.json"
             }
           ]
         }
@@ -607077,7 +607329,8 @@
           "release-0.5-form-and-document-accessibility",
           "release-0.5-route-state-closure",
           "release-0.5-safari-main-keyboard",
-          "release-0.5-workspace-route-census"
+          "release-0.5-workspace-route-census",
+          "release-0.5-source-coverage-gate"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -607277,7 +607530,7 @@
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.test.tsx",
-              "sha256": "1ceaafd1e1c6adf32324b4373f5f76bd911050641447bad0e95e5b59a70e4c7a"
+              "sha256": "a2756401c67e1dc0e00d08c103c059fbd8d008e355dbb682c449074b098617a0"
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.ts",
@@ -607471,7 +607724,8 @@
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
             "Bindings renewed by release-0.5-route-state-closure: bounded reads, existing authorization and caller behavior checked with targeted units, browser journeys and original bundle limits.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
-            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass."
+            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
+            "Bindings renewed by release-0.5-source-coverage-gate: test fixtures now exercise actual acknowledgement, current query/account context and nonoverlapping polls before the bounded read deadline; 61 focused tests passed and application source was unchanged."
           ],
           "criterion_result": "First three next-due invoices show exact remaining amount, due date and timezone-based days/urgency. Payment availability text distinguishes future payable dates; pay links open guarded invoice details and profile changes clear old rows.",
           "limitations": [
@@ -607603,6 +607857,11 @@
               "batch": "release-0.5-workspace-route-census",
               "base_commit": "7cf95f840a7e65c722f95b10e486bd02c435d498",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-workspace-route-census/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-source-coverage-gate",
+              "base_commit": "dfff68a0dbdcca3c04403ec979466750be35207a",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-source-coverage-gate/source-binding.json"
             }
           ]
         }
@@ -607644,7 +607903,8 @@
           "release-0.5-form-and-document-accessibility",
           "release-0.5-route-state-closure",
           "release-0.5-safari-main-keyboard",
-          "release-0.5-workspace-route-census"
+          "release-0.5-workspace-route-census",
+          "release-0.5-source-coverage-gate"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -607844,7 +608104,7 @@
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.test.tsx",
-              "sha256": "1ceaafd1e1c6adf32324b4373f5f76bd911050641447bad0e95e5b59a70e4c7a"
+              "sha256": "a2756401c67e1dc0e00d08c103c059fbd8d008e355dbb682c449074b098617a0"
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.ts",
@@ -608038,7 +608298,8 @@
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
             "Bindings renewed by release-0.5-route-state-closure: bounded reads, existing authorization and caller behavior checked with targeted units, browser journeys and original bundle limits.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
-            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass."
+            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
+            "Bindings renewed by release-0.5-source-coverage-gate: test fixtures now exercise actual acknowledgement, current query/account context and nonoverlapping polls before the bounded read deadline; 61 focused tests passed and application source was unchanged."
           ],
           "criterion_result": "Active published contracts retain recorded service end dates/status, bounded elapsed-term progress, explicit missing/invalid-date fallback and contract links. Progress does not fabricate fulfillment.",
           "limitations": [
@@ -608170,6 +608431,11 @@
               "batch": "release-0.5-workspace-route-census",
               "base_commit": "7cf95f840a7e65c722f95b10e486bd02c435d498",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-workspace-route-census/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-source-coverage-gate",
+              "base_commit": "dfff68a0dbdcca3c04403ec979466750be35207a",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-source-coverage-gate/source-binding.json"
             }
           ]
         }
@@ -608211,7 +608477,8 @@
           "release-0.5-form-and-document-accessibility",
           "release-0.5-route-state-closure",
           "release-0.5-safari-main-keyboard",
-          "release-0.5-workspace-route-census"
+          "release-0.5-workspace-route-census",
+          "release-0.5-source-coverage-gate"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -608411,7 +608678,7 @@
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.test.tsx",
-              "sha256": "1ceaafd1e1c6adf32324b4373f5f76bd911050641447bad0e95e5b59a70e4c7a"
+              "sha256": "a2756401c67e1dc0e00d08c103c059fbd8d008e355dbb682c449074b098617a0"
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.ts",
@@ -608605,7 +608872,8 @@
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
             "Bindings renewed by release-0.5-route-state-closure: bounded reads, existing authorization and caller behavior checked with targeted units, browser journeys and original bundle limits.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
-            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass."
+            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
+            "Bindings renewed by release-0.5-source-coverage-gate: test fixtures now exercise actual acknowledgement, current query/account context and nonoverlapping polls before the bounded read deadline; 61 focused tests passed and application source was unchanged."
           ],
           "criterion_result": "Staff queue independently reads current-grant ticket/order/unassigned-consultation counts with appropriate filtered links; tickets:assigned is constrained to that actor and concurrent grant removal withdraws results.",
           "limitations": [
@@ -608737,6 +609005,11 @@
               "batch": "release-0.5-workspace-route-census",
               "base_commit": "7cf95f840a7e65c722f95b10e486bd02c435d498",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-workspace-route-census/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-source-coverage-gate",
+              "base_commit": "dfff68a0dbdcca3c04403ec979466750be35207a",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-source-coverage-gate/source-binding.json"
             }
           ]
         }
@@ -608778,7 +609051,8 @@
           "release-0.5-form-and-document-accessibility",
           "release-0.5-route-state-closure",
           "release-0.5-safari-main-keyboard",
-          "release-0.5-workspace-route-census"
+          "release-0.5-workspace-route-census",
+          "release-0.5-source-coverage-gate"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -608978,7 +609252,7 @@
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.test.tsx",
-              "sha256": "1ceaafd1e1c6adf32324b4373f5f76bd911050641447bad0e95e5b59a70e4c7a"
+              "sha256": "a2756401c67e1dc0e00d08c103c059fbd8d008e355dbb682c449074b098617a0"
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.ts",
@@ -609172,7 +609446,8 @@
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
             "Bindings renewed by release-0.5-route-state-closure: bounded reads, existing authorization and caller behavior checked with targeted units, browser journeys and original bundle limits.",
             "Bindings renewed by release-0.5-safari-main-keyboard: focused shell keyboard and equivalent layout verified in browser, with unchanged authority code and original performance gates.",
-            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass."
+            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
+            "Bindings renewed by release-0.5-source-coverage-gate: test fixtures now exercise actual acknowledgement, current query/account context and nonoverlapping polls before the bounded read deadline; 61 focused tests passed and application source was unchanged."
           ],
           "criterion_result": "Admin dashboard exposes unresolved refund obligations in open business work and failed/exhausted subset in failures alongside failed background jobs and open delivery dead letters. Severity, links, independent retry, permission denial and stale-zero handling verified.",
           "limitations": [
@@ -609304,6 +609579,11 @@
               "batch": "release-0.5-workspace-route-census",
               "base_commit": "7cf95f840a7e65c722f95b10e486bd02c435d498",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-workspace-route-census/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-source-coverage-gate",
+              "base_commit": "dfff68a0dbdcca3c04403ec979466750be35207a",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-source-coverage-gate/source-binding.json"
             }
           ]
         }
@@ -654563,7 +654843,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.test.tsx",
-              "sha256": "27721bba11725f67fab6f943b1a4ed2fccac78a70a8e44714fe70bb203155adb"
+              "sha256": "fa67167559ed98e41462d9ffd7c5b66316f8c443cec5793ddda0c65798f855d1"
             },
             {
               "path": "apps/web/src/pages/customer-bank-receipt-history-scope.test.tsx",
@@ -654571,7 +654851,7 @@
             },
             {
               "path": "apps/web/src/pages/customer-invoice-history-scope.test.tsx",
-              "sha256": "a6fd01304ecd99cab0e23a70740708068f797c273ffaae8fb1425489f8277810"
+              "sha256": "a743fd8af9852d77d3633539966595c208623749835e08da20b4884ee52db3e8"
             },
             {
               "path": "packages/db/drizzle/0078_create_bank_receipts.sql",
@@ -656060,7 +656340,8 @@
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
             "Bindings renewed by release-0.5-populated-route-presentation: coarse targets, labels and colors changed; related browser journeys, invoice units, web typecheck and original bundle limits passed.",
             "Bindings renewed by release-0.5-measured-action-targets: target sizing changes pass exact populated route browsers and scoped invoice, saving and customer-history ownership units. Navigation, authority, receipt and money behavior are unchanged.",
-            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass."
+            "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
+            "Bindings renewed by release-0.5-source-coverage-gate: test fixtures now exercise actual acknowledgement, current query/account context and nonoverlapping polls before the bounded read deadline; 61 focused tests passed and application source was unchanged."
           ],
           "limitations": [
             "Complete the remaining effective contract/refund/invoice/receipt criteria after the existing owner decisions on engine/callback/credit-trigger/increase representations are dispositioned. Eleven scoped tasks remain partial; six have no current whole-task acceptance. Preserve the separate mathematical-policy, development reload and operational gates. Current35 boundary passes and94 matching accepted tasks do not certify those unresolved requirements."
@@ -657204,6 +657485,11 @@
               "batch": "release-0.5-workspace-route-census",
               "base_commit": "7cf95f840a7e65c722f95b10e486bd02c435d498",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-workspace-route-census/source-binding.json"
+            },
+            {
+              "batch": "release-0.5-source-coverage-gate",
+              "base_commit": "dfff68a0dbdcca3c04403ec979466750be35207a",
+              "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-source-coverage-gate/source-binding.json"
             }
           ]
         },
@@ -657228,7 +657514,8 @@
           "release-0.5-form-and-document-accessibility",
           "release-0.5-populated-route-presentation",
           "release-0.5-measured-action-targets",
-          "release-0.5-workspace-route-census"
+          "release-0.5-workspace-route-census",
+          "release-0.5-source-coverage-gate"
         ]
       }
     },
@@ -669183,7 +669470,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Original route budgets pass after the 320px solar fix. Complete the explicit changed-source coverage gate and remaining complex manual checks; no coverage thresholds or original financial assertions were changed."
+        "Initial coverage exposed four stale fixtures, now corrected and targeted-verified. Complete the independent web and API coverage runs, evaluate unchanged changed-source thresholds, and finish remaining complex manual accessibility checks. The scoped browser reports are not final gate acceptance."
       ],
       "owner": null,
       "depends_on": [],
@@ -669191,7 +669478,8 @@
         "current_acceptance": null,
         "batches": [
           "release-0.5-critical-accessibility-renewal",
-          "release-0.5-route-matrix-reconciliation"
+          "release-0.5-route-matrix-reconciliation",
+          "release-0.5-source-coverage-gate"
         ]
       }
     },
@@ -719822,7 +720110,174 @@
         "release-readiness#R-02.02"
       ],
       "failed_attempts_retained": true,
-      "release_disposition": "Five launch routes measured, solar Mobile Safari defect repaired. Remaining broad and final release checks are still open."
+      "release_disposition": "Five launch routes measured, solar Mobile Safari defect repaired. Remaining broad and final release checks are still open.",
+      "push_receipt": {
+        "commit": "dfff68a0dbdcca3c04403ec979466750be35207a",
+        "remote_sha": "dfff68a0dbdcca3c04403ec979466750be35207a",
+        "ref": "refs/heads/main",
+        "verified_at": "2026-11-07T08:16:56+00:00",
+        "method": "GitHub CLI API read after authenticated HTTPS Git push"
+      }
+    },
+    "release-0.5-source-coverage-gate": {
+      "batch": "release-0.5-source-coverage-gate",
+      "base_commit": "dfff68a0dbdcca3c04403ec979466750be35207a",
+      "task_keys": [
+        "release-readiness#R-04.02"
+      ],
+      "accepted_task_keys": [],
+      "partial_task_keys": [
+        "release-readiness#R-04.02"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/playwright.config.ts",
+          "sha256": "ad9a9e23b46599266a7fe0dcfd7185e12e612cdc50c040453533d1fccbea85cf"
+        },
+        {
+          "path": "apps/web/src/components/InvoiceBankReceiptSubmissionReviewDialog.tsx",
+          "sha256": "dae067f43cf4b4d78b6080e92be4701901294bf1a701c85420cbd5d0f4315736"
+        },
+        {
+          "path": "apps/web/src/hooks/useAsyncData.test.tsx",
+          "sha256": "a2756401c67e1dc0e00d08c103c059fbd8d008e355dbb682c449074b098617a0"
+        },
+        {
+          "path": "apps/web/src/hooks/useAsyncData.ts",
+          "sha256": "36177df577f094b5f2c77aabfe76d65826dd6bb36463c57eb4e8cd3f2720b235"
+        },
+        {
+          "path": "apps/web/src/hooks/useCustomerServiceHistory.ts",
+          "sha256": "fc70f03965a95ddb72f468edd7aeeed573b0004925200f569b7293cbf28f0400"
+        },
+        {
+          "path": "apps/web/src/hooks/useServerQuery.test.tsx",
+          "sha256": "bc67512f820dfdbf4d86f2214988083789502dd13b0ed2e0ccd3258d7c7df87f"
+        },
+        {
+          "path": "apps/web/src/hooks/useServerQuery.ts",
+          "sha256": "d48dcb712ea4eee821a3b101e12b3d7ee81f11277a8b42ab8aeb594cb2fab47d"
+        },
+        {
+          "path": "apps/web/src/lib/server-query-client.ts",
+          "sha256": "8f339009224962a0219dec6d142c856c7b1e142ce7687a8612c622d0440e1617"
+        },
+        {
+          "path": "apps/web/src/pages/ElectricityOrdersPage.tsx",
+          "sha256": "8e2c4277fc0ce52f91e9a3961b2b3664d5ccb26524044e304223d1e2eaef9f5b"
+        },
+        {
+          "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.test.tsx",
+          "sha256": "fa67167559ed98e41462d9ffd7c5b66316f8c443cec5793ddda0c65798f855d1"
+        },
+        {
+          "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.tsx",
+          "sha256": "6204d1d8fed35d68f0ef924fcc4f996d015663769f98e499bd6226724b2bd3a0"
+        },
+        {
+          "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
+          "sha256": "d9ceb305ec5e362b6deac3e2ba444646865ce06acbbc2ba1b0fd31a20bfe2ba8"
+        },
+        {
+          "path": "apps/web/src/pages/InvoicesPage.tsx",
+          "sha256": "3bd631400a0d7196e574febf93f5ee7a540cacea2d441ca62af856a8e9907996"
+        },
+        {
+          "path": "apps/web/src/pages/customer-invoice-history-scope.test.tsx",
+          "sha256": "a743fd8af9852d77d3633539966595c208623749835e08da20b4884ee52db3e8"
+        },
+        {
+          "path": "apps/web/src/routes/_app/electricity/orders.test.tsx",
+          "sha256": "70b01a809da6148ec80f8ffc22c3d329d6dff13d28bb4f3cb954e11d6af7b331"
+        },
+        {
+          "path": "apps/web/src/test/query-provider.tsx",
+          "sha256": "ac44623d5e62f2bf5f2e8a6e57e79cfaf42539ff065d7b076e66de27a5b7f947"
+        },
+        {
+          "path": "apps/web/vitest.config.ts",
+          "sha256": "1504b02f0222841aef059c7d58f0e6cef786f3f7430b183b80c3f66ccabe6687"
+        },
+        {
+          "path": "packages/tsconfig/vitest.base.config.ts",
+          "sha256": "cacf7cba1dc965375f314e932ca0bbdc4f3884def06980f3d191b19f0bc58f99"
+        },
+        {
+          "path": "packages/ui/src/components/ui/confirm-dialog.tsx",
+          "sha256": "7538bb3bfacfaced42c3990dc5efea65704f9a1a2cd3892a7d6deab1446f7724"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "0b875687ee1d2f32ea8819c9eb58af72f0c0db3796f5e74f82317d4b7ce46251"
+        },
+        {
+          "path": "scripts/check-changed-coverage.py",
+          "sha256": "721aa5763bb62336c0e4c454b8e36e2f15ff1e14bf4b0136c7c7946424bbd736"
+        },
+        {
+          "path": "scripts/collect-browser-coverage.mjs",
+          "sha256": "b3a734210f745cd07bd2af35af764b686bbfdc486a325aae6ef8dbd0cc0ceb22"
+        },
+        {
+          "path": "scripts/merge-browser-coverage.mjs",
+          "sha256": "19fcc8cef996c4e0ddedb872cfe643c2cb755e5a23df3086ddc01d72c87caa75"
+        }
+      ],
+      "checks": [
+        "Initial release coverage run used accepted v0.4.0 source eab6a0a0eede4005e3ce2ad3f5d95c28783a5492 and candidate dfff68a0dbdcca3c04403ec979466750be35207a. UI, shared and translation package coverage tests passed. Web had 5282 passes and 14 failures in four fixtures; Turbo stopped the API job and no passing combined report exists.",
+        "Receipt tests now assert financial confirmation remains disabled until the actual acknowledgement, and preserve attachment, retry, field, deduplication and receipt assertions. Invoice and electricity history fixtures use production-equivalent account/query providers; profile and resource 401/403, exact filters, pagination and navigation assertions remain. Polling tests cross two ticks while the request is still alive under the 15-second deadline, alongside explicit timeout tests.",
+        "61 focused unit checks and changed-file lint, format and web typecheck pass. The clean base also produced 36 distinct passing browser coverage records in two runs with no stale/dirty source maps. These are scoped inputs, not acceptance of the changed-source thresholds.",
+        "Web and API coverage are running independently so either can finish and emit its own report. No threshold or application source changed. Final coverage and remaining manual acceptance stay open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-source-coverage-gate",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-source-coverage-gate/reviewed-source.diff",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-source-coverage-gate/source-binding.json",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-source-coverage-gate/renewed-bindings.json",
+      "renewed_task_keys": [
+        "04-invoices-wallet-contracts.md#T-04.3.01.01",
+        "04-invoices-wallet-contracts.md#T-04.3.01.02",
+        "04-invoices-wallet-contracts.md#T-04.3.01.03",
+        "04-invoices-wallet-contracts.md#T-04.3.01.04",
+        "04-invoices-wallet-contracts.md#T-04.3.01.05",
+        "04-invoices-wallet-contracts.md#T-04.3.01.06",
+        "04-invoices-wallet-contracts.md#T-04.3.01.07",
+        "04-invoices-wallet-contracts.md#T-04.3.02.01",
+        "04-invoices-wallet-contracts.md#T-04.3.02.02",
+        "04-invoices-wallet-contracts.md#T-04.3.02.03",
+        "04-invoices-wallet-contracts.md#T-04.3.02.04",
+        "07-ui-ux-design.md#T-07.01.04.05",
+        "07-ui-ux-design.md#T-07.11.01.01",
+        "07-ui-ux-design.md#T-07.11.01.02",
+        "07-ui-ux-design.md#T-07.11.01.04",
+        "07-ui-ux-design.md#T-07.11.01.05",
+        "07-ui-ux-design.md#T-07.11.02.01",
+        "07-ui-ux-design.md#T-07.11.02.02",
+        "07-ui-ux-design.md#T-07.11.02.03",
+        "07-ui-ux-design.md#T-07.11.02.04",
+        "07-ui-ux-design.md#T-07.11.02.05",
+        "07-ui-ux-design.md#T-07.12.01.01",
+        "07-ui-ux-design.md#T-07.12.01.02",
+        "07-ui-ux-design.md#T-07.12.01.03",
+        "07-ui-ux-design.md#T-07.12.01.04",
+        "07-ui-ux-design.md#T-07.12.01.05",
+        "07-ui-ux-design.md#T-07.12.01.06",
+        "07-ui-ux-design.md#T-07.12.01.07",
+        "07-ui-ux-design.md#T-07.19.01.01",
+        "07-ui-ux-design.md#T-07.19.01.02",
+        "07-ui-ux-design.md#T-07.19.01.03",
+        "07-ui-ux-design.md#T-07.19.02.01",
+        "07-ui-ux-design.md#T-07.19.02.02",
+        "07-ui-ux-design.md#T-07.19.02.03",
+        "07-ui-ux-design.md#T-07.19.02.04",
+        "07-ui-ux-design.md#T-07.19.02.05",
+        "07-ui-ux-design.md#T-07.19.02.06",
+        "07-ui-ux-design.md#T-07.19.02.07",
+        "07-ui-ux-design.md#T-07.19.02.08",
+        "07-ui-ux-design.md#T-07.19.02.09",
+        "release-readiness#R-02.01"
+      ],
+      "failed_attempts_retained": true,
+      "release_disposition": "Corrected four coverage-discovered fixture failures. Combined coverage is still open; no release publication."
     }
   },
   "historical_improvements": [
@@ -719862,16 +720317,16 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.5-source-coverage-gate",
+    "id": "release-0.5-coverage-reports",
     "release": "0.5.0",
     "task_keys": [
       "release-readiness#R-04.02"
     ],
-    "goal": "Run the existing changed-source coverage gate against the accepted v0.4.0 base using clean revision-bound unit and browser source coverage. Diagnose actual failures without changing thresholds, rerunning unrelated passes, or certifying broader manual acceptance."
+    "goal": "Finish the independent web and API coverage reports, preserve the original base and floors, and measure the concrete changed-source deficits. Reuse matching scope without claiming the incomplete baseline succeeded."
   },
   "launch_forecast": {
     "status": "deadline_at_risk_until_v0_5_and_operational_gates_close",
-    "next_update_after": "v0.5.0 source coverage gate and actual missing proof",
+    "next_update_after": "v0.5.0 measured changed-source coverage and remaining manual evidence",
     "method": "v0.4.0 staging and Telegram receipts verified. 12 v0.5.0 criteria and gates remain, including route diagnostics and required CI merge enforcement decisions. v0.6.0 operations and v0.9.0 four-service rehearsal keep November 9 at risk. Production is not authorized."
   },
   "capabilities": [

@@ -155,7 +155,7 @@ it('polls without overlapping held reads and cancels the timer on unmount', asyn
   );
   vi.stubGlobal('fetch', fetcher);
   function Polled() {
-    resource = useAsyncData<string>('/resource', { refreshIntervalMs: 30_000 });
+    resource = useAsyncData<string>('/resource', { refreshIntervalMs: 5_000 });
     return null;
   }
   await act(async () =>
@@ -165,10 +165,11 @@ it('polls without overlapping held reads and cancels the timer on unmount', asyn
       </QueryProvider>
     )
   );
-  await act(async () => vi.advanceTimersByTime(90_000));
+  // Cross two polling ticks while the original read is still within its deadline.
+  await act(async () => vi.advanceTimersByTime(10_000));
   expect(fetcher).toHaveBeenCalledTimes(1);
   await act(async () => finish(response('first')));
-  await act(async () => vi.advanceTimersByTime(30_000));
+  await act(async () => vi.advanceTimersByTime(5_000));
   expect(resource).toMatchObject({ status: 'ready', data: 'first' });
   expect(fetcher).toHaveBeenCalledTimes(2);
   await act(async () => finish(response('next')));

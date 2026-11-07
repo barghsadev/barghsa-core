@@ -109,13 +109,21 @@ async function confirm() {
   await act(async () => {
     await import('../components/InvoiceBankReceiptSubmissionReviewDialog.js');
   });
-  for (let i = 0; i < 20 && !document.querySelector('[role="dialog"]'); i++) {
-    await act(async () => Promise.resolve());
-  }
-  const button = [...document.querySelectorAll<HTMLButtonElement>('[role="dialog"] button')].find(
-    (candidate) => candidate.textContent?.includes('Confirm and submit receipt')
+  const dialog = await vi.waitFor(async () => {
+    await act(async () => {});
+    const current = document.querySelector('[role="dialog"]');
+    expect(current, document.body.textContent ?? '').not.toBeNull();
+    return current!;
+  });
+  const button = [...dialog.querySelectorAll<HTMLButtonElement>('button')].find(
+    (candidate) => candidate.textContent?.trim() === 'Confirm and submit receipt'
   );
-  expect(button, document.body.textContent ?? '').toBeDefined();
+  expect(button?.disabled).toBe(true);
+  const acknowledgement = dialog.querySelector<HTMLElement>('[role="checkbox"]');
+  expect(acknowledgement).not.toBeNull();
+  await act(async () => acknowledgement!.click());
+  expect(acknowledgement!.getAttribute('aria-checked')).toBe('true');
+  expect(button?.disabled).toBe(false);
   await act(async () => button!.click());
 }
 async function render(onSubmitted?: () => Promise<void>) {
