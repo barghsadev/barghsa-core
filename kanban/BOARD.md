@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-07T08:02:11+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-07T08:09:41+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.4.0**. Next milestone: **v0.5.0**.
 
@@ -39,10 +39,14 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Audit direct staff terms draft/version/history reads and prove any hanging states with existing fixtures. Close only reproduced missing recovery without changing publication, immutable versions or permissions.
+Reconcile existing route, RTL, touch and landmark evidence against the current route inventory and prove uncovered launch journeys using populated fixtures. Fix measured blockers and preserve original coverage, manual accessibility and performance gates.
 
-- `07-ui-ux-design.md#T-07.12.01.08`: Every list page, detail page, dashboard widget, and admin page must implement the loading/empty/error pattern. No view renders a blank white page or infinite spinner.
+- `07-ui-ux-design.md#T-07.03.01.07`: Test every component and page in both RTL and LTR modes. Persian Lorem ipsum (`لورم ایپسوم`) should render correctly in all containers. Verify no text overflow, clipped content, or misaligned elements.
+- `07-ui-ux-design.md#T-07.04.01.06`: Touch targets: ensure all interactive elements (buttons, links, inputs, toggles) have minimum 44×44px tap area per WCAG 2.5.8.
+- `07-ui-ux-design.md#T-07.04.02.04`: Verify all pages look correct at `320px`, `375px`, `390px`, `414px`, `768px`, `1024px`, `1280px`, and `1920px` viewport widths. No horizontal scroll, no overlapping text, no tiny touch targets.
+- `07-ui-ux-design.md#T-07.05.01.07`: Implement proper heading hierarchy (`h1` → `h2` → `h3` → `h4`) on every page. A single `<h1>` per page. Landmarks: `<header>`, `<nav>`, `<main>`, `<aside>`, `<footer>` with `aria-label` when multiple instances exist.
 - `release-readiness#R-04.01`: Verify full customer and admin UI adoption
+- `release-readiness#R-04.02`: Renew accessibility and performance evidence
 
 ## v0.2.0: Complete customer journeys
 

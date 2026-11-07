@@ -4,6 +4,7 @@ import { ConfirmationFields } from '@barghsa/ui';
 import { useRiskConfirmation } from '../hooks/useRiskConfirmation.js';
 import { OrderWalletBalance } from '../components/OrderWalletBalance.js';
 import { commercialFetch as fetch } from '../lib/commercial-fetch.js';
+import { readWithDeadline } from '../lib/server-query-client.js';
 import { StepReviewPage } from '../components/StepReviewPage.js';
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate } from '@tanstack/react-router';
@@ -119,6 +120,7 @@ export function SolarRequestPage() {
   const [addresses, setAddresses] = useState<Address[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState(false);
+  const [loadAttempt, setLoadAttempt] = useState(0);
   const invalidField = t('formWizard.invalidField', locale);
   const fields = useWizardForm(
     z
@@ -211,40 +213,39 @@ export function SolarRequestPage() {
 
   useEffect(() => {
     const controller = new AbortController();
-    void (async () => {
-      try {
-        const response = await fetch('/api/profiles', {
-          credentials: 'include',
-          signal: controller.signal,
-        });
-        if (!response.ok) throw new Error('profile');
-        const profile = (await response.json()) as {
-          activeProfileId: string | null;
-          profiles: Array<{ id: string }>;
-        };
-        const active = profile.profiles.find((item) => item.id === profile.activeProfileId);
+    void readWithDeadline(controller.signal, async (signal) => {
+      const response = await fetch('/api/profiles', { credentials: 'include', signal });
+      if (!response.ok) throw new Error('profile');
+      const profile = (await response.json()) as {
+        activeProfileId: string | null;
+        profiles: Array<{ id: string }>;
+      };
+      const active = profile.profiles.find((item) => item.id === profile.activeProfileId);
+      if (!active) return { id: '', addresses: [] };
+      signal.throwIfAborted();
+      const addressResponse = await fetch(`/api/profiles/${active.id}/addresses`, {
+        credentials: 'include',
+        signal,
+      });
+      if (!addressResponse.ok) throw new Error('addresses');
+      const result = (await addressResponse.json()) as { addresses: Address[] };
+      if (!Array.isArray(result.addresses)) throw new Error('addresses');
+      return { id: active.id, addresses: result.addresses };
+    })
+      .then(({ id, addresses: siteAddresses }) => {
         if (controller.signal.aborted) return;
-        setProfileId(active?.id ?? '');
-        if (active) {
-          const addressResponse = await fetch(`/api/profiles/${active.id}/addresses`, {
-            credentials: 'include',
-            signal: controller.signal,
-          });
-          if (!addressResponse.ok) throw new Error('addresses');
-          const result = (await addressResponse.json()) as { addresses: Address[] };
-          if (!controller.signal.aborted) {
-            setAddresses(result.addresses);
-            setSiteAddressId((current) => current || result.addresses[0]?.id || '');
-          }
-        }
-      } catch {
+        setProfileId(id);
+        setAddresses(siteAddresses);
+        setSiteAddressId((current) => current || siteAddresses[0]?.id || '');
+      })
+      .catch(() => {
         if (!controller.signal.aborted) setLoadError(true);
-      } finally {
+      })
+      .finally(() => {
         if (!controller.signal.aborted) setLoading(false);
-      }
-    })();
+      });
     return () => controller.abort();
-  }, []);
+  }, [loadAttempt]);
 
   const currentDraft = useMemo<SolarDraft>(
     () => ({
@@ -548,8 +549,23 @@ export function SolarRequestPage() {
         <p className="text-muted-foreground">{copy('instruction')}</p>
       </div>
       {loading && <LoadingStatus>{copy('loading')}</LoadingStatus>}
-      {loadError && <p role="alert">{copy('loadError')}</p>}
-      {!loading && !profileId && <p role="alert">{copy('profileRequired')}</p>}
+      {loadError && (
+        <div role="alert">
+          <p>{copy('loadError')}</p>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => {
+              setLoadError(false);
+              setLoading(true);
+              setLoadAttempt((current) => current + 1);
+            }}
+          >
+            {copy('retry')}
+          </Button>
+        </div>
+      )}
+      {!loading && !loadError && !profileId && <p role="alert">{copy('profileRequired')}</p>}
       {profileId && draftLoading && <LoadingStatus>{copy('draftLoading')}</LoadingStatus>}
       {profileId && draftError && (
         <div role="alert">
@@ -567,7 +583,7 @@ export function SolarRequestPage() {
             : null
         }
       />
-      {!loading && profileId && draftHydrated && !draftError && (
+      {!loading && !loadError && profileId && draftHydrated && !draftError && (
         <ValidatedFormWizard
           form={fields.form}
           errorId={fields.errorId}

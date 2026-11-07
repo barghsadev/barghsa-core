@@ -583,6 +583,8 @@ for (const locale of ['en', 'fa'] as const)
       test(`solar intake returns from address setup with its saved site details (${locale}, existing=${existing}, ${buildingType})`, async ({
         page,
       }) => {
+        const retryAddressRead = existing && buildingType === 'non_household';
+        if (retryAddressRead) await page.clock.install();
         await page.addInitScript(
           (language) => localStorage.setItem('barghsa.locale', language),
           locale
@@ -610,6 +612,7 @@ for (const locale of ['en', 'fa'] as const)
           : [];
         let draft: Record<string, unknown> | null = null;
         let submission: Record<string, unknown> | null = null;
+        let addressReads = 0;
 
         await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
         await page.route('**/api/upload/policy/*', (route) =>
@@ -648,6 +651,7 @@ for (const locale of ['en', 'fa'] as const)
             addresses.push(siteAddress);
             return route.fulfill({ status: 201, json: siteAddress });
           }
+          if (++addressReads === 1 && retryAddressRead) return;
           return route.fulfill({ json: { addresses } });
         });
         await page.route('**/api/geography/provinces', (route) =>
@@ -710,6 +714,18 @@ for (const locale of ['en', 'fa'] as const)
 
         await page.goto('/solar/requests/new');
 
+        if (retryAddressRead) {
+          await expect.poll(() => addressReads).toBe(1);
+          await page.clock.fastForward(15_001);
+          const error = page.getByRole('alert').filter({ hasText: tSolar('loadError', locale) });
+          await expect(error).toBeVisible();
+          await expect(page.getByLabel(tSolar('address', locale))).toHaveCount(0);
+          expect(draft).toBeNull();
+          expect(submission).toBeNull();
+          await error.getByRole('button', { name: tSolar('retry', locale) }).click();
+          await expect(page.getByLabel(tSolar('address', locale))).toHaveValue(addresses[0]!.id);
+          await expect(error).toHaveCount(0);
+        }
         await page.locator(`input[value="${buildingType}"]`).check();
         if (buildingType === 'non_household') await page.locator('#solar-area').fill('250');
         else {
@@ -779,7 +795,10 @@ for (const locale of ['en', 'fa'] as const)
         await expect(page.locator('[data-review-section=property]')).toContainText(
           siteAddress.postalCode
         );
-        await page.getByRole('button', { name: tSolar('submit', locale) }).click();
+        const submit = page.getByRole('button', { name: tSolar('submit', locale), exact: true });
+        await expect(submit).toBeDisabled();
+        await approveRiskConfirmation(page, locale, 'financial');
+        await submit.click();
         await expect(page).toHaveURL(new RegExp(`/solar/requests/${requestId}$`));
         expect(submission).toMatchObject({
           buildingType,

@@ -295,6 +295,40 @@ async function fixture(page: Page, mode: Mode, locale: Locale, step = 2) {
   });
   return state;
 }
+
+for (const locale of ['en', 'fa'] as const)
+  test(`advanced electricity retries stalled settings and draft reads (${locale})`, async ({
+    page,
+  }) => {
+    await page.clock.install({ time: new Date('2026-10-02T10:00:00Z') });
+    const state = await fixture(page, 'advanced', locale);
+    const draftUrl = `**/api/electricity/drafts/advanced?profileId=${profileId}`;
+    const settingsUrl = '**/api/electricity/periods/advanced';
+    let settingsReads = 0;
+    let draftReads = 0;
+    await page.route(settingsUrl, (route) => {
+      if (++settingsReads > 1) return route.fallback();
+    });
+    await page.route(draftUrl, (route) => {
+      if (++draftReads > 1) return route.fallback();
+    });
+    await page.goto('/electricity/advanced?step=2');
+    const retry = page.getByRole('button', { name: t('electricity.order.retry', locale) });
+    for (const reads of [() => settingsReads, () => draftReads]) {
+      await expect.poll(reads).toBe(1);
+      await expect(field(page, 'advanced')).toHaveCount(0);
+      await page.clock.fastForward(15_001);
+      await expect(retry).toBeVisible();
+      await expect(field(page, 'advanced')).toHaveCount(0);
+      await retry.click();
+    }
+    await expect(field(page, 'advanced')).toHaveValue('100');
+    await expect(retry).toHaveCount(0);
+    expect(settingsReads).toBe(2);
+    expect(draftReads).toBe(2);
+    expect(state.saves).toHaveLength(0);
+    expect(state.orders).toHaveLength(0);
+  });
 const button = (page: Page, key: Parameters<typeof t>[0], locale: Locale) =>
   page.getByRole('button', { name: t(key, locale), exact: true });
 async function leave(page: Page, locale: Locale) {

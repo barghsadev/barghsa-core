@@ -1,6 +1,7 @@
 import { ConfirmationFields } from '@barghsa/ui';
 import { useRiskConfirmation } from '../hooks/useRiskConfirmation.js';
 import { commercialFetch as fetch } from '../lib/commercial-fetch.js';
+import { readWithDeadline } from '../lib/server-query-client.js';
 import { lazy, Suspense, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { useBlocker, useNavigate } from '@tanstack/react-router';
 import { LoadingStatus, Button, Card, CardContent, DateTimePicker } from '@barghsa/ui';
@@ -294,18 +295,16 @@ export function AdvancedElectricityOrderPage() {
 
   useEffect(() => {
     const abort = new AbortController();
-    void Promise.all([
-      fetch('/api/profiles/verification-status', { credentials: 'include', signal: abort.signal }),
-      fetch('/api/products/electricity', { credentials: 'include', signal: abort.signal }),
-      fetch('/api/electricity/periods/advanced', { credentials: 'include', signal: abort.signal }),
-    ])
-      .then(async ([profile, catalogue, settings]) => {
-        if (!profile.ok || !catalogue.ok || !settings.ok) throw new Error('Unavailable');
-        const [status, items, limits] = await Promise.all([
-          profile.json(),
-          catalogue.json(),
-          settings.json(),
-        ]);
+    void readWithDeadline(abort.signal, async (signal) => {
+      const [profile, catalogue, settings] = await Promise.all([
+        fetch('/api/profiles/verification-status', { credentials: 'include', signal }),
+        fetch('/api/products/electricity', { credentials: 'include', signal }),
+        fetch('/api/electricity/periods/advanced', { credentials: 'include', signal }),
+      ]);
+      if (!profile.ok || !catalogue.ok || !settings.ok) throw new Error('Unavailable');
+      return Promise.all([profile.json(), catalogue.json(), settings.json()]);
+    })
+      .then(([status, items, limits]) => {
         if (
           !status.activeProfileId ||
           !Array.isArray(items) ||
@@ -347,20 +346,21 @@ export function AdvancedElectricityOrderPage() {
     setSaving(false);
     setSubmitting(false);
     setLoading(true);
-    void Promise.all([
-      fetch(`/api/profiles/${profileId}/addresses`, {
-        credentials: 'include',
-        signal: abort.signal,
-      }),
-      fetch(`/api/electricity/drafts/advanced?profileId=${profileId}`, {
-        credentials: 'include',
-        signal: abort.signal,
-      }),
-    ])
-      .then(async ([addressResponse, draftResponse]) => {
-        if (!addressResponse.ok || !draftResponse.ok) throw new Error('Unavailable');
-        const addressData: { addresses: Address[] } = await addressResponse.json();
-        const draft: Draft = await draftResponse.json();
+    void readWithDeadline(
+      abort.signal,
+      async (signal): Promise<[{ addresses: Address[] }, Draft]> => {
+        const [addresses, draft] = await Promise.all([
+          fetch(`/api/profiles/${profileId}/addresses`, { credentials: 'include', signal }),
+          fetch(`/api/electricity/drafts/advanced?profileId=${profileId}`, {
+            credentials: 'include',
+            signal,
+          }),
+        ]);
+        if (!addresses.ok || !draft.ok) throw new Error('Unavailable');
+        return Promise.all([addresses.json(), draft.json()]);
+      }
+    )
+      .then(([addressData, draft]) => {
         if (abort.signal.aborted) return;
         if (
           !Array.isArray(addressData.addresses) ||
