@@ -19,6 +19,7 @@ import {
   Textarea,
 } from '@barghsa/ui';
 import { tCatalogue } from '@barghsa/i18n/catalogue';
+import { confirmationText } from '@barghsa/i18n/confirmation';
 import { useTimezone } from '../hooks/useTimezone.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { useStaffQueryRead } from '../hooks/useStaffQueryRead.js';
@@ -87,6 +88,9 @@ export default function AdminCataloguePage({
   const [hardwareRevision, setHardwareRevision] = useState(0);
   const [detailState, setDetailState] = useState<'loading' | 'ready' | 'error'>('ready');
   const [hardwareState, setHardwareState] = useState<'loading' | 'ready' | 'error'>('ready');
+  const [listAccepted, setListAccepted] = useState(-1);
+  const [detailAccepted, setDetailAccepted] = useState(-1);
+  const [hardwareAccepted, setHardwareAccepted] = useState(-1);
   const productContext = useRef({
     type,
     isNew: true,
@@ -211,11 +215,16 @@ export default function AdminCataloguePage({
   const source = useRef<{ scope: string; basis: string } | null>(null),
     acceptedReferences = useRef<References | null>(null);
   const [uncertainCreate, setUncertainCreate] = useState(false);
+  const [requiredRead, setRequiredRead] = useState<{
+    revision: number;
+    editor: string | null;
+  } | null>(null);
   const accessDenied = useRef(false);
   const hasEditor = editor !== null;
   const [action, setAction] = useState<TeamAction | null>(null),
     [saved, setSaved] = useState(false),
     [references, setReferences] = useState<References | null>(null);
+  const [pendingAction, setPendingAction] = useState<TeamAction | null>(null);
   const [priceOpen, setPriceOpen] = useState(false),
     [invalidDate, setInvalidDate] = useState(false);
   const [price, setPrice] = priceForm.field('price'),
@@ -230,6 +239,7 @@ export default function AdminCataloguePage({
   };
   const [savingBusy, setSavingBusy] = useState(false);
   const blocked = pending || action !== null || savingBusy;
+  const commandPending = action !== null && action === pendingAction;
   const live = useRef({
     type,
     editor,
@@ -252,6 +262,7 @@ export default function AdminCataloguePage({
   };
   const ready = () =>
     !accessDenied.current &&
+    requiredRead === null &&
     live.current.detailState === 'ready' &&
     (live.current.type !== 'saving_plan' || live.current.hardwareState === 'ready');
   useEffect(
@@ -305,6 +316,7 @@ export default function AdminCataloguePage({
     acceptedReferences.current = null;
     priceForm.form.reset(priceDefaults);
     setUncertainCreate(false);
+    setRequiredRead(null);
     setSaved(false);
     accessDenied.current = true;
     setState('denied');
@@ -357,6 +369,7 @@ export default function AdminCataloguePage({
         if (abort.signal.aborted || accessDenied.current) return;
         setRows(products);
         setHasNextPage(hasNext);
+        setListAccepted(revision);
         setState('ready');
       })
       .catch((cause: unknown) => {
@@ -388,6 +401,7 @@ export default function AdminCataloguePage({
       .then((products) => {
         if (abort.signal.aborted || accessDenied.current) return;
         setHardwareOptions(products);
+        setHardwareAccepted(revision);
         setHardwareState('ready');
       })
       .catch((cause: unknown) => {
@@ -435,6 +449,7 @@ export default function AdminCataloguePage({
       source.current = { scope: scopeKey, basis: nextBasis };
       setDetail(product);
       setPreventActiveDuplicates(config?.preventActiveDuplicates ?? true);
+      setDetailAccepted(revision);
       setDetailState('ready');
     }
     if (editor === 'new') {
@@ -491,6 +506,34 @@ export default function AdminCataloguePage({
     return () => abort.abort();
   }, [type, editor, revision, detailRevision, read]);
   useEffect(() => {
+    if (!requiredRead || state !== 'ready' || listAccepted < requiredRead.revision) return;
+    if (
+      editor !== null &&
+      editor === requiredRead.editor &&
+      (detailState !== 'ready' ||
+        detailAccepted < requiredRead.revision ||
+        (type === 'saving_plan' &&
+          (hardwareState !== 'ready' || hardwareAccepted < requiredRead.revision)))
+    )
+      return;
+    if (!uncertainCreate) {
+      generation.current++;
+      setAction(null);
+    }
+    setRequiredRead(null);
+  }, [
+    requiredRead,
+    state,
+    listAccepted,
+    editor,
+    detailState,
+    detailAccepted,
+    type,
+    hardwareState,
+    hardwareAccepted,
+    uncertainCreate,
+  ]);
+  useEffect(() => {
     const current = live.current;
     if (
       !current.editor ||
@@ -543,6 +586,7 @@ export default function AdminCataloguePage({
     setDetailRevision((value) => value + 1);
   }
   function refresh() {
+    if (commandPending) return;
     if (preference.status === 'error') preference.retry();
     setRevision((value) => value + 1);
   }
@@ -553,7 +597,7 @@ export default function AdminCataloguePage({
     description: string,
     body?: unknown
   ) {
-    if (accessDenied.current || action || uncertainCreate || savingBusy) return;
+    if (accessDenied.current || action || requiredRead || uncertainCreate || savingBusy) return;
     commandVersion.current = generation.current;
     if (heading !== label('save') && heading !== label('savePrice')) commandKind.current = 'other';
     setSaved(false);
@@ -727,6 +771,9 @@ export default function AdminCataloguePage({
     >
       <h1 className="text-2xl font-semibold">{label('title')}</h1>
       {uncertainCreate && !action && <p role="alert">{label('unverifiedCreate')}</p>}
+      {requiredRead && !uncertainCreate && !action && (
+        <p role="alert">{confirmationText('unconfirmed', locale)}</p>
+      )}
       <CommandFeedback message={saved ? label('saved') : null} />
       <div>
         <div className="max-w-full overflow-x-auto pb-2">
@@ -798,7 +845,10 @@ export default function AdminCataloguePage({
                         {label('refresh')}
                       </Button>
                       {type !== 'electricity' && state !== 'denied' && (
-                        <Button disabled={blocked || uncertainCreate} onClick={() => choose('new')}>
+                        <Button
+                          disabled={blocked || requiredRead !== null || uncertainCreate}
+                          onClick={() => choose('new')}
+                        >
                           {label('add')}
                         </Button>
                       )}
@@ -1497,7 +1547,7 @@ export default function AdminCataloguePage({
         <TeamActionDialog
           action={action}
           summary={
-            <div className="space-y-2">
+            <fieldset className="space-y-2 border-0 p-0" disabled={commandPending}>
               {uncertainCreate && <p role="alert">{label('unverifiedCreate')}</p>}
               <Button
                 type="button"
@@ -1524,10 +1574,15 @@ export default function AdminCataloguePage({
                   </Button>
                 </>
               )}
-            </div>
+            </fieldset>
           }
           finalFocus={false}
           onDenied={denyAccess}
+          onPendingChange={(pending) => setPendingAction(pending ? action : null)}
+          onUnconfirmed={() => {
+            setRequiredRead({ revision: revision + 1, editor });
+            if (editor === 'new') setUncertainCreate(true);
+          }}
           confirmationDisabled={
             uncertainCreate ||
             !ready() ||
@@ -1576,10 +1631,7 @@ export default function AdminCataloguePage({
                   : action.method === 'DELETE'
                     ? result === null
                     : matchesProductReceipt(action.body, result, selected, type);
-            if (!matched) {
-              if (editor === 'new') setUncertainCreate(true);
-              throw new Error('Invalid catalogue acknowledgement');
-            }
+            if (!matched) throw new Error('Invalid catalogue acknowledgement');
             choose(action.path.endsWith('/duplicate-policy') ? editor : null);
             setSaved(true);
             setRevision((value) => value + 1);

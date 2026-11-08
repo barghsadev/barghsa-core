@@ -17,6 +17,7 @@ import { OperationalQueueTable } from '../components/OperationalQueueTable.js';
 import { ConfigPreviewCard } from '../components/ConfigPreviewCard.js';
 import { tWorkspace as settingsText } from '@barghsa/i18n/workspace-admin';
 import { tVat } from '@barghsa/i18n/vat';
+import { confirmationText } from '@barghsa/i18n/confirmation';
 import {
   CHARGE_CATEGORIES,
   PRODUCT_OVERRIDE_CATEGORY,
@@ -261,6 +262,12 @@ export default function AdminVatPage() {
   }
   const [action, setAction] = useState<TeamAction | null>(null),
     [saved, setSaved] = useState(false);
+  const [pendingAction, setPendingAction] = useState<TeamAction | null>(null);
+  const [requiredRead, setRequiredRead] = useState<{
+    rates: number;
+    overrides?: number;
+    products?: number;
+  } | null>(null);
   const generation = useRef(0),
     commandVersion = useRef(0),
     frozenBasis = useRef<string | null>(null);
@@ -277,6 +284,7 @@ export default function AdminVatPage() {
   const clearWork = useCallback(() => {
     clearEditor();
     setSaved(false);
+    setRequiredRead(null);
   }, [clearEditor]);
   const scope = useCatalogueScope(clearWork);
   const rateRead = useCatalogueResource(scope, '/api/admin/finance/vat', validRates);
@@ -300,7 +308,11 @@ export default function AdminVatPage() {
   };
   const hasZone = preference.status === 'ready' || acceptedZone !== null;
   const rateDisabled =
-    scope.denied || rateRead.loading || rateRead.error || preference.status !== 'ready';
+    scope.denied ||
+    requiredRead !== null ||
+    rateRead.loading ||
+    rateRead.error ||
+    preference.status !== 'ready';
   const overrideDisabled = rateDisabled || overrideRead.loading || overrideRead.error;
   const choicesDisabled = overrideDisabled || productRead.loading || productRead.error;
   const commandDisabled = (kind: Editor['kind']) =>
@@ -370,6 +382,27 @@ export default function AdminVatPage() {
       setAction(null);
     }
   }, [rateRead.data, overrideRead.data, productRead.data, clearEditor]);
+  useEffect(() => {
+    if (
+      !requiredRead ||
+      rateRead.loading ||
+      rateRead.error ||
+      (rateRead.readAttempt ?? -1) < requiredRead.rates ||
+      (requiredRead.overrides !== undefined &&
+        (overrideRead.loading ||
+          overrideRead.error ||
+          (overrideRead.readAttempt ?? -1) < requiredRead.overrides)) ||
+      (requiredRead.products !== undefined &&
+        (productRead.loading ||
+          productRead.error ||
+          (productRead.readAttempt ?? -1) < requiredRead.products))
+    )
+      return;
+    generation.current++;
+    frozenBasis.current = null;
+    setAction(null);
+    setRequiredRead(null);
+  }, [requiredRead, rateRead, overrideRead, productRead]);
   function refresh() {
     preference.retry();
     if (scope.denied) scope.recover();
@@ -380,7 +413,10 @@ export default function AdminVatPage() {
     }
   }
   const recovery = (
-    <div className="space-y-2">
+    <fieldset
+      className="space-y-2 border-0 p-0"
+      disabled={action !== null && action === pendingAction}
+    >
       <Button
         type="button"
         variant="outline"
@@ -427,7 +463,7 @@ export default function AdminVatPage() {
           </Button>
         </div>
       )}
-    </div>
+    </fieldset>
   );
   const productTitle = (id: string) => {
     const product = products.find((row) => row.id === id);
@@ -598,6 +634,7 @@ export default function AdminVatPage() {
           {label('refresh')}
         </Button>
       </div>
+      {requiredRead && !action && <p role="alert">{confirmationText('unconfirmed', locale)}</p>}
       {scope.denied && <p role="alert">{label('denied')}</p>}
       {!scope.denied && (
         <>
@@ -984,6 +1021,16 @@ export default function AdminVatPage() {
           summary={recovery}
           finalFocus={false}
           onDenied={() => scope.deny()}
+          onPendingChange={(pending) => setPendingAction(pending ? action : null)}
+          onUnconfirmed={() =>
+            setRequiredRead({
+              rates: rateRead.nextReadAttempt(),
+              ...(editor?.kind === 'override' || editor?.kind === 'endOverride'
+                ? { overrides: overrideRead.nextReadAttempt() }
+                : {}),
+              ...(editor?.kind === 'override' ? { products: productRead.nextReadAttempt() } : {}),
+            })
+          }
           onValidationError={(fields) => {
             const allowed = [
               ...(editor?.kind === 'rate'

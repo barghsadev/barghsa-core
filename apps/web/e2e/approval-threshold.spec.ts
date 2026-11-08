@@ -4,6 +4,7 @@ import { setupCatalogueForms } from './catalogue-form-fixture';
 import { mockOtpStepUp, completeOtp } from './otp-step-up-fixture';
 import { tWalletReceipts as text } from '@barghsa/i18n/wallet-receipts';
 import { t as appText } from '@barghsa/i18n/app';
+import { confirmationText } from '@barghsa/i18n/confirmation';
 import { ErrorCodes } from '@barghsa/shared/errors';
 
 const path = '**/api/admin/config/dual-approval-threshold';
@@ -231,31 +232,35 @@ for (const locale of ['en', 'fa'] as const) {
       ).toHaveText(appText('team.error', locale));
       await expect(field).toHaveValue(raw);
       await expect(page.getByText('private-threshold-diagnostic')).toHaveCount(0);
+      const refreshReview = async (expected: number) => {
+        await expect(
+          dialog.getByRole('alert').filter({
+            hasText: confirmationText('unconfirmed', locale),
+          })
+        ).toHaveText(confirmationText('unconfirmed', locale));
+        await expect(
+          dialog.getByRole('button', { name: appText('team.confirm', locale), exact: true })
+        ).toBeDisabled();
+        await dialog
+          .getByRole('button', { name: appText('team.cancel', locale), exact: true })
+          .click();
+        await panel
+          .getByRole('button', { name: text('admin.receiptThreshold.retry', locale), exact: true })
+          .click();
+        await expect(save).toBeEnabled();
+        expect(writes).toHaveLength(expected);
+      };
       mode = 'service';
       await dialog
         .getByRole('button', { name: appText('team.confirm', locale), exact: true })
         .click();
-      await expect(
-        dialog.getByRole('alert').filter({ hasText: appText('team.error', locale) })
-      ).toHaveText(appText('team.error', locale));
+      await refreshReview(3);
       mode = 'mismatch';
-      await dialog
-        .getByRole('button', { name: appText('team.confirm', locale), exact: true })
-        .click();
-      await expect(
-        dialog.getByRole('alert').filter({ hasText: appText('team.error', locale) })
-      ).toHaveText(appText('team.error', locale));
+      await save.click();
+      dialog = page.getByRole('dialog');
+      await completeOtp(dialog, locale);
       await expect(panel.getByRole('status', { includeHidden: true })).toHaveCount(0);
-      expect(writes).toHaveLength(4);
-      await expect(
-        dialog.getByRole('button', { name: appText('team.confirm', locale), exact: true })
-      ).toBeDisabled();
-      await dialog
-        .getByRole('button', { name: appText('team.cancel', locale), exact: true })
-        .click();
-      await panel
-        .getByRole('button', { name: text('admin.receiptThreshold.retry', locale), exact: true })
-        .click();
+      await refreshReview(4);
       mode = 'success';
       await save.click();
       dialog = page.getByRole('dialog');
@@ -310,7 +315,9 @@ test('failed threshold save never reports success or changes the loaded value', 
   await page.getByRole('button', { name: 'Save threshold' }).click();
   const dialog = page.getByRole('dialog');
   await completeOtp(dialog, 'en');
-  await expect(dialog.getByRole('alert')).toBeVisible();
+  await expect(
+    dialog.getByRole('alert').filter({ hasText: confirmationText('unconfirmed', 'en') })
+  ).toHaveText(confirmationText('unconfirmed', 'en'));
   await expect(page.getByText('Threshold saved.', { exact: true })).toHaveCount(0);
   await expect(field).toHaveValue('250000');
 });

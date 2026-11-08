@@ -178,12 +178,9 @@ export function TeamActionDialog({
       currentAction.current === action &&
       getProfileContextRevision() === profileRevision;
     const showError = (message: string, uncertain = false) => {
-      setError(message);
-      if (owned())
-        sendToast(
-          uncertain ? 'warning' : 'error',
-          uncertain ? confirmationText('unconfirmed', locale) : message
-        );
+      const feedback = uncertain ? confirmationText('unconfirmed', locale) : message;
+      setError(feedback);
+      if (owned()) sendToast(uncertain ? 'warning' : 'error', feedback);
     };
     let commandSent = false;
     try {

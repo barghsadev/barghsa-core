@@ -23,6 +23,7 @@ import { formatCurrencyIrr } from '@barghsa/i18n/numbers';
 import { uploadBrandingLogo } from '../lib/branding-logo-upload.js';
 import { useState, useEffect, useCallback, useId, useRef } from 'react';
 import { brandingText } from '@barghsa/i18n/branding';
+import { confirmationText } from '@barghsa/i18n/confirmation';
 import { formatInTimezone } from '@barghsa/i18n/date-time';
 import { useTimezone } from '../hooks/useTimezone.js';
 import { useLocale } from '../hooks/useLocale.js';
@@ -108,6 +109,12 @@ export default function AdminBrandingConfig() {
   const numbers = useNumberFormatting(locale);
   const versionText = (version: number) => numbers.number(version, { useGrouping: false });
   const [action, setAction] = useState<TeamAction | null>(null);
+  const [pendingAction, setPendingAction] = useState<TeamAction | null>(null);
+  const [requiredRead, setRequiredRead] = useState<{
+    config: number;
+    history: number;
+    publishedId: string | undefined;
+  } | null>(null);
   const [editing, setEditing] = useState(false),
     [needsReset, setNeedsReset] = useState(false);
   const accepted = useRef<BrandConfigDto | null>(null),
@@ -167,6 +174,7 @@ export default function AdminBrandingConfig() {
   }, []);
   const clear = useCallback(() => {
     closeAction();
+    setRequiredRead(null);
     uploadRequest.current?.abort();
     setUploading(false);
     accepted.current = null;
@@ -191,13 +199,15 @@ export default function AdminBrandingConfig() {
     loadError = currentRead.error;
   const coherent =
     !!activeConfig && !!historyRead.data && coherentBrandHistory(activeConfig, historyRead.data);
-  const ready =
+  const coherentRead =
     !scope.denied &&
     !currentRead.loading &&
     !currentRead.error &&
     !historyRead.loading &&
     !historyRead.error &&
     coherent;
+  const ready = coherentRead && requiredRead === null;
+  const commandPending = action !== null && action === pendingAction;
   const draftInfo =
     activeConfig?.status === 'draft' && activeConfig.version > 0 ? activeConfig : null;
   const work = useRef({
@@ -224,6 +234,26 @@ export default function AdminBrandingConfig() {
     },
     []
   );
+  useEffect(() => {
+    if (
+      !requiredRead ||
+      !coherentRead ||
+      (currentRead.readAttempt ?? -1) < requiredRead.config ||
+      (historyRead.readAttempt ?? -1) < requiredRead.history
+    )
+      return;
+    if (published && published.id !== requiredRead.publishedId)
+      window.dispatchEvent(new Event('barghsa:branding-activated'));
+    closeAction();
+    setRequiredRead(null);
+  }, [
+    requiredRead,
+    coherentRead,
+    currentRead.readAttempt,
+    historyRead.readAttempt,
+    published,
+    closeAction,
+  ]);
   useEffect(() => {
     if (!ready || !activeConfig) return;
     const previous = accepted.current;
@@ -405,13 +435,21 @@ export default function AdminBrandingConfig() {
           action={action}
           onClose={closeAction}
           onDenied={scope.deny}
+          onPendingChange={(pending) => setPendingAction(pending ? action : null)}
+          onUnconfirmed={() =>
+            setRequiredRead({
+              config: currentRead.nextReadAttempt(),
+              history: historyRead.nextReadAttempt(),
+              publishedId: published?.id,
+            })
+          }
           confirmationDisabled={!ready || needsReset}
           summary={
             <Button
               type="button"
               variant="outline"
               onClick={refresh}
-              disabled={loading || historyRead.loading}
+              disabled={commandPending || loading || historyRead.loading}
             >
               {text('refresh')}
             </Button>
@@ -489,6 +527,7 @@ export default function AdminBrandingConfig() {
       >
         {text('refresh')}
       </Button>
+      {requiredRead && !action && <p role="alert">{confirmationText('unconfirmed', locale)}</p>}
       <div className="flex items-center justify-between">
         <div>
           {heading}

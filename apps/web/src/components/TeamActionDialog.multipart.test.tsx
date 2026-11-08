@@ -2,6 +2,7 @@ import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { TeamActionDialog } from './TeamActionDialog.js';
+import { confirmationText } from '@barghsa/i18n/confirmation';
 
 vi.mock('../hooks/useLocale.js', () => ({ useLocale: () => 'en' }));
 vi.mock('../hooks/useNumberFormatting.js', () => ({
@@ -111,8 +112,8 @@ it('keeps successful step-up verification across a failed save and retries the i
     form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
   );
   expect(document.body.querySelector('input[type=password]')).toBeNull();
-  expect(document.body.querySelector('[role=alert]')?.textContent).toContain(
-    'could not be completed'
+  expect(document.body.querySelector('[role=alert]')?.textContent).toBe(
+    confirmationText('unconfirmed', 'en')
   );
   const confirm = [...document.body.querySelectorAll<HTMLButtonElement>('button')].find(
     (button) => button.textContent === 'Confirm'

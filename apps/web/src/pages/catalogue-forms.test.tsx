@@ -158,6 +158,7 @@ it('exact localized initial prices and trimmed titles are captured while creatio
     });
     await act(async () => {
       await expect(dialog!.onSuccess({})).rejects.toThrow('acknowledgement');
+      dialog!.onUnconfirmed?.();
     });
     expect(dialog!.confirmationDisabled).toBe(true);
     await act(async () => button(host, 'Close confirmation').click());
@@ -166,6 +167,10 @@ it('exact localized initial prices and trimmed titles are captured while creatio
       ' ۹۰۰۷۱۹۹۲۵۴۷۴۰۹۹۳ '
     );
     expect(host.textContent).toContain('review the catalogue');
+    await act(async () => button(host, 'Cancel').click());
+    expect(button(host, 'Add product').disabled).toBe(true);
+    await act(async () => button(host, 'Refresh').click());
+    expect(button(host, 'Add product').disabled).toBe(false);
   } finally {
     await close();
   }

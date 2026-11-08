@@ -1,6 +1,7 @@
 import { crmShell } from './crm-shell-fixture';
 import { brandSettings } from '../src/test/branding-settings-fixtures';
 import { brandingText } from '@barghsa/i18n/branding';
+import { confirmationText } from '@barghsa/i18n/confirmation';
 import { t as settingsText } from '@barghsa/i18n/admin-ui';
 import { test, expect } from './coverage-fixture';
 
@@ -20,7 +21,8 @@ for (const locale of ['en', 'fa'] as const)
   }) => {
     const fa = locale === 'fa';
     await crmShell(page, locale);
-    await page.route('**/api/admin/branding/configs', (route) => route.fulfill({ json: [valid] }));
+    let history: unknown[] = [valid];
+    await page.route('**/api/admin/branding/configs', (route) => route.fulfill({ json: history }));
     const draftId = '11111111-1111-4111-8111-111111111112';
     let response: unknown = { ...valid, config: { ...config, numberStyle: ['western'] } };
     let saveResponse = 'invalid';
@@ -36,6 +38,17 @@ for (const locale of ['en', 'fa'] as const)
       }
       const body = route.request().postDataJSON();
       writes.push(body);
+      const savedDraft = {
+        ...valid,
+        id: draftId,
+        status: 'draft',
+        version: 2,
+        config: body.config,
+      };
+      if (saveResponse === 'valid') {
+        response = savedDraft;
+        history = [savedDraft, valid];
+      }
       return route.fulfill({
         json:
           saveResponse === 'invalid'
@@ -46,7 +59,7 @@ for (const locale of ['en', 'fa'] as const)
                 ? { ...valid, status: 'draft', version: 2, config }
                 : saveResponse === 'wrong-status'
                   ? { ...valid, version: 2, config: body.config }
-                  : { ...valid, id: draftId, status: 'draft', version: 2, config: body.config },
+                  : savedDraft,
       });
     });
     let activationResponse = 'wrong-id';
@@ -122,11 +135,28 @@ for (const locale of ['en', 'fa'] as const)
     await save.click();
     const dialog = page.getByRole('dialog');
     const confirm = dialog.getByRole('button', { name: fa ? 'تأیید' : 'Confirm', exact: true });
-    for (const failure of ['invalid', 'stale', 'wrong-title', 'wrong-status']) {
+    const resolveUnconfirmed = async (writeCount: () => number, expected: number) => {
+      await expect(dialog.getByRole('alert')).toHaveText(confirmationText('unconfirmed', locale));
+      await expect(confirm).toBeDisabled();
+      expect(writeCount()).toBe(expected);
+      await dialog
+        .getByRole('button', { name: brandingText('refresh', locale), exact: true })
+        .click();
+      await expect(dialog).toHaveCount(0);
+      expect(writeCount()).toBe(expected);
+    };
+    for (const [index, failure] of ['invalid', 'stale', 'wrong-title', 'wrong-status'].entries()) {
       saveResponse = failure;
       await confirm.click();
-      await expect(dialog.getByRole('alert')).toBeVisible();
+      if (fa && index === 0 && test.info().project.name === 'mobile-safari') {
+        await expect(confirm).toBeDisabled();
+        await page.screenshot({
+          path: test.info().outputPath('branding-unconfirmed-fa-mobile.png'),
+        });
+      }
+      await resolveUnconfirmed(() => writes.length, index + 1);
       await expect(title).toHaveValue('Retained draft');
+      await save.click();
     }
     saveResponse = 'valid';
     await confirm.click();
@@ -134,11 +164,13 @@ for (const locale of ['en', 'fa'] as const)
     await expect(title).toHaveValue('Retained draft');
     expect(writes).toHaveLength(5);
     for (const write of writes) expect(write).toEqual(writes[0]);
-    await page.getByRole('button', { name: fa ? 'انتشار' : 'Activate', exact: true }).click();
-    for (const failure of ['wrong-id', 'wrong-version', 'wrong-status']) {
+    const activate = page.getByRole('button', { name: fa ? 'انتشار' : 'Activate', exact: true });
+    await activate.click();
+    for (const [index, failure] of ['wrong-id', 'wrong-version', 'wrong-status'].entries()) {
       activationResponse = failure;
       await confirm.click();
-      await expect(dialog.getByRole('alert')).toBeVisible();
+      await resolveUnconfirmed(() => activations.length, index + 1);
+      await activate.click();
     }
     activationResponse = 'valid';
     await confirm.click();

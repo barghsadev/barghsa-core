@@ -4,6 +4,7 @@ import type { Page } from '@playwright/test';
 import { test, expect } from './coverage-fixture';
 import { fullNavigation } from './navigation-fixture';
 import { tVat } from '../../../packages/i18n/src/vat';
+import { confirmationText } from '@barghsa/i18n/confirmation';
 import {
   vatRate,
   electricityVatRate,
@@ -190,9 +191,15 @@ for (const locale of ['en', 'fa'] as const)
       await percent.fill(raw + ' ');
       await page.getByRole('button', { name: label('save'), exact: true }).click();
       await confirm().click();
-      await expect(dialog.getByRole('alert')).toBeVisible();
+      await expect(dialog.getByRole('alert')).toHaveText(confirmationText('unconfirmed', locale));
+      await expect(confirm()).toBeDisabled();
+      await expect(percent).toHaveValue(raw + ' ');
+      await dialog.getByRole('button', { name: label('refresh'), exact: true }).click();
+      await expect(dialog).toBeHidden();
+      expect(writes).toEqual(Array(3).fill({ category: 'electricity', rateBasisPoints: 725 }));
       await expect(percent).toHaveValue(raw + ' ');
       phase = 'success';
+      await page.getByRole('button', { name: label('save'), exact: true }).click();
       await confirm().click();
       await expect(dialog).toBeHidden();
       await expect(page.getByRole('status').filter({ hasText: label('saved') })).toBeVisible();

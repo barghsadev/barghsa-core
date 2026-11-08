@@ -4,6 +4,7 @@ import type { Page } from '@playwright/test';
 import { test, expect } from './coverage-fixture';
 import { setupCatalogueForms as setup } from './catalogue-form-fixture';
 import { tCatalogue } from '../../../packages/i18n/src/catalogue';
+import { confirmationText } from '@barghsa/i18n/confirmation';
 import {
   catalogueBase as base,
   catalogueId as id,
@@ -109,9 +110,15 @@ for (const locale of ['en', 'fa'] as const)
       await title.fill(raw + ' ');
       await page.getByRole('button', { name: label('save'), exact: true }).click();
       await confirm().click();
-      await expect(dialog.getByRole('alert')).toBeVisible();
+      await expect(dialog.getByRole('alert')).toHaveText(confirmationText('unconfirmed', locale));
+      await expect(confirm()).toBeDisabled();
+      await expect(title).toHaveValue(raw + ' ');
+      await dialog.getByRole('button', { name: label('refresh'), exact: true }).click();
+      await expect(dialog).toBeHidden();
+      expect(writes).toHaveLength(2);
       await expect(title).toHaveValue(raw + ' ');
       phase = 'success';
+      await page.getByRole('button', { name: label('save'), exact: true }).click();
       await confirm().click();
       await expect(dialog).toBeHidden();
       await expect(page.getByRole('status').filter({ hasText: label('saved') })).toBeVisible();
