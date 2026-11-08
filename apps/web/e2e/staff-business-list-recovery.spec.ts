@@ -79,6 +79,8 @@ for (const locale of ['en', 'fa'] as const) {
       if (name === 'saving') await page.clock.install();
       let detailFail = true,
         pageFail = true,
+        malformedPage = false,
+        malformedDetail = false,
         denied = false,
         detailReads = 0;
       let held: Route | undefined;
@@ -95,7 +97,7 @@ for (const locale of ['en', 'fa'] as const) {
           }
           return route.fulfill({
             json: {
-              [key]: [row(query.has('after') ? olderWork : firstWork)],
+              [key]: malformedPage ? [null] : [row(query.has('after') ? olderWork : firstWork)],
               nextAfter: query.has('after') ? olderWork : firstWork,
             },
           });
@@ -110,7 +112,7 @@ for (const locale of ['en', 'fa'] as const) {
               json:
                 name === 'consultation'
                   ? {
-                      request: row(),
+                      request: malformedDetail ? { ...row(), uncovered_credit: 'invalid' } : row(),
                       history: [
                         {
                           status: 'under_review',
@@ -148,11 +150,21 @@ for (const locale of ['en', 'fa'] as const) {
       const initialQueueReads = queries.length;
       expect(initialQueueReads).toBeGreaterThan(0);
       detailFail = false;
+      if (name === 'consultation') {
+        malformedDetail = true;
+        await retry.click();
+        await expect.poll(() => detailReads).toBe(2);
+        await expect(retry).toBeVisible();
+        await expect(page.locator(draft)).toHaveCount(0);
+        await expect(content.getByRole('button', { name: /First buyer/ })).toBeVisible();
+        malformedDetail = false;
+      }
       await retry.click();
       const input = page.locator(draft);
       await expect(input).toBeVisible();
       expect(queries).toHaveLength(initialQueueReads);
-      expect(detailReads).toBe(2);
+      const expectedDetailReads = name === 'consultation' ? 3 : 2;
+      expect(detailReads).toBe(expectedDetailReads);
       if (name === 'consultation') {
         await expect(
           list.locator('bdi').filter({ hasText: 'Chosen consultation staff نام <name>' })
@@ -177,11 +189,20 @@ for (const locale of ['en', 'fa'] as const) {
       await expect(content.getByRole('button', { name: retryWord, exact: true })).toBeVisible();
       const failed = queries.at(-1);
       pageFail = false;
+      if (name === 'consultation') {
+        malformedPage = true;
+        await content.getByRole('button', { name: retryWord, exact: true }).click();
+        await expect(content.getByRole('button', { name: retryWord, exact: true })).toBeVisible();
+        await expect(content.getByRole('button', { name: /First buyer/ })).toBeVisible();
+        await expect(input).toHaveValue('Preserve this staff draft');
+        expect(queries.at(-1)).toBe(failed);
+        malformedPage = false;
+      }
       await content.getByRole('button', { name: retryWord, exact: true }).click();
       await expect(content.getByRole('button', { name: /Older buyer/ })).toBeVisible();
       expect(queries.at(-1)).toBe(failed);
       expect(new URLSearchParams(failed).get('after')).toBe(firstWork);
-      expect(detailReads).toBe(2);
+      expect(detailReads).toBe(expectedDetailReads);
       await expect(input).toHaveValue('Preserve this staff draft');
       expect(await list.evaluate((el) => el.scrollWidth <= el.clientWidth)).toBe(true);
       if (name === 'electricity') {

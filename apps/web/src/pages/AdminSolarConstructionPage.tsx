@@ -44,6 +44,7 @@ import { withCsrf } from '../lib/csrf.js';
 import { SolarStageProgress } from '../components/SolarStageProgress.js';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import { readWithDeadline } from '../lib/server-query-client.js';
+import { staffOrderId } from '../lib/staff-order-list-query.js';
 interface Row {
   requestId: string;
   contractId: string;
@@ -52,6 +53,22 @@ interface Row {
   contractState: string;
   stage: string | null;
   revision: number;
+}
+function validQueueRow(value: unknown): value is Row {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return false;
+  const row = value as Record<string, unknown>;
+  return (
+    !!staffOrderId(row.requestId) &&
+    !!staffOrderId(row.contractId) &&
+    typeof row.contractNumber === 'string' &&
+    typeof row.submittedAt === 'string' &&
+    Number.isFinite(Date.parse(row.submittedAt)) &&
+    typeof row.contractState === 'string' &&
+    (row.stage === null || typeof row.stage === 'string') &&
+    typeof row.revision === 'number' &&
+    Number.isSafeInteger(row.revision) &&
+    row.revision >= 0
+  );
 }
 interface ReviewedProgress {
   captured: CapturedProgress;
@@ -226,9 +243,21 @@ function OwnedAdminSolarConstructionPage({
           return;
         }
         if (!response.ok) throw new Error('queue');
-        const result = (await response.json()) as { items: Row[]; nextBefore: string | null };
+        const result = (await response.json()) as { items?: unknown; nextBefore?: unknown } | null;
+        if (
+          !Array.isArray(result?.items) ||
+          !result.items.every(validQueueRow) ||
+          (result.nextBefore !== null && !staffOrderId(result.nextBefore))
+        )
+          throw new Error('Invalid construction queue');
         if (!abort.signal.aborted && !accessDenied.current && currentActor.current === actor) {
-          setQueue({ ...result, search: q, key: queueKey, actor });
+          setQueue({
+            items: result.items,
+            nextBefore: staffOrderId(result.nextBefore) || null,
+            search: q,
+            key: queueKey,
+            actor,
+          });
           setQueueState('ready');
         }
       })

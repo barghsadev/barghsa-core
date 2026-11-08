@@ -256,7 +256,8 @@ for (const locale of ['en', 'fa'] as const) {
     page,
   }) => {
     await crmShell(page, locale);
-    let fail = true;
+    let fail = true,
+      malformed = false;
     const reads: URL[] = [];
     await page.route(
       (url) => url.pathname === base,
@@ -268,7 +269,9 @@ for (const locale of ['en', 'fa'] as const) {
         const id = url.searchParams.has('before') ? constructionOlder : constructionRequest;
         return r.fulfill({
           json: {
-            items: [constructionRow(id)],
+            items: [
+              malformed ? { ...constructionRow(id), contractNumber: {} } : constructionRow(id),
+            ],
             nextBefore: id === constructionRequest ? constructionRequest : null,
           },
         });
@@ -287,7 +290,15 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(page.getByRole('button', { name: /701/ })).toBeVisible();
     expect(new URL(page.url()).searchParams.get('cursor')).toBe(constructionRequest);
     fail = false;
-    await page.getByRole('button', { name: copy('retry'), exact: true }).click();
+    malformed = true;
+    const retry = page.getByRole('button', { name: copy('retry'), exact: true });
+    await retry.click();
+    await expect(page.getByRole('alert')).toContainText(copy('staffQueueLoadError'));
+    await expect(page.getByRole('button', { name: /701/ })).toBeVisible();
+    await expect(page.getByText(copy('constructionBlocked'), { exact: true })).toBeVisible();
+    expect(reads.at(-1)?.searchParams.get('before')).toBe(constructionRequest);
+    malformed = false;
+    await retry.click();
     await expect(page.getByRole('button', { name: /702/ })).toBeVisible();
     await page.reload();
     await expect(page.getByRole('button', { name: /702/ })).toBeVisible();

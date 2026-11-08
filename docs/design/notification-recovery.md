@@ -155,3 +155,5 @@ The saving catalogue keeps its last verified plans and published terms visible d
 Invoice details check line items, linked invoices and activity before rendering. Consultation details check the display text, timeline, dates and recorded payment flag before offering actions. An invalid initial response leaves the detail heading and an explicit retry available.
 
 The staff invoice ledger validates rows and page cursors before replacing the current results. Its detail must match the selected invoice before the due-date and refund actions appear. A malformed reconciliation refresh keeps the last verified rows and open note. Staff retry the same query before reviewing another action.
+
+The solar construction queue and staff consultation queue validate their rows and cursors before accepting a page. A failed queue read keeps the previous rows available while staff retry the same query. Consultation team options and request details recover independently. An invalid financial or payment field keeps consultation actions unavailable until a valid detail arrives.

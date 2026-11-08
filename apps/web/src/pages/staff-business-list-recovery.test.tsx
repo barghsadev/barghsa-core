@@ -98,6 +98,7 @@ function button(container: ParentNode, label: string) {
 for (const { name, Page, base, row, key, more, draft } of cases) {
   it(`${name}: repeats a failed cursor without reloading detail or losing the staff draft`, async () => {
     let status = 503,
+      malformed = false,
       detailReads = 0;
     const queries: string[] = [];
     vi.stubGlobal(
@@ -113,6 +114,7 @@ for (const { name, Page, base, row, key, more, draft } of cases) {
         queries.push(url);
         if (new URL(url, 'http://localhost').searchParams.has('after') && status !== 200)
           return new Response('{}', { status });
+        if (malformed) return Response.json({ requests: [null], nextAfter: null });
         return Response.json({
           [key]: [
             row(new URL(url, 'http://localhost').searchParams.has('after') ? olderWork : firstWork),
@@ -136,6 +138,15 @@ for (const { name, Page, base, row, key, more, draft } of cases) {
       expect(failed).toContain(base);
       const reads = detailReads;
       status = 200;
+      if (name === 'consultation') {
+        malformed = true;
+        await act(async () => button(content, 'Try again').click());
+        expect(content.querySelector('[role="alert"]')).not.toBeNull();
+        expect(content.textContent).toContain('First buyer');
+        expect(input.value).toBe('Preserve this draft');
+        expect(detailReads).toBe(reads);
+        malformed = false;
+      }
       await act(async () =>
         button(content, name === 'consultation' ? 'Try again' : 'Retry').click()
       );
@@ -154,6 +165,7 @@ for (const { name, Page, base, row, key, more, draft } of cases) {
   });
   it(`${name}: detail failure leaves the queue usable and detail retry does not fetch the queue`, async () => {
     let fail = true,
+      malformed = false,
       listReads = 0,
       detailReads = 0;
     vi.stubGlobal(
@@ -164,6 +176,11 @@ for (const { name, Page, base, row, key, more, draft } of cases) {
         if (url.endsWith('/wallet-balance')) return new Response('{}', { status: 403 });
         if (url.endsWith(`/${firstWork}`)) {
           detailReads++;
+          if (malformed)
+            return Response.json({
+              request: { ...row(), uncovered_credit: 'invalid' },
+              history: [],
+            });
           return fail
             ? new Response('{}', { status: 503 })
             : Response.json(name === 'consultation' ? { request: row(), history: [] } : row());
@@ -180,11 +197,19 @@ for (const { name, Page, base, row, key, more, draft } of cases) {
       expect(content.textContent).toContain('First buyer');
       const reads = listReads;
       fail = false;
+      if (name === 'consultation') {
+        malformed = true;
+        await act(async () => button(container, 'Try again').click());
+        expect(container.querySelector(draft)).toBeNull();
+        expect(content.textContent).toContain('First buyer');
+        expect(listReads).toBe(reads);
+        malformed = false;
+      }
       await act(async () =>
         button(container, name === 'consultation' ? 'Try again' : 'Retry').click()
       );
       expect(container.querySelector(draft)).not.toBeNull();
-      expect(detailReads).toBe(2);
+      expect(detailReads).toBe(name === 'consultation' ? 3 : 2);
       expect(listReads).toBe(reads);
     } finally {
       await close();
@@ -193,6 +218,7 @@ for (const { name, Page, base, row, key, more, draft } of cases) {
 }
 it('consultation team recovery is independent of the queue and selected detail', async () => {
   let fail = true,
+    malformed = false,
     teamReads = 0,
     listReads = 0,
     detailReads = 0;
@@ -204,7 +230,7 @@ it('consultation team recovery is independent of the queue and selected detail',
         teamReads++;
         return fail
           ? new Response('{}', { status: 503 })
-          : Response.json({ teams: [{ name: 'Operations' }] });
+          : Response.json({ teams: [{ name: malformed ? { invalid: true } : 'Operations' }] });
       }
       if (url.endsWith(`/${firstWork}`)) {
         detailReads++;
@@ -220,8 +246,13 @@ it('consultation team recovery is independent of the queue and selected detail',
     await act(async () => button(container, 'First buyer').click());
     const reads = [listReads, detailReads];
     fail = false;
+    malformed = true;
     await act(async () => button(container, 'Try again').click());
-    expect(teamReads).toBe(2);
+    expect(container.textContent).toContain('Could not load consultation teams');
+    expect([listReads, detailReads]).toEqual(reads);
+    malformed = false;
+    await act(async () => button(container, 'Try again').click());
+    expect(teamReads).toBe(3);
     expect([listReads, detailReads]).toEqual(reads);
     expect(container.textContent).toContain('Operations');
     expect(container.textContent).not.toContain('Could not load consultation teams');

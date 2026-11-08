@@ -83,7 +83,7 @@ interface RequestRow {
   priority: 'high' | 'normal';
 }
 interface Detail {
-  request: RequestRow & {
+  request: Omit<RequestRow, 'priority'> & {
     scope: string | null;
     deliverables: string | null;
     fee: string | null;
@@ -153,6 +153,58 @@ type StaffCommand = StaffCommandSource &
         staffTeam: string | null;
       }
   );
+function record(value: unknown): value is Record<string, unknown> {
+  return !!value && typeof value === 'object' && !Array.isArray(value);
+}
+function optionalText(value: unknown): boolean {
+  return value == null || typeof value === 'string';
+}
+function timestamp(value: unknown): boolean {
+  return typeof value === 'string' && Number.isFinite(Date.parse(value));
+}
+function amount(value: unknown): boolean {
+  return typeof value === 'string' && /^\d+$/.test(value);
+}
+function validRequestContext(value: unknown): boolean {
+  if (!record(value) || !record(value.product_snapshot) || !record(value.product_snapshot.title))
+    return false;
+  return (
+    !!staffOrderId(value.id) &&
+    !!staffOrderId(value.profile_id) &&
+    typeof value.profile_name === 'string' &&
+    typeof value.status === 'string' &&
+    typeof value.product_snapshot.title.fa === 'string' &&
+    typeof value.product_snapshot.title.en === 'string' &&
+    [value.staff_owner_id, value.staff_owner_name, value.staff_team].every(optionalText) &&
+    timestamp(value.submitted_at)
+  );
+}
+function validRequestRow(value: unknown): value is RequestRow {
+  return (
+    record(value) &&
+    (value.priority === 'normal' || value.priority === 'high') &&
+    validRequestContext(value)
+  );
+}
+function validDetail(value: unknown, selectedId: string): value is Detail {
+  if (!record(value) || !record(value.request) || !validRequestContext(value.request)) return false;
+  const { request } = value;
+  return (
+    request.id === selectedId &&
+    typeof request.has_paid_invoice === 'boolean' &&
+    amount(request.uncovered_credit) &&
+    (request.fee === null || amount(request.fee)) &&
+    [
+      request.scope,
+      request.deliverables,
+      request.invoice_id,
+      request.invoice_state,
+      request.expected_next_step,
+    ].every(optionalText) &&
+    (request.offer_valid_until == null || timestamp(request.offer_valid_until)) &&
+    validHistory(value.history)
+  );
+}
 function validHistory(value: unknown): value is Detail['history'] {
   return (
     Array.isArray(value) &&
@@ -164,8 +216,7 @@ function validHistory(value: unknown): value is Detail['history'] {
         typeof event.status === 'string' &&
         typeof event.actor_type === 'string' &&
         (event.reason === null || typeof event.reason === 'string') &&
-        typeof event.created_at === 'string' &&
-        Number.isFinite(Date.parse(event.created_at)) &&
+        timestamp(event.created_at) &&
         (event.actor_name === undefined ||
           event.actor_name === null ||
           typeof event.actor_name === 'string')
@@ -226,7 +277,7 @@ function ConsultationAssignment({
   request,
   copy,
 }: {
-  request: RequestRow;
+  request: Omit<RequestRow, 'priority'>;
   copy: (key: string) => string;
 }) {
   const team = request.staff_team?.trim();
@@ -575,15 +626,22 @@ function OwnedAdminConsultationsPage({ queries }: { queries?: ConsultationListQu
     void readStaff('catalogue', 'detail', '/api/admin/consultations/teams', controller.signal)
       .then(async (response) => {
         if (!response.ok) throw new Error('teams');
-        return (await response.json()) as { teams: Array<{ name: string }> };
+        const result = await response.json();
+        if (
+          !record(result) ||
+          !Array.isArray(result.teams) ||
+          !result.teams.every((team: unknown) => record(team) && typeof team.name === 'string')
+        )
+          throw new Error('Invalid consultation teams');
+        return result.teams.map((team: { name: string }) => team.name);
       })
-      .then((result) => {
+      .then((names) => {
         if (
           !controller.signal.aborted &&
           capturedAccess === accessGeneration.current &&
           capturedRead === readGeneration.current
         ) {
-          setTeams(result.teams.map((item) => item.name));
+          setTeams(names);
           setTeamsActor(actor);
         }
       })
@@ -621,7 +679,15 @@ function OwnedAdminConsultationsPage({ queries }: { queries?: ConsultationListQu
     )
       .then(async (response) => {
         if (!response.ok) throw new Error(String(response.status));
-        return (await response.json()) as { requests: RequestRow[]; nextAfter: string | null };
+        const result = await response.json();
+        if (
+          !record(result) ||
+          !Array.isArray(result.requests) ||
+          !result.requests.every(validRequestRow) ||
+          (result.nextAfter !== null && !staffOrderId(result.nextAfter))
+        )
+          throw new Error('Invalid consultation queue');
+        return { requests: result.requests, nextAfter: staffOrderId(result.nextAfter) || null };
       })
       .then((result) => {
         if (
@@ -642,7 +708,7 @@ function OwnedAdminConsultationsPage({ queries }: { queries?: ConsultationListQu
               criteria,
               cursor: after,
               rows: [...previous, ...result.requests.filter((request) => !shown.has(request.id))],
-              nextAfter: staffOrderId(result.nextAfter) || null,
+              nextAfter: result.nextAfter,
             };
           });
         }
@@ -736,12 +802,10 @@ function OwnedAdminConsultationsPage({ queries }: { queries?: ConsultationListQu
     )
       .then(async (response) => {
         if (!response.ok) throw new Error(String(response.status));
-        const result = (await response.json()) as Detail;
+        const result = await response.json();
         if (
-          result?.request?.id !== selectedId ||
-          typeof result.request.profile_id !== 'string' ||
-          (recoveryAtRead && result.request.profile_id !== recoveryAtRead.profileId) ||
-          !validHistory(result.history)
+          !validDetail(result, selectedId) ||
+          (recoveryAtRead && result.request.profile_id !== recoveryAtRead.profileId)
         )
           throw new Error('detail');
         return result;

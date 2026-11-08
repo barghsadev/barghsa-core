@@ -297,6 +297,40 @@ it.each(['detail', 'review', 'record'] as const)(
   }
 );
 
+it('retries a malformed construction queue without rereading detail or losing the note', async () => {
+  let queueReads = 0;
+  let detailReads = 0;
+  const view = await mount(async (url) => {
+    if (url.includes('/construction?')) {
+      queueReads++;
+      return Response.json({
+        items: [
+          queueReads === 1
+            ? { ...constructionRow(), contractNumber: { invalid: true } }
+            : constructionRow(),
+        ],
+        nextBefore: null,
+      });
+    }
+    if (url.endsWith(`/${constructionRequest}`)) detailReads++;
+    return undefined;
+  });
+  try {
+    const content = view.host.querySelector('[data-slot="list-content"]')!;
+    expect(content.querySelector('[role="alert"]')?.textContent).toBe(copy('staffQueueLoadError'));
+    const before = detailReads;
+    await view.change('Keep this construction note');
+    await view.click(copy('retry'), content);
+    expect(queueReads).toBe(2);
+    expect(detailReads).toBe(before);
+    expect(content.querySelector('[role="alert"]')).toBeNull();
+    expect(content.textContent).toContain('701');
+    expect(view.note().value).toBe('Keep this construction note');
+  } finally {
+    await view.close();
+  }
+});
+
 it('ignores a stale missing construction response after a new selection accepts its own draft', async () => {
   let release!: (value: Response) => void,
     hold = false;

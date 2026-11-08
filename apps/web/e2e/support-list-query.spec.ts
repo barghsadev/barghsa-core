@@ -67,7 +67,7 @@ async function inspect(page: Page, locale: string, project: string, name: string
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   if (locale === 'fa' && project === 'mobile-safari')
     await page.screenshot({
-      path: `/tmp/barghsa-support-query-${name}-${dark ? 'dark' : 'light'}.png`,
+      path: test.info().outputPath(`support-query-${name}-${dark ? 'dark' : 'light'}.png`),
     });
 }
 for (const locale of ['en', 'fa'] as const)
