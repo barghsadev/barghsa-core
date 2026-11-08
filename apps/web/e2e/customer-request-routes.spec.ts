@@ -1,6 +1,7 @@
 import { test, expect } from './coverage-fixture';
 import { fullNavigation } from './navigation-fixture';
 import { approveRiskConfirmation } from './confirmation-fixture';
+import { shellText } from '@barghsa/i18n/shell';
 
 const profileId = '11111111-1111-4111-8111-111111111111';
 const solarId = '22222222-2222-4222-8222-222222222222';
@@ -368,44 +369,54 @@ test('accepting a consultation offer opens its invoice without reloading the app
       },
     })
   );
+  const review = {
+    schemaVersion: 1,
+    scope: {
+      action: 'consultation.offer-accept',
+      profileId,
+      resourceId: consultationId,
+    },
+    data: {
+      decision: 'accept',
+      serviceTitle: { en: 'Site advice', fa: 'مشاوره مکان' },
+      scope: 'Site review',
+      deliverables: 'Report',
+      fee: '500000',
+      previousFee: '0',
+      validUntil: '2099-01-01T00:00:00.000Z',
+      acceptedAt: null,
+      invoice: {
+        id: invoiceId,
+        state: 'Unpaid',
+        totalAmount: '500000',
+        paidAmount: '0',
+        adjustmentKind: null,
+      },
+      outcome: 'payment_required',
+    },
+    hash: 'b'.repeat(64),
+  };
   await page.route(`**/api/consultations/requests/${consultationId}/accept`, (route) =>
     route.fulfill({
-      json: { paymentRequired: true, invoiceId, financialReview: { hash: 'b'.repeat(64) } },
-    })
-  );
-  await page.route(`**/api/consultations/requests/${consultationId}/offer-review`, (route) =>
-    route.fulfill({
       json: {
-        schemaVersion: 1,
-        scope: {
-          action: 'consultation.offer-accept',
-          profileId,
-          resourceId: consultationId,
-        },
-        data: {
-          decision: 'accept',
-          serviceTitle: { en: 'Site advice', fa: 'مشاوره مکان' },
-          scope: 'Site review',
-          deliverables: 'Report',
-          fee: '500000',
-          previousFee: '0',
-          validUntil: '2099-01-01T00:00:00.000Z',
-          acceptedAt: null,
-          invoice: {
-            id: invoiceId,
-            state: 'Unpaid',
-            totalAmount: '500000',
-            paidAmount: '0',
-            adjustmentKind: null,
-          },
-          outcome: 'payment_required',
-        },
-        hash: 'b'.repeat(64),
+        requestId: consultationId,
+        status: 'offer_pending',
+        paymentRequired: true,
+        invoiceId,
+        financialReview: review,
       },
     })
   );
+  await page.route(`**/api/consultations/requests/${consultationId}/offer-review`, (route) =>
+    route.fulfill({ json: review })
+  );
   await page.goto(`/consultations/${consultationId}`);
-  await page.getByRole('button', { name: 'تغییر زبان به انگلیسی' }).click();
+  const switcher = page.getByRole('button', { name: shellText('language', 'fa'), exact: true });
+  const compact = !(await switcher.isVisible());
+  if (compact)
+    await page.getByRole('button', { name: shellText('accountMenu', 'fa'), exact: true }).click();
+  await switcher.click();
+  if (compact) await page.keyboard.press('Escape');
   await page.evaluate(() => {
     (window as Window & { __consultationNavigation?: string }).__consultationNavigation = 'kept';
   });

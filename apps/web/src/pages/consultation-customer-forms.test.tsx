@@ -4,6 +4,7 @@ import { act, type ReactNode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { afterEach, expect, it, vi } from 'vitest';
 import { tConsultation } from '@barghsa/i18n/consultation';
+import { confirmationText } from '@barghsa/i18n/confirmation';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import type * as FormModule from '@barghsa/ui/form';
 import { ConsultationsPage } from './ConsultationsPage.js';
@@ -671,6 +672,137 @@ it('information keeps a stalled reply locked until saved history confirms it', a
     await view.close();
   }
 });
+
+it.each(['accept', 'decline'] as const)(
+  'offer %s requires a bound acknowledgement or a fresh saved outcome',
+  async (decision) => {
+    const invoiceId = '77000000-0000-4000-8000-000000000001';
+    const validUntil = '2099-01-01T00:00:00.000Z';
+    const hash = 'c'.repeat(64);
+    const review = {
+      schemaVersion: 1,
+      scope: {
+        action: `consultation.offer-${decision}`,
+        profileId: browseProfileId,
+        resourceId: routing.requestId,
+      },
+      hash,
+      data: {
+        decision,
+        serviceTitle: browseConsultation.title,
+        scope: 'Offer scope',
+        deliverables: 'Report',
+        fee: '500000',
+        previousFee: '0',
+        validUntil,
+        acceptedAt: null,
+        invoice: {
+          id: invoiceId,
+          state: 'Unpaid',
+          totalAmount: '500000',
+          paidAmount: '0',
+          adjustmentKind: null,
+        },
+        outcome: decision === 'decline' ? 'cancel_unpaid_invoice' : 'payment_required',
+      },
+    };
+    let saved = false;
+    let finish: ((body: unknown) => void) | undefined;
+    let signal: AbortSignal | null | undefined;
+    const reads: RequestCache[] = [];
+    const writes: unknown[] = [];
+    const stalled = Response.json(null);
+    vi.spyOn(stalled, 'json').mockImplementation(
+      () =>
+        new Promise((resolve) => {
+          finish = resolve;
+        })
+    );
+    const view = await mount(ConsultationDetailPage, async (url, options) => {
+      if (options?.method === 'POST') {
+        if (url.endsWith('/offer-review')) return Response.json(review);
+        writes.push(JSON.parse(String(options.body)));
+        signal = options.signal;
+        return decision === 'decline'
+          ? stalled
+          : Response.json({
+              requestId: routing.requestId,
+              status: 'offer_pending',
+              invoiceId: browseProductId,
+              paymentRequired: true,
+              financialReview: review,
+            });
+      }
+      if (url === `/api/consultations/requests/${routing.requestId}` && options?.cache)
+        reads.push(options.cache);
+      const detailStatus = saved ? 'offer_declined' : 'offer_pending';
+      const result = detail(detailStatus);
+      return Response.json({
+        ...result,
+        request: {
+          ...result.request,
+          fee: review.data.fee,
+          scope: review.data.scope,
+          deliverables: review.data.deliverables,
+          offer_valid_until: validUntil,
+          invoice_id: invoiceId,
+          invoice_state: saved ? 'Cancelled' : 'Unpaid',
+        },
+      });
+    });
+    try {
+      const decisionText = copy(decision === 'decline' ? 'declineOffer' : 'acceptOffer');
+      await view.click(decisionText);
+      const dialog = document.querySelector('[data-slot=dialog-content]')!;
+      const confirm = button(dialog, decisionText);
+      expect(confirm.disabled).toBe(true);
+      const phrase = dialog.querySelector<HTMLInputElement>(
+        '[data-slot=destructive-confirmation] input'
+      );
+      if (decision === 'decline') {
+        expect(phrase).not.toBeNull();
+        await act(async () => {
+          Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!.call(
+            phrase,
+            confirmationText('phrase', 'en')
+          );
+          phrase!.dispatchEvent(new Event('input', { bubbles: true }));
+        });
+      }
+      const ack = dialog.querySelector<HTMLElement>('[role=checkbox]')!;
+      await act(async () => ack.click());
+      expect(confirm.disabled).toBe(false);
+      const readsBefore = reads.length;
+      if (decision === 'decline') vi.useFakeTimers();
+      await act(async () => confirm.click());
+      expect(writes).toEqual([{ expectedReviewHash: hash }]);
+      if (decision === 'decline') {
+        await vi.waitFor(() => expect(finish).toBeDefined());
+        saved = true;
+        await act(async () => vi.advanceTimersByTimeAsync(15_000));
+        expect(signal?.aborted).toBe(true);
+        expect(view.host.textContent).toContain(copy('status_offer_declined'));
+        expect(view.host.textContent).not.toContain(copy('decisionUnconfirmed'));
+        await act(async () =>
+          finish!({
+            requestId: routing.requestId,
+            status: 'offer_declined',
+            financialReview: review,
+          })
+        );
+      } else {
+        expect(view.host.textContent).toContain(copy('decisionUnconfirmed'));
+        expect(button(view.host, copy('declineOffer')).disabled).toBe(true);
+      }
+      expect(reads.slice(readsBefore)).toEqual(['no-store']);
+      expect(routing.navigate).not.toHaveBeenCalled();
+      expect(writes).toHaveLength(1);
+    } finally {
+      vi.useRealTimers();
+      await view.close();
+    }
+  }
+);
 
 it('information ignores late write settlement after request scope changes, preserving the newer draft', async () => {
   let finish: ((value: Response) => void) | undefined;

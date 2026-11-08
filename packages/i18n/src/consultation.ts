@@ -143,6 +143,8 @@ const en: Record<string, string> = {
   decisionReviewPaidOutcome: 'The invoice is already paid; accepting starts the consultation.',
   decisionReviewPaymentOutcome: 'Accepting keeps this invoice open for payment.',
   decisionReviewClose: 'Back to offer',
+  decisionUnconfirmed:
+    'The offer decision is unconfirmed. Check the current request. If the same offer is still pending, you can review the same decision again.',
   complete: 'Mark completed',
   history: 'Status history',
   actor: 'Changed by',
@@ -346,6 +348,8 @@ const fa: Record<string, string> = {
   decisionReviewPaidOutcome: 'صورتحساب قبلاً پرداخت شده است؛ پذیرش، مشاوره را آغاز می‌کند.',
   decisionReviewPaymentOutcome: 'با پذیرش، این صورتحساب برای پرداخت باز می‌ماند.',
   decisionReviewClose: 'بازگشت به پیشنهاد',
+  decisionUnconfirmed:
+    'نتیجه تصمیم درباره پیشنهاد تأیید نشده است. وضعیت فعلی درخواست را بررسی کنید. اگر همان پیشنهاد هنوز در انتظار تصمیم است، می‌توانید همان تصمیم را دوباره بررسی کنید.',
   complete: 'ثبت تکمیل مشاوره',
   history: 'تاریخچه وضعیت',
   actor: 'تغییردهنده',

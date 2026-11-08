@@ -94,6 +94,27 @@ interface Detail {
   refunds: Array<{ id: string; amount: string; state: string; destination: string }>;
 }
 
+async function postConsultationAction(
+  requestId: string,
+  action: 'provide-info' | 'offer-review' | 'accept' | 'decline',
+  body: Record<string, string>,
+  owner: AbortSignal
+) {
+  return readWithDeadline(owner, async (signal) => {
+    const response = await fetch(
+      `/api/consultations/requests/${encodeURIComponent(requestId)}/${action}`,
+      {
+        method: 'POST',
+        credentials: 'include',
+        headers: withCsrf({ 'Content-Type': 'application/json' }),
+        body: JSON.stringify(body),
+        signal,
+      }
+    );
+    return { response, result: await response.json().catch(() => null) };
+  });
+}
+
 export function ConsultationDetailPage() {
   const { requestId } = useParams({ from: '/_app/consultations/$requestId' });
   const navigate = useNavigate();
@@ -133,7 +154,7 @@ export function ConsultationDetailPage() {
     copy('actionError')
   );
   const pendingInformation = useRef<ConsultationInformationCommand | null>(null);
-  const informationTransport = useRef<AbortController | null>(null);
+  const actionTransport = useRef<AbortController | null>(null);
   const [informationUnconfirmed, setInformationUnconfirmed] = useState(false);
   const actionPending = useRef(false);
   const profileId = useRef<string | null>(null);
@@ -142,6 +163,10 @@ export function ConsultationDetailPage() {
   const [infoSent, setInfoSent] = useState(false);
   const [revision, setRevision] = useState(0);
   const [decisionReview, setDecisionReview] = useState<ConsultationOfferReview | null>(null);
+  const [offerRecovery, setOfferRecovery] = useState<{
+    review: ConsultationOfferReview;
+    checked: boolean;
+  } | null>(null);
   useEffect(() => {
     ++generation.current;
     profileId.current = null;
@@ -154,7 +179,8 @@ export function ConsultationDetailPage() {
     setActionError(false);
     setInfoSent(false);
     setDecisionReview(null);
-    return () => informationTransport.current?.abort();
+    setOfferRecovery(null);
+    return () => actionTransport.current?.abort();
   }, [scope]);
   useEffect(
     () => () => {
@@ -178,6 +204,7 @@ export function ConsultationDetailPage() {
     read: async (signal) => {
       const response = await fetch(`/api/consultations/requests/${encodeURIComponent(requestId)}`, {
         credentials: 'include',
+        cache: 'no-store',
         signal,
       });
       if (!response.ok) throw new Error('request');
@@ -219,6 +246,7 @@ export function ConsultationDetailPage() {
     const controller = new AbortController();
     const capturedGeneration = generation.current;
     const recoveryAtRead = actionPending.current ? null : pendingInformation.current;
+    const offerAtRead = actionPending.current ? null : offerRecovery;
     setLoading(true);
     setError(false);
     setDetail(null);
@@ -234,7 +262,7 @@ export function ConsultationDetailPage() {
         if (controller.signal.aborted || capturedGeneration !== generation.current) return;
         if (profileId.current && profileId.current !== result.request.profile_id) {
           ++generation.current;
-          informationTransport.current?.abort();
+          actionTransport.current?.abort();
           pendingInformation.current = null;
           informationForm.reset({ reason: '' });
           setInformationUnconfirmed(false);
@@ -243,6 +271,32 @@ export function ConsultationDetailPage() {
           actionPending.current = false;
           setSending(false);
           setDecisionReview(null);
+          setOfferRecovery(null);
+        }
+        if (offerAtRead && !actionPending.current) {
+          const reviewed = offerAtRead.review;
+          const request = result.request;
+          const currentInvoice = request.invoice_id;
+          const offerMoved =
+            ['offer_accepted', 'offer_declined', 'completed', 'cancelled', 'rejected'].includes(
+              request.status
+            ) ||
+            (typeof currentInvoice === 'string' &&
+              consultationUuid(currentInvoice) &&
+              currentInvoice !== reviewed.data.invoice.id);
+          const newlyAccepted =
+            reviewed.data.decision === 'accept' &&
+            currentInvoice === reviewed.data.invoice.id &&
+            reviewed.data.acceptedAt === null &&
+            typeof request.accepted_at === 'string' &&
+            Number.isFinite(Date.parse(request.accepted_at));
+          setOfferRecovery((current) =>
+            current === offerAtRead
+              ? offerMoved || newlyAccepted
+                ? null
+                : { ...offerAtRead, checked: true }
+              : current
+          );
         }
         profileId.current = result.request.profile_id;
         if (
@@ -300,24 +354,17 @@ export function ConsultationDetailPage() {
       };
       pendingInformation.current = command;
       const transport = new AbortController();
-      informationTransport.current = transport;
+      actionTransport.current = transport;
       actionPending.current = true;
       setSending(true);
       setActionError(false);
       try {
-        const { response, result } = await readWithDeadline(transport.signal, async (signal) => {
-          const response = await fetch(
-            `/api/consultations/requests/${encodeURIComponent(requestId)}/provide-info`,
-            {
-              method: 'POST',
-              credentials: 'include',
-              headers: withCsrf({ 'Content-Type': 'application/json' }),
-              body: JSON.stringify({ reason: command.reason }),
-              signal,
-            }
-          );
-          return { response, result: await response.json().catch(() => null) };
-        });
+        const { response, result } = await postConsultationAction(
+          requestId,
+          'provide-info',
+          { reason: command.reason },
+          transport.signal
+        );
         if (capturedGeneration !== generation.current) return;
         if (!response.ok) {
           if (
@@ -354,7 +401,7 @@ export function ConsultationDetailPage() {
           setInformationUnconfirmed(true);
         }
       } finally {
-        if (informationTransport.current === transport) informationTransport.current = null;
+        if (actionTransport.current === transport) actionTransport.current = null;
         if (capturedGeneration === generation.current) {
           actionPending.current = false;
           setSending(false);
@@ -363,32 +410,46 @@ export function ConsultationDetailPage() {
     })(event);
   }
 
+  function canReviewOffer(decision: 'accept' | 'decline') {
+    return (
+      !offerRecovery || (offerRecovery.checked && offerRecovery.review.data.decision === decision)
+    );
+  }
+
   async function beginDecision(decision: 'accept' | 'decline') {
-    if (actionPending.current || informationForm.isSubmissionPending() || !detail?.request) return;
+    if (
+      actionPending.current ||
+      informationForm.isSubmissionPending() ||
+      detail?.request.status !== 'offer_pending' ||
+      !canReviewOffer(decision)
+    )
+      return;
     const capturedGeneration = generation.current;
+    const transport = new AbortController();
+    actionTransport.current = transport;
     actionPending.current = true;
     setSending(true);
     setActionError(false);
     try {
-      const response = await fetch(
-        `/api/consultations/requests/${encodeURIComponent(requestId)}/offer-review`,
-        {
-          method: 'POST',
-          credentials: 'include',
-          headers: withCsrf({ 'Content-Type': 'application/json' }),
-          body: JSON.stringify({ decision }),
-        }
+      const { response, result } = await postConsultationAction(
+        requestId,
+        'offer-review',
+        { decision },
+        transport.signal
       );
       if (capturedGeneration !== generation.current) return;
       if (!response.ok) throw new Error('offer-review');
-      const review = parseConsultationOfferReview(await response.json());
-      if (capturedGeneration !== generation.current) return;
+      const review = parseConsultationOfferReview(result);
       const current = detail.request;
       if (
         !review ||
         review.scope.action !== `consultation.offer-${decision}` ||
         review.scope.resourceId !== requestId ||
+        review.scope.profileId !== current.profile_id ||
         review.data.invoice.id !== current.invoice_id ||
+        review.data.invoice.state !== current.invoice_state ||
+        review.data.acceptedAt !== current.accepted_at ||
+        review.data.validUntil !== current.offer_valid_until ||
         review.data.fee !== current.fee ||
         review.data.scope !== current.scope ||
         review.data.deliverables !== current.deliverables ||
@@ -402,6 +463,7 @@ export function ConsultationDetailPage() {
         setRevision((value) => value + 1);
       }
     } finally {
+      if (actionTransport.current === transport) actionTransport.current = null;
       if (capturedGeneration === generation.current) {
         actionPending.current = false;
         setSending(false);
@@ -419,10 +481,13 @@ export function ConsultationDetailPage() {
       !financialGate.allowed ||
       actionPending.current ||
       informationForm.isSubmissionPending() ||
-      !decisionReview
+      !decisionReview ||
+      !canReviewOffer(decisionReview.data.decision)
     )
       return;
     const capturedGeneration = generation.current;
+    const transport = new AbortController();
+    actionTransport.current = transport;
     actionPending.current = true;
     const { decision, hash } = {
       decision: decisionReview.data.decision,
@@ -431,37 +496,55 @@ export function ConsultationDetailPage() {
     setSending(true);
     setActionError(false);
     try {
-      const response = await fetch(
-        `/api/consultations/requests/${encodeURIComponent(requestId)}/${decision}`,
-        {
-          method: 'POST',
-          credentials: 'include',
-          headers: withCsrf({ 'Content-Type': 'application/json' }),
-          body: JSON.stringify({ expectedReviewHash: hash }),
-        }
+      const { response, result } = await postConsultationAction(
+        requestId,
+        decision,
+        { expectedReviewHash: hash },
+        transport.signal
       );
       if (capturedGeneration !== generation.current) return;
-      if (!response.ok) throw new Error(decision);
-      const result = (await response.json()) as {
-        paymentRequired?: boolean;
-        invoiceId?: string;
-        financialReview?: { hash?: string };
-      };
-      if (capturedGeneration !== generation.current) return;
-      if (result.financialReview?.hash !== hash) throw new Error('Unverified offer decision');
       setDecisionReview(null);
-      if (decision === 'accept' && result.paymentRequired && result.invoiceId) {
-        await navigate({ to: '/invoices/$invoiceId', params: { invoiceId: result.invoiceId } });
+      if (!response.ok && definitiveConsultationRejection(response.status, result)) {
+        setActionError(true);
+        setRevision((value) => value + 1);
+        return;
+      }
+      const receipt = parseConsultationOfferReview(result?.financialReview);
+      const paymentRequired = decisionReview.data.outcome === 'payment_required';
+      const expectedStatus =
+        decision === 'decline'
+          ? 'offer_declined'
+          : paymentRequired
+            ? 'offer_pending'
+            : 'offer_accepted';
+      if (
+        !response.ok ||
+        !consultationReceipt(result, requestId, expectedStatus) ||
+        !receipt ||
+        receipt.hash !== hash ||
+        JSON.stringify(receipt) !== JSON.stringify(decisionReview) ||
+        (decision === 'accept' &&
+          (result.invoiceId !== receipt.data.invoice.id ||
+            result.paymentRequired !== paymentRequired))
+      )
+        throw new Error('Unverified offer decision');
+      setOfferRecovery(null);
+      if (paymentRequired) {
+        void navigate({
+          to: '/invoices/$invoiceId',
+          params: { invoiceId: receipt.data.invoice.id },
+        });
         return;
       }
       setRevision((value) => value + 1);
     } catch {
       if (capturedGeneration === generation.current) {
         setDecisionReview(null);
-        setActionError(true);
+        setOfferRecovery({ review: decisionReview, checked: false });
         setRevision((value) => value + 1);
       }
     } finally {
+      if (actionTransport.current === transport) actionTransport.current = null;
       if (capturedGeneration === generation.current) {
         actionPending.current = false;
         setSending(false);
@@ -501,6 +584,11 @@ export function ConsultationDetailPage() {
       {time.notice}
       {loading && <LoadingStatus>{copy('loading')}</LoadingStatus>}
       {error && <p role="alert">{copy('loadError')}</p>}
+      <CommandFeedback
+        kind="error"
+        message={offerRecovery ? copy('decisionUnconfirmed') : null}
+        className="text-destructive"
+      />
       {request && (
         <>
           <WorkflowStatusBanner
@@ -631,7 +719,7 @@ export function ConsultationDetailPage() {
                 {(!request.accepted_at || request.invoice_state === 'Paid') && (
                   <Button
                     type="button"
-                    disabled={sending || offerExpired}
+                    disabled={sending || offerExpired || !canReviewOffer('accept')}
                     onClick={() => void beginDecision('accept')}
                   >
                     {copy(request.invoice_state === 'Paid' ? 'confirmAcceptance' : 'acceptOffer')}
@@ -640,7 +728,12 @@ export function ConsultationDetailPage() {
                 <Button
                   type="button"
                   variant="outline"
-                  disabled={sending || request.invoice_state === 'Paid' || request.has_paid_invoice}
+                  disabled={
+                    sending ||
+                    request.invoice_state === 'Paid' ||
+                    request.has_paid_invoice ||
+                    !canReviewOffer('decline')
+                  }
                   onClick={() => void beginDecision('decline')}
                 >
                   {copy('declineOffer')}

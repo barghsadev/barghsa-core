@@ -4,7 +4,7 @@ import { confirmationText } from '@barghsa/i18n/confirmation';
 import { fullNavigation } from './navigation-fixture';
 import { approveRiskConfirmation } from './confirmation-fixture';
 import AxeBuilder from '@axe-core/playwright';
-import { expect, test, type Locator, type Page } from './coverage-fixture';
+import { expect, test, type Locator, type Page, type Route } from './coverage-fixture';
 import { shellText } from '@barghsa/i18n/shell';
 
 async function switchLanguage(page: Page, locale: 'en' | 'fa') {
@@ -76,6 +76,41 @@ for (const locale of ['en', 'fa'] as const)
     let quotedFee: unknown = null;
     let offer: { fee: string; scope: string; deliverables: string; validUntil: string } | null =
       null;
+    let heldPreview: Route | undefined;
+    let heldAccept: Route | undefined;
+    let offerReads = 0;
+    const offerDecisions: Array<'accept' | 'decline'> = [];
+    const acceptWrites: unknown[] = [];
+    const offerReview = (decision: 'accept' | 'decline') => ({
+      schemaVersion: 1,
+      hash: (decision === 'accept' ? 'b' : 'c').repeat(64),
+      scope: { action: `consultation.offer-${decision}`, profileId, resourceId: requestId },
+      data: {
+        decision,
+        serviceTitle: title,
+        scope: offer!.scope,
+        deliverables: offer!.deliverables,
+        fee: offer!.fee,
+        previousFee: '0',
+        validUntil: offer!.validUntil,
+        acceptedAt: null,
+        invoice: {
+          id: invoiceId,
+          state: 'Unpaid',
+          totalAmount: offer!.fee,
+          paidAmount: '0',
+          adjustmentKind: null,
+        },
+        outcome: decision === 'accept' ? 'payment_required' : 'cancel_unpaid_invoice',
+      },
+    });
+    const acceptReceipt = () => ({
+      requestId,
+      status: 'offer_pending',
+      paymentRequired: true,
+      invoiceId,
+      financialReview: offerReview('accept'),
+    });
     const history: Array<{
       status: string;
       actor_type: 'staff' | 'customer';
@@ -166,9 +201,12 @@ for (const locale of ['en', 'fa'] as const)
       submitted = true;
       return route.fulfill({ status: 201, json: { requestId, status: 'submitted' } });
     });
-    await page.route(`**/api/consultations/requests/${requestId}`, (route) =>
-      route.fulfill({ json: { request: customerRequest(), history, adjustments: [], refunds: [] } })
-    );
+    await page.route(`**/api/consultations/requests/${requestId}`, (route) => {
+      offerReads++;
+      return route.fulfill({
+        json: { request: customerRequest(), history, adjustments: [], refunds: [] },
+      });
+    });
     await page.route('**/api/admin/consultations/teams', (route) =>
       route.fulfill({ json: { teams: [] } })
     );
@@ -241,45 +279,26 @@ for (const locale of ['en', 'fa'] as const)
     });
     await page.route(`**/api/consultations/requests/${requestId}/accept`, (route) => {
       expect(status).toBe('offer_pending');
-      expect(route.request().postDataJSON()).toEqual({ expectedReviewHash: 'b'.repeat(64) });
+      const body: unknown = route.request().postDataJSON();
+      expect(body).toEqual({ expectedReviewHash: 'b'.repeat(64) });
+      acceptWrites.push(body);
+      if (acceptWrites.length === 1) {
+        heldAccept = route;
+        return;
+      }
       acceptedAt = submittedAt;
-      return route.fulfill({
-        json: { paymentRequired: true, invoiceId, financialReview: { hash: 'b'.repeat(64) } },
-      });
+      return route.fulfill({ json: acceptReceipt() });
     });
     await page.route(`**/api/consultations/requests/${requestId}/offer-review`, (route) => {
       const { decision } = route.request().postDataJSON() as { decision: 'accept' | 'decline' };
       expect(['accept', 'decline']).toContain(decision);
       expect(offer).not.toBeNull();
-      return route.fulfill({
-        json: {
-          schemaVersion: 1,
-          hash: (decision === 'accept' ? 'b' : 'c').repeat(64),
-          scope: {
-            action: `consultation.offer-${decision}`,
-            profileId,
-            resourceId: requestId,
-          },
-          data: {
-            decision,
-            serviceTitle: title,
-            scope: offer!.scope,
-            deliverables: offer!.deliverables,
-            fee: offer!.fee,
-            previousFee: '0',
-            validUntil: offer!.validUntil,
-            acceptedAt: null,
-            invoice: {
-              id: invoiceId,
-              state: 'Unpaid',
-              totalAmount: offer!.fee,
-              paidAmount: '0',
-              adjustmentKind: null,
-            },
-            outcome: decision === 'accept' ? 'payment_required' : 'cancel_unpaid_invoice',
-          },
-        },
-      });
+      offerDecisions.push(decision);
+      if (offerDecisions.length === 1) {
+        heldPreview = route;
+        return;
+      }
+      return route.fulfill({ json: offerReview(decision) });
     });
     await page.route(`**/api/admin/consultations/requests/${requestId}/complete`, (route) => {
       expect(status).toBe('offer_accepted');
@@ -395,7 +414,22 @@ for (const locale of ['en', 'fa'] as const)
     await expectOfferTextFits(page, page.locator('main[data-area=dashboard]'), fields);
     const alternate = locale === 'en' ? 'fa' : 'en';
     await switchLanguage(page, locale);
-    await page.getByRole('button', { name: consultationCopy('declineOffer', alternate) }).click();
+    await page.clock.install();
+    const decline = page.getByRole('button', { name: consultationCopy('declineOffer', alternate) });
+    await decline.click();
+    await expect.poll(() => !!heldPreview).toBe(true);
+    await expect(decline).toBeDisabled();
+    await page.clock.fastForward(15_001);
+    await expect(
+      page.getByText(consultationCopy('actionError', alternate), { exact: true })
+    ).toBeVisible();
+    await expect(decline).toBeEnabled();
+    expect(offerDecisions).toEqual(['decline']);
+    await heldPreview!.fulfill({ json: offerReview('decline') }).catch(() => undefined);
+    await expect(
+      page.getByRole('dialog', { name: consultationCopy('decisionReviewTitle', alternate) })
+    ).toHaveCount(0);
+    await decline.click();
     const declineReview = page.getByRole('dialog', {
       name: consultationCopy('decisionReviewTitle', alternate),
     });
@@ -426,7 +460,31 @@ for (const locale of ['en', 'fa'] as const)
     await expect(accept).toBeDisabled();
     await approveRiskConfirmation(page, locale, 'financial');
     await accept.click();
+    await expect.poll(() => !!heldAccept).toBe(true);
+    await expect(accept).toBeDisabled();
+    const readsBeforeRecovery = offerReads;
+    await page.clock.fastForward(15_001);
+    await expect(review).toHaveCount(0);
+    await expect(
+      page.getByText(consultationCopy('decisionUnconfirmed', locale), { exact: true })
+    ).toBeVisible();
+    await expect.poll(() => offerReads).toBeGreaterThan(readsBeforeRecovery);
+    await expect(page).toHaveURL(new RegExp(`/consultations/${requestId}$`));
+    await expect(
+      page.getByRole('button', { name: consultationCopy('declineOffer', locale) })
+    ).toBeDisabled();
+    expect(acceptWrites).toHaveLength(1);
+    await heldAccept!.fulfill({ json: acceptReceipt() }).catch(() => undefined);
+    await page.getByRole('button', { name: consultationCopy('acceptOffer', locale) }).click();
+    await expect(accept).toBeDisabled();
+    await approveRiskConfirmation(page, locale, 'financial');
+    await accept.click();
     await expect(page).toHaveURL(new RegExp(`/invoices/${invoiceId}$`));
+    expect(acceptWrites).toEqual([
+      { expectedReviewHash: 'b'.repeat(64) },
+      { expectedReviewHash: 'b'.repeat(64) },
+    ]);
+    expect(offerDecisions).toEqual(['decline', 'decline', 'accept', 'accept']);
     await expect(
       page.getByRole('heading', { name: appCopy('invoices.details.title', locale) })
     ).toBeVisible();
