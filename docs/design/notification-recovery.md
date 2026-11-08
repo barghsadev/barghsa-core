@@ -12,6 +12,10 @@ The feedback scope includes account, profile revision, language and the supplied
 
 Map public error codes to localized messages and use a safe fallback for unrecognized errors. Do not display raw response text. Keep a reviewed order and its idempotency key for an explicit retry when the input is unchanged.
 
+For customer invoice and wallet bank receipts, announce submission only after the response confirms the reviewed amount and pending state. A lost or malformed acknowledgement leaves the outcome unconfirmed and asks the customer to check current status. A wallet retry of the same reviewed receipt keeps its original idempotency key and attachment. A failed history or balance refresh does not overturn an acknowledged receipt.
+
+In electricity and saving order discussions, an explicit retry after a transport failure announces the connection retry. Keep the failed page cursor, existing comments and unsent draft. HTTP errors and invalid response bodies retain inline recovery.
+
 `useToast` supports localized keys or domain-localized strings, all four severities, and a promise helper. Pass a validated operation promise. Its rejection still reaches the caller; it does not retry the operation. Only the latest operation owns the persistent progress notice, and a profile-context dismissal prevents a late result from restoring old content.
 
 The Sonner host loads on demand. It uses semantic severity colors, at most three visible notices, a localized close button and direction-aware swiping. Notices use the topbar’s current bounds, including when an account banner moves it. They fade in at that offset and yield while a dialog or popover is open. Financial dialogs keep their own persistent feedback and focus protocol.

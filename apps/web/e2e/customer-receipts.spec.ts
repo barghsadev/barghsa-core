@@ -1,6 +1,8 @@
 import { productionManifest } from './production-manifest';
 import { approveRiskConfirmation } from './confirmation-fixture';
 import AxeBuilder from '@axe-core/playwright';
+import { confirmationText } from '@barghsa/i18n/confirmation';
+import { feedbackText } from '@barghsa/i18n/feedback';
 import { test, expect, type Page } from './coverage-fixture';
 
 const profileId = '11111111-1111-4111-8111-111111111111';
@@ -16,7 +18,7 @@ async function setup(
   page: Page,
   locale: string,
   kind: 'wallet' | 'invoice',
-  loseResponse = false,
+  interruptAcknowledgements = false,
   theme: 'light' | 'dark' = 'light',
   prefill = true
 ) {
@@ -197,13 +199,13 @@ async function setup(
     if (existing && JSON.stringify(existing) !== JSON.stringify(body))
       return route.fulfill({ status: 409, json: {} });
     receipts.set(identity, body);
-    if (loseResponse && submissions.length === 1) return route.abort('failed');
+    if (interruptAcknowledgements && submissions.length === 1) return route.abort('failed');
     return route.fulfill({
       status: 201,
       json: {
         transactionId: '11111111-1111-7111-8111-111111111111',
         state: kind === 'wallet' ? 'Pending' : 'Submitted',
-        amount: body.amount,
+        amount: interruptAcknowledgements && submissions.length === 3 ? '1' : body.amount,
       },
     });
   });
@@ -261,7 +263,12 @@ for (const kind of ['wallet', 'invoice'] as const) {
         expect(actionLoads).toBe(1);
       }
       await confirmReceipt(page, locale);
-      await expect(page.getByTestId(`${prefix}-error`)).toBeVisible();
+      const unconfirmed = confirmationText('unconfirmed', locale);
+      const errors = page.locator('[data-sonner-toast][data-type="error"]');
+      const successes = page.locator('[data-sonner-toast][data-type="success"]');
+      await expect(page.getByTestId(`${prefix}-error`)).toContainText(unconfirmed);
+      await expect(errors).toContainText(unconfirmed);
+      await expect(successes).toHaveCount(0);
       await expect(page.getByTestId(`${prefix}-success`)).toHaveCount(0);
       expect(submissions).toHaveLength(1);
       expect(submissions[0]!.body).toEqual({
@@ -282,6 +289,11 @@ for (const kind of ['wallet', 'invoice'] as const) {
       if (kind === 'invoice')
         await expect(page.getByTestId('invoice-activity').locator('li')).toHaveCount(1);
       await expect(page.getByTestId(`${prefix}-success`)).toBeVisible();
+      await expect(successes).toContainText(
+        (await page.getByTestId(`${prefix}-success`).innerText()).trim()
+      );
+      await successes.getByRole('button', { name: feedbackText('close', locale) }).click();
+      await expect(successes).toHaveCount(0);
       await expect(page.getByTestId(`${prefix}-file`)).toHaveValue('');
       if (kind === 'wallet')
         await expect(page.getByTestId('wallet-balance')).toContainText(/۱۰۰|100/);
@@ -291,7 +303,17 @@ for (const kind of ['wallet', 'invoice'] as const) {
       await page.getByTestId(`${prefix}-submit`).click();
       await confirmReceipt(page, locale, 'TRACK-456');
       await expect.poll(() => submissions.length).toBe(3);
+      await expect(page.getByTestId(`${prefix}-error`)).toContainText(unconfirmed);
+      await expect(page.getByTestId(`${prefix}-success`)).toHaveCount(0);
+      await expect(successes).toHaveCount(0);
+      await page.getByTestId(`${prefix}-submit`).click();
+      await confirmReceipt(page, locale, 'TRACK-456');
+      await expect.poll(() => submissions.length).toBe(4);
+      expect(submissions[3]).toEqual(submissions[2]);
       await expect(page.getByTestId(`${prefix}-success`)).toBeVisible();
+      await expect(successes).toContainText(
+        (await page.getByTestId(`${prefix}-success`).innerText()).trim()
+      );
       expect(uploads).toHaveLength(2);
       expect(receipts.size).toBe(2);
       if (kind === 'invoice')

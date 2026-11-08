@@ -434,6 +434,8 @@ export const fa: I18nDictionary = {
   'wallet.page.receiptInvalidFile': 'یک فایل رسید معتبر (PDF یا تصویر) انتخاب کنید.',
   'wallet.page.receiptUploadError': 'بارگذاری فایل رسید انجام نشد. دوباره تلاش کنید.',
   'wallet.page.receiptGenericError': 'ارسال رسید با خطا مواجه شد. دوباره تلاش کنید.',
+  'wallet.page.receiptUnconfirmed':
+    'نتیجه هنوز تأیید نشده است. پیش از تلاش دوباره وضعیت فعلی را بررسی کنید.',
   'invitation.banner.loadError': 'بارگذاری دعوت\u200cنامه\u200cها انجام نشد. دوباره تلاش کنید.',
   'invitation.banner.heading': 'دعوت‌نامه‌های شرکت',
   'invitation.banner.loading': 'در حال دریافت دعوت‌نامه‌ها…',
@@ -1301,6 +1303,8 @@ export const en: I18nDictionary = {
   'wallet.page.receiptInvalidFile': 'Choose a valid receipt file (PDF or image).',
   'wallet.page.receiptUploadError': 'Could not upload the receipt file. Please try again.',
   'wallet.page.receiptGenericError': 'Could not submit the bank receipt. Please try again.',
+  'wallet.page.receiptUnconfirmed':
+    'The outcome is unconfirmed. Check the current status before trying again.',
   'invitation.banner.loadError': 'Could not load invitations. Please retry.',
   'invitation.banner.heading': 'Company invitations',
   'invitation.banner.loading': 'Loading invitations…',

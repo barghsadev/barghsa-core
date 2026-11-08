@@ -2,6 +2,7 @@ import { QueryProvider, QueryComponentProvider } from '../test/query-provider.js
 import { AccountUserProvider } from '../hooks/useAccountUser.js';
 import { act } from 'react';
 import { refreshProfileContext } from '../lib/profile-context.js';
+import { toast } from '../lib/toast-api.js';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi, type Mock } from 'vitest';
 import { WalletPage } from './WalletPage.js';
@@ -293,17 +294,72 @@ it.each([
   expect(element('wallet-receipt-success')).toBeNull();
 });
 
-it('retains successful receipt confirmation when the subsequent balance reload fails', async () => {
-  post.mockResolvedValue(
-    json({ transactionId: 'receipt-1', state: 'Pending', amount: '250' }, 201)
+it.each(['http', 'transport'] as const)(
+  'retains successful receipt confirmation when the balance reload fails over %s',
+  async (failure) => {
+    post.mockResolvedValue(
+      json({ transactionId: 'receipt-1', state: 'Pending', amount: '250' }, 201)
+    );
+    await render();
+    await receiptFields();
+    if (failure === 'transport') wallet.mockRejectedValue(new TypeError('offline'));
+    else wallet.mockResolvedValue(json({}, 503));
+    await submit(true);
+    await confirmReceipt();
+    expect(element('wallet-receipt-success').textContent).toContain('pending finance confirmation');
+    expect(element('wallet-balance').textContent).toContain('100');
+    expect(post).toHaveBeenCalledTimes(1);
+  }
+);
+
+it.each([200, 403])(
+  'withdraws the balance after a malformed or denied refresh (%s)',
+  async (status) => {
+    post.mockResolvedValue(
+      json({ transactionId: 'receipt-1', state: 'Pending', amount: '250' }, 201)
+    );
+    await render();
+    await receiptFields();
+    wallet.mockResolvedValue(json({ balance: 'PRIVATE_MALFORMED_BALANCE' }, status));
+    await submit(true);
+    await confirmReceipt();
+    expect(element('wallet-error')).not.toBeNull();
+    expect(element('wallet-balance')).toBeNull();
+    expect(host.textContent).not.toContain('PRIVATE_MALFORMED_BALANCE');
+    expect(post).toHaveBeenCalledTimes(1);
+  }
+);
+
+it('does not announce an acknowledged receipt after the profile changes', async () => {
+  let finish!: (response: ReturnType<typeof json>) => void;
+  post.mockImplementationOnce(
+    () =>
+      new Promise((resolve) => {
+        finish = resolve;
+      })
   );
-  await render();
-  await receiptFields();
-  wallet.mockResolvedValue(json({}, 503));
-  await submit(true);
-  await confirmReceipt();
-  expect(element('wallet-receipt-success').textContent).toContain('pending finance confirmation');
-  expect(element('wallet-balance').textContent).toContain('100');
+  const announce = vi.spyOn(toast, 'success');
+  try {
+    await render();
+    await receiptFields();
+    await submit(true);
+    await confirmReceipt();
+    expect(post).toHaveBeenCalledTimes(1);
+    await act(async () => refreshProfileContext());
+    const balanceReads = vi
+      .mocked(fetch)
+      .mock.calls.filter(([url]) => url === `/api/wallet/${PROFILE_ID}`).length;
+    await act(async () =>
+      finish(json({ transactionId: 'receipt-1', state: 'Pending', amount: '250' }, 201))
+    );
+    expect(announce).not.toHaveBeenCalled();
+    expect(element('wallet-receipt-success')).toBeNull();
+    expect(
+      vi.mocked(fetch).mock.calls.filter(([url]) => url === `/api/wallet/${PROFILE_ID}`)
+    ).toHaveLength(balanceReads);
+  } finally {
+    announce.mockRestore();
+  }
 });
 
 it('does not create a Pending receipt when the server review rejects it', async () => {
@@ -312,6 +368,15 @@ it('does not create a Pending receipt when the server review rejects it', async 
   await receiptFields();
   await submit(true);
   expect(element('wallet-receipt-error').textContent).toBeTruthy();
+  expect(post).not.toHaveBeenCalled();
+});
+
+it('reports a maintenance rejection before confirmation without posting a receipt', async () => {
+  receiptReviewPost.mockResolvedValue(json({}, 503));
+  await render();
+  await receiptFields();
+  await submit(true);
+  expect(element('wallet-receipt-error').textContent).toBe('Service temporarily unavailable');
   expect(post).not.toHaveBeenCalled();
 });
 
@@ -360,6 +425,32 @@ it.each(['review', 'confirm'] as const)(
     await confirmReceipt();
     expect(element('wallet-receipt-success')).not.toBeNull();
     expect(upload).toHaveBeenCalledTimes(1);
+  }
+);
+it.each(['review', 'confirm'] as const)(
+  'reuploads an attachment rejected during wallet %s while retaining the draft',
+  async (stage) => {
+    const failure = json(
+      { error: { code: 'VALIDATION:INPUT:INVALID', fields: ['attachmentKey'] } },
+      400
+    );
+    if (stage === 'review') receiptReviewPost.mockResolvedValueOnce(failure);
+    else post.mockResolvedValueOnce(failure);
+    post.mockResolvedValue(json({ transactionId: 'tx-1', state: 'Pending', amount: '250' }, 201));
+    await render();
+    await receiptFields();
+    await submit(true);
+    if (stage === 'confirm') await confirmReceipt();
+    const file = element<HTMLInputElement>('wallet-receipt-file');
+    expect(file.getAttribute('aria-invalid')).toBe('true');
+    expect(file.files?.[0]?.name).toBe('receipt.pdf');
+    expect(element<HTMLInputElement>('wallet-receipt-payer-ref').value).toBe('BANK-1');
+    expect(element('wallet-receipt-success')).toBeNull();
+    await submit(true);
+    await confirmReceipt();
+    expect(element('wallet-receipt-success')).not.toBeNull();
+    expect(upload).toHaveBeenCalledTimes(2);
+    expect(post).toHaveBeenCalledTimes(stage === 'review' ? 1 : 2);
   }
 );
 it('ignores receipt metadata with unknown protected fields', async () => {

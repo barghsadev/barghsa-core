@@ -99,6 +99,6 @@ export async function submitReviewedBankReceiptTopUp(
     payload.amount !== review.data.amountIrR ||
     typeof payload.transactionId !== 'string'
   )
-    return { kind: 'error', status: 409 };
+    return { kind: 'error', status: response.status };
   return { kind: 'success', value: payload.transactionId };
 }

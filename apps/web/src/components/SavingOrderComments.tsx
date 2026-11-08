@@ -21,6 +21,7 @@ import { TeamActionDialog, type TeamAction } from './TeamActionDialog.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
+import { readAsyncResponse } from '../hooks/useAsyncData.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import {
   commentUuid,
@@ -33,7 +34,8 @@ import {
   type CommentKind,
   type OrderComment,
 } from '../lib/order-comment-form.js';
-import { readWithDeadline } from '../lib/server-query-client.js';
+import { readWithDeadline, ServerQueryError } from '../lib/server-query-client.js';
+import { announceReadRetry } from '../lib/read-retry-feedback.js';
 
 interface CommentProps {
   orderId: string;
@@ -118,7 +120,7 @@ function CommentWorkspace({
   const [cursor, setCursor] = useState<string | null>(null);
   const [revision, setRevision] = useState(0);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<'load' | 'forbidden' | 'missing' | null>(null);
+  const [error, setError] = useState<'load' | 'network' | 'forbidden' | 'missing' | null>(null);
   const [action, setAction] = useState<TeamAction | null>(null);
   const [busy, setBusy] = useState(false);
   const [uncertain, setUncertain] = useState(false);
@@ -205,9 +207,9 @@ function CommentWorkspace({
         retry: false,
         queryFn: ({ signal: querySignal }) =>
           readWithDeadline(querySignal, async (signal) => {
-            const response = await fetch(
+            const response = await readAsyncResponse(
               cursor ? `${base}?before=${encodeURIComponent(cursor)}` : base,
-              { credentials: 'include', signal }
+              signal
             );
             return {
               ok: response.ok,
@@ -240,8 +242,9 @@ function CommentWorkspace({
         setComments(rows);
         setBefore(page.nextBefore);
       })
-      .catch(() => {
-        if (fresh()) setError('load');
+      .catch((reason: unknown) => {
+        if (fresh())
+          setError(reason instanceof ServerQueryError && reason.status === 0 ? 'network' : 'load');
       })
       .finally(() => {
         if (fresh()) {
@@ -254,10 +257,14 @@ function CommentWorkspace({
       controller.signal.removeEventListener('abort', cancel);
     };
   }, [base, cursor, revision, scope, client, actor, orderId, staff, profileRevision, reader]);
+  function retryPage() {
+    if (error === 'network') announceReadRetry(locale);
+    setRevision((value) => value + 1);
+  }
   function reload() {
     if (!active() || locked() || reading.current || denied.current) return;
-    if (error !== 'load') setCursor(null);
-    setRevision((value) => value + 1);
+    if (error !== 'load' && error !== 'network') setCursor(null);
+    retryPage();
   }
   function live(command: CapturedComment, ownedAction: TeamAction) {
     return (
@@ -380,7 +387,11 @@ function CommentWorkspace({
   return (
     <section className="space-y-4" aria-label={copy('comments')} data-testid="order-comments">
       <h2 className="text-xl font-semibold">{copy('comments')}</h2>
-      {error && <p role="alert">{error === 'load' ? copy('commentError') : formCopy(error)}</p>}
+      {error && (
+        <p role="alert">
+          {error === 'load' || error === 'network' ? copy('commentError') : formCopy(error)}
+        </p>
+      )}
       {loading && <LoadingStatus>{copy('staffLoading')}</LoadingStatus>}
       <div className="flex flex-wrap gap-2">
         {error !== 'forbidden' && (
@@ -401,7 +412,7 @@ function CommentWorkspace({
             disabled={loading || locked()}
             onClick={() => {
               if (active() && !locked() && !reading.current) {
-                if (cursor === before) setRevision((value) => value + 1);
+                if (cursor === before) retryPage();
                 else setCursor(before);
               }
             }}

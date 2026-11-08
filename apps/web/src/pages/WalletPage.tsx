@@ -1,8 +1,9 @@
 import { useOwnedFinancialRead } from '../hooks/useOwnedFinancialRead.js';
-import { useProfileContextRevision } from '../lib/profile-context.js';
+import { getProfileContextRevision, useProfileContextRevision } from '../lib/profile-context.js';
 import { useManualServerRead } from '../hooks/useServerQuery.js';
 import { queryKeys, type ServerQueryKey } from '../lib/query-keys.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
+import { toast } from '../lib/toast-api.js';
 import { Skeleton, Alert, AlertDescription } from '@barghsa/ui';
 import { FormField } from '@barghsa/ui/form';
 import { Loader2 } from 'lucide-react';
@@ -15,7 +16,7 @@ import { Currency } from '../components/Currency.js';
 import type { WalletPaymentReturn } from '../components/OnlinePaymentReturnPanel.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { lazy, Suspense, useCallback, useEffect, useId, useRef, useState } from 'react';
-import { t } from '@barghsa/i18n/workspace';
+import { t, type Locale } from '@barghsa/i18n/workspace';
 import type { OnlineTopUpReview } from '@barghsa/shared/finance';
 import type { BankReceiptTopUpReview } from '@barghsa/shared/finance';
 import {
@@ -80,7 +81,7 @@ function advertisedOnlineTopUpLimit(wallet: WalletBalance | null): number | null
 type PageError =
   'no-profile' | 'load' | Exclude<OnlineTopUpActionError, 'invalid-amount' | 'limit-exceeded'>;
 
-type ReceiptError = 'upload' | 'conflict' | 'maintenance' | 'generic';
+type ReceiptError = 'upload' | 'conflict' | 'maintenance' | 'generic' | 'unconfirmed';
 
 function newIdempotencyKey(): string {
   return crypto.randomUUID();
@@ -90,6 +91,14 @@ function mapReceiptSubmitError(status: number): ReceiptError {
   if (status === 503) return 'maintenance';
   if (status === 409) return 'conflict';
   return 'generic';
+}
+
+function receiptErrorText(error: ReceiptError, locale: Locale) {
+  if (error === 'maintenance') return tMaintenance('title', locale);
+  if (error === 'upload') return t('wallet.page.receiptUploadError', locale);
+  if (error === 'conflict') return t('wallet.page.conflict', locale);
+  if (error === 'unconfirmed') return t('wallet.page.receiptUnconfirmed', locale);
+  return t('wallet.page.receiptGenericError', locale);
 }
 
 /**
@@ -429,8 +438,9 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
       if (result.kind === 'error') {
         const next = mapReceiptSubmitError(result.status);
         if (next === 'conflict') setReceiptIdempotencyKey(newIdempotencyKey());
-        if (receipt.applyServerErrors(result.fields)) {
-          if (result.fields?.includes('attachmentKey')) setReceiptUploaded(null);
+        const fields = result.fields ?? [];
+        if (receipt.applyServerErrors(fields)) {
+          if (fields.includes('attachmentKey')) setReceiptUploaded(null);
         } else setReceiptError(next);
         return;
       }
@@ -447,11 +457,18 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
 
   async function confirmReceiptTopUp() {
     if (!receiptReview || receiptPending.current || !mounted.current) return;
-    const current = () => mounted.current && liveProfile.current === receiptReview.data.profileId;
+    const current = () =>
+      mounted.current &&
+      getProfileContextRevision() === profileRevision &&
+      liveProfile.current === receiptReview.data.profileId;
     if (!current()) return;
     receiptPending.current = true;
     setReceiptSubmitting(true);
     setReceiptError(null);
+    const reportError = (reason: ReceiptError) => {
+      setReceiptError(reason);
+      toast.error(receiptErrorText(reason, locale));
+    };
     try {
       const { submitReviewedBankReceiptTopUp } =
         await import('../lib/bank-receipt-topup-action.js');
@@ -460,15 +477,20 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
       if (!current()) return;
       if (result.kind === 'error') {
         setReceiptReview(null);
-        const next = mapReceiptSubmitError(result.status);
+        const next =
+          result.status >= 500 || (result.status >= 200 && result.status < 300)
+            ? 'unconfirmed'
+            : mapReceiptSubmitError(result.status);
         if (next === 'conflict') setReceiptIdempotencyKey(newIdempotencyKey());
-        if (receipt.applyServerErrors(result.fields)) {
-          if (result.fields?.includes('attachmentKey')) setReceiptUploaded(null);
-        } else setReceiptError(next);
+        const fields = result.fields ?? [];
+        if (receipt.applyServerErrors(fields)) {
+          if (fields.includes('attachmentKey')) setReceiptUploaded(null);
+        } else reportError(next);
         return;
       }
       setReceiptReview(null);
       setReceiptSuccess(true);
+      toast.success(t('wallet.page.receiptSuccess', locale));
       setReceiptIdempotencyKey(newIdempotencyKey());
       receipt.form.reset({ ...receipt.form.getValues(), file: null });
       setReceiptUploaded(null);
@@ -516,7 +538,7 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
     } catch {
       if (current()) {
         setReceiptReview(null);
-        setReceiptError('generic');
+        reportError('unconfirmed');
       }
     } finally {
       if (current()) {
@@ -554,16 +576,7 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
                 ? tMaintenance('title', locale)
                 : t('wallet.page.loadError', locale);
 
-  const receiptErrorMessage =
-    receiptError === null
-      ? null
-      : receiptError === 'upload'
-        ? t('wallet.page.receiptUploadError', locale)
-        : receiptError === 'conflict'
-          ? t('wallet.page.conflict', locale)
-          : receiptError === 'maintenance'
-            ? tMaintenance('title', locale)
-            : t('wallet.page.receiptGenericError', locale);
+  const receiptErrorMessage = receiptError && receiptErrorText(receiptError, locale);
 
   return (
     <div

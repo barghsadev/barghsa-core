@@ -4,6 +4,7 @@ import type { Locator, Page } from '@playwright/test';
 import { t } from '@barghsa/i18n/app';
 import { tOrderComments } from '@barghsa/i18n/order-comments';
 import { tSaving } from '@barghsa/i18n/saving';
+import { loadingText } from '@barghsa/i18n/loading-feedback';
 import { test, expect } from './coverage-fixture';
 import { completeOtp } from './otp-step-up-fixture';
 import { checkRoutePresentation } from './route-presentation';
@@ -92,8 +93,21 @@ for (const [locale, theme] of [
     await expect(section.getByRole('alert')).toBeVisible();
     await expect(section.locator('ol>li')).toHaveCount(50);
     await expect(body).toHaveValue('  Existing <script> reply  ');
+    const reload = section.getByTestId('order-comment-reload');
+    const retryNotice = page.locator('[data-sonner-toast][data-type="info"]').filter({
+      hasText: loadingText('connectionRetry', locale),
+    });
+    const httpRead = state.readRoute;
+    await reload.click();
+    await expect.poll(() => state.readRoute !== httpRead).toBe(true);
+    await expect(retryNotice).toHaveCount(0);
+    await state.readRoute!.abort('failed');
+    await expect(section.getByRole('alert')).toBeVisible();
+    await expect(retryNotice).toHaveCount(0);
+    expect(state.reads.at(-1)).toEqual(failedPage);
     state.readMode = 'success';
-    await section.getByTestId('order-comment-reload').click();
+    await reload.click();
+    await expect(retryNotice).toBeVisible();
     await expect(section.locator('ol>li')).toHaveCount(52);
     await expect(section.locator('ol>li').first()).toContainText('Chronological comment 0');
     expect(state.reads.at(-1)).toEqual(failedPage);

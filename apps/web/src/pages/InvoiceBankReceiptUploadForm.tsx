@@ -2,9 +2,11 @@ import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { Alert, AlertDescription } from '@barghsa/ui';
 import { FormField } from '@barghsa/ui/form';
 import { Loader2 } from 'lucide-react';
-import { useProfileContextRevision } from '../lib/profile-context.js';
+import { getProfileContextRevision, useProfileContextRevision } from '../lib/profile-context.js';
+import { useCommandFeedback } from '../hooks/useCommandFeedback.js';
 import { useReceiptForm } from '../hooks/useReceiptForm.js';
 import { t } from '@barghsa/i18n/app';
+import { confirmationText } from '@barghsa/i18n/confirmation';
 import type { InvoiceBankReceiptSubmissionReview } from '@barghsa/shared/finance';
 import {
   INVOICE_BANK_RECEIPT_FILE_ACCEPT,
@@ -54,6 +56,7 @@ export function InvoiceBankReceiptUploadForm(props: InvoiceBankReceiptUploadForm
 }
 function InvoiceReceiptForm({ invoiceId, onSubmitted }: InvoiceBankReceiptUploadFormProps) {
   const locale = useLocale();
+  const revision = useProfileContextRevision();
   const fileInput = useRef<HTMLInputElement>(null);
   const [profileId, setProfileId] = useState<string | null>(null);
   const draft = useReceiptForm('invoice', parseInvoiceBankReceiptAmountIrR);
@@ -76,7 +79,7 @@ function InvoiceReceiptForm({ invoiceId, onSubmitted }: InvoiceBankReceiptUpload
   );
   const [review, setReview] = useState<InvoiceBankReceiptSubmissionReview | null>(null);
   const [submitting, setSubmitting] = useState(false);
-  const [error, setError] = useState<InvoiceReceiptError | null>(null);
+  const [error, setError] = useState<InvoiceReceiptError | 'unconfirmed' | null>(null);
   const [success, setSuccess] = useState(false);
 
   useEffect(() => {
@@ -127,8 +130,9 @@ function InvoiceReceiptForm({ invoiceId, onSubmitted }: InvoiceBankReceiptUpload
       });
       if (!mounted.current) return;
       if (result.kind === 'error') {
-        if (draft.applyServerErrors(result.fields)) {
-          if (result.fields?.includes('attachmentKey')) setUploaded(null);
+        const fields = result.fields ?? [];
+        if (draft.applyServerErrors(fields)) {
+          if (fields.includes('attachmentKey')) setUploaded(null);
         } else setError(mapInvoiceReceiptSubmitError(result.status));
         return;
       }
@@ -144,10 +148,12 @@ function InvoiceReceiptForm({ invoiceId, onSubmitted }: InvoiceBankReceiptUpload
   });
 
   async function confirmSubmission() {
-    if (!review || pending.current || !mounted.current) return;
+    const current = () => mounted.current && getProfileContextRevision() === revision;
+    if (!review || pending.current || !current()) return;
     pending.current = true;
     setSubmitting(true);
     setError(null);
+    let confirmed = false;
     try {
       const result = await submitInvoiceBankReceipt({
         invoiceId: review.data.invoiceId,
@@ -159,14 +165,22 @@ function InvoiceReceiptForm({ invoiceId, onSubmitted }: InvoiceBankReceiptUpload
         ...(review.data.customerNote ? { customerNote: review.data.customerNote } : {}),
         expectedReviewHash: review.hash,
       });
-      if (!mounted.current) return;
+      if (!current()) return;
       if (!result.ok) {
         setReview(null);
-        if (draft.applyServerErrors(result.fields)) {
-          if (result.fields?.includes('attachmentKey')) setUploaded(null);
-        } else setError(mapInvoiceReceiptSubmitError(result.status));
+        const fields = result.fields ?? [];
+        if (draft.applyServerErrors(fields)) {
+          if (fields.includes('attachmentKey')) setUploaded(null);
+        } else {
+          setError(
+            result.status >= 500 || (result.status >= 200 && result.status < 300)
+              ? 'unconfirmed'
+              : mapInvoiceReceiptSubmitError(result.status)
+          );
+        }
         return;
       }
+      confirmed = true;
       setReview(null);
       setSuccess(true);
       draft.form.reset({
@@ -181,12 +195,12 @@ function InvoiceReceiptForm({ invoiceId, onSubmitted }: InvoiceBankReceiptUpload
       if (fileInput.current) fileInput.current.value = '';
       await onSubmitted?.();
     } catch {
-      if (mounted.current) {
+      if (current() && !confirmed) {
         setReview(null);
-        setError('generic');
+        setError('unconfirmed');
       }
     } finally {
-      if (mounted.current) {
+      if (current()) {
         pending.current = false;
         setSubmitting(false);
       }
@@ -195,9 +209,13 @@ function InvoiceReceiptForm({ invoiceId, onSubmitted }: InvoiceBankReceiptUpload
 
   const busy = submitting || draft.form.formState.isSubmitting;
   const locked = busy || !!review;
-  const errorMessage =
-    (error === null ? null : t(ERROR_I18N[error], locale)) ||
-    draft.errors.root?.validation?.message;
+  const commandError =
+    error === 'unconfirmed'
+      ? confirmationText('unconfirmed', locale)
+      : error && t(ERROR_I18N[error], locale);
+  const successMessage = success ? t('invoices.details.receiptSuccess', locale) : null;
+  useCommandFeedback({ success: successMessage, error: commandError, operation: invoiceId });
+  const errorMessage = commandError || draft.errors.root?.validation?.message;
 
   return (
     <>
@@ -216,13 +234,13 @@ function InvoiceReceiptForm({ invoiceId, onSubmitted }: InvoiceBankReceiptUpload
           </p>
         </div>
 
-        {success && (
+        {successMessage && (
           <div
             role="status"
             data-testid="invoice-receipt-success"
             className="rounded-lg border border-success/20 bg-success-soft p-3 text-sm text-success"
           >
-            {t('invoices.details.receiptSuccess', locale)}
+            {successMessage}
           </div>
         )}
 

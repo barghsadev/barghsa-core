@@ -144,6 +144,38 @@ async function valid() {
 }
 const alert = () => container.querySelector('[role="alert"]');
 
+it('keeps a confirmed receipt when history refresh fails', async () => {
+  const refresh = vi.fn().mockRejectedValue(new Error('read failed'));
+  await render(refresh);
+  await valid();
+  await submit();
+  await confirm();
+  expect(field('success')?.textContent).toContain('pending finance confirmation');
+  expect(alert()).toBeNull();
+  expect(refresh).toHaveBeenCalledTimes(1);
+});
+
+it('ignores a late acknowledgement after a profile switch', async () => {
+  let finish!: (result: Awaited<ReturnType<typeof submitInvoiceBankReceipt>>) => void;
+  vi.mocked(submitInvoiceBankReceipt).mockImplementationOnce(
+    () =>
+      new Promise((resolve) => {
+        finish = resolve;
+      })
+  );
+  const refresh = vi.fn();
+  await render(refresh);
+  await valid();
+  await submit();
+  await confirm();
+  expect(submitInvoiceBankReceipt).toHaveBeenCalledTimes(1);
+  await act(async () => refreshProfileContext());
+  await act(async () => finish({ ok: true, state: 'Submitted', amount: 100n }));
+  expect(field('success')).toBeNull();
+  expect(alert()).toBeNull();
+  expect(refresh).not.toHaveBeenCalled();
+});
+
 it('links all invalid fields and clears each corrected field without uploading', async () => {
   await render();
   await submit();
@@ -319,27 +351,35 @@ it.each(['review', 'confirm'] as const)(
   15_000
 );
 
-it('reuploads only after the server rejects the cached attachment', async () => {
-  await render();
-  await valid();
-  vi.mocked(loadInvoiceBankReceiptSubmissionReview).mockResolvedValueOnce({
-    kind: 'error',
-    status: 400,
-    fields: ['attachmentKey'],
-  });
-  await submit();
-  await act(
-    async () =>
-      new Promise<void>((resolve) =>
-        requestAnimationFrame(() => requestAnimationFrame(() => resolve()))
-      )
-  );
-  expect(document.activeElement).toBe(field('file'));
-  expect(field('file').files?.[0]?.name).toBe('receipt.pdf');
-  await submit();
-  await confirm();
-  expect(upload).toHaveBeenCalledTimes(2);
-}, 15_000);
+it.each(['review', 'confirm'] as const)(
+  'reuploads only after invoice %s rejects the cached attachment',
+  async (stage) => {
+    await render();
+    await valid();
+    const failure = { status: 400, fields: ['attachmentKey'] };
+    if (stage === 'review')
+      vi.mocked(loadInvoiceBankReceiptSubmissionReview).mockResolvedValueOnce({
+        kind: 'error',
+        ...failure,
+      });
+    else vi.mocked(submitInvoiceBankReceipt).mockResolvedValueOnce({ ok: false, ...failure });
+    await submit();
+    if (stage === 'confirm') await confirm();
+    await act(
+      async () =>
+        new Promise<void>((resolve) =>
+          requestAnimationFrame(() => requestAnimationFrame(() => resolve()))
+        )
+    );
+    expect(document.activeElement).toBe(field('file'));
+    expect(field('file').files?.[0]?.name).toBe('receipt.pdf');
+    await submit();
+    await confirm();
+    expect(upload).toHaveBeenCalledTimes(2);
+    expect(submitInvoiceBankReceipt).toHaveBeenCalledTimes(stage === 'review' ? 1 : 2);
+  },
+  15_000
+);
 
 it('uses a generic error for protected or unknown server fields', async () => {
   await render();
