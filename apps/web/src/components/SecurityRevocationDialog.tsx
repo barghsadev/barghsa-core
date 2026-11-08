@@ -118,6 +118,7 @@ export function SecurityRevocationDialog({
                       <Input
                         {...field}
                         type="password"
+                        aria-required="true"
                         autoComplete="current-password"
                         autoFocus
                         disabled={scope.locked}

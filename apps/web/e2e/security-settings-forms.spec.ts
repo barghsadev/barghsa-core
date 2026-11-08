@@ -178,7 +178,7 @@ async function submit(form: Locator) {
     node.requestSubmit();
   });
 }
-async function capture(target: Locator, name: string) {
+async function capture(target: Locator, path: string) {
   await expect(target).toBeVisible();
   await expect(target).toHaveCSS('opacity', '1');
   expect(
@@ -192,7 +192,7 @@ async function capture(target: Locator, name: string) {
   expect(
     await target.page().evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)
   ).toBe(true);
-  await target.screenshot({ path: `test-results/${name}.png` });
+  await target.screenshot({ path });
 }
 for (const locale of ['en', 'fa'] as const) {
   test(`security list deadline offers retry without hiding the companion list (${locale})`, async ({
@@ -283,6 +283,7 @@ for (const locale of ['en', 'fa'] as const) {
     const password = dialog.getByLabel(t('settings.security.passwordLabel', locale), {
       exact: true,
     });
+    await expect(password).toHaveAttribute('aria-required', 'true');
     await expect(password).toBeFocused();
     await submit(dialog.locator('form'));
     await expect(password).toHaveAttribute('aria-invalid', 'true');
@@ -292,7 +293,7 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(dialog.getByRole('alert')).toHaveText(copy('invalidPassword', locale));
     await expect(password).toHaveValue('wrong-password');
     await expect(dialog).not.toContainText('private');
-    await capture(dialog, `security-single-rejected-${locale}-${info.project.name}`);
+    await capture(dialog, info.outputPath(`security-single-rejected-${locale}.png`));
     await password.fill(' correct password ');
     await submit(dialog.locator('form'));
     await expect(dialog).toHaveCount(0);
@@ -320,6 +321,7 @@ for (const locale of ['en', 'fa'] as const) {
     const allPassword = dialog.getByLabel(t('settings.security.passwordLabel', locale), {
       exact: true,
     });
+    await expect(allPassword).toHaveAttribute('aria-required', 'true');
     await submit(dialog.locator('form'));
     await expect(allPassword).toHaveAttribute('aria-invalid', 'true');
     await allPassword.fill(' retained raw password ');
@@ -328,7 +330,7 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(allPassword).toHaveValue(' retained raw password ');
     await expect(dialog.getByRole('alert')).toHaveText(copy('error', locale));
     await expect(dialog).not.toContainText('private');
-    await capture(dialog, `security-all-rejected-${locale}-${info.project.name}`);
+    await capture(dialog, info.outputPath(`security-all-rejected-${locale}.png`));
     state.mode = 'success';
     await submit(dialog.locator('form'));
     await expect(dialog).toHaveCount(0);
@@ -378,7 +380,7 @@ for (const locale of ['en', 'fa'] as const) {
     await state.held!.fulfill({ status: 503, json: {} });
     state.held = null;
     await expect(dialog.getByRole('alert')).toHaveText(copy('uncertain', locale));
-    await capture(dialog, `security-single-uncertain-${locale}-${info.project.name}`);
+    await capture(dialog, info.outputPath(`security-single-uncertain-${locale}.png`));
     await dialog.getByRole('button', { name: copy('check', locale), exact: true }).click();
     await expect(dialog).toHaveCount(0);
     expect(state.requests.filter((v) => v.method === 'DELETE')).toHaveLength(1);
@@ -416,7 +418,7 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(
       dialog.getByRole('button', { name: copy('restart', locale), exact: true })
     ).toBeVisible();
-    await capture(dialog, `security-all-checked-${locale}-${info.project.name}`);
+    await capture(dialog, info.outputPath(`security-all-checked-${locale}.png`));
     await dialog.getByRole('button', { name: copy('restart', locale), exact: true }).click();
     await expect(password).toHaveValue(' retained uncertain password ');
     state.mode = 'success';

@@ -474,7 +474,7 @@ function CommentWorkspace({
                 <FormItem id={`${kind}-comment-${staff ? 'staff' : 'customer'}`}>
                   <FormLabel>{copy('writeComment')}</FormLabel>
                   <FormControl>
-                    <Textarea {...field} disabled={frozen} />
+                    <Textarea {...field} aria-required="true" disabled={frozen} />
                   </FormControl>
                   <FormDescription>{formCopy('bodyHelp')}</FormDescription>
                   <FormMessage reserveSpace />
@@ -491,6 +491,7 @@ function CommentWorkspace({
                     <FormControl>
                       <select
                         {...field}
+                        aria-required="true"
                         disabled={frozen}
                         className="w-full rounded border border-input bg-background p-2 text-sm"
                       >

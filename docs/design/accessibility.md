@@ -120,6 +120,11 @@ title, terms, reason and value kind. The selected kind determines which value
 field is required. Invoice lines require a description, quantity, price and VAT
 rate. The taxable checkbox permits either choice.
 
+Order comments require text. Staff electricity comments also require a
+visibility choice. Staff profile closure requires confirmation and a current
+password. Session and trusted-device revocation mark the password required
+when the action calls for step-up.
+
 Document retention years, legal reasons, and hold expiry each link to their
 own validation errors. Hold expiry remains optional. Upload policy formats
 require at least one selection, so the group explains the requirement without

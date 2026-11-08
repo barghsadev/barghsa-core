@@ -5,7 +5,7 @@ import { t } from '@barghsa/i18n/app';
 import { tOrderComments } from '@barghsa/i18n/order-comments';
 import { tSaving } from '@barghsa/i18n/saving';
 import { loadingText } from '@barghsa/i18n/loading-feedback';
-import { test, expect } from './coverage-fixture';
+import { checkpointBrowserCoverage, test, expect } from './coverage-fixture';
 import { completeOtp } from './otp-step-up-fixture';
 import { checkRoutePresentation } from './route-presentation';
 import { expectNoticeBelowPageHeader } from './notice-placement';
@@ -73,6 +73,7 @@ for (const [locale, theme] of [
     await expect(section.locator('ol>li').first()).toContainText('Chronological comment 2');
     await expect(section.locator('ol>li').last()).toContainText('Chronological comment 51');
     await expect(section).not.toContainText('PRIVATE_INTERNAL_NOTE');
+    await expect(body).toHaveAttribute('aria-required', 'true');
     await expect(body).not.toHaveAttribute('aria-invalid', 'true');
     await send.click();
     await expect(send).toBeDisabled();
@@ -178,10 +179,12 @@ for (const [locale, theme] of [
     // The shared saving branch accepts the same body/key contract without a visibility property.
     state.readMode = 'success';
     state.writeMode = 'success';
+    await checkpointBrowserCoverage(page);
     await page.goto(`/savings/orders/${savingOrder}`);
     section = page.getByTestId('order-comments');
     form = section.getByTestId('order-comment-form');
     body = page.locator('#saving-comment-customer');
+    await expect(body).toHaveAttribute('aria-required', 'true');
     await expect(form.locator('select')).toHaveCount(0);
     await body.fill('  Saving customer <script> message  ');
     await checkRoutePresentation(page, info, locale);
@@ -214,6 +217,8 @@ for (const [locale, theme] of [
     const visibility = page.locator('#electricity-comment-visibility');
     let send = form.getByRole('button', { name: copy('sendComment'), exact: true });
     await expect(section).toContainText('PRIVATE_INTERNAL_NOTE');
+    await expect(body).toHaveAttribute('aria-required', 'true');
+    await expect(visibility).toHaveAttribute('aria-required', 'true');
     await send.click();
     await expect(send).toBeDisabled();
     await form.dispatchEvent('submit');
@@ -301,10 +306,12 @@ for (const [locale, theme] of [
     // Staff saving replies have no visibility field or invented internal-note policy.
     state.needsStepUp = false;
     state.writeMode = 'owned-body';
+    await checkpointBrowserCoverage(page);
     await page.goto(`/admin/saving-orders?orderId=${savingOrder}`);
     section = page.getByTestId('order-comments');
     form = section.getByTestId('order-comment-form');
     body = page.locator('#saving-comment-staff');
+    await expect(body).toHaveAttribute('aria-required', 'true');
     await expect(form.locator('select')).toHaveCount(0);
     await body.fill('  Saving expert reply  ');
     send = form.getByRole('button', { name: tSaving('sendComment', locale), exact: true });

@@ -2,6 +2,7 @@ import { cookieResponse } from './cookie-response';
 import AxeBuilder from '@axe-core/playwright';
 import { test, expect, type Page } from './coverage-fixture';
 import { fullNavigation } from './navigation-fixture';
+import { approveRiskConfirmation } from './confirmation-fixture';
 import { securitySettingsText as copy } from '@barghsa/i18n/security-settings-forms';
 
 const records = [
@@ -219,10 +220,13 @@ for (const locale of ['fa', 'en'])
       expect(writes).toBe(0);
       await trigger.click();
       const submit = dialog.getByRole('button', { name: remove, exact: true });
+      await expect(submit).toBeDisabled();
+      await approveRiskConfirmation(page, locale as 'en' | 'fa', 'destructive');
       await submit.click();
       const password = dialog.getByLabel(locale === 'fa' ? 'رمز عبور' : 'Password', {
         exact: true,
       });
+      await expect(password).toHaveAttribute('aria-required', 'true');
       await expect(password).toBeFocused();
       await submit.click();
       await expect(password).toHaveAttribute('aria-invalid', 'true');
@@ -285,7 +289,7 @@ for (const locale of ['fa', 'en'])
         (await new AxeBuilder({ page }).include('[role="dialog"]').analyze()).violations
       ).toEqual([]);
       await page.screenshot({
-        path: `/tmp/barghsa-trusted-devices-${locale}-${darkMode}-${testInfo.project.name}.png`,
+        path: testInfo.outputPath(`trusted-devices-${locale}-${darkMode}.png`),
         fullPage: true,
       });
       sessionStatus = 200;
@@ -296,7 +300,9 @@ for (const locale of ['fa', 'en'])
       await expect(dialog).toHaveCount(0);
       await expect(region.getByRole('heading', { name: title, exact: true })).toBeFocused();
       await expect(region.getByRole('button', { name: remove, exact: true })).toHaveCount(1);
-      await expect(page.getByRole('status')).toHaveText(copy('confirmed', locale as 'en' | 'fa'));
+      await expect(page.getByRole('main').getByRole('status')).toHaveText(
+        copy('confirmed', locale as 'en' | 'fa')
+      );
       await expect(page.locator('time[datetime="2026-09-04T12:00:00.000Z"]')).toBeVisible();
       expect(sessionReads).toBe(7);
       expect(verifications).toEqual([

@@ -397,6 +397,7 @@ function ClosureReview({
                               <FormControl>
                                 <input
                                   type="checkbox"
+                                  aria-required="true"
                                   name={field.name}
                                   ref={field.ref}
                                   className="shrink-0"
@@ -423,6 +424,7 @@ function ClosureReview({
                                 {...field}
                                 id="closure-password"
                                 type="password"
+                                aria-required="true"
                                 autoComplete="current-password"
                                 data-ticket-command-retry={pending ? true : undefined}
                               />

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-08T07:21:39+00:00",
-  "source_commit": "7c85940fc285b58ef7535bab1266b25ae47a3a34",
+  "updated": "2026-11-08T07:29:11+00:00",
+  "source_commit": "3e8edbe78dc28c2948241ed6a41d92588e46f78e",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -25354,7 +25354,7 @@
             },
             {
               "path": "apps/web/e2e/trusted-devices.spec.ts",
-              "sha256": "9b4b7a03442748d07858a3181b11d520fda7aa94cc2ae0b0eb1ff6cd170401ec"
+              "sha256": "e3ba126192910d53f28138852484c3c9afb8a7d220e9b713e35d9e25c7b2d766"
             },
             {
               "path": "apps/web/e2e/verification-notices.spec.ts",
@@ -192203,7 +192203,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
-              "sha256": "607f764dd241f8152498963f373b40b189496e72bdefc078785d416617a5ad2e"
+              "sha256": "174f8fe7efb03b8a2b88aeefb9c556b9e8d6df1287dafe8eb329ac942d82d6ad"
             },
             {
               "path": "apps/web/src/components/jobs/JobProgress.tsx",
@@ -192235,7 +192235,7 @@
             },
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
-              "sha256": "be329894feef39a2b3357e2e97493b9c80d39754b840c5f34f35d897f9487da8"
+              "sha256": "4ca738d59b83f074d95432adb169d9134ad804fa1320f4739c92d4e352df6ae3"
             },
             {
               "path": "apps/web/e2e/operating-context.spec.ts",
@@ -193115,7 +193115,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
-              "sha256": "607f764dd241f8152498963f373b40b189496e72bdefc078785d416617a5ad2e"
+              "sha256": "174f8fe7efb03b8a2b88aeefb9c556b9e8d6df1287dafe8eb329ac942d82d6ad"
             },
             {
               "path": "apps/web/src/components/jobs/JobProgress.tsx",
@@ -193147,7 +193147,7 @@
             },
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
-              "sha256": "be329894feef39a2b3357e2e97493b9c80d39754b840c5f34f35d897f9487da8"
+              "sha256": "4ca738d59b83f074d95432adb169d9134ad804fa1320f4739c92d4e352df6ae3"
             },
             {
               "path": "apps/web/e2e/operating-context.spec.ts",
@@ -194123,7 +194123,7 @@
             },
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
-              "sha256": "be329894feef39a2b3357e2e97493b9c80d39754b840c5f34f35d897f9487da8"
+              "sha256": "4ca738d59b83f074d95432adb169d9134ad804fa1320f4739c92d4e352df6ae3"
             },
             {
               "path": "apps/web/e2e/ticket-forms-fixture.ts",
@@ -194147,7 +194147,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
-              "sha256": "607f764dd241f8152498963f373b40b189496e72bdefc078785d416617a5ad2e"
+              "sha256": "174f8fe7efb03b8a2b88aeefb9c556b9e8d6df1287dafe8eb329ac942d82d6ad"
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.test.tsx",
@@ -195236,7 +195236,7 @@
             },
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
-              "sha256": "be329894feef39a2b3357e2e97493b9c80d39754b840c5f34f35d897f9487da8"
+              "sha256": "4ca738d59b83f074d95432adb169d9134ad804fa1320f4739c92d4e352df6ae3"
             },
             {
               "path": "apps/web/e2e/saving-fulfillment-history.spec.ts",
@@ -195272,7 +195272,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
-              "sha256": "607f764dd241f8152498963f373b40b189496e72bdefc078785d416617a5ad2e"
+              "sha256": "174f8fe7efb03b8a2b88aeefb9c556b9e8d6df1287dafe8eb329ac942d82d6ad"
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.test.tsx",
@@ -197174,7 +197174,7 @@
             },
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
-              "sha256": "be329894feef39a2b3357e2e97493b9c80d39754b840c5f34f35d897f9487da8"
+              "sha256": "4ca738d59b83f074d95432adb169d9134ad804fa1320f4739c92d4e352df6ae3"
             },
             {
               "path": "apps/web/e2e/saving-fulfillment-history.spec.ts",
@@ -197210,7 +197210,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
-              "sha256": "607f764dd241f8152498963f373b40b189496e72bdefc078785d416617a5ad2e"
+              "sha256": "174f8fe7efb03b8a2b88aeefb9c556b9e8d6df1287dafe8eb329ac942d82d6ad"
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.test.tsx",
@@ -198939,7 +198939,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
-              "sha256": "607f764dd241f8152498963f373b40b189496e72bdefc078785d416617a5ad2e"
+              "sha256": "174f8fe7efb03b8a2b88aeefb9c556b9e8d6df1287dafe8eb329ac942d82d6ad"
             },
             {
               "path": "apps/web/src/components/jobs/JobProgress.tsx",
@@ -198971,7 +198971,7 @@
             },
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
-              "sha256": "be329894feef39a2b3357e2e97493b9c80d39754b840c5f34f35d897f9487da8"
+              "sha256": "4ca738d59b83f074d95432adb169d9134ad804fa1320f4739c92d4e352df6ae3"
             },
             {
               "path": "apps/web/e2e/operating-context.spec.ts",
@@ -380849,7 +380849,7 @@
             },
             {
               "path": "apps/web/e2e/order-comment-forms.spec.ts",
-              "sha256": "cb90e27a3a9e022a4a92b511443472f03689d7cd8fe9a861aa4540879b0bf9a6"
+              "sha256": "733135dac199380ddc73f92d69bd6fc7dbd74c39f2181fa0ae4912571c7a63f2"
             },
             {
               "path": "apps/web/src/components/DocumentRecords.test.tsx",
@@ -380877,7 +380877,7 @@
             },
             {
               "path": "apps/web/src/components/SavingOrderComments.tsx",
-              "sha256": "bef79e72466976201d8fc8baa83cdd75199da111fbace66bf32f9af2305df674"
+              "sha256": "44a3d04079c80cdb5e25cf916402d70f1bf62fcf49e0228007a647b991ba89a2"
             },
             {
               "path": "apps/web/src/components/SavingOrderDocuments.tsx",
@@ -381813,7 +381813,7 @@
             },
             {
               "path": "apps/web/e2e/order-comment-forms.spec.ts",
-              "sha256": "cb90e27a3a9e022a4a92b511443472f03689d7cd8fe9a861aa4540879b0bf9a6"
+              "sha256": "733135dac199380ddc73f92d69bd6fc7dbd74c39f2181fa0ae4912571c7a63f2"
             },
             {
               "path": "apps/web/src/components/DocumentRecords.test.tsx",
@@ -381841,7 +381841,7 @@
             },
             {
               "path": "apps/web/src/components/SavingOrderComments.tsx",
-              "sha256": "bef79e72466976201d8fc8baa83cdd75199da111fbace66bf32f9af2305df674"
+              "sha256": "44a3d04079c80cdb5e25cf916402d70f1bf62fcf49e0228007a647b991ba89a2"
             },
             {
               "path": "apps/web/src/components/SavingOrderDocuments.tsx",
@@ -382776,7 +382776,7 @@
             },
             {
               "path": "apps/web/e2e/order-comment-forms.spec.ts",
-              "sha256": "cb90e27a3a9e022a4a92b511443472f03689d7cd8fe9a861aa4540879b0bf9a6"
+              "sha256": "733135dac199380ddc73f92d69bd6fc7dbd74c39f2181fa0ae4912571c7a63f2"
             },
             {
               "path": "apps/web/src/components/DocumentRecords.test.tsx",
@@ -382804,7 +382804,7 @@
             },
             {
               "path": "apps/web/src/components/SavingOrderComments.tsx",
-              "sha256": "bef79e72466976201d8fc8baa83cdd75199da111fbace66bf32f9af2305df674"
+              "sha256": "44a3d04079c80cdb5e25cf916402d70f1bf62fcf49e0228007a647b991ba89a2"
             },
             {
               "path": "apps/web/src/components/SavingOrderDocuments.tsx",
@@ -464938,7 +464938,7 @@
             },
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
-              "sha256": "be329894feef39a2b3357e2e97493b9c80d39754b840c5f34f35d897f9487da8"
+              "sha256": "4ca738d59b83f074d95432adb169d9134ad804fa1320f4739c92d4e352df6ae3"
             },
             {
               "path": "apps/web/e2e/ticket-forms-fixture.ts",
@@ -465279,7 +465279,7 @@
             },
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
-              "sha256": "be329894feef39a2b3357e2e97493b9c80d39754b840c5f34f35d897f9487da8"
+              "sha256": "4ca738d59b83f074d95432adb169d9134ad804fa1320f4739c92d4e352df6ae3"
             },
             {
               "path": "apps/web/e2e/ticket-forms-fixture.ts",
@@ -465644,7 +465644,7 @@
             },
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
-              "sha256": "be329894feef39a2b3357e2e97493b9c80d39754b840c5f34f35d897f9487da8"
+              "sha256": "4ca738d59b83f074d95432adb169d9134ad804fa1320f4739c92d4e352df6ae3"
             },
             {
               "path": "apps/web/e2e/ticket-forms-fixture.ts",
@@ -465986,7 +465986,7 @@
             },
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
-              "sha256": "be329894feef39a2b3357e2e97493b9c80d39754b840c5f34f35d897f9487da8"
+              "sha256": "4ca738d59b83f074d95432adb169d9134ad804fa1320f4739c92d4e352df6ae3"
             },
             {
               "path": "apps/web/e2e/ticket-forms-fixture.ts",
@@ -490986,7 +490986,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
-              "sha256": "607f764dd241f8152498963f373b40b189496e72bdefc078785d416617a5ad2e"
+              "sha256": "174f8fe7efb03b8a2b88aeefb9c556b9e8d6df1287dafe8eb329ac942d82d6ad"
             },
             {
               "path": "apps/web/src/components/ProfileIdentity.tsx",
@@ -491026,7 +491026,7 @@
             },
             {
               "path": "apps/web/src/components/SavingOrderComments.tsx",
-              "sha256": "bef79e72466976201d8fc8baa83cdd75199da111fbace66bf32f9af2305df674"
+              "sha256": "44a3d04079c80cdb5e25cf916402d70f1bf62fcf49e0228007a647b991ba89a2"
             },
             {
               "path": "apps/web/src/components/ServiceDuePeriodPanel.tsx",
@@ -494045,7 +494045,7 @@
             },
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
-              "sha256": "be329894feef39a2b3357e2e97493b9c80d39754b840c5f34f35d897f9487da8"
+              "sha256": "4ca738d59b83f074d95432adb169d9134ad804fa1320f4739c92d4e352df6ae3"
             },
             {
               "path": "apps/web/e2e/staff-directory-recovery.spec.ts",
@@ -494169,7 +494169,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
-              "sha256": "607f764dd241f8152498963f373b40b189496e72bdefc078785d416617a5ad2e"
+              "sha256": "174f8fe7efb03b8a2b88aeefb9c556b9e8d6df1287dafe8eb329ac942d82d6ad"
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.test.tsx",
@@ -494927,7 +494927,7 @@
             },
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
-              "sha256": "be329894feef39a2b3357e2e97493b9c80d39754b840c5f34f35d897f9487da8"
+              "sha256": "4ca738d59b83f074d95432adb169d9134ad804fa1320f4739c92d4e352df6ae3"
             },
             {
               "path": "apps/web/e2e/staff-directory-recovery.spec.ts",
@@ -495051,7 +495051,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
-              "sha256": "607f764dd241f8152498963f373b40b189496e72bdefc078785d416617a5ad2e"
+              "sha256": "174f8fe7efb03b8a2b88aeefb9c556b9e8d6df1287dafe8eb329ac942d82d6ad"
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.test.tsx",
@@ -495750,7 +495750,7 @@
             },
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
-              "sha256": "be329894feef39a2b3357e2e97493b9c80d39754b840c5f34f35d897f9487da8"
+              "sha256": "4ca738d59b83f074d95432adb169d9134ad804fa1320f4739c92d4e352df6ae3"
             },
             {
               "path": "apps/web/e2e/staff-directory-recovery.spec.ts",
@@ -495874,7 +495874,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
-              "sha256": "607f764dd241f8152498963f373b40b189496e72bdefc078785d416617a5ad2e"
+              "sha256": "174f8fe7efb03b8a2b88aeefb9c556b9e8d6df1287dafe8eb329ac942d82d6ad"
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.test.tsx",
@@ -496702,7 +496702,7 @@
             },
             {
               "path": "apps/web/src/components/SavingOrderComments.tsx",
-              "sha256": "bef79e72466976201d8fc8baa83cdd75199da111fbace66bf32f9af2305df674"
+              "sha256": "44a3d04079c80cdb5e25cf916402d70f1bf62fcf49e0228007a647b991ba89a2"
             },
             {
               "path": "apps/web/src/components/SavingStaffOperationForm.tsx",
@@ -508142,7 +508142,7 @@
             },
             {
               "path": "apps/web/src/components/SavingOrderComments.tsx",
-              "sha256": "bef79e72466976201d8fc8baa83cdd75199da111fbace66bf32f9af2305df674"
+              "sha256": "44a3d04079c80cdb5e25cf916402d70f1bf62fcf49e0228007a647b991ba89a2"
             },
             {
               "path": "apps/web/src/components/SolarContractForm.tsx",
@@ -512005,7 +512005,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
-              "sha256": "607f764dd241f8152498963f373b40b189496e72bdefc078785d416617a5ad2e"
+              "sha256": "174f8fe7efb03b8a2b88aeefb9c556b9e8d6df1287dafe8eb329ac942d82d6ad"
             },
             {
               "path": "apps/web/src/components/ProfileSwitchProgress.tsx",
@@ -512045,7 +512045,7 @@
             },
             {
               "path": "apps/web/src/components/SavingOrderComments.tsx",
-              "sha256": "bef79e72466976201d8fc8baa83cdd75199da111fbace66bf32f9af2305df674"
+              "sha256": "44a3d04079c80cdb5e25cf916402d70f1bf62fcf49e0228007a647b991ba89a2"
             },
             {
               "path": "apps/web/src/components/ServiceWorkflowSettings.tsx",
@@ -512676,7 +512676,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
-              "sha256": "607f764dd241f8152498963f373b40b189496e72bdefc078785d416617a5ad2e"
+              "sha256": "174f8fe7efb03b8a2b88aeefb9c556b9e8d6df1287dafe8eb329ac942d82d6ad"
             },
             {
               "path": "apps/web/src/components/ProfileIdentity.tsx",
@@ -513475,7 +513475,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
-              "sha256": "607f764dd241f8152498963f373b40b189496e72bdefc078785d416617a5ad2e"
+              "sha256": "174f8fe7efb03b8a2b88aeefb9c556b9e8d6df1287dafe8eb329ac942d82d6ad"
             },
             {
               "path": "apps/web/src/components/ProfileIdentity.tsx",
@@ -514273,7 +514273,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
-              "sha256": "607f764dd241f8152498963f373b40b189496e72bdefc078785d416617a5ad2e"
+              "sha256": "174f8fe7efb03b8a2b88aeefb9c556b9e8d6df1287dafe8eb329ac942d82d6ad"
             },
             {
               "path": "apps/web/src/components/ProfileIdentity.tsx",
@@ -514856,15 +514856,15 @@
           "source_evidence": [
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
-              "sha256": "be329894feef39a2b3357e2e97493b9c80d39754b840c5f34f35d897f9487da8"
+              "sha256": "4ca738d59b83f074d95432adb169d9134ad804fa1320f4739c92d4e352df6ae3"
             },
             {
               "path": "apps/web/e2e/security-settings-forms.spec.ts",
-              "sha256": "b1c6320d0a68c5c183fcf6643065f70d1be124ea0e219590f0b0fe140b1d35fa"
+              "sha256": "58a05f707dcff59c4f2ea49112389aebec1f69ca054fe96cc4f12afcec0387b6"
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
-              "sha256": "607f764dd241f8152498963f373b40b189496e72bdefc078785d416617a5ad2e"
+              "sha256": "174f8fe7efb03b8a2b88aeefb9c556b9e8d6df1287dafe8eb329ac942d82d6ad"
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
@@ -515190,7 +515190,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "d06fca1ce0aeb9c8e5caeade63283faab22aaaf6f47cefed7cd74014547b4e55"
+              "sha256": "c15d024f1b62fb043b3dbb2c6cbc95c08fba4be667f7c8e80cd0101559c63c4c"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -515570,7 +515570,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "d06fca1ce0aeb9c8e5caeade63283faab22aaaf6f47cefed7cd74014547b4e55"
+              "sha256": "c15d024f1b62fb043b3dbb2c6cbc95c08fba4be667f7c8e80cd0101559c63c4c"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -516009,7 +516009,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "d06fca1ce0aeb9c8e5caeade63283faab22aaaf6f47cefed7cd74014547b4e55"
+              "sha256": "c15d024f1b62fb043b3dbb2c6cbc95c08fba4be667f7c8e80cd0101559c63c4c"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -516496,7 +516496,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "d06fca1ce0aeb9c8e5caeade63283faab22aaaf6f47cefed7cd74014547b4e55"
+              "sha256": "c15d024f1b62fb043b3dbb2c6cbc95c08fba4be667f7c8e80cd0101559c63c4c"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -516704,7 +516704,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Saving hardware changes and cancellations, solar contract issuance and electricity increase now expose their required controls. The shared order comment body and staff electricity visibility, profile closure confirmation and password, and the password for step-up session revocation still lack required markers. Reconcile the remaining conditional controls before closing."
+        "Order comment text and staff electricity visibility, profile closure confirmation and password, and step-up revocation passwords now expose required semantics. Staff saving address changes and their reasons, and customer consultation requested information still lack required markers. Reconcile remaining conditional controls."
       ],
       "owner": null,
       "depends_on": [],
@@ -516740,7 +516740,8 @@
           "release-0.5-knowledge-question-recovery",
           "release-0.5-contract-required-fields",
           "release-0.5-correction-template-required",
-          "release-0.5-correction-command-deadlines"
+          "release-0.5-correction-command-deadlines",
+          "release-0.5-comment-security-required"
         ],
         "current_acceptance": null
       }
@@ -517009,7 +517010,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "d06fca1ce0aeb9c8e5caeade63283faab22aaaf6f47cefed7cd74014547b4e55"
+              "sha256": "c15d024f1b62fb043b3dbb2c6cbc95c08fba4be667f7c8e80cd0101559c63c4c"
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
@@ -517351,7 +517352,7 @@
             },
             {
               "path": "apps/web/src/components/SavingOrderComments.tsx",
-              "sha256": "bef79e72466976201d8fc8baa83cdd75199da111fbace66bf32f9af2305df674"
+              "sha256": "44a3d04079c80cdb5e25cf916402d70f1bf62fcf49e0228007a647b991ba89a2"
             },
             {
               "path": "apps/web/src/components/SolarContractForm.tsx",
@@ -517663,7 +517664,7 @@
             },
             {
               "path": "apps/web/e2e/order-comment-forms.spec.ts",
-              "sha256": "cb90e27a3a9e022a4a92b511443472f03689d7cd8fe9a861aa4540879b0bf9a6"
+              "sha256": "733135dac199380ddc73f92d69bd6fc7dbd74c39f2181fa0ae4912571c7a63f2"
             },
             {
               "path": "apps/web/e2e/otp-numerals.spec.ts",
@@ -517695,7 +517696,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "d06fca1ce0aeb9c8e5caeade63283faab22aaaf6f47cefed7cd74014547b4e55"
+              "sha256": "c15d024f1b62fb043b3dbb2c6cbc95c08fba4be667f7c8e80cd0101559c63c4c"
             },
             {
               "path": "docs/design/notification-recovery.md",
@@ -517932,7 +517933,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "d06fca1ce0aeb9c8e5caeade63283faab22aaaf6f47cefed7cd74014547b4e55"
+              "sha256": "c15d024f1b62fb043b3dbb2c6cbc95c08fba4be667f7c8e80cd0101559c63c4c"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -518448,7 +518449,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "d06fca1ce0aeb9c8e5caeade63283faab22aaaf6f47cefed7cd74014547b4e55"
+              "sha256": "c15d024f1b62fb043b3dbb2c6cbc95c08fba4be667f7c8e80cd0101559c63c4c"
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
@@ -518922,7 +518923,7 @@
             },
             {
               "path": "apps/web/e2e/order-comment-forms.spec.ts",
-              "sha256": "cb90e27a3a9e022a4a92b511443472f03689d7cd8fe9a861aa4540879b0bf9a6"
+              "sha256": "733135dac199380ddc73f92d69bd6fc7dbd74c39f2181fa0ae4912571c7a63f2"
             },
             {
               "path": "apps/web/e2e/preference-settings-forms.spec.ts",
@@ -519166,7 +519167,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "d06fca1ce0aeb9c8e5caeade63283faab22aaaf6f47cefed7cd74014547b4e55"
+              "sha256": "c15d024f1b62fb043b3dbb2c6cbc95c08fba4be667f7c8e80cd0101559c63c4c"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -519750,7 +519751,7 @@
             },
             {
               "path": "apps/web/e2e/order-comment-forms.spec.ts",
-              "sha256": "cb90e27a3a9e022a4a92b511443472f03689d7cd8fe9a861aa4540879b0bf9a6"
+              "sha256": "733135dac199380ddc73f92d69bd6fc7dbd74c39f2181fa0ae4912571c7a63f2"
             },
             {
               "path": "apps/web/e2e/preference-settings-forms.spec.ts",
@@ -519994,7 +519995,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "d06fca1ce0aeb9c8e5caeade63283faab22aaaf6f47cefed7cd74014547b4e55"
+              "sha256": "c15d024f1b62fb043b3dbb2c6cbc95c08fba4be667f7c8e80cd0101559c63c4c"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -520604,7 +520605,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "d06fca1ce0aeb9c8e5caeade63283faab22aaaf6f47cefed7cd74014547b4e55"
+              "sha256": "c15d024f1b62fb043b3dbb2c6cbc95c08fba4be667f7c8e80cd0101559c63c4c"
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
@@ -521078,7 +521079,7 @@
             },
             {
               "path": "apps/web/e2e/order-comment-forms.spec.ts",
-              "sha256": "cb90e27a3a9e022a4a92b511443472f03689d7cd8fe9a861aa4540879b0bf9a6"
+              "sha256": "733135dac199380ddc73f92d69bd6fc7dbd74c39f2181fa0ae4912571c7a63f2"
             },
             {
               "path": "apps/web/e2e/preference-settings-forms.spec.ts",
@@ -521322,7 +521323,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "d06fca1ce0aeb9c8e5caeade63283faab22aaaf6f47cefed7cd74014547b4e55"
+              "sha256": "c15d024f1b62fb043b3dbb2c6cbc95c08fba4be667f7c8e80cd0101559c63c4c"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -544809,7 +544810,7 @@
             },
             {
               "path": "apps/web/e2e/security-settings-forms.spec.ts",
-              "sha256": "b1c6320d0a68c5c183fcf6643065f70d1be124ea0e219590f0b0fe140b1d35fa"
+              "sha256": "58a05f707dcff59c4f2ea49112389aebec1f69ca054fe96cc4f12afcec0387b6"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -545017,7 +545018,7 @@
             },
             {
               "path": "apps/web/src/components/SecurityRevocationDialog.tsx",
-              "sha256": "61cbf67830e514a104df050190baf1a2295bcdb3627a009815e85d20ec406ecb"
+              "sha256": "b381a20c0e1173438df6937ecd933f44ad3f94958147ff20ab0183e8264df972"
             },
             {
               "path": "apps/web/src/components/ServiceWorkflowSettings.test.tsx",
@@ -546674,7 +546675,7 @@
             },
             {
               "path": "apps/web/e2e/security-settings-forms.spec.ts",
-              "sha256": "b1c6320d0a68c5c183fcf6643065f70d1be124ea0e219590f0b0fe140b1d35fa"
+              "sha256": "58a05f707dcff59c4f2ea49112389aebec1f69ca054fe96cc4f12afcec0387b6"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -546882,7 +546883,7 @@
             },
             {
               "path": "apps/web/src/components/SecurityRevocationDialog.tsx",
-              "sha256": "61cbf67830e514a104df050190baf1a2295bcdb3627a009815e85d20ec406ecb"
+              "sha256": "b381a20c0e1173438df6937ecd933f44ad3f94958147ff20ab0183e8264df972"
             },
             {
               "path": "apps/web/src/components/ServiceWorkflowSettings.test.tsx",
@@ -548540,7 +548541,7 @@
             },
             {
               "path": "apps/web/e2e/security-settings-forms.spec.ts",
-              "sha256": "b1c6320d0a68c5c183fcf6643065f70d1be124ea0e219590f0b0fe140b1d35fa"
+              "sha256": "58a05f707dcff59c4f2ea49112389aebec1f69ca054fe96cc4f12afcec0387b6"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -548748,7 +548749,7 @@
             },
             {
               "path": "apps/web/src/components/SecurityRevocationDialog.tsx",
-              "sha256": "61cbf67830e514a104df050190baf1a2295bcdb3627a009815e85d20ec406ecb"
+              "sha256": "b381a20c0e1173438df6937ecd933f44ad3f94958147ff20ab0183e8264df972"
             },
             {
               "path": "apps/web/src/components/ServiceWorkflowSettings.test.tsx",
@@ -550375,7 +550376,7 @@
             },
             {
               "path": "apps/web/e2e/security-settings-forms.spec.ts",
-              "sha256": "b1c6320d0a68c5c183fcf6643065f70d1be124ea0e219590f0b0fe140b1d35fa"
+              "sha256": "58a05f707dcff59c4f2ea49112389aebec1f69ca054fe96cc4f12afcec0387b6"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -550583,7 +550584,7 @@
             },
             {
               "path": "apps/web/src/components/SecurityRevocationDialog.tsx",
-              "sha256": "61cbf67830e514a104df050190baf1a2295bcdb3627a009815e85d20ec406ecb"
+              "sha256": "b381a20c0e1173438df6937ecd933f44ad3f94958147ff20ab0183e8264df972"
             },
             {
               "path": "apps/web/src/components/ServiceWorkflowSettings.test.tsx",
@@ -552236,7 +552237,7 @@
             },
             {
               "path": "apps/web/e2e/security-settings-forms.spec.ts",
-              "sha256": "b1c6320d0a68c5c183fcf6643065f70d1be124ea0e219590f0b0fe140b1d35fa"
+              "sha256": "58a05f707dcff59c4f2ea49112389aebec1f69ca054fe96cc4f12afcec0387b6"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -552444,7 +552445,7 @@
             },
             {
               "path": "apps/web/src/components/SecurityRevocationDialog.tsx",
-              "sha256": "61cbf67830e514a104df050190baf1a2295bcdb3627a009815e85d20ec406ecb"
+              "sha256": "b381a20c0e1173438df6937ecd933f44ad3f94958147ff20ab0183e8264df972"
             },
             {
               "path": "apps/web/src/components/ServiceWorkflowSettings.test.tsx",
@@ -554106,7 +554107,7 @@
             },
             {
               "path": "apps/web/e2e/security-settings-forms.spec.ts",
-              "sha256": "b1c6320d0a68c5c183fcf6643065f70d1be124ea0e219590f0b0fe140b1d35fa"
+              "sha256": "58a05f707dcff59c4f2ea49112389aebec1f69ca054fe96cc4f12afcec0387b6"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -554314,7 +554315,7 @@
             },
             {
               "path": "apps/web/src/components/SecurityRevocationDialog.tsx",
-              "sha256": "61cbf67830e514a104df050190baf1a2295bcdb3627a009815e85d20ec406ecb"
+              "sha256": "b381a20c0e1173438df6937ecd933f44ad3f94958147ff20ab0183e8264df972"
             },
             {
               "path": "apps/web/src/components/ServiceWorkflowSettings.test.tsx",
@@ -555949,7 +555950,7 @@
             },
             {
               "path": "apps/web/e2e/security-settings-forms.spec.ts",
-              "sha256": "b1c6320d0a68c5c183fcf6643065f70d1be124ea0e219590f0b0fe140b1d35fa"
+              "sha256": "58a05f707dcff59c4f2ea49112389aebec1f69ca054fe96cc4f12afcec0387b6"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -556157,7 +556158,7 @@
             },
             {
               "path": "apps/web/src/components/SecurityRevocationDialog.tsx",
-              "sha256": "61cbf67830e514a104df050190baf1a2295bcdb3627a009815e85d20ec406ecb"
+              "sha256": "b381a20c0e1173438df6937ecd933f44ad3f94958147ff20ab0183e8264df972"
             },
             {
               "path": "apps/web/src/components/ServiceWorkflowSettings.test.tsx",
@@ -557756,7 +557757,7 @@
             },
             {
               "path": "apps/web/e2e/security-settings-forms.spec.ts",
-              "sha256": "b1c6320d0a68c5c183fcf6643065f70d1be124ea0e219590f0b0fe140b1d35fa"
+              "sha256": "58a05f707dcff59c4f2ea49112389aebec1f69ca054fe96cc4f12afcec0387b6"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -557964,7 +557965,7 @@
             },
             {
               "path": "apps/web/src/components/SecurityRevocationDialog.tsx",
-              "sha256": "61cbf67830e514a104df050190baf1a2295bcdb3627a009815e85d20ec406ecb"
+              "sha256": "b381a20c0e1173438df6937ecd933f44ad3f94958147ff20ab0183e8264df972"
             },
             {
               "path": "apps/web/src/components/ServiceWorkflowSettings.test.tsx",
@@ -559563,7 +559564,7 @@
             },
             {
               "path": "apps/web/e2e/security-settings-forms.spec.ts",
-              "sha256": "b1c6320d0a68c5c183fcf6643065f70d1be124ea0e219590f0b0fe140b1d35fa"
+              "sha256": "58a05f707dcff59c4f2ea49112389aebec1f69ca054fe96cc4f12afcec0387b6"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -559771,7 +559772,7 @@
             },
             {
               "path": "apps/web/src/components/SecurityRevocationDialog.tsx",
-              "sha256": "61cbf67830e514a104df050190baf1a2295bcdb3627a009815e85d20ec406ecb"
+              "sha256": "b381a20c0e1173438df6937ecd933f44ad3f94958147ff20ab0183e8264df972"
             },
             {
               "path": "apps/web/src/components/ServiceWorkflowSettings.test.tsx",
@@ -561371,7 +561372,7 @@
             },
             {
               "path": "apps/web/e2e/security-settings-forms.spec.ts",
-              "sha256": "b1c6320d0a68c5c183fcf6643065f70d1be124ea0e219590f0b0fe140b1d35fa"
+              "sha256": "58a05f707dcff59c4f2ea49112389aebec1f69ca054fe96cc4f12afcec0387b6"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -561579,7 +561580,7 @@
             },
             {
               "path": "apps/web/src/components/SecurityRevocationDialog.tsx",
-              "sha256": "61cbf67830e514a104df050190baf1a2295bcdb3627a009815e85d20ec406ecb"
+              "sha256": "b381a20c0e1173438df6937ecd933f44ad3f94958147ff20ab0183e8264df972"
             },
             {
               "path": "apps/web/src/components/ServiceWorkflowSettings.test.tsx",
@@ -563178,7 +563179,7 @@
             },
             {
               "path": "apps/web/e2e/security-settings-forms.spec.ts",
-              "sha256": "b1c6320d0a68c5c183fcf6643065f70d1be124ea0e219590f0b0fe140b1d35fa"
+              "sha256": "58a05f707dcff59c4f2ea49112389aebec1f69ca054fe96cc4f12afcec0387b6"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -563386,7 +563387,7 @@
             },
             {
               "path": "apps/web/src/components/SecurityRevocationDialog.tsx",
-              "sha256": "61cbf67830e514a104df050190baf1a2295bcdb3627a009815e85d20ec406ecb"
+              "sha256": "b381a20c0e1173438df6937ecd933f44ad3f94958147ff20ab0183e8264df972"
             },
             {
               "path": "apps/web/src/components/ServiceWorkflowSettings.test.tsx",
@@ -589732,7 +589733,7 @@
             },
             {
               "path": "apps/web/src/components/SavingOrderComments.tsx",
-              "sha256": "bef79e72466976201d8fc8baa83cdd75199da111fbace66bf32f9af2305df674"
+              "sha256": "44a3d04079c80cdb5e25cf916402d70f1bf62fcf49e0228007a647b991ba89a2"
             },
             {
               "path": "apps/web/src/components/SavingStaffOperationForm.tsx",
@@ -594296,7 +594297,7 @@
             },
             {
               "path": "apps/web/e2e/security-settings-forms.spec.ts",
-              "sha256": "b1c6320d0a68c5c183fcf6643065f70d1be124ea0e219590f0b0fe140b1d35fa"
+              "sha256": "58a05f707dcff59c4f2ea49112389aebec1f69ca054fe96cc4f12afcec0387b6"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -594504,7 +594505,7 @@
             },
             {
               "path": "apps/web/src/components/SecurityRevocationDialog.tsx",
-              "sha256": "61cbf67830e514a104df050190baf1a2295bcdb3627a009815e85d20ec406ecb"
+              "sha256": "b381a20c0e1173438df6937ecd933f44ad3f94958147ff20ab0183e8264df972"
             },
             {
               "path": "apps/web/src/components/ServiceWorkflowSettings.test.tsx",
@@ -596099,7 +596100,7 @@
             },
             {
               "path": "apps/web/e2e/security-settings-forms.spec.ts",
-              "sha256": "b1c6320d0a68c5c183fcf6643065f70d1be124ea0e219590f0b0fe140b1d35fa"
+              "sha256": "58a05f707dcff59c4f2ea49112389aebec1f69ca054fe96cc4f12afcec0387b6"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -596307,7 +596308,7 @@
             },
             {
               "path": "apps/web/src/components/SecurityRevocationDialog.tsx",
-              "sha256": "61cbf67830e514a104df050190baf1a2295bcdb3627a009815e85d20ec406ecb"
+              "sha256": "b381a20c0e1173438df6937ecd933f44ad3f94958147ff20ab0183e8264df972"
             },
             {
               "path": "apps/web/src/components/ServiceWorkflowSettings.test.tsx",
@@ -597902,7 +597903,7 @@
             },
             {
               "path": "apps/web/e2e/security-settings-forms.spec.ts",
-              "sha256": "b1c6320d0a68c5c183fcf6643065f70d1be124ea0e219590f0b0fe140b1d35fa"
+              "sha256": "58a05f707dcff59c4f2ea49112389aebec1f69ca054fe96cc4f12afcec0387b6"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -598110,7 +598111,7 @@
             },
             {
               "path": "apps/web/src/components/SecurityRevocationDialog.tsx",
-              "sha256": "61cbf67830e514a104df050190baf1a2295bcdb3627a009815e85d20ec406ecb"
+              "sha256": "b381a20c0e1173438df6937ecd933f44ad3f94958147ff20ab0183e8264df972"
             },
             {
               "path": "apps/web/src/components/ServiceWorkflowSettings.test.tsx",
@@ -599705,7 +599706,7 @@
             },
             {
               "path": "apps/web/e2e/security-settings-forms.spec.ts",
-              "sha256": "b1c6320d0a68c5c183fcf6643065f70d1be124ea0e219590f0b0fe140b1d35fa"
+              "sha256": "58a05f707dcff59c4f2ea49112389aebec1f69ca054fe96cc4f12afcec0387b6"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -599913,7 +599914,7 @@
             },
             {
               "path": "apps/web/src/components/SecurityRevocationDialog.tsx",
-              "sha256": "61cbf67830e514a104df050190baf1a2295bcdb3627a009815e85d20ec406ecb"
+              "sha256": "b381a20c0e1173438df6937ecd933f44ad3f94958147ff20ab0183e8264df972"
             },
             {
               "path": "apps/web/src/components/ServiceWorkflowSettings.test.tsx",
@@ -601508,7 +601509,7 @@
             },
             {
               "path": "apps/web/e2e/security-settings-forms.spec.ts",
-              "sha256": "b1c6320d0a68c5c183fcf6643065f70d1be124ea0e219590f0b0fe140b1d35fa"
+              "sha256": "58a05f707dcff59c4f2ea49112389aebec1f69ca054fe96cc4f12afcec0387b6"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -601716,7 +601717,7 @@
             },
             {
               "path": "apps/web/src/components/SecurityRevocationDialog.tsx",
-              "sha256": "61cbf67830e514a104df050190baf1a2295bcdb3627a009815e85d20ec406ecb"
+              "sha256": "b381a20c0e1173438df6937ecd933f44ad3f94958147ff20ab0183e8264df972"
             },
             {
               "path": "apps/web/src/components/ServiceWorkflowSettings.test.tsx",
@@ -603311,7 +603312,7 @@
             },
             {
               "path": "apps/web/e2e/security-settings-forms.spec.ts",
-              "sha256": "b1c6320d0a68c5c183fcf6643065f70d1be124ea0e219590f0b0fe140b1d35fa"
+              "sha256": "58a05f707dcff59c4f2ea49112389aebec1f69ca054fe96cc4f12afcec0387b6"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -603519,7 +603520,7 @@
             },
             {
               "path": "apps/web/src/components/SecurityRevocationDialog.tsx",
-              "sha256": "61cbf67830e514a104df050190baf1a2295bcdb3627a009815e85d20ec406ecb"
+              "sha256": "b381a20c0e1173438df6937ecd933f44ad3f94958147ff20ab0183e8264df972"
             },
             {
               "path": "apps/web/src/components/ServiceWorkflowSettings.test.tsx",
@@ -605114,7 +605115,7 @@
             },
             {
               "path": "apps/web/e2e/security-settings-forms.spec.ts",
-              "sha256": "b1c6320d0a68c5c183fcf6643065f70d1be124ea0e219590f0b0fe140b1d35fa"
+              "sha256": "58a05f707dcff59c4f2ea49112389aebec1f69ca054fe96cc4f12afcec0387b6"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -605322,7 +605323,7 @@
             },
             {
               "path": "apps/web/src/components/SecurityRevocationDialog.tsx",
-              "sha256": "61cbf67830e514a104df050190baf1a2295bcdb3627a009815e85d20ec406ecb"
+              "sha256": "b381a20c0e1173438df6937ecd933f44ad3f94958147ff20ab0183e8264df972"
             },
             {
               "path": "apps/web/src/components/ServiceWorkflowSettings.test.tsx",
@@ -611211,7 +611212,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
-              "sha256": "607f764dd241f8152498963f373b40b189496e72bdefc078785d416617a5ad2e"
+              "sha256": "174f8fe7efb03b8a2b88aeefb9c556b9e8d6df1287dafe8eb329ac942d82d6ad"
             },
             {
               "path": "apps/web/src/components/ProfileIdentity.tsx",
@@ -612009,7 +612010,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
-              "sha256": "607f764dd241f8152498963f373b40b189496e72bdefc078785d416617a5ad2e"
+              "sha256": "174f8fe7efb03b8a2b88aeefb9c556b9e8d6df1287dafe8eb329ac942d82d6ad"
             },
             {
               "path": "apps/web/src/components/ProfileIdentity.tsx",
@@ -612807,7 +612808,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
-              "sha256": "607f764dd241f8152498963f373b40b189496e72bdefc078785d416617a5ad2e"
+              "sha256": "174f8fe7efb03b8a2b88aeefb9c556b9e8d6df1287dafe8eb329ac942d82d6ad"
             },
             {
               "path": "apps/web/src/components/ProfileIdentity.tsx",
@@ -613605,7 +613606,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
-              "sha256": "607f764dd241f8152498963f373b40b189496e72bdefc078785d416617a5ad2e"
+              "sha256": "174f8fe7efb03b8a2b88aeefb9c556b9e8d6df1287dafe8eb329ac942d82d6ad"
             },
             {
               "path": "apps/web/src/components/ProfileIdentity.tsx",
@@ -614407,7 +614408,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
-              "sha256": "607f764dd241f8152498963f373b40b189496e72bdefc078785d416617a5ad2e"
+              "sha256": "174f8fe7efb03b8a2b88aeefb9c556b9e8d6df1287dafe8eb329ac942d82d6ad"
             },
             {
               "path": "apps/web/src/components/ProfileIdentity.tsx",
@@ -615205,7 +615206,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
-              "sha256": "607f764dd241f8152498963f373b40b189496e72bdefc078785d416617a5ad2e"
+              "sha256": "174f8fe7efb03b8a2b88aeefb9c556b9e8d6df1287dafe8eb329ac942d82d6ad"
             },
             {
               "path": "apps/web/src/components/ProfileIdentity.tsx",
@@ -616003,7 +616004,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
-              "sha256": "607f764dd241f8152498963f373b40b189496e72bdefc078785d416617a5ad2e"
+              "sha256": "174f8fe7efb03b8a2b88aeefb9c556b9e8d6df1287dafe8eb329ac942d82d6ad"
             },
             {
               "path": "apps/web/src/components/ProfileIdentity.tsx",
@@ -616802,7 +616803,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
-              "sha256": "607f764dd241f8152498963f373b40b189496e72bdefc078785d416617a5ad2e"
+              "sha256": "174f8fe7efb03b8a2b88aeefb9c556b9e8d6df1287dafe8eb329ac942d82d6ad"
             },
             {
               "path": "apps/web/src/components/ProfileIdentity.tsx",
@@ -617601,7 +617602,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
-              "sha256": "607f764dd241f8152498963f373b40b189496e72bdefc078785d416617a5ad2e"
+              "sha256": "174f8fe7efb03b8a2b88aeefb9c556b9e8d6df1287dafe8eb329ac942d82d6ad"
             },
             {
               "path": "apps/web/src/components/ProfileIdentity.tsx",
@@ -618400,7 +618401,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
-              "sha256": "607f764dd241f8152498963f373b40b189496e72bdefc078785d416617a5ad2e"
+              "sha256": "174f8fe7efb03b8a2b88aeefb9c556b9e8d6df1287dafe8eb329ac942d82d6ad"
             },
             {
               "path": "apps/web/src/components/ProfileIdentity.tsx",
@@ -619199,7 +619200,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
-              "sha256": "607f764dd241f8152498963f373b40b189496e72bdefc078785d416617a5ad2e"
+              "sha256": "174f8fe7efb03b8a2b88aeefb9c556b9e8d6df1287dafe8eb329ac942d82d6ad"
             },
             {
               "path": "apps/web/src/components/ProfileIdentity.tsx",
@@ -619998,7 +619999,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
-              "sha256": "607f764dd241f8152498963f373b40b189496e72bdefc078785d416617a5ad2e"
+              "sha256": "174f8fe7efb03b8a2b88aeefb9c556b9e8d6df1287dafe8eb329ac942d82d6ad"
             },
             {
               "path": "apps/web/src/components/ProfileIdentity.tsx",
@@ -620797,7 +620798,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
-              "sha256": "607f764dd241f8152498963f373b40b189496e72bdefc078785d416617a5ad2e"
+              "sha256": "174f8fe7efb03b8a2b88aeefb9c556b9e8d6df1287dafe8eb329ac942d82d6ad"
             },
             {
               "path": "apps/web/src/components/ProfileIdentity.tsx",
@@ -621596,7 +621597,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
-              "sha256": "607f764dd241f8152498963f373b40b189496e72bdefc078785d416617a5ad2e"
+              "sha256": "174f8fe7efb03b8a2b88aeefb9c556b9e8d6df1287dafe8eb329ac942d82d6ad"
             },
             {
               "path": "apps/web/src/components/ProfileIdentity.tsx",
@@ -622395,7 +622396,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
-              "sha256": "607f764dd241f8152498963f373b40b189496e72bdefc078785d416617a5ad2e"
+              "sha256": "174f8fe7efb03b8a2b88aeefb9c556b9e8d6df1287dafe8eb329ac942d82d6ad"
             },
             {
               "path": "apps/web/src/components/ProfileIdentity.tsx",
@@ -717235,7 +717236,7 @@
             },
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
-              "sha256": "be329894feef39a2b3357e2e97493b9c80d39754b840c5f34f35d897f9487da8"
+              "sha256": "4ca738d59b83f074d95432adb169d9134ad804fa1320f4739c92d4e352df6ae3"
             },
             {
               "path": "apps/web/e2e/provider-forms.spec.ts",
@@ -721116,7 +721117,7 @@
             },
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
-              "sha256": "be329894feef39a2b3357e2e97493b9c80d39754b840c5f34f35d897f9487da8"
+              "sha256": "4ca738d59b83f074d95432adb169d9134ad804fa1320f4739c92d4e352df6ae3"
             },
             {
               "path": "apps/web/e2e/provider-forms.spec.ts",
@@ -723755,7 +723756,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Current browser journeys cover required staff saving hardware and solar issue fields and customer electricity increases. Address and full corrections now surface a bounded manual replay. Remaining conditional form, command, bespoke state and live policy criteria need closure."
+        "Comment and account security journeys now verify required semantics alongside exact receipt and recovery checks. Remaining conditional form, command, bespoke state and live policy criteria need closure."
       ],
       "owner": null,
       "depends_on": [],
@@ -723867,7 +723868,8 @@
           "release-0.5-saving-solar-submission-recovery",
           "release-0.5-contract-required-fields",
           "release-0.5-correction-template-required",
-          "release-0.5-correction-command-deadlines"
+          "release-0.5-correction-command-deadlines",
+          "release-0.5-comment-security-required"
         ]
       }
     },
@@ -724283,7 +724285,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
-              "sha256": "607f764dd241f8152498963f373b40b189496e72bdefc078785d416617a5ad2e"
+              "sha256": "174f8fe7efb03b8a2b88aeefb9c556b9e8d6df1287dafe8eb329ac942d82d6ad"
             },
             {
               "path": "apps/web/src/components/ProfileIdentity.tsx",
@@ -724363,7 +724365,7 @@
             },
             {
               "path": "apps/web/src/components/SavingOrderComments.tsx",
-              "sha256": "bef79e72466976201d8fc8baa83cdd75199da111fbace66bf32f9af2305df674"
+              "sha256": "44a3d04079c80cdb5e25cf916402d70f1bf62fcf49e0228007a647b991ba89a2"
             },
             {
               "path": "apps/web/src/components/SavingStaffOperationForm.tsx",
@@ -724371,7 +724373,7 @@
             },
             {
               "path": "apps/web/src/components/SecurityRevocationDialog.tsx",
-              "sha256": "61cbf67830e514a104df050190baf1a2295bcdb3627a009815e85d20ec406ecb"
+              "sha256": "b381a20c0e1173438df6937ecd933f44ad3f94958147ff20ab0183e8264df972"
             },
             {
               "path": "apps/web/src/components/ServiceDuePeriodPanel.tsx",
@@ -725559,7 +725561,8 @@
             "Renewed saving, solar and shared checkout performance evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-solar-submission-recovery/proof.json",
             "Renewed affected contract accessibility and performance evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-contract-required-fields/proof.json",
             "Renewed correction, template and affected route performance evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-correction-template-required/proof.json",
-            "Renewed affected form and correction route performance evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-correction-command-deadlines/proof.json"
+            "Renewed affected form and correction route performance evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-correction-command-deadlines/proof.json",
+            "Renewed comment and account security performance evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-comment-security-required/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -794807,6 +794810,113 @@
       "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-correction-command-deadlines/renewed-bindings.json",
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-correction-command-deadlines/reviewed.patch",
       "release_disposition": "Verified required commercial form controls and correction recovery. v0.5.0 acceptance remains open."
+    },
+    "release-0.5-comment-security-required": {
+      "batch": "release-0.5-comment-security-required",
+      "base_commit": "3e8edbe78dc28c2948241ed6a41d92588e46f78e",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.05.01.05",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.05.01.05",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/confirmation-fixture.ts",
+          "sha256": "8d842de5577a9f43a5ca0efcf8e6a00e18e6ea1fb53116555fac8cbd7608bb61"
+        },
+        {
+          "path": "apps/web/e2e/coverage-fixture.ts",
+          "sha256": "07949862684b86d6ff241d5f71e59e6c71a5cc1ddc70655b0d508beb53865dac"
+        },
+        {
+          "path": "apps/web/e2e/order-comment-form-fixture.ts",
+          "sha256": "b9af0362d2f39efc7a8c8ee4fc32c862d6b79f483c72e605a332241f89ae7096"
+        },
+        {
+          "path": "apps/web/e2e/order-comment-forms.spec.ts",
+          "sha256": "733135dac199380ddc73f92d69bd6fc7dbd74c39f2181fa0ae4912571c7a63f2"
+        },
+        {
+          "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
+          "sha256": "4ca738d59b83f074d95432adb169d9134ad804fa1320f4739c92d4e352df6ae3"
+        },
+        {
+          "path": "apps/web/e2e/security-settings-forms.spec.ts",
+          "sha256": "58a05f707dcff59c4f2ea49112389aebec1f69ca054fe96cc4f12afcec0387b6"
+        },
+        {
+          "path": "apps/web/e2e/ticket-forms-fixture.ts",
+          "sha256": "cb301f1c98f59499b3bc3204f0648bb2ec925b9a14dd0ef3baf48594737dd2b6"
+        },
+        {
+          "path": "apps/web/e2e/trusted-devices.spec.ts",
+          "sha256": "e3ba126192910d53f28138852484c3c9afb8a7d220e9b713e35d9e25c7b2d766"
+        },
+        {
+          "path": "apps/web/src/components/ProfileClosureReview.tsx",
+          "sha256": "174f8fe7efb03b8a2b88aeefb9c556b9e8d6df1287dafe8eb329ac942d82d6ad"
+        },
+        {
+          "path": "apps/web/src/components/SavingOrderComments.tsx",
+          "sha256": "44a3d04079c80cdb5e25cf916402d70f1bf62fcf49e0228007a647b991ba89a2"
+        },
+        {
+          "path": "apps/web/src/components/SecurityRevocationDialog.tsx",
+          "sha256": "b381a20c0e1173438df6937ecd933f44ad3f94958147ff20ab0183e8264df972"
+        },
+        {
+          "path": "apps/web/src/hooks/useSecurityRevocationForm.ts",
+          "sha256": "c67189a8d5d9373b49dfc659e8314bb6492c5b4dcd96235c94ca97fcda647b61"
+        },
+        {
+          "path": "apps/web/src/lib/consultation-form-schemas.ts",
+          "sha256": "743a8594fb9a8b7201334e932eb60da4a5885e4a0662e8f352c140817d694c94"
+        },
+        {
+          "path": "apps/web/src/lib/order-comment-form-schemas.ts",
+          "sha256": "93403f0ae75b978df00f5d1187cf07179b1661bf51d1e817e5155179dfe954af"
+        },
+        {
+          "path": "apps/web/src/lib/profile-lifecycle-form-schemas.ts",
+          "sha256": "4fcf675a7a0401de571fff13b83b3de04b25f171817301882684b643dcbab6b3"
+        },
+        {
+          "path": "apps/web/src/lib/saving-address-amendment-form-schemas.ts",
+          "sha256": "591f451ff156c2df5f54f38ea9298038b1045fc3ec8212cd70a1cf5630a88a5e"
+        },
+        {
+          "path": "apps/web/src/lib/security-settings-form-schemas.ts",
+          "sha256": "427a0edd81ba7a387141b845f5268da784179957b1ffc438cba428df94d12cad"
+        },
+        {
+          "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
+          "sha256": "7a925319a1b3163823ed94b5174e75de6c1049ce27e3b8b5069dedc2c5597e5c"
+        },
+        {
+          "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
+          "sha256": "d53fa43a77e881652ba570ac2a4dba99d4030f20b36f9c6d167b5e610484ae27"
+        },
+        {
+          "path": "docs/design/accessibility.md",
+          "sha256": "c15d024f1b62fb043b3dbb2c6cbc95c08fba4be667f7c8e80cd0101559c63c4c"
+        }
+      ],
+      "checks": [
+        "Three baseline Chromium cases reproduced missing required markers on customer order comments, staff closure confirmation and step-up passwords.",
+        "Order comments expose required text and staff electricity comments also expose required visibility. Staff closure exposes required consent and current password. Session and device revocation expose a required password when the step-up field is present.",
+        "One initial security case stopped at a disk write error. The trusted-device test also omitted the existing destructive confirmation phrase and matched an unrelated status region. The revised tests follow the existing gate, verify its disabled state and assert the security-page status. Original CSRF, step-up, retry, focus and receipt assertions are retained.",
+        "41 web unit cases, 32 distinct production-browser cases across Chromium and Mobile Safari, 16 instrumented Chromium cases, all eight combined coverage groups, 98 gzip budgets, six cold-auth checks, lint, formatting and web typecheck passed."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-comment-security-required",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-comment-security-required/proof.json",
+      "source_scope_proof_sha256": "10fd3d4cd1f42c3e5fb713619de9795fef9fe79e1797d25b45a206d53c630840",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-comment-security-required/renewed-bindings.json",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-comment-security-required/reviewed.patch",
+      "release_disposition": "Verified required comment and account security controls. v0.5.0 acceptance remains open."
     }
   },
   "historical_improvements": [
@@ -794858,7 +794968,7 @@
       "release-readiness#R-04.01",
       "release-readiness#R-04.02"
     ],
-    "goal": "Close the demonstrated comment and account security form markers, then reconcile remaining route and command evidence. Resolve accessibility enforcement and live route reporting before accepting v0.5.0."
+    "goal": "Close the demonstrated saving address and consultation information markers, then reconcile remaining route and command evidence. Resolve accessibility enforcement and live route reporting before accepting v0.5.0."
   },
   "launch_forecast": {
     "status": "deadline_at_risk_until_v0_5_and_operational_gates_close",

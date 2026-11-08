@@ -326,6 +326,8 @@ for (const locale of ['en', 'fa'] as const) {
       .getByRole('button', { name: t('tickets.closure.execute', locale), exact: true })
       .click();
     const confirmed = owner.getByRole('checkbox');
+    await expect(confirmed).toHaveAttribute('aria-required', 'true');
+    await expect(owner.locator('input[type=password]')).toHaveAttribute('aria-required', 'true');
     await expect(confirmed).toBeFocused();
     await expect(confirmed).toHaveAttribute('aria-invalid', 'true');
     expect(
