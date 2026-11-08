@@ -46,7 +46,9 @@ function OwnedKnowledgeQuestionAssistant({ locale, staff }: { locale: Locale; st
   const scopeCopy = (key: string) => t('assistant.' + (staff ? 'staff.' : 'public.') + key, locale);
   const endpoint = staff ? '/api/staff/knowledge' : '/api/public/knowledge';
   const credentials = staff ? 'include' : 'omit';
-  const [available, setAvailable] = useState<boolean | null>(null);
+  const [availability, setAvailability] = useState<'loading' | 'ready' | 'unavailable' | 'error'>(
+    'loading'
+  );
   const [attempt, setAttempt] = useState(0);
   const [draft, setDraft] = useState('');
   const [question, setQuestion] = useState<{ text: string; at: number } | null>(null);
@@ -73,7 +75,7 @@ function OwnedKnowledgeQuestionAssistant({ locale, staff }: { locale: Locale; st
     );
     const cancel = () => void client.cancelQueries({ queryKey: key, exact: true });
     controller.signal.addEventListener('abort', cancel, { once: true });
-    setAvailable(null);
+    setAvailability('loading');
     setAnswer(null);
     setQuestion(null);
     setBusy(false);
@@ -89,22 +91,31 @@ function OwnedKnowledgeQuestionAssistant({ locale, staff }: { locale: Locale; st
         queryFn: ({ signal: querySignal }) =>
           readWithDeadline(querySignal, async (signal) => {
             const response = await fetch(endpoint + '/availability', { credentials, signal });
-            return { ok: response.ok, value: (await response.json()) as unknown };
+            return {
+              status: response.status,
+              value: response.status === 200 ? ((await response.json()) as unknown) : null,
+            };
           }),
       })
-      .then(async (response) => {
+      .then((response) => {
+        if (controller.signal.aborted) return;
+        if (staff && (response.status === 401 || response.status === 403)) {
+          setDraft('');
+          setAvailability('unavailable');
+          return;
+        }
         const data: unknown = response.value;
         if (
-          !response.ok ||
+          response.status !== 200 ||
           !chatRecord(data) ||
           Object.keys(data).length !== 1 ||
           typeof data.available !== 'boolean'
         )
           throw new Error('Invalid availability');
-        if (!controller.signal.aborted) setAvailable(data.available);
+        setAvailability(data.available ? 'ready' : 'unavailable');
       })
       .catch(() => {
-        if (!controller.signal.aborted) setAvailable(false);
+        if (!controller.signal.aborted) setAvailability('error');
       });
     return () => {
       controller.abort();
@@ -114,7 +125,7 @@ function OwnedKnowledgeQuestionAssistant({ locale, staff }: { locale: Locale; st
   }, [locale, attempt, endpoint, credentials, client, reader, staff, accountId, contextRevision]);
   async function submit(event: FormEvent) {
     event.preventDefault();
-    if (!available || sending.current || cooldown.blocked()) return;
+    if (availability !== 'ready' || sending.current || cooldown.blocked()) return;
     const message = draft.trim();
     if (!message || message.length > 1000) {
       setFieldError(true);
@@ -148,14 +159,14 @@ function OwnedKnowledgeQuestionAssistant({ locale, staff }: { locale: Locale; st
       if (controller.signal.aborted) return;
       if (!response.ok) {
         if (staff && (response.status === 401 || response.status === 403)) {
-          setAvailable(false);
+          setAvailability('unavailable');
           setAnswer(null);
           setQuestion(null);
           setDraft('');
           return;
         }
         if (response.status === 429) cooldown.read(response);
-        if (response.status === 409) setAvailable(false);
+        if (response.status === 409) setAvailability('unavailable');
         const code = authErrorCode(body);
         if (response.status === 400) {
           setFieldError(true);
@@ -205,14 +216,17 @@ function OwnedKnowledgeQuestionAssistant({ locale, staff }: { locale: Locale; st
           {scopeCopy('scope')}
         </p>
       </div>
-      {available === null ? (
+      {availability === 'loading' ? (
         <p role="status" className="text-sm text-muted-foreground">
           {copy('loading')}
         </p>
-      ) : !available ? (
+      ) : availability !== 'ready' ? (
         <div className="space-y-3">
-          <p role="status" className="text-sm text-muted-foreground">
-            {copy('unavailable')}
+          <p
+            role={availability === 'error' ? 'alert' : 'status'}
+            className="text-sm text-muted-foreground"
+          >
+            {availability === 'error' ? t('assistant.page.error', locale) : copy('unavailable')}
           </p>
           <Button variant="outline" onClick={() => setAttempt((value) => value + 1)}>
             {copy('refresh')}

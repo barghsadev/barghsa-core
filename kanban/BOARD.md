@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-08T21:43:57+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-08T21:53:49+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.4.0**. Next milestone: **v0.5.0**.
 
@@ -39,7 +39,7 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Bind the remaining original conditional requirements route by route, starting with public support, customer guide, and wallet and invoice detail panels. GitHub merge enforcement and staging Sentry delivery remain independent gates.
+Close the wallet and invoice conditional states and bind the remaining original requirements route by route. GitHub merge enforcement and staging Sentry delivery remain independent gates.
 
 - `07-ui-ux-design.md#T-07.05.01.08`: Ensure all color combinations pass WCAG AA contrast ratios: normal text ≥ 4.5:1, large text ≥ 3:1, UI components ≥ 3:1. Verify with automated tools. Provide a "high contrast" mode toggle that strengthens all contrast ratios.
 - `07-ui-ux-design.md#T-07.05.02.04`: Add CI gate: a11y violations on critical pages block PR merge. Non-critical pages warn but do not block. Violations must be triaged with reason or exemption.

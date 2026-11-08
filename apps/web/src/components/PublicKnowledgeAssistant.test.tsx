@@ -147,6 +147,58 @@ it('drops revoked scope and checks availability again without replaying a questi
   expect(fetcher).toHaveBeenCalledTimes(3);
   expect(host.querySelector('[data-message-role]')).toBeNull();
 });
+
+it.each([false, true])(
+  'distinguishes a stalled availability read from an unavailable guide (staff=%s)',
+  async (staff) => {
+    const stalled = Response.json(null);
+    let finish!: (body: unknown) => void;
+    vi.spyOn(stalled, 'json').mockImplementation(
+      () =>
+        new Promise((resolve) => {
+          finish = resolve;
+        })
+    );
+    const fetcher = vi
+      .fn<typeof fetch>()
+      .mockResolvedValueOnce(stalled)
+      .mockResolvedValueOnce(Response.json({ available: false }))
+      .mockResolvedValueOnce(Response.json({ available: true }));
+    vi.stubGlobal('fetch', fetcher);
+    vi.useFakeTimers();
+    const Assistant = staff ? StaffKnowledgeAssistant : PublicKnowledgeAssistant;
+    await act(async () =>
+      root.render(
+        <QueryComponentProvider>
+          <Assistant locale="en" />
+        </QueryComponentProvider>
+      )
+    );
+    expect(host.querySelector('[role=status]')?.textContent).toBe(
+      t('assistant.public.loading', 'en')
+    );
+    await act(async () => vi.advanceTimersByTimeAsync(15_000));
+    expect(fetcher.mock.calls[0]![1]?.signal?.aborted).toBe(true);
+    expect(host.querySelector('[role=alert]')?.textContent).toBe(t('assistant.page.error', 'en'));
+    expect(host.querySelector('textarea')).toBeNull();
+    const checkAgain = () => host.querySelector('button')!.click();
+    await act(async () => checkAgain());
+    expect(host.querySelector('[role=alert]')).toBeNull();
+    expect(host.querySelector('[role=status]')?.textContent).toBe(
+      t('assistant.public.unavailable', 'en')
+    );
+    await act(async () => finish({ available: true }));
+    expect(host.querySelector('textarea')).toBeNull();
+    await act(async () => checkAgain());
+    expect(host.querySelector('textarea')).not.toBeNull();
+    expect(fetcher.mock.calls.map(([url, init]) => [url, init?.credentials])).toEqual(
+      Array.from({ length: 3 }, () => [
+        `/api/${staff ? 'staff' : 'public'}/knowledge/availability`,
+        staff ? 'include' : 'omit',
+      ])
+    );
+  }
+);
 it('aborts a pending answer on locale change and refuses its late result', async () => {
   let finish!: (response: Response) => void;
   const fetcher = vi

@@ -1,8 +1,13 @@
 import AxeBuilder from '@axe-core/playwright';
 import { t } from '@barghsa/i18n/recovery';
+import { t as appText } from '@barghsa/i18n/app';
+import { loadingText } from '@barghsa/i18n/loading-feedback';
 import { confirmationText } from '@barghsa/i18n/confirmation';
-import { test, expect } from './coverage-fixture';
+import { test, expect, type Route } from './coverage-fixture';
 import { crmShell } from './crm-shell-fixture';
+import { mockPublicAuthCsrf } from './public-auth-fixture';
+import { productionManifest } from './production-manifest';
+import { brandSettings } from '../src/test/branding-settings-fixtures';
 const id = '22222222-2222-4222-8222-222222222222',
   profileId = '11111111-1111-4111-8111-111111111111',
   challengeId = '33333333-3333-4333-8333-333333333333';
@@ -60,6 +65,8 @@ for (const locale of ['en', 'fa'] as const) {
       { caseId: id, challengeId, code: '123456' },
       { caseId: id, challengeId, code: '123456' },
     ]);
+    await expect(digits).toHaveCount(0);
+    await expect(submit).toHaveCount(0);
     expect(
       (await new AxeBuilder({ page }).include('form:has(#recovery-caseId)').analyze()).violations
     ).toEqual([]);
@@ -70,6 +77,84 @@ for (const locale of ['en', 'fa'] as const) {
       path: test.info().outputPath('recovery-public.png'),
       fullPage: true,
     });
+  });
+  test(`support isolates guide availability and a stalled recovery confirmation (${locale})`, async ({
+    page,
+  }) => {
+    await page.addInitScript((value) => localStorage.setItem('barghsa.locale', value), locale);
+    await mockPublicAuthCsrf(page);
+    await page.route('**/api/auth/user', (route) => route.fulfill({ status: 401, json: {} }));
+    await page.clock.install();
+    await page.route('**/api/public/branding/config', (route) =>
+      route.fulfill({ json: brandSettings })
+    );
+    const manifest = await productionManifest();
+    const asset = manifest['src/components/RecoveryContactForm.tsx']!.file;
+    let module: Route | undefined;
+    await page.route(`**/${asset}`, (route) => {
+      module = route;
+    });
+    let guideReads = 0;
+    await page.route('**/api/public/knowledge/availability', (route) => {
+      guideReads++;
+      return guideReads === 1
+        ? route.fulfill({ status: 503, json: { message: 'PRIVATE_GUIDE_DETAIL' } })
+        : route.fulfill({ json: { available: guideReads === 3 } });
+    });
+    const writes: unknown[] = [];
+    let held: Route | undefined;
+    await page.route('**/api/auth/recovery/verify', (route) => {
+      expect(route.request().headers()['x-csrf-token']).toBe('c'.repeat(64));
+      writes.push(route.request().postDataJSON());
+      held = route;
+    });
+    await page.goto('/support', { waitUntil: 'commit' });
+    const main = page.getByRole('main');
+    await expect(
+      main.getByRole('status').filter({ hasText: loadingText('loading', locale) })
+    ).toBeVisible();
+    await expect(main.getByRole('link', { name: brandSettings.supportEmail })).toBeVisible();
+    await expect.poll(() => !!module).toBe(true);
+    await module!.continue();
+    const form = page.locator('form:has(#recovery-caseId)');
+    await expect(form).toBeVisible();
+    const guide = page.locator('[data-slot=public-knowledge]');
+    await expect(guide.getByRole('alert')).toHaveText(appText('assistant.page.error', locale));
+    await expect(guide).not.toContainText('PRIVATE_GUIDE_DETAIL');
+    const check = guide.getByRole('button', { name: appText('assistant.public.refresh', locale) });
+    await check.click();
+    await expect(guide.getByRole('status')).toHaveText(
+      appText('assistant.public.unavailable', locale)
+    );
+    await expect(guide.getByRole('alert')).toHaveCount(0);
+    await check.click();
+    await expect(guide.locator('textarea')).toBeVisible();
+    expect(writes).toEqual([]);
+    expect(guideReads).toBe(3);
+
+    await form.locator('#recovery-caseId').fill(id);
+    await form.locator('#recovery-challengeId').fill(challengeId);
+    const code = form.getByRole('group', { name: t('auth.otp.inputLabel', locale) });
+    await code
+      .getByRole('textbox')
+      .first()
+      .fill(locale === 'fa' ? '۱۲۳۴۵۶' : '123456');
+    await form.getByRole('button', { name: t('auth.recovery.verify', locale) }).click();
+    await expect.poll(() => !!held).toBe(true);
+    await expect(form).toHaveAttribute('aria-busy', 'true');
+    await expect(form.getByRole('status')).toHaveText(t('auth.recovery.loading', locale));
+    await page.clock.fastForward(15_001);
+    await expect(form.getByRole('alert')).toHaveText(t('auth.recovery.unconfirmed', locale));
+    await expect(form).toHaveAttribute('aria-busy', 'false');
+    await expect(code).toHaveCount(0);
+    await expect(form.locator('#recovery-caseId')).toHaveValue(id);
+    await expect(form.locator('#recovery-caseId')).toBeDisabled();
+    await expect(guide.locator('textarea')).toBeVisible();
+    await form.dispatchEvent('submit');
+    await held!.fulfill({ json: { verified: true } }).catch(() => {});
+    await expect(form.getByText(t('auth.recovery.verified', locale))).toHaveCount(0);
+    expect(writes).toEqual([{ caseId: id, challengeId, code: '123456' }]);
+    expect(guideReads).toBe(3);
   });
   test(`staff captures the exact recovery target and hides denied private detail (${locale})`, async ({
     page,

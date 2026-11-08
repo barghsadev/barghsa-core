@@ -9,6 +9,8 @@ export const fa: I18nDictionary = {
   'auth.recovery.verify': 'تأیید تماس جدید',
   'auth.recovery.verified': 'تماس تأیید شد. برای اجرای تصمیم با پشتیبانی هماهنگ کنید.',
   'auth.recovery.error': 'عملیات تأیید نشد. اطلاعات را نگه دارید و دوباره تلاش کنید.',
+  'auth.recovery.unconfirmed':
+    'تأیید تماس قطعی نیست. پیش از درخواست کد تازه، شناسه پرونده را به پشتیبانی بدهید.',
   'auth.recovery.profileId': 'شناسه پروفایل مالک',
   'auth.recovery.newLogin': 'ایمیل یا موبایل جدید',
   'auth.recovery.supportReference': 'مرجع درخواست پشتیبانی',
@@ -46,6 +48,8 @@ export const en: I18nDictionary = {
   'auth.recovery.verify': 'Verify new contact',
   'auth.recovery.verified': 'Contact verified. Support must apply the reviewed decision.',
   'auth.recovery.error': 'Operation was not confirmed. Keep your inputs and retry.',
+  'auth.recovery.unconfirmed':
+    'Contact verification is unconfirmed. Give support the case ID before requesting another code.',
   'auth.recovery.profileId': 'Owner profile ID',
   'auth.recovery.newLogin': 'New email or mobile',
   'auth.recovery.supportReference': 'Support request reference',

@@ -8,6 +8,7 @@ import { Card, CardContent } from '@barghsa/ui';
 import { MailIcon, PhoneIcon, ClockIcon, ArrowLeftIcon, ArrowRightIcon } from 'lucide-react';
 import { PublicKnowledgeAssistant } from '../components/PublicKnowledgeAssistant.js';
 import { feedbackText } from '@barghsa/i18n/feedback';
+import { loadingText } from '@barghsa/i18n/loading-feedback';
 
 export const Route = createFileRoute('/support')({
   validateSearch: (search: Record<string, unknown>): { reference?: string } =>
@@ -179,7 +180,7 @@ function SupportPage() {
                   </div>
                 </div>
               </div>
-              <Suspense>
+              <Suspense fallback={<p role="status">{loadingText('loading', locale)}</p>}>
                 <RecoveryContactForm />
               </Suspense>
               <PublicKnowledgeAssistant locale={locale} />

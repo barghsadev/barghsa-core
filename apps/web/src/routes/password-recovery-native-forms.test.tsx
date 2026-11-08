@@ -6,6 +6,8 @@ import { Route } from './forgot-password.js';
 import { Route as ActivationRoute } from './activate.js';
 import { passwordRecoveryText as copy } from '@barghsa/i18n/password-recovery-forms';
 import { t } from '@barghsa/i18n/auth';
+import { t as recoveryText } from '@barghsa/i18n/recovery';
+import RecoveryContactForm from '../components/RecoveryContactForm.js';
 const navigation = vi.hoisted(() => vi.fn(async () => {}));
 vi.mock('@tanstack/react-router', () => ({
   createFileRoute: () => (options: unknown) => ({ options }),
@@ -363,4 +365,33 @@ it('retires the submitted token and draft when a different link arrives', async 
   await act(async () => response.resolve(Response.json({ activated: true })));
   expect(host.querySelector('form')?.getAttribute('aria-busy')).toBe('false');
   expect(host.textContent).not.toContain(t('auth.activate.success', 'en'));
+});
+
+it('bounds the new-contact receipt body and never reapplies an uncertain proof', async () => {
+  vi.useFakeTimers();
+  const body = deferred<unknown>();
+  const fetcher = vi.fn(async (_path: string, _init: RequestInit) => ({
+    status: 200,
+    json: () => body.promise,
+  }));
+  vi.stubGlobal('fetch', fetcher);
+  await act(async () => root.render(<RecoveryContactForm />));
+  await fill('#recovery-caseId', id);
+  await fill('#recovery-challengeId', '00000000-0000-4000-8000-000000000002');
+  await fill('#recovery-code', '123456');
+  await submit();
+  expect(host.querySelector('form')?.getAttribute('aria-busy')).toBe('true');
+  expect(fetcher).toHaveBeenCalledOnce();
+  const signal = fetcher.mock.calls[0]![1].signal!;
+  await act(async () => vi.advanceTimersByTimeAsync(15_000));
+  expect(signal.aborted).toBe(true);
+  expect(host.querySelector('[role=alert]')?.textContent).toBe(
+    recoveryText('auth.recovery.unconfirmed', 'en')
+  );
+  expect(host.querySelector('#recovery-code')).toBeNull();
+  expect(host.querySelector<HTMLInputElement>('#recovery-caseId')?.value).toBe(id);
+  await submit();
+  await act(async () => body.resolve({ verified: true }));
+  expect(host.textContent).not.toContain(recoveryText('auth.recovery.verified', 'en'));
+  expect(fetcher).toHaveBeenCalledOnce();
 });
