@@ -391,7 +391,9 @@ for (const staff of [false, true])
       await replaceRow.getByRole('button', { name: word('replace'), exact: true }).click();
       expect(detailReads).toBe(0);
       const upload = list.locator('form').filter({ has: page.locator('input[type=file]') });
-      await upload.locator('input[type=file]').setInputFiles({
+      const fileInput = upload.locator('input[type=file]');
+      await expect(fileInput).toBeEnabled();
+      await fileInput.setInputFiles({
         name: 'replacement.pdf',
         mimeType: 'application/pdf',
         buffer: Buffer.from('%PDF-1.7'),
@@ -481,6 +483,7 @@ for (const staff of [false, true])
       await records.getByRole('button', { name: word('download'), exact: true }).click();
       await expect(records.getByRole('link')).toBeVisible();
       await records.getByRole('button', { name: word('remove'), exact: true }).click();
+      await approveRiskConfirmation(page, locale, 'destructive');
       await page
         .getByRole('dialog')
         .getByRole('button', { name: appText('team.confirm', locale), exact: true })

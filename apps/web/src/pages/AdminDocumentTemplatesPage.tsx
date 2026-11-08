@@ -365,6 +365,8 @@ function OwnedAdminDocumentTemplatesPage({ queries }: { queries?: ListQueryBindi
           description: word('confirmVersion'),
           path: `/api/admin/document-templates/${selected}/versions`,
           method: 'POST',
+          // A version can upload, extract and store several files in one request.
+          responseDeadline: 300_000,
           body,
           successStatus: 201,
           forbiddenMessage: word('denied'),

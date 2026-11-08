@@ -1,6 +1,7 @@
 import { test, expect } from './coverage-fixture';
 import { t } from '@barghsa/i18n/admin-ui';
 import AxeBuilder from '@axe-core/playwright';
+import { approveRiskConfirmation } from './confirmation-fixture';
 test.use({ viewport: { width: 390, height: 844 } });
 for (const locale of ['en', 'fa'])
   test(`Policy form retries captured input after password verification (${locale})`, async ({
@@ -247,6 +248,7 @@ for (const locale of ['en', 'fa'] as const)
     await confirm();
     expect(writes.at(-1)).toEqual({ policyId: policy.id, priorityOverride: -20 });
     await page.getByRole('button', { name: `${label('unlink')} Energy`, exact: true }).click();
+    await approveRiskConfirmation(page, locale, 'destructive');
     await confirm();
     expect(writes.at(-1)).toEqual({ removed: policy.id });
     await expect(

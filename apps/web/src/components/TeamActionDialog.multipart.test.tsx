@@ -129,53 +129,101 @@ it('keeps successful step-up verification across a failed save and retries the i
   expect(onSuccess).toHaveBeenCalledOnce();
 });
 
-it('ends a stalled step-up without sending or marking the captured command uncertain', async () => {
+it.each([true, false])(
+  'ends a stalled step-up without sending the command (explicit deadline: %s)',
+  async (explicit) => {
+    const fetcher = vi.fn(
+      (_input: RequestInfo | URL, _init?: RequestInit) => new Promise<Response>(() => {})
+    );
+    vi.stubGlobal('fetch', fetcher);
+    const onUnconfirmed = vi.fn(),
+      onSuccess = vi.fn(async () => {}),
+      onCommandDispatch = vi.fn();
+    await act(async () =>
+      root.render(
+        <TeamActionDialog
+          action={{
+            title: 'Record decision',
+            description: 'Reviewed command',
+            path: '/api/staff/electricity/reviewed',
+            method: 'POST',
+            requiresPassword: true,
+            ...(explicit ? { responseDeadline: true as const } : {}),
+          }}
+          onClose={vi.fn()}
+          onSuccess={onSuccess}
+          {...(explicit ? { onUnconfirmed } : {})}
+          onCommandDispatch={onCommandDispatch}
+        />
+      )
+    );
+    vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
+    try {
+      const form = document.body.querySelector('form')!;
+      const password = form.querySelector<HTMLInputElement>('input[type=password]')!;
+      const confirm = form.querySelector<HTMLButtonElement>('button[type=submit]')!;
+      await act(async () => {
+        Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!.call(
+          password,
+          'reviewed test credential'
+        );
+        password.dispatchEvent(new Event('input', { bubbles: true }));
+      });
+      await act(async () => confirm.click());
+      expect(fetcher.mock.calls.map(([path]) => path)).toEqual(['/api/auth/step-up']);
+      await act(async () => vi.advanceTimersByTimeAsync(15_001));
+      expect(fetcher.mock.calls[0]?.[1]?.signal?.aborted).toBe(true);
+      expect(confirm.disabled).toBe(false);
+      expect(document.body.querySelector('[role=alert]')).not.toBeNull();
+      expect(onUnconfirmed).not.toHaveBeenCalled();
+      expect(onCommandDispatch).not.toHaveBeenCalled();
+      expect(onSuccess).not.toHaveBeenCalled();
+      expect(fetcher).toHaveBeenCalledOnce();
+    } finally {
+      vi.useRealTimers();
+    }
+  }
+);
+
+it('bounds the response body for an inherited recovery deadline', async () => {
+  let release!: (value: unknown) => void;
+  const body = new Promise((resolve) => {
+    release = resolve;
+  });
   const fetcher = vi.fn(
-    (_input: RequestInfo | URL, _init?: RequestInit) => new Promise<Response>(() => {})
+    async (_input: RequestInfo | URL, _init?: RequestInit) =>
+      ({ status: 200, ok: true, json: () => body }) as Response
   );
   vi.stubGlobal('fetch', fetcher);
   const onUnconfirmed = vi.fn(),
     onSuccess = vi.fn(async () => {}),
-    onCommandDispatch = vi.fn();
+    onClose = vi.fn();
   await act(async () =>
     root.render(
       <TeamActionDialog
         action={{
-          title: 'Record decision',
-          description: 'Reviewed command',
-          path: '/api/staff/electricity/reviewed',
-          method: 'POST',
-          requiresPassword: true,
-          responseDeadline: true,
+          title: 'Save settings',
+          description: 'Reviewed settings',
+          path: '/api/admin/settings',
+          method: 'PUT',
         }}
-        onClose={vi.fn()}
+        onClose={onClose}
         onSuccess={onSuccess}
         onUnconfirmed={onUnconfirmed}
-        onCommandDispatch={onCommandDispatch}
       />
     )
   );
   vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
   try {
-    const form = document.body.querySelector('form')!;
-    const password = form.querySelector<HTMLInputElement>('input[type=password]')!;
-    const confirm = form.querySelector<HTMLButtonElement>('button[type=submit]')!;
-    await act(async () => {
-      Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!.call(
-        password,
-        'reviewed test credential'
-      );
-      password.dispatchEvent(new Event('input', { bubbles: true }));
-    });
+    const confirm = document.body.querySelector<HTMLButtonElement>('form button[type=submit]')!;
     await act(async () => confirm.click());
-    expect(fetcher.mock.calls.map(([path]) => path)).toEqual(['/api/auth/step-up']);
+    expect(confirm.disabled).toBe(true);
     await act(async () => vi.advanceTimersByTimeAsync(15_001));
     expect(fetcher.mock.calls[0]?.[1]?.signal?.aborted).toBe(true);
-    expect(confirm.disabled).toBe(false);
-    expect(document.body.querySelector('[role=alert]')).not.toBeNull();
-    expect(onUnconfirmed).not.toHaveBeenCalled();
-    expect(onCommandDispatch).not.toHaveBeenCalled();
+    expect(onUnconfirmed).toHaveBeenCalledOnce();
+    await act(async () => release({ saved: true }));
     expect(onSuccess).not.toHaveBeenCalled();
+    expect(onClose).not.toHaveBeenCalled();
     expect(fetcher).toHaveBeenCalledOnce();
   } finally {
     vi.useRealTimers();

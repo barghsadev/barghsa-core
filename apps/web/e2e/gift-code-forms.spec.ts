@@ -1,4 +1,4 @@
-import { test, expect, type Page } from './coverage-fixture';
+import { test, expect, type Page, type TestInfo } from './coverage-fixture';
 import { crmShell } from './crm-shell-fixture';
 import { giftCode } from '../src/test/gift-code-fixtures';
 import { tGift } from '@barghsa/i18n/gifts';
@@ -71,16 +71,16 @@ async function setup(page: Page, locale: 'en' | 'fa') {
     },
   };
 }
-async function inspect(page: Page, locale: string, project: string, name: string) {
+async function inspect(page: Page, locale: string, info: TestInfo, name: string) {
   expect((await new AxeBuilder({ page }).include('main > div').analyze()).violations).toEqual([]);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
-  if (locale === 'fa' && project === 'chromium') {
+  if (locale === 'fa' && info.project.name === 'chromium') {
     await page.setViewportSize({ width: 1600, height: 1000 });
     await page
       .getByRole('heading', { name: tGift('admin.gifts.title', 'fa'), exact: true })
       .scrollIntoViewIfNeeded();
     await page.screenshot({
-      path: `/Users/majid/.local/state/barghsa-manual-batches/gift-code-authoring/${name}-fa.png`,
+      path: info.outputPath(`${name}-fa.png`),
       fullPage: true,
     });
   }
@@ -121,7 +121,7 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(value).toHaveAttribute('aria-invalid', 'true');
     await expect(code).toBeFocused();
     expect(writes).toHaveLength(0);
-    await inspect(page, locale, info.project.name, 'validation');
+    await inspect(page, locale, info, 'validation');
     for (const invalidCode of ['A', '-SALE', 'SALE%']) {
       await code.fill(invalidCode);
       await form.getByRole('button', { name: word('save'), exact: true }).click();
@@ -180,7 +180,7 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(
       page.getByRole('button', { name: `${word('edit')} EXACT`, exact: true })
     ).toBeEnabled();
-    await inspect(page, locale, info.project.name, 'creation');
+    await inspect(page, locale, info, 'creation');
   });
   test(`gift editing rejects percentage rounding and preserves an unconfirmed draft (${locale})`, async ({
     page,
@@ -265,6 +265,6 @@ for (const locale of ['en', 'fa'] as const) {
       discountValue: '1234',
       maxCapIrr: '9007199254740993',
     });
-    await inspect(page, locale, info.project.name, 'editing');
+    await inspect(page, locale, info, 'editing');
   });
 }

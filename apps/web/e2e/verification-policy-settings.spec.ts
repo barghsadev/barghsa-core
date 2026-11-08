@@ -14,7 +14,7 @@ for (const width of [390, 1440])
     for (const dark of [false, true])
       test(`verification requirements publish exact drafts and hold uncertain outcomes (${width}, ${locale}, ${dark})`, async ({
         page,
-      }) => {
+      }, info) => {
         await page.setViewportSize({ width, height: 900 });
         await setupCatalogueForms(page, locale, dark);
         const text = (key: Parameters<typeof copy>[0]) => copy(key, locale);
@@ -86,7 +86,7 @@ for (const width of [390, 1440])
         );
         if (width === 390)
           await individual.screenshot({
-            path: `/Users/majid/.local/state/barghsa-manual-batches/release-0.5-expanded-verification/captures/policy-${locale}-${dark ? 'dark' : 'light'}.png`,
+            path: info.outputPath(`policy-${locale}-${dark ? 'dark' : 'light'}.png`),
           });
         await expiry.fill('31');
         mismatch = true;

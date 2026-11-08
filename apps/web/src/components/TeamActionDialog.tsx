@@ -42,7 +42,7 @@ export interface TeamAction {
   signsOut?: boolean;
   requiresPassword?: boolean;
   requiresOtp?: boolean;
-  /** Opt in when the caller owns recovery of a potentially committed command. */
+  /** Override the deadline inherited by callers with an unconfirmed-result handler. */
   responseDeadline?: true | number;
   conflictMessage?: string;
   forbiddenMessage?: string;
@@ -166,7 +166,7 @@ export function TeamActionDialog({
     if (needsOtp && !otpVerified) return;
     if (!canConfirm.current || inFlight.current || retryAt > Date.now()) return;
     const profileRevision = getProfileContextRevision();
-    const transport = action?.responseDeadline ? new AbortController() : null;
+    const transport = new AbortController();
     requestTransport.current = transport;
     inFlight.current = true;
     setBusy(true);
@@ -186,17 +186,15 @@ export function TeamActionDialog({
         );
     };
     let commandSent = false;
-    const request = <T,>(send: (signal?: AbortSignal) => Promise<T>, timeoutMs?: number) =>
-      transport ? readWithDeadline(transport.signal, send, timeoutMs) : send();
     try {
       if (!otpVerified && (needsPassword || !action)) {
-        const verified = await request((signal) =>
+        const verified = await readWithDeadline(transport.signal, (signal) =>
           fetch('/api/auth/step-up', {
             method: 'POST',
             credentials: 'include',
             headers: withCsrf({ 'Content-Type': 'application/json' }),
             body: JSON.stringify({ password }),
-            ...(signal ? { signal } : {}),
+            signal,
           })
         );
         if (!owned() || !canConfirm.current) return;
@@ -221,24 +219,29 @@ export function TeamActionDialog({
           : action.body instanceof FormData
             ? action.body
             : JSON.stringify(action.body);
-      const { response, data } = await request(
-        async (signal) => {
-          commandSent = true;
-          onCommandDispatch?.(true);
-          const response = await fetch(action.path, {
-            method: action.method,
-            credentials: 'include',
-            headers: withCsrf({
-              ...(multipart ? {} : { 'Content-Type': 'application/json' }),
-              'Accept-Language': locale,
-            }),
-            ...(requestBody === undefined ? {} : { body: requestBody }),
-            ...(signal ? { signal } : {}),
-          });
-          return { response, data: await response.json().catch(() => null) };
-        },
-        typeof action.responseDeadline === 'number' ? action.responseDeadline : undefined
-      );
+      const deadline = action.responseDeadline ?? (onUnconfirmed ? true : undefined);
+      const dispatch = async (signal?: AbortSignal) => {
+        commandSent = true;
+        onCommandDispatch?.(true);
+        const response = await fetch(action.path, {
+          method: action.method,
+          credentials: 'include',
+          headers: withCsrf({
+            ...(multipart ? {} : { 'Content-Type': 'application/json' }),
+            'Accept-Language': locale,
+          }),
+          ...(requestBody === undefined ? {} : { body: requestBody }),
+          ...(signal ? { signal } : {}),
+        });
+        return { response, data: await response.json().catch(() => null) };
+      };
+      const { response, data } = await (deadline
+        ? readWithDeadline(
+            transport.signal,
+            dispatch,
+            typeof deadline === 'number' ? deadline : undefined
+          )
+        : dispatch());
       if (!owned()) return;
       const code = typeof data?.error === 'string' ? data.error : data?.error?.code;
       if (
@@ -261,7 +264,8 @@ export function TeamActionDialog({
       if (rateLimited(response)) return;
       if (!response.ok) {
         commandSent = false;
-        if (response.status >= 500) onUnconfirmed?.();
+        const uncertain = response.status >= 500 || (!!deadline && response.status === 408);
+        if (uncertain) onUnconfirmed?.();
         if (
           response.status === 400 &&
           code === ErrorCodes.VALIDATION_INPUT_INVALID.code &&
@@ -284,7 +288,7 @@ export function TeamActionDialog({
               : response.status === 403
                 ? (action.forbiddenMessage ?? t('team.forbidden', locale))
                 : t('team.error', locale)),
-          response.status >= 500
+          uncertain
         );
         return;
       }

@@ -1,5 +1,5 @@
 import { checkRoutePresentation } from './route-presentation';
-import { test, expect, type Page } from './coverage-fixture';
+import { test, expect, type Page, type TestInfo } from './coverage-fixture';
 import { crmShell } from './crm-shell-fixture';
 import { approveRiskConfirmation } from './confirmation-fixture';
 import { tMaintenance } from '@barghsa/i18n/maintenance';
@@ -97,7 +97,7 @@ async function setup(page: Page, locale: 'en' | 'fa') {
     },
   };
 }
-async function inspect(page: Page, locale: string, project: string, name: string) {
+async function inspect(page: Page, locale: string, info: TestInfo, name: string) {
   const dialog = page.getByRole('dialog');
   const inDialog = (await dialog.count()) > 0;
   if (inDialog) await expect(dialog).toHaveCSS('opacity', '1');
@@ -106,14 +106,14 @@ async function inspect(page: Page, locale: string, project: string, name: string
       .violations
   ).toEqual([]);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
-  if (locale === 'fa' && project === 'chromium') {
+  if (locale === 'fa' && info.project.name === 'chromium') {
     await page.setViewportSize({ width: 1600, height: 2000 });
     if (inDialog) await dialog.scrollIntoViewIfNeeded();
     else
       await page
         .getByRole('heading', { name: tMaintenance('adminTitle', 'fa'), exact: true })
         .scrollIntoViewIfNeeded();
-    const path = `/Users/majid/.local/state/barghsa-manual-batches/maintenance-settings-forms/${name}-fa.png`;
+    const path = info.outputPath(`${name}-fa.png`);
     if (inDialog) await dialog.screenshot({ path });
     else
       await page
@@ -177,7 +177,7 @@ for (const locale of ['en', 'fa'] as const) {
     for (const field of [date, time])
       await expect(field).toHaveAccessibleDescription(word('invalidDeadline'));
     expect(writes).toHaveLength(0);
-    await inspect(page, locale, info.project.name, 'validation');
+    await inspect(page, locale, info, 'validation');
     await fa.fill('  پیام تازه مشتری  ');
     await en.fill('  A new customer message  ');
     await owner.fill('  Operations  ');
@@ -194,7 +194,7 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(
       page.getByRole('button', { name: word('manage'), includeHidden: true }).first()
     ).toBeDisabled();
-    await inspect(page, locale, info.project.name, 'confirmation');
+    await inspect(page, locale, info, 'confirmation');
     await confirmPause();
     await expect.poll(() => writes.length).toBe(1);
     await dialog.locator('form').evaluate((form: HTMLFormElement) => {
@@ -270,7 +270,7 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(
       page.getByRole('button', { name: word('returnToEditing'), exact: true })
     ).toBeEnabled();
-    await inspect(page, locale, info.project.name, 'recovery');
+    await inspect(page, locale, info, 'recovery');
     await page.getByRole('button', { name: word('returnToEditing'), exact: true }).click();
     await expect(owner).toBeEnabled();
     await expect(owner).toHaveValue('  Revised Operations  ');
@@ -324,6 +324,55 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(page.getByText(word('denied'), { exact: true })).toBeVisible();
     await expect(owner).toHaveCount(0);
     await expect(page.getByText('Other operator')).toHaveCount(0);
+  });
+
+  test(`maintenance inherits the deadline and reviews a late save (${locale})`, async ({
+    page,
+  }) => {
+    const { word, confirmPause, row, save, read } = await setup(page, locale);
+    await page.clock.install();
+    let release!: () => void;
+    const held = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    const writes: unknown[] = [];
+    await page.route('**/api/admin/maintenance/electricity_checkout', async (route) => {
+      const body = route.request().postDataJSON();
+      writes.push(body);
+      const next = { ...row(), ...body, version: body.expectedVersion + 1 };
+      save(next);
+      read(503);
+      await held;
+      return route.fulfill({ json: next }).catch(() => {});
+    });
+    try {
+      const owner = page.getByLabel(word('owner'), { exact: true });
+      await owner.fill('Reviewed Operations');
+      await page.getByRole('button', { name: word('save'), exact: true }).click();
+      await confirmPause();
+      await expect.poll(() => writes.length).toBe(1);
+      await expect(page.getByRole('dialog').locator('button[type=submit]')).toHaveAttribute(
+        'aria-busy',
+        'true'
+      );
+      await page.clock.fastForward(15_200);
+      await expect(page.getByText(word('unconfirmed'), { exact: true })).toBeVisible();
+      await expect(page.getByText(word('loadError'), { exact: true })).toBeVisible();
+      await expect(owner).toHaveValue('Reviewed Operations');
+      await expect(owner).toBeDisabled();
+      const resume = page.getByRole('button', { name: word('returnToEditing'), exact: true });
+      await expect(resume).toBeDisabled();
+      release();
+      read(200);
+      await page.getByRole('button', { name: word('refresh'), exact: true }).click();
+      await expect(resume).toBeEnabled();
+      await resume.click();
+      await expect(owner).toBeEnabled();
+      expect(writes).toHaveLength(1);
+      expect(row().version).toBe(2);
+    } finally {
+      release();
+    }
   });
 
   test(`maintenance retries a stalled refresh without writing the retained draft (${locale})`, async ({

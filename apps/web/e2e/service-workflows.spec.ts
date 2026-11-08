@@ -10,7 +10,7 @@ for (const width of [390, 1440])
     for (const dark of [false, true])
       test(`workflow targets preserve routing, confirm exact settings and recover receipts (${width}, ${locale}, ${dark})`, async ({
         page,
-      }) => {
+      }, info) => {
         await page.setViewportSize({ width, height: 1000 });
         await setupCatalogueForms(page, locale, dark);
         await page.route('**/api/auth/user', (route) =>
@@ -117,7 +117,7 @@ for (const width of [390, 1440])
         if (width === 390) {
           await section.locator('#workflow-from').scrollIntoViewIfNeeded();
           await page.screenshot({
-            path: `/Users/majid/.local/state/barghsa-manual-batches/release-0.5-service-workflows/captures/workflows-${locale}-${dark ? 'dark' : 'light'}.png`,
+            path: info.outputPath(`workflows-${locale}-${dark ? 'dark' : 'light'}.png`),
           });
         }
         await hours.fill('3');

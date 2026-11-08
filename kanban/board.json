@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-08T15:17:54+00:00",
-  "source_commit": "e121b5cc41875803d10e9dff94f79089b8d1fad8",
+  "updated": "2026-11-08T15:39:23+00:00",
+  "source_commit": "27bed3372703c7462a2e5e8a84667046d4a321bc",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -25370,11 +25370,11 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.multipart.test.tsx",
-              "sha256": "84d52bf1a2a25735b1100281dfa515e7b8b57774c84c74413117e09591f2994a"
+              "sha256": "4f46d54019ab96c122cb42206d15b5a7d7e3705c962c574c0bacc5af17c656ca"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/routes/_app/settings/security.tsx",
@@ -44396,7 +44396,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/hooks/useListQuery.ts",
@@ -45627,7 +45627,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/hooks/useListQuery.ts",
@@ -46796,7 +46796,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/hooks/useListQuery.ts",
@@ -47940,7 +47940,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/pages/AdminLayout.tsx",
@@ -49670,7 +49670,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -50385,7 +50385,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -50749,7 +50749,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/lib/invitation-action.ts",
@@ -51528,7 +51528,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/lib/invitation-action.ts",
@@ -53221,7 +53221,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
@@ -54564,7 +54564,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/lib/invitation-action.ts",
@@ -59554,7 +59554,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/hooks/useSettingsSnapshot.ts",
@@ -87524,7 +87524,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/lib/email-providers-api.ts",
@@ -90040,7 +90040,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/components/WalletTopUpLimitConfigPanel.test.tsx",
@@ -91448,7 +91448,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/components/WalletTopUpLimitConfigPanel.test.tsx",
@@ -96177,7 +96177,7 @@
             },
             {
               "path": "apps/web/e2e/gift-code-forms.spec.ts",
-              "sha256": "9dbece885ab1ed1b548f171f2a8f96b37e79bb60a5cc017fb2b9aea6a3426874"
+              "sha256": "3cac1b9327b5df89dfd46ec7dc61f4fd73a0da3f1533c7bdb001f62fbe58373b"
             },
             {
               "path": "apps/web/e2e/gift-code-recovery.spec.ts",
@@ -98742,7 +98742,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/components/WalletTopUpLimitConfigPanel.test.tsx",
@@ -100078,7 +100078,7 @@
             },
             {
               "path": "apps/web/e2e/document-template-forms.spec.ts",
-              "sha256": "1c65b21926aaed7e4175ba0df6a700dac2b9a9a9f5bc66cab41ca54aafef2419"
+              "sha256": "8d44a07e7306b5a54d85b0b9b2e1863c100b39351040ea9d3be7d8815271f0b2"
             },
             {
               "path": "apps/web/e2e/electricity-settings-forms.spec.ts",
@@ -100922,7 +100922,7 @@
             },
             {
               "path": "apps/web/e2e/document-template-forms.spec.ts",
-              "sha256": "1c65b21926aaed7e4175ba0df6a700dac2b9a9a9f5bc66cab41ca54aafef2419"
+              "sha256": "8d44a07e7306b5a54d85b0b9b2e1863c100b39351040ea9d3be7d8815271f0b2"
             },
             {
               "path": "apps/web/e2e/electricity-settings-forms.spec.ts",
@@ -101934,7 +101934,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/hooks/useWizardForm.ts",
@@ -102545,7 +102545,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/e2e/catalogue-form-fixture.ts",
@@ -103110,7 +103110,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/hooks/useCatalogueResource.ts",
@@ -103126,7 +103126,7 @@
             },
             {
               "path": "apps/web/e2e/ai-policies.spec.ts",
-              "sha256": "2ddbd46f47920f4dec43bda12b1eb047b68c04df681253991c8ade31923c83c2"
+              "sha256": "5db5113e8842c07c9c321cfc5c130dc9ac7238e020ded94135df4a4399ac0b46"
             },
             {
               "path": "apps/web/e2e/knowledge-policy-forms.spec.ts",
@@ -103642,7 +103642,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/lib/ai-agent-form.ts",
@@ -105692,7 +105692,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/hooks/useLocale.ts",
@@ -106408,7 +106408,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/hooks/useLocale.ts",
@@ -107147,7 +107147,7 @@
             },
             {
               "path": "apps/web/e2e/gift-code-forms.spec.ts",
-              "sha256": "9dbece885ab1ed1b548f171f2a8f96b37e79bb60a5cc017fb2b9aea6a3426874"
+              "sha256": "3cac1b9327b5df89dfd46ec7dc61f4fd73a0da3f1533c7bdb001f62fbe58373b"
             },
             {
               "path": "apps/web/e2e/gift-code-recovery.spec.ts",
@@ -108024,7 +108024,7 @@
             },
             {
               "path": "apps/web/e2e/document-template-forms.spec.ts",
-              "sha256": "1c65b21926aaed7e4175ba0df6a700dac2b9a9a9f5bc66cab41ca54aafef2419"
+              "sha256": "8d44a07e7306b5a54d85b0b9b2e1863c100b39351040ea9d3be7d8815271f0b2"
             },
             {
               "path": "apps/web/e2e/electricity-settings-forms.spec.ts",
@@ -108952,7 +108952,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/hooks/useLocale.ts",
@@ -109704,7 +109704,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/lib/staff-access-form-schemas.ts",
@@ -177131,7 +177131,7 @@
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
-              "sha256": "a5d28fab9c1dd5212deeb07921798c2d1552b979296aa84be03bee98a5e12bcf"
+              "sha256": "1187b42a7bbd635ff8378aea938d884ec4da83356fa61040095b08e3d847859c"
             },
             {
               "path": "apps/web/e2e/documents.spec.ts",
@@ -177938,7 +177938,7 @@
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
-              "sha256": "a5d28fab9c1dd5212deeb07921798c2d1552b979296aa84be03bee98a5e12bcf"
+              "sha256": "1187b42a7bbd635ff8378aea938d884ec4da83356fa61040095b08e3d847859c"
             },
             {
               "path": "apps/web/e2e/documents.spec.ts",
@@ -178742,7 +178742,7 @@
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
-              "sha256": "a5d28fab9c1dd5212deeb07921798c2d1552b979296aa84be03bee98a5e12bcf"
+              "sha256": "1187b42a7bbd635ff8378aea938d884ec4da83356fa61040095b08e3d847859c"
             },
             {
               "path": "apps/web/e2e/documents.spec.ts",
@@ -179545,7 +179545,7 @@
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
-              "sha256": "a5d28fab9c1dd5212deeb07921798c2d1552b979296aa84be03bee98a5e12bcf"
+              "sha256": "1187b42a7bbd635ff8378aea938d884ec4da83356fa61040095b08e3d847859c"
             },
             {
               "path": "apps/web/e2e/documents.spec.ts",
@@ -180350,7 +180350,7 @@
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
-              "sha256": "a5d28fab9c1dd5212deeb07921798c2d1552b979296aa84be03bee98a5e12bcf"
+              "sha256": "1187b42a7bbd635ff8378aea938d884ec4da83356fa61040095b08e3d847859c"
             },
             {
               "path": "apps/web/e2e/documents.spec.ts",
@@ -241083,7 +241083,7 @@
             },
             {
               "path": "apps/web/e2e/gift-code-forms.spec.ts",
-              "sha256": "9dbece885ab1ed1b548f171f2a8f96b37e79bb60a5cc017fb2b9aea6a3426874"
+              "sha256": "3cac1b9327b5df89dfd46ec7dc61f4fd73a0da3f1533c7bdb001f62fbe58373b"
             },
             {
               "path": "apps/web/e2e/gift-code-recovery.spec.ts",
@@ -241301,7 +241301,7 @@
             },
             {
               "path": "apps/web/e2e/gift-code-forms.spec.ts",
-              "sha256": "9dbece885ab1ed1b548f171f2a8f96b37e79bb60a5cc017fb2b9aea6a3426874"
+              "sha256": "3cac1b9327b5df89dfd46ec7dc61f4fd73a0da3f1533c7bdb001f62fbe58373b"
             },
             {
               "path": "apps/web/e2e/gift-code-recovery.spec.ts",
@@ -241517,7 +241517,7 @@
             },
             {
               "path": "apps/web/e2e/gift-code-forms.spec.ts",
-              "sha256": "9dbece885ab1ed1b548f171f2a8f96b37e79bb60a5cc017fb2b9aea6a3426874"
+              "sha256": "3cac1b9327b5df89dfd46ec7dc61f4fd73a0da3f1533c7bdb001f62fbe58373b"
             },
             {
               "path": "apps/web/e2e/gift-code-recovery.spec.ts",
@@ -241733,7 +241733,7 @@
             },
             {
               "path": "apps/web/e2e/gift-code-forms.spec.ts",
-              "sha256": "9dbece885ab1ed1b548f171f2a8f96b37e79bb60a5cc017fb2b9aea6a3426874"
+              "sha256": "3cac1b9327b5df89dfd46ec7dc61f4fd73a0da3f1533c7bdb001f62fbe58373b"
             },
             {
               "path": "apps/web/e2e/gift-code-recovery.spec.ts",
@@ -241952,7 +241952,7 @@
             },
             {
               "path": "apps/web/e2e/gift-code-forms.spec.ts",
-              "sha256": "9dbece885ab1ed1b548f171f2a8f96b37e79bb60a5cc017fb2b9aea6a3426874"
+              "sha256": "3cac1b9327b5df89dfd46ec7dc61f4fd73a0da3f1533c7bdb001f62fbe58373b"
             },
             {
               "path": "apps/web/e2e/gift-code-recovery.spec.ts",
@@ -439981,7 +439981,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "4f5f2b5e87d5f2dcb4f37842575bab74afdfed87f9ee29e4e27d52b4042fd108"
+              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
@@ -440001,7 +440001,7 @@
             },
             {
               "path": "apps/web/e2e/document-template-forms.spec.ts",
-              "sha256": "1c65b21926aaed7e4175ba0df6a700dac2b9a9a9f5bc66cab41ca54aafef2419"
+              "sha256": "8d44a07e7306b5a54d85b0b9b2e1863c100b39351040ea9d3be7d8815271f0b2"
             },
             {
               "path": "apps/web/src/test/document-list-fixtures.ts",
@@ -440017,7 +440017,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/components/ConfigPreviewCard.tsx",
@@ -440259,7 +440259,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "4f5f2b5e87d5f2dcb4f37842575bab74afdfed87f9ee29e4e27d52b4042fd108"
+              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
@@ -440279,7 +440279,7 @@
             },
             {
               "path": "apps/web/e2e/document-template-forms.spec.ts",
-              "sha256": "1c65b21926aaed7e4175ba0df6a700dac2b9a9a9f5bc66cab41ca54aafef2419"
+              "sha256": "8d44a07e7306b5a54d85b0b9b2e1863c100b39351040ea9d3be7d8815271f0b2"
             },
             {
               "path": "apps/web/src/test/document-list-fixtures.ts",
@@ -440295,7 +440295,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/components/ConfigPreviewCard.tsx",
@@ -440539,7 +440539,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "4f5f2b5e87d5f2dcb4f37842575bab74afdfed87f9ee29e4e27d52b4042fd108"
+              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
@@ -440559,7 +440559,7 @@
             },
             {
               "path": "apps/web/e2e/document-template-forms.spec.ts",
-              "sha256": "1c65b21926aaed7e4175ba0df6a700dac2b9a9a9f5bc66cab41ca54aafef2419"
+              "sha256": "8d44a07e7306b5a54d85b0b9b2e1863c100b39351040ea9d3be7d8815271f0b2"
             },
             {
               "path": "apps/web/src/test/document-list-fixtures.ts",
@@ -440575,7 +440575,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/components/ConfigPreviewCard.tsx",
@@ -440817,7 +440817,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "4f5f2b5e87d5f2dcb4f37842575bab74afdfed87f9ee29e4e27d52b4042fd108"
+              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
@@ -440837,7 +440837,7 @@
             },
             {
               "path": "apps/web/e2e/document-template-forms.spec.ts",
-              "sha256": "1c65b21926aaed7e4175ba0df6a700dac2b9a9a9f5bc66cab41ca54aafef2419"
+              "sha256": "8d44a07e7306b5a54d85b0b9b2e1863c100b39351040ea9d3be7d8815271f0b2"
             },
             {
               "path": "apps/web/src/test/document-list-fixtures.ts",
@@ -440853,7 +440853,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/components/ConfigPreviewCard.tsx",
@@ -441096,7 +441096,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "4f5f2b5e87d5f2dcb4f37842575bab74afdfed87f9ee29e4e27d52b4042fd108"
+              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
@@ -441116,7 +441116,7 @@
             },
             {
               "path": "apps/web/e2e/document-template-forms.spec.ts",
-              "sha256": "1c65b21926aaed7e4175ba0df6a700dac2b9a9a9f5bc66cab41ca54aafef2419"
+              "sha256": "8d44a07e7306b5a54d85b0b9b2e1863c100b39351040ea9d3be7d8815271f0b2"
             },
             {
               "path": "apps/web/src/test/document-list-fixtures.ts",
@@ -441132,7 +441132,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/components/ConfigPreviewCard.tsx",
@@ -441402,7 +441402,7 @@
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
-              "sha256": "a5d28fab9c1dd5212deeb07921798c2d1552b979296aa84be03bee98a5e12bcf"
+              "sha256": "1187b42a7bbd635ff8378aea938d884ec4da83356fa61040095b08e3d847859c"
             },
             {
               "path": "apps/web/e2e/documents.spec.ts",
@@ -442314,7 +442314,7 @@
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
-              "sha256": "a5d28fab9c1dd5212deeb07921798c2d1552b979296aa84be03bee98a5e12bcf"
+              "sha256": "1187b42a7bbd635ff8378aea938d884ec4da83356fa61040095b08e3d847859c"
             },
             {
               "path": "apps/web/e2e/document-upload-controls.spec.ts",
@@ -442802,7 +442802,7 @@
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
-              "sha256": "a5d28fab9c1dd5212deeb07921798c2d1552b979296aa84be03bee98a5e12bcf"
+              "sha256": "1187b42a7bbd635ff8378aea938d884ec4da83356fa61040095b08e3d847859c"
             },
             {
               "path": "apps/web/e2e/document-upload-controls.spec.ts",
@@ -443142,7 +443142,7 @@
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
-              "sha256": "a5d28fab9c1dd5212deeb07921798c2d1552b979296aa84be03bee98a5e12bcf"
+              "sha256": "1187b42a7bbd635ff8378aea938d884ec4da83356fa61040095b08e3d847859c"
             },
             {
               "path": "apps/web/e2e/upload-fixture.ts",
@@ -443573,7 +443573,7 @@
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
-              "sha256": "a5d28fab9c1dd5212deeb07921798c2d1552b979296aa84be03bee98a5e12bcf"
+              "sha256": "1187b42a7bbd635ff8378aea938d884ec4da83356fa61040095b08e3d847859c"
             },
             {
               "path": "apps/web/e2e/document-upload-controls.spec.ts",
@@ -443967,7 +443967,7 @@
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
-              "sha256": "a5d28fab9c1dd5212deeb07921798c2d1552b979296aa84be03bee98a5e12bcf"
+              "sha256": "1187b42a7bbd635ff8378aea938d884ec4da83356fa61040095b08e3d847859c"
             },
             {
               "path": "apps/web/e2e/document-upload-controls.spec.ts",
@@ -444440,7 +444440,7 @@
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
-              "sha256": "a5d28fab9c1dd5212deeb07921798c2d1552b979296aa84be03bee98a5e12bcf"
+              "sha256": "1187b42a7bbd635ff8378aea938d884ec4da83356fa61040095b08e3d847859c"
             },
             {
               "path": "apps/web/e2e/upload-fixture.ts",
@@ -444869,7 +444869,7 @@
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
-              "sha256": "a5d28fab9c1dd5212deeb07921798c2d1552b979296aa84be03bee98a5e12bcf"
+              "sha256": "1187b42a7bbd635ff8378aea938d884ec4da83356fa61040095b08e3d847859c"
             },
             {
               "path": "apps/web/e2e/document-upload-controls.spec.ts",
@@ -445351,7 +445351,7 @@
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
-              "sha256": "a5d28fab9c1dd5212deeb07921798c2d1552b979296aa84be03bee98a5e12bcf"
+              "sha256": "1187b42a7bbd635ff8378aea938d884ec4da83356fa61040095b08e3d847859c"
             },
             {
               "path": "apps/web/e2e/document-upload-controls.spec.ts",
@@ -445857,7 +445857,7 @@
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
-              "sha256": "a5d28fab9c1dd5212deeb07921798c2d1552b979296aa84be03bee98a5e12bcf"
+              "sha256": "1187b42a7bbd635ff8378aea938d884ec4da83356fa61040095b08e3d847859c"
             },
             {
               "path": "apps/web/e2e/document-upload-controls.spec.ts",
@@ -446363,7 +446363,7 @@
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
-              "sha256": "a5d28fab9c1dd5212deeb07921798c2d1552b979296aa84be03bee98a5e12bcf"
+              "sha256": "1187b42a7bbd635ff8378aea938d884ec4da83356fa61040095b08e3d847859c"
             },
             {
               "path": "apps/web/e2e/document-upload-controls.spec.ts",
@@ -446869,7 +446869,7 @@
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
-              "sha256": "a5d28fab9c1dd5212deeb07921798c2d1552b979296aa84be03bee98a5e12bcf"
+              "sha256": "1187b42a7bbd635ff8378aea938d884ec4da83356fa61040095b08e3d847859c"
             },
             {
               "path": "apps/web/e2e/document-upload-controls.spec.ts",
@@ -447374,7 +447374,7 @@
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
-              "sha256": "a5d28fab9c1dd5212deeb07921798c2d1552b979296aa84be03bee98a5e12bcf"
+              "sha256": "1187b42a7bbd635ff8378aea938d884ec4da83356fa61040095b08e3d847859c"
             },
             {
               "path": "apps/web/e2e/document-upload-controls.spec.ts",
@@ -447714,7 +447714,7 @@
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
-              "sha256": "a5d28fab9c1dd5212deeb07921798c2d1552b979296aa84be03bee98a5e12bcf"
+              "sha256": "1187b42a7bbd635ff8378aea938d884ec4da83356fa61040095b08e3d847859c"
             },
             {
               "path": "apps/web/e2e/upload-fixture.ts",
@@ -449950,7 +449950,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/hooks/useWizardForm.ts",
@@ -450431,7 +450431,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/hooks/useWizardForm.ts",
@@ -450914,7 +450914,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/hooks/useWizardForm.ts",
@@ -451395,7 +451395,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/hooks/useWizardForm.ts",
@@ -451856,7 +451856,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/e2e/catalogue-form-fixture.ts",
@@ -452309,7 +452309,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/e2e/catalogue-form-fixture.ts",
@@ -452764,7 +452764,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/e2e/catalogue-form-fixture.ts",
@@ -453218,7 +453218,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/e2e/catalogue-form-fixture.ts",
@@ -453596,7 +453596,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/hooks/useCatalogueResource.ts",
@@ -453612,7 +453612,7 @@
             },
             {
               "path": "apps/web/e2e/ai-policies.spec.ts",
-              "sha256": "2ddbd46f47920f4dec43bda12b1eb047b68c04df681253991c8ade31923c83c2"
+              "sha256": "5db5113e8842c07c9c321cfc5c130dc9ac7238e020ded94135df4a4399ac0b46"
             },
             {
               "path": "apps/web/e2e/knowledge-policy-forms.spec.ts",
@@ -453974,7 +453974,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/hooks/useCatalogueResource.ts",
@@ -453990,7 +453990,7 @@
             },
             {
               "path": "apps/web/e2e/ai-policies.spec.ts",
-              "sha256": "2ddbd46f47920f4dec43bda12b1eb047b68c04df681253991c8ade31923c83c2"
+              "sha256": "5db5113e8842c07c9c321cfc5c130dc9ac7238e020ded94135df4a4399ac0b46"
             },
             {
               "path": "apps/web/e2e/knowledge-policy-forms.spec.ts",
@@ -454348,7 +454348,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/hooks/useCatalogueResource.ts",
@@ -454364,7 +454364,7 @@
             },
             {
               "path": "apps/web/e2e/ai-policies.spec.ts",
-              "sha256": "2ddbd46f47920f4dec43bda12b1eb047b68c04df681253991c8ade31923c83c2"
+              "sha256": "5db5113e8842c07c9c321cfc5c130dc9ac7238e020ded94135df4a4399ac0b46"
             },
             {
               "path": "apps/web/e2e/knowledge-policy-forms.spec.ts",
@@ -454730,7 +454730,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/lib/ai-agent-form.ts",
@@ -455208,7 +455208,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/lib/ai-agent-form.ts",
@@ -455712,7 +455712,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/lib/ai-agent-form.ts",
@@ -456189,7 +456189,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/lib/ai-agent-form.ts",
@@ -456691,7 +456691,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/lib/ai-agent-form.ts",
@@ -491179,7 +491179,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "4f5f2b5e87d5f2dcb4f37842575bab74afdfed87f9ee29e4e27d52b4042fd108"
+              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityIncreasesPage.tsx",
@@ -492950,7 +492950,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/components/TemplatePreviewPanel.tsx",
@@ -494251,7 +494251,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/components/TicketIntakeForm.tsx",
@@ -494347,7 +494347,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "4f5f2b5e87d5f2dcb4f37842575bab74afdfed87f9ee29e4e27d52b4042fd108"
+              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityIncreasesPage.tsx",
@@ -495134,7 +495134,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/components/TicketIntakeForm.tsx",
@@ -495230,7 +495230,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "4f5f2b5e87d5f2dcb4f37842575bab74afdfed87f9ee29e4e27d52b4042fd108"
+              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityIncreasesPage.tsx",
@@ -495958,7 +495958,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/components/TicketIntakeForm.tsx",
@@ -496054,7 +496054,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "4f5f2b5e87d5f2dcb4f37842575bab74afdfed87f9ee29e4e27d52b4042fd108"
+              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityIncreasesPage.tsx",
@@ -496771,7 +496771,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -497047,7 +497047,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "3db7d84d578da8a7f3ab0e01c44eb04d341bd640d15d20d47ce3183fa88d7240"
+              "sha256": "9e649708455fe90141da6fba00698859928f30dfcf486aef906cc2e34973fe9a"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -497772,7 +497772,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/components/TemplatePreviewPanel.tsx",
@@ -511538,7 +511538,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "4f5f2b5e87d5f2dcb4f37842575bab74afdfed87f9ee29e4e27d52b4042fd108"
+              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityIncreasesPage.tsx",
@@ -512212,7 +512212,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "4f5f2b5e87d5f2dcb4f37842575bab74afdfed87f9ee29e4e27d52b4042fd108"
+              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityIncreasesPage.tsx",
@@ -516941,11 +516941,11 @@
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
-              "sha256": "a5d28fab9c1dd5212deeb07921798c2d1552b979296aa84be03bee98a5e12bcf"
+              "sha256": "1187b42a7bbd635ff8378aea938d884ec4da83356fa61040095b08e3d847859c"
             },
             {
               "path": "apps/web/e2e/document-template-forms.spec.ts",
-              "sha256": "1c65b21926aaed7e4175ba0df6a700dac2b9a9a9f5bc66cab41ca54aafef2419"
+              "sha256": "8d44a07e7306b5a54d85b0b9b2e1863c100b39351040ea9d3be7d8815271f0b2"
             },
             {
               "path": "apps/web/e2e/document-upload-controls.spec.ts",
@@ -517033,7 +517033,7 @@
             },
             {
               "path": "apps/web/e2e/gift-code-forms.spec.ts",
-              "sha256": "9dbece885ab1ed1b548f171f2a8f96b37e79bb60a5cc017fb2b9aea6a3426874"
+              "sha256": "3cac1b9327b5df89dfd46ec7dc61f4fd73a0da3f1533c7bdb001f62fbe58373b"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -517069,7 +517069,7 @@
             },
             {
               "path": "apps/web/e2e/maintenance-forms.spec.ts",
-              "sha256": "d8a3b9c9fa6c493f636969525d72ca95f4bf799e1c8775f6028b4e76e44bfaf7"
+              "sha256": "6ba52a953a4fc6f0075b58427630b879ab366abd42591cbe7fa9e7d31588920e"
             },
             {
               "path": "apps/web/e2e/manual-invoice.spec.ts",
@@ -517181,7 +517181,7 @@
             },
             {
               "path": "apps/web/e2e/service-workflows.spec.ts",
-              "sha256": "e694bcb89fa956b7a187c85b0699e3661c97c135c818a6b33dafa3f142edf91c"
+              "sha256": "95c244a68af7eb4b51a011c2efdf92e87f4c5ed76064f38b878f2de8e3a679b3"
             },
             {
               "path": "apps/web/e2e/sms-provider-settings.spec.ts",
@@ -517605,11 +517605,11 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.multipart.test.tsx",
-              "sha256": "84d52bf1a2a25735b1100281dfa515e7b8b57774c84c74413117e09591f2994a"
+              "sha256": "4f46d54019ab96c122cb42206d15b5a7d7e3705c962c574c0bacc5af17c656ca"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/components/TeamMemberFields.tsx",
@@ -517869,7 +517869,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "4f5f2b5e87d5f2dcb4f37842575bab74afdfed87f9ee29e4e27d52b4042fd108"
+              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityIncreasesPage.tsx",
@@ -518105,7 +518105,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "3db7d84d578da8a7f3ab0e01c44eb04d341bd640d15d20d47ce3183fa88d7240"
+              "sha256": "9e649708455fe90141da6fba00698859928f30dfcf486aef906cc2e34973fe9a"
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
@@ -518347,7 +518347,7 @@
             },
             {
               "path": "apps/web/e2e/document-template-forms.spec.ts",
-              "sha256": "1c65b21926aaed7e4175ba0df6a700dac2b9a9a9f5bc66cab41ca54aafef2419"
+              "sha256": "8d44a07e7306b5a54d85b0b9b2e1863c100b39351040ea9d3be7d8815271f0b2"
             },
             {
               "path": "apps/web/e2e/document-upload-controls.spec.ts",
@@ -518491,7 +518491,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "4f5f2b5e87d5f2dcb4f37842575bab74afdfed87f9ee29e4e27d52b4042fd108"
+              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
@@ -519213,7 +519213,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "3db7d84d578da8a7f3ab0e01c44eb04d341bd640d15d20d47ce3183fa88d7240"
+              "sha256": "9e649708455fe90141da6fba00698859928f30dfcf486aef906cc2e34973fe9a"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -519786,7 +519786,7 @@
             },
             {
               "path": "apps/web/e2e/document-template-forms.spec.ts",
-              "sha256": "1c65b21926aaed7e4175ba0df6a700dac2b9a9a9f5bc66cab41ca54aafef2419"
+              "sha256": "8d44a07e7306b5a54d85b0b9b2e1863c100b39351040ea9d3be7d8815271f0b2"
             },
             {
               "path": "apps/web/e2e/document-upload-controls.spec.ts",
@@ -519930,7 +519930,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "4f5f2b5e87d5f2dcb4f37842575bab74afdfed87f9ee29e4e27d52b4042fd108"
+              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
@@ -521942,7 +521942,7 @@
             },
             {
               "path": "apps/web/e2e/document-template-forms.spec.ts",
-              "sha256": "1c65b21926aaed7e4175ba0df6a700dac2b9a9a9f5bc66cab41ca54aafef2419"
+              "sha256": "8d44a07e7306b5a54d85b0b9b2e1863c100b39351040ea9d3be7d8815271f0b2"
             },
             {
               "path": "apps/web/e2e/document-upload-controls.spec.ts",
@@ -522086,7 +522086,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "4f5f2b5e87d5f2dcb4f37842575bab74afdfed87f9ee29e4e27d52b4042fd108"
+              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
@@ -523377,7 +523377,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/components/ThemeSwitcher.tsx",
@@ -524285,7 +524285,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/components/ThemeSwitcher.tsx",
@@ -525193,7 +525193,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/components/ThemeSwitcher.tsx",
@@ -526101,7 +526101,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/components/ThemeSwitcher.tsx",
@@ -527009,7 +527009,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/components/ThemeSwitcher.tsx",
@@ -527917,7 +527917,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/components/ThemeSwitcher.tsx",
@@ -528825,7 +528825,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/components/ThemeSwitcher.tsx",
@@ -529733,7 +529733,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/components/ThemeSwitcher.tsx",
@@ -530641,7 +530641,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/components/ThemeSwitcher.tsx",
@@ -531549,7 +531549,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/components/ThemeSwitcher.tsx",
@@ -532457,7 +532457,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/components/ThemeSwitcher.tsx",
@@ -533365,7 +533365,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/components/ThemeSwitcher.tsx",
@@ -534273,7 +534273,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/components/ThemeSwitcher.tsx",
@@ -535181,7 +535181,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/components/ThemeSwitcher.tsx",
@@ -536089,7 +536089,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/components/ThemeSwitcher.tsx",
@@ -536997,7 +536997,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/components/ThemeSwitcher.tsx",
@@ -537905,7 +537905,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/components/ThemeSwitcher.tsx",
@@ -538813,7 +538813,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/components/ThemeSwitcher.tsx",
@@ -539721,7 +539721,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/components/ThemeSwitcher.tsx",
@@ -540629,7 +540629,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/components/ThemeSwitcher.tsx",
@@ -546584,11 +546584,11 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.multipart.test.tsx",
-              "sha256": "84d52bf1a2a25735b1100281dfa515e7b8b57774c84c74413117e09591f2994a"
+              "sha256": "4f46d54019ab96c122cb42206d15b5a7d7e3705c962c574c0bacc5af17c656ca"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -548450,11 +548450,11 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.multipart.test.tsx",
-              "sha256": "84d52bf1a2a25735b1100281dfa515e7b8b57774c84c74413117e09591f2994a"
+              "sha256": "4f46d54019ab96c122cb42206d15b5a7d7e3705c962c574c0bacc5af17c656ca"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -550317,11 +550317,11 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.multipart.test.tsx",
-              "sha256": "84d52bf1a2a25735b1100281dfa515e7b8b57774c84c74413117e09591f2994a"
+              "sha256": "4f46d54019ab96c122cb42206d15b5a7d7e3705c962c574c0bacc5af17c656ca"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -552153,11 +552153,11 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.multipart.test.tsx",
-              "sha256": "84d52bf1a2a25735b1100281dfa515e7b8b57774c84c74413117e09591f2994a"
+              "sha256": "4f46d54019ab96c122cb42206d15b5a7d7e3705c962c574c0bacc5af17c656ca"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -554015,11 +554015,11 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.multipart.test.tsx",
-              "sha256": "84d52bf1a2a25735b1100281dfa515e7b8b57774c84c74413117e09591f2994a"
+              "sha256": "4f46d54019ab96c122cb42206d15b5a7d7e3705c962c574c0bacc5af17c656ca"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -555886,11 +555886,11 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.multipart.test.tsx",
-              "sha256": "84d52bf1a2a25735b1100281dfa515e7b8b57774c84c74413117e09591f2994a"
+              "sha256": "4f46d54019ab96c122cb42206d15b5a7d7e3705c962c574c0bacc5af17c656ca"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -557730,11 +557730,11 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.multipart.test.tsx",
-              "sha256": "84d52bf1a2a25735b1100281dfa515e7b8b57774c84c74413117e09591f2994a"
+              "sha256": "4f46d54019ab96c122cb42206d15b5a7d7e3705c962c574c0bacc5af17c656ca"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -559538,11 +559538,11 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.multipart.test.tsx",
-              "sha256": "84d52bf1a2a25735b1100281dfa515e7b8b57774c84c74413117e09591f2994a"
+              "sha256": "4f46d54019ab96c122cb42206d15b5a7d7e3705c962c574c0bacc5af17c656ca"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -561346,11 +561346,11 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.multipart.test.tsx",
-              "sha256": "84d52bf1a2a25735b1100281dfa515e7b8b57774c84c74413117e09591f2994a"
+              "sha256": "4f46d54019ab96c122cb42206d15b5a7d7e3705c962c574c0bacc5af17c656ca"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -563155,11 +563155,11 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.multipart.test.tsx",
-              "sha256": "84d52bf1a2a25735b1100281dfa515e7b8b57774c84c74413117e09591f2994a"
+              "sha256": "4f46d54019ab96c122cb42206d15b5a7d7e3705c962c574c0bacc5af17c656ca"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -564963,11 +564963,11 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.multipart.test.tsx",
-              "sha256": "84d52bf1a2a25735b1100281dfa515e7b8b57774c84c74413117e09591f2994a"
+              "sha256": "4f46d54019ab96c122cb42206d15b5a7d7e3705c962c574c0bacc5af17c656ca"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -566741,11 +566741,11 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.multipart.test.tsx",
-              "sha256": "84d52bf1a2a25735b1100281dfa515e7b8b57774c84c74413117e09591f2994a"
+              "sha256": "4f46d54019ab96c122cb42206d15b5a7d7e3705c962c574c0bacc5af17c656ca"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -567013,7 +567013,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "4f5f2b5e87d5f2dcb4f37842575bab74afdfed87f9ee29e4e27d52b4042fd108"
+              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
@@ -567521,7 +567521,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "3db7d84d578da8a7f3ab0e01c44eb04d341bd640d15d20d47ce3183fa88d7240"
+              "sha256": "9e649708455fe90141da6fba00698859928f30dfcf486aef906cc2e34973fe9a"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -568636,11 +568636,11 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.multipart.test.tsx",
-              "sha256": "84d52bf1a2a25735b1100281dfa515e7b8b57774c84c74413117e09591f2994a"
+              "sha256": "4f46d54019ab96c122cb42206d15b5a7d7e3705c962c574c0bacc5af17c656ca"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -568908,7 +568908,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "4f5f2b5e87d5f2dcb4f37842575bab74afdfed87f9ee29e4e27d52b4042fd108"
+              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
@@ -569416,7 +569416,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "3db7d84d578da8a7f3ab0e01c44eb04d341bd640d15d20d47ce3183fa88d7240"
+              "sha256": "9e649708455fe90141da6fba00698859928f30dfcf486aef906cc2e34973fe9a"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -570220,7 +570220,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Staff financial reconciliation now bounds the confirmation and requires uncached saved-state review after uncertain replies. Trace remaining literal command candidates through their real dispatch wrappers and compare operation feedback against current source-bound checks."
+        "Shared confirmation now bounds password verification and commands with unconfirmed-result recovery. Reconcile the remaining wallet invoice payment, refund, approval and lost-contact command paths. Compare their existing dispatch and retry flow before adding deadlines."
       ],
       "owner": null,
       "depends_on": [],
@@ -570295,7 +570295,8 @@
           "release-0.5-provider-command-recovery",
           "release-0.5-ai-admin-command-recovery",
           "release-0.5-onboarding-command-recovery",
-          "release-0.5-reconciliation-command-deadline"
+          "release-0.5-reconciliation-command-deadline",
+          "release-0.5-shared-confirmation-deadlines"
         ],
         "current_acceptance": null
       }
@@ -570626,11 +570627,11 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.multipart.test.tsx",
-              "sha256": "84d52bf1a2a25735b1100281dfa515e7b8b57774c84c74413117e09591f2994a"
+              "sha256": "4f46d54019ab96c122cb42206d15b5a7d7e3705c962c574c0bacc5af17c656ca"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -570898,7 +570899,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "4f5f2b5e87d5f2dcb4f37842575bab74afdfed87f9ee29e4e27d52b4042fd108"
+              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
@@ -571406,7 +571407,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "3db7d84d578da8a7f3ab0e01c44eb04d341bd640d15d20d47ce3183fa88d7240"
+              "sha256": "9e649708455fe90141da6fba00698859928f30dfcf486aef906cc2e34973fe9a"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -572521,11 +572522,11 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.multipart.test.tsx",
-              "sha256": "84d52bf1a2a25735b1100281dfa515e7b8b57774c84c74413117e09591f2994a"
+              "sha256": "4f46d54019ab96c122cb42206d15b5a7d7e3705c962c574c0bacc5af17c656ca"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -572793,7 +572794,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "4f5f2b5e87d5f2dcb4f37842575bab74afdfed87f9ee29e4e27d52b4042fd108"
+              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
@@ -573301,7 +573302,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "3db7d84d578da8a7f3ab0e01c44eb04d341bd640d15d20d47ce3183fa88d7240"
+              "sha256": "9e649708455fe90141da6fba00698859928f30dfcf486aef906cc2e34973fe9a"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -574416,11 +574417,11 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.multipart.test.tsx",
-              "sha256": "84d52bf1a2a25735b1100281dfa515e7b8b57774c84c74413117e09591f2994a"
+              "sha256": "4f46d54019ab96c122cb42206d15b5a7d7e3705c962c574c0bacc5af17c656ca"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -574688,7 +574689,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "4f5f2b5e87d5f2dcb4f37842575bab74afdfed87f9ee29e4e27d52b4042fd108"
+              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
@@ -575196,7 +575197,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "3db7d84d578da8a7f3ab0e01c44eb04d341bd640d15d20d47ce3183fa88d7240"
+              "sha256": "9e649708455fe90141da6fba00698859928f30dfcf486aef906cc2e34973fe9a"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -576311,11 +576312,11 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.multipart.test.tsx",
-              "sha256": "84d52bf1a2a25735b1100281dfa515e7b8b57774c84c74413117e09591f2994a"
+              "sha256": "4f46d54019ab96c122cb42206d15b5a7d7e3705c962c574c0bacc5af17c656ca"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -576583,7 +576584,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "4f5f2b5e87d5f2dcb4f37842575bab74afdfed87f9ee29e4e27d52b4042fd108"
+              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
@@ -577091,7 +577092,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "3db7d84d578da8a7f3ab0e01c44eb04d341bd640d15d20d47ce3183fa88d7240"
+              "sha256": "9e649708455fe90141da6fba00698859928f30dfcf486aef906cc2e34973fe9a"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -578206,11 +578207,11 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.multipart.test.tsx",
-              "sha256": "84d52bf1a2a25735b1100281dfa515e7b8b57774c84c74413117e09591f2994a"
+              "sha256": "4f46d54019ab96c122cb42206d15b5a7d7e3705c962c574c0bacc5af17c656ca"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -578478,7 +578479,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "4f5f2b5e87d5f2dcb4f37842575bab74afdfed87f9ee29e4e27d52b4042fd108"
+              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
@@ -578986,7 +578987,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "3db7d84d578da8a7f3ab0e01c44eb04d341bd640d15d20d47ce3183fa88d7240"
+              "sha256": "9e649708455fe90141da6fba00698859928f30dfcf486aef906cc2e34973fe9a"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -580101,11 +580102,11 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.multipart.test.tsx",
-              "sha256": "84d52bf1a2a25735b1100281dfa515e7b8b57774c84c74413117e09591f2994a"
+              "sha256": "4f46d54019ab96c122cb42206d15b5a7d7e3705c962c574c0bacc5af17c656ca"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -580373,7 +580374,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "4f5f2b5e87d5f2dcb4f37842575bab74afdfed87f9ee29e4e27d52b4042fd108"
+              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
@@ -580881,7 +580882,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "3db7d84d578da8a7f3ab0e01c44eb04d341bd640d15d20d47ce3183fa88d7240"
+              "sha256": "9e649708455fe90141da6fba00698859928f30dfcf486aef906cc2e34973fe9a"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -581996,11 +581997,11 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.multipart.test.tsx",
-              "sha256": "84d52bf1a2a25735b1100281dfa515e7b8b57774c84c74413117e09591f2994a"
+              "sha256": "4f46d54019ab96c122cb42206d15b5a7d7e3705c962c574c0bacc5af17c656ca"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -582268,7 +582269,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "4f5f2b5e87d5f2dcb4f37842575bab74afdfed87f9ee29e4e27d52b4042fd108"
+              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
@@ -582776,7 +582777,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "3db7d84d578da8a7f3ab0e01c44eb04d341bd640d15d20d47ce3183fa88d7240"
+              "sha256": "9e649708455fe90141da6fba00698859928f30dfcf486aef906cc2e34973fe9a"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -583891,11 +583892,11 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.multipart.test.tsx",
-              "sha256": "84d52bf1a2a25735b1100281dfa515e7b8b57774c84c74413117e09591f2994a"
+              "sha256": "4f46d54019ab96c122cb42206d15b5a7d7e3705c962c574c0bacc5af17c656ca"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -584163,7 +584164,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "4f5f2b5e87d5f2dcb4f37842575bab74afdfed87f9ee29e4e27d52b4042fd108"
+              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
@@ -584671,7 +584672,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "3db7d84d578da8a7f3ab0e01c44eb04d341bd640d15d20d47ce3183fa88d7240"
+              "sha256": "9e649708455fe90141da6fba00698859928f30dfcf486aef906cc2e34973fe9a"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -585786,11 +585787,11 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.multipart.test.tsx",
-              "sha256": "84d52bf1a2a25735b1100281dfa515e7b8b57774c84c74413117e09591f2994a"
+              "sha256": "4f46d54019ab96c122cb42206d15b5a7d7e3705c962c574c0bacc5af17c656ca"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -586058,7 +586059,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "4f5f2b5e87d5f2dcb4f37842575bab74afdfed87f9ee29e4e27d52b4042fd108"
+              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
@@ -586566,7 +586567,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "3db7d84d578da8a7f3ab0e01c44eb04d341bd640d15d20d47ce3183fa88d7240"
+              "sha256": "9e649708455fe90141da6fba00698859928f30dfcf486aef906cc2e34973fe9a"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -587681,11 +587682,11 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.multipart.test.tsx",
-              "sha256": "84d52bf1a2a25735b1100281dfa515e7b8b57774c84c74413117e09591f2994a"
+              "sha256": "4f46d54019ab96c122cb42206d15b5a7d7e3705c962c574c0bacc5af17c656ca"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -587953,7 +587954,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "4f5f2b5e87d5f2dcb4f37842575bab74afdfed87f9ee29e4e27d52b4042fd108"
+              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
@@ -588461,7 +588462,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "3db7d84d578da8a7f3ab0e01c44eb04d341bd640d15d20d47ce3183fa88d7240"
+              "sha256": "9e649708455fe90141da6fba00698859928f30dfcf486aef906cc2e34973fe9a"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -589576,11 +589577,11 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.multipart.test.tsx",
-              "sha256": "84d52bf1a2a25735b1100281dfa515e7b8b57774c84c74413117e09591f2994a"
+              "sha256": "4f46d54019ab96c122cb42206d15b5a7d7e3705c962c574c0bacc5af17c656ca"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -589848,7 +589849,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "4f5f2b5e87d5f2dcb4f37842575bab74afdfed87f9ee29e4e27d52b4042fd108"
+              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
@@ -590356,7 +590357,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "3db7d84d578da8a7f3ab0e01c44eb04d341bd640d15d20d47ce3183fa88d7240"
+              "sha256": "9e649708455fe90141da6fba00698859928f30dfcf486aef906cc2e34973fe9a"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -591344,7 +591345,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -591620,7 +591621,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "3db7d84d578da8a7f3ab0e01c44eb04d341bd640d15d20d47ce3183fa88d7240"
+              "sha256": "9e649708455fe90141da6fba00698859928f30dfcf486aef906cc2e34973fe9a"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -592211,11 +592212,11 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.multipart.test.tsx",
-              "sha256": "84d52bf1a2a25735b1100281dfa515e7b8b57774c84c74413117e09591f2994a"
+              "sha256": "4f46d54019ab96c122cb42206d15b5a7d7e3705c962c574c0bacc5af17c656ca"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -592483,7 +592484,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "4f5f2b5e87d5f2dcb4f37842575bab74afdfed87f9ee29e4e27d52b4042fd108"
+              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
@@ -592991,7 +592992,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "3db7d84d578da8a7f3ab0e01c44eb04d341bd640d15d20d47ce3183fa88d7240"
+              "sha256": "9e649708455fe90141da6fba00698859928f30dfcf486aef906cc2e34973fe9a"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -594106,11 +594107,11 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.multipart.test.tsx",
-              "sha256": "84d52bf1a2a25735b1100281dfa515e7b8b57774c84c74413117e09591f2994a"
+              "sha256": "4f46d54019ab96c122cb42206d15b5a7d7e3705c962c574c0bacc5af17c656ca"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -594378,7 +594379,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "4f5f2b5e87d5f2dcb4f37842575bab74afdfed87f9ee29e4e27d52b4042fd108"
+              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
@@ -594886,7 +594887,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "3db7d84d578da8a7f3ab0e01c44eb04d341bd640d15d20d47ce3183fa88d7240"
+              "sha256": "9e649708455fe90141da6fba00698859928f30dfcf486aef906cc2e34973fe9a"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -595690,7 +595691,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Onboarding drafts and submissions and staff financial reconciliation have current native recovery evidence. Match the remaining conditional list, detail and dashboard surfaces to the route census and current cases."
+        "Shared confirmation recovery, including maintenance and multipart document publication, has current native evidence. Match remaining conditional list, detail and dashboard states to the route census and scoped checks."
       ],
       "owner": null,
       "depends_on": [],
@@ -595776,7 +595777,8 @@
           "release-0.5-provider-command-recovery",
           "release-0.5-ai-admin-command-recovery",
           "release-0.5-onboarding-command-recovery",
-          "release-0.5-reconciliation-command-deadline"
+          "release-0.5-reconciliation-command-deadline",
+          "release-0.5-shared-confirmation-deadlines"
         ],
         "current_acceptance": null
       }
@@ -596165,11 +596167,11 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.multipart.test.tsx",
-              "sha256": "84d52bf1a2a25735b1100281dfa515e7b8b57774c84c74413117e09591f2994a"
+              "sha256": "4f46d54019ab96c122cb42206d15b5a7d7e3705c962c574c0bacc5af17c656ca"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -597969,11 +597971,11 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.multipart.test.tsx",
-              "sha256": "84d52bf1a2a25735b1100281dfa515e7b8b57774c84c74413117e09591f2994a"
+              "sha256": "4f46d54019ab96c122cb42206d15b5a7d7e3705c962c574c0bacc5af17c656ca"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -599773,11 +599775,11 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.multipart.test.tsx",
-              "sha256": "84d52bf1a2a25735b1100281dfa515e7b8b57774c84c74413117e09591f2994a"
+              "sha256": "4f46d54019ab96c122cb42206d15b5a7d7e3705c962c574c0bacc5af17c656ca"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -601577,11 +601579,11 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.multipart.test.tsx",
-              "sha256": "84d52bf1a2a25735b1100281dfa515e7b8b57774c84c74413117e09591f2994a"
+              "sha256": "4f46d54019ab96c122cb42206d15b5a7d7e3705c962c574c0bacc5af17c656ca"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -603381,11 +603383,11 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.multipart.test.tsx",
-              "sha256": "84d52bf1a2a25735b1100281dfa515e7b8b57774c84c74413117e09591f2994a"
+              "sha256": "4f46d54019ab96c122cb42206d15b5a7d7e3705c962c574c0bacc5af17c656ca"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -605185,11 +605187,11 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.multipart.test.tsx",
-              "sha256": "84d52bf1a2a25735b1100281dfa515e7b8b57774c84c74413117e09591f2994a"
+              "sha256": "4f46d54019ab96c122cb42206d15b5a7d7e3705c962c574c0bacc5af17c656ca"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -606989,11 +606991,11 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.multipart.test.tsx",
-              "sha256": "84d52bf1a2a25735b1100281dfa515e7b8b57774c84c74413117e09591f2994a"
+              "sha256": "4f46d54019ab96c122cb42206d15b5a7d7e3705c962c574c0bacc5af17c656ca"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -634860,7 +634862,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "4f5f2b5e87d5f2dcb4f37842575bab74afdfed87f9ee29e4e27d52b4042fd108"
+              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityIncreasesPage.tsx",
@@ -635984,7 +635986,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "4f5f2b5e87d5f2dcb4f37842575bab74afdfed87f9ee29e4e27d52b4042fd108"
+              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityIncreasesPage.tsx",
@@ -637108,7 +637110,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "4f5f2b5e87d5f2dcb4f37842575bab74afdfed87f9ee29e4e27d52b4042fd108"
+              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityIncreasesPage.tsx",
@@ -638235,7 +638237,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "4f5f2b5e87d5f2dcb4f37842575bab74afdfed87f9ee29e4e27d52b4042fd108"
+              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityIncreasesPage.tsx",
@@ -639362,7 +639364,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "4f5f2b5e87d5f2dcb4f37842575bab74afdfed87f9ee29e4e27d52b4042fd108"
+              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityIncreasesPage.tsx",
@@ -640516,7 +640518,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "4f5f2b5e87d5f2dcb4f37842575bab74afdfed87f9ee29e4e27d52b4042fd108"
+              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityIncreasesPage.tsx",
@@ -641639,7 +641641,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "4f5f2b5e87d5f2dcb4f37842575bab74afdfed87f9ee29e4e27d52b4042fd108"
+              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityIncreasesPage.tsx",
@@ -642762,7 +642764,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "4f5f2b5e87d5f2dcb4f37842575bab74afdfed87f9ee29e4e27d52b4042fd108"
+              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityIncreasesPage.tsx",
@@ -643886,7 +643888,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "4f5f2b5e87d5f2dcb4f37842575bab74afdfed87f9ee29e4e27d52b4042fd108"
+              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityIncreasesPage.tsx",
@@ -645028,7 +645030,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "4f5f2b5e87d5f2dcb4f37842575bab74afdfed87f9ee29e4e27d52b4042fd108"
+              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityIncreasesPage.tsx",
@@ -646153,7 +646155,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "4f5f2b5e87d5f2dcb4f37842575bab74afdfed87f9ee29e4e27d52b4042fd108"
+              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityIncreasesPage.tsx",
@@ -677653,7 +677655,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "4f5f2b5e87d5f2dcb4f37842575bab74afdfed87f9ee29e4e27d52b4042fd108"
+              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityIncreasesPage.tsx",
@@ -678775,7 +678777,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "4f5f2b5e87d5f2dcb4f37842575bab74afdfed87f9ee29e4e27d52b4042fd108"
+              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityIncreasesPage.tsx",
@@ -679897,7 +679899,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "4f5f2b5e87d5f2dcb4f37842575bab74afdfed87f9ee29e4e27d52b4042fd108"
+              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityIncreasesPage.tsx",
@@ -681019,7 +681021,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "4f5f2b5e87d5f2dcb4f37842575bab74afdfed87f9ee29e4e27d52b4042fd108"
+              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityIncreasesPage.tsx",
@@ -681905,7 +681907,7 @@
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
-              "sha256": "a5d28fab9c1dd5212deeb07921798c2d1552b979296aa84be03bee98a5e12bcf"
+              "sha256": "1187b42a7bbd635ff8378aea938d884ec4da83356fa61040095b08e3d847859c"
             },
             {
               "path": "apps/web/e2e/document-upload-controls.spec.ts",
@@ -682001,7 +682003,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/hooks/useAccountTime.tsx",
@@ -682479,7 +682481,7 @@
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
-              "sha256": "a5d28fab9c1dd5212deeb07921798c2d1552b979296aa84be03bee98a5e12bcf"
+              "sha256": "1187b42a7bbd635ff8378aea938d884ec4da83356fa61040095b08e3d847859c"
             },
             {
               "path": "apps/web/e2e/document-upload-controls.spec.ts",
@@ -682575,7 +682577,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/hooks/useAccountTime.tsx",
@@ -683052,7 +683054,7 @@
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
-              "sha256": "a5d28fab9c1dd5212deeb07921798c2d1552b979296aa84be03bee98a5e12bcf"
+              "sha256": "1187b42a7bbd635ff8378aea938d884ec4da83356fa61040095b08e3d847859c"
             },
             {
               "path": "apps/web/e2e/document-upload-controls.spec.ts",
@@ -683148,7 +683150,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/hooks/useAccountTime.tsx",
@@ -683627,7 +683629,7 @@
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
-              "sha256": "a5d28fab9c1dd5212deeb07921798c2d1552b979296aa84be03bee98a5e12bcf"
+              "sha256": "1187b42a7bbd635ff8378aea938d884ec4da83356fa61040095b08e3d847859c"
             },
             {
               "path": "apps/web/e2e/document-upload-controls.spec.ts",
@@ -683723,7 +683725,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/hooks/useAccountTime.tsx",
@@ -684200,7 +684202,7 @@
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
-              "sha256": "a5d28fab9c1dd5212deeb07921798c2d1552b979296aa84be03bee98a5e12bcf"
+              "sha256": "1187b42a7bbd635ff8378aea938d884ec4da83356fa61040095b08e3d847859c"
             },
             {
               "path": "apps/web/e2e/document-upload-controls.spec.ts",
@@ -684296,7 +684298,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/hooks/useAccountTime.tsx",
@@ -684773,7 +684775,7 @@
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
-              "sha256": "a5d28fab9c1dd5212deeb07921798c2d1552b979296aa84be03bee98a5e12bcf"
+              "sha256": "1187b42a7bbd635ff8378aea938d884ec4da83356fa61040095b08e3d847859c"
             },
             {
               "path": "apps/web/e2e/document-upload-controls.spec.ts",
@@ -684869,7 +684871,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/hooks/useAccountTime.tsx",
@@ -694731,11 +694733,11 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.multipart.test.tsx",
-              "sha256": "84d52bf1a2a25735b1100281dfa515e7b8b57774c84c74413117e09591f2994a"
+              "sha256": "4f46d54019ab96c122cb42206d15b5a7d7e3705c962c574c0bacc5af17c656ca"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/components/TeamMemberFields.tsx",
@@ -695362,11 +695364,11 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.multipart.test.tsx",
-              "sha256": "84d52bf1a2a25735b1100281dfa515e7b8b57774c84c74413117e09591f2994a"
+              "sha256": "4f46d54019ab96c122cb42206d15b5a7d7e3705c962c574c0bacc5af17c656ca"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/components/TeamMemberFields.tsx",
@@ -695993,11 +695995,11 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.multipart.test.tsx",
-              "sha256": "84d52bf1a2a25735b1100281dfa515e7b8b57774c84c74413117e09591f2994a"
+              "sha256": "4f46d54019ab96c122cb42206d15b5a7d7e3705c962c574c0bacc5af17c656ca"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/components/TeamMemberFields.tsx",
@@ -696625,11 +696627,11 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.multipart.test.tsx",
-              "sha256": "84d52bf1a2a25735b1100281dfa515e7b8b57774c84c74413117e09591f2994a"
+              "sha256": "4f46d54019ab96c122cb42206d15b5a7d7e3705c962c574c0bacc5af17c656ca"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/components/TeamMemberFields.tsx",
@@ -697256,11 +697258,11 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.multipart.test.tsx",
-              "sha256": "84d52bf1a2a25735b1100281dfa515e7b8b57774c84c74413117e09591f2994a"
+              "sha256": "4f46d54019ab96c122cb42206d15b5a7d7e3705c962c574c0bacc5af17c656ca"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/components/TeamMemberFields.tsx",
@@ -697887,11 +697889,11 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.multipart.test.tsx",
-              "sha256": "84d52bf1a2a25735b1100281dfa515e7b8b57774c84c74413117e09591f2994a"
+              "sha256": "4f46d54019ab96c122cb42206d15b5a7d7e3705c962c574c0bacc5af17c656ca"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/components/TeamMemberFields.tsx",
@@ -698518,11 +698520,11 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.multipart.test.tsx",
-              "sha256": "84d52bf1a2a25735b1100281dfa515e7b8b57774c84c74413117e09591f2994a"
+              "sha256": "4f46d54019ab96c122cb42206d15b5a7d7e3705c962c574c0bacc5af17c656ca"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/components/TeamMemberFields.tsx",
@@ -699150,11 +699152,11 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.multipart.test.tsx",
-              "sha256": "84d52bf1a2a25735b1100281dfa515e7b8b57774c84c74413117e09591f2994a"
+              "sha256": "4f46d54019ab96c122cb42206d15b5a7d7e3705c962c574c0bacc5af17c656ca"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/components/TeamMemberFields.tsx",
@@ -699781,11 +699783,11 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.multipart.test.tsx",
-              "sha256": "84d52bf1a2a25735b1100281dfa515e7b8b57774c84c74413117e09591f2994a"
+              "sha256": "4f46d54019ab96c122cb42206d15b5a7d7e3705c962c574c0bacc5af17c656ca"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/components/TeamMemberFields.tsx",
@@ -700412,11 +700414,11 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.multipart.test.tsx",
-              "sha256": "84d52bf1a2a25735b1100281dfa515e7b8b57774c84c74413117e09591f2994a"
+              "sha256": "4f46d54019ab96c122cb42206d15b5a7d7e3705c962c574c0bacc5af17c656ca"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/components/TeamMemberFields.tsx",
@@ -701144,7 +701146,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "4f5f2b5e87d5f2dcb4f37842575bab74afdfed87f9ee29e4e27d52b4042fd108"
+              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
             },
             {
               "path": "apps/web/src/pages/AdminVatPage.tsx",
@@ -701469,7 +701471,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
@@ -702778,7 +702780,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/components/WalletTopUpLimitConfigPanel.tsx",
@@ -703032,7 +703034,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/hooks/useCatalogueEditor.tsx",
@@ -703239,7 +703241,7 @@
             },
             {
               "path": "apps/web/e2e/gift-code-forms.spec.ts",
-              "sha256": "9dbece885ab1ed1b548f171f2a8f96b37e79bb60a5cc017fb2b9aea6a3426874"
+              "sha256": "3cac1b9327b5df89dfd46ec7dc61f4fd73a0da3f1533c7bdb001f62fbe58373b"
             },
             {
               "path": "apps/web/e2e/gift-code-recovery.spec.ts",
@@ -703267,7 +703269,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/hooks/useCatalogueEditor.tsx",
@@ -703499,7 +703501,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/hooks/useCatalogueEditor.tsx",
@@ -703726,7 +703728,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/hooks/useCatalogueEditor.tsx",
@@ -704084,7 +704086,7 @@
             },
             {
               "path": "apps/web/e2e/verification-policy-settings.spec.ts",
-              "sha256": "561850d40f64e14743cbd6372f952eaa2dd99c7230fe7015376c5e7801e6fcae"
+              "sha256": "da084972e63f896ac1c70f764ef8ec1e829a35ad172d605a0513796a044d6ef8"
             },
             {
               "path": "apps/web/e2e/verification-settings-forms.spec.ts",
@@ -704112,7 +704114,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/components/VerificationPolicySettings.tsx",
@@ -704500,7 +704502,7 @@
             },
             {
               "path": "apps/web/e2e/service-workflows.spec.ts",
-              "sha256": "e694bcb89fa956b7a187c85b0699e3661c97c135c818a6b33dafa3f142edf91c"
+              "sha256": "95c244a68af7eb4b51a011c2efdf92e87f4c5ed76064f38b878f2de8e3a679b3"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -704516,7 +704518,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/hooks/useCatalogueResource.ts",
@@ -704909,7 +704911,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/hooks/useCatalogueEditor.tsx",
@@ -705185,7 +705187,7 @@
             },
             {
               "path": "apps/web/e2e/service-workflows.spec.ts",
-              "sha256": "e694bcb89fa956b7a187c85b0699e3661c97c135c818a6b33dafa3f142edf91c"
+              "sha256": "95c244a68af7eb4b51a011c2efdf92e87f4c5ed76064f38b878f2de8e3a679b3"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -705201,7 +705203,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/hooks/useCatalogueResource.ts",
@@ -710770,7 +710772,7 @@
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
-              "sha256": "a5d28fab9c1dd5212deeb07921798c2d1552b979296aa84be03bee98a5e12bcf"
+              "sha256": "1187b42a7bbd635ff8378aea938d884ec4da83356fa61040095b08e3d847859c"
             },
             {
               "path": "apps/web/e2e/documents.spec.ts",
@@ -713471,7 +713473,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
@@ -718762,7 +718764,7 @@
             },
             {
               "path": "apps/web/e2e/ai-policies.spec.ts",
-              "sha256": "2ddbd46f47920f4dec43bda12b1eb047b68c04df681253991c8ade31923c83c2"
+              "sha256": "5db5113e8842c07c9c321cfc5c130dc9ac7238e020ded94135df4a4399ac0b46"
             },
             {
               "path": "apps/web/e2e/assistant-chat-forms.spec.ts",
@@ -718790,11 +718792,11 @@
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
-              "sha256": "a5d28fab9c1dd5212deeb07921798c2d1552b979296aa84be03bee98a5e12bcf"
+              "sha256": "1187b42a7bbd635ff8378aea938d884ec4da83356fa61040095b08e3d847859c"
             },
             {
               "path": "apps/web/e2e/document-template-forms.spec.ts",
-              "sha256": "1c65b21926aaed7e4175ba0df6a700dac2b9a9a9f5bc66cab41ca54aafef2419"
+              "sha256": "8d44a07e7306b5a54d85b0b9b2e1863c100b39351040ea9d3be7d8815271f0b2"
             },
             {
               "path": "apps/web/e2e/document-upload-controls.spec.ts",
@@ -719090,7 +719092,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/components/TemplatePreviewPanel.tsx",
@@ -719354,7 +719356,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "4f5f2b5e87d5f2dcb4f37842575bab74afdfed87f9ee29e4e27d52b4042fd108"
+              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
@@ -722644,7 +722646,7 @@
             },
             {
               "path": "apps/web/e2e/ai-policies.spec.ts",
-              "sha256": "2ddbd46f47920f4dec43bda12b1eb047b68c04df681253991c8ade31923c83c2"
+              "sha256": "5db5113e8842c07c9c321cfc5c130dc9ac7238e020ded94135df4a4399ac0b46"
             },
             {
               "path": "apps/web/e2e/assistant-chat-forms.spec.ts",
@@ -722672,11 +722674,11 @@
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
-              "sha256": "a5d28fab9c1dd5212deeb07921798c2d1552b979296aa84be03bee98a5e12bcf"
+              "sha256": "1187b42a7bbd635ff8378aea938d884ec4da83356fa61040095b08e3d847859c"
             },
             {
               "path": "apps/web/e2e/document-template-forms.spec.ts",
-              "sha256": "1c65b21926aaed7e4175ba0df6a700dac2b9a9a9f5bc66cab41ca54aafef2419"
+              "sha256": "8d44a07e7306b5a54d85b0b9b2e1863c100b39351040ea9d3be7d8815271f0b2"
             },
             {
               "path": "apps/web/e2e/document-upload-controls.spec.ts",
@@ -722956,7 +722958,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/components/TemplatePreviewPanel.tsx",
@@ -723220,7 +723222,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "4f5f2b5e87d5f2dcb4f37842575bab74afdfed87f9ee29e4e27d52b4042fd108"
+              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
@@ -725420,7 +725422,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "The onboarding and reconciliation journeys have current recovery evidence. Remaining conditional states and CRUD feedback require scoped route reconciliation. The required GitHub accessibility check and staging Sentry receipt remain open."
+        "Shared confirmation recovery and its affected journeys have current evidence. Remaining conditional states and protected CRUD feedback require scoped reconciliation. Required GitHub accessibility enforcement and the staging Sentry receipt remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -725571,7 +725573,8 @@
           "release-0.5-provider-command-recovery",
           "release-0.5-ai-admin-command-recovery",
           "release-0.5-onboarding-command-recovery",
-          "release-0.5-reconciliation-command-deadline"
+          "release-0.5-reconciliation-command-deadline",
+          "release-0.5-shared-confirmation-deadlines"
         ]
       }
     },
@@ -726123,7 +726126,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "8611e52a81b656758c67306c069c78dc399603ea21d990b9579073fbbef88c65"
+              "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
             },
             {
               "path": "apps/web/src/components/TeamMemberFields.tsx",
@@ -726507,7 +726510,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
-              "sha256": "4f5f2b5e87d5f2dcb4f37842575bab74afdfed87f9ee29e4e27d52b4042fd108"
+              "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityIncreasesPage.tsx",
@@ -727434,7 +727437,8 @@
             "Renewed email and SMS provider recovery and route and interaction budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-provider-command-recovery/proof.json",
             "Renewed AI administration recovery and route and interaction budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-ai-admin-command-recovery/proof.json",
             "Renewed onboarding recovery and route and interaction budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-onboarding-command-recovery/proof.json",
-            "Renewed staff reconciliation, verification-banner and route budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-reconciliation-command-deadline/proof.json"
+            "Renewed staff reconciliation, verification-banner and route budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-reconciliation-command-deadline/proof.json",
+            "Renewed confirmation dialog and document template budget and browser evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-shared-confirmation-deadlines/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -801077,6 +801081,119 @@
       "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-reconciliation-command-deadline/renewed-bindings.json",
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-reconciliation-command-deadline/reviewed.patch",
       "release_disposition": "Verified staff reconciliation response deadlines, uncached saved-state review and the shared verification-banner read. v0.5.0 acceptance remains open."
+    },
+    "release-0.5-shared-confirmation-deadlines": {
+      "batch": "release-0.5-shared-confirmation-deadlines",
+      "base_commit": "27bed3372703c7462a2e5e8a84667046d4a321bc",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.11.01.03",
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.11.01.03",
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": ".size-limit.json",
+          "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+        },
+        {
+          "path": "apps/api/src/documents/document-template.controller.ts",
+          "sha256": "eb4c4d8c04802538d7d81e399b59ef8d724bfa90e01f3890d18d2dad46085e73"
+        },
+        {
+          "path": "apps/api/src/documents/document-template.service.ts",
+          "sha256": "166ab73a5c62ace40b4313cef60bb4e9d9318599c86805467faa175f9ba1b50c"
+        },
+        {
+          "path": "apps/web/e2e/ai-policies.spec.ts",
+          "sha256": "5db5113e8842c07c9c321cfc5c130dc9ac7238e020ded94135df4a4399ac0b46"
+        },
+        {
+          "path": "apps/web/e2e/confirmation-fixture.ts",
+          "sha256": "8d842de5577a9f43a5ca0efcf8e6a00e18e6ea1fb53116555fac8cbd7608bb61"
+        },
+        {
+          "path": "apps/web/e2e/document-records.spec.ts",
+          "sha256": "1187b42a7bbd635ff8378aea938d884ec4da83356fa61040095b08e3d847859c"
+        },
+        {
+          "path": "apps/web/e2e/document-template-forms.spec.ts",
+          "sha256": "8d44a07e7306b5a54d85b0b9b2e1863c100b39351040ea9d3be7d8815271f0b2"
+        },
+        {
+          "path": "apps/web/e2e/gift-code-forms.spec.ts",
+          "sha256": "3cac1b9327b5df89dfd46ec7dc61f4fd73a0da3f1533c7bdb001f62fbe58373b"
+        },
+        {
+          "path": "apps/web/e2e/maintenance-forms.spec.ts",
+          "sha256": "6ba52a953a4fc6f0075b58427630b879ab366abd42591cbe7fa9e7d31588920e"
+        },
+        {
+          "path": "apps/web/e2e/service-workflows.spec.ts",
+          "sha256": "95c244a68af7eb4b51a011c2efdf92e87f4c5ed76064f38b878f2de8e3a679b3"
+        },
+        {
+          "path": "apps/web/e2e/verification-policy-settings.spec.ts",
+          "sha256": "da084972e63f896ac1c70f764ef8ec1e829a35ad172d605a0513796a044d6ef8"
+        },
+        {
+          "path": "apps/web/playwright.config.ts",
+          "sha256": "ad9a9e23b46599266a7fe0dcfd7185e12e612cdc50c040453533d1fccbea85cf"
+        },
+        {
+          "path": "apps/web/src/components/TeamActionDialog.multipart.test.tsx",
+          "sha256": "4f46d54019ab96c122cb42206d15b5a7d7e3705c962c574c0bacc5af17c656ca"
+        },
+        {
+          "path": "apps/web/src/components/TeamActionDialog.tsx",
+          "sha256": "9083723bed9290903fbff18d3ffb750b060e91df702c11aa56ec00a24e770324"
+        },
+        {
+          "path": "apps/web/src/lib/server-query-client.ts",
+          "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
+        },
+        {
+          "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
+          "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
+        },
+        {
+          "path": "deploy/staging/nginx-api-proxy.conf",
+          "sha256": "ffc79d8f52d6dd3628d7b0feee4aca07a172f3f33547ff02abe9238244dd5f09"
+        },
+        {
+          "path": "docs/design/notification-recovery.md",
+          "sha256": "9e649708455fe90141da6fba00698859928f30dfcf486aef906cc2e34973fe9a"
+        },
+        {
+          "path": "scripts/check-changed-coverage.py",
+          "sha256": "721aa5763bb62336c0e4c454b8e36e2f15ff1e14bf4b0136c7c7946424bbd736"
+        },
+        {
+          "path": "scripts/check-route-budgets.mjs",
+          "sha256": "4dd831c645a9dbf1e6fd9b0c211b5559e4fc22652373b31525bd4f4aae38186d"
+        },
+        {
+          "path": "scripts/run-production-browser.mjs",
+          "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+        }
+      ],
+      "checks": [
+        "Password verification and commands with unconfirmed-result handlers use the existing 15-second deadline. A stalled password check leaves the business command unsent. A lost command response or HTTP 408 goes to the existing recovery. Callers without recovery still need domain-specific reconciliation before a deadline can be added safely.",
+        "Multipart document template versions allow 300 seconds for reviewed upload, extraction and storage. Both locales keep the dialog busy after 20 seconds and reject an invalid receipt before deliberate retry. The maintenance test holds the saved reply through the inherited deadline, then requires a fresh read before another command.",
+        "Passed 12 unit, 120 Chromium, 120 mobile Safari and 12 instrumented Chromium cases, nine changed-coverage groups and 100 route budgets. The interrupted run had 13 failures including stale confirmation and upload readiness fixtures and a screenshot disk error. Retained 74 current-source cases and verified 166 in four separately reported follow-up shards. A prior follow-up exited before its report and provided no passing evidence. Fixed capture paths now use per-run output. Captures at overwritten historical paths need fresh review before release use.",
+        "Changed files passed lint, typecheck and formatting. Electricity ordering is 254,906 bytes under the unchanged 255,000-byte cap. The 31 compiled cold-auth files and paths match, retaining six accepted cold-auth cases."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-shared-confirmation-deadlines",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-shared-confirmation-deadlines/proof.json",
+      "source_scope_proof_sha256": "d9204dc7bdabee2513fdbc0e9bdc14dc315776960308d547bae8bec37661fd76",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-shared-confirmation-deadlines/renewed-bindings.json",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-shared-confirmation-deadlines/final-reviewed.patch",
+      "release_disposition": "Verified shared confirmation deadlines, existing uncertain-result recovery and the document-template upload allowance. v0.5.0 acceptance remains open."
     }
   },
   "historical_improvements": [
@@ -801127,12 +801244,12 @@
       "release-readiness#R-04.01",
       "release-readiness#R-04.02"
     ],
-    "goal": "Reconcile the remaining v0.5.0 command and conditional-state requirements in groups. Start with the static command candidates recorded in the latest batch, trace actual dispatch wrappers and compare scoped cases to the route census. Fix confirmed gaps and close only verified criteria. Live Sentry delivery and required GitHub accessibility enforcement remain separate v0.5.0 gates."
+    "goal": "Finish scoped v0.5.0 command feedback and conditional-state reconciliation. Inspect the remaining protected financial and account-recovery paths first using the latest confirmation census. Close demonstrated gaps without replaying uncertain writes. Compare remaining route states with existing coverage. Live Sentry delivery and required GitHub accessibility enforcement remain separate gates."
   },
   "launch_forecast": {
     "status": "deadline_at_risk_until_v0_5_and_operational_gates_close",
     "next_update_after": "v0.5.0 remaining UI criteria and owner decisions",
-    "method": "v0.4.0 staging and Telegram receipts are verified. v0.5.0 form semantics, guarded electricity drafts, solar document completion, ticket acknowledgement, verified attachment and verification-mode recovery, shared customer settings acknowledgement and saving intake recovery, staff notification template, customer correction, delivery-window, dead-letter, failed jobs, CRM verification corrections, email and SMS provider and AI administration acknowledgement recovery, personal and company onboarding and staff reconciliation recovery, staff directory, staff team and assignment-rule, invoice and reminder recovery, and scoped customer electricity, shell, onboarding, terms and invitation recovery are verified. Five launch-required criteria remain open, including the live Sentry receipt and GitHub accessibility enforcement. The November 9 sequence remains at risk."
+    "method": "v0.4.0 staging and Telegram receipts are verified. v0.5.0 shared confirmation deadlines and protected recovery have current customer and staff browser evidence. Five launch-required criteria remain open, including staging Sentry delivery, required GitHub accessibility enforcement and scoped UI reconciliation. The November 9 sequence remains at risk."
   },
   "capabilities": [
     {

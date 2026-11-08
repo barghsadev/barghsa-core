@@ -242,6 +242,10 @@ for (const locale of ['en', 'fa'] as const) {
     });
     await summary.fill('  الحاقیه قرارداد  ');
     const commands: string[] = [];
+    let releaseVersion!: () => void;
+    const versionPending = new Promise<void>((resolve) => {
+      releaseVersion = resolve;
+    });
     let stepUp = false;
     await page.route('**/api/auth/step-up', async (route) => {
       expect(route.request().postDataJSON()).toEqual({ password: 'test-password' });
@@ -261,6 +265,7 @@ for (const locale of ['en', 'fa'] as const) {
         if (!stepUp) throw new Error('Write attempted without step-up');
         if (commands.length === 2) {
           readFailed(true);
+          await versionPending;
           // A successful HTTP status without the matching receipt must not clear the draft.
           return route.fulfill({
             status: 201,
@@ -294,11 +299,22 @@ for (const locale of ['en', 'fa'] as const) {
         return route.fulfill({ status: 201, json: result });
       }
     );
+    await page.clock.install();
     await form.getByRole('button', { name: word('publishVersion'), exact: true }).click();
     await expect(page.getByRole('dialog')).toContainText('Addendum.pdf');
     await confirm().click();
     await page.locator('#team-step-up-password').fill('test-password');
     await confirm().click();
+    try {
+      await expect.poll(() => commands.length).toBe(2);
+      await page.clock.fastForward(20_000);
+      await expect(page.getByRole('dialog').locator('button[type=submit]')).toHaveAttribute(
+        'aria-busy',
+        'true'
+      );
+    } finally {
+      releaseVersion();
+    }
     await expect(page.getByRole('dialog')).toHaveCount(0);
     await expect(page.getByText(word('uncertain'), { exact: true })).toBeVisible();
     await expect(summary).toHaveValue('  الحاقیه قرارداد  ');
