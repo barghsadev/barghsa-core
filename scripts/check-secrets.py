@@ -33,8 +33,15 @@ def install(folder: Path) -> Path:
         f"https://github.com/gitleaks/gitleaks/releases/download/v{VERSION}/"
         f"gitleaks_{VERSION}_{target}.tar.gz"
     )
-    with urllib.request.urlopen(url, timeout=30) as response:
-        archive = response.read()
+    for attempt in range(2):
+        try:
+            with urllib.request.urlopen(url, timeout=30) as response:
+                archive = response.read()
+            break
+        except TimeoutError:
+            if attempt == 1:
+                raise
+            print("Gitleaks archive download timed out. Retrying once.", flush=True)
     if hashlib.sha256(archive).hexdigest() != checksum:
         raise RuntimeError("Gitleaks archive checksum mismatch")
     binary = folder / "gitleaks"

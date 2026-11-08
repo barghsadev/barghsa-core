@@ -20,12 +20,24 @@ class SecretScanTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             with patch.object(scanner.platform, "system", return_value="Linux"), patch.object(
                 scanner.platform, "machine", return_value="x86_64"
-            ), patch.object(scanner.urllib.request, "urlopen", return_value=io.BytesIO(b"changed")):
+            ), patch.object(scanner.urllib.request, "urlopen", return_value=io.BytesIO(b"changed")) as download:
                 with self.assertRaisesRegex(RuntimeError, "checksum mismatch"):
                     scanner.install(Path(directory))
+            download.assert_called_once()
             self.assertEqual(list(Path(directory).iterdir()), [])
 
-    def test_extracts_only_verified_binary_without_trusting_archive_paths(self):
+    def test_persistent_download_timeout_stops_after_one_retry(self):
+        with tempfile.TemporaryDirectory() as directory, patch.object(
+            scanner.platform, "system", return_value="Linux"
+        ), patch.object(scanner.platform, "machine", return_value="x86_64"), patch.object(
+            scanner.urllib.request, "urlopen", side_effect=TimeoutError
+        ) as download:
+            with self.assertRaises(TimeoutError):
+                scanner.install(Path(directory))
+            self.assertEqual(download.call_count, 2)
+            self.assertEqual(list(Path(directory).iterdir()), [])
+
+    def test_retries_timeout_and_extracts_only_verified_binary_without_trusting_archive_paths(self):
         payload = io.BytesIO()
         with tarfile.open(fileobj=payload, mode="w:gz") as archive:
             for name in ["gitleaks", "../outside"]:
@@ -40,8 +52,11 @@ class SecretScanTests(unittest.TestCase):
                 scanner.platform, "machine", return_value="fixture"
             ), patch.dict(scanner.ARCHIVES, {
                 ("Fixture", "fixture"): ("fixture", hashlib.sha256(data).hexdigest())
-            }), patch.object(scanner.urllib.request, "urlopen", return_value=io.BytesIO(data)):
+            }), patch.object(
+                scanner.urllib.request, "urlopen", side_effect=[TimeoutError, io.BytesIO(data)]
+            ) as download:
                 binary = scanner.install(destination)
+            self.assertEqual(download.call_count, 2)
             self.assertEqual(binary.read_bytes(), b"fixture")
             self.assertEqual(list(destination.iterdir()), [binary])
             self.assertFalse((Path(directory) / "outside").exists())

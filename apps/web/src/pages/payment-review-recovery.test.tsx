@@ -3,6 +3,7 @@ import { ConfirmationTestProvider as QueryProvider } from '../test/confirmation.
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
+import { confirmationText } from '@barghsa/i18n/confirmation';
 import Receipts from './AdminWalletReceiptsPage.js';
 import Reconciliation from './AdminReconciliationPage.js';
 import { TeamActionDialog } from '../components/TeamActionDialog.js';
@@ -218,20 +219,23 @@ it('an obsolete financial denial cannot clear a newer selected receipt', async (
   expect(container.textContent).not.toContain('You cannot view');
 });
 it('uncertain write errors remain visible through successful queue reads', async () => {
-  vi.stubGlobal(
-    'fetch',
-    vi.fn(async (url: RequestInfo | URL, init?: RequestInit) => {
-      if (init?.method === 'POST') throw new Error('Connection lost');
-      return read(url);
-    })
-  );
+  const fetcher = vi.fn(async (url: RequestInfo | URL, init?: RequestInit) => {
+    if (init?.method === 'POST') throw new Error('Connection lost');
+    return read(url);
+  });
+  vi.stubGlobal('fetch', fetcher);
   await act(async () => root.render(<QueryProvider>{<Receipts />}</QueryProvider>));
   await approveVisibleConfirmation();
   await act(async () => confirm().click());
   await confirmWalletDecision();
-  expect(container.textContent).toContain('Failed to save');
+  expect(container.querySelector('[role="alert"]')?.textContent).toContain(
+    confirmationText('unconfirmed', 'en')
+  );
   await click('Refresh receipt queue');
-  expect(container.textContent).toContain('Failed to save');
+  expect(container.querySelector('[role="alert"]')?.textContent).toContain(
+    confirmationText('unconfirmed', 'en')
+  );
+  expect(fetcher.mock.calls.filter(([, init]) => init?.method === 'POST')).toHaveLength(1);
   expect(confirm()).not.toBeNull();
 });
 it('fresh decision eligibility disables an old receipt without erasing its note', async () => {
@@ -386,21 +390,22 @@ it('a late queue success cannot restore private receipts after a newer detail de
   expect(container.textContent).not.toContain('TRK-primary');
 });
 it('malformed rejection success cannot discard a review draft or claim a saved decision', async () => {
-  vi.stubGlobal(
-    'fetch',
-    vi.fn(async (url: RequestInfo | URL, init?: RequestInit) =>
-      init?.method === 'POST' ? Response.json({}) : read(url)
-    )
+  const fetcher = vi.fn(async (url: RequestInfo | URL, init?: RequestInit) =>
+    init?.method === 'POST' ? Response.json({}) : read(url)
   );
+  vi.stubGlobal('fetch', fetcher);
   await act(async () => root.render(<QueryProvider>{<Receipts />}</QueryProvider>));
   await fill('#reject-reason', 'Receipt reference does not match');
   await click('Reject receipt');
   await confirmWalletDecision();
-  expect(container.textContent).toContain('Failed to save');
+  expect(container.querySelector('[role="alert"]')?.textContent).toContain(
+    confirmationText('unconfirmed', 'en')
+  );
   expect(document.querySelector<HTMLTextAreaElement>('#reject-reason')!.value).toBe(
     'Receipt reference does not match'
   );
   expect(container.textContent).not.toContain('Receipt rejected; balance unchanged');
+  expect(fetcher.mock.calls.filter(([, init]) => init?.method === 'POST')).toHaveLength(1);
 });
 it('a financial refresh cannot invalidate an in-flight rejection because decision controls wait for it', async () => {
   const pending = deferred();
