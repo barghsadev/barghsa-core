@@ -158,17 +158,14 @@ async function parseError(res: Response, fallback: string): Promise<string> {
   }
 }
 
-async function verifyStepUp(password: string): Promise<boolean> {
-  try {
-    const res = await fetch('/api/auth/step-up', {
-      method: 'POST',
-      headers: withCsrf({ 'Content-Type': 'application/json' }),
-      body: JSON.stringify({ password }),
-    });
-    return res.ok;
-  } catch {
-    return false;
-  }
+async function verifyStepUp(password: string, signal: AbortSignal): Promise<boolean> {
+  const res = await fetch('/api/auth/step-up', {
+    method: 'POST',
+    headers: withCsrf({ 'Content-Type': 'application/json' }),
+    body: JSON.stringify({ password }),
+    signal,
+  });
+  return res.ok;
 }
 
 const TABBABLE_SELECTOR = [
@@ -288,6 +285,8 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
   const [stepUpSubmitting, setStepUpSubmitting] = useState(false);
   const [pendingAction, setPendingAction] = useState<PendingAction | null>(null);
   const writeOwner = useRef<PendingAction | null>(null);
+  const decisionTransport = useRef<AbortController | null>(null);
+  const approvedDecision = useRef<{ action: PendingAction; authority: string } | null>(null);
   const stepUpDialogRef = useRef<HTMLDivElement | null>(null);
   const stepUpPasswordRef = useRef<HTMLInputElement | null>(null);
   const confirmButtonRef = useRef<HTMLButtonElement | null>(null);
@@ -308,6 +307,8 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
   const reviewScopeRef = useRef('');
   function invalidateDecision() {
     ++workGeneration.current;
+    decisionTransport.current?.abort();
+    approvedDecision.current = null;
     writeOwner.current = null;
     setStepUpOpen(false);
     setPendingAction(null);
@@ -346,6 +347,7 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
   useEffect(
     () => () => {
       ++workGeneration.current;
+      decisionTransport.current?.abort();
       queueController.current?.abort();
     },
     []
@@ -604,41 +606,70 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
   const confirmationRevision = useProfileContextRevision();
   const confirmationAuthority = JSON.stringify([confirmationActor, confirmationRevision]);
   const currentAuthority = useRef(confirmationAuthority);
-  currentAuthority.current = confirmationAuthority;
+  useLayoutEffect(() => {
+    if (currentAuthority.current === confirmationAuthority) return;
+    currentAuthority.current = confirmationAuthority;
+    invalidateDecision();
+  }, [confirmationAuthority]);
   const confirmDecision = useConfirm(
     JSON.stringify([confirmationAuthority, workGeneration.current, denied, selectedId])
   );
-  const approvedDecision = useRef<{ action: PendingAction; authority: string } | null>(null);
+  function ownsDecision(action: PendingAction) {
+    return (
+      approvedDecision.current?.action === action &&
+      approvedDecision.current.authority === currentAuthority.current &&
+      action.generation === workGeneration.current &&
+      !accessDenied.current
+    );
+  }
+  async function receiptRequest<T>(send: (signal: AbortSignal) => Promise<T>) {
+    const transport = new AbortController();
+    decisionTransport.current = transport;
+    try {
+      return await readWithDeadline(transport.signal, send);
+    } finally {
+      if (decisionTransport.current === transport) decisionTransport.current = null;
+    }
+  }
+  function recoverDecision() {
+    invalidateDecision();
+    setAllocation(null);
+    setDetailLoading(true);
+    setDetailRevision((value) => value + 1);
+    setReviewRevision((value) => value + 1);
+    setError(confirmationText('unconfirmed', locale));
+    void loadQueue();
+    return 'obsolete' as const;
+  }
   async function postDecision(
     action: PendingAction
   ): Promise<'step_up' | 'ok' | 'error' | 'obsolete'> {
-    if (
-      approvedDecision.current?.action !== action ||
-      approvedDecision.current.authority !== currentAuthority.current ||
-      action.generation !== workGeneration.current ||
-      accessDenied.current
-    )
-      return 'obsolete';
+    if (!ownsDecision(action)) return 'obsolete';
     const path =
       action.kind === 'confirm'
         ? `/api/admin/wallet/bank-receipt-top-ups/${action.transactionId}/confirm`
         : `/api/admin/wallet/bank-receipt-top-ups/${action.transactionId}/reject`;
-    const res = await fetch(path, {
-      method: 'POST',
-      headers: withCsrf({ 'Content-Type': 'application/json' }),
-      body:
-        action.kind === 'reject'
-          ? JSON.stringify({ reason: action.reason })
-          : JSON.stringify({
-              expectedReviewHash: action.review.hash,
-              ...(action.invoiceId ? { invoiceId: action.invoiceId } : {}),
-              ...(action.emergencyOverrideReason !== undefined
-                ? { emergencyOverrideReason: action.emergencyOverrideReason }
-                : {}),
-            }),
-    });
-    const data: unknown = await res.json().catch(() => null);
-    if (action.generation !== workGeneration.current || accessDenied.current) return 'obsolete';
+    const packet = await receiptRequest(async (signal) => {
+      const response = await fetch(path, {
+        method: 'POST',
+        headers: withCsrf({ 'Content-Type': 'application/json' }),
+        signal,
+        body:
+          action.kind === 'reject'
+            ? JSON.stringify({ reason: action.reason })
+            : JSON.stringify({
+                expectedReviewHash: action.review.hash,
+                ...(action.invoiceId ? { invoiceId: action.invoiceId } : {}),
+                ...(action.emergencyOverrideReason !== undefined
+                  ? { emergencyOverrideReason: action.emergencyOverrideReason }
+                  : {}),
+              }),
+      });
+      return { res: response, data: (await response.json().catch(() => null)) as unknown };
+    }).catch(() => null);
+    if (!ownsDecision(action)) return 'obsolete';
+    if (!packet || packet.res.status >= 500) return recoverDecision();
+    const { res, data } = packet;
     if (isStepUpRequired(res, data)) return 'step_up';
     if (
       res.status === 401 ||
@@ -678,12 +709,13 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
       !dto ||
       dto.transactionId !== action.transactionId ||
       typeof dto.canDecide !== 'boolean' ||
+      (dto.overpayment && !/^\d+$/.test(dto.overpayment.walletCreditAmount)) ||
       (action.kind === 'confirm' &&
         ((data as { reviewHash?: unknown }).reviewHash !== action.review.hash ||
           (dto.state !== 'Released' && !(dto.state === 'Pending' && dto.dualApproval)))) ||
       (action.kind === 'reject' && dto.state !== 'Rejected')
     )
-      throw new Error('Unconfirmed receipt response');
+      return recoverDecision();
     if (dto.state === 'Pending' && dto.dualApproval) {
       setStatus(t('admin.walletReceipts.approvalPending', locale));
       invalidateDecision();
@@ -924,14 +956,15 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
 
   async function submitStepUp(e?: FormEvent) {
     e?.preventDefault();
-    if (!stepUpPassword.trim() || stepUpSubmitting || !pendingAction) return;
+    if (!stepUpPassword.trim() || decisionTransport.current || !pendingAction) return;
     if (pendingAction.kind === 'confirm' && time.status !== 'ready') return;
     const currentAction = pendingAction;
+    if (!ownsDecision(currentAction)) return;
     setStepUpSubmitting(true);
     setStepUpError(null);
     try {
-      const verified = await verifyStepUp(stepUpPassword);
-      if (currentAction.generation !== workGeneration.current || accessDenied.current) return;
+      const verified = await receiptRequest((signal) => verifyStepUp(stepUpPassword, signal));
+      if (!ownsDecision(currentAction)) return;
       if (!verified) {
         setStepUpError(t('admin.walletReceipts.stepUp.failed', locale));
         return;
@@ -948,7 +981,7 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
         setStepUpPassword('');
       }
     } catch {
-      if (currentAction.generation === workGeneration.current)
+      if (ownsDecision(currentAction))
         setStepUpError(t('admin.walletReceipts.stepUp.failed', locale));
     } finally {
       if (currentAction.generation === workGeneration.current) setStepUpSubmitting(false);

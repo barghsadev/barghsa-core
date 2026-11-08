@@ -359,6 +359,7 @@ function OwnedInvoiceBankReceiptQueue({
       description: kind === 'confirm' ? word('confirmNotice') : word('rejectNotice'),
       path: `${base}/${encodeURIComponent(detail.receiptId)}/${kind}`,
       method: 'POST',
+      responseDeadline: true,
       ...(kind === 'reject'
         ? { body: { reason: reasonText } }
         : { body: { expectedReviewHash: confirmation!.hash } }),

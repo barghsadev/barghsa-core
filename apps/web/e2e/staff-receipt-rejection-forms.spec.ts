@@ -4,7 +4,7 @@ import AxeBuilder from '@axe-core/playwright';
 import { t as adminText } from '@barghsa/i18n/admin-ui';
 import { tWalletReceipts as walletText } from '@barghsa/i18n/wallet-receipts';
 import { t as appText } from '@barghsa/i18n/app';
-import { test, expect, type Page } from './coverage-fixture';
+import { test, expect, type Page, type Route } from './coverage-fixture';
 import { crmShell } from './crm-shell-fixture';
 import { bankReceiptReview } from '../src/test/bank-receipt-review-fixture';
 
@@ -102,11 +102,19 @@ for (const locale of ['en', 'fa'] as const)
         const bodies: unknown[] = [];
         const verifications: unknown[] = [];
         let saved = false;
+        let holdDetail = false;
+        let heldDetail: Route | undefined;
+        let heldDecision: Route | undefined;
+        let heldVerification: Route | undefined;
         await page.route(new RegExp(`${base}(?:\\?|$)`), (route) =>
           route.fulfill({ json: { items: saved ? [] : [receipt] } })
         );
-        await page.route(`**${base}/${receiptId}`, (route) =>
-          route.fulfill({
+        await page.route(`**${base}/${receiptId}`, (route) => {
+          if (holdDetail) {
+            heldDetail = route;
+            return;
+          }
+          return route.fulfill({
             json: saved
               ? {
                   ...receipt,
@@ -116,8 +124,8 @@ for (const locale of ['en', 'fa'] as const)
                   rejectionReason: 'Revised investigation',
                 }
               : receipt,
-          })
-        );
+          });
+        });
         await page.route(`**${base}/${receiptId}/review**`, (route) => {
           const review = bankReceiptReview(receiptId, null, profileId);
           review.data.receipt.bankName = 'Bank Mellat';
@@ -138,6 +146,10 @@ for (const locale of ['en', 'fa'] as const)
         );
         await page.route('**/api/auth/step-up', (route) => {
           verifications.push(route.request().postDataJSON());
+          if (verifications.length === 1) {
+            heldVerification = route;
+            return;
+          }
           return route.fulfill({ json: { verified: true } });
         });
         await page.route(`**${base}/${receiptId}/reject`, (route) => {
@@ -171,6 +183,10 @@ for (const locale of ['en', 'fa'] as const)
             });
           if (bodies.length === 4)
             return route.fulfill({ status: 503, json: { message: 'Private server diagnostic' } });
+          if (bodies.length === 5) {
+            heldDecision = route;
+            return;
+          }
           saved = true;
           return route.fulfill({
             json: {
@@ -223,17 +239,26 @@ for (const locale of ['en', 'fa'] as const)
         await submit();
         const dialog = page.getByRole('dialog');
         await expect(dialog).toBeVisible();
-        if (kind === 'wallet') {
-          await page.getByTestId('wallet-receipt-step-up-password').fill('verified-password');
-          await page.getByTestId('wallet-receipt-step-up-submit').click();
-        } else {
-          await dialog
-            .getByLabel(appText('team.password', locale), { exact: true })
-            .fill('verified-password');
-          await dialog
-            .getByRole('button', { name: appText('team.confirm', locale), exact: true })
-            .click();
-        }
+        const verify = async () => {
+          const password =
+            kind === 'wallet'
+              ? page.getByTestId('wallet-receipt-step-up-password')
+              : dialog.getByLabel(appText('team.password', locale), { exact: true });
+          const button =
+            kind === 'wallet'
+              ? page.getByTestId('wallet-receipt-step-up-submit')
+              : dialog.getByRole('button', { name: appText('team.confirm', locale), exact: true });
+          await password.fill('verified-password');
+          await button.click();
+        };
+        await page.clock.install();
+        await verify();
+        await expect.poll(() => !!heldVerification).toBe(true);
+        await page.clock.fastForward(15_001);
+        await expect(dialog.getByRole('alert')).toBeVisible();
+        await heldVerification!.fulfill({ json: { verified: true } }).catch(() => {});
+        expect(bodies).toHaveLength(1);
+        await verify();
         await expect(dialog).toHaveCount(0);
         await expect(field).toBeFocused();
         await expect(field).toHaveValue('  Preserve this investigation  ');
@@ -277,18 +302,32 @@ for (const locale of ['en', 'fa'] as const)
         await expect.poll(() => bodies.length).toBe(4);
         await expect(field).toHaveValue('  Revised investigation  ');
         await expect(page.getByText('Private server diagnostic', { exact: true })).toHaveCount(0);
-        if (kind === 'invoice') {
-          await expect(dialog).toHaveCount(0);
-          await expect(reject).toBeEnabled();
-          await submit();
-        } else await retryCaptured();
-        await expect.poll(() => bodies.length).toBe(5);
+        await expect(dialog).toHaveCount(0);
+        await expect(reject).toBeEnabled();
+        await submit();
+        await expect.poll(() => !!heldDecision).toBe(true);
+        holdDetail = true;
+        await page.clock.fastForward(15_001);
+        await expect.poll(() => !!heldDetail).toBe(true);
+        await expect(dialog).toHaveCount(0);
+        if (kind === 'invoice') await expect(reject).toHaveCount(0);
+        else await expect(reject).toBeDisabled();
+        await heldDecision!.fulfill({ status: 503, json: {} }).catch(() => {});
+        expect(bodies).toHaveLength(5);
+        holdDetail = false;
+        await heldDetail!.fulfill({ json: receipt });
+        await expect(reject).toBeEnabled();
+        await expect(field).toHaveValue('  Revised investigation  ');
+        await submit();
+        await expect.poll(() => bodies.length).toBe(6);
         await expect(field).toHaveCount(0);
         expect(bodies).toEqual([
           { reason: 'Preserve this investigation' },
           { reason: 'Preserve this investigation' },
-          ...Array.from({ length: 3 }, () => ({ reason: 'Revised investigation' })),
+          ...Array.from({ length: 4 }, () => ({ reason: 'Revised investigation' })),
         ]);
-        expect(verifications).toEqual([{ password: 'verified-password' }]);
+        expect(verifications).toEqual(
+          Array.from({ length: 2 }, () => ({ password: 'verified-password' }))
+        );
       });
     }

@@ -7,6 +7,7 @@ import { ErrorCodes } from '@barghsa/shared/errors';
 import AdminWalletReceiptsPage from './AdminWalletReceiptsPage.js';
 import type { BankReceiptConfirmationReview } from '@barghsa/shared/finance';
 import { tWalletReceipts as text } from '@barghsa/i18n/wallet-receipts';
+import { confirmationText } from '@barghsa/i18n/confirmation';
 import { AccountUserProvider } from '../hooks/useAccountUser.js';
 
 const TX_A = 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa';
@@ -628,7 +629,7 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
     expect(input.disabled).toBe(false);
     expect(input.value).toBe('Keep this investigation');
     expect(container.querySelector('[role="alert"]')?.textContent).toContain(
-      'Failed to save the decision'
+      confirmationText('unconfirmed', 'en')
     );
   });
 
@@ -1335,12 +1336,19 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
       expect(container.querySelector('[data-testid="wallet-receipt-confirm"]')).not.toBeNull();
     }
   );
-  it.each(['network', 'invalid-json'] as const)(
+  it.each(['network', 'server', 'invalid-json', 'invalid-credit'] as const)(
     'preserves the selected receipt after uncertain decision %s',
     async (kind) => {
       vi.mocked(fetch).mockImplementation(async (input, init) => {
         if (String(input).endsWith(`/${TX_A}/confirm`)) {
           if (kind === 'network') throw new Error('offline');
+          if (kind === 'server') return new Response(null, { status: 503 });
+          if (kind === 'invalid-credit')
+            return Response.json({
+              ...receiptDto(TX_A, { state: 'Released', canDecide: false }),
+              reviewHash: REVIEW_HASH,
+              overpayment: { walletCreditAmount: 'malformed' },
+            });
           return new Response('not json');
         }
         return defaultFetch(input, init);
@@ -1356,7 +1364,12 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
           .click()
       );
       await flush();
-      expect(container.querySelector('[role=alert]')).not.toBeNull();
+      expect(container.querySelector('[role=alert]')?.textContent).toContain(
+        confirmationText('unconfirmed', 'en')
+      );
+      expect(
+        vi.mocked(fetch).mock.calls.filter(([url]) => String(url).endsWith(`/${TX_A}/confirm`))
+      ).toHaveLength(1);
       expect(container.textContent).toContain('TRK-aaaa');
     }
   );
