@@ -49,6 +49,9 @@ Keep readable content opaque during page and list entrance animations. Even
 a brief fade of the whole row can put its text below the contrast floor.
 Dialog panels stay opaque while scaling in or out. The backdrop can fade
 independently.
+Popover content stays opaque on entry. On dismissal, hide the positioning
+element immediately so it cannot overlap a new dialog or widen the page
+during a viewport change.
 Onboarding confetti stays behind the opaque completion panel and respects
 reduced motion. The More menu animates movement and opacity. Its background
 and text colors switch together when the theme changes.

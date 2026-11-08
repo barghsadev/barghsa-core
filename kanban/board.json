@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-08T05:30:31+00:00",
-  "source_commit": "19101576b187f4e56bfa1625be226048673e69d0",
+  "updated": "2026-11-08T05:44:16+00:00",
+  "source_commit": "ba685419f1ee9d11c19e97d441ee3e482fb6e6b7",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -38710,7 +38710,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
+              "sha256": "8f419c0885c81ee907115c8e53b074ca571ecfe15f90382cd6cdfe5232a8288a"
             },
             {
               "path": "apps/web/src/pages/DashboardLayout.tsx",
@@ -40066,7 +40066,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
+              "sha256": "8f419c0885c81ee907115c8e53b074ca571ecfe15f90382cd6cdfe5232a8288a"
             },
             {
               "path": "apps/web/src/pages/DashboardLayout.tsx",
@@ -41430,7 +41430,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
+              "sha256": "8f419c0885c81ee907115c8e53b074ca571ecfe15f90382cd6cdfe5232a8288a"
             },
             {
               "path": "apps/web/src/pages/DashboardLayout.tsx",
@@ -195344,7 +195344,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "1b3cb6e9d5f4be997f9f78be063252cc79d7f4877affa5d5b256480dfcd68d70"
+              "sha256": "4df993cb335522ed5189fc7d959c98372c43c6ce011e8c57bd9241539909e8fa"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
@@ -197282,7 +197282,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "1b3cb6e9d5f4be997f9f78be063252cc79d7f4877affa5d5b256480dfcd68d70"
+              "sha256": "4df993cb335522ed5189fc7d959c98372c43c6ce011e8c57bd9241539909e8fa"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
@@ -199960,7 +199960,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
+              "sha256": "8f419c0885c81ee907115c8e53b074ca571ecfe15f90382cd6cdfe5232a8288a"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -201312,7 +201312,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
+              "sha256": "8f419c0885c81ee907115c8e53b074ca571ecfe15f90382cd6cdfe5232a8288a"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -202664,7 +202664,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
+              "sha256": "8f419c0885c81ee907115c8e53b074ca571ecfe15f90382cd6cdfe5232a8288a"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -204017,7 +204017,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
+              "sha256": "8f419c0885c81ee907115c8e53b074ca571ecfe15f90382cd6cdfe5232a8288a"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -205329,7 +205329,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
+              "sha256": "8f419c0885c81ee907115c8e53b074ca571ecfe15f90382cd6cdfe5232a8288a"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -206641,7 +206641,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
+              "sha256": "8f419c0885c81ee907115c8e53b074ca571ecfe15f90382cd6cdfe5232a8288a"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -207953,7 +207953,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
+              "sha256": "8f419c0885c81ee907115c8e53b074ca571ecfe15f90382cd6cdfe5232a8288a"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -209265,7 +209265,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
+              "sha256": "8f419c0885c81ee907115c8e53b074ca571ecfe15f90382cd6cdfe5232a8288a"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -210577,7 +210577,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
+              "sha256": "8f419c0885c81ee907115c8e53b074ca571ecfe15f90382cd6cdfe5232a8288a"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -211889,7 +211889,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
+              "sha256": "8f419c0885c81ee907115c8e53b074ca571ecfe15f90382cd6cdfe5232a8288a"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -213202,7 +213202,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
+              "sha256": "8f419c0885c81ee907115c8e53b074ca571ecfe15f90382cd6cdfe5232a8288a"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -214514,7 +214514,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
+              "sha256": "8f419c0885c81ee907115c8e53b074ca571ecfe15f90382cd6cdfe5232a8288a"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -215827,7 +215827,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
+              "sha256": "8f419c0885c81ee907115c8e53b074ca571ecfe15f90382cd6cdfe5232a8288a"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -217139,7 +217139,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
+              "sha256": "8f419c0885c81ee907115c8e53b074ca571ecfe15f90382cd6cdfe5232a8288a"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -218451,7 +218451,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
+              "sha256": "8f419c0885c81ee907115c8e53b074ca571ecfe15f90382cd6cdfe5232a8288a"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -219763,7 +219763,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
+              "sha256": "8f419c0885c81ee907115c8e53b074ca571ecfe15f90382cd6cdfe5232a8288a"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -221075,7 +221075,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
+              "sha256": "8f419c0885c81ee907115c8e53b074ca571ecfe15f90382cd6cdfe5232a8288a"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -222387,7 +222387,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
+              "sha256": "8f419c0885c81ee907115c8e53b074ca571ecfe15f90382cd6cdfe5232a8288a"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -223700,7 +223700,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
+              "sha256": "8f419c0885c81ee907115c8e53b074ca571ecfe15f90382cd6cdfe5232a8288a"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -225012,7 +225012,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
+              "sha256": "8f419c0885c81ee907115c8e53b074ca571ecfe15f90382cd6cdfe5232a8288a"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -226324,7 +226324,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
+              "sha256": "8f419c0885c81ee907115c8e53b074ca571ecfe15f90382cd6cdfe5232a8288a"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -227636,7 +227636,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
+              "sha256": "8f419c0885c81ee907115c8e53b074ca571ecfe15f90382cd6cdfe5232a8288a"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -228948,7 +228948,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
+              "sha256": "8f419c0885c81ee907115c8e53b074ca571ecfe15f90382cd6cdfe5232a8288a"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -230260,7 +230260,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
+              "sha256": "8f419c0885c81ee907115c8e53b074ca571ecfe15f90382cd6cdfe5232a8288a"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -231573,7 +231573,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
+              "sha256": "8f419c0885c81ee907115c8e53b074ca571ecfe15f90382cd6cdfe5232a8288a"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -232886,7 +232886,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
+              "sha256": "8f419c0885c81ee907115c8e53b074ca571ecfe15f90382cd6cdfe5232a8288a"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -234199,7 +234199,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
+              "sha256": "8f419c0885c81ee907115c8e53b074ca571ecfe15f90382cd6cdfe5232a8288a"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -235511,7 +235511,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
+              "sha256": "8f419c0885c81ee907115c8e53b074ca571ecfe15f90382cd6cdfe5232a8288a"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -236823,7 +236823,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
+              "sha256": "8f419c0885c81ee907115c8e53b074ca571ecfe15f90382cd6cdfe5232a8288a"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -238135,7 +238135,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
+              "sha256": "8f419c0885c81ee907115c8e53b074ca571ecfe15f90382cd6cdfe5232a8288a"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -253322,11 +253322,11 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "1b3cb6e9d5f4be997f9f78be063252cc79d7f4877affa5d5b256480dfcd68d70"
+              "sha256": "4df993cb335522ed5189fc7d959c98372c43c6ce011e8c57bd9241539909e8fa"
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
+              "sha256": "8f419c0885c81ee907115c8e53b074ca571ecfe15f90382cd6cdfe5232a8288a"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -253334,7 +253334,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "2f7a9e139b4d2b17563bb994cf94dffd26bf322989240cb49efdbcb0a191a3df"
+              "sha256": "8978cd3ba81b1b276d0e68a76c83c96c846e184de1a36f0fcabf6c6a02243938"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -254460,11 +254460,11 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "1b3cb6e9d5f4be997f9f78be063252cc79d7f4877affa5d5b256480dfcd68d70"
+              "sha256": "4df993cb335522ed5189fc7d959c98372c43c6ce011e8c57bd9241539909e8fa"
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
+              "sha256": "8f419c0885c81ee907115c8e53b074ca571ecfe15f90382cd6cdfe5232a8288a"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -254472,7 +254472,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "2f7a9e139b4d2b17563bb994cf94dffd26bf322989240cb49efdbcb0a191a3df"
+              "sha256": "8978cd3ba81b1b276d0e68a76c83c96c846e184de1a36f0fcabf6c6a02243938"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -255594,11 +255594,11 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "1b3cb6e9d5f4be997f9f78be063252cc79d7f4877affa5d5b256480dfcd68d70"
+              "sha256": "4df993cb335522ed5189fc7d959c98372c43c6ce011e8c57bd9241539909e8fa"
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
+              "sha256": "8f419c0885c81ee907115c8e53b074ca571ecfe15f90382cd6cdfe5232a8288a"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -255606,7 +255606,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "2f7a9e139b4d2b17563bb994cf94dffd26bf322989240cb49efdbcb0a191a3df"
+              "sha256": "8978cd3ba81b1b276d0e68a76c83c96c846e184de1a36f0fcabf6c6a02243938"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -256727,11 +256727,11 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "1b3cb6e9d5f4be997f9f78be063252cc79d7f4877affa5d5b256480dfcd68d70"
+              "sha256": "4df993cb335522ed5189fc7d959c98372c43c6ce011e8c57bd9241539909e8fa"
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
+              "sha256": "8f419c0885c81ee907115c8e53b074ca571ecfe15f90382cd6cdfe5232a8288a"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -256739,7 +256739,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "2f7a9e139b4d2b17563bb994cf94dffd26bf322989240cb49efdbcb0a191a3df"
+              "sha256": "8978cd3ba81b1b276d0e68a76c83c96c846e184de1a36f0fcabf6c6a02243938"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -257861,11 +257861,11 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "1b3cb6e9d5f4be997f9f78be063252cc79d7f4877affa5d5b256480dfcd68d70"
+              "sha256": "4df993cb335522ed5189fc7d959c98372c43c6ce011e8c57bd9241539909e8fa"
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
+              "sha256": "8f419c0885c81ee907115c8e53b074ca571ecfe15f90382cd6cdfe5232a8288a"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -257873,7 +257873,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "2f7a9e139b4d2b17563bb994cf94dffd26bf322989240cb49efdbcb0a191a3df"
+              "sha256": "8978cd3ba81b1b276d0e68a76c83c96c846e184de1a36f0fcabf6c6a02243938"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -258995,11 +258995,11 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "1b3cb6e9d5f4be997f9f78be063252cc79d7f4877affa5d5b256480dfcd68d70"
+              "sha256": "4df993cb335522ed5189fc7d959c98372c43c6ce011e8c57bd9241539909e8fa"
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
+              "sha256": "8f419c0885c81ee907115c8e53b074ca571ecfe15f90382cd6cdfe5232a8288a"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -259007,7 +259007,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "2f7a9e139b4d2b17563bb994cf94dffd26bf322989240cb49efdbcb0a191a3df"
+              "sha256": "8978cd3ba81b1b276d0e68a76c83c96c846e184de1a36f0fcabf6c6a02243938"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -260134,11 +260134,11 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "1b3cb6e9d5f4be997f9f78be063252cc79d7f4877affa5d5b256480dfcd68d70"
+              "sha256": "4df993cb335522ed5189fc7d959c98372c43c6ce011e8c57bd9241539909e8fa"
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
+              "sha256": "8f419c0885c81ee907115c8e53b074ca571ecfe15f90382cd6cdfe5232a8288a"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -260146,7 +260146,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "2f7a9e139b4d2b17563bb994cf94dffd26bf322989240cb49efdbcb0a191a3df"
+              "sha256": "8978cd3ba81b1b276d0e68a76c83c96c846e184de1a36f0fcabf6c6a02243938"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -261271,11 +261271,11 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "1b3cb6e9d5f4be997f9f78be063252cc79d7f4877affa5d5b256480dfcd68d70"
+              "sha256": "4df993cb335522ed5189fc7d959c98372c43c6ce011e8c57bd9241539909e8fa"
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
+              "sha256": "8f419c0885c81ee907115c8e53b074ca571ecfe15f90382cd6cdfe5232a8288a"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -261283,7 +261283,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "2f7a9e139b4d2b17563bb994cf94dffd26bf322989240cb49efdbcb0a191a3df"
+              "sha256": "8978cd3ba81b1b276d0e68a76c83c96c846e184de1a36f0fcabf6c6a02243938"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -262406,11 +262406,11 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "1b3cb6e9d5f4be997f9f78be063252cc79d7f4877affa5d5b256480dfcd68d70"
+              "sha256": "4df993cb335522ed5189fc7d959c98372c43c6ce011e8c57bd9241539909e8fa"
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
+              "sha256": "8f419c0885c81ee907115c8e53b074ca571ecfe15f90382cd6cdfe5232a8288a"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -262418,7 +262418,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "2f7a9e139b4d2b17563bb994cf94dffd26bf322989240cb49efdbcb0a191a3df"
+              "sha256": "8978cd3ba81b1b276d0e68a76c83c96c846e184de1a36f0fcabf6c6a02243938"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -263544,11 +263544,11 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "1b3cb6e9d5f4be997f9f78be063252cc79d7f4877affa5d5b256480dfcd68d70"
+              "sha256": "4df993cb335522ed5189fc7d959c98372c43c6ce011e8c57bd9241539909e8fa"
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
+              "sha256": "8f419c0885c81ee907115c8e53b074ca571ecfe15f90382cd6cdfe5232a8288a"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -263556,7 +263556,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "2f7a9e139b4d2b17563bb994cf94dffd26bf322989240cb49efdbcb0a191a3df"
+              "sha256": "8978cd3ba81b1b276d0e68a76c83c96c846e184de1a36f0fcabf6c6a02243938"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -264684,11 +264684,11 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "1b3cb6e9d5f4be997f9f78be063252cc79d7f4877affa5d5b256480dfcd68d70"
+              "sha256": "4df993cb335522ed5189fc7d959c98372c43c6ce011e8c57bd9241539909e8fa"
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
+              "sha256": "8f419c0885c81ee907115c8e53b074ca571ecfe15f90382cd6cdfe5232a8288a"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -264696,7 +264696,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "2f7a9e139b4d2b17563bb994cf94dffd26bf322989240cb49efdbcb0a191a3df"
+              "sha256": "8978cd3ba81b1b276d0e68a76c83c96c846e184de1a36f0fcabf6c6a02243938"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -265819,11 +265819,11 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "1b3cb6e9d5f4be997f9f78be063252cc79d7f4877affa5d5b256480dfcd68d70"
+              "sha256": "4df993cb335522ed5189fc7d959c98372c43c6ce011e8c57bd9241539909e8fa"
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
+              "sha256": "8f419c0885c81ee907115c8e53b074ca571ecfe15f90382cd6cdfe5232a8288a"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -265831,7 +265831,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "2f7a9e139b4d2b17563bb994cf94dffd26bf322989240cb49efdbcb0a191a3df"
+              "sha256": "8978cd3ba81b1b276d0e68a76c83c96c846e184de1a36f0fcabf6c6a02243938"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -266953,11 +266953,11 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "1b3cb6e9d5f4be997f9f78be063252cc79d7f4877affa5d5b256480dfcd68d70"
+              "sha256": "4df993cb335522ed5189fc7d959c98372c43c6ce011e8c57bd9241539909e8fa"
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
+              "sha256": "8f419c0885c81ee907115c8e53b074ca571ecfe15f90382cd6cdfe5232a8288a"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -266965,7 +266965,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "2f7a9e139b4d2b17563bb994cf94dffd26bf322989240cb49efdbcb0a191a3df"
+              "sha256": "8978cd3ba81b1b276d0e68a76c83c96c846e184de1a36f0fcabf6c6a02243938"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -268088,11 +268088,11 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "1b3cb6e9d5f4be997f9f78be063252cc79d7f4877affa5d5b256480dfcd68d70"
+              "sha256": "4df993cb335522ed5189fc7d959c98372c43c6ce011e8c57bd9241539909e8fa"
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
+              "sha256": "8f419c0885c81ee907115c8e53b074ca571ecfe15f90382cd6cdfe5232a8288a"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -268100,7 +268100,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "2f7a9e139b4d2b17563bb994cf94dffd26bf322989240cb49efdbcb0a191a3df"
+              "sha256": "8978cd3ba81b1b276d0e68a76c83c96c846e184de1a36f0fcabf6c6a02243938"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -269223,11 +269223,11 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "1b3cb6e9d5f4be997f9f78be063252cc79d7f4877affa5d5b256480dfcd68d70"
+              "sha256": "4df993cb335522ed5189fc7d959c98372c43c6ce011e8c57bd9241539909e8fa"
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
+              "sha256": "8f419c0885c81ee907115c8e53b074ca571ecfe15f90382cd6cdfe5232a8288a"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -269235,7 +269235,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "2f7a9e139b4d2b17563bb994cf94dffd26bf322989240cb49efdbcb0a191a3df"
+              "sha256": "8978cd3ba81b1b276d0e68a76c83c96c846e184de1a36f0fcabf6c6a02243938"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -270359,11 +270359,11 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "1b3cb6e9d5f4be997f9f78be063252cc79d7f4877affa5d5b256480dfcd68d70"
+              "sha256": "4df993cb335522ed5189fc7d959c98372c43c6ce011e8c57bd9241539909e8fa"
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
+              "sha256": "8f419c0885c81ee907115c8e53b074ca571ecfe15f90382cd6cdfe5232a8288a"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -270371,7 +270371,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "2f7a9e139b4d2b17563bb994cf94dffd26bf322989240cb49efdbcb0a191a3df"
+              "sha256": "8978cd3ba81b1b276d0e68a76c83c96c846e184de1a36f0fcabf6c6a02243938"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -421498,11 +421498,11 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "1b3cb6e9d5f4be997f9f78be063252cc79d7f4877affa5d5b256480dfcd68d70"
+              "sha256": "4df993cb335522ed5189fc7d959c98372c43c6ce011e8c57bd9241539909e8fa"
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
+              "sha256": "8f419c0885c81ee907115c8e53b074ca571ecfe15f90382cd6cdfe5232a8288a"
             },
             {
               "path": "apps/web/src/pages/ElectricityIncreasePanel.tsx",
@@ -476312,7 +476312,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
-              "sha256": "18fe660938d967e3df743ba69b58eada1e071850aeb12c7e854f824ac0cfed58"
+              "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
             },
             {
               "path": "packages/ui/src/components/ui/progress.tsx",
@@ -477417,7 +477417,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
-              "sha256": "18fe660938d967e3df743ba69b58eada1e071850aeb12c7e854f824ac0cfed58"
+              "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
             },
             {
               "path": "packages/ui/src/components/ui/progress.tsx",
@@ -478271,7 +478271,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
-              "sha256": "18fe660938d967e3df743ba69b58eada1e071850aeb12c7e854f824ac0cfed58"
+              "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
             },
             {
               "path": "packages/ui/src/components/ui/progress.tsx",
@@ -478997,7 +478997,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
-              "sha256": "18fe660938d967e3df743ba69b58eada1e071850aeb12c7e854f824ac0cfed58"
+              "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
             },
             {
               "path": "packages/ui/src/components/ui/progress.tsx",
@@ -479882,7 +479882,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
-              "sha256": "18fe660938d967e3df743ba69b58eada1e071850aeb12c7e854f824ac0cfed58"
+              "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
             },
             {
               "path": "packages/ui/src/components/ui/progress.tsx",
@@ -480610,7 +480610,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
-              "sha256": "18fe660938d967e3df743ba69b58eada1e071850aeb12c7e854f824ac0cfed58"
+              "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
             },
             {
               "path": "packages/ui/src/components/ui/progress.tsx",
@@ -481495,7 +481495,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
-              "sha256": "18fe660938d967e3df743ba69b58eada1e071850aeb12c7e854f824ac0cfed58"
+              "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
             },
             {
               "path": "packages/ui/src/components/ui/progress.tsx",
@@ -482238,7 +482238,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
-              "sha256": "18fe660938d967e3df743ba69b58eada1e071850aeb12c7e854f824ac0cfed58"
+              "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
             },
             {
               "path": "packages/ui/src/components/ui/progress.tsx",
@@ -485451,7 +485451,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
-              "sha256": "18fe660938d967e3df743ba69b58eada1e071850aeb12c7e854f824ac0cfed58"
+              "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
             },
             {
               "path": "packages/ui/src/components/ui/sheet.tsx",
@@ -485771,7 +485771,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
-              "sha256": "18fe660938d967e3df743ba69b58eada1e071850aeb12c7e854f824ac0cfed58"
+              "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
             },
             {
               "path": "packages/ui/src/components/ui/sheet.tsx",
@@ -486091,7 +486091,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
-              "sha256": "18fe660938d967e3df743ba69b58eada1e071850aeb12c7e854f824ac0cfed58"
+              "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
             },
             {
               "path": "packages/ui/src/components/ui/sheet.tsx",
@@ -486411,7 +486411,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
-              "sha256": "18fe660938d967e3df743ba69b58eada1e071850aeb12c7e854f824ac0cfed58"
+              "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
             },
             {
               "path": "packages/ui/src/components/ui/sheet.tsx",
@@ -486760,7 +486760,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
-              "sha256": "18fe660938d967e3df743ba69b58eada1e071850aeb12c7e854f824ac0cfed58"
+              "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
             },
             {
               "path": "packages/ui/src/components/ui/tooltip.tsx",
@@ -491254,11 +491254,11 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "1b3cb6e9d5f4be997f9f78be063252cc79d7f4877affa5d5b256480dfcd68d70"
+              "sha256": "4df993cb335522ed5189fc7d959c98372c43c6ce011e8c57bd9241539909e8fa"
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
+              "sha256": "8f419c0885c81ee907115c8e53b074ca571ecfe15f90382cd6cdfe5232a8288a"
             },
             {
               "path": "apps/web/src/pages/CrmCorrectionsPage.tsx",
@@ -494377,7 +494377,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
+              "sha256": "8f419c0885c81ee907115c8e53b074ca571ecfe15f90382cd6cdfe5232a8288a"
             },
             {
               "path": "apps/web/src/pages/CrmCorrectionsPage.tsx",
@@ -495259,7 +495259,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
+              "sha256": "8f419c0885c81ee907115c8e53b074ca571ecfe15f90382cd6cdfe5232a8288a"
             },
             {
               "path": "apps/web/src/pages/CrmCorrectionsPage.tsx",
@@ -496082,7 +496082,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
+              "sha256": "8f419c0885c81ee907115c8e53b074ca571ecfe15f90382cd6cdfe5232a8288a"
             },
             {
               "path": "apps/web/src/pages/CrmCorrectionsPage.tsx",
@@ -496998,7 +496998,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "77b5af7f20a66f76af1427df25b46e7da598a0f76411140b190528ecf90e5bef"
+              "sha256": "f125d23ffeb3763c419379d5f8deef0b81905da9a1fd6b3bb0fdee4fab532ce7"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -506660,7 +506660,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
-              "sha256": "18fe660938d967e3df743ba69b58eada1e071850aeb12c7e854f824ac0cfed58"
+              "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
             },
             {
               "path": "packages/ui/src/components/ui/progress.tsx",
@@ -507244,7 +507244,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
-              "sha256": "18fe660938d967e3df743ba69b58eada1e071850aeb12c7e854f824ac0cfed58"
+              "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
             },
             {
               "path": "packages/ui/src/components/ui/progress.tsx",
@@ -507828,7 +507828,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
-              "sha256": "18fe660938d967e3df743ba69b58eada1e071850aeb12c7e854f824ac0cfed58"
+              "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
             },
             {
               "path": "packages/ui/src/components/ui/progress.tsx",
@@ -508246,11 +508246,11 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "1b3cb6e9d5f4be997f9f78be063252cc79d7f4877affa5d5b256480dfcd68d70"
+              "sha256": "4df993cb335522ed5189fc7d959c98372c43c6ce011e8c57bd9241539909e8fa"
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
+              "sha256": "8f419c0885c81ee907115c8e53b074ca571ecfe15f90382cd6cdfe5232a8288a"
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
@@ -511563,7 +511563,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
+              "sha256": "8f419c0885c81ee907115c8e53b074ca571ecfe15f90382cd6cdfe5232a8288a"
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
@@ -512249,11 +512249,11 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "1b3cb6e9d5f4be997f9f78be063252cc79d7f4877affa5d5b256480dfcd68d70"
+              "sha256": "4df993cb335522ed5189fc7d959c98372c43c6ce011e8c57bd9241539909e8fa"
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
+              "sha256": "8f419c0885c81ee907115c8e53b074ca571ecfe15f90382cd6cdfe5232a8288a"
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
@@ -512912,7 +512912,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
-              "sha256": "18fe660938d967e3df743ba69b58eada1e071850aeb12c7e854f824ac0cfed58"
+              "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
             },
             {
               "path": "packages/ui/src/components/ui/radio-group.tsx",
@@ -513711,7 +513711,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
-              "sha256": "18fe660938d967e3df743ba69b58eada1e071850aeb12c7e854f824ac0cfed58"
+              "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
             },
             {
               "path": "packages/ui/src/components/ui/radio-group.tsx",
@@ -514509,7 +514509,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
-              "sha256": "18fe660938d967e3df743ba69b58eada1e071850aeb12c7e854f824ac0cfed58"
+              "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
             },
             {
               "path": "packages/ui/src/components/ui/radio-group.tsx",
@@ -515190,7 +515190,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "13ec3f0318509886dcd825fe4039afcd3d2a09e6aa95820247615eb30ec7d013"
+              "sha256": "7f7a1ed55c388625a387d5f9a4967a13e7497b732dda40e94dcd92a6d7fba925"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -515570,7 +515570,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "13ec3f0318509886dcd825fe4039afcd3d2a09e6aa95820247615eb30ec7d013"
+              "sha256": "7f7a1ed55c388625a387d5f9a4967a13e7497b732dda40e94dcd92a6d7fba925"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -515602,7 +515602,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
-              "sha256": "18fe660938d967e3df743ba69b58eada1e071850aeb12c7e854f824ac0cfed58"
+              "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
             },
             {
               "path": "packages/ui/src/components/ui/sheet.tsx",
@@ -516009,7 +516009,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "13ec3f0318509886dcd825fe4039afcd3d2a09e6aa95820247615eb30ec7d013"
+              "sha256": "7f7a1ed55c388625a387d5f9a4967a13e7497b732dda40e94dcd92a6d7fba925"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -516041,7 +516041,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
-              "sha256": "18fe660938d967e3df743ba69b58eada1e071850aeb12c7e854f824ac0cfed58"
+              "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
             },
             {
               "path": "packages/ui/src/components/ui/sheet.tsx",
@@ -516496,7 +516496,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "13ec3f0318509886dcd825fe4039afcd3d2a09e6aa95820247615eb30ec7d013"
+              "sha256": "7f7a1ed55c388625a387d5f9a4967a13e7497b732dda40e94dcd92a6d7fba925"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -517006,7 +517006,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "13ec3f0318509886dcd825fe4039afcd3d2a09e6aa95820247615eb30ec7d013"
+              "sha256": "7f7a1ed55c388625a387d5f9a4967a13e7497b732dda40e94dcd92a6d7fba925"
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
@@ -517464,11 +517464,11 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "1b3cb6e9d5f4be997f9f78be063252cc79d7f4877affa5d5b256480dfcd68d70"
+              "sha256": "4df993cb335522ed5189fc7d959c98372c43c6ce011e8c57bd9241539909e8fa"
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
+              "sha256": "8f419c0885c81ee907115c8e53b074ca571ecfe15f90382cd6cdfe5232a8288a"
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
@@ -517692,11 +517692,11 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "13ec3f0318509886dcd825fe4039afcd3d2a09e6aa95820247615eb30ec7d013"
+              "sha256": "7f7a1ed55c388625a387d5f9a4967a13e7497b732dda40e94dcd92a6d7fba925"
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "77b5af7f20a66f76af1427df25b46e7da598a0f76411140b190528ecf90e5bef"
+              "sha256": "f125d23ffeb3763c419379d5f8deef0b81905da9a1fd6b3bb0fdee4fab532ce7"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -517721,6 +517721,10 @@
             {
               "path": "packages/ui/src/styles.css",
               "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
+            },
+            {
+              "path": "packages/ui/src/components/ui/popover.tsx",
+              "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
             }
           ],
           "checks": [
@@ -517728,7 +517732,8 @@
             "The saving and electricity pages place notices below their introductory controls. The staff sidebar labels pass when revealed by scrolling. Saving step labels retain their screen-reader states and meet contrast after the user dismisses active notices. Transient visibility stays tracked under UI adoption.",
             "The original selected provider pill measured 1.0692:1. The foreground border raised the minimum across 32 selected-pill measurements to 7.7589:1. All 608 measured control cues passed, with a minimum of 3.2560:1. The measurements covered both themes, locales and contrast modes, boundary branding colors, Chromium and Mobile Safari.",
             "The five Mobile Safari native-control cases passed. Solar postal reported no inconclusive or violating contrast results. Eight direct staff select text measurements passed, with a minimum of 11.9559:1.",
-            "16 production browser cases, 16 affected keyboard and palette cases, eight instrumented Chromium cases, eight changed-coverage groups, UI distribution checks, 98 bundle budgets, six cold-auth measurements, scoped lint and formatting and both package typechecks passed."
+            "16 production browser cases, 16 affected keyboard and palette cases, eight instrumented Chromium cases, eight changed-coverage groups, UI distribution checks, 98 bundle budgets, six cold-auth measurements, scoped lint and formatting and both package typechecks passed.",
+            "Renewed shared popover contrast and narrow consultation layout evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-response-deadlines/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-conditional-control-contrast/proof.json",
           "scope_dispositions": [
@@ -517924,7 +517929,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "13ec3f0318509886dcd825fe4039afcd3d2a09e6aa95820247615eb30ec7d013"
+              "sha256": "7f7a1ed55c388625a387d5f9a4967a13e7497b732dda40e94dcd92a6d7fba925"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -517956,7 +517961,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
-              "sha256": "18fe660938d967e3df743ba69b58eada1e071850aeb12c7e854f824ac0cfed58"
+              "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
             },
             {
               "path": "packages/ui/src/components/ui/sheet.tsx",
@@ -518440,7 +518445,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "13ec3f0318509886dcd825fe4039afcd3d2a09e6aa95820247615eb30ec7d013"
+              "sha256": "7f7a1ed55c388625a387d5f9a4967a13e7497b732dda40e94dcd92a6d7fba925"
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
@@ -519158,7 +519163,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "13ec3f0318509886dcd825fe4039afcd3d2a09e6aa95820247615eb30ec7d013"
+              "sha256": "7f7a1ed55c388625a387d5f9a4967a13e7497b732dda40e94dcd92a6d7fba925"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -519986,7 +519991,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "13ec3f0318509886dcd825fe4039afcd3d2a09e6aa95820247615eb30ec7d013"
+              "sha256": "7f7a1ed55c388625a387d5f9a4967a13e7497b732dda40e94dcd92a6d7fba925"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -520596,7 +520601,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "13ec3f0318509886dcd825fe4039afcd3d2a09e6aa95820247615eb30ec7d013"
+              "sha256": "7f7a1ed55c388625a387d5f9a4967a13e7497b732dda40e94dcd92a6d7fba925"
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
@@ -521314,7 +521319,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "13ec3f0318509886dcd825fe4039afcd3d2a09e6aa95820247615eb30ec7d013"
+              "sha256": "7f7a1ed55c388625a387d5f9a4967a13e7497b732dda40e94dcd92a6d7fba925"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -522166,7 +522171,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
-              "sha256": "18fe660938d967e3df743ba69b58eada1e071850aeb12c7e854f824ac0cfed58"
+              "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
             },
             {
               "path": "packages/ui/src/components/ui/progress.tsx",
@@ -523073,7 +523078,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
-              "sha256": "18fe660938d967e3df743ba69b58eada1e071850aeb12c7e854f824ac0cfed58"
+              "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
             },
             {
               "path": "packages/ui/src/components/ui/progress.tsx",
@@ -523980,7 +523985,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
-              "sha256": "18fe660938d967e3df743ba69b58eada1e071850aeb12c7e854f824ac0cfed58"
+              "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
             },
             {
               "path": "packages/ui/src/components/ui/progress.tsx",
@@ -524887,7 +524892,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
-              "sha256": "18fe660938d967e3df743ba69b58eada1e071850aeb12c7e854f824ac0cfed58"
+              "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
             },
             {
               "path": "packages/ui/src/components/ui/progress.tsx",
@@ -525794,7 +525799,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
-              "sha256": "18fe660938d967e3df743ba69b58eada1e071850aeb12c7e854f824ac0cfed58"
+              "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
             },
             {
               "path": "packages/ui/src/components/ui/progress.tsx",
@@ -526701,7 +526706,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
-              "sha256": "18fe660938d967e3df743ba69b58eada1e071850aeb12c7e854f824ac0cfed58"
+              "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
             },
             {
               "path": "packages/ui/src/components/ui/progress.tsx",
@@ -527608,7 +527613,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
-              "sha256": "18fe660938d967e3df743ba69b58eada1e071850aeb12c7e854f824ac0cfed58"
+              "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
             },
             {
               "path": "packages/ui/src/components/ui/progress.tsx",
@@ -528515,7 +528520,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
-              "sha256": "18fe660938d967e3df743ba69b58eada1e071850aeb12c7e854f824ac0cfed58"
+              "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
             },
             {
               "path": "packages/ui/src/components/ui/progress.tsx",
@@ -529422,7 +529427,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
-              "sha256": "18fe660938d967e3df743ba69b58eada1e071850aeb12c7e854f824ac0cfed58"
+              "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
             },
             {
               "path": "packages/ui/src/components/ui/progress.tsx",
@@ -530329,7 +530334,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
-              "sha256": "18fe660938d967e3df743ba69b58eada1e071850aeb12c7e854f824ac0cfed58"
+              "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
             },
             {
               "path": "packages/ui/src/components/ui/progress.tsx",
@@ -531236,7 +531241,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
-              "sha256": "18fe660938d967e3df743ba69b58eada1e071850aeb12c7e854f824ac0cfed58"
+              "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
             },
             {
               "path": "packages/ui/src/components/ui/progress.tsx",
@@ -532143,7 +532148,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
-              "sha256": "18fe660938d967e3df743ba69b58eada1e071850aeb12c7e854f824ac0cfed58"
+              "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
             },
             {
               "path": "packages/ui/src/components/ui/progress.tsx",
@@ -533050,7 +533055,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
-              "sha256": "18fe660938d967e3df743ba69b58eada1e071850aeb12c7e854f824ac0cfed58"
+              "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
             },
             {
               "path": "packages/ui/src/components/ui/progress.tsx",
@@ -533957,7 +533962,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
-              "sha256": "18fe660938d967e3df743ba69b58eada1e071850aeb12c7e854f824ac0cfed58"
+              "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
             },
             {
               "path": "packages/ui/src/components/ui/progress.tsx",
@@ -534864,7 +534869,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
-              "sha256": "18fe660938d967e3df743ba69b58eada1e071850aeb12c7e854f824ac0cfed58"
+              "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
             },
             {
               "path": "packages/ui/src/components/ui/progress.tsx",
@@ -535771,7 +535776,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
-              "sha256": "18fe660938d967e3df743ba69b58eada1e071850aeb12c7e854f824ac0cfed58"
+              "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
             },
             {
               "path": "packages/ui/src/components/ui/progress.tsx",
@@ -536678,7 +536683,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
-              "sha256": "18fe660938d967e3df743ba69b58eada1e071850aeb12c7e854f824ac0cfed58"
+              "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
             },
             {
               "path": "packages/ui/src/components/ui/progress.tsx",
@@ -537585,7 +537590,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
-              "sha256": "18fe660938d967e3df743ba69b58eada1e071850aeb12c7e854f824ac0cfed58"
+              "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
             },
             {
               "path": "packages/ui/src/components/ui/progress.tsx",
@@ -538492,7 +538497,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
-              "sha256": "18fe660938d967e3df743ba69b58eada1e071850aeb12c7e854f824ac0cfed58"
+              "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
             },
             {
               "path": "packages/ui/src/components/ui/progress.tsx",
@@ -539399,7 +539404,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
-              "sha256": "18fe660938d967e3df743ba69b58eada1e071850aeb12c7e854f824ac0cfed58"
+              "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
             },
             {
               "path": "packages/ui/src/components/ui/progress.tsx",
@@ -545337,7 +545342,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "1b3cb6e9d5f4be997f9f78be063252cc79d7f4877affa5d5b256480dfcd68d70"
+              "sha256": "4df993cb335522ed5189fc7d959c98372c43c6ce011e8c57bd9241539909e8fa"
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
@@ -545433,7 +545438,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "2f7a9e139b4d2b17563bb994cf94dffd26bf322989240cb49efdbcb0a191a3df"
+              "sha256": "8978cd3ba81b1b276d0e68a76c83c96c846e184de1a36f0fcabf6c6a02243938"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -545917,7 +545922,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
-              "sha256": "18fe660938d967e3df743ba69b58eada1e071850aeb12c7e854f824ac0cfed58"
+              "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
             },
             {
               "path": "packages/ui/src/components/ui/progress.tsx",
@@ -547202,7 +547207,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "1b3cb6e9d5f4be997f9f78be063252cc79d7f4877affa5d5b256480dfcd68d70"
+              "sha256": "4df993cb335522ed5189fc7d959c98372c43c6ce011e8c57bd9241539909e8fa"
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
@@ -547298,7 +547303,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "2f7a9e139b4d2b17563bb994cf94dffd26bf322989240cb49efdbcb0a191a3df"
+              "sha256": "8978cd3ba81b1b276d0e68a76c83c96c846e184de1a36f0fcabf6c6a02243938"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -547782,7 +547787,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
-              "sha256": "18fe660938d967e3df743ba69b58eada1e071850aeb12c7e854f824ac0cfed58"
+              "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
             },
             {
               "path": "packages/ui/src/components/ui/progress.tsx",
@@ -549068,7 +549073,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "1b3cb6e9d5f4be997f9f78be063252cc79d7f4877affa5d5b256480dfcd68d70"
+              "sha256": "4df993cb335522ed5189fc7d959c98372c43c6ce011e8c57bd9241539909e8fa"
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
@@ -549164,7 +549169,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "2f7a9e139b4d2b17563bb994cf94dffd26bf322989240cb49efdbcb0a191a3df"
+              "sha256": "8978cd3ba81b1b276d0e68a76c83c96c846e184de1a36f0fcabf6c6a02243938"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -549648,7 +549653,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
-              "sha256": "18fe660938d967e3df743ba69b58eada1e071850aeb12c7e854f824ac0cfed58"
+              "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
             },
             {
               "path": "packages/ui/src/components/ui/progress.tsx",
@@ -550903,7 +550908,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "1b3cb6e9d5f4be997f9f78be063252cc79d7f4877affa5d5b256480dfcd68d70"
+              "sha256": "4df993cb335522ed5189fc7d959c98372c43c6ce011e8c57bd9241539909e8fa"
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
@@ -550999,7 +551004,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "2f7a9e139b4d2b17563bb994cf94dffd26bf322989240cb49efdbcb0a191a3df"
+              "sha256": "8978cd3ba81b1b276d0e68a76c83c96c846e184de1a36f0fcabf6c6a02243938"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -551483,7 +551488,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
-              "sha256": "18fe660938d967e3df743ba69b58eada1e071850aeb12c7e854f824ac0cfed58"
+              "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
             },
             {
               "path": "packages/ui/src/components/ui/progress.tsx",
@@ -552764,7 +552769,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "1b3cb6e9d5f4be997f9f78be063252cc79d7f4877affa5d5b256480dfcd68d70"
+              "sha256": "4df993cb335522ed5189fc7d959c98372c43c6ce011e8c57bd9241539909e8fa"
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
@@ -552860,7 +552865,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "2f7a9e139b4d2b17563bb994cf94dffd26bf322989240cb49efdbcb0a191a3df"
+              "sha256": "8978cd3ba81b1b276d0e68a76c83c96c846e184de1a36f0fcabf6c6a02243938"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -553344,7 +553349,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
-              "sha256": "18fe660938d967e3df743ba69b58eada1e071850aeb12c7e854f824ac0cfed58"
+              "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
             },
             {
               "path": "packages/ui/src/components/ui/progress.tsx",
@@ -554634,7 +554639,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "1b3cb6e9d5f4be997f9f78be063252cc79d7f4877affa5d5b256480dfcd68d70"
+              "sha256": "4df993cb335522ed5189fc7d959c98372c43c6ce011e8c57bd9241539909e8fa"
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
@@ -554730,7 +554735,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "2f7a9e139b4d2b17563bb994cf94dffd26bf322989240cb49efdbcb0a191a3df"
+              "sha256": "8978cd3ba81b1b276d0e68a76c83c96c846e184de1a36f0fcabf6c6a02243938"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -555214,7 +555219,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
-              "sha256": "18fe660938d967e3df743ba69b58eada1e071850aeb12c7e854f824ac0cfed58"
+              "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
             },
             {
               "path": "packages/ui/src/components/ui/progress.tsx",
@@ -556477,7 +556482,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "1b3cb6e9d5f4be997f9f78be063252cc79d7f4877affa5d5b256480dfcd68d70"
+              "sha256": "4df993cb335522ed5189fc7d959c98372c43c6ce011e8c57bd9241539909e8fa"
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
@@ -556573,7 +556578,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "2f7a9e139b4d2b17563bb994cf94dffd26bf322989240cb49efdbcb0a191a3df"
+              "sha256": "8978cd3ba81b1b276d0e68a76c83c96c846e184de1a36f0fcabf6c6a02243938"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -557057,7 +557062,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
-              "sha256": "18fe660938d967e3df743ba69b58eada1e071850aeb12c7e854f824ac0cfed58"
+              "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
             },
             {
               "path": "packages/ui/src/components/ui/progress.tsx",
@@ -558284,7 +558289,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "1b3cb6e9d5f4be997f9f78be063252cc79d7f4877affa5d5b256480dfcd68d70"
+              "sha256": "4df993cb335522ed5189fc7d959c98372c43c6ce011e8c57bd9241539909e8fa"
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
@@ -558380,7 +558385,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "2f7a9e139b4d2b17563bb994cf94dffd26bf322989240cb49efdbcb0a191a3df"
+              "sha256": "8978cd3ba81b1b276d0e68a76c83c96c846e184de1a36f0fcabf6c6a02243938"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -558864,7 +558869,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
-              "sha256": "18fe660938d967e3df743ba69b58eada1e071850aeb12c7e854f824ac0cfed58"
+              "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
             },
             {
               "path": "packages/ui/src/components/ui/progress.tsx",
@@ -560091,7 +560096,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "1b3cb6e9d5f4be997f9f78be063252cc79d7f4877affa5d5b256480dfcd68d70"
+              "sha256": "4df993cb335522ed5189fc7d959c98372c43c6ce011e8c57bd9241539909e8fa"
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
@@ -560187,7 +560192,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "2f7a9e139b4d2b17563bb994cf94dffd26bf322989240cb49efdbcb0a191a3df"
+              "sha256": "8978cd3ba81b1b276d0e68a76c83c96c846e184de1a36f0fcabf6c6a02243938"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -560671,7 +560676,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
-              "sha256": "18fe660938d967e3df743ba69b58eada1e071850aeb12c7e854f824ac0cfed58"
+              "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
             },
             {
               "path": "packages/ui/src/components/ui/progress.tsx",
@@ -561899,7 +561904,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "1b3cb6e9d5f4be997f9f78be063252cc79d7f4877affa5d5b256480dfcd68d70"
+              "sha256": "4df993cb335522ed5189fc7d959c98372c43c6ce011e8c57bd9241539909e8fa"
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
@@ -561995,7 +562000,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "2f7a9e139b4d2b17563bb994cf94dffd26bf322989240cb49efdbcb0a191a3df"
+              "sha256": "8978cd3ba81b1b276d0e68a76c83c96c846e184de1a36f0fcabf6c6a02243938"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -562479,7 +562484,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
-              "sha256": "18fe660938d967e3df743ba69b58eada1e071850aeb12c7e854f824ac0cfed58"
+              "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
             },
             {
               "path": "packages/ui/src/components/ui/progress.tsx",
@@ -563706,7 +563711,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "1b3cb6e9d5f4be997f9f78be063252cc79d7f4877affa5d5b256480dfcd68d70"
+              "sha256": "4df993cb335522ed5189fc7d959c98372c43c6ce011e8c57bd9241539909e8fa"
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
@@ -563802,7 +563807,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "2f7a9e139b4d2b17563bb994cf94dffd26bf322989240cb49efdbcb0a191a3df"
+              "sha256": "8978cd3ba81b1b276d0e68a76c83c96c846e184de1a36f0fcabf6c6a02243938"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -564286,7 +564291,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
-              "sha256": "18fe660938d967e3df743ba69b58eada1e071850aeb12c7e854f824ac0cfed58"
+              "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
             },
             {
               "path": "packages/ui/src/components/ui/progress.tsx",
@@ -565519,7 +565524,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "1b3cb6e9d5f4be997f9f78be063252cc79d7f4877affa5d5b256480dfcd68d70"
+              "sha256": "4df993cb335522ed5189fc7d959c98372c43c6ce011e8c57bd9241539909e8fa"
             },
             {
               "path": "apps/web/src/pages/ContractsNavigation.test.tsx",
@@ -565667,7 +565672,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "2f7a9e139b4d2b17563bb994cf94dffd26bf322989240cb49efdbcb0a191a3df"
+              "sha256": "8978cd3ba81b1b276d0e68a76c83c96c846e184de1a36f0fcabf6c6a02243938"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -565967,7 +565972,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "77b5af7f20a66f76af1427df25b46e7da598a0f76411140b190528ecf90e5bef"
+              "sha256": "f125d23ffeb3763c419379d5f8deef0b81905da9a1fd6b3bb0fdee4fab532ce7"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -566203,7 +566208,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
-              "sha256": "18fe660938d967e3df743ba69b58eada1e071850aeb12c7e854f824ac0cfed58"
+              "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
             },
             {
               "path": "packages/ui/src/components/ui/progress.tsx",
@@ -567413,7 +567418,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "1b3cb6e9d5f4be997f9f78be063252cc79d7f4877affa5d5b256480dfcd68d70"
+              "sha256": "4df993cb335522ed5189fc7d959c98372c43c6ce011e8c57bd9241539909e8fa"
             },
             {
               "path": "apps/web/src/pages/ContractsNavigation.test.tsx",
@@ -567561,7 +567566,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "2f7a9e139b4d2b17563bb994cf94dffd26bf322989240cb49efdbcb0a191a3df"
+              "sha256": "8978cd3ba81b1b276d0e68a76c83c96c846e184de1a36f0fcabf6c6a02243938"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -567861,7 +567866,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "77b5af7f20a66f76af1427df25b46e7da598a0f76411140b190528ecf90e5bef"
+              "sha256": "f125d23ffeb3763c419379d5f8deef0b81905da9a1fd6b3bb0fdee4fab532ce7"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -568097,7 +568102,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
-              "sha256": "18fe660938d967e3df743ba69b58eada1e071850aeb12c7e854f824ac0cfed58"
+              "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
             },
             {
               "path": "packages/ui/src/components/ui/progress.tsx",
@@ -568664,7 +568669,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Verified invoice, wallet, discussion, profile, guide and contract-limit command feedback retains its evidence. Conversation identity now warns on an uncertain save and confirms only the matching response or current saved state. Wider command feedback adoption stays open."
+        "Invoice, wallet, discussion, profile, guide, contract-limit and conversation identity feedback retain their evidence. Consultation intake now announces an uncertain response after a deadline and confirms only a valid replay receipt. Customer replies confirm only an exact acknowledgement or fresh matching saved history. Wider command feedback adoption remains open."
       ],
       "owner": null,
       "depends_on": [],
@@ -568700,7 +568705,8 @@
           "release-0.5-profile-export-deadlines",
           "release-0.5-assistant-stream-deadlines",
           "release-0.5-contrast-mode-closure",
-          "release-0.5-identity-recovery"
+          "release-0.5-identity-recovery",
+          "release-0.5-consultation-response-deadlines"
         ],
         "current_acceptance": null
       }
@@ -569363,7 +569369,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "1b3cb6e9d5f4be997f9f78be063252cc79d7f4877affa5d5b256480dfcd68d70"
+              "sha256": "4df993cb335522ed5189fc7d959c98372c43c6ce011e8c57bd9241539909e8fa"
             },
             {
               "path": "apps/web/src/pages/ContractsNavigation.test.tsx",
@@ -569511,7 +569517,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "2f7a9e139b4d2b17563bb994cf94dffd26bf322989240cb49efdbcb0a191a3df"
+              "sha256": "8978cd3ba81b1b276d0e68a76c83c96c846e184de1a36f0fcabf6c6a02243938"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -569811,7 +569817,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "77b5af7f20a66f76af1427df25b46e7da598a0f76411140b190528ecf90e5bef"
+              "sha256": "f125d23ffeb3763c419379d5f8deef0b81905da9a1fd6b3bb0fdee4fab532ce7"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -570047,7 +570053,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
-              "sha256": "18fe660938d967e3df743ba69b58eada1e071850aeb12c7e854f824ac0cfed58"
+              "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
             },
             {
               "path": "packages/ui/src/components/ui/progress.tsx",
@@ -571257,7 +571263,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "1b3cb6e9d5f4be997f9f78be063252cc79d7f4877affa5d5b256480dfcd68d70"
+              "sha256": "4df993cb335522ed5189fc7d959c98372c43c6ce011e8c57bd9241539909e8fa"
             },
             {
               "path": "apps/web/src/pages/ContractsNavigation.test.tsx",
@@ -571405,7 +571411,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "2f7a9e139b4d2b17563bb994cf94dffd26bf322989240cb49efdbcb0a191a3df"
+              "sha256": "8978cd3ba81b1b276d0e68a76c83c96c846e184de1a36f0fcabf6c6a02243938"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -571705,7 +571711,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "77b5af7f20a66f76af1427df25b46e7da598a0f76411140b190528ecf90e5bef"
+              "sha256": "f125d23ffeb3763c419379d5f8deef0b81905da9a1fd6b3bb0fdee4fab532ce7"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -571941,7 +571947,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
-              "sha256": "18fe660938d967e3df743ba69b58eada1e071850aeb12c7e854f824ac0cfed58"
+              "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
             },
             {
               "path": "packages/ui/src/components/ui/progress.tsx",
@@ -573151,7 +573157,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "1b3cb6e9d5f4be997f9f78be063252cc79d7f4877affa5d5b256480dfcd68d70"
+              "sha256": "4df993cb335522ed5189fc7d959c98372c43c6ce011e8c57bd9241539909e8fa"
             },
             {
               "path": "apps/web/src/pages/ContractsNavigation.test.tsx",
@@ -573299,7 +573305,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "2f7a9e139b4d2b17563bb994cf94dffd26bf322989240cb49efdbcb0a191a3df"
+              "sha256": "8978cd3ba81b1b276d0e68a76c83c96c846e184de1a36f0fcabf6c6a02243938"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -573599,7 +573605,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "77b5af7f20a66f76af1427df25b46e7da598a0f76411140b190528ecf90e5bef"
+              "sha256": "f125d23ffeb3763c419379d5f8deef0b81905da9a1fd6b3bb0fdee4fab532ce7"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -573835,7 +573841,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
-              "sha256": "18fe660938d967e3df743ba69b58eada1e071850aeb12c7e854f824ac0cfed58"
+              "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
             },
             {
               "path": "packages/ui/src/components/ui/progress.tsx",
@@ -575045,7 +575051,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "1b3cb6e9d5f4be997f9f78be063252cc79d7f4877affa5d5b256480dfcd68d70"
+              "sha256": "4df993cb335522ed5189fc7d959c98372c43c6ce011e8c57bd9241539909e8fa"
             },
             {
               "path": "apps/web/src/pages/ContractsNavigation.test.tsx",
@@ -575193,7 +575199,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "2f7a9e139b4d2b17563bb994cf94dffd26bf322989240cb49efdbcb0a191a3df"
+              "sha256": "8978cd3ba81b1b276d0e68a76c83c96c846e184de1a36f0fcabf6c6a02243938"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -575493,7 +575499,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "77b5af7f20a66f76af1427df25b46e7da598a0f76411140b190528ecf90e5bef"
+              "sha256": "f125d23ffeb3763c419379d5f8deef0b81905da9a1fd6b3bb0fdee4fab532ce7"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -575729,7 +575735,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
-              "sha256": "18fe660938d967e3df743ba69b58eada1e071850aeb12c7e854f824ac0cfed58"
+              "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
             },
             {
               "path": "packages/ui/src/components/ui/progress.tsx",
@@ -576939,7 +576945,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "1b3cb6e9d5f4be997f9f78be063252cc79d7f4877affa5d5b256480dfcd68d70"
+              "sha256": "4df993cb335522ed5189fc7d959c98372c43c6ce011e8c57bd9241539909e8fa"
             },
             {
               "path": "apps/web/src/pages/ContractsNavigation.test.tsx",
@@ -577087,7 +577093,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "2f7a9e139b4d2b17563bb994cf94dffd26bf322989240cb49efdbcb0a191a3df"
+              "sha256": "8978cd3ba81b1b276d0e68a76c83c96c846e184de1a36f0fcabf6c6a02243938"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -577387,7 +577393,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "77b5af7f20a66f76af1427df25b46e7da598a0f76411140b190528ecf90e5bef"
+              "sha256": "f125d23ffeb3763c419379d5f8deef0b81905da9a1fd6b3bb0fdee4fab532ce7"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -577623,7 +577629,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
-              "sha256": "18fe660938d967e3df743ba69b58eada1e071850aeb12c7e854f824ac0cfed58"
+              "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
             },
             {
               "path": "packages/ui/src/components/ui/progress.tsx",
@@ -578833,7 +578839,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "1b3cb6e9d5f4be997f9f78be063252cc79d7f4877affa5d5b256480dfcd68d70"
+              "sha256": "4df993cb335522ed5189fc7d959c98372c43c6ce011e8c57bd9241539909e8fa"
             },
             {
               "path": "apps/web/src/pages/ContractsNavigation.test.tsx",
@@ -578981,7 +578987,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "2f7a9e139b4d2b17563bb994cf94dffd26bf322989240cb49efdbcb0a191a3df"
+              "sha256": "8978cd3ba81b1b276d0e68a76c83c96c846e184de1a36f0fcabf6c6a02243938"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -579281,7 +579287,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "77b5af7f20a66f76af1427df25b46e7da598a0f76411140b190528ecf90e5bef"
+              "sha256": "f125d23ffeb3763c419379d5f8deef0b81905da9a1fd6b3bb0fdee4fab532ce7"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -579517,7 +579523,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
-              "sha256": "18fe660938d967e3df743ba69b58eada1e071850aeb12c7e854f824ac0cfed58"
+              "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
             },
             {
               "path": "packages/ui/src/components/ui/progress.tsx",
@@ -580727,7 +580733,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "1b3cb6e9d5f4be997f9f78be063252cc79d7f4877affa5d5b256480dfcd68d70"
+              "sha256": "4df993cb335522ed5189fc7d959c98372c43c6ce011e8c57bd9241539909e8fa"
             },
             {
               "path": "apps/web/src/pages/ContractsNavigation.test.tsx",
@@ -580875,7 +580881,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "2f7a9e139b4d2b17563bb994cf94dffd26bf322989240cb49efdbcb0a191a3df"
+              "sha256": "8978cd3ba81b1b276d0e68a76c83c96c846e184de1a36f0fcabf6c6a02243938"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -581175,7 +581181,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "77b5af7f20a66f76af1427df25b46e7da598a0f76411140b190528ecf90e5bef"
+              "sha256": "f125d23ffeb3763c419379d5f8deef0b81905da9a1fd6b3bb0fdee4fab532ce7"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -581411,7 +581417,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
-              "sha256": "18fe660938d967e3df743ba69b58eada1e071850aeb12c7e854f824ac0cfed58"
+              "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
             },
             {
               "path": "packages/ui/src/components/ui/progress.tsx",
@@ -582621,7 +582627,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "1b3cb6e9d5f4be997f9f78be063252cc79d7f4877affa5d5b256480dfcd68d70"
+              "sha256": "4df993cb335522ed5189fc7d959c98372c43c6ce011e8c57bd9241539909e8fa"
             },
             {
               "path": "apps/web/src/pages/ContractsNavigation.test.tsx",
@@ -582769,7 +582775,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "2f7a9e139b4d2b17563bb994cf94dffd26bf322989240cb49efdbcb0a191a3df"
+              "sha256": "8978cd3ba81b1b276d0e68a76c83c96c846e184de1a36f0fcabf6c6a02243938"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -583069,7 +583075,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "77b5af7f20a66f76af1427df25b46e7da598a0f76411140b190528ecf90e5bef"
+              "sha256": "f125d23ffeb3763c419379d5f8deef0b81905da9a1fd6b3bb0fdee4fab532ce7"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -583305,7 +583311,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
-              "sha256": "18fe660938d967e3df743ba69b58eada1e071850aeb12c7e854f824ac0cfed58"
+              "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
             },
             {
               "path": "packages/ui/src/components/ui/progress.tsx",
@@ -584515,7 +584521,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "1b3cb6e9d5f4be997f9f78be063252cc79d7f4877affa5d5b256480dfcd68d70"
+              "sha256": "4df993cb335522ed5189fc7d959c98372c43c6ce011e8c57bd9241539909e8fa"
             },
             {
               "path": "apps/web/src/pages/ContractsNavigation.test.tsx",
@@ -584663,7 +584669,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "2f7a9e139b4d2b17563bb994cf94dffd26bf322989240cb49efdbcb0a191a3df"
+              "sha256": "8978cd3ba81b1b276d0e68a76c83c96c846e184de1a36f0fcabf6c6a02243938"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -584963,7 +584969,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "77b5af7f20a66f76af1427df25b46e7da598a0f76411140b190528ecf90e5bef"
+              "sha256": "f125d23ffeb3763c419379d5f8deef0b81905da9a1fd6b3bb0fdee4fab532ce7"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -585199,7 +585205,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
-              "sha256": "18fe660938d967e3df743ba69b58eada1e071850aeb12c7e854f824ac0cfed58"
+              "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
             },
             {
               "path": "packages/ui/src/components/ui/progress.tsx",
@@ -586409,7 +586415,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "1b3cb6e9d5f4be997f9f78be063252cc79d7f4877affa5d5b256480dfcd68d70"
+              "sha256": "4df993cb335522ed5189fc7d959c98372c43c6ce011e8c57bd9241539909e8fa"
             },
             {
               "path": "apps/web/src/pages/ContractsNavigation.test.tsx",
@@ -586557,7 +586563,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "2f7a9e139b4d2b17563bb994cf94dffd26bf322989240cb49efdbcb0a191a3df"
+              "sha256": "8978cd3ba81b1b276d0e68a76c83c96c846e184de1a36f0fcabf6c6a02243938"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -586857,7 +586863,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "77b5af7f20a66f76af1427df25b46e7da598a0f76411140b190528ecf90e5bef"
+              "sha256": "f125d23ffeb3763c419379d5f8deef0b81905da9a1fd6b3bb0fdee4fab532ce7"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -587093,7 +587099,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
-              "sha256": "18fe660938d967e3df743ba69b58eada1e071850aeb12c7e854f824ac0cfed58"
+              "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
             },
             {
               "path": "packages/ui/src/components/ui/progress.tsx",
@@ -588303,7 +588309,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "1b3cb6e9d5f4be997f9f78be063252cc79d7f4877affa5d5b256480dfcd68d70"
+              "sha256": "4df993cb335522ed5189fc7d959c98372c43c6ce011e8c57bd9241539909e8fa"
             },
             {
               "path": "apps/web/src/pages/ContractsNavigation.test.tsx",
@@ -588451,7 +588457,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "2f7a9e139b4d2b17563bb994cf94dffd26bf322989240cb49efdbcb0a191a3df"
+              "sha256": "8978cd3ba81b1b276d0e68a76c83c96c846e184de1a36f0fcabf6c6a02243938"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -588751,7 +588757,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "77b5af7f20a66f76af1427df25b46e7da598a0f76411140b190528ecf90e5bef"
+              "sha256": "f125d23ffeb3763c419379d5f8deef0b81905da9a1fd6b3bb0fdee4fab532ce7"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -588987,7 +588993,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
-              "sha256": "18fe660938d967e3df743ba69b58eada1e071850aeb12c7e854f824ac0cfed58"
+              "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
             },
             {
               "path": "packages/ui/src/components/ui/progress.tsx",
@@ -590014,7 +590020,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "77b5af7f20a66f76af1427df25b46e7da598a0f76411140b190528ecf90e5bef"
+              "sha256": "f125d23ffeb3763c419379d5f8deef0b81905da9a1fd6b3bb0fdee4fab532ce7"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -590936,7 +590942,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "1b3cb6e9d5f4be997f9f78be063252cc79d7f4877affa5d5b256480dfcd68d70"
+              "sha256": "4df993cb335522ed5189fc7d959c98372c43c6ce011e8c57bd9241539909e8fa"
             },
             {
               "path": "apps/web/src/pages/ContractsNavigation.test.tsx",
@@ -591084,7 +591090,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "2f7a9e139b4d2b17563bb994cf94dffd26bf322989240cb49efdbcb0a191a3df"
+              "sha256": "8978cd3ba81b1b276d0e68a76c83c96c846e184de1a36f0fcabf6c6a02243938"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -591384,7 +591390,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "77b5af7f20a66f76af1427df25b46e7da598a0f76411140b190528ecf90e5bef"
+              "sha256": "f125d23ffeb3763c419379d5f8deef0b81905da9a1fd6b3bb0fdee4fab532ce7"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -591620,7 +591626,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
-              "sha256": "18fe660938d967e3df743ba69b58eada1e071850aeb12c7e854f824ac0cfed58"
+              "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
             },
             {
               "path": "packages/ui/src/components/ui/progress.tsx",
@@ -592830,7 +592836,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "1b3cb6e9d5f4be997f9f78be063252cc79d7f4877affa5d5b256480dfcd68d70"
+              "sha256": "4df993cb335522ed5189fc7d959c98372c43c6ce011e8c57bd9241539909e8fa"
             },
             {
               "path": "apps/web/src/pages/ContractsNavigation.test.tsx",
@@ -592978,7 +592984,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "2f7a9e139b4d2b17563bb994cf94dffd26bf322989240cb49efdbcb0a191a3df"
+              "sha256": "8978cd3ba81b1b276d0e68a76c83c96c846e184de1a36f0fcabf6c6a02243938"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -593278,7 +593284,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "77b5af7f20a66f76af1427df25b46e7da598a0f76411140b190528ecf90e5bef"
+              "sha256": "f125d23ffeb3763c419379d5f8deef0b81905da9a1fd6b3bb0fdee4fab532ce7"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -593514,7 +593520,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
-              "sha256": "18fe660938d967e3df743ba69b58eada1e071850aeb12c7e854f824ac0cfed58"
+              "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
             },
             {
               "path": "packages/ui/src/components/ui/progress.tsx",
@@ -594081,7 +594087,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Existing commerce, guide, notification, profile export and conversation identity recovery evidence remains current. Public and staff knowledge question submissions now bound stalled responses, preserve the question and enable explicit retry. Remaining bespoke list, detail and staff states need verification."
+        "Existing commerce, guide, notification, profile export and conversation identity recovery evidence remains current. Consultation intake and replies now recover a stalled response using their distinct safe retry and readback paths. Customer consultation offer preview and accept or decline still need bounded response handling. Remaining bespoke list, detail and staff states also need verification."
       ],
       "owner": null,
       "depends_on": [],
@@ -594129,7 +594135,8 @@
           "release-0.5-profile-export-deadlines",
           "release-0.5-assistant-stream-deadlines",
           "release-0.5-identity-recovery",
-          "release-0.5-knowledge-question-recovery"
+          "release-0.5-knowledge-question-recovery",
+          "release-0.5-consultation-response-deadlines"
         ],
         "current_acceptance": null
       }
@@ -594812,7 +594819,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "1b3cb6e9d5f4be997f9f78be063252cc79d7f4877affa5d5b256480dfcd68d70"
+              "sha256": "4df993cb335522ed5189fc7d959c98372c43c6ce011e8c57bd9241539909e8fa"
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
@@ -594908,7 +594915,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "2f7a9e139b4d2b17563bb994cf94dffd26bf322989240cb49efdbcb0a191a3df"
+              "sha256": "8978cd3ba81b1b276d0e68a76c83c96c846e184de1a36f0fcabf6c6a02243938"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -595392,7 +595399,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
-              "sha256": "18fe660938d967e3df743ba69b58eada1e071850aeb12c7e854f824ac0cfed58"
+              "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
             },
             {
               "path": "packages/ui/src/components/ui/progress.tsx",
@@ -596615,7 +596622,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "1b3cb6e9d5f4be997f9f78be063252cc79d7f4877affa5d5b256480dfcd68d70"
+              "sha256": "4df993cb335522ed5189fc7d959c98372c43c6ce011e8c57bd9241539909e8fa"
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
@@ -596711,7 +596718,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "2f7a9e139b4d2b17563bb994cf94dffd26bf322989240cb49efdbcb0a191a3df"
+              "sha256": "8978cd3ba81b1b276d0e68a76c83c96c846e184de1a36f0fcabf6c6a02243938"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -597195,7 +597202,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
-              "sha256": "18fe660938d967e3df743ba69b58eada1e071850aeb12c7e854f824ac0cfed58"
+              "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
             },
             {
               "path": "packages/ui/src/components/ui/progress.tsx",
@@ -598418,7 +598425,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "1b3cb6e9d5f4be997f9f78be063252cc79d7f4877affa5d5b256480dfcd68d70"
+              "sha256": "4df993cb335522ed5189fc7d959c98372c43c6ce011e8c57bd9241539909e8fa"
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
@@ -598514,7 +598521,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "2f7a9e139b4d2b17563bb994cf94dffd26bf322989240cb49efdbcb0a191a3df"
+              "sha256": "8978cd3ba81b1b276d0e68a76c83c96c846e184de1a36f0fcabf6c6a02243938"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -598998,7 +599005,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
-              "sha256": "18fe660938d967e3df743ba69b58eada1e071850aeb12c7e854f824ac0cfed58"
+              "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
             },
             {
               "path": "packages/ui/src/components/ui/progress.tsx",
@@ -600221,7 +600228,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "1b3cb6e9d5f4be997f9f78be063252cc79d7f4877affa5d5b256480dfcd68d70"
+              "sha256": "4df993cb335522ed5189fc7d959c98372c43c6ce011e8c57bd9241539909e8fa"
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
@@ -600317,7 +600324,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "2f7a9e139b4d2b17563bb994cf94dffd26bf322989240cb49efdbcb0a191a3df"
+              "sha256": "8978cd3ba81b1b276d0e68a76c83c96c846e184de1a36f0fcabf6c6a02243938"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -600801,7 +600808,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
-              "sha256": "18fe660938d967e3df743ba69b58eada1e071850aeb12c7e854f824ac0cfed58"
+              "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
             },
             {
               "path": "packages/ui/src/components/ui/progress.tsx",
@@ -602024,7 +602031,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "1b3cb6e9d5f4be997f9f78be063252cc79d7f4877affa5d5b256480dfcd68d70"
+              "sha256": "4df993cb335522ed5189fc7d959c98372c43c6ce011e8c57bd9241539909e8fa"
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
@@ -602120,7 +602127,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "2f7a9e139b4d2b17563bb994cf94dffd26bf322989240cb49efdbcb0a191a3df"
+              "sha256": "8978cd3ba81b1b276d0e68a76c83c96c846e184de1a36f0fcabf6c6a02243938"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -602604,7 +602611,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
-              "sha256": "18fe660938d967e3df743ba69b58eada1e071850aeb12c7e854f824ac0cfed58"
+              "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
             },
             {
               "path": "packages/ui/src/components/ui/progress.tsx",
@@ -603827,7 +603834,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "1b3cb6e9d5f4be997f9f78be063252cc79d7f4877affa5d5b256480dfcd68d70"
+              "sha256": "4df993cb335522ed5189fc7d959c98372c43c6ce011e8c57bd9241539909e8fa"
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
@@ -603923,7 +603930,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "2f7a9e139b4d2b17563bb994cf94dffd26bf322989240cb49efdbcb0a191a3df"
+              "sha256": "8978cd3ba81b1b276d0e68a76c83c96c846e184de1a36f0fcabf6c6a02243938"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -604407,7 +604414,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
-              "sha256": "18fe660938d967e3df743ba69b58eada1e071850aeb12c7e854f824ac0cfed58"
+              "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
             },
             {
               "path": "packages/ui/src/components/ui/progress.tsx",
@@ -605630,7 +605637,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "1b3cb6e9d5f4be997f9f78be063252cc79d7f4877affa5d5b256480dfcd68d70"
+              "sha256": "4df993cb335522ed5189fc7d959c98372c43c6ce011e8c57bd9241539909e8fa"
             },
             {
               "path": "apps/web/src/pages/CrmProfileDetail.tsx",
@@ -605726,7 +605733,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "2f7a9e139b4d2b17563bb994cf94dffd26bf322989240cb49efdbcb0a191a3df"
+              "sha256": "8978cd3ba81b1b276d0e68a76c83c96c846e184de1a36f0fcabf6c6a02243938"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -606210,7 +606217,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
-              "sha256": "18fe660938d967e3df743ba69b58eada1e071850aeb12c7e854f824ac0cfed58"
+              "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
             },
             {
               "path": "packages/ui/src/components/ui/progress.tsx",
@@ -611427,7 +611434,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
-              "sha256": "18fe660938d967e3df743ba69b58eada1e071850aeb12c7e854f824ac0cfed58"
+              "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
             },
             {
               "path": "packages/ui/src/components/ui/radio-group.tsx",
@@ -612225,7 +612232,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
-              "sha256": "18fe660938d967e3df743ba69b58eada1e071850aeb12c7e854f824ac0cfed58"
+              "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
             },
             {
               "path": "packages/ui/src/components/ui/radio-group.tsx",
@@ -613023,7 +613030,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
-              "sha256": "18fe660938d967e3df743ba69b58eada1e071850aeb12c7e854f824ac0cfed58"
+              "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
             },
             {
               "path": "packages/ui/src/components/ui/radio-group.tsx",
@@ -613821,7 +613828,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
-              "sha256": "18fe660938d967e3df743ba69b58eada1e071850aeb12c7e854f824ac0cfed58"
+              "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
             },
             {
               "path": "packages/ui/src/components/ui/radio-group.tsx",
@@ -614623,7 +614630,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
-              "sha256": "18fe660938d967e3df743ba69b58eada1e071850aeb12c7e854f824ac0cfed58"
+              "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
             },
             {
               "path": "packages/ui/src/components/ui/radio-group.tsx",
@@ -615421,7 +615428,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
-              "sha256": "18fe660938d967e3df743ba69b58eada1e071850aeb12c7e854f824ac0cfed58"
+              "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
             },
             {
               "path": "packages/ui/src/components/ui/radio-group.tsx",
@@ -616219,7 +616226,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
-              "sha256": "18fe660938d967e3df743ba69b58eada1e071850aeb12c7e854f824ac0cfed58"
+              "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
             },
             {
               "path": "packages/ui/src/components/ui/radio-group.tsx",
@@ -617018,7 +617025,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
-              "sha256": "18fe660938d967e3df743ba69b58eada1e071850aeb12c7e854f824ac0cfed58"
+              "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
             },
             {
               "path": "packages/ui/src/components/ui/radio-group.tsx",
@@ -617817,7 +617824,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
-              "sha256": "18fe660938d967e3df743ba69b58eada1e071850aeb12c7e854f824ac0cfed58"
+              "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
             },
             {
               "path": "packages/ui/src/components/ui/radio-group.tsx",
@@ -618616,7 +618623,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
-              "sha256": "18fe660938d967e3df743ba69b58eada1e071850aeb12c7e854f824ac0cfed58"
+              "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
             },
             {
               "path": "packages/ui/src/components/ui/radio-group.tsx",
@@ -619415,7 +619422,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
-              "sha256": "18fe660938d967e3df743ba69b58eada1e071850aeb12c7e854f824ac0cfed58"
+              "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
             },
             {
               "path": "packages/ui/src/components/ui/radio-group.tsx",
@@ -620214,7 +620221,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
-              "sha256": "18fe660938d967e3df743ba69b58eada1e071850aeb12c7e854f824ac0cfed58"
+              "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
             },
             {
               "path": "packages/ui/src/components/ui/radio-group.tsx",
@@ -621013,7 +621020,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
-              "sha256": "18fe660938d967e3df743ba69b58eada1e071850aeb12c7e854f824ac0cfed58"
+              "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
             },
             {
               "path": "packages/ui/src/components/ui/radio-group.tsx",
@@ -621812,7 +621819,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
-              "sha256": "18fe660938d967e3df743ba69b58eada1e071850aeb12c7e854f824ac0cfed58"
+              "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
             },
             {
               "path": "packages/ui/src/components/ui/radio-group.tsx",
@@ -622611,7 +622618,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
-              "sha256": "18fe660938d967e3df743ba69b58eada1e071850aeb12c7e854f824ac0cfed58"
+              "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
             },
             {
               "path": "packages/ui/src/components/ui/radio-group.tsx",
@@ -633300,7 +633307,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
+              "sha256": "8f419c0885c81ee907115c8e53b074ca571ecfe15f90382cd6cdfe5232a8288a"
             },
             {
               "path": "apps/web/src/pages/CrmCorrectionsPage.tsx",
@@ -634424,7 +634431,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
+              "sha256": "8f419c0885c81ee907115c8e53b074ca571ecfe15f90382cd6cdfe5232a8288a"
             },
             {
               "path": "apps/web/src/pages/CrmCorrectionsPage.tsx",
@@ -635548,7 +635555,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
+              "sha256": "8f419c0885c81ee907115c8e53b074ca571ecfe15f90382cd6cdfe5232a8288a"
             },
             {
               "path": "apps/web/src/pages/CrmCorrectionsPage.tsx",
@@ -636675,7 +636682,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
+              "sha256": "8f419c0885c81ee907115c8e53b074ca571ecfe15f90382cd6cdfe5232a8288a"
             },
             {
               "path": "apps/web/src/pages/CrmCorrectionsPage.tsx",
@@ -637802,7 +637809,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
+              "sha256": "8f419c0885c81ee907115c8e53b074ca571ecfe15f90382cd6cdfe5232a8288a"
             },
             {
               "path": "apps/web/src/pages/CrmCorrectionsPage.tsx",
@@ -638956,7 +638963,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
+              "sha256": "8f419c0885c81ee907115c8e53b074ca571ecfe15f90382cd6cdfe5232a8288a"
             },
             {
               "path": "apps/web/src/pages/CrmCorrectionsPage.tsx",
@@ -640079,7 +640086,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
+              "sha256": "8f419c0885c81ee907115c8e53b074ca571ecfe15f90382cd6cdfe5232a8288a"
             },
             {
               "path": "apps/web/src/pages/CrmCorrectionsPage.tsx",
@@ -641202,7 +641209,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
+              "sha256": "8f419c0885c81ee907115c8e53b074ca571ecfe15f90382cd6cdfe5232a8288a"
             },
             {
               "path": "apps/web/src/pages/CrmCorrectionsPage.tsx",
@@ -642326,7 +642333,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
+              "sha256": "8f419c0885c81ee907115c8e53b074ca571ecfe15f90382cd6cdfe5232a8288a"
             },
             {
               "path": "apps/web/src/pages/CrmCorrectionsPage.tsx",
@@ -643468,7 +643475,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
+              "sha256": "8f419c0885c81ee907115c8e53b074ca571ecfe15f90382cd6cdfe5232a8288a"
             },
             {
               "path": "apps/web/src/pages/CrmCorrectionsPage.tsx",
@@ -644593,7 +644600,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
+              "sha256": "8f419c0885c81ee907115c8e53b074ca571ecfe15f90382cd6cdfe5232a8288a"
             },
             {
               "path": "apps/web/src/pages/CrmCorrectionsPage.tsx",
@@ -676093,7 +676100,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
+              "sha256": "8f419c0885c81ee907115c8e53b074ca571ecfe15f90382cd6cdfe5232a8288a"
             },
             {
               "path": "apps/web/src/pages/CrmCorrectionsPage.tsx",
@@ -677215,7 +677222,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
+              "sha256": "8f419c0885c81ee907115c8e53b074ca571ecfe15f90382cd6cdfe5232a8288a"
             },
             {
               "path": "apps/web/src/pages/CrmCorrectionsPage.tsx",
@@ -678337,7 +678344,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
+              "sha256": "8f419c0885c81ee907115c8e53b074ca571ecfe15f90382cd6cdfe5232a8288a"
             },
             {
               "path": "apps/web/src/pages/CrmCorrectionsPage.tsx",
@@ -679459,7 +679466,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
+              "sha256": "8f419c0885c81ee907115c8e53b074ca571ecfe15f90382cd6cdfe5232a8288a"
             },
             {
               "path": "apps/web/src/pages/CrmCorrectionsPage.tsx",
@@ -683950,7 +683957,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "1b3cb6e9d5f4be997f9f78be063252cc79d7f4877affa5d5b256480dfcd68d70"
+              "sha256": "4df993cb335522ed5189fc7d959c98372c43c6ce011e8c57bd9241539909e8fa"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.tsx",
@@ -684791,7 +684798,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "1b3cb6e9d5f4be997f9f78be063252cc79d7f4877affa5d5b256480dfcd68d70"
+              "sha256": "4df993cb335522ed5189fc7d959c98372c43c6ce011e8c57bd9241539909e8fa"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.tsx",
@@ -685634,7 +685641,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "1b3cb6e9d5f4be997f9f78be063252cc79d7f4877affa5d5b256480dfcd68d70"
+              "sha256": "4df993cb335522ed5189fc7d959c98372c43c6ce011e8c57bd9241539909e8fa"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.tsx",
@@ -686475,7 +686482,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "1b3cb6e9d5f4be997f9f78be063252cc79d7f4877affa5d5b256480dfcd68d70"
+              "sha256": "4df993cb335522ed5189fc7d959c98372c43c6ce011e8c57bd9241539909e8fa"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.tsx",
@@ -687316,7 +687323,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "1b3cb6e9d5f4be997f9f78be063252cc79d7f4877affa5d5b256480dfcd68d70"
+              "sha256": "4df993cb335522ed5189fc7d959c98372c43c6ce011e8c57bd9241539909e8fa"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.tsx",
@@ -688161,7 +688168,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "1b3cb6e9d5f4be997f9f78be063252cc79d7f4877affa5d5b256480dfcd68d70"
+              "sha256": "4df993cb335522ed5189fc7d959c98372c43c6ce011e8c57bd9241539909e8fa"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.tsx",
@@ -689006,7 +689013,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "1b3cb6e9d5f4be997f9f78be063252cc79d7f4877affa5d5b256480dfcd68d70"
+              "sha256": "4df993cb335522ed5189fc7d959c98372c43c6ce011e8c57bd9241539909e8fa"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.tsx",
@@ -689847,7 +689854,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "1b3cb6e9d5f4be997f9f78be063252cc79d7f4877affa5d5b256480dfcd68d70"
+              "sha256": "4df993cb335522ed5189fc7d959c98372c43c6ce011e8c57bd9241539909e8fa"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.tsx",
@@ -690688,7 +690695,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "1b3cb6e9d5f4be997f9f78be063252cc79d7f4877affa5d5b256480dfcd68d70"
+              "sha256": "4df993cb335522ed5189fc7d959c98372c43c6ce011e8c57bd9241539909e8fa"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.tsx",
@@ -691530,7 +691537,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "1b3cb6e9d5f4be997f9f78be063252cc79d7f4877affa5d5b256480dfcd68d70"
+              "sha256": "4df993cb335522ed5189fc7d959c98372c43c6ce011e8c57bd9241539909e8fa"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.tsx",
@@ -692377,7 +692384,7 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "1b3cb6e9d5f4be997f9f78be063252cc79d7f4877affa5d5b256480dfcd68d70"
+              "sha256": "4df993cb335522ed5189fc7d959c98372c43c6ce011e8c57bd9241539909e8fa"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.tsx",
@@ -705760,7 +705767,7 @@
           "source_evidence": [
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
+              "sha256": "8f419c0885c81ee907115c8e53b074ca571ecfe15f90382cd6cdfe5232a8288a"
             },
             {
               "path": "apps/web/src/pages/customer-consultation-history-scope.test.tsx",
@@ -705768,7 +705775,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "2f7a9e139b4d2b17563bb994cf94dffd26bf322989240cb49efdbcb0a191a3df"
+              "sha256": "8978cd3ba81b1b276d0e68a76c83c96c846e184de1a36f0fcabf6c6a02243938"
             },
             {
               "path": "apps/web/e2e/customer-service-history-scope.spec.ts",
@@ -712113,11 +712120,11 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "1b3cb6e9d5f4be997f9f78be063252cc79d7f4877affa5d5b256480dfcd68d70"
+              "sha256": "4df993cb335522ed5189fc7d959c98372c43c6ce011e8c57bd9241539909e8fa"
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
+              "sha256": "8f419c0885c81ee907115c8e53b074ca571ecfe15f90382cd6cdfe5232a8288a"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -712125,7 +712132,7 @@
             },
             {
               "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
-              "sha256": "2f7a9e139b4d2b17563bb994cf94dffd26bf322989240cb49efdbcb0a191a3df"
+              "sha256": "8978cd3ba81b1b276d0e68a76c83c96c846e184de1a36f0fcabf6c6a02243938"
             },
             {
               "path": "apps/web/src/pages/consultation-fee-forms.test.tsx",
@@ -723735,7 +723742,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Supported themes, conditional control contrast, conversation identity and knowledge recovery retain their evidence. Saving checkout now keeps its verified notice clear of the progress steps and fully in view in both Mobile Safari locales. Wider conditional form semantics, verified command feedback, bespoke recovery and live policy gates remain open."
+        "The historical census records populated direction and viewport observations for 93 rendered routes and five redirects. Consultation intake, replies and the offer journey now have current bilingual production evidence. Shared popovers stay opaque on entry and leave layout on dismissal. Earlier saving notice placement and knowledge recovery retain their evidence. Conditional form semantics, remaining command feedback and bespoke states, and live policy gates remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -723840,7 +723847,8 @@
           "release-0.5-conditional-control-contrast",
           "release-0.5-identity-recovery",
           "release-0.5-knowledge-question-recovery",
-          "release-0.5-saving-progress-notices"
+          "release-0.5-saving-progress-notices",
+          "release-0.5-consultation-response-deadlines"
         ]
       }
     },
@@ -724908,11 +724916,11 @@
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
-              "sha256": "1b3cb6e9d5f4be997f9f78be063252cc79d7f4877affa5d5b256480dfcd68d70"
+              "sha256": "4df993cb335522ed5189fc7d959c98372c43c6ce011e8c57bd9241539909e8fa"
             },
             {
               "path": "apps/web/src/pages/ConsultationsPage.tsx",
-              "sha256": "ab05cf6593772fbdce68c306ad046ecf40d7a9b29433f59d9a9e13d22e208b3e"
+              "sha256": "8f419c0885c81ee907115c8e53b074ca571ecfe15f90382cd6cdfe5232a8288a"
             },
             {
               "path": "apps/web/src/pages/CrmCorrectionsPage.tsx",
@@ -725453,6 +725461,10 @@
             {
               "path": "apps/web/src/components/FormWizard.tsx",
               "sha256": "f884ae2b739534d381003c80864520644329fff8b59b1327ab97401ffbaa3474"
+            },
+            {
+              "path": "packages/ui/src/components/ui/popover.tsx",
+              "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
             }
           ],
           "checks": [
@@ -725501,7 +725513,8 @@
             "Renewed conditional control contrast and package performance evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-conditional-control-contrast/proof.json",
             "Renewed identity dialog recovery and package performance evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-identity-recovery/proof.json",
             "Renewed knowledge question recovery and package performance evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-knowledge-question-recovery/proof.json",
-            "Renewed saving notice placement and package performance evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-progress-notices/proof.json"
+            "Renewed saving notice placement and package performance evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-progress-notices/proof.json",
+            "Renewed consultation response deadlines and package performance evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-response-deadlines/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -793921,6 +793934,113 @@
       "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-progress-notices/renewed-bindings.json",
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-progress-notices/reviewed.patch",
       "release_disposition": "Verified saving checkout progress and notice placement. Other v0.5.0 launch criteria remain open."
+    },
+    "release-0.5-consultation-response-deadlines": {
+      "batch": "release-0.5-consultation-response-deadlines",
+      "base_commit": "ba685419f1ee9d11c19e97d441ee3e482fb6e6b7",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.11.01.03",
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01",
+        "07-ui-ux-design.md#T-07.05.01.08",
+        "release-readiness#R-04.02"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.11.01.03",
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/consultation/consultation-request.service.ts",
+          "sha256": "70c8266f100baaeb6c9b50e3930b6bad5ea20d04117b8735bc3f4a87d0e3b6a3"
+        },
+        {
+          "path": "apps/web/e2e/account-menu.spec.ts",
+          "sha256": "f9bb9dfc1ab5711f558b742e00fde6ed20761c1f4e05dc0960a6bef3157478b1"
+        },
+        {
+          "path": "apps/web/e2e/consultation-form-fixture.ts",
+          "sha256": "b9a0eb3229f83068a1e60843a0be299e5bdbf742b51812c938bf392537d34c16"
+        },
+        {
+          "path": "apps/web/e2e/consultation-forms.spec.ts",
+          "sha256": "98ddc4b599f6993707e09db89339e4dc6806586dc339d30418ae23d154487d3e"
+        },
+        {
+          "path": "apps/web/e2e/consultation-journey.spec.ts",
+          "sha256": "cb05e44c35377e73d523b2a5bf62283e1d4a33a8c74fb85ad2c7580c4c57c139"
+        },
+        {
+          "path": "apps/web/e2e/date-picker-component.spec.ts",
+          "sha256": "e93250b9218233eed8767770268dd4df611505b33016a590dff2775458440a6f"
+        },
+        {
+          "path": "apps/web/e2e/notification-center-recovery.spec.ts",
+          "sha256": "d3c228d7533b8a7484ef1778693985a6aca7c3c3a49cb4da62cae60c90cba830"
+        },
+        {
+          "path": "apps/web/e2e/profile-switch.spec.ts",
+          "sha256": "215a0adaf3d8c7d836b106a4d2bfca4104d72c57990441eba78452ee8d2058c1"
+        },
+        {
+          "path": "apps/web/src/components/NotificationBell.tsx",
+          "sha256": "b8d7da27155f21a7f6bbc30725c46eb2be7ec27c0745b34d8f8aa7e13b224422"
+        },
+        {
+          "path": "apps/web/src/components/ProfileMenu.tsx",
+          "sha256": "a2a3efb2b165ad500ebb5516857df6a54ab76d36e7ad998153bd48a9099672b8"
+        },
+        {
+          "path": "apps/web/src/components/ProfileSwitcher.tsx",
+          "sha256": "6d5d9c8faacf52f7430803266621b5ae7a085ad58c179cfc52f1c070c5fb9c66"
+        },
+        {
+          "path": "apps/web/src/lib/consultation-form.ts",
+          "sha256": "82d751252e2ef3d0cd8f04c02d146cbcba674fb6a2a44852a38fc3b876b9c609"
+        },
+        {
+          "path": "apps/web/src/lib/server-query-client.ts",
+          "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
+        },
+        {
+          "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
+          "sha256": "4df993cb335522ed5189fc7d959c98372c43c6ce011e8c57bd9241539909e8fa"
+        },
+        {
+          "path": "apps/web/src/pages/ConsultationsPage.tsx",
+          "sha256": "8f419c0885c81ee907115c8e53b074ca571ecfe15f90382cd6cdfe5232a8288a"
+        },
+        {
+          "path": "apps/web/src/pages/consultation-customer-forms.test.tsx",
+          "sha256": "8978cd3ba81b1b276d0e68a76c83c96c846e184de1a36f0fcabf6c6a02243938"
+        },
+        {
+          "path": "docs/design/accessibility.md",
+          "sha256": "7f7a1ed55c388625a387d5f9a4967a13e7497b732dda40e94dcd92a6d7fba925"
+        },
+        {
+          "path": "docs/design/notification-recovery.md",
+          "sha256": "f125d23ffeb3763c419379d5f8deef0b81905da9a1fd6b3bb0fdee4fab532ce7"
+        },
+        {
+          "path": "packages/ui/src/components/ui/popover.tsx",
+          "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
+        }
+      ],
+      "checks": [
+        "Both customer consultation writes leave the pending state when their response or body stalls for 15 seconds. The request transport is abandoned and an obsolete context cannot confirm a command.",
+        "An unconfirmed intake preserves the selected product and uses the exact captured submission key on explicit retry. An unconfirmed information reply keeps the original text locked and requires fresh matching history. A late acknowledgement cannot navigate, clear the draft or trigger another write.",
+        "Mobile Safari measured a 325-pixel page at a 320-pixel viewport while the closed popover positioner was still laid out. Axe also scanned fading content from the closed menu. Closed popovers now leave layout immediately and opening content stays opaque. The original width, contrast and financial confirmation assertions passed.",
+        "The batch passed 45 consultation unit cases, 28 date picker unit cases, 12 consultation production cases and 22 shared popover caller cases in Chromium and Mobile Safari, six instrumented cases, eight coverage groups, 98 bundle budgets, six cold-auth checks, UI distribution, scoped formatting, lint and web and UI typecheck.",
+        "The route reconciliation verified the hashes of 15 historical browser receipts for the populated census of 93 rendered routes and five redirects. Those observations cover the recorded direction and viewport cells. Later source changes and conditional paths require their own proof."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-response-deadlines",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-response-deadlines/proof.json",
+      "source_scope_proof_sha256": "a46587b4d2db814874c1f4e13aa6966a3e0d7410435683b07e29651346e07c16",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-response-deadlines/renewed-bindings.json",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-response-deadlines/reviewed.patch",
+      "release_disposition": "Verified bounded consultation intake and reply recovery. Other v0.5.0 launch criteria remain open."
     }
   },
   "historical_improvements": [

@@ -419,6 +419,50 @@ it('intake blocks simultaneous submits and retries a malformed result using the 
     await view.close();
   }
 });
+it('intake recovers a stalled acknowledgement with the original submission key', async () => {
+  const writes: unknown[] = [];
+  const stalled = Response.json(null);
+  let finish: ((body: unknown) => void) | undefined;
+  let signal: AbortSignal | null | undefined;
+  vi.spyOn(stalled, 'json').mockImplementation(
+    () =>
+      new Promise((resolve) => {
+        finish = resolve;
+      })
+  );
+  const receipt = { requestId: browseRequestId, status: 'submitted' };
+  const view = await mount(ConsultationsPage, async (url, options) => {
+    if (options?.method !== 'POST') return Response.json(read(url));
+    writes.push(JSON.parse(String(options.body)));
+    if (writes.length > 1) return Response.json(receipt);
+    signal = options.signal;
+    return stalled;
+  });
+  try {
+    await view.select();
+    vi.useFakeTimers();
+    await view.submit();
+    await vi.waitFor(() => expect(finish).toBeDefined());
+    const submit = view.host.querySelector<HTMLButtonElement>('form button[type=submit]')!;
+    expect(submit.disabled).toBe(true);
+    await act(async () => vi.advanceTimersByTimeAsync(15_000));
+    expect(view.host.textContent).toContain(copy('intakeUnconfirmed'));
+    expect(submit.disabled).toBe(false);
+    expect(view.host.querySelector<HTMLInputElement>('input[type=radio]')?.disabled).toBe(true);
+    expect(signal?.aborted).toBe(true);
+    await act(async () => finish!(receipt));
+    expect(routing.navigate).not.toHaveBeenCalled();
+    expect(writes).toHaveLength(1);
+    await view.submit();
+    await vi.waitFor(() => expect(routing.navigate).toHaveBeenCalledTimes(1));
+    expect(writes).toHaveLength(2);
+    expect(writes[1]).toEqual(writes[0]);
+  } finally {
+    vi.useRealTimers();
+    await view.close();
+  }
+});
+
 it('intake discards old actor settlement and starts a distinct key for the newly authorized account', async () => {
   const writes: unknown[] = [];
   let finish: ((response: Response) => void) | undefined;
@@ -577,6 +621,57 @@ it('uncertain information remains locked through older editable and unrelated hi
     await view.close();
   }
 });
+it('information keeps a stalled reply locked until saved history confirms it', async () => {
+  const stalled = Response.json(null);
+  let finish: ((body: unknown) => void) | undefined;
+  let signal: AbortSignal | null | undefined;
+  let saved = false;
+  let writes = 0;
+  vi.spyOn(stalled, 'json').mockImplementation(
+    () =>
+      new Promise((resolve) => {
+        finish = resolve;
+      })
+  );
+  const event = {
+    status: 'under_review',
+    actor_type: 'customer',
+    reason: 'Captured reply',
+    created_at: '2026-10-01T11:00:00Z',
+  };
+  const view = await mount(ConsultationDetailPage, async (url, options) => {
+    if (options?.method !== 'POST')
+      return Response.json(saved ? detail('under_review', [...baseline, event]) : read(url));
+    writes++;
+    signal = options.signal;
+    return stalled;
+  });
+  try {
+    await view.fill(' Captured reply ');
+    vi.useFakeTimers();
+    await view.submit();
+    await vi.waitFor(() => expect(finish).toBeDefined());
+    await act(async () => vi.advanceTimersByTimeAsync(15_000));
+    expect(view.host.textContent).toContain(copy('informationUnconfirmed'));
+    const input = view.host.querySelector<HTMLTextAreaElement>('#consultation-information')!;
+    expect(input.disabled).toBe(true);
+    expect(input.value).toBe(' Captured reply ');
+    expect(signal?.aborted).toBe(true);
+    await act(async () => finish!({ requestId: routing.requestId, status: 'under_review' }));
+    expect(view.host.textContent).not.toContain(copy('infoSent'));
+    await view.submit();
+    expect(writes).toBe(1);
+    saved = true;
+    await view.click(copy('informationReload'));
+    expect(view.host.textContent).toContain(copy('infoSent'));
+    expect(view.host.querySelector('#consultation-information')).toBeNull();
+    expect(writes).toBe(1);
+  } finally {
+    vi.useRealTimers();
+    await view.close();
+  }
+});
+
 it('information ignores late write settlement after request scope changes, preserving the newer draft', async () => {
   let finish: ((value: Response) => void) | undefined;
   const view = await mount(ConsultationDetailPage, async (url, options) =>

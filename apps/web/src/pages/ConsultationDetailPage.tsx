@@ -56,6 +56,7 @@ import { withCsrf } from '../lib/csrf.js';
 import { WorkflowStatusBanner } from '../components/WorkflowStatusBanner.js';
 import { workflowFeedback } from '@barghsa/i18n/workflow-feedback';
 import { consultationNextAction } from '../lib/consultation-next-action.js';
+import { readWithDeadline } from '../lib/server-query-client.js';
 
 interface Detail {
   request: {
@@ -132,6 +133,7 @@ export function ConsultationDetailPage() {
     copy('actionError')
   );
   const pendingInformation = useRef<ConsultationInformationCommand | null>(null);
+  const informationTransport = useRef<AbortController | null>(null);
   const [informationUnconfirmed, setInformationUnconfirmed] = useState(false);
   const actionPending = useRef(false);
   const profileId = useRef<string | null>(null);
@@ -152,6 +154,7 @@ export function ConsultationDetailPage() {
     setActionError(false);
     setInfoSent(false);
     setDecisionReview(null);
+    return () => informationTransport.current?.abort();
   }, [scope]);
   useEffect(
     () => () => {
@@ -231,6 +234,7 @@ export function ConsultationDetailPage() {
         if (controller.signal.aborted || capturedGeneration !== generation.current) return;
         if (profileId.current && profileId.current !== result.request.profile_id) {
           ++generation.current;
+          informationTransport.current?.abort();
           pendingInformation.current = null;
           informationForm.reset({ reason: '' });
           setInformationUnconfirmed(false);
@@ -295,20 +299,25 @@ export function ConsultationDetailPage() {
         history: capturedDetail.history.map((event) => ({ ...event })),
       };
       pendingInformation.current = command;
+      const transport = new AbortController();
+      informationTransport.current = transport;
       actionPending.current = true;
       setSending(true);
       setActionError(false);
       try {
-        const response = await fetch(
-          `/api/consultations/requests/${encodeURIComponent(requestId)}/provide-info`,
-          {
-            method: 'POST',
-            credentials: 'include',
-            headers: withCsrf({ 'Content-Type': 'application/json' }),
-            body: JSON.stringify({ reason: command.reason }),
-          }
-        );
-        const result = await response.json().catch(() => null);
+        const { response, result } = await readWithDeadline(transport.signal, async (signal) => {
+          const response = await fetch(
+            `/api/consultations/requests/${encodeURIComponent(requestId)}/provide-info`,
+            {
+              method: 'POST',
+              credentials: 'include',
+              headers: withCsrf({ 'Content-Type': 'application/json' }),
+              body: JSON.stringify({ reason: command.reason }),
+              signal,
+            }
+          );
+          return { response, result: await response.json().catch(() => null) };
+        });
         if (capturedGeneration !== generation.current) return;
         if (!response.ok) {
           if (
@@ -345,6 +354,7 @@ export function ConsultationDetailPage() {
           setInformationUnconfirmed(true);
         }
       } finally {
+        if (informationTransport.current === transport) informationTransport.current = null;
         if (capturedGeneration === generation.current) {
           actionPending.current = false;
           setSending(false);

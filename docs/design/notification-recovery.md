@@ -26,6 +26,8 @@ The customer guide allows up to 300 seconds for retrieval, answer generation and
 
 The public and staff question forms allow up to 300 seconds for the response, including its body. A timeout keeps the question in the field and releases the send control. Sending it again takes an explicit action. A response from a timed-out request or an obsolete workspace cannot replace the current answer.
 
+Consultation intake and replies allow up to 15 seconds for a response, including its body. A timeout leaves the outcome unconfirmed. Intake allows an explicit retry of the original product and submission key. A reply remains locked until a fresh request history confirms the captured information. A late acknowledgement cannot substitute for that history check.
+
 In electricity and saving order discussions, an explicit retry after a transport failure announces the connection retry. Keep the failed page cursor, existing comments and unsent draft. HTTP errors and invalid response bodies retain inline recovery.
 
 `useToast` supports localized keys or domain-localized strings, all four severities, and a promise helper. Pass a validated operation promise. Its rejection still reaches the caller; it does not retry the operation. Only the latest operation owns the persistent progress notice, and a profile-context dismissal prevents a late result from restoring old content.

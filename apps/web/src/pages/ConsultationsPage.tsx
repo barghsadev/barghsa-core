@@ -219,6 +219,7 @@ export function ConsultationsPage({
   const [submitError, setSubmitError] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const submissionKey = useRef<string | null>(null);
+  const intakeTransport = useRef<AbortController | null>(null);
   const pendingIntake = useRef<{
     profileId: string;
     productId: string;
@@ -233,6 +234,7 @@ export function ConsultationsPage({
     setIntakeUnconfirmed(false);
     setSubmitting(false);
     setSubmitError(false);
+    return () => intakeTransport.current?.abort();
   }, [scope]);
   useEffect(
     () => () => {
@@ -522,17 +524,22 @@ export function ConsultationsPage({
         submissionKey: (submissionKey.current ??= crypto.randomUUID()),
       };
       pendingIntake.current = body;
+      const transport = new AbortController();
+      intakeTransport.current = transport;
       setSubmitting(true);
       setSubmitError(false);
       let completed = false;
       try {
-        const response = await fetch('/api/consultations/requests', {
-          method: 'POST',
-          credentials: 'include',
-          headers: withCsrf({ 'Content-Type': 'application/json' }),
-          body: JSON.stringify(body),
+        const { response, result } = await readWithDeadline(transport.signal, async (signal) => {
+          const response = await fetch('/api/consultations/requests', {
+            method: 'POST',
+            credentials: 'include',
+            headers: withCsrf({ 'Content-Type': 'application/json' }),
+            body: JSON.stringify(body),
+            signal,
+          });
+          return { response, result: await response.json().catch(() => null) };
         });
-        const result = await response.json().catch(() => null);
         if (!currentContext() || capturedGeneration !== generation.current) return;
         if (!response.ok) {
           if (
@@ -575,6 +582,7 @@ export function ConsultationsPage({
           toast.error(copy('intakeUnconfirmed'), { id: reader });
         }
       } finally {
+        if (intakeTransport.current === transport) intakeTransport.current = null;
         if (currentContext() && capturedGeneration === generation.current && !completed)
           setSubmitting(false);
       }
