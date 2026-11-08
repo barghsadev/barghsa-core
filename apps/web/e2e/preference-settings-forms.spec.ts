@@ -16,6 +16,60 @@ const action = (page: Page, locale: Locale, key: string) =>
   page.getByRole('button', { name: copy(key, locale), exact: true });
 
 for (const locale of ['en', 'fa'] as const) {
+  for (const family of ['notifications', 'marketing-consent', 'timezone'] as const) {
+    test(`${family} write deadline offers an owned status check (${locale})`, async ({ page }) => {
+      await page.clock.install();
+      const state = await setup(page, locale);
+      await page.goto(family === 'timezone' ? '/settings/timezone' : '/settings');
+      const title =
+        family === 'timezone'
+          ? timezoneText('title', locale)
+          : t(
+              family === 'notifications'
+                ? 'settings.notifications.title'
+                : 'settings.marketing.title',
+              locale
+            );
+      const owner = page.getByRole('form', { name: title, exact: true });
+      const save = owner.locator('button[type=submit]');
+      await expect(save).toBeEnabled();
+      let body: Record<string, unknown>;
+      if (family === 'notifications') {
+        await owner.locator('#notification-EMAIL').click();
+        body = { channels: ['IN_APP'] };
+      } else if (family === 'marketing-consent') {
+        await owner.locator('#marketing-email').click();
+        body = { email: true, sms: false };
+      } else {
+        await owner.getByRole('listbox').selectOption('Europe/Istanbul');
+        body = { timezone: 'Europe/Istanbul' };
+      }
+      state.mode = 'hold';
+      await save.click();
+      await expect.poll(() => state.held !== null).toBe(true);
+      const command = { path: '/api/user/settings/' + family, body, csrf: 'preference-current' };
+      expect(state.writes).toEqual([command]);
+      const check = action(page, locale, 'confirm');
+      await expect(check).toHaveCount(0);
+      await page.clock.fastForward(15_001);
+      await expect(check).toBeEnabled({ timeout: 2_000 });
+      await expect(save).toBeDisabled();
+      await owner.dispatchEvent('submit');
+      expect(state.writes).toEqual([command]);
+      const late = state.held!.route;
+      if (family === 'notifications') state.notifications.channels = ['IN_APP'];
+      else if (family === 'marketing-consent')
+        state.marketing.channels.email = { optedIn: true, lastChangedAt: '2026-10-05T00:00:00Z' };
+      else state.timezone = 'Europe/Istanbul';
+      await late.fulfill({ status: 403, json: { error: 'AUTHZ:FORBIDDEN' } }).catch(() => {});
+      await expect(check).toBeEnabled();
+      await check.click();
+      await expect(check).toHaveCount(0);
+      await expect(save).toBeEnabled();
+      expect(state.writes).toEqual([command]);
+    });
+  }
+
   test(`high contrast stays on this browser and strengthens visible controls (${locale})`, async ({
     page,
   }) => {

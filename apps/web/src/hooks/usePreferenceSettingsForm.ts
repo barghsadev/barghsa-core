@@ -11,6 +11,7 @@ import { useProfileContextRevision, useProfileContextReset } from '../lib/profil
 import { accountWriteDenied, accountWriteRejected } from '../lib/account-settings-form.js';
 import { withCsrf } from '../lib/csrf.js';
 import { queryKeys } from '../lib/query-keys.js';
+import { readWithDeadline } from '../lib/server-query-client.js';
 import { DiscardedServerMutation, useServerMutation } from './useServerMutation.js';
 
 class PreferenceWriteError extends Error {
@@ -106,6 +107,7 @@ export function usePreferenceSettingsForm<Values extends FieldValues, Source>(
     sequence = useRef(0),
     checking = useRef(false);
   const capture = useRef<{ key: string; values: Values; checked: boolean } | null>(null);
+  const writeTransport = useRef<AbortController | null>(null);
   const activeOptions = useRef(options);
   activeOptions.current = options;
   const [result, setResult] = useState<{ key: string; value: Source } | null>(null);
@@ -156,26 +158,33 @@ export function usePreferenceSettingsForm<Values extends FieldValues, Source>(
     write: async (held) => {
       if (!scope.owns(options.family) || capture.current !== held)
         throw new DiscardedServerMutation();
-      const response = await fetch(options.path, {
-        method: 'PUT',
-        credentials: 'include',
-        headers: withCsrf({ 'Content-Type': 'application/json' }),
-        body: JSON.stringify(options.body(held.values)),
-      });
-      if (!scope.owns(options.family) || capture.current !== held)
-        throw new DiscardedServerMutation();
-      const body: unknown = await response.json().catch(() => null);
-      if (!scope.owns(options.family) || capture.current !== held)
-        throw new DiscardedServerMutation();
-      if (accountWriteDenied(response.status, body) || response.status === 404) {
-        scope.deny();
-        throw new PreferenceWriteError('denied');
+      const transport = new AbortController();
+      writeTransport.current = transport;
+      try {
+        const { response, body } = await readWithDeadline(transport.signal, async (signal) => {
+          const response = await fetch(options.path, {
+            method: 'PUT',
+            credentials: 'include',
+            headers: withCsrf({ 'Content-Type': 'application/json' }),
+            body: JSON.stringify(options.body(held.values)),
+            signal,
+          });
+          return { response, body: (await response.json().catch(() => null)) as unknown };
+        });
+        if (!scope.owns(options.family) || capture.current !== held)
+          throw new DiscardedServerMutation();
+        if (accountWriteDenied(response.status, body) || response.status === 404) {
+          scope.deny();
+          throw new PreferenceWriteError('denied');
+        }
+        const receipt = response.status === 200 ? options.parse(body) : null;
+        if (receipt && options.confirmed(receipt, held.values)) return receipt;
+        throw new PreferenceWriteError(
+          accountWriteRejected(response.status, body) ? 'rejected' : 'uncertain'
+        );
+      } finally {
+        if (writeTransport.current === transport) writeTransport.current = null;
       }
-      const receipt = response.status === 200 ? options.parse(body) : null;
-      if (receipt && options.confirmed(receipt, held.values)) return receipt;
-      throw new PreferenceWriteError(
-        accountWriteRejected(response.status, body) ? 'rejected' : 'uncertain'
-      );
     },
   });
   async function load(signal: AbortSignal) {
@@ -278,6 +287,7 @@ export function usePreferenceSettingsForm<Values extends FieldValues, Source>(
     void readCurrent.current(controller.signal);
     return () => {
       controller.abort();
+      writeTransport.current?.abort();
       sequence.current++;
     };
   }, [scope.key, scope.denied, resetForm]);

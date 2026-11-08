@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-08T07:51:04+00:00",
-  "source_commit": "cd3cca99bbefb3900688b81c93dece6deca7868c",
+  "updated": "2026-11-08T07:56:40+00:00",
+  "source_commit": "9316862c16ec5ab108e9cd5f215eb9ed54c6cb84",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -81377,7 +81377,7 @@
             },
             {
               "path": "apps/web/src/hooks/usePreferenceSettingsForm.ts",
-              "sha256": "79500fcb7b5597bd096135d7c053fef5a1d8976696a4f6cb434a0a7368263432"
+              "sha256": "84646eef89d8e80845dcfab092a8cb22113e79b64a6d35bfeb3b3f9060d2cff4"
             },
             {
               "path": "apps/web/src/hooks/useSettingsFormFeedback.ts",
@@ -81405,7 +81405,7 @@
             },
             {
               "path": "apps/web/e2e/preference-settings-forms.spec.ts",
-              "sha256": "e66bb98e394f146055a3be4964eebd7cad2cb4845acc08ffbfb24ae501d12a67"
+              "sha256": "e78db405b69c4f165efab3b3b201b36ffb7761267b639616e2ea422a3c299e17"
             },
             {
               "path": "apps/worker/src/notifications/channel-availability.ts",
@@ -496998,7 +496998,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "884e1540d4a6a096f1340627d5a4cec7d72606d688541dbda64f556c17176510"
+              "sha256": "92ab0a76204465294d9de73ad871af227c36e25a42da02ffc930e1acb1baa939"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -515502,7 +515502,7 @@
             },
             {
               "path": "apps/web/e2e/preference-settings-forms.spec.ts",
-              "sha256": "e66bb98e394f146055a3be4964eebd7cad2cb4845acc08ffbfb24ae501d12a67"
+              "sha256": "e78db405b69c4f165efab3b3b201b36ffb7761267b639616e2ea422a3c299e17"
             },
             {
               "path": "apps/web/e2e/staff-users.spec.ts",
@@ -515941,7 +515941,7 @@
             },
             {
               "path": "apps/web/e2e/preference-settings-forms.spec.ts",
-              "sha256": "e66bb98e394f146055a3be4964eebd7cad2cb4845acc08ffbfb24ae501d12a67"
+              "sha256": "e78db405b69c4f165efab3b3b201b36ffb7761267b639616e2ea422a3c299e17"
             },
             {
               "path": "apps/web/e2e/staff-users.spec.ts",
@@ -516704,7 +516704,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Username, contact, timezone and Telegram verification and step-up fields now expose their required semantics. Remaining conditional controls still need reconciliation against their active validation schemas."
+        "Account settings required semantics are verified. Staff electricity quantity increase approval dates and reasons and rejection reasons, and staff price adjustment contract selection and proposal fields lack explicit markers despite active validation. Reconcile remaining conditional controls."
       ],
       "owner": null,
       "depends_on": [],
@@ -516744,7 +516744,8 @@
           "release-0.5-comment-security-required",
           "release-0.5-service-response-required",
           "release-0.5-public-auth-required",
-          "release-0.5-account-command-recovery"
+          "release-0.5-account-command-recovery",
+          "release-0.5-preference-write-recovery"
         ],
         "current_acceptance": null
       }
@@ -517703,7 +517704,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "884e1540d4a6a096f1340627d5a4cec7d72606d688541dbda64f556c17176510"
+              "sha256": "92ab0a76204465294d9de73ad871af227c36e25a42da02ffc930e1acb1baa939"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -517868,7 +517869,7 @@
             },
             {
               "path": "apps/web/e2e/preference-settings-forms.spec.ts",
-              "sha256": "e66bb98e394f146055a3be4964eebd7cad2cb4845acc08ffbfb24ae501d12a67"
+              "sha256": "e78db405b69c4f165efab3b3b201b36ffb7761267b639616e2ea422a3c299e17"
             },
             {
               "path": "apps/web/e2e/staff-users.spec.ts",
@@ -518930,7 +518931,7 @@
             },
             {
               "path": "apps/web/e2e/preference-settings-forms.spec.ts",
-              "sha256": "e66bb98e394f146055a3be4964eebd7cad2cb4845acc08ffbfb24ae501d12a67"
+              "sha256": "e78db405b69c4f165efab3b3b201b36ffb7761267b639616e2ea422a3c299e17"
             },
             {
               "path": "apps/web/e2e/public-auth-fixture.ts",
@@ -519758,7 +519759,7 @@
             },
             {
               "path": "apps/web/e2e/preference-settings-forms.spec.ts",
-              "sha256": "e66bb98e394f146055a3be4964eebd7cad2cb4845acc08ffbfb24ae501d12a67"
+              "sha256": "e78db405b69c4f165efab3b3b201b36ffb7761267b639616e2ea422a3c299e17"
             },
             {
               "path": "apps/web/e2e/public-auth-fixture.ts",
@@ -521086,7 +521087,7 @@
             },
             {
               "path": "apps/web/e2e/preference-settings-forms.spec.ts",
-              "sha256": "e66bb98e394f146055a3be4964eebd7cad2cb4845acc08ffbfb24ae501d12a67"
+              "sha256": "e78db405b69c4f165efab3b3b201b36ffb7761267b639616e2ea422a3c299e17"
             },
             {
               "path": "apps/web/e2e/public-auth-fixture.ts",
@@ -565979,7 +565980,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "884e1540d4a6a096f1340627d5a4cec7d72606d688541dbda64f556c17176510"
+              "sha256": "92ab0a76204465294d9de73ad871af227c36e25a42da02ffc930e1acb1baa939"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -567873,7 +567874,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "884e1540d4a6a096f1340627d5a4cec7d72606d688541dbda64f556c17176510"
+              "sha256": "92ab0a76204465294d9de73ad871af227c36e25a42da02ffc930e1acb1baa939"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -568676,7 +568677,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Stalled username, contact and Telegram writes now show their existing unconfirmed outcome and preserve ownership. Shared preference writes still wait indefinitely for a missing acknowledgement. Remaining command surfaces need reconciliation."
+        "The shared timezone, notification and marketing save flow now announces a timed-out acknowledgement and preserves owned status recovery without an automatic retry. TeamActionDialog still waits indefinitely for a stalled step-up or command response. Scoped callers need validated receipt and retry recovery."
       ],
       "owner": null,
       "depends_on": [],
@@ -568719,7 +568720,8 @@
           "release-0.5-saving-solar-submission-recovery",
           "release-0.5-correction-template-required",
           "release-0.5-correction-command-deadlines",
-          "release-0.5-account-command-recovery"
+          "release-0.5-account-command-recovery",
+          "release-0.5-preference-write-recovery"
         ],
         "current_acceptance": null
       }
@@ -569830,7 +569832,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "884e1540d4a6a096f1340627d5a4cec7d72606d688541dbda64f556c17176510"
+              "sha256": "92ab0a76204465294d9de73ad871af227c36e25a42da02ffc930e1acb1baa939"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -571724,7 +571726,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "884e1540d4a6a096f1340627d5a4cec7d72606d688541dbda64f556c17176510"
+              "sha256": "92ab0a76204465294d9de73ad871af227c36e25a42da02ffc930e1acb1baa939"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -573618,7 +573620,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "884e1540d4a6a096f1340627d5a4cec7d72606d688541dbda64f556c17176510"
+              "sha256": "92ab0a76204465294d9de73ad871af227c36e25a42da02ffc930e1acb1baa939"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -575512,7 +575514,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "884e1540d4a6a096f1340627d5a4cec7d72606d688541dbda64f556c17176510"
+              "sha256": "92ab0a76204465294d9de73ad871af227c36e25a42da02ffc930e1acb1baa939"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -577406,7 +577408,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "884e1540d4a6a096f1340627d5a4cec7d72606d688541dbda64f556c17176510"
+              "sha256": "92ab0a76204465294d9de73ad871af227c36e25a42da02ffc930e1acb1baa939"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -579300,7 +579302,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "884e1540d4a6a096f1340627d5a4cec7d72606d688541dbda64f556c17176510"
+              "sha256": "92ab0a76204465294d9de73ad871af227c36e25a42da02ffc930e1acb1baa939"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -581194,7 +581196,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "884e1540d4a6a096f1340627d5a4cec7d72606d688541dbda64f556c17176510"
+              "sha256": "92ab0a76204465294d9de73ad871af227c36e25a42da02ffc930e1acb1baa939"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -583088,7 +583090,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "884e1540d4a6a096f1340627d5a4cec7d72606d688541dbda64f556c17176510"
+              "sha256": "92ab0a76204465294d9de73ad871af227c36e25a42da02ffc930e1acb1baa939"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -584982,7 +584984,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "884e1540d4a6a096f1340627d5a4cec7d72606d688541dbda64f556c17176510"
+              "sha256": "92ab0a76204465294d9de73ad871af227c36e25a42da02ffc930e1acb1baa939"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -586876,7 +586878,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "884e1540d4a6a096f1340627d5a4cec7d72606d688541dbda64f556c17176510"
+              "sha256": "92ab0a76204465294d9de73ad871af227c36e25a42da02ffc930e1acb1baa939"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -588770,7 +588772,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "884e1540d4a6a096f1340627d5a4cec7d72606d688541dbda64f556c17176510"
+              "sha256": "92ab0a76204465294d9de73ad871af227c36e25a42da02ffc930e1acb1baa939"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -590033,7 +590035,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "884e1540d4a6a096f1340627d5a4cec7d72606d688541dbda64f556c17176510"
+              "sha256": "92ab0a76204465294d9de73ad871af227c36e25a42da02ffc930e1acb1baa939"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -591403,7 +591405,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "884e1540d4a6a096f1340627d5a4cec7d72606d688541dbda64f556c17176510"
+              "sha256": "92ab0a76204465294d9de73ad871af227c36e25a42da02ffc930e1acb1baa939"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -593297,7 +593299,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "884e1540d4a6a096f1340627d5a4cec7d72606d688541dbda64f556c17176510"
+              "sha256": "92ab0a76204465294d9de73ad871af227c36e25a42da02ffc930e1acb1baa939"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -594100,7 +594102,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Stalled username, contact and Telegram writes now enter their existing bounded status-check flow. Shared timezone, notification and marketing writes still lack a response deadline. Reconcile other bespoke list, detail, widget and admin states."
+        "Timezone, notification and marketing saves now offer bounded owned recovery alongside previously verified username, contact and Telegram writes. TeamActionDialog step-up and write transports still have no response deadline. Verify the actual receipt and retry policy of each scoped caller before changing that shared boundary. Bespoke route states remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -594155,7 +594157,8 @@
           "release-0.5-saving-solar-submission-recovery",
           "release-0.5-correction-template-required",
           "release-0.5-correction-command-deadlines",
-          "release-0.5-account-command-recovery"
+          "release-0.5-account-command-recovery",
+          "release-0.5-preference-write-recovery"
         ],
         "current_acceptance": null
       }
@@ -717237,7 +717240,7 @@
             },
             {
               "path": "apps/web/e2e/preference-settings-forms.spec.ts",
-              "sha256": "e66bb98e394f146055a3be4964eebd7cad2cb4845acc08ffbfb24ae501d12a67"
+              "sha256": "e78db405b69c4f165efab3b3b201b36ffb7761267b639616e2ea422a3c299e17"
             },
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
@@ -717469,7 +717472,7 @@
             },
             {
               "path": "apps/web/src/hooks/usePreferenceSettingsForm.ts",
-              "sha256": "79500fcb7b5597bd096135d7c053fef5a1d8976696a4f6cb434a0a7368263432"
+              "sha256": "84646eef89d8e80845dcfab092a8cb22113e79b64a6d35bfeb3b3f9060d2cff4"
             },
             {
               "path": "apps/web/src/hooks/useProviderCatalogue.ts",
@@ -721118,7 +721121,7 @@
             },
             {
               "path": "apps/web/e2e/preference-settings-forms.spec.ts",
-              "sha256": "e66bb98e394f146055a3be4964eebd7cad2cb4845acc08ffbfb24ae501d12a67"
+              "sha256": "e78db405b69c4f165efab3b3b201b36ffb7761267b639616e2ea422a3c299e17"
             },
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
@@ -721334,7 +721337,7 @@
             },
             {
               "path": "apps/web/src/hooks/usePreferenceSettingsForm.ts",
-              "sha256": "79500fcb7b5597bd096135d7c053fef5a1d8976696a4f6cb434a0a7368263432"
+              "sha256": "84646eef89d8e80845dcfab092a8cb22113e79b64a6d35bfeb3b3f9060d2cff4"
             },
             {
               "path": "apps/web/src/hooks/useProviderCatalogue.ts",
@@ -723761,7 +723764,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Current account and Telegram settings journeys verify required semantics, linked errors and bounded status recovery. Remaining conditional form, command, bespoke state and live policy criteria need closure."
+        "Notification, marketing and timezone journeys now verify bounded save recovery and safe acknowledgement. Remaining conditional form, command, bespoke state and live policy criteria need closure."
       ],
       "owner": null,
       "depends_on": [],
@@ -723877,7 +723880,8 @@
           "release-0.5-comment-security-required",
           "release-0.5-service-response-required",
           "release-0.5-public-auth-required",
-          "release-0.5-account-command-recovery"
+          "release-0.5-account-command-recovery",
+          "release-0.5-preference-write-recovery"
         ]
       }
     },
@@ -724609,7 +724613,7 @@
             },
             {
               "path": "apps/web/src/hooks/usePreferenceSettingsForm.ts",
-              "sha256": "79500fcb7b5597bd096135d7c053fef5a1d8976696a4f6cb434a0a7368263432"
+              "sha256": "84646eef89d8e80845dcfab092a8cb22113e79b64a6d35bfeb3b3f9060d2cff4"
             },
             {
               "path": "apps/web/src/hooks/useProfileSettingsEditor.ts",
@@ -725577,7 +725581,8 @@
             "Renewed comment and account security performance evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-comment-security-required/proof.json",
             "Renewed saving address and consultation response performance evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-service-response-required/proof.json",
             "Renewed public auth and affected route performance evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-public-auth-required/proof.json",
-            "Renewed account settings and Telegram performance evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-account-command-recovery/proof.json"
+            "Renewed account settings and Telegram performance evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-account-command-recovery/proof.json",
+            "Renewed shared preference settings performance evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-preference-write-recovery/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -795242,6 +795247,93 @@
       "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-account-command-recovery/renewed-bindings.json",
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-account-command-recovery/reviewed.patch",
       "release_disposition": "Verified account settings required fields and bounded username, contact and Telegram commands. v0.5.0 acceptance remains open."
+    },
+    "release-0.5-preference-write-recovery": {
+      "batch": "release-0.5-preference-write-recovery",
+      "base_commit": "9316862c16ec5ab108e9cd5f215eb9ed54c6cb84",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.05.01.05",
+        "release-readiness#R-04.01",
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "07-ui-ux-design.md#T-07.11.01.03",
+        "release-readiness#R-04.02"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.05.01.05",
+        "release-readiness#R-04.01",
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "07-ui-ux-design.md#T-07.11.01.03"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/preference-settings-forms.spec.ts",
+          "sha256": "e78db405b69c4f165efab3b3b201b36ffb7761267b639616e2ea422a3c299e17"
+        },
+        {
+          "path": "apps/web/e2e/timezone-settings.spec.ts",
+          "sha256": "f3e9a003c229307e0907473c6c93fa0f7d8b776e782c9af3be749fb1c0eb4193"
+        },
+        {
+          "path": "apps/web/src/components/TeamActionDialog.tsx",
+          "sha256": "3926e0d68724b3f6b48050404f28d9fe2985287a7fefa5247388a324eab633e3"
+        },
+        {
+          "path": "apps/web/src/hooks/usePreferenceSettingsForm.ts",
+          "sha256": "84646eef89d8e80845dcfab092a8cb22113e79b64a6d35bfeb3b3f9060d2cff4"
+        },
+        {
+          "path": "apps/web/src/hooks/useServerMutation.ts",
+          "sha256": "95b8514ef0400d3bda7e1a4748851c5b52c107d31313ec2cc02980af3d18dec9"
+        },
+        {
+          "path": "apps/web/src/lib/electricity-increase-decision-form-schemas.ts",
+          "sha256": "7680f760433d91d47404009d1ff0a30559f3208de3352bc55022de8ef11d6973"
+        },
+        {
+          "path": "apps/web/src/lib/electricity-price-form-schemas.ts",
+          "sha256": "2ea6096c1e5f318e60438f35bc15b061de14031cb786390424880cdf38d23b68"
+        },
+        {
+          "path": "apps/web/src/lib/preference-settings-form-schemas.ts",
+          "sha256": "c5382f0ec6bff9028e1e8efdadbe72d6d8bcd6b807673de5225cf0f7921e6f65"
+        },
+        {
+          "path": "apps/web/src/lib/server-query-client.ts",
+          "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
+        },
+        {
+          "path": "apps/web/src/pages/AdminElectricityIncreasesPage.tsx",
+          "sha256": "40e7361da4af944f9c75263df20cb5e3f0a00dc61e38127d54491c4c3e3de77a"
+        },
+        {
+          "path": "apps/web/src/pages/AdminElectricityPriceAdjustmentsPage.tsx",
+          "sha256": "f34fc0682f834b4b083ba653dae36685c986cd49b188105a2f258bb2dcb52178"
+        },
+        {
+          "path": "apps/web/src/routes/_app/settings/index.tsx",
+          "sha256": "47ff271f5d9cf0235d0388d30fa2db1383836f074dd59666c868cfbd91a7cc4d"
+        },
+        {
+          "path": "apps/web/src/routes/_app/settings/timezone.tsx",
+          "sha256": "32f73dc2a6fa3c73b9acf99605e0c1b64794bc179c236895632a7a5f56381f68"
+        },
+        {
+          "path": "docs/design/notification-recovery.md",
+          "sha256": "92ab0a76204465294d9de73ad871af227c36e25a42da02ffc930e1acb1baa939"
+        }
+      ],
+      "checks": [
+        "Three baseline Chromium cases reproduced missing recovery when notification, marketing and timezone saves stalled.",
+        "The shared preference write now applies a 15-second acknowledgement deadline including the body. Timeout preserves captured values and owner, announces an unconfirmed result and allows the existing explicit read. A late denial cannot replace the current result.",
+        "Twelve production cases cover all three preferences in both languages on Chromium and Mobile Safari. Each simulates a committed write with a missing acknowledgement and verifies that an owned read completes it without a duplicate write. The original validation, contrast, permission and toast assertions passed. One existing case could not write its screenshot, and its isolated rerun passed.",
+        "21 web unit cases, 32 distinct production-browser cases, 16 instrumented Chromium cases, eight combined coverage groups, 98 gzip budgets, lint, formatting and web typecheck passed. Six cold-auth results were reused against byte-identical standalone auth assets."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-preference-write-recovery",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-preference-write-recovery/proof.json",
+      "source_scope_proof_sha256": "c503feaceab0cb8454e9cd5df6a63888679f257ea5f78da3894c427563b03e06",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-preference-write-recovery/renewed-bindings.json",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-preference-write-recovery/reviewed.patch",
+      "release_disposition": "Verified shared notification, marketing and timezone command recovery. v0.5.0 acceptance remains open."
     }
   },
   "historical_improvements": [
@@ -795293,7 +795385,7 @@
       "release-readiness#R-04.01",
       "release-readiness#R-04.02"
     ],
-    "goal": "Bound shared timezone, notification and marketing write acknowledgements, then reconcile remaining conditional fields and route evidence. Resolve accessibility enforcement and live route reporting before accepting v0.5.0."
+    "goal": "Close the demonstrated staff electricity quantity-increase and price-adjustment field markers, then reconcile remaining conditional fields and route evidence. Resolve accessibility enforcement and live route reporting before accepting v0.5.0."
   },
   "launch_forecast": {
     "status": "deadline_at_risk_until_v0_5_and_operational_gates_close",

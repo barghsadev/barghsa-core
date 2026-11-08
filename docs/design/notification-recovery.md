@@ -56,4 +56,6 @@ For account settings, use the query's deadline error to end visible loading even
 
 Username, contact and Telegram linking commands wait up to 15 seconds for an acknowledgement, including the response body. An unconfirmed command requires a fresh account or link-status check before further writes. No code or command is resent automatically.
 
+Timezone, notification and marketing saves use the same response deadline. A timed-out save keeps its choices and asks for a fresh settings read. Only a matching saved value completes the pending save.
+
 The auth build excludes customer-only profile and verification imports. Its existing route guard hands off non-authentication URLs before those workspaces can mount. Purchase components remain eager; their pending and error views can load separately. Budget checks still count the full emitted payload and retain the original limits. A Register facade emitted under a hashed manifest key uses the existing unique dynamic-entry selector, `chunk:index`; an ambiguous or missing entry fails the check.
