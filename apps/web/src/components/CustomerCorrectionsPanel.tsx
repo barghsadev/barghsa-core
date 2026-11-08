@@ -1,7 +1,8 @@
 import { readWithDeadline } from '../lib/server-query-client.js';
 import { CommandFeedback } from './CommandFeedback.js';
-import { useEffect, useId, useState } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 import { LoadingStatus, Button } from '@barghsa/ui';
+import { confirmationText } from '@barghsa/i18n/confirmation';
 import { tWorkspace as t, type Locale } from '@barghsa/i18n/workspace-admin';
 import { TeamActionDialog, type TeamAction } from './TeamActionDialog.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
@@ -13,6 +14,15 @@ interface Correction {
   createdAt: string;
   resolvedAt: string | null;
   resolutionNote: string | null;
+}
+
+function sameCorrection(first: Correction, second: Correction) {
+  return (
+    first.id === second.id &&
+    first.profileId === second.profileId &&
+    first.address === second.address &&
+    first.createdAt === second.createdAt
+  );
 }
 
 export function CustomerCorrectionsSection({ locale }: { locale: Locale }) {
@@ -52,6 +62,8 @@ export default function CustomerCorrectionsPanel({ locale }: { locale: Locale })
   const label = (key: string) => t(`admin.notifications.corrections.${key}`, locale);
   const time = useAccountTime(locale),
     noteId = useId();
+  const refreshButton = useRef<HTMLButtonElement>(null);
+  const saveButton = useRef<HTMLButtonElement>(null);
   const [rows, setRows] = useState<Correction[]>([]),
     [completed, setCompleted] = useState(false),
     [offset, setOffset] = useState(0);
@@ -60,18 +72,21 @@ export default function CustomerCorrectionsPanel({ locale }: { locale: Locale })
     [revision, setRevision] = useState(0),
     [more, setMore] = useState(false);
   const [access, setAccess] = useState<{ canView: boolean; canRetry: boolean } | null>(null);
-  const [editing, setEditing] = useState<Correction | null>(null),
-    [note, setNote] = useState(''),
-    [notice, setNotice] = useState(false);
-  const [action, setAction] = useState<(TeamAction & { id: string; note: string }) | null>(null);
+  const [draft, setDraft] = useState<{
+    row: Correction;
+    note: string;
+    recovery?: 'refresh' | 'review';
+  } | null>(null);
+  const [notice, setNotice] = useState(false);
+  const [action, setAction] = useState<(TeamAction & { row: Correction; note: string }) | null>(
+    null
+  );
   useEffect(() => {
     const controller = new AbortController();
     setLoading(true);
     setError(false);
     setRows([]);
     setAccess(null);
-    setEditing(null);
-    setNote('');
     setMore(false);
     void (async () => {
       try {
@@ -79,6 +94,12 @@ export default function CustomerCorrectionsPanel({ locale }: { locale: Locale })
           const response = await fetch('/api/admin/failed-notifications/access', {
             signal,
           });
+          if (response.status === 401 || response.status === 403) {
+            signal.throwIfAborted();
+            setAccess({ canView: false, canRetry: false });
+            setDraft(null);
+            return;
+          }
           const permission = await response.json();
           if (
             !response.ok ||
@@ -88,11 +109,18 @@ export default function CustomerCorrectionsPanel({ locale }: { locale: Locale })
             throw new Error('Invalid access');
           signal.throwIfAborted();
           setAccess(permission);
+          if (!permission.canView || !permission.canRetry) setDraft(null);
           if (!permission.canView) return;
           const list = await fetch(
             `/api/admin/notifications/customer-corrections?completed=${completed}&offset=${offset}`,
             { signal }
           );
+          if (list.status === 401 || list.status === 403) {
+            signal.throwIfAborted();
+            setAccess({ canView: false, canRetry: false });
+            setDraft(null);
+            return;
+          }
           const result: unknown = await list.json();
           if (
             !list.ok ||
@@ -104,8 +132,16 @@ export default function CustomerCorrectionsPanel({ locale }: { locale: Locale })
           )
             throw new Error('Invalid correction list');
           signal.throwIfAborted();
-          setRows(result.slice(0, 25));
+          const page = result.slice(0, 25);
+          setRows(page);
           setMore(result.length > 25);
+          if (!completed && permission.canRetry)
+            setDraft((current) =>
+              current?.recovery === 'refresh' &&
+              page.some((row) => sameCorrection(row, current.row))
+                ? { ...current, recovery: 'review' }
+                : current
+            );
         });
       } catch {
         if (!controller.signal.aborted) setError(true);
@@ -115,6 +151,19 @@ export default function CustomerCorrectionsPanel({ locale }: { locale: Locale })
     })();
     return () => controller.abort();
   }, [completed, offset, revision]);
+  function refresh() {
+    setLoading(true);
+    setRevision((value) => value + 1);
+  }
+  const canEdit =
+    draft !== null &&
+    access?.canView &&
+    access.canRetry &&
+    !completed &&
+    !loading &&
+    !error &&
+    draft.recovery !== 'refresh' &&
+    rows.some((row) => sameCorrection(row, draft.row));
   return (
     <section
       className="space-y-3 pt-4"
@@ -130,6 +179,8 @@ export default function CustomerCorrectionsPanel({ locale }: { locale: Locale })
             checked={completed}
             disabled={Boolean(action)}
             onChange={(event) => {
+              setLoading(true);
+              if (!draft?.recovery) setDraft(null);
               setCompleted(event.target.checked);
               setOffset(0);
               setNotice(false);
@@ -138,14 +189,18 @@ export default function CustomerCorrectionsPanel({ locale }: { locale: Locale })
           {label('completed')}
         </label>
         <Button
+          ref={refreshButton}
           variant="outline"
           disabled={loading || Boolean(action)}
-          onClick={() => setRevision((value) => value + 1)}
+          onClick={refresh}
         >
           {label('refresh')}
         </Button>
       </div>
       <CommandFeedback message={notice ? label('saved') : null} />
+      {draft?.recovery && access?.canView && access.canRetry && (
+        <p role="alert">{confirmationText('unconfirmed', locale)}</p>
+      )}
       {loading ? (
         <LoadingStatus>{label('loading')}</LoadingStatus>
       ) : error ? (
@@ -173,10 +228,9 @@ export default function CustomerCorrectionsPanel({ locale }: { locale: Locale })
                 access?.canRetry && (
                   <Button
                     variant="outline"
-                    disabled={Boolean(action)}
+                    disabled={Boolean(action || draft?.recovery)}
                     onClick={() => {
-                      setEditing(row);
-                      setNote('');
+                      setDraft({ row, note: '' });
                       setNotice(false);
                     }}
                   >
@@ -193,41 +247,51 @@ export default function CustomerCorrectionsPanel({ locale }: { locale: Locale })
           <Button
             variant="outline"
             disabled={offset === 0 || Boolean(action)}
-            onClick={() => setOffset((value) => Math.max(0, value - 25))}
+            onClick={() => {
+              setLoading(true);
+              if (!draft?.recovery) setDraft(null);
+              setOffset((value) => Math.max(0, value - 25));
+            }}
           >
             {label('previous')}
           </Button>
           <Button
             variant="outline"
             disabled={!more || Boolean(action)}
-            onClick={() => setOffset((value) => value + 25)}
+            onClick={() => {
+              setLoading(true);
+              if (!draft?.recovery) setDraft(null);
+              setOffset((value) => value + 25);
+            }}
           >
             {label('next')}
           </Button>
         </div>
       )}
-      {editing && access?.canRetry && (
+      {draft && access?.canView && access.canRetry && !loading && !error && (
         <form
           className="space-y-2 rounded border p-3"
           onSubmit={(event) => {
             event.preventDefault();
-            if (!note.trim() || action) return;
-            const text = note.trim();
+            if (!canEdit || !draft.note.trim() || action) return;
+            const text = draft.note.trim();
             setAction({
-              id: editing.id,
+              row: draft.row,
               note: text,
               title: label('resolve'),
-              description: `${editing.address}. ${label('confirm')}`,
-              path: `/api/admin/notifications/customer-corrections/${editing.id}/resolve`,
+              description: `${draft.row.address}. ${label('confirm')}`,
+              path: `/api/admin/notifications/customer-corrections/${draft.row.id}/resolve`,
               method: 'POST',
               body: { note: text },
+              responseDeadline: true,
+              successStatus: 200,
               conflictMessage: label('conflict'),
               forbiddenMessage: label('denied'),
             });
           }}
         >
           <p dir="ltr" className="break-all">
-            {editing.address}
+            {draft.row.address}
           </p>
           <label htmlFor={noteId}>{label('note')}</label>
           <textarea
@@ -236,19 +300,24 @@ export default function CustomerCorrectionsPanel({ locale }: { locale: Locale })
             required
             aria-required="true"
             maxLength={2000}
-            value={note}
+            value={draft.note}
             disabled={Boolean(action)}
-            onChange={(event) => setNote(event.target.value)}
+            readOnly={!canEdit || Boolean(draft.recovery)}
+            onChange={(event) => setDraft({ ...draft, note: event.target.value })}
           />
           <div className="flex gap-3">
-            <Button type="submit" disabled={!note.trim() || Boolean(action)}>
+            <Button
+              ref={saveButton}
+              type="submit"
+              disabled={!canEdit || !draft.note.trim() || Boolean(action)}
+            >
               {label('save')}
             </Button>
             <Button
               type="button"
               variant="outline"
               disabled={Boolean(action)}
-              onClick={() => setEditing(null)}
+              onClick={() => setDraft(null)}
             >
               {label('cancel')}
             </Button>
@@ -258,19 +327,31 @@ export default function CustomerCorrectionsPanel({ locale }: { locale: Locale })
       {action && (
         <TeamActionDialog
           action={action}
+          finalFocus={() =>
+            saveButton.current?.disabled === false ? saveButton.current : refreshButton.current
+          }
           onClose={() => setAction(null)}
+          onDenied={() => {
+            setDraft(null);
+            setAction(null);
+            refresh();
+          }}
+          onUnconfirmed={() => {
+            setDraft({ row: action.row, note: action.note, recovery: 'refresh' });
+            setAction(null);
+          }}
           onSuccess={async (result) => {
             if (
               !isCorrection(result) ||
-              result.id !== action.id ||
+              !sameCorrection(result, action.row) ||
               !result.resolvedAt ||
               result.resolutionNote !== action.note
             )
               throw new Error('Invalid completion response');
             setAction(null);
-            setEditing(null);
+            setDraft(null);
             setNotice(true);
-            setRevision((value) => value + 1);
+            refresh();
           }}
         />
       )}

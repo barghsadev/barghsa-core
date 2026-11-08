@@ -1,6 +1,7 @@
 import { crmShell } from './crm-shell-fixture';
 import { test, expect } from './coverage-fixture';
 import AxeBuilder from '@axe-core/playwright';
+import { confirmationText } from '@barghsa/i18n/confirmation';
 
 const row = {
   id: '10000000-0000-4000-8000-000000000001',
@@ -79,6 +80,7 @@ for (const locale of ['en', 'fa'] as const) {
     page,
   }) => {
     await crmShell(page, locale);
+    await page.clock.install();
     await page.route('**/api/user/settings/timezone', (route) =>
       route.fulfill({ json: { timezone: 'UTC' } })
     );
@@ -87,13 +89,14 @@ for (const locale of ['en', 'fa'] as const) {
     );
     await page.route('**/api/admin/failed-notifications?*', (route) => route.fulfill({ json: [] }));
     let saved = false,
-      calls = 0;
+      calls = 0,
+      openRows = [row];
     const note = fa ? 'اطلاعات تماس بررسی شد' : 'Contact details reviewed';
     const acknowledgment = { ...row, resolvedAt: '2026-09-13T10:00:00Z', resolutionNote: note };
     await page.route('**/api/admin/notifications/customer-corrections?*', (route) => {
       const completed = new URL(route.request().url()).searchParams.get('completed') === 'true';
       return route.fulfill({
-        json: completed ? (saved ? [acknowledgment] : []) : saved ? [] : [row],
+        json: completed ? (saved ? [acknowledgment] : []) : saved ? [] : openRows,
       });
     });
     await page.route(
@@ -107,6 +110,7 @@ for (const locale of ['en', 'fa'] as const) {
           return route.fulfill({
             json: { ...acknowledgment, id: '10000000-0000-4000-8000-000000000002' },
           });
+        if (calls === 3) return;
         saved = true;
         return route.fulfill({ json: acknowledgment });
       }
@@ -129,25 +133,48 @@ for (const locale of ['en', 'fa'] as const) {
       ]);
     await page.locator('summary').filter({ hasText: copy.title }).click();
     const panel = page.getByRole('region', { name: copy.title });
+    const refresh = panel.getByRole('button', { name: copy.refresh });
+    const save = panel.getByRole('button', { name: copy.save });
     await panel.getByRole('button', { name: copy.resolve, exact: true }).click();
     const outcome = panel.getByLabel(copy.note, { exact: true });
     await expect(outcome).toHaveAttribute('aria-required', 'true');
     await outcome.fill(`  ${note}  `);
-    await panel.getByRole('button', { name: copy.save }).click();
+    await save.click();
     const dialog = page.getByRole('dialog');
     const confirm = dialog.getByRole('button', { name: fa ? 'تأیید' : 'Confirm', exact: true });
     await confirm.click();
     await dialog.locator('input[type="password"]').fill('fixture-password');
     await confirm.click();
-    await expect(dialog.getByRole('alert')).toBeVisible();
-    // The modal hides the background from the accessibility tree, but must not remove the task.
-    await expect(
-      page
-        .getByRole('region', { name: copy.title, includeHidden: true })
-        .getByRole('listitem', { includeHidden: true })
-    ).toHaveCount(1);
-    // The verified session remains usable, while the submitted password is removed.
+    await expect(dialog).toHaveCount(0);
+    await expect(panel.getByRole('alert')).toHaveText(confirmationText('unconfirmed', locale));
+    await expect(panel.getByRole('listitem')).toHaveCount(1);
+    await expect(outcome).toHaveValue(note);
+    await expect(save).toBeDisabled();
+    await expect(refresh).toBeFocused();
+    expect(calls).toBe(2);
+    await refresh.click();
+    await expect(save).toBeEnabled();
+    await save.click();
     await expect(dialog.locator('input[type="password"]')).toHaveCount(0);
+    await confirm.click();
+    await expect.poll(() => calls).toBe(3);
+    await page.clock.fastForward(15_001);
+    await expect(dialog).toHaveCount(0);
+    await expect(panel.getByRole('alert')).toHaveText(confirmationText('unconfirmed', locale));
+    await expect(outcome).toHaveValue(note);
+    await expect(outcome).toHaveJSProperty('readOnly', true);
+    await expect(save).toBeDisabled();
+
+    openRows = [{ ...row, address: 'changed@example.test' }];
+    await refresh.click();
+    await expect(panel.getByRole('listitem')).toHaveText(/changed@example.test/);
+    await expect(save).toBeDisabled();
+    expect(calls).toBe(3);
+    openRows = [row];
+    await refresh.click();
+    await expect(save).toBeEnabled();
+    await expect(outcome).toHaveValue(note);
+    await save.click();
     await confirm.click();
     await expect(dialog).toHaveCount(0);
     await expect(panel.getByRole('listitem')).toHaveCount(0);
@@ -159,7 +186,75 @@ for (const locale of ['en', 'fa'] as const) {
     );
     await panel.getByLabel(copy.completed).check();
     await expect(panel.getByText(note, { exact: true })).toBeVisible();
-    expect(calls).toBe(3);
+    expect(calls).toBe(4);
     expect(stepUps).toBe(1);
   });
 }
+
+test('a committed correction with a lost receipt stays locked while staff check its history', async ({
+  page,
+}) => {
+  await crmShell(page, 'en');
+  await page.clock.install();
+  await page.route('**/api/user/settings/timezone', (route) =>
+    route.fulfill({ json: { timezone: 'UTC' } })
+  );
+  let canView = true,
+    committed = false,
+    writes = 0;
+  const note = 'Checked the customer contact record';
+  await page.route('**/api/admin/failed-notifications/access', (route) =>
+    route.fulfill({ json: { canView, canRetry: canView } })
+  );
+  await page.route('**/api/admin/failed-notifications?*', (route) => route.fulfill({ json: [] }));
+  await page.route('**/api/admin/notifications/customer-corrections?*', (route) => {
+    const completed = new URL(route.request().url()).searchParams.get('completed') === 'true';
+    return route.fulfill({
+      json: completed
+        ? committed
+          ? [{ ...row, resolvedAt: '2026-09-13T10:00:00Z', resolutionNote: note }]
+          : []
+        : committed
+          ? []
+          : [row],
+    });
+  });
+  await page.route(`**/api/admin/notifications/customer-corrections/${row.id}/resolve`, (route) => {
+    expect(route.request().postDataJSON()).toEqual({ note });
+    writes++;
+    committed = true;
+  });
+  await page.goto('/admin/failed-notifications');
+  await page.locator('summary').filter({ hasText: 'Customer contact corrections' }).click();
+  const panel = page.getByRole('region', { name: 'Customer contact corrections' });
+  const refresh = panel.getByRole('button', { name: 'Refresh corrections' });
+  const save = panel.getByRole('button', { name: 'Save and complete' });
+  const outcome = panel.getByLabel('Follow-up outcome');
+  await panel.getByRole('button', { name: 'Record follow-up' }).click();
+  await outcome.fill(note);
+  await save.click();
+  const dialog = page.getByRole('dialog');
+  await dialog.getByRole('button', { name: 'Confirm', exact: true }).click();
+  await expect.poll(() => writes).toBe(1);
+  await page.clock.fastForward(15_001);
+  await expect(dialog).toHaveCount(0);
+  await refresh.click();
+  await expect(panel.getByRole('listitem')).toHaveCount(0);
+  await expect(save).toBeDisabled();
+  await expect(outcome).toHaveValue(note);
+  await panel.getByLabel('Completed tasks').check();
+  await expect(panel.getByRole('listitem').getByText(note, { exact: true })).toBeVisible();
+  await expect(panel.getByText('Follow-up recorded. Email remains suppressed.')).toHaveCount(0);
+  expect(writes).toBe(1);
+
+  canView = false;
+  await refresh.click();
+  await expect(panel.getByRole('alert')).toHaveText('You do not have permission for this action.');
+  await expect(outcome).toHaveCount(0);
+  await expect(panel.getByRole('listitem')).toHaveCount(0);
+  canView = true;
+  await refresh.click();
+  await expect(panel.getByRole('listitem').getByText(note, { exact: true })).toBeVisible();
+  await expect(outcome).toHaveCount(0);
+  expect(writes).toBe(1);
+});

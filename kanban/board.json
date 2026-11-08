@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-08T13:21:19+00:00",
-  "source_commit": "f8186af52b9a10b3ee5fcfcc972c54e79dd483a5",
+  "updated": "2026-11-08T13:28:58+00:00",
+  "source_commit": "0d5517e91c424e23f7a24ceccdb6c4a6ac74077c",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -82044,7 +82044,7 @@
             },
             {
               "path": "apps/web/e2e/email-customer-corrections.spec.ts",
-              "sha256": "746417c741f4c235f1032a336d5200edd87805b351a1490319f7a60aff14e639"
+              "sha256": "6fcf221229f00d62f570015c003564eff7e09f68695678a5ba207126b832d08d"
             },
             {
               "path": "apps/web/e2e/email-provider-recovery.spec.ts",
@@ -82064,7 +82064,7 @@
             },
             {
               "path": "apps/web/src/components/CustomerCorrectionsPanel.tsx",
-              "sha256": "13f0702a311ee09324ed91be6adde11a682e678a543f85e881d6cec71a907668"
+              "sha256": "d6e984a1741fae3ff2ad67a49f573910ee45e01d16f3df1f1dbb676e55259902"
             },
             {
               "path": "apps/web/src/lib/email-providers-api.ts",
@@ -82993,7 +82993,7 @@
             },
             {
               "path": "apps/web/e2e/email-customer-corrections.spec.ts",
-              "sha256": "746417c741f4c235f1032a336d5200edd87805b351a1490319f7a60aff14e639"
+              "sha256": "6fcf221229f00d62f570015c003564eff7e09f68695678a5ba207126b832d08d"
             },
             {
               "path": "apps/web/e2e/email-provider-recovery.spec.ts",
@@ -83013,7 +83013,7 @@
             },
             {
               "path": "apps/web/src/components/CustomerCorrectionsPanel.tsx",
-              "sha256": "13f0702a311ee09324ed91be6adde11a682e678a543f85e881d6cec71a907668"
+              "sha256": "d6e984a1741fae3ff2ad67a49f573910ee45e01d16f3df1f1dbb676e55259902"
             },
             {
               "path": "apps/web/src/lib/email-providers-api.ts",
@@ -83942,7 +83942,7 @@
             },
             {
               "path": "apps/web/e2e/email-customer-corrections.spec.ts",
-              "sha256": "746417c741f4c235f1032a336d5200edd87805b351a1490319f7a60aff14e639"
+              "sha256": "6fcf221229f00d62f570015c003564eff7e09f68695678a5ba207126b832d08d"
             },
             {
               "path": "apps/web/e2e/email-provider-recovery.spec.ts",
@@ -83962,7 +83962,7 @@
             },
             {
               "path": "apps/web/src/components/CustomerCorrectionsPanel.tsx",
-              "sha256": "13f0702a311ee09324ed91be6adde11a682e678a543f85e881d6cec71a907668"
+              "sha256": "d6e984a1741fae3ff2ad67a49f573910ee45e01d16f3df1f1dbb676e55259902"
             },
             {
               "path": "apps/web/src/lib/email-providers-api.ts",
@@ -84892,7 +84892,7 @@
             },
             {
               "path": "apps/web/e2e/email-customer-corrections.spec.ts",
-              "sha256": "746417c741f4c235f1032a336d5200edd87805b351a1490319f7a60aff14e639"
+              "sha256": "6fcf221229f00d62f570015c003564eff7e09f68695678a5ba207126b832d08d"
             },
             {
               "path": "apps/web/e2e/email-provider-recovery.spec.ts",
@@ -84912,7 +84912,7 @@
             },
             {
               "path": "apps/web/src/components/CustomerCorrectionsPanel.tsx",
-              "sha256": "13f0702a311ee09324ed91be6adde11a682e678a543f85e881d6cec71a907668"
+              "sha256": "d6e984a1741fae3ff2ad67a49f573910ee45e01d16f3df1f1dbb676e55259902"
             },
             {
               "path": "apps/web/src/lib/email-providers-api.ts",
@@ -85841,7 +85841,7 @@
             },
             {
               "path": "apps/web/e2e/email-customer-corrections.spec.ts",
-              "sha256": "746417c741f4c235f1032a336d5200edd87805b351a1490319f7a60aff14e639"
+              "sha256": "6fcf221229f00d62f570015c003564eff7e09f68695678a5ba207126b832d08d"
             },
             {
               "path": "apps/web/e2e/email-provider-recovery.spec.ts",
@@ -85861,7 +85861,7 @@
             },
             {
               "path": "apps/web/src/components/CustomerCorrectionsPanel.tsx",
-              "sha256": "13f0702a311ee09324ed91be6adde11a682e678a543f85e881d6cec71a907668"
+              "sha256": "d6e984a1741fae3ff2ad67a49f573910ee45e01d16f3df1f1dbb676e55259902"
             },
             {
               "path": "apps/web/src/lib/email-providers-api.ts",
@@ -86759,7 +86759,7 @@
             },
             {
               "path": "apps/web/e2e/email-customer-corrections.spec.ts",
-              "sha256": "746417c741f4c235f1032a336d5200edd87805b351a1490319f7a60aff14e639"
+              "sha256": "6fcf221229f00d62f570015c003564eff7e09f68695678a5ba207126b832d08d"
             },
             {
               "path": "apps/web/e2e/email-provider-recovery.spec.ts",
@@ -86771,7 +86771,7 @@
             },
             {
               "path": "apps/web/src/components/CustomerCorrectionsPanel.tsx",
-              "sha256": "13f0702a311ee09324ed91be6adde11a682e678a543f85e881d6cec71a907668"
+              "sha256": "d6e984a1741fae3ff2ad67a49f573910ee45e01d16f3df1f1dbb676e55259902"
             },
             {
               "path": "apps/web/src/lib/email-providers-api.ts",
@@ -87508,7 +87508,7 @@
             },
             {
               "path": "apps/web/e2e/email-customer-corrections.spec.ts",
-              "sha256": "746417c741f4c235f1032a336d5200edd87805b351a1490319f7a60aff14e639"
+              "sha256": "6fcf221229f00d62f570015c003564eff7e09f68695678a5ba207126b832d08d"
             },
             {
               "path": "apps/web/e2e/email-provider-recovery.spec.ts",
@@ -87520,7 +87520,7 @@
             },
             {
               "path": "apps/web/src/components/CustomerCorrectionsPanel.tsx",
-              "sha256": "13f0702a311ee09324ed91be6adde11a682e678a543f85e881d6cec71a907668"
+              "sha256": "d6e984a1741fae3ff2ad67a49f573910ee45e01d16f3df1f1dbb676e55259902"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
@@ -88155,7 +88155,7 @@
             },
             {
               "path": "apps/web/e2e/email-customer-corrections.spec.ts",
-              "sha256": "746417c741f4c235f1032a336d5200edd87805b351a1490319f7a60aff14e639"
+              "sha256": "6fcf221229f00d62f570015c003564eff7e09f68695678a5ba207126b832d08d"
             },
             {
               "path": "apps/web/e2e/email-provider-recovery.spec.ts",
@@ -88175,7 +88175,7 @@
             },
             {
               "path": "apps/web/src/components/CustomerCorrectionsPanel.tsx",
-              "sha256": "13f0702a311ee09324ed91be6adde11a682e678a543f85e881d6cec71a907668"
+              "sha256": "d6e984a1741fae3ff2ad67a49f573910ee45e01d16f3df1f1dbb676e55259902"
             },
             {
               "path": "apps/web/src/lib/email-providers-api.ts",
@@ -490971,7 +490971,7 @@
             },
             {
               "path": "apps/web/src/components/CustomerCorrectionsPanel.tsx",
-              "sha256": "13f0702a311ee09324ed91be6adde11a682e678a543f85e881d6cec71a907668"
+              "sha256": "d6e984a1741fae3ff2ad67a49f573910ee45e01d16f3df1f1dbb676e55259902"
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
@@ -492746,7 +492746,7 @@
             },
             {
               "path": "apps/web/src/components/CustomerCorrectionsPanel.tsx",
-              "sha256": "13f0702a311ee09324ed91be6adde11a682e678a543f85e881d6cec71a907668"
+              "sha256": "d6e984a1741fae3ff2ad67a49f573910ee45e01d16f3df1f1dbb676e55259902"
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
@@ -497047,7 +497047,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "b1bdf2cf185b75edfde3a4817d61336c6d530d9c8258098b1f0c25848221371a"
+              "sha256": "4b6e461cdb03559e0868b1d445f46b1028d86d653ad7970f2f3f08d89ce542d8"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -497568,7 +497568,7 @@
             },
             {
               "path": "apps/web/src/components/CustomerCorrectionsPanel.tsx",
-              "sha256": "13f0702a311ee09324ed91be6adde11a682e678a543f85e881d6cec71a907668"
+              "sha256": "d6e984a1741fae3ff2ad67a49f573910ee45e01d16f3df1f1dbb676e55259902"
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
@@ -512032,7 +512032,7 @@
             },
             {
               "path": "apps/web/src/components/CustomerCorrectionsPanel.tsx",
-              "sha256": "13f0702a311ee09324ed91be6adde11a682e678a543f85e881d6cec71a907668"
+              "sha256": "d6e984a1741fae3ff2ad67a49f573910ee45e01d16f3df1f1dbb676e55259902"
             },
             {
               "path": "apps/web/src/components/DocumentRetentionPolicies.tsx",
@@ -517005,7 +517005,7 @@
             },
             {
               "path": "apps/web/e2e/email-customer-corrections.spec.ts",
-              "sha256": "746417c741f4c235f1032a336d5200edd87805b351a1490319f7a60aff14e639"
+              "sha256": "6fcf221229f00d62f570015c003564eff7e09f68695678a5ba207126b832d08d"
             },
             {
               "path": "apps/web/e2e/failed-notifications.spec.ts",
@@ -517433,7 +517433,7 @@
             },
             {
               "path": "apps/web/src/components/CustomerCorrectionsPanel.tsx",
-              "sha256": "13f0702a311ee09324ed91be6adde11a682e678a543f85e881d6cec71a907668"
+              "sha256": "d6e984a1741fae3ff2ad67a49f573910ee45e01d16f3df1f1dbb676e55259902"
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
@@ -518105,7 +518105,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "b1bdf2cf185b75edfde3a4817d61336c6d530d9c8258098b1f0c25848221371a"
+              "sha256": "4b6e461cdb03559e0868b1d445f46b1028d86d653ad7970f2f3f08d89ce542d8"
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
@@ -519213,7 +519213,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "b1bdf2cf185b75edfde3a4817d61336c6d530d9c8258098b1f0c25848221371a"
+              "sha256": "4b6e461cdb03559e0868b1d445f46b1028d86d653ad7970f2f3f08d89ce542d8"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -566613,7 +566613,7 @@
             },
             {
               "path": "apps/web/src/components/CustomerCorrectionsPanel.tsx",
-              "sha256": "13f0702a311ee09324ed91be6adde11a682e678a543f85e881d6cec71a907668"
+              "sha256": "d6e984a1741fae3ff2ad67a49f573910ee45e01d16f3df1f1dbb676e55259902"
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
@@ -567521,7 +567521,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "b1bdf2cf185b75edfde3a4817d61336c6d530d9c8258098b1f0c25848221371a"
+              "sha256": "4b6e461cdb03559e0868b1d445f46b1028d86d653ad7970f2f3f08d89ce542d8"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -568508,7 +568508,7 @@
             },
             {
               "path": "apps/web/src/components/CustomerCorrectionsPanel.tsx",
-              "sha256": "13f0702a311ee09324ed91be6adde11a682e678a543f85e881d6cec71a907668"
+              "sha256": "d6e984a1741fae3ff2ad67a49f573910ee45e01d16f3df1f1dbb676e55259902"
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
@@ -569416,7 +569416,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "b1bdf2cf185b75edfde3a4817d61336c6d530d9c8258098b1f0c25848221371a"
+              "sha256": "4b6e461cdb03559e0868b1d445f46b1028d86d653ad7970f2f3f08d89ce542d8"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -570220,7 +570220,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Delivery-window and failed-notification queue actions now have bounded recovery and current browser evidence. Customer notification correction resolution still has an unbounded acknowledgement and no owned recovery for a lost write reply. Reconcile the remaining CRUD and transactional feedback against current route evidence."
+        "Customer notification correction completion now has bounded feedback and captured-note recovery. The failed jobs retry/resolve actions already expose an unconfirmed review but lack a response deadline. Verify that path and reconcile the remaining CRUD and transactional feedback against current route evidence."
       ],
       "owner": null,
       "depends_on": [],
@@ -570286,7 +570286,8 @@
           "release-0.5-staff-invoice-command-recovery",
           "release-0.5-invoice-deadline-reminder-recovery",
           "release-0.5-delivery-window-queue-recovery",
-          "release-0.5-hosted-ci-repairs"
+          "release-0.5-hosted-ci-repairs",
+          "release-0.5-customer-correction-recovery"
         ],
         "current_acceptance": null
       }
@@ -570489,7 +570490,7 @@
             },
             {
               "path": "apps/web/src/components/CustomerCorrectionsPanel.tsx",
-              "sha256": "13f0702a311ee09324ed91be6adde11a682e678a543f85e881d6cec71a907668"
+              "sha256": "d6e984a1741fae3ff2ad67a49f573910ee45e01d16f3df1f1dbb676e55259902"
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
@@ -571397,7 +571398,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "b1bdf2cf185b75edfde3a4817d61336c6d530d9c8258098b1f0c25848221371a"
+              "sha256": "4b6e461cdb03559e0868b1d445f46b1028d86d653ad7970f2f3f08d89ce542d8"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -572384,7 +572385,7 @@
             },
             {
               "path": "apps/web/src/components/CustomerCorrectionsPanel.tsx",
-              "sha256": "13f0702a311ee09324ed91be6adde11a682e678a543f85e881d6cec71a907668"
+              "sha256": "d6e984a1741fae3ff2ad67a49f573910ee45e01d16f3df1f1dbb676e55259902"
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
@@ -573292,7 +573293,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "b1bdf2cf185b75edfde3a4817d61336c6d530d9c8258098b1f0c25848221371a"
+              "sha256": "4b6e461cdb03559e0868b1d445f46b1028d86d653ad7970f2f3f08d89ce542d8"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -574279,7 +574280,7 @@
             },
             {
               "path": "apps/web/src/components/CustomerCorrectionsPanel.tsx",
-              "sha256": "13f0702a311ee09324ed91be6adde11a682e678a543f85e881d6cec71a907668"
+              "sha256": "d6e984a1741fae3ff2ad67a49f573910ee45e01d16f3df1f1dbb676e55259902"
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
@@ -575187,7 +575188,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "b1bdf2cf185b75edfde3a4817d61336c6d530d9c8258098b1f0c25848221371a"
+              "sha256": "4b6e461cdb03559e0868b1d445f46b1028d86d653ad7970f2f3f08d89ce542d8"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -576174,7 +576175,7 @@
             },
             {
               "path": "apps/web/src/components/CustomerCorrectionsPanel.tsx",
-              "sha256": "13f0702a311ee09324ed91be6adde11a682e678a543f85e881d6cec71a907668"
+              "sha256": "d6e984a1741fae3ff2ad67a49f573910ee45e01d16f3df1f1dbb676e55259902"
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
@@ -577082,7 +577083,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "b1bdf2cf185b75edfde3a4817d61336c6d530d9c8258098b1f0c25848221371a"
+              "sha256": "4b6e461cdb03559e0868b1d445f46b1028d86d653ad7970f2f3f08d89ce542d8"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -578069,7 +578070,7 @@
             },
             {
               "path": "apps/web/src/components/CustomerCorrectionsPanel.tsx",
-              "sha256": "13f0702a311ee09324ed91be6adde11a682e678a543f85e881d6cec71a907668"
+              "sha256": "d6e984a1741fae3ff2ad67a49f573910ee45e01d16f3df1f1dbb676e55259902"
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
@@ -578977,7 +578978,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "b1bdf2cf185b75edfde3a4817d61336c6d530d9c8258098b1f0c25848221371a"
+              "sha256": "4b6e461cdb03559e0868b1d445f46b1028d86d653ad7970f2f3f08d89ce542d8"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -579964,7 +579965,7 @@
             },
             {
               "path": "apps/web/src/components/CustomerCorrectionsPanel.tsx",
-              "sha256": "13f0702a311ee09324ed91be6adde11a682e678a543f85e881d6cec71a907668"
+              "sha256": "d6e984a1741fae3ff2ad67a49f573910ee45e01d16f3df1f1dbb676e55259902"
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
@@ -580872,7 +580873,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "b1bdf2cf185b75edfde3a4817d61336c6d530d9c8258098b1f0c25848221371a"
+              "sha256": "4b6e461cdb03559e0868b1d445f46b1028d86d653ad7970f2f3f08d89ce542d8"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -581859,7 +581860,7 @@
             },
             {
               "path": "apps/web/src/components/CustomerCorrectionsPanel.tsx",
-              "sha256": "13f0702a311ee09324ed91be6adde11a682e678a543f85e881d6cec71a907668"
+              "sha256": "d6e984a1741fae3ff2ad67a49f573910ee45e01d16f3df1f1dbb676e55259902"
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
@@ -582767,7 +582768,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "b1bdf2cf185b75edfde3a4817d61336c6d530d9c8258098b1f0c25848221371a"
+              "sha256": "4b6e461cdb03559e0868b1d445f46b1028d86d653ad7970f2f3f08d89ce542d8"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -583754,7 +583755,7 @@
             },
             {
               "path": "apps/web/src/components/CustomerCorrectionsPanel.tsx",
-              "sha256": "13f0702a311ee09324ed91be6adde11a682e678a543f85e881d6cec71a907668"
+              "sha256": "d6e984a1741fae3ff2ad67a49f573910ee45e01d16f3df1f1dbb676e55259902"
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
@@ -584662,7 +584663,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "b1bdf2cf185b75edfde3a4817d61336c6d530d9c8258098b1f0c25848221371a"
+              "sha256": "4b6e461cdb03559e0868b1d445f46b1028d86d653ad7970f2f3f08d89ce542d8"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -585649,7 +585650,7 @@
             },
             {
               "path": "apps/web/src/components/CustomerCorrectionsPanel.tsx",
-              "sha256": "13f0702a311ee09324ed91be6adde11a682e678a543f85e881d6cec71a907668"
+              "sha256": "d6e984a1741fae3ff2ad67a49f573910ee45e01d16f3df1f1dbb676e55259902"
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
@@ -586557,7 +586558,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "b1bdf2cf185b75edfde3a4817d61336c6d530d9c8258098b1f0c25848221371a"
+              "sha256": "4b6e461cdb03559e0868b1d445f46b1028d86d653ad7970f2f3f08d89ce542d8"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -587544,7 +587545,7 @@
             },
             {
               "path": "apps/web/src/components/CustomerCorrectionsPanel.tsx",
-              "sha256": "13f0702a311ee09324ed91be6adde11a682e678a543f85e881d6cec71a907668"
+              "sha256": "d6e984a1741fae3ff2ad67a49f573910ee45e01d16f3df1f1dbb676e55259902"
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
@@ -588452,7 +588453,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "b1bdf2cf185b75edfde3a4817d61336c6d530d9c8258098b1f0c25848221371a"
+              "sha256": "4b6e461cdb03559e0868b1d445f46b1028d86d653ad7970f2f3f08d89ce542d8"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -589439,7 +589440,7 @@
             },
             {
               "path": "apps/web/src/components/CustomerCorrectionsPanel.tsx",
-              "sha256": "13f0702a311ee09324ed91be6adde11a682e678a543f85e881d6cec71a907668"
+              "sha256": "d6e984a1741fae3ff2ad67a49f573910ee45e01d16f3df1f1dbb676e55259902"
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
@@ -590347,7 +590348,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "b1bdf2cf185b75edfde3a4817d61336c6d530d9c8258098b1f0c25848221371a"
+              "sha256": "4b6e461cdb03559e0868b1d445f46b1028d86d653ad7970f2f3f08d89ce542d8"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -591611,7 +591612,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "b1bdf2cf185b75edfde3a4817d61336c6d530d9c8258098b1f0c25848221371a"
+              "sha256": "4b6e461cdb03559e0868b1d445f46b1028d86d653ad7970f2f3f08d89ce542d8"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -592074,7 +592075,7 @@
             },
             {
               "path": "apps/web/src/components/CustomerCorrectionsPanel.tsx",
-              "sha256": "13f0702a311ee09324ed91be6adde11a682e678a543f85e881d6cec71a907668"
+              "sha256": "d6e984a1741fae3ff2ad67a49f573910ee45e01d16f3df1f1dbb676e55259902"
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
@@ -592982,7 +592983,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "b1bdf2cf185b75edfde3a4817d61336c6d530d9c8258098b1f0c25848221371a"
+              "sha256": "4b6e461cdb03559e0868b1d445f46b1028d86d653ad7970f2f3f08d89ce542d8"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -593969,7 +593970,7 @@
             },
             {
               "path": "apps/web/src/components/CustomerCorrectionsPanel.tsx",
-              "sha256": "13f0702a311ee09324ed91be6adde11a682e678a543f85e881d6cec71a907668"
+              "sha256": "d6e984a1741fae3ff2ad67a49f573910ee45e01d16f3df1f1dbb676e55259902"
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
@@ -594877,7 +594878,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "b1bdf2cf185b75edfde3a4817d61336c6d530d9c8258098b1f0c25848221371a"
+              "sha256": "4b6e461cdb03559e0868b1d445f46b1028d86d653ad7970f2f3f08d89ce542d8"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -595681,7 +595682,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Delivery-window resets now require a successful post-failure read, and a stalled dead-letter write reaches the existing review. Match the remaining conditional list, detail, dashboard and staff route states to the inventory and current native evidence."
+        "Customer notification corrections now keep their owned note and require a fresh matching queue read after an unknown result. Match the remaining conditional list, detail, dashboard and staff route states to the inventory and current native evidence."
       ],
       "owner": null,
       "depends_on": [],
@@ -595758,7 +595759,8 @@
           "release-0.5-notification-template-command-recovery",
           "release-0.5-staff-invoice-command-recovery",
           "release-0.5-invoice-deadline-reminder-recovery",
-          "release-0.5-delivery-window-queue-recovery"
+          "release-0.5-delivery-window-queue-recovery",
+          "release-0.5-customer-correction-recovery"
         ],
         "current_acceptance": null
       }
@@ -718788,7 +718790,7 @@
             },
             {
               "path": "apps/web/e2e/email-customer-corrections.spec.ts",
-              "sha256": "746417c741f4c235f1032a336d5200edd87805b351a1490319f7a60aff14e639"
+              "sha256": "6fcf221229f00d62f570015c003564eff7e09f68695678a5ba207126b832d08d"
             },
             {
               "path": "apps/web/e2e/email-provider-recovery.spec.ts",
@@ -718964,7 +718966,7 @@
             },
             {
               "path": "apps/web/src/components/CustomerCorrectionsPanel.tsx",
-              "sha256": "13f0702a311ee09324ed91be6adde11a682e678a543f85e881d6cec71a907668"
+              "sha256": "d6e984a1741fae3ff2ad67a49f573910ee45e01d16f3df1f1dbb676e55259902"
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
@@ -722670,7 +722672,7 @@
             },
             {
               "path": "apps/web/e2e/email-customer-corrections.spec.ts",
-              "sha256": "746417c741f4c235f1032a336d5200edd87805b351a1490319f7a60aff14e639"
+              "sha256": "6fcf221229f00d62f570015c003564eff7e09f68695678a5ba207126b832d08d"
             },
             {
               "path": "apps/web/e2e/email-provider-recovery.spec.ts",
@@ -722838,7 +722840,7 @@
             },
             {
               "path": "apps/web/src/components/CustomerCorrectionsPanel.tsx",
-              "sha256": "13f0702a311ee09324ed91be6adde11a682e678a543f85e881d6cec71a907668"
+              "sha256": "d6e984a1741fae3ff2ad67a49f573910ee45e01d16f3df1f1dbb676e55259902"
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
@@ -725402,7 +725404,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Delivery-window and dead-letter recovery have current evidence. Remaining command feedback and route states, live Sentry delivery and required GitHub accessibility enforcement still gate full adoption."
+        "Customer notification correction completion, delivery-window and dead-letter recovery have current evidence. Remaining command feedback and route states, live Sentry delivery and required GitHub accessibility enforcement still gate full adoption."
       ],
       "owner": null,
       "depends_on": [],
@@ -725544,7 +725546,8 @@
           "release-0.5-staff-invoice-command-recovery",
           "release-0.5-invoice-deadline-reminder-recovery",
           "release-0.5-delivery-window-queue-recovery",
-          "release-0.5-hosted-ci-repairs"
+          "release-0.5-hosted-ci-repairs",
+          "release-0.5-customer-correction-recovery"
         ]
       }
     },
@@ -725768,7 +725771,7 @@
             },
             {
               "path": "apps/web/src/components/CustomerCorrectionsPanel.tsx",
-              "sha256": "13f0702a311ee09324ed91be6adde11a682e678a543f85e881d6cec71a907668"
+              "sha256": "d6e984a1741fae3ff2ad67a49f573910ee45e01d16f3df1f1dbb676e55259902"
             },
             {
               "path": "apps/web/src/components/DateDisplay.tsx",
@@ -727362,7 +727365,8 @@
             "Renewed notification template recovery and route and interaction budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-template-command-recovery/proof.json",
             "Renewed staff invoice recovery and route and interaction budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-invoice-command-recovery/proof.json",
             "Renewed invoice deadline and reminder recovery and route and interaction budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-deadline-reminder-recovery/proof.json",
-            "Renewed delivery-window and dead-letter recovery and route and interaction budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-delivery-window-queue-recovery/proof.json"
+            "Renewed delivery-window and dead-letter recovery and route and interaction budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-delivery-window-queue-recovery/proof.json",
+            "Renewed customer correction recovery and route and interaction budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-customer-correction-recovery/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -800018,6 +800022,110 @@
       "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-hosted-ci-repairs/renewed-bindings.json",
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-hosted-ci-repairs/reviewed.patch",
       "release_disposition": "Verified local repairs to the hosted CI failures. Required GitHub accessibility enforcement, remaining UI acceptance, and staging Sentry delivery remain open."
+    },
+    "release-0.5-customer-correction-recovery": {
+      "batch": "release-0.5-customer-correction-recovery",
+      "base_commit": "0d5517e91c424e23f7a24ceccdb6c4a6ac74077c",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.11.01.03",
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.11.01.03",
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": ".size-limit.json",
+          "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+        },
+        {
+          "path": "apps/api/src/admin/customer-corrections.controller.ts",
+          "sha256": "9612d3920b9b89118038edb2c8cb8104709ed1d4fcb926e2926dbc332251d757"
+        },
+        {
+          "path": "apps/api/src/admin/customer-corrections.service.ts",
+          "sha256": "e6c03efcd1ccb58fc4f702f77e6f168a3d206610c0393104156d9a1f721b9496"
+        },
+        {
+          "path": "apps/web/e2e/coverage-fixture.ts",
+          "sha256": "07949862684b86d6ff241d5f71e59e6c71a5cc1ddc70655b0d508beb53865dac"
+        },
+        {
+          "path": "apps/web/e2e/crm-shell-fixture.ts",
+          "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+        },
+        {
+          "path": "apps/web/e2e/email-customer-corrections.spec.ts",
+          "sha256": "6fcf221229f00d62f570015c003564eff7e09f68695678a5ba207126b832d08d"
+        },
+        {
+          "path": "apps/web/e2e/failed-notifications.spec.ts",
+          "sha256": "f958980c3dcbaf02cc621fe150abb4602e7fdce039a93287ed7938d956f9309b"
+        },
+        {
+          "path": "apps/web/src/components/CommandFeedback.tsx",
+          "sha256": "ea7f2a98774bc0ae31959ad3d381e0aa21797a43de4b533f8741424b33ba6fc7"
+        },
+        {
+          "path": "apps/web/src/components/CustomerCorrectionsPanel.test.tsx",
+          "sha256": "7932aca4304cef4a7328703e0fc5be02caaadd27e99d6f6b36f8e47d5700dc6a"
+        },
+        {
+          "path": "apps/web/src/components/CustomerCorrectionsPanel.tsx",
+          "sha256": "d6e984a1741fae3ff2ad67a49f573910ee45e01d16f3df1f1dbb676e55259902"
+        },
+        {
+          "path": "apps/web/src/components/TeamActionDialog.tsx",
+          "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+        },
+        {
+          "path": "apps/web/src/lib/server-query-client.ts",
+          "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
+        },
+        {
+          "path": "apps/web/src/pages/AdminFailedNotificationsPage.tsx",
+          "sha256": "a62973132825b7800d32abc470912796421a28adf9ec38d1844c5e15597c8872"
+        },
+        {
+          "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
+          "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
+        },
+        {
+          "path": "docs/design/notification-recovery.md",
+          "sha256": "4b6e461cdb03559e0868b1d445f46b1028d86d653ad7970f2f3f08d89ce542d8"
+        },
+        {
+          "path": "packages/i18n/src/confirmation.ts",
+          "sha256": "4dd854d1d4c048b6d6d80b7bc3648b5cf3eafa4e445a3ef1142f4c5663b5438e"
+        },
+        {
+          "path": "packages/i18n/src/workspace-admin-messages.ts",
+          "sha256": "cdf9b474fb83a0b423e802a22f3fecc1371682d3f2b91c5c0f0e4da5d6778e40"
+        },
+        {
+          "path": "scripts/check-changed-coverage.py",
+          "sha256": "721aa5763bb62336c0e4c454b8e36e2f15ff1e14bf4b0136c7c7946424bbd736"
+        },
+        {
+          "path": "scripts/check-route-budgets.mjs",
+          "sha256": "4dd831c645a9dbf1e6fd9b0c211b5559e4fc22652373b31525bd4f4aae38186d"
+        }
+      ],
+      "checks": [
+        "Correction completion bounds password verification and the command response. A bad receipt or lost reply closes the old confirmation, keeps the exact note and blocks another write. A new current open row must match ID, address, profile and creation time before staff can explicitly confirm the same payload. Success requires the HTTP 200 response and the exact completed receipt.",
+        "Bilingual production browsers verify wrong identity and timeout recovery, exact CSRF-protected payloads, one password challenge, required fresh reads, keyboard focus and the final matching receipt. A committed write with a lost reply stays locked after the pending queue empties, preserves the completed history and shows no optimistic success. Revoked access clears the private note and rows. Notification triage, queue paging, list recovery and Axe assertions pass.",
+        "Seventeen unit cases, 14 production Chromium and Mobile Safari cases, seven instrumented Chromium cases, all nine changed-coverage groups, all 100 unchanged bundle budgets, formatting, scoped lint and web typecheck passed. Six cold-auth receipts carry forward from byte-identical runtime files."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-customer-correction-recovery",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-customer-correction-recovery/proof.json",
+      "source_scope_proof_sha256": "3e5db37358dc7d06de3fadfe46f94abf46b3e8d96d7001f7b0dfc96837c006dc",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-customer-correction-recovery/renewed-bindings.json",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-customer-correction-recovery/reviewed.patch",
+      "release_disposition": "Verified customer correction write recovery, completed-history review and current permission safeguards. v0.5.0 acceptance remains open."
     }
   },
   "historical_improvements": [
@@ -800068,12 +800176,12 @@
       "release-readiness#R-04.01",
       "release-readiness#R-04.02"
     ],
-    "goal": "Close the unbounded customer notification correction resolution and verify fresh reads, owned notes and queue recovery. Continue matching remaining conditional route states to native evidence. Live Sentry delivery and required GitHub accessibility enforcement remain separate v0.5.0 gates."
+    "goal": "Close the failed-job retry and resolve acknowledgement deadline using their existing operational review, then reconcile remaining staff and customer route states and feedback in related cohorts. Live Sentry delivery and required GitHub accessibility enforcement remain separate v0.5.0 gates."
   },
   "launch_forecast": {
     "status": "deadline_at_risk_until_v0_5_and_operational_gates_close",
     "next_update_after": "v0.5.0 remaining UI criteria and owner decisions",
-    "method": "v0.4.0 staging and Telegram receipts are verified. v0.5.0 form semantics, guarded electricity drafts, solar document completion, ticket acknowledgement, verified attachment and verification-mode recovery, shared customer settings acknowledgement and saving intake recovery, staff notification template, delivery-window, dead-letter, invoice and reminder recovery, and scoped customer electricity, shell, onboarding, terms and invitation recovery are verified. Five launch-required criteria remain open, including the live Sentry receipt and GitHub accessibility enforcement. The November 9 sequence remains at risk."
+    "method": "v0.4.0 staging and Telegram receipts are verified. v0.5.0 form semantics, guarded electricity drafts, solar document completion, ticket acknowledgement, verified attachment and verification-mode recovery, shared customer settings acknowledgement and saving intake recovery, staff notification template, customer correction, delivery-window, dead-letter, invoice and reminder recovery, and scoped customer electricity, shell, onboarding, terms and invitation recovery are verified. Five launch-required criteria remain open, including the live Sentry receipt and GitHub accessibility enforcement. The November 9 sequence remains at risk."
   },
   "capabilities": [
     {

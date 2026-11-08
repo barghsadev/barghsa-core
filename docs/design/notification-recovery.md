@@ -86,6 +86,8 @@ Notification template saves, publication, withdrawal, deletion and test sends us
 
 Delivery-window saves keep the minute-precision draft after an unknown reply. Reset requires a successful settings read started after recovery became necessary. A refresh during an outstanding write cannot satisfy that requirement. Dead-letter actions use the same response deadline and send uncertain results to the existing review without replaying the action.
 
+Customer contact corrections keep the exact reviewed note when a write reply times out or fails receipt validation. Refreshing the open queue permits another explicit confirmation only when the same correction is still open. Staff can check completed history or discard their local note. A fresh read that denies authority clears the local note and hides private rows. Completing the correction leaves email suppression in place.
+
 Default invoice due-period changes wait up to 15 seconds for the acknowledgement. An unknown outcome leaves the draft in place and blocks writes until a fresh settings read succeeds. Manual issuance and invoice corrections use the same deadline for their acknowledgement and for password verification. A timed-out verification leaves the invoice command unsent. An unknown write keeps the reviewed amount, review hash and idempotency key for an explicit retry.
 
 Single-invoice deadline overrides use the same acknowledgement deadline and require a fresh invoice read after an unknown outcome. Reminder toggles keep confirmed changes to other cells and require a fresh, complete matrix after a lost or invalid receipt. A settings reload sends no toggle command. If password verification times out, the captured reminder changes remain queued for a new explicit verification.
