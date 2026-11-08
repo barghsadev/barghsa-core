@@ -4,7 +4,7 @@ import { toast } from '../lib/toast-api.js';
 import { isInvoiceUuid } from '../lib/invoice-uuid.js';
 import { useRiskConfirmation } from '../hooks/useRiskConfirmation.js';
 import { useQueryClient } from '@tanstack/react-query';
-import { useServerDetailQuery } from '../hooks/useServerQuery.js';
+import { useOwnedManualServerRead, useServerDetailQuery } from '../hooks/useServerQuery.js';
 import { queryKeys } from '../lib/query-keys.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { OrderWalletBalance } from '../components/OrderWalletBalance.js';
@@ -247,6 +247,7 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
   const reader = useId();
   const client = useQueryClient();
   const scopeKey = JSON.stringify([actor, profileRevision, orderId]);
+  const readReview = useOwnedManualServerRead(scopeKey);
   const readOwner = useRef({ scopeKey, epoch: 0 });
   if (readOwner.current.scopeKey !== scopeKey)
     readOwner.current = { scopeKey, epoch: readOwner.current.epoch + 1 };
@@ -590,29 +591,44 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
     event.preventDefault();
     if (!detail || correctionLock.owner || cancelReviewLoading || !cancelReason.trim()) return;
     const token = generation.current;
+    const reason = cancelReason.trim();
     cancellationActivity.current = true;
     setCancelReviewLoading(true);
     setCancelError(null);
     try {
-      const response = await fetch(
-        `/api/electricity/orders/${encodeURIComponent(orderId)}/cancel-review`,
-        {
-          method: 'POST',
-          credentials: 'include',
-          headers: withCsrf({ 'Content-Type': 'application/json' }),
-          body: JSON.stringify({ reason: cancelReason.trim() }),
+      const review = await readReview(
+        queryKeys.orders.detail(
+          {
+            context: 'customer',
+            ownerId: detail.profileId,
+            accountId: actor,
+            revision: profileRevision,
+          },
+          JSON.stringify([orderId, 'cancel-review'])
+        ),
+        undefined,
+        async (signal) => {
+          const response = await fetch(
+            `/api/electricity/orders/${encodeURIComponent(orderId)}/cancel-review`,
+            {
+              method: 'POST',
+              credentials: 'include',
+              signal,
+              headers: withCsrf({ 'Content-Type': 'application/json' }),
+              body: JSON.stringify({ reason }),
+            }
+          );
+          if (!response.ok) throw new Error('Review failed');
+          return parseElectricityCancellationReview(await response.json());
         }
       );
-      if (token !== generation.current) return;
-      if (!response.ok) throw new Error('Review failed');
-      const review = parseElectricityCancellationReview(await response.json());
       if (token !== generation.current) return;
       if (
         !review ||
         review.scope.profileId !== detail.profileId ||
         review.scope.resourceId !== orderId ||
         review.data.versionId !== detail.versionId ||
-        review.data.reason !== cancelReason.trim()
+        review.data.reason !== reason
       )
         throw new Error('Review mismatch');
       setCancelReview(review);

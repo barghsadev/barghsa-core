@@ -277,6 +277,51 @@ for (const [locale, theme] of [
   });
 
   for (const advanced of [false, true]) {
+    test(`electricity ${advanced ? 'advanced' : 'simple'} revision recovers from a stalled preview (${locale}, ${theme})`, async ({
+      page,
+    }) => {
+      await page.clock.install();
+      const { state } = await setupElectricityCorrectionForms(
+        page,
+        locale,
+        theme === 'dark',
+        advanced
+      );
+      state.quoteMode = 'held';
+      await page.goto(`/electricity/orders/${correctionOrder}`);
+      const form = page.getByTestId('electricity-revision-form');
+      const preview = form.getByRole('button', {
+        name: copy('electricity.order.revision.preview'),
+        exact: true,
+      });
+      const note = form.locator('#revision-note');
+      const quantity = form.locator(advanced ? '#revision-thermal' : '#revision-quantity');
+      const confirm = form
+        .locator('..')
+        .getByRole('button', { name: copy('electricity.order.correction.submit'), exact: true });
+      await note.fill('  Retained correction reason  ');
+      await quantity.fill('10');
+      await preview.click();
+      await expect.poll(() => state.quotePreviews.length).toBe(1);
+      const request = state.quotePreviews[0];
+      const stale = state.quotePreview!;
+      await expect(preview).toBeDisabled();
+      await page.clock.fastForward(15_001);
+      await expect(form.getByRole('alert')).toHaveText(copy('electricity.order.revision.error'));
+      await expect(preview).toBeEnabled();
+      await expect(note).toHaveValue('  Retained correction reason  ');
+      await expect(quantity).toHaveValue('10');
+      await expect(confirm).toHaveCount(0);
+      expect(state.revisionWrites).toEqual([]);
+      state.quoteMode = 'success';
+      await preview.click();
+      await expect(confirm).toBeDisabled();
+      await stale.fulfill({ status: 403, json: { error: 'AUTHZ:FORBIDDEN' } }).catch(() => {});
+      await expect(confirm).toBeDisabled();
+      expect(state.quotePreviews).toEqual([request, request]);
+      expect(state.revisionWrites).toEqual([]);
+    });
+
     test(`electricity ${advanced ? 'advanced' : 'simple'} revision validates and retries one reviewed command (${locale}, ${theme})`, async ({
       page,
     }, info) => {

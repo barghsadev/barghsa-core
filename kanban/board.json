@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-07T23:57:15+00:00",
-  "source_commit": "fa4c19b20b7da3e0e0717d0431b1f8b7055ba8a5",
+  "updated": "2026-11-08T00:04:29+00:00",
+  "source_commit": "c3d84ac1a74386eba8b1211c0f0d1cdb1bf74fba",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -35523,7 +35523,7 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
-              "sha256": "fc365aac52386a33dbfa80a739a0c3dbc5535be4626e11fffa49091b2b5fe1b9"
+              "sha256": "4ec8b51308a140a882febbcab78aaa095db70fae3c81bb1bafb9179cf3a0c14b"
             },
             {
               "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.tsx",
@@ -37325,7 +37325,7 @@
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
-              "sha256": "0d5c8b69ca42966f7a07d258e98324d4025f17e832df84152319eabb68383753"
+              "sha256": "7685ca2ff7aae1ea62ee84c1adbdf6a89bbad194690a9d84557f081131875b0e"
             },
             {
               "path": "apps/web/e2e/solar-journey.spec.ts",
@@ -37369,7 +37369,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
+              "sha256": "9cb970f5ba8513d4157944f8cf845624148325c01130e4775dbc204a5d1986af"
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
@@ -38726,7 +38726,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
+              "sha256": "9cb970f5ba8513d4157944f8cf845624148325c01130e4775dbc204a5d1986af"
             },
             {
               "path": "apps/web/src/routes/terms.tsx",
@@ -40082,7 +40082,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
+              "sha256": "9cb970f5ba8513d4157944f8cf845624148325c01130e4775dbc204a5d1986af"
             },
             {
               "path": "apps/web/src/routes/terms.tsx",
@@ -41446,7 +41446,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
+              "sha256": "9cb970f5ba8513d4157944f8cf845624148325c01130e4775dbc204a5d1986af"
             },
             {
               "path": "apps/web/src/routes/terms.tsx",
@@ -195348,7 +195348,7 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
-              "sha256": "fc365aac52386a33dbfa80a739a0c3dbc5535be4626e11fffa49091b2b5fe1b9"
+              "sha256": "4ec8b51308a140a882febbcab78aaa095db70fae3c81bb1bafb9179cf3a0c14b"
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
@@ -197286,7 +197286,7 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
-              "sha256": "fc365aac52386a33dbfa80a739a0c3dbc5535be4626e11fffa49091b2b5fe1b9"
+              "sha256": "4ec8b51308a140a882febbcab78aaa095db70fae3c81bb1bafb9179cf3a0c14b"
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
@@ -287671,7 +287671,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-order-details.test.tsx",
-              "sha256": "20bf72ff441ad1995c6ede02b7d8f2e79424f9162364d9a6fff38f4e5eef0951"
+              "sha256": "39ec7c2a28476ca9df561e340bc39f11c5e86efd57ce637702c1857c200c2112"
             },
             {
               "path": "apps/web/src/components/SimpleElectricityReview.tsx",
@@ -287719,7 +287719,7 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
-              "sha256": "fc365aac52386a33dbfa80a739a0c3dbc5535be4626e11fffa49091b2b5fe1b9"
+              "sha256": "4ec8b51308a140a882febbcab78aaa095db70fae3c81bb1bafb9179cf3a0c14b"
             },
             {
               "path": "apps/api/src/common/business-transition.ts",
@@ -288526,7 +288526,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-order-details.test.tsx",
-              "sha256": "20bf72ff441ad1995c6ede02b7d8f2e79424f9162364d9a6fff38f4e5eef0951"
+              "sha256": "39ec7c2a28476ca9df561e340bc39f11c5e86efd57ce637702c1857c200c2112"
             },
             {
               "path": "apps/web/src/components/SimpleElectricityReview.tsx",
@@ -288574,7 +288574,7 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
-              "sha256": "fc365aac52386a33dbfa80a739a0c3dbc5535be4626e11fffa49091b2b5fe1b9"
+              "sha256": "4ec8b51308a140a882febbcab78aaa095db70fae3c81bb1bafb9179cf3a0c14b"
             },
             {
               "path": "apps/api/src/common/business-transition.ts",
@@ -289381,7 +289381,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-order-details.test.tsx",
-              "sha256": "20bf72ff441ad1995c6ede02b7d8f2e79424f9162364d9a6fff38f4e5eef0951"
+              "sha256": "39ec7c2a28476ca9df561e340bc39f11c5e86efd57ce637702c1857c200c2112"
             },
             {
               "path": "apps/web/src/components/SimpleElectricityReview.tsx",
@@ -289429,7 +289429,7 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
-              "sha256": "fc365aac52386a33dbfa80a739a0c3dbc5535be4626e11fffa49091b2b5fe1b9"
+              "sha256": "4ec8b51308a140a882febbcab78aaa095db70fae3c81bb1bafb9179cf3a0c14b"
             },
             {
               "path": "apps/api/src/common/business-transition.ts",
@@ -290938,7 +290938,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-order-details.test.tsx",
-              "sha256": "20bf72ff441ad1995c6ede02b7d8f2e79424f9162364d9a6fff38f4e5eef0951"
+              "sha256": "39ec7c2a28476ca9df561e340bc39f11c5e86efd57ce637702c1857c200c2112"
             },
             {
               "path": "apps/web/src/components/SimpleElectricityReview.tsx",
@@ -290986,7 +290986,7 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
-              "sha256": "fc365aac52386a33dbfa80a739a0c3dbc5535be4626e11fffa49091b2b5fe1b9"
+              "sha256": "4ec8b51308a140a882febbcab78aaa095db70fae3c81bb1bafb9179cf3a0c14b"
             },
             {
               "path": "apps/api/src/common/business-transition.ts",
@@ -291794,7 +291794,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-order-details.test.tsx",
-              "sha256": "20bf72ff441ad1995c6ede02b7d8f2e79424f9162364d9a6fff38f4e5eef0951"
+              "sha256": "39ec7c2a28476ca9df561e340bc39f11c5e86efd57ce637702c1857c200c2112"
             },
             {
               "path": "apps/web/src/components/SimpleElectricityReview.tsx",
@@ -291842,7 +291842,7 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
-              "sha256": "fc365aac52386a33dbfa80a739a0c3dbc5535be4626e11fffa49091b2b5fe1b9"
+              "sha256": "4ec8b51308a140a882febbcab78aaa095db70fae3c81bb1bafb9179cf3a0c14b"
             },
             {
               "path": "apps/api/src/common/business-transition.ts",
@@ -292649,7 +292649,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-order-details.test.tsx",
-              "sha256": "20bf72ff441ad1995c6ede02b7d8f2e79424f9162364d9a6fff38f4e5eef0951"
+              "sha256": "39ec7c2a28476ca9df561e340bc39f11c5e86efd57ce637702c1857c200c2112"
             },
             {
               "path": "apps/web/src/components/SimpleElectricityReview.tsx",
@@ -292697,7 +292697,7 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
-              "sha256": "fc365aac52386a33dbfa80a739a0c3dbc5535be4626e11fffa49091b2b5fe1b9"
+              "sha256": "4ec8b51308a140a882febbcab78aaa095db70fae3c81bb1bafb9179cf3a0c14b"
             },
             {
               "path": "apps/api/src/common/business-transition.ts",
@@ -293504,7 +293504,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-order-details.test.tsx",
-              "sha256": "20bf72ff441ad1995c6ede02b7d8f2e79424f9162364d9a6fff38f4e5eef0951"
+              "sha256": "39ec7c2a28476ca9df561e340bc39f11c5e86efd57ce637702c1857c200c2112"
             },
             {
               "path": "apps/web/src/components/SimpleElectricityReview.tsx",
@@ -293552,7 +293552,7 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
-              "sha256": "fc365aac52386a33dbfa80a739a0c3dbc5535be4626e11fffa49091b2b5fe1b9"
+              "sha256": "4ec8b51308a140a882febbcab78aaa095db70fae3c81bb1bafb9179cf3a0c14b"
             },
             {
               "path": "apps/api/src/common/business-transition.ts",
@@ -294359,7 +294359,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-order-details.test.tsx",
-              "sha256": "20bf72ff441ad1995c6ede02b7d8f2e79424f9162364d9a6fff38f4e5eef0951"
+              "sha256": "39ec7c2a28476ca9df561e340bc39f11c5e86efd57ce637702c1857c200c2112"
             },
             {
               "path": "apps/web/src/components/SimpleElectricityReview.tsx",
@@ -294407,7 +294407,7 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
-              "sha256": "fc365aac52386a33dbfa80a739a0c3dbc5535be4626e11fffa49091b2b5fe1b9"
+              "sha256": "4ec8b51308a140a882febbcab78aaa095db70fae3c81bb1bafb9179cf3a0c14b"
             },
             {
               "path": "apps/api/src/common/business-transition.ts",
@@ -295215,7 +295215,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-order-details.test.tsx",
-              "sha256": "20bf72ff441ad1995c6ede02b7d8f2e79424f9162364d9a6fff38f4e5eef0951"
+              "sha256": "39ec7c2a28476ca9df561e340bc39f11c5e86efd57ce637702c1857c200c2112"
             },
             {
               "path": "apps/web/src/components/SimpleElectricityReview.tsx",
@@ -295263,7 +295263,7 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
-              "sha256": "fc365aac52386a33dbfa80a739a0c3dbc5535be4626e11fffa49091b2b5fe1b9"
+              "sha256": "4ec8b51308a140a882febbcab78aaa095db70fae3c81bb1bafb9179cf3a0c14b"
             },
             {
               "path": "apps/api/src/common/business-transition.ts",
@@ -296070,7 +296070,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-order-details.test.tsx",
-              "sha256": "20bf72ff441ad1995c6ede02b7d8f2e79424f9162364d9a6fff38f4e5eef0951"
+              "sha256": "39ec7c2a28476ca9df561e340bc39f11c5e86efd57ce637702c1857c200c2112"
             },
             {
               "path": "apps/web/src/components/SimpleElectricityReview.tsx",
@@ -296118,7 +296118,7 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
-              "sha256": "fc365aac52386a33dbfa80a739a0c3dbc5535be4626e11fffa49091b2b5fe1b9"
+              "sha256": "4ec8b51308a140a882febbcab78aaa095db70fae3c81bb1bafb9179cf3a0c14b"
             },
             {
               "path": "apps/api/src/common/business-transition.ts",
@@ -296925,7 +296925,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-order-details.test.tsx",
-              "sha256": "20bf72ff441ad1995c6ede02b7d8f2e79424f9162364d9a6fff38f4e5eef0951"
+              "sha256": "39ec7c2a28476ca9df561e340bc39f11c5e86efd57ce637702c1857c200c2112"
             },
             {
               "path": "apps/web/src/components/SimpleElectricityReview.tsx",
@@ -296973,7 +296973,7 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
-              "sha256": "fc365aac52386a33dbfa80a739a0c3dbc5535be4626e11fffa49091b2b5fe1b9"
+              "sha256": "4ec8b51308a140a882febbcab78aaa095db70fae3c81bb1bafb9179cf3a0c14b"
             },
             {
               "path": "apps/api/src/common/business-transition.ts",
@@ -298481,7 +298481,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-order-details.test.tsx",
-              "sha256": "20bf72ff441ad1995c6ede02b7d8f2e79424f9162364d9a6fff38f4e5eef0951"
+              "sha256": "39ec7c2a28476ca9df561e340bc39f11c5e86efd57ce637702c1857c200c2112"
             },
             {
               "path": "apps/web/src/components/SimpleElectricityReview.tsx",
@@ -298529,7 +298529,7 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
-              "sha256": "fc365aac52386a33dbfa80a739a0c3dbc5535be4626e11fffa49091b2b5fe1b9"
+              "sha256": "4ec8b51308a140a882febbcab78aaa095db70fae3c81bb1bafb9179cf3a0c14b"
             },
             {
               "path": "apps/api/src/common/business-transition.ts",
@@ -299336,7 +299336,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-order-details.test.tsx",
-              "sha256": "20bf72ff441ad1995c6ede02b7d8f2e79424f9162364d9a6fff38f4e5eef0951"
+              "sha256": "39ec7c2a28476ca9df561e340bc39f11c5e86efd57ce637702c1857c200c2112"
             },
             {
               "path": "apps/web/src/components/SimpleElectricityReview.tsx",
@@ -299384,7 +299384,7 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
-              "sha256": "fc365aac52386a33dbfa80a739a0c3dbc5535be4626e11fffa49091b2b5fe1b9"
+              "sha256": "4ec8b51308a140a882febbcab78aaa095db70fae3c81bb1bafb9179cf3a0c14b"
             },
             {
               "path": "apps/api/src/common/business-transition.ts",
@@ -300191,7 +300191,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-order-details.test.tsx",
-              "sha256": "20bf72ff441ad1995c6ede02b7d8f2e79424f9162364d9a6fff38f4e5eef0951"
+              "sha256": "39ec7c2a28476ca9df561e340bc39f11c5e86efd57ce637702c1857c200c2112"
             },
             {
               "path": "apps/web/src/components/SimpleElectricityReview.tsx",
@@ -300239,7 +300239,7 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
-              "sha256": "fc365aac52386a33dbfa80a739a0c3dbc5535be4626e11fffa49091b2b5fe1b9"
+              "sha256": "4ec8b51308a140a882febbcab78aaa095db70fae3c81bb1bafb9179cf3a0c14b"
             },
             {
               "path": "apps/api/src/common/business-transition.ts",
@@ -301046,7 +301046,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-order-details.test.tsx",
-              "sha256": "20bf72ff441ad1995c6ede02b7d8f2e79424f9162364d9a6fff38f4e5eef0951"
+              "sha256": "39ec7c2a28476ca9df561e340bc39f11c5e86efd57ce637702c1857c200c2112"
             },
             {
               "path": "apps/web/src/components/SimpleElectricityReview.tsx",
@@ -301094,7 +301094,7 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
-              "sha256": "fc365aac52386a33dbfa80a739a0c3dbc5535be4626e11fffa49091b2b5fe1b9"
+              "sha256": "4ec8b51308a140a882febbcab78aaa095db70fae3c81bb1bafb9179cf3a0c14b"
             },
             {
               "path": "apps/api/src/common/business-transition.ts",
@@ -301901,7 +301901,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-order-details.test.tsx",
-              "sha256": "20bf72ff441ad1995c6ede02b7d8f2e79424f9162364d9a6fff38f4e5eef0951"
+              "sha256": "39ec7c2a28476ca9df561e340bc39f11c5e86efd57ce637702c1857c200c2112"
             },
             {
               "path": "apps/web/src/components/SimpleElectricityReview.tsx",
@@ -301949,7 +301949,7 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
-              "sha256": "fc365aac52386a33dbfa80a739a0c3dbc5535be4626e11fffa49091b2b5fe1b9"
+              "sha256": "4ec8b51308a140a882febbcab78aaa095db70fae3c81bb1bafb9179cf3a0c14b"
             },
             {
               "path": "apps/api/src/common/business-transition.ts",
@@ -302756,7 +302756,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-order-details.test.tsx",
-              "sha256": "20bf72ff441ad1995c6ede02b7d8f2e79424f9162364d9a6fff38f4e5eef0951"
+              "sha256": "39ec7c2a28476ca9df561e340bc39f11c5e86efd57ce637702c1857c200c2112"
             },
             {
               "path": "apps/web/src/components/SimpleElectricityReview.tsx",
@@ -302804,7 +302804,7 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
-              "sha256": "fc365aac52386a33dbfa80a739a0c3dbc5535be4626e11fffa49091b2b5fe1b9"
+              "sha256": "4ec8b51308a140a882febbcab78aaa095db70fae3c81bb1bafb9179cf3a0c14b"
             },
             {
               "path": "apps/api/src/common/business-transition.ts",
@@ -303611,7 +303611,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-order-details.test.tsx",
-              "sha256": "20bf72ff441ad1995c6ede02b7d8f2e79424f9162364d9a6fff38f4e5eef0951"
+              "sha256": "39ec7c2a28476ca9df561e340bc39f11c5e86efd57ce637702c1857c200c2112"
             },
             {
               "path": "apps/web/src/components/SimpleElectricityReview.tsx",
@@ -303659,7 +303659,7 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
-              "sha256": "fc365aac52386a33dbfa80a739a0c3dbc5535be4626e11fffa49091b2b5fe1b9"
+              "sha256": "4ec8b51308a140a882febbcab78aaa095db70fae3c81bb1bafb9179cf3a0c14b"
             },
             {
               "path": "apps/api/src/common/business-transition.ts",
@@ -304466,7 +304466,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-order-details.test.tsx",
-              "sha256": "20bf72ff441ad1995c6ede02b7d8f2e79424f9162364d9a6fff38f4e5eef0951"
+              "sha256": "39ec7c2a28476ca9df561e340bc39f11c5e86efd57ce637702c1857c200c2112"
             },
             {
               "path": "apps/web/src/components/SimpleElectricityReview.tsx",
@@ -304514,7 +304514,7 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
-              "sha256": "fc365aac52386a33dbfa80a739a0c3dbc5535be4626e11fffa49091b2b5fe1b9"
+              "sha256": "4ec8b51308a140a882febbcab78aaa095db70fae3c81bb1bafb9179cf3a0c14b"
             },
             {
               "path": "apps/api/src/common/business-transition.ts",
@@ -305324,7 +305324,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-order-details.test.tsx",
-              "sha256": "20bf72ff441ad1995c6ede02b7d8f2e79424f9162364d9a6fff38f4e5eef0951"
+              "sha256": "39ec7c2a28476ca9df561e340bc39f11c5e86efd57ce637702c1857c200c2112"
             },
             {
               "path": "apps/web/src/components/SimpleElectricityReview.tsx",
@@ -305372,7 +305372,7 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
-              "sha256": "fc365aac52386a33dbfa80a739a0c3dbc5535be4626e11fffa49091b2b5fe1b9"
+              "sha256": "4ec8b51308a140a882febbcab78aaa095db70fae3c81bb1bafb9179cf3a0c14b"
             },
             {
               "path": "apps/api/src/common/business-transition.ts",
@@ -306179,7 +306179,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-order-details.test.tsx",
-              "sha256": "20bf72ff441ad1995c6ede02b7d8f2e79424f9162364d9a6fff38f4e5eef0951"
+              "sha256": "39ec7c2a28476ca9df561e340bc39f11c5e86efd57ce637702c1857c200c2112"
             },
             {
               "path": "apps/web/src/components/SimpleElectricityReview.tsx",
@@ -306227,7 +306227,7 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
-              "sha256": "fc365aac52386a33dbfa80a739a0c3dbc5535be4626e11fffa49091b2b5fe1b9"
+              "sha256": "4ec8b51308a140a882febbcab78aaa095db70fae3c81bb1bafb9179cf3a0c14b"
             },
             {
               "path": "apps/api/src/common/business-transition.ts",
@@ -307034,7 +307034,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-order-details.test.tsx",
-              "sha256": "20bf72ff441ad1995c6ede02b7d8f2e79424f9162364d9a6fff38f4e5eef0951"
+              "sha256": "39ec7c2a28476ca9df561e340bc39f11c5e86efd57ce637702c1857c200c2112"
             },
             {
               "path": "apps/web/src/components/SimpleElectricityReview.tsx",
@@ -307082,7 +307082,7 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
-              "sha256": "fc365aac52386a33dbfa80a739a0c3dbc5535be4626e11fffa49091b2b5fe1b9"
+              "sha256": "4ec8b51308a140a882febbcab78aaa095db70fae3c81bb1bafb9179cf3a0c14b"
             },
             {
               "path": "apps/api/src/common/business-transition.ts",
@@ -319976,7 +319976,7 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
-              "sha256": "fc365aac52386a33dbfa80a739a0c3dbc5535be4626e11fffa49091b2b5fe1b9"
+              "sha256": "4ec8b51308a140a882febbcab78aaa095db70fae3c81bb1bafb9179cf3a0c14b"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrdersPage.tsx",
@@ -320874,7 +320874,7 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
-              "sha256": "fc365aac52386a33dbfa80a739a0c3dbc5535be4626e11fffa49091b2b5fe1b9"
+              "sha256": "4ec8b51308a140a882febbcab78aaa095db70fae3c81bb1bafb9179cf3a0c14b"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrdersPage.tsx",
@@ -321775,7 +321775,7 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
-              "sha256": "fc365aac52386a33dbfa80a739a0c3dbc5535be4626e11fffa49091b2b5fe1b9"
+              "sha256": "4ec8b51308a140a882febbcab78aaa095db70fae3c81bb1bafb9179cf3a0c14b"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrdersPage.tsx",
@@ -322673,7 +322673,7 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
-              "sha256": "fc365aac52386a33dbfa80a739a0c3dbc5535be4626e11fffa49091b2b5fe1b9"
+              "sha256": "4ec8b51308a140a882febbcab78aaa095db70fae3c81bb1bafb9179cf3a0c14b"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrdersPage.tsx",
@@ -323572,7 +323572,7 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
-              "sha256": "fc365aac52386a33dbfa80a739a0c3dbc5535be4626e11fffa49091b2b5fe1b9"
+              "sha256": "4ec8b51308a140a882febbcab78aaa095db70fae3c81bb1bafb9179cf3a0c14b"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrdersPage.tsx",
@@ -324470,7 +324470,7 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
-              "sha256": "fc365aac52386a33dbfa80a739a0c3dbc5535be4626e11fffa49091b2b5fe1b9"
+              "sha256": "4ec8b51308a140a882febbcab78aaa095db70fae3c81bb1bafb9179cf3a0c14b"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrdersPage.tsx",
@@ -325370,7 +325370,7 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
-              "sha256": "fc365aac52386a33dbfa80a739a0c3dbc5535be4626e11fffa49091b2b5fe1b9"
+              "sha256": "4ec8b51308a140a882febbcab78aaa095db70fae3c81bb1bafb9179cf3a0c14b"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrdersPage.tsx",
@@ -326274,7 +326274,7 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
-              "sha256": "fc365aac52386a33dbfa80a739a0c3dbc5535be4626e11fffa49091b2b5fe1b9"
+              "sha256": "4ec8b51308a140a882febbcab78aaa095db70fae3c81bb1bafb9179cf3a0c14b"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrdersPage.tsx",
@@ -334611,7 +334611,7 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
-              "sha256": "fc365aac52386a33dbfa80a739a0c3dbc5535be4626e11fffa49091b2b5fe1b9"
+              "sha256": "4ec8b51308a140a882febbcab78aaa095db70fae3c81bb1bafb9179cf3a0c14b"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrdersPage.tsx",
@@ -335517,7 +335517,7 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
-              "sha256": "fc365aac52386a33dbfa80a739a0c3dbc5535be4626e11fffa49091b2b5fe1b9"
+              "sha256": "4ec8b51308a140a882febbcab78aaa095db70fae3c81bb1bafb9179cf3a0c14b"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrdersPage.tsx",
@@ -336424,7 +336424,7 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
-              "sha256": "fc365aac52386a33dbfa80a739a0c3dbc5535be4626e11fffa49091b2b5fe1b9"
+              "sha256": "4ec8b51308a140a882febbcab78aaa095db70fae3c81bb1bafb9179cf3a0c14b"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrdersPage.tsx",
@@ -361567,7 +361567,7 @@
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
-              "sha256": "0d5c8b69ca42966f7a07d258e98324d4025f17e832df84152319eabb68383753"
+              "sha256": "7685ca2ff7aae1ea62ee84c1adbdf6a89bbad194690a9d84557f081131875b0e"
             },
             {
               "path": "apps/api/src/test/submission-audit.ts",
@@ -386326,7 +386326,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
+              "sha256": "9cb970f5ba8513d4157944f8cf845624148325c01130e4775dbc204a5d1986af"
             },
             {
               "path": "apps/web/src/pages/solar-request.test.tsx",
@@ -387095,7 +387095,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
+              "sha256": "9cb970f5ba8513d4157944f8cf845624148325c01130e4775dbc204a5d1986af"
             },
             {
               "path": "apps/web/src/pages/solar-request.test.tsx",
@@ -387864,7 +387864,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
+              "sha256": "9cb970f5ba8513d4157944f8cf845624148325c01130e4775dbc204a5d1986af"
             },
             {
               "path": "apps/web/src/pages/solar-request.test.tsx",
@@ -388635,7 +388635,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
+              "sha256": "9cb970f5ba8513d4157944f8cf845624148325c01130e4775dbc204a5d1986af"
             },
             {
               "path": "apps/web/src/pages/solar-request.test.tsx",
@@ -389379,7 +389379,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
+              "sha256": "9cb970f5ba8513d4157944f8cf845624148325c01130e4775dbc204a5d1986af"
             },
             {
               "path": "apps/web/src/pages/solar-request.test.tsx",
@@ -389391,7 +389391,7 @@
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
-              "sha256": "0d5c8b69ca42966f7a07d258e98324d4025f17e832df84152319eabb68383753"
+              "sha256": "7685ca2ff7aae1ea62ee84c1adbdf6a89bbad194690a9d84557f081131875b0e"
             },
             {
               "path": "packages/i18n/src/solar.ts",
@@ -390019,7 +390019,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
+              "sha256": "9cb970f5ba8513d4157944f8cf845624148325c01130e4775dbc204a5d1986af"
             },
             {
               "path": "apps/web/src/pages/solar-request.test.tsx",
@@ -390031,7 +390031,7 @@
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
-              "sha256": "0d5c8b69ca42966f7a07d258e98324d4025f17e832df84152319eabb68383753"
+              "sha256": "7685ca2ff7aae1ea62ee84c1adbdf6a89bbad194690a9d84557f081131875b0e"
             },
             {
               "path": "packages/i18n/src/solar.ts",
@@ -390683,7 +390683,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
+              "sha256": "9cb970f5ba8513d4157944f8cf845624148325c01130e4775dbc204a5d1986af"
             },
             {
               "path": "apps/web/src/pages/solar-request.test.tsx",
@@ -391452,7 +391452,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
+              "sha256": "9cb970f5ba8513d4157944f8cf845624148325c01130e4775dbc204a5d1986af"
             },
             {
               "path": "apps/web/src/pages/solar-request.test.tsx",
@@ -392221,7 +392221,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
+              "sha256": "9cb970f5ba8513d4157944f8cf845624148325c01130e4775dbc204a5d1986af"
             },
             {
               "path": "apps/web/src/pages/solar-request.test.tsx",
@@ -392991,7 +392991,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
+              "sha256": "9cb970f5ba8513d4157944f8cf845624148325c01130e4775dbc204a5d1986af"
             },
             {
               "path": "apps/web/src/pages/solar-request.test.tsx",
@@ -393761,7 +393761,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
+              "sha256": "9cb970f5ba8513d4157944f8cf845624148325c01130e4775dbc204a5d1986af"
             },
             {
               "path": "apps/web/src/pages/solar-request.test.tsx",
@@ -394532,7 +394532,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
+              "sha256": "9cb970f5ba8513d4157944f8cf845624148325c01130e4775dbc204a5d1986af"
             },
             {
               "path": "apps/web/src/pages/solar-request.test.tsx",
@@ -395307,7 +395307,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
+              "sha256": "9cb970f5ba8513d4157944f8cf845624148325c01130e4775dbc204a5d1986af"
             },
             {
               "path": "apps/web/src/pages/solar-request.test.tsx",
@@ -396076,7 +396076,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
+              "sha256": "9cb970f5ba8513d4157944f8cf845624148325c01130e4775dbc204a5d1986af"
             },
             {
               "path": "apps/web/src/pages/solar-request.test.tsx",
@@ -396845,7 +396845,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
+              "sha256": "9cb970f5ba8513d4157944f8cf845624148325c01130e4775dbc204a5d1986af"
             },
             {
               "path": "apps/web/src/pages/solar-request.test.tsx",
@@ -421510,11 +421510,11 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
-              "sha256": "fc365aac52386a33dbfa80a739a0c3dbc5535be4626e11fffa49091b2b5fe1b9"
+              "sha256": "4ec8b51308a140a882febbcab78aaa095db70fae3c81bb1bafb9179cf3a0c14b"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderRevisionForm.tsx",
-              "sha256": "1dff9ca23f43a7ecfee759a7dc87de930ba4814e497453d4f77a689284fe732f"
+              "sha256": "a49825aeb8eb76d6955e242c0c77695411225efc99a08b64482d92e147df323e"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -421530,7 +421530,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
+              "sha256": "9cb970f5ba8513d4157944f8cf845624148325c01130e4775dbc204a5d1986af"
             },
             {
               "path": "apps/web/src/pages/electricity-increase-forms.test.tsx",
@@ -491278,7 +491278,7 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
-              "sha256": "fc365aac52386a33dbfa80a739a0c3dbc5535be4626e11fffa49091b2b5fe1b9"
+              "sha256": "4ec8b51308a140a882febbcab78aaa095db70fae3c81bb1bafb9179cf3a0c14b"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrdersPage.tsx",
@@ -491330,7 +491330,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
+              "sha256": "9cb970f5ba8513d4157944f8cf845624148325c01130e4775dbc204a5d1986af"
             },
             {
               "path": "apps/web/src/pages/SolarRequestsPage.tsx",
@@ -494397,11 +494397,11 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
-              "sha256": "fc365aac52386a33dbfa80a739a0c3dbc5535be4626e11fffa49091b2b5fe1b9"
+              "sha256": "4ec8b51308a140a882febbcab78aaa095db70fae3c81bb1bafb9179cf3a0c14b"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderRevisionForm.tsx",
-              "sha256": "1dff9ca23f43a7ecfee759a7dc87de930ba4814e497453d4f77a689284fe732f"
+              "sha256": "a49825aeb8eb76d6955e242c0c77695411225efc99a08b64482d92e147df323e"
             },
             {
               "path": "apps/web/src/pages/NotificationCenterPage.tsx",
@@ -494429,7 +494429,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-order-details.test.tsx",
-              "sha256": "20bf72ff441ad1995c6ede02b7d8f2e79424f9162364d9a6fff38f4e5eef0951"
+              "sha256": "39ec7c2a28476ca9df561e340bc39f11c5e86efd57ce637702c1857c200c2112"
             },
             {
               "path": "apps/web/src/pages/policy-catalogue-recovery.test.tsx",
@@ -495279,11 +495279,11 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
-              "sha256": "fc365aac52386a33dbfa80a739a0c3dbc5535be4626e11fffa49091b2b5fe1b9"
+              "sha256": "4ec8b51308a140a882febbcab78aaa095db70fae3c81bb1bafb9179cf3a0c14b"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderRevisionForm.tsx",
-              "sha256": "1dff9ca23f43a7ecfee759a7dc87de930ba4814e497453d4f77a689284fe732f"
+              "sha256": "a49825aeb8eb76d6955e242c0c77695411225efc99a08b64482d92e147df323e"
             },
             {
               "path": "apps/web/src/pages/NotificationCenterPage.tsx",
@@ -495311,7 +495311,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-order-details.test.tsx",
-              "sha256": "20bf72ff441ad1995c6ede02b7d8f2e79424f9162364d9a6fff38f4e5eef0951"
+              "sha256": "39ec7c2a28476ca9df561e340bc39f11c5e86efd57ce637702c1857c200c2112"
             },
             {
               "path": "apps/web/src/pages/policy-catalogue-recovery.test.tsx",
@@ -496102,11 +496102,11 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
-              "sha256": "fc365aac52386a33dbfa80a739a0c3dbc5535be4626e11fffa49091b2b5fe1b9"
+              "sha256": "4ec8b51308a140a882febbcab78aaa095db70fae3c81bb1bafb9179cf3a0c14b"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderRevisionForm.tsx",
-              "sha256": "1dff9ca23f43a7ecfee759a7dc87de930ba4814e497453d4f77a689284fe732f"
+              "sha256": "a49825aeb8eb76d6955e242c0c77695411225efc99a08b64482d92e147df323e"
             },
             {
               "path": "apps/web/src/pages/NotificationCenterPage.tsx",
@@ -496134,7 +496134,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-order-details.test.tsx",
-              "sha256": "20bf72ff441ad1995c6ede02b7d8f2e79424f9162364d9a6fff38f4e5eef0951"
+              "sha256": "39ec7c2a28476ca9df561e340bc39f11c5e86efd57ce637702c1857c200c2112"
             },
             {
               "path": "apps/web/src/pages/policy-catalogue-recovery.test.tsx",
@@ -512301,7 +512301,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
+              "sha256": "9cb970f5ba8513d4157944f8cf845624148325c01130e4775dbc204a5d1986af"
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
@@ -518730,7 +518730,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-correction-forms.spec.ts",
-              "sha256": "5af73fc375d261e8befbf4f360c8cc3dbff51adaa90e2ae3a6f1c1f2aa249dbe"
+              "sha256": "212e7da5b0ecf1f747bd27ed62cba12feed9b8bc7767478ddf5c66f40ea0f2bc"
             },
             {
               "path": "apps/web/e2e/electricity-pre-active-rejection.spec.ts",
@@ -519558,7 +519558,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-correction-forms.spec.ts",
-              "sha256": "5af73fc375d261e8befbf4f360c8cc3dbff51adaa90e2ae3a6f1c1f2aa249dbe"
+              "sha256": "212e7da5b0ecf1f747bd27ed62cba12feed9b8bc7767478ddf5c66f40ea0f2bc"
             },
             {
               "path": "apps/web/e2e/electricity-pre-active-rejection.spec.ts",
@@ -520886,7 +520886,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-correction-forms.spec.ts",
-              "sha256": "5af73fc375d261e8befbf4f360c8cc3dbff51adaa90e2ae3a6f1c1f2aa249dbe"
+              "sha256": "212e7da5b0ecf1f747bd27ed62cba12feed9b8bc7767478ddf5c66f40ea0f2bc"
             },
             {
               "path": "apps/web/e2e/electricity-pre-active-rejection.spec.ts",
@@ -544683,7 +544683,7 @@
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
-              "sha256": "0d5c8b69ca42966f7a07d258e98324d4025f17e832df84152319eabb68383753"
+              "sha256": "7685ca2ff7aae1ea62ee84c1adbdf6a89bbad194690a9d84557f081131875b0e"
             },
             {
               "path": "apps/web/e2e/ui-interaction.spec.ts",
@@ -545223,11 +545223,11 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
-              "sha256": "fc365aac52386a33dbfa80a739a0c3dbc5535be4626e11fffa49091b2b5fe1b9"
+              "sha256": "4ec8b51308a140a882febbcab78aaa095db70fae3c81bb1bafb9179cf3a0c14b"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderRevisionForm.tsx",
-              "sha256": "1dff9ca23f43a7ecfee759a7dc87de930ba4814e497453d4f77a689284fe732f"
+              "sha256": "a49825aeb8eb76d6955e242c0c77695411225efc99a08b64482d92e147df323e"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -545239,7 +545239,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
+              "sha256": "9cb970f5ba8513d4157944f8cf845624148325c01130e4775dbc204a5d1986af"
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
@@ -545383,7 +545383,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-order-details.test.tsx",
-              "sha256": "20bf72ff441ad1995c6ede02b7d8f2e79424f9162364d9a6fff38f4e5eef0951"
+              "sha256": "39ec7c2a28476ca9df561e340bc39f11c5e86efd57ce637702c1857c200c2112"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -546548,7 +546548,7 @@
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
-              "sha256": "0d5c8b69ca42966f7a07d258e98324d4025f17e832df84152319eabb68383753"
+              "sha256": "7685ca2ff7aae1ea62ee84c1adbdf6a89bbad194690a9d84557f081131875b0e"
             },
             {
               "path": "apps/web/e2e/ui-interaction.spec.ts",
@@ -547088,11 +547088,11 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
-              "sha256": "fc365aac52386a33dbfa80a739a0c3dbc5535be4626e11fffa49091b2b5fe1b9"
+              "sha256": "4ec8b51308a140a882febbcab78aaa095db70fae3c81bb1bafb9179cf3a0c14b"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderRevisionForm.tsx",
-              "sha256": "1dff9ca23f43a7ecfee759a7dc87de930ba4814e497453d4f77a689284fe732f"
+              "sha256": "a49825aeb8eb76d6955e242c0c77695411225efc99a08b64482d92e147df323e"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -547104,7 +547104,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
+              "sha256": "9cb970f5ba8513d4157944f8cf845624148325c01130e4775dbc204a5d1986af"
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
@@ -547248,7 +547248,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-order-details.test.tsx",
-              "sha256": "20bf72ff441ad1995c6ede02b7d8f2e79424f9162364d9a6fff38f4e5eef0951"
+              "sha256": "39ec7c2a28476ca9df561e340bc39f11c5e86efd57ce637702c1857c200c2112"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -548414,7 +548414,7 @@
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
-              "sha256": "0d5c8b69ca42966f7a07d258e98324d4025f17e832df84152319eabb68383753"
+              "sha256": "7685ca2ff7aae1ea62ee84c1adbdf6a89bbad194690a9d84557f081131875b0e"
             },
             {
               "path": "apps/web/e2e/ui-interaction.spec.ts",
@@ -548954,11 +548954,11 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
-              "sha256": "fc365aac52386a33dbfa80a739a0c3dbc5535be4626e11fffa49091b2b5fe1b9"
+              "sha256": "4ec8b51308a140a882febbcab78aaa095db70fae3c81bb1bafb9179cf3a0c14b"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderRevisionForm.tsx",
-              "sha256": "1dff9ca23f43a7ecfee759a7dc87de930ba4814e497453d4f77a689284fe732f"
+              "sha256": "a49825aeb8eb76d6955e242c0c77695411225efc99a08b64482d92e147df323e"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -548970,7 +548970,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
+              "sha256": "9cb970f5ba8513d4157944f8cf845624148325c01130e4775dbc204a5d1986af"
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
@@ -549114,7 +549114,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-order-details.test.tsx",
-              "sha256": "20bf72ff441ad1995c6ede02b7d8f2e79424f9162364d9a6fff38f4e5eef0951"
+              "sha256": "39ec7c2a28476ca9df561e340bc39f11c5e86efd57ce637702c1857c200c2112"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -550249,7 +550249,7 @@
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
-              "sha256": "0d5c8b69ca42966f7a07d258e98324d4025f17e832df84152319eabb68383753"
+              "sha256": "7685ca2ff7aae1ea62ee84c1adbdf6a89bbad194690a9d84557f081131875b0e"
             },
             {
               "path": "apps/web/e2e/ui-interaction.spec.ts",
@@ -550789,11 +550789,11 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
-              "sha256": "fc365aac52386a33dbfa80a739a0c3dbc5535be4626e11fffa49091b2b5fe1b9"
+              "sha256": "4ec8b51308a140a882febbcab78aaa095db70fae3c81bb1bafb9179cf3a0c14b"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderRevisionForm.tsx",
-              "sha256": "1dff9ca23f43a7ecfee759a7dc87de930ba4814e497453d4f77a689284fe732f"
+              "sha256": "a49825aeb8eb76d6955e242c0c77695411225efc99a08b64482d92e147df323e"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -550805,7 +550805,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
+              "sha256": "9cb970f5ba8513d4157944f8cf845624148325c01130e4775dbc204a5d1986af"
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
@@ -550949,7 +550949,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-order-details.test.tsx",
-              "sha256": "20bf72ff441ad1995c6ede02b7d8f2e79424f9162364d9a6fff38f4e5eef0951"
+              "sha256": "39ec7c2a28476ca9df561e340bc39f11c5e86efd57ce637702c1857c200c2112"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -552110,7 +552110,7 @@
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
-              "sha256": "0d5c8b69ca42966f7a07d258e98324d4025f17e832df84152319eabb68383753"
+              "sha256": "7685ca2ff7aae1ea62ee84c1adbdf6a89bbad194690a9d84557f081131875b0e"
             },
             {
               "path": "apps/web/e2e/ui-interaction.spec.ts",
@@ -552650,11 +552650,11 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
-              "sha256": "fc365aac52386a33dbfa80a739a0c3dbc5535be4626e11fffa49091b2b5fe1b9"
+              "sha256": "4ec8b51308a140a882febbcab78aaa095db70fae3c81bb1bafb9179cf3a0c14b"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderRevisionForm.tsx",
-              "sha256": "1dff9ca23f43a7ecfee759a7dc87de930ba4814e497453d4f77a689284fe732f"
+              "sha256": "a49825aeb8eb76d6955e242c0c77695411225efc99a08b64482d92e147df323e"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -552666,7 +552666,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
+              "sha256": "9cb970f5ba8513d4157944f8cf845624148325c01130e4775dbc204a5d1986af"
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
@@ -552810,7 +552810,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-order-details.test.tsx",
-              "sha256": "20bf72ff441ad1995c6ede02b7d8f2e79424f9162364d9a6fff38f4e5eef0951"
+              "sha256": "39ec7c2a28476ca9df561e340bc39f11c5e86efd57ce637702c1857c200c2112"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -553980,7 +553980,7 @@
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
-              "sha256": "0d5c8b69ca42966f7a07d258e98324d4025f17e832df84152319eabb68383753"
+              "sha256": "7685ca2ff7aae1ea62ee84c1adbdf6a89bbad194690a9d84557f081131875b0e"
             },
             {
               "path": "apps/web/e2e/ui-interaction.spec.ts",
@@ -554520,11 +554520,11 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
-              "sha256": "fc365aac52386a33dbfa80a739a0c3dbc5535be4626e11fffa49091b2b5fe1b9"
+              "sha256": "4ec8b51308a140a882febbcab78aaa095db70fae3c81bb1bafb9179cf3a0c14b"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderRevisionForm.tsx",
-              "sha256": "1dff9ca23f43a7ecfee759a7dc87de930ba4814e497453d4f77a689284fe732f"
+              "sha256": "a49825aeb8eb76d6955e242c0c77695411225efc99a08b64482d92e147df323e"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -554536,7 +554536,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
+              "sha256": "9cb970f5ba8513d4157944f8cf845624148325c01130e4775dbc204a5d1986af"
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
@@ -554680,7 +554680,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-order-details.test.tsx",
-              "sha256": "20bf72ff441ad1995c6ede02b7d8f2e79424f9162364d9a6fff38f4e5eef0951"
+              "sha256": "39ec7c2a28476ca9df561e340bc39f11c5e86efd57ce637702c1857c200c2112"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -555823,7 +555823,7 @@
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
-              "sha256": "0d5c8b69ca42966f7a07d258e98324d4025f17e832df84152319eabb68383753"
+              "sha256": "7685ca2ff7aae1ea62ee84c1adbdf6a89bbad194690a9d84557f081131875b0e"
             },
             {
               "path": "apps/web/e2e/ui-interaction.spec.ts",
@@ -556363,11 +556363,11 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
-              "sha256": "fc365aac52386a33dbfa80a739a0c3dbc5535be4626e11fffa49091b2b5fe1b9"
+              "sha256": "4ec8b51308a140a882febbcab78aaa095db70fae3c81bb1bafb9179cf3a0c14b"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderRevisionForm.tsx",
-              "sha256": "1dff9ca23f43a7ecfee759a7dc87de930ba4814e497453d4f77a689284fe732f"
+              "sha256": "a49825aeb8eb76d6955e242c0c77695411225efc99a08b64482d92e147df323e"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -556379,7 +556379,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
+              "sha256": "9cb970f5ba8513d4157944f8cf845624148325c01130e4775dbc204a5d1986af"
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
@@ -556523,7 +556523,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-order-details.test.tsx",
-              "sha256": "20bf72ff441ad1995c6ede02b7d8f2e79424f9162364d9a6fff38f4e5eef0951"
+              "sha256": "39ec7c2a28476ca9df561e340bc39f11c5e86efd57ce637702c1857c200c2112"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -557630,7 +557630,7 @@
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
-              "sha256": "0d5c8b69ca42966f7a07d258e98324d4025f17e832df84152319eabb68383753"
+              "sha256": "7685ca2ff7aae1ea62ee84c1adbdf6a89bbad194690a9d84557f081131875b0e"
             },
             {
               "path": "apps/web/e2e/ui-interaction.spec.ts",
@@ -558170,11 +558170,11 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
-              "sha256": "fc365aac52386a33dbfa80a739a0c3dbc5535be4626e11fffa49091b2b5fe1b9"
+              "sha256": "4ec8b51308a140a882febbcab78aaa095db70fae3c81bb1bafb9179cf3a0c14b"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderRevisionForm.tsx",
-              "sha256": "1dff9ca23f43a7ecfee759a7dc87de930ba4814e497453d4f77a689284fe732f"
+              "sha256": "a49825aeb8eb76d6955e242c0c77695411225efc99a08b64482d92e147df323e"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -558186,7 +558186,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
+              "sha256": "9cb970f5ba8513d4157944f8cf845624148325c01130e4775dbc204a5d1986af"
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
@@ -558330,7 +558330,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-order-details.test.tsx",
-              "sha256": "20bf72ff441ad1995c6ede02b7d8f2e79424f9162364d9a6fff38f4e5eef0951"
+              "sha256": "39ec7c2a28476ca9df561e340bc39f11c5e86efd57ce637702c1857c200c2112"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -559437,7 +559437,7 @@
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
-              "sha256": "0d5c8b69ca42966f7a07d258e98324d4025f17e832df84152319eabb68383753"
+              "sha256": "7685ca2ff7aae1ea62ee84c1adbdf6a89bbad194690a9d84557f081131875b0e"
             },
             {
               "path": "apps/web/e2e/ui-interaction.spec.ts",
@@ -559977,11 +559977,11 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
-              "sha256": "fc365aac52386a33dbfa80a739a0c3dbc5535be4626e11fffa49091b2b5fe1b9"
+              "sha256": "4ec8b51308a140a882febbcab78aaa095db70fae3c81bb1bafb9179cf3a0c14b"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderRevisionForm.tsx",
-              "sha256": "1dff9ca23f43a7ecfee759a7dc87de930ba4814e497453d4f77a689284fe732f"
+              "sha256": "a49825aeb8eb76d6955e242c0c77695411225efc99a08b64482d92e147df323e"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -559993,7 +559993,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
+              "sha256": "9cb970f5ba8513d4157944f8cf845624148325c01130e4775dbc204a5d1986af"
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
@@ -560137,7 +560137,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-order-details.test.tsx",
-              "sha256": "20bf72ff441ad1995c6ede02b7d8f2e79424f9162364d9a6fff38f4e5eef0951"
+              "sha256": "39ec7c2a28476ca9df561e340bc39f11c5e86efd57ce637702c1857c200c2112"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -561245,7 +561245,7 @@
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
-              "sha256": "0d5c8b69ca42966f7a07d258e98324d4025f17e832df84152319eabb68383753"
+              "sha256": "7685ca2ff7aae1ea62ee84c1adbdf6a89bbad194690a9d84557f081131875b0e"
             },
             {
               "path": "apps/web/e2e/ui-interaction.spec.ts",
@@ -561785,11 +561785,11 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
-              "sha256": "fc365aac52386a33dbfa80a739a0c3dbc5535be4626e11fffa49091b2b5fe1b9"
+              "sha256": "4ec8b51308a140a882febbcab78aaa095db70fae3c81bb1bafb9179cf3a0c14b"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderRevisionForm.tsx",
-              "sha256": "1dff9ca23f43a7ecfee759a7dc87de930ba4814e497453d4f77a689284fe732f"
+              "sha256": "a49825aeb8eb76d6955e242c0c77695411225efc99a08b64482d92e147df323e"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -561801,7 +561801,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
+              "sha256": "9cb970f5ba8513d4157944f8cf845624148325c01130e4775dbc204a5d1986af"
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
@@ -561945,7 +561945,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-order-details.test.tsx",
-              "sha256": "20bf72ff441ad1995c6ede02b7d8f2e79424f9162364d9a6fff38f4e5eef0951"
+              "sha256": "39ec7c2a28476ca9df561e340bc39f11c5e86efd57ce637702c1857c200c2112"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -563052,7 +563052,7 @@
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
-              "sha256": "0d5c8b69ca42966f7a07d258e98324d4025f17e832df84152319eabb68383753"
+              "sha256": "7685ca2ff7aae1ea62ee84c1adbdf6a89bbad194690a9d84557f081131875b0e"
             },
             {
               "path": "apps/web/e2e/ui-interaction.spec.ts",
@@ -563592,11 +563592,11 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
-              "sha256": "fc365aac52386a33dbfa80a739a0c3dbc5535be4626e11fffa49091b2b5fe1b9"
+              "sha256": "4ec8b51308a140a882febbcab78aaa095db70fae3c81bb1bafb9179cf3a0c14b"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderRevisionForm.tsx",
-              "sha256": "1dff9ca23f43a7ecfee759a7dc87de930ba4814e497453d4f77a689284fe732f"
+              "sha256": "a49825aeb8eb76d6955e242c0c77695411225efc99a08b64482d92e147df323e"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -563608,7 +563608,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
+              "sha256": "9cb970f5ba8513d4157944f8cf845624148325c01130e4775dbc204a5d1986af"
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
@@ -563752,7 +563752,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-order-details.test.tsx",
-              "sha256": "20bf72ff441ad1995c6ede02b7d8f2e79424f9162364d9a6fff38f4e5eef0951"
+              "sha256": "39ec7c2a28476ca9df561e340bc39f11c5e86efd57ce637702c1857c200c2112"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -565425,7 +565425,7 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
-              "sha256": "fc365aac52386a33dbfa80a739a0c3dbc5535be4626e11fffa49091b2b5fe1b9"
+              "sha256": "4ec8b51308a140a882febbcab78aaa095db70fae3c81bb1bafb9179cf3a0c14b"
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
@@ -565457,7 +565457,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
+              "sha256": "9cb970f5ba8513d4157944f8cf845624148325c01130e4775dbc204a5d1986af"
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
@@ -565617,7 +565617,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-order-details.test.tsx",
-              "sha256": "20bf72ff441ad1995c6ede02b7d8f2e79424f9162364d9a6fff38f4e5eef0951"
+              "sha256": "39ec7c2a28476ca9df561e340bc39f11c5e86efd57ce637702c1857c200c2112"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -567319,7 +567319,7 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
-              "sha256": "fc365aac52386a33dbfa80a739a0c3dbc5535be4626e11fffa49091b2b5fe1b9"
+              "sha256": "4ec8b51308a140a882febbcab78aaa095db70fae3c81bb1bafb9179cf3a0c14b"
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
@@ -567351,7 +567351,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
+              "sha256": "9cb970f5ba8513d4157944f8cf845624148325c01130e4775dbc204a5d1986af"
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
@@ -567511,7 +567511,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-order-details.test.tsx",
-              "sha256": "20bf72ff441ad1995c6ede02b7d8f2e79424f9162364d9a6fff38f4e5eef0951"
+              "sha256": "39ec7c2a28476ca9df561e340bc39f11c5e86efd57ce637702c1857c200c2112"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -569263,7 +569263,7 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
-              "sha256": "fc365aac52386a33dbfa80a739a0c3dbc5535be4626e11fffa49091b2b5fe1b9"
+              "sha256": "4ec8b51308a140a882febbcab78aaa095db70fae3c81bb1bafb9179cf3a0c14b"
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
@@ -569295,7 +569295,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
+              "sha256": "9cb970f5ba8513d4157944f8cf845624148325c01130e4775dbc204a5d1986af"
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
@@ -569455,7 +569455,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-order-details.test.tsx",
-              "sha256": "20bf72ff441ad1995c6ede02b7d8f2e79424f9162364d9a6fff38f4e5eef0951"
+              "sha256": "39ec7c2a28476ca9df561e340bc39f11c5e86efd57ce637702c1857c200c2112"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -571157,7 +571157,7 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
-              "sha256": "fc365aac52386a33dbfa80a739a0c3dbc5535be4626e11fffa49091b2b5fe1b9"
+              "sha256": "4ec8b51308a140a882febbcab78aaa095db70fae3c81bb1bafb9179cf3a0c14b"
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
@@ -571189,7 +571189,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
+              "sha256": "9cb970f5ba8513d4157944f8cf845624148325c01130e4775dbc204a5d1986af"
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
@@ -571349,7 +571349,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-order-details.test.tsx",
-              "sha256": "20bf72ff441ad1995c6ede02b7d8f2e79424f9162364d9a6fff38f4e5eef0951"
+              "sha256": "39ec7c2a28476ca9df561e340bc39f11c5e86efd57ce637702c1857c200c2112"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -573051,7 +573051,7 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
-              "sha256": "fc365aac52386a33dbfa80a739a0c3dbc5535be4626e11fffa49091b2b5fe1b9"
+              "sha256": "4ec8b51308a140a882febbcab78aaa095db70fae3c81bb1bafb9179cf3a0c14b"
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
@@ -573083,7 +573083,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
+              "sha256": "9cb970f5ba8513d4157944f8cf845624148325c01130e4775dbc204a5d1986af"
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
@@ -573243,7 +573243,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-order-details.test.tsx",
-              "sha256": "20bf72ff441ad1995c6ede02b7d8f2e79424f9162364d9a6fff38f4e5eef0951"
+              "sha256": "39ec7c2a28476ca9df561e340bc39f11c5e86efd57ce637702c1857c200c2112"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -574945,7 +574945,7 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
-              "sha256": "fc365aac52386a33dbfa80a739a0c3dbc5535be4626e11fffa49091b2b5fe1b9"
+              "sha256": "4ec8b51308a140a882febbcab78aaa095db70fae3c81bb1bafb9179cf3a0c14b"
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
@@ -574977,7 +574977,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
+              "sha256": "9cb970f5ba8513d4157944f8cf845624148325c01130e4775dbc204a5d1986af"
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
@@ -575137,7 +575137,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-order-details.test.tsx",
-              "sha256": "20bf72ff441ad1995c6ede02b7d8f2e79424f9162364d9a6fff38f4e5eef0951"
+              "sha256": "39ec7c2a28476ca9df561e340bc39f11c5e86efd57ce637702c1857c200c2112"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -576839,7 +576839,7 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
-              "sha256": "fc365aac52386a33dbfa80a739a0c3dbc5535be4626e11fffa49091b2b5fe1b9"
+              "sha256": "4ec8b51308a140a882febbcab78aaa095db70fae3c81bb1bafb9179cf3a0c14b"
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
@@ -576871,7 +576871,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
+              "sha256": "9cb970f5ba8513d4157944f8cf845624148325c01130e4775dbc204a5d1986af"
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
@@ -577031,7 +577031,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-order-details.test.tsx",
-              "sha256": "20bf72ff441ad1995c6ede02b7d8f2e79424f9162364d9a6fff38f4e5eef0951"
+              "sha256": "39ec7c2a28476ca9df561e340bc39f11c5e86efd57ce637702c1857c200c2112"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -578733,7 +578733,7 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
-              "sha256": "fc365aac52386a33dbfa80a739a0c3dbc5535be4626e11fffa49091b2b5fe1b9"
+              "sha256": "4ec8b51308a140a882febbcab78aaa095db70fae3c81bb1bafb9179cf3a0c14b"
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
@@ -578765,7 +578765,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
+              "sha256": "9cb970f5ba8513d4157944f8cf845624148325c01130e4775dbc204a5d1986af"
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
@@ -578925,7 +578925,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-order-details.test.tsx",
-              "sha256": "20bf72ff441ad1995c6ede02b7d8f2e79424f9162364d9a6fff38f4e5eef0951"
+              "sha256": "39ec7c2a28476ca9df561e340bc39f11c5e86efd57ce637702c1857c200c2112"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -580627,7 +580627,7 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
-              "sha256": "fc365aac52386a33dbfa80a739a0c3dbc5535be4626e11fffa49091b2b5fe1b9"
+              "sha256": "4ec8b51308a140a882febbcab78aaa095db70fae3c81bb1bafb9179cf3a0c14b"
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
@@ -580659,7 +580659,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
+              "sha256": "9cb970f5ba8513d4157944f8cf845624148325c01130e4775dbc204a5d1986af"
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
@@ -580819,7 +580819,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-order-details.test.tsx",
-              "sha256": "20bf72ff441ad1995c6ede02b7d8f2e79424f9162364d9a6fff38f4e5eef0951"
+              "sha256": "39ec7c2a28476ca9df561e340bc39f11c5e86efd57ce637702c1857c200c2112"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -582521,7 +582521,7 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
-              "sha256": "fc365aac52386a33dbfa80a739a0c3dbc5535be4626e11fffa49091b2b5fe1b9"
+              "sha256": "4ec8b51308a140a882febbcab78aaa095db70fae3c81bb1bafb9179cf3a0c14b"
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
@@ -582553,7 +582553,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
+              "sha256": "9cb970f5ba8513d4157944f8cf845624148325c01130e4775dbc204a5d1986af"
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
@@ -582713,7 +582713,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-order-details.test.tsx",
-              "sha256": "20bf72ff441ad1995c6ede02b7d8f2e79424f9162364d9a6fff38f4e5eef0951"
+              "sha256": "39ec7c2a28476ca9df561e340bc39f11c5e86efd57ce637702c1857c200c2112"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -584415,7 +584415,7 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
-              "sha256": "fc365aac52386a33dbfa80a739a0c3dbc5535be4626e11fffa49091b2b5fe1b9"
+              "sha256": "4ec8b51308a140a882febbcab78aaa095db70fae3c81bb1bafb9179cf3a0c14b"
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
@@ -584447,7 +584447,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
+              "sha256": "9cb970f5ba8513d4157944f8cf845624148325c01130e4775dbc204a5d1986af"
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
@@ -584607,7 +584607,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-order-details.test.tsx",
-              "sha256": "20bf72ff441ad1995c6ede02b7d8f2e79424f9162364d9a6fff38f4e5eef0951"
+              "sha256": "39ec7c2a28476ca9df561e340bc39f11c5e86efd57ce637702c1857c200c2112"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -586309,7 +586309,7 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
-              "sha256": "fc365aac52386a33dbfa80a739a0c3dbc5535be4626e11fffa49091b2b5fe1b9"
+              "sha256": "4ec8b51308a140a882febbcab78aaa095db70fae3c81bb1bafb9179cf3a0c14b"
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
@@ -586341,7 +586341,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
+              "sha256": "9cb970f5ba8513d4157944f8cf845624148325c01130e4775dbc204a5d1986af"
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
@@ -586501,7 +586501,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-order-details.test.tsx",
-              "sha256": "20bf72ff441ad1995c6ede02b7d8f2e79424f9162364d9a6fff38f4e5eef0951"
+              "sha256": "39ec7c2a28476ca9df561e340bc39f11c5e86efd57ce637702c1857c200c2112"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -588203,7 +588203,7 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
-              "sha256": "fc365aac52386a33dbfa80a739a0c3dbc5535be4626e11fffa49091b2b5fe1b9"
+              "sha256": "4ec8b51308a140a882febbcab78aaa095db70fae3c81bb1bafb9179cf3a0c14b"
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
@@ -588235,7 +588235,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
+              "sha256": "9cb970f5ba8513d4157944f8cf845624148325c01130e4775dbc204a5d1986af"
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
@@ -588395,7 +588395,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-order-details.test.tsx",
-              "sha256": "20bf72ff441ad1995c6ede02b7d8f2e79424f9162364d9a6fff38f4e5eef0951"
+              "sha256": "39ec7c2a28476ca9df561e340bc39f11c5e86efd57ce637702c1857c200c2112"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -590836,7 +590836,7 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
-              "sha256": "fc365aac52386a33dbfa80a739a0c3dbc5535be4626e11fffa49091b2b5fe1b9"
+              "sha256": "4ec8b51308a140a882febbcab78aaa095db70fae3c81bb1bafb9179cf3a0c14b"
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
@@ -590868,7 +590868,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
+              "sha256": "9cb970f5ba8513d4157944f8cf845624148325c01130e4775dbc204a5d1986af"
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
@@ -591028,7 +591028,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-order-details.test.tsx",
-              "sha256": "20bf72ff441ad1995c6ede02b7d8f2e79424f9162364d9a6fff38f4e5eef0951"
+              "sha256": "39ec7c2a28476ca9df561e340bc39f11c5e86efd57ce637702c1857c200c2112"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -592730,7 +592730,7 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
-              "sha256": "fc365aac52386a33dbfa80a739a0c3dbc5535be4626e11fffa49091b2b5fe1b9"
+              "sha256": "4ec8b51308a140a882febbcab78aaa095db70fae3c81bb1bafb9179cf3a0c14b"
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
@@ -592762,7 +592762,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
+              "sha256": "9cb970f5ba8513d4157944f8cf845624148325c01130e4775dbc204a5d1986af"
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
@@ -592922,7 +592922,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-order-details.test.tsx",
-              "sha256": "20bf72ff441ad1995c6ede02b7d8f2e79424f9162364d9a6fff38f4e5eef0951"
+              "sha256": "39ec7c2a28476ca9df561e340bc39f11c5e86efd57ce637702c1857c200c2112"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -593953,7 +593953,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Customer electricity and saving previews and the paid saving staff address review recover from held reads. The staff review keeps its draft, enables an explicit retry and ignores a late obsolete response. Remaining bespoke list, detail and staff route states require verification."
+        "Customer electricity and saving checkout, electricity revision and cancellation, solar intake and paid saving staff address previews recover from held reads. Remaining bespoke list, detail and staff route states require verification."
       ],
       "owner": null,
       "depends_on": [],
@@ -593991,7 +593991,8 @@
           "release-0.5-onboarding-deadlines-coverage",
           "release-0.5-conditional-heading-acceptance",
           "release-0.5-checkout-read-recovery",
-          "release-0.5-staff-saving-address-read"
+          "release-0.5-staff-saving-address-read",
+          "release-0.5-customer-review-deadlines"
         ],
         "current_acceptance": null
       }
@@ -594142,7 +594143,7 @@
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
-              "sha256": "0d5c8b69ca42966f7a07d258e98324d4025f17e832df84152319eabb68383753"
+              "sha256": "7685ca2ff7aae1ea62ee84c1adbdf6a89bbad194690a9d84557f081131875b0e"
             },
             {
               "path": "apps/web/e2e/ui-interaction.spec.ts",
@@ -594682,11 +594683,11 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
-              "sha256": "fc365aac52386a33dbfa80a739a0c3dbc5535be4626e11fffa49091b2b5fe1b9"
+              "sha256": "4ec8b51308a140a882febbcab78aaa095db70fae3c81bb1bafb9179cf3a0c14b"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderRevisionForm.tsx",
-              "sha256": "1dff9ca23f43a7ecfee759a7dc87de930ba4814e497453d4f77a689284fe732f"
+              "sha256": "a49825aeb8eb76d6955e242c0c77695411225efc99a08b64482d92e147df323e"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -594698,7 +594699,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
+              "sha256": "9cb970f5ba8513d4157944f8cf845624148325c01130e4775dbc204a5d1986af"
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
@@ -594842,7 +594843,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-order-details.test.tsx",
-              "sha256": "20bf72ff441ad1995c6ede02b7d8f2e79424f9162364d9a6fff38f4e5eef0951"
+              "sha256": "39ec7c2a28476ca9df561e340bc39f11c5e86efd57ce637702c1857c200c2112"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -595945,7 +595946,7 @@
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
-              "sha256": "0d5c8b69ca42966f7a07d258e98324d4025f17e832df84152319eabb68383753"
+              "sha256": "7685ca2ff7aae1ea62ee84c1adbdf6a89bbad194690a9d84557f081131875b0e"
             },
             {
               "path": "apps/web/e2e/ui-interaction.spec.ts",
@@ -596485,11 +596486,11 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
-              "sha256": "fc365aac52386a33dbfa80a739a0c3dbc5535be4626e11fffa49091b2b5fe1b9"
+              "sha256": "4ec8b51308a140a882febbcab78aaa095db70fae3c81bb1bafb9179cf3a0c14b"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderRevisionForm.tsx",
-              "sha256": "1dff9ca23f43a7ecfee759a7dc87de930ba4814e497453d4f77a689284fe732f"
+              "sha256": "a49825aeb8eb76d6955e242c0c77695411225efc99a08b64482d92e147df323e"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -596501,7 +596502,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
+              "sha256": "9cb970f5ba8513d4157944f8cf845624148325c01130e4775dbc204a5d1986af"
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
@@ -596645,7 +596646,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-order-details.test.tsx",
-              "sha256": "20bf72ff441ad1995c6ede02b7d8f2e79424f9162364d9a6fff38f4e5eef0951"
+              "sha256": "39ec7c2a28476ca9df561e340bc39f11c5e86efd57ce637702c1857c200c2112"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -597748,7 +597749,7 @@
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
-              "sha256": "0d5c8b69ca42966f7a07d258e98324d4025f17e832df84152319eabb68383753"
+              "sha256": "7685ca2ff7aae1ea62ee84c1adbdf6a89bbad194690a9d84557f081131875b0e"
             },
             {
               "path": "apps/web/e2e/ui-interaction.spec.ts",
@@ -598288,11 +598289,11 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
-              "sha256": "fc365aac52386a33dbfa80a739a0c3dbc5535be4626e11fffa49091b2b5fe1b9"
+              "sha256": "4ec8b51308a140a882febbcab78aaa095db70fae3c81bb1bafb9179cf3a0c14b"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderRevisionForm.tsx",
-              "sha256": "1dff9ca23f43a7ecfee759a7dc87de930ba4814e497453d4f77a689284fe732f"
+              "sha256": "a49825aeb8eb76d6955e242c0c77695411225efc99a08b64482d92e147df323e"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -598304,7 +598305,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
+              "sha256": "9cb970f5ba8513d4157944f8cf845624148325c01130e4775dbc204a5d1986af"
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
@@ -598448,7 +598449,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-order-details.test.tsx",
-              "sha256": "20bf72ff441ad1995c6ede02b7d8f2e79424f9162364d9a6fff38f4e5eef0951"
+              "sha256": "39ec7c2a28476ca9df561e340bc39f11c5e86efd57ce637702c1857c200c2112"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -599551,7 +599552,7 @@
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
-              "sha256": "0d5c8b69ca42966f7a07d258e98324d4025f17e832df84152319eabb68383753"
+              "sha256": "7685ca2ff7aae1ea62ee84c1adbdf6a89bbad194690a9d84557f081131875b0e"
             },
             {
               "path": "apps/web/e2e/ui-interaction.spec.ts",
@@ -600091,11 +600092,11 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
-              "sha256": "fc365aac52386a33dbfa80a739a0c3dbc5535be4626e11fffa49091b2b5fe1b9"
+              "sha256": "4ec8b51308a140a882febbcab78aaa095db70fae3c81bb1bafb9179cf3a0c14b"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderRevisionForm.tsx",
-              "sha256": "1dff9ca23f43a7ecfee759a7dc87de930ba4814e497453d4f77a689284fe732f"
+              "sha256": "a49825aeb8eb76d6955e242c0c77695411225efc99a08b64482d92e147df323e"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -600107,7 +600108,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
+              "sha256": "9cb970f5ba8513d4157944f8cf845624148325c01130e4775dbc204a5d1986af"
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
@@ -600251,7 +600252,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-order-details.test.tsx",
-              "sha256": "20bf72ff441ad1995c6ede02b7d8f2e79424f9162364d9a6fff38f4e5eef0951"
+              "sha256": "39ec7c2a28476ca9df561e340bc39f11c5e86efd57ce637702c1857c200c2112"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -601354,7 +601355,7 @@
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
-              "sha256": "0d5c8b69ca42966f7a07d258e98324d4025f17e832df84152319eabb68383753"
+              "sha256": "7685ca2ff7aae1ea62ee84c1adbdf6a89bbad194690a9d84557f081131875b0e"
             },
             {
               "path": "apps/web/e2e/ui-interaction.spec.ts",
@@ -601894,11 +601895,11 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
-              "sha256": "fc365aac52386a33dbfa80a739a0c3dbc5535be4626e11fffa49091b2b5fe1b9"
+              "sha256": "4ec8b51308a140a882febbcab78aaa095db70fae3c81bb1bafb9179cf3a0c14b"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderRevisionForm.tsx",
-              "sha256": "1dff9ca23f43a7ecfee759a7dc87de930ba4814e497453d4f77a689284fe732f"
+              "sha256": "a49825aeb8eb76d6955e242c0c77695411225efc99a08b64482d92e147df323e"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -601910,7 +601911,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
+              "sha256": "9cb970f5ba8513d4157944f8cf845624148325c01130e4775dbc204a5d1986af"
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
@@ -602054,7 +602055,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-order-details.test.tsx",
-              "sha256": "20bf72ff441ad1995c6ede02b7d8f2e79424f9162364d9a6fff38f4e5eef0951"
+              "sha256": "39ec7c2a28476ca9df561e340bc39f11c5e86efd57ce637702c1857c200c2112"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -603157,7 +603158,7 @@
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
-              "sha256": "0d5c8b69ca42966f7a07d258e98324d4025f17e832df84152319eabb68383753"
+              "sha256": "7685ca2ff7aae1ea62ee84c1adbdf6a89bbad194690a9d84557f081131875b0e"
             },
             {
               "path": "apps/web/e2e/ui-interaction.spec.ts",
@@ -603697,11 +603698,11 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
-              "sha256": "fc365aac52386a33dbfa80a739a0c3dbc5535be4626e11fffa49091b2b5fe1b9"
+              "sha256": "4ec8b51308a140a882febbcab78aaa095db70fae3c81bb1bafb9179cf3a0c14b"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderRevisionForm.tsx",
-              "sha256": "1dff9ca23f43a7ecfee759a7dc87de930ba4814e497453d4f77a689284fe732f"
+              "sha256": "a49825aeb8eb76d6955e242c0c77695411225efc99a08b64482d92e147df323e"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -603713,7 +603714,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
+              "sha256": "9cb970f5ba8513d4157944f8cf845624148325c01130e4775dbc204a5d1986af"
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
@@ -603857,7 +603858,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-order-details.test.tsx",
-              "sha256": "20bf72ff441ad1995c6ede02b7d8f2e79424f9162364d9a6fff38f4e5eef0951"
+              "sha256": "39ec7c2a28476ca9df561e340bc39f11c5e86efd57ce637702c1857c200c2112"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -604960,7 +604961,7 @@
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
-              "sha256": "0d5c8b69ca42966f7a07d258e98324d4025f17e832df84152319eabb68383753"
+              "sha256": "7685ca2ff7aae1ea62ee84c1adbdf6a89bbad194690a9d84557f081131875b0e"
             },
             {
               "path": "apps/web/e2e/ui-interaction.spec.ts",
@@ -605500,11 +605501,11 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
-              "sha256": "fc365aac52386a33dbfa80a739a0c3dbc5535be4626e11fffa49091b2b5fe1b9"
+              "sha256": "4ec8b51308a140a882febbcab78aaa095db70fae3c81bb1bafb9179cf3a0c14b"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderRevisionForm.tsx",
-              "sha256": "1dff9ca23f43a7ecfee759a7dc87de930ba4814e497453d4f77a689284fe732f"
+              "sha256": "a49825aeb8eb76d6955e242c0c77695411225efc99a08b64482d92e147df323e"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -605516,7 +605517,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
+              "sha256": "9cb970f5ba8513d4157944f8cf845624148325c01130e4775dbc204a5d1986af"
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
@@ -605660,7 +605661,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-order-details.test.tsx",
-              "sha256": "20bf72ff441ad1995c6ede02b7d8f2e79424f9162364d9a6fff38f4e5eef0951"
+              "sha256": "39ec7c2a28476ca9df561e340bc39f11c5e86efd57ce637702c1857c200c2112"
             },
             {
               "path": "apps/web/src/pages/electricity-order.test.tsx",
@@ -645315,7 +645316,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-correction-forms.spec.ts",
-              "sha256": "5af73fc375d261e8befbf4f360c8cc3dbff51adaa90e2ae3a6f1c1f2aa249dbe"
+              "sha256": "212e7da5b0ecf1f747bd27ed62cba12feed9b8bc7767478ddf5c66f40ea0f2bc"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -645575,7 +645576,7 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
-              "sha256": "fc365aac52386a33dbfa80a739a0c3dbc5535be4626e11fffa49091b2b5fe1b9"
+              "sha256": "4ec8b51308a140a882febbcab78aaa095db70fae3c81bb1bafb9179cf3a0c14b"
             },
             {
               "path": "apps/web/src/pages/InvoiceActivity.tsx",
@@ -645615,7 +645616,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-order-details.test.tsx",
-              "sha256": "20bf72ff441ad1995c6ede02b7d8f2e79424f9162364d9a6fff38f4e5eef0951"
+              "sha256": "39ec7c2a28476ca9df561e340bc39f11c5e86efd57ce637702c1857c200c2112"
             },
             {
               "path": "apps/web/src/providers/QueryProvider.tsx",
@@ -646144,7 +646145,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-correction-forms.spec.ts",
-              "sha256": "5af73fc375d261e8befbf4f360c8cc3dbff51adaa90e2ae3a6f1c1f2aa249dbe"
+              "sha256": "212e7da5b0ecf1f747bd27ed62cba12feed9b8bc7767478ddf5c66f40ea0f2bc"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -646404,7 +646405,7 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
-              "sha256": "fc365aac52386a33dbfa80a739a0c3dbc5535be4626e11fffa49091b2b5fe1b9"
+              "sha256": "4ec8b51308a140a882febbcab78aaa095db70fae3c81bb1bafb9179cf3a0c14b"
             },
             {
               "path": "apps/web/src/pages/InvoiceActivity.tsx",
@@ -646444,7 +646445,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-order-details.test.tsx",
-              "sha256": "20bf72ff441ad1995c6ede02b7d8f2e79424f9162364d9a6fff38f4e5eef0951"
+              "sha256": "39ec7c2a28476ca9df561e340bc39f11c5e86efd57ce637702c1857c200c2112"
             },
             {
               "path": "apps/web/src/providers/QueryProvider.tsx",
@@ -646981,7 +646982,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-correction-forms.spec.ts",
-              "sha256": "5af73fc375d261e8befbf4f360c8cc3dbff51adaa90e2ae3a6f1c1f2aa249dbe"
+              "sha256": "212e7da5b0ecf1f747bd27ed62cba12feed9b8bc7767478ddf5c66f40ea0f2bc"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -647241,7 +647242,7 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
-              "sha256": "fc365aac52386a33dbfa80a739a0c3dbc5535be4626e11fffa49091b2b5fe1b9"
+              "sha256": "4ec8b51308a140a882febbcab78aaa095db70fae3c81bb1bafb9179cf3a0c14b"
             },
             {
               "path": "apps/web/src/pages/InvoiceActivity.tsx",
@@ -647281,7 +647282,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-order-details.test.tsx",
-              "sha256": "20bf72ff441ad1995c6ede02b7d8f2e79424f9162364d9a6fff38f4e5eef0951"
+              "sha256": "39ec7c2a28476ca9df561e340bc39f11c5e86efd57ce637702c1857c200c2112"
             },
             {
               "path": "apps/web/src/providers/QueryProvider.tsx",
@@ -647802,7 +647803,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-correction-forms.spec.ts",
-              "sha256": "5af73fc375d261e8befbf4f360c8cc3dbff51adaa90e2ae3a6f1c1f2aa249dbe"
+              "sha256": "212e7da5b0ecf1f747bd27ed62cba12feed9b8bc7767478ddf5c66f40ea0f2bc"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -648062,7 +648063,7 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
-              "sha256": "fc365aac52386a33dbfa80a739a0c3dbc5535be4626e11fffa49091b2b5fe1b9"
+              "sha256": "4ec8b51308a140a882febbcab78aaa095db70fae3c81bb1bafb9179cf3a0c14b"
             },
             {
               "path": "apps/web/src/pages/InvoiceActivity.tsx",
@@ -648102,7 +648103,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-order-details.test.tsx",
-              "sha256": "20bf72ff441ad1995c6ede02b7d8f2e79424f9162364d9a6fff38f4e5eef0951"
+              "sha256": "39ec7c2a28476ca9df561e340bc39f11c5e86efd57ce637702c1857c200c2112"
             },
             {
               "path": "apps/web/src/providers/QueryProvider.tsx",
@@ -648622,7 +648623,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-correction-forms.spec.ts",
-              "sha256": "5af73fc375d261e8befbf4f360c8cc3dbff51adaa90e2ae3a6f1c1f2aa249dbe"
+              "sha256": "212e7da5b0ecf1f747bd27ed62cba12feed9b8bc7767478ddf5c66f40ea0f2bc"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -648882,7 +648883,7 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
-              "sha256": "fc365aac52386a33dbfa80a739a0c3dbc5535be4626e11fffa49091b2b5fe1b9"
+              "sha256": "4ec8b51308a140a882febbcab78aaa095db70fae3c81bb1bafb9179cf3a0c14b"
             },
             {
               "path": "apps/web/src/pages/InvoiceActivity.tsx",
@@ -648922,7 +648923,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-order-details.test.tsx",
-              "sha256": "20bf72ff441ad1995c6ede02b7d8f2e79424f9162364d9a6fff38f4e5eef0951"
+              "sha256": "39ec7c2a28476ca9df561e340bc39f11c5e86efd57ce637702c1857c200c2112"
             },
             {
               "path": "apps/web/src/providers/QueryProvider.tsx",
@@ -665749,7 +665750,7 @@
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
-              "sha256": "0d5c8b69ca42966f7a07d258e98324d4025f17e832df84152319eabb68383753"
+              "sha256": "7685ca2ff7aae1ea62ee84c1adbdf6a89bbad194690a9d84557f081131875b0e"
             },
             {
               "path": "apps/web/package.json",
@@ -665905,7 +665906,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
+              "sha256": "9cb970f5ba8513d4157944f8cf845624148325c01130e4775dbc204a5d1986af"
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
@@ -666417,7 +666418,7 @@
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
-              "sha256": "0d5c8b69ca42966f7a07d258e98324d4025f17e832df84152319eabb68383753"
+              "sha256": "7685ca2ff7aae1ea62ee84c1adbdf6a89bbad194690a9d84557f081131875b0e"
             },
             {
               "path": "apps/web/package.json",
@@ -666573,7 +666574,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
+              "sha256": "9cb970f5ba8513d4157944f8cf845624148325c01130e4775dbc204a5d1986af"
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
@@ -667084,7 +667085,7 @@
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
-              "sha256": "0d5c8b69ca42966f7a07d258e98324d4025f17e832df84152319eabb68383753"
+              "sha256": "7685ca2ff7aae1ea62ee84c1adbdf6a89bbad194690a9d84557f081131875b0e"
             },
             {
               "path": "apps/web/package.json",
@@ -667240,7 +667241,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
+              "sha256": "9cb970f5ba8513d4157944f8cf845624148325c01130e4775dbc204a5d1986af"
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
@@ -667753,7 +667754,7 @@
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
-              "sha256": "0d5c8b69ca42966f7a07d258e98324d4025f17e832df84152319eabb68383753"
+              "sha256": "7685ca2ff7aae1ea62ee84c1adbdf6a89bbad194690a9d84557f081131875b0e"
             },
             {
               "path": "apps/web/package.json",
@@ -667909,7 +667910,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
+              "sha256": "9cb970f5ba8513d4157944f8cf845624148325c01130e4775dbc204a5d1986af"
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
@@ -668422,7 +668423,7 @@
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
-              "sha256": "0d5c8b69ca42966f7a07d258e98324d4025f17e832df84152319eabb68383753"
+              "sha256": "7685ca2ff7aae1ea62ee84c1adbdf6a89bbad194690a9d84557f081131875b0e"
             },
             {
               "path": "apps/web/package.json",
@@ -668578,7 +668579,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
+              "sha256": "9cb970f5ba8513d4157944f8cf845624148325c01130e4775dbc204a5d1986af"
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
@@ -669088,7 +669089,7 @@
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
-              "sha256": "0d5c8b69ca42966f7a07d258e98324d4025f17e832df84152319eabb68383753"
+              "sha256": "7685ca2ff7aae1ea62ee84c1adbdf6a89bbad194690a9d84557f081131875b0e"
             },
             {
               "path": "apps/web/package.json",
@@ -669244,7 +669245,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
+              "sha256": "9cb970f5ba8513d4157944f8cf845624148325c01130e4775dbc204a5d1986af"
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
@@ -669754,7 +669755,7 @@
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
-              "sha256": "0d5c8b69ca42966f7a07d258e98324d4025f17e832df84152319eabb68383753"
+              "sha256": "7685ca2ff7aae1ea62ee84c1adbdf6a89bbad194690a9d84557f081131875b0e"
             },
             {
               "path": "apps/web/package.json",
@@ -669910,7 +669911,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
+              "sha256": "9cb970f5ba8513d4157944f8cf845624148325c01130e4775dbc204a5d1986af"
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
@@ -670421,7 +670422,7 @@
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
-              "sha256": "0d5c8b69ca42966f7a07d258e98324d4025f17e832df84152319eabb68383753"
+              "sha256": "7685ca2ff7aae1ea62ee84c1adbdf6a89bbad194690a9d84557f081131875b0e"
             },
             {
               "path": "apps/web/package.json",
@@ -670577,7 +670578,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
+              "sha256": "9cb970f5ba8513d4157944f8cf845624148325c01130e4775dbc204a5d1986af"
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
@@ -671087,7 +671088,7 @@
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
-              "sha256": "0d5c8b69ca42966f7a07d258e98324d4025f17e832df84152319eabb68383753"
+              "sha256": "7685ca2ff7aae1ea62ee84c1adbdf6a89bbad194690a9d84557f081131875b0e"
             },
             {
               "path": "apps/web/package.json",
@@ -671243,7 +671244,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
+              "sha256": "9cb970f5ba8513d4157944f8cf845624148325c01130e4775dbc204a5d1986af"
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
@@ -671754,7 +671755,7 @@
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
-              "sha256": "0d5c8b69ca42966f7a07d258e98324d4025f17e832df84152319eabb68383753"
+              "sha256": "7685ca2ff7aae1ea62ee84c1adbdf6a89bbad194690a9d84557f081131875b0e"
             },
             {
               "path": "apps/web/package.json",
@@ -671910,7 +671911,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
+              "sha256": "9cb970f5ba8513d4157944f8cf845624148325c01130e4775dbc204a5d1986af"
             },
             {
               "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
@@ -683820,7 +683821,7 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
-              "sha256": "fc365aac52386a33dbfa80a739a0c3dbc5535be4626e11fffa49091b2b5fe1b9"
+              "sha256": "4ec8b51308a140a882febbcab78aaa095db70fae3c81bb1bafb9179cf3a0c14b"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrdersPage.tsx",
@@ -684661,7 +684662,7 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
-              "sha256": "fc365aac52386a33dbfa80a739a0c3dbc5535be4626e11fffa49091b2b5fe1b9"
+              "sha256": "4ec8b51308a140a882febbcab78aaa095db70fae3c81bb1bafb9179cf3a0c14b"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrdersPage.tsx",
@@ -685504,7 +685505,7 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
-              "sha256": "fc365aac52386a33dbfa80a739a0c3dbc5535be4626e11fffa49091b2b5fe1b9"
+              "sha256": "4ec8b51308a140a882febbcab78aaa095db70fae3c81bb1bafb9179cf3a0c14b"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrdersPage.tsx",
@@ -686345,7 +686346,7 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
-              "sha256": "fc365aac52386a33dbfa80a739a0c3dbc5535be4626e11fffa49091b2b5fe1b9"
+              "sha256": "4ec8b51308a140a882febbcab78aaa095db70fae3c81bb1bafb9179cf3a0c14b"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrdersPage.tsx",
@@ -687186,7 +687187,7 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
-              "sha256": "fc365aac52386a33dbfa80a739a0c3dbc5535be4626e11fffa49091b2b5fe1b9"
+              "sha256": "4ec8b51308a140a882febbcab78aaa095db70fae3c81bb1bafb9179cf3a0c14b"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrdersPage.tsx",
@@ -688031,7 +688032,7 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
-              "sha256": "fc365aac52386a33dbfa80a739a0c3dbc5535be4626e11fffa49091b2b5fe1b9"
+              "sha256": "4ec8b51308a140a882febbcab78aaa095db70fae3c81bb1bafb9179cf3a0c14b"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrdersPage.tsx",
@@ -688876,7 +688877,7 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
-              "sha256": "fc365aac52386a33dbfa80a739a0c3dbc5535be4626e11fffa49091b2b5fe1b9"
+              "sha256": "4ec8b51308a140a882febbcab78aaa095db70fae3c81bb1bafb9179cf3a0c14b"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrdersPage.tsx",
@@ -689717,7 +689718,7 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
-              "sha256": "fc365aac52386a33dbfa80a739a0c3dbc5535be4626e11fffa49091b2b5fe1b9"
+              "sha256": "4ec8b51308a140a882febbcab78aaa095db70fae3c81bb1bafb9179cf3a0c14b"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrdersPage.tsx",
@@ -690558,7 +690559,7 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
-              "sha256": "fc365aac52386a33dbfa80a739a0c3dbc5535be4626e11fffa49091b2b5fe1b9"
+              "sha256": "4ec8b51308a140a882febbcab78aaa095db70fae3c81bb1bafb9179cf3a0c14b"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrdersPage.tsx",
@@ -691400,7 +691401,7 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
-              "sha256": "fc365aac52386a33dbfa80a739a0c3dbc5535be4626e11fffa49091b2b5fe1b9"
+              "sha256": "4ec8b51308a140a882febbcab78aaa095db70fae3c81bb1bafb9179cf3a0c14b"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrdersPage.tsx",
@@ -692247,7 +692248,7 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
-              "sha256": "fc365aac52386a33dbfa80a739a0c3dbc5535be4626e11fffa49091b2b5fe1b9"
+              "sha256": "4ec8b51308a140a882febbcab78aaa095db70fae3c81bb1bafb9179cf3a0c14b"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrdersPage.tsx",
@@ -712303,7 +712304,7 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
-              "sha256": "fc365aac52386a33dbfa80a739a0c3dbc5535be4626e11fffa49091b2b5fe1b9"
+              "sha256": "4ec8b51308a140a882febbcab78aaa095db70fae3c81bb1bafb9179cf3a0c14b"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrdersPage.tsx",
@@ -713027,7 +713028,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
+              "sha256": "9cb970f5ba8513d4157944f8cf845624148325c01130e4775dbc204a5d1986af"
             },
             {
               "path": "apps/web/src/pages/solar-request.test.tsx",
@@ -723597,7 +723598,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "The customer electricity and saving checkout and staff paid saving address review journeys have bounded preview recovery. Remaining native and conditional forms, contrast, command feedback and other route state verification stay open."
+        "Customer solar intake, electricity revision and cancellation and earlier checkout and staff address review journeys now have bounded preview recovery. Remaining native and conditional forms, contrast, command feedback and other route state verification stay open."
       ],
       "owner": null,
       "depends_on": [],
@@ -723675,7 +723676,8 @@
           "release-0.5-route-contrast-matrix",
           "release-0.5-banner-dismiss-contrast",
           "release-0.5-checkout-read-recovery",
-          "release-0.5-staff-saving-address-read"
+          "release-0.5-staff-saving-address-read",
+          "release-0.5-customer-review-deadlines"
         ]
       }
     },
@@ -724771,11 +724773,11 @@
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
-              "sha256": "fc365aac52386a33dbfa80a739a0c3dbc5535be4626e11fffa49091b2b5fe1b9"
+              "sha256": "4ec8b51308a140a882febbcab78aaa095db70fae3c81bb1bafb9179cf3a0c14b"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrderRevisionForm.tsx",
-              "sha256": "1dff9ca23f43a7ecfee759a7dc87de930ba4814e497453d4f77a689284fe732f"
+              "sha256": "a49825aeb8eb76d6955e242c0c77695411225efc99a08b64482d92e147df323e"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrdersPage.tsx",
@@ -724831,7 +724833,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
-              "sha256": "8330e2f691eec27f6938123a71338ac5a5d0ea61a5dc03624d1efdd238d3e874"
+              "sha256": "9cb970f5ba8513d4157944f8cf845624148325c01130e4775dbc204a5d1986af"
             },
             {
               "path": "apps/web/src/pages/SolarRequestsPage.tsx",
@@ -725205,7 +725207,8 @@
             "Terms editor contrast passed current source coverage, production size and cold authentication checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-contrast-matrix/proof.json",
             "Status banner dismiss contrast passed current source coverage, production size and cold authentication checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-banner-dismiss-contrast/proof.json",
             "Checkout read recovery passed current source coverage, production size and cold authentication checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-checkout-read-recovery/proof.json",
-            "Paid saving staff address review recovery passed current source coverage, production size and cold authentication checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-saving-address-read/proof.json"
+            "Paid saving staff address review recovery passed current source coverage, production size and cold authentication checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-saving-address-read/proof.json",
+            "Solar and electricity customer review recovery passed current source coverage, production size and cold authentication checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-customer-review-deadlines/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -791576,6 +791579,57 @@
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-saving-address-read/reviewed.patch",
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-saving-address-read",
       "release_disposition": "Staff saving address recovery recorded, with wider route verification still open. Other v0.5.0 criteria remain open."
+    },
+    "release-0.5-customer-review-deadlines": {
+      "batch": "release-0.5-customer-review-deadlines",
+      "base_commit": "c3d84ac1a74386eba8b1211c0f0d1cdb1bf74fba",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/electricity-correction-forms.spec.ts",
+          "sha256": "212e7da5b0ecf1f747bd27ed62cba12feed9b8bc7767478ddf5c66f40ea0f2bc"
+        },
+        {
+          "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
+          "sha256": "7685ca2ff7aae1ea62ee84c1adbdf6a89bbad194690a9d84557f081131875b0e"
+        },
+        {
+          "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
+          "sha256": "4ec8b51308a140a882febbcab78aaa095db70fae3c81bb1bafb9179cf3a0c14b"
+        },
+        {
+          "path": "apps/web/src/pages/ElectricityOrderRevisionForm.tsx",
+          "sha256": "a49825aeb8eb76d6955e242c0c77695411225efc99a08b64482d92e147df323e"
+        },
+        {
+          "path": "apps/web/src/pages/SolarRequestPage.tsx",
+          "sha256": "9cb970f5ba8513d4157944f8cf845624148325c01130e4775dbc204a5d1986af"
+        },
+        {
+          "path": "apps/web/src/pages/electricity-order-details.test.tsx",
+          "sha256": "39ec7c2a28476ca9df561e340bc39f11c5e86efd57ce637702c1857c200c2112"
+        }
+      ],
+      "checks": [
+        "Solar intake, electricity revision pricing and electricity cancellation previews now use the existing owner-scoped 15-second read deadline. Their existing validation, authorization, receipt and explicit submission controls remain in place.",
+        "Solar retries the same authoritative inputs and submission key after a held preview, preserving the acknowledged terms and withholding draft advancement and submission until the fresh preview. The existing commercial fetch still handles explicit terms denial.",
+        "Electricity revision preserves edited quantities and correction notes across the held preview, uses the same request on explicit retry, and ignores a stale denied response. Cancellation timeout aborts the transport, keeps the reason and performs no command. The fresh cancellation review still binds the exact refund and confirmation hash before mutation.",
+        "48 Chromium and 15 Mobile Safari cases, and 52 affected unit cases passed. Eight coverage groups, 98 bundle budgets, three cold authentication transfers, scoped lint, formatting and typecheck passed."
+      ],
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-customer-review-deadlines/proof.json",
+      "source_scope_proof_sha256": "f08d0bcbf0f6997d95b292a6e98a5da142c4351d1833323279d46380441aad43",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-customer-review-deadlines/renewed-bindings.json",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-customer-review-deadlines/reviewed.patch",
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-customer-review-deadlines",
+      "release_disposition": "Customer solar and electricity review recovery recorded, with wider route verification still open. Other v0.5.0 criteria remain open."
     }
   },
   "historical_improvements": [

@@ -726,6 +726,45 @@ test('solar keeps departure blocked while its authoritative review is pending', 
 });
 
 for (const locale of ['en', 'fa'] as const)
+  test(`solar retries a stalled authoritative review with the same submission key (${locale})`, async ({
+    page,
+  }) => {
+    await page.clock.install();
+    const state = await fixture(page, 'solar', locale);
+    const reviews: unknown[] = [];
+    await page.route('**/api/solar/requests/review', (route) => {
+      reviews.push(route.request().postDataJSON());
+      if (reviews.length > 1) return route.fallback();
+    });
+    await open(page, 'solar', locale);
+    const next = button(page, 'electricity.order.next', locale);
+    await next.click();
+    await next.click();
+    const agreement = page.getByLabel(tSolar('agreement', locale), { exact: true });
+    await agreement.check();
+    const draftWrites = state.saves.length;
+    await next.click();
+    await expect.poll(() => reviews.length).toBe(1);
+    await page.clock.fastForward(15_001);
+    await expect(page.getByRole('alert')).toContainText(tSolar('submitError', locale));
+    await expect(page).toHaveURL(/step=3$/);
+    await expect(agreement).toBeChecked();
+    expect(state.saves).toHaveLength(draftWrites);
+    expect(state.orders).toEqual([]);
+    await next.click();
+    await expect(page).toHaveURL(/step=4$/);
+    expect(reviews).toEqual([reviews[0], reviews[0]]);
+    expect(reviews[0]).toMatchObject({
+      siteAddressId: address.id,
+      submissionKey: expect.any(String),
+    });
+    await expect(
+      page.getByRole('button', { name: tSolar('submit', locale), exact: true })
+    ).toBeDisabled();
+    expect(state.orders).toEqual([]);
+  });
+
+for (const locale of ['en', 'fa'] as const)
   for (const mode of ['saving', 'solar'] as const) {
     test(`${mode} final sections save before editing and refresh the reviewed input (${locale})`, async ({
       page,

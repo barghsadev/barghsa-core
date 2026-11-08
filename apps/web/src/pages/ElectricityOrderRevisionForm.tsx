@@ -3,7 +3,7 @@ import { confirmationText } from '@barghsa/i18n/confirmation';
 import { toast } from '../lib/toast-api.js';
 import { useRiskConfirmation } from '../hooks/useRiskConfirmation.js';
 import { useQueryClient } from '@tanstack/react-query';
-import { useServerDetailQuery } from '../hooks/useServerQuery.js';
+import { useOwnedManualServerRead, useServerDetailQuery } from '../hooks/useServerQuery.js';
 import { queryKeys } from '../lib/query-keys.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { OrderWalletBalance } from '../components/OrderWalletBalance.js';
@@ -146,6 +146,7 @@ export function ElectricityOrderRevisionForm({
     order.profileId,
     order.versionId,
   ]);
+  const readReview = useOwnedManualServerRead(scopeKey);
   const readOwner = useRef({ scopeKey, epoch: 0 });
   if (readOwner.current.scopeKey !== scopeKey)
     readOwner.current = { scopeKey, epoch: readOwner.current.epoch + 1 };
@@ -473,9 +474,9 @@ export function ElectricityOrderRevisionForm({
         fields.totalKwh.trim()
     );
   }
-  function showFields(response: Response, value: unknown) {
+  function showFields(status: number, value: unknown) {
     return (
-      response.status === 400 &&
+      status === 400 &&
       correctionRecord(value) &&
       correctionRecord(value.error) &&
       value.error.code === ErrorCodes.VALIDATION_INPUT_INVALID.code &&
@@ -505,24 +506,43 @@ export function ElectricityOrderRevisionForm({
     try {
       await form.handleSubmit(async () => {
         if (token !== generation.current || raw !== JSON.stringify(form.getValues())) return;
-        const response = await fetch(
-          `/api/electricity/orders/${encodeURIComponent(order.orderId)}/revision-preview`,
-          {
-            method: 'POST',
-            credentials: 'include',
-            headers: withCsrf({ 'Content-Type': 'application/json' }),
-            body: JSON.stringify(captured),
+        const { status, ok, value } = await readReview(
+          queryKeys.orders.detail(
+            {
+              context: 'customer',
+              ownerId: order.profileId,
+              accountId: actor,
+              revision: profileRevision,
+            },
+            JSON.stringify([order.orderId, 'revision-preview'])
+          ),
+          undefined,
+          async (signal) => {
+            const response = await fetch(
+              `/api/electricity/orders/${encodeURIComponent(order.orderId)}/revision-preview`,
+              {
+                method: 'POST',
+                credentials: 'include',
+                signal,
+                headers: withCsrf({ 'Content-Type': 'application/json' }),
+                body: JSON.stringify(captured),
+              }
+            );
+            return {
+              status: response.status,
+              ok: response.ok,
+              value: (await response.json().catch(() => null)) as unknown,
+            };
           }
         );
-        const value: unknown = await response.json().catch(() => null);
         if (token !== generation.current) return;
-        if ([401, 403, 404].includes(response.status)) {
+        if ([401, 403, 404].includes(status)) {
           withdraw();
           return;
         }
         if (raw !== JSON.stringify(form.getValues())) return;
-        if (!response.ok) {
-          if (showFields(response, value)) return;
+        if (!ok) {
+          if (showFields(status, value)) return;
           throw new Error('Quote unavailable');
         }
         if (!electricityRevisionQuote(value) || !bindQuote(value, captured))
@@ -572,7 +592,7 @@ export function ElectricityOrderRevisionForm({
           setUnconfirmed(false);
           setReview(null);
           lock.release('revision');
-          if (showFields(response, value)) return;
+          if (showFields(response.status, value)) return;
           setError(true);
           return;
         }

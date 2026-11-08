@@ -5,6 +5,10 @@ import { useRiskConfirmation } from '../hooks/useRiskConfirmation.js';
 import { OrderWalletBalance } from '../components/OrderWalletBalance.js';
 import { commercialFetch as fetch } from '../lib/commercial-fetch.js';
 import { readWithDeadline } from '../lib/server-query-client.js';
+import { queryKeys } from '../lib/query-keys.js';
+import { useOwnedManualServerRead } from '../hooks/useServerQuery.js';
+import { useAccountUser } from '../hooks/useAccountUser.js';
+import { useProfileContextRevision } from '../lib/profile-context.js';
 import { StepReviewPage } from '../components/StepReviewPage.js';
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate } from '@tanstack/react-router';
@@ -117,6 +121,9 @@ export function SolarRequestPage() {
   const wizard = useWizardStep('/solar/requests/new', 4);
   const { step } = wizard;
   const [profileId, setProfileId] = useState('');
+  const actor = useAccountUser();
+  const profileRevision = useProfileContextRevision();
+  const readReview = useOwnedManualServerRead(JSON.stringify([actor, profileRevision, profileId]));
   const [addresses, setAddresses] = useState<Address[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState(false);
@@ -421,14 +428,30 @@ export function SolarRequestPage() {
         submissionKey.current = { fingerprint: keyFingerprint, key: crypto.randomUUID() };
       const input = { ...base, ...details, submissionKey: submissionKey.current.key };
       try {
-        const response = await fetch('/api/solar/requests/review', {
-          method: 'POST',
-          credentials: 'include',
-          headers: withCsrf({ 'Content-Type': 'application/json' }),
-          body: JSON.stringify(input),
-        });
-        if (!response.ok) throw new Error('review');
-        const receipt = (await response.json()) as SolarReview;
+        const receipt = await readReview(
+          queryKeys.solar.detail(
+            {
+              context: 'customer',
+              ownerId: profileId,
+              accountId: actor,
+              revision: profileRevision,
+            },
+            'submission-review'
+          ),
+          undefined,
+          async (signal) => {
+            const response = await fetch('/api/solar/requests/review', {
+              method: 'POST',
+              credentials: 'include',
+              signal,
+              headers: withCsrf({ 'Content-Type': 'application/json' }),
+              body: JSON.stringify(input),
+            });
+            if (!response.ok) throw new Error('review');
+            return (await response.json()) as SolarReview;
+          }
+        );
+        if (!current()) return;
         if (
           !receipt ||
           !/^[a-f0-9]{64}$/.test(receipt.hash) ||

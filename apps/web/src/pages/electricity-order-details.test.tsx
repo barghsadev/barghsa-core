@@ -5,6 +5,7 @@ import { createRoot } from 'react-dom/client';
 import { expect, it, vi } from 'vitest';
 import { ElectricityOrderDetailsPage } from './ElectricityOrderDetailsPage.js';
 import { AccountUserProvider } from '../hooks/useAccountUser.js';
+import { t } from '@barghsa/i18n/app';
 
 it('reviews the exact cancellation refund before submitting its hash', async () => {
   document.documentElement.lang = 'en';
@@ -69,23 +70,25 @@ it('reviews the exact cancellation refund before submitting its hash', async () 
     },
     hash: 'c'.repeat(64),
   };
-  const fetchMock = vi.fn(
-    async (url: string, _init?: RequestInit) =>
-      new Response(
-        JSON.stringify(
-          url === '/api/user/settings/timezone'
-            ? { timezone: 'Asia/Tehran' }
-            : url.endsWith('/cancel-review')
-              ? review
-              : url.endsWith('/cancel')
-                ? { orderId, status: 'cancelled', refundId: 'f1000000-0000-4000-8000-000000000001' }
-                : url.includes('/comments')
-                  ? { comments: [], nextBefore: null }
-                  : detail
-        ),
-        { headers: { 'Content-Type': 'application/json' } }
-      )
-  );
+  let reviewAttempts = 0;
+  const fetchMock = vi.fn(async (url: string, _init?: RequestInit) => {
+    if (url.endsWith('/cancel-review') && ++reviewAttempts === 1)
+      return new Promise<Response>(() => {});
+    return new Response(
+      JSON.stringify(
+        url === '/api/user/settings/timezone'
+          ? { timezone: 'Asia/Tehran' }
+          : url.endsWith('/cancel-review')
+            ? review
+            : url.endsWith('/cancel')
+              ? { orderId, status: 'cancelled', refundId: 'f1000000-0000-4000-8000-000000000001' }
+              : url.includes('/comments')
+                ? { comments: [], nextBefore: null }
+                : detail
+      ),
+      { headers: { 'Content-Type': 'application/json' } }
+    );
+  });
   vi.stubGlobal('fetch', fetchMock);
   const container = document.createElement('div');
   document.body.append(container);
@@ -109,11 +112,25 @@ it('reviews the exact cancellation refund before submitting its hash', async () 
       reason.dispatchEvent(new Event('input', { bubbles: true }));
     });
     await approveVisibleConfirmation();
-    await act(async () =>
-      reason
-        .closest('form')!
-        .dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
-    );
+    const prepare = () =>
+      act(async () =>
+        reason
+          .closest('form')!
+          .dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
+      );
+    vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
+    await prepare();
+    expect(reviewAttempts).toBe(1);
+    const pendingReview = fetchMock.mock.calls.find(([url]) => url.endsWith('/cancel-review'))!;
+    expect(pendingReview[1]?.signal?.aborted).toBe(false);
+    await act(async () => vi.advanceTimersByTimeAsync(15_001));
+    vi.useRealTimers();
+    expect(pendingReview[1]?.signal?.aborted).toBe(true);
+    expect(document.body.textContent).toContain(t('electricity.order.detail.cancelFailed', 'en'));
+    expect(reason.value).toBe('No longer needed');
+    expect(fetchMock.mock.calls.some(([url]) => url.endsWith('/cancel'))).toBe(false);
+    await prepare();
+    expect(reviewAttempts).toBe(2);
     expect(fetchMock).toHaveBeenCalledWith(
       `/api/electricity/orders/${orderId}/cancel-review`,
       expect.objectContaining({ body: JSON.stringify({ reason: 'No longer needed' }) })
@@ -133,6 +150,7 @@ it('reviews the exact cancellation refund before submitting its hash', async () 
       reason: 'No longer needed',
     });
   } finally {
+    vi.useRealTimers();
     await act(async () => root.unmount());
     container.remove();
     vi.unstubAllGlobals();
