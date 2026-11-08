@@ -304,6 +304,8 @@ for (const locale of ['en', 'fa'] as const)
     await page.route(`**/api/saving/orders/${savingOrderId}`, async (route) => {
       const wrongOrder = ++detailReads === 1;
       if (wrongOrder) await firstDetail;
+      if (detailReads === 2)
+        return route.fulfill({ json: { id: savingOrderId, profile_id: profileId } });
       return route.fulfill({
         json: {
           id: wrongOrder ? olderOrderId : savingOrderId,
@@ -356,7 +358,7 @@ for (const locale of ['en', 'fa'] as const)
           revisions: [],
           addressAmendments: [],
           hardwareAmendments: [],
-          hardwareUpgrades: [],
+          hardwareUpgrades: detailReads === 3 ? [null] : [],
         },
       });
     });
@@ -726,8 +728,23 @@ for (const locale of ['en', 'fa'] as const)
     ).toBeVisible();
     await expect(detail.getByText('PRIVATE_OTHER_SAVING_ORDER')).toHaveCount(0);
     expect(detailReads).toBe(1);
-    await detail.getByRole('button', { name: savingCopy('retry', locale), exact: true }).click();
-    await expect.poll(() => detailReads).toBe(2);
+    const retryDetail = detail.getByRole('button', {
+      name: savingCopy('retry', locale),
+      exact: true,
+    });
+    for (const rejectedRead of [2, 3]) {
+      await retryDetail.click();
+      await expect.poll(() => detailReads).toBe(rejectedRead);
+      await expect(detail.getByRole('heading', { level: 1 })).toHaveText(
+        savingCopy('orderDetail', locale)
+      );
+      await expect(
+        detail.getByRole('alert').filter({ hasText: savingCopy('error', locale) })
+      ).toBeVisible();
+      await expect(detail.locator(`a[href="/invoices/${invoiceId}"]`)).toHaveCount(0);
+    }
+    await retryDetail.click();
+    await expect.poll(() => detailReads).toBe(4);
     await expect(page.locator(`time[datetime="${submittedAt}"]`).first()).toHaveText(
       new Intl.DateTimeFormat(locale, {
         timeZone: 'Pacific/Kiritimati',

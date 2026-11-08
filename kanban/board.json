@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-08T16:10:52+00:00",
-  "source_commit": "ca8f0205557e966538a2c6e088e2bfb6b87677a9",
+  "updated": "2026-11-08T16:26:09+00:00",
+  "source_commit": "c011daa1513c75fa553b1ac2ca100d92ba48a066",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -37322,7 +37322,7 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "77976864944a20622a822db4aab4bb561358bee6e6a3081ce28ed6e3d00e01df"
+              "sha256": "6a2a80d082a45a17ce73f4f5e9185e4bbdf767983d5030d5c02341df1673011d"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -37366,7 +37366,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "ba65c6db6e4345f88c14db5f51cf14c72310c53f46ae987436d652f88594a11e"
+              "sha256": "cd6aa72723d81e8f9b443ff8bbd1f0e9ce35f31ac1c5ea1e57e05dfff5de514c"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -195268,7 +195268,7 @@
             },
             {
               "path": "apps/web/e2e/solar-construction-progress.spec.ts",
-              "sha256": "62196e4de6fe6e78e6fcbef2be765f100e3f1f1aa20668e2c59af5c6f28233ea"
+              "sha256": "98878df007ab75c9b137a2b2505d330a24f1af6aacd9d526bd3f097b117d8067"
             },
             {
               "path": "apps/web/e2e/status-timelines.spec.ts",
@@ -195376,7 +195376,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "ba65c6db6e4345f88c14db5f51cf14c72310c53f46ae987436d652f88594a11e"
+              "sha256": "cd6aa72723d81e8f9b443ff8bbd1f0e9ce35f31ac1c5ea1e57e05dfff5de514c"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -197206,7 +197206,7 @@
             },
             {
               "path": "apps/web/e2e/solar-construction-progress.spec.ts",
-              "sha256": "62196e4de6fe6e78e6fcbef2be765f100e3f1f1aa20668e2c59af5c6f28233ea"
+              "sha256": "98878df007ab75c9b137a2b2505d330a24f1af6aacd9d526bd3f097b117d8067"
             },
             {
               "path": "apps/web/e2e/status-timelines.spec.ts",
@@ -197314,7 +197314,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "ba65c6db6e4345f88c14db5f51cf14c72310c53f46ae987436d652f88594a11e"
+              "sha256": "cd6aa72723d81e8f9b443ff8bbd1f0e9ce35f31ac1c5ea1e57e05dfff5de514c"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -199988,7 +199988,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "59ab98578123c2c204139fd23753851af138d9db785ca94a5419c7b2fa5784a9"
+              "sha256": "3ac1aa3a01e25070cc253017b5fda5287feb6e2a371805a349a3aa15e5176546"
             },
             {
               "path": "kanban/epics/03-core-business.md",
@@ -201340,7 +201340,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "59ab98578123c2c204139fd23753851af138d9db785ca94a5419c7b2fa5784a9"
+              "sha256": "3ac1aa3a01e25070cc253017b5fda5287feb6e2a371805a349a3aa15e5176546"
             },
             {
               "path": "kanban/epics/03-core-business.md",
@@ -202692,7 +202692,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "59ab98578123c2c204139fd23753851af138d9db785ca94a5419c7b2fa5784a9"
+              "sha256": "3ac1aa3a01e25070cc253017b5fda5287feb6e2a371805a349a3aa15e5176546"
             },
             {
               "path": "kanban/epics/03-core-business.md",
@@ -204045,7 +204045,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "59ab98578123c2c204139fd23753851af138d9db785ca94a5419c7b2fa5784a9"
+              "sha256": "3ac1aa3a01e25070cc253017b5fda5287feb6e2a371805a349a3aa15e5176546"
             },
             {
               "path": "kanban/epics/03-core-business.md",
@@ -205357,7 +205357,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "59ab98578123c2c204139fd23753851af138d9db785ca94a5419c7b2fa5784a9"
+              "sha256": "3ac1aa3a01e25070cc253017b5fda5287feb6e2a371805a349a3aa15e5176546"
             },
             {
               "path": "kanban/epics/03-core-business.md",
@@ -206669,7 +206669,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "59ab98578123c2c204139fd23753851af138d9db785ca94a5419c7b2fa5784a9"
+              "sha256": "3ac1aa3a01e25070cc253017b5fda5287feb6e2a371805a349a3aa15e5176546"
             },
             {
               "path": "kanban/epics/03-core-business.md",
@@ -207981,7 +207981,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "59ab98578123c2c204139fd23753851af138d9db785ca94a5419c7b2fa5784a9"
+              "sha256": "3ac1aa3a01e25070cc253017b5fda5287feb6e2a371805a349a3aa15e5176546"
             },
             {
               "path": "kanban/epics/03-core-business.md",
@@ -209293,7 +209293,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "59ab98578123c2c204139fd23753851af138d9db785ca94a5419c7b2fa5784a9"
+              "sha256": "3ac1aa3a01e25070cc253017b5fda5287feb6e2a371805a349a3aa15e5176546"
             },
             {
               "path": "kanban/epics/03-core-business.md",
@@ -210605,7 +210605,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "59ab98578123c2c204139fd23753851af138d9db785ca94a5419c7b2fa5784a9"
+              "sha256": "3ac1aa3a01e25070cc253017b5fda5287feb6e2a371805a349a3aa15e5176546"
             },
             {
               "path": "kanban/epics/03-core-business.md",
@@ -211917,7 +211917,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "59ab98578123c2c204139fd23753851af138d9db785ca94a5419c7b2fa5784a9"
+              "sha256": "3ac1aa3a01e25070cc253017b5fda5287feb6e2a371805a349a3aa15e5176546"
             },
             {
               "path": "kanban/epics/03-core-business.md",
@@ -213230,7 +213230,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "59ab98578123c2c204139fd23753851af138d9db785ca94a5419c7b2fa5784a9"
+              "sha256": "3ac1aa3a01e25070cc253017b5fda5287feb6e2a371805a349a3aa15e5176546"
             },
             {
               "path": "kanban/epics/03-core-business.md",
@@ -214542,7 +214542,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "59ab98578123c2c204139fd23753851af138d9db785ca94a5419c7b2fa5784a9"
+              "sha256": "3ac1aa3a01e25070cc253017b5fda5287feb6e2a371805a349a3aa15e5176546"
             },
             {
               "path": "kanban/epics/03-core-business.md",
@@ -215855,7 +215855,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "59ab98578123c2c204139fd23753851af138d9db785ca94a5419c7b2fa5784a9"
+              "sha256": "3ac1aa3a01e25070cc253017b5fda5287feb6e2a371805a349a3aa15e5176546"
             },
             {
               "path": "kanban/epics/03-core-business.md",
@@ -217167,7 +217167,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "59ab98578123c2c204139fd23753851af138d9db785ca94a5419c7b2fa5784a9"
+              "sha256": "3ac1aa3a01e25070cc253017b5fda5287feb6e2a371805a349a3aa15e5176546"
             },
             {
               "path": "kanban/epics/03-core-business.md",
@@ -218479,7 +218479,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "59ab98578123c2c204139fd23753851af138d9db785ca94a5419c7b2fa5784a9"
+              "sha256": "3ac1aa3a01e25070cc253017b5fda5287feb6e2a371805a349a3aa15e5176546"
             },
             {
               "path": "kanban/epics/03-core-business.md",
@@ -219791,7 +219791,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "59ab98578123c2c204139fd23753851af138d9db785ca94a5419c7b2fa5784a9"
+              "sha256": "3ac1aa3a01e25070cc253017b5fda5287feb6e2a371805a349a3aa15e5176546"
             },
             {
               "path": "kanban/epics/03-core-business.md",
@@ -221103,7 +221103,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "59ab98578123c2c204139fd23753851af138d9db785ca94a5419c7b2fa5784a9"
+              "sha256": "3ac1aa3a01e25070cc253017b5fda5287feb6e2a371805a349a3aa15e5176546"
             },
             {
               "path": "kanban/epics/03-core-business.md",
@@ -222415,7 +222415,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "59ab98578123c2c204139fd23753851af138d9db785ca94a5419c7b2fa5784a9"
+              "sha256": "3ac1aa3a01e25070cc253017b5fda5287feb6e2a371805a349a3aa15e5176546"
             },
             {
               "path": "kanban/epics/03-core-business.md",
@@ -223728,7 +223728,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "59ab98578123c2c204139fd23753851af138d9db785ca94a5419c7b2fa5784a9"
+              "sha256": "3ac1aa3a01e25070cc253017b5fda5287feb6e2a371805a349a3aa15e5176546"
             },
             {
               "path": "kanban/epics/03-core-business.md",
@@ -225040,7 +225040,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "59ab98578123c2c204139fd23753851af138d9db785ca94a5419c7b2fa5784a9"
+              "sha256": "3ac1aa3a01e25070cc253017b5fda5287feb6e2a371805a349a3aa15e5176546"
             },
             {
               "path": "kanban/epics/03-core-business.md",
@@ -226352,7 +226352,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "59ab98578123c2c204139fd23753851af138d9db785ca94a5419c7b2fa5784a9"
+              "sha256": "3ac1aa3a01e25070cc253017b5fda5287feb6e2a371805a349a3aa15e5176546"
             },
             {
               "path": "kanban/epics/03-core-business.md",
@@ -227664,7 +227664,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "59ab98578123c2c204139fd23753851af138d9db785ca94a5419c7b2fa5784a9"
+              "sha256": "3ac1aa3a01e25070cc253017b5fda5287feb6e2a371805a349a3aa15e5176546"
             },
             {
               "path": "kanban/epics/03-core-business.md",
@@ -228976,7 +228976,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "59ab98578123c2c204139fd23753851af138d9db785ca94a5419c7b2fa5784a9"
+              "sha256": "3ac1aa3a01e25070cc253017b5fda5287feb6e2a371805a349a3aa15e5176546"
             },
             {
               "path": "kanban/epics/03-core-business.md",
@@ -230288,7 +230288,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "59ab98578123c2c204139fd23753851af138d9db785ca94a5419c7b2fa5784a9"
+              "sha256": "3ac1aa3a01e25070cc253017b5fda5287feb6e2a371805a349a3aa15e5176546"
             },
             {
               "path": "kanban/epics/03-core-business.md",
@@ -231601,7 +231601,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "59ab98578123c2c204139fd23753851af138d9db785ca94a5419c7b2fa5784a9"
+              "sha256": "3ac1aa3a01e25070cc253017b5fda5287feb6e2a371805a349a3aa15e5176546"
             },
             {
               "path": "kanban/epics/03-core-business.md",
@@ -232914,7 +232914,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "59ab98578123c2c204139fd23753851af138d9db785ca94a5419c7b2fa5784a9"
+              "sha256": "3ac1aa3a01e25070cc253017b5fda5287feb6e2a371805a349a3aa15e5176546"
             },
             {
               "path": "kanban/epics/03-core-business.md",
@@ -234227,7 +234227,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "59ab98578123c2c204139fd23753851af138d9db785ca94a5419c7b2fa5784a9"
+              "sha256": "3ac1aa3a01e25070cc253017b5fda5287feb6e2a371805a349a3aa15e5176546"
             },
             {
               "path": "kanban/epics/03-core-business.md",
@@ -235539,7 +235539,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "59ab98578123c2c204139fd23753851af138d9db785ca94a5419c7b2fa5784a9"
+              "sha256": "3ac1aa3a01e25070cc253017b5fda5287feb6e2a371805a349a3aa15e5176546"
             },
             {
               "path": "kanban/epics/03-core-business.md",
@@ -236851,7 +236851,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "59ab98578123c2c204139fd23753851af138d9db785ca94a5419c7b2fa5784a9"
+              "sha256": "3ac1aa3a01e25070cc253017b5fda5287feb6e2a371805a349a3aa15e5176546"
             },
             {
               "path": "kanban/epics/03-core-business.md",
@@ -238163,7 +238163,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "59ab98578123c2c204139fd23753851af138d9db785ca94a5419c7b2fa5784a9"
+              "sha256": "3ac1aa3a01e25070cc253017b5fda5287feb6e2a371805a349a3aa15e5176546"
             },
             {
               "path": "kanban/epics/03-core-business.md",
@@ -349937,11 +349937,11 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "77976864944a20622a822db4aab4bb561358bee6e6a3081ce28ed6e3d00e01df"
+              "sha256": "6a2a80d082a45a17ce73f4f5e9185e4bbdf767983d5030d5c02341df1673011d"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "59ab98578123c2c204139fd23753851af138d9db785ca94a5419c7b2fa5784a9"
+              "sha256": "3ac1aa3a01e25070cc253017b5fda5287feb6e2a371805a349a3aa15e5176546"
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
@@ -350926,11 +350926,11 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "77976864944a20622a822db4aab4bb561358bee6e6a3081ce28ed6e3d00e01df"
+              "sha256": "6a2a80d082a45a17ce73f4f5e9185e4bbdf767983d5030d5c02341df1673011d"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "59ab98578123c2c204139fd23753851af138d9db785ca94a5419c7b2fa5784a9"
+              "sha256": "3ac1aa3a01e25070cc253017b5fda5287feb6e2a371805a349a3aa15e5176546"
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
@@ -351917,11 +351917,11 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "77976864944a20622a822db4aab4bb561358bee6e6a3081ce28ed6e3d00e01df"
+              "sha256": "6a2a80d082a45a17ce73f4f5e9185e4bbdf767983d5030d5c02341df1673011d"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "59ab98578123c2c204139fd23753851af138d9db785ca94a5419c7b2fa5784a9"
+              "sha256": "3ac1aa3a01e25070cc253017b5fda5287feb6e2a371805a349a3aa15e5176546"
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
@@ -352906,11 +352906,11 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "77976864944a20622a822db4aab4bb561358bee6e6a3081ce28ed6e3d00e01df"
+              "sha256": "6a2a80d082a45a17ce73f4f5e9185e4bbdf767983d5030d5c02341df1673011d"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "59ab98578123c2c204139fd23753851af138d9db785ca94a5419c7b2fa5784a9"
+              "sha256": "3ac1aa3a01e25070cc253017b5fda5287feb6e2a371805a349a3aa15e5176546"
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
@@ -353895,11 +353895,11 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "77976864944a20622a822db4aab4bb561358bee6e6a3081ce28ed6e3d00e01df"
+              "sha256": "6a2a80d082a45a17ce73f4f5e9185e4bbdf767983d5030d5c02341df1673011d"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "59ab98578123c2c204139fd23753851af138d9db785ca94a5419c7b2fa5784a9"
+              "sha256": "3ac1aa3a01e25070cc253017b5fda5287feb6e2a371805a349a3aa15e5176546"
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
@@ -354884,11 +354884,11 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "77976864944a20622a822db4aab4bb561358bee6e6a3081ce28ed6e3d00e01df"
+              "sha256": "6a2a80d082a45a17ce73f4f5e9185e4bbdf767983d5030d5c02341df1673011d"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "59ab98578123c2c204139fd23753851af138d9db785ca94a5419c7b2fa5784a9"
+              "sha256": "3ac1aa3a01e25070cc253017b5fda5287feb6e2a371805a349a3aa15e5176546"
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
@@ -355874,11 +355874,11 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "77976864944a20622a822db4aab4bb561358bee6e6a3081ce28ed6e3d00e01df"
+              "sha256": "6a2a80d082a45a17ce73f4f5e9185e4bbdf767983d5030d5c02341df1673011d"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "59ab98578123c2c204139fd23753851af138d9db785ca94a5419c7b2fa5784a9"
+              "sha256": "3ac1aa3a01e25070cc253017b5fda5287feb6e2a371805a349a3aa15e5176546"
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
@@ -356863,11 +356863,11 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "77976864944a20622a822db4aab4bb561358bee6e6a3081ce28ed6e3d00e01df"
+              "sha256": "6a2a80d082a45a17ce73f4f5e9185e4bbdf767983d5030d5c02341df1673011d"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "59ab98578123c2c204139fd23753851af138d9db785ca94a5419c7b2fa5784a9"
+              "sha256": "3ac1aa3a01e25070cc253017b5fda5287feb6e2a371805a349a3aa15e5176546"
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
@@ -357852,11 +357852,11 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "77976864944a20622a822db4aab4bb561358bee6e6a3081ce28ed6e3d00e01df"
+              "sha256": "6a2a80d082a45a17ce73f4f5e9185e4bbdf767983d5030d5c02341df1673011d"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "59ab98578123c2c204139fd23753851af138d9db785ca94a5419c7b2fa5784a9"
+              "sha256": "3ac1aa3a01e25070cc253017b5fda5287feb6e2a371805a349a3aa15e5176546"
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
@@ -358841,11 +358841,11 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "77976864944a20622a822db4aab4bb561358bee6e6a3081ce28ed6e3d00e01df"
+              "sha256": "6a2a80d082a45a17ce73f4f5e9185e4bbdf767983d5030d5c02341df1673011d"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "59ab98578123c2c204139fd23753851af138d9db785ca94a5419c7b2fa5784a9"
+              "sha256": "3ac1aa3a01e25070cc253017b5fda5287feb6e2a371805a349a3aa15e5176546"
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
@@ -359804,7 +359804,7 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "77976864944a20622a822db4aab4bb561358bee6e6a3081ce28ed6e3d00e01df"
+              "sha256": "6a2a80d082a45a17ce73f4f5e9185e4bbdf767983d5030d5c02341df1673011d"
             },
             {
               "path": "packages/i18n/src/saving.ts",
@@ -360552,11 +360552,11 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "77976864944a20622a822db4aab4bb561358bee6e6a3081ce28ed6e3d00e01df"
+              "sha256": "6a2a80d082a45a17ce73f4f5e9185e4bbdf767983d5030d5c02341df1673011d"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "59ab98578123c2c204139fd23753851af138d9db785ca94a5419c7b2fa5784a9"
+              "sha256": "3ac1aa3a01e25070cc253017b5fda5287feb6e2a371805a349a3aa15e5176546"
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
@@ -361515,7 +361515,7 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "77976864944a20622a822db4aab4bb561358bee6e6a3081ce28ed6e3d00e01df"
+              "sha256": "6a2a80d082a45a17ce73f4f5e9185e4bbdf767983d5030d5c02341df1673011d"
             },
             {
               "path": "packages/i18n/src/saving.ts",
@@ -362268,11 +362268,11 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "77976864944a20622a822db4aab4bb561358bee6e6a3081ce28ed6e3d00e01df"
+              "sha256": "6a2a80d082a45a17ce73f4f5e9185e4bbdf767983d5030d5c02341df1673011d"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "59ab98578123c2c204139fd23753851af138d9db785ca94a5419c7b2fa5784a9"
+              "sha256": "3ac1aa3a01e25070cc253017b5fda5287feb6e2a371805a349a3aa15e5176546"
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
@@ -363257,11 +363257,11 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "77976864944a20622a822db4aab4bb561358bee6e6a3081ce28ed6e3d00e01df"
+              "sha256": "6a2a80d082a45a17ce73f4f5e9185e4bbdf767983d5030d5c02341df1673011d"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "59ab98578123c2c204139fd23753851af138d9db785ca94a5419c7b2fa5784a9"
+              "sha256": "3ac1aa3a01e25070cc253017b5fda5287feb6e2a371805a349a3aa15e5176546"
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
@@ -364246,11 +364246,11 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "77976864944a20622a822db4aab4bb561358bee6e6a3081ce28ed6e3d00e01df"
+              "sha256": "6a2a80d082a45a17ce73f4f5e9185e4bbdf767983d5030d5c02341df1673011d"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "59ab98578123c2c204139fd23753851af138d9db785ca94a5419c7b2fa5784a9"
+              "sha256": "3ac1aa3a01e25070cc253017b5fda5287feb6e2a371805a349a3aa15e5176546"
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
@@ -365237,11 +365237,11 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "77976864944a20622a822db4aab4bb561358bee6e6a3081ce28ed6e3d00e01df"
+              "sha256": "6a2a80d082a45a17ce73f4f5e9185e4bbdf767983d5030d5c02341df1673011d"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "59ab98578123c2c204139fd23753851af138d9db785ca94a5419c7b2fa5784a9"
+              "sha256": "3ac1aa3a01e25070cc253017b5fda5287feb6e2a371805a349a3aa15e5176546"
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
@@ -366226,11 +366226,11 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "77976864944a20622a822db4aab4bb561358bee6e6a3081ce28ed6e3d00e01df"
+              "sha256": "6a2a80d082a45a17ce73f4f5e9185e4bbdf767983d5030d5c02341df1673011d"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "59ab98578123c2c204139fd23753851af138d9db785ca94a5419c7b2fa5784a9"
+              "sha256": "3ac1aa3a01e25070cc253017b5fda5287feb6e2a371805a349a3aa15e5176546"
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
@@ -367220,11 +367220,11 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "77976864944a20622a822db4aab4bb561358bee6e6a3081ce28ed6e3d00e01df"
+              "sha256": "6a2a80d082a45a17ce73f4f5e9185e4bbdf767983d5030d5c02341df1673011d"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "59ab98578123c2c204139fd23753851af138d9db785ca94a5419c7b2fa5784a9"
+              "sha256": "3ac1aa3a01e25070cc253017b5fda5287feb6e2a371805a349a3aa15e5176546"
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
@@ -368218,11 +368218,11 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "77976864944a20622a822db4aab4bb561358bee6e6a3081ce28ed6e3d00e01df"
+              "sha256": "6a2a80d082a45a17ce73f4f5e9185e4bbdf767983d5030d5c02341df1673011d"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "59ab98578123c2c204139fd23753851af138d9db785ca94a5419c7b2fa5784a9"
+              "sha256": "3ac1aa3a01e25070cc253017b5fda5287feb6e2a371805a349a3aa15e5176546"
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
@@ -369216,11 +369216,11 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "77976864944a20622a822db4aab4bb561358bee6e6a3081ce28ed6e3d00e01df"
+              "sha256": "6a2a80d082a45a17ce73f4f5e9185e4bbdf767983d5030d5c02341df1673011d"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "59ab98578123c2c204139fd23753851af138d9db785ca94a5419c7b2fa5784a9"
+              "sha256": "3ac1aa3a01e25070cc253017b5fda5287feb6e2a371805a349a3aa15e5176546"
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
@@ -370423,7 +370423,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "59ab98578123c2c204139fd23753851af138d9db785ca94a5419c7b2fa5784a9"
+              "sha256": "3ac1aa3a01e25070cc253017b5fda5287feb6e2a371805a349a3aa15e5176546"
             },
             {
               "path": "packages/db/drizzle/production/0161_saving_orders.sql",
@@ -371705,7 +371705,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "59ab98578123c2c204139fd23753851af138d9db785ca94a5419c7b2fa5784a9"
+              "sha256": "3ac1aa3a01e25070cc253017b5fda5287feb6e2a371805a349a3aa15e5176546"
             },
             {
               "path": "packages/db/drizzle/production/0161_saving_orders.sql",
@@ -372987,7 +372987,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "59ab98578123c2c204139fd23753851af138d9db785ca94a5419c7b2fa5784a9"
+              "sha256": "3ac1aa3a01e25070cc253017b5fda5287feb6e2a371805a349a3aa15e5176546"
             },
             {
               "path": "packages/db/drizzle/production/0161_saving_orders.sql",
@@ -374269,7 +374269,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "59ab98578123c2c204139fd23753851af138d9db785ca94a5419c7b2fa5784a9"
+              "sha256": "3ac1aa3a01e25070cc253017b5fda5287feb6e2a371805a349a3aa15e5176546"
             },
             {
               "path": "packages/db/drizzle/production/0161_saving_orders.sql",
@@ -375552,7 +375552,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "59ab98578123c2c204139fd23753851af138d9db785ca94a5419c7b2fa5784a9"
+              "sha256": "3ac1aa3a01e25070cc253017b5fda5287feb6e2a371805a349a3aa15e5176546"
             },
             {
               "path": "packages/db/drizzle/production/0161_saving_orders.sql",
@@ -376642,7 +376642,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "59ab98578123c2c204139fd23753851af138d9db785ca94a5419c7b2fa5784a9"
+              "sha256": "3ac1aa3a01e25070cc253017b5fda5287feb6e2a371805a349a3aa15e5176546"
             },
             {
               "path": "apps/web/src/pages/saving-staff-operation-forms.test.tsx",
@@ -377497,7 +377497,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "59ab98578123c2c204139fd23753851af138d9db785ca94a5419c7b2fa5784a9"
+              "sha256": "3ac1aa3a01e25070cc253017b5fda5287feb6e2a371805a349a3aa15e5176546"
             },
             {
               "path": "apps/web/src/pages/saving-staff-operation-forms.test.tsx",
@@ -378348,7 +378348,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "59ab98578123c2c204139fd23753851af138d9db785ca94a5419c7b2fa5784a9"
+              "sha256": "3ac1aa3a01e25070cc253017b5fda5287feb6e2a371805a349a3aa15e5176546"
             },
             {
               "path": "apps/web/src/pages/saving-staff-operation-forms.test.tsx",
@@ -379199,7 +379199,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "59ab98578123c2c204139fd23753851af138d9db785ca94a5419c7b2fa5784a9"
+              "sha256": "3ac1aa3a01e25070cc253017b5fda5287feb6e2a371805a349a3aa15e5176546"
             },
             {
               "path": "apps/web/src/pages/saving-staff-operation-forms.test.tsx",
@@ -380049,7 +380049,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "59ab98578123c2c204139fd23753851af138d9db785ca94a5419c7b2fa5784a9"
+              "sha256": "3ac1aa3a01e25070cc253017b5fda5287feb6e2a371805a349a3aa15e5176546"
             },
             {
               "path": "apps/web/src/pages/saving-staff-operation-forms.test.tsx",
@@ -386346,7 +386346,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "ba65c6db6e4345f88c14db5f51cf14c72310c53f46ae987436d652f88594a11e"
+              "sha256": "cd6aa72723d81e8f9b443ff8bbd1f0e9ce35f31ac1c5ea1e57e05dfff5de514c"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -387115,7 +387115,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "ba65c6db6e4345f88c14db5f51cf14c72310c53f46ae987436d652f88594a11e"
+              "sha256": "cd6aa72723d81e8f9b443ff8bbd1f0e9ce35f31ac1c5ea1e57e05dfff5de514c"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -387884,7 +387884,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "ba65c6db6e4345f88c14db5f51cf14c72310c53f46ae987436d652f88594a11e"
+              "sha256": "cd6aa72723d81e8f9b443ff8bbd1f0e9ce35f31ac1c5ea1e57e05dfff5de514c"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -388655,7 +388655,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "ba65c6db6e4345f88c14db5f51cf14c72310c53f46ae987436d652f88594a11e"
+              "sha256": "cd6aa72723d81e8f9b443ff8bbd1f0e9ce35f31ac1c5ea1e57e05dfff5de514c"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -390703,7 +390703,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "ba65c6db6e4345f88c14db5f51cf14c72310c53f46ae987436d652f88594a11e"
+              "sha256": "cd6aa72723d81e8f9b443ff8bbd1f0e9ce35f31ac1c5ea1e57e05dfff5de514c"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -391472,7 +391472,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "ba65c6db6e4345f88c14db5f51cf14c72310c53f46ae987436d652f88594a11e"
+              "sha256": "cd6aa72723d81e8f9b443ff8bbd1f0e9ce35f31ac1c5ea1e57e05dfff5de514c"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -392241,7 +392241,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "ba65c6db6e4345f88c14db5f51cf14c72310c53f46ae987436d652f88594a11e"
+              "sha256": "cd6aa72723d81e8f9b443ff8bbd1f0e9ce35f31ac1c5ea1e57e05dfff5de514c"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -393011,7 +393011,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "ba65c6db6e4345f88c14db5f51cf14c72310c53f46ae987436d652f88594a11e"
+              "sha256": "cd6aa72723d81e8f9b443ff8bbd1f0e9ce35f31ac1c5ea1e57e05dfff5de514c"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -393781,7 +393781,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "ba65c6db6e4345f88c14db5f51cf14c72310c53f46ae987436d652f88594a11e"
+              "sha256": "cd6aa72723d81e8f9b443ff8bbd1f0e9ce35f31ac1c5ea1e57e05dfff5de514c"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -394552,7 +394552,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "ba65c6db6e4345f88c14db5f51cf14c72310c53f46ae987436d652f88594a11e"
+              "sha256": "cd6aa72723d81e8f9b443ff8bbd1f0e9ce35f31ac1c5ea1e57e05dfff5de514c"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -395327,7 +395327,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "ba65c6db6e4345f88c14db5f51cf14c72310c53f46ae987436d652f88594a11e"
+              "sha256": "cd6aa72723d81e8f9b443ff8bbd1f0e9ce35f31ac1c5ea1e57e05dfff5de514c"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -396096,7 +396096,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "ba65c6db6e4345f88c14db5f51cf14c72310c53f46ae987436d652f88594a11e"
+              "sha256": "cd6aa72723d81e8f9b443ff8bbd1f0e9ce35f31ac1c5ea1e57e05dfff5de514c"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -396865,7 +396865,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "ba65c6db6e4345f88c14db5f51cf14c72310c53f46ae987436d652f88594a11e"
+              "sha256": "cd6aa72723d81e8f9b443ff8bbd1f0e9ce35f31ac1c5ea1e57e05dfff5de514c"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -397656,7 +397656,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "ba65c6db6e4345f88c14db5f51cf14c72310c53f46ae987436d652f88594a11e"
+              "sha256": "cd6aa72723d81e8f9b443ff8bbd1f0e9ce35f31ac1c5ea1e57e05dfff5de514c"
             },
             {
               "path": "apps/web/src/pages/solar-document-review-forms.test.tsx",
@@ -398229,7 +398229,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "ba65c6db6e4345f88c14db5f51cf14c72310c53f46ae987436d652f88594a11e"
+              "sha256": "cd6aa72723d81e8f9b443ff8bbd1f0e9ce35f31ac1c5ea1e57e05dfff5de514c"
             },
             {
               "path": "apps/web/src/pages/solar-document-review-forms.test.tsx",
@@ -398802,7 +398802,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "ba65c6db6e4345f88c14db5f51cf14c72310c53f46ae987436d652f88594a11e"
+              "sha256": "cd6aa72723d81e8f9b443ff8bbd1f0e9ce35f31ac1c5ea1e57e05dfff5de514c"
             },
             {
               "path": "apps/web/src/pages/solar-document-review-forms.test.tsx",
@@ -399376,7 +399376,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "ba65c6db6e4345f88c14db5f51cf14c72310c53f46ae987436d652f88594a11e"
+              "sha256": "cd6aa72723d81e8f9b443ff8bbd1f0e9ce35f31ac1c5ea1e57e05dfff5de514c"
             },
             {
               "path": "apps/web/src/pages/solar-document-review-forms.test.tsx",
@@ -399953,7 +399953,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "ba65c6db6e4345f88c14db5f51cf14c72310c53f46ae987436d652f88594a11e"
+              "sha256": "cd6aa72723d81e8f9b443ff8bbd1f0e9ce35f31ac1c5ea1e57e05dfff5de514c"
             },
             {
               "path": "apps/web/src/pages/solar-document-review-forms.test.tsx",
@@ -400526,7 +400526,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "ba65c6db6e4345f88c14db5f51cf14c72310c53f46ae987436d652f88594a11e"
+              "sha256": "cd6aa72723d81e8f9b443ff8bbd1f0e9ce35f31ac1c5ea1e57e05dfff5de514c"
             },
             {
               "path": "apps/web/src/pages/solar-document-review-forms.test.tsx",
@@ -401100,7 +401100,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "ba65c6db6e4345f88c14db5f51cf14c72310c53f46ae987436d652f88594a11e"
+              "sha256": "cd6aa72723d81e8f9b443ff8bbd1f0e9ce35f31ac1c5ea1e57e05dfff5de514c"
             },
             {
               "path": "apps/web/src/pages/solar-document-review-forms.test.tsx",
@@ -401675,7 +401675,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "ba65c6db6e4345f88c14db5f51cf14c72310c53f46ae987436d652f88594a11e"
+              "sha256": "cd6aa72723d81e8f9b443ff8bbd1f0e9ce35f31ac1c5ea1e57e05dfff5de514c"
             },
             {
               "path": "apps/web/src/pages/solar-document-review-forms.test.tsx",
@@ -402248,7 +402248,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "ba65c6db6e4345f88c14db5f51cf14c72310c53f46ae987436d652f88594a11e"
+              "sha256": "cd6aa72723d81e8f9b443ff8bbd1f0e9ce35f31ac1c5ea1e57e05dfff5de514c"
             },
             {
               "path": "apps/web/src/pages/solar-document-review-forms.test.tsx",
@@ -402821,7 +402821,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "ba65c6db6e4345f88c14db5f51cf14c72310c53f46ae987436d652f88594a11e"
+              "sha256": "cd6aa72723d81e8f9b443ff8bbd1f0e9ce35f31ac1c5ea1e57e05dfff5de514c"
             },
             {
               "path": "apps/web/src/pages/solar-document-review-forms.test.tsx",
@@ -421542,7 +421542,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "59ab98578123c2c204139fd23753851af138d9db785ca94a5419c7b2fa5784a9"
+              "sha256": "3ac1aa3a01e25070cc253017b5fda5287feb6e2a371805a349a3aa15e5176546"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -491347,7 +491347,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "59ab98578123c2c204139fd23753851af138d9db785ca94a5419c7b2fa5784a9"
+              "sha256": "3ac1aa3a01e25070cc253017b5fda5287feb6e2a371805a349a3aa15e5176546"
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.test.tsx",
@@ -491371,7 +491371,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "ba65c6db6e4345f88c14db5f51cf14c72310c53f46ae987436d652f88594a11e"
+              "sha256": "cd6aa72723d81e8f9b443ff8bbd1f0e9ce35f31ac1c5ea1e57e05dfff5de514c"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -497047,7 +497047,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "1cdce801803f1fd16a30a63b2b6109e700dc86b058c77f7751b890db4ba65a63"
+              "sha256": "a7cd88d95ee8a8229698c9f3633cc011001a39e52e29352fd6015369e7f071ee"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -508313,7 +508313,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "59ab98578123c2c204139fd23753851af138d9db785ca94a5419c7b2fa5784a9"
+              "sha256": "3ac1aa3a01e25070cc253017b5fda5287feb6e2a371805a349a3aa15e5176546"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -508325,7 +508325,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "ba65c6db6e4345f88c14db5f51cf14c72310c53f46ae987436d652f88594a11e"
+              "sha256": "cd6aa72723d81e8f9b443ff8bbd1f0e9ce35f31ac1c5ea1e57e05dfff5de514c"
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
@@ -512328,7 +512328,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "59ab98578123c2c204139fd23753851af138d9db785ca94a5419c7b2fa5784a9"
+              "sha256": "3ac1aa3a01e25070cc253017b5fda5287feb6e2a371805a349a3aa15e5176546"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -512348,7 +512348,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "ba65c6db6e4345f88c14db5f51cf14c72310c53f46ae987436d652f88594a11e"
+              "sha256": "cd6aa72723d81e8f9b443ff8bbd1f0e9ce35f31ac1c5ea1e57e05dfff5de514c"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -514919,7 +514919,7 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "77976864944a20622a822db4aab4bb561358bee6e6a3081ce28ed6e3d00e01df"
+              "sha256": "6a2a80d082a45a17ce73f4f5e9185e4bbdf767983d5030d5c02341df1673011d"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -517169,7 +517169,7 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "77976864944a20622a822db4aab4bb561358bee6e6a3081ce28ed6e3d00e01df"
+              "sha256": "6a2a80d082a45a17ce73f4f5e9185e4bbdf767983d5030d5c02341df1673011d"
             },
             {
               "path": "apps/web/e2e/saving-staff-operation-forms.spec.ts",
@@ -518105,7 +518105,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "1cdce801803f1fd16a30a63b2b6109e700dc86b058c77f7751b890db4ba65a63"
+              "sha256": "a7cd88d95ee8a8229698c9f3633cc011001a39e52e29352fd6015369e7f071ee"
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
@@ -518997,7 +518997,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "59ab98578123c2c204139fd23753851af138d9db785ca94a5419c7b2fa5784a9"
+              "sha256": "3ac1aa3a01e25070cc253017b5fda5287feb6e2a371805a349a3aa15e5176546"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -519013,7 +519013,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "ba65c6db6e4345f88c14db5f51cf14c72310c53f46ae987436d652f88594a11e"
+              "sha256": "cd6aa72723d81e8f9b443ff8bbd1f0e9ce35f31ac1c5ea1e57e05dfff5de514c"
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
@@ -519185,7 +519185,7 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "77976864944a20622a822db4aab4bb561358bee6e6a3081ce28ed6e3d00e01df"
+              "sha256": "6a2a80d082a45a17ce73f4f5e9185e4bbdf767983d5030d5c02341df1673011d"
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
@@ -519213,7 +519213,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "1cdce801803f1fd16a30a63b2b6109e700dc86b058c77f7751b890db4ba65a63"
+              "sha256": "a7cd88d95ee8a8229698c9f3633cc011001a39e52e29352fd6015369e7f071ee"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -567117,7 +567117,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "59ab98578123c2c204139fd23753851af138d9db785ca94a5419c7b2fa5784a9"
+              "sha256": "3ac1aa3a01e25070cc253017b5fda5287feb6e2a371805a349a3aa15e5176546"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -567129,7 +567129,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "ba65c6db6e4345f88c14db5f51cf14c72310c53f46ae987436d652f88594a11e"
+              "sha256": "cd6aa72723d81e8f9b443ff8bbd1f0e9ce35f31ac1c5ea1e57e05dfff5de514c"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -567521,7 +567521,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "1cdce801803f1fd16a30a63b2b6109e700dc86b058c77f7751b890db4ba65a63"
+              "sha256": "a7cd88d95ee8a8229698c9f3633cc011001a39e52e29352fd6015369e7f071ee"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -569012,7 +569012,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "59ab98578123c2c204139fd23753851af138d9db785ca94a5419c7b2fa5784a9"
+              "sha256": "3ac1aa3a01e25070cc253017b5fda5287feb6e2a371805a349a3aa15e5176546"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -569024,7 +569024,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "ba65c6db6e4345f88c14db5f51cf14c72310c53f46ae987436d652f88594a11e"
+              "sha256": "cd6aa72723d81e8f9b443ff8bbd1f0e9ce35f31ac1c5ea1e57e05dfff5de514c"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -569416,7 +569416,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "1cdce801803f1fd16a30a63b2b6109e700dc86b058c77f7751b890db4ba65a63"
+              "sha256": "a7cd88d95ee8a8229698c9f3633cc011001a39e52e29352fd6015369e7f071ee"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -571005,7 +571005,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "59ab98578123c2c204139fd23753851af138d9db785ca94a5419c7b2fa5784a9"
+              "sha256": "3ac1aa3a01e25070cc253017b5fda5287feb6e2a371805a349a3aa15e5176546"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -571017,7 +571017,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "ba65c6db6e4345f88c14db5f51cf14c72310c53f46ae987436d652f88594a11e"
+              "sha256": "cd6aa72723d81e8f9b443ff8bbd1f0e9ce35f31ac1c5ea1e57e05dfff5de514c"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -571409,7 +571409,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "1cdce801803f1fd16a30a63b2b6109e700dc86b058c77f7751b890db4ba65a63"
+              "sha256": "a7cd88d95ee8a8229698c9f3633cc011001a39e52e29352fd6015369e7f071ee"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -572900,7 +572900,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "59ab98578123c2c204139fd23753851af138d9db785ca94a5419c7b2fa5784a9"
+              "sha256": "3ac1aa3a01e25070cc253017b5fda5287feb6e2a371805a349a3aa15e5176546"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -572912,7 +572912,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "ba65c6db6e4345f88c14db5f51cf14c72310c53f46ae987436d652f88594a11e"
+              "sha256": "cd6aa72723d81e8f9b443ff8bbd1f0e9ce35f31ac1c5ea1e57e05dfff5de514c"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -573304,7 +573304,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "1cdce801803f1fd16a30a63b2b6109e700dc86b058c77f7751b890db4ba65a63"
+              "sha256": "a7cd88d95ee8a8229698c9f3633cc011001a39e52e29352fd6015369e7f071ee"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -574795,7 +574795,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "59ab98578123c2c204139fd23753851af138d9db785ca94a5419c7b2fa5784a9"
+              "sha256": "3ac1aa3a01e25070cc253017b5fda5287feb6e2a371805a349a3aa15e5176546"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -574807,7 +574807,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "ba65c6db6e4345f88c14db5f51cf14c72310c53f46ae987436d652f88594a11e"
+              "sha256": "cd6aa72723d81e8f9b443ff8bbd1f0e9ce35f31ac1c5ea1e57e05dfff5de514c"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -575199,7 +575199,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "1cdce801803f1fd16a30a63b2b6109e700dc86b058c77f7751b890db4ba65a63"
+              "sha256": "a7cd88d95ee8a8229698c9f3633cc011001a39e52e29352fd6015369e7f071ee"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -576690,7 +576690,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "59ab98578123c2c204139fd23753851af138d9db785ca94a5419c7b2fa5784a9"
+              "sha256": "3ac1aa3a01e25070cc253017b5fda5287feb6e2a371805a349a3aa15e5176546"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -576702,7 +576702,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "ba65c6db6e4345f88c14db5f51cf14c72310c53f46ae987436d652f88594a11e"
+              "sha256": "cd6aa72723d81e8f9b443ff8bbd1f0e9ce35f31ac1c5ea1e57e05dfff5de514c"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -577094,7 +577094,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "1cdce801803f1fd16a30a63b2b6109e700dc86b058c77f7751b890db4ba65a63"
+              "sha256": "a7cd88d95ee8a8229698c9f3633cc011001a39e52e29352fd6015369e7f071ee"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -578585,7 +578585,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "59ab98578123c2c204139fd23753851af138d9db785ca94a5419c7b2fa5784a9"
+              "sha256": "3ac1aa3a01e25070cc253017b5fda5287feb6e2a371805a349a3aa15e5176546"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -578597,7 +578597,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "ba65c6db6e4345f88c14db5f51cf14c72310c53f46ae987436d652f88594a11e"
+              "sha256": "cd6aa72723d81e8f9b443ff8bbd1f0e9ce35f31ac1c5ea1e57e05dfff5de514c"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -578989,7 +578989,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "1cdce801803f1fd16a30a63b2b6109e700dc86b058c77f7751b890db4ba65a63"
+              "sha256": "a7cd88d95ee8a8229698c9f3633cc011001a39e52e29352fd6015369e7f071ee"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -580480,7 +580480,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "59ab98578123c2c204139fd23753851af138d9db785ca94a5419c7b2fa5784a9"
+              "sha256": "3ac1aa3a01e25070cc253017b5fda5287feb6e2a371805a349a3aa15e5176546"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -580492,7 +580492,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "ba65c6db6e4345f88c14db5f51cf14c72310c53f46ae987436d652f88594a11e"
+              "sha256": "cd6aa72723d81e8f9b443ff8bbd1f0e9ce35f31ac1c5ea1e57e05dfff5de514c"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -580884,7 +580884,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "1cdce801803f1fd16a30a63b2b6109e700dc86b058c77f7751b890db4ba65a63"
+              "sha256": "a7cd88d95ee8a8229698c9f3633cc011001a39e52e29352fd6015369e7f071ee"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -582375,7 +582375,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "59ab98578123c2c204139fd23753851af138d9db785ca94a5419c7b2fa5784a9"
+              "sha256": "3ac1aa3a01e25070cc253017b5fda5287feb6e2a371805a349a3aa15e5176546"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -582387,7 +582387,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "ba65c6db6e4345f88c14db5f51cf14c72310c53f46ae987436d652f88594a11e"
+              "sha256": "cd6aa72723d81e8f9b443ff8bbd1f0e9ce35f31ac1c5ea1e57e05dfff5de514c"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -582779,7 +582779,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "1cdce801803f1fd16a30a63b2b6109e700dc86b058c77f7751b890db4ba65a63"
+              "sha256": "a7cd88d95ee8a8229698c9f3633cc011001a39e52e29352fd6015369e7f071ee"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -584270,7 +584270,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "59ab98578123c2c204139fd23753851af138d9db785ca94a5419c7b2fa5784a9"
+              "sha256": "3ac1aa3a01e25070cc253017b5fda5287feb6e2a371805a349a3aa15e5176546"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -584282,7 +584282,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "ba65c6db6e4345f88c14db5f51cf14c72310c53f46ae987436d652f88594a11e"
+              "sha256": "cd6aa72723d81e8f9b443ff8bbd1f0e9ce35f31ac1c5ea1e57e05dfff5de514c"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -584674,7 +584674,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "1cdce801803f1fd16a30a63b2b6109e700dc86b058c77f7751b890db4ba65a63"
+              "sha256": "a7cd88d95ee8a8229698c9f3633cc011001a39e52e29352fd6015369e7f071ee"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -586165,7 +586165,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "59ab98578123c2c204139fd23753851af138d9db785ca94a5419c7b2fa5784a9"
+              "sha256": "3ac1aa3a01e25070cc253017b5fda5287feb6e2a371805a349a3aa15e5176546"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -586177,7 +586177,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "ba65c6db6e4345f88c14db5f51cf14c72310c53f46ae987436d652f88594a11e"
+              "sha256": "cd6aa72723d81e8f9b443ff8bbd1f0e9ce35f31ac1c5ea1e57e05dfff5de514c"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -586569,7 +586569,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "1cdce801803f1fd16a30a63b2b6109e700dc86b058c77f7751b890db4ba65a63"
+              "sha256": "a7cd88d95ee8a8229698c9f3633cc011001a39e52e29352fd6015369e7f071ee"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -588060,7 +588060,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "59ab98578123c2c204139fd23753851af138d9db785ca94a5419c7b2fa5784a9"
+              "sha256": "3ac1aa3a01e25070cc253017b5fda5287feb6e2a371805a349a3aa15e5176546"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -588072,7 +588072,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "ba65c6db6e4345f88c14db5f51cf14c72310c53f46ae987436d652f88594a11e"
+              "sha256": "cd6aa72723d81e8f9b443ff8bbd1f0e9ce35f31ac1c5ea1e57e05dfff5de514c"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -588464,7 +588464,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "1cdce801803f1fd16a30a63b2b6109e700dc86b058c77f7751b890db4ba65a63"
+              "sha256": "a7cd88d95ee8a8229698c9f3633cc011001a39e52e29352fd6015369e7f071ee"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -589955,7 +589955,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "59ab98578123c2c204139fd23753851af138d9db785ca94a5419c7b2fa5784a9"
+              "sha256": "3ac1aa3a01e25070cc253017b5fda5287feb6e2a371805a349a3aa15e5176546"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -589967,7 +589967,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "ba65c6db6e4345f88c14db5f51cf14c72310c53f46ae987436d652f88594a11e"
+              "sha256": "cd6aa72723d81e8f9b443ff8bbd1f0e9ce35f31ac1c5ea1e57e05dfff5de514c"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -590359,7 +590359,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "1cdce801803f1fd16a30a63b2b6109e700dc86b058c77f7751b890db4ba65a63"
+              "sha256": "a7cd88d95ee8a8229698c9f3633cc011001a39e52e29352fd6015369e7f071ee"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -591623,7 +591623,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "1cdce801803f1fd16a30a63b2b6109e700dc86b058c77f7751b890db4ba65a63"
+              "sha256": "a7cd88d95ee8a8229698c9f3633cc011001a39e52e29352fd6015369e7f071ee"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -592590,7 +592590,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "59ab98578123c2c204139fd23753851af138d9db785ca94a5419c7b2fa5784a9"
+              "sha256": "3ac1aa3a01e25070cc253017b5fda5287feb6e2a371805a349a3aa15e5176546"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -592602,7 +592602,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "ba65c6db6e4345f88c14db5f51cf14c72310c53f46ae987436d652f88594a11e"
+              "sha256": "cd6aa72723d81e8f9b443ff8bbd1f0e9ce35f31ac1c5ea1e57e05dfff5de514c"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -592994,7 +592994,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "1cdce801803f1fd16a30a63b2b6109e700dc86b058c77f7751b890db4ba65a63"
+              "sha256": "a7cd88d95ee8a8229698c9f3633cc011001a39e52e29352fd6015369e7f071ee"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -594485,7 +594485,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "59ab98578123c2c204139fd23753851af138d9db785ca94a5419c7b2fa5784a9"
+              "sha256": "3ac1aa3a01e25070cc253017b5fda5287feb6e2a371805a349a3aa15e5176546"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -594497,7 +594497,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "ba65c6db6e4345f88c14db5f51cf14c72310c53f46ae987436d652f88594a11e"
+              "sha256": "cd6aa72723d81e8f9b443ff8bbd1f0e9ce35f31ac1c5ea1e57e05dfff5de514c"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -594889,7 +594889,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "1cdce801803f1fd16a30a63b2b6109e700dc86b058c77f7751b890db4ba65a63"
+              "sha256": "a7cd88d95ee8a8229698c9f3633cc011001a39e52e29352fd6015369e7f071ee"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -595693,7 +595693,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Protected creation and saved case recovery have current native evidence. Match the remaining list, detail and dashboard states against the route census and scoped cases."
+        "Saving and solar malformed or mismatched detail recovery has current browser evidence. Finish reconciliation of remaining conditional route, list and dashboard states against the populated route census and their scoped evidence."
       ],
       "owner": null,
       "depends_on": [],
@@ -595782,7 +595782,8 @@
           "release-0.5-reconciliation-command-deadline",
           "release-0.5-shared-confirmation-deadlines",
           "release-0.5-financial-confirmation-recovery",
-          "release-0.5-protected-creation-recovery"
+          "release-0.5-protected-creation-recovery",
+          "release-0.5-customer-detail-state-recovery"
         ],
         "current_acceptance": null
       }
@@ -647399,7 +647400,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "ba65c6db6e4345f88c14db5f51cf14c72310c53f46ae987436d652f88594a11e"
+              "sha256": "cd6aa72723d81e8f9b443ff8bbd1f0e9ce35f31ac1c5ea1e57e05dfff5de514c"
             },
             {
               "path": "apps/web/src/pages/customer-bank-receipt-history-scope.test.tsx",
@@ -648228,7 +648229,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "ba65c6db6e4345f88c14db5f51cf14c72310c53f46ae987436d652f88594a11e"
+              "sha256": "cd6aa72723d81e8f9b443ff8bbd1f0e9ce35f31ac1c5ea1e57e05dfff5de514c"
             },
             {
               "path": "apps/web/src/pages/customer-bank-receipt-history-scope.test.tsx",
@@ -649065,7 +649066,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "ba65c6db6e4345f88c14db5f51cf14c72310c53f46ae987436d652f88594a11e"
+              "sha256": "cd6aa72723d81e8f9b443ff8bbd1f0e9ce35f31ac1c5ea1e57e05dfff5de514c"
             },
             {
               "path": "apps/web/src/pages/customer-bank-receipt-history-scope.test.tsx",
@@ -649886,7 +649887,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "ba65c6db6e4345f88c14db5f51cf14c72310c53f46ae987436d652f88594a11e"
+              "sha256": "cd6aa72723d81e8f9b443ff8bbd1f0e9ce35f31ac1c5ea1e57e05dfff5de514c"
             },
             {
               "path": "apps/web/src/pages/customer-bank-receipt-history-scope.test.tsx",
@@ -650706,7 +650707,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "ba65c6db6e4345f88c14db5f51cf14c72310c53f46ae987436d652f88594a11e"
+              "sha256": "cd6aa72723d81e8f9b443ff8bbd1f0e9ce35f31ac1c5ea1e57e05dfff5de514c"
             },
             {
               "path": "apps/web/src/pages/customer-bank-receipt-history-scope.test.tsx",
@@ -685358,7 +685359,7 @@
             },
             {
               "path": "apps/web/e2e/solar-construction-progress.spec.ts",
-              "sha256": "62196e4de6fe6e78e6fcbef2be765f100e3f1f1aa20668e2c59af5c6f28233ea"
+              "sha256": "98878df007ab75c9b137a2b2505d330a24f1af6aacd9d526bd3f097b117d8067"
             },
             {
               "path": "apps/web/e2e/solar-operation-form-fixture.ts",
@@ -685642,7 +685643,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "ba65c6db6e4345f88c14db5f51cf14c72310c53f46ae987436d652f88594a11e"
+              "sha256": "cd6aa72723d81e8f9b443ff8bbd1f0e9ce35f31ac1c5ea1e57e05dfff5de514c"
             },
             {
               "path": "apps/web/src/test/solar-progress-fixtures.ts",
@@ -686199,7 +686200,7 @@
             },
             {
               "path": "apps/web/e2e/solar-construction-progress.spec.ts",
-              "sha256": "62196e4de6fe6e78e6fcbef2be765f100e3f1f1aa20668e2c59af5c6f28233ea"
+              "sha256": "98878df007ab75c9b137a2b2505d330a24f1af6aacd9d526bd3f097b117d8067"
             },
             {
               "path": "apps/web/e2e/solar-operation-form-fixture.ts",
@@ -686483,7 +686484,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "ba65c6db6e4345f88c14db5f51cf14c72310c53f46ae987436d652f88594a11e"
+              "sha256": "cd6aa72723d81e8f9b443ff8bbd1f0e9ce35f31ac1c5ea1e57e05dfff5de514c"
             },
             {
               "path": "apps/web/src/test/solar-progress-fixtures.ts",
@@ -687042,7 +687043,7 @@
             },
             {
               "path": "apps/web/e2e/solar-construction-progress.spec.ts",
-              "sha256": "62196e4de6fe6e78e6fcbef2be765f100e3f1f1aa20668e2c59af5c6f28233ea"
+              "sha256": "98878df007ab75c9b137a2b2505d330a24f1af6aacd9d526bd3f097b117d8067"
             },
             {
               "path": "apps/web/e2e/solar-operation-form-fixture.ts",
@@ -687326,7 +687327,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "ba65c6db6e4345f88c14db5f51cf14c72310c53f46ae987436d652f88594a11e"
+              "sha256": "cd6aa72723d81e8f9b443ff8bbd1f0e9ce35f31ac1c5ea1e57e05dfff5de514c"
             },
             {
               "path": "apps/web/src/test/solar-progress-fixtures.ts",
@@ -687883,7 +687884,7 @@
             },
             {
               "path": "apps/web/e2e/solar-construction-progress.spec.ts",
-              "sha256": "62196e4de6fe6e78e6fcbef2be765f100e3f1f1aa20668e2c59af5c6f28233ea"
+              "sha256": "98878df007ab75c9b137a2b2505d330a24f1af6aacd9d526bd3f097b117d8067"
             },
             {
               "path": "apps/web/e2e/solar-operation-form-fixture.ts",
@@ -688167,7 +688168,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "ba65c6db6e4345f88c14db5f51cf14c72310c53f46ae987436d652f88594a11e"
+              "sha256": "cd6aa72723d81e8f9b443ff8bbd1f0e9ce35f31ac1c5ea1e57e05dfff5de514c"
             },
             {
               "path": "apps/web/src/test/solar-progress-fixtures.ts",
@@ -688724,7 +688725,7 @@
             },
             {
               "path": "apps/web/e2e/solar-construction-progress.spec.ts",
-              "sha256": "62196e4de6fe6e78e6fcbef2be765f100e3f1f1aa20668e2c59af5c6f28233ea"
+              "sha256": "98878df007ab75c9b137a2b2505d330a24f1af6aacd9d526bd3f097b117d8067"
             },
             {
               "path": "apps/web/e2e/solar-operation-form-fixture.ts",
@@ -689008,7 +689009,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "ba65c6db6e4345f88c14db5f51cf14c72310c53f46ae987436d652f88594a11e"
+              "sha256": "cd6aa72723d81e8f9b443ff8bbd1f0e9ce35f31ac1c5ea1e57e05dfff5de514c"
             },
             {
               "path": "apps/web/src/test/solar-progress-fixtures.ts",
@@ -689569,7 +689570,7 @@
             },
             {
               "path": "apps/web/e2e/solar-construction-progress.spec.ts",
-              "sha256": "62196e4de6fe6e78e6fcbef2be765f100e3f1f1aa20668e2c59af5c6f28233ea"
+              "sha256": "98878df007ab75c9b137a2b2505d330a24f1af6aacd9d526bd3f097b117d8067"
             },
             {
               "path": "apps/web/e2e/solar-operation-form-fixture.ts",
@@ -689853,7 +689854,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "ba65c6db6e4345f88c14db5f51cf14c72310c53f46ae987436d652f88594a11e"
+              "sha256": "cd6aa72723d81e8f9b443ff8bbd1f0e9ce35f31ac1c5ea1e57e05dfff5de514c"
             },
             {
               "path": "apps/web/src/test/solar-progress-fixtures.ts",
@@ -690414,7 +690415,7 @@
             },
             {
               "path": "apps/web/e2e/solar-construction-progress.spec.ts",
-              "sha256": "62196e4de6fe6e78e6fcbef2be765f100e3f1f1aa20668e2c59af5c6f28233ea"
+              "sha256": "98878df007ab75c9b137a2b2505d330a24f1af6aacd9d526bd3f097b117d8067"
             },
             {
               "path": "apps/web/e2e/solar-operation-form-fixture.ts",
@@ -690698,7 +690699,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "ba65c6db6e4345f88c14db5f51cf14c72310c53f46ae987436d652f88594a11e"
+              "sha256": "cd6aa72723d81e8f9b443ff8bbd1f0e9ce35f31ac1c5ea1e57e05dfff5de514c"
             },
             {
               "path": "apps/web/src/test/solar-progress-fixtures.ts",
@@ -691255,7 +691256,7 @@
             },
             {
               "path": "apps/web/e2e/solar-construction-progress.spec.ts",
-              "sha256": "62196e4de6fe6e78e6fcbef2be765f100e3f1f1aa20668e2c59af5c6f28233ea"
+              "sha256": "98878df007ab75c9b137a2b2505d330a24f1af6aacd9d526bd3f097b117d8067"
             },
             {
               "path": "apps/web/e2e/solar-operation-form-fixture.ts",
@@ -691539,7 +691540,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "ba65c6db6e4345f88c14db5f51cf14c72310c53f46ae987436d652f88594a11e"
+              "sha256": "cd6aa72723d81e8f9b443ff8bbd1f0e9ce35f31ac1c5ea1e57e05dfff5de514c"
             },
             {
               "path": "apps/web/src/test/solar-progress-fixtures.ts",
@@ -692096,7 +692097,7 @@
             },
             {
               "path": "apps/web/e2e/solar-construction-progress.spec.ts",
-              "sha256": "62196e4de6fe6e78e6fcbef2be765f100e3f1f1aa20668e2c59af5c6f28233ea"
+              "sha256": "98878df007ab75c9b137a2b2505d330a24f1af6aacd9d526bd3f097b117d8067"
             },
             {
               "path": "apps/web/e2e/solar-operation-form-fixture.ts",
@@ -692380,7 +692381,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "ba65c6db6e4345f88c14db5f51cf14c72310c53f46ae987436d652f88594a11e"
+              "sha256": "cd6aa72723d81e8f9b443ff8bbd1f0e9ce35f31ac1c5ea1e57e05dfff5de514c"
             },
             {
               "path": "apps/web/src/test/solar-progress-fixtures.ts",
@@ -692938,7 +692939,7 @@
             },
             {
               "path": "apps/web/e2e/solar-construction-progress.spec.ts",
-              "sha256": "62196e4de6fe6e78e6fcbef2be765f100e3f1f1aa20668e2c59af5c6f28233ea"
+              "sha256": "98878df007ab75c9b137a2b2505d330a24f1af6aacd9d526bd3f097b117d8067"
             },
             {
               "path": "apps/web/e2e/solar-operation-form-fixture.ts",
@@ -693222,7 +693223,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "ba65c6db6e4345f88c14db5f51cf14c72310c53f46ae987436d652f88594a11e"
+              "sha256": "cd6aa72723d81e8f9b443ff8bbd1f0e9ce35f31ac1c5ea1e57e05dfff5de514c"
             },
             {
               "path": "apps/web/src/test/solar-progress-fixtures.ts",
@@ -693785,7 +693786,7 @@
             },
             {
               "path": "apps/web/e2e/solar-construction-progress.spec.ts",
-              "sha256": "62196e4de6fe6e78e6fcbef2be765f100e3f1f1aa20668e2c59af5c6f28233ea"
+              "sha256": "98878df007ab75c9b137a2b2505d330a24f1af6aacd9d526bd3f097b117d8067"
             },
             {
               "path": "apps/web/e2e/solar-operation-form-fixture.ts",
@@ -694069,7 +694070,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "ba65c6db6e4345f88c14db5f51cf14c72310c53f46ae987436d652f88594a11e"
+              "sha256": "cd6aa72723d81e8f9b443ff8bbd1f0e9ce35f31ac1c5ea1e57e05dfff5de514c"
             },
             {
               "path": "apps/web/src/test/solar-progress-fixtures.ts",
@@ -705622,7 +705623,7 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "77976864944a20622a822db4aab4bb561358bee6e6a3081ce28ed6e3d00e01df"
+              "sha256": "6a2a80d082a45a17ce73f4f5e9185e4bbdf767983d5030d5c02341df1673011d"
             },
             {
               "path": "apps/web/e2e/solar-journey.spec.ts",
@@ -707698,7 +707699,7 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "77976864944a20622a822db4aab4bb561358bee6e6a3081ce28ed6e3d00e01df"
+              "sha256": "6a2a80d082a45a17ce73f4f5e9185e4bbdf767983d5030d5c02341df1673011d"
             },
             {
               "path": "apps/web/e2e/solar-journey.spec.ts",
@@ -714461,11 +714462,11 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "77976864944a20622a822db4aab4bb561358bee6e6a3081ce28ed6e3d00e01df"
+              "sha256": "6a2a80d082a45a17ce73f4f5e9185e4bbdf767983d5030d5c02341df1673011d"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "59ab98578123c2c204139fd23753851af138d9db785ca94a5419c7b2fa5784a9"
+              "sha256": "3ac1aa3a01e25070cc253017b5fda5287feb6e2a371805a349a3aa15e5176546"
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
@@ -714849,7 +714850,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "ba65c6db6e4345f88c14db5f51cf14c72310c53f46ae987436d652f88594a11e"
+              "sha256": "cd6aa72723d81e8f9b443ff8bbd1f0e9ce35f31ac1c5ea1e57e05dfff5de514c"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -725426,7 +725427,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Protected financial and identity creation and decision recovery have current native evidence. Remaining scoped command feedback and conditional UI states require reconciliation. Required GitHub accessibility enforcement and the staging Sentry receipt remain open."
+        "Saving and solar conditional detail recovery has current production-browser evidence. Remaining scoped command feedback and conditional UI states require reconciliation. Required GitHub accessibility enforcement and the staging Sentry receipt remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -725580,7 +725581,8 @@
           "release-0.5-reconciliation-command-deadline",
           "release-0.5-shared-confirmation-deadlines",
           "release-0.5-financial-confirmation-recovery",
-          "release-0.5-protected-creation-recovery"
+          "release-0.5-protected-creation-recovery",
+          "release-0.5-customer-detail-state-recovery"
         ]
       }
     },
@@ -725668,7 +725670,7 @@
             },
             {
               "path": "apps/web/e2e/solar-construction-progress.spec.ts",
-              "sha256": "62196e4de6fe6e78e6fcbef2be765f100e3f1f1aa20668e2c59af5c6f28233ea"
+              "sha256": "98878df007ab75c9b137a2b2505d330a24f1af6aacd9d526bd3f097b117d8067"
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
@@ -726708,7 +726710,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
-              "sha256": "59ab98578123c2c204139fd23753851af138d9db785ca94a5419c7b2fa5784a9"
+              "sha256": "3ac1aa3a01e25070cc253017b5fda5287feb6e2a371805a349a3aa15e5176546"
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
@@ -726732,7 +726734,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
-              "sha256": "ba65c6db6e4345f88c14db5f51cf14c72310c53f46ae987436d652f88594a11e"
+              "sha256": "cd6aa72723d81e8f9b443ff8bbd1f0e9ce35f31ac1c5ea1e57e05dfff5de514c"
             },
             {
               "path": "apps/web/src/pages/SolarRequestPage.tsx",
@@ -727462,7 +727464,8 @@
             "Renewed staff reconciliation, verification-banner and route budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-reconciliation-command-deadline/proof.json",
             "Renewed confirmation dialog and document template budget and browser evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-shared-confirmation-deadlines/proof.json",
             "Renewed financial recovery native browser and route budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-financial-confirmation-recovery/proof.json",
-            "Renewed protected creation browser, coverage and route budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-protected-creation-recovery/proof.json"
+            "Renewed protected creation browser, coverage and route budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-protected-creation-recovery/proof.json",
+            "Renewed saving and solar detail browser, coverage and route budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-customer-detail-state-recovery/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -801476,6 +801479,92 @@
       "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-protected-creation-recovery/renewed-bindings.json",
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-protected-creation-recovery/reviewed.patch",
       "release_disposition": "Verified exact refund and lost-contact creation retries, authorized case reads and stale challenge protection. v0.5.0 acceptance remains open."
+    },
+    "release-0.5-customer-detail-state-recovery": {
+      "batch": "release-0.5-customer-detail-state-recovery",
+      "base_commit": "c011daa1513c75fa553b1ac2ca100d92ba48a066",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": ".size-limit.json",
+          "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+        },
+        {
+          "path": "apps/api/src/saving/saving-fulfillment-history.ts",
+          "sha256": "c08b7caadf5b0aa4aea05763457a31caaed7c6ee3f62f6152ad73f9518ccd2ca"
+        },
+        {
+          "path": "apps/api/src/saving/saving-order.service.ts",
+          "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+        },
+        {
+          "path": "apps/api/src/solar/solar-request.service.ts",
+          "sha256": "2351000f7fd2f86266ce92c1c0c309b283c57eb08d1d195bfe421afc23a3761c"
+        },
+        {
+          "path": "apps/web/e2e/saving-journey.spec.ts",
+          "sha256": "6a2a80d082a45a17ce73f4f5e9185e4bbdf767983d5030d5c02341df1673011d"
+        },
+        {
+          "path": "apps/web/e2e/solar-construction-progress.spec.ts",
+          "sha256": "98878df007ab75c9b137a2b2505d330a24f1af6aacd9d526bd3f097b117d8067"
+        },
+        {
+          "path": "apps/web/playwright.config.ts",
+          "sha256": "ad9a9e23b46599266a7fe0dcfd7185e12e612cdc50c040453533d1fccbea85cf"
+        },
+        {
+          "path": "apps/web/src/hooks/useServerQuery.ts",
+          "sha256": "d48dcb712ea4eee821a3b101e12b3d7ee81f11277a8b42ab8aeb594cb2fab47d"
+        },
+        {
+          "path": "apps/web/src/lib/saving-next-action.ts",
+          "sha256": "9ced1dc0b28c2d40555c231eed3109177bcaaf13870c6e0e40d8bf5b1e335a1d"
+        },
+        {
+          "path": "apps/web/src/lib/solar-progress-form.ts",
+          "sha256": "7749a522e429a8f60a185c79cb4f1334c9a764586c96573e7dae556885d354d3"
+        },
+        {
+          "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
+          "sha256": "3ac1aa3a01e25070cc253017b5fda5287feb6e2a371805a349a3aa15e5176546"
+        },
+        {
+          "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
+          "sha256": "cd6aa72723d81e8f9b443ff8bbd1f0e9ce35f31ac1c5ea1e57e05dfff5de514c"
+        },
+        {
+          "path": "docs/design/notification-recovery.md",
+          "sha256": "a7cd88d95ee8a8229698c9f3633cc011001a39e52e29352fd6015369e7f071ee"
+        },
+        {
+          "path": "scripts/check-changed-coverage.py",
+          "sha256": "721aa5763bb62336c0e4c454b8e36e2f15ff1e14bf4b0136c7c7946424bbd736"
+        },
+        {
+          "path": "scripts/check-route-budgets.mjs",
+          "sha256": "4dd831c645a9dbf1e6fd9b0c211b5559e4fc22652373b31525bd4f4aae38186d"
+        }
+      ],
+      "checks": [
+        "The saving detail keeps its heading and retry control for incomplete records and malformed histories. Solar progress must pass the existing parser and match the request and profile. Both journeys hide business links while the read is invalid. An accepted retry restores the exact record, and legacy optional histories or progress may be absent.",
+        "Passed 38 native Chromium and mobile Safari cases, 17 instrumented Chromium cases and 19 focused unit tests. Web type checking, lint, formatting, 100 route and interaction budgets and all nine changed-source coverage groups passed. The cold-auth runtime matched all 31 previously verified assets byte for byte.",
+        "The existing customer scope, payment and contract calls are unchanged. This evidence covers the two conditional detail journeys. The populated route census alone does not certify every conditional state."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-customer-detail-state-recovery",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-customer-detail-state-recovery/proof.json",
+      "source_scope_proof_sha256": "2d247282831507bdbb594808947d8d43bbba06c8a1fe6066e78556925d8fc0f4",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-customer-detail-state-recovery/renewed-bindings.json",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-customer-detail-state-recovery/reviewed.patch",
+      "release_disposition": "Verified conditional saving and solar detail recovery for malformed and mismatched responses. v0.5.0 acceptance remains open."
     }
   },
   "historical_improvements": [
@@ -801526,12 +801615,12 @@
       "release-readiness#R-04.01",
       "release-readiness#R-04.02"
     ],
-    "goal": "Close remaining v0.5.0 conditional list, detail and dashboard states against the current route census. Reconcile the remaining confirmation sites and CRUD feedback using the existing command recovery rules. Live Sentry and required GitHub accessibility enforcement remain separate gates."
+    "goal": "Reconcile the remaining v0.5.0 confirmation sites and CRUD feedback using the existing command recovery rules. Verify remaining conditional states against the current route census and scoped evidence. Live Sentry and required GitHub accessibility enforcement remain separate gates."
   },
   "launch_forecast": {
     "status": "deadline_at_risk_until_v0_5_and_operational_gates_close",
     "next_update_after": "v0.5.0 remaining UI criteria and owner decisions",
-    "method": "v0.4.0 staging and Telegram receipts are verified. v0.5.0 protected refund and lost-contact creation recovery has current browser and HTTP evidence. Five launch-required criteria remain open, including staging Sentry delivery, GitHub accessibility enforcement and remaining UI reconciliation. The November 9 sequence remains at risk."
+    "method": "v0.4.0 staging and Telegram receipts are verified. v0.5.0 saving and solar detail recovery has current native browser evidence. Five launch-required criteria remain open, including staging Sentry delivery, GitHub accessibility enforcement and remaining UI reconciliation. The November 9 sequence remains at risk."
   },
   "capabilities": [
     {

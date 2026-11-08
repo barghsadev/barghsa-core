@@ -19,6 +19,7 @@ import { DocumentResults, type DocumentFilters } from '../components/DocumentsWo
 import { SolarPostalPanel } from '../components/SolarPostalPanel.js';
 import { SolarStageProgress } from '../components/SolarStageProgress.js';
 import type { SolarProgress } from '../lib/solar-progress.js';
+import { parseProgress } from '../lib/solar-progress-form.js';
 import { WorkflowStatusBanner } from '../components/WorkflowStatusBanner.js';
 import { workflowFeedback } from '@barghsa/i18n/workflow-feedback';
 import { solarNextAction } from '../lib/solar-next-action.js';
@@ -51,6 +52,8 @@ interface SolarRequest {
   agreement_accepted_at: string;
   submitted_at: string;
 }
+
+type SolarHistory = Array<{ event: string; at: string; actorContext?: string | null }>;
 
 function readFailure(reason: unknown) {
   if (reason instanceof ServerQueryError) {
@@ -89,9 +92,7 @@ function SolarRequestDetail({
   const time = useAccountTime(locale);
   const copy = (key: string) => tSolar(key, locale);
   const [request, setRequest] = useState<SolarRequest | null>(null);
-  const [history, setHistory] = useState<
-    Array<{ event: string; at: string; actorContext?: string | null }>
-  >([]);
+  const [history, setHistory] = useState<SolarHistory>([]);
   const [progress, setProgress] = useState<SolarProgress | null>(null);
   const [loading, setLoading] = useState(true);
   const [detailError, setDetailError] = useState<ReturnType<typeof readFailure> | null>(null);
@@ -136,8 +137,8 @@ function SolarRequestDetail({
   );
   const detailQuery = useServerDetailQuery<{
     request: SolarRequest;
-    progress?: SolarProgress;
-    history?: Array<{ event: string; at: string; actorContext?: string | null }>;
+    progress: SolarProgress | null;
+    history: SolarHistory;
   }>({
     queryKey: detailQueryKey,
     enabled: false,
@@ -148,7 +149,36 @@ function SolarRequestDetail({
         signal
       );
       if (!response.ok) throw new ServerQueryError(response.status);
-      return response.json();
+      const result = (await response.json()) as {
+        request?: SolarRequest;
+        history?: SolarHistory | null;
+        progress?: unknown;
+      } | null;
+      const request = result?.request;
+      const history = result?.history ?? [];
+      const progress = result?.progress == null ? null : parseProgress(result.progress);
+      if (
+        !request ||
+        request.id !== requestId ||
+        typeof request.profile_id !== 'string' ||
+        !request.profile_id.trim() ||
+        typeof request.status !== 'string' ||
+        typeof request.submitted_at !== 'string' ||
+        !Array.isArray(history) ||
+        !history.every(
+          (item) =>
+            item &&
+            typeof item.event === 'string' &&
+            typeof item.at === 'string' &&
+            (item.actorContext == null || typeof item.actorContext === 'string')
+        ) ||
+        (result?.progress != null &&
+          (!progress ||
+            progress.requestId !== requestId ||
+            progress.profileId !== request.profile_id))
+      )
+        throw new Error('request');
+      return { request, history, progress };
     },
   });
   const showDocuments =
@@ -196,16 +226,9 @@ function SolarRequestDetail({
         if (controller.signal.aborted) return;
         if (!reply.isSuccess || !reply.data) throw reply.error ?? new Error('request');
         const result = reply.data;
-        if (
-          !result.request ||
-          result.request.id !== requestId ||
-          typeof result.request.profile_id !== 'string' ||
-          !result.request.profile_id.trim()
-        )
-          throw new Error('request');
         setRequest(result.request);
-        setProgress(result.progress ?? null);
-        setHistory(result.history ?? []);
+        setProgress(result.progress);
+        setHistory(result.history);
       })
       .catch((reason: unknown) => {
         if (!controller.signal.aborted) {

@@ -71,6 +71,78 @@ interface Detail extends SavingActionContext {
   hardwareUpgrades: SavingHardwareUpgrade[];
 }
 
+const text = (value: unknown) => typeof value === 'string';
+const optionalText = (value: unknown) => value == null || text(value);
+const localized = (value?: { fa: string; en: string } | null) => text(value?.fa) && text(value?.en);
+const amount = (value: unknown) => typeof value === 'string' && /^-?\d+$/.test(value);
+
+function optionalRows<T>(rows: T[] | null | undefined, valid: (row: T) => boolean) {
+  return rows == null || (Array.isArray(rows) && rows.every((row) => row != null && valid(row)));
+}
+
+function validDetail(detail: Detail | null, orderId: string): detail is Detail {
+  const pricing = detail?.pricing_snapshot;
+  return (
+    detail?.id === orderId &&
+    typeof detail.profile_id === 'string' &&
+    !!detail.profile_id.trim() &&
+    [detail.status, detail.financial_status, detail.submitted_at, detail.bill_identifier].every(
+      text
+    ) &&
+    [detail.invoice_id, detail.contract_id, detail.agreement_snapshot].every(optionalText) &&
+    localized(detail.current_hardware_title) &&
+    text(detail.address_snapshot?.full_address) &&
+    text(detail.address_snapshot?.postal_code) &&
+    text(detail.verification_result?.status) &&
+    !!pricing &&
+    localized(pricing.plan?.title) &&
+    [pricing.subtotalIrR, pricing.discountIrR, pricing.vatIrR, pricing.totalIrR].every(amount) &&
+    Array.isArray(detail.stages) &&
+    optionalRows(
+      detail.stages,
+      (stage) =>
+        [stage.stage, stage.status].every(text) &&
+        [stage.started_at, stage.completed_at, stage.handover_description].every(optionalText)
+    ) &&
+    optionalRows(
+      detail.events,
+      (event) =>
+        [event.id, event.created_at, event.explanation].every(text) &&
+        optionalText(event.handover_description)
+    ) &&
+    optionalRows(
+      detail.revisions,
+      (row) =>
+        [row.previousAddress, row.address].every(optionalText) &&
+        (row.previousHardwareTitle == null || localized(row.previousHardwareTitle)) &&
+        (row.hardwareTitle == null || localized(row.hardwareTitle))
+    ) &&
+    optionalRows(detail.addressAmendments, (row) =>
+      [row.previousAddress, row.address, row.previousPostalCode, row.postalCode, row.reason].every(
+        text
+      )
+    ) &&
+    optionalRows(
+      detail.hardwareAmendments,
+      (row) =>
+        localized(row.previousTitle) &&
+        localized(row.hardwareTitle) &&
+        optionalText(row.reason) &&
+        optionalText(row.adjustmentInvoiceId) &&
+        amount(row.priceDeltaIrR)
+    ) &&
+    optionalRows(
+      detail.hardwareUpgrades,
+      (row) =>
+        localized(row.previousTitle) &&
+        localized(row.hardwareTitle) &&
+        optionalText(row.reason) &&
+        text(row.adjustmentInvoiceId) &&
+        amount(row.priceDeltaIrR)
+    )
+  );
+}
+
 export function SavingOrderDetailPage() {
   const { orderId } = useParams({ from: '/_app/savings/orders/$orderId' });
   const locale = useLocale();
@@ -120,7 +192,7 @@ export function SavingOrderDetailPage() {
       });
       if (!response.ok) throw new Error('order');
       const result = (await response.json()) as Detail | null;
-      if (!result || result.id !== orderId) throw new Error('order');
+      if (!validDetail(result, orderId)) throw new Error('order');
       return result;
     },
   });

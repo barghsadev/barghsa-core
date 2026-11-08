@@ -169,8 +169,10 @@ for (const locale of ['en', 'fa'] as const) {
         },
       })
     );
-    await page.route(`**/api/solar/requests/${constructionRequest}`, (r) =>
-      r.fulfill({
+    let detailReads = 0;
+    await page.route(`**/api/solar/requests/${constructionRequest}`, (r) => {
+      detailReads++;
+      return r.fulfill({
         json: {
           request: {
             id: constructionRequest,
@@ -189,11 +191,14 @@ for (const locale of ['en', 'fa'] as const) {
             agreement_accepted_at: '2026-09-20T23:00:00.000Z',
             submitted_at: '2026-09-20T23:00:00.000Z',
           },
-          progress: savedProgress(),
-          history: [],
+          progress:
+            detailReads === 2
+              ? { ...savedProgress(), profileId: '89000000-0000-4000-8000-000000000004' }
+              : savedProgress(),
+          history: detailReads === 1 ? [null] : [],
         },
-      })
-    );
+      });
+    });
     await page.route(`**/api/solar/requests/${constructionRequest}/postal`, (r) =>
       r.fulfill({
         json: {
@@ -211,6 +216,20 @@ for (const locale of ['en', 'fa'] as const) {
       })
     );
     await page.goto(`/solar/requests/${constructionRequest}`);
+    const main = page.getByRole('main');
+    const detailError = main.getByRole('alert').filter({ hasText: copy('notFound') });
+    for (const rejectedRead of [1, 2]) {
+      await expect.poll(() => detailReads).toBe(rejectedRead);
+      await expect(main.getByRole('heading', { level: 1 })).toHaveText(copy('details'));
+      await expect(detailError).toBeVisible();
+      await expect(scope(page, 'constructionTitle', locale)).toHaveCount(0);
+      await expect(
+        main.locator(`a[href="/contracts?contractId=${constructionContract}"]`)
+      ).toHaveCount(0);
+      await main.getByRole('button', { name: copy('retry'), exact: true }).click();
+    }
+    await expect.poll(() => detailReads).toBe(3);
+    await expect(detailError).toHaveCount(0);
     await expect(
       scope(page, 'constructionTitle', locale).locator(
         '[data-slot=progress-stepper]>li[data-state=complete]'
