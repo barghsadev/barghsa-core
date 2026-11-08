@@ -58,6 +58,7 @@ export function useCatalogueResource<T>(
     setAttempt(requested);
     return requested;
   }, []);
+  const nextReadAttempt = useCallback(() => nextAttempt.current + 1, []);
   /** Publish a validated mutation receipt before reloading its authoritative catalogue. */
   const accept = useCallback(
     (data: T) => {
@@ -137,11 +138,13 @@ export function useCatalogueResource<T>(
   ]);
   const accepted = !denied && !forbidden && result?.key === key ? result : null;
   return {
+    ownerKey: key,
     data: accepted?.data ?? null,
     loading: !!path && !denied && !forbidden && (accepted?.loading ?? true),
     error: accepted?.error ?? false,
     // Only a successful authoritative read satisfies recovery; local receipts do not.
     readAttempt: accepted?.readAttempt ?? null,
+    nextReadAttempt,
     retry,
     accept,
   };

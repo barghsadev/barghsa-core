@@ -1,6 +1,7 @@
 import { test, expect } from './coverage-fixture';
 import { fullNavigation } from './navigation-fixture';
 import { dismissMessages } from './dismiss-messages';
+import { t as adminText } from '@barghsa/i18n/admin-ui';
 import AxeBuilder from '@axe-core/playwright';
 
 test.beforeEach(async ({ page }) => {
@@ -119,6 +120,7 @@ for (const locale of ['en', 'fa'] as const) {
     page,
   }) => {
     const fa = locale === 'fa';
+    const label = (key: string) => adminText(`admin.green.${key}`, locale);
     await page.addInitScript((value) => {
       localStorage.setItem('barghsa.locale', value);
       localStorage.setItem('barghsa.theme', value === 'fa' ? 'dark' : 'light');
@@ -171,19 +173,26 @@ for (const locale of ['en', 'fa'] as const) {
       fa ? 'درخواست خورشیدی' : 'Profile setup, electricity, saving and solar drafts'
     );
     await ttl.fill('14');
-    await page
-      .getByRole('button', {
-        name: fa ? 'ذخیره مدت نگهداری' : 'Save retention period',
-        exact: true,
-      })
-      .click();
+    const save = page.getByRole('button', {
+      name: fa ? 'ذخیره مدت نگهداری' : 'Save retention period',
+      exact: true,
+    });
+    await save.click();
     const dialog = page.getByRole('dialog');
     await expect(dialog).toContainText(fa ? 'همه فرم‌های مشتری' : 'all customer form drafts');
     const confirm = dialog.getByRole('button', { name: fa ? 'تأیید' : 'Confirm', exact: true });
     await confirm.click();
-    await expect(dialog.getByRole('alert')).toBeVisible();
+    await expect(dialog.getByRole('alert').filter({ hasText: label('unverified') })).toBeVisible();
+    await expect(confirm).toBeDisabled();
     expect(days).toBe(7);
+    await dialog.getByRole('button', { name: fa ? 'انصراف' : 'Cancel', exact: true }).click();
+    await expect(save).toBeDisabled();
+    await expect(ttl).toHaveValue('14');
     fail = false;
+    await page.getByRole('button', { name: label('refresh'), exact: true }).click();
+    await expect(save).toBeEnabled();
+    expect(writes).toEqual([{ days: 14 }]);
+    await save.click();
     await confirm.click();
     await expect(dialog).toHaveCount(0);
     await expect(ttl).toHaveValue('14');

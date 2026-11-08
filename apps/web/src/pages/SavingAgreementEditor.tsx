@@ -199,6 +199,8 @@ export function SavingAgreementEditor({
           confirmationDisabled={!editor.ready || editor.uncertain}
           onClose={editor.close}
           onDenied={editor.onDenied}
+          onPendingChange={editor.onPendingChange}
+          onUnconfirmed={editor.onUnconfirmed}
           {...(activation ? {} : { onValidationError: editor.onValidationError })}
           summary={
             <div className="space-y-2 rounded-md border p-3">

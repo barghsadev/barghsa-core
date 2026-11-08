@@ -229,12 +229,21 @@ for (const [locale, darkMode] of [
     let fail = false,
       changed = false,
       denied = false;
-    await page.route('**/api/admin/config/contract-electricity-limits', (route) =>
-      route.fulfill({
+    let writes = 0;
+    let releaseWrite = () => {};
+    const heldWrite = new Promise<void>((resolve) => (releaseWrite = resolve));
+    await page.route('**/api/admin/config/contract-electricity-limits', async (route) => {
+      if (route.request().method() === 'PUT') {
+        writes++;
+        expect(route.request().postDataJSON()).toMatchObject({ lead_time_days: 14 });
+        await heldWrite;
+        return route.abort().catch(() => {});
+      }
+      return route.fulfill({
         status: denied ? 403 : fail ? 503 : 200,
         json: { ...electricityLimits, leadTimeDays: changed ? 7 : 0 },
-      })
-    );
+      });
+    });
     await page.goto('/admin/contract-limits');
     const lead = page.locator('#contract-limit-leadTimeDays');
     await lead.fill('14');
@@ -253,6 +262,35 @@ for (const [locale, darkMode] of [
     await expect(confirm).toBeDisabled();
     fail = false;
     await dialog.getByRole('button', { name: limit('retry'), exact: true }).click();
+    await expect(confirm).toBeEnabled();
+    const reviewRefresh = dialog.getByRole('button', { name: limit('refresh'), exact: true });
+    await page.clock.install();
+    await confirm.click();
+    try {
+      await expect.poll(() => writes).toBe(1);
+      await expect(reviewRefresh).toBeDisabled();
+      await page.clock.runFor(15_100);
+      await expect(dialog).toContainText(limit('unverified'));
+      await expect(confirm).toBeDisabled();
+      if (locale === 'fa' && darkMode && info.project.name === 'mobile-safari')
+        await dialog.screenshot({
+          path: info.outputPath('contract-limit-unconfirmed-fa-mobile.png'),
+        });
+    } finally {
+      releaseWrite();
+    }
+    fail = true;
+    await reviewRefresh.click();
+    await expect(dialog.getByText(limit('readError'), { exact: true })).toBeVisible();
+    await expect(dialog).toContainText(limit('unverified'));
+    await expect(confirm).toBeDisabled();
+    await expect(lead).toHaveValue('14');
+    fail = false;
+    await dialog.getByRole('button', { name: limit('retry'), exact: true }).click();
+    await expect(dialog).toHaveCount(0);
+    await expect(lead).toHaveValue('14');
+    expect(writes).toBe(1);
+    await page.getByRole('button', { name: limit('save'), exact: true }).click();
     await expect(confirm).toBeEnabled();
     changed = true;
     await dialog.getByRole('button', { name: limit('refresh'), exact: true }).click();

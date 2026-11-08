@@ -54,6 +54,7 @@ it('a validated save receipt supersedes older reads and cannot cross a denied sc
       required = resource.retry();
     });
     expect(required).toBe(1);
+    expect(resource.nextReadAttempt()).toBe(2);
     expect(resource.readAttempt).toBe(0);
     await act(async () => resolve(new Response('unavailable', { status: 503 })));
     expect(resource.error).toBe(true);
@@ -64,6 +65,7 @@ it('a validated save receipt supersedes older reads and cannot cross a denied sc
     await act(async () => resolve(new Response('20')));
     expect(resource.readAttempt).toBe(required);
     expect(resource.readAttempt).toBe(2);
+    expect(resource.nextReadAttempt()).toBe(3);
     await act(async () => scope.deny());
     await act(async () => {
       expect(oldAccept(48)).toBe(false);

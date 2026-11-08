@@ -53,7 +53,7 @@ export default function AdminContractLimitsPage() {
   const error = catalogueRootMessage(editor.errors),
     body = editor.action?.body;
   // An unchanged recovery read preserves the already reviewed proposal.
-  const refresh = () => (editor.denied ? editor.refresh() : editor.resource.retry());
+  const refresh = editor.refresh;
   return (
     <section className="space-y-5" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
       <header className="flex flex-wrap justify-between gap-3">
@@ -61,7 +61,11 @@ export default function AdminContractLimitsPage() {
           <h1 className="text-2xl font-semibold">{label('title')}</h1>
           <p className="text-muted-foreground">{label('description')}</p>
         </div>
-        <Button variant="outline" disabled={editor.resource.loading} onClick={refresh}>
+        <Button
+          variant="outline"
+          disabled={editor.resource.loading || editor.commandPending}
+          onClick={refresh}
+        >
           {label('refresh')}
         </Button>
       </header>
@@ -132,6 +136,8 @@ export default function AdminContractLimitsPage() {
           onClose={editor.close}
           confirmationDisabled={!editor.ready || editor.uncertain}
           onDenied={editor.onDenied}
+          onPendingChange={editor.onPendingChange}
+          onUnconfirmed={editor.onUnconfirmed}
           onValidationError={editor.onValidationError}
           summary={
             <div className="space-y-3 rounded border p-3">
@@ -144,7 +150,7 @@ export default function AdminContractLimitsPage() {
               <Button
                 type="button"
                 variant="outline"
-                disabled={editor.resource.loading}
+                disabled={editor.resource.loading || editor.commandPending}
                 onClick={refresh}
               >
                 {label('refresh')}
@@ -152,7 +158,12 @@ export default function AdminContractLimitsPage() {
               {editor.resource.error && (
                 <div role="alert">
                   <p>{label('readError')}</p>
-                  <Button type="button" variant="outline" onClick={refresh}>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    disabled={editor.commandPending}
+                    onClick={refresh}
+                  >
                     {label('retry')}
                   </Button>
                 </div>

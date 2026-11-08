@@ -191,6 +191,8 @@ function GreenEditor({
           confirmationDisabled={!editor.ready || editor.uncertain}
           onClose={editor.close}
           onDenied={editor.onDenied}
+          onPendingChange={editor.onPendingChange}
+          onUnconfirmed={editor.onUnconfirmed}
           onValidationError={editor.onValidationError}
           summary={
             <div className="space-y-3 rounded-md border p-3">
@@ -307,6 +309,8 @@ function RetentionEditor({ label, ...props }: CatalogueEditorProps & { label: Co
           confirmationDisabled={!editor.ready || editor.uncertain}
           onClose={editor.close}
           onDenied={editor.onDenied}
+          onPendingChange={editor.onPendingChange}
+          onUnconfirmed={editor.onUnconfirmed}
           onValidationError={editor.onValidationError}
           summary={
             <div className="rounded-md border p-3">
@@ -433,6 +437,8 @@ function TemplateEditor({ label, ...props }: CatalogueEditorProps & { label: Cop
           confirmationDisabled={!editor.ready || editor.uncertain}
           onClose={editor.close}
           onDenied={editor.onDenied}
+          onPendingChange={editor.onPendingChange}
+          onUnconfirmed={editor.onUnconfirmed}
           onValidationError={editor.onValidationError}
           summary={
             <div className="rounded-md border p-3">

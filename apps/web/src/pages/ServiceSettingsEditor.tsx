@@ -68,7 +68,7 @@ export function ServiceSettingsEditor({
     },
   });
   const refreshButton = useRef<HTMLButtonElement>(null);
-  const refresh = () => (editor.denied ? editor.refresh() : editor.resource.retry());
+  const refresh = editor.refresh;
   const currentValues = editor.resource.data ? definition.values(editor.resource.data) : null;
   const dirty =
     !!currentValues &&
@@ -91,7 +91,7 @@ export function ServiceSettingsEditor({
           ref={refreshButton}
           type="button"
           variant="outline"
-          disabled={editor.resource.loading}
+          disabled={editor.resource.loading || editor.commandPending}
           onClick={refresh}
         >
           {label('refresh')}
@@ -233,6 +233,8 @@ export function ServiceSettingsEditor({
           finalFocus={refreshButton}
           confirmationDisabled={!editor.ready || editor.uncertain}
           onDenied={editor.onDenied}
+          onPendingChange={editor.onPendingChange}
+          onUnconfirmed={editor.onUnconfirmed}
           onValidationError={(keys) =>
             keys.every((key) => fields.some((field) => field.hours === key)) &&
             editor.onValidationError(keys)
@@ -262,7 +264,7 @@ export function ServiceSettingsEditor({
               <Button
                 type="button"
                 variant="outline"
-                disabled={editor.resource.loading}
+                disabled={editor.resource.loading || editor.commandPending}
                 onClick={refresh}
               >
                 {label('refresh')}

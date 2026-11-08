@@ -20,6 +20,7 @@ type CatalogueEditor<Data, Draft extends FieldValues> = ReturnType<typeof useWiz
   busy: boolean;
   ready: boolean;
   uncertain: boolean;
+  commandPending: boolean;
   saved: boolean;
   stale: boolean;
   resetToCurrent: () => void;
@@ -33,6 +34,8 @@ type CatalogueEditor<Data, Draft extends FieldValues> = ReturnType<typeof useWiz
   refresh: () => void;
   complete: (value?: Data) => void;
   onDenied: () => void;
+  onPendingChange: (pending: boolean) => void;
+  onUnconfirmed: () => void;
   onValidationError: (fields: unknown[]) => boolean;
   feedback: (field: FieldPath<Draft>) => ReactNode;
 };
@@ -51,16 +54,19 @@ export function useCatalogueEditor<Data, Draft extends FieldValues>(
     label: (key: string) => string;
   }
 ): CatalogueEditor<Data, Draft> {
-  const { identity, path, validate, basis, defaults, values, messages, label } = options;
+  const { path, validate, basis, defaults, values, messages, label } = options;
   const callbacks = useRef(options);
   callbacks.current = options;
   const generation = useRef(0),
-    source = useRef<{ identity: string; basis: string } | null>(null);
+    source = useRef<string | null>(null);
   const command = useRef<{ action: TeamAction; generation: number } | null>(null);
   const [action, setAction] = useState<TeamAction | null>(null);
   const [stale, setStale] = useState(false);
-  const [uncertain, setUncertain] = useState(false),
+  const [requiredRead, setRequiredRead] = useState<number | null>(null),
     [saved, setSaved] = useState(false);
+  const [commandPending, setCommandPending] = useState(false);
+  const commandPendingRef = useRef(false);
+  const uncertain = requiredRead !== null;
   const data = useRef<Data | null>(null);
   const editor = useWizardForm<Draft>(
     () => callbacks.current.schema(data.current),
@@ -77,35 +83,51 @@ export function useCatalogueEditor<Data, Draft extends FieldValues>(
     command.current = null;
     invalidFocus.current = null;
     data.current = null;
+    commandPendingRef.current = false;
+    setCommandPending(false);
     reset(defaults);
     setAction(null);
-    setUncertain(false);
+    setRequiredRead(null);
     setSaved(false);
     setStale(false);
     callbacks.current.onDenied?.();
   }, [reset, defaults]);
   const scope = useCatalogueScope(deny);
   const resource = useCatalogueResource(scope, path, validate);
+  const identity = JSON.stringify([options.identity, resource.ownerKey]);
+  const nextReadAttempt = resource.nextReadAttempt;
   const refreshVersion = useRef(options.refreshVersion);
   useEffect(() => {
     if (refreshVersion.current === options.refreshVersion) return;
     refreshVersion.current = options.refreshVersion;
     generation.current++;
     command.current = null;
+    if (commandPendingRef.current) {
+      const required = nextReadAttempt();
+      setRequiredRead((previous) => previous ?? required);
+      commandPendingRef.current = false;
+      setCommandPending(false);
+    }
     invalidFocus.current = null;
     setAction(null);
     setSaved(false);
     resource.retry();
-  }, [options.refreshVersion, resource.retry]);
+  }, [options.refreshVersion, resource.retry, nextReadAttempt]);
   const contextBasis = useRef(options.contextBasis);
   useEffect(() => {
     if (contextBasis.current === options.contextBasis) return;
     contextBasis.current = options.contextBasis;
     generation.current++;
     command.current = null;
+    if (commandPendingRef.current) {
+      const required = nextReadAttempt();
+      setRequiredRead((previous) => previous ?? required);
+      commandPendingRef.current = false;
+      setCommandPending(false);
+    }
     invalidFocus.current = null;
     setAction(null);
-  }, [options.contextBasis]);
+  }, [options.contextBasis, nextReadAttempt]);
   data.current = resource.data;
   const pending = editor.pending || editor.form.formState.isSubmitting;
   const busy = pending || action !== null;
@@ -118,35 +140,61 @@ export function useCatalogueEditor<Data, Draft extends FieldValues>(
     !stale;
   const live = useRef({ identity, ready, uncertain });
   live.current = { identity, ready, uncertain };
+  const acceptedOwner = useRef<string | null>(null);
   useEffect(() => {
-    if (source.current?.identity !== identity) {
+    if (acceptedOwner.current !== identity) {
+      acceptedOwner.current = identity;
       generation.current++;
       source.current = null;
       command.current = null;
       invalidFocus.current = null;
+      commandPendingRef.current = false;
+      setCommandPending(false);
       reset(defaults);
       setAction(null);
-      setUncertain(false);
+      setRequiredRead(null);
       setSaved(false);
       setStale(false);
     }
-    if (!resource.data) return;
+    if (!resource.data || commandPending) return;
+    if (
+      requiredRead !== null &&
+      (resource.loading ||
+        resource.error ||
+        resource.readAttempt === null ||
+        resource.readAttempt < requiredRead)
+    )
+      return;
     const accepted = basis(resource.data);
-    if (source.current?.basis !== accepted) {
+    if (requiredRead !== null || source.current !== accepted) {
       generation.current++;
       command.current = null;
       invalidFocus.current = null;
-      if (source.current && callbacks.current.retainChangedDraft && dirtyDraft.current)
-        setStale(true);
-      else {
-        reset(values(resource.data));
-        setStale(false);
+      if (source.current !== accepted) {
+        if (source.current !== null && callbacks.current.retainChangedDraft && dirtyDraft.current)
+          setStale(true);
+        else {
+          reset(values(resource.data));
+          setStale(false);
+        }
       }
       setAction(null);
     }
-    source.current = { identity, basis: accepted };
-    setUncertain(false);
-  }, [identity, resource.data, basis, values, reset, defaults]);
+    source.current = accepted;
+    setRequiredRead(null);
+  }, [
+    identity,
+    resource.data,
+    resource.loading,
+    resource.error,
+    resource.readAttempt,
+    commandPending,
+    requiredRead,
+    basis,
+    values,
+    reset,
+    defaults,
+  ]);
   useEffect(() => {
     return () => {
       generation.current++;
@@ -167,6 +215,8 @@ export function useCatalogueEditor<Data, Draft extends FieldValues>(
   const fieldErrors = useActionFieldErrors(editor.form, messages, label('invalid'));
   function close() {
     command.current = null;
+    commandPendingRef.current = false;
+    setCommandPending(false);
     setAction(null);
   }
   function propose(next: TeamAction) {
@@ -218,10 +268,15 @@ export function useCatalogueEditor<Data, Draft extends FieldValues>(
     captured.generation === generation.current &&
     live.current.identity === identity &&
     !scope.denied;
+  function unconfirmed() {
+    if (!current()) return;
+    const required = nextReadAttempt();
+    setRequiredRead((previous) => previous ?? required);
+  }
   function verifyReceipt(matches: boolean) {
     if (!current()) return false;
     if (!matches) {
-      setUncertain(true);
+      unconfirmed();
       throw new Error('Unverified catalogue acknowledgement');
     }
     return true;
@@ -244,11 +299,12 @@ export function useCatalogueEditor<Data, Draft extends FieldValues>(
     busy,
     ready,
     uncertain,
+    commandPending,
     saved,
     stale,
     deny: scope.deny,
     resetToCurrent: () => {
-      if (!resource.data || busy || scope.denied) return;
+      if (!resource.data || busy || uncertain || scope.denied) return;
       generation.current++;
       reset(values(resource.data));
       setStale(false);
@@ -263,7 +319,7 @@ export function useCatalogueEditor<Data, Draft extends FieldValues>(
     },
     verifyReceipt,
     refresh: () => {
-      if (editor.isPending() || command.current) return;
+      if (editor.isPending() || commandPendingRef.current) return;
       setSaved(false);
       if (scope.denied) scope.recover();
       else resource.retry();
@@ -271,7 +327,7 @@ export function useCatalogueEditor<Data, Draft extends FieldValues>(
     complete: (value) => {
       if (current()) {
         if (value !== undefined) {
-          source.current = { identity, basis: basis(value) };
+          source.current = basis(value);
           reset(values(value));
           resource.accept(value);
           setStale(false);
@@ -283,6 +339,12 @@ export function useCatalogueEditor<Data, Draft extends FieldValues>(
     onDenied: () => {
       if (current()) scope.deny();
     },
+    onPendingChange: (pending) => {
+      if (!current()) return;
+      commandPendingRef.current = pending;
+      setCommandPending(pending);
+    },
+    onUnconfirmed: unconfirmed,
     onValidationError: (fields: unknown[]) => current() && fieldErrors(fields),
     feedback: (field: FieldPath<Draft>) => {
       const message = editor.form.getFieldState(field).error?.message;

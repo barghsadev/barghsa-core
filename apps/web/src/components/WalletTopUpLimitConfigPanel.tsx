@@ -156,6 +156,8 @@ export default function WalletTopUpLimitConfigPanel(props: CatalogueEditorProps 
           action={editor.action}
           onClose={editor.close}
           onDenied={editor.onDenied}
+          onPendingChange={editor.onPendingChange}
+          onUnconfirmed={editor.onUnconfirmed}
           onValidationError={editor.onValidationError}
           confirmationDisabled={!editor.ready || editor.uncertain}
           summary={
