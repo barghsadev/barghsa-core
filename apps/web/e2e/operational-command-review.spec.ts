@@ -31,7 +31,8 @@ async function setup(page: Page, locale: 'en' | 'fa', family: 'jobs' | 'notifica
     })
   );
   const endpoint = `/api/admin/failed-${family}`;
-  let rows = [family === 'jobs' ? failedJob : deadLetter];
+  const firstRow = family === 'jobs' ? failedJob : deadLetter;
+  let rows = [{ ...firstRow, resolvedAt: firstRow.resolvedAt as string | null }];
   let readStatus = 200,
     wrongIdentity = false,
     listFails = false;
@@ -127,6 +128,61 @@ async function inspect(page: Page, locale: string, project: string, name: string
   }
 }
 for (const locale of ['en', 'fa'] as const) {
+  for (const kind of ['retry', 'bulk', 'resolve'] as const) {
+    test(`job ${kind} timeout reviews current records without another write (${locale})`, async ({
+      page,
+    }) => {
+      await page.clock.install();
+      const s = await setup(page, locale, 'jobs');
+      const second = {
+        ...failedJob,
+        id: '10000000-0000-4000-8000-000000000002',
+        jobType: 'contract_activation',
+      };
+      if (kind === 'bulk') {
+        s.save([failedJob, second]);
+        await page.getByRole('button', { name: s.word('refresh'), exact: true }).click();
+        await expect(page.locator('tbody tr')).toHaveCount(2);
+        await page.getByRole('checkbox').nth(0).check();
+        await page.getByRole('checkbox').nth(1).check();
+      }
+      const status = kind === 'resolve' ? 'resolved' : 'retrying';
+      let writes = 0;
+      const path = kind === 'bulk' ? '/retry-bulk' : `/${failedJob.id}/${kind}`;
+      await page.route(`**${s.endpoint}${path}`, (route) => {
+        expect(route.request().method()).toBe('POST');
+        if (kind === 'bulk')
+          expect(route.request().postDataJSON()).toEqual({ ids: [failedJob.id, second.id] });
+        else expect(route.request().postData()).toBeNull();
+        writes++;
+        const updated = {
+          ...failedJob,
+          status,
+          resolvedAt: kind === 'resolve' ? '2026-09-01T13:00:00Z' : null,
+        };
+        s.save(kind === 'bulk' ? [updated, second] : [updated]);
+      });
+      await page
+        .getByRole('button', { name: s.word(kind), exact: kind !== 'bulk' })
+        .first()
+        .click();
+      await s.confirm().click();
+      await expect.poll(() => writes).toBe(1);
+      expect(s.reads).toEqual([]);
+      await page.clock.fastForward(15_001);
+      await expect(s.dialog()).toContainText(s.reviewWord('title'));
+      await expect(s.confirm()).toHaveCount(0);
+      await expect(s.dialog()).toContainText(s.word(`status.${status}`));
+      if (kind === 'bulk') await expect(s.dialog()).toContainText(s.word('status.failed'));
+      await expect(s.review()).toBeEnabled();
+      const ids = kind === 'bulk' ? [failedJob.id, second.id] : [failedJob.id];
+      expect([...s.reads].sort()).toEqual(ids.map((id) => `${s.endpoint}/${id}`).sort());
+      await s.review().click();
+      await expect(s.dialog()).toHaveCount(0);
+      await expect(page.locator('tbody tr')).toHaveCount(kind === 'bulk' ? 1 : 0);
+      expect(writes).toBe(1);
+    });
+  }
   test(`job retry reviews exact status after an uncertain save without replay (${locale})`, async ({
     page,
   }) => {

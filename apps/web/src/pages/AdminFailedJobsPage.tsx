@@ -277,6 +277,7 @@ export default function AdminFailedJobsPage({ queries }: { queries?: ListQueryBi
         ids.map((id) => jobName(jobs.find((job) => job.id === id)!.jobType)).join(', '),
       path: bulk ? '/api/admin/failed-jobs/retry-bulk' : `/api/admin/failed-jobs/${ids[0]}/${kind}`,
       method: 'POST',
+      responseDeadline: true,
       successStatus: 200,
       ...(bulk ? { body: { ids } } : {}),
       conflictMessage: label('conflict'),

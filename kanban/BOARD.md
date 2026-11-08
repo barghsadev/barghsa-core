@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-08T13:28:58+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-08T13:34:44+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.4.0**. Next milestone: **v0.5.0**.
 
@@ -39,7 +39,7 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Close the failed-job retry and resolve acknowledgement deadline using their existing operational review, then reconcile remaining staff and customer route states and feedback in related cohorts. Live Sentry delivery and required GitHub accessibility enforcement remain separate v0.5.0 gates.
+Close staff team creation, editing and deletion plus assignment-rule acknowledgement recovery as one admin settings journey. Continue reconciling remaining staff and customer route states and feedback in related cohorts. Live Sentry delivery and required GitHub accessibility enforcement remain separate v0.5.0 gates.
 
 - `07-ui-ux-design.md#T-07.05.01.08`: Ensure all color combinations pass WCAG AA contrast ratios: normal text ≥ 4.5:1, large text ≥ 3:1, UI components ≥ 3:1. Verify with automated tools. Provide a "high contrast" mode toggle that strengthens all contrast ratios.
 - `07-ui-ux-design.md#T-07.05.02.04`: Add CI gate: a11y violations on critical pages block PR merge. Non-critical pages warn but do not block. Violations must be triaged with reason or exemption.

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-08T13:28:58+00:00",
-  "source_commit": "0d5517e91c424e23f7a24ceccdb6c4a6ac74077c",
+  "updated": "2026-11-08T13:34:44+00:00",
+  "source_commit": "57bd68995bc66dc957dfcfe9c6e15d5d29a1c682",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -35468,7 +35468,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
-              "sha256": "aeddf8ef3271f8703083e89f581e895b4a41d2f6882308275b3babc898ed5866"
+              "sha256": "6ee17bc53343bb6646b5468fed440b7c34b49492582d321b23a5b1e4b2580ad7"
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
@@ -63168,7 +63168,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
-              "sha256": "aeddf8ef3271f8703083e89f581e895b4a41d2f6882308275b3babc898ed5866"
+              "sha256": "6ee17bc53343bb6646b5468fed440b7c34b49492582d321b23a5b1e4b2580ad7"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -491203,7 +491203,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
-              "sha256": "aeddf8ef3271f8703083e89f581e895b4a41d2f6882308275b3babc898ed5866"
+              "sha256": "6ee17bc53343bb6646b5468fed440b7c34b49492582d321b23a5b1e4b2580ad7"
             },
             {
               "path": "apps/web/src/pages/AdminGeographyPage.tsx",
@@ -496911,7 +496911,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
-              "sha256": "aeddf8ef3271f8703083e89f581e895b4a41d2f6882308275b3babc898ed5866"
+              "sha256": "6ee17bc53343bb6646b5468fed440b7c34b49492582d321b23a5b1e4b2580ad7"
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
@@ -497047,7 +497047,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "4b6e461cdb03559e0868b1d445f46b1028d86d653ad7970f2f3f08d89ce542d8"
+              "sha256": "5ad4f09d1c512169b8bd12f4c74a3b9ed0b620e553cb65e64d1836dd26dc02f4"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -511558,7 +511558,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
-              "sha256": "aeddf8ef3271f8703083e89f581e895b4a41d2f6882308275b3babc898ed5866"
+              "sha256": "6ee17bc53343bb6646b5468fed440b7c34b49492582d321b23a5b1e4b2580ad7"
             },
             {
               "path": "apps/web/src/pages/AdminGeographyPage.tsx",
@@ -512236,7 +512236,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
-              "sha256": "aeddf8ef3271f8703083e89f581e895b4a41d2f6882308275b3babc898ed5866"
+              "sha256": "6ee17bc53343bb6646b5468fed440b7c34b49492582d321b23a5b1e4b2580ad7"
             },
             {
               "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
@@ -518105,7 +518105,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "4b6e461cdb03559e0868b1d445f46b1028d86d653ad7970f2f3f08d89ce542d8"
+              "sha256": "5ad4f09d1c512169b8bd12f4c74a3b9ed0b620e553cb65e64d1836dd26dc02f4"
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
@@ -519213,7 +519213,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "4b6e461cdb03559e0868b1d445f46b1028d86d653ad7970f2f3f08d89ce542d8"
+              "sha256": "5ad4f09d1c512169b8bd12f4c74a3b9ed0b620e553cb65e64d1836dd26dc02f4"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -567521,7 +567521,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "4b6e461cdb03559e0868b1d445f46b1028d86d653ad7970f2f3f08d89ce542d8"
+              "sha256": "5ad4f09d1c512169b8bd12f4c74a3b9ed0b620e553cb65e64d1836dd26dc02f4"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -569416,7 +569416,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "4b6e461cdb03559e0868b1d445f46b1028d86d653ad7970f2f3f08d89ce542d8"
+              "sha256": "5ad4f09d1c512169b8bd12f4c74a3b9ed0b620e553cb65e64d1836dd26dc02f4"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -570220,7 +570220,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Customer notification correction completion now has bounded feedback and captured-note recovery. The failed jobs retry/resolve actions already expose an unconfirmed review but lack a response deadline. Verify that path and reconcile the remaining CRUD and transactional feedback against current route evidence."
+        "Failed-job retry, bulk retry and resolve now have bounded receipts and exact-record recovery. Staff team and assignment-rule confirmations still lack deadlines and recovery for an uncertain transport outcome. Reconcile the remaining CRUD and transactional feedback against current route evidence."
       ],
       "owner": null,
       "depends_on": [],
@@ -570287,7 +570287,8 @@
           "release-0.5-invoice-deadline-reminder-recovery",
           "release-0.5-delivery-window-queue-recovery",
           "release-0.5-hosted-ci-repairs",
-          "release-0.5-customer-correction-recovery"
+          "release-0.5-customer-correction-recovery",
+          "release-0.5-failed-job-command-recovery"
         ],
         "current_acceptance": null
       }
@@ -571398,7 +571399,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "4b6e461cdb03559e0868b1d445f46b1028d86d653ad7970f2f3f08d89ce542d8"
+              "sha256": "5ad4f09d1c512169b8bd12f4c74a3b9ed0b620e553cb65e64d1836dd26dc02f4"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -573293,7 +573294,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "4b6e461cdb03559e0868b1d445f46b1028d86d653ad7970f2f3f08d89ce542d8"
+              "sha256": "5ad4f09d1c512169b8bd12f4c74a3b9ed0b620e553cb65e64d1836dd26dc02f4"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -575188,7 +575189,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "4b6e461cdb03559e0868b1d445f46b1028d86d653ad7970f2f3f08d89ce542d8"
+              "sha256": "5ad4f09d1c512169b8bd12f4c74a3b9ed0b620e553cb65e64d1836dd26dc02f4"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -577083,7 +577084,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "4b6e461cdb03559e0868b1d445f46b1028d86d653ad7970f2f3f08d89ce542d8"
+              "sha256": "5ad4f09d1c512169b8bd12f4c74a3b9ed0b620e553cb65e64d1836dd26dc02f4"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -578978,7 +578979,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "4b6e461cdb03559e0868b1d445f46b1028d86d653ad7970f2f3f08d89ce542d8"
+              "sha256": "5ad4f09d1c512169b8bd12f4c74a3b9ed0b620e553cb65e64d1836dd26dc02f4"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -580873,7 +580874,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "4b6e461cdb03559e0868b1d445f46b1028d86d653ad7970f2f3f08d89ce542d8"
+              "sha256": "5ad4f09d1c512169b8bd12f4c74a3b9ed0b620e553cb65e64d1836dd26dc02f4"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -582768,7 +582769,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "4b6e461cdb03559e0868b1d445f46b1028d86d653ad7970f2f3f08d89ce542d8"
+              "sha256": "5ad4f09d1c512169b8bd12f4c74a3b9ed0b620e553cb65e64d1836dd26dc02f4"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -584663,7 +584664,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "4b6e461cdb03559e0868b1d445f46b1028d86d653ad7970f2f3f08d89ce542d8"
+              "sha256": "5ad4f09d1c512169b8bd12f4c74a3b9ed0b620e553cb65e64d1836dd26dc02f4"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -586558,7 +586559,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "4b6e461cdb03559e0868b1d445f46b1028d86d653ad7970f2f3f08d89ce542d8"
+              "sha256": "5ad4f09d1c512169b8bd12f4c74a3b9ed0b620e553cb65e64d1836dd26dc02f4"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -588453,7 +588454,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "4b6e461cdb03559e0868b1d445f46b1028d86d653ad7970f2f3f08d89ce542d8"
+              "sha256": "5ad4f09d1c512169b8bd12f4c74a3b9ed0b620e553cb65e64d1836dd26dc02f4"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -590348,7 +590349,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "4b6e461cdb03559e0868b1d445f46b1028d86d653ad7970f2f3f08d89ce542d8"
+              "sha256": "5ad4f09d1c512169b8bd12f4c74a3b9ed0b620e553cb65e64d1836dd26dc02f4"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -591476,7 +591477,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
-              "sha256": "aeddf8ef3271f8703083e89f581e895b4a41d2f6882308275b3babc898ed5866"
+              "sha256": "6ee17bc53343bb6646b5468fed440b7c34b49492582d321b23a5b1e4b2580ad7"
             },
             {
               "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
@@ -591612,7 +591613,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "4b6e461cdb03559e0868b1d445f46b1028d86d653ad7970f2f3f08d89ce542d8"
+              "sha256": "5ad4f09d1c512169b8bd12f4c74a3b9ed0b620e553cb65e64d1836dd26dc02f4"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -592983,7 +592984,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "4b6e461cdb03559e0868b1d445f46b1028d86d653ad7970f2f3f08d89ce542d8"
+              "sha256": "5ad4f09d1c512169b8bd12f4c74a3b9ed0b620e553cb65e64d1836dd26dc02f4"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -594878,7 +594879,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "4b6e461cdb03559e0868b1d445f46b1028d86d653ad7970f2f3f08d89ce542d8"
+              "sha256": "5ad4f09d1c512169b8bd12f4c74a3b9ed0b620e553cb65e64d1836dd26dc02f4"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -595682,7 +595683,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Customer notification corrections now keep their owned note and require a fresh matching queue read after an unknown result. Match the remaining conditional list, detail, dashboard and staff route states to the inventory and current native evidence."
+        "Failed jobs now reach current-record review after a stalled write and require a fresh queue before another action. Match the remaining conditional list, detail, dashboard and staff route states to the inventory and current native evidence."
       ],
       "owner": null,
       "depends_on": [],
@@ -595760,7 +595761,8 @@
           "release-0.5-staff-invoice-command-recovery",
           "release-0.5-invoice-deadline-reminder-recovery",
           "release-0.5-delivery-window-queue-recovery",
-          "release-0.5-customer-correction-recovery"
+          "release-0.5-customer-correction-recovery",
+          "release-0.5-failed-job-command-recovery"
         ],
         "current_acceptance": null
       }
@@ -634864,7 +634866,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
-              "sha256": "aeddf8ef3271f8703083e89f581e895b4a41d2f6882308275b3babc898ed5866"
+              "sha256": "6ee17bc53343bb6646b5468fed440b7c34b49492582d321b23a5b1e4b2580ad7"
             },
             {
               "path": "apps/web/src/pages/AdminGeographyPage.tsx",
@@ -635988,7 +635990,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
-              "sha256": "aeddf8ef3271f8703083e89f581e895b4a41d2f6882308275b3babc898ed5866"
+              "sha256": "6ee17bc53343bb6646b5468fed440b7c34b49492582d321b23a5b1e4b2580ad7"
             },
             {
               "path": "apps/web/src/pages/AdminGeographyPage.tsx",
@@ -637112,7 +637114,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
-              "sha256": "aeddf8ef3271f8703083e89f581e895b4a41d2f6882308275b3babc898ed5866"
+              "sha256": "6ee17bc53343bb6646b5468fed440b7c34b49492582d321b23a5b1e4b2580ad7"
             },
             {
               "path": "apps/web/src/pages/AdminGeographyPage.tsx",
@@ -638239,7 +638241,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
-              "sha256": "aeddf8ef3271f8703083e89f581e895b4a41d2f6882308275b3babc898ed5866"
+              "sha256": "6ee17bc53343bb6646b5468fed440b7c34b49492582d321b23a5b1e4b2580ad7"
             },
             {
               "path": "apps/web/src/pages/AdminGeographyPage.tsx",
@@ -639366,7 +639368,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
-              "sha256": "aeddf8ef3271f8703083e89f581e895b4a41d2f6882308275b3babc898ed5866"
+              "sha256": "6ee17bc53343bb6646b5468fed440b7c34b49492582d321b23a5b1e4b2580ad7"
             },
             {
               "path": "apps/web/src/pages/AdminGeographyPage.tsx",
@@ -640520,7 +640522,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
-              "sha256": "aeddf8ef3271f8703083e89f581e895b4a41d2f6882308275b3babc898ed5866"
+              "sha256": "6ee17bc53343bb6646b5468fed440b7c34b49492582d321b23a5b1e4b2580ad7"
             },
             {
               "path": "apps/web/src/pages/AdminGeographyPage.tsx",
@@ -641643,7 +641645,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
-              "sha256": "aeddf8ef3271f8703083e89f581e895b4a41d2f6882308275b3babc898ed5866"
+              "sha256": "6ee17bc53343bb6646b5468fed440b7c34b49492582d321b23a5b1e4b2580ad7"
             },
             {
               "path": "apps/web/src/pages/AdminGeographyPage.tsx",
@@ -642766,7 +642768,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
-              "sha256": "aeddf8ef3271f8703083e89f581e895b4a41d2f6882308275b3babc898ed5866"
+              "sha256": "6ee17bc53343bb6646b5468fed440b7c34b49492582d321b23a5b1e4b2580ad7"
             },
             {
               "path": "apps/web/src/pages/AdminGeographyPage.tsx",
@@ -643890,7 +643892,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
-              "sha256": "aeddf8ef3271f8703083e89f581e895b4a41d2f6882308275b3babc898ed5866"
+              "sha256": "6ee17bc53343bb6646b5468fed440b7c34b49492582d321b23a5b1e4b2580ad7"
             },
             {
               "path": "apps/web/src/pages/AdminGeographyPage.tsx",
@@ -645032,7 +645034,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
-              "sha256": "aeddf8ef3271f8703083e89f581e895b4a41d2f6882308275b3babc898ed5866"
+              "sha256": "6ee17bc53343bb6646b5468fed440b7c34b49492582d321b23a5b1e4b2580ad7"
             },
             {
               "path": "apps/web/src/pages/AdminGeographyPage.tsx",
@@ -646157,7 +646159,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
-              "sha256": "aeddf8ef3271f8703083e89f581e895b4a41d2f6882308275b3babc898ed5866"
+              "sha256": "6ee17bc53343bb6646b5468fed440b7c34b49492582d321b23a5b1e4b2580ad7"
             },
             {
               "path": "apps/web/src/pages/AdminGeographyPage.tsx",
@@ -677657,7 +677659,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
-              "sha256": "aeddf8ef3271f8703083e89f581e895b4a41d2f6882308275b3babc898ed5866"
+              "sha256": "6ee17bc53343bb6646b5468fed440b7c34b49492582d321b23a5b1e4b2580ad7"
             },
             {
               "path": "apps/web/src/pages/AdminGeographyPage.tsx",
@@ -678779,7 +678781,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
-              "sha256": "aeddf8ef3271f8703083e89f581e895b4a41d2f6882308275b3babc898ed5866"
+              "sha256": "6ee17bc53343bb6646b5468fed440b7c34b49492582d321b23a5b1e4b2580ad7"
             },
             {
               "path": "apps/web/src/pages/AdminGeographyPage.tsx",
@@ -679901,7 +679903,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
-              "sha256": "aeddf8ef3271f8703083e89f581e895b4a41d2f6882308275b3babc898ed5866"
+              "sha256": "6ee17bc53343bb6646b5468fed440b7c34b49492582d321b23a5b1e4b2580ad7"
             },
             {
               "path": "apps/web/src/pages/AdminGeographyPage.tsx",
@@ -681023,7 +681025,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
-              "sha256": "aeddf8ef3271f8703083e89f581e895b4a41d2f6882308275b3babc898ed5866"
+              "sha256": "6ee17bc53343bb6646b5468fed440b7c34b49492582d321b23a5b1e4b2580ad7"
             },
             {
               "path": "apps/web/src/pages/AdminGeographyPage.tsx",
@@ -725404,7 +725406,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Customer notification correction completion, delivery-window and dead-letter recovery have current evidence. Remaining command feedback and route states, live Sentry delivery and required GitHub accessibility enforcement still gate full adoption."
+        "Failed jobs, customer notification corrections, delivery-window settings and dead-letter recovery have current evidence. Remaining command feedback and route states, live Sentry delivery and required GitHub accessibility enforcement still gate full adoption."
       ],
       "owner": null,
       "depends_on": [],
@@ -725547,7 +725549,8 @@
           "release-0.5-invoice-deadline-reminder-recovery",
           "release-0.5-delivery-window-queue-recovery",
           "release-0.5-hosted-ci-repairs",
-          "release-0.5-customer-correction-recovery"
+          "release-0.5-customer-correction-recovery",
+          "release-0.5-failed-job-command-recovery"
         ]
       }
     },
@@ -726507,7 +726510,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
-              "sha256": "aeddf8ef3271f8703083e89f581e895b4a41d2f6882308275b3babc898ed5866"
+              "sha256": "6ee17bc53343bb6646b5468fed440b7c34b49492582d321b23a5b1e4b2580ad7"
             },
             {
               "path": "apps/web/src/pages/AdminFailedNotificationsPage.tsx",
@@ -727366,7 +727369,8 @@
             "Renewed staff invoice recovery and route and interaction budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-invoice-command-recovery/proof.json",
             "Renewed invoice deadline and reminder recovery and route and interaction budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-deadline-reminder-recovery/proof.json",
             "Renewed delivery-window and dead-letter recovery and route and interaction budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-delivery-window-queue-recovery/proof.json",
-            "Renewed customer correction recovery and route and interaction budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-customer-correction-recovery/proof.json"
+            "Renewed customer correction recovery and route and interaction budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-customer-correction-recovery/proof.json",
+            "Renewed failed-job recovery and route and interaction budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-failed-job-command-recovery/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -800126,6 +800130,113 @@
       "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-customer-correction-recovery/renewed-bindings.json",
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-customer-correction-recovery/reviewed.patch",
       "release_disposition": "Verified customer correction write recovery, completed-history review and current permission safeguards. v0.5.0 acceptance remains open."
+    },
+    "release-0.5-failed-job-command-recovery": {
+      "batch": "release-0.5-failed-job-command-recovery",
+      "base_commit": "57bd68995bc66dc957dfcfe9c6e15d5d29a1c682",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.11.01.03",
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.11.01.03",
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": ".size-limit.json",
+          "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+        },
+        {
+          "path": "apps/api/src/admin/failed-jobs.controller.ts",
+          "sha256": "b8678908536e24d5b88cfa911433e69d8e586ae8860d895a0c529caadd21330f"
+        },
+        {
+          "path": "apps/api/src/admin/failed-jobs.service.ts",
+          "sha256": "2eea6accec06da6ff700dd4d904763e5a2976e27c2498306c0f819f31c787c08"
+        },
+        {
+          "path": "apps/web/e2e/coverage-fixture.ts",
+          "sha256": "07949862684b86d6ff241d5f71e59e6c71a5cc1ddc70655b0d508beb53865dac"
+        },
+        {
+          "path": "apps/web/e2e/crm-shell-fixture.ts",
+          "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+        },
+        {
+          "path": "apps/web/e2e/failed-jobs.spec.ts",
+          "sha256": "3ec4e81cda38cd1cb2bc28ba5c3d1f57db29fe5579bec375a74a22b08438992b"
+        },
+        {
+          "path": "apps/web/e2e/operational-command-review.spec.ts",
+          "sha256": "c5ec32cb68d2283b66cf3bb3f7f7c8325e350bcbde3b71992385fc636c8f7d37"
+        },
+        {
+          "path": "apps/web/src/components/OperationalCommandReview.tsx",
+          "sha256": "337ecb8ef476be26e678eb850d9a882b1e6a61948061e12d68d154c48179a747"
+        },
+        {
+          "path": "apps/web/src/components/TeamActionDialog.tsx",
+          "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+        },
+        {
+          "path": "apps/web/src/components/team-action-confirmation.test.tsx",
+          "sha256": "0b383dc33bf9345b86e78ec8988eda59047b9346b4c7fbed1a6d318807e26af3"
+        },
+        {
+          "path": "apps/web/src/hooks/useOperationalQueue.ts",
+          "sha256": "2d66f00c756ed9d1d68ea3f4394e243d4c12b6125d47446c0c29f30c88770544"
+        },
+        {
+          "path": "apps/web/src/lib/server-query-client.ts",
+          "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
+        },
+        {
+          "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
+          "sha256": "6ee17bc53343bb6646b5468fed440b7c34b49492582d321b23a5b1e4b2580ad7"
+        },
+        {
+          "path": "apps/web/src/pages/admin-boundaries.test.tsx",
+          "sha256": "c05458d85c47b7402648f6be777023767910f1f25b0d055c399abcc993d4c73c"
+        },
+        {
+          "path": "apps/web/src/pages/operational-queue-recovery.test.tsx",
+          "sha256": "fcc3c32dfaf3e95fc39408c6cf58c5cadc90d3a1f884eb10713be4fda26650ed"
+        },
+        {
+          "path": "apps/web/src/test/operational-queue-fixtures.ts",
+          "sha256": "1f73a7bd820a812a13176826277e7bc8ad5834eae689f93ba901c4d78c8b3091"
+        },
+        {
+          "path": "docs/design/notification-recovery.md",
+          "sha256": "5ad4f09d1c512169b8bd12f4c74a3b9ed0b620e553cb65e64d1836dd26dc02f4"
+        },
+        {
+          "path": "packages/i18n/src/workspace-admin-messages.ts",
+          "sha256": "cdf9b474fb83a0b423e802a22f3fecc1371682d3f2b91c5c0f0e4da5d6778e40"
+        },
+        {
+          "path": "scripts/check-changed-coverage.py",
+          "sha256": "721aa5763bb62336c0e4c454b8e36e2f15ff1e14bf4b0136c7c7946424bbd736"
+        },
+        {
+          "path": "scripts/check-route-budgets.mjs",
+          "sha256": "4dd831c645a9dbf1e6fd9b0c211b5559e4fc22652373b31525bd4f4aae38186d"
+        }
+      ],
+      "checks": [
+        "Staff failed-job single retry, bulk retry and resolve use the shared deadline for confirmation and receipt parsing. All three stalled-write browser paths confirm no status read before the timeout, the exact captured write, only the selected IDs in the fresh read, no repeated write, and a fresh queue after review. A partial bulk outcome shows the state of both jobs.",
+        "The existing server-error, permission denial, duplicate bulk receipt, password step-up, queue recovery and locale cases continue to pass. The selected unit files passed 413 cases, and targeted browser checks passed 28 production Chromium/Mobile Safari cases and 14 instrumented Chromium cases. All nine changed-coverage groups, all 100 unchanged bundle budgets, formatting, scoped lint and web typecheck passed. Six cold-auth receipts carry forward from byte-identical runtime files."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-failed-job-command-recovery",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-failed-job-command-recovery/proof.json",
+      "source_scope_proof_sha256": "b38c3cece383f96a83d38b1b181895f16a523fe558e02dce8e3169dac5ca364c",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-failed-job-command-recovery/renewed-bindings.json",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-failed-job-command-recovery/reviewed.patch",
+      "release_disposition": "Verified failed-job command deadlines and exact-record recovery with current permissions and no write replay. v0.5.0 acceptance remains open."
     }
   },
   "historical_improvements": [
@@ -800176,12 +800287,12 @@
       "release-readiness#R-04.01",
       "release-readiness#R-04.02"
     ],
-    "goal": "Close the failed-job retry and resolve acknowledgement deadline using their existing operational review, then reconcile remaining staff and customer route states and feedback in related cohorts. Live Sentry delivery and required GitHub accessibility enforcement remain separate v0.5.0 gates."
+    "goal": "Close staff team creation, editing and deletion plus assignment-rule acknowledgement recovery as one admin settings journey. Continue reconciling remaining staff and customer route states and feedback in related cohorts. Live Sentry delivery and required GitHub accessibility enforcement remain separate v0.5.0 gates."
   },
   "launch_forecast": {
     "status": "deadline_at_risk_until_v0_5_and_operational_gates_close",
     "next_update_after": "v0.5.0 remaining UI criteria and owner decisions",
-    "method": "v0.4.0 staging and Telegram receipts are verified. v0.5.0 form semantics, guarded electricity drafts, solar document completion, ticket acknowledgement, verified attachment and verification-mode recovery, shared customer settings acknowledgement and saving intake recovery, staff notification template, customer correction, delivery-window, dead-letter, invoice and reminder recovery, and scoped customer electricity, shell, onboarding, terms and invitation recovery are verified. Five launch-required criteria remain open, including the live Sentry receipt and GitHub accessibility enforcement. The November 9 sequence remains at risk."
+    "method": "v0.4.0 staging and Telegram receipts are verified. v0.5.0 form semantics, guarded electricity drafts, solar document completion, ticket acknowledgement, verified attachment and verification-mode recovery, shared customer settings acknowledgement and saving intake recovery, staff notification template, customer correction, delivery-window, dead-letter, failed jobs, invoice and reminder recovery, and scoped customer electricity, shell, onboarding, terms and invitation recovery are verified. Five launch-required criteria remain open, including the live Sentry receipt and GitHub accessibility enforcement. The November 9 sequence remains at risk."
   },
   "capabilities": [
     {
