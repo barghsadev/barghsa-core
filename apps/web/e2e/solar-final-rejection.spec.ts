@@ -1,4 +1,5 @@
 import { expect, test } from './coverage-fixture';
+import { approveRiskConfirmation } from './confirmation-fixture';
 
 test.beforeEach(async ({ page }) => {
   await page.addInitScript(() => localStorage.setItem('barghsa.locale', 'en'));
@@ -106,6 +107,7 @@ test('staff can reject a postal-reviewed solar request with a reason', async ({ 
   await expect(page.getByRole('dialog')).toContainText('Original documents failed final review');
   await expect(page.getByRole('dialog')).toContainText('After confirmation');
   await expect(page.getByRole('dialog')).toContainText('Rejected');
+  await approveRiskConfirmation(page, 'en', 'destructive');
   await page.getByRole('dialog').getByRole('button', { name: 'Confirm' }).click();
   await expect.poll(() => decisions.length).toBe(1);
   expect(decisions[0]).toEqual({

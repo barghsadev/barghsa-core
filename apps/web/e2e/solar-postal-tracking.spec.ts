@@ -93,15 +93,25 @@ for (const locale of ['en', 'fa'] as const) {
     await page.goto('/admin/solar-postal');
     await page.getByRole('button', { name: /First solar buyer/ }).click();
     const editor = page.getByRole('region', { name: copy('postalTrackingUpdate') }).first();
-    await expect(editor.getByLabel(copy('postalTrackingNote'), { exact: true })).toBeVisible();
+    const noteField = editor.getByLabel(copy('postalTrackingNote'), { exact: true });
+    const urlField = editor.getByLabel(copy('postalTrackingUrl'), { exact: true });
+    const estimate = editor.getByLabel(copy('postalArrivalEstimate'), { exact: true });
+    const review = editor.getByRole('button', { name: copy('postalTrackingReview'), exact: true });
+    await expect(noteField).toHaveAttribute('aria-required', 'true');
+    await expect(urlField).not.toHaveAttribute('aria-required', 'true');
+    await expect(estimate).not.toHaveAttribute('aria-required', 'true');
+    await noteField.fill('  ');
+    await review.click();
+    await expect(noteField).toBeFocused();
+    await expect(noteField).toHaveAttribute('aria-invalid', 'true');
+    await expect(noteField).toHaveAttribute('aria-describedby', /-message/);
+    expect(previews).toHaveLength(0);
     await expect(editor).toContainText(postalCalendarDate('2026-09-26', locale)!);
     await editor.getByRole('button', { name: copy('postalClearEstimate'), exact: true }).click();
     const note = 'Updated <script> arrival note, visible to the customer.';
-    await editor.getByLabel(copy('postalTrackingNote'), { exact: true }).fill(note);
-    await editor
-      .getByLabel(copy('postalTrackingUrl'), { exact: true })
-      .fill('https://courier.example.org/track/TRACK-1');
-    await editor.getByRole('button', { name: copy('postalTrackingReview'), exact: true }).click();
+    await noteField.fill(note);
+    await urlField.fill('https://courier.example.org/track/TRACK-1');
+    await review.click();
     const dialog = page.getByRole('dialog');
     await expect(dialog).toContainText(copy('postalTrackingReviewDescription'));
     await expect(dialog).toContainText(note);
@@ -242,6 +252,14 @@ for (const locale of ['en', 'fa'] as const) {
     page,
   }) => {
     await setup(page, locale);
+    // Deliver the held preview even after the application cancels its request.
+    await page.addInitScript((previewPath) => {
+      const fetch = window.fetch.bind(window);
+      window.fetch = (input, init) =>
+        typeof input === 'string' && input === previewPath
+          ? fetch(input, { ...init, signal: undefined })
+          : fetch(input, init);
+    }, base + '/review');
     await page.route('**/api/admin/solar/postal-queue?*', (r) =>
       r.fulfill({
         json: {

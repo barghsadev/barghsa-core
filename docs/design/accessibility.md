@@ -114,8 +114,9 @@ Quantity increase requests require the requested amount. A stalled correction
 submission offers a manual retry of the same reviewed request and keeps other
 corrections locked while its outcome is uncertain.
 Staff quantity increase approvals and rejections require a reason. Staff may
-leave the proposed approval date blank for the server to select it. Price proposals require a contract, percentage,
-effective date, reason and contractual basis.
+leave the proposed approval date blank for the server to select it. Price
+proposals require a contract, percentage, effective date, reason and
+contractual basis.
 
 Saving hardware changes require a replacement product and a reason. Cancelling
 an upgrade requires its own reason. Staff changes to a paid saving order's
@@ -125,6 +126,10 @@ Solar contract issuance requires a source,
 title, terms, reason and value kind. The selected kind determines which value
 field is required. Invoice lines require a description, quantity, price and VAT
 rate. The taxable checkbox permits either choice.
+Staff solar postal tracking updates require a customer-visible note. The
+estimated arrival date and tracking URL remain optional. Closing an approved
+request without a contract requires a reason. When a reason depends on the
+chosen action, the shared field explains which decisions require one.
 
 Order comments require text. Staff electricity comments also require a
 visibility choice. Staff profile closure requires confirmation and a current

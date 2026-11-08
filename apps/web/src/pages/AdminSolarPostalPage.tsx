@@ -789,6 +789,7 @@ function AdminSolarPostalWorkspace({ queries }: { queries?: ListQueryBinding } =
                         <FormControl>
                           <textarea
                             {...field}
+                            aria-required={row.request_status === 'approved' || undefined}
                             disabled={editorLocked || decisionUnconfirmed}
                             className="w-full rounded-md border bg-background p-2"
                           />

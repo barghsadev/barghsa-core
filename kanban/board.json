@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-08T08:10:16+00:00",
-  "source_commit": "009e91dbf3fcb3214a6a2d153e93854ecbf98df8",
+  "updated": "2026-11-08T08:24:46+00:00",
+  "source_commit": "a32f204418483c914961421e0abda8cab2461358",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -386334,7 +386334,7 @@
             },
             {
               "path": "apps/web/e2e/solar-final-rejection.spec.ts",
-              "sha256": "a4a2f45de71a87b66c4b6eedb8b44911586c807c93ca9fcb7dc43e5c75fabdd0"
+              "sha256": "67e192f59f605c78f9d5077f0acf7a28852fe921f9cc4f66a19f533c5ed90d10"
             },
             {
               "path": "apps/web/e2e/solar-journey.spec.ts",
@@ -387103,7 +387103,7 @@
             },
             {
               "path": "apps/web/e2e/solar-final-rejection.spec.ts",
-              "sha256": "a4a2f45de71a87b66c4b6eedb8b44911586c807c93ca9fcb7dc43e5c75fabdd0"
+              "sha256": "67e192f59f605c78f9d5077f0acf7a28852fe921f9cc4f66a19f533c5ed90d10"
             },
             {
               "path": "apps/web/e2e/solar-journey.spec.ts",
@@ -387872,7 +387872,7 @@
             },
             {
               "path": "apps/web/e2e/solar-final-rejection.spec.ts",
-              "sha256": "a4a2f45de71a87b66c4b6eedb8b44911586c807c93ca9fcb7dc43e5c75fabdd0"
+              "sha256": "67e192f59f605c78f9d5077f0acf7a28852fe921f9cc4f66a19f533c5ed90d10"
             },
             {
               "path": "apps/web/e2e/solar-journey.spec.ts",
@@ -388643,7 +388643,7 @@
             },
             {
               "path": "apps/web/e2e/solar-final-rejection.spec.ts",
-              "sha256": "a4a2f45de71a87b66c4b6eedb8b44911586c807c93ca9fcb7dc43e5c75fabdd0"
+              "sha256": "67e192f59f605c78f9d5077f0acf7a28852fe921f9cc4f66a19f533c5ed90d10"
             },
             {
               "path": "apps/web/e2e/solar-journey.spec.ts",
@@ -390691,7 +390691,7 @@
             },
             {
               "path": "apps/web/e2e/solar-final-rejection.spec.ts",
-              "sha256": "a4a2f45de71a87b66c4b6eedb8b44911586c807c93ca9fcb7dc43e5c75fabdd0"
+              "sha256": "67e192f59f605c78f9d5077f0acf7a28852fe921f9cc4f66a19f533c5ed90d10"
             },
             {
               "path": "apps/web/e2e/solar-journey.spec.ts",
@@ -391460,7 +391460,7 @@
             },
             {
               "path": "apps/web/e2e/solar-final-rejection.spec.ts",
-              "sha256": "a4a2f45de71a87b66c4b6eedb8b44911586c807c93ca9fcb7dc43e5c75fabdd0"
+              "sha256": "67e192f59f605c78f9d5077f0acf7a28852fe921f9cc4f66a19f533c5ed90d10"
             },
             {
               "path": "apps/web/e2e/solar-journey.spec.ts",
@@ -392229,7 +392229,7 @@
             },
             {
               "path": "apps/web/e2e/solar-final-rejection.spec.ts",
-              "sha256": "a4a2f45de71a87b66c4b6eedb8b44911586c807c93ca9fcb7dc43e5c75fabdd0"
+              "sha256": "67e192f59f605c78f9d5077f0acf7a28852fe921f9cc4f66a19f533c5ed90d10"
             },
             {
               "path": "apps/web/e2e/solar-journey.spec.ts",
@@ -392999,7 +392999,7 @@
             },
             {
               "path": "apps/web/e2e/solar-final-rejection.spec.ts",
-              "sha256": "a4a2f45de71a87b66c4b6eedb8b44911586c807c93ca9fcb7dc43e5c75fabdd0"
+              "sha256": "67e192f59f605c78f9d5077f0acf7a28852fe921f9cc4f66a19f533c5ed90d10"
             },
             {
               "path": "apps/web/e2e/solar-journey.spec.ts",
@@ -393769,7 +393769,7 @@
             },
             {
               "path": "apps/web/e2e/solar-final-rejection.spec.ts",
-              "sha256": "a4a2f45de71a87b66c4b6eedb8b44911586c807c93ca9fcb7dc43e5c75fabdd0"
+              "sha256": "67e192f59f605c78f9d5077f0acf7a28852fe921f9cc4f66a19f533c5ed90d10"
             },
             {
               "path": "apps/web/e2e/solar-journey.spec.ts",
@@ -394540,7 +394540,7 @@
             },
             {
               "path": "apps/web/e2e/solar-final-rejection.spec.ts",
-              "sha256": "a4a2f45de71a87b66c4b6eedb8b44911586c807c93ca9fcb7dc43e5c75fabdd0"
+              "sha256": "67e192f59f605c78f9d5077f0acf7a28852fe921f9cc4f66a19f533c5ed90d10"
             },
             {
               "path": "apps/web/e2e/solar-journey.spec.ts",
@@ -395315,7 +395315,7 @@
             },
             {
               "path": "apps/web/e2e/solar-final-rejection.spec.ts",
-              "sha256": "a4a2f45de71a87b66c4b6eedb8b44911586c807c93ca9fcb7dc43e5c75fabdd0"
+              "sha256": "67e192f59f605c78f9d5077f0acf7a28852fe921f9cc4f66a19f533c5ed90d10"
             },
             {
               "path": "apps/web/e2e/solar-journey.spec.ts",
@@ -396084,7 +396084,7 @@
             },
             {
               "path": "apps/web/e2e/solar-final-rejection.spec.ts",
-              "sha256": "a4a2f45de71a87b66c4b6eedb8b44911586c807c93ca9fcb7dc43e5c75fabdd0"
+              "sha256": "67e192f59f605c78f9d5077f0acf7a28852fe921f9cc4f66a19f533c5ed90d10"
             },
             {
               "path": "apps/web/e2e/solar-journey.spec.ts",
@@ -396853,7 +396853,7 @@
             },
             {
               "path": "apps/web/e2e/solar-final-rejection.spec.ts",
-              "sha256": "a4a2f45de71a87b66c4b6eedb8b44911586c807c93ca9fcb7dc43e5c75fabdd0"
+              "sha256": "67e192f59f605c78f9d5077f0acf7a28852fe921f9cc4f66a19f533c5ed90d10"
             },
             {
               "path": "apps/web/e2e/solar-journey.spec.ts",
@@ -403672,15 +403672,15 @@
             },
             {
               "path": "apps/web/e2e/solar-postal-form-fixture.ts",
-              "sha256": "c23e7bbec50f2aae15a2c96c844a2c50c42fd002f77e13876ff68de869d33cbc"
+              "sha256": "ef543b9411fc7bf19f041686b809c5adcb50606b4b67466b45ca43f8c741ebcc"
             },
             {
               "path": "apps/web/e2e/solar-postal-forms.spec.ts",
-              "sha256": "7b38e02b15313ffa365db8dbc397359aa8e62a8e54edd6014de4ff74fb7c6fce"
+              "sha256": "022cf0d28f00149157295bfaa1cb89bb7299d475139c6472b1e5d222f2390260"
             },
             {
               "path": "apps/web/e2e/solar-postal-tracking.spec.ts",
-              "sha256": "0099310712d1928b7e5d9dbd64c8c0a36da4e42f26cc63165bd31eca3f6747f6"
+              "sha256": "e78bf9fc1d2a8f05ef2cb06747cadac4e295fe8c60af0138ea1cd8d8c1ffaf75"
             },
             {
               "path": "apps/web/src/components/SolarContractForm.tsx",
@@ -403736,7 +403736,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarPostalPage.tsx",
-              "sha256": "b944994ec1a05ff6a747eedbfb9529d956ffb5d95b3529da62725fc472d2e880"
+              "sha256": "a23b4bbd4245ee3a5c88fc49e83e7eca72155bc636fcfd16e7778ffb2105de75"
             },
             {
               "path": "apps/web/src/pages/admin-solar-queues.test.tsx",
@@ -405018,15 +405018,15 @@
             },
             {
               "path": "apps/web/e2e/solar-postal-form-fixture.ts",
-              "sha256": "c23e7bbec50f2aae15a2c96c844a2c50c42fd002f77e13876ff68de869d33cbc"
+              "sha256": "ef543b9411fc7bf19f041686b809c5adcb50606b4b67466b45ca43f8c741ebcc"
             },
             {
               "path": "apps/web/e2e/solar-postal-forms.spec.ts",
-              "sha256": "7b38e02b15313ffa365db8dbc397359aa8e62a8e54edd6014de4ff74fb7c6fce"
+              "sha256": "022cf0d28f00149157295bfaa1cb89bb7299d475139c6472b1e5d222f2390260"
             },
             {
               "path": "apps/web/e2e/solar-postal-tracking.spec.ts",
-              "sha256": "0099310712d1928b7e5d9dbd64c8c0a36da4e42f26cc63165bd31eca3f6747f6"
+              "sha256": "e78bf9fc1d2a8f05ef2cb06747cadac4e295fe8c60af0138ea1cd8d8c1ffaf75"
             },
             {
               "path": "apps/web/src/components/SolarContractForm.tsx",
@@ -405082,7 +405082,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarPostalPage.tsx",
-              "sha256": "b944994ec1a05ff6a747eedbfb9529d956ffb5d95b3529da62725fc472d2e880"
+              "sha256": "a23b4bbd4245ee3a5c88fc49e83e7eca72155bc636fcfd16e7778ffb2105de75"
             },
             {
               "path": "apps/web/src/pages/admin-solar-queues.test.tsx",
@@ -406365,15 +406365,15 @@
             },
             {
               "path": "apps/web/e2e/solar-postal-form-fixture.ts",
-              "sha256": "c23e7bbec50f2aae15a2c96c844a2c50c42fd002f77e13876ff68de869d33cbc"
+              "sha256": "ef543b9411fc7bf19f041686b809c5adcb50606b4b67466b45ca43f8c741ebcc"
             },
             {
               "path": "apps/web/e2e/solar-postal-forms.spec.ts",
-              "sha256": "7b38e02b15313ffa365db8dbc397359aa8e62a8e54edd6014de4ff74fb7c6fce"
+              "sha256": "022cf0d28f00149157295bfaa1cb89bb7299d475139c6472b1e5d222f2390260"
             },
             {
               "path": "apps/web/e2e/solar-postal-tracking.spec.ts",
-              "sha256": "0099310712d1928b7e5d9dbd64c8c0a36da4e42f26cc63165bd31eca3f6747f6"
+              "sha256": "e78bf9fc1d2a8f05ef2cb06747cadac4e295fe8c60af0138ea1cd8d8c1ffaf75"
             },
             {
               "path": "apps/web/src/components/SolarContractForm.tsx",
@@ -406429,7 +406429,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarPostalPage.tsx",
-              "sha256": "b944994ec1a05ff6a747eedbfb9529d956ffb5d95b3529da62725fc472d2e880"
+              "sha256": "a23b4bbd4245ee3a5c88fc49e83e7eca72155bc636fcfd16e7778ffb2105de75"
             },
             {
               "path": "apps/web/src/pages/admin-solar-queues.test.tsx",
@@ -407711,15 +407711,15 @@
             },
             {
               "path": "apps/web/e2e/solar-postal-form-fixture.ts",
-              "sha256": "c23e7bbec50f2aae15a2c96c844a2c50c42fd002f77e13876ff68de869d33cbc"
+              "sha256": "ef543b9411fc7bf19f041686b809c5adcb50606b4b67466b45ca43f8c741ebcc"
             },
             {
               "path": "apps/web/e2e/solar-postal-forms.spec.ts",
-              "sha256": "7b38e02b15313ffa365db8dbc397359aa8e62a8e54edd6014de4ff74fb7c6fce"
+              "sha256": "022cf0d28f00149157295bfaa1cb89bb7299d475139c6472b1e5d222f2390260"
             },
             {
               "path": "apps/web/e2e/solar-postal-tracking.spec.ts",
-              "sha256": "0099310712d1928b7e5d9dbd64c8c0a36da4e42f26cc63165bd31eca3f6747f6"
+              "sha256": "e78bf9fc1d2a8f05ef2cb06747cadac4e295fe8c60af0138ea1cd8d8c1ffaf75"
             },
             {
               "path": "apps/web/src/components/SolarContractForm.tsx",
@@ -407775,7 +407775,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarPostalPage.tsx",
-              "sha256": "b944994ec1a05ff6a747eedbfb9529d956ffb5d95b3529da62725fc472d2e880"
+              "sha256": "a23b4bbd4245ee3a5c88fc49e83e7eca72155bc636fcfd16e7778ffb2105de75"
             },
             {
               "path": "apps/web/src/pages/admin-solar-queues.test.tsx",
@@ -409057,15 +409057,15 @@
             },
             {
               "path": "apps/web/e2e/solar-postal-form-fixture.ts",
-              "sha256": "c23e7bbec50f2aae15a2c96c844a2c50c42fd002f77e13876ff68de869d33cbc"
+              "sha256": "ef543b9411fc7bf19f041686b809c5adcb50606b4b67466b45ca43f8c741ebcc"
             },
             {
               "path": "apps/web/e2e/solar-postal-forms.spec.ts",
-              "sha256": "7b38e02b15313ffa365db8dbc397359aa8e62a8e54edd6014de4ff74fb7c6fce"
+              "sha256": "022cf0d28f00149157295bfaa1cb89bb7299d475139c6472b1e5d222f2390260"
             },
             {
               "path": "apps/web/e2e/solar-postal-tracking.spec.ts",
-              "sha256": "0099310712d1928b7e5d9dbd64c8c0a36da4e42f26cc63165bd31eca3f6747f6"
+              "sha256": "e78bf9fc1d2a8f05ef2cb06747cadac4e295fe8c60af0138ea1cd8d8c1ffaf75"
             },
             {
               "path": "apps/web/src/components/SolarContractForm.tsx",
@@ -409121,7 +409121,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarPostalPage.tsx",
-              "sha256": "b944994ec1a05ff6a747eedbfb9529d956ffb5d95b3529da62725fc472d2e880"
+              "sha256": "a23b4bbd4245ee3a5c88fc49e83e7eca72155bc636fcfd16e7778ffb2105de75"
             },
             {
               "path": "apps/web/src/pages/admin-solar-queues.test.tsx",
@@ -410404,15 +410404,15 @@
             },
             {
               "path": "apps/web/e2e/solar-postal-form-fixture.ts",
-              "sha256": "c23e7bbec50f2aae15a2c96c844a2c50c42fd002f77e13876ff68de869d33cbc"
+              "sha256": "ef543b9411fc7bf19f041686b809c5adcb50606b4b67466b45ca43f8c741ebcc"
             },
             {
               "path": "apps/web/e2e/solar-postal-forms.spec.ts",
-              "sha256": "7b38e02b15313ffa365db8dbc397359aa8e62a8e54edd6014de4ff74fb7c6fce"
+              "sha256": "022cf0d28f00149157295bfaa1cb89bb7299d475139c6472b1e5d222f2390260"
             },
             {
               "path": "apps/web/e2e/solar-postal-tracking.spec.ts",
-              "sha256": "0099310712d1928b7e5d9dbd64c8c0a36da4e42f26cc63165bd31eca3f6747f6"
+              "sha256": "e78bf9fc1d2a8f05ef2cb06747cadac4e295fe8c60af0138ea1cd8d8c1ffaf75"
             },
             {
               "path": "apps/web/src/components/SolarContractForm.tsx",
@@ -410468,7 +410468,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarPostalPage.tsx",
-              "sha256": "b944994ec1a05ff6a747eedbfb9529d956ffb5d95b3529da62725fc472d2e880"
+              "sha256": "a23b4bbd4245ee3a5c88fc49e83e7eca72155bc636fcfd16e7778ffb2105de75"
             },
             {
               "path": "apps/web/src/pages/admin-solar-queues.test.tsx",
@@ -411752,15 +411752,15 @@
             },
             {
               "path": "apps/web/e2e/solar-postal-form-fixture.ts",
-              "sha256": "c23e7bbec50f2aae15a2c96c844a2c50c42fd002f77e13876ff68de869d33cbc"
+              "sha256": "ef543b9411fc7bf19f041686b809c5adcb50606b4b67466b45ca43f8c741ebcc"
             },
             {
               "path": "apps/web/e2e/solar-postal-forms.spec.ts",
-              "sha256": "7b38e02b15313ffa365db8dbc397359aa8e62a8e54edd6014de4ff74fb7c6fce"
+              "sha256": "022cf0d28f00149157295bfaa1cb89bb7299d475139c6472b1e5d222f2390260"
             },
             {
               "path": "apps/web/e2e/solar-postal-tracking.spec.ts",
-              "sha256": "0099310712d1928b7e5d9dbd64c8c0a36da4e42f26cc63165bd31eca3f6747f6"
+              "sha256": "e78bf9fc1d2a8f05ef2cb06747cadac4e295fe8c60af0138ea1cd8d8c1ffaf75"
             },
             {
               "path": "apps/web/src/components/SolarContractForm.tsx",
@@ -411816,7 +411816,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarPostalPage.tsx",
-              "sha256": "b944994ec1a05ff6a747eedbfb9529d956ffb5d95b3529da62725fc472d2e880"
+              "sha256": "a23b4bbd4245ee3a5c88fc49e83e7eca72155bc636fcfd16e7778ffb2105de75"
             },
             {
               "path": "apps/web/src/pages/admin-solar-queues.test.tsx",
@@ -414403,15 +414403,15 @@
             },
             {
               "path": "apps/web/e2e/solar-postal-form-fixture.ts",
-              "sha256": "c23e7bbec50f2aae15a2c96c844a2c50c42fd002f77e13876ff68de869d33cbc"
+              "sha256": "ef543b9411fc7bf19f041686b809c5adcb50606b4b67466b45ca43f8c741ebcc"
             },
             {
               "path": "apps/web/e2e/solar-postal-forms.spec.ts",
-              "sha256": "7b38e02b15313ffa365db8dbc397359aa8e62a8e54edd6014de4ff74fb7c6fce"
+              "sha256": "022cf0d28f00149157295bfaa1cb89bb7299d475139c6472b1e5d222f2390260"
             },
             {
               "path": "apps/web/e2e/solar-postal-tracking.spec.ts",
-              "sha256": "0099310712d1928b7e5d9dbd64c8c0a36da4e42f26cc63165bd31eca3f6747f6"
+              "sha256": "e78bf9fc1d2a8f05ef2cb06747cadac4e295fe8c60af0138ea1cd8d8c1ffaf75"
             },
             {
               "path": "apps/web/src/components/SolarContractForm.tsx",
@@ -414467,7 +414467,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarPostalPage.tsx",
-              "sha256": "b944994ec1a05ff6a747eedbfb9529d956ffb5d95b3529da62725fc472d2e880"
+              "sha256": "a23b4bbd4245ee3a5c88fc49e83e7eca72155bc636fcfd16e7778ffb2105de75"
             },
             {
               "path": "apps/web/src/pages/admin-solar-queues.test.tsx",
@@ -415748,15 +415748,15 @@
             },
             {
               "path": "apps/web/e2e/solar-postal-form-fixture.ts",
-              "sha256": "c23e7bbec50f2aae15a2c96c844a2c50c42fd002f77e13876ff68de869d33cbc"
+              "sha256": "ef543b9411fc7bf19f041686b809c5adcb50606b4b67466b45ca43f8c741ebcc"
             },
             {
               "path": "apps/web/e2e/solar-postal-forms.spec.ts",
-              "sha256": "7b38e02b15313ffa365db8dbc397359aa8e62a8e54edd6014de4ff74fb7c6fce"
+              "sha256": "022cf0d28f00149157295bfaa1cb89bb7299d475139c6472b1e5d222f2390260"
             },
             {
               "path": "apps/web/e2e/solar-postal-tracking.spec.ts",
-              "sha256": "0099310712d1928b7e5d9dbd64c8c0a36da4e42f26cc63165bd31eca3f6747f6"
+              "sha256": "e78bf9fc1d2a8f05ef2cb06747cadac4e295fe8c60af0138ea1cd8d8c1ffaf75"
             },
             {
               "path": "apps/web/src/components/SolarContractForm.tsx",
@@ -415812,7 +415812,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarPostalPage.tsx",
-              "sha256": "b944994ec1a05ff6a747eedbfb9529d956ffb5d95b3529da62725fc472d2e880"
+              "sha256": "a23b4bbd4245ee3a5c88fc49e83e7eca72155bc636fcfd16e7778ffb2105de75"
             },
             {
               "path": "apps/web/src/pages/admin-solar-queues.test.tsx",
@@ -491251,7 +491251,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarPostalPage.tsx",
-              "sha256": "b944994ec1a05ff6a747eedbfb9529d956ffb5d95b3529da62725fc472d2e880"
+              "sha256": "a23b4bbd4245ee3a5c88fc49e83e7eca72155bc636fcfd16e7778ffb2105de75"
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
@@ -494395,7 +494395,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarPostalPage.tsx",
-              "sha256": "b944994ec1a05ff6a747eedbfb9529d956ffb5d95b3529da62725fc472d2e880"
+              "sha256": "a23b4bbd4245ee3a5c88fc49e83e7eca72155bc636fcfd16e7778ffb2105de75"
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
@@ -495278,7 +495278,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarPostalPage.tsx",
-              "sha256": "b944994ec1a05ff6a747eedbfb9529d956ffb5d95b3529da62725fc472d2e880"
+              "sha256": "a23b4bbd4245ee3a5c88fc49e83e7eca72155bc636fcfd16e7778ffb2105de75"
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
@@ -496102,7 +496102,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarPostalPage.tsx",
-              "sha256": "b944994ec1a05ff6a747eedbfb9529d956ffb5d95b3529da62725fc472d2e880"
+              "sha256": "a23b4bbd4245ee3a5c88fc49e83e7eca72155bc636fcfd16e7778ffb2105de75"
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
@@ -496767,7 +496767,7 @@
             },
             {
               "path": "apps/web/src/components/SolarPostalTrackingEditor.tsx",
-              "sha256": "78363eb55e6ed3f7baa27b62c98477b57590343fd405f2347a52fa6ae4b5e8ca"
+              "sha256": "dd1164907ba5311ce45a96e16cc5c51420d2e42adbfd5330f720009e729e00fe"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
@@ -496927,7 +496927,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarPostalPage.tsx",
-              "sha256": "b944994ec1a05ff6a747eedbfb9529d956ffb5d95b3529da62725fc472d2e880"
+              "sha256": "a23b4bbd4245ee3a5c88fc49e83e7eca72155bc636fcfd16e7778ffb2105de75"
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
@@ -508201,7 +508201,7 @@
             },
             {
               "path": "apps/web/src/components/SolarPostalTrackingEditor.tsx",
-              "sha256": "78363eb55e6ed3f7baa27b62c98477b57590343fd405f2347a52fa6ae4b5e8ca"
+              "sha256": "dd1164907ba5311ce45a96e16cc5c51420d2e42adbfd5330f720009e729e00fe"
             },
             {
               "path": "apps/web/src/components/ThemeSwitcher.tsx",
@@ -508293,7 +508293,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarPostalPage.tsx",
-              "sha256": "b944994ec1a05ff6a747eedbfb9529d956ffb5d95b3529da62725fc472d2e880"
+              "sha256": "a23b4bbd4245ee3a5c88fc49e83e7eca72155bc636fcfd16e7778ffb2105de75"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -512108,7 +512108,7 @@
             },
             {
               "path": "apps/web/src/components/SolarPostalTrackingEditor.tsx",
-              "sha256": "78363eb55e6ed3f7baa27b62c98477b57590343fd405f2347a52fa6ae4b5e8ca"
+              "sha256": "dd1164907ba5311ce45a96e16cc5c51420d2e42adbfd5330f720009e729e00fe"
             },
             {
               "path": "apps/web/src/components/TeamMemberFields.tsx",
@@ -512264,7 +512264,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarPostalPage.tsx",
-              "sha256": "b944994ec1a05ff6a747eedbfb9529d956ffb5d95b3529da62725fc472d2e880"
+              "sha256": "a23b4bbd4245ee3a5c88fc49e83e7eca72155bc636fcfd16e7778ffb2105de75"
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
@@ -515241,7 +515241,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "5a37c423ac927cabbaf22ff9d6c447bb561b20ec15e6d72580139cea298d9b3a"
+              "sha256": "12254598785f7459babcd443c56224b568c3a9da4aa9ff5e5f409c7125c37e76"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -515621,7 +515621,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "5a37c423ac927cabbaf22ff9d6c447bb561b20ec15e6d72580139cea298d9b3a"
+              "sha256": "12254598785f7459babcd443c56224b568c3a9da4aa9ff5e5f409c7125c37e76"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -516060,7 +516060,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "5a37c423ac927cabbaf22ff9d6c447bb561b20ec15e6d72580139cea298d9b3a"
+              "sha256": "12254598785f7459babcd443c56224b568c3a9da4aa9ff5e5f409c7125c37e76"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -516547,7 +516547,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "5a37c423ac927cabbaf22ff9d6c447bb561b20ec15e6d72580139cea298d9b3a"
+              "sha256": "12254598785f7459babcd443c56224b568c3a9da4aa9ff5e5f409c7125c37e76"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -516755,7 +516755,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Staff electricity quantity and price forms now expose their required fields. The required public update note in the staff solar postal tracking editor and the sole closing reason on approved solar requests still lack markers. Reconcile remaining conditional controls."
+        "Staff solar postal tracking notes and the sole closing reason on approved requests now expose their required state. Remaining source-confirmed gaps include the staff electricity order reason when rejection is the sole action, the profile address group when edited, the saving stage explanation when approval is unavailable, and new template files when no file is retained. Preserve optional reasons and attachments for their other actions."
       ],
       "owner": null,
       "depends_on": [],
@@ -516797,7 +516797,8 @@
           "release-0.5-public-auth-required",
           "release-0.5-account-command-recovery",
           "release-0.5-preference-write-recovery",
-          "release-0.5-electricity-staff-acknowledgement"
+          "release-0.5-electricity-staff-acknowledgement",
+          "release-0.5-solar-postal-required"
         ],
         "current_acceptance": null
       }
@@ -517066,7 +517067,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "5a37c423ac927cabbaf22ff9d6c447bb561b20ec15e6d72580139cea298d9b3a"
+              "sha256": "12254598785f7459babcd443c56224b568c3a9da4aa9ff5e5f409c7125c37e76"
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
@@ -517416,7 +517417,7 @@
             },
             {
               "path": "apps/web/src/components/SolarPostalTrackingEditor.tsx",
-              "sha256": "78363eb55e6ed3f7baa27b62c98477b57590343fd405f2347a52fa6ae4b5e8ca"
+              "sha256": "dd1164907ba5311ce45a96e16cc5c51420d2e42adbfd5330f720009e729e00fe"
             },
             {
               "path": "apps/web/src/components/ThemeSwitcher.tsx",
@@ -517516,7 +517517,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarPostalPage.tsx",
-              "sha256": "b944994ec1a05ff6a747eedbfb9529d956ffb5d95b3529da62725fc472d2e880"
+              "sha256": "a23b4bbd4245ee3a5c88fc49e83e7eca72155bc636fcfd16e7778ffb2105de75"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -517752,7 +517753,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "5a37c423ac927cabbaf22ff9d6c447bb561b20ec15e6d72580139cea298d9b3a"
+              "sha256": "12254598785f7459babcd443c56224b568c3a9da4aa9ff5e5f409c7125c37e76"
             },
             {
               "path": "docs/design/notification-recovery.md",
@@ -517989,7 +517990,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "5a37c423ac927cabbaf22ff9d6c447bb561b20ec15e6d72580139cea298d9b3a"
+              "sha256": "12254598785f7459babcd443c56224b568c3a9da4aa9ff5e5f409c7125c37e76"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -518505,7 +518506,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "5a37c423ac927cabbaf22ff9d6c447bb561b20ec15e6d72580139cea298d9b3a"
+              "sha256": "12254598785f7459babcd443c56224b568c3a9da4aa9ff5e5f409c7125c37e76"
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
@@ -519019,7 +519020,7 @@
             },
             {
               "path": "apps/web/e2e/solar-postal-tracking.spec.ts",
-              "sha256": "0099310712d1928b7e5d9dbd64c8c0a36da4e42f26cc63165bd31eca3f6747f6"
+              "sha256": "e78bf9fc1d2a8f05ef2cb06747cadac4e295fe8c60af0138ea1cd8d8c1ffaf75"
             },
             {
               "path": "apps/web/e2e/staff-creation.spec.ts",
@@ -519223,7 +519224,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "5a37c423ac927cabbaf22ff9d6c447bb561b20ec15e6d72580139cea298d9b3a"
+              "sha256": "12254598785f7459babcd443c56224b568c3a9da4aa9ff5e5f409c7125c37e76"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -519847,7 +519848,7 @@
             },
             {
               "path": "apps/web/e2e/solar-postal-tracking.spec.ts",
-              "sha256": "0099310712d1928b7e5d9dbd64c8c0a36da4e42f26cc63165bd31eca3f6747f6"
+              "sha256": "e78bf9fc1d2a8f05ef2cb06747cadac4e295fe8c60af0138ea1cd8d8c1ffaf75"
             },
             {
               "path": "apps/web/e2e/staff-creation.spec.ts",
@@ -520051,7 +520052,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "5a37c423ac927cabbaf22ff9d6c447bb561b20ec15e6d72580139cea298d9b3a"
+              "sha256": "12254598785f7459babcd443c56224b568c3a9da4aa9ff5e5f409c7125c37e76"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -520661,7 +520662,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "5a37c423ac927cabbaf22ff9d6c447bb561b20ec15e6d72580139cea298d9b3a"
+              "sha256": "12254598785f7459babcd443c56224b568c3a9da4aa9ff5e5f409c7125c37e76"
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
@@ -521175,7 +521176,7 @@
             },
             {
               "path": "apps/web/e2e/solar-postal-tracking.spec.ts",
-              "sha256": "0099310712d1928b7e5d9dbd64c8c0a36da4e42f26cc63165bd31eca3f6747f6"
+              "sha256": "e78bf9fc1d2a8f05ef2cb06747cadac4e295fe8c60af0138ea1cd8d8c1ffaf75"
             },
             {
               "path": "apps/web/e2e/staff-creation.spec.ts",
@@ -521379,7 +521380,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "5a37c423ac927cabbaf22ff9d6c447bb561b20ec15e6d72580139cea298d9b3a"
+              "sha256": "12254598785f7459babcd443c56224b568c3a9da4aa9ff5e5f409c7125c37e76"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -545378,7 +545379,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarPostalPage.tsx",
-              "sha256": "b944994ec1a05ff6a747eedbfb9529d956ffb5d95b3529da62725fc472d2e880"
+              "sha256": "a23b4bbd4245ee3a5c88fc49e83e7eca72155bc636fcfd16e7778ffb2105de75"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -547244,7 +547245,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarPostalPage.tsx",
-              "sha256": "b944994ec1a05ff6a747eedbfb9529d956ffb5d95b3529da62725fc472d2e880"
+              "sha256": "a23b4bbd4245ee3a5c88fc49e83e7eca72155bc636fcfd16e7778ffb2105de75"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -549111,7 +549112,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarPostalPage.tsx",
-              "sha256": "b944994ec1a05ff6a747eedbfb9529d956ffb5d95b3529da62725fc472d2e880"
+              "sha256": "a23b4bbd4245ee3a5c88fc49e83e7eca72155bc636fcfd16e7778ffb2105de75"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -550947,7 +550948,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarPostalPage.tsx",
-              "sha256": "b944994ec1a05ff6a747eedbfb9529d956ffb5d95b3529da62725fc472d2e880"
+              "sha256": "a23b4bbd4245ee3a5c88fc49e83e7eca72155bc636fcfd16e7778ffb2105de75"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -552809,7 +552810,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarPostalPage.tsx",
-              "sha256": "b944994ec1a05ff6a747eedbfb9529d956ffb5d95b3529da62725fc472d2e880"
+              "sha256": "a23b4bbd4245ee3a5c88fc49e83e7eca72155bc636fcfd16e7778ffb2105de75"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -554680,7 +554681,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarPostalPage.tsx",
-              "sha256": "b944994ec1a05ff6a747eedbfb9529d956ffb5d95b3529da62725fc472d2e880"
+              "sha256": "a23b4bbd4245ee3a5c88fc49e83e7eca72155bc636fcfd16e7778ffb2105de75"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -556524,7 +556525,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarPostalPage.tsx",
-              "sha256": "b944994ec1a05ff6a747eedbfb9529d956ffb5d95b3529da62725fc472d2e880"
+              "sha256": "a23b4bbd4245ee3a5c88fc49e83e7eca72155bc636fcfd16e7778ffb2105de75"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -558332,7 +558333,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarPostalPage.tsx",
-              "sha256": "b944994ec1a05ff6a747eedbfb9529d956ffb5d95b3529da62725fc472d2e880"
+              "sha256": "a23b4bbd4245ee3a5c88fc49e83e7eca72155bc636fcfd16e7778ffb2105de75"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -560140,7 +560141,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarPostalPage.tsx",
-              "sha256": "b944994ec1a05ff6a747eedbfb9529d956ffb5d95b3529da62725fc472d2e880"
+              "sha256": "a23b4bbd4245ee3a5c88fc49e83e7eca72155bc636fcfd16e7778ffb2105de75"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -561949,7 +561950,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarPostalPage.tsx",
-              "sha256": "b944994ec1a05ff6a747eedbfb9529d956ffb5d95b3529da62725fc472d2e880"
+              "sha256": "a23b4bbd4245ee3a5c88fc49e83e7eca72155bc636fcfd16e7778ffb2105de75"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -563757,7 +563758,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarPostalPage.tsx",
-              "sha256": "b944994ec1a05ff6a747eedbfb9529d956ffb5d95b3529da62725fc472d2e880"
+              "sha256": "a23b4bbd4245ee3a5c88fc49e83e7eca72155bc636fcfd16e7778ffb2105de75"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -589852,7 +589853,7 @@
             },
             {
               "path": "apps/web/src/components/SolarPostalTrackingEditor.tsx",
-              "sha256": "78363eb55e6ed3f7baa27b62c98477b57590343fd405f2347a52fa6ae4b5e8ca"
+              "sha256": "dd1164907ba5311ce45a96e16cc5c51420d2e42adbfd5330f720009e729e00fe"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
@@ -590012,7 +590013,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarPostalPage.tsx",
-              "sha256": "b944994ec1a05ff6a747eedbfb9529d956ffb5d95b3529da62725fc472d2e880"
+              "sha256": "a23b4bbd4245ee3a5c88fc49e83e7eca72155bc636fcfd16e7778ffb2105de75"
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
@@ -594898,7 +594899,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarPostalPage.tsx",
-              "sha256": "b944994ec1a05ff6a747eedbfb9529d956ffb5d95b3529da62725fc472d2e880"
+              "sha256": "a23b4bbd4245ee3a5c88fc49e83e7eca72155bc636fcfd16e7778ffb2105de75"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -596702,7 +596703,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarPostalPage.tsx",
-              "sha256": "b944994ec1a05ff6a747eedbfb9529d956ffb5d95b3529da62725fc472d2e880"
+              "sha256": "a23b4bbd4245ee3a5c88fc49e83e7eca72155bc636fcfd16e7778ffb2105de75"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -598506,7 +598507,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarPostalPage.tsx",
-              "sha256": "b944994ec1a05ff6a747eedbfb9529d956ffb5d95b3529da62725fc472d2e880"
+              "sha256": "a23b4bbd4245ee3a5c88fc49e83e7eca72155bc636fcfd16e7778ffb2105de75"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -600310,7 +600311,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarPostalPage.tsx",
-              "sha256": "b944994ec1a05ff6a747eedbfb9529d956ffb5d95b3529da62725fc472d2e880"
+              "sha256": "a23b4bbd4245ee3a5c88fc49e83e7eca72155bc636fcfd16e7778ffb2105de75"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -602114,7 +602115,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarPostalPage.tsx",
-              "sha256": "b944994ec1a05ff6a747eedbfb9529d956ffb5d95b3529da62725fc472d2e880"
+              "sha256": "a23b4bbd4245ee3a5c88fc49e83e7eca72155bc636fcfd16e7778ffb2105de75"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -603918,7 +603919,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarPostalPage.tsx",
-              "sha256": "b944994ec1a05ff6a747eedbfb9529d956ffb5d95b3529da62725fc472d2e880"
+              "sha256": "a23b4bbd4245ee3a5c88fc49e83e7eca72155bc636fcfd16e7778ffb2105de75"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -605722,7 +605723,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarPostalPage.tsx",
-              "sha256": "b944994ec1a05ff6a747eedbfb9529d956ffb5d95b3529da62725fc472d2e880"
+              "sha256": "a23b4bbd4245ee3a5c88fc49e83e7eca72155bc636fcfd16e7778ffb2105de75"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -633405,7 +633406,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarPostalPage.tsx",
-              "sha256": "b944994ec1a05ff6a747eedbfb9529d956ffb5d95b3529da62725fc472d2e880"
+              "sha256": "a23b4bbd4245ee3a5c88fc49e83e7eca72155bc636fcfd16e7778ffb2105de75"
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
@@ -634529,7 +634530,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarPostalPage.tsx",
-              "sha256": "b944994ec1a05ff6a747eedbfb9529d956ffb5d95b3529da62725fc472d2e880"
+              "sha256": "a23b4bbd4245ee3a5c88fc49e83e7eca72155bc636fcfd16e7778ffb2105de75"
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
@@ -635653,7 +635654,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarPostalPage.tsx",
-              "sha256": "b944994ec1a05ff6a747eedbfb9529d956ffb5d95b3529da62725fc472d2e880"
+              "sha256": "a23b4bbd4245ee3a5c88fc49e83e7eca72155bc636fcfd16e7778ffb2105de75"
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
@@ -636780,7 +636781,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarPostalPage.tsx",
-              "sha256": "b944994ec1a05ff6a747eedbfb9529d956ffb5d95b3529da62725fc472d2e880"
+              "sha256": "a23b4bbd4245ee3a5c88fc49e83e7eca72155bc636fcfd16e7778ffb2105de75"
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
@@ -637907,7 +637908,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarPostalPage.tsx",
-              "sha256": "b944994ec1a05ff6a747eedbfb9529d956ffb5d95b3529da62725fc472d2e880"
+              "sha256": "a23b4bbd4245ee3a5c88fc49e83e7eca72155bc636fcfd16e7778ffb2105de75"
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
@@ -639061,7 +639062,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarPostalPage.tsx",
-              "sha256": "b944994ec1a05ff6a747eedbfb9529d956ffb5d95b3529da62725fc472d2e880"
+              "sha256": "a23b4bbd4245ee3a5c88fc49e83e7eca72155bc636fcfd16e7778ffb2105de75"
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
@@ -640184,7 +640185,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarPostalPage.tsx",
-              "sha256": "b944994ec1a05ff6a747eedbfb9529d956ffb5d95b3529da62725fc472d2e880"
+              "sha256": "a23b4bbd4245ee3a5c88fc49e83e7eca72155bc636fcfd16e7778ffb2105de75"
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
@@ -641307,7 +641308,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarPostalPage.tsx",
-              "sha256": "b944994ec1a05ff6a747eedbfb9529d956ffb5d95b3529da62725fc472d2e880"
+              "sha256": "a23b4bbd4245ee3a5c88fc49e83e7eca72155bc636fcfd16e7778ffb2105de75"
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
@@ -642431,7 +642432,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarPostalPage.tsx",
-              "sha256": "b944994ec1a05ff6a747eedbfb9529d956ffb5d95b3529da62725fc472d2e880"
+              "sha256": "a23b4bbd4245ee3a5c88fc49e83e7eca72155bc636fcfd16e7778ffb2105de75"
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
@@ -643573,7 +643574,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarPostalPage.tsx",
-              "sha256": "b944994ec1a05ff6a747eedbfb9529d956ffb5d95b3529da62725fc472d2e880"
+              "sha256": "a23b4bbd4245ee3a5c88fc49e83e7eca72155bc636fcfd16e7778ffb2105de75"
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
@@ -644698,7 +644699,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarPostalPage.tsx",
-              "sha256": "b944994ec1a05ff6a747eedbfb9529d956ffb5d95b3529da62725fc472d2e880"
+              "sha256": "a23b4bbd4245ee3a5c88fc49e83e7eca72155bc636fcfd16e7778ffb2105de75"
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
@@ -645598,7 +645599,7 @@
             },
             {
               "path": "apps/web/e2e/solar-postal-tracking.spec.ts",
-              "sha256": "0099310712d1928b7e5d9dbd64c8c0a36da4e42f26cc63165bd31eca3f6747f6"
+              "sha256": "e78bf9fc1d2a8f05ef2cb06747cadac4e295fe8c60af0138ea1cd8d8c1ffaf75"
             },
             {
               "path": "apps/web/e2e/status-displays.spec.ts",
@@ -645842,7 +645843,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarPostalPage.tsx",
-              "sha256": "b944994ec1a05ff6a747eedbfb9529d956ffb5d95b3529da62725fc472d2e880"
+              "sha256": "a23b4bbd4245ee3a5c88fc49e83e7eca72155bc636fcfd16e7778ffb2105de75"
             },
             {
               "path": "apps/web/src/pages/ContractsNavigation.test.tsx",
@@ -646427,7 +646428,7 @@
             },
             {
               "path": "apps/web/e2e/solar-postal-tracking.spec.ts",
-              "sha256": "0099310712d1928b7e5d9dbd64c8c0a36da4e42f26cc63165bd31eca3f6747f6"
+              "sha256": "e78bf9fc1d2a8f05ef2cb06747cadac4e295fe8c60af0138ea1cd8d8c1ffaf75"
             },
             {
               "path": "apps/web/e2e/status-displays.spec.ts",
@@ -646671,7 +646672,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarPostalPage.tsx",
-              "sha256": "b944994ec1a05ff6a747eedbfb9529d956ffb5d95b3529da62725fc472d2e880"
+              "sha256": "a23b4bbd4245ee3a5c88fc49e83e7eca72155bc636fcfd16e7778ffb2105de75"
             },
             {
               "path": "apps/web/src/pages/ContractsNavigation.test.tsx",
@@ -647264,7 +647265,7 @@
             },
             {
               "path": "apps/web/e2e/solar-postal-tracking.spec.ts",
-              "sha256": "0099310712d1928b7e5d9dbd64c8c0a36da4e42f26cc63165bd31eca3f6747f6"
+              "sha256": "e78bf9fc1d2a8f05ef2cb06747cadac4e295fe8c60af0138ea1cd8d8c1ffaf75"
             },
             {
               "path": "apps/web/e2e/status-displays.spec.ts",
@@ -647508,7 +647509,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarPostalPage.tsx",
-              "sha256": "b944994ec1a05ff6a747eedbfb9529d956ffb5d95b3529da62725fc472d2e880"
+              "sha256": "a23b4bbd4245ee3a5c88fc49e83e7eca72155bc636fcfd16e7778ffb2105de75"
             },
             {
               "path": "apps/web/src/pages/ContractsNavigation.test.tsx",
@@ -648085,7 +648086,7 @@
             },
             {
               "path": "apps/web/e2e/solar-postal-tracking.spec.ts",
-              "sha256": "0099310712d1928b7e5d9dbd64c8c0a36da4e42f26cc63165bd31eca3f6747f6"
+              "sha256": "e78bf9fc1d2a8f05ef2cb06747cadac4e295fe8c60af0138ea1cd8d8c1ffaf75"
             },
             {
               "path": "apps/web/e2e/status-displays.spec.ts",
@@ -648329,7 +648330,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarPostalPage.tsx",
-              "sha256": "b944994ec1a05ff6a747eedbfb9529d956ffb5d95b3529da62725fc472d2e880"
+              "sha256": "a23b4bbd4245ee3a5c88fc49e83e7eca72155bc636fcfd16e7778ffb2105de75"
             },
             {
               "path": "apps/web/src/pages/ContractsNavigation.test.tsx",
@@ -648905,7 +648906,7 @@
             },
             {
               "path": "apps/web/e2e/solar-postal-tracking.spec.ts",
-              "sha256": "0099310712d1928b7e5d9dbd64c8c0a36da4e42f26cc63165bd31eca3f6747f6"
+              "sha256": "e78bf9fc1d2a8f05ef2cb06747cadac4e295fe8c60af0138ea1cd8d8c1ffaf75"
             },
             {
               "path": "apps/web/e2e/status-displays.spec.ts",
@@ -649149,7 +649150,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarPostalPage.tsx",
-              "sha256": "b944994ec1a05ff6a747eedbfb9529d956ffb5d95b3529da62725fc472d2e880"
+              "sha256": "a23b4bbd4245ee3a5c88fc49e83e7eca72155bc636fcfd16e7778ffb2105de75"
             },
             {
               "path": "apps/web/src/pages/ContractsNavigation.test.tsx",
@@ -676198,7 +676199,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarPostalPage.tsx",
-              "sha256": "b944994ec1a05ff6a747eedbfb9529d956ffb5d95b3529da62725fc472d2e880"
+              "sha256": "a23b4bbd4245ee3a5c88fc49e83e7eca72155bc636fcfd16e7778ffb2105de75"
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
@@ -677320,7 +677321,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarPostalPage.tsx",
-              "sha256": "b944994ec1a05ff6a747eedbfb9529d956ffb5d95b3529da62725fc472d2e880"
+              "sha256": "a23b4bbd4245ee3a5c88fc49e83e7eca72155bc636fcfd16e7778ffb2105de75"
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
@@ -678442,7 +678443,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarPostalPage.tsx",
-              "sha256": "b944994ec1a05ff6a747eedbfb9529d956ffb5d95b3529da62725fc472d2e880"
+              "sha256": "a23b4bbd4245ee3a5c88fc49e83e7eca72155bc636fcfd16e7778ffb2105de75"
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
@@ -679564,7 +679565,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarPostalPage.tsx",
-              "sha256": "b944994ec1a05ff6a747eedbfb9529d956ffb5d95b3529da62725fc472d2e880"
+              "sha256": "a23b4bbd4245ee3a5c88fc49e83e7eca72155bc636fcfd16e7778ffb2105de75"
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
@@ -713312,7 +713313,7 @@
             },
             {
               "path": "apps/web/e2e/solar-final-rejection.spec.ts",
-              "sha256": "a4a2f45de71a87b66c4b6eedb8b44911586c807c93ca9fcb7dc43e5c75fabdd0"
+              "sha256": "67e192f59f605c78f9d5077f0acf7a28852fe921f9cc4f66a19f533c5ed90d10"
             },
             {
               "path": "apps/web/e2e/solar-journey.spec.ts",
@@ -713600,15 +713601,15 @@
             },
             {
               "path": "apps/web/e2e/solar-postal-form-fixture.ts",
-              "sha256": "c23e7bbec50f2aae15a2c96c844a2c50c42fd002f77e13876ff68de869d33cbc"
+              "sha256": "ef543b9411fc7bf19f041686b809c5adcb50606b4b67466b45ca43f8c741ebcc"
             },
             {
               "path": "apps/web/e2e/solar-postal-forms.spec.ts",
-              "sha256": "7b38e02b15313ffa365db8dbc397359aa8e62a8e54edd6014de4ff74fb7c6fce"
+              "sha256": "022cf0d28f00149157295bfaa1cb89bb7299d475139c6472b1e5d222f2390260"
             },
             {
               "path": "apps/web/e2e/solar-postal-tracking.spec.ts",
-              "sha256": "0099310712d1928b7e5d9dbd64c8c0a36da4e42f26cc63165bd31eca3f6747f6"
+              "sha256": "e78bf9fc1d2a8f05ef2cb06747cadac4e295fe8c60af0138ea1cd8d8c1ffaf75"
             },
             {
               "path": "apps/web/src/components/SolarContractForm.tsx",
@@ -713664,7 +713665,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarPostalPage.tsx",
-              "sha256": "b944994ec1a05ff6a747eedbfb9529d956ffb5d95b3529da62725fc472d2e880"
+              "sha256": "a23b4bbd4245ee3a5c88fc49e83e7eca72155bc636fcfd16e7778ffb2105de75"
             },
             {
               "path": "apps/web/src/pages/admin-solar-queues.test.tsx",
@@ -723901,7 +723902,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Staff electricity decision and price journeys now verify required semantics and bounded same-command recovery alongside current financial and authority checks. Remaining conditional form, command, bespoke state and live policy criteria need closure."
+        "Solar postal customer and staff journeys now verify required tracking and closing semantics, existing review and matching-receipt safeguards, and denied or obsolete data isolation. Remaining conditional form, command, bespoke state and live policy criteria need closure."
       ],
       "owner": null,
       "depends_on": [],
@@ -724019,7 +724020,8 @@
           "release-0.5-public-auth-required",
           "release-0.5-account-command-recovery",
           "release-0.5-preference-write-recovery",
-          "release-0.5-electricity-staff-acknowledgement"
+          "release-0.5-electricity-staff-acknowledgement",
+          "release-0.5-solar-postal-required"
         ]
       }
     },
@@ -724551,7 +724553,7 @@
             },
             {
               "path": "apps/web/src/components/SolarPostalTrackingEditor.tsx",
-              "sha256": "78363eb55e6ed3f7baa27b62c98477b57590343fd405f2347a52fa6ae4b5e8ca"
+              "sha256": "dd1164907ba5311ce45a96e16cc5c51420d2e42adbfd5330f720009e729e00fe"
             },
             {
               "path": "apps/web/src/components/SonnerToaster.tsx",
@@ -725039,7 +725041,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarPostalPage.tsx",
-              "sha256": "b944994ec1a05ff6a747eedbfb9529d956ffb5d95b3529da62725fc472d2e880"
+              "sha256": "a23b4bbd4245ee3a5c88fc49e83e7eca72155bc636fcfd16e7778ffb2105de75"
             },
             {
               "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
@@ -725722,7 +725724,8 @@
             "Renewed account settings and Telegram performance evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-account-command-recovery/proof.json",
             "Renewed shared preference settings performance evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-preference-write-recovery/proof.json",
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
-            "Renewed staff electricity and shared confirmation dialog performance evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json"
+            "Renewed staff electricity and shared confirmation dialog performance evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
+            "Renewed solar postal form performance evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-solar-postal-required/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -795589,6 +795592,116 @@
       "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/renewed-bindings.json",
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/reviewed.patch",
       "release_disposition": "Verified staff electricity required fields and bounded financial acknowledgement recovery. v0.5.0 acceptance remains open."
+    },
+    "release-0.5-solar-postal-required": {
+      "batch": "release-0.5-solar-postal-required",
+      "base_commit": "a32f204418483c914961421e0abda8cab2461358",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.05.01.05",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.05.01.05",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/confirmation-fixture.ts",
+          "sha256": "8d842de5577a9f43a5ca0efcf8e6a00e18e6ea1fb53116555fac8cbd7608bb61"
+        },
+        {
+          "path": "apps/web/e2e/solar-final-rejection.spec.ts",
+          "sha256": "67e192f59f605c78f9d5077f0acf7a28852fe921f9cc4f66a19f533c5ed90d10"
+        },
+        {
+          "path": "apps/web/e2e/solar-operation-form-fixture.ts",
+          "sha256": "4bb2ae99176347d0b908754a1f4660a02f017db18afe98de61e81e9ad92bd013"
+        },
+        {
+          "path": "apps/web/e2e/solar-postal-form-fixture.ts",
+          "sha256": "ef543b9411fc7bf19f041686b809c5adcb50606b4b67466b45ca43f8c741ebcc"
+        },
+        {
+          "path": "apps/web/e2e/solar-postal-forms.spec.ts",
+          "sha256": "022cf0d28f00149157295bfaa1cb89bb7299d475139c6472b1e5d222f2390260"
+        },
+        {
+          "path": "apps/web/e2e/solar-postal-tracking.spec.ts",
+          "sha256": "e78bf9fc1d2a8f05ef2cb06747cadac4e295fe8c60af0138ea1cd8d8c1ffaf75"
+        },
+        {
+          "path": "apps/web/e2e/solar-staff-list-recovery.spec.ts",
+          "sha256": "37b3e9e58c960db3e07e5f3e37e7414b7db67292fb0f4c02f88a77951b68b8df"
+        },
+        {
+          "path": "apps/web/e2e/solar-staff-query.spec.ts",
+          "sha256": "0579bf73526b893f845e85fb25055aa46b11ab662a6a1763fecfc7ef35e7f810"
+        },
+        {
+          "path": "apps/web/src/components/SavingStaffOperationForm.tsx",
+          "sha256": "b13a0f30394077415ed3467039f32f0362f61d813bee7ec6be28cf48bf80c5bf"
+        },
+        {
+          "path": "apps/web/src/components/SolarPostalTrackingEditor.tsx",
+          "sha256": "dd1164907ba5311ce45a96e16cc5c51420d2e42adbfd5330f720009e729e00fe"
+        },
+        {
+          "path": "apps/web/src/lib/document-template-form.ts",
+          "sha256": "458f1a64060cae8d3bf2d884e424db6a02a0c566485b076df031f416c5573a2d"
+        },
+        {
+          "path": "apps/web/src/lib/electricity-staff-reason-form-schemas.ts",
+          "sha256": "fb9572e7aa02d279a08c20cca5cdd5549b840d718389f9aa635a5de9a8c17725"
+        },
+        {
+          "path": "apps/web/src/lib/saving-staff-operation-form-schemas.ts",
+          "sha256": "2c58eb60219989adb96d9b41b01cb082c11df6406e9deb4399d3f335573b4090"
+        },
+        {
+          "path": "apps/web/src/lib/settings-form-schemas.ts",
+          "sha256": "db940d1bfb675f532cb486b74f203950704a15f16a3191ff5ef4bc55c2734351"
+        },
+        {
+          "path": "apps/web/src/lib/solar-postal-form-schemas.ts",
+          "sha256": "8ecde0883666b6e1de7df9f5a7241bbf702407ae5650880d8b1e33124aaab6d0"
+        },
+        {
+          "path": "apps/web/src/lib/solar-tracking-form-schemas.ts",
+          "sha256": "588ce3b5dc692b06afa4edac0c32235f8977e773772ef38d02c075d488f3bc60"
+        },
+        {
+          "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
+          "sha256": "dbfba9a14cb7c452471040e40ccea350564d00562d0bb62e1c92aaf11ace536f"
+        },
+        {
+          "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
+          "sha256": "c66996f35aa48b0b594a7690acc2a871d9c9412fd8ece3a03fe1a6e0db3dd42f"
+        },
+        {
+          "path": "apps/web/src/pages/AdminSolarPostalPage.tsx",
+          "sha256": "a23b4bbd4245ee3a5c88fc49e83e7eca72155bc636fcfd16e7778ffb2105de75"
+        },
+        {
+          "path": "apps/web/src/routes/_app/settings/profile.tsx",
+          "sha256": "cc9fe2f61b5917f70c26cc2c93b73b60ab0c5391e37d2aa0a7c91709ebe4e1fb"
+        },
+        {
+          "path": "docs/design/accessibility.md",
+          "sha256": "12254598785f7459babcd443c56224b568c3a9da4aa9ff5e5f409c7125c37e76"
+        }
+      ],
+      "checks": [
+        "The baseline reproduced a missing required state for the customer-visible tracking note. Source inspection identified the missing marker when closing an approved request. The final-review reason stays conditional. Its initial required-state assertion used the wrong state and was corrected.",
+        "The tracking note and sole closing reason now expose the required state. Blank values keep focus and validation at the associated field and send no preview. Shared reason fields for multiple actions retain their conditional instructions. The tracking URL and arrival estimate stay optional.",
+        "The final runtime passed 14 browser cases across Chromium and Mobile Safari, including a deliberately delivered obsolete preview. Twelve prior cases carry forward from byte-identical assets. The older rejection test now exercises the existing destructive acknowledgement and keeps all reason, review hash and outcome assertions. All 19 final instrumented cases passed. All 30 targeted unit cases, eight source-bound coverage groups, 98 gzip budgets, lint, formatting and web typecheck passed. Six cold-auth results carry forward against byte-identical standalone auth assets."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-solar-postal-required",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-solar-postal-required/proof.json",
+      "source_scope_proof_sha256": "3df499e0735070c62b1e3c09b14e271723fd47682d3d3e587cdc76260d5e0111",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-solar-postal-required/renewed-bindings.json",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-solar-postal-required/reviewed.patch",
+      "release_disposition": "Verified staff solar postal form semantics with existing review and recovery safeguards. v0.5.0 acceptance remains open."
     }
   },
   "historical_improvements": [
@@ -795640,7 +795753,7 @@
       "release-readiness#R-04.01",
       "release-readiness#R-04.02"
     ],
-    "goal": "Close the demonstrated staff solar postal fields, then verify safe acknowledgement recovery and remaining route and command evidence. Resolve accessibility enforcement and live route reporting before accepting v0.5.0."
+    "goal": "Close the remaining evidenced electricity, profile, saving and template field semantics and reconcile final form evidence, command acknowledgements and route states. Resolve accessibility enforcement and live route reporting before accepting v0.5.0."
   },
   "launch_forecast": {
     "status": "deadline_at_risk_until_v0_5_and_operational_gates_close",

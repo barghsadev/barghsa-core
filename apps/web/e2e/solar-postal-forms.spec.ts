@@ -149,6 +149,7 @@ for (const [locale, theme] of settings) {
     await page.goto('/admin/solar-postal');
     await page.getByRole('button', { name: /First solar buyer/ }).click();
     const reason = page.locator('#solar-postal-reason');
+    await expect(reason).not.toHaveAttribute('aria-required', 'true');
     const guidance = page.getByRole('group', {
       name: copy('postalGuidance'),
       exact: true,
@@ -289,6 +290,10 @@ for (const [locale, theme] of settings) {
 
     await page.getByRole('button', { name: /Older solar buyer/ }).click();
     const close = page.getByRole('button', { name: copy('solarCloseNoContract'), exact: true });
+    await expect(reason).not.toHaveAttribute('aria-required', 'true');
+    await close.click();
+    await focusedError(reason);
+    expect(state.finalPreviews).toEqual([]);
     await reason.fill('ف'.repeat(1001));
     await close.click();
     await focusedError(reason);
@@ -319,5 +324,23 @@ for (const [locale, theme] of settings) {
     await expect(page.getByRole('button', { name: /Older solar buyer/ })).toHaveCount(0);
     expect(state.finalClosed).toBe(true);
     await expect(en).toHaveValue(capturedGuidance.en);
+  });
+
+  test(`solar postal closing reason is required when it is the only decision (${locale}, ${theme})`, async ({
+    page,
+  }) => {
+    const { state } = await setupSolarPostalForms(page, locale, theme === 'dark');
+    state.finalStatus = 'approved';
+    await page.goto('/admin/solar-postal');
+    await page.getByRole('button', { name: /Older solar buyer/ }).click();
+    const reason = page.locator('#solar-postal-reason');
+    await expect(reason).toHaveAttribute('aria-required', 'true');
+    await expect(
+      page.getByRole('button', { name: copy('solarFinalApprove'), exact: true })
+    ).toHaveCount(0);
+    await page.getByRole('button', { name: copy('solarCloseNoContract'), exact: true }).click();
+    await focusedError(reason);
+    expect(state.finalPreviews).toEqual([]);
+    expect(state.finalWrites).toEqual([]);
   });
 }

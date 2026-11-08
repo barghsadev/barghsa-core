@@ -69,6 +69,7 @@ export async function setupSolarPostalForms(
     queueReads: 0,
     verifications: 0,
     firstPostalStatus: 'shipped',
+    finalStatus: 'final_review' as 'final_review' | 'approved',
     finalClosed: false,
     guidance: structuredClone(postalGuidance),
     parcels: { [firstSolar]: parcel(), [olderSolar]: parcel() },
@@ -233,7 +234,7 @@ export async function setupSolarPostalForms(
             ? [
                 {
                   ...solarPostal(olderSolar),
-                  request_status: 'final_review',
+                  request_status: state.finalStatus,
                   postal_status: 'received',
                 },
               ]
@@ -293,7 +294,7 @@ export async function setupSolarPostalForms(
     },
     data: {
       requestId: olderSolar,
-      currentStatus: 'final_review',
+      currentStatus: state.finalStatus,
       postalStatus: 'received',
       trackingNumber: 'TRACK-1',
       contractId: null,

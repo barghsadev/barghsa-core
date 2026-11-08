@@ -586,6 +586,7 @@ function OwnedSolarPostalTrackingEditor({
                       <FormControl>
                         <Textarea
                           {...field}
+                          aria-required="true"
                           disabled={locked}
                           onChange={(event) => {
                             dirty.current = true;
