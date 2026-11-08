@@ -50,6 +50,7 @@ beforeEach(() => {
   vi.stubGlobal('fetch', requests);
 });
 afterEach(async () => {
+  vi.useRealTimers();
   await act(async () => root.unmount());
   host.remove();
   for (const [path, init] of requests.mock.calls.filter(([, init]) => !init?.method)) {
@@ -333,6 +334,23 @@ it('retains consent and the full signing command through step-up and uncertain r
     expectedReviewHash: 'b'.repeat(64),
     idempotencyKey: expect.any(String),
   });
+  const stalled = Response.json(signatureRow(), { status: 201 });
+  let finish!: (value: unknown) => void;
+  const pending = new Promise((resolve) => {
+    finish = resolve;
+  });
+  stalled.json = () => pending;
+  write = () => stalled;
+  vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
+  await clickRetry();
+  expect(posts()).toHaveLength(2);
+  await act(async () => vi.advanceTimersByTimeAsync(15_001));
+  vi.useRealTimers();
+  expect(posts()[1]?.[1]?.signal?.aborted).toBe(true);
+  expect(retry().disabled).toBe(false);
+  await act(async () => finish(signatureRow()));
+  expect(retry().disabled).toBe(false);
+  expect(reads()).toHaveLength(1);
   write = () => Response.json(signatureRow({ versionId: invoiceId }), { status: 201 });
   await clickRetry();
   expect(retry()).not.toBeNull();

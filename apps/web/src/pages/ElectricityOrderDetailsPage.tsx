@@ -42,6 +42,7 @@ import {
   useZodForm,
 } from '@barghsa/ui/form';
 import { ErrorCodes } from '@barghsa/shared/errors';
+import { ELECTRICITY_ORDER_STATUSES } from '@barghsa/shared/validation';
 import {
   parseElectricityCancellationReview,
   type ElectricityCancellationReview,
@@ -239,6 +240,27 @@ function nextActionHref(detail: ElectricityOrderDetail): string | null {
   }
 }
 
+function validOrderDetail(
+  value: ElectricityOrderDetail | null,
+  orderId: string
+): value is ElectricityOrderDetail {
+  return (
+    !!value &&
+    value.orderId === orderId &&
+    correctionUuid(value.profileId) &&
+    correctionUuid(value.versionId) &&
+    correctionUuid(value.contractId) &&
+    correctionUuid(value.invoiceId) &&
+    [value.totalIrR, value.paidIrR, value.refundedIrR].every(
+      (amount) => typeof amount === 'string' && /^\d+$/.test(amount)
+    )
+  );
+}
+
+function cancellable(detail: ElectricityOrderDetail) {
+  return ['awaiting_staff_review', 'changes_requested'].includes(detail.electricityStatus);
+}
+
 export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
   const locale = useLocale();
   const time = useAccountTime(locale);
@@ -322,11 +344,14 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
   const [cancelReviewLoading, setCancelReviewLoading] = useState(false);
   const [cancelReview, setCancelReview] = useState<ElectricityCancellationReview | null>(null);
   const [cancelError, setCancelError] = useState<'stepup' | 'generic' | null>(null);
+  const [cancelRecovery, setCancelRecovery] = useState<'check' | 'retry' | null>(null);
+  const cancelTransport = useRef<AbortController | null>(null);
   cancellationActivity.current = cancelling || cancelReviewLoading || !!cancelReview;
 
   function withdraw() {
     ++generation.current;
     correctionTransport.current?.abort();
+    cancelTransport.current?.abort();
     setDetail(null);
     setAcceptedScope(null);
     setError(true);
@@ -343,6 +368,7 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
     correctionForm.reset({ fullAddress: '', postalCode: '', responseNote: '' });
     setCancelReview(null);
     setCancelReason('');
+    setCancelRecovery(null);
   }
   function reloadDetail() {
     if (scope.current !== scopeKey || correctionLock.owner || capturedCorrection.current) return;
@@ -351,6 +377,7 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
     setCancelling(false);
     setCancelReviewLoading(false);
     setCancelReview(null);
+    setCancelRecovery(null);
     cancellationActivity.current = false;
     ++generation.current;
     setDetail(null);
@@ -368,11 +395,15 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
     correctionForm.reset({ fullAddress: '', postalCode: '', responseNote: '' });
     setCancelReview(null);
     setCancelReason('');
+    setCancelKey(crypto.randomUUID());
+    setCancelError(null);
+    setCancelRecovery(null);
     setCancelling(false);
     setCancelReviewLoading(false);
     return () => {
       ++generation.current;
       correctionTransport.current?.abort();
+      cancelTransport.current?.abort();
     };
   }, [scopeKey]);
 
@@ -418,21 +449,7 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
       })
       .then((value) => {
         if (controller.signal.aborted || token !== generation.current || !value) return;
-        if (
-          !value ||
-          value.orderId !== orderId ||
-          !correctionUuid(value.profileId) ||
-          !correctionUuid(value.versionId) ||
-          !correctionUuid(value.contractId) ||
-          !correctionUuid(value.invoiceId) ||
-          typeof value.totalIrR !== 'string' ||
-          !/^\d+$/.test(value.totalIrR) ||
-          typeof value.paidIrR !== 'string' ||
-          !/^\d+$/.test(value.paidIrR) ||
-          typeof value.refundedIrR !== 'string' ||
-          !/^\d+$/.test(value.refundedIrR)
-        )
-          throw new Error('Invalid order detail');
+        if (!validOrderDetail(value, orderId)) throw new Error('Invalid order detail');
         if (
           loadedDetail &&
           acceptedScope === scopeKey &&
@@ -600,7 +617,14 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
 
   async function cancelOrder(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (!detail || correctionLock.owner || cancelReviewLoading || !cancelReason.trim()) return;
+    if (
+      !detail ||
+      !cancellable(detail) ||
+      correctionLock.owner ||
+      cancellationActivity.current ||
+      !cancelReason.trim()
+    )
+      return;
     const token = generation.current;
     const reason = cancelReason.trim();
     cancellationActivity.current = true;
@@ -654,45 +678,118 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
   }
 
   const cancelFocus = useRef<HTMLButtonElement>(null);
-  const financialGate = useRiskConfirmation(cancelReview, locale, 'both');
+  const cancellationIntent = useMemo(
+    () => ({ cancelReview, cancelRecovery }),
+    [cancelReview, cancelRecovery]
+  );
+  const financialGate = useRiskConfirmation(cancellationIntent, locale, 'both');
+
+  async function checkCancellation() {
+    if (scope.current !== scopeKey || !cancelReview || !cancelRecovery || cancelTransport.current)
+      return;
+    const controller = new AbortController();
+    cancelTransport.current = controller;
+    const token = generation.current;
+    setCancelRecovery('check');
+    setCancelling(true);
+    try {
+      const reply = await query.refetch();
+      if (controller.signal.aborted || token !== generation.current) return;
+      if (!reply.isSuccess || !reply.data) return;
+      const { status, value } = reply.data;
+      if ([401, 403, 404].includes(status)) {
+        withdraw();
+        return;
+      }
+      if (
+        !validOrderDetail(value, orderId) ||
+        !ELECTRICITY_ORDER_STATUSES.some((status) => status === value.electricityStatus)
+      )
+        return;
+      if (value.profileId !== cancelReview.scope.profileId) {
+        withdraw();
+        return;
+      }
+      if (value.versionId === cancelReview.data.versionId && cancellable(value)) {
+        setCancelRecovery('retry');
+        return;
+      }
+      setCancelReview(null);
+      setCancelRecovery(null);
+      setCancelError(null);
+      setCancelKey(crypto.randomUUID());
+      setDetail(value);
+      correctionForm.reset({
+        fullAddress: value.fullAddress,
+        postalCode: value.postalCode,
+        responseNote: '',
+      });
+    } finally {
+      if (cancelTransport.current === controller) cancelTransport.current = null;
+      if (token === generation.current) setCancelling(false);
+    }
+  }
+
   async function confirmCancellation() {
     if (
+      scope.current !== scopeKey ||
       !financialGate.allowed ||
       !cancelReview ||
+      !detail ||
+      !cancellable(detail) ||
+      cancelReview.scope.profileId !== detail.profileId ||
+      cancelReview.data.versionId !== detail.versionId ||
       correctionLock.owner ||
-      cancelling ||
+      cancelTransport.current ||
+      cancelRecovery === 'check' ||
       cancelReview.scope.resourceId !== orderId
     )
       return;
     const token = generation.current;
+    const controller = new AbortController();
+    cancelTransport.current = controller;
     cancellationActivity.current = true;
     setCancelling(true);
     setCancelError(null);
     try {
-      const response = await fetch(
-        `/api/electricity/orders/${encodeURIComponent(orderId)}/cancel`,
-        {
-          method: 'POST',
-          credentials: 'include',
-          headers: withCsrf({ 'Content-Type': 'application/json' }),
-          body: JSON.stringify({
-            idempotencyKey: cancelKey,
-            expectedVersionId: cancelReview.data.versionId,
-            expectedReviewHash: cancelReview.hash,
-            reason: cancelReview.data.reason,
-          }),
-        }
-      );
+      const { response, receipt } = await readWithDeadline(controller.signal, async (signal) => {
+        const response = await fetch(
+          `/api/electricity/orders/${encodeURIComponent(orderId)}/cancel`,
+          {
+            method: 'POST',
+            credentials: 'include',
+            headers: withCsrf({ 'Content-Type': 'application/json' }),
+            body: JSON.stringify({
+              idempotencyKey: cancelKey,
+              expectedVersionId: cancelReview.data.versionId,
+              expectedReviewHash: cancelReview.hash,
+              reason: cancelReview.data.reason,
+            }),
+            signal,
+          }
+        );
+        const receipt: unknown = response.ok ? await response.json().catch(() => null) : null;
+        return { response, receipt };
+      });
       if (token !== generation.current) return;
+      if ([401, 404].includes(response.status)) {
+        withdraw();
+        return;
+      }
       if (response.status === 403) {
         setCancelError('stepup');
-        setCancelReview(null);
+        if (cancelRecovery) setCancelRecovery('check');
+        else setCancelReview(null);
+        return;
+      }
+      if (!cancelRecovery && response.status >= 400 && response.status < 500) {
+        setCancelError('generic');
+        reloadDetail();
         return;
       }
       if (!response.ok) throw new Error('Cancellation failed');
-      const receipt: unknown = await response.json().catch(() => null);
-      if (token !== generation.current) return;
       if (
+        response.status !== 200 ||
         !correctionRecord(receipt) ||
         receipt.orderId !== orderId ||
         receipt.status !== 'cancelled' ||
@@ -707,12 +804,10 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
       reloadDetail();
     } catch {
       if (token !== generation.current) return;
-      setCancelReview(null);
-      setCancelError('generic');
-      reloadDetail();
+      setCancelRecovery('check');
     } finally {
+      if (cancelTransport.current === controller) cancelTransport.current = null;
       if (token === generation.current) {
-        cancellationActivity.current = false;
         setCancelling(false);
       }
     }
@@ -1074,7 +1169,7 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
               </Link>
             </CardContent>
           </Card>
-          {['awaiting_staff_review', 'changes_requested'].includes(detail.electricityStatus) ? (
+          {cancellable(detail) ? (
             <Card>
               <CardContent className="pt-6">
                 <form onSubmit={(event) => void cancelOrder(event)} className="space-y-3">
@@ -1279,11 +1374,15 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
       cancelReview.scope.resourceId === orderId &&
       cancelReview.scope.profileId === detail.profileId &&
       cancelReview.data.versionId === detail.versionId ? (
-        <Dialog open onOpenChange={(open) => !open && !cancelling && setCancelReview(null)}>
+        <Dialog
+          open
+          onOpenChange={(open) => !open && !cancelling && !cancelRecovery && setCancelReview(null)}
+        >
           <DialogContent
             className="max-h-[90dvh] overflow-y-auto"
             dir={locale === 'fa' ? 'rtl' : 'ltr'}
-            showCloseButton={!cancelling}
+            showCloseButton={!cancelling && !cancelRecovery}
+            aria-busy={cancelling}
             initialFocus={cancelFocus}
           >
             <DialogHeader>
@@ -1391,19 +1490,45 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
                 </div>
               }
             />
-            <ConfirmationFields gate={financialGate} disabled={cancelling} />
+            {cancelRecovery && !cancelling && (
+              <p role="alert" className="text-sm text-destructive">
+                {confirmationText('unconfirmed', locale)}{' '}
+                <Link
+                  className="underline"
+                  to={cancelError === 'stepup' ? '/settings/security' : '/tickets'}
+                >
+                  {t(
+                    cancelError === 'stepup'
+                      ? 'electricity.order.detail.security'
+                      : 'electricity.order.detail.help',
+                    locale
+                  )}
+                </Link>
+              </p>
+            )}
+            <ConfirmationFields
+              gate={financialGate}
+              disabled={cancelling || cancelRecovery === 'check'}
+            />
             <DialogFooter>
               <Button
                 ref={cancelFocus}
                 variant="outline"
                 disabled={cancelling}
-                onClick={() => setCancelReview(null)}
+                onClick={() => (cancelRecovery ? void checkCancellation() : setCancelReview(null))}
               >
-                {t('electricity.order.detail.cancelReviewBack', locale)}
+                {cancelRecovery
+                  ? confirmationText('checkStatus', locale)
+                  : t('electricity.order.detail.cancelReviewBack', locale)}
               </Button>
               <Button
                 variant="destructive"
-                disabled={!financialGate.allowed || !!correctionLock.owner || cancelling}
+                disabled={
+                  !financialGate.allowed ||
+                  !!correctionLock.owner ||
+                  cancelling ||
+                  cancelRecovery === 'check'
+                }
                 onClick={() => void confirmCancellation()}
               >
                 {t('electricity.order.detail.cancel', locale)}

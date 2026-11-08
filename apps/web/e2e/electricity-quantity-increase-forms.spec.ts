@@ -119,12 +119,22 @@ for (const [locale, theme] of [
     const refresh = page.getByTestId('electricity-increase-refresh');
     await expect(refresh).toHaveCount(0);
     expect(state.customerReads).toBe(readsBefore);
+    await page.clock.install();
+    await retry.click();
+    await expect.poll(() => state.requestWrites.length).toBe(3);
+    const lateRequest = state.requestRoute!;
+    await page.clock.fastForward(15_001);
+    await expect(retry).toBeEnabled();
+    await lateRequest.fulfill({ status: 201, json: increaseRequest() }).catch(() => {});
+    await expect(quantity).toHaveValue(' 12 ');
+    await expect(submit).toBeDisabled();
+    expect(state.customerReads).toBe(readsBefore);
     // Exact request replay returns the live row, which may have progressed to approval.
     state.request = approvedIncrease();
     state.requestMode = 'success';
     await retry.click();
     await expect(form).toHaveCount(0);
-    expect(state.requestWrites.slice(1)).toEqual([command, command]);
+    expect(state.requestWrites.slice(1)).toEqual([command, command, command]);
     const sign = page.getByRole('button', { name: copy('electricity.increase.sign'), exact: true });
     await expect(sign).toBeDisabled();
     const consent = page.getByRole('checkbox', {

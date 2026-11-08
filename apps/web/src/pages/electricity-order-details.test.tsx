@@ -7,7 +7,7 @@ import { ElectricityOrderDetailsPage } from './ElectricityOrderDetailsPage.js';
 import { AccountUserProvider } from '../hooks/useAccountUser.js';
 import { t } from '@barghsa/i18n/app';
 
-it('reviews the exact cancellation refund before submitting its hash', async () => {
+async function exerciseCancellation(outcome: 'confirmed' | 'retry' | 'already-cancelled') {
   document.documentElement.lang = 'en';
   vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
   const orderId = '11111111-1111-7111-8111-111111111111';
@@ -110,20 +110,45 @@ it('reviews the exact cancellation refund before submitting its hash', async () 
     hash: 'c'.repeat(64),
   };
   let reviewAttempts = 0;
+  let statusChecks = 0;
+  let releaseReceipt!: (value: unknown) => void;
+  const firstReceipt = new Promise((resolve) => {
+    releaseReceipt = resolve;
+  });
+  const cancellationReceipt = {
+    orderId,
+    status: 'cancelled',
+    refundId: 'f1000000-0000-4000-8000-000000000001',
+  };
+  const cancellationWrites: Array<RequestInit | undefined> = [];
   const fetchMock = vi.fn(async (url: string, _init?: RequestInit) => {
     if (url.endsWith('/cancel-review') && ++reviewAttempts === 1)
       return new Promise<Response>(() => {});
+    if (url.endsWith('/cancel')) {
+      cancellationWrites.push(_init);
+      const response = Response.json(cancellationReceipt);
+      if (outcome !== 'confirmed' && cancellationWrites.length === 1)
+        response.json = () => firstReceipt;
+      return response;
+    }
+    if (url === `/api/electricity/orders/${orderId}` && cancellationWrites.length === 1) {
+      statusChecks++;
+      if (outcome === 'retry') {
+        if (statusChecks === 1) return new Response(null, { status: 503 });
+        if (statusChecks === 2) return Response.json({ ...detail, electricityStatus: null });
+      }
+      if (outcome === 'already-cancelled')
+        return Response.json({ ...detail, electricityStatus: 'cancelled' });
+    }
     return new Response(
       JSON.stringify(
         url === '/api/user/settings/timezone'
           ? { timezone: 'Asia/Tehran' }
           : url.endsWith('/cancel-review')
             ? review
-            : url.endsWith('/cancel')
-              ? { orderId, status: 'cancelled', refundId: 'f1000000-0000-4000-8000-000000000001' }
-              : url.includes('/comments')
-                ? { comments: [], nextBefore: null }
-                : detail
+            : url.includes('/comments')
+              ? { comments: [], nextBefore: null }
+              : detail
       ),
       { headers: { 'Content-Type': 'application/json' } }
     );
@@ -188,6 +213,7 @@ it('reviews the exact cancellation refund before submitting its hash', async () 
       (button) => button.closest('[role="dialog"]') && button.textContent === 'Cancel order'
     );
     await approveVisibleConfirmation();
+    if (outcome !== 'confirmed') vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
     await act(async () => confirm!.click());
     const mutation = fetchMock.mock.calls.find(([url]) => url.endsWith('/cancel'));
     expect(mutation).toBeDefined();
@@ -196,13 +222,52 @@ it('reviews the exact cancellation refund before submitting its hash', async () 
       expectedVersionId: versionId,
       reason: 'No longer needed',
     });
+    if (outcome !== 'confirmed') {
+      await act(async () => vi.advanceTimersByTimeAsync(15_001));
+      vi.useRealTimers();
+      expect(mutation![1]?.signal?.aborted).toBe(true);
+      expect(statusChecks).toBe(0);
+      expect(dialog.textContent).toContain('The outcome is unconfirmed');
+      expect(confirm?.disabled).toBe(true);
+      await act(async () => releaseReceipt(cancellationReceipt));
+      expect(document.body.querySelector('[role="dialog"]')).toBe(dialog);
+      const checkStatus = [...dialog.querySelectorAll('button')].find(
+        (button) => button.textContent === 'Check current status'
+      )!;
+      await act(async () => checkStatus.click());
+      expect(cancellationWrites).toHaveLength(1);
+      if (outcome === 'already-cancelled') {
+        expect(statusChecks).toBe(1);
+        expect(document.body.querySelector('[role="dialog"]')).toBeNull();
+        expect(container.textContent).toContain(t('electricity.order.status.cancelled', 'en'));
+        return;
+      }
+      expect(statusChecks).toBe(1);
+      expect(confirm?.disabled).toBe(true);
+      await act(async () => checkStatus.click());
+      expect(statusChecks).toBe(2);
+      expect(confirm?.disabled).toBe(true);
+      await act(async () => checkStatus.click());
+      expect(statusChecks).toBe(3);
+      expect(confirm?.disabled).toBe(true);
+      await approveVisibleConfirmation();
+      await act(async () => confirm!.click());
+      expect(cancellationWrites).toHaveLength(2);
+      expect(cancellationWrites[1]?.body).toBe(cancellationWrites[0]?.body);
+      expect(document.body.querySelector('[role="dialog"]')).toBeNull();
+    }
   } finally {
     vi.useRealTimers();
     await act(async () => root.unmount());
     container.remove();
     vi.unstubAllGlobals();
   }
-});
+}
+
+it.each(['confirmed', 'retry', 'already-cancelled'] as const)(
+  'reviews the exact cancellation refund and handles its %s outcome',
+  exerciseCancellation
+);
 
 vi.mock('@tanstack/react-router', () => ({
   Link: ({

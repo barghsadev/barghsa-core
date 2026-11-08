@@ -3,6 +3,7 @@ import { confirmationText } from '@barghsa/i18n/confirmation';
 import { useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from '../lib/query-keys.js';
 import { useServerDetailQuery } from '../hooks/useServerQuery.js';
+import { readWithDeadline } from '../lib/server-query-client.js';
 import { OrderWalletBalance } from '../components/OrderWalletBalance.js';
 import { useEffect, useId, useRef, useState, type FormEvent } from 'react';
 import { t } from '@barghsa/i18n/workspace';
@@ -127,6 +128,7 @@ export function ElectricityIncreasePanel({
     messages,
     t('electricity.increase.failed', locale)
   );
+  const transport = useRef<AbortController | null>(null);
   function clearAttempt() {
     attempt.current = null;
     setCaptured(null);
@@ -134,6 +136,7 @@ export function ElectricityIncreasePanel({
   }
   function withdraw() {
     ++generation.current;
+    transport.current?.abort();
     clearAttempt();
     dataRef.current = null;
     setData(null);
@@ -164,6 +167,7 @@ export function ElectricityIncreasePanel({
     setError(null);
     return () => {
       ++generation.current;
+      transport.current?.abort();
     };
   }, [scopeKey]);
   const queryKey = queryKeys.contracts.detail(
@@ -247,17 +251,23 @@ export function ElectricityIncreasePanel({
     if (scope.current !== scopeKey) return;
     const current = attempt.current;
     if (!current || current.generation !== generation.current) return;
+    const controller = new AbortController();
+    transport.current = controller;
     try {
-      const response = await fetch(
-        `/api/electricity/contracts/${encodeURIComponent(contractId)}/increase${current.kind === 'sign' ? '/sign' : ''}`,
-        {
-          method: 'POST',
-          credentials: 'include',
-          headers: withCsrf({ 'Content-Type': 'application/json' }),
-          body: current.body,
-        }
-      );
-      const value: unknown = await response.json().catch(() => null);
+      const { response, value } = await readWithDeadline(controller.signal, async (signal) => {
+        const response = await fetch(
+          `/api/electricity/contracts/${encodeURIComponent(contractId)}/increase${current.kind === 'sign' ? '/sign' : ''}`,
+          {
+            method: 'POST',
+            credentials: 'include',
+            headers: withCsrf({ 'Content-Type': 'application/json' }),
+            body: current.body,
+            signal,
+          }
+        );
+        const value: unknown = await response.json().catch(() => null);
+        return { response, value };
+      });
       if (current !== attempt.current || current.generation !== generation.current) return;
       if (
         response.status === 403 &&
@@ -323,6 +333,8 @@ export function ElectricityIncreasePanel({
         setUnconfirmed(true);
         setError('save');
       }
+    } finally {
+      if (transport.current === controller) transport.current = null;
     }
   }
   async function submit(event: FormEvent<HTMLFormElement>) {
