@@ -66,6 +66,7 @@ for (const [locale, theme] of [
       exact: true,
     });
     await expect(quantity).toBeVisible();
+    await expect(quantity).toHaveAttribute('aria-required', 'true');
     await expect(quantity).not.toHaveAttribute('aria-invalid', 'true');
     await submit.click();
     await expect(submit).toBeDisabled();

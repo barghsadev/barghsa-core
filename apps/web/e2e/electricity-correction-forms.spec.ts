@@ -47,6 +47,68 @@ for (const [locale, theme] of [
 ] as const) {
   const copy = (key: string) => t(key, locale);
   const staffText = (key: string) => adminText(`admin.electricityOrders.${key}`, locale);
+  for (const kind of ['address', 'revision'] as const) {
+    test(`electricity ${kind} correction recovers from a stalled write (${locale}, ${theme})`, async ({
+      page,
+    }) => {
+      await page.clock.install();
+      const { state, persistCorrection } = await setupElectricityCorrectionForms(
+        page,
+        locale,
+        theme === 'dark'
+      );
+      state.quoteMode = 'success';
+      await page.goto(`/electricity/orders/${correctionOrder}`);
+      const address = page.getByTestId('electricity-address-correction-form');
+      const revision = page.getByTestId('electricity-revision-form');
+      const addressSubmit = address.locator('button[type=submit]');
+      const preview = revision.locator('button[type=submit]');
+      const note = page.locator(kind === 'address' ? '#correction-note' : '#revision-note');
+      await note.fill('  Correction acknowledged after replay  ');
+      if (kind === 'address') {
+        await addressSubmit.click();
+      } else {
+        await page.locator('#revision-quantity').fill('10');
+        await preview.click();
+        await approveRiskConfirmation(page, locale, 'financial');
+        await revision
+          .locator('..')
+          .getByRole('button', { name: copy('electricity.order.correction.submit'), exact: true })
+          .click();
+      }
+      const writes = kind === 'address' ? state.addressWrites : state.revisionWrites;
+      await expect.poll(() => writes.length).toBe(1);
+      const stale = (kind === 'address' ? state.addressWrite : state.revisionWrite)!;
+      const originalBody = stale.request().postData();
+      expect(writes[0]?.idempotencyKey).toMatch(/^[0-9a-f-]{36}$/);
+      persistCorrection(kind);
+      const retry = page.getByTestId(
+        kind === 'address' ? 'electricity-address-correction-retry' : 'electricity-revision-retry'
+      );
+      await expect(retry).toHaveCount(0);
+      await page.clock.fastForward(15_001);
+      await expect(retry).toBeEnabled({ timeout: 2_000 });
+      await expect(addressSubmit).toBeDisabled();
+      await expect(preview).toBeDisabled();
+      await expect(note).toHaveValue('  Correction acknowledged after replay  ');
+      expect(writes).toHaveLength(1);
+      await stale.fulfill({ status: 403, json: { error: 'AUTHZ:FORBIDDEN' } }).catch(() => {});
+      await expect(retry).toBeEnabled();
+      if (kind === 'address') state.addressWriteMode = 'success';
+      else state.revisionWriteMode = 'success';
+      const replay = page.waitForRequest(
+        (request) => request.method() === 'POST' && request.url() === stale.request().url()
+      );
+      await retry.click();
+      expect((await replay).postData()).toBe(originalBody);
+      await expect(retry).toHaveCount(0);
+      expect(writes).toEqual([writes[0], writes[0]]);
+      await expect(page.locator('[data-slot=status-timeline]')).toContainText(
+        'Correction acknowledged after replay'
+      );
+    });
+  }
+
   test(`electricity staff changes and address correction preserve captured commands (${locale}, ${theme})`, async ({
     page,
   }, info) => {

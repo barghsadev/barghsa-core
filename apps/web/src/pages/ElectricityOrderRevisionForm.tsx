@@ -5,6 +5,7 @@ import { useRiskConfirmation } from '../hooks/useRiskConfirmation.js';
 import { useQueryClient } from '@tanstack/react-query';
 import { useOwnedManualServerRead, useServerDetailQuery } from '../hooks/useServerQuery.js';
 import { queryKeys } from '../lib/query-keys.js';
+import { readWithDeadline } from '../lib/server-query-client.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { OrderWalletBalance } from '../components/OrderWalletBalance.js';
 import {
@@ -250,6 +251,7 @@ export function ElectricityOrderRevisionForm({
   const [busy, setBusy] = useState(false);
   const pending = useRef(false);
   const attempt = useRef<CapturedRevision | null>(null);
+  const submissionTransport = useRef<AbortController | null>(null);
   const [unconfirmed, setUnconfirmed] = useState(false);
   const [error, setError] = useState(false);
   const [denied, setDenied] = useState(false);
@@ -270,6 +272,7 @@ export function ElectricityOrderRevisionForm({
   const lock = coordination ?? localLock;
   function withdraw() {
     ++generation.current;
+    submissionTransport.current?.abort();
     attempt.current = null;
     pending.current = false;
     lock.release('revision');
@@ -292,6 +295,7 @@ export function ElectricityOrderRevisionForm({
     form.reset(initial());
     return () => {
       ++generation.current;
+      submissionTransport.current?.abort();
     };
   }, [scopeKey]);
   const optionsQueryKey = queryKeys.catalogue.detail(
@@ -565,17 +569,22 @@ export function ElectricityOrderRevisionForm({
     if (!financialGate.allowed || scope.current !== scopeKey) return;
     const captured = attempt.current;
     if (!captured || captured.generation !== generation.current) return;
+    const transport = new AbortController();
+    submissionTransport.current = transport;
     try {
-      const response = await fetch(
-        `/api/electricity/orders/${encodeURIComponent(order.orderId)}/resubmit`,
-        {
-          method: 'POST',
-          credentials: 'include',
-          headers: withCsrf({ 'Content-Type': 'application/json' }),
-          body: captured.body,
-        }
-      );
-      const value: unknown = await response.json().catch(() => null);
+      const { response, value } = await readWithDeadline(transport.signal, async (signal) => {
+        const response = await fetch(
+          `/api/electricity/orders/${encodeURIComponent(order.orderId)}/resubmit`,
+          {
+            method: 'POST',
+            credentials: 'include',
+            headers: withCsrf({ 'Content-Type': 'application/json' }),
+            body: captured.body,
+            signal,
+          }
+        );
+        return { response, value: (await response.json().catch(() => null)) as unknown };
+      });
       if (captured !== attempt.current || captured.generation !== generation.current) return;
       if ([401, 403, 404].includes(response.status)) {
         withdraw();
@@ -611,6 +620,8 @@ export function ElectricityOrderRevisionForm({
         setUnconfirmed(true);
         setError(true);
       }
+    } finally {
+      if (submissionTransport.current === transport) submissionTransport.current = null;
     }
   }
   async function resubmit() {

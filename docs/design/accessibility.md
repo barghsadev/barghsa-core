@@ -110,6 +110,15 @@ Electricity address corrections require the address, postal code and response
 note. Full revisions also require the location and delivery period. Advanced
 revisions announce the requirement for a positive quantity at the product
 group, while each product quantity and the gift code remain optional.
+Quantity increase requests require the requested amount. A stalled correction
+submission offers a manual retry of the same reviewed request and keeps other
+corrections locked while its outcome is uncertain.
+
+Saving hardware changes require a replacement product and a reason. Cancelling
+an upgrade requires its own reason. Solar contract issuance requires a source,
+title, terms, reason and value kind. The selected kind determines which value
+field is required. Invoice lines require a description, quantity, price and VAT
+rate. The taxable checkbox permits either choice.
 
 Document retention years, legal reasons, and hold expiry each link to their
 own validation errors. Hold expiry remains optional. Upload policy formats

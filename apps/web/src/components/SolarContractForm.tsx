@@ -434,6 +434,7 @@ function OwnedSolarContractForm({
             ) : kind === 'textarea' ? (
               <Textarea
                 {...field}
+                aria-required="true"
                 value={String(field.value ?? '')}
                 disabled={locked}
                 rows={name === 'text' ? 8 : 3}
@@ -441,6 +442,7 @@ function OwnedSolarContractForm({
             ) : (
               <Input
                 {...field}
+                aria-required="true"
                 value={String(field.value ?? '')}
                 disabled={locked}
                 inputMode={
@@ -499,6 +501,7 @@ function OwnedSolarContractForm({
                   <FormControl>
                     <select
                       {...field}
+                      aria-required="true"
                       disabled={locked}
                       className="w-full rounded-md border bg-background p-2"
                     >
@@ -549,6 +552,7 @@ function OwnedSolarContractForm({
                   <FormControl>
                     <select
                       {...field}
+                      aria-required="true"
                       disabled={locked}
                       className="w-full rounded-md border bg-background p-2"
                     >

@@ -117,6 +117,8 @@ for (const [locale, theme] of [
       }
       await page.getByRole('button', { name: /First solar buyer/ }).click();
       await expect(field('source')).toBeEnabled();
+      for (const name of ['source', 'title', 'text', 'reason', 'value-kind'])
+        await expect(field(name)).toHaveAttribute('aria-required', 'true');
       await expect(
         field('source').locator('option', { hasText: 'Solar construction template' })
       ).toHaveCount(1);
@@ -130,16 +132,23 @@ for (const [locale, theme] of [
       await field('reason').fill('  Initial solar contract terms and invoice  ');
       await expect(form).toContainText(contractText('commercialValueNotice', locale));
       await field('value-kind').selectOption('variable');
+      await expect(field('variable-description')).toHaveAttribute('aria-required', 'true');
+      await expect(field('fixed-amount')).toHaveCount(0);
       await field('variable-description').fill(
         '  Final value depends on measured installation work  '
       );
       await field('value-kind').selectOption('fixed');
+      await expect(field('fixed-amount')).toHaveAttribute('aria-required', 'true');
+      await expect(field('variable-description')).toHaveCount(0);
       await field('fixed-amount').fill(maxAmount);
       if (kind === 'document') await field('value-kind').selectOption('variable');
       await line(0, 'description').fill('  Panel installation  ');
       await line(0, 'quantity').fill(kind === 'template' ? '2' : '3');
       await line(0, 'unit-price').fill(kind === 'template' ? '125000' : '00005');
       await line(0, 'vat-rate').fill(kind === 'template' ? '900' : '1000');
+      for (const name of ['description', 'quantity', 'unit-price', 'vat-rate'])
+        await expect(line(0, name)).toHaveAttribute('aria-required', 'true');
+      await expect(line(0, 'taxable')).not.toHaveAttribute('aria-required', 'true');
       await checkChoiceTarget(
         line(0, 'taxable'),
         form.locator('label[for="solar-contract-line-0-taxable"]')

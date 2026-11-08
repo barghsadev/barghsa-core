@@ -635,6 +635,7 @@ export function ElectricityIncreasePanel({
                     <FormControl>
                       <Input
                         {...field}
+                        aria-required="true"
                         type="text"
                         inputMode="numeric"
                         maxLength={21}

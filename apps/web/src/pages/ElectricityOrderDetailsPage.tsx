@@ -6,6 +6,7 @@ import { useRiskConfirmation } from '../hooks/useRiskConfirmation.js';
 import { useQueryClient } from '@tanstack/react-query';
 import { useOwnedManualServerRead, useServerDetailQuery } from '../hooks/useServerQuery.js';
 import { queryKeys } from '../lib/query-keys.js';
+import { readWithDeadline } from '../lib/server-query-client.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { OrderWalletBalance } from '../components/OrderWalletBalance.js';
 import { historyContextText } from '../lib/history-context.js';
@@ -313,6 +314,7 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
     generation: number;
   } | null>(null);
   const correctionPending = useRef(false);
+  const correctionTransport = useRef<AbortController | null>(null);
   const [unconfirmedCorrection, setUnconfirmedCorrection] = useState(false);
   const [cancelReason, setCancelReason] = useState('');
   const [cancelKey, setCancelKey] = useState(() => crypto.randomUUID());
@@ -324,6 +326,7 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
 
   function withdraw() {
     ++generation.current;
+    correctionTransport.current?.abort();
     setDetail(null);
     setAcceptedScope(null);
     setError(true);
@@ -369,6 +372,7 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
     setCancelReviewLoading(false);
     return () => {
       ++generation.current;
+      correctionTransport.current?.abort();
     };
   }, [scopeKey]);
 
@@ -509,17 +513,22 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
     if (scope.current !== scopeKey) return;
     const attempt = capturedCorrection.current;
     if (!attempt || attempt.generation !== generation.current) return;
+    const transport = new AbortController();
+    correctionTransport.current = transport;
     try {
-      const response = await fetch(
-        `/api/electricity/orders/${encodeURIComponent(orderId)}/resubmit-address`,
-        {
-          method: 'POST',
-          credentials: 'include',
-          headers: withCsrf({ 'Content-Type': 'application/json' }),
-          body: attempt.body,
-        }
-      );
-      const value: unknown = await response.json().catch(() => null);
+      const { response, value } = await readWithDeadline(transport.signal, async (signal) => {
+        const response = await fetch(
+          `/api/electricity/orders/${encodeURIComponent(orderId)}/resubmit-address`,
+          {
+            method: 'POST',
+            credentials: 'include',
+            headers: withCsrf({ 'Content-Type': 'application/json' }),
+            body: attempt.body,
+            signal,
+          }
+        );
+        return { response, value: (await response.json().catch(() => null)) as unknown };
+      });
       if (attempt !== capturedCorrection.current || attempt.generation !== generation.current)
         return;
       if ([401, 403, 404].includes(response.status)) {
@@ -562,6 +571,8 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
         setUnconfirmedCorrection(true);
         setCorrectionError(true);
       }
+    } finally {
+      if (correctionTransport.current === transport) correctionTransport.current = null;
     }
   }
 

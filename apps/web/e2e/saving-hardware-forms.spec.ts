@@ -98,6 +98,8 @@ for (const [locale, theme] of [
     const preview = () =>
       hardwareForm.getByRole('button', { name: copy('staffAmendHardware'), exact: true });
     await expect(hardwareForm).toBeVisible();
+    await expect(hardware).toHaveAttribute('aria-required', 'true');
+    await expect(reason).toHaveAttribute('aria-required', 'true');
     await addressReason.fill('  Independent address explanation  ');
     await note.fill('  Independent public delivery note  ');
     await preview().click();
@@ -214,6 +216,7 @@ for (const [locale, theme] of [
     await expect(note).toHaveValue('  Independent public delivery note  ');
     const row = page.getByTestId(`saving-upgrade-cancel-form-${upgradeId}`);
     const rowReason = page.locator(`#saving-upgrade-cancel-${upgradeId}`);
+    await expect(rowReason).toHaveAttribute('aria-required', 'true');
     const rowSubmit = () =>
       row.getByRole('button', { name: copy('hardwareUpgradeCancel'), exact: true });
     await expect(rowReason).toHaveValue('');
