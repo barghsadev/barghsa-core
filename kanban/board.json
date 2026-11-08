@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-08T09:52:22+00:00",
-  "source_commit": "0513156f7409850b11e1a2805a57456ed5600566",
+  "updated": "2026-11-08T10:01:20+00:00",
+  "source_commit": "051389b1c8db426db15910369d0bb05d2fa03a7c",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -35492,7 +35492,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "fd48d6b503a18beafb686a5c8533e0ea744c0dfda770c0f7ad48223a4340272b"
+              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -63188,7 +63188,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "fd48d6b503a18beafb686a5c8533e0ea744c0dfda770c0f7ad48223a4340272b"
+              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -63895,7 +63895,7 @@
             },
             {
               "path": "apps/web/e2e/content-forms.spec.ts",
-              "sha256": "2e8f52bba09ddab8a0296991cc6ccd536cc5452a1531d37f6404ed0c488c4ff1"
+              "sha256": "c045c5baeb159a8c4141ada1be5950799406f819b2648a9a4359fee2a90cb848"
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
@@ -63951,7 +63951,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "fd48d6b503a18beafb686a5c8533e0ea744c0dfda770c0f7ad48223a4340272b"
+              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
             },
             {
               "path": "apps/web/src/pages/TosPreview.tsx",
@@ -64556,7 +64556,7 @@
             },
             {
               "path": "apps/web/e2e/content-forms.spec.ts",
-              "sha256": "2e8f52bba09ddab8a0296991cc6ccd536cc5452a1531d37f6404ed0c488c4ff1"
+              "sha256": "c045c5baeb159a8c4141ada1be5950799406f819b2648a9a4359fee2a90cb848"
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
@@ -64612,7 +64612,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "fd48d6b503a18beafb686a5c8533e0ea744c0dfda770c0f7ad48223a4340272b"
+              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
             },
             {
               "path": "apps/web/src/pages/TosPreview.tsx",
@@ -65216,7 +65216,7 @@
             },
             {
               "path": "apps/web/e2e/content-forms.spec.ts",
-              "sha256": "2e8f52bba09ddab8a0296991cc6ccd536cc5452a1531d37f6404ed0c488c4ff1"
+              "sha256": "c045c5baeb159a8c4141ada1be5950799406f819b2648a9a4359fee2a90cb848"
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
@@ -65272,7 +65272,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "fd48d6b503a18beafb686a5c8533e0ea744c0dfda770c0f7ad48223a4340272b"
+              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
             },
             {
               "path": "apps/web/src/pages/TosPreview.tsx",
@@ -65875,7 +65875,7 @@
             },
             {
               "path": "apps/web/e2e/content-forms.spec.ts",
-              "sha256": "2e8f52bba09ddab8a0296991cc6ccd536cc5452a1531d37f6404ed0c488c4ff1"
+              "sha256": "c045c5baeb159a8c4141ada1be5950799406f819b2648a9a4359fee2a90cb848"
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
@@ -65931,7 +65931,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "fd48d6b503a18beafb686a5c8533e0ea744c0dfda770c0f7ad48223a4340272b"
+              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
             },
             {
               "path": "apps/web/src/pages/TosPreview.tsx",
@@ -491267,7 +491267,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "fd48d6b503a18beafb686a5c8533e0ea744c0dfda770c0f7ad48223a4340272b"
+              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -494407,7 +494407,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "fd48d6b503a18beafb686a5c8533e0ea744c0dfda770c0f7ad48223a4340272b"
+              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -495290,7 +495290,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "fd48d6b503a18beafb686a5c8533e0ea744c0dfda770c0f7ad48223a4340272b"
+              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -496114,7 +496114,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "fd48d6b503a18beafb686a5c8533e0ea744c0dfda770c0f7ad48223a4340272b"
+              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -496939,7 +496939,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "fd48d6b503a18beafb686a5c8533e0ea744c0dfda770c0f7ad48223a4340272b"
+              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.tsx",
@@ -497047,7 +497047,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "0458c387f1bb33578a22b5849b1d71c39dac02593a41be53a0669de69cbea2de"
+              "sha256": "80094abbf7f296a3abb3fe91f2fd4755db3b887a8ceff227b42da9034da7ee73"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -511598,7 +511598,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "fd48d6b503a18beafb686a5c8533e0ea744c0dfda770c0f7ad48223a4340272b"
+              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -512280,7 +512280,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "fd48d6b503a18beafb686a5c8533e0ea744c0dfda770c0f7ad48223a4340272b"
+              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -517945,7 +517945,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "fd48d6b503a18beafb686a5c8533e0ea744c0dfda770c0f7ad48223a4340272b"
+              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -518029,7 +518029,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "e7b2cd52d420f0a2d6dad2f434d479b8e2bf16e5cb8f9fed6fedd96c4172d869"
+              "sha256": "c05458d85c47b7402648f6be777023767910f1f25b0d055c399abcc993d4c73c"
             },
             {
               "path": "apps/web/src/pages/electricity-order-details.test.tsx",
@@ -518105,7 +518105,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "0458c387f1bb33578a22b5849b1d71c39dac02593a41be53a0669de69cbea2de"
+              "sha256": "80094abbf7f296a3abb3fe91f2fd4755db3b887a8ceff227b42da9034da7ee73"
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
@@ -519213,7 +519213,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "0458c387f1bb33578a22b5849b1d71c39dac02593a41be53a0669de69cbea2de"
+              "sha256": "80094abbf7f296a3abb3fe91f2fd4755db3b887a8ceff227b42da9034da7ee73"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -546851,7 +546851,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "fd48d6b503a18beafb686a5c8533e0ea744c0dfda770c0f7ad48223a4340272b"
+              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -546911,7 +546911,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "e7b2cd52d420f0a2d6dad2f434d479b8e2bf16e5cb8f9fed6fedd96c4172d869"
+              "sha256": "c05458d85c47b7402648f6be777023767910f1f25b0d055c399abcc993d4c73c"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -546999,7 +546999,7 @@
             },
             {
               "path": "apps/web/src/pages/content-catalogue-recovery.test.tsx",
-              "sha256": "be2941604a74a317a5334c761d8a9b4f7a06f310dd67cfb79bd4567bbe37137f"
+              "sha256": "ecf31ec5ce780ad26316d163efbbf9c5d571c705e35e51fb55f27216ba71652b"
             },
             {
               "path": "apps/web/src/pages/content-forms.test.tsx",
@@ -548717,7 +548717,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "fd48d6b503a18beafb686a5c8533e0ea744c0dfda770c0f7ad48223a4340272b"
+              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -548777,7 +548777,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "e7b2cd52d420f0a2d6dad2f434d479b8e2bf16e5cb8f9fed6fedd96c4172d869"
+              "sha256": "c05458d85c47b7402648f6be777023767910f1f25b0d055c399abcc993d4c73c"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -548865,7 +548865,7 @@
             },
             {
               "path": "apps/web/src/pages/content-catalogue-recovery.test.tsx",
-              "sha256": "be2941604a74a317a5334c761d8a9b4f7a06f310dd67cfb79bd4567bbe37137f"
+              "sha256": "ecf31ec5ce780ad26316d163efbbf9c5d571c705e35e51fb55f27216ba71652b"
             },
             {
               "path": "apps/web/src/pages/content-forms.test.tsx",
@@ -550584,7 +550584,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "fd48d6b503a18beafb686a5c8533e0ea744c0dfda770c0f7ad48223a4340272b"
+              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -550644,7 +550644,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "e7b2cd52d420f0a2d6dad2f434d479b8e2bf16e5cb8f9fed6fedd96c4172d869"
+              "sha256": "c05458d85c47b7402648f6be777023767910f1f25b0d055c399abcc993d4c73c"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -550732,7 +550732,7 @@
             },
             {
               "path": "apps/web/src/pages/content-catalogue-recovery.test.tsx",
-              "sha256": "be2941604a74a317a5334c761d8a9b4f7a06f310dd67cfb79bd4567bbe37137f"
+              "sha256": "ecf31ec5ce780ad26316d163efbbf9c5d571c705e35e51fb55f27216ba71652b"
             },
             {
               "path": "apps/web/src/pages/content-forms.test.tsx",
@@ -552420,7 +552420,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "fd48d6b503a18beafb686a5c8533e0ea744c0dfda770c0f7ad48223a4340272b"
+              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -552480,7 +552480,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "e7b2cd52d420f0a2d6dad2f434d479b8e2bf16e5cb8f9fed6fedd96c4172d869"
+              "sha256": "c05458d85c47b7402648f6be777023767910f1f25b0d055c399abcc993d4c73c"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -552568,7 +552568,7 @@
             },
             {
               "path": "apps/web/src/pages/content-catalogue-recovery.test.tsx",
-              "sha256": "be2941604a74a317a5334c761d8a9b4f7a06f310dd67cfb79bd4567bbe37137f"
+              "sha256": "ecf31ec5ce780ad26316d163efbbf9c5d571c705e35e51fb55f27216ba71652b"
             },
             {
               "path": "apps/web/src/pages/content-forms.test.tsx",
@@ -554282,7 +554282,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "fd48d6b503a18beafb686a5c8533e0ea744c0dfda770c0f7ad48223a4340272b"
+              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -554342,7 +554342,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "e7b2cd52d420f0a2d6dad2f434d479b8e2bf16e5cb8f9fed6fedd96c4172d869"
+              "sha256": "c05458d85c47b7402648f6be777023767910f1f25b0d055c399abcc993d4c73c"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -554430,7 +554430,7 @@
             },
             {
               "path": "apps/web/src/pages/content-catalogue-recovery.test.tsx",
-              "sha256": "be2941604a74a317a5334c761d8a9b4f7a06f310dd67cfb79bd4567bbe37137f"
+              "sha256": "ecf31ec5ce780ad26316d163efbbf9c5d571c705e35e51fb55f27216ba71652b"
             },
             {
               "path": "apps/web/src/pages/content-forms.test.tsx",
@@ -556153,7 +556153,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "fd48d6b503a18beafb686a5c8533e0ea744c0dfda770c0f7ad48223a4340272b"
+              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -556213,7 +556213,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "e7b2cd52d420f0a2d6dad2f434d479b8e2bf16e5cb8f9fed6fedd96c4172d869"
+              "sha256": "c05458d85c47b7402648f6be777023767910f1f25b0d055c399abcc993d4c73c"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -556301,7 +556301,7 @@
             },
             {
               "path": "apps/web/src/pages/content-catalogue-recovery.test.tsx",
-              "sha256": "be2941604a74a317a5334c761d8a9b4f7a06f310dd67cfb79bd4567bbe37137f"
+              "sha256": "ecf31ec5ce780ad26316d163efbbf9c5d571c705e35e51fb55f27216ba71652b"
             },
             {
               "path": "apps/web/src/pages/content-forms.test.tsx",
@@ -557997,7 +557997,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "fd48d6b503a18beafb686a5c8533e0ea744c0dfda770c0f7ad48223a4340272b"
+              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -558057,7 +558057,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "e7b2cd52d420f0a2d6dad2f434d479b8e2bf16e5cb8f9fed6fedd96c4172d869"
+              "sha256": "c05458d85c47b7402648f6be777023767910f1f25b0d055c399abcc993d4c73c"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -558145,7 +558145,7 @@
             },
             {
               "path": "apps/web/src/pages/content-catalogue-recovery.test.tsx",
-              "sha256": "be2941604a74a317a5334c761d8a9b4f7a06f310dd67cfb79bd4567bbe37137f"
+              "sha256": "ecf31ec5ce780ad26316d163efbbf9c5d571c705e35e51fb55f27216ba71652b"
             },
             {
               "path": "apps/web/src/pages/content-forms.test.tsx",
@@ -559805,7 +559805,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "fd48d6b503a18beafb686a5c8533e0ea744c0dfda770c0f7ad48223a4340272b"
+              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -559865,7 +559865,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "e7b2cd52d420f0a2d6dad2f434d479b8e2bf16e5cb8f9fed6fedd96c4172d869"
+              "sha256": "c05458d85c47b7402648f6be777023767910f1f25b0d055c399abcc993d4c73c"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -559953,7 +559953,7 @@
             },
             {
               "path": "apps/web/src/pages/content-catalogue-recovery.test.tsx",
-              "sha256": "be2941604a74a317a5334c761d8a9b4f7a06f310dd67cfb79bd4567bbe37137f"
+              "sha256": "ecf31ec5ce780ad26316d163efbbf9c5d571c705e35e51fb55f27216ba71652b"
             },
             {
               "path": "apps/web/src/pages/content-forms.test.tsx",
@@ -561613,7 +561613,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "fd48d6b503a18beafb686a5c8533e0ea744c0dfda770c0f7ad48223a4340272b"
+              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -561673,7 +561673,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "e7b2cd52d420f0a2d6dad2f434d479b8e2bf16e5cb8f9fed6fedd96c4172d869"
+              "sha256": "c05458d85c47b7402648f6be777023767910f1f25b0d055c399abcc993d4c73c"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -561761,7 +561761,7 @@
             },
             {
               "path": "apps/web/src/pages/content-catalogue-recovery.test.tsx",
-              "sha256": "be2941604a74a317a5334c761d8a9b4f7a06f310dd67cfb79bd4567bbe37137f"
+              "sha256": "ecf31ec5ce780ad26316d163efbbf9c5d571c705e35e51fb55f27216ba71652b"
             },
             {
               "path": "apps/web/src/pages/content-forms.test.tsx",
@@ -563422,7 +563422,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "fd48d6b503a18beafb686a5c8533e0ea744c0dfda770c0f7ad48223a4340272b"
+              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -563482,7 +563482,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "e7b2cd52d420f0a2d6dad2f434d479b8e2bf16e5cb8f9fed6fedd96c4172d869"
+              "sha256": "c05458d85c47b7402648f6be777023767910f1f25b0d055c399abcc993d4c73c"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -563570,7 +563570,7 @@
             },
             {
               "path": "apps/web/src/pages/content-catalogue-recovery.test.tsx",
-              "sha256": "be2941604a74a317a5334c761d8a9b4f7a06f310dd67cfb79bd4567bbe37137f"
+              "sha256": "ecf31ec5ce780ad26316d163efbbf9c5d571c705e35e51fb55f27216ba71652b"
             },
             {
               "path": "apps/web/src/pages/content-forms.test.tsx",
@@ -565230,7 +565230,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "fd48d6b503a18beafb686a5c8533e0ea744c0dfda770c0f7ad48223a4340272b"
+              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -565290,7 +565290,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "e7b2cd52d420f0a2d6dad2f434d479b8e2bf16e5cb8f9fed6fedd96c4172d869"
+              "sha256": "c05458d85c47b7402648f6be777023767910f1f25b0d055c399abcc993d4c73c"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -565378,7 +565378,7 @@
             },
             {
               "path": "apps/web/src/pages/content-catalogue-recovery.test.tsx",
-              "sha256": "be2941604a74a317a5334c761d8a9b4f7a06f310dd67cfb79bd4567bbe37137f"
+              "sha256": "ecf31ec5ce780ad26316d163efbbf9c5d571c705e35e51fb55f27216ba71652b"
             },
             {
               "path": "apps/web/src/pages/content-forms.test.tsx",
@@ -567156,7 +567156,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "e7b2cd52d420f0a2d6dad2f434d479b8e2bf16e5cb8f9fed6fedd96c4172d869"
+              "sha256": "c05458d85c47b7402648f6be777023767910f1f25b0d055c399abcc993d4c73c"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -567244,7 +567244,7 @@
             },
             {
               "path": "apps/web/src/pages/content-catalogue-recovery.test.tsx",
-              "sha256": "be2941604a74a317a5334c761d8a9b4f7a06f310dd67cfb79bd4567bbe37137f"
+              "sha256": "ecf31ec5ce780ad26316d163efbbf9c5d571c705e35e51fb55f27216ba71652b"
             },
             {
               "path": "apps/web/src/pages/content-forms.test.tsx",
@@ -567520,7 +567520,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "0458c387f1bb33578a22b5849b1d71c39dac02593a41be53a0669de69cbea2de"
+              "sha256": "80094abbf7f296a3abb3fe91f2fd4755db3b887a8ceff227b42da9034da7ee73"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -569051,7 +569051,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "e7b2cd52d420f0a2d6dad2f434d479b8e2bf16e5cb8f9fed6fedd96c4172d869"
+              "sha256": "c05458d85c47b7402648f6be777023767910f1f25b0d055c399abcc993d4c73c"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -569139,7 +569139,7 @@
             },
             {
               "path": "apps/web/src/pages/content-catalogue-recovery.test.tsx",
-              "sha256": "be2941604a74a317a5334c761d8a9b4f7a06f310dd67cfb79bd4567bbe37137f"
+              "sha256": "ecf31ec5ce780ad26316d163efbbf9c5d571c705e35e51fb55f27216ba71652b"
             },
             {
               "path": "apps/web/src/pages/content-forms.test.tsx",
@@ -569415,7 +569415,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "0458c387f1bb33578a22b5849b1d71c39dac02593a41be53a0669de69cbea2de"
+              "sha256": "80094abbf7f296a3abb3fe91f2fd4755db3b887a8ceff227b42da9034da7ee73"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -570219,7 +570219,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Scoped launch service, contract, staff receipt and onboarding commands distinguish a verified receipt from an unknown result. Remaining ordinary command feedback still needs reconciliation."
+        "Scoped launch service, contract, staff receipt, onboarding and terms commands distinguish a verified acknowledgement from an unknown result. Remaining ordinary command feedback still needs reconciliation."
       ],
       "owner": null,
       "depends_on": [],
@@ -570269,7 +570269,8 @@
           "release-0.5-saving-solar-confirmation",
           "release-0.5-contract-confirmation",
           "release-0.5-staff-receipt-acknowledgement",
-          "release-0.5-onboarding-acknowledgement"
+          "release-0.5-onboarding-acknowledgement",
+          "release-0.5-terms-acknowledgement"
         ],
         "current_acceptance": null
       }
@@ -571016,7 +571017,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "e7b2cd52d420f0a2d6dad2f434d479b8e2bf16e5cb8f9fed6fedd96c4172d869"
+              "sha256": "c05458d85c47b7402648f6be777023767910f1f25b0d055c399abcc993d4c73c"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -571104,7 +571105,7 @@
             },
             {
               "path": "apps/web/src/pages/content-catalogue-recovery.test.tsx",
-              "sha256": "be2941604a74a317a5334c761d8a9b4f7a06f310dd67cfb79bd4567bbe37137f"
+              "sha256": "ecf31ec5ce780ad26316d163efbbf9c5d571c705e35e51fb55f27216ba71652b"
             },
             {
               "path": "apps/web/src/pages/content-forms.test.tsx",
@@ -571380,7 +571381,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "0458c387f1bb33578a22b5849b1d71c39dac02593a41be53a0669de69cbea2de"
+              "sha256": "80094abbf7f296a3abb3fe91f2fd4755db3b887a8ceff227b42da9034da7ee73"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -572911,7 +572912,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "e7b2cd52d420f0a2d6dad2f434d479b8e2bf16e5cb8f9fed6fedd96c4172d869"
+              "sha256": "c05458d85c47b7402648f6be777023767910f1f25b0d055c399abcc993d4c73c"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -572999,7 +573000,7 @@
             },
             {
               "path": "apps/web/src/pages/content-catalogue-recovery.test.tsx",
-              "sha256": "be2941604a74a317a5334c761d8a9b4f7a06f310dd67cfb79bd4567bbe37137f"
+              "sha256": "ecf31ec5ce780ad26316d163efbbf9c5d571c705e35e51fb55f27216ba71652b"
             },
             {
               "path": "apps/web/src/pages/content-forms.test.tsx",
@@ -573275,7 +573276,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "0458c387f1bb33578a22b5849b1d71c39dac02593a41be53a0669de69cbea2de"
+              "sha256": "80094abbf7f296a3abb3fe91f2fd4755db3b887a8ceff227b42da9034da7ee73"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -574806,7 +574807,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "e7b2cd52d420f0a2d6dad2f434d479b8e2bf16e5cb8f9fed6fedd96c4172d869"
+              "sha256": "c05458d85c47b7402648f6be777023767910f1f25b0d055c399abcc993d4c73c"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -574894,7 +574895,7 @@
             },
             {
               "path": "apps/web/src/pages/content-catalogue-recovery.test.tsx",
-              "sha256": "be2941604a74a317a5334c761d8a9b4f7a06f310dd67cfb79bd4567bbe37137f"
+              "sha256": "ecf31ec5ce780ad26316d163efbbf9c5d571c705e35e51fb55f27216ba71652b"
             },
             {
               "path": "apps/web/src/pages/content-forms.test.tsx",
@@ -575170,7 +575171,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "0458c387f1bb33578a22b5849b1d71c39dac02593a41be53a0669de69cbea2de"
+              "sha256": "80094abbf7f296a3abb3fe91f2fd4755db3b887a8ceff227b42da9034da7ee73"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -576701,7 +576702,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "e7b2cd52d420f0a2d6dad2f434d479b8e2bf16e5cb8f9fed6fedd96c4172d869"
+              "sha256": "c05458d85c47b7402648f6be777023767910f1f25b0d055c399abcc993d4c73c"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -576789,7 +576790,7 @@
             },
             {
               "path": "apps/web/src/pages/content-catalogue-recovery.test.tsx",
-              "sha256": "be2941604a74a317a5334c761d8a9b4f7a06f310dd67cfb79bd4567bbe37137f"
+              "sha256": "ecf31ec5ce780ad26316d163efbbf9c5d571c705e35e51fb55f27216ba71652b"
             },
             {
               "path": "apps/web/src/pages/content-forms.test.tsx",
@@ -577065,7 +577066,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "0458c387f1bb33578a22b5849b1d71c39dac02593a41be53a0669de69cbea2de"
+              "sha256": "80094abbf7f296a3abb3fe91f2fd4755db3b887a8ceff227b42da9034da7ee73"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -578596,7 +578597,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "e7b2cd52d420f0a2d6dad2f434d479b8e2bf16e5cb8f9fed6fedd96c4172d869"
+              "sha256": "c05458d85c47b7402648f6be777023767910f1f25b0d055c399abcc993d4c73c"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -578684,7 +578685,7 @@
             },
             {
               "path": "apps/web/src/pages/content-catalogue-recovery.test.tsx",
-              "sha256": "be2941604a74a317a5334c761d8a9b4f7a06f310dd67cfb79bd4567bbe37137f"
+              "sha256": "ecf31ec5ce780ad26316d163efbbf9c5d571c705e35e51fb55f27216ba71652b"
             },
             {
               "path": "apps/web/src/pages/content-forms.test.tsx",
@@ -578960,7 +578961,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "0458c387f1bb33578a22b5849b1d71c39dac02593a41be53a0669de69cbea2de"
+              "sha256": "80094abbf7f296a3abb3fe91f2fd4755db3b887a8ceff227b42da9034da7ee73"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -580491,7 +580492,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "e7b2cd52d420f0a2d6dad2f434d479b8e2bf16e5cb8f9fed6fedd96c4172d869"
+              "sha256": "c05458d85c47b7402648f6be777023767910f1f25b0d055c399abcc993d4c73c"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -580579,7 +580580,7 @@
             },
             {
               "path": "apps/web/src/pages/content-catalogue-recovery.test.tsx",
-              "sha256": "be2941604a74a317a5334c761d8a9b4f7a06f310dd67cfb79bd4567bbe37137f"
+              "sha256": "ecf31ec5ce780ad26316d163efbbf9c5d571c705e35e51fb55f27216ba71652b"
             },
             {
               "path": "apps/web/src/pages/content-forms.test.tsx",
@@ -580855,7 +580856,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "0458c387f1bb33578a22b5849b1d71c39dac02593a41be53a0669de69cbea2de"
+              "sha256": "80094abbf7f296a3abb3fe91f2fd4755db3b887a8ceff227b42da9034da7ee73"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -582386,7 +582387,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "e7b2cd52d420f0a2d6dad2f434d479b8e2bf16e5cb8f9fed6fedd96c4172d869"
+              "sha256": "c05458d85c47b7402648f6be777023767910f1f25b0d055c399abcc993d4c73c"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -582474,7 +582475,7 @@
             },
             {
               "path": "apps/web/src/pages/content-catalogue-recovery.test.tsx",
-              "sha256": "be2941604a74a317a5334c761d8a9b4f7a06f310dd67cfb79bd4567bbe37137f"
+              "sha256": "ecf31ec5ce780ad26316d163efbbf9c5d571c705e35e51fb55f27216ba71652b"
             },
             {
               "path": "apps/web/src/pages/content-forms.test.tsx",
@@ -582750,7 +582751,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "0458c387f1bb33578a22b5849b1d71c39dac02593a41be53a0669de69cbea2de"
+              "sha256": "80094abbf7f296a3abb3fe91f2fd4755db3b887a8ceff227b42da9034da7ee73"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -584281,7 +584282,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "e7b2cd52d420f0a2d6dad2f434d479b8e2bf16e5cb8f9fed6fedd96c4172d869"
+              "sha256": "c05458d85c47b7402648f6be777023767910f1f25b0d055c399abcc993d4c73c"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -584369,7 +584370,7 @@
             },
             {
               "path": "apps/web/src/pages/content-catalogue-recovery.test.tsx",
-              "sha256": "be2941604a74a317a5334c761d8a9b4f7a06f310dd67cfb79bd4567bbe37137f"
+              "sha256": "ecf31ec5ce780ad26316d163efbbf9c5d571c705e35e51fb55f27216ba71652b"
             },
             {
               "path": "apps/web/src/pages/content-forms.test.tsx",
@@ -584645,7 +584646,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "0458c387f1bb33578a22b5849b1d71c39dac02593a41be53a0669de69cbea2de"
+              "sha256": "80094abbf7f296a3abb3fe91f2fd4755db3b887a8ceff227b42da9034da7ee73"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -586176,7 +586177,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "e7b2cd52d420f0a2d6dad2f434d479b8e2bf16e5cb8f9fed6fedd96c4172d869"
+              "sha256": "c05458d85c47b7402648f6be777023767910f1f25b0d055c399abcc993d4c73c"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -586264,7 +586265,7 @@
             },
             {
               "path": "apps/web/src/pages/content-catalogue-recovery.test.tsx",
-              "sha256": "be2941604a74a317a5334c761d8a9b4f7a06f310dd67cfb79bd4567bbe37137f"
+              "sha256": "ecf31ec5ce780ad26316d163efbbf9c5d571c705e35e51fb55f27216ba71652b"
             },
             {
               "path": "apps/web/src/pages/content-forms.test.tsx",
@@ -586540,7 +586541,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "0458c387f1bb33578a22b5849b1d71c39dac02593a41be53a0669de69cbea2de"
+              "sha256": "80094abbf7f296a3abb3fe91f2fd4755db3b887a8ceff227b42da9034da7ee73"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -588071,7 +588072,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "e7b2cd52d420f0a2d6dad2f434d479b8e2bf16e5cb8f9fed6fedd96c4172d869"
+              "sha256": "c05458d85c47b7402648f6be777023767910f1f25b0d055c399abcc993d4c73c"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -588159,7 +588160,7 @@
             },
             {
               "path": "apps/web/src/pages/content-catalogue-recovery.test.tsx",
-              "sha256": "be2941604a74a317a5334c761d8a9b4f7a06f310dd67cfb79bd4567bbe37137f"
+              "sha256": "ecf31ec5ce780ad26316d163efbbf9c5d571c705e35e51fb55f27216ba71652b"
             },
             {
               "path": "apps/web/src/pages/content-forms.test.tsx",
@@ -588435,7 +588436,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "0458c387f1bb33578a22b5849b1d71c39dac02593a41be53a0669de69cbea2de"
+              "sha256": "80094abbf7f296a3abb3fe91f2fd4755db3b887a8ceff227b42da9034da7ee73"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -589966,7 +589967,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "e7b2cd52d420f0a2d6dad2f434d479b8e2bf16e5cb8f9fed6fedd96c4172d869"
+              "sha256": "c05458d85c47b7402648f6be777023767910f1f25b0d055c399abcc993d4c73c"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -590054,7 +590055,7 @@
             },
             {
               "path": "apps/web/src/pages/content-catalogue-recovery.test.tsx",
-              "sha256": "be2941604a74a317a5334c761d8a9b4f7a06f310dd67cfb79bd4567bbe37137f"
+              "sha256": "ecf31ec5ce780ad26316d163efbbf9c5d571c705e35e51fb55f27216ba71652b"
             },
             {
               "path": "apps/web/src/pages/content-forms.test.tsx",
@@ -590330,7 +590331,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "0458c387f1bb33578a22b5849b1d71c39dac02593a41be53a0669de69cbea2de"
+              "sha256": "80094abbf7f296a3abb3fe91f2fd4755db3b887a8ceff227b42da9034da7ee73"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -591486,7 +591487,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "fd48d6b503a18beafb686a5c8533e0ea744c0dfda770c0f7ad48223a4340272b"
+              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.tsx",
@@ -591594,7 +591595,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "0458c387f1bb33578a22b5849b1d71c39dac02593a41be53a0669de69cbea2de"
+              "sha256": "80094abbf7f296a3abb3fe91f2fd4755db3b887a8ceff227b42da9034da7ee73"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -592601,7 +592602,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "e7b2cd52d420f0a2d6dad2f434d479b8e2bf16e5cb8f9fed6fedd96c4172d869"
+              "sha256": "c05458d85c47b7402648f6be777023767910f1f25b0d055c399abcc993d4c73c"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -592689,7 +592690,7 @@
             },
             {
               "path": "apps/web/src/pages/content-catalogue-recovery.test.tsx",
-              "sha256": "be2941604a74a317a5334c761d8a9b4f7a06f310dd67cfb79bd4567bbe37137f"
+              "sha256": "ecf31ec5ce780ad26316d163efbbf9c5d571c705e35e51fb55f27216ba71652b"
             },
             {
               "path": "apps/web/src/pages/content-forms.test.tsx",
@@ -592965,7 +592966,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "0458c387f1bb33578a22b5849b1d71c39dac02593a41be53a0669de69cbea2de"
+              "sha256": "80094abbf7f296a3abb3fe91f2fd4755db3b887a8ceff227b42da9034da7ee73"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -594496,7 +594497,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "e7b2cd52d420f0a2d6dad2f434d479b8e2bf16e5cb8f9fed6fedd96c4172d869"
+              "sha256": "c05458d85c47b7402648f6be777023767910f1f25b0d055c399abcc993d4c73c"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -594584,7 +594585,7 @@
             },
             {
               "path": "apps/web/src/pages/content-catalogue-recovery.test.tsx",
-              "sha256": "be2941604a74a317a5334c761d8a9b4f7a06f310dd67cfb79bd4567bbe37137f"
+              "sha256": "ecf31ec5ce780ad26316d163efbbf9c5d571c705e35e51fb55f27216ba71652b"
             },
             {
               "path": "apps/web/src/pages/content-forms.test.tsx",
@@ -594860,7 +594861,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "0458c387f1bb33578a22b5849b1d71c39dac02593a41be53a0669de69cbea2de"
+              "sha256": "80094abbf7f296a3abb3fe91f2fd4755db3b887a8ceff227b42da9034da7ee73"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -595664,7 +595665,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Onboarding start and completion now exit stalled states and support scoped recovery without repeating committed dashboard selection. Reconcile remaining bespoke route loading, empty and error states."
+        "Terms saves, publication and discard now leave stalled states and require fresh history before another write. Reconcile remaining bespoke route loading, empty and error states."
       ],
       "owner": null,
       "depends_on": [],
@@ -595726,7 +595727,8 @@
           "release-0.5-saving-solar-confirmation",
           "release-0.5-contract-confirmation",
           "release-0.5-staff-receipt-acknowledgement",
-          "release-0.5-onboarding-acknowledgement"
+          "release-0.5-onboarding-acknowledgement",
+          "release-0.5-terms-acknowledgement"
         ],
         "current_acceptance": null
       }
@@ -596383,7 +596385,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "fd48d6b503a18beafb686a5c8533e0ea744c0dfda770c0f7ad48223a4340272b"
+              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -596443,7 +596445,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "e7b2cd52d420f0a2d6dad2f434d479b8e2bf16e5cb8f9fed6fedd96c4172d869"
+              "sha256": "c05458d85c47b7402648f6be777023767910f1f25b0d055c399abcc993d4c73c"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -596531,7 +596533,7 @@
             },
             {
               "path": "apps/web/src/pages/content-catalogue-recovery.test.tsx",
-              "sha256": "be2941604a74a317a5334c761d8a9b4f7a06f310dd67cfb79bd4567bbe37137f"
+              "sha256": "ecf31ec5ce780ad26316d163efbbf9c5d571c705e35e51fb55f27216ba71652b"
             },
             {
               "path": "apps/web/src/pages/content-forms.test.tsx",
@@ -598187,7 +598189,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "fd48d6b503a18beafb686a5c8533e0ea744c0dfda770c0f7ad48223a4340272b"
+              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -598247,7 +598249,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "e7b2cd52d420f0a2d6dad2f434d479b8e2bf16e5cb8f9fed6fedd96c4172d869"
+              "sha256": "c05458d85c47b7402648f6be777023767910f1f25b0d055c399abcc993d4c73c"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -598335,7 +598337,7 @@
             },
             {
               "path": "apps/web/src/pages/content-catalogue-recovery.test.tsx",
-              "sha256": "be2941604a74a317a5334c761d8a9b4f7a06f310dd67cfb79bd4567bbe37137f"
+              "sha256": "ecf31ec5ce780ad26316d163efbbf9c5d571c705e35e51fb55f27216ba71652b"
             },
             {
               "path": "apps/web/src/pages/content-forms.test.tsx",
@@ -599991,7 +599993,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "fd48d6b503a18beafb686a5c8533e0ea744c0dfda770c0f7ad48223a4340272b"
+              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -600051,7 +600053,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "e7b2cd52d420f0a2d6dad2f434d479b8e2bf16e5cb8f9fed6fedd96c4172d869"
+              "sha256": "c05458d85c47b7402648f6be777023767910f1f25b0d055c399abcc993d4c73c"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -600139,7 +600141,7 @@
             },
             {
               "path": "apps/web/src/pages/content-catalogue-recovery.test.tsx",
-              "sha256": "be2941604a74a317a5334c761d8a9b4f7a06f310dd67cfb79bd4567bbe37137f"
+              "sha256": "ecf31ec5ce780ad26316d163efbbf9c5d571c705e35e51fb55f27216ba71652b"
             },
             {
               "path": "apps/web/src/pages/content-forms.test.tsx",
@@ -601795,7 +601797,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "fd48d6b503a18beafb686a5c8533e0ea744c0dfda770c0f7ad48223a4340272b"
+              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -601855,7 +601857,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "e7b2cd52d420f0a2d6dad2f434d479b8e2bf16e5cb8f9fed6fedd96c4172d869"
+              "sha256": "c05458d85c47b7402648f6be777023767910f1f25b0d055c399abcc993d4c73c"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -601943,7 +601945,7 @@
             },
             {
               "path": "apps/web/src/pages/content-catalogue-recovery.test.tsx",
-              "sha256": "be2941604a74a317a5334c761d8a9b4f7a06f310dd67cfb79bd4567bbe37137f"
+              "sha256": "ecf31ec5ce780ad26316d163efbbf9c5d571c705e35e51fb55f27216ba71652b"
             },
             {
               "path": "apps/web/src/pages/content-forms.test.tsx",
@@ -603599,7 +603601,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "fd48d6b503a18beafb686a5c8533e0ea744c0dfda770c0f7ad48223a4340272b"
+              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -603659,7 +603661,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "e7b2cd52d420f0a2d6dad2f434d479b8e2bf16e5cb8f9fed6fedd96c4172d869"
+              "sha256": "c05458d85c47b7402648f6be777023767910f1f25b0d055c399abcc993d4c73c"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -603747,7 +603749,7 @@
             },
             {
               "path": "apps/web/src/pages/content-catalogue-recovery.test.tsx",
-              "sha256": "be2941604a74a317a5334c761d8a9b4f7a06f310dd67cfb79bd4567bbe37137f"
+              "sha256": "ecf31ec5ce780ad26316d163efbbf9c5d571c705e35e51fb55f27216ba71652b"
             },
             {
               "path": "apps/web/src/pages/content-forms.test.tsx",
@@ -605403,7 +605405,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "fd48d6b503a18beafb686a5c8533e0ea744c0dfda770c0f7ad48223a4340272b"
+              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -605463,7 +605465,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "e7b2cd52d420f0a2d6dad2f434d479b8e2bf16e5cb8f9fed6fedd96c4172d869"
+              "sha256": "c05458d85c47b7402648f6be777023767910f1f25b0d055c399abcc993d4c73c"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -605551,7 +605553,7 @@
             },
             {
               "path": "apps/web/src/pages/content-catalogue-recovery.test.tsx",
-              "sha256": "be2941604a74a317a5334c761d8a9b4f7a06f310dd67cfb79bd4567bbe37137f"
+              "sha256": "ecf31ec5ce780ad26316d163efbbf9c5d571c705e35e51fb55f27216ba71652b"
             },
             {
               "path": "apps/web/src/pages/content-forms.test.tsx",
@@ -607207,7 +607209,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "fd48d6b503a18beafb686a5c8533e0ea744c0dfda770c0f7ad48223a4340272b"
+              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -607267,7 +607269,7 @@
             },
             {
               "path": "apps/web/src/pages/admin-boundaries.test.tsx",
-              "sha256": "e7b2cd52d420f0a2d6dad2f434d479b8e2bf16e5cb8f9fed6fedd96c4172d869"
+              "sha256": "c05458d85c47b7402648f6be777023767910f1f25b0d055c399abcc993d4c73c"
             },
             {
               "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
@@ -607355,7 +607357,7 @@
             },
             {
               "path": "apps/web/src/pages/content-catalogue-recovery.test.tsx",
-              "sha256": "be2941604a74a317a5334c761d8a9b4f7a06f310dd67cfb79bd4567bbe37137f"
+              "sha256": "ecf31ec5ce780ad26316d163efbbf9c5d571c705e35e51fb55f27216ba71652b"
             },
             {
               "path": "apps/web/src/pages/content-forms.test.tsx",
@@ -634886,7 +634888,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "fd48d6b503a18beafb686a5c8533e0ea744c0dfda770c0f7ad48223a4340272b"
+              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -636010,7 +636012,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "fd48d6b503a18beafb686a5c8533e0ea744c0dfda770c0f7ad48223a4340272b"
+              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -637134,7 +637136,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "fd48d6b503a18beafb686a5c8533e0ea744c0dfda770c0f7ad48223a4340272b"
+              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -638261,7 +638263,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "fd48d6b503a18beafb686a5c8533e0ea744c0dfda770c0f7ad48223a4340272b"
+              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -639388,7 +639390,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "fd48d6b503a18beafb686a5c8533e0ea744c0dfda770c0f7ad48223a4340272b"
+              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -640542,7 +640544,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "fd48d6b503a18beafb686a5c8533e0ea744c0dfda770c0f7ad48223a4340272b"
+              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -641665,7 +641667,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "fd48d6b503a18beafb686a5c8533e0ea744c0dfda770c0f7ad48223a4340272b"
+              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -642788,7 +642790,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "fd48d6b503a18beafb686a5c8533e0ea744c0dfda770c0f7ad48223a4340272b"
+              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -643912,7 +643914,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "fd48d6b503a18beafb686a5c8533e0ea744c0dfda770c0f7ad48223a4340272b"
+              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -645054,7 +645056,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "fd48d6b503a18beafb686a5c8533e0ea744c0dfda770c0f7ad48223a4340272b"
+              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -646179,7 +646181,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "fd48d6b503a18beafb686a5c8533e0ea744c0dfda770c0f7ad48223a4340272b"
+              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -677679,7 +677681,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "fd48d6b503a18beafb686a5c8533e0ea744c0dfda770c0f7ad48223a4340272b"
+              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -678801,7 +678803,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "fd48d6b503a18beafb686a5c8533e0ea744c0dfda770c0f7ad48223a4340272b"
+              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -679923,7 +679925,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "fd48d6b503a18beafb686a5c8533e0ea744c0dfda770c0f7ad48223a4340272b"
+              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -681045,7 +681047,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "fd48d6b503a18beafb686a5c8533e0ea744c0dfda770c0f7ad48223a4340272b"
+              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -702081,7 +702083,7 @@
           "source_evidence": [
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "fd48d6b503a18beafb686a5c8533e0ea744c0dfda770c0f7ad48223a4340272b"
+              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
             },
             {
               "path": "apps/web/src/pages/TosRichText.tsx",
@@ -702105,7 +702107,7 @@
             },
             {
               "path": "apps/web/e2e/content-forms.spec.ts",
-              "sha256": "2e8f52bba09ddab8a0296991cc6ccd536cc5452a1531d37f6404ed0c488c4ff1"
+              "sha256": "c045c5baeb159a8c4141ada1be5950799406f819b2648a9a4359fee2a90cb848"
             }
           ],
           "checks": [
@@ -725370,7 +725372,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Form semantics are accepted. Scoped financial, fulfillment, receipt and onboarding commands pass bounded acknowledgement and recovery. Ordinary command feedback, bespoke route states, configured live Sentry receipt and GitHub accessibility enforcement remain open."
+        "Form semantics are accepted. Scoped financial, fulfillment, receipt, onboarding and terms commands pass bounded acknowledgement and recovery. Ordinary command feedback, bespoke route states, configured live Sentry receipt and GitHub accessibility enforcement remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -725496,7 +725498,8 @@
           "release-0.5-saving-solar-confirmation",
           "release-0.5-contract-confirmation",
           "release-0.5-staff-receipt-acknowledgement",
-          "release-0.5-onboarding-acknowledgement"
+          "release-0.5-onboarding-acknowledgement",
+          "release-0.5-terms-acknowledgement"
         ]
       }
     },
@@ -726532,7 +726535,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "fd48d6b503a18beafb686a5c8533e0ea744c0dfda770c0f7ad48223a4340272b"
+              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -727223,7 +727226,8 @@
             "Renewed saving and solar confirmations and the verification banner's customer bundle measurement. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-solar-confirmation/proof.json",
             "Renewed contract acknowledgement browser coverage and launch bundle measurements. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-contract-confirmation/proof.json",
             "Renewed staff receipt review browser coverage and launch bundle measurements. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-receipt-acknowledgement/proof.json",
-            "Renewed onboarding recovery and launch bundle measurements. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-onboarding-acknowledgement/proof.json"
+            "Renewed onboarding recovery and launch bundle measurements. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-onboarding-acknowledgement/proof.json",
+            "Renewed terms editor recovery and launch bundle measurements. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-terms-acknowledgement/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -798159,6 +798163,119 @@
       "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-onboarding-acknowledgement/renewed-bindings.json",
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-onboarding-acknowledgement/reviewed.patch",
       "release_disposition": "Verified bounded onboarding creation and completion with exact recovery. v0.5.0 acceptance remains open."
+    },
+    "release-0.5-terms-acknowledgement": {
+      "batch": "release-0.5-terms-acknowledgement",
+      "base_commit": "051389b1c8db426db15910369d0bb05d2fa03a7c",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.11.01.03",
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.11.01.03",
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": ".size-limit.json",
+          "sha256": "3e22df1ae210db450940af0674c699c1b6c8f9df91db74ff0f2b2488d5d0f946"
+        },
+        {
+          "path": "apps/api/src/tos/tos.service.ts",
+          "sha256": "eca80c4348068d55642d632ebde81041b252399126cc21999af0efba6dd0f7e6"
+        },
+        {
+          "path": "apps/web/e2e/catalogue-form-fixture.ts",
+          "sha256": "d628dc1b6830b741901854f7107cee5a094dd9b33b286d20097b66f47629a74a"
+        },
+        {
+          "path": "apps/web/e2e/confirmation-fixture.ts",
+          "sha256": "8d842de5577a9f43a5ca0efcf8e6a00e18e6ea1fb53116555fac8cbd7608bb61"
+        },
+        {
+          "path": "apps/web/e2e/content-catalogue-recovery.spec.ts",
+          "sha256": "f04edaa0e511095627868a60a5001d6254db29263461afa6fb95575f908e6a66"
+        },
+        {
+          "path": "apps/web/e2e/content-forms.spec.ts",
+          "sha256": "c045c5baeb159a8c4141ada1be5950799406f819b2648a9a4359fee2a90cb848"
+        },
+        {
+          "path": "apps/web/e2e/coverage-fixture.ts",
+          "sha256": "07949862684b86d6ff241d5f71e59e6c71a5cc1ddc70655b0d508beb53865dac"
+        },
+        {
+          "path": "apps/web/src/hooks/useCatalogueResource.ts",
+          "sha256": "a189459305295c7cef7c9741922109d25540db7eba3141d8e8d8a61941792dee"
+        },
+        {
+          "path": "apps/web/src/hooks/useDestructiveConfirm.ts",
+          "sha256": "08b81ecc087a6e6dae7ddf322dfdfa00caec97dad1d6d418f4bcc44b89069d1c"
+        },
+        {
+          "path": "apps/web/src/lib/content-catalogues.ts",
+          "sha256": "118b8ac0abb05f2363b7c51b72e5f0e255e37650bf20aad6a65fd166d7c1424a"
+        },
+        {
+          "path": "apps/web/src/lib/csrf.ts",
+          "sha256": "9ae9d43859271c9fcf38aa560cc4369e5a9930a679fccb54b6b754f6f43ef209"
+        },
+        {
+          "path": "apps/web/src/lib/server-query-client.ts",
+          "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
+        },
+        {
+          "path": "apps/web/src/pages/AdminTosDraft.test.tsx",
+          "sha256": "2ce0b1a456ac7b89968d923327a30ac698093bb575d38fab75483fab9555c698"
+        },
+        {
+          "path": "apps/web/src/pages/AdminTosPage.tsx",
+          "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
+        },
+        {
+          "path": "apps/web/src/pages/admin-boundaries.test.tsx",
+          "sha256": "c05458d85c47b7402648f6be777023767910f1f25b0d055c399abcc993d4c73c"
+        },
+        {
+          "path": "apps/web/src/pages/admin-tos-text.ts",
+          "sha256": "b5e853616ae56116834c244ef4aa5d2c1e20cdb974ab2f235e09d8d09c474a4c"
+        },
+        {
+          "path": "apps/web/src/pages/content-catalogue-recovery.test.tsx",
+          "sha256": "ecf31ec5ce780ad26316d163efbbf9c5d571c705e35e51fb55f27216ba71652b"
+        },
+        {
+          "path": "apps/web/src/pages/content-forms.test.tsx",
+          "sha256": "d33f6d0e97759a6a29ea3bedc819b90c5237e13240879df5d41ede99dd77d265"
+        },
+        {
+          "path": "apps/web/src/test/content-catalogue-fixtures.ts",
+          "sha256": "80cc68da3ac19500fa407be17b09f0d7fce43872b66818555492216a565197d0"
+        },
+        {
+          "path": "docs/design/notification-recovery.md",
+          "sha256": "80094abbf7f296a3abb3fe91f2fd4755db3b887a8ceff227b42da9034da7ee73"
+        },
+        {
+          "path": "scripts/check-route-budgets.mjs",
+          "sha256": "4dd831c645a9dbf1e6fd9b0c211b5559e4fc22652373b31525bd4f4aae38186d"
+        }
+      ],
+      "checks": [
+        "Production baseline cases reproduced stalled draft update, publication and discard. The first discard selector used the wrong dialog role; the corrected selector reproduced the acknowledgement stall on the same pre-fix build.",
+        "Terms writes now bound response headers and body. Unknown outcomes preserve draft text, retire the stale preview and require a new history read. A history request started before the timeout is canceled. Current revision, document content, authority, and publication and discard confirmation checks remain enforced.",
+        "Twenty-four production browser cases and sixteen instrumented Chromium cases passed. They cover exact revision-bound requests, late matching replies, a fresh read before further writes, draft recovery, and retained validation. The focused unit rerun passed 89 cases across four suites. Two initial fixtures required waiting for their intended mock dispatch or acknowledgement.",
+        "All eight changed-coverage groups, 98 gzip budgets, six byte-matched cold-auth checks, formatting, scoped lint and web typecheck passed. Only two unit fixtures changed after the production build. The browser tests and runtime are byte-matched."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-terms-acknowledgement",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-terms-acknowledgement/proof.json",
+      "source_scope_proof_sha256": "af629aefd41e13539a220e612ee60179167ae7ca17a74cd9cb8b565ce57ba25e",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-terms-acknowledgement/renewed-bindings.json",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-terms-acknowledgement/reviewed.patch",
+      "release_disposition": "Verified bounded terms editor writes and fresh-history recovery. v0.5.0 acceptance remains open."
     }
   },
   "historical_improvements": [
@@ -798214,7 +798331,7 @@
   "launch_forecast": {
     "status": "deadline_at_risk_until_v0_5_and_operational_gates_close",
     "next_update_after": "v0.5.0 remaining UI criteria and owner decisions",
-    "method": "v0.4.0 staging and Telegram receipts are verified. v0.5.0 form semantics, staff receipt decisions and onboarding recovery are verified. Five launch-required criteria remain open, including the live Sentry receipt and GitHub accessibility enforcement. The November 9 sequence remains at risk."
+    "method": "v0.4.0 staging and Telegram receipts are verified. v0.5.0 form semantics, onboarding recovery and bounded terms editor commands are verified. Five launch-required criteria remain open, including the live Sentry receipt and GitHub accessibility enforcement. The November 9 sequence remains at risk."
   },
   "capabilities": [
     {

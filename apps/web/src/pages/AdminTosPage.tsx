@@ -31,6 +31,7 @@ import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useManualServerRead } from '../hooks/useServerQuery.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { queryKeys } from '../lib/query-keys.js';
+import { readWithDeadline } from '../lib/server-query-client.js';
 import type { FormEvent } from 'react';
 
 const TosRichText = lazy(() => import('./TosRichText.js'));
@@ -52,8 +53,7 @@ function displayError(error: unknown, fallback: MessageKey): { key: MessageKey; 
     : { key: fallback };
 }
 
-async function responseCode(response: Response): Promise<string | undefined> {
-  const body: unknown = await response.json().catch(() => null);
+function responseCode(body: unknown): string | undefined {
   if (!body || typeof body !== 'object' || !('error' in body)) return;
   if (typeof body.error === 'string') return body.error;
   if (
@@ -101,6 +101,7 @@ export default function AdminTosPage() {
   const historyRequest = useRef(0);
   const historyController = useRef<AbortController | null>(null);
   const draftController = useRef<AbortController | null>(null);
+  const writeRequests = useRef(new Set<AbortController>());
   const mounted = useRef(false);
   const publishBaseline = useRef<string | null>(null);
   const saveInFlight = useRef(false);
@@ -159,6 +160,7 @@ export default function AdminTosPage() {
     historyRequest.current++;
     historyController.current?.abort();
     draftController.current?.abort();
+    for (const request of writeRequests.current) request.abort();
     editorGeneration.current++;
     publishGeneration.current++;
     setVersions([]);
@@ -180,9 +182,11 @@ export default function AdminTosPage() {
   const confirmDestruction = useDestructiveConfirm(locale, scope.version);
   useEffect(() => {
     mounted.current = true;
+    const writes = writeRequests.current;
     return () => {
       mounted.current = false;
       draftController.current?.abort();
+      for (const request of writes) request.abort();
       editorGeneration.current++;
       publishGeneration.current++;
     };
@@ -343,6 +347,31 @@ export default function AdminTosPage() {
     setViewVersion(null);
   }
 
+  async function writeVersion(path: string, init: RequestInit) {
+    const controller = new AbortController();
+    writeRequests.current.add(controller);
+    try {
+      return await readWithDeadline(controller.signal, async (signal) => {
+        const response = await fetch(path, { ...init, signal });
+        const { ok, status } = response;
+        const body: unknown =
+          (ok && status !== 204) || status === 400 || status === 409
+            ? await response.json().catch(() => null)
+            : null;
+        return { ok, status, body };
+      });
+    } finally {
+      writeRequests.current.delete(controller);
+    }
+  }
+
+  function requireCurrentHistory() {
+    historyRequest.current++;
+    historyController.current?.abort();
+    setLoading(false);
+    setHistoryReady(false);
+  }
+
   async function handleSave(e: FormEvent) {
     e.preventDefault();
     if (
@@ -374,121 +403,68 @@ export default function AdminTosPage() {
       const { versionId, contentFa, contentEn } = captured;
       editor.form.clearErrors('root');
       setError(null);
+      if (editId && !editRevision) throw new TosUiError('previewRequired');
+      const command = editId
+        ? {
+            expectedRevision: editRevision,
+            ...(versionId ? { versionId } : {}),
+            ...(contentFa ? { contentFa } : {}),
+            ...(contentEn ? { contentEn } : {}),
+          }
+        : { versionId, contentFa, contentEn };
       requestSent = true;
-      if (editId) {
-        // Update existing draft
-        if (!editRevision) throw new TosUiError('previewRequired');
-        const body: Record<string, string> = { expectedRevision: editRevision };
-        if (versionId) body.versionId = versionId;
-        if (contentFa) body.contentFa = contentFa;
-        if (contentEn) body.contentEn = contentEn;
-
-        const res = await fetch(`/api/admin/tos/versions/${editId}`, {
-          method: 'PUT',
+      const { ok, status, body } = await writeVersion(
+        editId ? `/api/admin/tos/versions/${editId}` : '/api/admin/tos/versions',
+        {
+          method: editId ? 'PUT' : 'POST',
           headers: withCsrf({ 'Content-Type': 'application/json' }),
-          body: JSON.stringify(body),
-        });
-        if (!current()) return;
-        if (res.status === 401 || res.status === 403) {
-          scope.deny();
-          return;
+          body: JSON.stringify(command),
         }
-        if (res.status === 409) {
+      );
+      if (!current()) return;
+      if (status === 401 || status === 403) {
+        scope.deny();
+        return;
+      }
+      if (status >= 500) throw new TosUiError('unconfirmedWrite', status);
+      requestSent = ok;
+      if (status === 409) {
+        if (editId) {
           setEditConflict(true);
           throw new TosUiError('draftChanged');
         }
-        if (!res.ok) {
-          if (res.status === 400) {
-            const data: unknown = await res.json().catch(() => null);
-            if (!current()) return;
-            const fields =
-              data &&
-              typeof data === 'object' &&
-              'error' in data &&
-              data.error &&
-              typeof data.error === 'object' &&
-              'fields' in data.error
-                ? data.error.fields
-                : null;
-            if (Array.isArray(fields) && applyFieldErrors(fields)) return;
-          }
-          if (res.status >= 500) setUncertainSave(true);
-          requestSent = false;
-          throw new TosUiError('saveFailed', res.status);
-        }
-        const result: unknown = await res.json().catch(() => null);
-        if (!current()) return;
-        if (
-          !isVersion(result) ||
-          !result.revision ||
-          result.status !== 'draft' ||
-          result.versionId !== versionId ||
-          result.contentFa !== contentFa ||
-          result.contentEn !== contentEn ||
-          (editId && result.id !== editId)
-        ) {
-          setHistoryReady(false);
-          setUncertainSave(true);
-          throw new TosUiError('unconfirmedWrite');
-        }
-        historyRequest.current++;
-        setVersions((previous) => [result, ...previous.filter((v) => v.id !== result.id)]);
-      } else {
-        // Create new draft
-        const res = await fetch('/api/admin/tos/versions', {
-          method: 'POST',
-          headers: withCsrf({ 'Content-Type': 'application/json' }),
-          body: JSON.stringify({ versionId, contentFa, contentEn }),
-        });
-        if (!current()) return;
-        if (res.status === 401 || res.status === 403) {
-          scope.deny();
-          return;
-        }
-        if (res.status === 409) {
-          if ((await responseCode(res)) === 'TOS_VERSION_ID_TAKEN') {
-            throw new TosUiError('versionIdTaken');
-          }
-          setHistoryReady(false);
-          throw new TosUiError('createConflict');
-        }
-        if (!res.ok) {
-          if (res.status === 400) {
-            const data: unknown = await res.json().catch(() => null);
-            if (!current()) return;
-            const fields =
-              data &&
-              typeof data === 'object' &&
-              'error' in data &&
-              data.error &&
-              typeof data.error === 'object' &&
-              'fields' in data.error
-                ? data.error.fields
-                : null;
-            if (Array.isArray(fields) && applyFieldErrors(fields)) return;
-          }
-          if (res.status >= 500) setUncertainSave(true);
-          requestSent = false;
-          throw new TosUiError('saveFailed', res.status);
-        }
-        const result: unknown = await res.json().catch(() => null);
-        if (!current()) return;
-        if (
-          !isVersion(result) ||
-          !result.revision ||
-          result.status !== 'draft' ||
-          result.versionId !== versionId ||
-          result.contentFa !== contentFa ||
-          result.contentEn !== contentEn ||
-          (editId && result.id !== editId)
-        ) {
-          setHistoryReady(false);
-          setUncertainSave(true);
-          throw new TosUiError('unconfirmedWrite');
-        }
-        historyRequest.current++;
-        setVersions((previous) => [result, ...previous.filter((v) => v.id !== result.id)]);
+        if (responseCode(body) === 'TOS_VERSION_ID_TAKEN') throw new TosUiError('versionIdTaken');
+        setHistoryReady(false);
+        throw new TosUiError('createConflict');
       }
+      if (!ok) {
+        if (status === 400) {
+          const fields =
+            body &&
+            typeof body === 'object' &&
+            'error' in body &&
+            body.error &&
+            typeof body.error === 'object' &&
+            'fields' in body.error
+              ? body.error.fields
+              : null;
+          if (Array.isArray(fields) && applyFieldErrors(fields)) return;
+        }
+        throw new TosUiError('saveFailed', status);
+      }
+      if (
+        !isVersion(body) ||
+        !body.revision ||
+        body.status !== 'draft' ||
+        body.versionId !== versionId ||
+        body.contentFa !== contentFa ||
+        body.contentEn !== contentEn ||
+        (editId && body.id !== editId)
+      )
+        throw new TosUiError('unconfirmedWrite');
+      requestSent = false;
+      historyRequest.current++;
+      setVersions((previous) => [body, ...previous.filter((version) => version.id !== body.id)]);
 
       if (!current()) return;
       setShowEditor(false);
@@ -496,9 +472,13 @@ export default function AdminTosPage() {
       await fetchVersions();
     } catch (err) {
       if (current()) {
-        if (requestSent && !(err instanceof TosUiError)) setUncertainSave(true);
-        setError(displayError(err, 'saveFailed'));
-        if (!(err instanceof TosUiError))
+        if (requestSent) {
+          requireCurrentHistory();
+          setUncertainSave(true);
+        }
+        const fallback = requestSent ? 'unconfirmedWrite' : 'saveFailed';
+        setError(displayError(err, fallback));
+        if (!requestSent && !(err instanceof TosUiError))
           editor.form.setError('root', { type: 'server', message: text.saveFailed });
       }
     } finally {
@@ -511,7 +491,7 @@ export default function AdminTosPage() {
   }
 
   async function reloadDraft() {
-    if (!editId || saveInFlight.current || scope.denied || loading) return;
+    if (!editId || saveInFlight.current || scope.denied || !historyReady || loading) return;
     const epoch = scope.version,
       generation = editorGeneration.current;
     const controller = new AbortController();
@@ -580,26 +560,26 @@ export default function AdminTosPage() {
     setPublishing(true);
 
     try {
-      const res = await fetch(`/api/admin/tos/versions/${publishVersion.id}/publish`, {
+      const {
+        ok,
+        status,
+        body: result,
+      } = await writeVersion(`/api/admin/tos/versions/${publishVersion.id}/publish`, {
         method: 'POST',
         headers: withCsrf({ 'Content-Type': 'application/json' }),
         body: JSON.stringify({ changeType, expectedRevision: publishVersion.revision }),
       });
       if (!current()) return;
-      if (res.status === 401 || res.status === 403) {
+      if (status === 401 || status === 403) {
         scope.deny();
         return;
       }
-      if (res.status === 409) {
+      if (status === 409) {
         setPreviewReady(false);
         throw new TosUiError('previewChanged');
       }
-      if (!res.ok) {
-        throw new TosUiError('publishFailed', res.status);
-      }
-
-      const result: unknown = await res.json().catch(() => null);
-      if (!current()) return;
+      if (status >= 500) throw new TosUiError('unconfirmedWrite', status);
+      if (!ok) throw new TosUiError('publishFailed', status);
       if (
         !isVersion(result) ||
         result.id !== publishVersion.id ||
@@ -609,10 +589,8 @@ export default function AdminTosPage() {
         result.versionId !== publishVersion.versionId ||
         result.contentFa !== publishVersion.contentFa ||
         result.contentEn !== publishVersion.contentEn
-      ) {
-        setPreviewReady(false);
+      )
         throw new TosUiError('unconfirmedWrite');
-      }
       historyRequest.current++;
       setVersions((previous) => [
         result,
@@ -622,7 +600,14 @@ export default function AdminTosPage() {
       toast.success(confirmationText('recorded', locale));
       await fetchVersions();
     } catch (err) {
-      if (current()) setError(displayError(err, 'publishFailed'));
+      if (current()) {
+        if (!(err instanceof TosUiError) || err.key === 'unconfirmedWrite') {
+          requireCurrentHistory();
+          setPublishVersion(null);
+          setPreviewReady(false);
+        }
+        setError(displayError(err, 'unconfirmedWrite'));
+      }
     } finally {
       if (token === busyTokens.current.publish) {
         publishInFlight.current = false;
@@ -640,13 +625,20 @@ export default function AdminTosPage() {
 
     const epoch = scope.version;
     const current = () => mounted.current && scope.live.current === epoch;
+    const historyOwner = historyRequest.current;
     const token = ++busyTokens.current.discard;
     discardInFlight.current = true;
     setDiscarding(true);
+    let requestSent = false;
     try {
-      if (!(await confirmDestruction(text.confirmDiscard, text.confirmDiscard)) || !current())
+      if (
+        !(await confirmDestruction(text.confirmDiscard, text.confirmDiscard)) ||
+        !current() ||
+        historyOwner !== historyRequest.current
+      )
         return;
-      const res = await fetch(
+      requestSent = true;
+      const { ok, status } = await writeVersion(
         `/api/admin/tos/versions/${version.id}?expectedRevision=${encodeURIComponent(version.revision)}`,
         {
           headers: withCsrf(),
@@ -654,24 +646,28 @@ export default function AdminTosPage() {
         }
       );
       if (!current()) return;
-      if (res.status === 401 || res.status === 403) {
+      if (status === 401 || status === 403) {
         scope.deny();
         return;
       }
-      if (res.status === 409) {
+      if (status === 409) {
         setHistoryReady(false);
         throw new TosUiError('draftChanged');
       }
-      if (!current()) return;
-      if (res.status !== 204) {
-        throw new TosUiError('discardFailed', res.status);
-      }
+      if (status >= 500 || (ok && status !== 204)) throw new TosUiError('unconfirmedWrite', status);
+      if (status !== 204) throw new TosUiError('discardFailed', status);
+      requestSent = false;
       historyRequest.current++;
       setVersions((previous) => previous.filter((v) => v.id !== version.id));
       toast.success(confirmationText('recorded', locale));
       await fetchVersions();
     } catch (err) {
-      if (current()) setError(displayError(err, 'discardFailed'));
+      if (current()) {
+        const unconfirmed =
+          requestSent && (!(err instanceof TosUiError) || err.key === 'unconfirmedWrite');
+        if (unconfirmed) requireCurrentHistory();
+        setError(displayError(err, unconfirmed ? 'unconfirmedWrite' : 'discardFailed'));
+      }
     } finally {
       if (token === busyTokens.current.discard) {
         discardInFlight.current = false;
@@ -876,7 +872,7 @@ export default function AdminTosPage() {
                     <Button
                       type="button"
                       onClick={reloadDraft}
-                      disabled={saving}
+                      disabled={saving || !historyReady || loading}
                       className="rounded border px-4 py-2"
                     >
                       {text.reloadDraft}

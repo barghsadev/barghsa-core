@@ -633,7 +633,10 @@ it.each(
       .querySelector('form')!
       .dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
   );
-  expect(host.querySelector('[role=alert]')).not.toBeNull();
+  await vi.waitFor(async () => {
+    await act(async () => {});
+    expect(host.querySelector('[role=alert]')).not.toBeNull();
+  });
   expect(host.querySelector<HTMLButtonElement>('form button[type=submit]')?.disabled).toBe(true);
   expect(vi.mocked(fetch).mock.calls.filter(([, init]) => !init?.method).length).toBe(1);
   const request = vi.mocked(fetch).mock.calls.find(([, init]) => init?.method === 'PUT')!;
@@ -730,8 +733,16 @@ it.each([
     expect(host.querySelector('[role=alert]')).toBeNull();
   } else {
     expect(host.querySelector('[role=alert]')).not.toBeNull();
-    expect(host.querySelector('[role=region][aria-label="Publish TOS Version"]')).not.toBeNull();
-    if (scenario.status !== 503) expect(publish.disabled).toBe(true);
+    if (scenario.status === 409) {
+      expect(host.querySelector('[role=region][aria-label="Publish TOS Version"]')).not.toBeNull();
+      expect(publish.disabled).toBe(true);
+    } else {
+      expect(host.querySelector('[role=region][aria-label="Publish TOS Version"]')).toBeNull();
+      expect(
+        [...host.querySelectorAll('button')].find((button) => button.textContent === 'Publish')
+          ?.disabled
+      ).toBe(true);
+    }
   }
 });
 it.each([200, 409, 503, 'network'] as const)(

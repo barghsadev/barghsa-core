@@ -243,7 +243,7 @@ it.each(domains)('%s late successful command cannot restore denied content', asy
   await click(edit(domain));
   await fill(input(domain), 'Local text');
   await submit();
-  if (domain === 'templates') await vi.waitFor(() => expect(resolve).toBeTypeOf('function'));
+  await vi.waitFor(() => expect(resolve).toBeTypeOf('function'));
   denied = true;
   await click(refresh(domain));
   await act(async () =>

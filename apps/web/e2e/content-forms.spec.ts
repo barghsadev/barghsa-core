@@ -1,4 +1,6 @@
-import { test, expect } from './coverage-fixture';
+import { test, expect, type Route } from './coverage-fixture';
+import { approveRiskConfirmation } from './confirmation-fixture';
+import { confirmationText } from '@barghsa/i18n/confirmation';
 import { setupCatalogueForms } from './catalogue-form-fixture';
 import { contractTemplatesText } from '@barghsa/i18n/contract-templates';
 import { contentFormText } from '@barghsa/i18n/content-forms';
@@ -13,6 +15,122 @@ import AxeBuilder from '@axe-core/playwright';
 import { measureControlContrast } from './control-contrast';
 
 test.use({ viewport: { width: 390, height: 844 } });
+for (const locale of ['en', 'fa'] as const)
+  for (const operation of ['update', 'publish', 'discard'] as const) {
+    test(`a stalled terms ${operation} requires current history (${locale})`, async ({ page }) => {
+      await setupCatalogueForms(page, locale, locale === 'fa');
+      const text = adminTosText(locale);
+      const draft = termsVersion();
+      const base = '/api/admin/tos/versions';
+      const updated = {
+        ...draft,
+        contentEn: 'Reviewed replacement terms',
+        revision: 'b'.repeat(64),
+      };
+      const published = {
+        ...draft,
+        status: 'published' as const,
+        isActive: true,
+        changeType: 'major' as const,
+        publishedAt: '2026-10-02T00:00:00Z',
+      };
+      let versions = [draft];
+      const writes: Array<{ path: string; method: string; body: unknown }> = [];
+      let held: Route | undefined;
+      await page.route(`**${base}**`, (route) => {
+        const request = route.request();
+        const url = new URL(request.url());
+        if (request.method() === 'GET')
+          return route.fulfill({ json: url.pathname === base ? versions : versions[0] });
+        writes.push({
+          path: url.pathname + url.search,
+          method: request.method(),
+          body: request.postDataJSON(),
+        });
+        versions = operation === 'update' ? [updated] : operation === 'publish' ? [published] : [];
+        held = route;
+      });
+      await page.goto('/admin/tos');
+      const history = page.getByRole('list', { name: text.history, exact: true });
+      const edit = history.getByRole('button', { name: text.edit, exact: true });
+      const publish = history.getByRole('button', { name: text.publish, exact: true });
+      const discard = history.getByRole('button', { name: text.discard, exact: true });
+      const preview = page.getByRole('region', { name: text.publishTitle, exact: true });
+      const english = page.getByRole('textbox', { name: text.english, exact: true });
+      await expect(history).toBeVisible();
+      if (operation === 'update') {
+        await edit.click();
+        await english.fill(updated.contentEn);
+        await page.clock.install();
+        await page.getByRole('button', { name: text.updateDraft, exact: true }).click();
+      } else if (operation === 'publish') {
+        await publish.click();
+        await preview.getByRole('checkbox', { name: text.materialChange }).check();
+        await page.clock.install();
+        await preview.getByRole('button', { name: text.publish, exact: true }).click();
+      } else {
+        await discard.click();
+        await approveRiskConfirmation(page, locale, 'destructive');
+        await page.clock.install();
+        await page
+          .getByRole('dialog', { name: text.confirmDiscard, exact: true })
+          .getByRole('button', {
+            name: confirmationText('confirm', locale),
+            exact: true,
+          })
+          .click();
+      }
+      await expect.poll(() => !!held).toBe(true);
+      await page.clock.fastForward(15_001);
+      await expect(
+        page.getByRole('alert').filter({ hasText: text.unconfirmedWrite })
+      ).toBeVisible();
+      await expect(edit).toBeDisabled();
+      await expect(publish).toBeDisabled();
+      await expect(discard).toBeDisabled();
+      await expect(preview).toHaveCount(0);
+      const path = `${base}/${draft.id}`;
+      expect(writes).toEqual([
+        operation === 'update'
+          ? {
+              path,
+              method: 'PUT',
+              body: {
+                expectedRevision: draft.revision,
+                versionId: draft.versionId,
+                contentFa: draft.contentFa,
+                contentEn: updated.contentEn,
+              },
+            }
+          : operation === 'publish'
+            ? {
+                path: `${path}/publish`,
+                method: 'POST',
+                body: { changeType: 'major', expectedRevision: draft.revision },
+              }
+            : { path: `${path}?expectedRevision=${draft.revision}`, method: 'DELETE', body: null },
+      ]);
+      await held!
+        .fulfill(operation === 'discard' ? { status: 204 } : { json: versions[0] })
+        .catch(() => {});
+      await page.getByRole('button', { name: text.refresh, exact: true }).click();
+      if (operation === 'update') {
+        await expect(english).toContainText(updated.contentEn);
+        await page.getByRole('button', { name: text.reloadDraft, exact: true }).click();
+        await expect(
+          page.getByRole('button', { name: text.updateDraft, exact: true })
+        ).toBeEnabled();
+      } else if (operation === 'publish') {
+        await expect(history).toContainText(text.active);
+        await expect(publish).toHaveCount(0);
+      } else {
+        await expect(page.getByRole('button', { name: text.newDraft, exact: true })).toBeEnabled();
+        await expect(discard).toHaveCount(0);
+      }
+      expect(writes).toHaveLength(1);
+    });
+  }
+
 for (const locale of ['en', 'fa'] as const)
   for (const dark of [false, true]) {
     test(`saved terms links and active formatting stay readable (${locale}, ${dark ? 'dark' : 'light'})`, async ({
