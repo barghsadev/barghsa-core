@@ -1,11 +1,10 @@
-import { readWithDeadline } from '../lib/server-query-client.js';
 import { feedbackText } from '@barghsa/i18n/feedback';
-import { useQueryClient } from '@tanstack/react-query';
+import { useManualServerRead } from '../hooks/useServerQuery.js';
 import { queryKeys } from '../lib/query-keys.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { withCsrf } from '../lib/csrf.js';
-import { useEffect, useId, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useLocation, useRouter } from '@tanstack/react-router';
 import { t } from '@barghsa/i18n/workspace';
 import { WaitingForBarghsa } from '@barghsa/ui';
@@ -56,9 +55,7 @@ function OwnedVerificationBanner({
   accountId: string | null;
   revision: number;
 }) {
-  const client = useQueryClient();
-  const reader = useId();
-  const sequence = useRef(0);
+  const read = useManualServerRead();
   const [status, setStatus] = useState<VerificationStatusResponse | null>(null);
   const [verification, setVerification] = useState<'idle' | 'working' | 'verified' | 'error'>(
     'idle'
@@ -74,41 +71,26 @@ function OwnedVerificationBanner({
     const controller = new AbortController();
     const key = queryKeys.profiles.authority(
       { context: 'account', ownerId: accountId ?? 'current-session', accountId, revision },
-      JSON.stringify([reader, 'verification-status', pathname, locale, ++sequence.current])
+      JSON.stringify(['verification-status', pathname, locale])
     );
     setStatus(null);
 
-    async function fetchStatus() {
-      try {
-        const data = await client.fetchQuery({
-          queryKey: key,
-          staleTime: 0,
-          gcTime: 0,
-          retry: false,
-          queryFn: ({ signal: ownerSignal }) =>
-            readWithDeadline(ownerSignal, async (signal) => {
-              const response = await fetch('/api/profiles/verification-status', {
-                method: 'GET',
-                credentials: 'include',
-                signal,
-                headers: { Accept: 'application/json', 'Accept-Language': locale },
-              });
-              return response.ok ? ((await response.json()) as VerificationStatusResponse) : null;
-            }),
-        });
-        if (!controller.signal.aborted) setStatus(data);
-      } catch {
+    void read(key, controller.signal, async (signal) => {
+      const response = await fetch('/api/profiles/verification-status', {
+        credentials: 'include',
+        signal,
+        headers: { Accept: 'application/json', 'Accept-Language': locale },
+      });
+      return response.ok ? ((await response.json()) as VerificationStatusResponse) : null;
+    })
+      .then((value) => {
+        if (!controller.signal.aborted) setStatus(value);
+      })
+      .catch(() => {
         // The previous status was cleared before the read.
-      }
-    }
-
-    fetchStatus();
-
-    return () => {
-      controller.abort();
-      void client.cancelQueries({ queryKey: key, exact: true });
-    };
-  }, [locale, pathname, client, accountId, revision, reader]);
+      });
+    return () => controller.abort();
+  }, [locale, pathname, read, accountId, revision]);
 
   // Don't render anything while loading, or if no status data, or if dismissed
   if (!status) return null;

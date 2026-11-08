@@ -55,7 +55,7 @@ const severities = ['low', 'medium', 'high', 'critical'];
 const pageSize = 25;
 const endpoint = '/api/admin/reconciliation/items';
 async function reconciliationRead(path: string, signal: AbortSignal): Promise<unknown> {
-  const response = await fetch(path, { signal });
+  const response = await fetch(path, { signal, cache: 'no-store' });
   if (!response.ok) throw new ServerQueryError(response.status);
   return response.json();
 }
@@ -381,6 +381,7 @@ function OwnedReconciliation({ queries }: { queries?: ListQueryBinding }) {
         description: label('confirm'),
         path: `/api/admin/reconciliation/items/${selected.id}/${verb}`,
         method: 'POST',
+        responseDeadline: true,
         body: verb === 'investigate' ? {} : { note },
         successStatus: 200,
         conflictMessage: label('changed'),

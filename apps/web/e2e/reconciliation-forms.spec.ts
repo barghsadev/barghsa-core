@@ -266,14 +266,19 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(page.getByRole('status').filter({ hasText: s.word('saved') })).toHaveCount(0);
   });
 
-  for (const result of ['wrong-receipt', 'lost-response'] as const)
+  for (const result of ['wrong-receipt', 'lost-response', 'stalled-response'] as const)
     test(`reconciliation requires exact saved-state recovery after ${result} (${locale})`, async ({
       page,
     }) => {
       const s = await setup(page, locale);
       const writes: string[] = [];
+      let releaseResolve!: () => void;
+      const held = new Promise<void>((resolve) => {
+        releaseResolve = resolve;
+      });
+      if (result === 'stalled-response') await page.clock.install();
       s.readStatus(503);
-      await page.route('**/api/admin/reconciliation/items/*/*', (route) => {
+      await page.route('**/api/admin/reconciliation/items/*/*', async (route) => {
         if (route.request().method() !== 'POST') return route.fallback();
         const verb = new URL(route.request().url()).pathname.split('/').at(-1)!;
         writes.push(verb);
@@ -284,6 +289,10 @@ for (const locale of ['en', 'fa'] as const) {
             resolutionNote: 'Saved original',
             resolvedByUsername: 'reviewer',
           });
+          if (result === 'stalled-response') {
+            await held;
+            return route.fulfill({ json: s.row() }).catch(() => {});
+          }
           return route.fulfill(
             result === 'wrong-receipt'
               ? { json: { ...s.row(), id: paymentInvoiceId } }
@@ -298,6 +307,19 @@ for (const locale of ['en', 'fa'] as const) {
       await note.fill('  Retained raw explanation  ');
       await s.button('resolve').click();
       await s.confirm().click();
+      if (result === 'stalled-response') {
+        try {
+          await expect.poll(() => writes).toEqual(['resolve']);
+          await expect(s.dialog().locator('button[type=submit]')).toHaveAttribute(
+            'aria-busy',
+            'true'
+          );
+          await page.clock.fastForward(15_200);
+          await expect(s.dialog()).toContainText(s.word('unconfirmed'));
+        } finally {
+          releaseResolve();
+        }
+      }
       await expect(s.dialog()).toContainText(s.word('unconfirmed'));
       await expect(note).toHaveValue('  Retained raw explanation  ');
       await expect(note).toBeDisabled();
