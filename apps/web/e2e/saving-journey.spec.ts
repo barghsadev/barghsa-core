@@ -5,6 +5,7 @@ import { t as appCopy } from '@barghsa/i18n/app';
 import { test, expect, type Page } from './coverage-fixture';
 import { approveRiskConfirmation } from './confirmation-fixture';
 import { checkRoutePresentation } from './route-presentation';
+import { expectNoticeBelowPageHeader } from './notice-placement';
 
 const profileId = '11111111-1111-4111-8111-111111111111';
 const planId = '22222222-2222-4222-8222-222222222222';
@@ -633,6 +634,7 @@ for (const locale of ['en', 'fa'] as const)
       .click();
     await expect(page.getByText('Saving Street')).toBeVisible();
     await expect(addressSaved).toHaveCount(1);
+    await expectNoticeBelowPageHeader(addressSaved);
     expect(addressWrites).toHaveLength(3);
     expect(addressWrites[2]).toEqual(addressWrites[1]);
     await expect(choice('chooseAddress')).toHaveAttribute('aria-required', 'true');

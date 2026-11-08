@@ -7,7 +7,11 @@ import { useTheme } from '../hooks/useTheme.js';
 import { connectToast } from '../lib/toast-api.js';
 
 function toastAnchor() {
-  return document.querySelector('[data-toast-anchor]') ?? document.querySelector('header');
+  return (
+    document.querySelector('main [data-toast-anchor]') ??
+    document.querySelector('[data-toast-anchor]') ??
+    document.querySelector('header')
+  );
 }
 
 function anchorOffset(anchor = toastAnchor()) {

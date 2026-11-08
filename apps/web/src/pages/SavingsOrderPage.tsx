@@ -759,7 +759,7 @@ function OwnedSavingsOrderPage() {
           />
         </Suspense>
       )}
-      <header className="space-y-2">
+      <header className="space-y-2" data-toast-anchor>
         <Link to="/savings" className="touch-action text-sm text-primary hover:underline">
           {copy('title')}
         </Link>

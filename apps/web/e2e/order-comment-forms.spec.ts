@@ -8,6 +8,7 @@ import { loadingText } from '@barghsa/i18n/loading-feedback';
 import { test, expect } from './coverage-fixture';
 import { completeOtp } from './otp-step-up-fixture';
 import { checkRoutePresentation } from './route-presentation';
+import { expectNoticeBelowPageHeader } from './notice-placement';
 import {
   setupOrderCommentForms,
   electricityOrder,
@@ -108,6 +109,7 @@ for (const [locale, theme] of [
     state.readMode = 'success';
     await reload.click();
     await expect(retryNotice).toBeVisible();
+    await expectNoticeBelowPageHeader(retryNotice);
     await expect(section.locator('ol>li')).toHaveCount(52);
     await expect(section.locator('ol>li').first()).toContainText('Chronological comment 0');
     expect(state.reads.at(-1)).toEqual(failedPage);

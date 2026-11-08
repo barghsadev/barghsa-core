@@ -5,6 +5,7 @@ import { test, expect, type Page } from './coverage-fixture';
 import { t } from '@barghsa/i18n/app';
 import { fullNavigation } from './navigation-fixture';
 import { checkRoutePresentation } from './route-presentation';
+import { expectNoticeBelowPageHeader } from './notice-placement';
 
 type Mode = 'simple' | 'advanced';
 type Locale = 'en' | 'fa';
@@ -689,6 +690,13 @@ for (const locale of ['en', 'fa'] as const)
       ).toBeVisible();
       await expect(page).toHaveURL(/step=5$/);
       await expect(quantity).toBeVisible();
+      if (mode === 'advanced') {
+        await expectNoticeBelowPageHeader(
+          page.locator('[data-sonner-toast][data-type="error"]').filter({
+            hasText: t('electricity.order.draftSaveFailed', locale),
+          })
+        );
+      }
       state.saveStatus = 200;
       await quantity.getByRole('button').click();
       await expect(page).toHaveURL(/step=2$/);

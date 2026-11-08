@@ -735,7 +735,7 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
       className="container mx-auto max-w-2xl space-y-6 px-4 py-8"
       dir={locale === 'fa' ? 'rtl' : 'ltr'}
     >
-      <header>
+      <header data-toast-anchor>
         <Link
           to="/electricity/orders"
           className="touch-action text-sm text-primary underline underline-offset-4"

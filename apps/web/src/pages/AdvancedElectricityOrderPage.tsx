@@ -715,7 +715,7 @@ export function AdvancedElectricityOrderPage() {
           />
         </Suspense>
       )}
-      <header>
+      <header data-toast-anchor>
         <h1 className="text-2xl font-semibold">{title}</h1>
         <p className="text-sm text-muted-foreground">
           {t('electricity.advanced.description', locale)}
