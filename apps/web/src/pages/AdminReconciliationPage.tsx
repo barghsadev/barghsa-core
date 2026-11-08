@@ -781,7 +781,7 @@ function OwnedReconciliation({ queries }: { queries?: ListQueryBinding }) {
                       name="note"
                       id="rex-note"
                       label={label('note')}
-                      inputProps={{ maxLength: 1000, className: 'min-h-24' }}
+                      inputProps={{ maxLength: 1000, className: 'min-h-24', 'aria-required': true }}
                     />
                     {notes.formState.errors.root?.validation?.message && (
                       <p role="alert">{notes.formState.errors.root.validation.message}</p>

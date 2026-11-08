@@ -74,6 +74,8 @@ export default function AdminMaintenancePage() {
   const zoneChanged = time.status === 'ready' && draftZone !== time.timezone;
   const locked = validating || !!action || uncertain;
   const canEdit = state === 'ready' && time.status === 'ready' && !stale && !zoneChanged;
+  const deadlineId = 'maintenance-deadline';
+  const deadlineErrorId = form.formState.errors.deadline ? `${deadlineId}-message` : undefined;
 
   function clearPrivate() {
     ++generation.current;
@@ -353,19 +355,19 @@ export default function AdminMaintenancePage() {
                     control={form.control}
                     name="reasonFa"
                     label={copy('reasonFa')}
-                    inputProps={{ dir: 'rtl', maxLength: 500 }}
+                    inputProps={{ dir: 'rtl', maxLength: 500, 'aria-required': true }}
                   />
                   <FormTextarea
                     control={form.control}
                     name="reasonEn"
                     label={copy('reasonEn')}
-                    inputProps={{ dir: 'ltr', maxLength: 500 }}
+                    inputProps={{ dir: 'ltr', maxLength: 500, 'aria-required': true }}
                   />
                   <FormInput
                     control={form.control}
                     name="owner"
                     label={copy('owner')}
-                    inputProps={{ maxLength: 100 }}
+                    inputProps={{ maxLength: 100, 'aria-required': true }}
                   />
                   <p className="text-sm">
                     {copy('accountTime')}: <bdi>{draftZone}</bdi>
@@ -374,7 +376,7 @@ export default function AdminMaintenancePage() {
                     control={form.control}
                     name="deadline"
                     render={({ field }) => (
-                      <FormItem id="maintenance-deadline">
+                      <FormItem id={deadlineId}>
                         <FormControl>
                           <div
                             role="group"
@@ -390,6 +392,10 @@ export default function AdminMaintenancePage() {
                                 timezone={draftZone}
                                 value={draft.deadline.date}
                                 disabled={locked || !canEdit}
+                                triggerProps={{
+                                  'aria-required': true,
+                                  'aria-describedby': deadlineErrorId,
+                                }}
                                 onChange={(date) => setDeadline({ date })}
                               />
                               <div className="space-y-2">
@@ -397,6 +403,8 @@ export default function AdminMaintenancePage() {
                                 <Input
                                   id="maintenance-time"
                                   type="time"
+                                  aria-required="true"
+                                  aria-describedby={deadlineErrorId}
                                   value={draft.deadline.time}
                                   onChange={(event) => setDeadline({ time: event.target.value })}
                                 />

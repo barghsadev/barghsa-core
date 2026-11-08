@@ -370,6 +370,15 @@ for (const locale of ['en', 'fa'] as const) {
       city = page.locator('#addresses-field-2');
     const full = page.locator('#addresses-field-3'),
       postal = page.locator('#addresses-field-4');
+    for (const [field, key] of [
+      [province, 'province'],
+      [city, 'city'],
+      [full, 'fullAddress'],
+      [postal, 'postalCode'],
+    ] as const) {
+      await expect(field).toHaveAccessibleName(t(`settings.addresses.form.${key}`, locale));
+      await expect(field).toHaveAttribute('aria-required', 'true');
+    }
     await province.selectOption(provinceId);
     await expect(city.locator(`option[value="${cityId}"]`)).toHaveCount(1);
     await city.selectOption(cityId);

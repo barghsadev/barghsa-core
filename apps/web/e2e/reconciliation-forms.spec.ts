@@ -181,10 +181,12 @@ for (const locale of ['en', 'fa'] as const) {
       `/admin/invoices?invoiceId=${paymentInvoiceId}`
     );
     const note = page.getByLabel(s.word('note'), { exact: true });
+    await expect(note).toHaveAttribute('aria-required', 'true');
     await note.fill('  ');
     await s.button('resolve').click();
     await expect(note).toBeFocused();
     await expect(note).toHaveAttribute('aria-invalid', 'true');
+    await expect(note).toHaveAccessibleDescription(s.word('invalidNote'));
     await expect(note).toHaveValue('  ');
     expect(writes).toHaveLength(0);
     await inspect(page, locale, info.project.name, 'validation');

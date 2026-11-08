@@ -409,6 +409,7 @@ function SettingsAddressesPage() {
                         <FormControl>
                           <select
                             {...field}
+                            aria-required="true"
                             onChange={(event) => {
                               if (command.coordination.isLocked()) return;
                               form.setValue('cityId', '', {
@@ -451,6 +452,7 @@ function SettingsAddressesPage() {
                         <FormControl>
                           <DependentSelect
                             {...field}
+                            aria-required="true"
                             dependencyValue={formProvinceId}
                             ready={cityOptions.ready}
                             loading={cityOptions.loading}
@@ -508,6 +510,7 @@ function SettingsAddressesPage() {
                     label={t('settings.addresses.form.fullAddress', locale)}
                     reserveMessageSpace
                     inputProps={{
+                      'aria-required': true,
                       placeholder: t('settings.addresses.form.fullAddressPlaceholder', locale),
                       dir: locale === 'fa' ? 'rtl' : 'ltr',
                       maxLength: 500,
@@ -521,6 +524,7 @@ function SettingsAddressesPage() {
                     label={t('settings.addresses.form.postalCode', locale)}
                     reserveMessageSpace
                     inputProps={{
+                      'aria-required': true,
                       type: 'text',
                       inputMode: 'numeric',
                       placeholder: t('settings.addresses.form.postalCodePlaceholder', locale),

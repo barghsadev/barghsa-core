@@ -160,22 +160,29 @@ for (const locale of ['en', 'fa'] as const) {
     const fa = page.getByLabel(word('reasonFa'), { exact: true });
     const en = page.getByLabel(word('reasonEn'), { exact: true });
     const owner = page.getByLabel(word('owner'), { exact: true });
+    const date = page.getByRole('combobox', { name: word('returnDate'), exact: true });
+    const time = page.getByLabel(word('returnTime'), { exact: true });
+    for (const field of [fa, en, owner, date, time])
+      await expect(field).toHaveAttribute('aria-required', 'true');
     await fa.fill(' ');
     await en.fill(' ');
     await owner.fill(' ');
-    await page.getByLabel(word('returnTime'), { exact: true }).fill('');
+    await time.fill('');
     await page.getByRole('button', { name: word('save'), exact: true }).click();
     await expect(fa).toBeFocused();
     await expect(fa).toHaveAttribute('aria-invalid', 'true');
     await expect(
       page.getByRole('group', { name: word('estimatedUntil'), exact: true })
     ).toHaveAttribute('aria-invalid', 'true');
+    for (const field of [date, time])
+      await expect(field).toHaveAccessibleDescription(word('invalidDeadline'));
     expect(writes).toHaveLength(0);
     await inspect(page, locale, info.project.name, 'validation');
     await fa.fill('  پیام تازه مشتری  ');
     await en.fill('  A new customer message  ');
     await owner.fill('  Operations  ');
-    await page.getByLabel(word('returnTime'), { exact: true }).fill('04:15');
+    await time.fill('04:15');
+    for (const field of [date, time]) await expect(field).not.toHaveAttribute('aria-describedby');
     await page.locator('form').evaluate((form: HTMLFormElement) => {
       form.requestSubmit();
       form.requestSubmit();
@@ -268,6 +275,8 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(owner).toBeEnabled();
     await expect(owner).toHaveValue('  Revised Operations  ');
     await page.getByRole('checkbox', { name: word('active'), exact: true }).uncheck();
+    for (const key of ['reasonFa', 'reasonEn', 'owner', 'returnDate', 'returnTime'])
+      await expect(page.getByLabel(word(key), { exact: true })).toHaveCount(0);
     await page.getByRole('button', { name: word('save'), exact: true }).click();
     await confirm().click();
     await expect(
