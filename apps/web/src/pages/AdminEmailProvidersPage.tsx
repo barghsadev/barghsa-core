@@ -5,7 +5,9 @@ import {
   useProviderCatalogue,
   providerBasis,
   useProviderCommandGuard,
+  useProviderCommandRecovery,
 } from '../hooks/useProviderCatalogue.js';
+import { CommandFeedback } from '../components/CommandFeedback.js';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import { DeliveryProviderTable } from '../components/DeliveryProviderTable.js';
 import { ProviderHealthMetrics } from '../components/ProviderHealthMetrics.js';
@@ -89,12 +91,13 @@ export default function AdminEmailProvidersPage() {
   const [invalidConfig, setInvalidConfig] = useState(false);
   const [editBasis, setEditBasis] = useState<string | null>(null);
   const inFlight = useRef(false);
+  const protectedDispatched = useRef(false);
   const [busy, setBusy] = useState(false);
   const [protectedAction, setProtectedAction] = useState<{
     action: TeamAction;
     basis: string;
     onSuccess: (result: unknown) => Promise<void>;
-    save?: boolean;
+    kind: 'save' | 'test' | 'change';
   } | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
@@ -130,8 +133,6 @@ export default function AdminEmailProvidersPage() {
   const form = editor.values;
   const [label, setLabel] = editor.field('label');
   const generation = useRef(0);
-  const [uncertain, setUncertain] = useState(false);
-  const [recovered, setRecovered] = useState(false);
   const fieldErrors = useActionFieldErrors(
     editor.form,
     messages,
@@ -153,8 +154,6 @@ export default function AdminEmailProvidersPage() {
     generation.current++;
     inFlight.current = false;
     editor.setValidationPending(false);
-    setUncertain(false);
-    setRecovered(false);
     setTransport('smtp');
     setProtectedAction(null);
     setTestOutcome({});
@@ -167,6 +166,14 @@ export default function AdminEmailProvidersPage() {
   const scope = useCatalogueScope(clearPrivate);
   const confirmDestruction = useDestructiveConfirm(uiLocale, scope.version);
   const catalogue = useProviderCatalogue(scope, listProviders);
+  const command = useProviderCommandRecovery(catalogue.ownerKey, catalogue);
+  const previousOwner = useRef(catalogue.ownerKey);
+  useEffect(() => {
+    if (previousOwner.current === catalogue.ownerKey) return;
+    previousOwner.current = catalogue.ownerKey;
+    clearPrivate();
+  }, [catalogue.ownerKey, clearPrivate]);
+  const uncertain = command.pending === 'save';
   const providers = catalogue.data ?? [];
   useEffect(() => {
     const allowed = new Map(
@@ -195,7 +202,7 @@ export default function AdminEmailProvidersPage() {
       maskedConfig: p.maskedConfig,
     });
   const basis = providerBasis(providers.map((p) => rowBasis(p)).sort());
-  const capture = useProviderCommandGuard(basis, scope.live);
+  const capture = useProviderCommandGuard(basis, catalogue.ownerKey, scope.live);
   useEffect(() => setTestOutcome({}), [basis]);
   const staleEditor =
     editId !== null &&
@@ -215,13 +222,12 @@ export default function AdminEmailProvidersPage() {
     await catalogue.refresh();
   }, [catalogue.refresh]);
   useEffect(() => {
-    if (protectedAction && protectedAction.basis !== basis) setProtectedAction(null);
-    if (!inFlight.current) setBusy(false);
+    if (protectedAction && protectedAction.basis !== basis && !protectedDispatched.current)
+      setProtectedAction(null);
   }, [basis, protectedAction]);
   const recover = async () => {
     if (scope.denied) return scope.recover();
     await fetchAll();
-    if (!inFlight.current) setRecovered(true);
   };
   const recovery = (
     <div className="space-y-2">
@@ -238,8 +244,7 @@ export default function AdminEmailProvidersPage() {
     generation.current++;
     inFlight.current = false;
     setBusy(false);
-    setUncertain(false);
-    setRecovered(false);
+    command.reset();
     editor.setValidationPending(false);
   }
   function openCreate() {
@@ -304,14 +309,14 @@ export default function AdminEmailProvidersPage() {
     title: string,
     description: string,
     onSuccess: (result: unknown) => Promise<void>,
-    save = false
+    kind: 'save' | 'test' | 'change'
   ): boolean {
     if (!(error instanceof ProviderStepUpError)) return false;
     setProtectedAction({
       basis,
-      action: { ...error.action, title, description, requiresOtp: true },
+      action: { ...error.action, title, description, requiresOtp: true, responseDeadline: true },
       onSuccess,
-      save,
+      kind,
     });
     return true;
   }
@@ -327,13 +332,14 @@ export default function AdminEmailProvidersPage() {
       loadFailed ||
       scope.denied ||
       staleEditor ||
-      uncertain
+      command.pending
     )
       return;
     inFlight.current = true;
     const ticket = ++generation.current;
-    const validScope = capture();
-    const current = () => ticket === generation.current && validScope();
+    const guard = capture();
+    const owned = () => ticket === generation.current && guard.owned();
+    const current = () => owned() && guard.current();
     editor.setValidationPending(true);
     setBusy(true);
     setError(null);
@@ -354,7 +360,7 @@ export default function AdminEmailProvidersPage() {
         providers.find((p) => p.id === id)
       );
       const accept = async (result: unknown) => {
-        if (!current()) return;
+        if (!current()) throw new ProviderRequestError(false, [], true);
         try {
           const saved = validateProviderResult(result, 'draft', id ?? undefined);
           if (saved.transport !== kind || saved.label !== draft.label.trim())
@@ -372,30 +378,28 @@ export default function AdminEmailProvidersPage() {
               throw new ProviderRequestError();
           }
         } catch {
-          setUncertain(true);
-          setRecovered(false);
           throw new ProviderRequestError(false, [], true);
         }
         setTestOutcome({});
-        closeEditor();
         await fetchAll();
+        if (!owned()) return;
+        closeEditor();
+        setNotice(providerFormText('saved', uiLocale));
       };
       try {
         const result = id
           ? await updateProvider(id, { label: draft.label.trim(), config })
           : await createProvider(kind, draft.label.trim(), config);
-        if (!current()) {
-          if (ticket === generation.current) {
-            setUncertain(true);
-            setRecovered(false);
-          }
-          return;
-        }
         await accept(result);
       } catch (err) {
-        if (!current()) return;
+        if (!owned()) return;
         if (err instanceof ProviderRequestError && err.denied) {
           scope.deny();
+          return;
+        }
+        if (!current() || (err instanceof ProviderRequestError && err.uncertain)) {
+          command.mark('save');
+          setError(providerText('admin.providers.error.save', uiLocale));
           return;
         }
         if (err instanceof ProviderRequestError && fieldErrors(err.fields)) return;
@@ -408,14 +412,10 @@ export default function AdminEmailProvidersPage() {
             ),
             draft.label.trim(),
             accept,
-            true
+            'save'
           )
         )
           return;
-        if (err instanceof ProviderRequestError && err.uncertain) {
-          setUncertain(true);
-          setRecovered(false);
-        }
         setError(providerText('admin.providers.error.save', uiLocale));
       }
     } finally {
@@ -427,187 +427,90 @@ export default function AdminEmailProvidersPage() {
     }
   }
 
-  async function handleTest(p: EmailProvider, recipient: string) {
-    if (inFlight.current || protectedAction || loading || loadFailed || scope.denied) return;
-    inFlight.current = true;
-    const ticket = ++generation.current;
-    const validScope = capture();
-    const current = () => ticket === generation.current && validScope();
-    setBusy(true);
-    setError(null);
-    setNotice(null);
-    try {
-      const outcome = await testConnection(p.id, recipient);
-      if (!current()) return;
-      setTestOutcome((prev) => ({ ...prev, [p.id]: outcome }));
-      await fetchAll();
-    } catch (err) {
-      if (!current()) return;
-      if (err instanceof ProviderRequestError && err.denied) {
-        scope.deny();
-        return;
-      }
-      if (
-        offerStepUp(
-          err,
-          providerText('admin.providers.test.run', uiLocale),
-          p.label,
-          async (result) => {
-            if (!current()) return;
-            const outcome = validateConnectionResult(result, p.id);
-            setTestOutcome((prev) => ({ ...prev, [p.id]: outcome }));
-            await fetchAll();
-          }
-        )
-      )
-        return;
-      // Connection errors surfaced inline on the row, not as a page error.
-      setTestOutcome((prev) => ({
-        ...prev,
-        [p.id]: { ok: false, error: providerText('admin.providers.error.test', uiLocale) },
-      }));
-    } finally {
-      if (ticket === generation.current) {
-        inFlight.current = false;
-        setBusy(false);
-      }
-    }
-  }
+  const actionsDisabled =
+    busy || loading || loadFailed || scope.denied || !!protectedAction || !!command.pending;
 
-  async function handleActivate(p: EmailProvider) {
-    if (inFlight.current || protectedAction || loading || loadFailed || scope.denied) return;
+  async function runProviderAction(
+    p: EmailProvider,
+    operation: 'test' | 'activate' | 'disable' | 'rollback',
+    recipient?: string
+  ) {
+    if (inFlight.current || actionsDisabled) return;
     inFlight.current = true;
     const ticket = ++generation.current;
-    const validScope = capture();
-    const current = () => ticket === generation.current && validScope();
+    const guard = capture();
+    const owned = () => ticket === generation.current && guard.owned();
+    const current = () => owned() && guard.current();
+    const kind = operation === 'test' ? 'test' : 'change';
+    const title = providerText(
+      operation === 'test' ? 'admin.providers.test.run' : `admin.providers.${operation}`,
+      uiLocale
+    );
     setBusy(true);
     setError(null);
     setNotice(null);
-    try {
-      await activateProvider(p.id);
-      if (!current()) return;
+    const accept = async (result: unknown, validatedTest?: TestConnectionOutcome) => {
+      if (!current()) throw new ProviderRequestError(false, [], true);
+      if (operation === 'test') {
+        const outcome = validatedTest ?? validateConnectionResult(result, p.id);
+        setTestOutcome((prev) => ({ ...prev, [p.id]: outcome }));
+      } else {
+        const saved = validateProviderResult(
+          result,
+          operation === 'disable' ? 'disabled' : 'active',
+          operation === 'rollback' ? undefined : p.id
+        );
+        if (operation === 'rollback' && saved.id === p.id)
+          throw new ProviderRequestError(false, [], true);
+        setNotice(
+          providerFormText(
+            operation === 'activate'
+              ? 'activated'
+              : operation === 'disable'
+                ? 'disabled'
+                : 'rolledBack',
+            uiLocale
+          )
+        );
+      }
       await fetchAll();
-    } catch (err) {
-      if (!current()) return;
-      if (err instanceof ProviderRequestError && err.denied) {
-        scope.deny();
-        return;
-      }
-      if (
-        offerStepUp(
-          err,
-          providerText('admin.providers.activate', uiLocale),
-          p.label,
-          async (result) => {
-            if (!current()) return;
-            validateProviderResult(result, 'active', p.id);
-            await fetchAll();
-          }
-        )
-      )
-        return;
-      setError(providerText('admin.providers.error.activate', uiLocale));
-    } finally {
-      if (ticket === generation.current) {
-        inFlight.current = false;
-        setBusy(false);
-      }
-    }
-  }
-
-  async function handleDisable(p: EmailProvider) {
-    if (inFlight.current || protectedAction || loading || loadFailed || scope.denied) return;
-    inFlight.current = true;
-    const ticket = ++generation.current;
-    const validScope = capture();
-    const current = () => ticket === generation.current && validScope();
-    setBusy(true);
-    setError(null);
-    setNotice(null);
+    };
     try {
       if (
-        !(await confirmDestruction(
-          providerText('admin.providers.disable', uiLocale),
-          providerText('admin.providers.disableConfirm', uiLocale)
+        (operation === 'disable' || operation === 'rollback') &&
+        (!(await confirmDestruction(
+          title,
+          providerText(`admin.providers.${operation}Confirm`, uiLocale)
         )) ||
-        !current()
+          !current())
       )
         return;
-      await disableProvider(p.id);
-      if (!current()) return;
-      await fetchAll();
+      if (operation === 'test') await accept(null, await testConnection(p.id, recipient));
+      else {
+        const send = {
+          activate: activateProvider,
+          disable: disableProvider,
+          rollback: rollbackProvider,
+        };
+        await accept(await send[operation](p.id));
+      }
     } catch (err) {
-      if (!current()) return;
+      if (!owned()) return;
       if (err instanceof ProviderRequestError && err.denied) {
         scope.deny();
         return;
       }
-      if (
-        offerStepUp(
-          err,
-          providerText('admin.providers.disable', uiLocale),
-          p.label,
-          async (result) => {
-            if (!current()) return;
-            validateProviderResult(result, 'disabled', p.id);
-            await fetchAll();
-          }
-        )
-      )
-        return;
-      setError(providerText('admin.providers.error.disable', uiLocale));
-    } finally {
-      if (ticket === generation.current) {
-        inFlight.current = false;
-        setBusy(false);
-      }
-    }
-  }
-
-  async function handleRollback(p: EmailProvider) {
-    if (inFlight.current || protectedAction || loading || loadFailed || scope.denied) return;
-    inFlight.current = true;
-    const ticket = ++generation.current;
-    const validScope = capture();
-    const current = () => ticket === generation.current && validScope();
-    setBusy(true);
-    setError(null);
-    setNotice(null);
-    try {
-      if (
-        !(await confirmDestruction(
-          providerText('admin.providers.rollback', uiLocale),
-          providerText('admin.providers.rollbackConfirm', uiLocale)
-        )) ||
-        !current()
-      )
-        return;
-      await rollbackProvider(p.id);
-      if (!current()) return;
-      setNotice(providerText('admin.providers.rollback', uiLocale));
-      await fetchAll();
-    } catch (err) {
-      if (!current()) return;
-      if (err instanceof ProviderRequestError && err.denied) {
-        scope.deny();
+      if (!current() || (err instanceof ProviderRequestError && err.uncertain)) {
+        command.mark(kind);
         return;
       }
-      if (
-        offerStepUp(
-          err,
-          providerText('admin.providers.rollback', uiLocale),
-          p.label,
-          async (result) => {
-            if (!current()) return;
-            const saved = validateProviderResult(result, 'active');
-            if (saved.id === p.id) throw new ProviderRequestError();
-            setNotice(providerText('admin.providers.rollback', uiLocale));
-            await fetchAll();
-          }
-        )
-      )
-        return;
-      setError(providerText('admin.providers.error.rollback', uiLocale));
+      if (offerStepUp(err, title, p.label, accept, kind)) return;
+      if (operation === 'test') {
+        setTestOutcome((prev) => ({
+          ...prev,
+          [p.id]: { ok: false, error: providerText('admin.providers.error.test', uiLocale) },
+        }));
+      } else setError(providerText(`admin.providers.error.${operation}`, uiLocale));
     } finally {
       if (ticket === generation.current) {
         inFlight.current = false;
@@ -747,7 +650,7 @@ export default function AdminEmailProvidersPage() {
           <>
             <button
               onClick={() => openEdit(p)}
-              disabled={busy || loading || loadFailed || scope.denied || !!protectedAction}
+              disabled={actionsDisabled}
               className="px-3 py-1 border border-input rounded text-xs hover:bg-muted disabled:opacity-50 w-full text-start"
             >
               {providerText('admin.providers.update', uiLocale)}
@@ -761,19 +664,13 @@ export default function AdminEmailProvidersPage() {
                   [p.id]: { basis: recipientBasis(p), value },
                 }))
               }
-              onTest={handleTest}
-              busy={busy || loading || loadFailed || scope.denied || !!protectedAction}
+              onTest={(provider, recipient) => runProviderAction(provider, 'test', recipient)}
+              busy={busy}
+              disabled={actionsDisabled}
             />
             <button
-              onClick={() => handleActivate(p)}
-              disabled={
-                busy ||
-                loading ||
-                loadFailed ||
-                scope.denied ||
-                !!protectedAction ||
-                p.lastTestStatus !== 'passed'
-              }
+              onClick={() => runProviderAction(p, 'activate')}
+              disabled={actionsDisabled || p.lastTestStatus !== 'passed'}
               title={
                 p.lastTestStatus !== 'passed'
                   ? providerText('admin.providers.activateHint', uiLocale)
@@ -794,8 +691,8 @@ export default function AdminEmailProvidersPage() {
               </div>
             )}
             <button
-              onClick={() => handleDisable(p)}
-              disabled={busy || loading || loadFailed || scope.denied || !!protectedAction}
+              onClick={() => runProviderAction(p, 'disable')}
+              disabled={actionsDisabled}
               className="px-3 py-1 border border-destructive/20 text-destructive rounded text-xs hover:bg-danger-soft-hover disabled:opacity-50 w-full text-start"
             >
               {providerText('admin.providers.disable', uiLocale)}
@@ -805,8 +702,8 @@ export default function AdminEmailProvidersPage() {
 
         {(p.status === 'superseded' || p.status === 'disabled') && (
           <button
-            onClick={() => handleRollback(p)}
-            disabled={busy || loading || loadFailed || scope.denied || !!protectedAction}
+            onClick={() => runProviderAction(p, 'rollback')}
+            disabled={actionsDisabled}
             className="px-3 py-1 border border-input rounded text-xs hover:bg-muted disabled:opacity-50 w-full text-start"
           >
             {providerText('admin.providers.rollback', uiLocale)}
@@ -832,7 +729,7 @@ export default function AdminEmailProvidersPage() {
         {!showEditor && (
           <button
             onClick={openCreate}
-            disabled={busy || loading || loadFailed || scope.denied || !!protectedAction}
+            disabled={actionsDisabled}
             className="px-4 py-2 bg-primary text-primary-foreground rounded hover:shadow-md"
           >
             {providerText('admin.providers.new', uiLocale)}
@@ -856,16 +753,22 @@ export default function AdminEmailProvidersPage() {
         </div>
       )}
 
-      {notice && (
-        <div className="bg-success-soft border border-success/20 text-success px-4 py-3 rounded relative">
-          {notice}
-          <button
-            onClick={() => setNotice(null)}
-            className="absolute top-2 end-2 text-success hover:underline"
-            aria-label={providerText('admin.providers.dismissNotice', uiLocale)}
+      <CommandFeedback message={notice} />
+      {command.pending && command.pending !== 'save' && (
+        <div className="space-y-2">
+          <p role="alert">
+            {providerFormText(
+              command.pending === 'test' ? 'testUnconfirmed' : 'changeUnconfirmed',
+              uiLocale
+            )}
+          </p>
+          <Button
+            variant="outline"
+            disabled={!command.canReview || !!protectedAction}
+            onClick={command.reset}
           >
-            ✕
-          </button>
+            {providerFormText(command.pending === 'test' ? 'reviewTest' : 'reviewChange', uiLocale)}
+          </Button>
         </div>
       )}
 
@@ -883,11 +786,16 @@ export default function AdminEmailProvidersPage() {
               type="button"
               variant="outline"
               disabled={
-                loading || loadFailed || busy || !!protectedAction || (uncertain && !recovered)
+                loading ||
+                loadFailed ||
+                busy ||
+                !!protectedAction ||
+                (uncertain && !command.canReview)
               }
               onClick={() => {
                 const row = providers.find((p) => p.id === editId);
-                if (row) openEdit(row);
+                if (row?.status === 'draft') openEdit(row);
+                else if (editId) closeEditor();
                 else openCreate();
               }}
             >
@@ -1000,7 +908,7 @@ export default function AdminEmailProvidersPage() {
               <button
                 type="button"
                 onClick={closeEditor}
-                disabled={busy || !!protectedAction}
+                disabled={busy || !!protectedAction || uncertain}
                 className="px-4 py-2 border border-input rounded text-sm hover:bg-muted disabled:opacity-50"
               >
                 {providerText('admin.providers.cancel', uiLocale)}
@@ -1014,9 +922,9 @@ export default function AdminEmailProvidersPage() {
         <TeamActionDialog
           action={protectedAction.action}
           onSuccess={protectedAction.onSuccess}
-          {...(protectedAction.save ? { onValidationError: fieldErrors } : {})}
+          {...(protectedAction.kind === 'save' ? { onValidationError: fieldErrors } : {})}
           confirmationDisabled={
-            (protectedAction.save && uncertain) ||
+            !!command.pending ||
             loading ||
             loadFailed ||
             scope.denied ||
@@ -1036,11 +944,21 @@ export default function AdminEmailProvidersPage() {
               {recovery}
             </>
           }
+          onUnconfirmed={() => command.mark(protectedAction.kind)}
+          onCommandDispatch={(sent) => {
+            protectedDispatched.current = sent;
+          }}
+          onPendingChange={(pending) => {
+            if (!pending) protectedDispatched.current = false;
+          }}
           onDenied={scope.deny}
           finalFocus={() =>
             document.querySelector<HTMLButtonElement>('[data-slot="list-page"] button')
           }
-          onClose={() => setProtectedAction(null)}
+          onClose={() => {
+            protectedDispatched.current = false;
+            setProtectedAction(null);
+          }}
         />
       )}
 
@@ -1357,12 +1275,14 @@ function EmailTestRow({
   provider,
   onTest,
   busy,
+  disabled,
   recipient,
   setRecipient,
 }: {
   provider: EmailProvider;
   onTest: (p: EmailProvider, recipient: string) => void;
   busy: boolean;
+  disabled: boolean;
   recipient: string;
   setRecipient: (value: string) => void;
 }) {
@@ -1374,7 +1294,7 @@ function EmailTestRow({
         type="email"
         value={recipient}
         maxLength={320}
-        disabled={busy}
+        disabled={disabled}
         onChange={(e) => setRecipient(e.target.value)}
         aria-label={providerText('admin.providers.test.recipient', uiLocale)}
         placeholder={providerText('admin.providers.test.recipient', uiLocale)}
@@ -1382,7 +1302,7 @@ function EmailTestRow({
       />
       <button
         onClick={() => onTest(provider, recipient.trim())}
-        disabled={busy || !recipient.trim()}
+        disabled={disabled || !recipient.trim()}
         className="px-3 py-1 border border-input rounded text-xs hover:bg-muted disabled:opacity-50 w-full text-start"
       >
         {busy ? (

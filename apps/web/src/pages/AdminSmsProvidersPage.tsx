@@ -4,6 +4,7 @@ import {
   useProviderCatalogue,
   providerBasis,
   useProviderCommandGuard,
+  useProviderCommandRecovery,
 } from '../hooks/useProviderCatalogue.js';
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
 import { LoadingStatus, Button, DateCell, Input, Label, ListPage, ScrollArea } from '@barghsa/ui';
@@ -72,13 +73,12 @@ export default function AdminSmsProvidersPage() {
     action: TeamAction;
     basis: string;
     onSuccess: (result: unknown) => Promise<void>;
-    save?: boolean;
+    kind: 'save' | 'test' | 'change';
   } | null>(null);
   const inFlight = useRef(false);
+  const protectedDispatched = useRef(false);
   const generation = useRef(0);
   const validationOwner = useRef(0);
-  const [uncertain, setUncertain] = useState(false),
-    [recovered, setRecovered] = useState(false);
   const eventNames = useRef<string[]>([]);
   const messages: Record<keyof SmsEditor, string> = {
     id: '',
@@ -132,11 +132,10 @@ export default function AdminSmsProvidersPage() {
     validationOwner.current++;
     inFlight.current = false;
     form.setValidationPending(false);
-    setUncertain(false);
-    setRecovered(false);
     setEditSource(null);
     setSelected(null);
     setFirstEvent('');
+    protectedDispatched.current = false;
     setProtectedAction(null);
     setError(null);
     setNotice(null);
@@ -144,6 +143,14 @@ export default function AdminSmsProvidersPage() {
   }, [resetForm, form.setValidationPending]);
   const scope = useCatalogueScope(clearPrivate);
   const catalogue = useProviderCatalogue(scope, listSmsProviders);
+  const command = useProviderCommandRecovery(catalogue.ownerKey, catalogue);
+  const previousOwner = useRef(catalogue.ownerKey);
+  useEffect(() => {
+    if (previousOwner.current === catalogue.ownerKey) return;
+    previousOwner.current = catalogue.ownerKey;
+    clearPrivate();
+  }, [catalogue.ownerKey, clearPrivate]);
+  const uncertain = command.pending === 'save';
   const eventKeys = useProviderCatalogue(scope, listSmsEventKeys);
   const templateVariables = useProviderCatalogue(scope, listSmsTemplateVariableChoices);
   const providers = catalogue.data ?? [],
@@ -163,19 +170,20 @@ export default function AdminSmsProvidersPage() {
       config: p.config,
     });
   const basis = providerBasis([providers.map((p) => rowBasis(p)).sort(), events]);
-  const capture = useProviderCommandGuard(basis, scope.live);
+  const capture = useProviderCommandGuard(basis, catalogue.ownerKey, scope.live);
   const staleEditor =
     !!editor &&
     !!editSource &&
     !providers.some((p) => p.id === editSource.id && rowBasis(p, false) === editSource.basis);
-  const disabled = loading || loadFailed || scope.denied || busy || !!protectedAction;
+  const disabled =
+    loading || loadFailed || scope.denied || busy || !!protectedAction || !!command.pending;
   const eventsReady =
     eventKeys.data !== null && !eventKeys.loading && !eventKeys.error && !scope.denied;
-  const invalidEvents = !!editor && editor.mappings.some((m) => !events.includes(m.event.trim()));
   useEffect(() => {
-    if (protectedAction && protectedAction.basis !== basis) setProtectedAction(null);
-    if (!inFlight.current) setBusy(false);
+    if (protectedAction && protectedAction.basis !== basis && !protectedDispatched.current)
+      setProtectedAction(null);
   }, [basis, protectedAction]);
+  const invalidEvents = !!editor && editor.mappings.some((m) => !events.includes(m.event.trim()));
   useEffect(() => {
     if (
       catalogue.data &&
@@ -196,7 +204,6 @@ export default function AdminSmsProvidersPage() {
           onClick={async () => {
             if (scope.denied) return scope.recover();
             await refresh();
-            if (!inFlight.current) setRecovered(true);
           }}
         >
           {text(loadFailed || scope.denied ? 'retry' : 'refresh')}
@@ -240,46 +247,47 @@ export default function AdminSmsProvidersPage() {
   async function mutate(
     action: Pick<TeamAction, 'path' | 'method' | 'body'>,
     accept: (result: unknown) => Promise<void>,
-    save = false
+    kind: 'save' | 'test'
   ) {
     if (inFlight.current || disabled || !eventsReady) return;
-    const validScope = capture();
+    const guard = capture();
     const ticket = ++generation.current;
-    const current = () => ticket === generation.current && validScope();
+    const owned = () => ticket === generation.current && guard.owned();
+    const current = () => owned() && guard.current();
     inFlight.current = true;
     setBusy(true);
     setError(null);
     setNotice(null);
     try {
       const result = await smsRequest(action.path, action.method as 'POST' | 'PUT', action.body);
-      if (current()) await accept(result);
-      else if (save && ticket === generation.current) {
-        setUncertain(true);
-        setRecovered(false);
-      }
+      if (!current()) throw new ProviderRequestError(false, [], true);
+      await accept(result);
     } catch (e) {
-      if (!current()) return;
+      if (!owned()) return;
       if (e instanceof ProviderRequestError && e.denied) {
         scope.deny();
         return;
       }
-      if (save && e instanceof ProviderRequestError && fieldErrors(e.fields)) return;
-      if (save && e instanceof ProviderRequestError && e.uncertain) {
-        setUncertain(true);
-        setRecovered(false);
+      if (!current() || (e instanceof ProviderRequestError && e.uncertain)) {
+        command.mark(kind);
+        if (kind === 'save') setError(text('unavailable'));
+        return;
       }
+      if (kind === 'save' && e instanceof ProviderRequestError && fieldErrors(e.fields)) return;
       if (e instanceof ProviderStepUpError)
         setProtectedAction({
           basis,
-          save,
+          kind,
           action: {
             ...e.action,
             title: text('title'),
             description: text('confirm'),
             requiresOtp: true,
+            responseDeadline: true,
           },
           onSuccess: async (result) => {
-            if (current()) await accept(result);
+            if (!current()) throw new ProviderRequestError(false, [], true);
+            await accept(result);
           },
         });
       else setError(text('unavailable'));
@@ -304,14 +312,14 @@ export default function AdminSmsProvidersPage() {
       return;
     const owner = ++validationOwner.current;
     const ticket = generation.current,
-      validScope = capture();
+      { current } = capture();
     form.setValidationPending(true);
     const captured: { value?: SmsEditor } = {};
     try {
       await form.form.handleSubmit((value) => {
         captured.value = value;
       })();
-      if (!captured.value || ticket !== generation.current || !validScope()) return;
+      if (!captured.value || ticket !== generation.current || !current()) return;
       const draft = captured.value,
         config = configFor(draft),
         label = draft.label.trim();
@@ -335,8 +343,6 @@ export default function AdminSmsProvidersPage() {
             )
               throw new ProviderRequestError();
           } catch {
-            setUncertain(true);
-            setRecovered(false);
             throw new ProviderRequestError(false, [], true);
           }
           setEditor(null);
@@ -345,7 +351,7 @@ export default function AdminSmsProvidersPage() {
           setNotice(text('saved'));
           await refresh();
         },
-        true
+        'save'
       );
     } finally {
       if (owner === validationOwner.current) form.setValidationPending(false);
@@ -353,21 +359,23 @@ export default function AdminSmsProvidersPage() {
   }
   function lifecycle(row: SmsProvider, operation: 'activate' | 'disable' | 'rollback') {
     if (disabled || !eventsReady) return;
-    const current = capture();
+    const { current } = capture();
     setError(null);
     setNotice(null);
     const status: Status = operation === 'disable' ? 'disabled' : 'active';
     setProtectedAction({
       basis,
+      kind: 'change',
       action: {
         ...(operation === 'disable' ? { risk: 'destructive' as const } : {}),
         title: text(operation),
         description: text(operation === 'rollback' ? 'rollbackNotice' : 'confirm'),
         path: `/api/admin/sms-providers/${encodeURIComponent(row.id)}/${operation}`,
         method: 'POST',
+        responseDeadline: true,
       },
       onSuccess: async (result) => {
-        if (!current()) return;
+        if (!current()) throw new ProviderRequestError(false, [], true);
         const saved = readSmsProvider(result, {
           status,
           ...(operation !== 'rollback' ? { id: row.id } : {}),
@@ -397,8 +405,13 @@ export default function AdminSmsProvidersPage() {
         body: { eventKey: firstEvent },
       },
       async (result) => {
-        const saved = readSmsProvider(result, { status: 'draft', id }),
-          outcome = (result as { test?: { ok?: unknown; error?: unknown } }).test;
+        let saved: SmsProvider;
+        try {
+          saved = readSmsProvider(result, { status: 'draft', id });
+        } catch {
+          throw new ProviderRequestError(false, [], true);
+        }
+        const outcome = (result as { test?: { ok?: unknown; error?: unknown } }).test;
         if (
           !outcome ||
           typeof outcome.ok !== 'boolean' ||
@@ -406,11 +419,12 @@ export default function AdminSmsProvidersPage() {
           saved.lastTestStatus !== (outcome.ok ? 'passed' : 'failed') ||
           (outcome.ok && outcome.error !== null)
         )
-          throw new ProviderRequestError();
+          throw new ProviderRequestError(false, [], true);
         if (outcome.ok) setNotice(text('passed'));
         else setError(text('failed'));
         await refresh();
-      }
+      },
+      'test'
     );
   }
   function field(
@@ -427,8 +441,7 @@ export default function AdminSmsProvidersPage() {
   }
   function open(row?: SmsProvider, clone = false) {
     generation.current++;
-    setUncertain(false);
-    setRecovered(false);
+    command.reset();
     form.setValidationPending(false);
     setEditor(editorFor(row, clone));
     setEditSource(row ? { id: row.id, basis: rowBasis(row, false) } : null);
@@ -562,9 +575,12 @@ export default function AdminSmsProvidersPage() {
       {protectedAction && (
         <TeamActionDialog
           action={protectedAction.action}
-          onClose={() => setProtectedAction(null)}
+          onClose={() => {
+            protectedDispatched.current = false;
+            setProtectedAction(null);
+          }}
           onSuccess={protectedAction.onSuccess}
-          {...(protectedAction.save ? { onValidationError: fieldErrors } : {})}
+          {...(protectedAction.kind === 'save' ? { onValidationError: fieldErrors } : {})}
           summary={
             <>
               {(loadFailed || scope.denied) && (
@@ -573,12 +589,19 @@ export default function AdminSmsProvidersPage() {
               {recovery}
             </>
           }
+          onUnconfirmed={() => command.mark(protectedAction.kind)}
+          onCommandDispatch={(sent) => {
+            protectedDispatched.current = sent;
+          }}
+          onPendingChange={(pending) => {
+            if (!pending) protectedDispatched.current = false;
+          }}
           onDenied={scope.deny}
           finalFocus={() =>
             document.querySelector<HTMLButtonElement>('[data-slot="list-page"] button')
           }
           confirmationDisabled={
-            (protectedAction.save && uncertain) ||
+            !!command.pending ||
             loading ||
             loadFailed ||
             scope.denied ||
@@ -605,7 +628,24 @@ export default function AdminSmsProvidersPage() {
           {error}
         </p>
       )}
-      <CommandFeedback message={notice ? notice : null} />
+      <CommandFeedback message={notice} />
+      {command.pending && command.pending !== 'save' && (
+        <div className="space-y-2">
+          <p role="alert">
+            {providerFormText(
+              command.pending === 'test' ? 'testUnconfirmed' : 'changeUnconfirmed',
+              locale
+            )}
+          </p>
+          <Button
+            variant="outline"
+            disabled={!command.canReview || !!protectedAction}
+            onClick={command.reset}
+          >
+            {providerFormText(command.pending === 'test' ? 'reviewTest' : 'reviewChange', locale)}
+          </Button>
+        </div>
+      )}
       <ListPage>
         <ListPage.Toolbar>{recovery}</ListPage.Toolbar>
         <ListPage.Content
@@ -641,11 +681,18 @@ export default function AdminSmsProvidersPage() {
               type="button"
               variant="outline"
               disabled={
-                loading || loadFailed || busy || !!protectedAction || (uncertain && !recovered)
+                loading ||
+                loadFailed ||
+                busy ||
+                !!protectedAction ||
+                (uncertain && !command.canReview)
               }
               onClick={() => {
                 const row = providers.find((p) => p.id === editSource?.id);
-                open(row, editor.id === null && !!row);
+                if (editor.id && row?.status !== 'draft') {
+                  command.reset();
+                  setEditor(null);
+                } else open(row, editor.id === null && !!row);
               }}
             >
               {providerFormText('reset', locale)}

@@ -67,7 +67,7 @@ describe('provider response contracts', () => {
     it(`${action.name} rejects missing or contradictory acknowledgements`, async () => {
       for (const value of [null, {}, { ...action.expected, status: 'superseded' }]) {
         respond(value);
-        await expect(action.run()).rejects.toThrow();
+        await expect(action.run()).rejects.toMatchObject({ uncertain: true });
       }
       respond(action.expected);
       await expect(action.run()).resolves.toEqual(action.expected);
@@ -168,4 +168,21 @@ it('validates the last successful test timestamp while accepting older health re
     );
   for (const lastSuccessfulTestAt of ['invalid', {}, 123])
     expect(() => readHealthMetrics({ ...metrics, lastSuccessfulTestAt })).toThrow();
+});
+
+it('bounds a stalled command reply and does not resend a test', async () => {
+  vi.useFakeTimers();
+  try {
+    respond(null);
+    const send = vi.mocked(fetch).mockImplementationOnce(async () => new Promise(() => {}));
+    const outcome = expect(testConnection(row.id, 'staff@example.test')).rejects.toMatchObject({
+      uncertain: true,
+    });
+    await vi.advanceTimersByTimeAsync(15_000);
+    await outcome;
+    expect(send).toHaveBeenCalledTimes(1);
+    expect(send.mock.calls[0]?.[1]?.signal?.aborted).toBe(true);
+  } finally {
+    vi.useRealTimers();
+  }
 });

@@ -4,7 +4,7 @@ import { expect, it, vi } from 'vitest';
 import { QueryProvider } from '../test/query-provider.js';
 import { AccountUserProvider } from './useAccountUser.js';
 import { useCatalogueScope } from './useCatalogueResource.js';
-import { useProviderCatalogue } from './useProviderCatalogue.js';
+import { useProviderCatalogue, useProviderCommandRecovery } from './useProviderCatalogue.js';
 import { ProviderRequestError } from '../lib/email-providers-api.js';
 
 it('awaited refresh publishes validated data, retains failures, and performs no automatic reads', async () => {
@@ -126,6 +126,52 @@ it('separate provider readers share permission scope without sharing data and wi
     await act(async () => next(['provider-b']));
     expect(catalogue.data).toEqual(['provider-b']);
     expect(choices.data).toEqual(['choice']);
+  } finally {
+    await act(async () => root.unmount());
+  }
+});
+
+it('requires an accepted provider read started after an unconfirmed command', async () => {
+  const root = createRoot(document.createElement('div'));
+  let catalogue!: ReturnType<typeof useProviderCatalogue<string[]>>;
+  let recovery!: ReturnType<typeof useProviderCommandRecovery>;
+  let finishOldRead!: (rows: string[]) => void;
+  const load = vi
+    .fn()
+    .mockImplementationOnce(
+      () =>
+        new Promise<string[]>((resolve) => {
+          finishOldRead = resolve;
+        })
+    )
+    .mockRejectedValueOnce(new Error('offline'))
+    .mockResolvedValueOnce(['current']);
+  function Probe() {
+    catalogue = useProviderCatalogue(useCatalogueScope(useCallback(() => {}, [])), load);
+    recovery = useProviderCommandRecovery(catalogue.ownerKey, catalogue);
+    return null;
+  }
+  try {
+    await act(async () =>
+      root.render(
+        <QueryProvider>
+          <Probe />
+        </QueryProvider>
+      )
+    );
+    await act(async () => recovery.mark('test'));
+    await act(async () => finishOldRead(['older']));
+    expect(catalogue.data).toEqual(['older']);
+    expect(recovery.canReview).toBe(false);
+    await act(async () => catalogue.refresh());
+    expect(catalogue.error).toBe(true);
+    expect(recovery.canReview).toBe(false);
+    await act(async () => catalogue.refresh());
+    expect(catalogue.data).toEqual(['current']);
+    expect(recovery.canReview).toBe(true);
+    expect(recovery.pending).toBe('test');
+    await act(async () => recovery.reset());
+    expect(recovery.pending).toBeUndefined();
   } finally {
     await act(async () => root.unmount());
   }

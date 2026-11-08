@@ -26,27 +26,31 @@ export function useProviderCatalogue<T>(
   );
   const key = JSON.stringify(queryKey);
   const latest = useRef(key);
+  const attempt = useRef(0);
   latest.current = key;
   const [result, setResult] = useState<{
     key: string;
     data: T | null;
     loading: boolean;
     error: boolean;
+    attempt: number;
   } | null>(null);
   const query = useServerDetailQuery<{ value: T }>({
     queryKey: denied ? null : queryKey,
     manual: true,
     read: async (signal) => {
+      const started = ++attempt.current;
       const current = () => !signal.aborted && live.current === version && latest.current === key;
       setResult((previous) => ({
         key,
         data: previous?.key === key ? previous.data : null,
         loading: true,
         error: false,
+        attempt: started,
       }));
       try {
         const data = await load(signal);
-        if (current()) setResult({ key, data, loading: false, error: false });
+        if (current()) setResult({ key, data, loading: false, error: false, attempt: started });
         return { value: data };
       } catch (error) {
         if (current()) {
@@ -57,6 +61,7 @@ export function useProviderCatalogue<T>(
               data: previous?.key === key ? previous.data : null,
               loading: false,
               error: true,
+              attempt: started,
             }));
         }
         throw error;
@@ -73,10 +78,36 @@ export function useProviderCatalogue<T>(
   }, [denied, live, version, key, client, refetch]);
   const accepted = !denied && result?.key === key ? result : null;
   return {
+    ownerKey: key,
     data: accepted?.data ?? null,
     loading: !denied && (accepted?.loading ?? true),
     error: accepted?.error ?? false,
+    readAttempt: accepted && !accepted.loading && !accepted.error ? accepted.attempt : null,
+    nextReadAttempt: () => attempt.current + 1,
     refresh,
+  };
+}
+
+export function useProviderCommandRecovery(
+  owner: string,
+  catalogue: { readAttempt: number | null; nextReadAttempt: () => number }
+) {
+  const [command, setCommand] = useState<{
+    kind: 'save' | 'test' | 'change';
+    requiredRead: number;
+    owner: string;
+  } | null>(null);
+  const pending = command?.owner === owner ? command : null;
+  const reset = useCallback(() => setCommand(null), []);
+  return {
+    pending: pending?.kind,
+    canReview:
+      pending !== null &&
+      catalogue.readAttempt !== null &&
+      catalogue.readAttempt >= pending.requiredRead,
+    mark: (kind: NonNullable<typeof pending>['kind']) =>
+      setCommand({ kind, requiredRead: catalogue.nextReadAttempt(), owner }),
+    reset,
   };
 }
 
@@ -95,10 +126,10 @@ export function providerBasis(value: unknown): string {
   return JSON.stringify(canonical(value));
 }
 
-export function useProviderCommandGuard(basis: string, live: { current: number }) {
-  const latest = useRef(basis),
+export function useProviderCommandGuard(basis: string, owner: string, live: { current: number }) {
+  const latest = useRef({ basis, owner }),
     mounted = useRef(true);
-  latest.current = basis;
+  latest.current = { basis, owner };
   useEffect(() => {
     mounted.current = true;
     return () => {
@@ -106,8 +137,9 @@ export function useProviderCommandGuard(basis: string, live: { current: number }
     };
   }, []);
   return () => {
-    const captured = basis,
-      version = live.current;
-    return () => mounted.current && latest.current === captured && live.current === version;
+    const version = live.current;
+    const owned = () =>
+      mounted.current && latest.current.owner === owner && live.current === version;
+    return { owned, current: () => owned() && latest.current.basis === basis };
   };
 }

@@ -23,6 +23,16 @@ const en = {
   validationUnavailable: 'Validation could not load. Try submitting again.',
   uncertain: 'The save could not be verified. Refresh providers and reset before trying again.',
   reset: 'Reset provider draft',
+  saved: 'Provider draft saved.',
+  activated: 'Provider activated.',
+  disabled: 'Provider disabled.',
+  rolledBack: 'Provider restored as a new version.',
+  changeUnconfirmed:
+    'The provider change could not be verified. Refresh and review the saved provider state before making another change.',
+  testUnconfirmed:
+    'The test result could not be verified. The message may already have been sent. Refresh providers and check the recipient before sending another test.',
+  reviewChange: 'I reviewed the saved provider state',
+  reviewTest: 'I checked the saved state and test recipient',
 };
 const fa: Record<keyof typeof en, string> = {
   label: 'نام را با ۱ تا ۱۲۰ نویسه وارد کنید.',
@@ -48,6 +58,16 @@ const fa: Record<keyof typeof en, string> = {
   validationUnavailable: 'اعتبارسنجی بارگیری نشد. دوباره ارسال کنید.',
   uncertain: 'ذخیره تأیید نشد. پیش از تلاش دوباره، تأمین‌کنندگان را تازه‌سازی و بازنشانی کنید.',
   reset: 'بازنشانی پیش‌نویس تأمین‌کننده',
+  saved: 'پیش‌نویس تأمین‌کننده ذخیره شد.',
+  activated: 'تأمین‌کننده فعال شد.',
+  disabled: 'تأمین‌کننده غیرفعال شد.',
+  rolledBack: 'تأمین‌کننده به‌صورت نسخه‌ای جدید بازیابی شد.',
+  changeUnconfirmed:
+    'تغییر تأمین‌کننده تأیید نشد. پیش از تغییر دیگری، فهرست را تازه‌سازی و وضعیت ذخیره‌شده را بررسی کنید.',
+  testUnconfirmed:
+    'نتیجه آزمایش تأیید نشد. ممکن است پیام ارسال شده باشد. پیش از آزمایش دوباره، فهرست را تازه‌سازی و دریافت پیام را بررسی کنید.',
+  reviewChange: 'وضعیت ذخیره‌شده تأمین‌کننده را بررسی کردم',
+  reviewTest: 'وضعیت ذخیره‌شده و دریافت پیام آزمایشی را بررسی کردم',
 };
 export type ProviderFormKey = keyof typeof en;
 export function providerFormText(key: ProviderFormKey, locale: Locale): string {

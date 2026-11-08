@@ -428,11 +428,21 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(panel.getByRole('status').filter({ hasText: text('passed') })).toHaveText(
       text('passed')
     );
-    await panel.getByRole('button', { name: text('activate'), exact: true }).click();
+    const activate = panel.getByRole('button', { name: text('activate'), exact: true });
+    const refresh = panel.getByRole('button', { name: text('refresh'), exact: true });
+    const reviewed = panel.getByRole('button', { name: providerFormText('reviewChange', locale) });
+    await activate.click();
     await dialog.locator('button[type=submit]').click();
     await expect(dialog.getByRole('alert')).toBeVisible();
+    await expect(dialog.locator('button[type=submit]')).toBeDisabled();
     await page.keyboard.press('Escape');
-    await panel.getByRole('button', { name: text('activate'), exact: true }).click();
+    await expect(activate).toBeDisabled();
+    await expect(reviewed).toBeDisabled();
+    await refresh.click();
+    await expect(reviewed).toBeEnabled();
+    expect(activations).toBe(1);
+    await reviewed.click();
+    await activate.click();
     await dialog.locator('button[type=submit]').click();
     await expect(dialog).toHaveCount(0);
     await panel.getByRole('button', { name: text('disable'), exact: true }).click();
@@ -449,6 +459,14 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(dialog).toContainText(text('rollbackNotice'));
     await dialog.locator('button[type=submit]').click();
     await expect(dialog.getByRole('alert')).toBeVisible();
+    await expect(dialog.locator('button[type=submit]')).toBeDisabled();
+    await page.keyboard.press('Escape');
+    await expect(reviewed).toBeDisabled();
+    await refresh.click();
+    await expect(reviewed).toBeEnabled();
+    expect(rollbacks).toBe(1);
+    await reviewed.click();
+    await panel.getByRole('button', { name: text('rollback'), exact: true }).click();
     await dialog.locator('button[type=submit]').click();
     await expect(dialog).toHaveCount(0);
     await expect(panel.getByRole('status').filter({ hasText: text('changed') })).toHaveText(

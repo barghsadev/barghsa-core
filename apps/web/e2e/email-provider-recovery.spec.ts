@@ -127,10 +127,12 @@ for (const locale of ['en', 'fa'] as const) {
     };
     let testCalls = 0;
     let activateCalls = 0;
+    let readFails = false;
     await crmShell(page, locale);
     await providerOtpSend(page);
     await page.route('**/api/admin/email-providers**', (route) => {
-      if (route.request().method() === 'GET') return route.fulfill({ json: [provider] });
+      if (route.request().method() === 'GET')
+        return route.fulfill({ status: readFails ? 503 : 200, json: [provider] });
       const path = new URL(route.request().url()).pathname;
       if (path.endsWith('/test-connection')) {
         testCalls++;
@@ -163,17 +165,47 @@ for (const locale of ['en', 'fa'] as const) {
     await row.locator('input[type=email]').fill('staff@example.test');
     await expect(connection).toContainText('staff@example.test');
     await expect(activate).toBeDisabled();
+    const refresh = page.getByRole('button', {
+      name: providerText('admin.providers.refresh', locale),
+      exact: true,
+    });
+    const reviewedTest = page.getByRole('button', { name: providerFormText('reviewTest', locale) });
     await connection.click();
-    await expect(row).toContainText(fa ? 'خطا در تست اتصال' : 'Failed to run connection test');
+    await expect(page.getByRole('alert')).toContainText(
+      providerFormText('testUnconfirmed', locale)
+    );
     await expect(activate).toBeDisabled();
+    await expect(connection).toBeDisabled();
+    await expect(reviewedTest).toBeDisabled();
+    readFails = true;
+    await refresh.click();
+    const retry = page.getByRole('button', {
+      name: providerText('admin.providers.retry', locale),
+      exact: true,
+    });
+    await expect(retry).toBeVisible();
+    await expect(reviewedTest).toBeDisabled();
+    expect(testCalls).toBe(1);
+    readFails = false;
+    await retry.click();
+    await expect(reviewedTest).toBeEnabled();
+    await expect(connection).toBeDisabled();
+    await reviewedTest.click();
     await connection.click();
     await expect(activate).toBeEnabled();
     await activate.click();
-    await expect(
-      page
-        .getByRole('alert')
-        .filter({ hasText: fa ? 'خطا در فعال‌سازی' : 'Failed to activate provider' })
-    ).toBeVisible();
+    const reviewedChange = page.getByRole('button', {
+      name: providerFormText('reviewChange', locale),
+    });
+    await expect(page.getByRole('alert')).toContainText(
+      providerFormText('changeUnconfirmed', locale)
+    );
+    await expect(reviewedChange).toBeDisabled();
+    await expect(activate).toBeDisabled();
+    await refresh.click();
+    await expect(reviewedChange).toBeEnabled();
+    expect(activateCalls).toBe(1);
+    await reviewedChange.click();
     await activate.click();
     await row.getByRole('button', { name: fa ? 'غیرفعال‌سازی' : 'Disable', exact: true }).click();
     await confirmProviderChange(page, locale);

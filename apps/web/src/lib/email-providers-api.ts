@@ -1,5 +1,6 @@
 import type { TeamAction } from '../components/TeamActionDialog.js';
 import { withCsrf } from './csrf.js';
+import { readWithDeadline } from './server-query-client.js';
 export type Transport = 'smtp' | 'resend';
 export type Status = 'draft' | 'active' | 'superseded' | 'disabled';
 export type TestStatus = 'pending' | 'passed' | 'failed';
@@ -166,7 +167,7 @@ export async function providerRequest(
   family: 'email' | 'sms' = 'email'
 ): Promise<unknown> {
   const payload = body === undefined ? undefined : JSON.stringify(body);
-  try {
+  const send = async (signal?: AbortSignal) => {
     const response = await fetch(`/api/admin/${family}-providers${path}`, {
       method,
       ...(signal ? { signal } : {}),
@@ -200,6 +201,11 @@ export async function providerRequest(
       );
     }
     return await response.json();
+  };
+  try {
+    return await (method === 'GET'
+      ? send(signal)
+      : readWithDeadline(signal ?? new AbortController().signal, send));
   } catch (error) {
     if (signal?.aborted || error instanceof ProviderRequestError) throw error;
     throw new ProviderRequestError(false, [], method !== 'GET');
@@ -208,9 +214,9 @@ export async function providerRequest(
 const request = providerRequest;
 
 export function validateProviderResult(value: unknown, status: Status, id?: string): EmailProvider {
-  const row = provider(value);
+  const row = providerReceipt(value);
   if (row.status !== status || (id !== undefined && row.id !== id))
-    throw new ProviderRequestError();
+    throw new ProviderRequestError(false, [], true);
   return row;
 }
 export async function listProviders(signal?: AbortSignal): Promise<EmailProvider[]> {
@@ -256,18 +262,26 @@ export async function testConnection(
   );
   return validateConnectionResult(data, id);
 }
+function providerReceipt(value: unknown) {
+  try {
+    return provider(value);
+  } catch {
+    throw new ProviderRequestError(false, [], true);
+  }
+}
 export function validateConnectionResult(data: unknown, id: string): TestConnectionOutcome {
-  const row = provider(data);
+  const row = providerReceipt(data);
   const test = record(record(data)?.test);
   if (
     row.id !== id ||
+    row.status !== 'draft' ||
     !test ||
     typeof test.ok !== 'boolean' ||
     (test.error !== null && typeof test.error !== 'string') ||
     (test.ok && test.error !== null) ||
     row.lastTestStatus !== (test.ok ? 'passed' : 'failed')
   )
-    throw new ProviderRequestError();
+    throw new ProviderRequestError(false, [], true);
   return { ok: test.ok, error: test.error as string | null };
 }
 export async function activateProvider(id: string) {
@@ -289,6 +303,6 @@ export async function rollbackProvider(id: string) {
     await request(`/${encodeURIComponent(id)}/rollback`, 'POST'),
     'active'
   );
-  if (row.id === id) throw new ProviderRequestError();
+  if (row.id === id) throw new ProviderRequestError(false, [], true);
   return row;
 }
