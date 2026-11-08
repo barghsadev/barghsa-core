@@ -1,4 +1,6 @@
 import { t } from '@barghsa/i18n/admin-ui';
+import { confirmationText } from '@barghsa/i18n/confirmation';
+import { notificationFormText } from '@barghsa/i18n/notification-forms';
 import { crmShell } from './crm-shell-fixture';
 import { notificationTemplate } from '../src/test/content-catalogue-fixtures';
 import { test, expect } from './coverage-fixture';
@@ -255,6 +257,104 @@ test('notification publication rejects a different template acknowledgement', as
     page.getByRole('alert').filter({ hasText: 'Failed to publish template' })
   ).toBeVisible();
   await expect(confirm).toBeVisible();
+});
+
+test('notification publication checks saved status after its acknowledgement stalls', async ({
+  page,
+}) => {
+  await crmShell(page, 'en');
+  await page.clock.install();
+  let publishCalls = 0;
+  let reads = 0;
+  await page.route('**/api/admin/notifications/templates', (route) => {
+    reads++;
+    return route.fulfill({
+      json: [publishCalls ? { ...template, status: 'active', isActive: true } : template],
+    });
+  });
+  await page.route(`**/api/admin/notifications/templates/${template.id}/publish`, () => {
+    publishCalls++;
+  });
+  await page.goto('/admin/notifications');
+
+  const row = page
+    .getByRole('list', { name: t('admin.notifications.catalogue', 'en') })
+    .getByRole('listitem')
+    .filter({ hasText: template.subject });
+  await row.getByRole('button', { name: 'Publish', exact: true }).click();
+  const review = page.getByRole('heading', { name: 'Publish Template', exact: true }).locator('..');
+  const submit = review.getByRole('button', { name: 'Publish', exact: true });
+  await submit.click();
+  await expect.poll(() => publishCalls).toBe(1);
+  const readsBeforeTimeout = reads;
+  await page.clock.fastForward(15_001);
+  await expect(
+    page.locator('main').getByText(confirmationText('unconfirmed', 'en'), { exact: true })
+  ).toBeVisible();
+  await expect(submit).toBeDisabled();
+  expect(reads).toBe(readsBeforeTimeout);
+  await page
+    .getByRole('button', { name: t('admin.notifications.refresh', 'en'), exact: true })
+    .click();
+  await expect(review).toHaveCount(0);
+  await expect(row.getByText('Active', { exact: true }).first()).toBeVisible();
+  expect(publishCalls).toBe(1);
+});
+
+test('notification protected test send stays unconfirmed until catalogue refresh', async ({
+  page,
+}) => {
+  const locale = 'fa';
+  await crmShell(page, locale);
+  await page.clock.install();
+  let calls = 0;
+  let passwordChecks = 0;
+  await page.route('**/api/admin/notifications/templates', (route) =>
+    route.fulfill({ json: [template] })
+  );
+  await page.route(`**/api/admin/notifications/templates/${template.id}/test-send`, (route) => {
+    if (++calls === 1)
+      return route.fulfill({ status: 403, json: { error: 'AUTHZ:STEP_UP_REQUIRED' } });
+  });
+  await page.route('**/api/auth/step-up', (route) => {
+    passwordChecks++;
+    return route.fulfill({ json: { ok: true } });
+  });
+  await page.goto('/admin/notifications');
+  await page
+    .getByRole('list', { name: t('admin.notifications.catalogue', locale) })
+    .getByRole('listitem')
+    .filter({ hasText: template.subject })
+    .getByRole('button', { name: t('admin.notifications.edit', locale), exact: true })
+    .click();
+  const send = page.getByRole('button', {
+    name: t('admin.notifications.testSend', locale),
+    exact: true,
+  });
+  await send.click();
+  await page.locator('#team-step-up-password').fill('Local-test-password!');
+  const dialog = page.getByRole('dialog');
+  const submit = dialog.locator('button[type=submit]');
+  await submit.click();
+  await expect.poll(() => calls).toBe(2);
+  await page.clock.fastForward(15_001);
+  const notice = page.getByText(notificationFormText('testUnconfirmed', locale), { exact: true });
+  await expect(notice).toBeVisible();
+  await expect(submit).toBeDisabled();
+  await page.keyboard.press('Escape');
+  await expect(dialog).toHaveCount(0);
+  await expect(notice).toBeVisible();
+  await expect(send).toBeDisabled();
+  await expect(
+    page.getByText(t('admin.notifications.testSentEmail', locale), { exact: true })
+  ).toHaveCount(0);
+  await page
+    .getByRole('button', { name: t('admin.notifications.refresh', locale), exact: true })
+    .click();
+  await expect(notice).toHaveCount(0);
+  await expect(send).toBeEnabled();
+  expect(calls).toBe(2);
+  expect(passwordChecks).toBe(1);
 });
 
 test('late notification test-send challenge does not reopen a closed editor', async ({ page }) => {

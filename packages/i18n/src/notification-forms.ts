@@ -12,6 +12,8 @@ const en = {
   validationUnavailable: 'Validation could not load. Try submitting again.',
   stale: 'Saved settings changed. Reset to the latest settings before saving.',
   uncertain: 'The save could not be verified. Refresh and reset before trying again.',
+  testUnconfirmed:
+    'The test may have been sent. Check the destination and refresh the catalogue before sending again.',
   reset: 'Reset to saved values',
   refresh: 'Refresh delivery settings',
   denied: 'You no longer have access to these delivery settings.',
@@ -29,6 +31,8 @@ const fa: Record<keyof typeof en, string> = {
   validationUnavailable: 'اعتبارسنجی بارگیری نشد. دوباره ارسال کنید.',
   stale: 'تنظیمات ذخیره‌شده تغییر کرده است. پیش از ذخیره، آخرین تنظیمات را بازنشانی کنید.',
   uncertain: 'ذخیره تأیید نشد. پیش از تلاش دوباره، تازه‌سازی و بازنشانی کنید.',
+  testUnconfirmed:
+    'پیام آزمایشی ممکن است ارسال شده باشد. پیش از ارسال دوباره، مقصد را بررسی و فهرست قالب‌ها را تازه‌سازی کنید.',
   reset: 'بازنشانی به مقادیر ذخیره‌شده',
   refresh: 'تازه‌سازی تنظیمات ارسال',
   denied: 'دیگر به این تنظیمات ارسال دسترسی ندارید.',

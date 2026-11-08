@@ -1,4 +1,4 @@
-import { toast } from '../lib/toast-api.js';
+import { sendToast, toast } from '../lib/toast-api.js';
 import { confirmationText } from '@barghsa/i18n/confirmation';
 import { useDestructiveConfirm } from '../hooks/useDestructiveConfirm.js';
 import { parseTemplateEventKey } from '@barghsa/shared/notifications';
@@ -6,6 +6,7 @@ import { renderTemplatePreview } from '../lib/template-preview.js';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { withCsrf } from '../lib/csrf.js';
+import { readWithDeadline } from '../lib/server-query-client.js';
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { LoadingStatus, Alert, Button, ListPage, DateCell, TextCell } from '@barghsa/ui';
 import { OperationalQueueTable } from '../components/OperationalQueueTable.js';
@@ -25,6 +26,8 @@ import {
 } from '../lib/notification-form.js';
 import { useCatalogueScope } from '../hooks/useCatalogueResource.js';
 import { useStaffQueryRead } from '../hooks/useStaffQueryRead.js';
+import { useAccountUser } from '../hooks/useAccountUser.js';
+import { getProfileContextRevision, useProfileContextRevision } from '../lib/profile-context.js';
 import type { ListQueryBinding } from '../hooks/useListQuery.js';
 import type { FormEvent } from 'react';
 import { t } from '@barghsa/i18n/admin-ui';
@@ -97,23 +100,31 @@ function variablesToText(variables: NotificationVariable[]): string {
   return variables.map((v) => (v.description ? `${v.name}: ${v.description}` : v.name)).join(', ');
 }
 
+type NotificationPageProps = {
+  queries?: ListQueryBinding;
+  previewQueries?: ListQueryBinding;
+  failedQueries?: ListQueryBinding;
+  historyQueries?: ListQueryBinding;
+};
+
+export default function AdminNotificationsPage(props: NotificationPageProps = {}) {
+  const account = useAccountUser();
+  const revision = useProfileContextRevision();
+  return <OwnedNotificationsPage key={JSON.stringify([account, revision])} {...props} />;
+}
+
 /**
  * Admin notification template editor page (T-09.04.01).
  *
  * Lists all notification templates, allows creating/editing drafts,
  * publishing active templates, and unpublishing.
  */
-export default function AdminNotificationsPage({
+function OwnedNotificationsPage({
   queries,
   previewQueries,
   failedQueries,
   historyQueries,
-}: {
-  queries?: ListQueryBinding;
-  previewQueries?: ListQueryBinding;
-  failedQueries?: ListQueryBinding;
-  historyQueries?: ListQueryBinding;
-} = {}) {
+}: NotificationPageProps) {
   const uiLocale = useLocale();
   const numbers = useNumberFormatting(uiLocale);
   const time = useAccountTime(uiLocale);
@@ -127,6 +138,7 @@ export default function AdminNotificationsPage({
   const [error, setError] = useState<string | null>(null);
   const [loadFailed, setLoadFailed] = useState(false);
   const [accepted, setAccepted] = useState(false);
+  const [unconfirmed, setUnconfirmed] = useState<'template' | 'test' | null>(null);
   const [panelsReady, setPanelsReady] = useState(false);
   const refreshButton = useRef<HTMLButtonElement>(null);
   const templatesRef = useRef(templates);
@@ -134,10 +146,12 @@ export default function AdminNotificationsPage({
   const operationInFlight = useRef(false);
   const mounted = useRef(false);
   const listRequest = useRef<AbortController | null>(null);
+  const mutationRequests = useRef(new Set<AbortController>());
   const refreshTemplates = useRef<() => Promise<void>>(async () => {});
   const [protectedAction, setProtectedAction] = useState<{
     action: TeamAction;
     onSuccess: (result: unknown) => Promise<void>;
+    onUnconfirmed: () => void;
     current: () => boolean;
     onValidationError?: (fields: unknown[]) => boolean;
   } | null>(null);
@@ -222,6 +236,8 @@ export default function AdminNotificationsPage({
     setTestSending(false);
   }, []);
   const resetCatalogueBusy = useCallback(() => {
+    for (const request of mutationRequests.current) request.abort();
+    mutationRequests.current.clear();
     busyTokens.current.publish++;
     busyTokens.current.row++;
     operationInFlight.current = false;
@@ -236,6 +252,7 @@ export default function AdminNotificationsPage({
     setTemplates([]);
     setAccepted(false);
     setPanelsReady(false);
+    setUnconfirmed(null);
     setLoading(false);
     setLoadFailed(true);
     setError(null);
@@ -253,20 +270,23 @@ export default function AdminNotificationsPage({
   const scope = useCatalogueScope(clearPrivate);
   const read = useStaffQueryRead('notifications');
   const confirmDestruction = useDestructiveConfirm(uiLocale, scope.version);
-  const ready = accepted && !loading && !loadFailed && !scope.denied;
+  const ready = accepted && !loading && !loadFailed && !scope.denied && !unconfirmed;
   const selectedTemplate = editId ? templates.find((r) => r.id === editId) : null;
   const stale =
     !!editId && (selectedTemplate ? templateBasis(selectedTemplate) : null) !== editBasis;
   const editorLive = useRef({ ready, stale, viewOnly, editorUncertain });
   editorLive.current = { ready, stale, viewOnly, editorUncertain };
-  const selectedRef = useRef({ editId, editBasis, publishId });
-  selectedRef.current = { editId, editBasis, publishId };
+  const selectedRef = useRef({ editId, editBasis, publishId, unconfirmed });
+  selectedRef.current = { editId, editBasis, publishId, unconfirmed };
   useEffect(() => {
+    const requests = mutationRequests.current;
     mounted.current = true;
     return () => {
       mounted.current = false;
       editorGeneration.current++;
       listRequest.current?.abort();
+      for (const request of requests) request.abort();
+      requests.clear();
     };
   }, []);
   const clearFilterWork = useCallback(() => {
@@ -347,10 +367,11 @@ export default function AdminNotificationsPage({
         }
         if (
           selection.publishId &&
-          publishBasis.current !==
-            (data.find((r) => r.id === selection.publishId)
-              ? templateBasis(data.find((r) => r.id === selection.publishId)!)
-              : null)
+          (selection.unconfirmed ||
+            publishBasis.current !==
+              (data.find((r) => r.id === selection.publishId)
+                ? templateBasis(data.find((r) => r.id === selection.publishId)!)
+                : null))
         ) {
           busyTokens.current.publish++;
           setPublishing(false);
@@ -363,6 +384,7 @@ export default function AdminNotificationsPage({
         setAccepted(true);
         setPanelsReady(true);
         setLoadFailed(false);
+        setUnconfirmed(null);
       }
     } catch {
       if (!request.signal.aborted && scope.live.current === epoch) {
@@ -407,27 +429,51 @@ export default function AdminNotificationsPage({
     onValidationError?: (fields: unknown[]) => boolean
   ) {
     const epoch = scope.version;
+    const profileRevision = getProfileContextRevision();
     const id = action.path.split('/templates/')[1]?.split('/')[0];
     const selected = id ? templatesRef.current.find((r) => r.id === id) : null;
     const basis = selected ? templateBasis(selected) : null;
     const current = () =>
       mounted.current &&
       scope.live.current === epoch &&
+      getProfileContextRevision() === profileRevision &&
       isCurrent() &&
       (!id || templatesRef.current.some((r) => r.id === id && templateBasis(r) === basis));
     const payload = action.body === undefined ? undefined : JSON.stringify(action.body);
     const captured = {
       ...action,
+      responseDeadline: true as const,
       ...(action.method === 'DELETE' ? { successStatus: 204 } : {}),
       ...(payload === undefined ? {} : { body: JSON.parse(payload) as unknown }),
     };
+    let outcomeUnconfirmed = false;
+    const markUnconfirmed = () => {
+      if (!current()) return;
+      outcomeUnconfirmed = true;
+      listRequest.current?.abort();
+      setLoading(false);
+      setUnconfirmed(action.path.endsWith('/test-send') ? 'test' : 'template');
+      if (onValidationError) {
+        setEditorRecovered(false);
+        setEditorUncertain(true);
+      }
+    };
+    const request = new AbortController();
+    mutationRequests.current.add(request);
     try {
-      const res = await fetch(captured.path, {
-        method: captured.method,
-        headers: withCsrf({ 'Content-Type': 'application/json' }),
-        ...(payload === undefined ? {} : { body: payload }),
+      const { res, data } = await readWithDeadline(request.signal, async (signal) => {
+        const res = await fetch(captured.path, {
+          method: captured.method,
+          headers: withCsrf({ 'Content-Type': 'application/json' }),
+          ...(payload === undefined ? {} : { body: payload }),
+          signal,
+        });
+        const data: unknown = res.status === 204 ? null : await res.json().catch(() => null);
+        return { res, data };
+      }).catch((error: unknown) => {
+        markUnconfirmed();
+        throw error;
       });
-      const data: unknown = res.status === 204 ? null : await res.json().catch(() => null);
       if (!current()) return;
       const record = responseRecord(data);
       const code =
@@ -444,6 +490,7 @@ export default function AdminNotificationsPage({
             requiresPassword: true,
           },
           current,
+          onUnconfirmed: markUnconfirmed,
           ...(onValidationError ? { onValidationError } : {}),
           onSuccess: async (result) => {
             if (!current()) return;
@@ -458,15 +505,26 @@ export default function AdminNotificationsPage({
       }
       const fields = responseRecord(record?.error)?.fields;
       if (res.status === 400 && Array.isArray(fields) && onValidationError?.(fields)) return;
-      if (!res.ok) throw new Error(t(errorKey, uiLocale));
-      if (action.method === 'DELETE' && res.status !== 204) throw new Error(t(errorKey, uiLocale));
+      if (!res.ok) {
+        if (res.status >= 500) markUnconfirmed();
+        throw new Error();
+      }
       try {
+        if (action.method === 'DELETE' && res.status !== 204) throw new Error();
         await onSuccess(data);
       } catch {
-        throw new Error(t(errorKey, uiLocale));
+        markUnconfirmed();
+        throw new Error();
       }
-    } catch (error) {
-      if (current()) throw error;
+    } catch {
+      if (current()) {
+        const message = t(errorKey, uiLocale);
+        if (outcomeUnconfirmed) sendToast('warning', confirmationText('unconfirmed', uiLocale));
+        else toast.error(message);
+        throw new Error(message);
+      }
+    } finally {
+      mutationRequests.current.delete(request);
     }
   }
 
@@ -682,33 +740,25 @@ export default function AdminNotificationsPage({
             id ? 'admin.notifications.update' : 'admin.notifications.create',
             'admin.notifications.error.save',
             async (result) => {
-              try {
-                const saved = savedTemplate(result, 'draft', id ?? undefined);
-                if (
-                  saved.eventKey !== expected.eventKey ||
-                  saved.channel !== expected.channel ||
-                  saved.locale !== expected.locale ||
-                  saved.bodyTemplate !== expected.bodyTemplate ||
-                  (saved.subject ?? null) !== expected.subject ||
-                  saved.variables.length !== expected.variables.length ||
-                  saved.variables.some(
-                    (variable, index) =>
-                      variable.name !== expected.variables[index]?.name ||
-                      variable.description !== expected.variables[index]?.description
-                  )
+              const saved = savedTemplate(result, 'draft', id ?? undefined);
+              if (
+                saved.eventKey !== expected.eventKey ||
+                saved.channel !== expected.channel ||
+                saved.locale !== expected.locale ||
+                saved.bodyTemplate !== expected.bodyTemplate ||
+                (saved.subject ?? null) !== expected.subject ||
+                saved.variables.length !== expected.variables.length ||
+                saved.variables.some(
+                  (variable, index) =>
+                    variable.name !== expected.variables[index]?.name ||
+                    variable.description !== expected.variables[index]?.description
                 )
-                  throw new Error();
-                acceptReceipt(saved);
-                toast.success(confirmationText('recorded', uiLocale));
-                if (generation === editorGeneration.current) closeEditor();
-                await refreshTemplates.current();
-              } catch (error) {
-                if (generation === editorGeneration.current) {
-                  setEditorRecovered(false);
-                  setEditorUncertain(true);
-                }
-                throw error;
-              }
+              )
+                throw new Error();
+              acceptReceipt(saved);
+              toast.success(confirmationText('recorded', uiLocale));
+              if (generation === editorGeneration.current) closeEditor();
+              await refreshTemplates.current();
             },
             () => generation === editorGeneration.current,
             applyEditorErrors
@@ -870,6 +920,7 @@ export default function AdminNotificationsPage({
           action={protectedAction.action}
           onSuccess={protectedAction.onSuccess}
           onClose={() => setProtectedAction(null)}
+          onUnconfirmed={protectedAction.onUnconfirmed}
           onDenied={scope.deny}
           {...(protectedAction.onValidationError
             ? { onValidationError: protectedAction.onValidationError }
@@ -1071,6 +1122,13 @@ export default function AdminNotificationsPage({
             </div>
           }
         >
+          {unconfirmed && (
+            <Alert variant="destructive">
+              {unconfirmed === 'test'
+                ? notificationFormText('testUnconfirmed', uiLocale)
+                : confirmationText('unconfirmed', uiLocale)}
+            </Alert>
+          )}
           {error && (
             <div
               role="alert"

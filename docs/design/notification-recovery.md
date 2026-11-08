@@ -82,6 +82,8 @@ Onboarding start, profile completion and dashboard-profile selection use the sam
 
 Terms draft saves, publication and discard use the same response deadline. An unknown result keeps local draft text, retires the old publication preview and disables writes until version history is read again. Revision checks and explicit publication or discard confirmation still apply to a new attempt.
 
+Notification template saves, publication, withdrawal, deletion and test sends use the same deadline, including commands confirmed by password. An unconfirmed command blocks further template writes until a fresh catalogue read succeeds. A draft also needs an explicit reset. Refreshing retires the old publication review and sends no command. An unconfirmed test asks staff to check the destination before sending again.
+
 Verification-mode draft saves use the same response deadline. An unknown result keeps the selected mode and blocks both saving and activation. Verification and service-workflow settings require a successful read started after the unknown result before staff can reset to the saved version. Activation still requires its own version check and password confirmation.
 
 Profile and saved-address commands and address creation during saving intake wait up to 15 seconds for write headers and receipt parsing. A keyed command can retry its captured JSON with the current CSRF token. Profile switches and default changes, address deletion, and setting the main address instead check the current owned data after an unknown result. A projected acknowledgement that still needs confirmation also proceeds by read alone. Losing the command scope cancels its write transport.

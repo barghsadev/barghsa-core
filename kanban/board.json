@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-08T12:32:01+00:00",
-  "source_commit": "bbfa25264d60b278f5ee7a0d17fe6935dc2d8970",
+  "updated": "2026-11-08T12:42:43+00:00",
+  "source_commit": "c8313f22a32fc50d8e3368c9c2b7f337fac69269",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -35476,7 +35476,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "cae6a6f2d0efc83767f304b0408ed0a508f8ca56569e6e6962452559c49975e5"
+              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
@@ -63172,7 +63172,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "cae6a6f2d0efc83767f304b0408ed0a508f8ca56569e6e6962452559c49975e5"
+              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
@@ -66540,7 +66540,7 @@
             },
             {
               "path": "apps/web/e2e/notification-template-recovery.spec.ts",
-              "sha256": "0cef139df54751af21474621b95c39e807374d7e83e3f039c930235bff6b97ca"
+              "sha256": "793c05e2dd2edfdc613362af02c88d036bad7a9865713b1f370407d2ea5a121c"
             },
             {
               "path": "apps/web/e2e/notification-template-versions.spec.ts",
@@ -66576,7 +66576,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "cae6a6f2d0efc83767f304b0408ed0a508f8ca56569e6e6962452559c49975e5"
+              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
             },
             {
               "path": "apps/web/src/providers/BrandThemeProvider.tsx",
@@ -77254,7 +77254,7 @@
             },
             {
               "path": "apps/web/e2e/notification-template-recovery.spec.ts",
-              "sha256": "0cef139df54751af21474621b95c39e807374d7e83e3f039c930235bff6b97ca"
+              "sha256": "793c05e2dd2edfdc613362af02c88d036bad7a9865713b1f370407d2ea5a121c"
             },
             {
               "path": "apps/web/e2e/notification-template-versions.spec.ts",
@@ -77290,7 +77290,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "cae6a6f2d0efc83767f304b0408ed0a508f8ca56569e6e6962452559c49975e5"
+              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
             },
             {
               "path": "apps/web/src/providers/BrandThemeProvider.tsx",
@@ -77839,7 +77839,7 @@
             },
             {
               "path": "apps/web/e2e/notification-template-recovery.spec.ts",
-              "sha256": "0cef139df54751af21474621b95c39e807374d7e83e3f039c930235bff6b97ca"
+              "sha256": "793c05e2dd2edfdc613362af02c88d036bad7a9865713b1f370407d2ea5a121c"
             },
             {
               "path": "apps/web/e2e/notification-template-versions.spec.ts",
@@ -77875,7 +77875,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "cae6a6f2d0efc83767f304b0408ed0a508f8ca56569e6e6962452559c49975e5"
+              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
             },
             {
               "path": "apps/web/src/providers/BrandThemeProvider.tsx",
@@ -78591,7 +78591,7 @@
             },
             {
               "path": "apps/web/e2e/notification-template-recovery.spec.ts",
-              "sha256": "0cef139df54751af21474621b95c39e807374d7e83e3f039c930235bff6b97ca"
+              "sha256": "793c05e2dd2edfdc613362af02c88d036bad7a9865713b1f370407d2ea5a121c"
             },
             {
               "path": "apps/web/e2e/notification-template-versions.spec.ts",
@@ -78627,7 +78627,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "cae6a6f2d0efc83767f304b0408ed0a508f8ca56569e6e6962452559c49975e5"
+              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
             },
             {
               "path": "apps/web/src/providers/BrandThemeProvider.tsx",
@@ -79173,7 +79173,7 @@
             },
             {
               "path": "apps/web/e2e/notification-template-recovery.spec.ts",
-              "sha256": "0cef139df54751af21474621b95c39e807374d7e83e3f039c930235bff6b97ca"
+              "sha256": "793c05e2dd2edfdc613362af02c88d036bad7a9865713b1f370407d2ea5a121c"
             },
             {
               "path": "apps/web/e2e/notification-template-versions.spec.ts",
@@ -79209,7 +79209,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "cae6a6f2d0efc83767f304b0408ed0a508f8ca56569e6e6962452559c49975e5"
+              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
             },
             {
               "path": "apps/web/src/providers/BrandThemeProvider.tsx",
@@ -79758,7 +79758,7 @@
             },
             {
               "path": "apps/web/e2e/notification-template-recovery.spec.ts",
-              "sha256": "0cef139df54751af21474621b95c39e807374d7e83e3f039c930235bff6b97ca"
+              "sha256": "793c05e2dd2edfdc613362af02c88d036bad7a9865713b1f370407d2ea5a121c"
             },
             {
               "path": "apps/web/e2e/notification-template-versions.spec.ts",
@@ -79794,7 +79794,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "cae6a6f2d0efc83767f304b0408ed0a508f8ca56569e6e6962452559c49975e5"
+              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
             },
             {
               "path": "apps/web/src/providers/BrandThemeProvider.tsx",
@@ -82092,7 +82092,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "cae6a6f2d0efc83767f304b0408ed0a508f8ca56569e6e6962452559c49975e5"
+              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
             },
             {
               "path": "apps/web/src/pages/delivery-provider-recovery.test.tsx",
@@ -83041,7 +83041,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "cae6a6f2d0efc83767f304b0408ed0a508f8ca56569e6e6962452559c49975e5"
+              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
             },
             {
               "path": "apps/web/src/pages/delivery-provider-recovery.test.tsx",
@@ -83990,7 +83990,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "cae6a6f2d0efc83767f304b0408ed0a508f8ca56569e6e6962452559c49975e5"
+              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
             },
             {
               "path": "apps/web/src/pages/delivery-provider-recovery.test.tsx",
@@ -84940,7 +84940,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "cae6a6f2d0efc83767f304b0408ed0a508f8ca56569e6e6962452559c49975e5"
+              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
             },
             {
               "path": "apps/web/src/pages/delivery-provider-recovery.test.tsx",
@@ -85889,7 +85889,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "cae6a6f2d0efc83767f304b0408ed0a508f8ca56569e6e6962452559c49975e5"
+              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
             },
             {
               "path": "apps/web/src/pages/delivery-provider-recovery.test.tsx",
@@ -86787,7 +86787,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "cae6a6f2d0efc83767f304b0408ed0a508f8ca56569e6e6962452559c49975e5"
+              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
@@ -87540,7 +87540,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "cae6a6f2d0efc83767f304b0408ed0a508f8ca56569e6e6962452559c49975e5"
+              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
@@ -88203,7 +88203,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "cae6a6f2d0efc83767f304b0408ed0a508f8ca56569e6e6962452559c49975e5"
+              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
             },
             {
               "path": "apps/web/src/pages/delivery-provider-recovery.test.tsx",
@@ -491223,7 +491223,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "cae6a6f2d0efc83767f304b0408ed0a508f8ca56569e6e6962452559c49975e5"
+              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
@@ -494371,7 +494371,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "cae6a6f2d0efc83767f304b0408ed0a508f8ca56569e6e6962452559c49975e5"
+              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
@@ -495254,7 +495254,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "cae6a6f2d0efc83767f304b0408ed0a508f8ca56569e6e6962452559c49975e5"
+              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
@@ -496078,7 +496078,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "cae6a6f2d0efc83767f304b0408ed0a508f8ca56569e6e6962452559c49975e5"
+              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
@@ -497047,7 +497047,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "c238f5aadf0fc263de3243495f48ab82517485966f0f982f16648d63fb65793b"
+              "sha256": "e1afff25e97f73536eab6490ab447ecb177f80ecc32d8a5d1bf0690e039cd5bb"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -511574,7 +511574,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "cae6a6f2d0efc83767f304b0408ed0a508f8ca56569e6e6962452559c49975e5"
+              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
@@ -511992,7 +511992,7 @@
             },
             {
               "path": "apps/web/e2e/notification-template-recovery.spec.ts",
-              "sha256": "0cef139df54751af21474621b95c39e807374d7e83e3f039c930235bff6b97ca"
+              "sha256": "793c05e2dd2edfdc613362af02c88d036bad7a9865713b1f370407d2ea5a121c"
             },
             {
               "path": "apps/web/e2e/route-presentation.ts",
@@ -512248,7 +512248,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "cae6a6f2d0efc83767f304b0408ed0a508f8ca56569e6e6962452559c49975e5"
+              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
             },
             {
               "path": "apps/web/src/pages/AdminRolesPage.tsx",
@@ -517905,7 +517905,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "cae6a6f2d0efc83767f304b0408ed0a508f8ca56569e6e6962452559c49975e5"
+              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
@@ -518105,7 +518105,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "c238f5aadf0fc263de3243495f48ab82517485966f0f982f16648d63fb65793b"
+              "sha256": "e1afff25e97f73536eab6490ab447ecb177f80ecc32d8a5d1bf0690e039cd5bb"
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
@@ -518817,7 +518817,7 @@
             },
             {
               "path": "apps/web/e2e/notification-template-recovery.spec.ts",
-              "sha256": "0cef139df54751af21474621b95c39e807374d7e83e3f039c930235bff6b97ca"
+              "sha256": "793c05e2dd2edfdc613362af02c88d036bad7a9865713b1f370407d2ea5a121c"
             },
             {
               "path": "apps/web/e2e/route-presentation.ts",
@@ -518961,7 +518961,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "cae6a6f2d0efc83767f304b0408ed0a508f8ca56569e6e6962452559c49975e5"
+              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -519213,7 +519213,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "c238f5aadf0fc263de3243495f48ab82517485966f0f982f16648d63fb65793b"
+              "sha256": "e1afff25e97f73536eab6490ab447ecb177f80ecc32d8a5d1bf0690e039cd5bb"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -546823,7 +546823,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "cae6a6f2d0efc83767f304b0408ed0a508f8ca56569e6e6962452559c49975e5"
+              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -548689,7 +548689,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "cae6a6f2d0efc83767f304b0408ed0a508f8ca56569e6e6962452559c49975e5"
+              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -550556,7 +550556,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "cae6a6f2d0efc83767f304b0408ed0a508f8ca56569e6e6962452559c49975e5"
+              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -552392,7 +552392,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "cae6a6f2d0efc83767f304b0408ed0a508f8ca56569e6e6962452559c49975e5"
+              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -554254,7 +554254,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "cae6a6f2d0efc83767f304b0408ed0a508f8ca56569e6e6962452559c49975e5"
+              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -556125,7 +556125,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "cae6a6f2d0efc83767f304b0408ed0a508f8ca56569e6e6962452559c49975e5"
+              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -557969,7 +557969,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "cae6a6f2d0efc83767f304b0408ed0a508f8ca56569e6e6962452559c49975e5"
+              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -559777,7 +559777,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "cae6a6f2d0efc83767f304b0408ed0a508f8ca56569e6e6962452559c49975e5"
+              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -561585,7 +561585,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "cae6a6f2d0efc83767f304b0408ed0a508f8ca56569e6e6962452559c49975e5"
+              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -563394,7 +563394,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "cae6a6f2d0efc83767f304b0408ed0a508f8ca56569e6e6962452559c49975e5"
+              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -565202,7 +565202,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "cae6a6f2d0efc83767f304b0408ed0a508f8ca56569e6e6962452559c49975e5"
+              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -567520,7 +567520,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "c238f5aadf0fc263de3243495f48ab82517485966f0f982f16648d63fb65793b"
+              "sha256": "e1afff25e97f73536eab6490ab447ecb177f80ecc32d8a5d1bf0690e039cd5bb"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -569415,7 +569415,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "c238f5aadf0fc263de3243495f48ab82517485966f0f982f16648d63fb65793b"
+              "sha256": "e1afff25e97f73536eab6490ab447ecb177f80ecc32d8a5d1bf0690e039cd5bb"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -570219,7 +570219,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Profile, address and saving intake recovery have current customer evidence. Reconcile remaining ordinary CRUD feedback across the full route inventory and confirm that transactional commands preserve their owned recovery."
+        "Staff notification template commands now give bounded, scoped feedback and require a fresh read after an unknown result. Staff invoice due-period settings still wait indefinitely for a direct save acknowledgement. Reconcile the remaining CRUD and transactional feedback against current route evidence."
       ],
       "owner": null,
       "depends_on": [],
@@ -570280,7 +570280,8 @@
           "release-0.5-verified-upload-deadline",
           "release-0.5-verification-mode-recovery",
           "release-0.5-customer-settings-deadline",
-          "release-0.5-saving-intake-recovery"
+          "release-0.5-saving-intake-recovery",
+          "release-0.5-notification-template-command-recovery"
         ],
         "current_acceptance": null
       }
@@ -571391,7 +571392,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "c238f5aadf0fc263de3243495f48ab82517485966f0f982f16648d63fb65793b"
+              "sha256": "e1afff25e97f73536eab6490ab447ecb177f80ecc32d8a5d1bf0690e039cd5bb"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -573286,7 +573287,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "c238f5aadf0fc263de3243495f48ab82517485966f0f982f16648d63fb65793b"
+              "sha256": "e1afff25e97f73536eab6490ab447ecb177f80ecc32d8a5d1bf0690e039cd5bb"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -575181,7 +575182,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "c238f5aadf0fc263de3243495f48ab82517485966f0f982f16648d63fb65793b"
+              "sha256": "e1afff25e97f73536eab6490ab447ecb177f80ecc32d8a5d1bf0690e039cd5bb"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -577076,7 +577077,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "c238f5aadf0fc263de3243495f48ab82517485966f0f982f16648d63fb65793b"
+              "sha256": "e1afff25e97f73536eab6490ab447ecb177f80ecc32d8a5d1bf0690e039cd5bb"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -578971,7 +578972,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "c238f5aadf0fc263de3243495f48ab82517485966f0f982f16648d63fb65793b"
+              "sha256": "e1afff25e97f73536eab6490ab447ecb177f80ecc32d8a5d1bf0690e039cd5bb"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -580866,7 +580867,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "c238f5aadf0fc263de3243495f48ab82517485966f0f982f16648d63fb65793b"
+              "sha256": "e1afff25e97f73536eab6490ab447ecb177f80ecc32d8a5d1bf0690e039cd5bb"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -582761,7 +582762,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "c238f5aadf0fc263de3243495f48ab82517485966f0f982f16648d63fb65793b"
+              "sha256": "e1afff25e97f73536eab6490ab447ecb177f80ecc32d8a5d1bf0690e039cd5bb"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -584656,7 +584657,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "c238f5aadf0fc263de3243495f48ab82517485966f0f982f16648d63fb65793b"
+              "sha256": "e1afff25e97f73536eab6490ab447ecb177f80ecc32d8a5d1bf0690e039cd5bb"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -586551,7 +586552,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "c238f5aadf0fc263de3243495f48ab82517485966f0f982f16648d63fb65793b"
+              "sha256": "e1afff25e97f73536eab6490ab447ecb177f80ecc32d8a5d1bf0690e039cd5bb"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -588446,7 +588447,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "c238f5aadf0fc263de3243495f48ab82517485966f0f982f16648d63fb65793b"
+              "sha256": "e1afff25e97f73536eab6490ab447ecb177f80ecc32d8a5d1bf0690e039cd5bb"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -590341,7 +590342,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "c238f5aadf0fc263de3243495f48ab82517485966f0f982f16648d63fb65793b"
+              "sha256": "e1afff25e97f73536eab6490ab447ecb177f80ecc32d8a5d1bf0690e039cd5bb"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -591605,7 +591606,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "c238f5aadf0fc263de3243495f48ab82517485966f0f982f16648d63fb65793b"
+              "sha256": "e1afff25e97f73536eab6490ab447ecb177f80ecc32d8a5d1bf0690e039cd5bb"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -592976,7 +592977,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "c238f5aadf0fc263de3243495f48ab82517485966f0f982f16648d63fb65793b"
+              "sha256": "e1afff25e97f73536eab6490ab447ecb177f80ecc32d8a5d1bf0690e039cd5bb"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -594871,7 +594872,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "c238f5aadf0fc263de3243495f48ab82517485966f0f982f16648d63fb65793b"
+              "sha256": "e1afff25e97f73536eab6490ab447ecb177f80ecc32d8a5d1bf0690e039cd5bb"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -595675,7 +595676,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Saving intake now covers bounded retries, a valid empty catalogue and an empty address list. Match the remaining conditional list, detail, dashboard and staff route states to the inventory and current native evidence."
+        "Saving intake and notification template command recovery have current native evidence. Match the remaining conditional list, detail, dashboard and staff route states to the inventory and current native evidence."
       ],
       "owner": null,
       "depends_on": [],
@@ -595748,7 +595749,8 @@
           "release-0.5-verified-upload-deadline",
           "release-0.5-verification-mode-recovery",
           "release-0.5-customer-settings-deadline",
-          "release-0.5-saving-intake-recovery"
+          "release-0.5-saving-intake-recovery",
+          "release-0.5-notification-template-command-recovery"
         ],
         "current_acceptance": null
       }
@@ -596377,7 +596379,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "cae6a6f2d0efc83767f304b0408ed0a508f8ca56569e6e6962452559c49975e5"
+              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -598181,7 +598183,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "cae6a6f2d0efc83767f304b0408ed0a508f8ca56569e6e6962452559c49975e5"
+              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -599985,7 +599987,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "cae6a6f2d0efc83767f304b0408ed0a508f8ca56569e6e6962452559c49975e5"
+              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -601789,7 +601791,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "cae6a6f2d0efc83767f304b0408ed0a508f8ca56569e6e6962452559c49975e5"
+              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -603593,7 +603595,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "cae6a6f2d0efc83767f304b0408ed0a508f8ca56569e6e6962452559c49975e5"
+              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -605397,7 +605399,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "cae6a6f2d0efc83767f304b0408ed0a508f8ca56569e6e6962452559c49975e5"
+              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -607201,7 +607203,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "cae6a6f2d0efc83767f304b0408ed0a508f8ca56569e6e6962452559c49975e5"
+              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -634868,7 +634870,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "cae6a6f2d0efc83767f304b0408ed0a508f8ca56569e6e6962452559c49975e5"
+              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
@@ -635992,7 +635994,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "cae6a6f2d0efc83767f304b0408ed0a508f8ca56569e6e6962452559c49975e5"
+              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
@@ -637116,7 +637118,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "cae6a6f2d0efc83767f304b0408ed0a508f8ca56569e6e6962452559c49975e5"
+              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
@@ -638243,7 +638245,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "cae6a6f2d0efc83767f304b0408ed0a508f8ca56569e6e6962452559c49975e5"
+              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
@@ -639370,7 +639372,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "cae6a6f2d0efc83767f304b0408ed0a508f8ca56569e6e6962452559c49975e5"
+              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
@@ -640524,7 +640526,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "cae6a6f2d0efc83767f304b0408ed0a508f8ca56569e6e6962452559c49975e5"
+              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
@@ -641647,7 +641649,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "cae6a6f2d0efc83767f304b0408ed0a508f8ca56569e6e6962452559c49975e5"
+              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
@@ -642770,7 +642772,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "cae6a6f2d0efc83767f304b0408ed0a508f8ca56569e6e6962452559c49975e5"
+              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
@@ -643894,7 +643896,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "cae6a6f2d0efc83767f304b0408ed0a508f8ca56569e6e6962452559c49975e5"
+              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
@@ -645036,7 +645038,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "cae6a6f2d0efc83767f304b0408ed0a508f8ca56569e6e6962452559c49975e5"
+              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
@@ -646161,7 +646163,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "cae6a6f2d0efc83767f304b0408ed0a508f8ca56569e6e6962452559c49975e5"
+              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
@@ -677661,7 +677663,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "cae6a6f2d0efc83767f304b0408ed0a508f8ca56569e6e6962452559c49975e5"
+              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
@@ -678783,7 +678785,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "cae6a6f2d0efc83767f304b0408ed0a508f8ca56569e6e6962452559c49975e5"
+              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
@@ -679905,7 +679907,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "cae6a6f2d0efc83767f304b0408ed0a508f8ca56569e6e6962452559c49975e5"
+              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
@@ -681027,7 +681029,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "cae6a6f2d0efc83767f304b0408ed0a508f8ca56569e6e6962452559c49975e5"
+              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
@@ -702213,7 +702215,7 @@
             },
             {
               "path": "apps/web/e2e/notification-template-recovery.spec.ts",
-              "sha256": "0cef139df54751af21474621b95c39e807374d7e83e3f039c930235bff6b97ca"
+              "sha256": "793c05e2dd2edfdc613362af02c88d036bad7a9865713b1f370407d2ea5a121c"
             },
             {
               "path": "apps/web/e2e/notification-template-versions.spec.ts",
@@ -702233,7 +702235,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "cae6a6f2d0efc83767f304b0408ed0a508f8ca56569e6e6962452559c49975e5"
+              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
             },
             {
               "path": "apps/web/src/pages/notification-forms.test.tsx",
@@ -718858,7 +718860,7 @@
             },
             {
               "path": "apps/web/e2e/notification-template-recovery.spec.ts",
-              "sha256": "0cef139df54751af21474621b95c39e807374d7e83e3f039c930235bff6b97ca"
+              "sha256": "793c05e2dd2edfdc613362af02c88d036bad7a9865713b1f370407d2ea5a121c"
             },
             {
               "path": "apps/web/e2e/notification-template-versions.spec.ts",
@@ -719342,7 +719344,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "cae6a6f2d0efc83767f304b0408ed0a508f8ca56569e6e6962452559c49975e5"
+              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -722740,7 +722742,7 @@
             },
             {
               "path": "apps/web/e2e/notification-template-recovery.spec.ts",
-              "sha256": "0cef139df54751af21474621b95c39e807374d7e83e3f039c930235bff6b97ca"
+              "sha256": "793c05e2dd2edfdc613362af02c88d036bad7a9865713b1f370407d2ea5a121c"
             },
             {
               "path": "apps/web/e2e/notification-template-versions.spec.ts",
@@ -723208,7 +723210,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "cae6a6f2d0efc83767f304b0408ed0a508f8ca56569e6e6962452559c49975e5"
+              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
             },
             {
               "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
@@ -725392,7 +725394,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Saving intake retry and empty states have current evidence. Remaining command feedback and route states, live Sentry delivery and required GitHub accessibility enforcement still gate full adoption."
+        "Notification template mutation recovery has current evidence. Remaining command feedback and route states, live Sentry delivery and required GitHub accessibility enforcement still gate full adoption."
       ],
       "owner": null,
       "depends_on": [],
@@ -725529,7 +725531,8 @@
           "release-0.5-verified-upload-deadline",
           "release-0.5-verification-mode-recovery",
           "release-0.5-customer-settings-deadline",
-          "release-0.5-saving-intake-recovery"
+          "release-0.5-saving-intake-recovery",
+          "release-0.5-notification-template-command-recovery"
         ]
       }
     },
@@ -726521,7 +726524,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-              "sha256": "cae6a6f2d0efc83767f304b0408ed0a508f8ca56569e6e6962452559c49975e5"
+              "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
@@ -727250,6 +727253,10 @@
             {
               "path": "apps/web/src/hooks/useSettingsCommand.ts",
               "sha256": "d26862e04f82d8839ffdee8d100a33ad4aa33119afdff0d129ca336deffbb843"
+            },
+            {
+              "path": "packages/i18n/src/notification-forms.ts",
+              "sha256": "426fb5a38c9e3b014e8dd65935c6e1029b2055f8b119cefbf87b074ada74eedc"
             }
           ],
           "checks": [
@@ -727331,7 +727338,8 @@
             "Renewed verified attachment, receipt preparation and route and interaction budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-verified-upload-deadline/proof.json",
             "Renewed verification-mode and workflow recovery and route and interaction budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-verification-mode-recovery/proof.json",
             "Renewed shared customer settings command and route and interaction budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-customer-settings-deadline/proof.json",
-            "Renewed saving intake recovery, accessibility and route and interaction budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-intake-recovery/proof.json"
+            "Renewed saving intake recovery, accessibility and route and interaction budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-intake-recovery/proof.json",
+            "Renewed notification template recovery and route and interaction budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-template-command-recovery/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -799540,6 +799548,102 @@
       "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-intake-recovery/renewed-bindings.json",
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-intake-recovery/reviewed.patch",
       "release_disposition": "Verified saving intake retries and empty states with the existing draft and authority checks. v0.5.0 acceptance remains open."
+    },
+    "release-0.5-notification-template-command-recovery": {
+      "batch": "release-0.5-notification-template-command-recovery",
+      "base_commit": "c8313f22a32fc50d8e3368c9c2b7f337fac69269",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.11.01.03",
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.11.01.03",
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": ".size-limit.json",
+          "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+        },
+        {
+          "path": "apps/web/e2e/confirmation-fixture.ts",
+          "sha256": "8d842de5577a9f43a5ca0efcf8e6a00e18e6ea1fb53116555fac8cbd7608bb61"
+        },
+        {
+          "path": "apps/web/e2e/crm-shell-fixture.ts",
+          "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+        },
+        {
+          "path": "apps/web/e2e/notification-template-recovery.spec.ts",
+          "sha256": "793c05e2dd2edfdc613362af02c88d036bad7a9865713b1f370407d2ea5a121c"
+        },
+        {
+          "path": "apps/web/src/components/TeamActionDialog.tsx",
+          "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+        },
+        {
+          "path": "apps/web/src/hooks/useCatalogueResource.ts",
+          "sha256": "a189459305295c7cef7c9741922109d25540db7eba3141d8e8d8a61941792dee"
+        },
+        {
+          "path": "apps/web/src/hooks/useStaffQueryRead.ts",
+          "sha256": "e21695a1a08c18ea78dcc4a17a19555992e8a94ba3284fea02d3a587bd8ca4e0"
+        },
+        {
+          "path": "apps/web/src/lib/content-catalogues.ts",
+          "sha256": "118b8ac0abb05f2363b7c51b72e5f0e255e37650bf20aad6a65fd166d7c1424a"
+        },
+        {
+          "path": "apps/web/src/lib/server-query-client.ts",
+          "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
+        },
+        {
+          "path": "apps/web/src/lib/toast-api.ts",
+          "sha256": "19bb9d7b3de334e1b002e5759b9a581354885611c69d8d59297230d9a4d254bd"
+        },
+        {
+          "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
+          "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
+        },
+        {
+          "path": "apps/web/src/pages/notification-forms.test.tsx",
+          "sha256": "fd9d523258748005538f07f5d06a3859259e8ba66c6dbe1629679a506932d0e0"
+        },
+        {
+          "path": "docs/design/notification-recovery.md",
+          "sha256": "e1afff25e97f73536eab6490ab447ecb177f80ecc32d8a5d1bf0690e039cd5bb"
+        },
+        {
+          "path": "packages/i18n/src/confirmation.ts",
+          "sha256": "4dd854d1d4c048b6d6d80b7bc3648b5cf3eafa4e445a3ef1142f4c5663b5438e"
+        },
+        {
+          "path": "packages/i18n/src/notification-forms.ts",
+          "sha256": "426fb5a38c9e3b014e8dd65935c6e1029b2055f8b119cefbf87b074ada74eedc"
+        },
+        {
+          "path": "scripts/check-changed-coverage.py",
+          "sha256": "721aa5763bb62336c0e4c454b8e36e2f15ff1e14bf4b0136c7c7946424bbd736"
+        },
+        {
+          "path": "scripts/check-route-budgets.mjs",
+          "sha256": "4dd831c645a9dbf1e6fd9b0c211b5559e4fc22652373b31525bd4f4aae38186d"
+        }
+      ],
+      "checks": [
+        "Staff notification template create, edit, publish, unpublish, delete and test send bound the request and acknowledgement body, including the password-confirmed path. Unknown outcomes keep the command unconfirmed and hold template writes until a fresh catalogue read. Drafts still require an explicit reset, and recovery clears the old publication review.",
+        "The browser cases confirm an applied publication with a lost acknowledgement through a separate read without a duplicate write. They also check that a timed-out password-confirmed test send leaves the dialog disabled, exposes an instruction to check the destination, and sends no further message on refresh. Previously tested current-scope and receipt checks remain active.",
+        "Twenty notification form unit cases, 26 production Chromium and Mobile Safari cases, 13 instrumented Chromium cases, nine changed-coverage groups, 100 unchanged bundle budgets, formatting, scoped lint and web typecheck passed. Six cold-auth receipts carry forward from byte-identical runtime files."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-template-command-recovery",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-template-command-recovery/proof.json",
+      "source_scope_proof_sha256": "a863b0ffd9e743637b01763ecc53464e4f3dbf528565b27430ae1276aa3acdc1",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-template-command-recovery/renewed-bindings.json",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-template-command-recovery/reviewed.patch",
+      "release_disposition": "Verified staff notification template write recovery with its existing permission and receipt safeguards. v0.5.0 acceptance remains open."
     }
   },
   "historical_improvements": [
@@ -799590,12 +799694,12 @@
       "release-readiness#R-04.01",
       "release-readiness#R-04.02"
     ],
-    "goal": "Reconcile the remaining customer and staff command feedback and conditional route states against the existing route inventory and native evidence. Build only demonstrated gaps. Live Sentry delivery and GitHub accessibility enforcement remain separate v0.5.0 gates."
+    "goal": "Reconcile staff invoice settings and manual invoice command recovery, starting with the unbounded due-period save acknowledgement. Continue matching remaining conditional route states to native evidence. Live Sentry delivery and required GitHub accessibility enforcement remain separate v0.5.0 gates."
   },
   "launch_forecast": {
     "status": "deadline_at_risk_until_v0_5_and_operational_gates_close",
     "next_update_after": "v0.5.0 remaining UI criteria and owner decisions",
-    "method": "v0.4.0 staging and Telegram receipts are verified. v0.5.0 form semantics, guarded electricity drafts, solar document completion, ticket acknowledgement, verified attachment and verification-mode recovery, shared customer settings acknowledgement and saving intake recovery, and scoped customer electricity, shell, onboarding, terms and invitation recovery are verified. Five launch-required criteria remain open, including the live Sentry receipt and GitHub accessibility enforcement. The November 9 sequence remains at risk."
+    "method": "v0.4.0 staging and Telegram receipts are verified. v0.5.0 form semantics, guarded electricity drafts, solar document completion, ticket acknowledgement, verified attachment and verification-mode recovery, shared customer settings acknowledgement and saving intake recovery, staff notification template recovery, and scoped customer electricity, shell, onboarding, terms and invitation recovery are verified. Five launch-required criteria remain open, including the live Sentry receipt and GitHub accessibility enforcement. The November 9 sequence remains at risk."
   },
   "capabilities": [
     {
