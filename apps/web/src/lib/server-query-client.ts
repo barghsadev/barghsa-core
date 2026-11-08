@@ -9,14 +9,18 @@ export class ServerQueryError extends Error {
 /** A stalled read is an error; changing its owner still cancels it. */
 export async function readWithDeadline<T>(
   parent: AbortSignal,
-  read: (signal: AbortSignal) => Promise<T>
+  read: (signal: AbortSignal) => Promise<T>,
+  timeoutMs = 15_000
 ): Promise<T> {
   parent.throwIfAborted();
   const transport = new AbortController();
   const signal = transport.signal;
   const cancel = () => transport.abort(parent.reason);
   parent.addEventListener('abort', cancel, { once: true });
-  const deadline = setTimeout(() => transport.abort(new DOMException('', 'TimeoutError')), 15_000);
+  const deadline = setTimeout(
+    () => transport.abort(new DOMException('', 'TimeoutError')),
+    timeoutMs
+  );
   try {
     const abandoned = new Promise<never>((_resolve, reject) => {
       signal.addEventListener('abort', () => reject(signal.reason), { once: true });

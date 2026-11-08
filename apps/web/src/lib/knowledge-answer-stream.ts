@@ -1,4 +1,5 @@
 import { chatRecord, readKnowledgeAnswer, type KnowledgeAnswer } from './assistant-chat.js';
+import { readWithDeadline } from './server-query-client.js';
 
 /** Accept only a complete, matching receipt; interrupted text remains an unfinished draft. */
 export async function readKnowledgeResponse(
@@ -19,12 +20,9 @@ export async function readKnowledgeResponse(
     text = '',
     bytes = 0;
   let answer: KnowledgeAnswer | null = null;
-  const abort = () => void reader.cancel().catch(() => undefined);
-  signal.addEventListener('abort', abort, { once: true });
   try {
     while (true) {
-      if (signal.aborted) throw new Error('Answer aborted');
-      const part = await reader.read();
+      const part = await readWithDeadline(signal, () => reader.read());
       bytes += part.value?.byteLength ?? 0;
       if (bytes > 256 * 1024 || signal.aborted) throw new Error('Invalid answer stream');
       buffer += part.done ? decoder.decode() : decoder.decode(part.value, { stream: true });
@@ -51,8 +49,7 @@ export async function readKnowledgeResponse(
     if (buffer || !answer || signal.aborted) throw new Error('Incomplete answer');
     return answer;
   } finally {
-    signal.removeEventListener('abort', abort);
-    await reader.cancel().catch(() => undefined);
+    void reader.cancel().catch(() => undefined);
     reader.releaseLock();
   }
 }

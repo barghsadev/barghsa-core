@@ -42,6 +42,8 @@ type Turn = {
   account?: AccountSnapshot;
 };
 type PendingRequest = { requestId: string; message: string };
+// Retrieval and checked inference can run before the first byte of the answer.
+const KNOWLEDGE_ANSWER_DEADLINE_MS = 300_000;
 
 type AssistantPanelProps = {
   locale: Locale;
@@ -170,75 +172,86 @@ function OwnedKnowledgeAssistantPanel({
     const abort = new AbortController();
     controller.current = abort;
     try {
-      const response = await fetch('/api/ai/knowledge/questions', {
-        method: 'POST',
-        credentials: 'include',
-        headers: withCsrf({
-          'Content-Type': 'application/json',
-          'Accept-Language': locale,
-          Accept: 'text/event-stream',
-        }),
-        body: JSON.stringify(payload),
-        signal: abort.signal,
-      });
-      if (!response.ok) {
-        const body: unknown = await response.json().catch(() => null);
-        if (abort.signal.aborted) return;
-        if (response.status === 401 || response.status === 403) {
-          deny();
-          return;
-        }
-        const fields = inputErrorFields(body, response.status).fields;
-        const code = authErrorCode(body);
-        if (fields && ownedFields(fields)) {
-          setServerMessageError(true);
+      await readWithDeadline(
+        abort.signal,
+        async (signal) => {
+          const response = await fetch('/api/ai/knowledge/questions', {
+            method: 'POST',
+            credentials: 'include',
+            headers: withCsrf({
+              'Content-Type': 'application/json',
+              'Accept-Language': locale,
+              Accept: 'text/event-stream',
+            }),
+            body: JSON.stringify(payload),
+            signal,
+          });
+          if (signal.aborted) return;
+          if (!response.ok) {
+            const body: unknown = await response.json().catch(() => null);
+            if (signal.aborted) return;
+            if (response.status === 401 || response.status === 403) {
+              deny();
+              return;
+            }
+            const fields = inputErrorFields(body, response.status).fields;
+            const code = authErrorCode(body);
+            const inProgress = response.status === 409 && code === 'AI_KNOWLEDGE_IN_PROGRESS';
+            if (fields && ownedFields(fields)) {
+              setServerMessageError(true);
+              captured.current = null;
+              setError(copy('invalid'));
+              return;
+            }
+            setError(
+              code === 'AI_KNOWLEDGE_NO_SOURCE'
+                ? label('noSource')
+                : code === 'AI_KNOWLEDGE_POLICY_BLOCKED'
+                  ? label('policyBlocked')
+                  : code === 'AI_MODEL_BUDGET_EXHAUSTED'
+                    ? label('budget')
+                    : code === 'AI_KNOWLEDGE_BUSY' || inProgress
+                      ? label('busy')
+                      : response.status === 429
+                        ? label('limit')
+                        : response.status === 409
+                          ? label('changed')
+                          : label('error')
+            );
+            if (response.status === 429) cooldown.read(response);
+            if (
+              inProgress ||
+              response.status >= 500 ||
+              (response.status === 429 && code !== 'AI_MODEL_BUDGET_EXHAUSTED')
+            )
+              setRetry(payload);
+            else captured.current = null;
+            return;
+          }
+          const answer = await readKnowledgeResponse(response, signal, (text) => {
+            if (signal.aborted || !mounted.current) return;
+            setTurns((current) =>
+              current.map((turn) =>
+                turn.id === payload.requestId
+                  ? {
+                      ...turn,
+                      partial: { text, receivedAt: turn.partial?.receivedAt ?? Date.now() },
+                    }
+                  : turn
+              )
+            );
+          });
+          if (signal.aborted) return;
+          setTurns((current) =>
+            current.map((turn) =>
+              turn.id === payload.requestId ? { ...turn, answer, partial: undefined } : turn
+            )
+          );
+          reset({ message: '' });
           captured.current = null;
-          setError(copy('invalid'));
-          return;
-        }
-        setError(
-          code === 'AI_KNOWLEDGE_NO_SOURCE'
-            ? label('noSource')
-            : code === 'AI_KNOWLEDGE_POLICY_BLOCKED'
-              ? label('policyBlocked')
-              : code === 'AI_MODEL_BUDGET_EXHAUSTED'
-                ? label('budget')
-                : code === 'AI_KNOWLEDGE_BUSY'
-                  ? label('busy')
-                  : response.status === 429
-                    ? label('limit')
-                    : response.status === 409
-                      ? label('changed')
-                      : label('error')
-        );
-        if (response.status === 429) cooldown.read(response);
-        if (
-          response.status >= 500 ||
-          (response.status === 429 && code !== 'AI_MODEL_BUDGET_EXHAUSTED')
-        )
-          setRetry(payload);
-        else captured.current = null;
-        return;
-      }
-      const answer = await readKnowledgeResponse(response, abort.signal, (text) => {
-        if (abort.signal.aborted || !mounted.current) return;
-        setTurns((current) =>
-          current.map((turn) =>
-            turn.id === payload.requestId
-              ? { ...turn, partial: { text, receivedAt: turn.partial?.receivedAt ?? Date.now() } }
-              : turn
-          )
-        );
-      });
-      if (abort.signal.aborted) return;
-      if (response.status !== 200 || !answer) throw new Error('Invalid answer');
-      setTurns((current) =>
-        current.map((turn) =>
-          turn.id === payload.requestId ? { ...turn, answer, partial: undefined } : turn
-        )
+        },
+        KNOWLEDGE_ANSWER_DEADLINE_MS
       );
-      reset({ message: '' });
-      captured.current = null;
     } catch {
       if (abort.signal.aborted) return;
       setError(label('error'));

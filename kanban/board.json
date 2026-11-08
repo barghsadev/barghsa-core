@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-08T02:50:37+00:00",
-  "source_commit": "dff7c02eac4a14b66d87da585c62bd00124b997b",
+  "updated": "2026-11-08T03:02:46+00:00",
+  "source_commit": "f0e4b18f99799c442bcbb768cefb451a36fb9f91",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -104436,7 +104436,7 @@
             },
             {
               "path": "apps/web/e2e/knowledge-assistant-metadata.spec.ts",
-              "sha256": "8a4e126d144158f6e1075d1cf38b4187276b74da6261f9b57af9d0bc1828a612"
+              "sha256": "e2c8ea9d1cc74cdd15217167c93d9b2a0659991d604883843ac378532e44cdae"
             },
             {
               "path": "apps/web/e2e/knowledge-assistant.spec.ts",
@@ -457162,7 +457162,7 @@
             },
             {
               "path": "apps/web/e2e/knowledge-assistant-metadata.spec.ts",
-              "sha256": "8a4e126d144158f6e1075d1cf38b4187276b74da6261f9b57af9d0bc1828a612"
+              "sha256": "e2c8ea9d1cc74cdd15217167c93d9b2a0659991d604883843ac378532e44cdae"
             },
             {
               "path": "apps/web/e2e/knowledge-assistant.spec.ts",
@@ -457727,7 +457727,7 @@
             },
             {
               "path": "apps/web/e2e/knowledge-assistant-metadata.spec.ts",
-              "sha256": "8a4e126d144158f6e1075d1cf38b4187276b74da6261f9b57af9d0bc1828a612"
+              "sha256": "e2c8ea9d1cc74cdd15217167c93d9b2a0659991d604883843ac378532e44cdae"
             },
             {
               "path": "apps/web/e2e/knowledge-assistant.spec.ts",
@@ -458290,7 +458290,7 @@
             },
             {
               "path": "apps/web/e2e/knowledge-assistant-metadata.spec.ts",
-              "sha256": "8a4e126d144158f6e1075d1cf38b4187276b74da6261f9b57af9d0bc1828a612"
+              "sha256": "e2c8ea9d1cc74cdd15217167c93d9b2a0659991d604883843ac378532e44cdae"
             },
             {
               "path": "apps/web/e2e/knowledge-assistant.spec.ts",
@@ -458853,7 +458853,7 @@
             },
             {
               "path": "apps/web/e2e/knowledge-assistant-metadata.spec.ts",
-              "sha256": "8a4e126d144158f6e1075d1cf38b4187276b74da6261f9b57af9d0bc1828a612"
+              "sha256": "e2c8ea9d1cc74cdd15217167c93d9b2a0659991d604883843ac378532e44cdae"
             },
             {
               "path": "apps/web/e2e/knowledge-assistant.spec.ts",
@@ -459915,7 +459915,7 @@
             },
             {
               "path": "apps/web/e2e/knowledge-assistant-metadata.spec.ts",
-              "sha256": "8a4e126d144158f6e1075d1cf38b4187276b74da6261f9b57af9d0bc1828a612"
+              "sha256": "e2c8ea9d1cc74cdd15217167c93d9b2a0659991d604883843ac378532e44cdae"
             },
             {
               "path": "apps/web/e2e/knowledge-assistant.spec.ts",
@@ -460590,7 +460590,7 @@
             },
             {
               "path": "apps/web/e2e/knowledge-assistant-metadata.spec.ts",
-              "sha256": "8a4e126d144158f6e1075d1cf38b4187276b74da6261f9b57af9d0bc1828a612"
+              "sha256": "e2c8ea9d1cc74cdd15217167c93d9b2a0659991d604883843ac378532e44cdae"
             },
             {
               "path": "apps/web/e2e/knowledge-assistant.spec.ts",
@@ -461651,7 +461651,7 @@
             },
             {
               "path": "apps/web/e2e/knowledge-assistant-metadata.spec.ts",
-              "sha256": "8a4e126d144158f6e1075d1cf38b4187276b74da6261f9b57af9d0bc1828a612"
+              "sha256": "e2c8ea9d1cc74cdd15217167c93d9b2a0659991d604883843ac378532e44cdae"
             },
             {
               "path": "apps/web/e2e/knowledge-assistant.spec.ts",
@@ -462213,7 +462213,7 @@
             },
             {
               "path": "apps/web/e2e/knowledge-assistant-metadata.spec.ts",
-              "sha256": "8a4e126d144158f6e1075d1cf38b4187276b74da6261f9b57af9d0bc1828a612"
+              "sha256": "e2c8ea9d1cc74cdd15217167c93d9b2a0659991d604883843ac378532e44cdae"
             },
             {
               "path": "apps/web/e2e/knowledge-assistant.spec.ts",
@@ -462776,7 +462776,7 @@
             },
             {
               "path": "apps/web/e2e/knowledge-assistant-metadata.spec.ts",
-              "sha256": "8a4e126d144158f6e1075d1cf38b4187276b74da6261f9b57af9d0bc1828a612"
+              "sha256": "e2c8ea9d1cc74cdd15217167c93d9b2a0659991d604883843ac378532e44cdae"
             },
             {
               "path": "apps/web/e2e/knowledge-assistant.spec.ts",
@@ -463340,7 +463340,7 @@
             },
             {
               "path": "apps/web/e2e/knowledge-assistant-metadata.spec.ts",
-              "sha256": "8a4e126d144158f6e1075d1cf38b4187276b74da6261f9b57af9d0bc1828a612"
+              "sha256": "e2c8ea9d1cc74cdd15217167c93d9b2a0659991d604883843ac378532e44cdae"
             },
             {
               "path": "apps/web/e2e/knowledge-assistant.spec.ts",
@@ -463926,7 +463926,7 @@
             },
             {
               "path": "apps/web/e2e/knowledge-assistant-metadata.spec.ts",
-              "sha256": "8a4e126d144158f6e1075d1cf38b4187276b74da6261f9b57af9d0bc1828a612"
+              "sha256": "e2c8ea9d1cc74cdd15217167c93d9b2a0659991d604883843ac378532e44cdae"
             },
             {
               "path": "apps/web/e2e/knowledge-assistant.spec.ts",
@@ -464488,7 +464488,7 @@
             },
             {
               "path": "apps/web/e2e/knowledge-assistant-metadata.spec.ts",
-              "sha256": "8a4e126d144158f6e1075d1cf38b4187276b74da6261f9b57af9d0bc1828a612"
+              "sha256": "e2c8ea9d1cc74cdd15217167c93d9b2a0659991d604883843ac378532e44cdae"
             },
             {
               "path": "apps/web/e2e/knowledge-assistant.spec.ts",
@@ -492977,7 +492977,7 @@
             },
             {
               "path": "apps/web/src/lib/server-query-client.ts",
-              "sha256": "8f339009224962a0219dec6d142c856c7b1e142ce7687a8612c622d0440e1617"
+              "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
             },
             {
               "path": "apps/web/src/pages/AdminDashboard.tsx",
@@ -494277,7 +494277,7 @@
             },
             {
               "path": "apps/web/src/lib/server-query-client.ts",
-              "sha256": "8f339009224962a0219dec6d142c856c7b1e142ce7687a8612c622d0440e1617"
+              "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
             },
             {
               "path": "apps/web/src/pages/AccountRecoveryPage.tsx",
@@ -495159,7 +495159,7 @@
             },
             {
               "path": "apps/web/src/lib/server-query-client.ts",
-              "sha256": "8f339009224962a0219dec6d142c856c7b1e142ce7687a8612c622d0440e1617"
+              "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
             },
             {
               "path": "apps/web/src/pages/AccountRecoveryPage.tsx",
@@ -495982,7 +495982,7 @@
             },
             {
               "path": "apps/web/src/lib/server-query-client.ts",
-              "sha256": "8f339009224962a0219dec6d142c856c7b1e142ce7687a8612c622d0440e1617"
+              "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
             },
             {
               "path": "apps/web/src/pages/AccountRecoveryPage.tsx",
@@ -496834,7 +496834,7 @@
             },
             {
               "path": "apps/web/src/lib/server-query-client.ts",
-              "sha256": "8f339009224962a0219dec6d142c856c7b1e142ce7687a8612c622d0440e1617"
+              "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
@@ -496998,7 +496998,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "6a0f8470e241e6cdccfa5287963181735b4693d58f3f45bc7867de051cef447c"
+              "sha256": "1ba02df26dc816a3cc999da3c67e0a488d23f0f7879fda04cbfa1d32f8d5c551"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -497794,7 +497794,7 @@
             },
             {
               "path": "apps/web/src/lib/server-query-client.ts",
-              "sha256": "8f339009224962a0219dec6d142c856c7b1e142ce7687a8612c622d0440e1617"
+              "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
             },
             {
               "path": "apps/web/src/pages/AdminDashboard.tsx",
@@ -512788,7 +512788,7 @@
             },
             {
               "path": "apps/web/src/lib/server-query-client.ts",
-              "sha256": "8f339009224962a0219dec6d142c856c7b1e142ce7687a8612c622d0440e1617"
+              "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
             },
             {
               "path": "apps/web/src/lib/session-role.test.ts",
@@ -513587,7 +513587,7 @@
             },
             {
               "path": "apps/web/src/lib/server-query-client.ts",
-              "sha256": "8f339009224962a0219dec6d142c856c7b1e142ce7687a8612c622d0440e1617"
+              "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
             },
             {
               "path": "apps/web/src/lib/session-role.test.ts",
@@ -514385,7 +514385,7 @@
             },
             {
               "path": "apps/web/src/lib/server-query-client.ts",
-              "sha256": "8f339009224962a0219dec6d142c856c7b1e142ce7687a8612c622d0440e1617"
+              "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
             },
             {
               "path": "apps/web/src/lib/session-role.test.ts",
@@ -515142,7 +515142,7 @@
             },
             {
               "path": "apps/web/src/lib/server-query-client.ts",
-              "sha256": "8f339009224962a0219dec6d142c856c7b1e142ce7687a8612c622d0440e1617"
+              "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
             },
             {
               "path": "apps/web/src/lib/session-ended-notice.ts",
@@ -516448,7 +516448,7 @@
             },
             {
               "path": "apps/web/src/lib/server-query-client.ts",
-              "sha256": "8f339009224962a0219dec6d142c856c7b1e142ce7687a8612c622d0440e1617"
+              "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
             },
             {
               "path": "apps/web/src/lib/session-ended-notice.ts",
@@ -565854,7 +565854,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "6a0f8470e241e6cdccfa5287963181735b4693d58f3f45bc7867de051cef447c"
+              "sha256": "1ba02df26dc816a3cc999da3c67e0a488d23f0f7879fda04cbfa1d32f8d5c551"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -567748,7 +567748,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "6a0f8470e241e6cdccfa5287963181735b4693d58f3f45bc7867de051cef447c"
+              "sha256": "1ba02df26dc816a3cc999da3c67e0a488d23f0f7879fda04cbfa1d32f8d5c551"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -568551,7 +568551,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Customer invoice and wallet receipts distinguish acknowledged pending results from unknown outcomes. Electricity and saving discussions announce explicit transport retries. Wallet returns and profile lifecycle commands explain unknown outcomes and offer a scoped retry or status recheck. Wider verified CRUD and read feedback adoption remains open."
+        "Customer invoice and wallet receipts distinguish acknowledged pending results from unknown outcomes. Electricity and saving discussions announce explicit transport retries. Wallet returns, profile lifecycle commands and customer guide answers explain unconfirmed outcomes and offer a scoped retry or status recheck. Wider verified CRUD and read feedback adoption remains open."
       ],
       "owner": null,
       "depends_on": [],
@@ -568584,7 +568584,8 @@
           "release-0.5-geography-retry-feedback",
           "release-0.5-receipt-and-comment-feedback",
           "release-0.5-wallet-return-deadline",
-          "release-0.5-profile-export-deadlines"
+          "release-0.5-profile-export-deadlines",
+          "release-0.5-assistant-stream-deadlines"
         ],
         "current_acceptance": null
       }
@@ -569695,7 +569696,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "6a0f8470e241e6cdccfa5287963181735b4693d58f3f45bc7867de051cef447c"
+              "sha256": "1ba02df26dc816a3cc999da3c67e0a488d23f0f7879fda04cbfa1d32f8d5c551"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -571589,7 +571590,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "6a0f8470e241e6cdccfa5287963181735b4693d58f3f45bc7867de051cef447c"
+              "sha256": "1ba02df26dc816a3cc999da3c67e0a488d23f0f7879fda04cbfa1d32f8d5c551"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -573483,7 +573484,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "6a0f8470e241e6cdccfa5287963181735b4693d58f3f45bc7867de051cef447c"
+              "sha256": "1ba02df26dc816a3cc999da3c67e0a488d23f0f7879fda04cbfa1d32f8d5c551"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -575377,7 +575378,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "6a0f8470e241e6cdccfa5287963181735b4693d58f3f45bc7867de051cef447c"
+              "sha256": "1ba02df26dc816a3cc999da3c67e0a488d23f0f7879fda04cbfa1d32f8d5c551"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -577271,7 +577272,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "6a0f8470e241e6cdccfa5287963181735b4693d58f3f45bc7867de051cef447c"
+              "sha256": "1ba02df26dc816a3cc999da3c67e0a488d23f0f7879fda04cbfa1d32f8d5c551"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -579165,7 +579166,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "6a0f8470e241e6cdccfa5287963181735b4693d58f3f45bc7867de051cef447c"
+              "sha256": "1ba02df26dc816a3cc999da3c67e0a488d23f0f7879fda04cbfa1d32f8d5c551"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -581059,7 +581060,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "6a0f8470e241e6cdccfa5287963181735b4693d58f3f45bc7867de051cef447c"
+              "sha256": "1ba02df26dc816a3cc999da3c67e0a488d23f0f7879fda04cbfa1d32f8d5c551"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -582953,7 +582954,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "6a0f8470e241e6cdccfa5287963181735b4693d58f3f45bc7867de051cef447c"
+              "sha256": "1ba02df26dc816a3cc999da3c67e0a488d23f0f7879fda04cbfa1d32f8d5c551"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -584847,7 +584848,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "6a0f8470e241e6cdccfa5287963181735b4693d58f3f45bc7867de051cef447c"
+              "sha256": "1ba02df26dc816a3cc999da3c67e0a488d23f0f7879fda04cbfa1d32f8d5c551"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -586741,7 +586742,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "6a0f8470e241e6cdccfa5287963181735b4693d58f3f45bc7867de051cef447c"
+              "sha256": "1ba02df26dc816a3cc999da3c67e0a488d23f0f7879fda04cbfa1d32f8d5c551"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -588635,7 +588636,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "6a0f8470e241e6cdccfa5287963181735b4693d58f3f45bc7867de051cef447c"
+              "sha256": "1ba02df26dc816a3cc999da3c67e0a488d23f0f7879fda04cbfa1d32f8d5c551"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -589734,7 +589735,7 @@
             },
             {
               "path": "apps/web/src/lib/server-query-client.ts",
-              "sha256": "8f339009224962a0219dec6d142c856c7b1e142ce7687a8612c622d0440e1617"
+              "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
@@ -589898,7 +589899,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "6a0f8470e241e6cdccfa5287963181735b4693d58f3f45bc7867de051cef447c"
+              "sha256": "1ba02df26dc816a3cc999da3c67e0a488d23f0f7879fda04cbfa1d32f8d5c551"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -591268,7 +591269,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "6a0f8470e241e6cdccfa5287963181735b4693d58f3f45bc7867de051cef447c"
+              "sha256": "1ba02df26dc816a3cc999da3c67e0a488d23f0f7879fda04cbfa1d32f8d5c551"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -593162,7 +593163,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "6a0f8470e241e6cdccfa5287963181735b4693d58f3f45bc7867de051cef447c"
+              "sha256": "1ba02df26dc816a3cc999da3c67e0a488d23f0f7879fda04cbfa1d32f8d5c551"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -593965,7 +593966,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Invoice receipt, security and preference reads, commerce previews, wallet confirmation, staff knowledge test searches and notification header recovery retain their evidence. Profile export ticket creation, job preparation, and job progress now have bounded recovery. Remaining bespoke list, detail and staff states need verification."
+        "Invoice receipt, security and preference reads, commerce previews, wallet confirmation, staff knowledge test searches and notification header recovery retain their evidence. Profile export ticket creation, job preparation, job progress and customer guide answer streaming have bounded recovery. Remaining bespoke list, detail and staff states need verification."
       ],
       "owner": null,
       "depends_on": [],
@@ -594010,7 +594011,8 @@
           "release-0.5-wallet-return-deadline",
           "release-0.5-knowledge-query-deadline",
           "release-0.5-header-notification-deadlines",
-          "release-0.5-profile-export-deadlines"
+          "release-0.5-profile-export-deadlines",
+          "release-0.5-assistant-stream-deadlines"
         ],
         "current_acceptance": null
       }
@@ -611184,7 +611186,7 @@
             },
             {
               "path": "apps/web/src/lib/server-query-client.ts",
-              "sha256": "8f339009224962a0219dec6d142c856c7b1e142ce7687a8612c622d0440e1617"
+              "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
             },
             {
               "path": "apps/web/src/lib/session-role.test.ts",
@@ -611982,7 +611984,7 @@
             },
             {
               "path": "apps/web/src/lib/server-query-client.ts",
-              "sha256": "8f339009224962a0219dec6d142c856c7b1e142ce7687a8612c622d0440e1617"
+              "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
             },
             {
               "path": "apps/web/src/lib/session-role.test.ts",
@@ -612780,7 +612782,7 @@
             },
             {
               "path": "apps/web/src/lib/server-query-client.ts",
-              "sha256": "8f339009224962a0219dec6d142c856c7b1e142ce7687a8612c622d0440e1617"
+              "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
             },
             {
               "path": "apps/web/src/lib/session-role.test.ts",
@@ -613578,7 +613580,7 @@
             },
             {
               "path": "apps/web/src/lib/server-query-client.ts",
-              "sha256": "8f339009224962a0219dec6d142c856c7b1e142ce7687a8612c622d0440e1617"
+              "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
             },
             {
               "path": "apps/web/src/lib/session-role.test.ts",
@@ -614380,7 +614382,7 @@
             },
             {
               "path": "apps/web/src/lib/server-query-client.ts",
-              "sha256": "8f339009224962a0219dec6d142c856c7b1e142ce7687a8612c622d0440e1617"
+              "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
             },
             {
               "path": "apps/web/src/lib/session-role.test.ts",
@@ -615178,7 +615180,7 @@
             },
             {
               "path": "apps/web/src/lib/server-query-client.ts",
-              "sha256": "8f339009224962a0219dec6d142c856c7b1e142ce7687a8612c622d0440e1617"
+              "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
             },
             {
               "path": "apps/web/src/lib/session-role.test.ts",
@@ -615976,7 +615978,7 @@
             },
             {
               "path": "apps/web/src/lib/server-query-client.ts",
-              "sha256": "8f339009224962a0219dec6d142c856c7b1e142ce7687a8612c622d0440e1617"
+              "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
             },
             {
               "path": "apps/web/src/lib/session-role.test.ts",
@@ -616775,7 +616777,7 @@
             },
             {
               "path": "apps/web/src/lib/server-query-client.ts",
-              "sha256": "8f339009224962a0219dec6d142c856c7b1e142ce7687a8612c622d0440e1617"
+              "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
             },
             {
               "path": "apps/web/src/lib/session-role.test.ts",
@@ -617574,7 +617576,7 @@
             },
             {
               "path": "apps/web/src/lib/server-query-client.ts",
-              "sha256": "8f339009224962a0219dec6d142c856c7b1e142ce7687a8612c622d0440e1617"
+              "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
             },
             {
               "path": "apps/web/src/lib/session-role.test.ts",
@@ -618373,7 +618375,7 @@
             },
             {
               "path": "apps/web/src/lib/server-query-client.ts",
-              "sha256": "8f339009224962a0219dec6d142c856c7b1e142ce7687a8612c622d0440e1617"
+              "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
             },
             {
               "path": "apps/web/src/lib/session-role.test.ts",
@@ -619172,7 +619174,7 @@
             },
             {
               "path": "apps/web/src/lib/server-query-client.ts",
-              "sha256": "8f339009224962a0219dec6d142c856c7b1e142ce7687a8612c622d0440e1617"
+              "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
             },
             {
               "path": "apps/web/src/lib/session-role.test.ts",
@@ -619971,7 +619973,7 @@
             },
             {
               "path": "apps/web/src/lib/server-query-client.ts",
-              "sha256": "8f339009224962a0219dec6d142c856c7b1e142ce7687a8612c622d0440e1617"
+              "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
             },
             {
               "path": "apps/web/src/lib/session-role.test.ts",
@@ -620770,7 +620772,7 @@
             },
             {
               "path": "apps/web/src/lib/server-query-client.ts",
-              "sha256": "8f339009224962a0219dec6d142c856c7b1e142ce7687a8612c622d0440e1617"
+              "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
             },
             {
               "path": "apps/web/src/lib/session-role.test.ts",
@@ -621569,7 +621571,7 @@
             },
             {
               "path": "apps/web/src/lib/server-query-client.ts",
-              "sha256": "8f339009224962a0219dec6d142c856c7b1e142ce7687a8612c622d0440e1617"
+              "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
             },
             {
               "path": "apps/web/src/lib/session-role.test.ts",
@@ -622368,7 +622370,7 @@
             },
             {
               "path": "apps/web/src/lib/server-query-client.ts",
-              "sha256": "8f339009224962a0219dec6d142c856c7b1e142ce7687a8612c622d0440e1617"
+              "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
             },
             {
               "path": "apps/web/src/lib/session-role.test.ts",
@@ -633029,7 +633031,7 @@
             },
             {
               "path": "apps/web/src/lib/server-query-client.ts",
-              "sha256": "8f339009224962a0219dec6d142c856c7b1e142ce7687a8612c622d0440e1617"
+              "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
             },
             {
               "path": "apps/web/src/lib/staff-order-list-query.test.ts",
@@ -634153,7 +634155,7 @@
             },
             {
               "path": "apps/web/src/lib/server-query-client.ts",
-              "sha256": "8f339009224962a0219dec6d142c856c7b1e142ce7687a8612c622d0440e1617"
+              "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
             },
             {
               "path": "apps/web/src/lib/staff-order-list-query.test.ts",
@@ -635277,7 +635279,7 @@
             },
             {
               "path": "apps/web/src/lib/server-query-client.ts",
-              "sha256": "8f339009224962a0219dec6d142c856c7b1e142ce7687a8612c622d0440e1617"
+              "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
             },
             {
               "path": "apps/web/src/lib/staff-order-list-query.test.ts",
@@ -636404,7 +636406,7 @@
             },
             {
               "path": "apps/web/src/lib/server-query-client.ts",
-              "sha256": "8f339009224962a0219dec6d142c856c7b1e142ce7687a8612c622d0440e1617"
+              "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
             },
             {
               "path": "apps/web/src/lib/staff-order-list-query.test.ts",
@@ -637531,7 +637533,7 @@
             },
             {
               "path": "apps/web/src/lib/server-query-client.ts",
-              "sha256": "8f339009224962a0219dec6d142c856c7b1e142ce7687a8612c622d0440e1617"
+              "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
             },
             {
               "path": "apps/web/src/lib/staff-order-list-query.test.ts",
@@ -638685,7 +638687,7 @@
             },
             {
               "path": "apps/web/src/lib/server-query-client.ts",
-              "sha256": "8f339009224962a0219dec6d142c856c7b1e142ce7687a8612c622d0440e1617"
+              "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
             },
             {
               "path": "apps/web/src/lib/staff-order-list-query.test.ts",
@@ -639808,7 +639810,7 @@
             },
             {
               "path": "apps/web/src/lib/server-query-client.ts",
-              "sha256": "8f339009224962a0219dec6d142c856c7b1e142ce7687a8612c622d0440e1617"
+              "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
             },
             {
               "path": "apps/web/src/lib/staff-order-list-query.test.ts",
@@ -640931,7 +640933,7 @@
             },
             {
               "path": "apps/web/src/lib/server-query-client.ts",
-              "sha256": "8f339009224962a0219dec6d142c856c7b1e142ce7687a8612c622d0440e1617"
+              "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
             },
             {
               "path": "apps/web/src/lib/staff-order-list-query.test.ts",
@@ -642055,7 +642057,7 @@
             },
             {
               "path": "apps/web/src/lib/server-query-client.ts",
-              "sha256": "8f339009224962a0219dec6d142c856c7b1e142ce7687a8612c622d0440e1617"
+              "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
             },
             {
               "path": "apps/web/src/lib/staff-order-list-query.test.ts",
@@ -643197,7 +643199,7 @@
             },
             {
               "path": "apps/web/src/lib/server-query-client.ts",
-              "sha256": "8f339009224962a0219dec6d142c856c7b1e142ce7687a8612c622d0440e1617"
+              "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
             },
             {
               "path": "apps/web/src/lib/staff-order-list-query.test.ts",
@@ -644322,7 +644324,7 @@
             },
             {
               "path": "apps/web/src/lib/server-query-client.ts",
-              "sha256": "8f339009224962a0219dec6d142c856c7b1e142ce7687a8612c622d0440e1617"
+              "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
             },
             {
               "path": "apps/web/src/lib/staff-order-list-query.test.ts",
@@ -645574,7 +645576,7 @@
             },
             {
               "path": "apps/web/src/lib/server-query-client.ts",
-              "sha256": "8f339009224962a0219dec6d142c856c7b1e142ce7687a8612c622d0440e1617"
+              "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
             },
             {
               "path": "apps/web/src/lib/solar-postal-tracking.test.ts",
@@ -646403,7 +646405,7 @@
             },
             {
               "path": "apps/web/src/lib/server-query-client.ts",
-              "sha256": "8f339009224962a0219dec6d142c856c7b1e142ce7687a8612c622d0440e1617"
+              "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
             },
             {
               "path": "apps/web/src/lib/solar-postal-tracking.test.ts",
@@ -647240,7 +647242,7 @@
             },
             {
               "path": "apps/web/src/lib/server-query-client.ts",
-              "sha256": "8f339009224962a0219dec6d142c856c7b1e142ce7687a8612c622d0440e1617"
+              "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
             },
             {
               "path": "apps/web/src/lib/solar-postal-tracking.test.ts",
@@ -648061,7 +648063,7 @@
             },
             {
               "path": "apps/web/src/lib/server-query-client.ts",
-              "sha256": "8f339009224962a0219dec6d142c856c7b1e142ce7687a8612c622d0440e1617"
+              "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
             },
             {
               "path": "apps/web/src/lib/solar-postal-tracking.test.ts",
@@ -648881,7 +648883,7 @@
             },
             {
               "path": "apps/web/src/lib/server-query-client.ts",
-              "sha256": "8f339009224962a0219dec6d142c856c7b1e142ce7687a8612c622d0440e1617"
+              "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
             },
             {
               "path": "apps/web/src/lib/solar-postal-tracking.test.ts",
@@ -649563,7 +649565,7 @@
             },
             {
               "path": "apps/web/src/lib/server-query-client.ts",
-              "sha256": "8f339009224962a0219dec6d142c856c7b1e142ce7687a8612c622d0440e1617"
+              "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
             },
             {
               "path": "apps/web/src/lib/session-role.test.ts",
@@ -650203,7 +650205,7 @@
             },
             {
               "path": "apps/web/src/lib/server-query-client.ts",
-              "sha256": "8f339009224962a0219dec6d142c856c7b1e142ce7687a8612c622d0440e1617"
+              "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
             },
             {
               "path": "apps/web/src/lib/session-role.test.ts",
@@ -650843,7 +650845,7 @@
             },
             {
               "path": "apps/web/src/lib/server-query-client.ts",
-              "sha256": "8f339009224962a0219dec6d142c856c7b1e142ce7687a8612c622d0440e1617"
+              "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
             },
             {
               "path": "apps/web/src/lib/session-role.test.ts",
@@ -651481,7 +651483,7 @@
             },
             {
               "path": "apps/web/src/lib/server-query-client.ts",
-              "sha256": "8f339009224962a0219dec6d142c856c7b1e142ce7687a8612c622d0440e1617"
+              "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
             },
             {
               "path": "apps/web/src/lib/session-role.test.ts",
@@ -652119,7 +652121,7 @@
             },
             {
               "path": "apps/web/src/lib/server-query-client.ts",
-              "sha256": "8f339009224962a0219dec6d142c856c7b1e142ce7687a8612c622d0440e1617"
+              "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
             },
             {
               "path": "apps/web/src/lib/session-role.test.ts",
@@ -652759,7 +652761,7 @@
             },
             {
               "path": "apps/web/src/lib/server-query-client.ts",
-              "sha256": "8f339009224962a0219dec6d142c856c7b1e142ce7687a8612c622d0440e1617"
+              "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
             },
             {
               "path": "apps/web/src/lib/session-role.test.ts",
@@ -653398,7 +653400,7 @@
             },
             {
               "path": "apps/web/src/lib/server-query-client.ts",
-              "sha256": "8f339009224962a0219dec6d142c856c7b1e142ce7687a8612c622d0440e1617"
+              "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
             },
             {
               "path": "apps/web/src/lib/session-role.test.ts",
@@ -654037,7 +654039,7 @@
             },
             {
               "path": "apps/web/src/lib/server-query-client.ts",
-              "sha256": "8f339009224962a0219dec6d142c856c7b1e142ce7687a8612c622d0440e1617"
+              "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
             },
             {
               "path": "apps/web/src/lib/session-role.test.ts",
@@ -654676,7 +654678,7 @@
             },
             {
               "path": "apps/web/src/lib/server-query-client.ts",
-              "sha256": "8f339009224962a0219dec6d142c856c7b1e142ce7687a8612c622d0440e1617"
+              "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
             },
             {
               "path": "apps/web/src/lib/session-role.test.ts",
@@ -655315,7 +655317,7 @@
             },
             {
               "path": "apps/web/src/lib/server-query-client.ts",
-              "sha256": "8f339009224962a0219dec6d142c856c7b1e142ce7687a8612c622d0440e1617"
+              "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
             },
             {
               "path": "apps/web/src/lib/session-role.test.ts",
@@ -655954,7 +655956,7 @@
             },
             {
               "path": "apps/web/src/lib/server-query-client.ts",
-              "sha256": "8f339009224962a0219dec6d142c856c7b1e142ce7687a8612c622d0440e1617"
+              "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
             },
             {
               "path": "apps/web/src/lib/session-role.test.ts",
@@ -656593,7 +656595,7 @@
             },
             {
               "path": "apps/web/src/lib/server-query-client.ts",
-              "sha256": "8f339009224962a0219dec6d142c856c7b1e142ce7687a8612c622d0440e1617"
+              "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
             },
             {
               "path": "apps/web/src/lib/session-role.test.ts",
@@ -657217,7 +657219,7 @@
             },
             {
               "path": "apps/web/e2e/knowledge-assistant-metadata.spec.ts",
-              "sha256": "8a4e126d144158f6e1075d1cf38b4187276b74da6261f9b57af9d0bc1828a612"
+              "sha256": "e2c8ea9d1cc74cdd15217167c93d9b2a0659991d604883843ac378532e44cdae"
             },
             {
               "path": "apps/web/e2e/knowledge-assistant.spec.ts",
@@ -657261,7 +657263,7 @@
             },
             {
               "path": "apps/web/src/components/KnowledgeAssistantPanel.tsx",
-              "sha256": "76f4d5e3d418f0f842a06ccdb1256d35513e13722c33335be88e280551393a74"
+              "sha256": "05a3cd264c553028338d743c23e1789d3b7cc3809c6465f6697b9383ff405748"
             },
             {
               "path": "apps/web/src/components/PublicKnowledgeAssistant.test.tsx",
@@ -657333,11 +657335,11 @@
             },
             {
               "path": "apps/web/src/lib/knowledge-answer-stream.test.ts",
-              "sha256": "18900164dfedaefa4a21fec159ca177d728db4630ed5a8b3ac4bf0d4810718bb"
+              "sha256": "fbc639d19689b96cd4a1e4694827b236ea8f6f58075cf297bc0d44938238888b"
             },
             {
               "path": "apps/web/src/lib/knowledge-answer-stream.ts",
-              "sha256": "7166c11186a32da329c963cf36f19dc834b2643272b39d50c035b12052228974"
+              "sha256": "35ceaf982b334e1828f563ac3f18b0f668f6067eeebdd8f1f4f34e6f7d0033fa"
             },
             {
               "path": "apps/web/src/lib/knowledge-assistant.test.ts",
@@ -657357,7 +657359,7 @@
             },
             {
               "path": "apps/web/src/lib/server-query-client.ts",
-              "sha256": "8f339009224962a0219dec6d142c856c7b1e142ce7687a8612c622d0440e1617"
+              "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
             },
             {
               "path": "apps/web/src/pages/AIChat.tsx",
@@ -657899,7 +657901,7 @@
             },
             {
               "path": "apps/web/e2e/knowledge-assistant-metadata.spec.ts",
-              "sha256": "8a4e126d144158f6e1075d1cf38b4187276b74da6261f9b57af9d0bc1828a612"
+              "sha256": "e2c8ea9d1cc74cdd15217167c93d9b2a0659991d604883843ac378532e44cdae"
             },
             {
               "path": "apps/web/e2e/knowledge-assistant.spec.ts",
@@ -657943,7 +657945,7 @@
             },
             {
               "path": "apps/web/src/components/KnowledgeAssistantPanel.tsx",
-              "sha256": "76f4d5e3d418f0f842a06ccdb1256d35513e13722c33335be88e280551393a74"
+              "sha256": "05a3cd264c553028338d743c23e1789d3b7cc3809c6465f6697b9383ff405748"
             },
             {
               "path": "apps/web/src/components/PublicKnowledgeAssistant.test.tsx",
@@ -658015,11 +658017,11 @@
             },
             {
               "path": "apps/web/src/lib/knowledge-answer-stream.test.ts",
-              "sha256": "18900164dfedaefa4a21fec159ca177d728db4630ed5a8b3ac4bf0d4810718bb"
+              "sha256": "fbc639d19689b96cd4a1e4694827b236ea8f6f58075cf297bc0d44938238888b"
             },
             {
               "path": "apps/web/src/lib/knowledge-answer-stream.ts",
-              "sha256": "7166c11186a32da329c963cf36f19dc834b2643272b39d50c035b12052228974"
+              "sha256": "35ceaf982b334e1828f563ac3f18b0f668f6067eeebdd8f1f4f34e6f7d0033fa"
             },
             {
               "path": "apps/web/src/lib/knowledge-assistant.test.ts",
@@ -658039,7 +658041,7 @@
             },
             {
               "path": "apps/web/src/lib/server-query-client.ts",
-              "sha256": "8f339009224962a0219dec6d142c856c7b1e142ce7687a8612c622d0440e1617"
+              "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
             },
             {
               "path": "apps/web/src/pages/AIChat.tsx",
@@ -658583,7 +658585,7 @@
             },
             {
               "path": "apps/web/e2e/knowledge-assistant-metadata.spec.ts",
-              "sha256": "8a4e126d144158f6e1075d1cf38b4187276b74da6261f9b57af9d0bc1828a612"
+              "sha256": "e2c8ea9d1cc74cdd15217167c93d9b2a0659991d604883843ac378532e44cdae"
             },
             {
               "path": "apps/web/e2e/knowledge-assistant.spec.ts",
@@ -658627,7 +658629,7 @@
             },
             {
               "path": "apps/web/src/components/KnowledgeAssistantPanel.tsx",
-              "sha256": "76f4d5e3d418f0f842a06ccdb1256d35513e13722c33335be88e280551393a74"
+              "sha256": "05a3cd264c553028338d743c23e1789d3b7cc3809c6465f6697b9383ff405748"
             },
             {
               "path": "apps/web/src/components/PublicKnowledgeAssistant.test.tsx",
@@ -658699,11 +658701,11 @@
             },
             {
               "path": "apps/web/src/lib/knowledge-answer-stream.test.ts",
-              "sha256": "18900164dfedaefa4a21fec159ca177d728db4630ed5a8b3ac4bf0d4810718bb"
+              "sha256": "fbc639d19689b96cd4a1e4694827b236ea8f6f58075cf297bc0d44938238888b"
             },
             {
               "path": "apps/web/src/lib/knowledge-answer-stream.ts",
-              "sha256": "7166c11186a32da329c963cf36f19dc834b2643272b39d50c035b12052228974"
+              "sha256": "35ceaf982b334e1828f563ac3f18b0f668f6067eeebdd8f1f4f34e6f7d0033fa"
             },
             {
               "path": "apps/web/src/lib/knowledge-assistant.test.ts",
@@ -658723,7 +658725,7 @@
             },
             {
               "path": "apps/web/src/lib/server-query-client.ts",
-              "sha256": "8f339009224962a0219dec6d142c856c7b1e142ce7687a8612c622d0440e1617"
+              "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
             },
             {
               "path": "apps/web/src/pages/AIChat.tsx",
@@ -659265,7 +659267,7 @@
             },
             {
               "path": "apps/web/e2e/knowledge-assistant-metadata.spec.ts",
-              "sha256": "8a4e126d144158f6e1075d1cf38b4187276b74da6261f9b57af9d0bc1828a612"
+              "sha256": "e2c8ea9d1cc74cdd15217167c93d9b2a0659991d604883843ac378532e44cdae"
             },
             {
               "path": "apps/web/e2e/knowledge-assistant.spec.ts",
@@ -659309,7 +659311,7 @@
             },
             {
               "path": "apps/web/src/components/KnowledgeAssistantPanel.tsx",
-              "sha256": "76f4d5e3d418f0f842a06ccdb1256d35513e13722c33335be88e280551393a74"
+              "sha256": "05a3cd264c553028338d743c23e1789d3b7cc3809c6465f6697b9383ff405748"
             },
             {
               "path": "apps/web/src/components/PublicKnowledgeAssistant.test.tsx",
@@ -659381,11 +659383,11 @@
             },
             {
               "path": "apps/web/src/lib/knowledge-answer-stream.test.ts",
-              "sha256": "18900164dfedaefa4a21fec159ca177d728db4630ed5a8b3ac4bf0d4810718bb"
+              "sha256": "fbc639d19689b96cd4a1e4694827b236ea8f6f58075cf297bc0d44938238888b"
             },
             {
               "path": "apps/web/src/lib/knowledge-answer-stream.ts",
-              "sha256": "7166c11186a32da329c963cf36f19dc834b2643272b39d50c035b12052228974"
+              "sha256": "35ceaf982b334e1828f563ac3f18b0f668f6067eeebdd8f1f4f34e6f7d0033fa"
             },
             {
               "path": "apps/web/src/lib/knowledge-assistant.test.ts",
@@ -659405,7 +659407,7 @@
             },
             {
               "path": "apps/web/src/lib/server-query-client.ts",
-              "sha256": "8f339009224962a0219dec6d142c856c7b1e142ce7687a8612c622d0440e1617"
+              "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
             },
             {
               "path": "apps/web/src/pages/AIChat.tsx",
@@ -659946,7 +659948,7 @@
             },
             {
               "path": "apps/web/e2e/knowledge-assistant-metadata.spec.ts",
-              "sha256": "8a4e126d144158f6e1075d1cf38b4187276b74da6261f9b57af9d0bc1828a612"
+              "sha256": "e2c8ea9d1cc74cdd15217167c93d9b2a0659991d604883843ac378532e44cdae"
             },
             {
               "path": "apps/web/e2e/knowledge-assistant.spec.ts",
@@ -659990,7 +659992,7 @@
             },
             {
               "path": "apps/web/src/components/KnowledgeAssistantPanel.tsx",
-              "sha256": "76f4d5e3d418f0f842a06ccdb1256d35513e13722c33335be88e280551393a74"
+              "sha256": "05a3cd264c553028338d743c23e1789d3b7cc3809c6465f6697b9383ff405748"
             },
             {
               "path": "apps/web/src/components/PublicKnowledgeAssistant.test.tsx",
@@ -660062,11 +660064,11 @@
             },
             {
               "path": "apps/web/src/lib/knowledge-answer-stream.test.ts",
-              "sha256": "18900164dfedaefa4a21fec159ca177d728db4630ed5a8b3ac4bf0d4810718bb"
+              "sha256": "fbc639d19689b96cd4a1e4694827b236ea8f6f58075cf297bc0d44938238888b"
             },
             {
               "path": "apps/web/src/lib/knowledge-answer-stream.ts",
-              "sha256": "7166c11186a32da329c963cf36f19dc834b2643272b39d50c035b12052228974"
+              "sha256": "35ceaf982b334e1828f563ac3f18b0f668f6067eeebdd8f1f4f34e6f7d0033fa"
             },
             {
               "path": "apps/web/src/lib/knowledge-assistant.test.ts",
@@ -660086,7 +660088,7 @@
             },
             {
               "path": "apps/web/src/lib/server-query-client.ts",
-              "sha256": "8f339009224962a0219dec6d142c856c7b1e142ce7687a8612c622d0440e1617"
+              "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
             },
             {
               "path": "apps/web/src/pages/AIChat.tsx",
@@ -661126,7 +661128,7 @@
             },
             {
               "path": "apps/web/e2e/knowledge-assistant-metadata.spec.ts",
-              "sha256": "8a4e126d144158f6e1075d1cf38b4187276b74da6261f9b57af9d0bc1828a612"
+              "sha256": "e2c8ea9d1cc74cdd15217167c93d9b2a0659991d604883843ac378532e44cdae"
             },
             {
               "path": "apps/web/e2e/knowledge-assistant.spec.ts",
@@ -661170,7 +661172,7 @@
             },
             {
               "path": "apps/web/src/components/KnowledgeAssistantPanel.tsx",
-              "sha256": "76f4d5e3d418f0f842a06ccdb1256d35513e13722c33335be88e280551393a74"
+              "sha256": "05a3cd264c553028338d743c23e1789d3b7cc3809c6465f6697b9383ff405748"
             },
             {
               "path": "apps/web/src/components/PublicKnowledgeAssistant.test.tsx",
@@ -661242,11 +661244,11 @@
             },
             {
               "path": "apps/web/src/lib/knowledge-answer-stream.test.ts",
-              "sha256": "18900164dfedaefa4a21fec159ca177d728db4630ed5a8b3ac4bf0d4810718bb"
+              "sha256": "fbc639d19689b96cd4a1e4694827b236ea8f6f58075cf297bc0d44938238888b"
             },
             {
               "path": "apps/web/src/lib/knowledge-answer-stream.ts",
-              "sha256": "7166c11186a32da329c963cf36f19dc834b2643272b39d50c035b12052228974"
+              "sha256": "35ceaf982b334e1828f563ac3f18b0f668f6067eeebdd8f1f4f34e6f7d0033fa"
             },
             {
               "path": "apps/web/src/lib/knowledge-assistant.test.ts",
@@ -661266,7 +661268,7 @@
             },
             {
               "path": "apps/web/src/lib/server-query-client.ts",
-              "sha256": "8f339009224962a0219dec6d142c856c7b1e142ce7687a8612c622d0440e1617"
+              "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
             },
             {
               "path": "apps/web/src/pages/AIChat.tsx",
@@ -661808,7 +661810,7 @@
             },
             {
               "path": "apps/web/e2e/knowledge-assistant-metadata.spec.ts",
-              "sha256": "8a4e126d144158f6e1075d1cf38b4187276b74da6261f9b57af9d0bc1828a612"
+              "sha256": "e2c8ea9d1cc74cdd15217167c93d9b2a0659991d604883843ac378532e44cdae"
             },
             {
               "path": "apps/web/e2e/knowledge-assistant.spec.ts",
@@ -661852,7 +661854,7 @@
             },
             {
               "path": "apps/web/src/components/KnowledgeAssistantPanel.tsx",
-              "sha256": "76f4d5e3d418f0f842a06ccdb1256d35513e13722c33335be88e280551393a74"
+              "sha256": "05a3cd264c553028338d743c23e1789d3b7cc3809c6465f6697b9383ff405748"
             },
             {
               "path": "apps/web/src/components/PublicKnowledgeAssistant.test.tsx",
@@ -661924,11 +661926,11 @@
             },
             {
               "path": "apps/web/src/lib/knowledge-answer-stream.test.ts",
-              "sha256": "18900164dfedaefa4a21fec159ca177d728db4630ed5a8b3ac4bf0d4810718bb"
+              "sha256": "fbc639d19689b96cd4a1e4694827b236ea8f6f58075cf297bc0d44938238888b"
             },
             {
               "path": "apps/web/src/lib/knowledge-answer-stream.ts",
-              "sha256": "7166c11186a32da329c963cf36f19dc834b2643272b39d50c035b12052228974"
+              "sha256": "35ceaf982b334e1828f563ac3f18b0f668f6067eeebdd8f1f4f34e6f7d0033fa"
             },
             {
               "path": "apps/web/src/lib/knowledge-assistant.test.ts",
@@ -661948,7 +661950,7 @@
             },
             {
               "path": "apps/web/src/lib/server-query-client.ts",
-              "sha256": "8f339009224962a0219dec6d142c856c7b1e142ce7687a8612c622d0440e1617"
+              "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
             },
             {
               "path": "apps/web/src/pages/AIChat.tsx",
@@ -662491,7 +662493,7 @@
             },
             {
               "path": "apps/web/e2e/knowledge-assistant-metadata.spec.ts",
-              "sha256": "8a4e126d144158f6e1075d1cf38b4187276b74da6261f9b57af9d0bc1828a612"
+              "sha256": "e2c8ea9d1cc74cdd15217167c93d9b2a0659991d604883843ac378532e44cdae"
             },
             {
               "path": "apps/web/e2e/knowledge-assistant.spec.ts",
@@ -662535,7 +662537,7 @@
             },
             {
               "path": "apps/web/src/components/KnowledgeAssistantPanel.tsx",
-              "sha256": "76f4d5e3d418f0f842a06ccdb1256d35513e13722c33335be88e280551393a74"
+              "sha256": "05a3cd264c553028338d743c23e1789d3b7cc3809c6465f6697b9383ff405748"
             },
             {
               "path": "apps/web/src/components/PublicKnowledgeAssistant.test.tsx",
@@ -662607,11 +662609,11 @@
             },
             {
               "path": "apps/web/src/lib/knowledge-answer-stream.test.ts",
-              "sha256": "18900164dfedaefa4a21fec159ca177d728db4630ed5a8b3ac4bf0d4810718bb"
+              "sha256": "fbc639d19689b96cd4a1e4694827b236ea8f6f58075cf297bc0d44938238888b"
             },
             {
               "path": "apps/web/src/lib/knowledge-answer-stream.ts",
-              "sha256": "7166c11186a32da329c963cf36f19dc834b2643272b39d50c035b12052228974"
+              "sha256": "35ceaf982b334e1828f563ac3f18b0f668f6067eeebdd8f1f4f34e6f7d0033fa"
             },
             {
               "path": "apps/web/src/lib/knowledge-assistant.test.ts",
@@ -662631,7 +662633,7 @@
             },
             {
               "path": "apps/web/src/lib/server-query-client.ts",
-              "sha256": "8f339009224962a0219dec6d142c856c7b1e142ce7687a8612c622d0440e1617"
+              "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
             },
             {
               "path": "apps/web/src/pages/AIChat.tsx",
@@ -663172,7 +663174,7 @@
             },
             {
               "path": "apps/web/e2e/knowledge-assistant-metadata.spec.ts",
-              "sha256": "8a4e126d144158f6e1075d1cf38b4187276b74da6261f9b57af9d0bc1828a612"
+              "sha256": "e2c8ea9d1cc74cdd15217167c93d9b2a0659991d604883843ac378532e44cdae"
             },
             {
               "path": "apps/web/e2e/knowledge-assistant.spec.ts",
@@ -663216,7 +663218,7 @@
             },
             {
               "path": "apps/web/src/components/KnowledgeAssistantPanel.tsx",
-              "sha256": "76f4d5e3d418f0f842a06ccdb1256d35513e13722c33335be88e280551393a74"
+              "sha256": "05a3cd264c553028338d743c23e1789d3b7cc3809c6465f6697b9383ff405748"
             },
             {
               "path": "apps/web/src/components/PublicKnowledgeAssistant.test.tsx",
@@ -663288,11 +663290,11 @@
             },
             {
               "path": "apps/web/src/lib/knowledge-answer-stream.test.ts",
-              "sha256": "18900164dfedaefa4a21fec159ca177d728db4630ed5a8b3ac4bf0d4810718bb"
+              "sha256": "fbc639d19689b96cd4a1e4694827b236ea8f6f58075cf297bc0d44938238888b"
             },
             {
               "path": "apps/web/src/lib/knowledge-answer-stream.ts",
-              "sha256": "7166c11186a32da329c963cf36f19dc834b2643272b39d50c035b12052228974"
+              "sha256": "35ceaf982b334e1828f563ac3f18b0f668f6067eeebdd8f1f4f34e6f7d0033fa"
             },
             {
               "path": "apps/web/src/lib/knowledge-assistant.test.ts",
@@ -663312,7 +663314,7 @@
             },
             {
               "path": "apps/web/src/lib/server-query-client.ts",
-              "sha256": "8f339009224962a0219dec6d142c856c7b1e142ce7687a8612c622d0440e1617"
+              "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
             },
             {
               "path": "apps/web/src/pages/AIChat.tsx",
@@ -663852,7 +663854,7 @@
             },
             {
               "path": "apps/web/e2e/knowledge-assistant-metadata.spec.ts",
-              "sha256": "8a4e126d144158f6e1075d1cf38b4187276b74da6261f9b57af9d0bc1828a612"
+              "sha256": "e2c8ea9d1cc74cdd15217167c93d9b2a0659991d604883843ac378532e44cdae"
             },
             {
               "path": "apps/web/e2e/knowledge-assistant.spec.ts",
@@ -663896,7 +663898,7 @@
             },
             {
               "path": "apps/web/src/components/KnowledgeAssistantPanel.tsx",
-              "sha256": "76f4d5e3d418f0f842a06ccdb1256d35513e13722c33335be88e280551393a74"
+              "sha256": "05a3cd264c553028338d743c23e1789d3b7cc3809c6465f6697b9383ff405748"
             },
             {
               "path": "apps/web/src/components/PublicKnowledgeAssistant.test.tsx",
@@ -663968,11 +663970,11 @@
             },
             {
               "path": "apps/web/src/lib/knowledge-answer-stream.test.ts",
-              "sha256": "18900164dfedaefa4a21fec159ca177d728db4630ed5a8b3ac4bf0d4810718bb"
+              "sha256": "fbc639d19689b96cd4a1e4694827b236ea8f6f58075cf297bc0d44938238888b"
             },
             {
               "path": "apps/web/src/lib/knowledge-answer-stream.ts",
-              "sha256": "7166c11186a32da329c963cf36f19dc834b2643272b39d50c035b12052228974"
+              "sha256": "35ceaf982b334e1828f563ac3f18b0f668f6067eeebdd8f1f4f34e6f7d0033fa"
             },
             {
               "path": "apps/web/src/lib/knowledge-assistant.test.ts",
@@ -663992,7 +663994,7 @@
             },
             {
               "path": "apps/web/src/lib/server-query-client.ts",
-              "sha256": "8f339009224962a0219dec6d142c856c7b1e142ce7687a8612c622d0440e1617"
+              "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
             },
             {
               "path": "apps/web/src/pages/AIChat.tsx",
@@ -664532,7 +664534,7 @@
             },
             {
               "path": "apps/web/e2e/knowledge-assistant-metadata.spec.ts",
-              "sha256": "8a4e126d144158f6e1075d1cf38b4187276b74da6261f9b57af9d0bc1828a612"
+              "sha256": "e2c8ea9d1cc74cdd15217167c93d9b2a0659991d604883843ac378532e44cdae"
             },
             {
               "path": "apps/web/e2e/knowledge-assistant.spec.ts",
@@ -664576,7 +664578,7 @@
             },
             {
               "path": "apps/web/src/components/KnowledgeAssistantPanel.tsx",
-              "sha256": "76f4d5e3d418f0f842a06ccdb1256d35513e13722c33335be88e280551393a74"
+              "sha256": "05a3cd264c553028338d743c23e1789d3b7cc3809c6465f6697b9383ff405748"
             },
             {
               "path": "apps/web/src/components/PublicKnowledgeAssistant.test.tsx",
@@ -664648,11 +664650,11 @@
             },
             {
               "path": "apps/web/src/lib/knowledge-answer-stream.test.ts",
-              "sha256": "18900164dfedaefa4a21fec159ca177d728db4630ed5a8b3ac4bf0d4810718bb"
+              "sha256": "fbc639d19689b96cd4a1e4694827b236ea8f6f58075cf297bc0d44938238888b"
             },
             {
               "path": "apps/web/src/lib/knowledge-answer-stream.ts",
-              "sha256": "7166c11186a32da329c963cf36f19dc834b2643272b39d50c035b12052228974"
+              "sha256": "35ceaf982b334e1828f563ac3f18b0f668f6067eeebdd8f1f4f34e6f7d0033fa"
             },
             {
               "path": "apps/web/src/lib/knowledge-assistant.test.ts",
@@ -664672,7 +664674,7 @@
             },
             {
               "path": "apps/web/src/lib/server-query-client.ts",
-              "sha256": "8f339009224962a0219dec6d142c856c7b1e142ce7687a8612c622d0440e1617"
+              "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
             },
             {
               "path": "apps/web/src/pages/AIChat.tsx",
@@ -665212,7 +665214,7 @@
             },
             {
               "path": "apps/web/e2e/knowledge-assistant-metadata.spec.ts",
-              "sha256": "8a4e126d144158f6e1075d1cf38b4187276b74da6261f9b57af9d0bc1828a612"
+              "sha256": "e2c8ea9d1cc74cdd15217167c93d9b2a0659991d604883843ac378532e44cdae"
             },
             {
               "path": "apps/web/e2e/knowledge-assistant.spec.ts",
@@ -665256,7 +665258,7 @@
             },
             {
               "path": "apps/web/src/components/KnowledgeAssistantPanel.tsx",
-              "sha256": "76f4d5e3d418f0f842a06ccdb1256d35513e13722c33335be88e280551393a74"
+              "sha256": "05a3cd264c553028338d743c23e1789d3b7cc3809c6465f6697b9383ff405748"
             },
             {
               "path": "apps/web/src/components/PublicKnowledgeAssistant.test.tsx",
@@ -665328,11 +665330,11 @@
             },
             {
               "path": "apps/web/src/lib/knowledge-answer-stream.test.ts",
-              "sha256": "18900164dfedaefa4a21fec159ca177d728db4630ed5a8b3ac4bf0d4810718bb"
+              "sha256": "fbc639d19689b96cd4a1e4694827b236ea8f6f58075cf297bc0d44938238888b"
             },
             {
               "path": "apps/web/src/lib/knowledge-answer-stream.ts",
-              "sha256": "7166c11186a32da329c963cf36f19dc834b2643272b39d50c035b12052228974"
+              "sha256": "35ceaf982b334e1828f563ac3f18b0f668f6067eeebdd8f1f4f34e6f7d0033fa"
             },
             {
               "path": "apps/web/src/lib/knowledge-assistant.test.ts",
@@ -665352,7 +665354,7 @@
             },
             {
               "path": "apps/web/src/lib/server-query-client.ts",
-              "sha256": "8f339009224962a0219dec6d142c856c7b1e142ce7687a8612c622d0440e1617"
+              "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
             },
             {
               "path": "apps/web/src/pages/AIChat.tsx",
@@ -672557,7 +672559,7 @@
             },
             {
               "path": "apps/web/src/lib/server-query-client.ts",
-              "sha256": "8f339009224962a0219dec6d142c856c7b1e142ce7687a8612c622d0440e1617"
+              "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
             },
             {
               "path": "apps/web/src/lib/ticket-form-schemas.ts",
@@ -673089,7 +673091,7 @@
             },
             {
               "path": "apps/web/src/lib/server-query-client.ts",
-              "sha256": "8f339009224962a0219dec6d142c856c7b1e142ce7687a8612c622d0440e1617"
+              "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
             },
             {
               "path": "apps/web/src/lib/ticket-form-schemas.ts",
@@ -673625,7 +673627,7 @@
             },
             {
               "path": "apps/web/src/lib/server-query-client.ts",
-              "sha256": "8f339009224962a0219dec6d142c856c7b1e142ce7687a8612c622d0440e1617"
+              "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
             },
             {
               "path": "apps/web/src/lib/ticket-form-schemas.ts",
@@ -674158,7 +674160,7 @@
             },
             {
               "path": "apps/web/src/lib/server-query-client.ts",
-              "sha256": "8f339009224962a0219dec6d142c856c7b1e142ce7687a8612c622d0440e1617"
+              "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
             },
             {
               "path": "apps/web/src/lib/ticket-form-schemas.ts",
@@ -674690,7 +674692,7 @@
             },
             {
               "path": "apps/web/src/lib/server-query-client.ts",
-              "sha256": "8f339009224962a0219dec6d142c856c7b1e142ce7687a8612c622d0440e1617"
+              "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
             },
             {
               "path": "apps/web/src/lib/ticket-form-schemas.ts",
@@ -675224,7 +675226,7 @@
             },
             {
               "path": "apps/web/src/lib/server-query-client.ts",
-              "sha256": "8f339009224962a0219dec6d142c856c7b1e142ce7687a8612c622d0440e1617"
+              "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
             },
             {
               "path": "apps/web/src/lib/ticket-form-schemas.ts",
@@ -675822,7 +675824,7 @@
             },
             {
               "path": "apps/web/src/lib/server-query-client.ts",
-              "sha256": "8f339009224962a0219dec6d142c856c7b1e142ce7687a8612c622d0440e1617"
+              "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
             },
             {
               "path": "apps/web/src/lib/staff-order-list-query.test.ts",
@@ -676944,7 +676946,7 @@
             },
             {
               "path": "apps/web/src/lib/server-query-client.ts",
-              "sha256": "8f339009224962a0219dec6d142c856c7b1e142ce7687a8612c622d0440e1617"
+              "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
             },
             {
               "path": "apps/web/src/lib/staff-order-list-query.test.ts",
@@ -678066,7 +678068,7 @@
             },
             {
               "path": "apps/web/src/lib/server-query-client.ts",
-              "sha256": "8f339009224962a0219dec6d142c856c7b1e142ce7687a8612c622d0440e1617"
+              "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
             },
             {
               "path": "apps/web/src/lib/staff-order-list-query.test.ts",
@@ -679188,7 +679190,7 @@
             },
             {
               "path": "apps/web/src/lib/server-query-client.ts",
-              "sha256": "8f339009224962a0219dec6d142c856c7b1e142ce7687a8612c622d0440e1617"
+              "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
             },
             {
               "path": "apps/web/src/lib/staff-order-list-query.test.ts",
@@ -680302,7 +680304,7 @@
             },
             {
               "path": "apps/web/src/lib/server-query-client.ts",
-              "sha256": "8f339009224962a0219dec6d142c856c7b1e142ce7687a8612c622d0440e1617"
+              "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
             },
             {
               "path": "apps/web/src/lib/staff-order-list-query.ts",
@@ -680875,7 +680877,7 @@
             },
             {
               "path": "apps/web/src/lib/server-query-client.ts",
-              "sha256": "8f339009224962a0219dec6d142c856c7b1e142ce7687a8612c622d0440e1617"
+              "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
             },
             {
               "path": "apps/web/src/lib/staff-order-list-query.ts",
@@ -681447,7 +681449,7 @@
             },
             {
               "path": "apps/web/src/lib/server-query-client.ts",
-              "sha256": "8f339009224962a0219dec6d142c856c7b1e142ce7687a8612c622d0440e1617"
+              "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
             },
             {
               "path": "apps/web/src/lib/staff-order-list-query.ts",
@@ -682021,7 +682023,7 @@
             },
             {
               "path": "apps/web/src/lib/server-query-client.ts",
-              "sha256": "8f339009224962a0219dec6d142c856c7b1e142ce7687a8612c622d0440e1617"
+              "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
             },
             {
               "path": "apps/web/src/lib/staff-order-list-query.ts",
@@ -682593,7 +682595,7 @@
             },
             {
               "path": "apps/web/src/lib/server-query-client.ts",
-              "sha256": "8f339009224962a0219dec6d142c856c7b1e142ce7687a8612c622d0440e1617"
+              "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
             },
             {
               "path": "apps/web/src/lib/staff-order-list-query.ts",
@@ -683165,7 +683167,7 @@
             },
             {
               "path": "apps/web/src/lib/server-query-client.ts",
-              "sha256": "8f339009224962a0219dec6d142c856c7b1e142ce7687a8612c622d0440e1617"
+              "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
             },
             {
               "path": "apps/web/src/lib/staff-order-list-query.ts",
@@ -717028,7 +717030,7 @@
             },
             {
               "path": "apps/web/e2e/knowledge-assistant-metadata.spec.ts",
-              "sha256": "8a4e126d144158f6e1075d1cf38b4187276b74da6261f9b57af9d0bc1828a612"
+              "sha256": "e2c8ea9d1cc74cdd15217167c93d9b2a0659991d604883843ac378532e44cdae"
             },
             {
               "path": "apps/web/e2e/knowledge-assistant.spec.ts",
@@ -720909,7 +720911,7 @@
             },
             {
               "path": "apps/web/e2e/knowledge-assistant-metadata.spec.ts",
-              "sha256": "8a4e126d144158f6e1075d1cf38b4187276b74da6261f9b57af9d0bc1828a612"
+              "sha256": "e2c8ea9d1cc74cdd15217167c93d9b2a0659991d604883843ac378532e44cdae"
             },
             {
               "path": "apps/web/e2e/knowledge-assistant.spec.ts",
@@ -723616,7 +723618,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Native-required controls, scoped wallet confirmation, customer team roles, staff knowledge search, notification header recovery and profile export recovery have current evidence. Remaining schema-only forms, contrast, broader command feedback and route state adoption stay open."
+        "Native-required controls, scoped wallet confirmation, customer team roles, staff knowledge search, notification header recovery, profile export recovery and customer guide stream recovery have current evidence. Remaining schema-only forms, contrast, broader command feedback and route state adoption stay open."
       ],
       "owner": null,
       "depends_on": [],
@@ -723709,7 +723711,8 @@
           "release-0.5-required-team-role-group",
           "release-0.5-knowledge-query-deadline",
           "release-0.5-header-notification-deadlines",
-          "release-0.5-profile-export-deadlines"
+          "release-0.5-profile-export-deadlines",
+          "release-0.5-assistant-stream-deadlines"
         ]
       }
     },
@@ -724041,7 +724044,7 @@
             },
             {
               "path": "apps/web/src/components/KnowledgeAssistantPanel.tsx",
-              "sha256": "76f4d5e3d418f0f842a06ccdb1256d35513e13722c33335be88e280551393a74"
+              "sha256": "05a3cd264c553028338d743c23e1789d3b7cc3809c6465f6697b9383ff405748"
             },
             {
               "path": "apps/web/src/components/KnowledgeBaseDocumentPicker.tsx",
@@ -724557,7 +724560,7 @@
             },
             {
               "path": "apps/web/src/lib/server-query-client.ts",
-              "sha256": "8f339009224962a0219dec6d142c856c7b1e142ce7687a8612c622d0440e1617"
+              "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
             },
             {
               "path": "apps/web/src/lib/session-ended-notice.ts",
@@ -725298,6 +725301,10 @@
             {
               "path": "apps/web/src/lib/jobs.ts",
               "sha256": "18d90b4a7514dca091d4c085f4d73f4814feb1ad114de36d1d498060f37a6141"
+            },
+            {
+              "path": "apps/web/src/lib/knowledge-answer-stream.ts",
+              "sha256": "35ceaf982b334e1828f563ac3f18b0f668f6067eeebdd8f1f4f34e6f7d0033fa"
             }
           ],
           "checks": [
@@ -725335,7 +725342,8 @@
             "Customer team role group passed current production, coverage and bundle checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-team-role-group/proof.json",
             "Knowledge test search recovery passed current production, coverage and bundle checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-knowledge-query-deadline/proof.json",
             "Shared notification header recovery passed current production, coverage and bundle checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-header-notification-deadlines/candidate/proof.json",
-            "Profile export deadline recovery passed current production, coverage and bundle checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-profile-export-deadlines/proof.json"
+            "Profile export deadline recovery passed current production, coverage and bundle checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-profile-export-deadlines/proof.json",
+            "Customer guide answer deadlines passed current production, coverage and bundle checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-assistant-stream-deadlines/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -792730,6 +792738,59 @@
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-profile-export-deadlines/reviewed.patch",
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-profile-export-deadlines",
       "release_disposition": "Verified the customer profile export path through bounded request, preparation, and progress recovery. The v0.5.0 milestone remains open."
+    },
+    "release-0.5-assistant-stream-deadlines": {
+      "batch": "release-0.5-assistant-stream-deadlines",
+      "base_commit": "f0e4b18f99799c442bcbb768cefb451a36fb9f91",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "07-ui-ux-design.md#T-07.11.01.03",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "07-ui-ux-design.md#T-07.11.01.03",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/knowledge-assistant-metadata.spec.ts",
+          "sha256": "e2c8ea9d1cc74cdd15217167c93d9b2a0659991d604883843ac378532e44cdae"
+        },
+        {
+          "path": "apps/web/src/components/KnowledgeAssistantPanel.tsx",
+          "sha256": "05a3cd264c553028338d743c23e1789d3b7cc3809c6465f6697b9383ff405748"
+        },
+        {
+          "path": "apps/web/src/lib/knowledge-answer-stream.test.ts",
+          "sha256": "fbc639d19689b96cd4a1e4694827b236ea8f6f58075cf297bc0d44938238888b"
+        },
+        {
+          "path": "apps/web/src/lib/knowledge-answer-stream.ts",
+          "sha256": "35ceaf982b334e1828f563ac3f18b0f668f6067eeebdd8f1f4f34e6f7d0033fa"
+        },
+        {
+          "path": "apps/web/src/lib/server-query-client.ts",
+          "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
+        },
+        {
+          "path": "docs/design/notification-recovery.md",
+          "sha256": "1ba02df26dc816a3cc999da3c67e0a488d23f0f7879fda04cbfa1d32f8d5c551"
+        }
+      ],
+      "checks": [
+        "The customer guide bounds the answer request and receipt at 300 seconds and each idle stream read at 15 seconds. Late receipts and retired profile results stay fenced. Checked partial text remains labelled unfinished until a matching final receipt releases the answer and its sources.",
+        "An explicit retry after a timeout or an in-progress receipt keeps the captured request ID. Generic scope changes, cooldowns, denials and completed receipts retain their existing handling.",
+        "Thirty-eight production browser cases across Chromium and Mobile Safari passed. Six cases were renewed, including two profile-switch cases corrected to use valid profile fixtures and the current picker. Thirty-two unchanged passing cases were reused against identical built assets.",
+        "Nineteen Chromium coverage cases, 104 related unit cases, eight source-bound coverage groups, 98 bundle budgets, six fresh cold auth checks, formatting, lint and web typecheck passed."
+      ],
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-assistant-stream-deadlines/proof.json",
+      "source_scope_proof_sha256": "c99a5115f5b441a8109d47dd650375f245db632fb5a5c10dbb3f6f5065631dc6",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-assistant-stream-deadlines/renewed-bindings.json",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-assistant-stream-deadlines/reviewed.patch",
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-assistant-stream-deadlines",
+      "release_disposition": "Verified bounded customer guide answer recovery and captured-request retries. The v0.5.0 milestone remains open."
     }
   },
   "historical_improvements": [

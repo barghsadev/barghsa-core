@@ -1,4 +1,4 @@
-import { expect, it } from 'vitest';
+import { expect, it, vi } from 'vitest';
 import { readKnowledgeResponse } from './knowledge-answer-stream.js';
 
 const answer = {
@@ -74,6 +74,25 @@ it('cancels a pending reader on scope withdrawal without accepting its receipt',
   abort.abort();
   await expect(pending).rejects.toThrow();
   expect(cancelled).toBe(true);
+});
+it('rejects an idle stream even if its source does not finish cancelling', async () => {
+  vi.useFakeTimers();
+  try {
+    const cancel = vi.fn(() => new Promise<void>(() => {}));
+    const pending = readKnowledgeResponse(
+      new Response(new ReadableStream({ cancel }), {
+        headers: { 'content-type': 'text/event-stream' },
+      }),
+      new AbortController().signal,
+      () => {}
+    );
+    const rejected = expect(pending).rejects.toMatchObject({ name: 'TimeoutError' });
+    await vi.advanceTimersByTimeAsync(15_000);
+    await rejected;
+    expect(cancel).toHaveBeenCalledTimes(1);
+  } finally {
+    vi.useRealTimers();
+  }
 });
 it('retains validated JSON compatibility during a rolling deployment', async () => {
   expect(

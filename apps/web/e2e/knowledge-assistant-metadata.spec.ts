@@ -1,6 +1,6 @@
 import AxeBuilder from '@axe-core/playwright';
 import { t, type Locale } from '@barghsa/i18n/app';
-import { test, expect, type Page } from './coverage-fixture';
+import { test, expect, type Page, type Route } from './coverage-fixture';
 import { fulfillDashboard } from './dashboard-fixture';
 
 const answeredAt = '2026-10-01T22:30:00Z';
@@ -240,6 +240,53 @@ test('a profile switch clears old policy metadata and ignores a late answer', as
   baseURL,
 }) => {
   await setup(page, 'en', baseURL!);
+  const individual = '01900000-0000-7000-8000-000000000010';
+  const company = '01900000-0000-7000-8000-000000000011';
+  let active = individual;
+  await page.route('**/api/profiles', (route) =>
+    route.fulfill({
+      json: {
+        profiles: [
+          {
+            id: individual,
+            profileType: 'INDIVIDUAL',
+            status: 'ACTIVE',
+            isDefault: true,
+            title: null,
+            firstName: 'Ari',
+            lastName: 'Buyer',
+            nationalId: null,
+          },
+          {
+            id: company,
+            profileType: 'LEGAL',
+            status: 'ACTIVE',
+            isDefault: false,
+            title: 'Nova Energy',
+            firstName: null,
+            lastName: null,
+            nationalId: null,
+          },
+        ],
+        activeProfileId: active,
+        hasDefault: true,
+      },
+    })
+  );
+  await page.route(`**/api/profiles/switch/${company}`, (route) => {
+    active = company;
+    return route.fulfill({ json: { activeProfileId: active } });
+  });
+  await page.route('**/api/ai/knowledge/availability', (route) =>
+    route.fulfill({
+      json: {
+        available: true,
+        profileId: active,
+        profileName: active === company ? 'Nova Energy' : 'Ari Buyer',
+        slotKey: active === company ? 'legal_entity_chatbot' : 'individual_chatbot',
+      },
+    })
+  );
   let release!: () => void;
   const gate = new Promise<void>((resolve) => {
     release = resolve;
@@ -262,13 +309,19 @@ test('a profile switch clears old policy metadata and ignores a late answer', as
     await page.getByLabel('Write your question').fill('Old profile question');
     await page.getByLabel('Write your question').press('Enter');
     await expect.poll(() => requests.length).toBe(1);
-    const profilePicker = page.getByLabel('Switch active profile');
     const navigationToggle = page.locator('[aria-controls="dashboard-navigation"]');
-    const openedNavigation = !(await profilePicker.isVisible());
-    if (openedNavigation) await navigationToggle.click();
-    await profilePicker.selectOption('profile-2');
-    if (openedNavigation) await navigationToggle.click();
+    if (await navigationToggle.isVisible()) await navigationToggle.click();
+    await page.locator('#profile-switcher').click();
+    await page
+      .getByRole('radiogroup')
+      .locator(`[role=radio][data-profile-id="${company}"]`)
+      .click();
     await expect(page.getByText("You're asking as Nova Energy.")).toBeVisible();
+    if (
+      (await navigationToggle.isVisible()) &&
+      (await navigationToggle.getAttribute('aria-expanded')) === 'true'
+    )
+      await navigationToggle.click();
     await page.getByText(t('assistant.suggestions', 'en'), { exact: true }).click();
     await expect(
       page.getByRole('button', { name: t('assistant.suggestion.legalDocuments', 'en') })
@@ -285,6 +338,46 @@ test('a profile switch clears old policy metadata and ignores a late answer', as
     expect(requests[1]).toEqual({ message: 'New profile question', requestId: expect.any(String) });
   } finally {
     release();
+  }
+});
+
+test('a guide request with stalled headers recovers without submitting a new question', async ({
+  page,
+  baseURL,
+}) => {
+  await setup(page, 'en', baseURL!);
+  const requests: unknown[] = [];
+  let held: Route | undefined;
+  await page.route('**/api/ai/knowledge/questions', (route) => {
+    requests.push(route.request().postDataJSON());
+    if (requests.length === 1) {
+      held = route;
+      return;
+    }
+    return route.fulfill({ json: answer() });
+  });
+  await page.goto('/ai');
+  const input = page.getByLabel('Write your question');
+  const retry = page.getByRole('button', { name: 'Try again', exact: true });
+  await input.fill('Published guidance?');
+  await page.clock.install();
+  try {
+    await input.press('Enter');
+    await expect.poll(() => requests.length).toBe(1);
+    await page.clock.fastForward(60_000);
+    await expect(input).toBeDisabled();
+    await expect(retry).toHaveCount(0);
+    await page.clock.fastForward(240_200);
+    await expect(retry).toBeEnabled();
+    await expect(input).toHaveValue('Published guidance?');
+    expect(requests).toHaveLength(1);
+    await held!.fulfill({ json: answer({ reply: 'Late result' }) }).catch(() => {});
+    await expect(page.getByText('Late result', { exact: true })).toHaveCount(0);
+    await retry.click();
+    await expect(page.getByText(reply)).toBeVisible();
+    expect(requests).toEqual([requests[0], requests[0]]);
+  } finally {
+    await held?.abort().catch(() => {});
   }
 });
 
@@ -317,6 +410,10 @@ for (const locale of ['en', 'fa'] as const)
             if (new Headers(init?.headers).get('Accept') !== 'text/event-stream')
               throw new Error('SSE not requested');
             requests.push(JSON.parse(String(init?.body)));
+            if (requests.length === 3)
+              return Promise.resolve(
+                Response.json({ error: 'AI_KNOWLEDGE_IN_PROGRESS' }, { status: 409 })
+              );
             return Promise.resolve(
               new Response(
                 new ReadableStream<Uint8Array>({
@@ -349,7 +446,18 @@ for (const locale of ['en', 'fa'] as const)
     );
     await expect(panel.getByRole('alert')).toBeVisible();
     await expect(input).toHaveValue('Published guidance?');
-    await panel.getByRole('button', { name: text('retry'), exact: true }).click();
+    const retry = panel.getByRole('button', { name: text('retry'), exact: true });
+    await page.clock.install();
+    await retry.click();
+    await expect(panel.getByText(first, { exact: true })).toBeVisible();
+    await page.clock.fastForward(15_200);
+    await expect(retry).toBeEnabled();
+    await expect(panel.getByText(text('incompleteAnswer'))).toBeVisible();
+    await expect(panel.getByText(text('sources'), { exact: false })).toHaveCount(0);
+    await retry.click();
+    await expect(panel.getByRole('alert')).toContainText(text('busy'));
+    await expect(retry).toBeEnabled();
+    await retry.click();
     await expect(panel.getByText(first, { exact: true })).toBeVisible();
     expect(
       await page.evaluate(
@@ -358,11 +466,13 @@ for (const locale of ['en', 'fa'] as const)
     ).toEqual([
       expect.objectContaining({ message: 'Published guidance?', requestId: expect.any(String) }),
       expect.objectContaining({ message: 'Published guidance?', requestId: expect.any(String) }),
+      expect.objectContaining({ message: 'Published guidance?', requestId: expect.any(String) }),
+      expect.objectContaining({ message: 'Published guidance?', requestId: expect.any(String) }),
     ]);
     expect(
       await page.evaluate(() => {
         const rows = (window as unknown as { knowledgeRequests: unknown[] }).knowledgeRequests;
-        return JSON.stringify(rows[0]) === JSON.stringify(rows[1]);
+        return rows.every((row) => JSON.stringify(row) === JSON.stringify(rows[0]));
       })
     ).toBe(true);
     await page.evaluate(() =>
