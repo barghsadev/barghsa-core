@@ -1191,6 +1191,48 @@ for (const locale of ['en', 'fa'] as const) {
   }
 }
 
+test('an unconfirmed self role change checks session revocation before sign-in', async ({
+  page,
+}) => {
+  const locale = 'fa';
+  await shell(page, locale, false);
+  let revoked = false;
+  const writes: unknown[] = [];
+  await page.route(`**/api/profiles/${profileId}/agents`, (route) =>
+    revoked ? route.fulfill({ status: 401, json: {} }) : route.fallback()
+  );
+  await page.route(`**/api/profiles/${profileId}/agents/member/roles`, (route) => {
+    writes.push(route.request().postDataJSON());
+    return route.fulfill({ status: 503, json: {} });
+  });
+  await page.goto('/settings/team');
+  const member = page
+    .getByRole('row')
+    .or(page.getByRole('listitem'))
+    .filter({ has: page.getByRole('heading', { name: 'm***@example.test' }) });
+  await member.getByRole('checkbox', { name: 'مالی', exact: true }).check();
+  await member.getByRole('button', { name: 'ذخیره نقش‌ها', exact: true }).click();
+  await authorizeAction(page, locale);
+  const dialog = page.getByRole('dialog');
+  const confirm = dialog.getByRole('button', {
+    name: confirmationText('confirm', locale),
+    exact: true,
+  });
+  await confirm.click();
+  await expect(dialog.getByRole('alert')).toHaveText(confirmationText('unconfirmed', locale));
+  await expect(confirm).toBeDisabled();
+  await expect(page).toHaveURL(/\/settings\/team$/);
+  expect(writes).toEqual([{ roles: ['Manager', 'Finance'] }]);
+  if (test.info().project.name === 'mobile-safari')
+    await page.screenshot({ path: test.info().outputPath('team-member-recovery-fa-mobile.png') });
+  revoked = true;
+  await dialog
+    .getByRole('button', { name: teamText('team.refreshMembers', locale), exact: true })
+    .click();
+  await expect(page).toHaveURL(/\/login$/);
+  expect(writes).toHaveLength(1);
+});
+
 for (const locale of ['en', 'fa'] as const) {
   test(`onboarding invitations recover, accept without creating a profile and open explicitly (${locale})`, async ({
     page,

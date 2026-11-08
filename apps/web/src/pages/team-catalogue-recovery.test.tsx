@@ -716,6 +716,7 @@ it.each(['agent', 'invitation'] as const)(
   '%s removal retains review for an invalid receipt and closes only after a verified result',
   async (type) => {
     let valid = false;
+    let readFailed = false;
     const requests = await render((path, init) => {
       if (init?.method === 'DELETE')
         return reply(
@@ -728,6 +729,7 @@ it.each(['agent', 'invitation'] as const)(
               : { id: 'wrong-target', status: 'Withdrawn' }
         );
       if (path.includes('/activity')) return reply(historyPage());
+      if (path.endsWith('/agents') && readFailed) return reply({}, 503);
       return baseline(path);
     });
     const row = [...host.querySelectorAll('tr')].find((row) =>
@@ -744,7 +746,29 @@ it.each(['agent', 'invitation'] as const)(
     await click('Confirm', true);
     expect(detailDialog().textContent).toContain(confirmationText('unconfirmed', 'en'));
     expect(host.textContent).not.toContain('Change saved');
+    const confirm = () =>
+      Array.from(detailDialog().querySelectorAll<HTMLButtonElement>('button')).find(
+        (button) => button.textContent === 'Confirm'
+      )!;
+    expect(confirm().disabled).toBe(true);
+    readFailed = true;
+    await click('Refresh members', true);
+    expect(confirm().disabled).toBe(true);
+    expect(detailDialog().textContent).toContain('Could not load');
+    await click('Cancel', true);
+    expect(detailDialog().textContent).toContain(confirmationText('unconfirmed', 'en'));
+    expect(
+      Array.from(detailDialog().querySelectorAll<HTMLButtonElement>('button')).find(
+        (button) =>
+          button.textContent === (type === 'agent' ? 'Remove member' : 'Withdraw invitation')
+      )?.disabled
+    ).toBe(true);
+    readFailed = false;
+    await click('Refresh members', true);
+    expect(detailDialog().textContent).not.toContain(confirmationText('unconfirmed', 'en'));
+    expect(requests.mock.calls.filter(([, init]) => init?.method === 'DELETE')).toHaveLength(1);
     valid = true;
+    await click(type === 'agent' ? 'Remove member' : 'Withdraw invitation', true);
     await click('Confirm', true);
     expect(document.querySelector('[role=dialog]')).toBeNull();
     expect(host.textContent).toContain('Change saved');

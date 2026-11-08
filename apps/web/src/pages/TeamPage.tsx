@@ -1,6 +1,7 @@
 import { useCommandFeedback } from '../hooks/useCommandFeedback.js';
 import { useCompactRecords } from '../hooks/useCompactRecords.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
+import { useAccountUser } from '../hooks/useAccountUser.js';
 import {
   useCallback,
   useEffect,
@@ -312,6 +313,12 @@ function TeamCatalogue() {
     </div>
   );
 }
+type MemberAction = TeamAction & {
+  memberUserId?: string;
+  successMessage?: string;
+  onConfirmed?: () => void;
+  onValidationError?: (fields: unknown[]) => boolean;
+};
 function TeamMembers({
   profile,
   profileReady,
@@ -328,20 +335,19 @@ function TeamMembers({
   onSessionDenied: () => void;
 }) {
   const time = useAccountTime();
+  const actor = useAccountUser();
   const locale = useLocale();
   const compact = useCompactRecords();
   const [detail, setDetail] = useState<{ type: 'agent' | 'invitation'; id: string } | null>(null);
   const detailTrigger = useRef<HTMLButtonElement | null>(null);
   const [activityRevision, setActivityRevision] = useState(0);
   const [error, setError] = useState<string | null>(null);
-  const [action, setAction] = useState<
-    | (TeamAction & {
-        successMessage?: string;
-        onConfirmed?: () => void;
-        onValidationError?: (fields: unknown[]) => boolean;
-      })
-    | null
-  >(null);
+  const [action, setAction] = useState<MemberAction | null>(null);
+  const [memberPending, setMemberPending] = useState(false);
+  const [memberRecovery, setMemberRecovery] = useState<{
+    after: number;
+    mayRevokeSession: boolean;
+  } | null>(null);
   const [ownershipStep, setOwnershipStep] = useState<'verify' | 'select' | 'confirm' | null>(null);
   const [transferUnconfirmed, setTransferUnconfirmed] = useState(false);
   const [recipientId, setRecipientId] = useState('');
@@ -412,6 +418,8 @@ function TeamMembers({
     setOwnershipStep(null);
     setTransferUnconfirmed(false);
     setAction(null);
+    setMemberPending(false);
+    setMemberRecovery(null);
     resetInvitation({ username: '', role: 'Manager', message: '' });
     setRecipientId('');
     setError(null);
@@ -422,11 +430,15 @@ function TeamMembers({
     (value: unknown): value is Team => validTeam(value) && value.profileId === profile.id,
     [profile.id]
   );
+  const memberReadUnauthorized = useCallback(() => {
+    if (memberRecovery?.mayRevokeSession) window.location.assign('/login');
+    onSessionDenied();
+  }, [memberRecovery, onSessionDenied]);
   const resource = useCatalogueResource(
     scope,
     `/api/profiles/${encodeURIComponent(profile.id)}/agents`,
     validate,
-    { onUnauthorized: onSessionDenied }
+    { onUnauthorized: memberReadUnauthorized }
   );
   const team = resource.data
     ? {
@@ -442,7 +454,8 @@ function TeamMembers({
     [onSessionDenied, scope.deny]
   );
   const loading = resource.loading;
-  const ready = profileReady && !!team && !resource.loading && !resource.error && !scope.denied;
+  const membershipReady = profileReady && !!team && !loading && !resource.error && !scope.denied;
+  const ready = membershipReady && memberRecovery === null;
   const basis = team ? teamBasis(team) : null;
   const liveBasis = useRef(basis);
   liveBasis.current = basis;
@@ -456,18 +469,26 @@ function TeamMembers({
     };
   }, []);
   useEffect(() => {
-    if (ready && staleReview) {
+    if (!membershipReady || memberPending) return;
+    if (memberRecovery) {
+      if ((resource.readAttempt ?? -1) < memberRecovery.after) return;
+      setMemberRecovery(null);
+      setAction(null);
+      setActivityRevision((value) => value + 1);
+      if (!detail) refreshMembers.current?.focus();
+    } else if (staleReview) {
       setAction(null);
       setOwnershipStep(null);
       setRecipientId('');
       refreshMembers.current?.focus();
     }
-  }, [ready, staleReview]);
+  }, [membershipReady, memberPending, memberRecovery, resource.readAttempt, staleReview, detail]);
   const load = async () => {
     focusRefreshPending.current = true;
     resource.retry();
   };
   function reloadMembers() {
+    if (memberPending) return;
     if (scope.denied) {
       scope.recover();
       return;
@@ -677,20 +698,15 @@ function TeamMembers({
     }
   }, [ready, detail, detailedEntry]);
   const base = `/api/profiles/${encodeURIComponent(team?.profileId ?? '')}`;
-  const openAction = (
-    next: TeamAction & {
-      successMessage?: string;
-      onConfirmed?: () => void;
-      onValidationError?: (fields: unknown[]) => boolean;
-    }
-  ) => {
+  const openAction = (next: MemberAction) => {
     if (!ready) return;
     reviewBasis.current = basis;
     setNotice(null);
     setAction(next);
   };
   const finished = async (result: unknown) => {
-    if (!mounted.current || reviewBasis.current !== liveBasis.current) return;
+    if (!mounted.current) return;
+    if (reviewBasis.current !== liveBasis.current) throw new Error('Membership changed');
     const receipt = result && typeof result === 'object' ? result : null;
     const sessionRevoked =
       receipt && 'sessionRevoked' in receipt && receipt.sessionRevoked === true;
@@ -721,7 +737,7 @@ function TeamMembers({
       if (!z.object({ id: z.uuid() }).safeParse(result).success) throw new Error();
       refreshTransfers();
     }
-    if (sessionRevoked && (action?.path.endsWith('/roles') || action?.path.includes('/agents/'))) {
+    if (sessionRevoked && actor && action?.memberUserId === actor) {
       window.location.assign('/login');
       return;
     }
@@ -745,6 +761,7 @@ function TeamMembers({
         .replace('{roles}', roles.map((role) => word(role)).join('، ')),
       path: `${base}/agents/${encodeURIComponent(userId)}/roles`,
       method: 'PUT',
+      memberUserId: userId,
       body: { roles },
       onConfirmed,
       onValidationError,
@@ -758,6 +775,7 @@ function TeamMembers({
       ),
       path: `${base}/agents/${encodeURIComponent(userId)}`,
       method: 'DELETE',
+      memberUserId: userId,
     });
   const withdraw = (entry: Entry) =>
     openAction({
@@ -798,9 +816,19 @@ function TeamMembers({
           {error}
         </p>
       )}
+      {memberRecovery && !action && !detailedEntry && (
+        <p role="alert" className="text-destructive">
+          {confirmationText('unconfirmed', locale)}
+        </p>
+      )}
       <ListPage>
         <ListPage.Toolbar>
-          <Button ref={refreshMembers} variant="outline" onClick={reloadMembers}>
+          <Button
+            ref={refreshMembers}
+            variant="outline"
+            disabled={memberPending}
+            onClick={reloadMembers}
+          >
             {word('refreshMembers')}
           </Button>
           {team?.canTransferOwnership &&
@@ -980,7 +1008,7 @@ function TeamMembers({
           roles={detailedMember?.roles ?? [detailedEntry.role]}
           profileId={profile.id}
           scope={scope}
-          onUnauthorized={onSessionDenied}
+          onUnauthorized={memberReadUnauthorized}
           visible={!action && !ownershipStep}
           canCommand={ready}
           onClose={closeDetail}
@@ -990,7 +1018,9 @@ function TeamMembers({
           onRemove={() => removeMember(detail.id, detailedEntry)}
           onWithdraw={() => withdraw(detailedEntry)}
           revision={activityRevision}
-          refreshMembers={resource.retry}
+          refreshMembers={reloadMembers}
+          recoveryNotice={memberRecovery ? confirmationText('unconfirmed', locale) : undefined}
+          refreshError={memberRecovery !== null && resource.error}
         />
       )}
       {invitationOpen && (
@@ -1147,15 +1177,28 @@ function TeamMembers({
         <TeamActionDialog
           key={`${action.method}:${action.path}`}
           action={action}
-          onClose={() => setAction(null)}
+          onClose={() => {
+            setMemberPending(false);
+            setAction(null);
+          }}
           onSuccess={finished}
           {...(action.onValidationError ? { onValidationError: action.onValidationError } : {})}
           onDenied={denyTeam}
+          onPendingChange={setMemberPending}
+          onUnconfirmed={() =>
+            setMemberRecovery({
+              after: resource.nextReadAttempt(),
+              mayRevokeSession: actor !== null && action.memberUserId === actor,
+            })
+          }
           confirmationDisabled={!ready || staleReview}
           summary={
-            <Button variant="outline" disabled={loading} onClick={resource.retry}>
-              {word('refreshMembers')}
-            </Button>
+            <div className="space-y-2">
+              <Button variant="outline" disabled={loading || memberPending} onClick={reloadMembers}>
+                {word('refreshMembers')}
+              </Button>
+              {memberRecovery && resource.error && <p role="alert">{word('loadError')}</p>}
+            </div>
           }
           finalFocus={
             detail

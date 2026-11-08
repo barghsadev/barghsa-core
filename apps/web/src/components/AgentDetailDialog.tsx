@@ -36,6 +36,8 @@ export function AgentDetailDialog({
   onWithdraw,
   revision,
   refreshMembers,
+  recoveryNotice,
+  refreshError,
 }: {
   entry: TeamEntry;
   roles: string[];
@@ -54,6 +56,8 @@ export function AgentDetailDialog({
   onWithdraw: () => void;
   revision: number;
   refreshMembers: () => void;
+  recoveryNotice: string | undefined;
+  refreshError: boolean;
 }) {
   const locale = useLocale(),
     time = useAccountTime(),
@@ -82,6 +86,8 @@ export function AgentDetailDialog({
           <DialogTitle>{word(pending ? 'invitationDetails' : 'memberDetails')}</DialogTitle>
           <DialogDescription>{word('detailHint')}</DialogDescription>
         </DialogHeader>
+        {recoveryNotice && <p role="alert">{recoveryNotice}</p>}
+        {refreshError && <p role="alert">{word('loadError')}</p>}
         <TeamIdentity entry={entry} owner={owner} />
         <dl className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
           <dt className="text-muted-foreground">{word('status')}</dt>

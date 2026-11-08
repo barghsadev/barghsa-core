@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-08T17:51:40+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-08T18:02:06+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.4.0**. Next milestone: **v0.5.0**.
 
@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 868 | Accepted with unchanged source bindings. |
+| done | 869 | Accepted with unchanged source bindings. |
 | verify | 470 | Existing work may be complete; inspect evidence before building. |
-| partial | 25 | An earlier review found unmet criteria; reconcile later fixes. |
+| partial | 24 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 5 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
 | blocked | 1 | Named owner or external prerequisite. |
@@ -39,7 +39,7 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Close the remaining team role, member removal and invitation withdrawal recovery. Reconcile conditional UI states for v0.5.0. Live Sentry delivery and required GitHub accessibility enforcement remain separate gates.
+Reconcile v0.5.0 conditional loading, empty, error and denial states against the current route census and scoped evidence. Live Sentry delivery and required GitHub accessibility enforcement remain separate gates.
 
 - `07-ui-ux-design.md#T-07.05.01.08`: Ensure all color combinations pass WCAG AA contrast ratios: normal text ≥ 4.5:1, large text ≥ 3:1, UI components ≥ 3:1. Verify with automated tools. Provide a "high contrast" mode toggle that strengthens all contrast ratios.
 - `07-ui-ux-design.md#T-07.05.02.04`: Add CI gate: a11y violations on critical pages block PR merge. Non-critical pages warn but do not block. Violations must be triaged with reason or exemption.
@@ -779,7 +779,7 @@ Customer and admin workflows work on desktop/mobile in both languages and themes
 | `07-ui-ux-design.md#T-07.10.02.05` | done | Recorded batch work | Build `FormReview` component (read-only summary of all form fields before final submission). Used for order review step before submit. Backend-rendered snapshot for financial orders. |
 | `07-ui-ux-design.md#T-07.11.01.01` | done | Recorded batch work | Configure Sonner (shadcn's toast wrapper) in `apps/web`. Set up `<Toaster />` with: position (top-right for LTR, top-left for RTL), close button, rich colors (success green, error red, warning amber, info blue), max 3 visible toasts, swipe to dismiss. |
 | `07-ui-ux-design.md#T-07.11.01.02` | done | Recorded batch work | Create `useToast()` hook: `toast.success(msg)`, `toast.error(msg)`, `toast.warning(msg)`, `toast.info(msg)`, `toast.promise(promise, { loading, success, error })`. Supports i18n keys or string messages. |
-| `07-ui-ux-design.md#T-07.11.01.03` | partial | Recorded batch work | Create an API response interceptor that auto-shows toasts for: successful CRUD operations ("Invoice created", "Profile updated", "Order submitted"), API errors (error message from API), network failures ("Connection lost. Retrying..."). |
+| `07-ui-ux-design.md#T-07.11.01.03` | done | Recorded batch work | Create an API response interceptor that auto-shows toasts for: successful CRUD operations ("Invoice created", "Profile updated", "Order submitted"), API errors (error message from API), network failures ("Connection lost. Retrying..."). |
 | `07-ui-ux-design.md#T-07.11.01.04` | done | Recorded batch work | Toasts must not block or interrupt critical flows. Only one persistent toast for in-progress operations (e.g. "Uploading document..."). |
 | `07-ui-ux-design.md#T-07.11.01.05` | done | Recorded batch work | Ensure toasts are reachable by screen readers via `aria-live="polite"`. Toast content must be announced without stealing focus. |
 | `07-ui-ux-design.md#T-07.11.02.01` | done | Recorded batch work | Build `NotificationBell` component in topbar: bell icon with unread count badge. Fetches unread count via API (short-poll every 30s or SSE stream). Animates badge on new notification. |
