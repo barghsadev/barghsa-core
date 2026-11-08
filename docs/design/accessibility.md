@@ -28,6 +28,18 @@ Fix confirmed defects. Where automation cannot evaluate the result, record
 the manual check and its result, for example the contrast of text over a
 gradient. An exception needs a specific rule, scope, reason and owner approval.
 
+Use unrounded contrast ratios. Ordinary text needs 4.5:1. Large text and
+visual cues needed to identify or operate controls need 3:1. Measure control
+boundaries, state indicators and keyboard focus separately from text.
+[WCAG text contrast](https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html)
+[WCAG non-text contrast](https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html)
+
+Record the actual theme, high-contrast state, language and viewport for each
+measurement. If published policy locks the fixture to one theme, record the
+other theme as unmeasured. Reveal clipped text in its scroll container and
+check it again. Run page landmark assertions before opening a modal, then
+measure the dialog while it owns focus.
+
 Keep readable content opaque during page and list entrance animations. Even
 a brief fade of the whole row can put its text below the contrast floor.
 

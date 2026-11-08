@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-08T03:11:10+00:00",
-  "source_commit": "2106d0f86f3ed3b0ddc6bfb4f1b03573163cdd56",
+  "updated": "2026-11-08T03:28:19+00:00",
+  "source_commit": "def7e57e295b53ad4c3ca89981fa5ae4b2f86223",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -515190,7 +515190,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "94a4fad8727db412bcf488060488a96dfe36f4f8fea89bdabfccc025f750f44a"
+              "sha256": "5b63bbb558f1b49f135609fb1ce3b19d0504ac1a1dc4772c75580d2087a1f1f6"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -515570,7 +515570,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "94a4fad8727db412bcf488060488a96dfe36f4f8fea89bdabfccc025f750f44a"
+              "sha256": "5b63bbb558f1b49f135609fb1ce3b19d0504ac1a1dc4772c75580d2087a1f1f6"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -516009,7 +516009,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "94a4fad8727db412bcf488060488a96dfe36f4f8fea89bdabfccc025f750f44a"
+              "sha256": "5b63bbb558f1b49f135609fb1ce3b19d0504ac1a1dc4772c75580d2087a1f1f6"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -516496,7 +516496,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "94a4fad8727db412bcf488060488a96dfe36f4f8fea89bdabfccc025f750f44a"
+              "sha256": "5b63bbb558f1b49f135609fb1ce3b19d0504ac1a1dc4772c75580d2087a1f1f6"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -517004,7 +517004,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "94a4fad8727db412bcf488060488a96dfe36f4f8fea89bdabfccc025f750f44a"
+              "sha256": "5b63bbb558f1b49f135609fb1ce3b19d0504ac1a1dc4772c75580d2087a1f1f6"
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
@@ -517597,7 +517597,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "The shared one-time-code boundary and unavailable saving checkout copy now have direct light, dark and high-contrast evidence in Chromium and Mobile Safari. Terms and banner evidence remains current. Resolve remaining clipped and overlapped route findings, unmeasured conditional controls and unsampled routes before acceptance."
+        "Current text scans measured 93 of 93 populated route patterns. Shared component cues, high contrast persistence and notification page numbers passed numeric checks. Resolve 4338 incomplete observations and the missing locale/theme cells and conditional control states before acceptance."
       ],
       "owner": null,
       "depends_on": [],
@@ -517621,7 +517621,8 @@
           "release-0.5-action-contrast",
           "release-0.5-route-contrast-matrix",
           "release-0.5-banner-dismiss-contrast",
-          "release-0.5-otp-and-saving-contrast"
+          "release-0.5-otp-and-saving-contrast",
+          "release-0.5-current-contrast"
         ],
         "current_acceptance": null
       }
@@ -517812,7 +517813,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "94a4fad8727db412bcf488060488a96dfe36f4f8fea89bdabfccc025f750f44a"
+              "sha256": "5b63bbb558f1b49f135609fb1ce3b19d0504ac1a1dc4772c75580d2087a1f1f6"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -518328,7 +518329,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "94a4fad8727db412bcf488060488a96dfe36f4f8fea89bdabfccc025f750f44a"
+              "sha256": "5b63bbb558f1b49f135609fb1ce3b19d0504ac1a1dc4772c75580d2087a1f1f6"
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
@@ -519046,7 +519047,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "94a4fad8727db412bcf488060488a96dfe36f4f8fea89bdabfccc025f750f44a"
+              "sha256": "5b63bbb558f1b49f135609fb1ce3b19d0504ac1a1dc4772c75580d2087a1f1f6"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -519874,7 +519875,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "94a4fad8727db412bcf488060488a96dfe36f4f8fea89bdabfccc025f750f44a"
+              "sha256": "5b63bbb558f1b49f135609fb1ce3b19d0504ac1a1dc4772c75580d2087a1f1f6"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -520484,7 +520485,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "94a4fad8727db412bcf488060488a96dfe36f4f8fea89bdabfccc025f750f44a"
+              "sha256": "5b63bbb558f1b49f135609fb1ce3b19d0504ac1a1dc4772c75580d2087a1f1f6"
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
@@ -521202,7 +521203,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "94a4fad8727db412bcf488060488a96dfe36f4f8fea89bdabfccc025f750f44a"
+              "sha256": "5b63bbb558f1b49f135609fb1ce3b19d0504ac1a1dc4772c75580d2087a1f1f6"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -723619,7 +723620,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Native-required controls, scoped wallet confirmation, customer team roles, staff knowledge search, notification header recovery, profile export recovery and customer guide stream recovery have current evidence. Saved addresses, maintenance and reconciliation now expose required states. Broader form, contrast, command feedback and route state adoption remain open."
+        "Scoped forms, verified wallet confirmation, staff knowledge search, notifications, export and guide recovery retain current evidence. The current populated route contrast census and direct control measurements narrow the open contrast work. Wider contrast, conditional forms, verified command feedback and route-state adoption remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -723714,7 +723715,8 @@
           "release-0.5-header-notification-deadlines",
           "release-0.5-profile-export-deadlines",
           "release-0.5-assistant-stream-deadlines",
-          "release-0.5-schema-form-census"
+          "release-0.5-schema-form-census",
+          "release-0.5-current-contrast"
         ]
       }
     },
@@ -792845,6 +792847,358 @@
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-schema-form-census/reviewed.patch",
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-schema-form-census",
       "release_disposition": "Verified required field semantics and error links for saved addresses, maintenance and reconciliation. The v0.5.0 milestone remains open."
+    },
+    "release-0.5-current-contrast": {
+      "batch": "release-0.5-current-contrast",
+      "base_commit": "def7e57e295b53ad4c3ca89981fa5ae4b2f86223",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.05.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.05.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/account-recovery-closure.spec.ts",
+          "sha256": "efd3c7fa73b3abf7e6266aa05bcccb1791c0bf0db7761fe1f451bb3167208a13"
+        },
+        {
+          "path": "apps/web/e2e/ai-admin-presentation.spec.ts",
+          "sha256": "cbf5723b460f6c9e5fb0088dfa5195c1f41003f0d05c47ca87e37287734e1f2c"
+        },
+        {
+          "path": "apps/web/e2e/ai-catalogue-tables.spec.ts",
+          "sha256": "fa3f372e261cd0a9c8dd46951d6b797b4ba935daf799dae12b2d1b0c33ff1d93"
+        },
+        {
+          "path": "apps/web/e2e/analytics-consent.spec.ts",
+          "sha256": "66b56d6dd6b7eb8ec9524e6a06ced8e9cc8482063784878da0366e47c96069aa"
+        },
+        {
+          "path": "apps/web/e2e/approval-reason-forms.spec.ts",
+          "sha256": "bd3e4b18518eb09f73f2a9e1b6f5e7a308a3120aebf4b7ba173f5ac06ea7b976"
+        },
+        {
+          "path": "apps/web/e2e/assistant-chat-forms.spec.ts",
+          "sha256": "3e9c018025b7315f7a4bc7178af944cf3fc156f75abfa86ff32b335f41136918"
+        },
+        {
+          "path": "apps/web/e2e/branding-validation.spec.ts",
+          "sha256": "ddfa0b57a7d206d4dd079e5f0234e38533f2289279ab82026aa8781b33135b57"
+        },
+        {
+          "path": "apps/web/e2e/consultation-forms.spec.ts",
+          "sha256": "98ddc4b599f6993707e09db89339e4dc6806586dc339d30418ae23d154487d3e"
+        },
+        {
+          "path": "apps/web/e2e/content-forms.spec.ts",
+          "sha256": "2e8f52bba09ddab8a0296991cc6ccd536cc5452a1531d37f6404ed0c488c4ff1"
+        },
+        {
+          "path": "apps/web/e2e/contract-context.spec.ts",
+          "sha256": "ad04cb0e8f9e569c6a4f16497e061838f10d222aeb4611e983495bee8ebf9983"
+        },
+        {
+          "path": "apps/web/e2e/contract-limits.spec.ts",
+          "sha256": "2614b5767b22320b78619557a603b91a072ba3a50b276ebe4fd58d4307759b4f"
+        },
+        {
+          "path": "apps/web/e2e/contract-quantity-increase.spec.ts",
+          "sha256": "e426afca86cd4123d0e4a9ee77ad67f6496ecc60ba1e4df8e96c0c70bb2b6d15"
+        },
+        {
+          "path": "apps/web/e2e/contract-templates.spec.ts",
+          "sha256": "23d612c3de26d3c0260d1bf319fdcff2e7983c6c15895e61d21a465368d3686e"
+        },
+        {
+          "path": "apps/web/e2e/control-contrast.ts",
+          "sha256": "86da99d6e70a98e7085ed785c3a4dc7b7d7018074f64a29b2e70ca23cdd599b2"
+        },
+        {
+          "path": "apps/web/e2e/crm-corrections.spec.ts",
+          "sha256": "698688c26febd5e37bdacda275406343a337f89b468a246b0e885d277d609534"
+        },
+        {
+          "path": "apps/web/e2e/crm-dashboard.spec.ts",
+          "sha256": "59e01fcd87a53dcff9e379b98054f0f5017f880961173f22674c371757bfa847"
+        },
+        {
+          "path": "apps/web/e2e/crm-detail-permissions.spec.ts",
+          "sha256": "748849bd1dc0db5b440782a15a9d7ba2b80cbd471a250f310d3b3bcbf985b3f2"
+        },
+        {
+          "path": "apps/web/e2e/crm-list.spec.ts",
+          "sha256": "6e45d20195e3deb2d35d20f79410169bf13eb6b327adc8652b8c75ffd837e11c"
+        },
+        {
+          "path": "apps/web/e2e/customer-bank-receipt-history.spec.ts",
+          "sha256": "94d454c3dc3f30d35f624f6624bdcf8f4684f1dc520cee47eeb89321a06041dc"
+        },
+        {
+          "path": "apps/web/e2e/customer-service-history-views.spec.ts",
+          "sha256": "1aaea8e0a7ba394e68df54ea5fe621b99cc7b4d7fe04037eb734441cb21a6f85"
+        },
+        {
+          "path": "apps/web/e2e/delivery-provider-tables.spec.ts",
+          "sha256": "8b970cd666872b3f951f62dac8aedb660fdcfaa95b91c0ddf70cfa101ccc6900"
+        },
+        {
+          "path": "apps/web/e2e/document-list-recovery.spec.ts",
+          "sha256": "a2c701f572c920348eabae2df1356e6b59541dbefc0e94645b7097af9ed05b40"
+        },
+        {
+          "path": "apps/web/e2e/electricity-increase-queue.spec.ts",
+          "sha256": "176bcb6111323baca03b66e71cd124d23f0147577056e8b18407606b439a7f0e"
+        },
+        {
+          "path": "apps/web/e2e/electricity-price-adjustment-history.spec.ts",
+          "sha256": "60cfcd404df62caae028c4fc8bea0b8fc6848b4248e4e6e0657abb93cbc590ae"
+        },
+        {
+          "path": "apps/web/e2e/electricity-settings-forms.spec.ts",
+          "sha256": "e107c7d15d6c67f9e96107023389cadf9fe7ba8598f05e27ebae94851c12bd2d"
+        },
+        {
+          "path": "apps/web/e2e/electricity-simple-journey.spec.ts",
+          "sha256": "18fc1dfb6d3d93abfbe92b7f880d5a84925abf4f05e0172dc62c6c86935ed742"
+        },
+        {
+          "path": "apps/web/e2e/electricity-staff-queue-tables.spec.ts",
+          "sha256": "9a03348a9cc257fdd21a44e65c669ffe40aeb96cee463b3e0db9381336897de6"
+        },
+        {
+          "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
+          "sha256": "bdf2a13774eedd2dbd8726c05f0d0cb7edd5301960ac2ca6f49509e17f74688f"
+        },
+        {
+          "path": "apps/web/e2e/failed-jobs.spec.ts",
+          "sha256": "3ec4e81cda38cd1cb2bc28ba5c3d1f57db29fe5579bec375a74a22b08438992b"
+        },
+        {
+          "path": "apps/web/e2e/failed-notifications.spec.ts",
+          "sha256": "f958980c3dcbaf02cc621fe150abb4602e7fdce039a93287ed7938d956f9309b"
+        },
+        {
+          "path": "apps/web/e2e/finance-timestamps.spec.ts",
+          "sha256": "1ef9c97d5f95078588cd44546352831b6ef11a9ae48ca126b573dcad407bda98"
+        },
+        {
+          "path": "apps/web/e2e/geography-tables.spec.ts",
+          "sha256": "2d06a7a7487584dd3410825c3d5dead51d55df4f4b2eb7e2c36aae8ec7da44d5"
+        },
+        {
+          "path": "apps/web/e2e/gift-code-tables.spec.ts",
+          "sha256": "d6dde9c73e36667edf9495e19a9df86087a785d3e205af83fa9336c79f254b99"
+        },
+        {
+          "path": "apps/web/e2e/invoice-customer-deadline.spec.ts",
+          "sha256": "51991607b1159f4ecfcaa88531e8268b36582041ce86747bcb74b9493e242ea6"
+        },
+        {
+          "path": "apps/web/e2e/knowledge-policy-tables.spec.ts",
+          "sha256": "9a9b34ef69e18914b484f50a37ea89e3f558d18f6213286d0be27b6617ec16e8"
+        },
+        {
+          "path": "apps/web/e2e/login-native-forms.spec.ts",
+          "sha256": "50623f9c7d28b4d0e1abeb6213ba457e67c46f8d318aa4e7da80ed133950a1d3"
+        },
+        {
+          "path": "apps/web/e2e/maintenance-forms.spec.ts",
+          "sha256": "d8a3b9c9fa6c493f636969525d72ca95f4bf799e1c8775f6028b4e76e44bfaf7"
+        },
+        {
+          "path": "apps/web/e2e/notification-center-recovery.spec.ts",
+          "sha256": "d3c228d7533b8a7484ef1778693985a6aca7c3c3a49cb4da62cae60c90cba830"
+        },
+        {
+          "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
+          "sha256": "7120dd69988871f50b5d4b0ae5b4a44483da4b10b7c0b5403df5bfabb2444265"
+        },
+        {
+          "path": "apps/web/e2e/notification-template-filters.spec.ts",
+          "sha256": "54de898a1d42dfbda10ab98a2006fb2a679861c3f215fea84c80ad2a6a21962a"
+        },
+        {
+          "path": "apps/web/e2e/onboarding-wizard.spec.ts",
+          "sha256": "431c02a2dca694d5ef0a60a047857aa4da1004e3c4b52e4fe4a8c27a24e8f6d7"
+        },
+        {
+          "path": "apps/web/e2e/order-comment-forms.spec.ts",
+          "sha256": "a8a9cab9bfd3a6ee51d25510a5d9089f2bec757f43ad18731347d94391e94b19"
+        },
+        {
+          "path": "apps/web/e2e/password-recovery-forms.spec.ts",
+          "sha256": "ebe65e57622a7ee6d518698ce7343ad4e00f84d9d5ac5b8363036db33426b600"
+        },
+        {
+          "path": "apps/web/e2e/preference-settings-forms.spec.ts",
+          "sha256": "e66bb98e394f146055a3be4964eebd7cad2cb4845acc08ffbfb24ae501d12a67"
+        },
+        {
+          "path": "apps/web/e2e/product-catalogue-tables.spec.ts",
+          "sha256": "d9c4002b6a96f7815de2166eee15f3e68a5752aab2affa0bc59636e43ea54154"
+        },
+        {
+          "path": "apps/web/e2e/profile-address-forms.spec.ts",
+          "sha256": "6222f02de117547fe681a0a864f52c85ba4eb244df1f9e7611979f6dc28a0d82"
+        },
+        {
+          "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
+          "sha256": "be329894feef39a2b3357e2e97493b9c80d39754b840c5f34f35d897f9487da8"
+        },
+        {
+          "path": "apps/web/e2e/profile-switch.spec.ts",
+          "sha256": "215a0adaf3d8c7d836b106a4d2bfca4104d72c57990441eba78452ee8d2058c1"
+        },
+        {
+          "path": "apps/web/e2e/public-terms-history.spec.ts",
+          "sha256": "45c707bb0213a3e18748419fc33e03b726e1287dae9e1cac731c93499763cd05"
+        },
+        {
+          "path": "apps/web/e2e/reconciliation-tables.spec.ts",
+          "sha256": "a3859dc08b9234f1a7bb02ec4cb1913d647c0e9f36f158c8159df6ddd57821a1"
+        },
+        {
+          "path": "apps/web/e2e/registration-native-forms.spec.ts",
+          "sha256": "f44a4a92fc1cfeeb475fdce0295c307fac2528519ee252b1065b5223014cb65f"
+        },
+        {
+          "path": "apps/web/e2e/role-permission-recovery.spec.ts",
+          "sha256": "b7fe603c10081f5b3710a1a9e860a529b9bfcee9296946f21555587556b6e111"
+        },
+        {
+          "path": "apps/web/e2e/route-presentation.ts",
+          "sha256": "8dabd22073f252b16a56ee02f016f674116680e7d1e529ac3edf817d4f9f119d"
+        },
+        {
+          "path": "apps/web/e2e/saving-fulfillment-history.spec.ts",
+          "sha256": "ffd1e2b87967d99a0c3105808c6900a850866961180c71d1c5e8219ca1e670a1"
+        },
+        {
+          "path": "apps/web/e2e/saving-journey.spec.ts",
+          "sha256": "b246f13d28a579eb2b963f5054963a44b25231c59deaaadc9f726fb013c026aa"
+        },
+        {
+          "path": "apps/web/e2e/security-settings-forms.spec.ts",
+          "sha256": "b1c6320d0a68c5c183fcf6643065f70d1be124ea0e219590f0b0fe140b1d35fa"
+        },
+        {
+          "path": "apps/web/e2e/service-settings-forms.spec.ts",
+          "sha256": "9a5eb7083b27e67f170d71f25feb9cd944c4abcc25eb826405dff18746141fdc"
+        },
+        {
+          "path": "apps/web/e2e/solar-construction-progress.spec.ts",
+          "sha256": "4a95d913b53e07345de8f24a25bdcbfeddd87c90c7653bc28b5e2ed13c5f5b5d"
+        },
+        {
+          "path": "apps/web/e2e/solar-journey.spec.ts",
+          "sha256": "9231a7c558f5da5f550169d646859c84f3009a6fca4da1c18e50b1db670b13e5"
+        },
+        {
+          "path": "apps/web/e2e/solar-postal-forms.spec.ts",
+          "sha256": "7b38e02b15313ffa365db8dbc397359aa8e62a8e54edd6014de4ff74fb7c6fce"
+        },
+        {
+          "path": "apps/web/e2e/solar-staff-list-recovery.spec.ts",
+          "sha256": "37b3e9e58c960db3e07e5f3e37e7414b7db67292fb0f4c02f88a77951b68b8df"
+        },
+        {
+          "path": "apps/web/e2e/staff-activation.spec.ts",
+          "sha256": "6d8b2cfb6027d67c24f8f06ac36ec2c6f3e8ae554d751285cc8d0876f1bbb2a0"
+        },
+        {
+          "path": "apps/web/e2e/staff-directory-tables.spec.ts",
+          "sha256": "5b8d0cbfc2cfdf9199178efd7fd30967c84227e71e8ce7cea7f44bdae82d3393"
+        },
+        {
+          "path": "apps/web/e2e/staff-operation-tables.spec.ts",
+          "sha256": "9b2bbca8cf4640b0d2d2072bab38d1596a7b6c4d13690a74d691e6ec238af039"
+        },
+        {
+          "path": "apps/web/e2e/staff-team-forms.spec.ts",
+          "sha256": "631362508c7cc5fd021827a3267590850b2446aebe62830b4b093d0920ec46ed"
+        },
+        {
+          "path": "apps/web/e2e/staff-wallet-ledger.spec.ts",
+          "sha256": "4d9f1edb9ba1d12ea80ad8400e1cce1bab552f33df250e47ef8a2af004919041"
+        },
+        {
+          "path": "apps/web/e2e/storage-policy-forms.spec.ts",
+          "sha256": "fbf7236507119aa8be55567e23fbf079ce6f5afb0341463409afa83b70dc7089"
+        },
+        {
+          "path": "apps/web/e2e/team-form-validation.spec.ts",
+          "sha256": "0e0234c39a1cad3c6feb917b4a7fad5f5168d1344cb5d0393c93eeb9baceee03"
+        },
+        {
+          "path": "apps/web/e2e/theme-components.spec.ts",
+          "sha256": "f1bd9442fabf40b108a45ad9b1e8bd5c4358c4acce1472bd88000fdacb9a738d"
+        },
+        {
+          "path": "apps/web/e2e/ticket-forms.spec.ts",
+          "sha256": "d1e3474df5d78abb6f554520e6311a274f14380f9a0799f759aa52ab574dc43b"
+        },
+        {
+          "path": "apps/web/e2e/timezone-settings.spec.ts",
+          "sha256": "5f80180cb122e31c71340f3bb70399a029df625763345c7c63048d6553a5c755"
+        },
+        {
+          "path": "apps/web/e2e/username-pair.spec.ts",
+          "sha256": "3585379bf4bc55c369e077e761863dc0c8199e9fd6de7684f6a2cc20588469be"
+        },
+        {
+          "path": "apps/web/e2e/vat-forms.spec.ts",
+          "sha256": "be7ebbb67779b13fd059e99cc638119d76f84c577179d2f974fb4c016b34d5b6"
+        },
+        {
+          "path": "apps/web/e2e/verification-settings-forms.spec.ts",
+          "sha256": "aa13d31ae5c41c7a30cff3a7f0cfaf7fce43231a35fe2281580cf7e14e65ed6d"
+        },
+        {
+          "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
+          "sha256": "2fcdbd4e2601c41322c5a8edad99d8ea0bb1c484645645fdc0ed32f0bf41a8e8"
+        },
+        {
+          "path": "apps/web/e2e/workspace-media-routes.spec.ts",
+          "sha256": "281aeb4f4bf429353f97b28ae96ef4b039ba0b2ee75e392e95c196875ace6a7a"
+        },
+        {
+          "path": "apps/web/src/components/HighContrastPreference.tsx",
+          "sha256": "b5ce7e8eb121c86ca0920a6fc5357cf699659a1abdd7a005b43949c0dd794cb1"
+        },
+        {
+          "path": "apps/web/src/providers/BrandThemeProvider.tsx",
+          "sha256": "8e2cb24dbab8576970cd9d4622e5f930ab9a4ca71ff222ddacb0b9da051a7abc"
+        },
+        {
+          "path": "apps/web/src/routeTree.gen.ts",
+          "sha256": "c1524622f37c4dc26c3fc7f5746d3a9a2d962c8397db0ab77e61efa0422be658"
+        },
+        {
+          "path": "docs/design/accessibility.md",
+          "sha256": "5b63bbb558f1b49f135609fb1ce3b19d0504ac1a1dc4772c75580d2087a1f1f6"
+        },
+        {
+          "path": "packages/ui/src/styles.css",
+          "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "aab5a31e236ab70a7c588c676e3a0a2cf0bb8250e8d96ecdc469c9be175dcfa2"
+        }
+      ],
+      "checks": [
+        "Current production assets and unchanged route fixtures yielded 1072 text scans across 93 of 93 populated route patterns. Diagnostic overlays and the build bytes are recorded. 0 distinct automated violations were reported and 4338 incomplete observations still require resolution.",
+        "Sixteen Chromium and Mobile Safari cases passed for shared controls, the persisted high-contrast switch and notification pagination. All 480 measured component cues met 3:1. Notification page numbers met 4.5:1 in 16 samples.",
+        "Disk-write failures passed in isolated capture reruns. The original notification touch assertion passed and the dialog probe separately checks the page before opening and the modal while it is open. Text measurements remain scoped to each fixture and available palette."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-contrast",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-contrast/proof.json",
+      "source_scope_proof_sha256": "48728f021e9d1771e15a797ce6a03118460f27982aeae5577410a505b1e619ab",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-current-contrast/renewed-bindings.json",
+      "release_disposition": "Measured contrast on current populated route fixtures and renewed the shared control checks. Remaining contrast evidence and other v0.5.0 gates stay open."
     }
   },
   "historical_improvements": [
