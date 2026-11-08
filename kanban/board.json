@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-08T21:31:25+00:00",
-  "source_commit": "7c7f961cd7f61c739b687378ec9901e7533be1b6",
+  "updated": "2026-11-08T21:43:57+00:00",
+  "source_commit": "b772be8df0656e579faea57adc649d712b8ccb31",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -29900,7 +29900,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "89fa4c61dacf2a5fa0e2c6a0eb8eb28b2fd78874df083ea0d7f75d0d743316b6"
+              "sha256": "bf9dd526986e776fd0bd784a10b96ae5572816c065bafa4eee6a5f0b55f8e264"
             },
             {
               "path": "apps/web/e2e/profile-display-name.spec.ts",
@@ -30661,7 +30661,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "89fa4c61dacf2a5fa0e2c6a0eb8eb28b2fd78874df083ea0d7f75d0d743316b6"
+              "sha256": "bf9dd526986e776fd0bd784a10b96ae5572816c065bafa4eee6a5f0b55f8e264"
             },
             {
               "path": "apps/web/e2e/verification-banner.spec.ts",
@@ -31283,7 +31283,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "89fa4c61dacf2a5fa0e2c6a0eb8eb28b2fd78874df083ea0d7f75d0d743316b6"
+              "sha256": "bf9dd526986e776fd0bd784a10b96ae5572816c065bafa4eee6a5f0b55f8e264"
             },
             {
               "path": "apps/web/src/routes/onboarding/index.tsx",
@@ -31520,7 +31520,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "89fa4c61dacf2a5fa0e2c6a0eb8eb28b2fd78874df083ea0d7f75d0d743316b6"
+              "sha256": "bf9dd526986e776fd0bd784a10b96ae5572816c065bafa4eee6a5f0b55f8e264"
             },
             {
               "path": "apps/web/src/lib/profile-digits.ts",
@@ -31787,7 +31787,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "89fa4c61dacf2a5fa0e2c6a0eb8eb28b2fd78874df083ea0d7f75d0d743316b6"
+              "sha256": "bf9dd526986e776fd0bd784a10b96ae5572816c065bafa4eee6a5f0b55f8e264"
             },
             {
               "path": "apps/web/src/hooks/useOnboardingDraft.ts",
@@ -32013,11 +32013,11 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "89fa4c61dacf2a5fa0e2c6a0eb8eb28b2fd78874df083ea0d7f75d0d743316b6"
+              "sha256": "bf9dd526986e776fd0bd784a10b96ae5572816c065bafa4eee6a5f0b55f8e264"
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "2130e3e96f1b1b8851b6b0d1e8ab48b5250a8a2826cc15c71ebc32c97834511b"
+              "sha256": "7ce2b00882b8089983f527060a1affbeefc263fc90d68765cbaa277a8b7977f5"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -32233,7 +32233,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "89fa4c61dacf2a5fa0e2c6a0eb8eb28b2fd78874df083ea0d7f75d0d743316b6"
+              "sha256": "bf9dd526986e776fd0bd784a10b96ae5572816c065bafa4eee6a5f0b55f8e264"
             },
             {
               "path": "apps/web/e2e/profile-display-name.spec.ts",
@@ -32556,7 +32556,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "89fa4c61dacf2a5fa0e2c6a0eb8eb28b2fd78874df083ea0d7f75d0d743316b6"
+              "sha256": "bf9dd526986e776fd0bd784a10b96ae5572816c065bafa4eee6a5f0b55f8e264"
             },
             {
               "path": "apps/web/e2e/profile-display-name.spec.ts",
@@ -497047,7 +497047,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "d511f2c903d6edeee7268611ae2a051840cbcd0ccefc2e5bcca051cd1ed20e2e"
+              "sha256": "7e5f8c0f4168fd3c9b94e2e3c383ce515d0ceee60c34bf39f9455903fb903d7a"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -499009,7 +499009,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "2130e3e96f1b1b8851b6b0d1e8ab48b5250a8a2826cc15c71ebc32c97834511b"
+              "sha256": "7ce2b00882b8089983f527060a1affbeefc263fc90d68765cbaa277a8b7977f5"
             },
             {
               "path": "apps/web/src/test/branding-settings-fixtures.ts",
@@ -499553,7 +499553,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "2130e3e96f1b1b8851b6b0d1e8ab48b5250a8a2826cc15c71ebc32c97834511b"
+              "sha256": "7ce2b00882b8089983f527060a1affbeefc263fc90d68765cbaa277a8b7977f5"
             },
             {
               "path": "apps/web/src/test/branding-settings-fixtures.ts",
@@ -500097,7 +500097,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "2130e3e96f1b1b8851b6b0d1e8ab48b5250a8a2826cc15c71ebc32c97834511b"
+              "sha256": "7ce2b00882b8089983f527060a1affbeefc263fc90d68765cbaa277a8b7977f5"
             },
             {
               "path": "apps/web/src/test/branding-settings-fixtures.ts",
@@ -500641,7 +500641,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "2130e3e96f1b1b8851b6b0d1e8ab48b5250a8a2826cc15c71ebc32c97834511b"
+              "sha256": "7ce2b00882b8089983f527060a1affbeefc263fc90d68765cbaa277a8b7977f5"
             },
             {
               "path": "apps/web/src/test/branding-settings-fixtures.ts",
@@ -501185,7 +501185,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "2130e3e96f1b1b8851b6b0d1e8ab48b5250a8a2826cc15c71ebc32c97834511b"
+              "sha256": "7ce2b00882b8089983f527060a1affbeefc263fc90d68765cbaa277a8b7977f5"
             },
             {
               "path": "apps/web/src/test/branding-settings-fixtures.ts",
@@ -501729,7 +501729,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "2130e3e96f1b1b8851b6b0d1e8ab48b5250a8a2826cc15c71ebc32c97834511b"
+              "sha256": "7ce2b00882b8089983f527060a1affbeefc263fc90d68765cbaa277a8b7977f5"
             },
             {
               "path": "apps/web/src/test/branding-settings-fixtures.ts",
@@ -502273,7 +502273,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "2130e3e96f1b1b8851b6b0d1e8ab48b5250a8a2826cc15c71ebc32c97834511b"
+              "sha256": "7ce2b00882b8089983f527060a1affbeefc263fc90d68765cbaa277a8b7977f5"
             },
             {
               "path": "apps/web/src/test/branding-settings-fixtures.ts",
@@ -502817,7 +502817,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "2130e3e96f1b1b8851b6b0d1e8ab48b5250a8a2826cc15c71ebc32c97834511b"
+              "sha256": "7ce2b00882b8089983f527060a1affbeefc263fc90d68765cbaa277a8b7977f5"
             },
             {
               "path": "apps/web/src/test/branding-settings-fixtures.ts",
@@ -503361,7 +503361,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "2130e3e96f1b1b8851b6b0d1e8ab48b5250a8a2826cc15c71ebc32c97834511b"
+              "sha256": "7ce2b00882b8089983f527060a1affbeefc263fc90d68765cbaa277a8b7977f5"
             },
             {
               "path": "apps/web/src/test/branding-settings-fixtures.ts",
@@ -503905,7 +503905,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "2130e3e96f1b1b8851b6b0d1e8ab48b5250a8a2826cc15c71ebc32c97834511b"
+              "sha256": "7ce2b00882b8089983f527060a1affbeefc263fc90d68765cbaa277a8b7977f5"
             },
             {
               "path": "apps/web/src/test/branding-settings-fixtures.ts",
@@ -504449,7 +504449,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "2130e3e96f1b1b8851b6b0d1e8ab48b5250a8a2826cc15c71ebc32c97834511b"
+              "sha256": "7ce2b00882b8089983f527060a1affbeefc263fc90d68765cbaa277a8b7977f5"
             },
             {
               "path": "apps/web/src/test/branding-settings-fixtures.ts",
@@ -504993,7 +504993,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "2130e3e96f1b1b8851b6b0d1e8ab48b5250a8a2826cc15c71ebc32c97834511b"
+              "sha256": "7ce2b00882b8089983f527060a1affbeefc263fc90d68765cbaa277a8b7977f5"
             },
             {
               "path": "apps/web/src/test/branding-settings-fixtures.ts",
@@ -505537,7 +505537,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "2130e3e96f1b1b8851b6b0d1e8ab48b5250a8a2826cc15c71ebc32c97834511b"
+              "sha256": "7ce2b00882b8089983f527060a1affbeefc263fc90d68765cbaa277a8b7977f5"
             },
             {
               "path": "apps/web/src/test/branding-settings-fixtures.ts",
@@ -506081,7 +506081,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "2130e3e96f1b1b8851b6b0d1e8ab48b5250a8a2826cc15c71ebc32c97834511b"
+              "sha256": "7ce2b00882b8089983f527060a1affbeefc263fc90d68765cbaa277a8b7977f5"
             },
             {
               "path": "apps/web/src/test/branding-settings-fixtures.ts",
@@ -512380,7 +512380,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "2130e3e96f1b1b8851b6b0d1e8ab48b5250a8a2826cc15c71ebc32c97834511b"
+              "sha256": "7ce2b00882b8089983f527060a1affbeefc263fc90d68765cbaa277a8b7977f5"
             },
             {
               "path": "apps/web/src/routes/onboarding/index.tsx",
@@ -517089,7 +517089,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "89fa4c61dacf2a5fa0e2c6a0eb8eb28b2fd78874df083ea0d7f75d0d743316b6"
+              "sha256": "bf9dd526986e776fd0bd784a10b96ae5572816c065bafa4eee6a5f0b55f8e264"
             },
             {
               "path": "apps/web/e2e/order-comment-form-fixture.ts",
@@ -517245,7 +517245,7 @@
             },
             {
               "path": "apps/web/e2e/staff-activation.spec.ts",
-              "sha256": "cbfc3bee2f9cbe2d0009ac515d603f547590227091d2ffcd2ce6ef3aa08d64d6"
+              "sha256": "c881726e765dcd47a816de22f2fec68d6da9fc0a529f3b0554a683cef63e9dcd"
             },
             {
               "path": "apps/web/e2e/staff-business-list-recovery.spec.ts",
@@ -518073,7 +518073,7 @@
             },
             {
               "path": "apps/web/src/routes/activate.tsx",
-              "sha256": "9c3658b7298d46356ee01563d424444ca8fbc4e45d3a0b07a24b447e2894425a"
+              "sha256": "ad5c0aef9f65103d4f54f6af819b8af64601c4c9e506e4fe8eeb32b73ab78222"
             },
             {
               "path": "apps/web/src/routes/forgot-password.tsx",
@@ -518105,7 +518105,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "d511f2c903d6edeee7268611ae2a051840cbcd0ccefc2e5bcca051cd1ed20e2e"
+              "sha256": "7e5f8c0f4168fd3c9b94e2e3c383ce515d0ceee60c34bf39f9455903fb903d7a"
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
@@ -519213,7 +519213,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "d511f2c903d6edeee7268611ae2a051840cbcd0ccefc2e5bcca051cd1ed20e2e"
+              "sha256": "7e5f8c0f4168fd3c9b94e2e3c383ce515d0ceee60c34bf39f9455903fb903d7a"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -520433,7 +520433,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "89fa4c61dacf2a5fa0e2c6a0eb8eb28b2fd78874df083ea0d7f75d0d743316b6"
+              "sha256": "bf9dd526986e776fd0bd784a10b96ae5572816c065bafa4eee6a5f0b55f8e264"
             },
             {
               "path": "apps/web/e2e/order-comment-forms.spec.ts",
@@ -520633,7 +520633,7 @@
             },
             {
               "path": "apps/web/src/routes/activate.tsx",
-              "sha256": "9c3658b7298d46356ee01563d424444ca8fbc4e45d3a0b07a24b447e2894425a"
+              "sha256": "ad5c0aef9f65103d4f54f6af819b8af64601c4c9e506e4fe8eeb32b73ab78222"
             },
             {
               "path": "apps/web/src/routes/forgot-password.tsx",
@@ -520653,7 +520653,7 @@
             },
             {
               "path": "apps/web/src/routes/password-recovery-native-forms.test.tsx",
-              "sha256": "cc34f5787df33fe0e6bd0b36fa5b0a8001a22b7e6f09a711b4657de273d72385"
+              "sha256": "19f19a613034652f992a97a17ac43947c5633311ed9634928dbbc8e91c8c614b"
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
@@ -521261,7 +521261,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "89fa4c61dacf2a5fa0e2c6a0eb8eb28b2fd78874df083ea0d7f75d0d743316b6"
+              "sha256": "bf9dd526986e776fd0bd784a10b96ae5572816c065bafa4eee6a5f0b55f8e264"
             },
             {
               "path": "apps/web/e2e/order-comment-forms.spec.ts",
@@ -521461,7 +521461,7 @@
             },
             {
               "path": "apps/web/src/routes/activate.tsx",
-              "sha256": "9c3658b7298d46356ee01563d424444ca8fbc4e45d3a0b07a24b447e2894425a"
+              "sha256": "ad5c0aef9f65103d4f54f6af819b8af64601c4c9e506e4fe8eeb32b73ab78222"
             },
             {
               "path": "apps/web/src/routes/forgot-password.tsx",
@@ -521481,7 +521481,7 @@
             },
             {
               "path": "apps/web/src/routes/password-recovery-native-forms.test.tsx",
-              "sha256": "cc34f5787df33fe0e6bd0b36fa5b0a8001a22b7e6f09a711b4657de273d72385"
+              "sha256": "19f19a613034652f992a97a17ac43947c5633311ed9634928dbbc8e91c8c614b"
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
@@ -522589,7 +522589,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "89fa4c61dacf2a5fa0e2c6a0eb8eb28b2fd78874df083ea0d7f75d0d743316b6"
+              "sha256": "bf9dd526986e776fd0bd784a10b96ae5572816c065bafa4eee6a5f0b55f8e264"
             },
             {
               "path": "apps/web/e2e/order-comment-forms.spec.ts",
@@ -522789,7 +522789,7 @@
             },
             {
               "path": "apps/web/src/routes/activate.tsx",
-              "sha256": "9c3658b7298d46356ee01563d424444ca8fbc4e45d3a0b07a24b447e2894425a"
+              "sha256": "ad5c0aef9f65103d4f54f6af819b8af64601c4c9e506e4fe8eeb32b73ab78222"
             },
             {
               "path": "apps/web/src/routes/forgot-password.tsx",
@@ -522809,7 +522809,7 @@
             },
             {
               "path": "apps/web/src/routes/password-recovery-native-forms.test.tsx",
-              "sha256": "cc34f5787df33fe0e6bd0b36fa5b0a8001a22b7e6f09a711b4657de273d72385"
+              "sha256": "19f19a613034652f992a97a17ac43947c5633311ed9634928dbbc8e91c8c614b"
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
@@ -567503,7 +567503,7 @@
             },
             {
               "path": "apps/web/src/routes/password-recovery-native-forms.test.tsx",
-              "sha256": "cc34f5787df33fe0e6bd0b36fa5b0a8001a22b7e6f09a711b4657de273d72385"
+              "sha256": "19f19a613034652f992a97a17ac43947c5633311ed9634928dbbc8e91c8c614b"
             },
             {
               "path": "apps/web/src/routes/registration-native-forms.test.tsx",
@@ -567523,7 +567523,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "d511f2c903d6edeee7268611ae2a051840cbcd0ccefc2e5bcca051cd1ed20e2e"
+              "sha256": "7e5f8c0f4168fd3c9b94e2e3c383ce515d0ceee60c34bf39f9455903fb903d7a"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -569398,7 +569398,7 @@
             },
             {
               "path": "apps/web/src/routes/password-recovery-native-forms.test.tsx",
-              "sha256": "cc34f5787df33fe0e6bd0b36fa5b0a8001a22b7e6f09a711b4657de273d72385"
+              "sha256": "19f19a613034652f992a97a17ac43947c5633311ed9634928dbbc8e91c8c614b"
             },
             {
               "path": "apps/web/src/routes/registration-native-forms.test.tsx",
@@ -569418,7 +569418,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "d511f2c903d6edeee7268611ae2a051840cbcd0ccefc2e5bcca051cd1ed20e2e"
+              "sha256": "7e5f8c0f4168fd3c9b94e2e3c383ce515d0ceee60c34bf39f9455903fb903d7a"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -570702,7 +570702,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "89fa4c61dacf2a5fa0e2c6a0eb8eb28b2fd78874df083ea0d7f75d0d743316b6"
+              "sha256": "bf9dd526986e776fd0bd784a10b96ae5572816c065bafa4eee6a5f0b55f8e264"
             },
             {
               "path": "apps/web/e2e/online-payment-return.spec.ts",
@@ -572982,7 +572982,7 @@
             },
             {
               "path": "apps/web/src/routes/activate.tsx",
-              "sha256": "9c3658b7298d46356ee01563d424444ca8fbc4e45d3a0b07a24b447e2894425a"
+              "sha256": "ad5c0aef9f65103d4f54f6af819b8af64601c4c9e506e4fe8eeb32b73ab78222"
             },
             {
               "path": "apps/web/src/routes/forgot-password.tsx",
@@ -573002,7 +573002,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "2130e3e96f1b1b8851b6b0d1e8ab48b5250a8a2826cc15c71ebc32c97834511b"
+              "sha256": "7ce2b00882b8089983f527060a1affbeefc263fc90d68765cbaa277a8b7977f5"
             },
             {
               "path": "apps/web/src/routes/onboarding/index.tsx",
@@ -573018,7 +573018,7 @@
             },
             {
               "path": "apps/web/src/routes/password-recovery-native-forms.test.tsx",
-              "sha256": "cc34f5787df33fe0e6bd0b36fa5b0a8001a22b7e6f09a711b4657de273d72385"
+              "sha256": "19f19a613034652f992a97a17ac43947c5633311ed9634928dbbc8e91c8c614b"
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
@@ -573070,7 +573070,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "d511f2c903d6edeee7268611ae2a051840cbcd0ccefc2e5bcca051cd1ed20e2e"
+              "sha256": "7e5f8c0f4168fd3c9b94e2e3c383ce515d0ceee60c34bf39f9455903fb903d7a"
             },
             {
               "path": "scripts/check-changed-coverage.py",
@@ -574180,7 +574180,7 @@
             },
             {
               "path": "apps/web/src/routes/password-recovery-native-forms.test.tsx",
-              "sha256": "cc34f5787df33fe0e6bd0b36fa5b0a8001a22b7e6f09a711b4657de273d72385"
+              "sha256": "19f19a613034652f992a97a17ac43947c5633311ed9634928dbbc8e91c8c614b"
             },
             {
               "path": "apps/web/src/routes/registration-native-forms.test.tsx",
@@ -574200,7 +574200,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "d511f2c903d6edeee7268611ae2a051840cbcd0ccefc2e5bcca051cd1ed20e2e"
+              "sha256": "7e5f8c0f4168fd3c9b94e2e3c383ce515d0ceee60c34bf39f9455903fb903d7a"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -576075,7 +576075,7 @@
             },
             {
               "path": "apps/web/src/routes/password-recovery-native-forms.test.tsx",
-              "sha256": "cc34f5787df33fe0e6bd0b36fa5b0a8001a22b7e6f09a711b4657de273d72385"
+              "sha256": "19f19a613034652f992a97a17ac43947c5633311ed9634928dbbc8e91c8c614b"
             },
             {
               "path": "apps/web/src/routes/registration-native-forms.test.tsx",
@@ -576095,7 +576095,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "d511f2c903d6edeee7268611ae2a051840cbcd0ccefc2e5bcca051cd1ed20e2e"
+              "sha256": "7e5f8c0f4168fd3c9b94e2e3c383ce515d0ceee60c34bf39f9455903fb903d7a"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -577970,7 +577970,7 @@
             },
             {
               "path": "apps/web/src/routes/password-recovery-native-forms.test.tsx",
-              "sha256": "cc34f5787df33fe0e6bd0b36fa5b0a8001a22b7e6f09a711b4657de273d72385"
+              "sha256": "19f19a613034652f992a97a17ac43947c5633311ed9634928dbbc8e91c8c614b"
             },
             {
               "path": "apps/web/src/routes/registration-native-forms.test.tsx",
@@ -577990,7 +577990,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "d511f2c903d6edeee7268611ae2a051840cbcd0ccefc2e5bcca051cd1ed20e2e"
+              "sha256": "7e5f8c0f4168fd3c9b94e2e3c383ce515d0ceee60c34bf39f9455903fb903d7a"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -579865,7 +579865,7 @@
             },
             {
               "path": "apps/web/src/routes/password-recovery-native-forms.test.tsx",
-              "sha256": "cc34f5787df33fe0e6bd0b36fa5b0a8001a22b7e6f09a711b4657de273d72385"
+              "sha256": "19f19a613034652f992a97a17ac43947c5633311ed9634928dbbc8e91c8c614b"
             },
             {
               "path": "apps/web/src/routes/registration-native-forms.test.tsx",
@@ -579885,7 +579885,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "d511f2c903d6edeee7268611ae2a051840cbcd0ccefc2e5bcca051cd1ed20e2e"
+              "sha256": "7e5f8c0f4168fd3c9b94e2e3c383ce515d0ceee60c34bf39f9455903fb903d7a"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -581760,7 +581760,7 @@
             },
             {
               "path": "apps/web/src/routes/password-recovery-native-forms.test.tsx",
-              "sha256": "cc34f5787df33fe0e6bd0b36fa5b0a8001a22b7e6f09a711b4657de273d72385"
+              "sha256": "19f19a613034652f992a97a17ac43947c5633311ed9634928dbbc8e91c8c614b"
             },
             {
               "path": "apps/web/src/routes/registration-native-forms.test.tsx",
@@ -581780,7 +581780,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "d511f2c903d6edeee7268611ae2a051840cbcd0ccefc2e5bcca051cd1ed20e2e"
+              "sha256": "7e5f8c0f4168fd3c9b94e2e3c383ce515d0ceee60c34bf39f9455903fb903d7a"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -583655,7 +583655,7 @@
             },
             {
               "path": "apps/web/src/routes/password-recovery-native-forms.test.tsx",
-              "sha256": "cc34f5787df33fe0e6bd0b36fa5b0a8001a22b7e6f09a711b4657de273d72385"
+              "sha256": "19f19a613034652f992a97a17ac43947c5633311ed9634928dbbc8e91c8c614b"
             },
             {
               "path": "apps/web/src/routes/registration-native-forms.test.tsx",
@@ -583675,7 +583675,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "d511f2c903d6edeee7268611ae2a051840cbcd0ccefc2e5bcca051cd1ed20e2e"
+              "sha256": "7e5f8c0f4168fd3c9b94e2e3c383ce515d0ceee60c34bf39f9455903fb903d7a"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -585550,7 +585550,7 @@
             },
             {
               "path": "apps/web/src/routes/password-recovery-native-forms.test.tsx",
-              "sha256": "cc34f5787df33fe0e6bd0b36fa5b0a8001a22b7e6f09a711b4657de273d72385"
+              "sha256": "19f19a613034652f992a97a17ac43947c5633311ed9634928dbbc8e91c8c614b"
             },
             {
               "path": "apps/web/src/routes/registration-native-forms.test.tsx",
@@ -585570,7 +585570,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "d511f2c903d6edeee7268611ae2a051840cbcd0ccefc2e5bcca051cd1ed20e2e"
+              "sha256": "7e5f8c0f4168fd3c9b94e2e3c383ce515d0ceee60c34bf39f9455903fb903d7a"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -587445,7 +587445,7 @@
             },
             {
               "path": "apps/web/src/routes/password-recovery-native-forms.test.tsx",
-              "sha256": "cc34f5787df33fe0e6bd0b36fa5b0a8001a22b7e6f09a711b4657de273d72385"
+              "sha256": "19f19a613034652f992a97a17ac43947c5633311ed9634928dbbc8e91c8c614b"
             },
             {
               "path": "apps/web/src/routes/registration-native-forms.test.tsx",
@@ -587465,7 +587465,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "d511f2c903d6edeee7268611ae2a051840cbcd0ccefc2e5bcca051cd1ed20e2e"
+              "sha256": "7e5f8c0f4168fd3c9b94e2e3c383ce515d0ceee60c34bf39f9455903fb903d7a"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -589340,7 +589340,7 @@
             },
             {
               "path": "apps/web/src/routes/password-recovery-native-forms.test.tsx",
-              "sha256": "cc34f5787df33fe0e6bd0b36fa5b0a8001a22b7e6f09a711b4657de273d72385"
+              "sha256": "19f19a613034652f992a97a17ac43947c5633311ed9634928dbbc8e91c8c614b"
             },
             {
               "path": "apps/web/src/routes/registration-native-forms.test.tsx",
@@ -589360,7 +589360,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "d511f2c903d6edeee7268611ae2a051840cbcd0ccefc2e5bcca051cd1ed20e2e"
+              "sha256": "7e5f8c0f4168fd3c9b94e2e3c383ce515d0ceee60c34bf39f9455903fb903d7a"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -591235,7 +591235,7 @@
             },
             {
               "path": "apps/web/src/routes/password-recovery-native-forms.test.tsx",
-              "sha256": "cc34f5787df33fe0e6bd0b36fa5b0a8001a22b7e6f09a711b4657de273d72385"
+              "sha256": "19f19a613034652f992a97a17ac43947c5633311ed9634928dbbc8e91c8c614b"
             },
             {
               "path": "apps/web/src/routes/registration-native-forms.test.tsx",
@@ -591255,7 +591255,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "d511f2c903d6edeee7268611ae2a051840cbcd0ccefc2e5bcca051cd1ed20e2e"
+              "sha256": "7e5f8c0f4168fd3c9b94e2e3c383ce515d0ceee60c34bf39f9455903fb903d7a"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -593130,7 +593130,7 @@
             },
             {
               "path": "apps/web/src/routes/password-recovery-native-forms.test.tsx",
-              "sha256": "cc34f5787df33fe0e6bd0b36fa5b0a8001a22b7e6f09a711b4657de273d72385"
+              "sha256": "19f19a613034652f992a97a17ac43947c5633311ed9634928dbbc8e91c8c614b"
             },
             {
               "path": "apps/web/src/routes/registration-native-forms.test.tsx",
@@ -593150,7 +593150,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "d511f2c903d6edeee7268611ae2a051840cbcd0ccefc2e5bcca051cd1ed20e2e"
+              "sha256": "7e5f8c0f4168fd3c9b94e2e3c383ce515d0ceee60c34bf39f9455903fb903d7a"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -594414,7 +594414,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "d511f2c903d6edeee7268611ae2a051840cbcd0ccefc2e5bcca051cd1ed20e2e"
+              "sha256": "7e5f8c0f4168fd3c9b94e2e3c383ce515d0ceee60c34bf39f9455903fb903d7a"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -595765,7 +595765,7 @@
             },
             {
               "path": "apps/web/src/routes/password-recovery-native-forms.test.tsx",
-              "sha256": "cc34f5787df33fe0e6bd0b36fa5b0a8001a22b7e6f09a711b4657de273d72385"
+              "sha256": "19f19a613034652f992a97a17ac43947c5633311ed9634928dbbc8e91c8c614b"
             },
             {
               "path": "apps/web/src/routes/registration-native-forms.test.tsx",
@@ -595785,7 +595785,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "d511f2c903d6edeee7268611ae2a051840cbcd0ccefc2e5bcca051cd1ed20e2e"
+              "sha256": "7e5f8c0f4168fd3c9b94e2e3c383ce515d0ceee60c34bf39f9455903fb903d7a"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -597660,7 +597660,7 @@
             },
             {
               "path": "apps/web/src/routes/password-recovery-native-forms.test.tsx",
-              "sha256": "cc34f5787df33fe0e6bd0b36fa5b0a8001a22b7e6f09a711b4657de273d72385"
+              "sha256": "19f19a613034652f992a97a17ac43947c5633311ed9634928dbbc8e91c8c614b"
             },
             {
               "path": "apps/web/src/routes/registration-native-forms.test.tsx",
@@ -597680,7 +597680,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "d511f2c903d6edeee7268611ae2a051840cbcd0ccefc2e5bcca051cd1ed20e2e"
+              "sha256": "7e5f8c0f4168fd3c9b94e2e3c383ce515d0ceee60c34bf39f9455903fb903d7a"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -598484,7 +598484,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Branding read recovery and the named customer settings, staff policy and dashboard cases are reconciled. Finish matching the remaining original route and widget conditions against current source and evidence, including auth/setup terminal views and independently loaded operational lists."
+        "Activation and setup terminal behavior and named operational queue cases now have current evidence. Complete the route-by-route binding of remaining original conditional requirements, including public support, customer guide, and independently loaded wallet and invoice detail panels."
       ],
       "owner": null,
       "depends_on": [],
@@ -598598,7 +598598,8 @@
           "release-0.5-carried-route-evidence",
           "release-0.5-invoice-receipt-detail-retry",
           "release-0.5-customer-service-detail-states",
-          "release-0.5-settings-pane-read-states"
+          "release-0.5-settings-pane-read-states",
+          "release-0.5-auth-terminal-recovery"
         ],
         "current_acceptance": null
       }
@@ -611569,7 +611570,7 @@
             },
             {
               "path": "apps/web/e2e/staff-activation.spec.ts",
-              "sha256": "cbfc3bee2f9cbe2d0009ac515d603f547590227091d2ffcd2ce6ef3aa08d64d6"
+              "sha256": "c881726e765dcd47a816de22f2fec68d6da9fc0a529f3b0554a683cef63e9dcd"
             },
             {
               "path": "apps/web/e2e/tos-acceptance-receipt.spec.ts",
@@ -611749,7 +611750,7 @@
             },
             {
               "path": "apps/web/src/routes/activate.tsx",
-              "sha256": "9c3658b7298d46356ee01563d424444ca8fbc4e45d3a0b07a24b447e2894425a"
+              "sha256": "ad5c0aef9f65103d4f54f6af819b8af64601c4c9e506e4fe8eeb32b73ab78222"
             },
             {
               "path": "apps/web/src/routes/forgot-password.tsx",
@@ -611833,7 +611834,7 @@
             },
             {
               "path": "packages/i18n/src/password-recovery-forms.ts",
-              "sha256": "6709358738239c819b2b7dc4a7962e3352edb3306d79e4d3ffcc33d76cb48497"
+              "sha256": "30fc82591427111bde36ef4f94162dbdc439c9a4039511f2649fd149edb411ef"
             },
             {
               "path": "packages/i18n/src/password-strength-feedback.ts",
@@ -612396,7 +612397,7 @@
             },
             {
               "path": "apps/web/e2e/staff-activation.spec.ts",
-              "sha256": "cbfc3bee2f9cbe2d0009ac515d603f547590227091d2ffcd2ce6ef3aa08d64d6"
+              "sha256": "c881726e765dcd47a816de22f2fec68d6da9fc0a529f3b0554a683cef63e9dcd"
             },
             {
               "path": "apps/web/e2e/tos-acceptance-receipt.spec.ts",
@@ -612576,7 +612577,7 @@
             },
             {
               "path": "apps/web/src/routes/activate.tsx",
-              "sha256": "9c3658b7298d46356ee01563d424444ca8fbc4e45d3a0b07a24b447e2894425a"
+              "sha256": "ad5c0aef9f65103d4f54f6af819b8af64601c4c9e506e4fe8eeb32b73ab78222"
             },
             {
               "path": "apps/web/src/routes/forgot-password.tsx",
@@ -612660,7 +612661,7 @@
             },
             {
               "path": "packages/i18n/src/password-recovery-forms.ts",
-              "sha256": "6709358738239c819b2b7dc4a7962e3352edb3306d79e4d3ffcc33d76cb48497"
+              "sha256": "30fc82591427111bde36ef4f94162dbdc439c9a4039511f2649fd149edb411ef"
             },
             {
               "path": "packages/i18n/src/password-strength-feedback.ts",
@@ -613223,7 +613224,7 @@
             },
             {
               "path": "apps/web/e2e/staff-activation.spec.ts",
-              "sha256": "cbfc3bee2f9cbe2d0009ac515d603f547590227091d2ffcd2ce6ef3aa08d64d6"
+              "sha256": "c881726e765dcd47a816de22f2fec68d6da9fc0a529f3b0554a683cef63e9dcd"
             },
             {
               "path": "apps/web/e2e/tos-acceptance-receipt.spec.ts",
@@ -613403,7 +613404,7 @@
             },
             {
               "path": "apps/web/src/routes/activate.tsx",
-              "sha256": "9c3658b7298d46356ee01563d424444ca8fbc4e45d3a0b07a24b447e2894425a"
+              "sha256": "ad5c0aef9f65103d4f54f6af819b8af64601c4c9e506e4fe8eeb32b73ab78222"
             },
             {
               "path": "apps/web/src/routes/forgot-password.tsx",
@@ -613487,7 +613488,7 @@
             },
             {
               "path": "packages/i18n/src/password-recovery-forms.ts",
-              "sha256": "6709358738239c819b2b7dc4a7962e3352edb3306d79e4d3ffcc33d76cb48497"
+              "sha256": "30fc82591427111bde36ef4f94162dbdc439c9a4039511f2649fd149edb411ef"
             },
             {
               "path": "packages/i18n/src/password-strength-feedback.ts",
@@ -614050,7 +614051,7 @@
             },
             {
               "path": "apps/web/e2e/staff-activation.spec.ts",
-              "sha256": "cbfc3bee2f9cbe2d0009ac515d603f547590227091d2ffcd2ce6ef3aa08d64d6"
+              "sha256": "c881726e765dcd47a816de22f2fec68d6da9fc0a529f3b0554a683cef63e9dcd"
             },
             {
               "path": "apps/web/e2e/tos-acceptance-receipt.spec.ts",
@@ -614230,7 +614231,7 @@
             },
             {
               "path": "apps/web/src/routes/activate.tsx",
-              "sha256": "9c3658b7298d46356ee01563d424444ca8fbc4e45d3a0b07a24b447e2894425a"
+              "sha256": "ad5c0aef9f65103d4f54f6af819b8af64601c4c9e506e4fe8eeb32b73ab78222"
             },
             {
               "path": "apps/web/src/routes/forgot-password.tsx",
@@ -614314,7 +614315,7 @@
             },
             {
               "path": "packages/i18n/src/password-recovery-forms.ts",
-              "sha256": "6709358738239c819b2b7dc4a7962e3352edb3306d79e4d3ffcc33d76cb48497"
+              "sha256": "30fc82591427111bde36ef4f94162dbdc439c9a4039511f2649fd149edb411ef"
             },
             {
               "path": "packages/i18n/src/password-strength-feedback.ts",
@@ -614877,7 +614878,7 @@
             },
             {
               "path": "apps/web/e2e/staff-activation.spec.ts",
-              "sha256": "cbfc3bee2f9cbe2d0009ac515d603f547590227091d2ffcd2ce6ef3aa08d64d6"
+              "sha256": "c881726e765dcd47a816de22f2fec68d6da9fc0a529f3b0554a683cef63e9dcd"
             },
             {
               "path": "apps/web/e2e/tos-acceptance-receipt.spec.ts",
@@ -615057,7 +615058,7 @@
             },
             {
               "path": "apps/web/src/routes/activate.tsx",
-              "sha256": "9c3658b7298d46356ee01563d424444ca8fbc4e45d3a0b07a24b447e2894425a"
+              "sha256": "ad5c0aef9f65103d4f54f6af819b8af64601c4c9e506e4fe8eeb32b73ab78222"
             },
             {
               "path": "apps/web/src/routes/forgot-password.tsx",
@@ -615141,7 +615142,7 @@
             },
             {
               "path": "packages/i18n/src/password-recovery-forms.ts",
-              "sha256": "6709358738239c819b2b7dc4a7962e3352edb3306d79e4d3ffcc33d76cb48497"
+              "sha256": "30fc82591427111bde36ef4f94162dbdc439c9a4039511f2649fd149edb411ef"
             },
             {
               "path": "packages/i18n/src/password-strength-feedback.ts",
@@ -627686,7 +627687,7 @@
             },
             {
               "path": "apps/web/e2e/staff-activation.spec.ts",
-              "sha256": "cbfc3bee2f9cbe2d0009ac515d603f547590227091d2ffcd2ce6ef3aa08d64d6"
+              "sha256": "c881726e765dcd47a816de22f2fec68d6da9fc0a529f3b0554a683cef63e9dcd"
             },
             {
               "path": "apps/web/e2e/tos-acceptance-receipt.spec.ts",
@@ -627866,7 +627867,7 @@
             },
             {
               "path": "apps/web/src/routes/activate.tsx",
-              "sha256": "9c3658b7298d46356ee01563d424444ca8fbc4e45d3a0b07a24b447e2894425a"
+              "sha256": "ad5c0aef9f65103d4f54f6af819b8af64601c4c9e506e4fe8eeb32b73ab78222"
             },
             {
               "path": "apps/web/src/routes/forgot-password.tsx",
@@ -627950,7 +627951,7 @@
             },
             {
               "path": "packages/i18n/src/password-recovery-forms.ts",
-              "sha256": "6709358738239c819b2b7dc4a7962e3352edb3306d79e4d3ffcc33d76cb48497"
+              "sha256": "30fc82591427111bde36ef4f94162dbdc439c9a4039511f2649fd149edb411ef"
             },
             {
               "path": "packages/i18n/src/password-strength-feedback.ts",
@@ -628513,7 +628514,7 @@
             },
             {
               "path": "apps/web/e2e/staff-activation.spec.ts",
-              "sha256": "cbfc3bee2f9cbe2d0009ac515d603f547590227091d2ffcd2ce6ef3aa08d64d6"
+              "sha256": "c881726e765dcd47a816de22f2fec68d6da9fc0a529f3b0554a683cef63e9dcd"
             },
             {
               "path": "apps/web/e2e/tos-acceptance-receipt.spec.ts",
@@ -628693,7 +628694,7 @@
             },
             {
               "path": "apps/web/src/routes/activate.tsx",
-              "sha256": "9c3658b7298d46356ee01563d424444ca8fbc4e45d3a0b07a24b447e2894425a"
+              "sha256": "ad5c0aef9f65103d4f54f6af819b8af64601c4c9e506e4fe8eeb32b73ab78222"
             },
             {
               "path": "apps/web/src/routes/forgot-password.tsx",
@@ -628777,7 +628778,7 @@
             },
             {
               "path": "packages/i18n/src/password-recovery-forms.ts",
-              "sha256": "6709358738239c819b2b7dc4a7962e3352edb3306d79e4d3ffcc33d76cb48497"
+              "sha256": "30fc82591427111bde36ef4f94162dbdc439c9a4039511f2649fd149edb411ef"
             },
             {
               "path": "packages/i18n/src/password-strength-feedback.ts",
@@ -629340,7 +629341,7 @@
             },
             {
               "path": "apps/web/e2e/staff-activation.spec.ts",
-              "sha256": "cbfc3bee2f9cbe2d0009ac515d603f547590227091d2ffcd2ce6ef3aa08d64d6"
+              "sha256": "c881726e765dcd47a816de22f2fec68d6da9fc0a529f3b0554a683cef63e9dcd"
             },
             {
               "path": "apps/web/e2e/tos-acceptance-receipt.spec.ts",
@@ -629520,7 +629521,7 @@
             },
             {
               "path": "apps/web/src/routes/activate.tsx",
-              "sha256": "9c3658b7298d46356ee01563d424444ca8fbc4e45d3a0b07a24b447e2894425a"
+              "sha256": "ad5c0aef9f65103d4f54f6af819b8af64601c4c9e506e4fe8eeb32b73ab78222"
             },
             {
               "path": "apps/web/src/routes/forgot-password.tsx",
@@ -629604,7 +629605,7 @@
             },
             {
               "path": "packages/i18n/src/password-recovery-forms.ts",
-              "sha256": "6709358738239c819b2b7dc4a7962e3352edb3306d79e4d3ffcc33d76cb48497"
+              "sha256": "30fc82591427111bde36ef4f94162dbdc439c9a4039511f2649fd149edb411ef"
             },
             {
               "path": "packages/i18n/src/password-strength-feedback.ts",
@@ -630167,7 +630168,7 @@
             },
             {
               "path": "apps/web/e2e/staff-activation.spec.ts",
-              "sha256": "cbfc3bee2f9cbe2d0009ac515d603f547590227091d2ffcd2ce6ef3aa08d64d6"
+              "sha256": "c881726e765dcd47a816de22f2fec68d6da9fc0a529f3b0554a683cef63e9dcd"
             },
             {
               "path": "apps/web/e2e/tos-acceptance-receipt.spec.ts",
@@ -630347,7 +630348,7 @@
             },
             {
               "path": "apps/web/src/routes/activate.tsx",
-              "sha256": "9c3658b7298d46356ee01563d424444ca8fbc4e45d3a0b07a24b447e2894425a"
+              "sha256": "ad5c0aef9f65103d4f54f6af819b8af64601c4c9e506e4fe8eeb32b73ab78222"
             },
             {
               "path": "apps/web/src/routes/forgot-password.tsx",
@@ -630431,7 +630432,7 @@
             },
             {
               "path": "packages/i18n/src/password-recovery-forms.ts",
-              "sha256": "6709358738239c819b2b7dc4a7962e3352edb3306d79e4d3ffcc33d76cb48497"
+              "sha256": "30fc82591427111bde36ef4f94162dbdc439c9a4039511f2649fd149edb411ef"
             },
             {
               "path": "packages/i18n/src/password-strength-feedback.ts",
@@ -630994,7 +630995,7 @@
             },
             {
               "path": "apps/web/e2e/staff-activation.spec.ts",
-              "sha256": "cbfc3bee2f9cbe2d0009ac515d603f547590227091d2ffcd2ce6ef3aa08d64d6"
+              "sha256": "c881726e765dcd47a816de22f2fec68d6da9fc0a529f3b0554a683cef63e9dcd"
             },
             {
               "path": "apps/web/e2e/tos-acceptance-receipt.spec.ts",
@@ -631174,7 +631175,7 @@
             },
             {
               "path": "apps/web/src/routes/activate.tsx",
-              "sha256": "9c3658b7298d46356ee01563d424444ca8fbc4e45d3a0b07a24b447e2894425a"
+              "sha256": "ad5c0aef9f65103d4f54f6af819b8af64601c4c9e506e4fe8eeb32b73ab78222"
             },
             {
               "path": "apps/web/src/routes/forgot-password.tsx",
@@ -631258,7 +631259,7 @@
             },
             {
               "path": "packages/i18n/src/password-recovery-forms.ts",
-              "sha256": "6709358738239c819b2b7dc4a7962e3352edb3306d79e4d3ffcc33d76cb48497"
+              "sha256": "30fc82591427111bde36ef4f94162dbdc439c9a4039511f2649fd149edb411ef"
             },
             {
               "path": "packages/i18n/src/password-strength-feedback.ts",
@@ -631821,7 +631822,7 @@
             },
             {
               "path": "apps/web/e2e/staff-activation.spec.ts",
-              "sha256": "cbfc3bee2f9cbe2d0009ac515d603f547590227091d2ffcd2ce6ef3aa08d64d6"
+              "sha256": "c881726e765dcd47a816de22f2fec68d6da9fc0a529f3b0554a683cef63e9dcd"
             },
             {
               "path": "apps/web/e2e/tos-acceptance-receipt.spec.ts",
@@ -632001,7 +632002,7 @@
             },
             {
               "path": "apps/web/src/routes/activate.tsx",
-              "sha256": "9c3658b7298d46356ee01563d424444ca8fbc4e45d3a0b07a24b447e2894425a"
+              "sha256": "ad5c0aef9f65103d4f54f6af819b8af64601c4c9e506e4fe8eeb32b73ab78222"
             },
             {
               "path": "apps/web/src/routes/forgot-password.tsx",
@@ -632085,7 +632086,7 @@
             },
             {
               "path": "packages/i18n/src/password-recovery-forms.ts",
-              "sha256": "6709358738239c819b2b7dc4a7962e3352edb3306d79e4d3ffcc33d76cb48497"
+              "sha256": "30fc82591427111bde36ef4f94162dbdc439c9a4039511f2649fd149edb411ef"
             },
             {
               "path": "packages/i18n/src/password-strength-feedback.ts",
@@ -632648,7 +632649,7 @@
             },
             {
               "path": "apps/web/e2e/staff-activation.spec.ts",
-              "sha256": "cbfc3bee2f9cbe2d0009ac515d603f547590227091d2ffcd2ce6ef3aa08d64d6"
+              "sha256": "c881726e765dcd47a816de22f2fec68d6da9fc0a529f3b0554a683cef63e9dcd"
             },
             {
               "path": "apps/web/e2e/tos-acceptance-receipt.spec.ts",
@@ -632828,7 +632829,7 @@
             },
             {
               "path": "apps/web/src/routes/activate.tsx",
-              "sha256": "9c3658b7298d46356ee01563d424444ca8fbc4e45d3a0b07a24b447e2894425a"
+              "sha256": "ad5c0aef9f65103d4f54f6af819b8af64601c4c9e506e4fe8eeb32b73ab78222"
             },
             {
               "path": "apps/web/src/routes/forgot-password.tsx",
@@ -632912,7 +632913,7 @@
             },
             {
               "path": "packages/i18n/src/password-recovery-forms.ts",
-              "sha256": "6709358738239c819b2b7dc4a7962e3352edb3306d79e4d3ffcc33d76cb48497"
+              "sha256": "30fc82591427111bde36ef4f94162dbdc439c9a4039511f2649fd149edb411ef"
             },
             {
               "path": "packages/i18n/src/password-strength-feedback.ts",
@@ -633475,7 +633476,7 @@
             },
             {
               "path": "apps/web/e2e/staff-activation.spec.ts",
-              "sha256": "cbfc3bee2f9cbe2d0009ac515d603f547590227091d2ffcd2ce6ef3aa08d64d6"
+              "sha256": "c881726e765dcd47a816de22f2fec68d6da9fc0a529f3b0554a683cef63e9dcd"
             },
             {
               "path": "apps/web/e2e/tos-acceptance-receipt.spec.ts",
@@ -633655,7 +633656,7 @@
             },
             {
               "path": "apps/web/src/routes/activate.tsx",
-              "sha256": "9c3658b7298d46356ee01563d424444ca8fbc4e45d3a0b07a24b447e2894425a"
+              "sha256": "ad5c0aef9f65103d4f54f6af819b8af64601c4c9e506e4fe8eeb32b73ab78222"
             },
             {
               "path": "apps/web/src/routes/forgot-password.tsx",
@@ -633739,7 +633740,7 @@
             },
             {
               "path": "packages/i18n/src/password-recovery-forms.ts",
-              "sha256": "6709358738239c819b2b7dc4a7962e3352edb3306d79e4d3ffcc33d76cb48497"
+              "sha256": "30fc82591427111bde36ef4f94162dbdc439c9a4039511f2649fd149edb411ef"
             },
             {
               "path": "packages/i18n/src/password-strength-feedback.ts",
@@ -634302,7 +634303,7 @@
             },
             {
               "path": "apps/web/e2e/staff-activation.spec.ts",
-              "sha256": "cbfc3bee2f9cbe2d0009ac515d603f547590227091d2ffcd2ce6ef3aa08d64d6"
+              "sha256": "c881726e765dcd47a816de22f2fec68d6da9fc0a529f3b0554a683cef63e9dcd"
             },
             {
               "path": "apps/web/e2e/tos-acceptance-receipt.spec.ts",
@@ -634482,7 +634483,7 @@
             },
             {
               "path": "apps/web/src/routes/activate.tsx",
-              "sha256": "9c3658b7298d46356ee01563d424444ca8fbc4e45d3a0b07a24b447e2894425a"
+              "sha256": "ad5c0aef9f65103d4f54f6af819b8af64601c4c9e506e4fe8eeb32b73ab78222"
             },
             {
               "path": "apps/web/src/routes/forgot-password.tsx",
@@ -634566,7 +634567,7 @@
             },
             {
               "path": "packages/i18n/src/password-recovery-forms.ts",
-              "sha256": "6709358738239c819b2b7dc4a7962e3352edb3306d79e4d3ffcc33d76cb48497"
+              "sha256": "30fc82591427111bde36ef4f94162dbdc439c9a4039511f2649fd149edb411ef"
             },
             {
               "path": "packages/i18n/src/password-strength-feedback.ts",
@@ -635129,7 +635130,7 @@
             },
             {
               "path": "apps/web/e2e/staff-activation.spec.ts",
-              "sha256": "cbfc3bee2f9cbe2d0009ac515d603f547590227091d2ffcd2ce6ef3aa08d64d6"
+              "sha256": "c881726e765dcd47a816de22f2fec68d6da9fc0a529f3b0554a683cef63e9dcd"
             },
             {
               "path": "apps/web/e2e/tos-acceptance-receipt.spec.ts",
@@ -635309,7 +635310,7 @@
             },
             {
               "path": "apps/web/src/routes/activate.tsx",
-              "sha256": "9c3658b7298d46356ee01563d424444ca8fbc4e45d3a0b07a24b447e2894425a"
+              "sha256": "ad5c0aef9f65103d4f54f6af819b8af64601c4c9e506e4fe8eeb32b73ab78222"
             },
             {
               "path": "apps/web/src/routes/forgot-password.tsx",
@@ -635393,7 +635394,7 @@
             },
             {
               "path": "packages/i18n/src/password-recovery-forms.ts",
-              "sha256": "6709358738239c819b2b7dc4a7962e3352edb3306d79e4d3ffcc33d76cb48497"
+              "sha256": "30fc82591427111bde36ef4f94162dbdc439c9a4039511f2649fd149edb411ef"
             },
             {
               "path": "packages/i18n/src/password-strength-feedback.ts",
@@ -635956,7 +635957,7 @@
             },
             {
               "path": "apps/web/e2e/staff-activation.spec.ts",
-              "sha256": "cbfc3bee2f9cbe2d0009ac515d603f547590227091d2ffcd2ce6ef3aa08d64d6"
+              "sha256": "c881726e765dcd47a816de22f2fec68d6da9fc0a529f3b0554a683cef63e9dcd"
             },
             {
               "path": "apps/web/e2e/tos-acceptance-receipt.spec.ts",
@@ -636136,7 +636137,7 @@
             },
             {
               "path": "apps/web/src/routes/activate.tsx",
-              "sha256": "9c3658b7298d46356ee01563d424444ca8fbc4e45d3a0b07a24b447e2894425a"
+              "sha256": "ad5c0aef9f65103d4f54f6af819b8af64601c4c9e506e4fe8eeb32b73ab78222"
             },
             {
               "path": "apps/web/src/routes/forgot-password.tsx",
@@ -636220,7 +636221,7 @@
             },
             {
               "path": "packages/i18n/src/password-recovery-forms.ts",
-              "sha256": "6709358738239c819b2b7dc4a7962e3352edb3306d79e4d3ffcc33d76cb48497"
+              "sha256": "30fc82591427111bde36ef4f94162dbdc439c9a4039511f2649fd149edb411ef"
             },
             {
               "path": "packages/i18n/src/password-strength-feedback.ts",
@@ -636783,7 +636784,7 @@
             },
             {
               "path": "apps/web/e2e/staff-activation.spec.ts",
-              "sha256": "cbfc3bee2f9cbe2d0009ac515d603f547590227091d2ffcd2ce6ef3aa08d64d6"
+              "sha256": "c881726e765dcd47a816de22f2fec68d6da9fc0a529f3b0554a683cef63e9dcd"
             },
             {
               "path": "apps/web/e2e/tos-acceptance-receipt.spec.ts",
@@ -636963,7 +636964,7 @@
             },
             {
               "path": "apps/web/src/routes/activate.tsx",
-              "sha256": "9c3658b7298d46356ee01563d424444ca8fbc4e45d3a0b07a24b447e2894425a"
+              "sha256": "ad5c0aef9f65103d4f54f6af819b8af64601c4c9e506e4fe8eeb32b73ab78222"
             },
             {
               "path": "apps/web/src/routes/forgot-password.tsx",
@@ -637047,7 +637048,7 @@
             },
             {
               "path": "packages/i18n/src/password-recovery-forms.ts",
-              "sha256": "6709358738239c819b2b7dc4a7962e3352edb3306d79e4d3ffcc33d76cb48497"
+              "sha256": "30fc82591427111bde36ef4f94162dbdc439c9a4039511f2649fd149edb411ef"
             },
             {
               "path": "packages/i18n/src/password-strength-feedback.ts",
@@ -670363,7 +670364,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "89fa4c61dacf2a5fa0e2c6a0eb8eb28b2fd78874df083ea0d7f75d0d743316b6"
+              "sha256": "bf9dd526986e776fd0bd784a10b96ae5572816c065bafa4eee6a5f0b55f8e264"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -670563,7 +670564,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "2130e3e96f1b1b8851b6b0d1e8ab48b5250a8a2826cc15c71ebc32c97834511b"
+              "sha256": "7ce2b00882b8089983f527060a1affbeefc263fc90d68765cbaa277a8b7977f5"
             },
             {
               "path": "apps/web/src/routes/onboarding/index.tsx",
@@ -671031,7 +671032,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "89fa4c61dacf2a5fa0e2c6a0eb8eb28b2fd78874df083ea0d7f75d0d743316b6"
+              "sha256": "bf9dd526986e776fd0bd784a10b96ae5572816c065bafa4eee6a5f0b55f8e264"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -671231,7 +671232,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "2130e3e96f1b1b8851b6b0d1e8ab48b5250a8a2826cc15c71ebc32c97834511b"
+              "sha256": "7ce2b00882b8089983f527060a1affbeefc263fc90d68765cbaa277a8b7977f5"
             },
             {
               "path": "apps/web/src/routes/onboarding/index.tsx",
@@ -671698,7 +671699,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "89fa4c61dacf2a5fa0e2c6a0eb8eb28b2fd78874df083ea0d7f75d0d743316b6"
+              "sha256": "bf9dd526986e776fd0bd784a10b96ae5572816c065bafa4eee6a5f0b55f8e264"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -671898,7 +671899,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "2130e3e96f1b1b8851b6b0d1e8ab48b5250a8a2826cc15c71ebc32c97834511b"
+              "sha256": "7ce2b00882b8089983f527060a1affbeefc263fc90d68765cbaa277a8b7977f5"
             },
             {
               "path": "apps/web/src/routes/onboarding/index.tsx",
@@ -672367,7 +672368,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "89fa4c61dacf2a5fa0e2c6a0eb8eb28b2fd78874df083ea0d7f75d0d743316b6"
+              "sha256": "bf9dd526986e776fd0bd784a10b96ae5572816c065bafa4eee6a5f0b55f8e264"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -672567,7 +672568,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "2130e3e96f1b1b8851b6b0d1e8ab48b5250a8a2826cc15c71ebc32c97834511b"
+              "sha256": "7ce2b00882b8089983f527060a1affbeefc263fc90d68765cbaa277a8b7977f5"
             },
             {
               "path": "apps/web/src/routes/onboarding/index.tsx",
@@ -673036,7 +673037,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "89fa4c61dacf2a5fa0e2c6a0eb8eb28b2fd78874df083ea0d7f75d0d743316b6"
+              "sha256": "bf9dd526986e776fd0bd784a10b96ae5572816c065bafa4eee6a5f0b55f8e264"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -673236,7 +673237,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "2130e3e96f1b1b8851b6b0d1e8ab48b5250a8a2826cc15c71ebc32c97834511b"
+              "sha256": "7ce2b00882b8089983f527060a1affbeefc263fc90d68765cbaa277a8b7977f5"
             },
             {
               "path": "apps/web/src/routes/onboarding/index.tsx",
@@ -673702,7 +673703,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "89fa4c61dacf2a5fa0e2c6a0eb8eb28b2fd78874df083ea0d7f75d0d743316b6"
+              "sha256": "bf9dd526986e776fd0bd784a10b96ae5572816c065bafa4eee6a5f0b55f8e264"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -673902,7 +673903,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "2130e3e96f1b1b8851b6b0d1e8ab48b5250a8a2826cc15c71ebc32c97834511b"
+              "sha256": "7ce2b00882b8089983f527060a1affbeefc263fc90d68765cbaa277a8b7977f5"
             },
             {
               "path": "apps/web/src/routes/onboarding/index.tsx",
@@ -674368,7 +674369,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "89fa4c61dacf2a5fa0e2c6a0eb8eb28b2fd78874df083ea0d7f75d0d743316b6"
+              "sha256": "bf9dd526986e776fd0bd784a10b96ae5572816c065bafa4eee6a5f0b55f8e264"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -674568,7 +674569,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "2130e3e96f1b1b8851b6b0d1e8ab48b5250a8a2826cc15c71ebc32c97834511b"
+              "sha256": "7ce2b00882b8089983f527060a1affbeefc263fc90d68765cbaa277a8b7977f5"
             },
             {
               "path": "apps/web/src/routes/onboarding/index.tsx",
@@ -675035,7 +675036,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "89fa4c61dacf2a5fa0e2c6a0eb8eb28b2fd78874df083ea0d7f75d0d743316b6"
+              "sha256": "bf9dd526986e776fd0bd784a10b96ae5572816c065bafa4eee6a5f0b55f8e264"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -675235,7 +675236,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "2130e3e96f1b1b8851b6b0d1e8ab48b5250a8a2826cc15c71ebc32c97834511b"
+              "sha256": "7ce2b00882b8089983f527060a1affbeefc263fc90d68765cbaa277a8b7977f5"
             },
             {
               "path": "apps/web/src/routes/onboarding/index.tsx",
@@ -675701,7 +675702,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "89fa4c61dacf2a5fa0e2c6a0eb8eb28b2fd78874df083ea0d7f75d0d743316b6"
+              "sha256": "bf9dd526986e776fd0bd784a10b96ae5572816c065bafa4eee6a5f0b55f8e264"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -675901,7 +675902,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "2130e3e96f1b1b8851b6b0d1e8ab48b5250a8a2826cc15c71ebc32c97834511b"
+              "sha256": "7ce2b00882b8089983f527060a1affbeefc263fc90d68765cbaa277a8b7977f5"
             },
             {
               "path": "apps/web/src/routes/onboarding/index.tsx",
@@ -676368,7 +676369,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "89fa4c61dacf2a5fa0e2c6a0eb8eb28b2fd78874df083ea0d7f75d0d743316b6"
+              "sha256": "bf9dd526986e776fd0bd784a10b96ae5572816c065bafa4eee6a5f0b55f8e264"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -676568,7 +676569,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "2130e3e96f1b1b8851b6b0d1e8ab48b5250a8a2826cc15c71ebc32c97834511b"
+              "sha256": "7ce2b00882b8089983f527060a1affbeefc263fc90d68765cbaa277a8b7977f5"
             },
             {
               "path": "apps/web/src/routes/onboarding/index.tsx",
@@ -697487,7 +697488,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "89fa4c61dacf2a5fa0e2c6a0eb8eb28b2fd78874df083ea0d7f75d0d743316b6"
+              "sha256": "bf9dd526986e776fd0bd784a10b96ae5572816c065bafa4eee6a5f0b55f8e264"
             },
             {
               "path": "apps/web/e2e/team-catalogue-recovery.spec.ts",
@@ -697683,7 +697684,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "2130e3e96f1b1b8851b6b0d1e8ab48b5250a8a2826cc15c71ebc32c97834511b"
+              "sha256": "7ce2b00882b8089983f527060a1affbeefc263fc90d68765cbaa277a8b7977f5"
             },
             {
               "path": "apps/web/src/routes/onboarding/index.tsx",
@@ -698118,7 +698119,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "89fa4c61dacf2a5fa0e2c6a0eb8eb28b2fd78874df083ea0d7f75d0d743316b6"
+              "sha256": "bf9dd526986e776fd0bd784a10b96ae5572816c065bafa4eee6a5f0b55f8e264"
             },
             {
               "path": "apps/web/e2e/team-catalogue-recovery.spec.ts",
@@ -698314,7 +698315,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "2130e3e96f1b1b8851b6b0d1e8ab48b5250a8a2826cc15c71ebc32c97834511b"
+              "sha256": "7ce2b00882b8089983f527060a1affbeefc263fc90d68765cbaa277a8b7977f5"
             },
             {
               "path": "apps/web/src/routes/onboarding/index.tsx",
@@ -698749,7 +698750,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "89fa4c61dacf2a5fa0e2c6a0eb8eb28b2fd78874df083ea0d7f75d0d743316b6"
+              "sha256": "bf9dd526986e776fd0bd784a10b96ae5572816c065bafa4eee6a5f0b55f8e264"
             },
             {
               "path": "apps/web/e2e/team-catalogue-recovery.spec.ts",
@@ -698945,7 +698946,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "2130e3e96f1b1b8851b6b0d1e8ab48b5250a8a2826cc15c71ebc32c97834511b"
+              "sha256": "7ce2b00882b8089983f527060a1affbeefc263fc90d68765cbaa277a8b7977f5"
             },
             {
               "path": "apps/web/src/routes/onboarding/index.tsx",
@@ -699381,7 +699382,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "89fa4c61dacf2a5fa0e2c6a0eb8eb28b2fd78874df083ea0d7f75d0d743316b6"
+              "sha256": "bf9dd526986e776fd0bd784a10b96ae5572816c065bafa4eee6a5f0b55f8e264"
             },
             {
               "path": "apps/web/e2e/team-catalogue-recovery.spec.ts",
@@ -699577,7 +699578,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "2130e3e96f1b1b8851b6b0d1e8ab48b5250a8a2826cc15c71ebc32c97834511b"
+              "sha256": "7ce2b00882b8089983f527060a1affbeefc263fc90d68765cbaa277a8b7977f5"
             },
             {
               "path": "apps/web/src/routes/onboarding/index.tsx",
@@ -700012,7 +700013,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "89fa4c61dacf2a5fa0e2c6a0eb8eb28b2fd78874df083ea0d7f75d0d743316b6"
+              "sha256": "bf9dd526986e776fd0bd784a10b96ae5572816c065bafa4eee6a5f0b55f8e264"
             },
             {
               "path": "apps/web/e2e/team-catalogue-recovery.spec.ts",
@@ -700208,7 +700209,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "2130e3e96f1b1b8851b6b0d1e8ab48b5250a8a2826cc15c71ebc32c97834511b"
+              "sha256": "7ce2b00882b8089983f527060a1affbeefc263fc90d68765cbaa277a8b7977f5"
             },
             {
               "path": "apps/web/src/routes/onboarding/index.tsx",
@@ -700643,7 +700644,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "89fa4c61dacf2a5fa0e2c6a0eb8eb28b2fd78874df083ea0d7f75d0d743316b6"
+              "sha256": "bf9dd526986e776fd0bd784a10b96ae5572816c065bafa4eee6a5f0b55f8e264"
             },
             {
               "path": "apps/web/e2e/team-catalogue-recovery.spec.ts",
@@ -700839,7 +700840,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "2130e3e96f1b1b8851b6b0d1e8ab48b5250a8a2826cc15c71ebc32c97834511b"
+              "sha256": "7ce2b00882b8089983f527060a1affbeefc263fc90d68765cbaa277a8b7977f5"
             },
             {
               "path": "apps/web/src/routes/onboarding/index.tsx",
@@ -701274,7 +701275,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "89fa4c61dacf2a5fa0e2c6a0eb8eb28b2fd78874df083ea0d7f75d0d743316b6"
+              "sha256": "bf9dd526986e776fd0bd784a10b96ae5572816c065bafa4eee6a5f0b55f8e264"
             },
             {
               "path": "apps/web/e2e/team-catalogue-recovery.spec.ts",
@@ -701470,7 +701471,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "2130e3e96f1b1b8851b6b0d1e8ab48b5250a8a2826cc15c71ebc32c97834511b"
+              "sha256": "7ce2b00882b8089983f527060a1affbeefc263fc90d68765cbaa277a8b7977f5"
             },
             {
               "path": "apps/web/src/routes/onboarding/index.tsx",
@@ -701906,7 +701907,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "89fa4c61dacf2a5fa0e2c6a0eb8eb28b2fd78874df083ea0d7f75d0d743316b6"
+              "sha256": "bf9dd526986e776fd0bd784a10b96ae5572816c065bafa4eee6a5f0b55f8e264"
             },
             {
               "path": "apps/web/e2e/team-catalogue-recovery.spec.ts",
@@ -702102,7 +702103,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "2130e3e96f1b1b8851b6b0d1e8ab48b5250a8a2826cc15c71ebc32c97834511b"
+              "sha256": "7ce2b00882b8089983f527060a1affbeefc263fc90d68765cbaa277a8b7977f5"
             },
             {
               "path": "apps/web/src/routes/onboarding/index.tsx",
@@ -702537,7 +702538,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "89fa4c61dacf2a5fa0e2c6a0eb8eb28b2fd78874df083ea0d7f75d0d743316b6"
+              "sha256": "bf9dd526986e776fd0bd784a10b96ae5572816c065bafa4eee6a5f0b55f8e264"
             },
             {
               "path": "apps/web/e2e/team-catalogue-recovery.spec.ts",
@@ -702733,7 +702734,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "2130e3e96f1b1b8851b6b0d1e8ab48b5250a8a2826cc15c71ebc32c97834511b"
+              "sha256": "7ce2b00882b8089983f527060a1affbeefc263fc90d68765cbaa277a8b7977f5"
             },
             {
               "path": "apps/web/src/routes/onboarding/index.tsx",
@@ -703168,7 +703169,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "89fa4c61dacf2a5fa0e2c6a0eb8eb28b2fd78874df083ea0d7f75d0d743316b6"
+              "sha256": "bf9dd526986e776fd0bd784a10b96ae5572816c065bafa4eee6a5f0b55f8e264"
             },
             {
               "path": "apps/web/e2e/team-catalogue-recovery.spec.ts",
@@ -703364,7 +703365,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "2130e3e96f1b1b8851b6b0d1e8ab48b5250a8a2826cc15c71ebc32c97834511b"
+              "sha256": "7ce2b00882b8089983f527060a1affbeefc263fc90d68765cbaa277a8b7977f5"
             },
             {
               "path": "apps/web/src/routes/onboarding/index.tsx",
@@ -728245,7 +728246,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Branding read recovery and the named customer settings, staff policy and dashboard cases are reconciled. Finish matching the remaining original route and widget conditions against current source and evidence, including auth/setup terminal views and independently loaded operational lists."
+        "Activation and setup terminal behavior and named operational queue cases now have current evidence. Complete the route-by-route binding of remaining original conditional requirements, including public support, customer guide, and independently loaded wallet and invoice detail panels."
       ],
       "owner": null,
       "depends_on": [],
@@ -728425,7 +728426,8 @@
           "release-0.5-carried-route-evidence",
           "release-0.5-invoice-receipt-detail-retry",
           "release-0.5-customer-service-detail-states",
-          "release-0.5-settings-pane-read-states"
+          "release-0.5-settings-pane-read-states",
+          "release-0.5-auth-terminal-recovery"
         ]
       }
     },
@@ -728509,7 +728511,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "89fa4c61dacf2a5fa0e2c6a0eb8eb28b2fd78874df083ea0d7f75d0d743316b6"
+              "sha256": "bf9dd526986e776fd0bd784a10b96ae5572816c065bafa4eee6a5f0b55f8e264"
             },
             {
               "path": "apps/web/e2e/solar-construction-progress.spec.ts",
@@ -729653,7 +729655,7 @@
             },
             {
               "path": "apps/web/src/routes/activate.tsx",
-              "sha256": "9c3658b7298d46356ee01563d424444ca8fbc4e45d3a0b07a24b447e2894425a"
+              "sha256": "ad5c0aef9f65103d4f54f6af819b8af64601c4c9e506e4fe8eeb32b73ab78222"
             },
             {
               "path": "apps/web/src/routes/admin.tsx",
@@ -729673,7 +729675,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "2130e3e96f1b1b8851b6b0d1e8ab48b5250a8a2826cc15c71ebc32c97834511b"
+              "sha256": "7ce2b00882b8089983f527060a1affbeefc263fc90d68765cbaa277a8b7977f5"
             },
             {
               "path": "apps/web/src/routes/onboarding/index.tsx",
@@ -730351,7 +730353,8 @@
             "The isolated admin preview keeps its request ID after a timeout or pending receipt. The shared chat composer and all 101 budgets passed scoped verification. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-admin-test-chat-deadline/proof.json",
             "Staff invoice receipt recovery passed its critical coverage gate and all 101 bundle budgets. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-receipt-detail-retry/proof.json",
             "The final service detail build passed all 101 existing bundle limits. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-customer-service-detail-states/proof.json",
-            "Final scoped branding and wallet presentation build passed all 101 existing budgets. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-settings-pane-read-states/proof.json"
+            "Final scoped branding and wallet presentation build passed all 101 existing budgets. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-settings-pane-read-states/proof.json",
+            "Final activation recovery passed all 101 budgets and six cold-auth transfer checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-auth-terminal-recovery/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -807286,6 +807289,99 @@
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-settings-pane-read-states/reviewed.patch",
       "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-settings-pane-read-states/renewed-bindings.json",
       "release_disposition": "Verified scoped branding recovery and named policy/dashboard conditions. v0.5.0 remains open."
+    },
+    "release-0.5-auth-terminal-recovery": {
+      "batch": "release-0.5-auth-terminal-recovery",
+      "base_commit": "b772be8df0656e579faea57adc649d712b8ccb31",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/onboarding-wizard.spec.ts",
+          "sha256": "bf9dd526986e776fd0bd784a10b96ae5572816c065bafa4eee6a5f0b55f8e264"
+        },
+        {
+          "path": "apps/web/e2e/preauth-csrf.spec.ts",
+          "sha256": "f2249e4299776a94a78c8354f9562b390a0a49de8142c4913baa69c5a4405dec"
+        },
+        {
+          "path": "apps/web/e2e/staff-activation.spec.ts",
+          "sha256": "c881726e765dcd47a816de22f2fec68d6da9fc0a529f3b0554a683cef63e9dcd"
+        },
+        {
+          "path": "apps/web/src/routes/activate.tsx",
+          "sha256": "ad5c0aef9f65103d4f54f6af819b8af64601c4c9e506e4fe8eeb32b73ab78222"
+        },
+        {
+          "path": "apps/web/src/routes/onboarding/complete.tsx",
+          "sha256": "7ce2b00882b8089983f527060a1affbeefc263fc90d68765cbaa277a8b7977f5"
+        },
+        {
+          "path": "apps/web/src/routes/password-recovery-native-forms.test.tsx",
+          "sha256": "19f19a613034652f992a97a17ac43947c5633311ed9634928dbbc8e91c8c614b"
+        },
+        {
+          "path": "docs/design/notification-recovery.md",
+          "sha256": "7e5f8c0f4168fd3c9b94e2e3c383ce515d0ceee60c34bf39f9455903fb903d7a"
+        },
+        {
+          "path": "packages/i18n/src/password-recovery-forms.ts",
+          "sha256": "30fc82591427111bde36ef4f94162dbdc439c9a4039511f2649fd149edb411ef"
+        },
+        {
+          "path": "apps/web/src/hooks/useOperationalQueue.ts",
+          "sha256": "2d66f00c756ed9d1d68ea3f4394e243d4c12b6125d47446c0c29f30c88770544"
+        },
+        {
+          "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
+          "sha256": "6ee17bc53343bb6646b5468fed440b7c34b49492582d321b23a5b1e4b2580ad7"
+        },
+        {
+          "path": "apps/web/src/pages/AdminFailedNotificationsPage.tsx",
+          "sha256": "a62973132825b7800d32abc470912796421a28adf9ec38d1844c5e15597c8872"
+        },
+        {
+          "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
+          "sha256": "822ee7d64181a10a170cc7c6475b83a90d25c03dc593e454d77b2a6533ae61c0"
+        },
+        {
+          "path": "apps/web/src/pages/TicketsPage.tsx",
+          "sha256": "957cdaefba5bb88d77ef2ec2062ed9ad3a87379a3b34dbd09416629d6b20b98e"
+        },
+        {
+          "path": "apps/web/e2e/operational-queue-recovery.spec.ts",
+          "sha256": "8ee68d7684fb4406a740638a2206a4d0cac3fc6e49e572f085811b9b67c5af3b"
+        },
+        {
+          "path": "apps/web/e2e/decision-queue-query.spec.ts",
+          "sha256": "389ec1455872088797557cd12e6bb3635c48a6a9e6f556045dfda98467602f9d"
+        },
+        {
+          "path": "apps/web/e2e/support-queue-recovery.spec.ts",
+          "sha256": "76b66b9f69f4655ba7cacdd5437eeac51c4e2151190234eed89ba0457cd40586"
+        }
+      ],
+      "checks": [
+        "Staff activation requires HTTP 200 with the exact activated boolean and bounds the CSRF bootstrap, command and response body. A timeout or malformed success retires the form with sign-in guidance. A replacement link clears inputs and fences the previous response.",
+        "Missing or conflicting onboarding completion targets show the setup return action without an API completion or journey request. Scoped timeout recovery for valid targets and confirmed profile selection passed.",
+        "Thirty native Chromium and Mobile Safari cases passed across staff activation, onboarding terminal states and preauth CSRF. The initial four CSRF failures timed out before the login form because the fixtures did not identify an anonymous session. The corrected fixture verifies the original bootstrap and header assertions.",
+        "Twenty-four additional native operational-list cases passed on the final build. The predecessor cases were rerun because emitted modules regrouped. Cases cover failed jobs and notifications, approval URL context and independent customer and staff support recovery.",
+        "Fifty-six web unit tests, two i18n tests and thirteen instrumented Chromium cases passed. The unchanged source gate measured 42/42 changed web lines and 45/55 branches. Typecheck, lint and formatting passed.",
+        "All 101 route and interaction budgets and six browser auth transfer checks passed. The first build exceeded the wallet receipts budget. Moving the activation copy from shared auth strings to the password-flow dictionary brought the final route to 499.88 KB against 500 KB."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-auth-terminal-recovery",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-auth-terminal-recovery/proof.json",
+      "source_scope_proof_sha256": "e8366dad159f21c74fd09a3979cbd40ef488bfa96499f3b67d947eb2822b139c",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-auth-terminal-recovery/reviewed.patch",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-auth-terminal-recovery/renewed-bindings.json",
+      "release_disposition": "Verified activation and setup terminal behavior and scoped operational list recovery. v0.5.0 remains open."
     }
   },
   "historical_improvements": [
@@ -807336,12 +807432,12 @@
       "release-readiness#R-04.01",
       "release-readiness#R-04.02"
     ],
-    "goal": "Reconcile remaining original conditional route and widget requirements, starting with auth/setup terminal states and independently loaded operational lists. GitHub merge enforcement and staging Sentry delivery remain independent gates."
+    "goal": "Bind the remaining original conditional requirements route by route, starting with public support, customer guide, and wallet and invoice detail panels. GitHub merge enforcement and staging Sentry delivery remain independent gates."
   },
   "launch_forecast": {
     "status": "deadline_at_risk_until_v0_5_and_operational_gates_close",
     "next_update_after": "v0.5.0 remaining UI criteria and owner decisions",
-    "method": "v0.4.0 staging and Telegram receipts are verified. v0.5.0 has 93 populated route layouts and further settings, policy and dashboard evidence. Four required criteria remain open and the November 9 sequence remains at risk."
+    "method": "v0.4.0 staging and Telegram receipts are verified. v0.5.0 has populated layouts for 93 routes plus verified activation, setup and operational recovery slices. Four required criteria remain open and the November 9 sequence remains at risk."
   },
   "capabilities": [
     {

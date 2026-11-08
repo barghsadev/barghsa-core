@@ -1577,6 +1577,39 @@ for (const locale of ['fa', 'en'] as const) {
     expect(state.active).toBe(profileId);
   });
 
+  test(`missing or conflicting completion targets return to setup without a write (${locale})`, async ({
+    page,
+  }) => {
+    const state = await fixture(page, locale, 'INDIVIDUAL', individual);
+    const requestPaths: string[] = [];
+    page.on('request', (request) => {
+      const pathname = new URL(request.url()).pathname;
+      if (
+        pathname.startsWith('/api/onboarding/complete/') ||
+        pathname.startsWith('/api/onboarding/journeys/')
+      )
+        requestPaths.push(pathname);
+    });
+    for (const query of ['', `?profileId=${profileId}&journeyId=${journeyId}`]) {
+      await page.goto(`/onboarding/complete${query}`);
+      await expect(page.getByRole('alert')).toContainText(
+        t('onboarding.complete.missingProfile', locale)
+      );
+      await expect(
+        page.getByRole('button', { name: t('onboarding.draft.retry', locale), exact: true })
+      ).toHaveCount(0);
+      await expect(
+        page.getByRole('button', {
+          name: t('onboarding.complete.backToSetup', locale),
+          exact: true,
+        })
+      ).toBeVisible();
+      await expect(page.locator('.animate-confetti-drop')).toHaveCount(0);
+    }
+    expect(requestPaths).toEqual([]);
+    expect(state.completeRequests).toBe(0);
+  });
+
   test(`a stalled profile completion only retries the same profile explicitly (${locale})`, async ({
     page,
   }) => {

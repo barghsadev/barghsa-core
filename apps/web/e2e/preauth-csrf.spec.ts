@@ -1,5 +1,10 @@
 import { loginFormText } from '@barghsa/i18n/login-forms';
 import { test, expect } from './coverage-fixture';
+import { mockPublicAuthCsrf } from './public-auth-fixture';
+
+test.beforeEach(async ({ page }) => {
+  await mockPublicAuthCsrf(page);
+});
 
 test('login retries a stale pre-login token once and uses the replacement header', async ({
   page,

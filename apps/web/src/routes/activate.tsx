@@ -1,8 +1,11 @@
 import { publicAuthFetch } from '../lib/public-auth-fetch.js';
-import '../lib/auth-errors.js';
-import { useEffect, useState, type FormEvent } from 'react';
+import { authErrorCode, rateLimitMessage } from '../lib/auth-errors.js';
+import { authResponseRecord } from '../lib/auth-responses.js';
+import { readWithDeadline } from '../lib/server-query-client.js';
+import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { createFileRoute, Link } from '@tanstack/react-router';
 import { t } from '@barghsa/i18n/auth';
+import { passwordRecoveryText } from '@barghsa/i18n/password-recovery-forms';
 import { Alert, AlertDescription, Button } from '@barghsa/ui';
 import { AuthLayout } from '../components/AuthLayout.js';
 import { PasswordField } from '../components/PasswordField.js';
@@ -15,10 +18,12 @@ function ActivatePage() {
   const [token, setToken] = useState(
     () => new URLSearchParams(window.location.hash.slice(1)).get('token') ?? ''
   );
+  const link = useRef({ token, retired: false });
+  const request = useRef<AbortController | null>(null);
   const [password, setPassword] = useState('');
   const [confirmation, setConfirmation] = useState('');
   const [busy, setBusy] = useState(false);
-  const [complete, setComplete] = useState(false);
+  const [outcome, setOutcome] = useState<'complete' | 'unconfirmed' | null>(null);
   const [error, setError] = useState<string | null>(null);
   const validToken = /^[a-f0-9]{64}$/.test(token);
   const validPassword =
@@ -32,54 +37,77 @@ function ActivatePage() {
     // The email fragment never reaches the HTTP server, and is removed from browser history.
     const receiveLink = () => {
       const incoming = new URLSearchParams(window.location.hash.slice(1)).get('token');
-      if (incoming !== null) {
+      if (incoming !== null && incoming !== link.current.token) {
+        request.current?.abort();
+        request.current = null;
+        link.current = { token: incoming, retired: false };
         setToken(incoming);
-        setComplete(false);
+        setPassword('');
+        setConfirmation('');
+        setBusy(false);
+        setOutcome(null);
         setError(null);
       }
       window.history.replaceState(window.history.state, '', window.location.pathname);
     };
     receiveLink();
     window.addEventListener('hashchange', receiveLink);
-    return () => window.removeEventListener('hashchange', receiveLink);
+    return () => {
+      window.removeEventListener('hashchange', receiveLink);
+      request.current?.abort();
+      request.current = null;
+    };
   }, []);
 
   async function activate(event: FormEvent) {
     event.preventDefault();
-    if (busy || !validToken || !validPassword) return;
+    const owner = link.current;
+    if (request.current || owner.retired || owner.token !== token || !validToken || !validPassword)
+      return;
     if (password !== confirmation) {
       setError(t('auth.resetPassword.mismatch', locale));
       return;
     }
+    const controller = new AbortController();
+    request.current = controller;
     setBusy(true);
     setError(null);
-    try {
-      const response = await publicAuthFetch('/api/auth/activate-staff', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Accept-Language': locale },
-        body: JSON.stringify({ token, newPassword: password }),
-      });
-      if (!response.ok) {
-        setError(
-          t(
-            response.status === 401
-              ? 'auth.activate.invalid'
-              : response.status === 429
-                ? 'auth.forgotPassword.error.rateLimited'
-                : 'auth.forgotPassword.error.generic',
-            locale
-          )
-        );
-        return;
-      }
+    const finish = (result: typeof outcome) => {
+      owner.retired = true;
       setToken('');
       setPassword('');
       setConfirmation('');
-      setComplete(true);
+      setOutcome(result);
+    };
+    try {
+      const { response, body } = await readWithDeadline(controller.signal, async (signal) => {
+        const response = await publicAuthFetch('/api/auth/activate-staff', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept-Language': locale },
+          body: JSON.stringify({ token, newPassword: password }),
+          signal,
+        });
+        return { response, body: await response.json().catch(() => null) };
+      });
+      if (request.current !== controller) return;
+      if (response.status === 200 && authResponseRecord(body)?.activated === true) {
+        finish('complete');
+      } else if (response.status === 401 && authErrorCode(body) === 'AUTH:TOKEN_INVALID') {
+        finish(null);
+      } else if ([400, 403, 422, 429].includes(response.status)) {
+        setError(
+          rateLimitMessage(response, locale) ?? t('auth.forgotPassword.error.generic', locale)
+        );
+      } else {
+        finish('unconfirmed');
+      }
     } catch {
-      setError(t('auth.forgotPassword.error.generic', locale));
+      if (request.current === controller) finish('unconfirmed');
     } finally {
-      setBusy(false);
+      if (request.current === controller) {
+        request.current = null;
+        setBusy(false);
+      }
     }
   }
 
@@ -97,16 +125,22 @@ function ActivatePage() {
     >
       <div className="space-y-6" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
         <h1 className="text-xl font-semibold">
-          {t(complete ? 'auth.activate.success' : 'auth.activate.title', locale)}
+          {t(outcome === 'complete' ? 'auth.activate.success' : 'auth.activate.title', locale)}
         </h1>
-        {complete ? (
+        {outcome === 'complete' ? (
           <p role="status">{t('auth.resetPassword.signIn', locale)}</p>
+        ) : outcome === 'unconfirmed' ? (
+          <Alert variant="destructive" role="alert">
+            <AlertDescription>
+              {passwordRecoveryText('activationUnconfirmed', locale)}
+            </AlertDescription>
+          </Alert>
         ) : !validToken ? (
           <Alert variant="destructive" role="alert">
             <AlertDescription>{t('auth.activate.invalid', locale)}</AlertDescription>
           </Alert>
         ) : (
-          <form onSubmit={activate} className="space-y-4">
+          <form onSubmit={activate} className="space-y-4" aria-busy={busy}>
             {error && (
               <Alert variant="destructive" role="alert">
                 <AlertDescription>{error}</AlertDescription>

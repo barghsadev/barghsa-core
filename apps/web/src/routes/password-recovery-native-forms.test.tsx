@@ -3,6 +3,7 @@ import { act, type ComponentType } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { beforeEach, afterEach, expect, it, vi } from 'vitest';
 import { Route } from './forgot-password.js';
+import { Route as ActivationRoute } from './activate.js';
 import { passwordRecoveryText as copy } from '@barghsa/i18n/password-recovery-forms';
 import { t } from '@barghsa/i18n/auth';
 const navigation = vi.hoisted(() => vi.fn(async () => {}));
@@ -36,6 +37,7 @@ afterEach(async () => {
   vi.unstubAllGlobals();
   vi.useRealTimers();
   document.documentElement.lang = 'fa';
+  window.history.replaceState(null, '', '/');
 });
 const id = '00000000-0000-4000-8000-000000000001';
 const grant = () => ({
@@ -80,8 +82,8 @@ function fixture() {
   );
   return state;
 }
-async function mount() {
-  const Page = Route.options.component as ComponentType;
+async function mount(route: typeof Route | typeof ActivationRoute = Route) {
+  const Page = route.options.component as ComponentType;
   await act(async () => root.render(<QueryProvider>{<Page />}</QueryProvider>));
 }
 async function fill(selector: string, value: string) {
@@ -305,4 +307,60 @@ it('keeps invalid destination feedback when a native blur overlaps submit valida
   expect(state.writes).toHaveLength(0);
   expect(input.getAttribute('aria-invalid')).toBe('true');
   expect(host.textContent).toContain(copy('usernameInvalid', 'en'));
+});
+
+const activationPassword = 'Activation-test-123!';
+const activationToken = 'a'.repeat(64);
+const activationUrl = (token: string) => `/activate#token=${token}`;
+async function fillActivation() {
+  await fill('#activation-password', activationPassword);
+  await fill('#activation-confirmation', activationPassword);
+}
+
+it('bounds an activation response body and discards a late success', async () => {
+  vi.useFakeTimers();
+  const body = deferred<unknown>();
+  const fetcher = vi.fn(async (_path: string, _init: RequestInit) => ({
+    status: 200,
+    json: () => body.promise,
+  }));
+  vi.stubGlobal('fetch', fetcher);
+  window.history.replaceState(null, '', activationUrl(activationToken));
+  await mount(ActivationRoute);
+  await fillActivation();
+  await submit();
+  expect(host.querySelector('form')?.getAttribute('aria-busy')).toBe('true');
+  const signal = fetcher.mock.calls[0]![1].signal!;
+  await act(async () => vi.advanceTimersByTimeAsync(15_000));
+  expect(signal.aborted).toBe(true);
+  expect(host.querySelector('[role=alert]')?.textContent).toBe(copy('activationUnconfirmed', 'en'));
+  expect(host.querySelector('form')).toBeNull();
+  await act(async () => body.resolve({ activated: true }));
+  expect(host.textContent).not.toContain(t('auth.activate.success', 'en'));
+  expect(fetcher).toHaveBeenCalledTimes(1);
+});
+
+it('retires the submitted token and draft when a different link arrives', async () => {
+  const response = deferred<Response>();
+  const fetcher = vi.fn(async (_path: string, _init: RequestInit) => response.promise);
+  vi.stubGlobal('fetch', fetcher);
+  window.history.replaceState(null, '', activationUrl(activationToken));
+  await mount(ActivationRoute);
+  await fillActivation();
+  await submit();
+  const signal = fetcher.mock.calls[0]![1].signal!;
+  const oldForm = host.querySelector('form')!;
+  await act(async () => {
+    window.history.replaceState(null, '', activationUrl('b'.repeat(64)));
+    window.dispatchEvent(new HashChangeEvent('hashchange'));
+    oldForm.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+  });
+  expect(signal.aborted).toBe(true);
+  expect(fetcher).toHaveBeenCalledTimes(1);
+  expect(window.location.hash).toBe('');
+  expect(host.querySelector<HTMLInputElement>('#activation-password')?.value).toBe('');
+  expect(host.querySelector<HTMLInputElement>('#activation-confirmation')?.value).toBe('');
+  await act(async () => response.resolve(Response.json({ activated: true })));
+  expect(host.querySelector('form')?.getAttribute('aria-busy')).toBe('false');
+  expect(host.textContent).not.toContain(t('auth.activate.success', 'en'));
 });

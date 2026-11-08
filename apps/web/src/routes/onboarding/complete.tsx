@@ -79,6 +79,7 @@ function OnboardingCompletePage() {
 function Completion({ profileId, journeyId }: { profileId?: string; journeyId?: string }) {
   const locale = useLocale();
   const router = useRouter();
+  const missingTarget = Boolean(profileId) === Boolean(journeyId);
   const [status, setStatus] = useState<'loading' | 'complete' | 'error'>('loading');
   const [profile, setProfile] = useState<OnboardingProfile | null>(null);
   const [journey, setJourney] = useState<OnboardingJourney | null>(null);
@@ -90,7 +91,7 @@ function Completion({ profileId, journeyId }: { profileId?: string; journeyId?: 
   const finishRequest = useRef<AbortController | null>(null);
   useEffect(() => () => finishRequest.current?.abort(), []);
   useEffect(() => {
-    if ((!profileId && !journeyId) || (profileId && journeyId)) {
+    if (missingTarget) {
       setStatus('error');
       return;
     }
@@ -144,7 +145,7 @@ function Completion({ profileId, journeyId }: { profileId?: string; journeyId?: 
       if (!controller.signal.aborted) setStatus('error');
     });
     return () => controller.abort();
-  }, [profileId, journeyId, retry, router]);
+  }, [profileId, journeyId, retry, router, missingTarget]);
 
   async function finish() {
     if (!journey || !selected || busy.current) return;
@@ -355,13 +356,11 @@ function Completion({ profileId, journeyId }: { profileId?: string; journeyId?: 
           <>
             <p role="alert">
               {t(
-                profileId || journeyId
-                  ? 'onboarding.complete.error'
-                  : 'onboarding.complete.missingProfile',
+                missingTarget ? 'onboarding.complete.missingProfile' : 'onboarding.complete.error',
                 locale
               )}
             </p>
-            {(profileId || journeyId) && (
+            {!missingTarget && (
               <Button type="button" onClick={() => setRetry((value) => value + 1)}>
                 {t('onboarding.draft.retry', locale)}
               </Button>
