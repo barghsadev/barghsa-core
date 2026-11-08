@@ -34,6 +34,8 @@ export interface CreateVerificationCaseDto {
   evidenceUrls?: string[];
   /** Reason/description for the correction request. */
   reason: string;
+  /** Stable key for a retry of the exact reviewed submission. */
+  idempotencyKey?: string;
 }
 
 export interface ReviewVerificationCaseDto {
@@ -90,6 +92,7 @@ export class VerificationCaseController {
           description: 'Evidence document URLs',
         },
         reason: { type: 'string', description: 'Reason for the correction' },
+        idempotencyKey: { type: 'string', format: 'uuid' },
       },
     },
   })
@@ -128,6 +131,7 @@ export class VerificationCaseController {
         requestedValue: z.string().trim().min(1).max(512),
         evidenceUrls: z.array(z.string().max(2048)).min(1).max(5),
         reason: z.string().trim().min(1).max(1000),
+        idempotencyKey: z.string().uuid().optional(),
       })
       .strict()
       .safeParse(dto);
@@ -148,6 +152,7 @@ export class VerificationCaseController {
         currentValue: parsed.data.currentValue ?? null,
         requestedValue: parsed.data.requestedValue,
         reason: parsed.data.reason,
+        ...(parsed.data.idempotencyKey ? { idempotencyKey: parsed.data.idempotencyKey } : {}),
         ...(parsed.data.evidenceUrls ? { evidenceUrls: parsed.data.evidenceUrls } : {}),
       },
       req.session,

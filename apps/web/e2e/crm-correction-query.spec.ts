@@ -123,15 +123,15 @@ for (const profile of [false, true])
         .getByRole('button', { name: appText('team.confirm', locale), exact: true })
         .click();
       await expect.poll(() => !!write).toBe(true);
+      const abandoned = page.waitForEvent(
+        'requestfailed',
+        (request) => request.method() === 'PUT' && request.url() === write!.request().url()
+      );
       await page.goBack();
       await expect(main.getByText('Page 1', { exact: true })).toBeVisible();
       await expect(page.getByRole('dialog')).toHaveCount(0);
       await expect(page.locator('#case-notes')).toHaveCount(0);
-      const receipt = page.waitForResponse((r) => r.url().endsWith('/status'));
-      await write!.fulfill({
-        json: { success: true, id: crmCaseId, profileId: crmProfileId, status: 'Approved' },
-      });
-      await (await receipt).finished();
+      expect((await abandoned).failure()?.errorText).toBeTruthy();
       await page.evaluate(
         () =>
           new Promise<void>((resolve) =>

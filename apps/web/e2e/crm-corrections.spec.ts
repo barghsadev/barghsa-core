@@ -1,5 +1,6 @@
 import { verifyClippedContrast } from './clipped-contrast';
 import { t as crmText } from '@barghsa/i18n/crm';
+import { confirmationText } from '@barghsa/i18n/confirmation';
 import { crmShell } from './crm-shell-fixture';
 import AxeBuilder from '@axe-core/playwright';
 import { test, expect, type Page } from './coverage-fixture';
@@ -273,6 +274,15 @@ for (const [locale, darkMode] of [
     await expect(
       dialog.getByLabel(locale === 'fa' ? 'رمز عبور خود را تأیید کنید' : 'Confirm your password')
     ).toHaveCount(0);
+    const confirm = dialog.getByRole('button', {
+      name: locale === 'fa' ? 'تأیید' : 'Confirm',
+      exact: true,
+    });
+    await expect(confirm).toBeDisabled();
+    await dialog
+      .getByRole('button', { name: crmText('crm.corrections.profileRetry', locale), exact: true })
+      .click();
+    await expect(confirm).toBeEnabled();
     await dialog
       .getByRole('button', { name: locale === 'fa' ? 'تأیید' : 'Confirm', exact: true })
       .click();
@@ -295,12 +305,15 @@ for (const [locale, darkMode] of [
         exact: true,
       })
     ).toHaveCount(0);
+    const operation = (bodies[0] as { idempotencyKey: string }).idempotencyKey;
+    expect(operation).toMatch(/^[a-f0-9-]{36}$/i);
     expect(bodies).toEqual(
       Array.from({ length: 3 }, () => ({
         fieldName: 'first_name',
         requestedValue: 'Corrected',
         reason: 'Document checked',
         evidenceUrls: [key],
+        idempotencyKey: operation,
       }))
     );
   });
@@ -471,11 +484,12 @@ for (const [locale, darkMode] of [
     await expect(page.locator('#case-status')).toBeFocused();
   });
 
-for (const locale of ['en', 'fa'])
+for (const locale of ['en', 'fa'] as const)
   test(`correction decisions require the selected case and matching acknowledgement (${locale})`, async ({
     page,
   }) => {
     await shell(page, locale);
+    await page.clock.install();
     let detailAttempt = 0;
     let saves = 0;
     const bodies: unknown[] = [];
@@ -503,7 +517,9 @@ for (const locale of ['en', 'fa'])
       return route.fulfill({ json: invalid[detailAttempt++] ?? detail });
     });
     const expected = { success: true, id: caseId, profileId, status: 'Approved' };
+    const stalled = Symbol('stalled correction decision');
     const invalid = [
+      stalled,
       null,
       {},
       { ...expected, success: false },
@@ -515,6 +531,7 @@ for (const locale of ['en', 'fa'])
       bodies.push(route.request().postDataJSON());
       const result = saves < invalid.length ? invalid[saves] : expected;
       saves++;
+      if (result === stalled) return;
       return route.fulfill({
         status: 200,
         body: JSON.stringify(result),
@@ -547,8 +564,22 @@ for (const locale of ['en', 'fa'])
     for (let attempt = 0; attempt < invalid.length; attempt++) {
       await confirm.click();
       await expect.poll(() => saves).toBe(attempt + 1);
-      await expect(dialog.getByRole('alert')).toBeVisible();
+      if (invalid[attempt] === stalled) await page.clock.fastForward(15_001);
+      await expect(dialog).toHaveCount(0);
+      await expect(
+        page
+          .locator('main')
+          .getByRole('alert')
+          .filter({ hasText: confirmationText('unconfirmed', locale) })
+      ).toBeVisible();
+      await expect(review).toBeDisabled();
       await expect(page.locator('#case-notes')).toHaveValue('Evidence checked');
+      await page
+        .getByRole('button', { name: crmText('crm.list.refresh', locale), exact: true })
+        .click();
+      await expect(review).toBeEnabled();
+      expect(saves).toBe(attempt + 1);
+      await review.click();
     }
     await confirm.click();
     await expect(dialog).toHaveCount(0);

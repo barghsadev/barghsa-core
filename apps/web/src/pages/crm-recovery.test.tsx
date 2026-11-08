@@ -512,9 +512,12 @@ it('unmounted upload cannot reopen confirmation on a newly restricted profile', 
   await render();
   await creationDraft();
   await click('Upload evidence and review request');
+  const signal = vi.mocked(uploadVerificationEvidence).mock.lastCall?.[2];
+  expect(signal?.aborted).toBe(false);
   // Remount a restricted profile before the old upload resolves.
   allowed = false;
   await act(async () => root.unmount());
+  expect(signal?.aborted).toBe(true);
   root = createRoot(host);
   await render();
   await act(async () => finish('verification-evidence/obsolete'));

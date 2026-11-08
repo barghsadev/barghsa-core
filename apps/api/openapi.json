@@ -28614,6 +28614,10 @@
                     "description": "Identity field to correct (e.g. first_name, last_name, national_id, legal_name)",
                     "type": "string"
                   },
+                  "idempotencyKey": {
+                    "format": "uuid",
+                    "type": "string"
+                  },
                   "reason": {
                     "description": "Reason for the correction",
                     "type": "string"

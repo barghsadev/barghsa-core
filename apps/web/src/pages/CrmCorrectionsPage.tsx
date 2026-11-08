@@ -2,7 +2,8 @@ import { CommandFeedback } from '../components/CommandFeedback.js';
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
 import { useNavigate, useSearch } from '@tanstack/react-router';
 import { t } from '@barghsa/i18n/crm';
-import { LoadingStatus, Button, Input, Label, ListPage } from '@barghsa/ui';
+import { confirmationText } from '@barghsa/i18n/confirmation';
+import { LoadingStatus, Button, Input, Label, ListPage, NativeSelect } from '@barghsa/ui';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
@@ -137,7 +138,7 @@ function Corrections({
   const read = useManualServerRead();
   const generation = useRef(0),
     workGeneration = useRef(0),
-    uploading = useRef(false);
+    uploading = useRef<AbortController | null>(null);
   const queueController = useRef<AbortController | null>(null);
   const [localStatus, setLocalStatus] = useState<Status>('Open'),
     [localOffset, setLocalOffset] = useState(0);
@@ -160,6 +161,7 @@ function Corrections({
     criteria: string;
     offset: number;
     data: Queue;
+    readAttempt: number;
   } | null>(null);
   const [selected, setSelected] = useState<{ criteria: string; offset: number; item: Case } | null>(
     null
@@ -178,6 +180,14 @@ function Corrections({
   const [notes, setNotes] = useState(''),
     [decision, setDecision] = useState<Status>('Under Review');
   const [action, setAction] = useState<CorrectionAction | null>(null);
+  const [creationRecovery, setCreationRecovery] = useState<{
+    action: CorrectionAction;
+    profileAttempt: number | null;
+  } | null>(null);
+  const [reviewRecovery, setReviewRecovery] = useState<{
+    queueAttempt: number | null;
+    detailAttempt: number | null;
+  } | null>(null);
   const actionRef = useRef<CorrectionAction | null>(null),
     selectedRef = useRef(selected);
   actionRef.current = action;
@@ -195,6 +205,7 @@ function Corrections({
     setSelected(null);
     selectedRef.current = null;
     setNotes('');
+    setReviewRecovery(null);
     if (actionRef.current?.expected.id) {
       ++workGeneration.current;
       actionRef.current = null;
@@ -207,13 +218,15 @@ function Corrections({
     setReason('');
     setFiles([]);
     setFileVersion((v) => v + 1);
+    setCreationRecovery(null);
     setField(fieldsFor(profileRef.current?.profile.profileType ?? null)[0]!);
     if ((actionRef.current && !actionRef.current.expected.id) || uploading.current) {
       ++workGeneration.current;
       actionRef.current = null;
       setAction(null);
       frozenBasis.current = null;
-      uploading.current = false;
+      uploading.current?.abort();
+      uploading.current = null;
       setBusy(false);
     }
   }, []);
@@ -356,7 +369,7 @@ function Corrections({
         setOffset(Math.max(0, Math.ceil(data.total / 20) - 1) * 20, true);
         return;
       }
-      setAccepted({ criteria, offset, data });
+      setAccepted({ criteria, offset, data, readAttempt: current });
     } catch {
       if (isCurrent()) setQueueError(true);
     } finally {
@@ -391,6 +404,7 @@ function Corrections({
   useEffect(
     () => () => {
       ++workGeneration.current;
+      uploading.current?.abort();
     },
     []
   );
@@ -441,6 +455,7 @@ function Corrections({
   }
   function captured(next: CorrectionAction) {
     ++workGeneration.current;
+    if (next.expected.id) setReviewRecovery(null);
     frozenBasis.current =
       next.expected.id && detail
         ? detailBasis(detail)
@@ -448,13 +463,36 @@ function Corrections({
           ? profileBasis(profileRead.data)
           : null;
     setSaved(false);
-    const command = {
+    const command: CorrectionAction = {
       ...next,
+      responseDeadline: true,
+      successStatus: next.expected.id ? 200 : 201,
       forbiddenMessage: t('crm.corrections.self', locale),
       conflictMessage: t('crm.profile.conflict', locale),
     };
     actionRef.current = command;
     setAction(command);
+  }
+  function refreshProfile() {
+    const requested = profileRead.retry();
+    setCreationRecovery((current) => current && { ...current, profileAttempt: requested });
+  }
+  const canRetryCreation =
+    !creationRecovery ||
+    (creationRecovery.profileAttempt !== null &&
+      creationRecovery.profileAttempt === profileRead.readAttempt);
+  const canRetryReview =
+    !reviewRecovery ||
+    (reviewRecovery.queueAttempt !== null &&
+      reviewRecovery.detailAttempt !== null &&
+      reviewRecovery.queueAttempt === accepted?.readAttempt &&
+      reviewRecovery.detailAttempt === detailRead.readAttempt);
+  function refreshCorrection() {
+    refreshProfile();
+    const detailAttempt = selectedItem ? detailRead.retry() : null;
+    const queueAttempt = generation.current + 1;
+    setReviewRecovery((current) => current && { queueAttempt, detailAttempt });
+    void load();
   }
   const invalidEvidence =
     files.length > 5 || files.some((file) => !isAllowedInvoiceReceiptFile(file));
@@ -466,26 +504,29 @@ function Corrections({
       profileRead.loading ||
       profileRead.error ||
       denied ||
-      !value.trim() ||
-      !reason.trim() ||
-      !files.length ||
-      invalidEvidence ||
+      actionRef.current ||
       uploading.current
     )
       return;
+    if (creationRecovery) {
+      if (canRetryCreation) captured(creationRecovery.action);
+      return;
+    }
+    if (!value.trim() || !reason.trim() || !files.length || invalidEvidence) return;
     const current = ++workGeneration.current;
-    uploading.current = true;
+    const transport = new AbortController();
+    uploading.current = transport;
     setBusy(true);
     setError(false);
     try {
       const keys: string[] = [];
       for (const file of files) {
-        const key = await uploadVerificationEvidence(file, profileId);
+        const key = await uploadVerificationEvidence(file, profileId, transport.signal);
         if (!key) throw new Error();
         if (current !== workGeneration.current) return;
         keys.push(key);
       }
-      uploading.current = false;
+      uploading.current = null;
       setBusy(false);
       captured({
         title: t('crm.corrections.request', locale),
@@ -498,13 +539,14 @@ function Corrections({
           requestedValue: value.trim(),
           reason: reason.trim(),
           evidenceUrls: keys,
+          idempotencyKey: crypto.randomUUID(),
         },
       });
     } catch {
       if (current === workGeneration.current) setError(true);
     } finally {
       if (current === workGeneration.current) {
-        uploading.current = false;
+        uploading.current = null;
         setBusy(false);
       }
     }
@@ -543,9 +585,7 @@ function Corrections({
           {profileRead.error && (
             <div role="alert">
               <p>{t('crm.profile.error.generic', locale)}</p>
-              <Button onClick={profileRead.retry}>
-                {t('crm.corrections.profileRetry', locale)}
-              </Button>
+              <Button onClick={refreshProfile}>{t('crm.corrections.profileRetry', locale)}</Button>
             </div>
           )}
           {profileId && profileRead.loading && (
@@ -557,16 +597,16 @@ function Corrections({
               className="space-y-3 rounded border bg-card text-card-foreground p-4"
             >
               <h2 className="font-semibold">{t('crm.corrections.request', locale)}</h2>
-              <fieldset disabled={busy || !!action} className="space-y-3">
+              <fieldset disabled={busy || !!action || !!creationRecovery} className="space-y-3">
                 <div>
                   <Label htmlFor="correction-field">{t('crm.corrections.field', locale)}</Label>
-                  <select
+                  <NativeSelect
                     ref={fieldSelect}
                     id="correction-field"
                     aria-required="true"
                     value={field}
                     onChange={(event) => setField(event.target.value)}
-                    className="block rounded border bg-background text-foreground p-2"
+                    className="max-w-full rounded-lg bg-background text-foreground"
                   >
                     {(profileType === 'LEGAL'
                       ? ['legal_name', 'national_identifier']
@@ -576,7 +616,7 @@ function Corrections({
                         {t(`crm.corrections.${key}`, locale)}
                       </option>
                     ))}
-                  </select>
+                  </NativeSelect>
                 </div>
                 <div>
                   <Label htmlFor="correction-value">{t('crm.corrections.newValue', locale)}</Label>
@@ -670,16 +710,35 @@ function Corrections({
                   {t(busy ? 'crm.corrections.uploading' : 'crm.corrections.upload', locale)}
                 </Button>
               </fieldset>
+              {creationRecovery && !action && (
+                <div className="space-y-2">
+                  <p role="alert">{confirmationText('unconfirmed', locale)}</p>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    disabled={profileRead.loading}
+                    onClick={refreshProfile}
+                  >
+                    {t('crm.corrections.profileRetry', locale)}
+                  </Button>
+                  <Button
+                    type="submit"
+                    disabled={!canRetryCreation || profileRead.loading || profileRead.error}
+                  >
+                    {t('crm.corrections.request', locale)}
+                  </Button>
+                </div>
+              )}
             </form>
           )}
           <div className="flex flex-wrap items-center gap-3">
             {!queueForbidden && (
               <>
                 <Label htmlFor="case-status">{t('crm.corrections.status', locale)}</Label>
-                <select
+                <NativeSelect
                   ref={statusSelect}
                   id="case-status"
-                  disabled={busy || !!action}
+                  disabled={busy || !!action || !canRetryReview}
                   value={status}
                   onChange={(event) => {
                     if (queries) queries.setQuery({ filters: { status: event.target.value } });
@@ -688,29 +747,22 @@ function Corrections({
                       setLocalOffset(0);
                     }
                   }}
-                  className="rounded border bg-background text-foreground p-2"
+                  className="max-w-full rounded-lg bg-background text-foreground"
                 >
                   {(['Open', 'Under Review', 'Approved', 'Rejected'] as const).map((value) => (
                     <option key={value} value={value}>
                       {t(`crm.corrections.${value}`, locale)}
                     </option>
                   ))}
-                </select>
+                </NativeSelect>
               </>
             )}
-            <Button
-              variant="outline"
-              disabled={loading || busy}
-              onClick={() => {
-                profileRead.retry();
-                if (selectedItem) detailRead.retry();
-                void load();
-              }}
-            >
+            <Button variant="outline" disabled={loading || busy} onClick={refreshCorrection}>
               {t('crm.list.refresh', locale)}
             </Button>
           </div>
           <CommandFeedback message={saved ? t('crm.corrections.saved', locale) : null} />
+          {reviewRecovery && <p role="alert">{confirmationText('unconfirmed', locale)}</p>}
           {error && <p role="alert">{t('crm.corrections.error', locale)}</p>}
           {queueForbidden ? (
             <p>{t('crm.corrections.queueForbidden', locale)}</p>
@@ -746,7 +798,12 @@ function Corrections({
                         <Button
                           variant="outline"
                           disabled={
-                            !!action || busy || loading || queueError || accepted?.offset !== offset
+                            !!action ||
+                            busy ||
+                            loading ||
+                            queueError ||
+                            !canRetryReview ||
+                            accepted?.offset !== offset
                           }
                           onClick={() => select(item)}
                         >
@@ -763,7 +820,7 @@ function Corrections({
             <nav className="flex gap-2" aria-label={t('crm.corrections.title', locale)}>
               <Button
                 variant="outline"
-                disabled={loading || busy || !!action || offset === 0}
+                disabled={loading || busy || !!action || !canRetryReview || offset === 0}
                 onClick={() => setOffset((previous) => Math.max(0, previous - 20))}
               >
                 {t('crm.list.previous', locale)}
@@ -771,7 +828,13 @@ function Corrections({
               <Button
                 variant="outline"
                 disabled={
-                  loading || queueError || busy || !!action || !queue || offset + 20 >= queue.total
+                  loading ||
+                  queueError ||
+                  busy ||
+                  !!action ||
+                  !canRetryReview ||
+                  !queue ||
+                  offset + 20 >= queue.total
                 }
                 onClick={() => setOffset((previous) => previous + 20)}
               >
@@ -829,13 +892,13 @@ function Corrections({
                 ['Open', 'Under Review'].includes(detail.status) && (
                   <div className="space-y-3">
                     <Label htmlFor="case-decision">{t('crm.corrections.save', locale)}</Label>
-                    <select
+                    <NativeSelect
                       disabled={busy || !!action}
                       id="case-decision"
                       aria-required="true"
                       value={decision}
                       onChange={(event) => setDecision(event.target.value as Status)}
-                      className="block rounded border bg-background text-foreground p-2"
+                      className="max-w-full rounded-lg bg-background text-foreground"
                     >
                       {(detail.status === 'Open'
                         ? ['Under Review', 'Rejected']
@@ -845,7 +908,7 @@ function Corrections({
                           {t(`crm.corrections.${value}`, locale)}
                         </option>
                       ))}
-                    </select>
+                    </NativeSelect>
                     <Label htmlFor="case-notes">{t('crm.corrections.notes', locale)}</Label>
                     <textarea
                       disabled={busy || !!action}
@@ -863,6 +926,7 @@ function Corrections({
                         queueError ||
                         detailRead.loading ||
                         detailRead.error ||
+                        !canRetryReview ||
                         busy ||
                         !!action ||
                         (decision === 'Rejected' && !notes.trim()) ||
@@ -916,7 +980,7 @@ function Corrections({
                 !queue?.viewer.canReview ||
                 queue.viewer.userId === detail.createdBy ||
                 (action.expected.status === 'Approved' && !hasEvidence)
-              : !canCreate || profileRead.loading || profileRead.error)
+              : !canCreate || profileRead.loading || profileRead.error || !canRetryCreation)
           }
           summary={
             <div className="space-y-2">
@@ -934,11 +998,7 @@ function Corrections({
                   </Button>
                 </>
               ) : (
-                <Button
-                  variant="outline"
-                  disabled={profileRead.loading}
-                  onClick={profileRead.retry}
-                >
+                <Button variant="outline" disabled={profileRead.loading} onClick={refreshProfile}>
                   {t('crm.corrections.profileRetry', locale)}
                 </Button>
               )}
@@ -957,6 +1017,19 @@ function Corrections({
             actionRef.current = null;
             setAction(null);
             frozenBasis.current = null;
+          }}
+          onUnconfirmed={() => {
+            if (actionGeneration !== workGeneration.current || actionRef.current !== action) return;
+            setSaved(false);
+            if (action.expected.id) {
+              setReviewRecovery({ queueAttempt: null, detailAttempt: null });
+              ++workGeneration.current;
+              actionRef.current = null;
+              setAction(null);
+              frozenBasis.current = null;
+            } else {
+              setCreationRecovery({ action, profileAttempt: null });
+            }
           }}
           onSuccess={((current) => async (value) => {
             if (current !== workGeneration.current) return;

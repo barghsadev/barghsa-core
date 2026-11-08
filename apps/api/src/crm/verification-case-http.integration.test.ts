@@ -64,7 +64,7 @@ async function profile() {
   );
   return id;
 }
-async function create(id: string, extra: Record<string, unknown> = {}) {
+async function evidence(id: string) {
   const key = `uploads/document/${randomUUID()}.pdf`,
     bytes = Buffer.from('%PDF-1.7\nOriginal evidence\n%%EOF');
   objects.set(key, bytes);
@@ -82,6 +82,10 @@ async function create(id: string, extra: Record<string, unknown> = {}) {
       bytes.length,
     ]
   );
+  return key;
+}
+async function create(id: string, extra: Record<string, unknown> = {}, existingKey?: string) {
+  const key = existingKey ?? (await evidence(id));
   return fetch(`${http.base}/api/crm/profiles/${id}/verification-cases`, {
     method: 'POST',
     headers: headers.creator!,
@@ -102,6 +106,45 @@ async function review(id: string, decision: string, user = 'reviewer') {
     body: JSON.stringify({ decision, reviewerNotes: 'Evidence checked' }),
   });
 }
+
+it('replays a keyed creation without resealing evidence or reopening a finished correction', async () => {
+  const target = await profile(),
+    key = await evidence(target),
+    idempotencyKey = randomUUID();
+  const request = { idempotencyKey };
+  const replies = await Promise.all([create(target, request, key), create(target, request, key)]);
+  expect(replies.map((reply) => reply.status)).toEqual([201, 201]);
+  const first = (await replies[0].json()) as { id: string };
+  expect(await replies[1].json()).toEqual(first);
+  expect((await review(first.id, 'Under Review')).status).toBe(200);
+  expect((await review(first.id, 'Approved')).status).toBe(200);
+  const replay = await create(target, request, key);
+  expect(replay.status).toBe(201);
+  expect(await replay.json()).toEqual(first);
+  expect((await create(target, { ...request, reason: 'Changed payload' }, key)).status).toBe(409);
+  const state = await http.pool.query(
+    'SELECT id,status FROM verification_cases WHERE profile_id=$1',
+    [target]
+  );
+  expect(state.rows).toEqual([{ id: first.id, status: 'Approved' }]);
+  const copies = await http.pool.query(
+    "SELECT storage_key FROM storage_records WHERE metadata->>'sourceKey'=$1",
+    [key]
+  );
+  expect(copies.rows).toHaveLength(1);
+  const audit = await http.pool.query(
+    "SELECT id FROM audit_log WHERE event='verification_case_created' AND metadata::jsonb->>'profileId'=$1",
+    [target]
+  );
+  expect(audit.rows).toHaveLength(1);
+
+  await http.pool.query("UPDATE sessions SET step_up_verified_at=NULL WHERE user_id='creator'");
+  try {
+    expect((await create(target, request, key)).status).toBe(403);
+  } finally {
+    await http.pool.query("UPDATE sessions SET step_up_verified_at=NOW() WHERE user_id='creator'");
+  }
+});
 
 it('creates an identity case alongside ticket assignment to its creator without deadlocking', async () => {
   const target = await profile(),

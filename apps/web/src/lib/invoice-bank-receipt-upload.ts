@@ -62,9 +62,10 @@ export async function uploadInvoiceReceiptAttachment(
 
 export async function uploadVerificationEvidence(
   file: File,
-  profileId: string
+  profileId: string,
+  signal?: AbortSignal
 ): Promise<string | null> {
-  return uploadVerifiedAttachment(file, profileId, 'verification_evidence');
+  return uploadVerifiedAttachment(file, profileId, 'verification_evidence', undefined, signal);
 }
 
 export async function uploadTicketAttachment(
