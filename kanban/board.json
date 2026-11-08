@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-08T19:33:59+00:00",
-  "source_commit": "da9fd377aec54f89135619cc21ff850da1e36fb1",
+  "updated": "2026-11-08T19:55:43+00:00",
+  "source_commit": "3933994decc5367d25157dfbdd03a897c76e4696",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -88912,7 +88912,7 @@
             },
             {
               "path": "apps/web/e2e/delivery-provider-recovery.spec.ts",
-              "sha256": "32d3c2ae0f7ff17804f920527e41f1de4ada343ade39fba3f73e8a936ec13273"
+              "sha256": "739aa6d07a2a110d5a5074fddd3846abe7e12b1f0f791bf8c40f3b5e49b335ba"
             },
             {
               "path": "apps/web/e2e/sms-provider-settings.spec.ts",
@@ -163166,11 +163166,11 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.test.tsx",
-              "sha256": "c9847e1057e9ba5647084c27b3d644e184cc5f730a7265cc945437aa09124bab"
+              "sha256": "1a9d3272ec9cd9574b475a752fb014fb53f9a7639970c162b9252e4781dad933"
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.tsx",
-              "sha256": "8a29a431aadb2d73d7e43948725cf7d92a05b89c4797e8283b44e13898b0be27"
+              "sha256": "0554b5519ecf702aaa033020f252165d0f20294b72b4b07e147b6d50d85df810"
             },
             {
               "path": "apps/web/src/components/contract-authoring-forms.test.tsx",
@@ -164172,11 +164172,11 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.test.tsx",
-              "sha256": "c9847e1057e9ba5647084c27b3d644e184cc5f730a7265cc945437aa09124bab"
+              "sha256": "1a9d3272ec9cd9574b475a752fb014fb53f9a7639970c162b9252e4781dad933"
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.tsx",
-              "sha256": "8a29a431aadb2d73d7e43948725cf7d92a05b89c4797e8283b44e13898b0be27"
+              "sha256": "0554b5519ecf702aaa033020f252165d0f20294b72b4b07e147b6d50d85df810"
             },
             {
               "path": "apps/web/src/components/contract-authoring-forms.test.tsx",
@@ -165181,11 +165181,11 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.test.tsx",
-              "sha256": "c9847e1057e9ba5647084c27b3d644e184cc5f730a7265cc945437aa09124bab"
+              "sha256": "1a9d3272ec9cd9574b475a752fb014fb53f9a7639970c162b9252e4781dad933"
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.tsx",
-              "sha256": "8a29a431aadb2d73d7e43948725cf7d92a05b89c4797e8283b44e13898b0be27"
+              "sha256": "0554b5519ecf702aaa033020f252165d0f20294b72b4b07e147b6d50d85df810"
             },
             {
               "path": "apps/web/src/components/contract-authoring-forms.test.tsx",
@@ -166188,11 +166188,11 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.test.tsx",
-              "sha256": "c9847e1057e9ba5647084c27b3d644e184cc5f730a7265cc945437aa09124bab"
+              "sha256": "1a9d3272ec9cd9574b475a752fb014fb53f9a7639970c162b9252e4781dad933"
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.tsx",
-              "sha256": "8a29a431aadb2d73d7e43948725cf7d92a05b89c4797e8283b44e13898b0be27"
+              "sha256": "0554b5519ecf702aaa033020f252165d0f20294b72b4b07e147b6d50d85df810"
             },
             {
               "path": "apps/web/src/components/contract-authoring-forms.test.tsx",
@@ -167194,11 +167194,11 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.test.tsx",
-              "sha256": "c9847e1057e9ba5647084c27b3d644e184cc5f730a7265cc945437aa09124bab"
+              "sha256": "1a9d3272ec9cd9574b475a752fb014fb53f9a7639970c162b9252e4781dad933"
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.tsx",
-              "sha256": "8a29a431aadb2d73d7e43948725cf7d92a05b89c4797e8283b44e13898b0be27"
+              "sha256": "0554b5519ecf702aaa033020f252165d0f20294b72b4b07e147b6d50d85df810"
             },
             {
               "path": "apps/web/src/components/contract-authoring-forms.test.tsx",
@@ -168200,11 +168200,11 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.test.tsx",
-              "sha256": "c9847e1057e9ba5647084c27b3d644e184cc5f730a7265cc945437aa09124bab"
+              "sha256": "1a9d3272ec9cd9574b475a752fb014fb53f9a7639970c162b9252e4781dad933"
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.tsx",
-              "sha256": "8a29a431aadb2d73d7e43948725cf7d92a05b89c4797e8283b44e13898b0be27"
+              "sha256": "0554b5519ecf702aaa033020f252165d0f20294b72b4b07e147b6d50d85df810"
             },
             {
               "path": "apps/web/src/components/contract-authoring-forms.test.tsx",
@@ -169205,11 +169205,11 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.test.tsx",
-              "sha256": "c9847e1057e9ba5647084c27b3d644e184cc5f730a7265cc945437aa09124bab"
+              "sha256": "1a9d3272ec9cd9574b475a752fb014fb53f9a7639970c162b9252e4781dad933"
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.tsx",
-              "sha256": "8a29a431aadb2d73d7e43948725cf7d92a05b89c4797e8283b44e13898b0be27"
+              "sha256": "0554b5519ecf702aaa033020f252165d0f20294b72b4b07e147b6d50d85df810"
             },
             {
               "path": "apps/web/src/components/contract-authoring-forms.test.tsx",
@@ -170213,11 +170213,11 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.test.tsx",
-              "sha256": "c9847e1057e9ba5647084c27b3d644e184cc5f730a7265cc945437aa09124bab"
+              "sha256": "1a9d3272ec9cd9574b475a752fb014fb53f9a7639970c162b9252e4781dad933"
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.tsx",
-              "sha256": "8a29a431aadb2d73d7e43948725cf7d92a05b89c4797e8283b44e13898b0be27"
+              "sha256": "0554b5519ecf702aaa033020f252165d0f20294b72b4b07e147b6d50d85df810"
             },
             {
               "path": "apps/web/src/components/contract-authoring-forms.test.tsx",
@@ -171219,11 +171219,11 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.test.tsx",
-              "sha256": "c9847e1057e9ba5647084c27b3d644e184cc5f730a7265cc945437aa09124bab"
+              "sha256": "1a9d3272ec9cd9574b475a752fb014fb53f9a7639970c162b9252e4781dad933"
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.tsx",
-              "sha256": "8a29a431aadb2d73d7e43948725cf7d92a05b89c4797e8283b44e13898b0be27"
+              "sha256": "0554b5519ecf702aaa033020f252165d0f20294b72b4b07e147b6d50d85df810"
             },
             {
               "path": "apps/web/src/components/contract-authoring-forms.test.tsx",
@@ -172225,11 +172225,11 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.test.tsx",
-              "sha256": "c9847e1057e9ba5647084c27b3d644e184cc5f730a7265cc945437aa09124bab"
+              "sha256": "1a9d3272ec9cd9574b475a752fb014fb53f9a7639970c162b9252e4781dad933"
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.tsx",
-              "sha256": "8a29a431aadb2d73d7e43948725cf7d92a05b89c4797e8283b44e13898b0be27"
+              "sha256": "0554b5519ecf702aaa033020f252165d0f20294b72b4b07e147b6d50d85df810"
             },
             {
               "path": "apps/web/src/components/contract-authoring-forms.test.tsx",
@@ -173232,11 +173232,11 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.test.tsx",
-              "sha256": "c9847e1057e9ba5647084c27b3d644e184cc5f730a7265cc945437aa09124bab"
+              "sha256": "1a9d3272ec9cd9574b475a752fb014fb53f9a7639970c162b9252e4781dad933"
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.tsx",
-              "sha256": "8a29a431aadb2d73d7e43948725cf7d92a05b89c4797e8283b44e13898b0be27"
+              "sha256": "0554b5519ecf702aaa033020f252165d0f20294b72b4b07e147b6d50d85df810"
             },
             {
               "path": "apps/web/src/components/contract-authoring-forms.test.tsx",
@@ -174238,11 +174238,11 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.test.tsx",
-              "sha256": "c9847e1057e9ba5647084c27b3d644e184cc5f730a7265cc945437aa09124bab"
+              "sha256": "1a9d3272ec9cd9574b475a752fb014fb53f9a7639970c162b9252e4781dad933"
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.tsx",
-              "sha256": "8a29a431aadb2d73d7e43948725cf7d92a05b89c4797e8283b44e13898b0be27"
+              "sha256": "0554b5519ecf702aaa033020f252165d0f20294b72b4b07e147b6d50d85df810"
             },
             {
               "path": "apps/web/src/components/contract-authoring-forms.test.tsx",
@@ -175243,11 +175243,11 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.test.tsx",
-              "sha256": "c9847e1057e9ba5647084c27b3d644e184cc5f730a7265cc945437aa09124bab"
+              "sha256": "1a9d3272ec9cd9574b475a752fb014fb53f9a7639970c162b9252e4781dad933"
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.tsx",
-              "sha256": "8a29a431aadb2d73d7e43948725cf7d92a05b89c4797e8283b44e13898b0be27"
+              "sha256": "0554b5519ecf702aaa033020f252165d0f20294b72b4b07e147b6d50d85df810"
             },
             {
               "path": "apps/web/src/components/contract-authoring-forms.test.tsx",
@@ -176249,11 +176249,11 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.test.tsx",
-              "sha256": "c9847e1057e9ba5647084c27b3d644e184cc5f730a7265cc945437aa09124bab"
+              "sha256": "1a9d3272ec9cd9574b475a752fb014fb53f9a7639970c162b9252e4781dad933"
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.tsx",
-              "sha256": "8a29a431aadb2d73d7e43948725cf7d92a05b89c4797e8283b44e13898b0be27"
+              "sha256": "0554b5519ecf702aaa033020f252165d0f20294b72b4b07e147b6d50d85df810"
             },
             {
               "path": "apps/web/src/components/contract-authoring-forms.test.tsx",
@@ -177127,7 +177127,7 @@
             },
             {
               "path": "apps/web/e2e/document-list-recovery.spec.ts",
-              "sha256": "a2c701f572c920348eabae2df1356e6b59541dbefc0e94645b7097af9ed05b40"
+              "sha256": "8676029a70bd46565ac5cb5ce8480833b8fddc4d3964d5361dd5c16545373421"
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
@@ -177151,7 +177151,7 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.test.tsx",
-              "sha256": "c9847e1057e9ba5647084c27b3d644e184cc5f730a7265cc945437aa09124bab"
+              "sha256": "1a9d3272ec9cd9574b475a752fb014fb53f9a7639970c162b9252e4781dad933"
             },
             {
               "path": "apps/web/src/components/DocumentRecords.test.tsx",
@@ -177171,11 +177171,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "4608a08d7bcc56f471adecae5c88b4154d82ce026bd709284e4ebbbf1d2af33d"
+              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "28c8c4f967612e08890361d4137395f3171fc06acc1f3f8813e883fd87fda137"
+              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
             },
             {
               "path": "apps/web/src/components/contract-authoring-forms.test.tsx",
@@ -177934,7 +177934,7 @@
             },
             {
               "path": "apps/web/e2e/document-list-recovery.spec.ts",
-              "sha256": "a2c701f572c920348eabae2df1356e6b59541dbefc0e94645b7097af9ed05b40"
+              "sha256": "8676029a70bd46565ac5cb5ce8480833b8fddc4d3964d5361dd5c16545373421"
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
@@ -177958,7 +177958,7 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.test.tsx",
-              "sha256": "c9847e1057e9ba5647084c27b3d644e184cc5f730a7265cc945437aa09124bab"
+              "sha256": "1a9d3272ec9cd9574b475a752fb014fb53f9a7639970c162b9252e4781dad933"
             },
             {
               "path": "apps/web/src/components/DocumentRecords.test.tsx",
@@ -177978,11 +177978,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "4608a08d7bcc56f471adecae5c88b4154d82ce026bd709284e4ebbbf1d2af33d"
+              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "28c8c4f967612e08890361d4137395f3171fc06acc1f3f8813e883fd87fda137"
+              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
             },
             {
               "path": "apps/web/src/components/contract-authoring-forms.test.tsx",
@@ -178738,7 +178738,7 @@
             },
             {
               "path": "apps/web/e2e/document-list-recovery.spec.ts",
-              "sha256": "a2c701f572c920348eabae2df1356e6b59541dbefc0e94645b7097af9ed05b40"
+              "sha256": "8676029a70bd46565ac5cb5ce8480833b8fddc4d3964d5361dd5c16545373421"
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
@@ -178762,7 +178762,7 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.test.tsx",
-              "sha256": "c9847e1057e9ba5647084c27b3d644e184cc5f730a7265cc945437aa09124bab"
+              "sha256": "1a9d3272ec9cd9574b475a752fb014fb53f9a7639970c162b9252e4781dad933"
             },
             {
               "path": "apps/web/src/components/DocumentRecords.test.tsx",
@@ -178782,11 +178782,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "4608a08d7bcc56f471adecae5c88b4154d82ce026bd709284e4ebbbf1d2af33d"
+              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "28c8c4f967612e08890361d4137395f3171fc06acc1f3f8813e883fd87fda137"
+              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
             },
             {
               "path": "apps/web/src/components/contract-authoring-forms.test.tsx",
@@ -179541,7 +179541,7 @@
             },
             {
               "path": "apps/web/e2e/document-list-recovery.spec.ts",
-              "sha256": "a2c701f572c920348eabae2df1356e6b59541dbefc0e94645b7097af9ed05b40"
+              "sha256": "8676029a70bd46565ac5cb5ce8480833b8fddc4d3964d5361dd5c16545373421"
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
@@ -179565,7 +179565,7 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.test.tsx",
-              "sha256": "c9847e1057e9ba5647084c27b3d644e184cc5f730a7265cc945437aa09124bab"
+              "sha256": "1a9d3272ec9cd9574b475a752fb014fb53f9a7639970c162b9252e4781dad933"
             },
             {
               "path": "apps/web/src/components/DocumentRecords.test.tsx",
@@ -179585,11 +179585,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "4608a08d7bcc56f471adecae5c88b4154d82ce026bd709284e4ebbbf1d2af33d"
+              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "28c8c4f967612e08890361d4137395f3171fc06acc1f3f8813e883fd87fda137"
+              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
             },
             {
               "path": "apps/web/src/components/contract-authoring-forms.test.tsx",
@@ -180346,7 +180346,7 @@
             },
             {
               "path": "apps/web/e2e/document-list-recovery.spec.ts",
-              "sha256": "a2c701f572c920348eabae2df1356e6b59541dbefc0e94645b7097af9ed05b40"
+              "sha256": "8676029a70bd46565ac5cb5ce8480833b8fddc4d3964d5361dd5c16545373421"
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
@@ -180370,7 +180370,7 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.test.tsx",
-              "sha256": "c9847e1057e9ba5647084c27b3d644e184cc5f730a7265cc945437aa09124bab"
+              "sha256": "1a9d3272ec9cd9574b475a752fb014fb53f9a7639970c162b9252e4781dad933"
             },
             {
               "path": "apps/web/src/components/DocumentRecords.test.tsx",
@@ -180390,11 +180390,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "4608a08d7bcc56f471adecae5c88b4154d82ce026bd709284e4ebbbf1d2af33d"
+              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "28c8c4f967612e08890361d4137395f3171fc06acc1f3f8813e883fd87fda137"
+              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
             },
             {
               "path": "apps/web/src/components/contract-authoring-forms.test.tsx",
@@ -181181,7 +181181,7 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.test.tsx",
-              "sha256": "c9847e1057e9ba5647084c27b3d644e184cc5f730a7265cc945437aa09124bab"
+              "sha256": "1a9d3272ec9cd9574b475a752fb014fb53f9a7639970c162b9252e4781dad933"
             },
             {
               "path": "apps/web/src/components/contract-workspace-query.test.tsx",
@@ -182369,7 +182369,7 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.test.tsx",
-              "sha256": "c9847e1057e9ba5647084c27b3d644e184cc5f730a7265cc945437aa09124bab"
+              "sha256": "1a9d3272ec9cd9574b475a752fb014fb53f9a7639970c162b9252e4781dad933"
             },
             {
               "path": "apps/web/src/components/contract-workspace-query.test.tsx",
@@ -183854,7 +183854,7 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.test.tsx",
-              "sha256": "c9847e1057e9ba5647084c27b3d644e184cc5f730a7265cc945437aa09124bab"
+              "sha256": "1a9d3272ec9cd9574b475a752fb014fb53f9a7639970c162b9252e4781dad933"
             },
             {
               "path": "apps/web/src/components/contract-workspace-query.test.tsx",
@@ -184983,7 +184983,7 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.test.tsx",
-              "sha256": "c9847e1057e9ba5647084c27b3d644e184cc5f730a7265cc945437aa09124bab"
+              "sha256": "1a9d3272ec9cd9574b475a752fb014fb53f9a7639970c162b9252e4781dad933"
             },
             {
               "path": "apps/web/src/components/contract-workspace-query.test.tsx",
@@ -186092,7 +186092,7 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.test.tsx",
-              "sha256": "c9847e1057e9ba5647084c27b3d644e184cc5f730a7265cc945437aa09124bab"
+              "sha256": "1a9d3272ec9cd9574b475a752fb014fb53f9a7639970c162b9252e4781dad933"
             },
             {
               "path": "apps/web/src/lib/electricity-increase-decision-form-schemas.ts",
@@ -186879,7 +186879,7 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.test.tsx",
-              "sha256": "c9847e1057e9ba5647084c27b3d644e184cc5f730a7265cc945437aa09124bab"
+              "sha256": "1a9d3272ec9cd9574b475a752fb014fb53f9a7639970c162b9252e4781dad933"
             },
             {
               "path": "apps/web/src/components/contract-workspace-query.test.tsx",
@@ -192223,7 +192223,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "e9a3b0d45e52638d95f3d3dfbfb6c600408438c324ddc7e1b8da2935584c5900"
+              "sha256": "cc53b8e6eacede2177a6d61c1d845cf74449dd19c8fde3aedce624fbc50e8a0f"
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
@@ -192259,7 +192259,7 @@
             },
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
-              "sha256": "4ca738d59b83f074d95432adb169d9134ad804fa1320f4739c92d4e352df6ae3"
+              "sha256": "0025099fd945e492a959bf5161b1b94b0cabf8f94e56888684e01a4585ec1009"
             },
             {
               "path": "apps/web/e2e/operating-context.spec.ts",
@@ -193135,7 +193135,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "e9a3b0d45e52638d95f3d3dfbfb6c600408438c324ddc7e1b8da2935584c5900"
+              "sha256": "cc53b8e6eacede2177a6d61c1d845cf74449dd19c8fde3aedce624fbc50e8a0f"
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
@@ -193171,7 +193171,7 @@
             },
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
-              "sha256": "4ca738d59b83f074d95432adb169d9134ad804fa1320f4739c92d4e352df6ae3"
+              "sha256": "0025099fd945e492a959bf5161b1b94b0cabf8f94e56888684e01a4585ec1009"
             },
             {
               "path": "apps/web/e2e/operating-context.spec.ts",
@@ -194147,7 +194147,7 @@
             },
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
-              "sha256": "4ca738d59b83f074d95432adb169d9134ad804fa1320f4739c92d4e352df6ae3"
+              "sha256": "0025099fd945e492a959bf5161b1b94b0cabf8f94e56888684e01a4585ec1009"
             },
             {
               "path": "apps/web/e2e/ticket-forms-fixture.ts",
@@ -194179,7 +194179,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "e9a3b0d45e52638d95f3d3dfbfb6c600408438c324ddc7e1b8da2935584c5900"
+              "sha256": "cc53b8e6eacede2177a6d61c1d845cf74449dd19c8fde3aedce624fbc50e8a0f"
             },
             {
               "path": "apps/web/src/components/ProfileMenu.tsx",
@@ -195260,7 +195260,7 @@
             },
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
-              "sha256": "4ca738d59b83f074d95432adb169d9134ad804fa1320f4739c92d4e352df6ae3"
+              "sha256": "0025099fd945e492a959bf5161b1b94b0cabf8f94e56888684e01a4585ec1009"
             },
             {
               "path": "apps/web/e2e/saving-fulfillment-history.spec.ts",
@@ -195304,7 +195304,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "e9a3b0d45e52638d95f3d3dfbfb6c600408438c324ddc7e1b8da2935584c5900"
+              "sha256": "cc53b8e6eacede2177a6d61c1d845cf74449dd19c8fde3aedce624fbc50e8a0f"
             },
             {
               "path": "apps/web/src/components/ProfileMenu.tsx",
@@ -197198,7 +197198,7 @@
             },
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
-              "sha256": "4ca738d59b83f074d95432adb169d9134ad804fa1320f4739c92d4e352df6ae3"
+              "sha256": "0025099fd945e492a959bf5161b1b94b0cabf8f94e56888684e01a4585ec1009"
             },
             {
               "path": "apps/web/e2e/saving-fulfillment-history.spec.ts",
@@ -197242,7 +197242,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "e9a3b0d45e52638d95f3d3dfbfb6c600408438c324ddc7e1b8da2935584c5900"
+              "sha256": "cc53b8e6eacede2177a6d61c1d845cf74449dd19c8fde3aedce624fbc50e8a0f"
             },
             {
               "path": "apps/web/src/components/ProfileMenu.tsx",
@@ -198959,7 +198959,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "e9a3b0d45e52638d95f3d3dfbfb6c600408438c324ddc7e1b8da2935584c5900"
+              "sha256": "cc53b8e6eacede2177a6d61c1d845cf74449dd19c8fde3aedce624fbc50e8a0f"
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
@@ -198995,7 +198995,7 @@
             },
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
-              "sha256": "4ca738d59b83f074d95432adb169d9134ad804fa1320f4739c92d4e352df6ae3"
+              "sha256": "0025099fd945e492a959bf5161b1b94b0cabf8f94e56888684e01a4585ec1009"
             },
             {
               "path": "apps/web/e2e/operating-context.spec.ts",
@@ -337403,7 +337403,7 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.test.tsx",
-              "sha256": "c9847e1057e9ba5647084c27b3d644e184cc5f730a7265cc945437aa09124bab"
+              "sha256": "1a9d3272ec9cd9574b475a752fb014fb53f9a7639970c162b9252e4781dad933"
             },
             {
               "path": "apps/web/src/components/contract-workspace-query.test.tsx",
@@ -338513,7 +338513,7 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.test.tsx",
-              "sha256": "c9847e1057e9ba5647084c27b3d644e184cc5f730a7265cc945437aa09124bab"
+              "sha256": "1a9d3272ec9cd9574b475a752fb014fb53f9a7639970c162b9252e4781dad933"
             },
             {
               "path": "apps/web/src/lib/electricity-increase-decision-form-schemas.ts",
@@ -339300,7 +339300,7 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.test.tsx",
-              "sha256": "c9847e1057e9ba5647084c27b3d644e184cc5f730a7265cc945437aa09124bab"
+              "sha256": "1a9d3272ec9cd9574b475a752fb014fb53f9a7639970c162b9252e4781dad933"
             },
             {
               "path": "apps/web/src/components/contract-workspace-query.test.tsx",
@@ -340410,7 +340410,7 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.test.tsx",
-              "sha256": "c9847e1057e9ba5647084c27b3d644e184cc5f730a7265cc945437aa09124bab"
+              "sha256": "1a9d3272ec9cd9574b475a752fb014fb53f9a7639970c162b9252e4781dad933"
             },
             {
               "path": "apps/web/src/lib/electricity-increase-decision-form-schemas.ts",
@@ -341198,7 +341198,7 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.test.tsx",
-              "sha256": "c9847e1057e9ba5647084c27b3d644e184cc5f730a7265cc945437aa09124bab"
+              "sha256": "1a9d3272ec9cd9574b475a752fb014fb53f9a7639970c162b9252e4781dad933"
             },
             {
               "path": "apps/web/src/components/contract-workspace-query.test.tsx",
@@ -342327,7 +342327,7 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.test.tsx",
-              "sha256": "c9847e1057e9ba5647084c27b3d644e184cc5f730a7265cc945437aa09124bab"
+              "sha256": "1a9d3272ec9cd9574b475a752fb014fb53f9a7639970c162b9252e4781dad933"
             },
             {
               "path": "apps/web/src/components/contract-workspace-query.test.tsx",
@@ -343458,7 +343458,7 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.test.tsx",
-              "sha256": "c9847e1057e9ba5647084c27b3d644e184cc5f730a7265cc945437aa09124bab"
+              "sha256": "1a9d3272ec9cd9574b475a752fb014fb53f9a7639970c162b9252e4781dad933"
             },
             {
               "path": "apps/web/src/components/contract-workspace-query.test.tsx",
@@ -344588,7 +344588,7 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.test.tsx",
-              "sha256": "c9847e1057e9ba5647084c27b3d644e184cc5f730a7265cc945437aa09124bab"
+              "sha256": "1a9d3272ec9cd9574b475a752fb014fb53f9a7639970c162b9252e4781dad933"
             },
             {
               "path": "apps/web/src/components/contract-workspace-query.test.tsx",
@@ -380893,11 +380893,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "4608a08d7bcc56f471adecae5c88b4154d82ce026bd709284e4ebbbf1d2af33d"
+              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "28c8c4f967612e08890361d4137395f3171fc06acc1f3f8813e883fd87fda137"
+              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
             },
             {
               "path": "apps/web/src/components/SavingOrderComments.tsx",
@@ -381857,11 +381857,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "4608a08d7bcc56f471adecae5c88b4154d82ce026bd709284e4ebbbf1d2af33d"
+              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "28c8c4f967612e08890361d4137395f3171fc06acc1f3f8813e883fd87fda137"
+              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
             },
             {
               "path": "apps/web/src/components/SavingOrderComments.tsx",
@@ -382820,11 +382820,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "4608a08d7bcc56f471adecae5c88b4154d82ce026bd709284e4ebbbf1d2af33d"
+              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "28c8c4f967612e08890361d4137395f3171fc06acc1f3f8813e883fd87fda137"
+              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
             },
             {
               "path": "apps/web/src/components/SavingOrderComments.tsx",
@@ -434709,7 +434709,7 @@
             },
             {
               "path": "apps/web/e2e/delivery-provider-recovery.spec.ts",
-              "sha256": "32d3c2ae0f7ff17804f920527e41f1de4ada343ade39fba3f73e8a936ec13273"
+              "sha256": "739aa6d07a2a110d5a5074fddd3846abe7e12b1f0f791bf8c40f3b5e49b335ba"
             },
             {
               "path": "apps/web/e2e/sms-provider-settings.spec.ts",
@@ -435146,7 +435146,7 @@
             },
             {
               "path": "apps/web/e2e/delivery-provider-recovery.spec.ts",
-              "sha256": "32d3c2ae0f7ff17804f920527e41f1de4ada343ade39fba3f73e8a936ec13273"
+              "sha256": "739aa6d07a2a110d5a5074fddd3846abe7e12b1f0f791bf8c40f3b5e49b335ba"
             },
             {
               "path": "apps/web/e2e/sms-provider-settings.spec.ts",
@@ -435582,7 +435582,7 @@
             },
             {
               "path": "apps/web/e2e/delivery-provider-recovery.spec.ts",
-              "sha256": "32d3c2ae0f7ff17804f920527e41f1de4ada343ade39fba3f73e8a936ec13273"
+              "sha256": "739aa6d07a2a110d5a5074fddd3846abe7e12b1f0f791bf8c40f3b5e49b335ba"
             },
             {
               "path": "apps/web/e2e/sms-provider-settings.spec.ts",
@@ -436017,7 +436017,7 @@
             },
             {
               "path": "apps/web/e2e/delivery-provider-recovery.spec.ts",
-              "sha256": "32d3c2ae0f7ff17804f920527e41f1de4ada343ade39fba3f73e8a936ec13273"
+              "sha256": "739aa6d07a2a110d5a5074fddd3846abe7e12b1f0f791bf8c40f3b5e49b335ba"
             },
             {
               "path": "apps/web/e2e/sms-provider-settings.spec.ts",
@@ -436534,7 +436534,7 @@
             },
             {
               "path": "apps/web/e2e/delivery-provider-recovery.spec.ts",
-              "sha256": "32d3c2ae0f7ff17804f920527e41f1de4ada343ade39fba3f73e8a936ec13273"
+              "sha256": "739aa6d07a2a110d5a5074fddd3846abe7e12b1f0f791bf8c40f3b5e49b335ba"
             },
             {
               "path": "apps/web/e2e/provider-forms.spec.ts",
@@ -437514,7 +437514,7 @@
             },
             {
               "path": "apps/web/e2e/delivery-provider-recovery.spec.ts",
-              "sha256": "32d3c2ae0f7ff17804f920527e41f1de4ada343ade39fba3f73e8a936ec13273"
+              "sha256": "739aa6d07a2a110d5a5074fddd3846abe7e12b1f0f791bf8c40f3b5e49b335ba"
             },
             {
               "path": "apps/web/src/lib/email-providers-api.ts",
@@ -441398,7 +441398,7 @@
             },
             {
               "path": "apps/web/e2e/document-list-recovery.spec.ts",
-              "sha256": "a2c701f572c920348eabae2df1356e6b59541dbefc0e94645b7097af9ed05b40"
+              "sha256": "8676029a70bd46565ac5cb5ce8480833b8fddc4d3964d5361dd5c16545373421"
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
@@ -441422,7 +441422,7 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.test.tsx",
-              "sha256": "c9847e1057e9ba5647084c27b3d644e184cc5f730a7265cc945437aa09124bab"
+              "sha256": "1a9d3272ec9cd9574b475a752fb014fb53f9a7639970c162b9252e4781dad933"
             },
             {
               "path": "apps/web/src/components/DocumentRecords.test.tsx",
@@ -441442,11 +441442,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "4608a08d7bcc56f471adecae5c88b4154d82ce026bd709284e4ebbbf1d2af33d"
+              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "28c8c4f967612e08890361d4137395f3171fc06acc1f3f8813e883fd87fda137"
+              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
             },
             {
               "path": "apps/web/src/components/contract-authoring-forms.test.tsx",
@@ -442270,7 +442270,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "28c8c4f967612e08890361d4137395f3171fc06acc1f3f8813e883fd87fda137"
+              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
             },
             {
               "path": "apps/web/src/components/DocumentRecords.tsx",
@@ -442298,7 +442298,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "4608a08d7bcc56f471adecae5c88b4154d82ce026bd709284e4ebbbf1d2af33d"
+              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
             },
             {
               "path": "apps/web/src/components/DocumentRecords.test.tsx",
@@ -442322,7 +442322,7 @@
             },
             {
               "path": "apps/web/e2e/document-list-recovery.spec.ts",
-              "sha256": "a2c701f572c920348eabae2df1356e6b59541dbefc0e94645b7097af9ed05b40"
+              "sha256": "8676029a70bd46565ac5cb5ce8480833b8fddc4d3964d5361dd5c16545373421"
             },
             {
               "path": "apps/web/e2e/contract-pdf-scanning.spec.ts",
@@ -442758,7 +442758,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "28c8c4f967612e08890361d4137395f3171fc06acc1f3f8813e883fd87fda137"
+              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
             },
             {
               "path": "apps/web/src/components/DocumentRecords.tsx",
@@ -442786,7 +442786,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "4608a08d7bcc56f471adecae5c88b4154d82ce026bd709284e4ebbbf1d2af33d"
+              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
             },
             {
               "path": "apps/web/src/components/DocumentRecords.test.tsx",
@@ -442810,7 +442810,7 @@
             },
             {
               "path": "apps/web/e2e/document-list-recovery.spec.ts",
-              "sha256": "a2c701f572c920348eabae2df1356e6b59541dbefc0e94645b7097af9ed05b40"
+              "sha256": "8676029a70bd46565ac5cb5ce8480833b8fddc4d3964d5361dd5c16545373421"
             },
             {
               "path": "apps/web/e2e/contract-pdf-scanning.spec.ts",
@@ -443114,7 +443114,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "4608a08d7bcc56f471adecae5c88b4154d82ce026bd709284e4ebbbf1d2af33d"
+              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
             },
             {
               "path": "apps/web/src/components/FilePreview.tsx",
@@ -443134,7 +443134,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "28c8c4f967612e08890361d4137395f3171fc06acc1f3f8813e883fd87fda137"
+              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
             },
             {
               "path": "apps/web/src/lib/documents.ts",
@@ -443529,7 +443529,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "28c8c4f967612e08890361d4137395f3171fc06acc1f3f8813e883fd87fda137"
+              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
             },
             {
               "path": "apps/web/src/components/DocumentRecords.tsx",
@@ -443557,7 +443557,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "4608a08d7bcc56f471adecae5c88b4154d82ce026bd709284e4ebbbf1d2af33d"
+              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
             },
             {
               "path": "apps/web/src/components/DocumentRecords.test.tsx",
@@ -443581,7 +443581,7 @@
             },
             {
               "path": "apps/web/e2e/document-list-recovery.spec.ts",
-              "sha256": "a2c701f572c920348eabae2df1356e6b59541dbefc0e94645b7097af9ed05b40"
+              "sha256": "8676029a70bd46565ac5cb5ce8480833b8fddc4d3964d5361dd5c16545373421"
             },
             {
               "path": "apps/web/e2e/contract-pdf-scanning.spec.ts",
@@ -443963,7 +443963,7 @@
             },
             {
               "path": "apps/web/e2e/document-list-recovery.spec.ts",
-              "sha256": "a2c701f572c920348eabae2df1356e6b59541dbefc0e94645b7097af9ed05b40"
+              "sha256": "8676029a70bd46565ac5cb5ce8480833b8fddc4d3964d5361dd5c16545373421"
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
@@ -444003,11 +444003,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "4608a08d7bcc56f471adecae5c88b4154d82ce026bd709284e4ebbbf1d2af33d"
+              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "28c8c4f967612e08890361d4137395f3171fc06acc1f3f8813e883fd87fda137"
+              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
             },
             {
               "path": "apps/web/src/components/FilePreview.tsx",
@@ -444412,7 +444412,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "4608a08d7bcc56f471adecae5c88b4154d82ce026bd709284e4ebbbf1d2af33d"
+              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
             },
             {
               "path": "apps/web/src/components/FilePreview.tsx",
@@ -444432,7 +444432,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "28c8c4f967612e08890361d4137395f3171fc06acc1f3f8813e883fd87fda137"
+              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
             },
             {
               "path": "apps/web/src/lib/documents.ts",
@@ -444825,7 +444825,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "28c8c4f967612e08890361d4137395f3171fc06acc1f3f8813e883fd87fda137"
+              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
             },
             {
               "path": "apps/web/src/components/DocumentRecords.tsx",
@@ -444853,7 +444853,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "4608a08d7bcc56f471adecae5c88b4154d82ce026bd709284e4ebbbf1d2af33d"
+              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
             },
             {
               "path": "apps/web/src/components/DocumentRecords.test.tsx",
@@ -444877,7 +444877,7 @@
             },
             {
               "path": "apps/web/e2e/document-list-recovery.spec.ts",
-              "sha256": "a2c701f572c920348eabae2df1356e6b59541dbefc0e94645b7097af9ed05b40"
+              "sha256": "8676029a70bd46565ac5cb5ce8480833b8fddc4d3964d5361dd5c16545373421"
             },
             {
               "path": "apps/web/e2e/contract-pdf-scanning.spec.ts",
@@ -445307,7 +445307,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "28c8c4f967612e08890361d4137395f3171fc06acc1f3f8813e883fd87fda137"
+              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
             },
             {
               "path": "apps/web/src/components/DocumentRecords.tsx",
@@ -445335,7 +445335,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "4608a08d7bcc56f471adecae5c88b4154d82ce026bd709284e4ebbbf1d2af33d"
+              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
             },
             {
               "path": "apps/web/src/components/DocumentRecords.test.tsx",
@@ -445359,7 +445359,7 @@
             },
             {
               "path": "apps/web/e2e/document-list-recovery.spec.ts",
-              "sha256": "a2c701f572c920348eabae2df1356e6b59541dbefc0e94645b7097af9ed05b40"
+              "sha256": "8676029a70bd46565ac5cb5ce8480833b8fddc4d3964d5361dd5c16545373421"
             },
             {
               "path": "apps/web/e2e/contract-pdf-scanning.spec.ts",
@@ -445813,7 +445813,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "28c8c4f967612e08890361d4137395f3171fc06acc1f3f8813e883fd87fda137"
+              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
             },
             {
               "path": "apps/web/src/components/DocumentRecords.tsx",
@@ -445841,7 +445841,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "4608a08d7bcc56f471adecae5c88b4154d82ce026bd709284e4ebbbf1d2af33d"
+              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
             },
             {
               "path": "apps/web/src/components/DocumentRecords.test.tsx",
@@ -445865,7 +445865,7 @@
             },
             {
               "path": "apps/web/e2e/document-list-recovery.spec.ts",
-              "sha256": "a2c701f572c920348eabae2df1356e6b59541dbefc0e94645b7097af9ed05b40"
+              "sha256": "8676029a70bd46565ac5cb5ce8480833b8fddc4d3964d5361dd5c16545373421"
             },
             {
               "path": "apps/web/e2e/contract-pdf-scanning.spec.ts",
@@ -446319,7 +446319,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "28c8c4f967612e08890361d4137395f3171fc06acc1f3f8813e883fd87fda137"
+              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
             },
             {
               "path": "apps/web/src/components/DocumentRecords.tsx",
@@ -446347,7 +446347,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "4608a08d7bcc56f471adecae5c88b4154d82ce026bd709284e4ebbbf1d2af33d"
+              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
             },
             {
               "path": "apps/web/src/components/DocumentRecords.test.tsx",
@@ -446371,7 +446371,7 @@
             },
             {
               "path": "apps/web/e2e/document-list-recovery.spec.ts",
-              "sha256": "a2c701f572c920348eabae2df1356e6b59541dbefc0e94645b7097af9ed05b40"
+              "sha256": "8676029a70bd46565ac5cb5ce8480833b8fddc4d3964d5361dd5c16545373421"
             },
             {
               "path": "apps/web/e2e/contract-pdf-scanning.spec.ts",
@@ -446825,7 +446825,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "28c8c4f967612e08890361d4137395f3171fc06acc1f3f8813e883fd87fda137"
+              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
             },
             {
               "path": "apps/web/src/components/DocumentRecords.tsx",
@@ -446853,7 +446853,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "4608a08d7bcc56f471adecae5c88b4154d82ce026bd709284e4ebbbf1d2af33d"
+              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
             },
             {
               "path": "apps/web/src/components/DocumentRecords.test.tsx",
@@ -446877,7 +446877,7 @@
             },
             {
               "path": "apps/web/e2e/document-list-recovery.spec.ts",
-              "sha256": "a2c701f572c920348eabae2df1356e6b59541dbefc0e94645b7097af9ed05b40"
+              "sha256": "8676029a70bd46565ac5cb5ce8480833b8fddc4d3964d5361dd5c16545373421"
             },
             {
               "path": "apps/web/e2e/contract-pdf-scanning.spec.ts",
@@ -447330,7 +447330,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "28c8c4f967612e08890361d4137395f3171fc06acc1f3f8813e883fd87fda137"
+              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
             },
             {
               "path": "apps/web/src/components/DocumentRecords.tsx",
@@ -447358,7 +447358,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "4608a08d7bcc56f471adecae5c88b4154d82ce026bd709284e4ebbbf1d2af33d"
+              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
             },
             {
               "path": "apps/web/src/components/DocumentRecords.test.tsx",
@@ -447382,7 +447382,7 @@
             },
             {
               "path": "apps/web/e2e/document-list-recovery.spec.ts",
-              "sha256": "a2c701f572c920348eabae2df1356e6b59541dbefc0e94645b7097af9ed05b40"
+              "sha256": "8676029a70bd46565ac5cb5ce8480833b8fddc4d3964d5361dd5c16545373421"
             },
             {
               "path": "apps/web/e2e/contract-pdf-scanning.spec.ts",
@@ -447686,7 +447686,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "4608a08d7bcc56f471adecae5c88b4154d82ce026bd709284e4ebbbf1d2af33d"
+              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
             },
             {
               "path": "apps/web/src/components/FilePreview.tsx",
@@ -447706,7 +447706,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "28c8c4f967612e08890361d4137395f3171fc06acc1f3f8813e883fd87fda137"
+              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
             },
             {
               "path": "apps/web/src/lib/documents.ts",
@@ -448093,11 +448093,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "4608a08d7bcc56f471adecae5c88b4154d82ce026bd709284e4ebbbf1d2af33d"
+              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
             },
             {
               "path": "apps/web/e2e/document-list-recovery.spec.ts",
-              "sha256": "a2c701f572c920348eabae2df1356e6b59541dbefc0e94645b7097af9ed05b40"
+              "sha256": "8676029a70bd46565ac5cb5ce8480833b8fddc4d3964d5361dd5c16545373421"
             },
             {
               "path": "apps/web/e2e/document-upload-controls.spec.ts",
@@ -448436,11 +448436,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "4608a08d7bcc56f471adecae5c88b4154d82ce026bd709284e4ebbbf1d2af33d"
+              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
             },
             {
               "path": "apps/web/e2e/document-list-recovery.spec.ts",
-              "sha256": "a2c701f572c920348eabae2df1356e6b59541dbefc0e94645b7097af9ed05b40"
+              "sha256": "8676029a70bd46565ac5cb5ce8480833b8fddc4d3964d5361dd5c16545373421"
             },
             {
               "path": "apps/web/e2e/document-upload-controls.spec.ts",
@@ -448781,11 +448781,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "4608a08d7bcc56f471adecae5c88b4154d82ce026bd709284e4ebbbf1d2af33d"
+              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
             },
             {
               "path": "apps/web/e2e/document-list-recovery.spec.ts",
-              "sha256": "a2c701f572c920348eabae2df1356e6b59541dbefc0e94645b7097af9ed05b40"
+              "sha256": "8676029a70bd46565ac5cb5ce8480833b8fddc4d3964d5361dd5c16545373421"
             },
             {
               "path": "apps/web/e2e/document-upload-controls.spec.ts",
@@ -449151,11 +449151,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "4608a08d7bcc56f471adecae5c88b4154d82ce026bd709284e4ebbbf1d2af33d"
+              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
             },
             {
               "path": "apps/web/e2e/document-list-recovery.spec.ts",
-              "sha256": "a2c701f572c920348eabae2df1356e6b59541dbefc0e94645b7097af9ed05b40"
+              "sha256": "8676029a70bd46565ac5cb5ce8480833b8fddc4d3964d5361dd5c16545373421"
             },
             {
               "path": "apps/web/e2e/document-upload-controls.spec.ts",
@@ -449494,11 +449494,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "4608a08d7bcc56f471adecae5c88b4154d82ce026bd709284e4ebbbf1d2af33d"
+              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
             },
             {
               "path": "apps/web/e2e/document-list-recovery.spec.ts",
-              "sha256": "a2c701f572c920348eabae2df1356e6b59541dbefc0e94645b7097af9ed05b40"
+              "sha256": "8676029a70bd46565ac5cb5ce8480833b8fddc4d3964d5361dd5c16545373421"
             },
             {
               "path": "apps/web/e2e/document-upload-controls.spec.ts",
@@ -464983,7 +464983,7 @@
             },
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
-              "sha256": "4ca738d59b83f074d95432adb169d9134ad804fa1320f4739c92d4e352df6ae3"
+              "sha256": "0025099fd945e492a959bf5161b1b94b0cabf8f94e56888684e01a4585ec1009"
             },
             {
               "path": "apps/web/e2e/ticket-forms-fixture.ts",
@@ -464991,7 +464991,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "e9a3b0d45e52638d95f3d3dfbfb6c600408438c324ddc7e1b8da2935584c5900"
+              "sha256": "cc53b8e6eacede2177a6d61c1d845cf74449dd19c8fde3aedce624fbc50e8a0f"
             },
             {
               "path": "apps/web/src/components/jobs/JobProgress.test.tsx",
@@ -465324,7 +465324,7 @@
             },
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
-              "sha256": "4ca738d59b83f074d95432adb169d9134ad804fa1320f4739c92d4e352df6ae3"
+              "sha256": "0025099fd945e492a959bf5161b1b94b0cabf8f94e56888684e01a4585ec1009"
             },
             {
               "path": "apps/web/e2e/ticket-forms-fixture.ts",
@@ -465332,7 +465332,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "e9a3b0d45e52638d95f3d3dfbfb6c600408438c324ddc7e1b8da2935584c5900"
+              "sha256": "cc53b8e6eacede2177a6d61c1d845cf74449dd19c8fde3aedce624fbc50e8a0f"
             },
             {
               "path": "apps/web/src/components/jobs/JobProgress.test.tsx",
@@ -465689,7 +465689,7 @@
             },
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
-              "sha256": "4ca738d59b83f074d95432adb169d9134ad804fa1320f4739c92d4e352df6ae3"
+              "sha256": "0025099fd945e492a959bf5161b1b94b0cabf8f94e56888684e01a4585ec1009"
             },
             {
               "path": "apps/web/e2e/ticket-forms-fixture.ts",
@@ -465697,7 +465697,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "e9a3b0d45e52638d95f3d3dfbfb6c600408438c324ddc7e1b8da2935584c5900"
+              "sha256": "cc53b8e6eacede2177a6d61c1d845cf74449dd19c8fde3aedce624fbc50e8a0f"
             },
             {
               "path": "apps/web/src/components/jobs/JobProgress.test.tsx",
@@ -466031,7 +466031,7 @@
             },
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
-              "sha256": "4ca738d59b83f074d95432adb169d9134ad804fa1320f4739c92d4e352df6ae3"
+              "sha256": "0025099fd945e492a959bf5161b1b94b0cabf8f94e56888684e01a4585ec1009"
             },
             {
               "path": "apps/web/e2e/ticket-forms-fixture.ts",
@@ -466039,7 +466039,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "e9a3b0d45e52638d95f3d3dfbfb6c600408438c324ddc7e1b8da2935584c5900"
+              "sha256": "cc53b8e6eacede2177a6d61c1d845cf74449dd19c8fde3aedce624fbc50e8a0f"
             },
             {
               "path": "apps/web/src/components/jobs/JobProgress.test.tsx",
@@ -491039,7 +491039,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "e9a3b0d45e52638d95f3d3dfbfb6c600408438c324ddc7e1b8da2935584c5900"
+              "sha256": "cc53b8e6eacede2177a6d61c1d845cf74449dd19c8fde3aedce624fbc50e8a0f"
             },
             {
               "path": "apps/web/src/components/ProfileMenu.tsx",
@@ -492718,7 +492718,7 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.tsx",
-              "sha256": "8a29a431aadb2d73d7e43948725cf7d92a05b89c4797e8283b44e13898b0be27"
+              "sha256": "0554b5519ecf702aaa033020f252165d0f20294b72b4b07e147b6d50d85df810"
             },
             {
               "path": "apps/web/src/components/CrmAddressEditor.tsx",
@@ -492762,7 +492762,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "28c8c4f967612e08890361d4137395f3171fc06acc1f3f8813e883fd87fda137"
+              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
             },
             {
               "path": "apps/web/src/components/EffectivePermissionsView.tsx",
@@ -494091,7 +494091,7 @@
             },
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
-              "sha256": "4ca738d59b83f074d95432adb169d9134ad804fa1320f4739c92d4e352df6ae3"
+              "sha256": "0025099fd945e492a959bf5161b1b94b0cabf8f94e56888684e01a4585ec1009"
             },
             {
               "path": "apps/web/e2e/staff-directory-recovery.spec.ts",
@@ -494171,7 +494171,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "4608a08d7bcc56f471adecae5c88b4154d82ce026bd709284e4ebbbf1d2af33d"
+              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.test.tsx",
@@ -494223,7 +494223,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "e9a3b0d45e52638d95f3d3dfbfb6c600408438c324ddc7e1b8da2935584c5900"
+              "sha256": "cc53b8e6eacede2177a6d61c1d845cf74449dd19c8fde3aedce624fbc50e8a0f"
             },
             {
               "path": "apps/web/src/components/PublishedTermsHistory.tsx",
@@ -494974,7 +494974,7 @@
             },
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
-              "sha256": "4ca738d59b83f074d95432adb169d9134ad804fa1320f4739c92d4e352df6ae3"
+              "sha256": "0025099fd945e492a959bf5161b1b94b0cabf8f94e56888684e01a4585ec1009"
             },
             {
               "path": "apps/web/e2e/staff-directory-recovery.spec.ts",
@@ -495054,7 +495054,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "4608a08d7bcc56f471adecae5c88b4154d82ce026bd709284e4ebbbf1d2af33d"
+              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.test.tsx",
@@ -495106,7 +495106,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "e9a3b0d45e52638d95f3d3dfbfb6c600408438c324ddc7e1b8da2935584c5900"
+              "sha256": "cc53b8e6eacede2177a6d61c1d845cf74449dd19c8fde3aedce624fbc50e8a0f"
             },
             {
               "path": "apps/web/src/components/PublishedTermsHistory.tsx",
@@ -495798,7 +495798,7 @@
             },
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
-              "sha256": "4ca738d59b83f074d95432adb169d9134ad804fa1320f4739c92d4e352df6ae3"
+              "sha256": "0025099fd945e492a959bf5161b1b94b0cabf8f94e56888684e01a4585ec1009"
             },
             {
               "path": "apps/web/e2e/staff-directory-recovery.spec.ts",
@@ -495878,7 +495878,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "4608a08d7bcc56f471adecae5c88b4154d82ce026bd709284e4ebbbf1d2af33d"
+              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.test.tsx",
@@ -495930,7 +495930,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "e9a3b0d45e52638d95f3d3dfbfb6c600408438c324ddc7e1b8da2935584c5900"
+              "sha256": "cc53b8e6eacede2177a6d61c1d845cf74449dd19c8fde3aedce624fbc50e8a0f"
             },
             {
               "path": "apps/web/src/components/PublishedTermsHistory.tsx",
@@ -497047,7 +497047,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "2449f3f30c987b1c068ffb3cd094ad506578e408b2654729aece5a318042f44e"
+              "sha256": "c653d0fec878e482b053a584c1362d7cd80a17ddbf55c6b351758cd2a71e41bd"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -497540,7 +497540,7 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.tsx",
-              "sha256": "8a29a431aadb2d73d7e43948725cf7d92a05b89c4797e8283b44e13898b0be27"
+              "sha256": "0554b5519ecf702aaa033020f252165d0f20294b72b4b07e147b6d50d85df810"
             },
             {
               "path": "apps/web/src/components/CrmAddressEditor.tsx",
@@ -497584,7 +497584,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "28c8c4f967612e08890361d4137395f3171fc06acc1f3f8813e883fd87fda137"
+              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
             },
             {
               "path": "apps/web/src/components/EffectivePermissionsView.tsx",
@@ -511410,7 +511410,7 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.tsx",
-              "sha256": "8a29a431aadb2d73d7e43948725cf7d92a05b89c4797e8283b44e13898b0be27"
+              "sha256": "0554b5519ecf702aaa033020f252165d0f20294b72b4b07e147b6d50d85df810"
             },
             {
               "path": "apps/web/src/components/CrmProfileRecords.tsx",
@@ -512739,7 +512739,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "e9a3b0d45e52638d95f3d3dfbfb6c600408438c324ddc7e1b8da2935584c5900"
+              "sha256": "cc53b8e6eacede2177a6d61c1d845cf74449dd19c8fde3aedce624fbc50e8a0f"
             },
             {
               "path": "apps/web/src/components/ProfileMenu.tsx",
@@ -513538,7 +513538,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "e9a3b0d45e52638d95f3d3dfbfb6c600408438c324ddc7e1b8da2935584c5900"
+              "sha256": "cc53b8e6eacede2177a6d61c1d845cf74449dd19c8fde3aedce624fbc50e8a0f"
             },
             {
               "path": "apps/web/src/components/ProfileMenu.tsx",
@@ -514336,7 +514336,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "e9a3b0d45e52638d95f3d3dfbfb6c600408438c324ddc7e1b8da2935584c5900"
+              "sha256": "cc53b8e6eacede2177a6d61c1d845cf74449dd19c8fde3aedce624fbc50e8a0f"
             },
             {
               "path": "apps/web/src/components/ProfileMenu.tsx",
@@ -514907,7 +514907,7 @@
           "source_evidence": [
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
-              "sha256": "4ca738d59b83f074d95432adb169d9134ad804fa1320f4739c92d4e352df6ae3"
+              "sha256": "0025099fd945e492a959bf5161b1b94b0cabf8f94e56888684e01a4585ec1009"
             },
             {
               "path": "apps/web/e2e/security-settings-forms.spec.ts",
@@ -516937,7 +516937,7 @@
             },
             {
               "path": "apps/web/e2e/document-list-recovery.spec.ts",
-              "sha256": "a2c701f572c920348eabae2df1356e6b59541dbefc0e94645b7097af9ed05b40"
+              "sha256": "8676029a70bd46565ac5cb5ce8480833b8fddc4d3964d5361dd5c16545373421"
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
@@ -517121,7 +517121,7 @@
             },
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
-              "sha256": "4ca738d59b83f074d95432adb169d9134ad804fa1320f4739c92d4e352df6ae3"
+              "sha256": "0025099fd945e492a959bf5161b1b94b0cabf8f94e56888684e01a4585ec1009"
             },
             {
               "path": "apps/web/e2e/provider-forms.spec.ts",
@@ -517409,11 +517409,11 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.test.tsx",
-              "sha256": "c9847e1057e9ba5647084c27b3d644e184cc5f730a7265cc945437aa09124bab"
+              "sha256": "1a9d3272ec9cd9574b475a752fb014fb53f9a7639970c162b9252e4781dad933"
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.tsx",
-              "sha256": "8a29a431aadb2d73d7e43948725cf7d92a05b89c4797e8283b44e13898b0be27"
+              "sha256": "0554b5519ecf702aaa033020f252165d0f20294b72b4b07e147b6d50d85df810"
             },
             {
               "path": "apps/web/src/components/ConversationIdentityDialog.test.tsx",
@@ -517457,11 +517457,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "4608a08d7bcc56f471adecae5c88b4154d82ce026bd709284e4ebbbf1d2af33d"
+              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "28c8c4f967612e08890361d4137395f3171fc06acc1f3f8813e883fd87fda137"
+              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.tsx",
@@ -518105,7 +518105,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "2449f3f30c987b1c068ffb3cd094ad506578e408b2654729aece5a318042f44e"
+              "sha256": "c653d0fec878e482b053a584c1362d7cd80a17ddbf55c6b351758cd2a71e41bd"
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
@@ -518399,11 +518399,11 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.test.tsx",
-              "sha256": "c9847e1057e9ba5647084c27b3d644e184cc5f730a7265cc945437aa09124bab"
+              "sha256": "1a9d3272ec9cd9574b475a752fb014fb53f9a7639970c162b9252e4781dad933"
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.tsx",
-              "sha256": "8a29a431aadb2d73d7e43948725cf7d92a05b89c4797e8283b44e13898b0be27"
+              "sha256": "0554b5519ecf702aaa033020f252165d0f20294b72b4b07e147b6d50d85df810"
             },
             {
               "path": "apps/web/src/components/ConversationIdentityDialog.tsx",
@@ -518415,7 +518415,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "4608a08d7bcc56f471adecae5c88b4154d82ce026bd709284e4ebbbf1d2af33d"
+              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
             },
             {
               "path": "apps/web/src/components/FilePreview.tsx",
@@ -519213,7 +519213,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "2449f3f30c987b1c068ffb3cd094ad506578e408b2654729aece5a318042f44e"
+              "sha256": "c653d0fec878e482b053a584c1362d7cd80a17ddbf55c6b351758cd2a71e41bd"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -519838,11 +519838,11 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.test.tsx",
-              "sha256": "c9847e1057e9ba5647084c27b3d644e184cc5f730a7265cc945437aa09124bab"
+              "sha256": "1a9d3272ec9cd9574b475a752fb014fb53f9a7639970c162b9252e4781dad933"
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.tsx",
-              "sha256": "8a29a431aadb2d73d7e43948725cf7d92a05b89c4797e8283b44e13898b0be27"
+              "sha256": "0554b5519ecf702aaa033020f252165d0f20294b72b4b07e147b6d50d85df810"
             },
             {
               "path": "apps/web/src/components/ConversationIdentityDialog.tsx",
@@ -519854,7 +519854,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "4608a08d7bcc56f471adecae5c88b4154d82ce026bd709284e4ebbbf1d2af33d"
+              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
             },
             {
               "path": "apps/web/src/components/FilePreview.tsx",
@@ -520556,7 +520556,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "e9a3b0d45e52638d95f3d3dfbfb6c600408438c324ddc7e1b8da2935584c5900"
+              "sha256": "cc53b8e6eacede2177a6d61c1d845cf74449dd19c8fde3aedce624fbc50e8a0f"
             },
             {
               "path": "apps/web/src/components/RecoveryContactForm.tsx",
@@ -521384,7 +521384,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "e9a3b0d45e52638d95f3d3dfbfb6c600408438c324ddc7e1b8da2935584c5900"
+              "sha256": "cc53b8e6eacede2177a6d61c1d845cf74449dd19c8fde3aedce624fbc50e8a0f"
             },
             {
               "path": "apps/web/src/components/RecoveryContactForm.tsx",
@@ -521994,11 +521994,11 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.test.tsx",
-              "sha256": "c9847e1057e9ba5647084c27b3d644e184cc5f730a7265cc945437aa09124bab"
+              "sha256": "1a9d3272ec9cd9574b475a752fb014fb53f9a7639970c162b9252e4781dad933"
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.tsx",
-              "sha256": "8a29a431aadb2d73d7e43948725cf7d92a05b89c4797e8283b44e13898b0be27"
+              "sha256": "0554b5519ecf702aaa033020f252165d0f20294b72b4b07e147b6d50d85df810"
             },
             {
               "path": "apps/web/src/components/ConversationIdentityDialog.tsx",
@@ -522010,7 +522010,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "4608a08d7bcc56f471adecae5c88b4154d82ce026bd709284e4ebbbf1d2af33d"
+              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
             },
             {
               "path": "apps/web/src/components/FilePreview.tsx",
@@ -522712,7 +522712,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "e9a3b0d45e52638d95f3d3dfbfb6c600408438c324ddc7e1b8da2935584c5900"
+              "sha256": "cc53b8e6eacede2177a6d61c1d845cf74449dd19c8fde3aedce624fbc50e8a0f"
             },
             {
               "path": "apps/web/src/components/RecoveryContactForm.tsx",
@@ -546433,7 +546433,7 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.test.tsx",
-              "sha256": "c9847e1057e9ba5647084c27b3d644e184cc5f730a7265cc945437aa09124bab"
+              "sha256": "1a9d3272ec9cd9574b475a752fb014fb53f9a7639970c162b9252e4781dad933"
             },
             {
               "path": "apps/web/src/components/CrmLegalEditor.test.tsx",
@@ -546469,7 +546469,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "4608a08d7bcc56f471adecae5c88b4154d82ce026bd709284e4ebbbf1d2af33d"
+              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
             },
             {
               "path": "apps/web/src/components/DualApprovalThresholdPanel.test.tsx",
@@ -548299,7 +548299,7 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.test.tsx",
-              "sha256": "c9847e1057e9ba5647084c27b3d644e184cc5f730a7265cc945437aa09124bab"
+              "sha256": "1a9d3272ec9cd9574b475a752fb014fb53f9a7639970c162b9252e4781dad933"
             },
             {
               "path": "apps/web/src/components/CrmLegalEditor.test.tsx",
@@ -548335,7 +548335,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "4608a08d7bcc56f471adecae5c88b4154d82ce026bd709284e4ebbbf1d2af33d"
+              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
             },
             {
               "path": "apps/web/src/components/DualApprovalThresholdPanel.test.tsx",
@@ -550166,7 +550166,7 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.test.tsx",
-              "sha256": "c9847e1057e9ba5647084c27b3d644e184cc5f730a7265cc945437aa09124bab"
+              "sha256": "1a9d3272ec9cd9574b475a752fb014fb53f9a7639970c162b9252e4781dad933"
             },
             {
               "path": "apps/web/src/components/CrmLegalEditor.test.tsx",
@@ -550202,7 +550202,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "4608a08d7bcc56f471adecae5c88b4154d82ce026bd709284e4ebbbf1d2af33d"
+              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
             },
             {
               "path": "apps/web/src/components/DualApprovalThresholdPanel.test.tsx",
@@ -552002,7 +552002,7 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.test.tsx",
-              "sha256": "c9847e1057e9ba5647084c27b3d644e184cc5f730a7265cc945437aa09124bab"
+              "sha256": "1a9d3272ec9cd9574b475a752fb014fb53f9a7639970c162b9252e4781dad933"
             },
             {
               "path": "apps/web/src/components/CrmLegalEditor.test.tsx",
@@ -552038,7 +552038,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "4608a08d7bcc56f471adecae5c88b4154d82ce026bd709284e4ebbbf1d2af33d"
+              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
             },
             {
               "path": "apps/web/src/components/DualApprovalThresholdPanel.test.tsx",
@@ -553864,7 +553864,7 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.test.tsx",
-              "sha256": "c9847e1057e9ba5647084c27b3d644e184cc5f730a7265cc945437aa09124bab"
+              "sha256": "1a9d3272ec9cd9574b475a752fb014fb53f9a7639970c162b9252e4781dad933"
             },
             {
               "path": "apps/web/src/components/CrmLegalEditor.test.tsx",
@@ -553900,7 +553900,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "4608a08d7bcc56f471adecae5c88b4154d82ce026bd709284e4ebbbf1d2af33d"
+              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
             },
             {
               "path": "apps/web/src/components/DualApprovalThresholdPanel.test.tsx",
@@ -555735,7 +555735,7 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.test.tsx",
-              "sha256": "c9847e1057e9ba5647084c27b3d644e184cc5f730a7265cc945437aa09124bab"
+              "sha256": "1a9d3272ec9cd9574b475a752fb014fb53f9a7639970c162b9252e4781dad933"
             },
             {
               "path": "apps/web/src/components/CrmLegalEditor.test.tsx",
@@ -555771,7 +555771,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "4608a08d7bcc56f471adecae5c88b4154d82ce026bd709284e4ebbbf1d2af33d"
+              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
             },
             {
               "path": "apps/web/src/components/DualApprovalThresholdPanel.test.tsx",
@@ -557579,7 +557579,7 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.test.tsx",
-              "sha256": "c9847e1057e9ba5647084c27b3d644e184cc5f730a7265cc945437aa09124bab"
+              "sha256": "1a9d3272ec9cd9574b475a752fb014fb53f9a7639970c162b9252e4781dad933"
             },
             {
               "path": "apps/web/src/components/CrmLegalEditor.test.tsx",
@@ -557615,7 +557615,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "4608a08d7bcc56f471adecae5c88b4154d82ce026bd709284e4ebbbf1d2af33d"
+              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
             },
             {
               "path": "apps/web/src/components/DualApprovalThresholdPanel.test.tsx",
@@ -559387,7 +559387,7 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.test.tsx",
-              "sha256": "c9847e1057e9ba5647084c27b3d644e184cc5f730a7265cc945437aa09124bab"
+              "sha256": "1a9d3272ec9cd9574b475a752fb014fb53f9a7639970c162b9252e4781dad933"
             },
             {
               "path": "apps/web/src/components/CrmLegalEditor.test.tsx",
@@ -559423,7 +559423,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "4608a08d7bcc56f471adecae5c88b4154d82ce026bd709284e4ebbbf1d2af33d"
+              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
             },
             {
               "path": "apps/web/src/components/DualApprovalThresholdPanel.test.tsx",
@@ -561195,7 +561195,7 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.test.tsx",
-              "sha256": "c9847e1057e9ba5647084c27b3d644e184cc5f730a7265cc945437aa09124bab"
+              "sha256": "1a9d3272ec9cd9574b475a752fb014fb53f9a7639970c162b9252e4781dad933"
             },
             {
               "path": "apps/web/src/components/CrmLegalEditor.test.tsx",
@@ -561231,7 +561231,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "4608a08d7bcc56f471adecae5c88b4154d82ce026bd709284e4ebbbf1d2af33d"
+              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
             },
             {
               "path": "apps/web/src/components/DualApprovalThresholdPanel.test.tsx",
@@ -563004,7 +563004,7 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.test.tsx",
-              "sha256": "c9847e1057e9ba5647084c27b3d644e184cc5f730a7265cc945437aa09124bab"
+              "sha256": "1a9d3272ec9cd9574b475a752fb014fb53f9a7639970c162b9252e4781dad933"
             },
             {
               "path": "apps/web/src/components/CrmLegalEditor.test.tsx",
@@ -563040,7 +563040,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "4608a08d7bcc56f471adecae5c88b4154d82ce026bd709284e4ebbbf1d2af33d"
+              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
             },
             {
               "path": "apps/web/src/components/DualApprovalThresholdPanel.test.tsx",
@@ -564812,7 +564812,7 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.test.tsx",
-              "sha256": "c9847e1057e9ba5647084c27b3d644e184cc5f730a7265cc945437aa09124bab"
+              "sha256": "1a9d3272ec9cd9574b475a752fb014fb53f9a7639970c162b9252e4781dad933"
             },
             {
               "path": "apps/web/src/components/CrmLegalEditor.test.tsx",
@@ -564848,7 +564848,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "4608a08d7bcc56f471adecae5c88b4154d82ce026bd709284e4ebbbf1d2af33d"
+              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
             },
             {
               "path": "apps/web/src/components/DualApprovalThresholdPanel.test.tsx",
@@ -566606,7 +566606,7 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.test.tsx",
-              "sha256": "c9847e1057e9ba5647084c27b3d644e184cc5f730a7265cc945437aa09124bab"
+              "sha256": "1a9d3272ec9cd9574b475a752fb014fb53f9a7639970c162b9252e4781dad933"
             },
             {
               "path": "apps/web/src/components/CrmLegalEditor.test.tsx",
@@ -566642,7 +566642,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "4608a08d7bcc56f471adecae5c88b4154d82ce026bd709284e4ebbbf1d2af33d"
+              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
             },
             {
               "path": "apps/web/src/components/DualApprovalThresholdPanel.test.tsx",
@@ -567522,7 +567522,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "2449f3f30c987b1c068ffb3cd094ad506578e408b2654729aece5a318042f44e"
+              "sha256": "c653d0fec878e482b053a584c1362d7cd80a17ddbf55c6b351758cd2a71e41bd"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -568501,7 +568501,7 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.test.tsx",
-              "sha256": "c9847e1057e9ba5647084c27b3d644e184cc5f730a7265cc945437aa09124bab"
+              "sha256": "1a9d3272ec9cd9574b475a752fb014fb53f9a7639970c162b9252e4781dad933"
             },
             {
               "path": "apps/web/src/components/CrmLegalEditor.test.tsx",
@@ -568537,7 +568537,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "4608a08d7bcc56f471adecae5c88b4154d82ce026bd709284e4ebbbf1d2af33d"
+              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
             },
             {
               "path": "apps/web/src/components/DualApprovalThresholdPanel.test.tsx",
@@ -569417,7 +569417,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "2449f3f30c987b1c068ffb3cd094ad506578e408b2654729aece5a318042f44e"
+              "sha256": "c653d0fec878e482b053a584c1362d7cd80a17ddbf55c6b351758cd2a71e41bd"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -570513,7 +570513,7 @@
             },
             {
               "path": "apps/web/e2e/document-list-recovery.spec.ts",
-              "sha256": "a2c701f572c920348eabae2df1356e6b59541dbefc0e94645b7097af9ed05b40"
+              "sha256": "8676029a70bd46565ac5cb5ce8480833b8fddc4d3964d5361dd5c16545373421"
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
@@ -570733,7 +570733,7 @@
             },
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
-              "sha256": "4ca738d59b83f074d95432adb169d9134ad804fa1320f4739c92d4e352df6ae3"
+              "sha256": "0025099fd945e492a959bf5161b1b94b0cabf8f94e56888684e01a4585ec1009"
             },
             {
               "path": "apps/web/e2e/profile-switch.spec.ts",
@@ -571105,7 +571105,7 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.test.tsx",
-              "sha256": "c9847e1057e9ba5647084c27b3d644e184cc5f730a7265cc945437aa09124bab"
+              "sha256": "1a9d3272ec9cd9574b475a752fb014fb53f9a7639970c162b9252e4781dad933"
             },
             {
               "path": "apps/web/src/components/ConversationIdentityDialog.test.tsx",
@@ -571181,11 +571181,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "4608a08d7bcc56f471adecae5c88b4154d82ce026bd709284e4ebbbf1d2af33d"
+              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "28c8c4f967612e08890361d4137395f3171fc06acc1f3f8813e883fd87fda137"
+              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
             },
             {
               "path": "apps/web/src/components/DualApprovalThresholdPanel.test.tsx",
@@ -571329,7 +571329,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "e9a3b0d45e52638d95f3d3dfbfb6c600408438c324ddc7e1b8da2935584c5900"
+              "sha256": "cc53b8e6eacede2177a6d61c1d845cf74449dd19c8fde3aedce624fbc50e8a0f"
             },
             {
               "path": "apps/web/src/components/ProfileMenu.tsx",
@@ -573069,7 +573069,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "2449f3f30c987b1c068ffb3cd094ad506578e408b2654729aece5a318042f44e"
+              "sha256": "c653d0fec878e482b053a584c1362d7cd80a17ddbf55c6b351758cd2a71e41bd"
             },
             {
               "path": "scripts/check-changed-coverage.py",
@@ -573283,7 +573283,7 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.test.tsx",
-              "sha256": "c9847e1057e9ba5647084c27b3d644e184cc5f730a7265cc945437aa09124bab"
+              "sha256": "1a9d3272ec9cd9574b475a752fb014fb53f9a7639970c162b9252e4781dad933"
             },
             {
               "path": "apps/web/src/components/CrmLegalEditor.test.tsx",
@@ -573319,7 +573319,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "4608a08d7bcc56f471adecae5c88b4154d82ce026bd709284e4ebbbf1d2af33d"
+              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
             },
             {
               "path": "apps/web/src/components/DualApprovalThresholdPanel.test.tsx",
@@ -574199,7 +574199,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "2449f3f30c987b1c068ffb3cd094ad506578e408b2654729aece5a318042f44e"
+              "sha256": "c653d0fec878e482b053a584c1362d7cd80a17ddbf55c6b351758cd2a71e41bd"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -575178,7 +575178,7 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.test.tsx",
-              "sha256": "c9847e1057e9ba5647084c27b3d644e184cc5f730a7265cc945437aa09124bab"
+              "sha256": "1a9d3272ec9cd9574b475a752fb014fb53f9a7639970c162b9252e4781dad933"
             },
             {
               "path": "apps/web/src/components/CrmLegalEditor.test.tsx",
@@ -575214,7 +575214,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "4608a08d7bcc56f471adecae5c88b4154d82ce026bd709284e4ebbbf1d2af33d"
+              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
             },
             {
               "path": "apps/web/src/components/DualApprovalThresholdPanel.test.tsx",
@@ -576094,7 +576094,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "2449f3f30c987b1c068ffb3cd094ad506578e408b2654729aece5a318042f44e"
+              "sha256": "c653d0fec878e482b053a584c1362d7cd80a17ddbf55c6b351758cd2a71e41bd"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -577073,7 +577073,7 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.test.tsx",
-              "sha256": "c9847e1057e9ba5647084c27b3d644e184cc5f730a7265cc945437aa09124bab"
+              "sha256": "1a9d3272ec9cd9574b475a752fb014fb53f9a7639970c162b9252e4781dad933"
             },
             {
               "path": "apps/web/src/components/CrmLegalEditor.test.tsx",
@@ -577109,7 +577109,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "4608a08d7bcc56f471adecae5c88b4154d82ce026bd709284e4ebbbf1d2af33d"
+              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
             },
             {
               "path": "apps/web/src/components/DualApprovalThresholdPanel.test.tsx",
@@ -577989,7 +577989,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "2449f3f30c987b1c068ffb3cd094ad506578e408b2654729aece5a318042f44e"
+              "sha256": "c653d0fec878e482b053a584c1362d7cd80a17ddbf55c6b351758cd2a71e41bd"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -578968,7 +578968,7 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.test.tsx",
-              "sha256": "c9847e1057e9ba5647084c27b3d644e184cc5f730a7265cc945437aa09124bab"
+              "sha256": "1a9d3272ec9cd9574b475a752fb014fb53f9a7639970c162b9252e4781dad933"
             },
             {
               "path": "apps/web/src/components/CrmLegalEditor.test.tsx",
@@ -579004,7 +579004,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "4608a08d7bcc56f471adecae5c88b4154d82ce026bd709284e4ebbbf1d2af33d"
+              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
             },
             {
               "path": "apps/web/src/components/DualApprovalThresholdPanel.test.tsx",
@@ -579884,7 +579884,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "2449f3f30c987b1c068ffb3cd094ad506578e408b2654729aece5a318042f44e"
+              "sha256": "c653d0fec878e482b053a584c1362d7cd80a17ddbf55c6b351758cd2a71e41bd"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -580863,7 +580863,7 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.test.tsx",
-              "sha256": "c9847e1057e9ba5647084c27b3d644e184cc5f730a7265cc945437aa09124bab"
+              "sha256": "1a9d3272ec9cd9574b475a752fb014fb53f9a7639970c162b9252e4781dad933"
             },
             {
               "path": "apps/web/src/components/CrmLegalEditor.test.tsx",
@@ -580899,7 +580899,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "4608a08d7bcc56f471adecae5c88b4154d82ce026bd709284e4ebbbf1d2af33d"
+              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
             },
             {
               "path": "apps/web/src/components/DualApprovalThresholdPanel.test.tsx",
@@ -581779,7 +581779,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "2449f3f30c987b1c068ffb3cd094ad506578e408b2654729aece5a318042f44e"
+              "sha256": "c653d0fec878e482b053a584c1362d7cd80a17ddbf55c6b351758cd2a71e41bd"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -582758,7 +582758,7 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.test.tsx",
-              "sha256": "c9847e1057e9ba5647084c27b3d644e184cc5f730a7265cc945437aa09124bab"
+              "sha256": "1a9d3272ec9cd9574b475a752fb014fb53f9a7639970c162b9252e4781dad933"
             },
             {
               "path": "apps/web/src/components/CrmLegalEditor.test.tsx",
@@ -582794,7 +582794,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "4608a08d7bcc56f471adecae5c88b4154d82ce026bd709284e4ebbbf1d2af33d"
+              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
             },
             {
               "path": "apps/web/src/components/DualApprovalThresholdPanel.test.tsx",
@@ -583674,7 +583674,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "2449f3f30c987b1c068ffb3cd094ad506578e408b2654729aece5a318042f44e"
+              "sha256": "c653d0fec878e482b053a584c1362d7cd80a17ddbf55c6b351758cd2a71e41bd"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -584653,7 +584653,7 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.test.tsx",
-              "sha256": "c9847e1057e9ba5647084c27b3d644e184cc5f730a7265cc945437aa09124bab"
+              "sha256": "1a9d3272ec9cd9574b475a752fb014fb53f9a7639970c162b9252e4781dad933"
             },
             {
               "path": "apps/web/src/components/CrmLegalEditor.test.tsx",
@@ -584689,7 +584689,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "4608a08d7bcc56f471adecae5c88b4154d82ce026bd709284e4ebbbf1d2af33d"
+              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
             },
             {
               "path": "apps/web/src/components/DualApprovalThresholdPanel.test.tsx",
@@ -585569,7 +585569,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "2449f3f30c987b1c068ffb3cd094ad506578e408b2654729aece5a318042f44e"
+              "sha256": "c653d0fec878e482b053a584c1362d7cd80a17ddbf55c6b351758cd2a71e41bd"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -586548,7 +586548,7 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.test.tsx",
-              "sha256": "c9847e1057e9ba5647084c27b3d644e184cc5f730a7265cc945437aa09124bab"
+              "sha256": "1a9d3272ec9cd9574b475a752fb014fb53f9a7639970c162b9252e4781dad933"
             },
             {
               "path": "apps/web/src/components/CrmLegalEditor.test.tsx",
@@ -586584,7 +586584,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "4608a08d7bcc56f471adecae5c88b4154d82ce026bd709284e4ebbbf1d2af33d"
+              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
             },
             {
               "path": "apps/web/src/components/DualApprovalThresholdPanel.test.tsx",
@@ -587464,7 +587464,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "2449f3f30c987b1c068ffb3cd094ad506578e408b2654729aece5a318042f44e"
+              "sha256": "c653d0fec878e482b053a584c1362d7cd80a17ddbf55c6b351758cd2a71e41bd"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -588443,7 +588443,7 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.test.tsx",
-              "sha256": "c9847e1057e9ba5647084c27b3d644e184cc5f730a7265cc945437aa09124bab"
+              "sha256": "1a9d3272ec9cd9574b475a752fb014fb53f9a7639970c162b9252e4781dad933"
             },
             {
               "path": "apps/web/src/components/CrmLegalEditor.test.tsx",
@@ -588479,7 +588479,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "4608a08d7bcc56f471adecae5c88b4154d82ce026bd709284e4ebbbf1d2af33d"
+              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
             },
             {
               "path": "apps/web/src/components/DualApprovalThresholdPanel.test.tsx",
@@ -589359,7 +589359,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "2449f3f30c987b1c068ffb3cd094ad506578e408b2654729aece5a318042f44e"
+              "sha256": "c653d0fec878e482b053a584c1362d7cd80a17ddbf55c6b351758cd2a71e41bd"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -590338,7 +590338,7 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.test.tsx",
-              "sha256": "c9847e1057e9ba5647084c27b3d644e184cc5f730a7265cc945437aa09124bab"
+              "sha256": "1a9d3272ec9cd9574b475a752fb014fb53f9a7639970c162b9252e4781dad933"
             },
             {
               "path": "apps/web/src/components/CrmLegalEditor.test.tsx",
@@ -590374,7 +590374,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "4608a08d7bcc56f471adecae5c88b4154d82ce026bd709284e4ebbbf1d2af33d"
+              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
             },
             {
               "path": "apps/web/src/components/DualApprovalThresholdPanel.test.tsx",
@@ -591254,7 +591254,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "2449f3f30c987b1c068ffb3cd094ad506578e408b2654729aece5a318042f44e"
+              "sha256": "c653d0fec878e482b053a584c1362d7cd80a17ddbf55c6b351758cd2a71e41bd"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -592233,7 +592233,7 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.test.tsx",
-              "sha256": "c9847e1057e9ba5647084c27b3d644e184cc5f730a7265cc945437aa09124bab"
+              "sha256": "1a9d3272ec9cd9574b475a752fb014fb53f9a7639970c162b9252e4781dad933"
             },
             {
               "path": "apps/web/src/components/CrmLegalEditor.test.tsx",
@@ -592269,7 +592269,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "4608a08d7bcc56f471adecae5c88b4154d82ce026bd709284e4ebbbf1d2af33d"
+              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
             },
             {
               "path": "apps/web/src/components/DualApprovalThresholdPanel.test.tsx",
@@ -593149,7 +593149,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "2449f3f30c987b1c068ffb3cd094ad506578e408b2654729aece5a318042f44e"
+              "sha256": "c653d0fec878e482b053a584c1362d7cd80a17ddbf55c6b351758cd2a71e41bd"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -594413,7 +594413,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "2449f3f30c987b1c068ffb3cd094ad506578e408b2654729aece5a318042f44e"
+              "sha256": "c653d0fec878e482b053a584c1362d7cd80a17ddbf55c6b351758cd2a71e41bd"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -594868,7 +594868,7 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.test.tsx",
-              "sha256": "c9847e1057e9ba5647084c27b3d644e184cc5f730a7265cc945437aa09124bab"
+              "sha256": "1a9d3272ec9cd9574b475a752fb014fb53f9a7639970c162b9252e4781dad933"
             },
             {
               "path": "apps/web/src/components/CrmLegalEditor.test.tsx",
@@ -594904,7 +594904,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "4608a08d7bcc56f471adecae5c88b4154d82ce026bd709284e4ebbbf1d2af33d"
+              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
             },
             {
               "path": "apps/web/src/components/DualApprovalThresholdPanel.test.tsx",
@@ -595784,7 +595784,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "2449f3f30c987b1c068ffb3cd094ad506578e408b2654729aece5a318042f44e"
+              "sha256": "c653d0fec878e482b053a584c1362d7cd80a17ddbf55c6b351758cd2a71e41bd"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -596763,7 +596763,7 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.test.tsx",
-              "sha256": "c9847e1057e9ba5647084c27b3d644e184cc5f730a7265cc945437aa09124bab"
+              "sha256": "1a9d3272ec9cd9574b475a752fb014fb53f9a7639970c162b9252e4781dad933"
             },
             {
               "path": "apps/web/src/components/CrmLegalEditor.test.tsx",
@@ -596799,7 +596799,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "4608a08d7bcc56f471adecae5c88b4154d82ce026bd709284e4ebbbf1d2af33d"
+              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
             },
             {
               "path": "apps/web/src/components/DualApprovalThresholdPanel.test.tsx",
@@ -597679,7 +597679,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "2449f3f30c987b1c068ffb3cd094ad506578e408b2654729aece5a318042f44e"
+              "sha256": "c653d0fec878e482b053a584c1362d7cd80a17ddbf55c6b351758cd2a71e41bd"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -598483,7 +598483,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Customer wallet history and the staff ledger now have current recovery evidence, including malformed rows, permission denial, accepted-page retention and exact cursor retry. Use the 98-route reconciliation to match existing conditional evidence for contract and document workspaces, staff inbox, provider settings and customer account/privacy panels. Verify uncovered loading, empty and error views."
+        "Contract and document workspaces, customer privacy, staff and customer inboxes, provider panes, and security lists now have source-bound conditional evidence. Reconcile the remaining detail and singleton panels against the 98-route inventory and existing independent tests, including routes whose populated layout was measured but whose recovery conditions still lack a current owner or proof."
       ],
       "owner": null,
       "depends_on": [],
@@ -598589,7 +598589,8 @@
           "release-0.5-staff-service-queue-validation",
           "release-0.5-address-states-and-route-reconciliation",
           "release-0.5-hosted-affected-web-repair",
-          "release-0.5-wallet-ledger-read-recovery"
+          "release-0.5-wallet-ledger-read-recovery",
+          "release-0.5-record-workspace-read-states"
         ],
         "current_acceptance": null
       }
@@ -598826,7 +598827,7 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.test.tsx",
-              "sha256": "c9847e1057e9ba5647084c27b3d644e184cc5f730a7265cc945437aa09124bab"
+              "sha256": "1a9d3272ec9cd9574b475a752fb014fb53f9a7639970c162b9252e4781dad933"
             },
             {
               "path": "apps/web/src/components/CrmLegalEditor.test.tsx",
@@ -598862,7 +598863,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "4608a08d7bcc56f471adecae5c88b4154d82ce026bd709284e4ebbbf1d2af33d"
+              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
             },
             {
               "path": "apps/web/src/components/DualApprovalThresholdPanel.test.tsx",
@@ -600630,7 +600631,7 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.test.tsx",
-              "sha256": "c9847e1057e9ba5647084c27b3d644e184cc5f730a7265cc945437aa09124bab"
+              "sha256": "1a9d3272ec9cd9574b475a752fb014fb53f9a7639970c162b9252e4781dad933"
             },
             {
               "path": "apps/web/src/components/CrmLegalEditor.test.tsx",
@@ -600666,7 +600667,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "4608a08d7bcc56f471adecae5c88b4154d82ce026bd709284e4ebbbf1d2af33d"
+              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
             },
             {
               "path": "apps/web/src/components/DualApprovalThresholdPanel.test.tsx",
@@ -602434,7 +602435,7 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.test.tsx",
-              "sha256": "c9847e1057e9ba5647084c27b3d644e184cc5f730a7265cc945437aa09124bab"
+              "sha256": "1a9d3272ec9cd9574b475a752fb014fb53f9a7639970c162b9252e4781dad933"
             },
             {
               "path": "apps/web/src/components/CrmLegalEditor.test.tsx",
@@ -602470,7 +602471,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "4608a08d7bcc56f471adecae5c88b4154d82ce026bd709284e4ebbbf1d2af33d"
+              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
             },
             {
               "path": "apps/web/src/components/DualApprovalThresholdPanel.test.tsx",
@@ -604238,7 +604239,7 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.test.tsx",
-              "sha256": "c9847e1057e9ba5647084c27b3d644e184cc5f730a7265cc945437aa09124bab"
+              "sha256": "1a9d3272ec9cd9574b475a752fb014fb53f9a7639970c162b9252e4781dad933"
             },
             {
               "path": "apps/web/src/components/CrmLegalEditor.test.tsx",
@@ -604274,7 +604275,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "4608a08d7bcc56f471adecae5c88b4154d82ce026bd709284e4ebbbf1d2af33d"
+              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
             },
             {
               "path": "apps/web/src/components/DualApprovalThresholdPanel.test.tsx",
@@ -606042,7 +606043,7 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.test.tsx",
-              "sha256": "c9847e1057e9ba5647084c27b3d644e184cc5f730a7265cc945437aa09124bab"
+              "sha256": "1a9d3272ec9cd9574b475a752fb014fb53f9a7639970c162b9252e4781dad933"
             },
             {
               "path": "apps/web/src/components/CrmLegalEditor.test.tsx",
@@ -606078,7 +606079,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "4608a08d7bcc56f471adecae5c88b4154d82ce026bd709284e4ebbbf1d2af33d"
+              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
             },
             {
               "path": "apps/web/src/components/DualApprovalThresholdPanel.test.tsx",
@@ -607846,7 +607847,7 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.test.tsx",
-              "sha256": "c9847e1057e9ba5647084c27b3d644e184cc5f730a7265cc945437aa09124bab"
+              "sha256": "1a9d3272ec9cd9574b475a752fb014fb53f9a7639970c162b9252e4781dad933"
             },
             {
               "path": "apps/web/src/components/CrmLegalEditor.test.tsx",
@@ -607882,7 +607883,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "4608a08d7bcc56f471adecae5c88b4154d82ce026bd709284e4ebbbf1d2af33d"
+              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
             },
             {
               "path": "apps/web/src/components/DualApprovalThresholdPanel.test.tsx",
@@ -609650,7 +609651,7 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.test.tsx",
-              "sha256": "c9847e1057e9ba5647084c27b3d644e184cc5f730a7265cc945437aa09124bab"
+              "sha256": "1a9d3272ec9cd9574b475a752fb014fb53f9a7639970c162b9252e4781dad933"
             },
             {
               "path": "apps/web/src/components/CrmLegalEditor.test.tsx",
@@ -609686,7 +609687,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "4608a08d7bcc56f471adecae5c88b4154d82ce026bd709284e4ebbbf1d2af33d"
+              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
             },
             {
               "path": "apps/web/src/components/DualApprovalThresholdPanel.test.tsx",
@@ -615672,7 +615673,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "e9a3b0d45e52638d95f3d3dfbfb6c600408438c324ddc7e1b8da2935584c5900"
+              "sha256": "cc53b8e6eacede2177a6d61c1d845cf74449dd19c8fde3aedce624fbc50e8a0f"
             },
             {
               "path": "apps/web/src/components/ProfileMenu.tsx",
@@ -616470,7 +616471,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "e9a3b0d45e52638d95f3d3dfbfb6c600408438c324ddc7e1b8da2935584c5900"
+              "sha256": "cc53b8e6eacede2177a6d61c1d845cf74449dd19c8fde3aedce624fbc50e8a0f"
             },
             {
               "path": "apps/web/src/components/ProfileMenu.tsx",
@@ -617268,7 +617269,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "e9a3b0d45e52638d95f3d3dfbfb6c600408438c324ddc7e1b8da2935584c5900"
+              "sha256": "cc53b8e6eacede2177a6d61c1d845cf74449dd19c8fde3aedce624fbc50e8a0f"
             },
             {
               "path": "apps/web/src/components/ProfileMenu.tsx",
@@ -618066,7 +618067,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "e9a3b0d45e52638d95f3d3dfbfb6c600408438c324ddc7e1b8da2935584c5900"
+              "sha256": "cc53b8e6eacede2177a6d61c1d845cf74449dd19c8fde3aedce624fbc50e8a0f"
             },
             {
               "path": "apps/web/src/components/ProfileMenu.tsx",
@@ -618868,7 +618869,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "e9a3b0d45e52638d95f3d3dfbfb6c600408438c324ddc7e1b8da2935584c5900"
+              "sha256": "cc53b8e6eacede2177a6d61c1d845cf74449dd19c8fde3aedce624fbc50e8a0f"
             },
             {
               "path": "apps/web/src/components/ProfileMenu.tsx",
@@ -619666,7 +619667,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "e9a3b0d45e52638d95f3d3dfbfb6c600408438c324ddc7e1b8da2935584c5900"
+              "sha256": "cc53b8e6eacede2177a6d61c1d845cf74449dd19c8fde3aedce624fbc50e8a0f"
             },
             {
               "path": "apps/web/src/components/ProfileMenu.tsx",
@@ -620464,7 +620465,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "e9a3b0d45e52638d95f3d3dfbfb6c600408438c324ddc7e1b8da2935584c5900"
+              "sha256": "cc53b8e6eacede2177a6d61c1d845cf74449dd19c8fde3aedce624fbc50e8a0f"
             },
             {
               "path": "apps/web/src/components/ProfileMenu.tsx",
@@ -621263,7 +621264,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "e9a3b0d45e52638d95f3d3dfbfb6c600408438c324ddc7e1b8da2935584c5900"
+              "sha256": "cc53b8e6eacede2177a6d61c1d845cf74449dd19c8fde3aedce624fbc50e8a0f"
             },
             {
               "path": "apps/web/src/components/ProfileMenu.tsx",
@@ -622062,7 +622063,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "e9a3b0d45e52638d95f3d3dfbfb6c600408438c324ddc7e1b8da2935584c5900"
+              "sha256": "cc53b8e6eacede2177a6d61c1d845cf74449dd19c8fde3aedce624fbc50e8a0f"
             },
             {
               "path": "apps/web/src/components/ProfileMenu.tsx",
@@ -622861,7 +622862,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "e9a3b0d45e52638d95f3d3dfbfb6c600408438c324ddc7e1b8da2935584c5900"
+              "sha256": "cc53b8e6eacede2177a6d61c1d845cf74449dd19c8fde3aedce624fbc50e8a0f"
             },
             {
               "path": "apps/web/src/components/ProfileMenu.tsx",
@@ -623660,7 +623661,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "e9a3b0d45e52638d95f3d3dfbfb6c600408438c324ddc7e1b8da2935584c5900"
+              "sha256": "cc53b8e6eacede2177a6d61c1d845cf74449dd19c8fde3aedce624fbc50e8a0f"
             },
             {
               "path": "apps/web/src/components/ProfileMenu.tsx",
@@ -624459,7 +624460,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "e9a3b0d45e52638d95f3d3dfbfb6c600408438c324ddc7e1b8da2935584c5900"
+              "sha256": "cc53b8e6eacede2177a6d61c1d845cf74449dd19c8fde3aedce624fbc50e8a0f"
             },
             {
               "path": "apps/web/src/components/ProfileMenu.tsx",
@@ -625258,7 +625259,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "e9a3b0d45e52638d95f3d3dfbfb6c600408438c324ddc7e1b8da2935584c5900"
+              "sha256": "cc53b8e6eacede2177a6d61c1d845cf74449dd19c8fde3aedce624fbc50e8a0f"
             },
             {
               "path": "apps/web/src/components/ProfileMenu.tsx",
@@ -626057,7 +626058,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "e9a3b0d45e52638d95f3d3dfbfb6c600408438c324ddc7e1b8da2935584c5900"
+              "sha256": "cc53b8e6eacede2177a6d61c1d845cf74449dd19c8fde3aedce624fbc50e8a0f"
             },
             {
               "path": "apps/web/src/components/ProfileMenu.tsx",
@@ -626856,7 +626857,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "e9a3b0d45e52638d95f3d3dfbfb6c600408438c324ddc7e1b8da2935584c5900"
+              "sha256": "cc53b8e6eacede2177a6d61c1d845cf74449dd19c8fde3aedce624fbc50e8a0f"
             },
             {
               "path": "apps/web/src/components/ProfileMenu.tsx",
@@ -637461,7 +637462,7 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.tsx",
-              "sha256": "8a29a431aadb2d73d7e43948725cf7d92a05b89c4797e8283b44e13898b0be27"
+              "sha256": "0554b5519ecf702aaa033020f252165d0f20294b72b4b07e147b6d50d85df810"
             },
             {
               "path": "apps/web/src/components/CustomerContractFilters.tsx",
@@ -637481,7 +637482,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "28c8c4f967612e08890361d4137395f3171fc06acc1f3f8813e883fd87fda137"
+              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.tsx",
@@ -638585,7 +638586,7 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.tsx",
-              "sha256": "8a29a431aadb2d73d7e43948725cf7d92a05b89c4797e8283b44e13898b0be27"
+              "sha256": "0554b5519ecf702aaa033020f252165d0f20294b72b4b07e147b6d50d85df810"
             },
             {
               "path": "apps/web/src/components/CustomerContractFilters.tsx",
@@ -638605,7 +638606,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "28c8c4f967612e08890361d4137395f3171fc06acc1f3f8813e883fd87fda137"
+              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.tsx",
@@ -639709,7 +639710,7 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.tsx",
-              "sha256": "8a29a431aadb2d73d7e43948725cf7d92a05b89c4797e8283b44e13898b0be27"
+              "sha256": "0554b5519ecf702aaa033020f252165d0f20294b72b4b07e147b6d50d85df810"
             },
             {
               "path": "apps/web/src/components/CustomerContractFilters.tsx",
@@ -639729,7 +639730,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "28c8c4f967612e08890361d4137395f3171fc06acc1f3f8813e883fd87fda137"
+              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.tsx",
@@ -640836,7 +640837,7 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.tsx",
-              "sha256": "8a29a431aadb2d73d7e43948725cf7d92a05b89c4797e8283b44e13898b0be27"
+              "sha256": "0554b5519ecf702aaa033020f252165d0f20294b72b4b07e147b6d50d85df810"
             },
             {
               "path": "apps/web/src/components/CustomerContractFilters.tsx",
@@ -640856,7 +640857,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "28c8c4f967612e08890361d4137395f3171fc06acc1f3f8813e883fd87fda137"
+              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.tsx",
@@ -641963,7 +641964,7 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.tsx",
-              "sha256": "8a29a431aadb2d73d7e43948725cf7d92a05b89c4797e8283b44e13898b0be27"
+              "sha256": "0554b5519ecf702aaa033020f252165d0f20294b72b4b07e147b6d50d85df810"
             },
             {
               "path": "apps/web/src/components/CustomerContractFilters.tsx",
@@ -641983,7 +641984,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "28c8c4f967612e08890361d4137395f3171fc06acc1f3f8813e883fd87fda137"
+              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.tsx",
@@ -643117,7 +643118,7 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.tsx",
-              "sha256": "8a29a431aadb2d73d7e43948725cf7d92a05b89c4797e8283b44e13898b0be27"
+              "sha256": "0554b5519ecf702aaa033020f252165d0f20294b72b4b07e147b6d50d85df810"
             },
             {
               "path": "apps/web/src/components/CustomerContractFilters.tsx",
@@ -643137,7 +643138,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "28c8c4f967612e08890361d4137395f3171fc06acc1f3f8813e883fd87fda137"
+              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.tsx",
@@ -644240,7 +644241,7 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.tsx",
-              "sha256": "8a29a431aadb2d73d7e43948725cf7d92a05b89c4797e8283b44e13898b0be27"
+              "sha256": "0554b5519ecf702aaa033020f252165d0f20294b72b4b07e147b6d50d85df810"
             },
             {
               "path": "apps/web/src/components/CustomerContractFilters.tsx",
@@ -644260,7 +644261,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "28c8c4f967612e08890361d4137395f3171fc06acc1f3f8813e883fd87fda137"
+              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.tsx",
@@ -645363,7 +645364,7 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.tsx",
-              "sha256": "8a29a431aadb2d73d7e43948725cf7d92a05b89c4797e8283b44e13898b0be27"
+              "sha256": "0554b5519ecf702aaa033020f252165d0f20294b72b4b07e147b6d50d85df810"
             },
             {
               "path": "apps/web/src/components/CustomerContractFilters.tsx",
@@ -645383,7 +645384,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "28c8c4f967612e08890361d4137395f3171fc06acc1f3f8813e883fd87fda137"
+              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.tsx",
@@ -646487,7 +646488,7 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.tsx",
-              "sha256": "8a29a431aadb2d73d7e43948725cf7d92a05b89c4797e8283b44e13898b0be27"
+              "sha256": "0554b5519ecf702aaa033020f252165d0f20294b72b4b07e147b6d50d85df810"
             },
             {
               "path": "apps/web/src/components/CustomerContractFilters.tsx",
@@ -646507,7 +646508,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "28c8c4f967612e08890361d4137395f3171fc06acc1f3f8813e883fd87fda137"
+              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.tsx",
@@ -647629,7 +647630,7 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.tsx",
-              "sha256": "8a29a431aadb2d73d7e43948725cf7d92a05b89c4797e8283b44e13898b0be27"
+              "sha256": "0554b5519ecf702aaa033020f252165d0f20294b72b4b07e147b6d50d85df810"
             },
             {
               "path": "apps/web/src/components/CustomerContractFilters.tsx",
@@ -647649,7 +647650,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "28c8c4f967612e08890361d4137395f3171fc06acc1f3f8813e883fd87fda137"
+              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.tsx",
@@ -648754,7 +648755,7 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.tsx",
-              "sha256": "8a29a431aadb2d73d7e43948725cf7d92a05b89c4797e8283b44e13898b0be27"
+              "sha256": "0554b5519ecf702aaa033020f252165d0f20294b72b4b07e147b6d50d85df810"
             },
             {
               "path": "apps/web/src/components/CustomerContractFilters.tsx",
@@ -648774,7 +648775,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "28c8c4f967612e08890361d4137395f3171fc06acc1f3f8813e883fd87fda137"
+              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.tsx",
@@ -649986,11 +649987,11 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.test.tsx",
-              "sha256": "c9847e1057e9ba5647084c27b3d644e184cc5f730a7265cc945437aa09124bab"
+              "sha256": "1a9d3272ec9cd9574b475a752fb014fb53f9a7639970c162b9252e4781dad933"
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.tsx",
-              "sha256": "8a29a431aadb2d73d7e43948725cf7d92a05b89c4797e8283b44e13898b0be27"
+              "sha256": "0554b5519ecf702aaa033020f252165d0f20294b72b4b07e147b6d50d85df810"
             },
             {
               "path": "apps/web/src/components/DocumentRecords.test.tsx",
@@ -650815,11 +650816,11 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.test.tsx",
-              "sha256": "c9847e1057e9ba5647084c27b3d644e184cc5f730a7265cc945437aa09124bab"
+              "sha256": "1a9d3272ec9cd9574b475a752fb014fb53f9a7639970c162b9252e4781dad933"
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.tsx",
-              "sha256": "8a29a431aadb2d73d7e43948725cf7d92a05b89c4797e8283b44e13898b0be27"
+              "sha256": "0554b5519ecf702aaa033020f252165d0f20294b72b4b07e147b6d50d85df810"
             },
             {
               "path": "apps/web/src/components/DocumentRecords.test.tsx",
@@ -651652,11 +651653,11 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.test.tsx",
-              "sha256": "c9847e1057e9ba5647084c27b3d644e184cc5f730a7265cc945437aa09124bab"
+              "sha256": "1a9d3272ec9cd9574b475a752fb014fb53f9a7639970c162b9252e4781dad933"
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.tsx",
-              "sha256": "8a29a431aadb2d73d7e43948725cf7d92a05b89c4797e8283b44e13898b0be27"
+              "sha256": "0554b5519ecf702aaa033020f252165d0f20294b72b4b07e147b6d50d85df810"
             },
             {
               "path": "apps/web/src/components/DocumentRecords.test.tsx",
@@ -652473,11 +652474,11 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.test.tsx",
-              "sha256": "c9847e1057e9ba5647084c27b3d644e184cc5f730a7265cc945437aa09124bab"
+              "sha256": "1a9d3272ec9cd9574b475a752fb014fb53f9a7639970c162b9252e4781dad933"
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.tsx",
-              "sha256": "8a29a431aadb2d73d7e43948725cf7d92a05b89c4797e8283b44e13898b0be27"
+              "sha256": "0554b5519ecf702aaa033020f252165d0f20294b72b4b07e147b6d50d85df810"
             },
             {
               "path": "apps/web/src/components/DocumentRecords.test.tsx",
@@ -653293,11 +653294,11 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.test.tsx",
-              "sha256": "c9847e1057e9ba5647084c27b3d644e184cc5f730a7265cc945437aa09124bab"
+              "sha256": "1a9d3272ec9cd9574b475a752fb014fb53f9a7639970c162b9252e4781dad933"
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.tsx",
-              "sha256": "8a29a431aadb2d73d7e43948725cf7d92a05b89c4797e8283b44e13898b0be27"
+              "sha256": "0554b5519ecf702aaa033020f252165d0f20294b72b4b07e147b6d50d85df810"
             },
             {
               "path": "apps/web/src/components/DocumentRecords.test.tsx",
@@ -680254,7 +680255,7 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.tsx",
-              "sha256": "8a29a431aadb2d73d7e43948725cf7d92a05b89c4797e8283b44e13898b0be27"
+              "sha256": "0554b5519ecf702aaa033020f252165d0f20294b72b4b07e147b6d50d85df810"
             },
             {
               "path": "apps/web/src/components/CustomerContractFilters.tsx",
@@ -680274,7 +680275,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "28c8c4f967612e08890361d4137395f3171fc06acc1f3f8813e883fd87fda137"
+              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.tsx",
@@ -681376,7 +681377,7 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.tsx",
-              "sha256": "8a29a431aadb2d73d7e43948725cf7d92a05b89c4797e8283b44e13898b0be27"
+              "sha256": "0554b5519ecf702aaa033020f252165d0f20294b72b4b07e147b6d50d85df810"
             },
             {
               "path": "apps/web/src/components/CustomerContractFilters.tsx",
@@ -681396,7 +681397,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "28c8c4f967612e08890361d4137395f3171fc06acc1f3f8813e883fd87fda137"
+              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.tsx",
@@ -682498,7 +682499,7 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.tsx",
-              "sha256": "8a29a431aadb2d73d7e43948725cf7d92a05b89c4797e8283b44e13898b0be27"
+              "sha256": "0554b5519ecf702aaa033020f252165d0f20294b72b4b07e147b6d50d85df810"
             },
             {
               "path": "apps/web/src/components/CustomerContractFilters.tsx",
@@ -682518,7 +682519,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "28c8c4f967612e08890361d4137395f3171fc06acc1f3f8813e883fd87fda137"
+              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.tsx",
@@ -683620,7 +683621,7 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.tsx",
-              "sha256": "8a29a431aadb2d73d7e43948725cf7d92a05b89c4797e8283b44e13898b0be27"
+              "sha256": "0554b5519ecf702aaa033020f252165d0f20294b72b4b07e147b6d50d85df810"
             },
             {
               "path": "apps/web/src/components/CustomerContractFilters.tsx",
@@ -683640,7 +683641,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "28c8c4f967612e08890361d4137395f3171fc06acc1f3f8813e883fd87fda137"
+              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
             },
             {
               "path": "apps/web/src/components/ElectricityRawDraftQueue.tsx",
@@ -684786,11 +684787,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "4608a08d7bcc56f471adecae5c88b4154d82ce026bd709284e4ebbbf1d2af33d"
+              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "28c8c4f967612e08890361d4137395f3171fc06acc1f3f8813e883fd87fda137"
+              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
             },
             {
               "path": "apps/web/src/components/FilePreview.test.tsx",
@@ -685360,11 +685361,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "4608a08d7bcc56f471adecae5c88b4154d82ce026bd709284e4ebbbf1d2af33d"
+              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "28c8c4f967612e08890361d4137395f3171fc06acc1f3f8813e883fd87fda137"
+              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
             },
             {
               "path": "apps/web/src/components/FilePreview.test.tsx",
@@ -685933,11 +685934,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "4608a08d7bcc56f471adecae5c88b4154d82ce026bd709284e4ebbbf1d2af33d"
+              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "28c8c4f967612e08890361d4137395f3171fc06acc1f3f8813e883fd87fda137"
+              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
             },
             {
               "path": "apps/web/src/components/FilePreview.test.tsx",
@@ -686508,11 +686509,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "4608a08d7bcc56f471adecae5c88b4154d82ce026bd709284e4ebbbf1d2af33d"
+              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "28c8c4f967612e08890361d4137395f3171fc06acc1f3f8813e883fd87fda137"
+              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
             },
             {
               "path": "apps/web/src/components/FilePreview.test.tsx",
@@ -687081,11 +687082,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "4608a08d7bcc56f471adecae5c88b4154d82ce026bd709284e4ebbbf1d2af33d"
+              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "28c8c4f967612e08890361d4137395f3171fc06acc1f3f8813e883fd87fda137"
+              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
             },
             {
               "path": "apps/web/src/components/FilePreview.test.tsx",
@@ -687654,11 +687655,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "4608a08d7bcc56f471adecae5c88b4154d82ce026bd709284e4ebbbf1d2af33d"
+              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "28c8c4f967612e08890361d4137395f3171fc06acc1f3f8813e883fd87fda137"
+              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
             },
             {
               "path": "apps/web/src/components/FilePreview.test.tsx",
@@ -710275,7 +710276,7 @@
             },
             {
               "path": "apps/web/src/hooks/useCursorHistory.ts",
-              "sha256": "d3dc62a9ae2db9fddfeb790d12be0762eebaa02edb187017a6a1925d365ab8e0"
+              "sha256": "f90b635accf0dbdcf971dfc1dcb688e9b827aa3348903eddd8c129add8763404"
             },
             {
               "path": "apps/web/src/lib/route-bootstrap-query.test.ts",
@@ -713395,11 +713396,11 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.test.tsx",
-              "sha256": "c9847e1057e9ba5647084c27b3d644e184cc5f730a7265cc945437aa09124bab"
+              "sha256": "1a9d3272ec9cd9574b475a752fb014fb53f9a7639970c162b9252e4781dad933"
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.tsx",
-              "sha256": "8a29a431aadb2d73d7e43948725cf7d92a05b89c4797e8283b44e13898b0be27"
+              "sha256": "0554b5519ecf702aaa033020f252165d0f20294b72b4b07e147b6d50d85df810"
             },
             {
               "path": "apps/web/src/components/contract-authoring-forms.test.tsx",
@@ -713579,7 +713580,7 @@
             },
             {
               "path": "apps/web/e2e/document-list-recovery.spec.ts",
-              "sha256": "a2c701f572c920348eabae2df1356e6b59541dbefc0e94645b7097af9ed05b40"
+              "sha256": "8676029a70bd46565ac5cb5ce8480833b8fddc4d3964d5361dd5c16545373421"
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
@@ -713611,11 +713612,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "4608a08d7bcc56f471adecae5c88b4154d82ce026bd709284e4ebbbf1d2af33d"
+              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "28c8c4f967612e08890361d4137395f3171fc06acc1f3f8813e883fd87fda137"
+              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
             },
             {
               "path": "apps/web/src/components/contract-authoring-native.test.tsx",
@@ -717004,7 +717005,7 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.test.tsx",
-              "sha256": "c9847e1057e9ba5647084c27b3d644e184cc5f730a7265cc945437aa09124bab"
+              "sha256": "1a9d3272ec9cd9574b475a752fb014fb53f9a7639970c162b9252e4781dad933"
             },
             {
               "path": "apps/web/src/lib/electricity-increase-decision-form-schemas.ts",
@@ -721595,11 +721596,11 @@
             },
             {
               "path": "apps/web/e2e/delivery-provider-recovery.spec.ts",
-              "sha256": "32d3c2ae0f7ff17804f920527e41f1de4ada343ade39fba3f73e8a936ec13273"
+              "sha256": "739aa6d07a2a110d5a5074fddd3846abe7e12b1f0f791bf8c40f3b5e49b335ba"
             },
             {
               "path": "apps/web/e2e/document-list-recovery.spec.ts",
-              "sha256": "a2c701f572c920348eabae2df1356e6b59541dbefc0e94645b7097af9ed05b40"
+              "sha256": "8676029a70bd46565ac5cb5ce8480833b8fddc4d3964d5361dd5c16545373421"
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
@@ -721711,7 +721712,7 @@
             },
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
-              "sha256": "4ca738d59b83f074d95432adb169d9134ad804fa1320f4739c92d4e352df6ae3"
+              "sha256": "0025099fd945e492a959bf5161b1b94b0cabf8f94e56888684e01a4585ec1009"
             },
             {
               "path": "apps/web/e2e/provider-forms.spec.ts",
@@ -721835,11 +721836,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "4608a08d7bcc56f471adecae5c88b4154d82ce026bd709284e4ebbbf1d2af33d"
+              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "28c8c4f967612e08890361d4137395f3171fc06acc1f3f8813e883fd87fda137"
+              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
             },
             {
               "path": "apps/web/src/components/FilePreview.test.tsx",
@@ -721883,7 +721884,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "e9a3b0d45e52638d95f3d3dfbfb6c600408438c324ddc7e1b8da2935584c5900"
+              "sha256": "cc53b8e6eacede2177a6d61c1d845cf74449dd19c8fde3aedce624fbc50e8a0f"
             },
             {
               "path": "apps/web/src/components/ProviderAlertHistory.tsx",
@@ -725477,11 +725478,11 @@
             },
             {
               "path": "apps/web/e2e/delivery-provider-recovery.spec.ts",
-              "sha256": "32d3c2ae0f7ff17804f920527e41f1de4ada343ade39fba3f73e8a936ec13273"
+              "sha256": "739aa6d07a2a110d5a5074fddd3846abe7e12b1f0f791bf8c40f3b5e49b335ba"
             },
             {
               "path": "apps/web/e2e/document-list-recovery.spec.ts",
-              "sha256": "a2c701f572c920348eabae2df1356e6b59541dbefc0e94645b7097af9ed05b40"
+              "sha256": "8676029a70bd46565ac5cb5ce8480833b8fddc4d3964d5361dd5c16545373421"
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
@@ -725593,7 +725594,7 @@
             },
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
-              "sha256": "4ca738d59b83f074d95432adb169d9134ad804fa1320f4739c92d4e352df6ae3"
+              "sha256": "0025099fd945e492a959bf5161b1b94b0cabf8f94e56888684e01a4585ec1009"
             },
             {
               "path": "apps/web/e2e/provider-forms.spec.ts",
@@ -725709,11 +725710,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
-              "sha256": "4608a08d7bcc56f471adecae5c88b4154d82ce026bd709284e4ebbbf1d2af33d"
+              "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "28c8c4f967612e08890361d4137395f3171fc06acc1f3f8813e883fd87fda137"
+              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
             },
             {
               "path": "apps/web/src/components/FilePreview.test.tsx",
@@ -725757,7 +725758,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "e9a3b0d45e52638d95f3d3dfbfb6c600408438c324ddc7e1b8da2935584c5900"
+              "sha256": "cc53b8e6eacede2177a6d61c1d845cf74449dd19c8fde3aedce624fbc50e8a0f"
             },
             {
               "path": "apps/web/src/components/ProviderAlertHistory.tsx",
@@ -728233,7 +728234,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Saved addresses, service settings and customer/staff wallet history have current conditional evidence. Confirm hosted affected-web tests on the pushed source and finish route-state reconciliation. Required GitHub merge enforcement and staging Sentry delivery remain open."
+        "Current recovery evidence now includes the nine named workspace, inbox, provider and security routes. The previous wallet commit passed hosted CI. Verify hosted CI for this batch and finish the route and shared-pattern reconciliation. Required GitHub merge enforcement and a staging Sentry event remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -728404,7 +728405,8 @@
           "release-0.5-staff-service-queue-validation",
           "release-0.5-address-states-and-route-reconciliation",
           "release-0.5-hosted-affected-web-repair",
-          "release-0.5-wallet-ledger-read-recovery"
+          "release-0.5-wallet-ledger-read-recovery",
+          "release-0.5-record-workspace-read-states"
         ]
       }
     },
@@ -728612,7 +728614,7 @@
             },
             {
               "path": "apps/web/src/components/ContractsWorkspace.tsx",
-              "sha256": "8a29a431aadb2d73d7e43948725cf7d92a05b89c4797e8283b44e13898b0be27"
+              "sha256": "0554b5519ecf702aaa033020f252165d0f20294b72b4b07e147b6d50d85df810"
             },
             {
               "path": "apps/web/src/components/ConversationIdentityDialog.tsx",
@@ -728676,7 +728678,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
-              "sha256": "28c8c4f967612e08890361d4137395f3171fc06acc1f3f8813e883fd87fda137"
+              "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
             },
             {
               "path": "apps/web/src/components/DualApprovalThresholdPanel.tsx",
@@ -728828,7 +728830,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "e9a3b0d45e52638d95f3d3dfbfb6c600408438c324ddc7e1b8da2935584c5900"
+              "sha256": "cc53b8e6eacede2177a6d61c1d845cf74449dd19c8fde3aedce624fbc50e8a0f"
             },
             {
               "path": "apps/web/src/components/ProfileMenu.tsx",
@@ -730205,6 +730207,10 @@
             {
               "path": "packages/i18n/src/addresses.ts",
               "sha256": "e51b7dbb757c6872a6459d720c0c1b5a8bda96f37f31abc882245cfda30683fe"
+            },
+            {
+              "path": "apps/web/src/hooks/useCursorHistory.ts",
+              "sha256": "f90b635accf0dbdcf971dfc1dcb688e9b827aa3348903eddd8c129add8763404"
             }
           ],
           "checks": [
@@ -730319,7 +730325,8 @@
             "Renewed staff service queue browser, coverage and route budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-service-queue-validation/proof.json",
             "Renewed route budgets, changed-source coverage and cold auth asset comparison. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-address-states-and-route-reconciliation/proof.json",
             "Renewed service-settings route budgets, changed-source coverage and cold auth asset comparison. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-hosted-affected-web-repair/proof.json",
-            "Renewed wallet history route budgets, changed-source coverage and cold auth asset comparison. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-wallet-ledger-read-recovery/proof.json"
+            "Renewed wallet history route budgets, changed-source coverage and cold auth asset comparison. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-wallet-ledger-read-recovery/proof.json",
+            "Renewed record workspace route budgets, measured coverage and cold auth evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-record-workspace-read-states/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -806420,6 +806427,218 @@
       "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-wallet-ledger-read-recovery/renewed-bindings.json",
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-wallet-ledger-read-recovery/reviewed.patch",
       "release_disposition": "Verified wallet history recovery for customer and staff. v0.5.0 remains open."
+    },
+    "release-0.5-record-workspace-read-states": {
+      "batch": "release-0.5-record-workspace-read-states",
+      "base_commit": "3933994decc5367d25157dfbdd03a897c76e4696",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": ".size-limit.json",
+          "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
+        },
+        {
+          "path": "apps/web/e2e/coverage-fixture.ts",
+          "sha256": "07949862684b86d6ff241d5f71e59e6c71a5cc1ddc70655b0d508beb53865dac"
+        },
+        {
+          "path": "apps/web/e2e/customer-contract-filters.spec.ts",
+          "sha256": "633de69d2db849ff557905f9de39f60e510779b86062b73502555d8af654a0c0"
+        },
+        {
+          "path": "apps/web/e2e/delivery-provider-recovery.spec.ts",
+          "sha256": "739aa6d07a2a110d5a5074fddd3846abe7e12b1f0f791bf8c40f3b5e49b335ba"
+        },
+        {
+          "path": "apps/web/e2e/document-list-recovery.spec.ts",
+          "sha256": "8676029a70bd46565ac5cb5ce8480833b8fddc4d3964d5361dd5c16545373421"
+        },
+        {
+          "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
+          "sha256": "7120dd69988871f50b5d4b0ae5b4a44483da4b10b7c0b5403df5bfabb2444265"
+        },
+        {
+          "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
+          "sha256": "0025099fd945e492a959bf5161b1b94b0cabf8f94e56888684e01a4585ec1009"
+        },
+        {
+          "path": "apps/web/e2e/record-list-query.spec.ts",
+          "sha256": "246050675523b71260a5f860ea5e8bbf6dfe00a036a1be364491e6fcf88b6c42"
+        },
+        {
+          "path": "apps/web/e2e/security-settings-forms.spec.ts",
+          "sha256": "58a05f707dcff59c4f2ea49112389aebec1f69ca054fe96cc4f12afcec0387b6"
+        },
+        {
+          "path": "apps/web/playwright.config.ts",
+          "sha256": "ad9a9e23b46599266a7fe0dcfd7185e12e612cdc50c040453533d1fccbea85cf"
+        },
+        {
+          "path": "apps/web/src/components/ContractsWorkspace.test.tsx",
+          "sha256": "1a9d3272ec9cd9574b475a752fb014fb53f9a7639970c162b9252e4781dad933"
+        },
+        {
+          "path": "apps/web/src/components/ContractsWorkspace.tsx",
+          "sha256": "0554b5519ecf702aaa033020f252165d0f20294b72b4b07e147b6d50d85df810"
+        },
+        {
+          "path": "apps/web/src/components/DocumentDetail.tsx",
+          "sha256": "51dffb23c17520aa44ef8beee2d23981349d6a82dbdd240dd7c2c4ce8a2f09ed"
+        },
+        {
+          "path": "apps/web/src/components/DocumentRecords.tsx",
+          "sha256": "d1f92b5203b97619ce35d95b3ddb9d17493230d760d3d868da6c109d194fe586"
+        },
+        {
+          "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
+          "sha256": "e78baae38b08176f43c926dfc8f1e62db2830da610c4b8121d79484236e05545"
+        },
+        {
+          "path": "apps/web/src/components/DocumentsWorkspace.tsx",
+          "sha256": "81a69667753c26f2566b1e711850a2eaf885989f3beb4033a8f50bd94a3f87b9"
+        },
+        {
+          "path": "apps/web/src/components/ProfileLifecyclePanel.test.tsx",
+          "sha256": "4cbe2f639a2438bcc2b54c9c404e299c259607ff6e99827bfd051fdbcc379cf1"
+        },
+        {
+          "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
+          "sha256": "cc53b8e6eacede2177a6d61c1d845cf74449dd19c8fde3aedce624fbc50e8a0f"
+        },
+        {
+          "path": "apps/web/src/components/contract-workspace-query.test.tsx",
+          "sha256": "1a5fde3186fbad811a477ab2dd0dbde7203d8cad2fae9d28791c8ad60d505764"
+        },
+        {
+          "path": "apps/web/src/components/record-list-query.test.tsx",
+          "sha256": "166ee343f3f66f4dfc1ed3d6fcb89241a605ce6fdb6d13834ff0a74547b64a45"
+        },
+        {
+          "path": "apps/web/src/hooks/useCursorHistory.test.tsx",
+          "sha256": "579031f9a1c0c79aff81a32daa2c96d17375c2b1e5a6e972861f3737a9181725"
+        },
+        {
+          "path": "apps/web/src/hooks/useCursorHistory.ts",
+          "sha256": "f90b635accf0dbdcf971dfc1dcb688e9b827aa3348903eddd8c129add8763404"
+        },
+        {
+          "path": "apps/web/src/hooks/useOwnedContractRead.ts",
+          "sha256": "d158637ca069b7551b3d4920621873ed1a07b10a0cc50c730be822d68ae20200"
+        },
+        {
+          "path": "apps/web/src/hooks/useOwnedDocumentRead.ts",
+          "sha256": "2cab6d3dd68e87d3c0a8e10e5ff30bafa86f008517e13ec8f8ce4ffa8883a883"
+        },
+        {
+          "path": "apps/web/src/lib/contracts.ts",
+          "sha256": "49d1fd116578561b1bf5828f75bbdae00d7f610dd1943b0bd9a1ff1e6ac46e13"
+        },
+        {
+          "path": "apps/web/src/lib/documents.ts",
+          "sha256": "23769141261230282f3cde5b9be17da1191e279ba4882b39b5f86c75b8bc3d3f"
+        },
+        {
+          "path": "apps/web/src/pages/AdminDeliveryProvidersPage.tsx",
+          "sha256": "23fb5f4467d4b2482b0ea61d390657af674d0cd7cd0bdefbde269faa998405b1"
+        },
+        {
+          "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
+          "sha256": "a72f4e37a56dd99540aeb5a9ecfe69126db05f322e971061614e9f11f0ab33b0"
+        },
+        {
+          "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
+          "sha256": "51e9857108279223998b298077d825b214e48c7a5c7972b60794f8417d73b857"
+        },
+        {
+          "path": "apps/web/src/pages/NotificationCenterPage.tsx",
+          "sha256": "d0e38edec8e1a8a9733a0967dc8a5db591dec6b89153d7b605ab1bec6a0d8c37"
+        },
+        {
+          "path": "apps/web/src/routes/_app/contracts.tsx",
+          "sha256": "339f4449296ad8c10e0d7d8ab85393878574edb7bb74d73d8d7cdd4bc1dea6da"
+        },
+        {
+          "path": "apps/web/src/routes/_app/documents.tsx",
+          "sha256": "4645c7a3f70278d3cb14cbd407bde35bd21e79600ba5a730fb22620bfad641e9"
+        },
+        {
+          "path": "apps/web/src/routes/_app/notifications.tsx",
+          "sha256": "360f09cfdbf3839ebd542bab3b55a8c3d673e2833906a656233103dfd2befa02"
+        },
+        {
+          "path": "apps/web/src/routes/_app/settings/privacy.tsx",
+          "sha256": "f1192935ad8024b4653de301b9782c7bcbc046d42d73042d596e60a50e730ec6"
+        },
+        {
+          "path": "apps/web/src/routes/_app/settings/security.tsx",
+          "sha256": "6d0e8aad058bff595c8b9606ab17358a52cb29469d0c212921cae1dbe6739ef9"
+        },
+        {
+          "path": "apps/web/src/routes/admin/contracts.tsx",
+          "sha256": "e51e0994c520ae45bcc4b30a3b01c2daca182ba888969184af45047e34f566d6"
+        },
+        {
+          "path": "apps/web/src/routes/admin/documents.tsx",
+          "sha256": "2e17d1323d40dc142d3fe2ee952ebfa3cf5e45da11b12a4dc72e62dc6388defe"
+        },
+        {
+          "path": "apps/web/src/routes/admin/inbox.tsx",
+          "sha256": "5409a87b514205e80af28a96c1e4f69e51c1ae5d93ca13f9acb0c458c98e0848"
+        },
+        {
+          "path": "apps/web/src/routes/admin/providers.tsx",
+          "sha256": "774b9561ab7d9126f4a941cb4ec0cdd985ffd6ea63bea31d33ee3ece96e05ba7"
+        },
+        {
+          "path": "docs/design/notification-recovery.md",
+          "sha256": "c653d0fec878e482b053a584c1362d7cd80a17ddbf55c6b351758cd2a71e41bd"
+        },
+        {
+          "path": "package.json",
+          "sha256": "886264b44b4a98229d8f38d01775db77f95128e8eb80eb1f70f2c41f97c784ff"
+        },
+        {
+          "path": "packages/i18n/src/documents.ts",
+          "sha256": "a4ca9205a2ccaa96883507807823acb73a685e42376f4cacf3b38dfdf140a751"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "aab5a31e236ab70a7c588c676e3a0a2cf0bb8250e8d96ecdc469c9be175dcfa2"
+        },
+        {
+          "path": "scripts/check-changed-coverage.py",
+          "sha256": "721aa5763bb62336c0e4c454b8e36e2f15ff1e14bf4b0136c7c7946424bbd736"
+        },
+        {
+          "path": "scripts/check-route-budgets.mjs",
+          "sha256": "4dd831c645a9dbf1e6fd9b0c211b5559e4fc22652373b31525bd4f4aae38186d"
+        },
+        {
+          "path": "scripts/run-production-browser.mjs",
+          "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+        }
+      ],
+      "checks": [
+        "Contract histories reject malformed rows before rendering and keep verified rows on first-page refresh until a replacement succeeds. Denial clears legacy and URL-owned rows. Native cases preserve exact invoice amounts, filter and cursor retry, and independent detail.",
+        "Document queues reject invalid row metadata and rows from a different selected profile while preserving the last verified page and open work. The document profile read distinguishes loading, denied, unavailable and missing active selection. The privacy preview announces retry loading and keeps the captured closure safeguards.",
+        "Verified 56 native cases across nine named routes, including independent email and SMS reads, customer and staff inboxes and the security list deadline. Four instrumented cases and 108 distinct targeted units passed. After reusing existing localized labels, all 101 unchanged route budgets and nine coverage groups passed. Cold auth retained all 31 verified assets.",
+        "The first candidate exposed a refresh retention failure and an incomplete fixture and empty-state prop. A later candidate exceeded the staff wallet receipt budget by 80 bytes. The final source reuses existing labels, supplies the header string type and retains the 500 KB limit. One Safari companion run stopped at a temporary screenshot write and passed in the Playwright artifact directory.",
+        "The wallet predecessor completed GitHub Actions run 42515789023 successfully. This batch uses targeted acceptance and does not establish every route state."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-record-workspace-read-states",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-record-workspace-read-states/proof.json",
+      "source_scope_proof_sha256": "75da679390a78203fa808a25dab84dea3bc156b07e692a9fd636ed190bc069cd",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-record-workspace-read-states/renewed-bindings.json",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-record-workspace-read-states/reviewed.patch",
+      "release_disposition": "Verified nine named route scopes. v0.5.0 remains open."
     }
   },
   "historical_improvements": [
@@ -806470,12 +806689,12 @@
       "release-readiness#R-04.01",
       "release-readiness#R-04.02"
     ],
-    "goal": "Complete conditional evidence reconciliation for the remaining read-owning route panels. Confirm the affected hosted test receipt for the repaired source. Required GitHub merge enforcement and staging Sentry delivery remain independent gates."
+    "goal": "Complete conditional evidence reconciliation for the remaining read-owning detail and settings panes using the 98-route census and case receipts. Diagnose demonstrated gaps first. Required GitHub merge enforcement and staging Sentry delivery remain independent gates."
   },
   "launch_forecast": {
     "status": "deadline_at_risk_until_v0_5_and_operational_gates_close",
     "next_update_after": "v0.5.0 remaining UI criteria and owner decisions",
-    "method": "v0.4.0 staging and Telegram receipts are verified. v0.5.0 customer and staff wallet history recovery passed scoped checks. Six previous hosted failures have passing local evidence. Four launch-required criteria remain open and the November 9 sequence remains at risk."
+    "method": "v0.4.0 staging and Telegram receipts are verified. Nine named v0.5.0 route scopes passed current conditional checks. Four launch-required criteria remain open and the November 9 sequence remains at risk."
   },
   "capabilities": [
     {

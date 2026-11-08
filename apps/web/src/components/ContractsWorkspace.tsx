@@ -36,7 +36,12 @@ import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { DocumentRequestError } from '../lib/documents.js';
-import { contractBase, contractStates, type ContractSummary } from '../lib/contracts.js';
+import {
+  contractBase,
+  contractStates,
+  parseContractCommercialValue,
+  type ContractSummary,
+} from '../lib/contracts.js';
 import { ContractActivationRules } from './ContractActivationRules.js';
 import { ContractDetailLoader } from './ContractDetailLoader.js';
 import { ContractDraftEditor } from './ContractDraftEditor.js';
@@ -52,6 +57,34 @@ import { useAccountUser } from '../hooks/useAccountUser.js';
 import type { ContractFormCoordination } from '../lib/contract-review-signature-form.js';
 import { staffOrderId } from '../lib/staff-order-list-query.js';
 import type { RecordListQuery } from '../lib/record-list-query.js';
+
+function validContractSummary(item: ContractSummary) {
+  return (
+    !!item &&
+    typeof item.id === 'string' &&
+    typeof item.versionId === 'string' &&
+    Number.isSafeInteger(item.versionNumber) &&
+    contractStates.includes(item.state) &&
+    ['electricity', 'savings', 'solar'].includes(item.serviceType) &&
+    [
+      item.contractNumber,
+      item.profileTitle,
+      item.acceptedParty?.name,
+      item.changeDescription,
+      item.orderId,
+      item.savingOrderId,
+      item.initialInvoiceId,
+      item.initialInvoiceState,
+      item.linkedOrderStatus,
+    ].every((value) => value == null || typeof value === 'string') &&
+    [item.publishedAt, item.acceptedAt, item.serviceStartsAt, item.serviceEndsAt].every(
+      (value) => value == null || (typeof value === 'string' && Number.isFinite(Date.parse(value)))
+    ) &&
+    (item.initialInvoiceAmount == null ||
+      (typeof item.initialInvoiceAmount === 'string' && /^\d+$/.test(item.initialInvoiceAmount))) &&
+    (item.commercialValue == null || !!parseContractCommercialValue(item.commercialValue))
+  );
+}
 
 export function ContractsWorkspace({
   staff = false,
@@ -375,7 +408,8 @@ function ContractResults({
   const word = (key: string) => contractText(key, locale);
   const [reload, setReload] = useState(0);
   const [retryRevision, setRetryRevision] = useState(0);
-  const legacy = useCursorHistory<ContractSummary>(`${staff}:${query}:${reload}`);
+  const legacy = useCursorHistory<ContractSummary>(`${staff}:${query}`);
+  const clearLegacy = legacy.clear;
   const cursor = queries ? queries.queue.query.cursor : legacy.before;
   const urlRows = useCursorPageRows<ContractSummary>(`${staff}:${query}`, cursor || '');
   const [denied, setDenied] = useState(false);
@@ -424,6 +458,12 @@ function ContractResults({
     )
       .then((page) => {
         if (!fresh()) return;
+        if (
+          !Array.isArray(page.contracts) ||
+          !page.contracts.every(validContractSummary) ||
+          (page.nextBefore !== null && typeof page.nextBefore !== 'string')
+        )
+          throw new Error('Invalid contract list');
         setDenied(false);
         acceptPage(
           page.contracts,
@@ -435,6 +475,7 @@ function ContractResults({
         setError(true);
         if (reason instanceof DocumentRequestError && [401, 403].includes(reason.status)) {
           setDenied(true);
+          clearLegacy();
           urlRows.discard();
           setSelected(null, true);
         }
@@ -443,10 +484,11 @@ function ContractResults({
         if (fresh()) setLoading(false);
       });
     return () => controller.abort();
-  }, [staff, query, cursor, reload, retryRevision, acceptPage, locked, readContract]);
+  }, [staff, query, cursor, reload, retryRevision, acceptPage, clearLegacy, locked, readContract]);
   function refresh() {
     if (coordination.blocked()) return;
     if (queryRef.current) queryRef.current.queue.setQuery({ cursor: '' });
+    else legacy.reset(true);
     setReload((value) => value + 1);
   }
   const renderIdentity = (item: ContractSummary) => (

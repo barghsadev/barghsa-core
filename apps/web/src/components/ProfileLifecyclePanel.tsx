@@ -260,6 +260,7 @@ function LifecyclePanel({ authorized }: { authorized: () => boolean }) {
             onClick={() => {
               if (busy.current || !permitted()) return;
               busy.current = true;
+              setState('loading');
               setSubmitting('closure');
               void refresh()
                 .catch(() => {

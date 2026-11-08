@@ -93,7 +93,7 @@ for (const locale of ['en', 'fa'] as const) {
       .poll(async () => (await new AxeBuilder({ page }).analyze()).violations)
       .toEqual([]);
     await page.screenshot({
-      path: `/tmp/barghsa-provider-configuration-pause-${locale}.png`,
+      path: test.info().outputPath(`barghsa-provider-configuration-pause-${locale}.png`),
       fullPage: true,
     });
   });
@@ -168,7 +168,7 @@ for (const locale of ['en', 'fa'] as const)
       );
       expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
       await page.screenshot({
-        path: `/tmp/barghsa-provider-email-${locale}-${theme}.png`,
+        path: test.info().outputPath(`barghsa-provider-email-${locale}-${theme}.png`),
         fullPage: true,
       });
     });
@@ -296,7 +296,7 @@ for (const locale of ['en', 'fa'] as const)
       );
       expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
       await page.screenshot({
-        path: `/tmp/barghsa-provider-sms-${locale}-${theme}.png`,
+        path: test.info().outputPath(`barghsa-provider-sms-${locale}-${theme}.png`),
         fullPage: true,
       });
     });

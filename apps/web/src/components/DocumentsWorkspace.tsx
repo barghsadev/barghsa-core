@@ -74,7 +74,9 @@ function Workspace({ staff, queries }: { staff: boolean; queries?: RecordListQue
   const locale = useLocale();
   const word = (key: string) => documentText(key, locale);
   const [activeProfile, setActiveProfile] = useState<string | null>(null);
-  const [profileError, setProfileError] = useState(false);
+  const [profileState, setProfileState] = useState<
+    'loading' | 'ready' | 'missing' | 'error' | 'denied'
+  >('loading');
   const [profileRetry, setProfileRetry] = useState(0);
   const routeFilters: DocumentFilters = {
     kind: (queries?.queue.query.filters.kind || 'standalone') as DocumentKind,
@@ -104,18 +106,28 @@ function Workspace({ staff, queries }: { staff: boolean; queries?: RecordListQue
   useEffect(() => {
     if (staff) return;
     const controller = new AbortController();
-    setProfileError(false);
+    setProfileState('loading');
     void readDocument<{ activeProfileId: string | null }>('/api/profiles', {
       signal: controller.signal,
     })
       .then((data) => {
         if (!controller.signal.aborted) {
+          if (
+            data.activeProfileId !== null &&
+            (typeof data.activeProfileId !== 'string' || !uuid.test(data.activeProfileId))
+          )
+            throw new Error('Invalid active profile');
           setActiveProfile(data.activeProfileId);
-          if (!data.activeProfileId) setProfileError(true);
+          setProfileState(data.activeProfileId ? 'ready' : 'missing');
         }
       })
-      .catch(() => {
-        if (!controller.signal.aborted) setProfileError(true);
+      .catch((error: unknown) => {
+        if (!controller.signal.aborted)
+          setProfileState(
+            error instanceof DocumentRequestError && [401, 403].includes(error.status)
+              ? 'denied'
+              : 'error'
+          );
       });
     return () => controller.abort();
   }, [staff, profileRetry, readDocument]);
@@ -150,7 +162,9 @@ function Workspace({ staff, queries }: { staff: boolean; queries?: RecordListQue
     <div className="mx-auto flex max-w-5xl flex-col gap-6" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
       <PageHeader
         title={word(staff ? 'staffTitle' : 'title')}
-        description={word(staff ? 'staffDescription' : 'description')}
+        description={
+          staff ? word('staffDescription') : profileState !== 'missing' ? word('description') : ''
+        }
       />
       {staff ? <DocumentRetentionPolicies /> : null}
       {staff ? <DocumentDestructionQueue /> : null}
@@ -246,15 +260,27 @@ function Workspace({ staff, queries }: { staff: boolean; queries?: RecordListQue
           {word('apply')}
         </Button>
       </form>
-      {profileError ? (
+      {!staff && (profileState === 'error' || profileState === 'denied') ? (
         <Alert variant="destructive">
-          <AlertDescription>{word('denied')}</AlertDescription>
+          <AlertDescription>
+            {word(profileState === 'denied' ? 'denied' : 'listError')}
+          </AlertDescription>
           <Button variant="outline" onClick={() => setProfileRetry((value) => value + 1)}>
             {word('refresh')}
           </Button>
         </Alert>
-      ) : !staff && !activeProfile ? (
+      ) : !staff && profileState === 'loading' ? (
         <PageLoading label={word('loading')} />
+      ) : !staff && profileState === 'missing' ? (
+        <EmptyState
+          title={appText('dashboard.profile.choose', locale)}
+          description={word('description')}
+          action={
+            <a href="/app" className="text-sm text-primary underline underline-offset-4">
+              {appText('dashboard.nav.overview', locale)}
+            </a>
+          }
+        />
       ) : (
         <DocumentResults
           key={generation}
@@ -287,6 +313,25 @@ export function DocumentResults(props: ComponentProps<typeof Results>) {
   ]);
   return <Results key={scope} {...props} />;
 }
+
+function validDocumentRow(item: BusinessDocument, profileId: string) {
+  return (
+    !!item &&
+    typeof item.id === 'string' &&
+    typeof item.profileId === 'string' &&
+    (!profileId || item.profileId === profileId) &&
+    documentKinds.includes(item.businessRecordType) &&
+    documentStates.includes(item.state) &&
+    typeof item.originalName === 'string' &&
+    Number.isSafeInteger(item.revision) &&
+    Number.isSafeInteger(item.sizeBytes) &&
+    item.sizeBytes >= 0 &&
+    typeof item.createdAt === 'string' &&
+    Number.isFinite(Date.parse(item.createdAt)) &&
+    (item.rejectionReason == null || typeof item.rejectionReason === 'string')
+  );
+}
+
 function Results({
   staff,
   showRetention = false,
@@ -406,6 +451,7 @@ function Results({
         if (!controller.signal.aborted) {
           if (
             !Array.isArray(page.documents) ||
+            !page.documents.every((item) => validDocumentRow(item, profileId)) ||
             (page.nextBefore !== null && typeof page.nextBefore !== 'string')
           )
             throw new DocumentRequestError(502, null);

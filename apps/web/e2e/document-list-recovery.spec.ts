@@ -79,6 +79,7 @@ for (const staff of [false, true])
       let status = 503,
         detailReads = 0,
         hold = false,
+        invalidPage = false,
         held: Route | undefined;
       const queries: string[] = [];
       await page.route(
@@ -89,6 +90,12 @@ for (const staff of [false, true])
           if (hold) {
             held = route;
             return;
+          }
+          if (invalidPage) {
+            const invalid = staff
+              ? { ...documentMore, originalName: { text: 'Wrong name shape' } }
+              : { ...documentMore, profileId: '99999999-9999-4999-8999-999999999999' };
+            return route.fulfill({ json: { documents: [invalid], nextBefore: null } });
           }
           return status === 200
             ? route.fulfill({
@@ -142,7 +149,6 @@ for (const staff of [false, true])
       hold = false;
       await expect(content.getByRole('alert')).toBeVisible();
       const failed = queries.at(-1)!;
-      const count = queries.length;
       const query = new URL(failed, 'https://local');
       expect(query.searchParams.get('before')).toBe(documentCursor);
       expect(query.searchParams.get('profileId')).toBe(documentProfileId);
@@ -151,6 +157,14 @@ for (const staff of [false, true])
         expect(query.searchParams.get('category')).toBe('document');
         expect(query.searchParams.get('state')).toBe('SubmittedForReview');
       }
+      invalidPage = true;
+      await content.getByRole('button', { name: word('retry'), exact: true }).click();
+      await expect(content.getByRole('alert')).toBeVisible();
+      await expect(detail).toBeVisible();
+      await expect(content.getByRole('button', { name: documentMore.originalName })).toHaveCount(0);
+      expect(queries.at(-1)).toBe(failed);
+      invalidPage = false;
+      const count = queries.length;
       await content.getByRole('button', { name: word('retry'), exact: true }).click();
       await expect(
         content.getByRole('button', { name: documentMore.originalName, exact: true })
@@ -189,7 +203,9 @@ for (const staff of [false, true])
       );
       if (locale === 'fa' && testInfo.project.name === 'mobile-safari')
         await page.screenshot({
-          path: `/tmp/barghsa-document-${staff ? 'staff' : 'customer'}-fa-mobile-safari.png`,
+          path: testInfo.outputPath(
+            `barghsa-document-${staff ? 'staff' : 'customer'}-fa-mobile-safari.png`
+          ),
           fullPage: true,
         });
       status = 403;

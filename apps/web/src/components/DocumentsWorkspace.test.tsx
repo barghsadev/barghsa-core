@@ -279,6 +279,15 @@ it.each(['en', 'fa'] as const)(
   }
 );
 
+it('offers profile selection when the account has no active profile', async () => {
+  const fetcher = vi.fn(async () => response({ activeProfileId: null }));
+  vi.stubGlobal('fetch', fetcher);
+  await render(<DocumentsWorkspace />);
+  expect(container.querySelector('a[href="/app"]')?.textContent).toBe('Dashboard');
+  expect(container.querySelector('[role=alert]')).toBeNull();
+  expect(fetcher).toHaveBeenCalledTimes(1);
+});
+
 it('sends search/category filters to the server and paginates without duplicate rows', async () => {
   const fetcher = vi.fn(async (url: string) => {
     if (url === '/api/profiles') return response({ activeProfileId: PROFILE });
@@ -319,7 +328,10 @@ it('abandons requests from the old profile and never renders a late result after
           resolveOld = resolve;
         });
       }
-      return response({ documents: [row({ originalName: 'New profile.pdf' })], nextBefore: null });
+      return response({
+        documents: [row({ originalName: 'New profile.pdf', profileId: selected })],
+        nextBefore: null,
+      });
     })
   );
   await render(<DocumentsWorkspace />);

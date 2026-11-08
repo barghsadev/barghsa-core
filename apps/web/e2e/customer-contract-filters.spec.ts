@@ -9,6 +9,7 @@ import { test, expect } from './coverage-fixture';
 import AxeBuilder from '@axe-core/playwright';
 import type { Route } from '@playwright/test';
 import { t } from '@barghsa/i18n/app';
+import { t as workspaceText } from '@barghsa/i18n/workspace';
 import { contractText } from '@barghsa/i18n/contracts';
 import { dateRangePreset } from '@barghsa/ui';
 
@@ -74,10 +75,18 @@ for (const locale of ['en', 'fa'] as const) {
     let held: Route | undefined;
     let hold = true;
     let fail = false;
+    let malformed = false;
     await page.route(/\/api\/contracts(?:\?|$)/, (route) => {
       const params = new URL(route.request().url()).searchParams;
       queries.push(params);
       if (fail) return route.fulfill({ status: 503, json: {} });
+      if (malformed)
+        return route.fulfill({
+          json: {
+            contracts: [{ ...body(searched).contracts[0], initialInvoiceAmount: '1.50' }],
+            nextBefore: null,
+          },
+        });
       if (params.get('serviceType') === 'solar' && hold) {
         held = route;
         return;
@@ -200,6 +209,22 @@ for (const locale of ['en', 'fa'] as const) {
       .getByRole('button', { name: contractText('refresh', locale), exact: true })
       .click();
     await expect(reference(searched)).toBeVisible();
+    malformed = true;
+    const main = page.getByRole('main');
+    await main.getByRole('button', { name: contractText('refresh', locale), exact: true }).click();
+    await expect(
+      main.getByRole('alert').filter({ hasText: contractText('error', locale) })
+    ).toBeVisible();
+    await expect(reference(searched)).toBeVisible();
+    const malformedQuery = queries.at(-1)!.toString();
+    malformed = false;
+    await main
+      .getByRole('button', { name: workspaceText('historyPagination.retry', locale), exact: true })
+      .click();
+    await expect(
+      main.getByRole('alert').filter({ hasText: contractText('error', locale) })
+    ).toHaveCount(0);
+    expect(queries.at(-1)!.toString()).toBe(malformedQuery);
     await page.route('**/api/user/settings/timezone', (route) =>
       route.fulfill({ status: 503, json: {} })
     );

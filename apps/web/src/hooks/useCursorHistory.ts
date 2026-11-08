@@ -37,11 +37,16 @@ export function useCursorHistory<T extends { id: string }>(scope: string) {
       current.scope === scope ? { ...current, items: [], nextBefore: null } : current
     );
   }, [scope]);
-  const reset = useCallback(() => {
-    setPage((current) =>
-      current.scope === scope ? { scope, items: [], nextBefore: null } : current
-    );
-  }, [scope]);
+  const reset = useCallback(
+    (retainItems = false) => {
+      setPage((current) =>
+        current.scope === scope
+          ? { scope, items: retainItems ? current.items : [], nextBefore: null }
+          : current
+      );
+    },
+    [scope]
+  );
   const loadMore = () => {
     if (nextBefore)
       setPage((current) =>

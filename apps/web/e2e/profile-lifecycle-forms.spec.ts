@@ -55,8 +55,13 @@ for (const locale of ['en', 'fa'] as const) {
     const value = { ...actualLifecyclePreview(), profileId },
       writes: Record<string, unknown>[] = [];
     let previews = 0;
+    let retry: Route | undefined;
     await page.route('**/api/tickets/lifecycle-preview', (r) => {
       if (++previews === 1) return;
+      if (previews === 2) {
+        retry = r;
+        return;
+      }
       return r.fulfill({ json: value });
     });
     await page.route('**/api/tickets/lifecycle-requests', async (r) => {
@@ -88,6 +93,10 @@ for (const locale of ['en', 'fa'] as const) {
     await owner
       .getByRole('button', { name: lifecycleFormText('refresh', locale), exact: true })
       .click();
+    await expect.poll(() => !!retry).toBe(true);
+    await expect(owner.getByRole('status')).toContainText(t('settings.privacy.loading', locale));
+    await expect(owner.getByRole('alert')).toHaveCount(0);
+    await retry!.fulfill({ json: value });
     await expect(
       owner.getByText(t('settings.privacy.blocker.activeOrder', locale), { exact: true })
     ).toBeVisible();
