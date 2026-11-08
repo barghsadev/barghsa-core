@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-08T23:50:24+00:00",
-  "source_commit": "bc85a6d69e8f12a7faa710d014cd23b77df3bd3e",
+  "updated": "2026-11-08T23:57:29+00:00",
+  "source_commit": "f03cd51e888e7be0417a46310b70052fdc3c5e28",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -55295,7 +55295,7 @@
             },
             {
               "path": "apps/web/src/components/dashboard/DashboardWidget.tsx",
-              "sha256": "ec2c47323f604bd3622d0ef8264c76526387071020b63940fff058b0ce3384a9"
+              "sha256": "c51a33d1c73d94deb398e2fd97605d402712546fcc9f8845fd0f61aa55f5c49b"
             },
             {
               "path": "apps/web/src/hooks/useStaffDashboardData.ts",
@@ -55926,7 +55926,7 @@
             },
             {
               "path": "apps/web/src/components/dashboard/DashboardWidget.tsx",
-              "sha256": "ec2c47323f604bd3622d0ef8264c76526387071020b63940fff058b0ce3384a9"
+              "sha256": "c51a33d1c73d94deb398e2fd97605d402712546fcc9f8845fd0f61aa55f5c49b"
             },
             {
               "path": "apps/web/src/hooks/useStaffDashboardData.ts",
@@ -61310,7 +61310,7 @@
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.ts",
-              "sha256": "99a562efaa93aee37f56c153d42d294b2cefcc40d43bc7d3e27fce4a8cd477b7"
+              "sha256": "6e4a95c781d240f2bf81c9d219924a516b7b357f19a7d58db41fe88cbf5facd2"
             },
             {
               "path": "apps/web/src/routes/_app/dashboard.tsx",
@@ -61318,7 +61318,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
-              "sha256": "65503f453f8c75f9e4d369c287a1da87cae0f5982224842a92ad7433c18ee248"
+              "sha256": "346c312b37de92189f5ddb13e7ea40bce8352f5cc6440374af2a0f0d3c624781"
             },
             {
               "path": "apps/web/e2e/dashboard-entry.spec.ts",
@@ -61689,7 +61689,7 @@
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.ts",
-              "sha256": "99a562efaa93aee37f56c153d42d294b2cefcc40d43bc7d3e27fce4a8cd477b7"
+              "sha256": "6e4a95c781d240f2bf81c9d219924a516b7b357f19a7d58db41fe88cbf5facd2"
             },
             {
               "path": "apps/web/src/routes/_app/dashboard.tsx",
@@ -61697,7 +61697,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
-              "sha256": "65503f453f8c75f9e4d369c287a1da87cae0f5982224842a92ad7433c18ee248"
+              "sha256": "346c312b37de92189f5ddb13e7ea40bce8352f5cc6440374af2a0f0d3c624781"
             },
             {
               "path": "apps/web/e2e/dashboard-entry.spec.ts",
@@ -62069,7 +62069,7 @@
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.ts",
-              "sha256": "99a562efaa93aee37f56c153d42d294b2cefcc40d43bc7d3e27fce4a8cd477b7"
+              "sha256": "6e4a95c781d240f2bf81c9d219924a516b7b357f19a7d58db41fe88cbf5facd2"
             },
             {
               "path": "apps/web/src/routes/_app/dashboard.tsx",
@@ -62077,7 +62077,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
-              "sha256": "65503f453f8c75f9e4d369c287a1da87cae0f5982224842a92ad7433c18ee248"
+              "sha256": "346c312b37de92189f5ddb13e7ea40bce8352f5cc6440374af2a0f0d3c624781"
             },
             {
               "path": "apps/web/e2e/dashboard-entry.spec.ts",
@@ -496831,7 +496831,7 @@
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.ts",
-              "sha256": "99a562efaa93aee37f56c153d42d294b2cefcc40d43bc7d3e27fce4a8cd477b7"
+              "sha256": "6e4a95c781d240f2bf81c9d219924a516b7b357f19a7d58db41fe88cbf5facd2"
             },
             {
               "path": "apps/web/src/hooks/useContractAuthoringCommand.ts",
@@ -508217,11 +508217,11 @@
             },
             {
               "path": "apps/web/src/components/dashboard/DashboardWidget.tsx",
-              "sha256": "ec2c47323f604bd3622d0ef8264c76526387071020b63940fff058b0ce3384a9"
+              "sha256": "c51a33d1c73d94deb398e2fd97605d402712546fcc9f8845fd0f61aa55f5c49b"
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.ts",
-              "sha256": "99a562efaa93aee37f56c153d42d294b2cefcc40d43bc7d3e27fce4a8cd477b7"
+              "sha256": "6e4a95c781d240f2bf81c9d219924a516b7b357f19a7d58db41fe88cbf5facd2"
             },
             {
               "path": "apps/web/src/hooks/useCatalogueConfirmationRead.ts",
@@ -510086,7 +510086,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
-              "sha256": "65503f453f8c75f9e4d369c287a1da87cae0f5982224842a92ad7433c18ee248"
+              "sha256": "346c312b37de92189f5ddb13e7ea40bce8352f5cc6440374af2a0f0d3c624781"
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
@@ -510396,7 +510396,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
-              "sha256": "65503f453f8c75f9e4d369c287a1da87cae0f5982224842a92ad7433c18ee248"
+              "sha256": "346c312b37de92189f5ddb13e7ea40bce8352f5cc6440374af2a0f0d3c624781"
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
@@ -510706,7 +510706,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
-              "sha256": "65503f453f8c75f9e4d369c287a1da87cae0f5982224842a92ad7433c18ee248"
+              "sha256": "346c312b37de92189f5ddb13e7ea40bce8352f5cc6440374af2a0f0d3c624781"
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
@@ -511016,7 +511016,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
-              "sha256": "65503f453f8c75f9e4d369c287a1da87cae0f5982224842a92ad7433c18ee248"
+              "sha256": "346c312b37de92189f5ddb13e7ea40bce8352f5cc6440374af2a0f0d3c624781"
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
@@ -512140,11 +512140,11 @@
             },
             {
               "path": "apps/web/src/components/dashboard/DashboardWidget.tsx",
-              "sha256": "ec2c47323f604bd3622d0ef8264c76526387071020b63940fff058b0ce3384a9"
+              "sha256": "c51a33d1c73d94deb398e2fd97605d402712546fcc9f8845fd0f61aa55f5c49b"
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.ts",
-              "sha256": "99a562efaa93aee37f56c153d42d294b2cefcc40d43bc7d3e27fce4a8cd477b7"
+              "sha256": "6e4a95c781d240f2bf81c9d219924a516b7b357f19a7d58db41fe88cbf5facd2"
             },
             {
               "path": "apps/web/src/hooks/useCatalogueConfirmationRead.ts",
@@ -512779,7 +512779,7 @@
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.ts",
-              "sha256": "99a562efaa93aee37f56c153d42d294b2cefcc40d43bc7d3e27fce4a8cd477b7"
+              "sha256": "6e4a95c781d240f2bf81c9d219924a516b7b357f19a7d58db41fe88cbf5facd2"
             },
             {
               "path": "apps/web/src/hooks/useLocale.ts",
@@ -513578,7 +513578,7 @@
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.ts",
-              "sha256": "99a562efaa93aee37f56c153d42d294b2cefcc40d43bc7d3e27fce4a8cd477b7"
+              "sha256": "6e4a95c781d240f2bf81c9d219924a516b7b357f19a7d58db41fe88cbf5facd2"
             },
             {
               "path": "apps/web/src/hooks/useLocale.ts",
@@ -514376,7 +514376,7 @@
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.ts",
-              "sha256": "99a562efaa93aee37f56c153d42d294b2cefcc40d43bc7d3e27fce4a8cd477b7"
+              "sha256": "6e4a95c781d240f2bf81c9d219924a516b7b357f19a7d58db41fe88cbf5facd2"
             },
             {
               "path": "apps/web/src/hooks/useLocale.ts",
@@ -514935,11 +514935,11 @@
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
-              "sha256": "65503f453f8c75f9e4d369c287a1da87cae0f5982224842a92ad7433c18ee248"
+              "sha256": "346c312b37de92189f5ddb13e7ea40bce8352f5cc6440374af2a0f0d3c624781"
             },
             {
               "path": "apps/web/src/components/dashboard/DashboardWidget.tsx",
-              "sha256": "ec2c47323f604bd3622d0ef8264c76526387071020b63940fff058b0ce3384a9"
+              "sha256": "c51a33d1c73d94deb398e2fd97605d402712546fcc9f8845fd0f61aa55f5c49b"
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.test.tsx",
@@ -514947,7 +514947,7 @@
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.ts",
-              "sha256": "99a562efaa93aee37f56c153d42d294b2cefcc40d43bc7d3e27fce4a8cd477b7"
+              "sha256": "6e4a95c781d240f2bf81c9d219924a516b7b357f19a7d58db41fe88cbf5facd2"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.tsx",
@@ -514955,7 +514955,7 @@
             },
             {
               "path": "packages/i18n/src/dashboard.ts",
-              "sha256": "5a77f62b6689595b84f702aad1151ccd8a7010a1118574d2fe1f61e8e62dbcf7"
+              "sha256": "0b1d2e35178c8257602256ad3d6b92e736a42fe0a3adcaa2b8fb83f4005d6e76"
             }
           ],
           "checks": [
@@ -515085,7 +515085,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
-              "sha256": "65503f453f8c75f9e4d369c287a1da87cae0f5982224842a92ad7433c18ee248"
+              "sha256": "346c312b37de92189f5ddb13e7ea40bce8352f5cc6440374af2a0f0d3c624781"
             },
             {
               "path": "apps/web/e2e/feedback.spec.ts",
@@ -515517,7 +515517,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
-              "sha256": "65503f453f8c75f9e4d369c287a1da87cae0f5982224842a92ad7433c18ee248"
+              "sha256": "346c312b37de92189f5ddb13e7ea40bce8352f5cc6440374af2a0f0d3c624781"
             },
             {
               "path": "apps/web/e2e/date-picker-component.spec.ts",
@@ -515956,7 +515956,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
-              "sha256": "65503f453f8c75f9e4d369c287a1da87cae0f5982224842a92ad7433c18ee248"
+              "sha256": "346c312b37de92189f5ddb13e7ea40bce8352f5cc6440374af2a0f0d3c624781"
             },
             {
               "path": "apps/web/e2e/date-picker-component.spec.ts",
@@ -516391,7 +516391,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
-              "sha256": "65503f453f8c75f9e4d369c287a1da87cae0f5982224842a92ad7433c18ee248"
+              "sha256": "346c312b37de92189f5ddb13e7ea40bce8352f5cc6440374af2a0f0d3c624781"
             },
             {
               "path": "apps/web/e2e/feedback.spec.ts",
@@ -518889,11 +518889,11 @@
             },
             {
               "path": "apps/web/src/components/dashboard/DashboardWidget.tsx",
-              "sha256": "ec2c47323f604bd3622d0ef8264c76526387071020b63940fff058b0ce3384a9"
+              "sha256": "c51a33d1c73d94deb398e2fd97605d402712546fcc9f8845fd0f61aa55f5c49b"
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.ts",
-              "sha256": "99a562efaa93aee37f56c153d42d294b2cefcc40d43bc7d3e27fce4a8cd477b7"
+              "sha256": "6e4a95c781d240f2bf81c9d219924a516b7b357f19a7d58db41fe88cbf5facd2"
             },
             {
               "path": "apps/web/src/hooks/useCatalogueConfirmationRead.ts",
@@ -519343,7 +519343,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
-              "sha256": "65503f453f8c75f9e4d369c287a1da87cae0f5982224842a92ad7433c18ee248"
+              "sha256": "346c312b37de92189f5ddb13e7ea40bce8352f5cc6440374af2a0f0d3c624781"
             },
             {
               "path": "apps/web/e2e/date-picker-component.spec.ts",
@@ -520369,7 +520369,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
-              "sha256": "65503f453f8c75f9e4d369c287a1da87cae0f5982224842a92ad7433c18ee248"
+              "sha256": "346c312b37de92189f5ddb13e7ea40bce8352f5cc6440374af2a0f0d3c624781"
             },
             {
               "path": "apps/web/e2e/electricity-correction-forms.spec.ts",
@@ -521197,7 +521197,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
-              "sha256": "65503f453f8c75f9e4d369c287a1da87cae0f5982224842a92ad7433c18ee248"
+              "sha256": "346c312b37de92189f5ddb13e7ea40bce8352f5cc6440374af2a0f0d3c624781"
             },
             {
               "path": "apps/web/e2e/electricity-correction-forms.spec.ts",
@@ -522525,7 +522525,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
-              "sha256": "65503f453f8c75f9e4d369c287a1da87cae0f5982224842a92ad7433c18ee248"
+              "sha256": "346c312b37de92189f5ddb13e7ea40bce8352f5cc6440374af2a0f0d3c624781"
             },
             {
               "path": "apps/web/e2e/electricity-correction-forms.spec.ts",
@@ -523198,7 +523198,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "GitHub Actions run 42512612547 passed the critical accessibility, advisory and upload steps on main. Advisory artifact 13630346874 is present. GitHub reports main unprotected with no active rules. A repository administrator must make the critical accessibility job a required merge check, with the repository's authorized direct push policy preserved."
+        "Critical accessibility passed in GitHub Actions and both workflow changes are on main. A repository administrator must require the Verify monorepo integrity check for merges while preserving the authorized direct-push path, then verify effective enforcement. The current CLI account has workflow scope and push access but lacks repository admin access."
       ],
       "owner": null,
       "depends_on": [],
@@ -523216,7 +523216,8 @@
           "release-0.5-wallet-return-deadline",
           "release-0.5-hosted-ci-repairs",
           "release-0.5-address-states-and-route-reconciliation",
-          "release-0.5-intake-response-recovery"
+          "release-0.5-intake-response-recovery",
+          "release-0.5-dashboard-profile-conflict"
         ],
         "current_acceptance": null
       }
@@ -523388,7 +523389,7 @@
             },
             {
               "path": "apps/web/src/components/dashboard/DashboardWidget.tsx",
-              "sha256": "ec2c47323f604bd3622d0ef8264c76526387071020b63940fff058b0ce3384a9"
+              "sha256": "c51a33d1c73d94deb398e2fd97605d402712546fcc9f8845fd0f61aa55f5c49b"
             },
             {
               "path": "apps/web/src/hooks/useLocale.ts",
@@ -524296,7 +524297,7 @@
             },
             {
               "path": "apps/web/src/components/dashboard/DashboardWidget.tsx",
-              "sha256": "ec2c47323f604bd3622d0ef8264c76526387071020b63940fff058b0ce3384a9"
+              "sha256": "c51a33d1c73d94deb398e2fd97605d402712546fcc9f8845fd0f61aa55f5c49b"
             },
             {
               "path": "apps/web/src/hooks/useLocale.ts",
@@ -525204,7 +525205,7 @@
             },
             {
               "path": "apps/web/src/components/dashboard/DashboardWidget.tsx",
-              "sha256": "ec2c47323f604bd3622d0ef8264c76526387071020b63940fff058b0ce3384a9"
+              "sha256": "c51a33d1c73d94deb398e2fd97605d402712546fcc9f8845fd0f61aa55f5c49b"
             },
             {
               "path": "apps/web/src/hooks/useLocale.ts",
@@ -526112,7 +526113,7 @@
             },
             {
               "path": "apps/web/src/components/dashboard/DashboardWidget.tsx",
-              "sha256": "ec2c47323f604bd3622d0ef8264c76526387071020b63940fff058b0ce3384a9"
+              "sha256": "c51a33d1c73d94deb398e2fd97605d402712546fcc9f8845fd0f61aa55f5c49b"
             },
             {
               "path": "apps/web/src/hooks/useLocale.ts",
@@ -527020,7 +527021,7 @@
             },
             {
               "path": "apps/web/src/components/dashboard/DashboardWidget.tsx",
-              "sha256": "ec2c47323f604bd3622d0ef8264c76526387071020b63940fff058b0ce3384a9"
+              "sha256": "c51a33d1c73d94deb398e2fd97605d402712546fcc9f8845fd0f61aa55f5c49b"
             },
             {
               "path": "apps/web/src/hooks/useLocale.ts",
@@ -527928,7 +527929,7 @@
             },
             {
               "path": "apps/web/src/components/dashboard/DashboardWidget.tsx",
-              "sha256": "ec2c47323f604bd3622d0ef8264c76526387071020b63940fff058b0ce3384a9"
+              "sha256": "c51a33d1c73d94deb398e2fd97605d402712546fcc9f8845fd0f61aa55f5c49b"
             },
             {
               "path": "apps/web/src/hooks/useLocale.ts",
@@ -528836,7 +528837,7 @@
             },
             {
               "path": "apps/web/src/components/dashboard/DashboardWidget.tsx",
-              "sha256": "ec2c47323f604bd3622d0ef8264c76526387071020b63940fff058b0ce3384a9"
+              "sha256": "c51a33d1c73d94deb398e2fd97605d402712546fcc9f8845fd0f61aa55f5c49b"
             },
             {
               "path": "apps/web/src/hooks/useLocale.ts",
@@ -529744,7 +529745,7 @@
             },
             {
               "path": "apps/web/src/components/dashboard/DashboardWidget.tsx",
-              "sha256": "ec2c47323f604bd3622d0ef8264c76526387071020b63940fff058b0ce3384a9"
+              "sha256": "c51a33d1c73d94deb398e2fd97605d402712546fcc9f8845fd0f61aa55f5c49b"
             },
             {
               "path": "apps/web/src/hooks/useLocale.ts",
@@ -530652,7 +530653,7 @@
             },
             {
               "path": "apps/web/src/components/dashboard/DashboardWidget.tsx",
-              "sha256": "ec2c47323f604bd3622d0ef8264c76526387071020b63940fff058b0ce3384a9"
+              "sha256": "c51a33d1c73d94deb398e2fd97605d402712546fcc9f8845fd0f61aa55f5c49b"
             },
             {
               "path": "apps/web/src/hooks/useLocale.ts",
@@ -531560,7 +531561,7 @@
             },
             {
               "path": "apps/web/src/components/dashboard/DashboardWidget.tsx",
-              "sha256": "ec2c47323f604bd3622d0ef8264c76526387071020b63940fff058b0ce3384a9"
+              "sha256": "c51a33d1c73d94deb398e2fd97605d402712546fcc9f8845fd0f61aa55f5c49b"
             },
             {
               "path": "apps/web/src/hooks/useLocale.ts",
@@ -532468,7 +532469,7 @@
             },
             {
               "path": "apps/web/src/components/dashboard/DashboardWidget.tsx",
-              "sha256": "ec2c47323f604bd3622d0ef8264c76526387071020b63940fff058b0ce3384a9"
+              "sha256": "c51a33d1c73d94deb398e2fd97605d402712546fcc9f8845fd0f61aa55f5c49b"
             },
             {
               "path": "apps/web/src/hooks/useLocale.ts",
@@ -533376,7 +533377,7 @@
             },
             {
               "path": "apps/web/src/components/dashboard/DashboardWidget.tsx",
-              "sha256": "ec2c47323f604bd3622d0ef8264c76526387071020b63940fff058b0ce3384a9"
+              "sha256": "c51a33d1c73d94deb398e2fd97605d402712546fcc9f8845fd0f61aa55f5c49b"
             },
             {
               "path": "apps/web/src/hooks/useLocale.ts",
@@ -534284,7 +534285,7 @@
             },
             {
               "path": "apps/web/src/components/dashboard/DashboardWidget.tsx",
-              "sha256": "ec2c47323f604bd3622d0ef8264c76526387071020b63940fff058b0ce3384a9"
+              "sha256": "c51a33d1c73d94deb398e2fd97605d402712546fcc9f8845fd0f61aa55f5c49b"
             },
             {
               "path": "apps/web/src/hooks/useLocale.ts",
@@ -535192,7 +535193,7 @@
             },
             {
               "path": "apps/web/src/components/dashboard/DashboardWidget.tsx",
-              "sha256": "ec2c47323f604bd3622d0ef8264c76526387071020b63940fff058b0ce3384a9"
+              "sha256": "c51a33d1c73d94deb398e2fd97605d402712546fcc9f8845fd0f61aa55f5c49b"
             },
             {
               "path": "apps/web/src/hooks/useLocale.ts",
@@ -536100,7 +536101,7 @@
             },
             {
               "path": "apps/web/src/components/dashboard/DashboardWidget.tsx",
-              "sha256": "ec2c47323f604bd3622d0ef8264c76526387071020b63940fff058b0ce3384a9"
+              "sha256": "c51a33d1c73d94deb398e2fd97605d402712546fcc9f8845fd0f61aa55f5c49b"
             },
             {
               "path": "apps/web/src/hooks/useLocale.ts",
@@ -537008,7 +537009,7 @@
             },
             {
               "path": "apps/web/src/components/dashboard/DashboardWidget.tsx",
-              "sha256": "ec2c47323f604bd3622d0ef8264c76526387071020b63940fff058b0ce3384a9"
+              "sha256": "c51a33d1c73d94deb398e2fd97605d402712546fcc9f8845fd0f61aa55f5c49b"
             },
             {
               "path": "apps/web/src/hooks/useLocale.ts",
@@ -537916,7 +537917,7 @@
             },
             {
               "path": "apps/web/src/components/dashboard/DashboardWidget.tsx",
-              "sha256": "ec2c47323f604bd3622d0ef8264c76526387071020b63940fff058b0ce3384a9"
+              "sha256": "c51a33d1c73d94deb398e2fd97605d402712546fcc9f8845fd0f61aa55f5c49b"
             },
             {
               "path": "apps/web/src/hooks/useLocale.ts",
@@ -538824,7 +538825,7 @@
             },
             {
               "path": "apps/web/src/components/dashboard/DashboardWidget.tsx",
-              "sha256": "ec2c47323f604bd3622d0ef8264c76526387071020b63940fff058b0ce3384a9"
+              "sha256": "c51a33d1c73d94deb398e2fd97605d402712546fcc9f8845fd0f61aa55f5c49b"
             },
             {
               "path": "apps/web/src/hooks/useLocale.ts",
@@ -539732,7 +539733,7 @@
             },
             {
               "path": "apps/web/src/components/dashboard/DashboardWidget.tsx",
-              "sha256": "ec2c47323f604bd3622d0ef8264c76526387071020b63940fff058b0ce3384a9"
+              "sha256": "c51a33d1c73d94deb398e2fd97605d402712546fcc9f8845fd0f61aa55f5c49b"
             },
             {
               "path": "apps/web/src/hooks/useLocale.ts",
@@ -540640,7 +540641,7 @@
             },
             {
               "path": "apps/web/src/components/dashboard/DashboardWidget.tsx",
-              "sha256": "ec2c47323f604bd3622d0ef8264c76526387071020b63940fff058b0ce3384a9"
+              "sha256": "c51a33d1c73d94deb398e2fd97605d402712546fcc9f8845fd0f61aa55f5c49b"
             },
             {
               "path": "apps/web/src/hooks/useLocale.ts",
@@ -566820,7 +566821,7 @@
             },
             {
               "path": "apps/web/src/components/dashboard/DashboardWidget.tsx",
-              "sha256": "ec2c47323f604bd3622d0ef8264c76526387071020b63940fff058b0ce3384a9"
+              "sha256": "c51a33d1c73d94deb398e2fd97605d402712546fcc9f8845fd0f61aa55f5c49b"
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
@@ -566900,7 +566901,7 @@
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.ts",
-              "sha256": "99a562efaa93aee37f56c153d42d294b2cefcc40d43bc7d3e27fce4a8cd477b7"
+              "sha256": "6e4a95c781d240f2bf81c9d219924a516b7b357f19a7d58db41fe88cbf5facd2"
             },
             {
               "path": "apps/web/src/hooks/useCommandFeedback.test.tsx",
@@ -568715,7 +568716,7 @@
             },
             {
               "path": "apps/web/src/components/dashboard/DashboardWidget.tsx",
-              "sha256": "ec2c47323f604bd3622d0ef8264c76526387071020b63940fff058b0ce3384a9"
+              "sha256": "c51a33d1c73d94deb398e2fd97605d402712546fcc9f8845fd0f61aa55f5c49b"
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
@@ -568795,7 +568796,7 @@
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.ts",
-              "sha256": "99a562efaa93aee37f56c153d42d294b2cefcc40d43bc7d3e27fce4a8cd477b7"
+              "sha256": "6e4a95c781d240f2bf81c9d219924a516b7b357f19a7d58db41fe88cbf5facd2"
             },
             {
               "path": "apps/web/src/hooks/useCommandFeedback.test.tsx",
@@ -570503,7 +570504,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
-              "sha256": "65503f453f8c75f9e4d369c287a1da87cae0f5982224842a92ad7433c18ee248"
+              "sha256": "346c312b37de92189f5ddb13e7ea40bce8352f5cc6440374af2a0f0d3c624781"
             },
             {
               "path": "apps/web/e2e/date-picker-component.spec.ts",
@@ -571599,7 +571600,7 @@
             },
             {
               "path": "apps/web/src/components/dashboard/DashboardWidget.tsx",
-              "sha256": "ec2c47323f604bd3622d0ef8264c76526387071020b63940fff058b0ce3384a9"
+              "sha256": "c51a33d1c73d94deb398e2fd97605d402712546fcc9f8845fd0f61aa55f5c49b"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -571719,7 +571720,7 @@
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.ts",
-              "sha256": "99a562efaa93aee37f56c153d42d294b2cefcc40d43bc7d3e27fce4a8cd477b7"
+              "sha256": "6e4a95c781d240f2bf81c9d219924a516b7b357f19a7d58db41fe88cbf5facd2"
             },
             {
               "path": "apps/web/src/hooks/useCatalogueEditor.tsx",
@@ -573497,7 +573498,7 @@
             },
             {
               "path": "apps/web/src/components/dashboard/DashboardWidget.tsx",
-              "sha256": "ec2c47323f604bd3622d0ef8264c76526387071020b63940fff058b0ce3384a9"
+              "sha256": "c51a33d1c73d94deb398e2fd97605d402712546fcc9f8845fd0f61aa55f5c49b"
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
@@ -573577,7 +573578,7 @@
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.ts",
-              "sha256": "99a562efaa93aee37f56c153d42d294b2cefcc40d43bc7d3e27fce4a8cd477b7"
+              "sha256": "6e4a95c781d240f2bf81c9d219924a516b7b357f19a7d58db41fe88cbf5facd2"
             },
             {
               "path": "apps/web/src/hooks/useCommandFeedback.test.tsx",
@@ -575392,7 +575393,7 @@
             },
             {
               "path": "apps/web/src/components/dashboard/DashboardWidget.tsx",
-              "sha256": "ec2c47323f604bd3622d0ef8264c76526387071020b63940fff058b0ce3384a9"
+              "sha256": "c51a33d1c73d94deb398e2fd97605d402712546fcc9f8845fd0f61aa55f5c49b"
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
@@ -575472,7 +575473,7 @@
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.ts",
-              "sha256": "99a562efaa93aee37f56c153d42d294b2cefcc40d43bc7d3e27fce4a8cd477b7"
+              "sha256": "6e4a95c781d240f2bf81c9d219924a516b7b357f19a7d58db41fe88cbf5facd2"
             },
             {
               "path": "apps/web/src/hooks/useCommandFeedback.test.tsx",
@@ -577287,7 +577288,7 @@
             },
             {
               "path": "apps/web/src/components/dashboard/DashboardWidget.tsx",
-              "sha256": "ec2c47323f604bd3622d0ef8264c76526387071020b63940fff058b0ce3384a9"
+              "sha256": "c51a33d1c73d94deb398e2fd97605d402712546fcc9f8845fd0f61aa55f5c49b"
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
@@ -577367,7 +577368,7 @@
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.ts",
-              "sha256": "99a562efaa93aee37f56c153d42d294b2cefcc40d43bc7d3e27fce4a8cd477b7"
+              "sha256": "6e4a95c781d240f2bf81c9d219924a516b7b357f19a7d58db41fe88cbf5facd2"
             },
             {
               "path": "apps/web/src/hooks/useCommandFeedback.test.tsx",
@@ -579182,7 +579183,7 @@
             },
             {
               "path": "apps/web/src/components/dashboard/DashboardWidget.tsx",
-              "sha256": "ec2c47323f604bd3622d0ef8264c76526387071020b63940fff058b0ce3384a9"
+              "sha256": "c51a33d1c73d94deb398e2fd97605d402712546fcc9f8845fd0f61aa55f5c49b"
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
@@ -579262,7 +579263,7 @@
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.ts",
-              "sha256": "99a562efaa93aee37f56c153d42d294b2cefcc40d43bc7d3e27fce4a8cd477b7"
+              "sha256": "6e4a95c781d240f2bf81c9d219924a516b7b357f19a7d58db41fe88cbf5facd2"
             },
             {
               "path": "apps/web/src/hooks/useCommandFeedback.test.tsx",
@@ -581077,7 +581078,7 @@
             },
             {
               "path": "apps/web/src/components/dashboard/DashboardWidget.tsx",
-              "sha256": "ec2c47323f604bd3622d0ef8264c76526387071020b63940fff058b0ce3384a9"
+              "sha256": "c51a33d1c73d94deb398e2fd97605d402712546fcc9f8845fd0f61aa55f5c49b"
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
@@ -581157,7 +581158,7 @@
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.ts",
-              "sha256": "99a562efaa93aee37f56c153d42d294b2cefcc40d43bc7d3e27fce4a8cd477b7"
+              "sha256": "6e4a95c781d240f2bf81c9d219924a516b7b357f19a7d58db41fe88cbf5facd2"
             },
             {
               "path": "apps/web/src/hooks/useCommandFeedback.test.tsx",
@@ -582972,7 +582973,7 @@
             },
             {
               "path": "apps/web/src/components/dashboard/DashboardWidget.tsx",
-              "sha256": "ec2c47323f604bd3622d0ef8264c76526387071020b63940fff058b0ce3384a9"
+              "sha256": "c51a33d1c73d94deb398e2fd97605d402712546fcc9f8845fd0f61aa55f5c49b"
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
@@ -583052,7 +583053,7 @@
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.ts",
-              "sha256": "99a562efaa93aee37f56c153d42d294b2cefcc40d43bc7d3e27fce4a8cd477b7"
+              "sha256": "6e4a95c781d240f2bf81c9d219924a516b7b357f19a7d58db41fe88cbf5facd2"
             },
             {
               "path": "apps/web/src/hooks/useCommandFeedback.test.tsx",
@@ -584867,7 +584868,7 @@
             },
             {
               "path": "apps/web/src/components/dashboard/DashboardWidget.tsx",
-              "sha256": "ec2c47323f604bd3622d0ef8264c76526387071020b63940fff058b0ce3384a9"
+              "sha256": "c51a33d1c73d94deb398e2fd97605d402712546fcc9f8845fd0f61aa55f5c49b"
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
@@ -584947,7 +584948,7 @@
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.ts",
-              "sha256": "99a562efaa93aee37f56c153d42d294b2cefcc40d43bc7d3e27fce4a8cd477b7"
+              "sha256": "6e4a95c781d240f2bf81c9d219924a516b7b357f19a7d58db41fe88cbf5facd2"
             },
             {
               "path": "apps/web/src/hooks/useCommandFeedback.test.tsx",
@@ -586762,7 +586763,7 @@
             },
             {
               "path": "apps/web/src/components/dashboard/DashboardWidget.tsx",
-              "sha256": "ec2c47323f604bd3622d0ef8264c76526387071020b63940fff058b0ce3384a9"
+              "sha256": "c51a33d1c73d94deb398e2fd97605d402712546fcc9f8845fd0f61aa55f5c49b"
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
@@ -586842,7 +586843,7 @@
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.ts",
-              "sha256": "99a562efaa93aee37f56c153d42d294b2cefcc40d43bc7d3e27fce4a8cd477b7"
+              "sha256": "6e4a95c781d240f2bf81c9d219924a516b7b357f19a7d58db41fe88cbf5facd2"
             },
             {
               "path": "apps/web/src/hooks/useCommandFeedback.test.tsx",
@@ -588657,7 +588658,7 @@
             },
             {
               "path": "apps/web/src/components/dashboard/DashboardWidget.tsx",
-              "sha256": "ec2c47323f604bd3622d0ef8264c76526387071020b63940fff058b0ce3384a9"
+              "sha256": "c51a33d1c73d94deb398e2fd97605d402712546fcc9f8845fd0f61aa55f5c49b"
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
@@ -588737,7 +588738,7 @@
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.ts",
-              "sha256": "99a562efaa93aee37f56c153d42d294b2cefcc40d43bc7d3e27fce4a8cd477b7"
+              "sha256": "6e4a95c781d240f2bf81c9d219924a516b7b357f19a7d58db41fe88cbf5facd2"
             },
             {
               "path": "apps/web/src/hooks/useCommandFeedback.test.tsx",
@@ -590552,7 +590553,7 @@
             },
             {
               "path": "apps/web/src/components/dashboard/DashboardWidget.tsx",
-              "sha256": "ec2c47323f604bd3622d0ef8264c76526387071020b63940fff058b0ce3384a9"
+              "sha256": "c51a33d1c73d94deb398e2fd97605d402712546fcc9f8845fd0f61aa55f5c49b"
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
@@ -590632,7 +590633,7 @@
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.ts",
-              "sha256": "99a562efaa93aee37f56c153d42d294b2cefcc40d43bc7d3e27fce4a8cd477b7"
+              "sha256": "6e4a95c781d240f2bf81c9d219924a516b7b357f19a7d58db41fe88cbf5facd2"
             },
             {
               "path": "apps/web/src/hooks/useCommandFeedback.test.tsx",
@@ -592447,7 +592448,7 @@
             },
             {
               "path": "apps/web/src/components/dashboard/DashboardWidget.tsx",
-              "sha256": "ec2c47323f604bd3622d0ef8264c76526387071020b63940fff058b0ce3384a9"
+              "sha256": "c51a33d1c73d94deb398e2fd97605d402712546fcc9f8845fd0f61aa55f5c49b"
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
@@ -592527,7 +592528,7 @@
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.ts",
-              "sha256": "99a562efaa93aee37f56c153d42d294b2cefcc40d43bc7d3e27fce4a8cd477b7"
+              "sha256": "6e4a95c781d240f2bf81c9d219924a516b7b357f19a7d58db41fe88cbf5facd2"
             },
             {
               "path": "apps/web/src/hooks/useCommandFeedback.test.tsx",
@@ -594199,7 +594200,7 @@
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.ts",
-              "sha256": "99a562efaa93aee37f56c153d42d294b2cefcc40d43bc7d3e27fce4a8cd477b7"
+              "sha256": "6e4a95c781d240f2bf81c9d219924a516b7b357f19a7d58db41fe88cbf5facd2"
             },
             {
               "path": "apps/web/src/hooks/useContractAuthoringCommand.ts",
@@ -595082,7 +595083,7 @@
             },
             {
               "path": "apps/web/src/components/dashboard/DashboardWidget.tsx",
-              "sha256": "ec2c47323f604bd3622d0ef8264c76526387071020b63940fff058b0ce3384a9"
+              "sha256": "c51a33d1c73d94deb398e2fd97605d402712546fcc9f8845fd0f61aa55f5c49b"
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
@@ -595162,7 +595163,7 @@
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.ts",
-              "sha256": "99a562efaa93aee37f56c153d42d294b2cefcc40d43bc7d3e27fce4a8cd477b7"
+              "sha256": "6e4a95c781d240f2bf81c9d219924a516b7b357f19a7d58db41fe88cbf5facd2"
             },
             {
               "path": "apps/web/src/hooks/useCommandFeedback.test.tsx",
@@ -596977,7 +596978,7 @@
             },
             {
               "path": "apps/web/src/components/dashboard/DashboardWidget.tsx",
-              "sha256": "ec2c47323f604bd3622d0ef8264c76526387071020b63940fff058b0ce3384a9"
+              "sha256": "c51a33d1c73d94deb398e2fd97605d402712546fcc9f8845fd0f61aa55f5c49b"
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
@@ -597057,7 +597058,7 @@
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.ts",
-              "sha256": "99a562efaa93aee37f56c153d42d294b2cefcc40d43bc7d3e27fce4a8cd477b7"
+              "sha256": "6e4a95c781d240f2bf81c9d219924a516b7b357f19a7d58db41fe88cbf5facd2"
             },
             {
               "path": "apps/web/src/hooks/useCommandFeedback.test.tsx",
@@ -598485,7 +598486,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "All indexed conditional routes have scoped cases. The electricity revision, Telegram security panel and knowledge launcher now have browser evidence during module loading. Reconcile original route-level states against named cases and measured layouts, then check the remaining applicable first-load empty, denied and stale states."
+        "Customer and staff dashboard receipts now include stale server-owned profile recovery, isolated widget failures, loaded/empty states and denial withdrawal. Complete the original route-level state and interaction reconciliation for the remaining list, detail and admin routes. Check only uncovered applicable first-load empty, denied and stale states."
       ],
       "owner": null,
       "depends_on": [],
@@ -598609,7 +598610,8 @@
           "release-0.5-intake-response-recovery",
           "release-0.5-operational-route-receipts",
           "release-0.5-config-and-customer-route-receipts",
-          "release-0.5-lazy-panel-waits"
+          "release-0.5-lazy-panel-waits",
+          "release-0.5-dashboard-profile-conflict"
         ],
         "current_acceptance": null
       }
@@ -615733,7 +615735,7 @@
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.ts",
-              "sha256": "99a562efaa93aee37f56c153d42d294b2cefcc40d43bc7d3e27fce4a8cd477b7"
+              "sha256": "6e4a95c781d240f2bf81c9d219924a516b7b357f19a7d58db41fe88cbf5facd2"
             },
             {
               "path": "apps/web/src/hooks/useLocale.ts",
@@ -616531,7 +616533,7 @@
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.ts",
-              "sha256": "99a562efaa93aee37f56c153d42d294b2cefcc40d43bc7d3e27fce4a8cd477b7"
+              "sha256": "6e4a95c781d240f2bf81c9d219924a516b7b357f19a7d58db41fe88cbf5facd2"
             },
             {
               "path": "apps/web/src/hooks/useLocale.ts",
@@ -617329,7 +617331,7 @@
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.ts",
-              "sha256": "99a562efaa93aee37f56c153d42d294b2cefcc40d43bc7d3e27fce4a8cd477b7"
+              "sha256": "6e4a95c781d240f2bf81c9d219924a516b7b357f19a7d58db41fe88cbf5facd2"
             },
             {
               "path": "apps/web/src/hooks/useLocale.ts",
@@ -618127,7 +618129,7 @@
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.ts",
-              "sha256": "99a562efaa93aee37f56c153d42d294b2cefcc40d43bc7d3e27fce4a8cd477b7"
+              "sha256": "6e4a95c781d240f2bf81c9d219924a516b7b357f19a7d58db41fe88cbf5facd2"
             },
             {
               "path": "apps/web/src/hooks/useLocale.ts",
@@ -618929,7 +618931,7 @@
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.ts",
-              "sha256": "99a562efaa93aee37f56c153d42d294b2cefcc40d43bc7d3e27fce4a8cd477b7"
+              "sha256": "6e4a95c781d240f2bf81c9d219924a516b7b357f19a7d58db41fe88cbf5facd2"
             },
             {
               "path": "apps/web/src/hooks/useLocale.ts",
@@ -619727,7 +619729,7 @@
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.ts",
-              "sha256": "99a562efaa93aee37f56c153d42d294b2cefcc40d43bc7d3e27fce4a8cd477b7"
+              "sha256": "6e4a95c781d240f2bf81c9d219924a516b7b357f19a7d58db41fe88cbf5facd2"
             },
             {
               "path": "apps/web/src/hooks/useLocale.ts",
@@ -620525,7 +620527,7 @@
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.ts",
-              "sha256": "99a562efaa93aee37f56c153d42d294b2cefcc40d43bc7d3e27fce4a8cd477b7"
+              "sha256": "6e4a95c781d240f2bf81c9d219924a516b7b357f19a7d58db41fe88cbf5facd2"
             },
             {
               "path": "apps/web/src/hooks/useLocale.ts",
@@ -621324,7 +621326,7 @@
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.ts",
-              "sha256": "99a562efaa93aee37f56c153d42d294b2cefcc40d43bc7d3e27fce4a8cd477b7"
+              "sha256": "6e4a95c781d240f2bf81c9d219924a516b7b357f19a7d58db41fe88cbf5facd2"
             },
             {
               "path": "apps/web/src/hooks/useLocale.ts",
@@ -622123,7 +622125,7 @@
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.ts",
-              "sha256": "99a562efaa93aee37f56c153d42d294b2cefcc40d43bc7d3e27fce4a8cd477b7"
+              "sha256": "6e4a95c781d240f2bf81c9d219924a516b7b357f19a7d58db41fe88cbf5facd2"
             },
             {
               "path": "apps/web/src/hooks/useLocale.ts",
@@ -622922,7 +622924,7 @@
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.ts",
-              "sha256": "99a562efaa93aee37f56c153d42d294b2cefcc40d43bc7d3e27fce4a8cd477b7"
+              "sha256": "6e4a95c781d240f2bf81c9d219924a516b7b357f19a7d58db41fe88cbf5facd2"
             },
             {
               "path": "apps/web/src/hooks/useLocale.ts",
@@ -623721,7 +623723,7 @@
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.ts",
-              "sha256": "99a562efaa93aee37f56c153d42d294b2cefcc40d43bc7d3e27fce4a8cd477b7"
+              "sha256": "6e4a95c781d240f2bf81c9d219924a516b7b357f19a7d58db41fe88cbf5facd2"
             },
             {
               "path": "apps/web/src/hooks/useLocale.ts",
@@ -624520,7 +624522,7 @@
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.ts",
-              "sha256": "99a562efaa93aee37f56c153d42d294b2cefcc40d43bc7d3e27fce4a8cd477b7"
+              "sha256": "6e4a95c781d240f2bf81c9d219924a516b7b357f19a7d58db41fe88cbf5facd2"
             },
             {
               "path": "apps/web/src/hooks/useLocale.ts",
@@ -625319,7 +625321,7 @@
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.ts",
-              "sha256": "99a562efaa93aee37f56c153d42d294b2cefcc40d43bc7d3e27fce4a8cd477b7"
+              "sha256": "6e4a95c781d240f2bf81c9d219924a516b7b357f19a7d58db41fe88cbf5facd2"
             },
             {
               "path": "apps/web/src/hooks/useLocale.ts",
@@ -626118,7 +626120,7 @@
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.ts",
-              "sha256": "99a562efaa93aee37f56c153d42d294b2cefcc40d43bc7d3e27fce4a8cd477b7"
+              "sha256": "6e4a95c781d240f2bf81c9d219924a516b7b357f19a7d58db41fe88cbf5facd2"
             },
             {
               "path": "apps/web/src/hooks/useLocale.ts",
@@ -626917,7 +626919,7 @@
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.ts",
-              "sha256": "99a562efaa93aee37f56c153d42d294b2cefcc40d43bc7d3e27fce4a8cd477b7"
+              "sha256": "6e4a95c781d240f2bf81c9d219924a516b7b357f19a7d58db41fe88cbf5facd2"
             },
             {
               "path": "apps/web/src/hooks/useLocale.ts",
@@ -654016,7 +654018,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
-              "sha256": "65503f453f8c75f9e4d369c287a1da87cae0f5982224842a92ad7433c18ee248"
+              "sha256": "346c312b37de92189f5ddb13e7ea40bce8352f5cc6440374af2a0f0d3c624781"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -654108,7 +654110,7 @@
             },
             {
               "path": "apps/web/src/components/dashboard/DashboardWidget.tsx",
-              "sha256": "ec2c47323f604bd3622d0ef8264c76526387071020b63940fff058b0ce3384a9"
+              "sha256": "c51a33d1c73d94deb398e2fd97605d402712546fcc9f8845fd0f61aa55f5c49b"
             },
             {
               "path": "apps/web/src/hooks/useAccountTime.test.tsx",
@@ -654128,7 +654130,7 @@
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.ts",
-              "sha256": "99a562efaa93aee37f56c153d42d294b2cefcc40d43bc7d3e27fce4a8cd477b7"
+              "sha256": "6e4a95c781d240f2bf81c9d219924a516b7b357f19a7d58db41fe88cbf5facd2"
             },
             {
               "path": "apps/web/src/hooks/useLocale.test.tsx",
@@ -654244,7 +654246,7 @@
             },
             {
               "path": "packages/i18n/src/dashboard.ts",
-              "sha256": "5a77f62b6689595b84f702aad1151ccd8a7010a1118574d2fe1f61e8e62dbcf7"
+              "sha256": "0b1d2e35178c8257602256ad3d6b92e736a42fe0a3adcaa2b8fb83f4005d6e76"
             },
             {
               "path": "packages/i18n/src/feedback.ts",
@@ -654656,7 +654658,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
-              "sha256": "65503f453f8c75f9e4d369c287a1da87cae0f5982224842a92ad7433c18ee248"
+              "sha256": "346c312b37de92189f5ddb13e7ea40bce8352f5cc6440374af2a0f0d3c624781"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -654748,7 +654750,7 @@
             },
             {
               "path": "apps/web/src/components/dashboard/DashboardWidget.tsx",
-              "sha256": "ec2c47323f604bd3622d0ef8264c76526387071020b63940fff058b0ce3384a9"
+              "sha256": "c51a33d1c73d94deb398e2fd97605d402712546fcc9f8845fd0f61aa55f5c49b"
             },
             {
               "path": "apps/web/src/hooks/useAccountTime.test.tsx",
@@ -654768,7 +654770,7 @@
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.ts",
-              "sha256": "99a562efaa93aee37f56c153d42d294b2cefcc40d43bc7d3e27fce4a8cd477b7"
+              "sha256": "6e4a95c781d240f2bf81c9d219924a516b7b357f19a7d58db41fe88cbf5facd2"
             },
             {
               "path": "apps/web/src/hooks/useLocale.test.tsx",
@@ -654884,7 +654886,7 @@
             },
             {
               "path": "packages/i18n/src/dashboard.ts",
-              "sha256": "5a77f62b6689595b84f702aad1151ccd8a7010a1118574d2fe1f61e8e62dbcf7"
+              "sha256": "0b1d2e35178c8257602256ad3d6b92e736a42fe0a3adcaa2b8fb83f4005d6e76"
             },
             {
               "path": "packages/i18n/src/feedback.ts",
@@ -655296,7 +655298,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
-              "sha256": "65503f453f8c75f9e4d369c287a1da87cae0f5982224842a92ad7433c18ee248"
+              "sha256": "346c312b37de92189f5ddb13e7ea40bce8352f5cc6440374af2a0f0d3c624781"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -655388,7 +655390,7 @@
             },
             {
               "path": "apps/web/src/components/dashboard/DashboardWidget.tsx",
-              "sha256": "ec2c47323f604bd3622d0ef8264c76526387071020b63940fff058b0ce3384a9"
+              "sha256": "c51a33d1c73d94deb398e2fd97605d402712546fcc9f8845fd0f61aa55f5c49b"
             },
             {
               "path": "apps/web/src/hooks/useAccountTime.test.tsx",
@@ -655408,7 +655410,7 @@
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.ts",
-              "sha256": "99a562efaa93aee37f56c153d42d294b2cefcc40d43bc7d3e27fce4a8cd477b7"
+              "sha256": "6e4a95c781d240f2bf81c9d219924a516b7b357f19a7d58db41fe88cbf5facd2"
             },
             {
               "path": "apps/web/src/hooks/useLocale.test.tsx",
@@ -655524,7 +655526,7 @@
             },
             {
               "path": "packages/i18n/src/dashboard.ts",
-              "sha256": "5a77f62b6689595b84f702aad1151ccd8a7010a1118574d2fe1f61e8e62dbcf7"
+              "sha256": "0b1d2e35178c8257602256ad3d6b92e736a42fe0a3adcaa2b8fb83f4005d6e76"
             },
             {
               "path": "packages/i18n/src/feedback.ts",
@@ -655934,7 +655936,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
-              "sha256": "65503f453f8c75f9e4d369c287a1da87cae0f5982224842a92ad7433c18ee248"
+              "sha256": "346c312b37de92189f5ddb13e7ea40bce8352f5cc6440374af2a0f0d3c624781"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -656026,7 +656028,7 @@
             },
             {
               "path": "apps/web/src/components/dashboard/DashboardWidget.tsx",
-              "sha256": "ec2c47323f604bd3622d0ef8264c76526387071020b63940fff058b0ce3384a9"
+              "sha256": "c51a33d1c73d94deb398e2fd97605d402712546fcc9f8845fd0f61aa55f5c49b"
             },
             {
               "path": "apps/web/src/hooks/useAccountTime.test.tsx",
@@ -656046,7 +656048,7 @@
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.ts",
-              "sha256": "99a562efaa93aee37f56c153d42d294b2cefcc40d43bc7d3e27fce4a8cd477b7"
+              "sha256": "6e4a95c781d240f2bf81c9d219924a516b7b357f19a7d58db41fe88cbf5facd2"
             },
             {
               "path": "apps/web/src/hooks/useLocale.test.tsx",
@@ -656162,7 +656164,7 @@
             },
             {
               "path": "packages/i18n/src/dashboard.ts",
-              "sha256": "5a77f62b6689595b84f702aad1151ccd8a7010a1118574d2fe1f61e8e62dbcf7"
+              "sha256": "0b1d2e35178c8257602256ad3d6b92e736a42fe0a3adcaa2b8fb83f4005d6e76"
             },
             {
               "path": "packages/i18n/src/feedback.ts",
@@ -656572,7 +656574,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
-              "sha256": "65503f453f8c75f9e4d369c287a1da87cae0f5982224842a92ad7433c18ee248"
+              "sha256": "346c312b37de92189f5ddb13e7ea40bce8352f5cc6440374af2a0f0d3c624781"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -656664,7 +656666,7 @@
             },
             {
               "path": "apps/web/src/components/dashboard/DashboardWidget.tsx",
-              "sha256": "ec2c47323f604bd3622d0ef8264c76526387071020b63940fff058b0ce3384a9"
+              "sha256": "c51a33d1c73d94deb398e2fd97605d402712546fcc9f8845fd0f61aa55f5c49b"
             },
             {
               "path": "apps/web/src/hooks/useAccountTime.test.tsx",
@@ -656684,7 +656686,7 @@
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.ts",
-              "sha256": "99a562efaa93aee37f56c153d42d294b2cefcc40d43bc7d3e27fce4a8cd477b7"
+              "sha256": "6e4a95c781d240f2bf81c9d219924a516b7b357f19a7d58db41fe88cbf5facd2"
             },
             {
               "path": "apps/web/src/hooks/useLocale.test.tsx",
@@ -656800,7 +656802,7 @@
             },
             {
               "path": "packages/i18n/src/dashboard.ts",
-              "sha256": "5a77f62b6689595b84f702aad1151ccd8a7010a1118574d2fe1f61e8e62dbcf7"
+              "sha256": "0b1d2e35178c8257602256ad3d6b92e736a42fe0a3adcaa2b8fb83f4005d6e76"
             },
             {
               "path": "packages/i18n/src/feedback.ts",
@@ -657212,7 +657214,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
-              "sha256": "65503f453f8c75f9e4d369c287a1da87cae0f5982224842a92ad7433c18ee248"
+              "sha256": "346c312b37de92189f5ddb13e7ea40bce8352f5cc6440374af2a0f0d3c624781"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -657304,7 +657306,7 @@
             },
             {
               "path": "apps/web/src/components/dashboard/DashboardWidget.tsx",
-              "sha256": "ec2c47323f604bd3622d0ef8264c76526387071020b63940fff058b0ce3384a9"
+              "sha256": "c51a33d1c73d94deb398e2fd97605d402712546fcc9f8845fd0f61aa55f5c49b"
             },
             {
               "path": "apps/web/src/hooks/useAccountTime.test.tsx",
@@ -657324,7 +657326,7 @@
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.ts",
-              "sha256": "99a562efaa93aee37f56c153d42d294b2cefcc40d43bc7d3e27fce4a8cd477b7"
+              "sha256": "6e4a95c781d240f2bf81c9d219924a516b7b357f19a7d58db41fe88cbf5facd2"
             },
             {
               "path": "apps/web/src/hooks/useLocale.test.tsx",
@@ -657440,7 +657442,7 @@
             },
             {
               "path": "packages/i18n/src/dashboard.ts",
-              "sha256": "5a77f62b6689595b84f702aad1151ccd8a7010a1118574d2fe1f61e8e62dbcf7"
+              "sha256": "0b1d2e35178c8257602256ad3d6b92e736a42fe0a3adcaa2b8fb83f4005d6e76"
             },
             {
               "path": "packages/i18n/src/feedback.ts",
@@ -657851,7 +657853,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
-              "sha256": "65503f453f8c75f9e4d369c287a1da87cae0f5982224842a92ad7433c18ee248"
+              "sha256": "346c312b37de92189f5ddb13e7ea40bce8352f5cc6440374af2a0f0d3c624781"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -657943,7 +657945,7 @@
             },
             {
               "path": "apps/web/src/components/dashboard/DashboardWidget.tsx",
-              "sha256": "ec2c47323f604bd3622d0ef8264c76526387071020b63940fff058b0ce3384a9"
+              "sha256": "c51a33d1c73d94deb398e2fd97605d402712546fcc9f8845fd0f61aa55f5c49b"
             },
             {
               "path": "apps/web/src/hooks/useAccountTime.test.tsx",
@@ -657963,7 +657965,7 @@
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.ts",
-              "sha256": "99a562efaa93aee37f56c153d42d294b2cefcc40d43bc7d3e27fce4a8cd477b7"
+              "sha256": "6e4a95c781d240f2bf81c9d219924a516b7b357f19a7d58db41fe88cbf5facd2"
             },
             {
               "path": "apps/web/src/hooks/useLocale.test.tsx",
@@ -658079,7 +658081,7 @@
             },
             {
               "path": "packages/i18n/src/dashboard.ts",
-              "sha256": "5a77f62b6689595b84f702aad1151ccd8a7010a1118574d2fe1f61e8e62dbcf7"
+              "sha256": "0b1d2e35178c8257602256ad3d6b92e736a42fe0a3adcaa2b8fb83f4005d6e76"
             },
             {
               "path": "packages/i18n/src/feedback.ts",
@@ -658490,7 +658492,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
-              "sha256": "65503f453f8c75f9e4d369c287a1da87cae0f5982224842a92ad7433c18ee248"
+              "sha256": "346c312b37de92189f5ddb13e7ea40bce8352f5cc6440374af2a0f0d3c624781"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -658582,7 +658584,7 @@
             },
             {
               "path": "apps/web/src/components/dashboard/DashboardWidget.tsx",
-              "sha256": "ec2c47323f604bd3622d0ef8264c76526387071020b63940fff058b0ce3384a9"
+              "sha256": "c51a33d1c73d94deb398e2fd97605d402712546fcc9f8845fd0f61aa55f5c49b"
             },
             {
               "path": "apps/web/src/hooks/useAccountTime.test.tsx",
@@ -658602,7 +658604,7 @@
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.ts",
-              "sha256": "99a562efaa93aee37f56c153d42d294b2cefcc40d43bc7d3e27fce4a8cd477b7"
+              "sha256": "6e4a95c781d240f2bf81c9d219924a516b7b357f19a7d58db41fe88cbf5facd2"
             },
             {
               "path": "apps/web/src/hooks/useLocale.test.tsx",
@@ -658718,7 +658720,7 @@
             },
             {
               "path": "packages/i18n/src/dashboard.ts",
-              "sha256": "5a77f62b6689595b84f702aad1151ccd8a7010a1118574d2fe1f61e8e62dbcf7"
+              "sha256": "0b1d2e35178c8257602256ad3d6b92e736a42fe0a3adcaa2b8fb83f4005d6e76"
             },
             {
               "path": "packages/i18n/src/feedback.ts",
@@ -659129,7 +659131,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
-              "sha256": "65503f453f8c75f9e4d369c287a1da87cae0f5982224842a92ad7433c18ee248"
+              "sha256": "346c312b37de92189f5ddb13e7ea40bce8352f5cc6440374af2a0f0d3c624781"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -659221,7 +659223,7 @@
             },
             {
               "path": "apps/web/src/components/dashboard/DashboardWidget.tsx",
-              "sha256": "ec2c47323f604bd3622d0ef8264c76526387071020b63940fff058b0ce3384a9"
+              "sha256": "c51a33d1c73d94deb398e2fd97605d402712546fcc9f8845fd0f61aa55f5c49b"
             },
             {
               "path": "apps/web/src/hooks/useAccountTime.test.tsx",
@@ -659241,7 +659243,7 @@
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.ts",
-              "sha256": "99a562efaa93aee37f56c153d42d294b2cefcc40d43bc7d3e27fce4a8cd477b7"
+              "sha256": "6e4a95c781d240f2bf81c9d219924a516b7b357f19a7d58db41fe88cbf5facd2"
             },
             {
               "path": "apps/web/src/hooks/useLocale.test.tsx",
@@ -659357,7 +659359,7 @@
             },
             {
               "path": "packages/i18n/src/dashboard.ts",
-              "sha256": "5a77f62b6689595b84f702aad1151ccd8a7010a1118574d2fe1f61e8e62dbcf7"
+              "sha256": "0b1d2e35178c8257602256ad3d6b92e736a42fe0a3adcaa2b8fb83f4005d6e76"
             },
             {
               "path": "packages/i18n/src/feedback.ts",
@@ -659768,7 +659770,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
-              "sha256": "65503f453f8c75f9e4d369c287a1da87cae0f5982224842a92ad7433c18ee248"
+              "sha256": "346c312b37de92189f5ddb13e7ea40bce8352f5cc6440374af2a0f0d3c624781"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -659860,7 +659862,7 @@
             },
             {
               "path": "apps/web/src/components/dashboard/DashboardWidget.tsx",
-              "sha256": "ec2c47323f604bd3622d0ef8264c76526387071020b63940fff058b0ce3384a9"
+              "sha256": "c51a33d1c73d94deb398e2fd97605d402712546fcc9f8845fd0f61aa55f5c49b"
             },
             {
               "path": "apps/web/src/hooks/useAccountTime.test.tsx",
@@ -659880,7 +659882,7 @@
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.ts",
-              "sha256": "99a562efaa93aee37f56c153d42d294b2cefcc40d43bc7d3e27fce4a8cd477b7"
+              "sha256": "6e4a95c781d240f2bf81c9d219924a516b7b357f19a7d58db41fe88cbf5facd2"
             },
             {
               "path": "apps/web/src/hooks/useLocale.test.tsx",
@@ -659996,7 +659998,7 @@
             },
             {
               "path": "packages/i18n/src/dashboard.ts",
-              "sha256": "5a77f62b6689595b84f702aad1151ccd8a7010a1118574d2fe1f61e8e62dbcf7"
+              "sha256": "0b1d2e35178c8257602256ad3d6b92e736a42fe0a3adcaa2b8fb83f4005d6e76"
             },
             {
               "path": "packages/i18n/src/feedback.ts",
@@ -660407,7 +660409,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
-              "sha256": "65503f453f8c75f9e4d369c287a1da87cae0f5982224842a92ad7433c18ee248"
+              "sha256": "346c312b37de92189f5ddb13e7ea40bce8352f5cc6440374af2a0f0d3c624781"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -660499,7 +660501,7 @@
             },
             {
               "path": "apps/web/src/components/dashboard/DashboardWidget.tsx",
-              "sha256": "ec2c47323f604bd3622d0ef8264c76526387071020b63940fff058b0ce3384a9"
+              "sha256": "c51a33d1c73d94deb398e2fd97605d402712546fcc9f8845fd0f61aa55f5c49b"
             },
             {
               "path": "apps/web/src/hooks/useAccountTime.test.tsx",
@@ -660519,7 +660521,7 @@
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.ts",
-              "sha256": "99a562efaa93aee37f56c153d42d294b2cefcc40d43bc7d3e27fce4a8cd477b7"
+              "sha256": "6e4a95c781d240f2bf81c9d219924a516b7b357f19a7d58db41fe88cbf5facd2"
             },
             {
               "path": "apps/web/src/hooks/useLocale.test.tsx",
@@ -660635,7 +660637,7 @@
             },
             {
               "path": "packages/i18n/src/dashboard.ts",
-              "sha256": "5a77f62b6689595b84f702aad1151ccd8a7010a1118574d2fe1f61e8e62dbcf7"
+              "sha256": "0b1d2e35178c8257602256ad3d6b92e736a42fe0a3adcaa2b8fb83f4005d6e76"
             },
             {
               "path": "packages/i18n/src/feedback.ts",
@@ -661046,7 +661048,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
-              "sha256": "65503f453f8c75f9e4d369c287a1da87cae0f5982224842a92ad7433c18ee248"
+              "sha256": "346c312b37de92189f5ddb13e7ea40bce8352f5cc6440374af2a0f0d3c624781"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -661138,7 +661140,7 @@
             },
             {
               "path": "apps/web/src/components/dashboard/DashboardWidget.tsx",
-              "sha256": "ec2c47323f604bd3622d0ef8264c76526387071020b63940fff058b0ce3384a9"
+              "sha256": "c51a33d1c73d94deb398e2fd97605d402712546fcc9f8845fd0f61aa55f5c49b"
             },
             {
               "path": "apps/web/src/hooks/useAccountTime.test.tsx",
@@ -661158,7 +661160,7 @@
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.ts",
-              "sha256": "99a562efaa93aee37f56c153d42d294b2cefcc40d43bc7d3e27fce4a8cd477b7"
+              "sha256": "6e4a95c781d240f2bf81c9d219924a516b7b357f19a7d58db41fe88cbf5facd2"
             },
             {
               "path": "apps/web/src/hooks/useLocale.test.tsx",
@@ -661274,7 +661276,7 @@
             },
             {
               "path": "packages/i18n/src/dashboard.ts",
-              "sha256": "5a77f62b6689595b84f702aad1151ccd8a7010a1118574d2fe1f61e8e62dbcf7"
+              "sha256": "0b1d2e35178c8257602256ad3d6b92e736a42fe0a3adcaa2b8fb83f4005d6e76"
             },
             {
               "path": "packages/i18n/src/feedback.ts",
@@ -728257,7 +728259,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "All indexed conditional routes have scoped cases. The electricity revision, Telegram security panel and knowledge launcher now have browser evidence during module loading. Reconcile original route-level states against named cases and measured layouts, then check the remaining applicable first-load empty, denied and stale states."
+        "Customer and staff dashboard receipts now include stale server-owned profile recovery, isolated widget failures, loaded/empty states and denial withdrawal. Complete the original route-level state and interaction reconciliation for the remaining list, detail and admin routes. Check only uncovered applicable first-load empty, denied and stale states."
       ],
       "owner": null,
       "depends_on": [],
@@ -728447,7 +728449,8 @@
           "release-0.5-intake-response-recovery",
           "release-0.5-operational-route-receipts",
           "release-0.5-config-and-customer-route-receipts",
-          "release-0.5-lazy-panel-waits"
+          "release-0.5-lazy-panel-waits",
+          "release-0.5-dashboard-profile-conflict"
         ]
       }
     },
@@ -728523,7 +728526,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
-              "sha256": "65503f453f8c75f9e4d369c287a1da87cae0f5982224842a92ad7433c18ee248"
+              "sha256": "346c312b37de92189f5ddb13e7ea40bce8352f5cc6440374af2a0f0d3c624781"
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
@@ -729091,7 +729094,7 @@
             },
             {
               "path": "apps/web/src/components/dashboard/DashboardWidget.tsx",
-              "sha256": "ec2c47323f604bd3622d0ef8264c76526387071020b63940fff058b0ce3384a9"
+              "sha256": "c51a33d1c73d94deb398e2fd97605d402712546fcc9f8845fd0f61aa55f5c49b"
             },
             {
               "path": "apps/web/src/hooks/useAccountSettingsEditor.ts",
@@ -729099,7 +729102,7 @@
             },
             {
               "path": "apps/web/src/hooks/useAsyncData.ts",
-              "sha256": "99a562efaa93aee37f56c153d42d294b2cefcc40d43bc7d3e27fce4a8cd477b7"
+              "sha256": "6e4a95c781d240f2bf81c9d219924a516b7b357f19a7d58db41fe88cbf5facd2"
             },
             {
               "path": "apps/web/src/hooks/useCalendar.ts",
@@ -730381,7 +730384,8 @@
             "Registration and setup prerequisite loading passed all 101 budgets and six cold-auth transfer checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-entry-prerequisites/proof.json",
             "Service intake and the wallet receipt view pass all 101 unchanged budgets. The cold-auth build files match the prior checked transfer. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-intake-response-recovery/proof.json",
             "The operational batch passes all 101 transfer budgets, with byte-matched auth assets and targeted native regression evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-operational-route-receipts/proof.json",
-            "The deferred panel loading batch passes all 101 transfer budgets and six cold authentication checks on final assets. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-lazy-panel-waits/proof.json"
+            "The deferred panel loading batch passes all 101 transfer budgets and six cold authentication checks on final assets. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-lazy-panel-waits/proof.json",
+            "All 101 route and interaction transfer budgets pass on the dashboard conflict build. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-dashboard-profile-conflict/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -808522,6 +808526,51 @@
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-lazy-panel-waits/reviewed.patch",
       "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-lazy-panel-waits/renewed-bindings.json",
       "release_disposition": "Closed three demonstrated module loading gaps with exact browser evidence. Four v0.5.0 acceptance items remain."
+    },
+    "release-0.5-dashboard-profile-conflict": {
+      "batch": "release-0.5-dashboard-profile-conflict",
+      "base_commit": "f03cd51e888e7be0417a46310b70052fdc3c5e28",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01",
+        "07-ui-ux-design.md#T-07.05.02.04",
+        "release-readiness#R-04.02"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01",
+        "07-ui-ux-design.md#T-07.05.02.04"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
+          "sha256": "346c312b37de92189f5ddb13e7ea40bce8352f5cc6440374af2a0f0d3c624781"
+        },
+        {
+          "path": "apps/web/src/components/dashboard/DashboardWidget.tsx",
+          "sha256": "c51a33d1c73d94deb398e2fd97605d402712546fcc9f8845fd0f61aa55f5c49b"
+        },
+        {
+          "path": "apps/web/src/hooks/useAsyncData.ts",
+          "sha256": "6e4a95c781d240f2bf81c9d219924a516b7b357f19a7d58db41fe88cbf5facd2"
+        },
+        {
+          "path": "packages/i18n/src/dashboard.ts",
+          "sha256": "0b1d2e35178c8257602256ad3d6b92e736a42fe0a3adcaa2b8fb83f4005d6e76"
+        }
+      ],
+      "checks": [
+        "Both baseline Chromium cases sent the old profile ID twice after the widget API returned 409. On the reviewed build the reload reads the current server-owned profile and its orders without issuing a profile switch or another write.",
+        "Fourteen production browser cases passed in Chromium and Mobile Safari, including English and Persian conflict recovery, isolated customer and staff errors and retry, the existing widget accessibility checks and withdrawal of old customer data on profile switch.",
+        "Six instrumented browser cases, 12 focused hook tests, changed source coverage, lint, formatting and web/i18n typechecks passed. All 101 transfer budgets pass. Dashboard uses 290.59 KB of its 300 KB budget.",
+        "GitHub CLI now has workflow scope. Both workflow commits are on main, and the observed Verify monorepo integrity run passed critical accessibility. The repository reports no enforced required check for main, and the CLI account has push access without repository admin access."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-dashboard-profile-conflict",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-dashboard-profile-conflict/proof.json",
+      "source_scope_proof_sha256": "318d2b1e88866d35ebfc302a720478baed64f298c7f7bafa322f3d5623ee8bb2",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-dashboard-profile-conflict/reviewed.patch",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-dashboard-profile-conflict/renewed-bindings.json",
+      "release_disposition": "Closed dashboard recovery when the server changes the active profile. Four v0.5.0 acceptance items remain."
     }
   },
   "historical_improvements": [
@@ -808572,7 +808621,7 @@
       "release-readiness#R-04.01",
       "release-readiness#R-04.02"
     ],
-    "goal": "Reconcile original first-load empty, denied and stale context requirements with named browser cases and layout receipts. Verify specific gaps in the shared dashboard and representative route families. GitHub merge enforcement and staging Sentry delivery remain independent gates."
+    "goal": "Compare original route acceptance with named and measured evidence for list, detail and admin routes. Verify only uncovered applicable first-load empty, denied and stale states. Repository required-check enforcement and staging Sentry delivery remain independent gates."
   },
   "launch_forecast": {
     "status": "deadline_at_risk_until_v0_5_and_operational_gates_close",

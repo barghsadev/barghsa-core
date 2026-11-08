@@ -2,7 +2,7 @@ import { useId, type ReactNode } from 'react';
 import type { LucideIcon } from 'lucide-react';
 import { Button, Card, CardHeader, CardContent, LoadingSkeleton } from '@barghsa/ui';
 import { dashboardText } from '@barghsa/i18n/dashboard';
-import { loadingText } from '@barghsa/i18n/loading-feedback';
+import { loadingText, reloadText } from '@barghsa/i18n/loading-feedback';
 import type { Locale } from '@barghsa/i18n/app';
 import type { AsyncData } from '../../hooks/useAsyncData.js';
 import { announceReadRetry } from '../../lib/read-retry-feedback.js';
@@ -33,6 +33,7 @@ export function DashboardWidget<T>({
   children: (data: T) => ReactNode;
 }) {
   const id = useId();
+  const profileChanged = resource.status === 'error' && resource.error.code === 'READ_CONFLICT';
   return (
     <Card variant="widget" role="region" aria-labelledby={id} className="h-[32rem] min-w-0">
       <CardHeader className="flex min-h-12 flex-row flex-wrap items-center justify-between gap-3">
@@ -47,9 +48,19 @@ export function DashboardWidget<T>({
           <LoadingSkeleton label={loadingText('loading', locale)} variant="table" />
         ) : resource.status === 'error' ? (
           <div role="alert" className="space-y-3">
-            <p className="text-sm text-muted-foreground">{dashboardText('widget.error', locale)}</p>
-            <Button variant="outline" onClick={() => retryDashboardRead(resource, locale)}>
-              {dashboardText('widget.retry', locale)}
+            <p className="text-sm text-muted-foreground">
+              {dashboardText(profileChanged ? 'widget.profileChanged' : 'widget.error', locale)}
+            </p>
+            <Button
+              variant="outline"
+              onClick={() => {
+                if (profileChanged) window.location.reload();
+                else retryDashboardRead(resource, locale);
+              }}
+            >
+              {profileChanged
+                ? reloadText('reload', locale)
+                : dashboardText('widget.retry', locale)}
             </Button>
           </div>
         ) : empty?.(resource.data) ? (

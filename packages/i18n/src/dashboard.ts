@@ -2,6 +2,7 @@ import type { Locale } from './app.js';
 
 const en = {
   'widget.error': 'This section could not be loaded. Other sections are still available.',
+  'widget.profileChanged': 'Your active profile changed. Reload the dashboard to continue.',
   'widget.retry': 'Retry this section',
   'status.title': 'At a glance',
   'verification.empty': 'No profiles are awaiting verification.',
@@ -32,6 +33,8 @@ const en = {
 
 const fa: Record<keyof typeof en, string> = {
   'widget.error': 'این بخش بارگذاری نشد. بخش‌های دیگر همچنان در دسترس هستند.',
+  'widget.profileChanged':
+    'پروفایل فعال شما تغییر کرده است. برای ادامه، داشبورد را دوباره بارگذاری کنید.',
   'widget.retry': 'تلاش دوباره برای این بخش',
   'status.title': 'در یک نگاه',
   'verification.empty': 'پروفایلی در انتظار تأیید نیست.',

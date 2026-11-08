@@ -26,7 +26,8 @@ export type AsyncData<T> =
   | { status: 'error'; data: null; retry: () => void; error: AsyncReadError }
   | { status: 'ready'; data: T; retry: () => void; refreshError?: boolean };
 
-type ReadErrorCode = 'READ_DENIED' | 'READ_UNAVAILABLE' | 'READ_FAILED' | 'READ_NETWORK';
+type ReadErrorCode =
+  'READ_DENIED' | 'READ_CONFLICT' | 'READ_UNAVAILABLE' | 'READ_FAILED' | 'READ_NETWORK';
 interface AsyncReadError {
   code: ReadErrorCode;
   message: string;
@@ -44,6 +45,7 @@ function readErrorCode(error: unknown): ReadErrorCode {
   if (error instanceof ServerQueryError) {
     if (error.status === 0) return 'READ_NETWORK';
     if (error.status === 401 || error.status === 403) return 'READ_DENIED';
+    if (error.status === 409) return 'READ_CONFLICT';
     if (error.status === 429 || error.status >= 500) return 'READ_UNAVAILABLE';
   }
   return 'READ_FAILED';

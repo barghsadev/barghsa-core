@@ -1,7 +1,7 @@
 import { test, expect } from './coverage-fixture';
 import AxeBuilder from '@axe-core/playwright';
 import { dashboardText } from '@barghsa/i18n/dashboard';
-import { loadingText } from '@barghsa/i18n/loading-feedback';
+import { loadingText, reloadText } from '@barghsa/i18n/loading-feedback';
 import { t } from '@barghsa/i18n/app';
 import { tSaving } from '@barghsa/i18n/saving';
 import { formatCurrencyIrr } from '@barghsa/i18n/numbers';
@@ -257,4 +257,85 @@ for (const locale of ['en', 'fa'] as const) {
       }
     }
   );
+
+  test(`dashboard recovers when the server's active profile changes (${locale})`, async ({
+    page,
+  }) => {
+    await page.addInitScript((value) => localStorage.setItem('barghsa.locale', value), locale);
+    const currentId = '74000000-0000-4000-8000-000000000002';
+    const profileNames = { [profileId]: 'Ari Buyer', [currentId]: 'Nova Buyer' };
+    let activeProfileId: keyof typeof profileNames = profileId;
+    const contextReads: string[] = [];
+    const orderReads: string[] = [];
+    const writes: string[] = [];
+    await page.route('**/api/**', (route) => {
+      const request = route.request();
+      if (request.method() !== 'GET') writes.push(request.url());
+      return route.fulfill({ status: 404, json: {} });
+    });
+    await page.route('**/api/auth/user', (route) =>
+      route.fulfill({ json: { userId: 'customer', isStaff: false, requiresTosAcceptance: false } })
+    );
+    await page.route('**/api/profiles', (route) =>
+      route.fulfill({
+        json: {
+          activeProfileId,
+          hasDefault: true,
+          profiles: Object.entries(profileNames).map(([id, name]) => ({
+            id,
+            profileType: 'INDIVIDUAL',
+            firstName: name,
+            status: 'ACTIVE',
+          })),
+        },
+      })
+    );
+    await page.route('**/api/dashboard/context', (route) => {
+      contextReads.push(activeProfileId);
+      return route.fulfill({
+        json: {
+          profile: { id: activeProfileId, name: profileNames[activeProfileId] },
+          access: { wallet: false, invoices: false, orders: true, contracts: false },
+        },
+      });
+    });
+    await page.route('**/api/dashboard/widgets/**', (route) => {
+      const url = new URL(route.request().url());
+      const requestedId = url.searchParams.get('profileId')!;
+      const orders = url.pathname.endsWith('/orders');
+      if (orders) {
+        orderReads.push(requestedId);
+        activeProfileId = currentId;
+      }
+      if (requestedId !== activeProfileId)
+        return route.fulfill({ status: 409, json: { message: 'Active profile changed' } });
+      return route.fulfill({
+        json: {
+          profileId: requestedId,
+          data: orders
+            ? []
+            : { activeContracts: 0, pendingOrders: 0, openTickets: 0, unpaidInvoices: 0 },
+        },
+      });
+    });
+    await page.goto('/app');
+    const main = page.getByRole('main');
+    const orders = main.getByRole('region', { name: dashboardText('orders.title', locale) });
+    await expect(main.getByRole('heading', { level: 1 })).toContainText(profileNames[profileId]);
+    const warning = orders.getByRole('alert');
+    const action = warning.getByRole('button');
+    const warningText = await warning.textContent();
+    const actionText = await action.textContent();
+    await action.focus();
+    await expect(action).toBeFocused();
+    await page.keyboard.press('Enter');
+    await expect.poll(() => orderReads).toEqual([profileId, currentId]);
+    expect(contextReads).toEqual([profileId, currentId]);
+    expect(warningText).toContain(dashboardText('widget.profileChanged', locale));
+    expect(actionText).toBe(reloadText('reload', locale));
+    await expect(main.getByRole('heading', { level: 1 })).toContainText(profileNames[currentId]);
+    await expect(orders.getByText(dashboardText('orders.empty', locale))).toBeVisible();
+    await expect(warning).toHaveCount(0);
+    expect(writes).toEqual([]);
+  });
 }
