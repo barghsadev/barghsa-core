@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-08T23:28:19+00:00",
-  "source_commit": "a07c4dc44c015caa0b5fa3ab2f343d33bcabbb8e",
+  "updated": "2026-11-08T23:32:15+00:00",
+  "source_commit": "bb911643f7ff6d1cc9b7daa680bcadf3fe0d4fe2",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -598485,7 +598485,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Named scoped cases now include entry and intake flows, staff configuration, operational service queues, CRM and staff directory, contracts, documents, inbox, and wallet review. Bind remaining configuration and customer service route cases and verify any still-unmeasured route-specific loading, empty, denied, stale and recovery interactions against the original criteria."
+        "All 23 routes missing a named case in the previous index now have scoped browser evidence. Reconcile per-route state and interaction requirements against named cases and the populated layout receipts. Check only applicable states still missing evidence, especially first-load empty states, denied and stale context, and isolated recovery where a route owns multiple reads."
       ],
       "owner": null,
       "depends_on": [],
@@ -598607,7 +598607,8 @@
           "release-0.5-public-auth-deadline",
           "release-0.5-entry-prerequisites",
           "release-0.5-intake-response-recovery",
-          "release-0.5-operational-route-receipts"
+          "release-0.5-operational-route-receipts",
+          "release-0.5-config-and-customer-route-receipts"
         ],
         "current_acceptance": null
       }
@@ -728255,7 +728256,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Named scoped cases now include entry and intake flows, staff configuration, operational service queues, CRM and staff directory, contracts, documents, inbox, and wallet review. Bind remaining configuration and customer service route cases and verify any still-unmeasured route-specific loading, empty, denied, stale and recovery interactions against the original criteria."
+        "All 23 routes missing a named case in the previous index now have scoped browser evidence. Reconcile per-route state and interaction requirements against named cases and the populated layout receipts. Check only applicable states still missing evidence, especially first-load empty states, denied and stale context, and isolated recovery where a route owns multiple reads."
       ],
       "owner": null,
       "depends_on": [],
@@ -728443,7 +728444,8 @@
           "release-0.5-public-auth-deadline",
           "release-0.5-entry-prerequisites",
           "release-0.5-intake-response-recovery",
-          "release-0.5-operational-route-receipts"
+          "release-0.5-operational-route-receipts",
+          "release-0.5-config-and-customer-route-receipts"
         ]
       }
     },
@@ -808071,6 +808073,369 @@
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-operational-route-receipts/reviewed.patch",
       "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-operational-route-receipts/renewed-bindings.json",
       "release_disposition": "Recorded 22 route-specific case sets and corrected protected recovery dialog feedback. v0.5.0 still has four required acceptance items."
+    },
+    "release-0.5-config-and-customer-route-receipts": {
+      "batch": "release-0.5-config-and-customer-route-receipts",
+      "base_commit": "bb911643f7ff6d1cc9b7daa680bcadf3fe0d4fe2",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/account-settings-forms.spec.ts",
+          "sha256": "265b6abb11194016eaa8cbf31c38713a5fdaa6945a36fba2b8898d5ee1290ee2"
+        },
+        {
+          "path": "apps/web/e2e/ai-catalogue-recovery.spec.ts",
+          "sha256": "a67511d0ac1c12bc416510bd53acd4d2310c5bb873649e2babc798f0ecbd49cd"
+        },
+        {
+          "path": "apps/web/e2e/content-catalogue-recovery.spec.ts",
+          "sha256": "f04edaa0e511095627868a60a5001d6254db29263461afa6fb95575f908e6a66"
+        },
+        {
+          "path": "apps/web/e2e/contract-settings-recovery.spec.ts",
+          "sha256": "c3c2f5710e48f1d09c5f91dd77fe92371c583dd0eea7208971592e1579e19a45"
+        },
+        {
+          "path": "apps/web/e2e/customer-browse-recovery.spec.ts",
+          "sha256": "a6fcc7d0e5c3d9ff7266248f353fc5fe69c9782c89197234086278b0d87c5ed4"
+        },
+        {
+          "path": "apps/web/e2e/delivery-provider-recovery.spec.ts",
+          "sha256": "739aa6d07a2a110d5a5074fddd3846abe7e12b1f0f791bf8c40f3b5e49b335ba"
+        },
+        {
+          "path": "apps/web/e2e/document-list-recovery.spec.ts",
+          "sha256": "8676029a70bd46565ac5cb5ce8480833b8fddc4d3964d5361dd5c16545373421"
+        },
+        {
+          "path": "apps/web/e2e/electricity-change-recovery.spec.ts",
+          "sha256": "79c13b763b246137866723f85604ea4d09414d9a5c2864e3346ab81a8291a889"
+        },
+        {
+          "path": "apps/web/e2e/electricity-correction-forms.spec.ts",
+          "sha256": "b6f326781c780de3504f8a8aab418afb0607cb2cefc1ad305c7474890ae26e47"
+        },
+        {
+          "path": "apps/web/e2e/electricity-customer-cancellation-recovery.spec.ts",
+          "sha256": "323913209089935f0b5d10fc403bb0ee9d67d7b5a27e0715f8d680635fd43e24"
+        },
+        {
+          "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
+          "sha256": "c50944fd1cd3e9b6e11408e741c1f55a678130df3f1e0685f219b94ceb9ace91"
+        },
+        {
+          "path": "apps/web/e2e/gift-code-recovery.spec.ts",
+          "sha256": "ea9f04a7d2a3429c76dc95e25cb981cff89e78c9830352d52fa437ad4adf0599"
+        },
+        {
+          "path": "apps/web/e2e/knowledge-policy-forms.spec.ts",
+          "sha256": "9e61e7b35e7ed65cbfadd4d86efa32628bf6d15b6bebe543bfff409d204eb1a7"
+        },
+        {
+          "path": "apps/web/e2e/onboarding-wizard.spec.ts",
+          "sha256": "289aaf1b790e4b088306ab51d0d449a9aa8d14a8cae00a0fe7e55a3d3d7250a7"
+        },
+        {
+          "path": "apps/web/e2e/preference-settings-forms.spec.ts",
+          "sha256": "e78db405b69c4f165efab3b3b201b36ffb7761267b639616e2ea422a3c299e17"
+        },
+        {
+          "path": "apps/web/e2e/product-catalogue-query.spec.ts",
+          "sha256": "b0c0ebbd24fdf28ab5830f6b64fddaecff1c615732f4da52b9971d4809730d5b"
+        },
+        {
+          "path": "apps/web/e2e/public-terms-history.spec.ts",
+          "sha256": "45c707bb0213a3e18748419fc33e03b726e1287dae9e1cac731c93499763cd05"
+        },
+        {
+          "path": "apps/web/e2e/security-settings-forms.spec.ts",
+          "sha256": "58a05f707dcff59c4f2ea49112389aebec1f69ca054fe96cc4f12afcec0387b6"
+        },
+        {
+          "path": "apps/web/e2e/team-catalogue-recovery.spec.ts",
+          "sha256": "5138ca5b9295eb324295c53447d04bfa3c618e1a71c8e48827c2cd6b071e3fa0"
+        },
+        {
+          "path": "apps/web/e2e/vat-recovery.spec.ts",
+          "sha256": "109683dd920939632ddd4833dcee8e334ed11831f5ba78af0918251d5f217559"
+        },
+        {
+          "path": "apps/web/src/components/AdminAiSections.tsx",
+          "sha256": "2b18fa285f521214cd94e124a7b5cec53d463ecd9cb3414c746054251025b3fe"
+        },
+        {
+          "path": "apps/web/src/components/GeographyLoadError.tsx",
+          "sha256": "251ad679666fa6c592902bd342d317c7c4041a4630c801d7e177de2132e58b7c"
+        },
+        {
+          "path": "apps/web/src/components/Icon.tsx",
+          "sha256": "277e22791913ed1141250fa4f8c2799dce1073fe57cd53a59247fc46302ca43c"
+        },
+        {
+          "path": "apps/web/src/components/MaintenanceNotice.tsx",
+          "sha256": "3a96b04a5d4a296bf79682b8b049ad043d7f88ab79382dd0cfae1c5dcae2feff"
+        },
+        {
+          "path": "apps/web/src/components/OnboardingWizard.tsx",
+          "sha256": "0faa5162a685d66ed5278f8e15e353eeca6fd45725cfbc2d7c4caac4dace7aed"
+        },
+        {
+          "path": "apps/web/src/components/PreferenceSettingsStatus.tsx",
+          "sha256": "60ff89836dc2fff28c0a153848ee34706908d17c75829e43c0dd925ff3bc38f0"
+        },
+        {
+          "path": "apps/web/src/components/PublishedTermsHistory.tsx",
+          "sha256": "8eae6315b27f1d236743a26c8a40453d60cbcba7a15cf950b7cf1a952d8477bd"
+        },
+        {
+          "path": "apps/web/src/components/RouteErrorBoundary.tsx",
+          "sha256": "78cafc7f50e701d1a465d5fffb8e44b73c4f16bf67d761c3ec3e173b58f55fab"
+        },
+        {
+          "path": "apps/web/src/components/RouteSkeleton.tsx",
+          "sha256": "c371e664a768721aaf5589f26e7951db525ece11f565c1b542d51b9374820638"
+        },
+        {
+          "path": "apps/web/src/components/SecurityRevocationDialog.tsx",
+          "sha256": "b381a20c0e1173438df6937ecd933f44ad3f94958147ff20ab0183e8264df972"
+        },
+        {
+          "path": "apps/web/src/components/TelegramLinkPanel.tsx",
+          "sha256": "cf292cacb89816bf30a2be649644517556d32e1e5c5ded1b7b7145fdfe888c8e"
+        },
+        {
+          "path": "apps/web/src/components/TosContent.tsx",
+          "sha256": "4a04ed74640a531a6f59921dabbc7705b0bec6df3fa421dbd9b5892779c65769"
+        },
+        {
+          "path": "apps/web/src/components/TrustedDevices.tsx",
+          "sha256": "7d2fbe27037e1362cf63d8d20aaea1906a6ce0cf422c48e64d4d62a301c9ad3d"
+        },
+        {
+          "path": "apps/web/src/hooks/useAccountSettingsEditor.ts",
+          "sha256": "4a3928950a238a70523ffafaae0e23d97683919526756ccd352fafbe52ad4f55"
+        },
+        {
+          "path": "apps/web/src/hooks/useAccountTime.tsx",
+          "sha256": "e3f3524399d2f7cccafc0315d915a888cdb73e9d49eb8f43659400d910c18ed1"
+        },
+        {
+          "path": "apps/web/src/hooks/useGeographyOptions.ts",
+          "sha256": "520091b3c30a4f9686760ec8d5691f5f9f7818521c6555efe059ae7ac4333225"
+        },
+        {
+          "path": "apps/web/src/hooks/useListQuery.ts",
+          "sha256": "c6ac6d60b68941befc2b90ab86e50ae6c6518cc5cf096444c74a0ea2ee75c6b3"
+        },
+        {
+          "path": "apps/web/src/hooks/useLocale.ts",
+          "sha256": "b753d2595d649722a4d9e131ba4d688b434c4183a8bea106c08d965c3d252856"
+        },
+        {
+          "path": "apps/web/src/hooks/useNumberFormatting.ts",
+          "sha256": "1e3e43ea13ee7b0e46e1200af1b4a5b39f671063c529c54e43344ab54afd68b1"
+        },
+        {
+          "path": "apps/web/src/hooks/useOnboardingDraft.ts",
+          "sha256": "ab284b4cf3c5e0a6a6b07cbac58adae4540576f062cb2aa7eb301d79a92d75b2"
+        },
+        {
+          "path": "apps/web/src/hooks/useOnboardingForm.ts",
+          "sha256": "da9e89503351249b1a29397825ce8199353dfb5baf58b6aa92bcf84196a207d6"
+        },
+        {
+          "path": "apps/web/src/hooks/useOnboardingSubmission.ts",
+          "sha256": "1fb6a2de10635105dbf3cb84a027bff4cda0aed8c888ec32cbf73eb4a04c52d7"
+        },
+        {
+          "path": "apps/web/src/hooks/usePreferenceSettingsForm.ts",
+          "sha256": "84646eef89d8e80845dcfab092a8cb22113e79b64a6d35bfeb3b3f9060d2cff4"
+        },
+        {
+          "path": "apps/web/src/hooks/useSecuritySettings.ts",
+          "sha256": "b147234e1376089f842f94f1a6969c0336715489441a8b0f922b8411af54005b"
+        },
+        {
+          "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
+          "sha256": "e79b9faa4484ffa9afb54766d9abad3eb017e43001badced876ffcbebce78562"
+        },
+        {
+          "path": "apps/web/src/pages/AdminAiPoliciesPage.tsx",
+          "sha256": "6c0e427c790d496d0a512f874215b0cd93b5908c540b19632b3d5a63f4f0d954"
+        },
+        {
+          "path": "apps/web/src/pages/AdminCataloguePage.tsx",
+          "sha256": "0ce4eb4228c830c1d8dd2a426e953dfe0b47154d8e33967bb26c67d65f96d1b6"
+        },
+        {
+          "path": "apps/web/src/pages/AdminContractTemplatesPage.tsx",
+          "sha256": "18b94c9afaf2b37bee9e5e05dca669abdf459c4b2a43b1542e12e2786d2e2409"
+        },
+        {
+          "path": "apps/web/src/pages/AdminDeliveryProvidersPage.tsx",
+          "sha256": "23fb5f4467d4b2482b0ea61d390657af674d0cd7cd0bdefbde269faa998405b1"
+        },
+        {
+          "path": "apps/web/src/pages/AdminDocumentTemplatesPage.tsx",
+          "sha256": "c19ecb8e58b7ff208a44554cf8a580331305dcde34240e5a0ed4647f6491046c"
+        },
+        {
+          "path": "apps/web/src/pages/AdminElectricityIncreasesPage.tsx",
+          "sha256": "68fa86c23168db0583ae7cbb6655305f858fb26f872837983c9aec3fd59c1e59"
+        },
+        {
+          "path": "apps/web/src/pages/AdminElectricityPriceAdjustmentsPage.tsx",
+          "sha256": "6749b87bf32c141145ee9b31415b542dafbcbcd14c3a8d78f301ed432db8f428"
+        },
+        {
+          "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
+          "sha256": "a72f4e37a56dd99540aeb5a9ecfe69126db05f322e971061614e9f11f0ab33b0"
+        },
+        {
+          "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
+          "sha256": "1b9aa82bc78d488237b769a97232e0f003d6ab20dd7df5f042d3d15224ffeb00"
+        },
+        {
+          "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
+          "sha256": "4b0ceb5d0a2cdb3582cf3a3eb6f121093f2abc80ee5e4190b594f0414e03f170"
+        },
+        {
+          "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
+          "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
+        },
+        {
+          "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
+          "sha256": "51e9857108279223998b298077d825b214e48c7a5c7972b60794f8417d73b857"
+        },
+        {
+          "path": "apps/web/src/pages/AdminVatPage.tsx",
+          "sha256": "64783c14fd207a752cd57330c9c3c04a90e4282c8dd2397202d7a7a7503ab138"
+        },
+        {
+          "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
+          "sha256": "2886daf15a6d10266cf18f9e00e618e695095d1e7d2cc32789526369e433c1e8"
+        },
+        {
+          "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
+          "sha256": "f0b747cfd026383d53d97dab86faf4ee4541fc0664260bd0e918bf4a9b1c431a"
+        },
+        {
+          "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
+          "sha256": "b01b6b4eac4b5aaa108df6f0cc2afc11127e8f2a2de09eb9ff384f3e64a521d5"
+        },
+        {
+          "path": "apps/web/src/pages/TeamPage.tsx",
+          "sha256": "ebbecde19091a8a3109d3c236b388a7e6d362bda9ce71e11ce94a9cb9118fad0"
+        },
+        {
+          "path": "apps/web/src/routes/_app/electricity/advanced.tsx",
+          "sha256": "51b5984fa1dcebc428fd9c56486a8cbba6529ae35d522b81d24aaab49ab45737"
+        },
+        {
+          "path": "apps/web/src/routes/_app/electricity/index.tsx",
+          "sha256": "248ecb1ae76c60637b7e3c59a75274580e248b336c52e335e43bc7347710f8fa"
+        },
+        {
+          "path": "apps/web/src/routes/_app/electricity/order.tsx",
+          "sha256": "622295a1d60d52de79b1cb74b1ec5215b7a3441cbef8274c6c8a7cc207ef66d4"
+        },
+        {
+          "path": "apps/web/src/routes/_app/electricity/orders.$orderId.tsx",
+          "sha256": "c8d175fde696fdfc384c56fe1ca8e237b85e5e915679c359f5608c02e473df96"
+        },
+        {
+          "path": "apps/web/src/routes/_app/settings/security.tsx",
+          "sha256": "6d0e8aad058bff595c8b9606ab17358a52cb29469d0c212921cae1dbe6739ef9"
+        },
+        {
+          "path": "apps/web/src/routes/_app/settings/team.tsx",
+          "sha256": "370fc9a2c8652ae1e7e763ef00eb7f61f8444099e197814b204b8d7bced39824"
+        },
+        {
+          "path": "apps/web/src/routes/_app/settings/timezone.tsx",
+          "sha256": "32f73dc2a6fa3c73b9acf99605e0c1b64794bc179c236895632a7a5f56381f68"
+        },
+        {
+          "path": "apps/web/src/routes/_app/settings/username.tsx",
+          "sha256": "9ec6bd4c18c86d6101ce57bf33d9cb971515e5882da17ccfc1ea167ee64c09cd"
+        },
+        {
+          "path": "apps/web/src/routes/admin/ai-models.tsx",
+          "sha256": "a24238103f39d64adfd0e82c4caa668fa65342e36ce72f11acb5212409a8d352"
+        },
+        {
+          "path": "apps/web/src/routes/admin/catalogue.tsx",
+          "sha256": "1c9d8bb7e0144942694543ceeca3ff46dbfd62c24057dc2553c7da634d38f7fd"
+        },
+        {
+          "path": "apps/web/src/routes/admin/contract-templates.tsx",
+          "sha256": "149b3b237533a5854a9a3b44e5fdabef15752f64ba8b0e72f5b3e20982e756a8"
+        },
+        {
+          "path": "apps/web/src/routes/admin/document-templates.tsx",
+          "sha256": "25a8f1dc949e6b595aa12a256a7a2e0c9130226dade69b54046da802b8b1c7fd"
+        },
+        {
+          "path": "apps/web/src/routes/admin/electricity-increases.tsx",
+          "sha256": "80e57cfbe4019d20c23bc9899c8eba3dedd0b9954601e0c42d57341b83110396"
+        },
+        {
+          "path": "apps/web/src/routes/admin/electricity-price-adjustments.tsx",
+          "sha256": "f839a9b256a5f9e60954f9ca444e855e4ff96f79cd46da377ffef2efb0b00ef8"
+        },
+        {
+          "path": "apps/web/src/routes/admin/gift-codes.tsx",
+          "sha256": "c5bd414b419a5795333d9df7debb9b09261352ab66513a13e880d6f99d7c3acf"
+        },
+        {
+          "path": "apps/web/src/routes/admin/knowledge-bases.tsx",
+          "sha256": "c0293ef220d71a520639e41b0313c12ac4b66efdb27f0b1c80247e463683080a"
+        },
+        {
+          "path": "apps/web/src/routes/admin/notifications.tsx",
+          "sha256": "59474795b1c14f54363497e70fa0c938485059fcacdb11bcf3f2e1f32a774097"
+        },
+        {
+          "path": "apps/web/src/routes/admin/policies.tsx",
+          "sha256": "68ca4bdccf395c9d369333607bf8658e18755e91e1e0d88501f8352fdfd2c106"
+        },
+        {
+          "path": "apps/web/src/routes/admin/providers.tsx",
+          "sha256": "774b9561ab7d9126f4a941cb4ec0cdd985ffd6ea63bea31d33ee3ece96e05ba7"
+        },
+        {
+          "path": "apps/web/src/routes/admin/vat.tsx",
+          "sha256": "59e9bbd145609a3eee67682e873aa117883a26ae604406c2e6be4d138cd450bd"
+        },
+        {
+          "path": "apps/web/src/routes/onboarding/individual/$profileId.tsx",
+          "sha256": "81c644be74e099b0b985b74182f923530b85367de783be2f862a517325b95cd9"
+        },
+        {
+          "path": "apps/web/src/routes/onboarding/legal/$profileId.tsx",
+          "sha256": "d7775fe6894ca50a7b293d5162e43267734a5489d23db74d4764e9d39a49bd0c"
+        },
+        {
+          "path": "apps/web/src/routes/terms.tsx",
+          "sha256": "f75d630d1f0c32e1e4a995a61522e857f91113cb03ef340ffb7a7ebe516e6495"
+        }
+      ],
+      "checks": [
+        "Matched the complete browser build to the previous audited asset hashes. The pushed source differs from the tested runtime revision only in the board and its generated view.",
+        "All 176 selected Chromium and Mobile Safari cases passed in English and Persian. They bind named cases and direct source to all 23 routes without an entry in the preceding index.",
+        "Configuration and intake cases exercise independent retry, stale work, denied data and exact command recovery. Per-route receipts specify the exercised conditions. This pass does not by itself certify every original route state."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-config-and-customer-route-receipts",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-config-and-customer-route-receipts/proof.json",
+      "source_scope_proof_sha256": "32b5a88ccafc3161ce6930411ff0fd34f3868a9f1abd328a8aa1d643d9273205",
+      "release_disposition": "Closed 23 named-case index gaps with scoped browser evidence. Four v0.5.0 acceptance items remain."
     }
   },
   "historical_improvements": [
@@ -808121,12 +808486,12 @@
       "release-readiness#R-04.01",
       "release-readiness#R-04.02"
     ],
-    "goal": "The latest receipt identifies 23 routes without named cases in the current index. Start with staff configuration, then the electricity wizard, detail, and remaining account and onboarding routes. Bind existing passing receipts first and check the unmeasured states. GitHub merge enforcement and staging Sentry delivery remain independent gates."
+    "goal": "Compare the original per-route criteria to the named browser receipts and populated layouts, then verify the remaining applicable states. The previous 23-route named-case gap is closed. GitHub merge enforcement and staging Sentry delivery remain independent gates."
   },
   "launch_forecast": {
     "status": "deadline_at_risk_until_v0_5_and_operational_gates_close",
     "next_update_after": "v0.5.0 remaining UI criteria and owner decisions",
-    "method": "v0.4.0 staging and Telegram receipts are verified. v0.5.0 has recorded layouts for 93 routes and updated interaction evidence for 22 operational and record routes. Four required items remain open and the November 9 sequence remains at risk."
+    "method": "v0.4.0 staging and Telegram receipts are verified. v0.5.0 has layouts for 93 routes and named scoped evidence for all previously unindexed conditional routes. Four required items remain open and the November 9 sequence remains at risk."
   },
   "capabilities": [
     {
