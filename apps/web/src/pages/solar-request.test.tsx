@@ -3,6 +3,7 @@ import { act } from 'react';
 import { createRoot } from 'react-dom/client';
 import { afterEach, expect, it, vi } from 'vitest';
 import { SolarRequestPage } from './SolarRequestPage.js';
+import { tSolar } from '@barghsa/i18n/solar';
 
 const router = vi.hoisted(() => ({
   step: undefined as unknown,
@@ -44,6 +45,16 @@ vi.mock('@tanstack/react-router', async () => {
   };
 });
 
+const savedAddress = {
+  id: 'address-1',
+  profileId: 'profile-1',
+  provinceId: 'province-1',
+  cityId: 'city-1',
+  fullAddress: 'Test site',
+  postalCode: '1234567890',
+  mainAddress: true,
+};
+
 afterEach(() => {
   vi.unstubAllGlobals();
   router.step = undefined;
@@ -73,7 +84,7 @@ it.each(['fa', 'en'] as const)(
         if (url === '/api/profiles/profile-1/addresses')
           return new Response(
             JSON.stringify({
-              addresses: [{ id: 'address-1', fullAddress: 'Test site', postalCode: '1234567890' }],
+              addresses: [savedAddress],
             })
           );
         throw new Error(`Unexpected ${url}`);
@@ -184,7 +195,7 @@ it('restores a solar draft before showing the form', async () => {
       if (url === '/api/profiles/profile-1/addresses')
         return new Response(
           JSON.stringify({
-            addresses: [{ id: 'address-1', fullAddress: 'Test site', postalCode: '1234567890' }],
+            addresses: [savedAddress],
           })
         );
       if (url === '/api/solar/requests/draft?profileId=profile-1')
@@ -229,7 +240,7 @@ it('keeps entered solar details when draft saving fails', async () => {
       if (url === '/api/profiles/profile-1/addresses')
         return new Response(
           JSON.stringify({
-            addresses: [{ id: 'address-1', fullAddress: 'Test site', postalCode: '1234567890' }],
+            addresses: [savedAddress],
           })
         );
       if (url === '/api/solar/requests/draft?profileId=profile-1')
@@ -260,6 +271,49 @@ it('keeps entered solar details when draft saving fails', async () => {
     expect(
       (container.querySelector('input[value="non_household"]') as HTMLInputElement).checked
     ).toBe(true);
+  } finally {
+    await act(async () => root.unmount());
+    container.remove();
+  }
+});
+
+it('retries an inconsistent active profile and distinguishes a valid no-profile response', async () => {
+  const locale = 'en';
+  document.documentElement.lang = locale;
+  vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
+  const read = vi.fn(async (url: string) => {
+    expect(url).toBe('/api/profiles');
+    return Response.json({
+      activeProfileId: read.mock.calls.length === 1 ? 'missing-profile' : null,
+      profiles: [{ id: 'profile-1' }],
+    });
+  });
+  vi.stubGlobal('fetch', read);
+  const container = document.createElement('div');
+  document.body.append(container);
+  const root = createRoot(container);
+  try {
+    await act(async () =>
+      root.render(
+        <QueryProvider>
+          <SolarRequestPage />
+        </QueryProvider>
+      )
+    );
+    expect(container.querySelector('[role=alert]')?.textContent).toContain(
+      tSolar('loadError', locale)
+    );
+    expect(container.textContent).not.toContain(tSolar('profileRequired', locale));
+    const retry = container.querySelector<HTMLButtonElement>('[role=alert] button');
+    expect(retry?.textContent).toBe(tSolar('retry', locale));
+    await act(async () => retry!.click());
+    expect(container.querySelector('[role=alert]')?.textContent).toBe(
+      tSolar('profileRequired', locale)
+    );
+    expect(read.mock.calls).toEqual([
+      ['/api/profiles', expect.anything()],
+      ['/api/profiles', expect.anything()],
+    ]);
   } finally {
     await act(async () => root.unmount());
     container.remove();

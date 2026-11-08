@@ -9,59 +9,11 @@ import { useManualServerRead } from '../hooks/useServerQuery.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { queryKeys } from '../lib/query-keys.js';
 import { ServerQueryError } from '../lib/server-query-client.js';
-
-interface Product {
-  id: string;
-  title: { fa: string; en: string };
-  description: { fa: string; en: string } | null;
-  price: string | null;
-  status: string;
-  stock_tracking?: boolean;
-  available_count?: number;
-}
-interface SavingPlan extends Product {
-  hardware: Product[];
-  agreement: { versionId: string; title: string; body: string } | null;
-  available: boolean;
-}
-
-function record(value: unknown): value is Record<string, unknown> {
-  return !!value && typeof value === 'object' && !Array.isArray(value);
-}
-
-function localizedText(value: unknown): boolean {
-  return record(value) && typeof value.fa === 'string' && typeof value.en === 'string';
-}
-
-function validProduct(value: unknown): boolean {
-  return (
-    record(value) &&
-    typeof value.id === 'string' &&
-    value.id.length > 0 &&
-    localizedText(value.title) &&
-    (value.description === null || localizedText(value.description)) &&
-    (value.price === null || (typeof value.price === 'string' && /^-?\d+$/.test(value.price))) &&
-    typeof value.status === 'string' &&
-    (value.stock_tracking === undefined || typeof value.stock_tracking === 'boolean') &&
-    (value.available_count === undefined || Number.isSafeInteger(value.available_count))
-  );
-}
-
-function validPlan(value: unknown): value is SavingPlan {
-  if (!record(value) || !validProduct(value)) return false;
-  const { agreement, hardware } = value;
-  return (
-    typeof value.available === 'boolean' &&
-    Array.isArray(hardware) &&
-    hardware.every(validProduct) &&
-    (agreement === null ||
-      (record(agreement) &&
-        typeof agreement.versionId === 'string' &&
-        agreement.versionId.length > 0 &&
-        typeof agreement.title === 'string' &&
-        typeof agreement.body === 'string'))
-  );
-}
+import {
+  parseSavingCatalogue,
+  type SavingPlan,
+  type SavingProduct,
+} from '../lib/customer-saving-catalogue.js';
 
 export function SavingsPage() {
   const locale = useLocale();
@@ -73,8 +25,9 @@ export function SavingsPage() {
   const [plans, setPlans] = useState<SavingPlan[]>([]);
   const [state, setState] = useState<'loading' | 'ready' | 'error' | 'denied'>('loading');
   const [revision, setRevision] = useState(0);
-  const title = (product: Product) => product.title[locale] || product.title.en || product.title.fa;
-  const description = (product: Product) =>
+  const title = (product: SavingProduct) =>
+    product.title[locale] || product.title.en || product.title.fa;
+  const description = (product: SavingProduct) =>
     product.description?.[locale] || product.description?.en || product.description?.fa || '';
   const price = (value: string | null) =>
     value && BigInt(value) > 0n ? numbers.money(value) : copy('unpriced');
@@ -90,11 +43,9 @@ export function SavingsPage() {
     void read(key, controller.signal, async (signal) => {
       const response = await fetch(path, { credentials: 'include', signal });
       if (!response.ok) throw new ServerQueryError(response.status);
-      const result: unknown = await response.json();
-      if (!record(result) || !Array.isArray(result.plans) || !result.plans.every(validPlan)) {
-        throw new Error('Invalid saving catalogue');
-      }
-      return result.plans;
+      const plans = parseSavingCatalogue(await response.json());
+      if (!plans) throw new Error('Invalid saving catalogue');
+      return plans;
     })
       .then((validatedPlans) => {
         if (!controller.signal.aborted) {

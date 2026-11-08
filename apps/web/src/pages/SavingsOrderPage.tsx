@@ -41,29 +41,17 @@ import { useAccountUser } from '../hooks/useAccountUser.js';
 import { getProfileContextRevision, useProfileContextRevision } from '../lib/profile-context.js';
 import { addressReceipt } from '../lib/settings-form.js';
 import { WalletFundingPrompt } from '../components/WalletFundingPrompt.js';
+import {
+  parseSavingCatalogue,
+  type SavingPlan as Plan,
+  type SavingProduct as Product,
+} from '../lib/customer-saving-catalogue.js';
+import {
+  readIntakeProfile,
+  readIntakeAddresses,
+  type IntakeAddress as Address,
+} from '../lib/service-intake-records.js';
 
-interface Product {
-  id: string;
-  title: { fa: string; en: string };
-  description: { fa: string; en: string } | null;
-  price: string | null;
-  status: string;
-  stock_tracking?: boolean;
-  available_count?: number;
-}
-interface Plan extends Product {
-  hardware: Product[];
-  agreement: { versionId: string; title: string; body: string } | null;
-  available: boolean;
-}
-interface Address {
-  id: string;
-  provinceId: string;
-  cityId: string;
-  fullAddress: string;
-  postalCode: string;
-  mainAddress: boolean;
-}
 interface Quote {
   reviewDigest: string;
   plan: { id: string; title: Product['title'] };
@@ -374,16 +362,13 @@ function OwnedSavingsOrderPage() {
     void (async () => {
       try {
         const [profile, catalogue] = await Promise.all([
-          readIntake<{
-            activeProfileId: string | null;
-            profiles: Array<{ id: string; profileType?: string; type?: string }>;
-          }>(
+          readIntake<unknown>(
             queryKeys.profiles.authority(intakeScope, 'saving-intake-profile'),
             '/api/profiles',
             'load',
             { credentials: 'include', signal: controller.signal }
           ),
-          readIntake<{ plans: Plan[] }>(
+          readIntake<unknown>(
             queryKeys.catalogue.detail(intakeScope, 'saving-intake-plans'),
             '/api/saving/plans',
             'load',
@@ -391,12 +376,14 @@ function OwnedSavingsOrderPage() {
           ),
         ]);
         if (controller.signal.aborted) return;
-        if (!Array.isArray(catalogue?.plans)) throw new Error('Invalid saving plans');
-        const active = profile.profiles.find((item) => item.id === profile.activeProfileId);
-        setProfileId(
-          active && (active.profileType ?? active.type) === 'INDIVIDUAL' ? active.id : null
-        );
-        setPlans(catalogue.plans);
+        const plans = parseSavingCatalogue(catalogue);
+        if (!plans) throw new Error('Invalid saving plans');
+        const active = readIntakeProfile(profile);
+        if (active && active.type !== 'INDIVIDUAL' && active.type !== 'LEGAL') {
+          throw new Error('Invalid saving profile type');
+        }
+        setProfileId(active?.type === 'INDIVIDUAL' ? active.id : null);
+        setPlans(plans);
       } catch {
         if (!controller.signal.aborted) setLoadError('intake');
       } finally {
@@ -409,20 +396,20 @@ function OwnedSavingsOrderPage() {
   useEffect(() => {
     if (!profileId || !plans.length) return;
     const controller = new AbortController();
-    void readIntake<{ addresses: Address[] }>(
+    void readIntake<unknown>(
       queryKeys.profiles.list(
         { ...intakeScope, context: 'customer', ownerId: profileId },
         new URLSearchParams({ owner: 'saving-intake-addresses' })
       ),
-      `/api/profiles/${profileId}/addresses`,
+      `/api/profiles/${encodeURIComponent(profileId)}/addresses`,
       'addresses',
       { credentials: 'include', signal: controller.signal }
     )
       .then((result) => {
         if (!controller.signal.aborted) {
-          if (!Array.isArray(result?.addresses)) throw new Error('Invalid saved addresses');
-          const main = result.addresses.find((item) => item.mainAddress);
-          setAddresses(result.addresses);
+          const addresses = readIntakeAddresses(result, profileId);
+          const main = addresses.find((item) => item.mainAddress);
+          setAddresses(addresses);
           setAddressId((current) => current || main?.id || '');
         }
       })

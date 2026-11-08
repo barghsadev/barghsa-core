@@ -104,8 +104,12 @@ for (const locale of ['en', 'fa'] as const)
           addresses: [
             {
               id: 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',
+              profileId,
+              provinceId: '33333333-3333-4333-8333-333333333333',
+              cityId: '44444444-4444-4444-8444-444444444444',
               fullAddress: 'Household installation site',
               postalCode: '1234567890',
+              mainAddress: true,
             },
           ],
         },
@@ -760,7 +764,11 @@ for (const locale of ['en', 'fa'] as const)
             addresses.push(siteAddress);
             return route.fulfill({ status: 201, json: siteAddress });
           }
-          if (++addressReads === 1 && retryAddressRead) return;
+          addressReads++;
+          if (retryAddressRead) {
+            if (addressReads === 1) return;
+            if (addressReads === 2) return route.fulfill({ json: { addresses: [null] } });
+          }
           return route.fulfill({ json: { addresses } });
         });
         await page.route('**/api/geography/provinces', (route) =>
@@ -831,7 +839,14 @@ for (const locale of ['en', 'fa'] as const)
           await expect(page.getByLabel(tSolar('address', locale))).toHaveCount(0);
           expect(draft).toBeNull();
           expect(submission).toBeNull();
-          await error.getByRole('button', { name: tSolar('retry', locale) }).click();
+          const retry = error.getByRole('button', { name: tSolar('retry', locale) });
+          await retry.click();
+          await expect.poll(() => addressReads).toBe(2);
+          await expect(error).toBeVisible();
+          await expect(page.getByLabel(tSolar('address', locale))).toHaveCount(0);
+          expect(draft).toBeNull();
+          expect(submission).toBeNull();
+          await retry.click();
           await expect(page.getByLabel(tSolar('address', locale))).toHaveValue(addresses[0]!.id);
           await expect(error).toHaveCount(0);
         }

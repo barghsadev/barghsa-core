@@ -13,6 +13,7 @@ const profileId = '11111111-1111-4111-8111-111111111111';
 const planId = '22222222-2222-4222-8222-222222222222';
 const hardwareId = '33333333-3333-4333-8333-333333333333';
 const address = {
+  profileId,
   id: '44444444-4444-4444-8444-444444444444',
   fullAddress: 'Saved Site Street',
   postalCode: '1234567890',
@@ -291,14 +292,23 @@ for (const locale of ['en', 'fa'] as const)
     let addresses = 0;
     let addressWrites = 0;
     await page.route('**/api/saving/plans', (route) => {
-      if (++plans > 1) return route.fallback();
+      plans++;
+      if (plans === 2) return route.fulfill({ json: { plans: [null] } });
+      if (plans > 2) return route.fallback();
     });
     await page.route(`**/api/profiles/${profileId}/addresses`, (route) => {
       if (route.request().method() !== 'GET') {
         addressWrites++;
         return route.fallback();
       }
-      if (++addresses > 1) return route.fulfill({ json: { addresses: [] } });
+      addresses++;
+      if (addresses === 2)
+        return route.fulfill({
+          json: {
+            addresses: [{ ...address, profileId: receiptId, fullAddress: 'Foreign address' }],
+          },
+        });
+      if (addresses > 2) return route.fulfill({ json: { addresses: [] } });
     });
     await page.goto(path('saving'));
     const next = button(page, 'electricity.order.next', locale);
@@ -314,19 +324,29 @@ for (const locale of ['en', 'fa'] as const)
     await expect(alert('profileRequired')).toHaveCount(0);
     expect(addresses).toBe(0);
     await retry('intakeLoadError').click();
+    await expect.poll(() => plans).toBe(2);
+    await expect(alert('intakeLoadError')).toBeVisible();
+    await expect(next).toHaveCount(0);
+    expect(addresses).toBe(0);
+    await retry('intakeLoadError').click();
     await expect.poll(() => addresses).toBe(1);
     await page.clock.fastForward(15_001);
     await expect(alert('addressLoadError')).toBeVisible();
     await expect(next).toBeDisabled();
-    expect(plans).toBe(2);
+    expect(plans).toBe(3);
     expect(addresses).toBe(1);
     await retry('addressLoadError').click();
     await expect.poll(() => addresses).toBe(2);
+    await expect(alert('addressLoadError')).toBeVisible();
+    await expect(page.getByText('Foreign address', { exact: true })).toHaveCount(0);
+    await expect(next).toBeDisabled();
+    await retry('addressLoadError').click();
+    await expect.poll(() => addresses).toBe(3);
     await expect(next).toBeEnabled();
     expect(state.saves).toHaveLength(0);
     expect(state.orders).toHaveLength(0);
     expect(addressWrites).toBe(0);
-    expect(plans).toBe(2);
+    expect(plans).toBe(3);
 
     await next.click();
     await page.getByLabel(tSaving('confirmHardware', locale), { exact: true }).check();
@@ -532,6 +552,62 @@ for (const locale of ['en', 'fa'] as const)
     });
     expect(state.orders).toHaveLength(0);
   });
+
+test('saving distinguishes blocked and acknowledged duplicates and allows manual bill review', async ({
+  page,
+}) => {
+  const locale = 'en';
+  const state = await fixture(page, 'saving', locale);
+  const supportBill = '1234567890';
+  const warnedBill = '1234567891';
+  await page.route('**/api/saving/orders/duplicate', (route) => {
+    const { billIdentifier } = route.request().postDataJSON();
+    return route.fulfill({
+      json: {
+        duplicate: true,
+        preventActiveDuplicates: billIdentifier !== warnedBill,
+        existingOrderId: billIdentifier === supportBill ? null : receiptId,
+      },
+    });
+  });
+  const verifications: unknown[] = [];
+  await page.route('**/api/saving/orders/verify-bill', (route) => {
+    verifications.push(route.request().postDataJSON());
+    return verifications.length === 1 ? route.fulfill({ status: 503, json: {} }) : route.fallback();
+  });
+  await open(page, 'saving', locale);
+  const next = button(page, 'electricity.order.next', locale);
+  const bill = input(page, 'saving', locale);
+  const verify = page.getByRole('button', { name: tSaving('verifyBill', locale), exact: true });
+  const acknowledgement = page.getByLabel(tSaving('acknowledgeDuplicate', locale));
+  await expect(page.getByText(tSaving('duplicateOrder', locale), { exact: true })).toBeVisible();
+  await expect(page.getByRole('link', { name: tSaving('openExisting', locale) })).toBeVisible();
+  await expect(next).toBeDisabled();
+  await expect(acknowledgement).toHaveCount(0);
+  await bill.fill(supportBill);
+  await expect(page.getByText(tSaving('duplicateSupport', locale), { exact: true })).toBeVisible();
+  await expect(next).toBeDisabled();
+  await verify.click();
+  await expect(page.getByText(tSaving('manualReview', locale), { exact: true })).toBeVisible();
+  await expect(bill).toHaveValue(supportBill);
+  await verify.click();
+  await expect(page.getByText(tSaving('verified', locale), { exact: true })).toBeVisible();
+  await bill.fill(warnedBill);
+  await expect(
+    page.getByText(tSaving('duplicateAllowedNotice', locale), { exact: true })
+  ).toBeVisible();
+  await expect(next).toBeDisabled();
+  await acknowledgement.check();
+  await expect(next).toBeEnabled();
+  await bill.fill(supportBill);
+  await expect(page.getByText(tSaving('duplicateSupport', locale), { exact: true })).toBeVisible();
+  await expect(next).toBeDisabled();
+  expect(verifications).toEqual([
+    { profileId, billIdentifier: supportBill },
+    { profileId, billIdentifier: supportBill },
+  ]);
+  expect(state.orders).toHaveLength(0);
+});
 
 for (const mode of ['saving', 'solar'] as const)
   for (const locale of ['en', 'fa'] as const) {

@@ -19,6 +19,7 @@ import {
   useState,
   type FormEvent,
   type KeyboardEvent as ReactKeyboardEvent,
+  type ReactNode,
 } from 'react';
 import { tWalletReceipts as t } from '@barghsa/i18n/wallet-receipts';
 import type { Locale } from '@barghsa/i18n/app';
@@ -226,6 +227,17 @@ function formatPaymentDate(value: string | null, locale: Locale): string {
     }).format(d);
   }
   return t('admin.walletReceipts.none', locale);
+}
+
+function receiptDetail(label: string, value: ReactNode, className?: string, dir?: 'ltr') {
+  return (
+    <div>
+      <dt className="text-muted-foreground">{label}</dt>
+      <dd className={className} dir={dir}>
+        {value}
+      </dd>
+    </div>
+  );
 }
 
 export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQueryBinding } = {}) {
@@ -842,18 +854,11 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
     }
   }
 
+  const decisionReadBlocked = loading || !!queueError || detailLoading || detailError;
+  const decisionUnavailable =
+    !selected?.canDecide || acting || stepUpOpen || decisionReadBlocked || accessDenied.current;
   const canConfirmNow = useRef(false);
-  canConfirmNow.current = Boolean(
-    selected?.canDecide &&
-    !acting &&
-    !rejectionBusy &&
-    !stepUpOpen &&
-    !loading &&
-    !queueError &&
-    !detailLoading &&
-    !detailError &&
-    !accessDenied.current
-  );
+  canConfirmNow.current = !decisionUnavailable && !rejectionBusy;
   const reviewReadyNow = useRef(false);
   reviewReadyNow.current = reviewReady;
   function validationPending() {
@@ -925,18 +930,7 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
   }
 
   const canRejectNow = useRef(false);
-  canRejectNow.current = Boolean(
-    selected?.canDecide &&
-    !acting &&
-    !stepUpOpen &&
-    !loading &&
-    !queueError &&
-    !allocationLoading &&
-    !detailLoading &&
-    !detailError &&
-    !confirmationBusy &&
-    !accessDenied.current
-  );
+  canRejectNow.current = !decisionUnavailable && !allocationLoading && !confirmationBusy;
   function handleReject(e: FormEvent) {
     e.preventDefault();
     if (!canRejectNow.current || validationPending()) return;
@@ -1018,7 +1012,7 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
   const confirmationWorking = acting || confirmationBusy || stepUpOpen;
   const rejectionWorking = acting || rejectionBusy;
   const controlsLocked = confirmationWorking || rejectionBusy;
-  const decisionBlocked = controlsLocked || loading || !!queueError || detailLoading || detailError;
+  const decisionBlocked = controlsLocked || decisionReadBlocked;
   const invoiceTarget = invoiceId.trim();
   const usesInvoice = isTransactionUuid(invoiceTarget);
   const allocationUnavailable = allocationLoading || !!allocationError || !allocation;
@@ -1151,56 +1145,40 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
                 </p>
               )}
               <dl className="grid grid-cols-1 gap-2 text-sm">
-                <div>
-                  <dt className="text-muted-foreground">
-                    {t('admin.walletReceipts.amount', locale)}
-                  </dt>
-                  <dd className="font-medium">
-                    {numbers.irrDigits(selected.amount)} {selected.currency}
-                  </dd>
-                </div>
-                <div>
-                  <dt className="text-muted-foreground">
-                    {t('admin.walletReceipts.paymentDate', locale)}
-                  </dt>
-                  <dd>{formatPaymentDate(selected.paymentDate, locale)}</dd>
-                </div>
-                <div>
-                  <dt className="text-muted-foreground">
-                    {t('admin.walletReceipts.payerReference', locale)}
-                  </dt>
-                  <dd className="font-mono text-sm" dir="ltr">
-                    {selected.payerReference ?? t('admin.walletReceipts.none', locale)}
-                  </dd>
-                </div>
-                <div>
-                  <dt className="text-muted-foreground">
-                    {adminText('admin.invoiceReceipts.bankName', locale)}
-                  </dt>
-                  <dd className="break-words">
-                    {selected.bankName ?? t('admin.walletReceipts.none', locale)}
-                  </dd>
-                </div>
-                <div>
-                  <dt className="text-muted-foreground">
-                    {t('admin.walletReceipts.walletId', locale)}
-                  </dt>
-                  <dd className="font-mono text-sm" dir="ltr">
-                    {selected.walletId}
-                  </dd>
-                </div>
-                <div>
-                  <dt className="text-muted-foreground">
-                    {t('admin.walletReceipts.submittedAt', locale)}
-                  </dt>
-                  <dd>{time.format(selected.submittedAt)}</dd>
-                </div>
-                <div>
-                  <dt className="text-muted-foreground">
-                    {t('admin.walletReceipts.note', locale)}
-                  </dt>
-                  <dd>{selected.customerNote ?? t('admin.walletReceipts.none', locale)}</dd>
-                </div>
+                {receiptDetail(
+                  t('admin.walletReceipts.amount', locale),
+                  `${numbers.irrDigits(selected.amount)} ${selected.currency}`,
+                  'font-medium'
+                )}
+                {receiptDetail(
+                  t('admin.walletReceipts.paymentDate', locale),
+                  formatPaymentDate(selected.paymentDate, locale)
+                )}
+                {receiptDetail(
+                  t('admin.walletReceipts.payerReference', locale),
+                  selected.payerReference ?? t('admin.walletReceipts.none', locale),
+                  'font-mono text-sm',
+                  'ltr'
+                )}
+                {receiptDetail(
+                  adminText('admin.invoiceReceipts.bankName', locale),
+                  selected.bankName ?? t('admin.walletReceipts.none', locale),
+                  'break-words'
+                )}
+                {receiptDetail(
+                  t('admin.walletReceipts.walletId', locale),
+                  selected.walletId,
+                  'font-mono text-sm',
+                  'ltr'
+                )}
+                {receiptDetail(
+                  t('admin.walletReceipts.submittedAt', locale),
+                  time.format(selected.submittedAt)
+                )}
+                {receiptDetail(
+                  t('admin.walletReceipts.note', locale),
+                  selected.customerNote ?? t('admin.walletReceipts.none', locale)
+                )}
               </dl>
 
               <div>

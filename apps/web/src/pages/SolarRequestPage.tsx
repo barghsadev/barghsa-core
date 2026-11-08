@@ -27,12 +27,12 @@ import { useLocale } from '../hooks/useLocale.js';
 import { withCsrf } from '../lib/csrf.js';
 import { normalizeProfileDigits } from '../lib/profile-digits.js';
 import { useFormDraft, type DraftSchema } from '../hooks/useFormDraft.js';
+import {
+  readIntakeProfile,
+  readIntakeAddresses,
+  type IntakeAddress as Address,
+} from '../lib/service-intake-records.js';
 
-interface Address {
-  id: string;
-  fullAddress: string;
-  postalCode: string;
-}
 interface SolarReview {
   hash: string;
   data: {
@@ -228,21 +228,21 @@ export function SolarRequestPage() {
     void readWithDeadline(controller.signal, async (signal) => {
       const response = await fetch('/api/profiles', { credentials: 'include', signal });
       if (!response.ok) throw new Error('profile');
-      const profile = (await response.json()) as {
-        activeProfileId: string | null;
-        profiles: Array<{ id: string }>;
-      };
-      const active = profile.profiles.find((item) => item.id === profile.activeProfileId);
+      const active = readIntakeProfile(await response.json());
       if (!active) return { id: '', addresses: [] };
       signal.throwIfAborted();
-      const addressResponse = await fetch(`/api/profiles/${active.id}/addresses`, {
-        credentials: 'include',
-        signal,
-      });
+      const addressResponse = await fetch(
+        `/api/profiles/${encodeURIComponent(active.id)}/addresses`,
+        {
+          credentials: 'include',
+          signal,
+        }
+      );
       if (!addressResponse.ok) throw new Error('addresses');
-      const result = (await addressResponse.json()) as { addresses: Address[] };
-      if (!Array.isArray(result.addresses)) throw new Error('addresses');
-      return { id: active.id, addresses: result.addresses };
+      return {
+        id: active.id,
+        addresses: readIntakeAddresses(await addressResponse.json(), active.id),
+      };
     })
       .then(({ id, addresses: siteAddresses }) => {
         if (controller.signal.aborted) return;

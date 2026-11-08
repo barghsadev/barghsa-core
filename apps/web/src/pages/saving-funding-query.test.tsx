@@ -25,6 +25,7 @@ let pending: boolean;
 const agreement = { versionId: 'agreement-1', title: 'Terms', body: 'Agreement body' };
 const address = {
   id: 'address-1',
+  profileId: 'profile-1',
   provinceId: 'province-1',
   cityId: 'city-1',
   fullAddress: 'Site',

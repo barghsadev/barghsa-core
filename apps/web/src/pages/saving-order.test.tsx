@@ -95,6 +95,32 @@ it.each(['en', 'fa'] as const)(
                       price: '200000',
                       status: 'active',
                     },
+                    {
+                      id: 'depleted-device',
+                      title: { fa: 'ناموجود', en: 'Depleted' },
+                      description: null,
+                      price: null,
+                      status: 'active',
+                      stock_tracking: true,
+                      available_count: 0,
+                    },
+                    {
+                      id: 'stocked-device',
+                      title: { fa: 'موجود', en: 'Stocked' },
+                      description: null,
+                      price: '250000',
+                      status: 'active',
+                      stock_tracking: true,
+                      available_count: 2,
+                    },
+                    {
+                      id: 'retired-device',
+                      title: { fa: 'غیرفعال', en: 'Retired' },
+                      description: null,
+                      price: '300000',
+                      status: 'inactive',
+                      stock_tracking: true,
+                    },
                   ],
                   agreement: { versionId: 'agreement-1', title: 'Terms', body: 'Agreement body' },
                 },
@@ -131,6 +157,18 @@ it.each(['en', 'fa'] as const)(
         expect.objectContaining({ method: 'PUT' })
       );
       expect(container.textContent).toContain(locale === 'fa' ? 'دستگاه' : 'Device');
+      const hardware = (id: string) =>
+        container.querySelector<HTMLInputElement>(`input[value="${id}"]`)!;
+      expect(hardware('depleted-device').disabled).toBe(true);
+      expect(hardware('retired-device').disabled).toBe(true);
+      expect(hardware('stocked-device').disabled).toBe(false);
+      expect(hardware('depleted-device').closest('label')?.textContent).toContain(
+        tSaving('outOfStock', locale)
+      );
+      expect(hardware('stocked-device').closest('label')?.textContent).toContain(
+        tSaving('inStock', locale)
+      );
+
       expect(container.textContent).toContain(
         locale === 'fa'
           ? 'موجودی پس از تأیید کارشناس مشخص می‌شود.'
@@ -357,3 +395,49 @@ for (const locale of ['en', 'fa'] as const)
       }
     }
   );
+
+it.each([
+  [
+    'unsupported profile type',
+    { activeProfileId: 'profile-1', profiles: [{ id: 'profile-1', profileType: 'UNKNOWN' }] },
+    'intakeLoadError',
+  ],
+  [
+    'legal profile',
+    { activeProfileId: 'profile-1', profiles: [{ id: 'profile-1', profileType: 'LEGAL' }] },
+    'profileRequired',
+  ],
+  ['no active profile', { activeProfileId: null, profiles: [] }, 'profileRequired'],
+] as const)('blocks private saving intake for %s', async (_case, profile, message) => {
+  const locale = 'en';
+  document.documentElement.lang = locale;
+  vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
+  const read = vi.fn(async (url: string) => {
+    if (url === '/api/profiles') return Response.json(profile);
+    if (url === '/api/saving/plans') return Response.json({ plans: [] });
+    throw new Error(`Unexpected ${url}`);
+  });
+  vi.stubGlobal('fetch', read);
+  const container = document.createElement('div');
+  document.body.append(container);
+  const root = createRoot(container);
+  try {
+    await act(async () =>
+      root.render(
+        <QueryProvider>
+          <SavingsOrderPage />
+        </QueryProvider>
+      )
+    );
+    expect(container.querySelector('[role=alert]')?.textContent).toContain(
+      tSaving(message, locale)
+    );
+    expect(read.mock.calls.map(([url]) => url).sort()).toEqual([
+      '/api/profiles',
+      '/api/saving/plans',
+    ]);
+  } finally {
+    await act(async () => root.unmount());
+    container.remove();
+  }
+});
