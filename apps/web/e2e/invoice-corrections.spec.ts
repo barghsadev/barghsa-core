@@ -266,6 +266,7 @@ for (const locale of ['fa', 'en'] as const)
           const lookup = panel.getByLabel(fa ? 'شناسه فاکتور اصلی' : 'Original invoice ID', {
             exact: true,
           });
+          await expect(lookup).toHaveAttribute('aria-required', 'true');
           const load = panel.getByRole('button', {
             name: fa ? 'دریافت فاکتور برای اصلاح' : 'Load invoice for correction',
             exact: true,
@@ -280,6 +281,7 @@ for (const locale of ['fa', 'en'] as const)
             { exact: true }
           );
           await expect(reason).toBeVisible();
+          await expect(reason).toHaveAttribute('aria-required', 'true');
           const issue = panel.getByRole('button', {
             name:
               kind === 'replacement'
@@ -300,15 +302,19 @@ for (const locale of ['fa', 'en'] as const)
             const price = panel.getByLabel(fa ? 'قیمت واحد (ریال)' : 'Unit price (IRR)', {
               exact: true,
             });
+            const vat = panel.getByLabel(fa ? 'مالیات بر ارزش افزوده (%)' : 'VAT (%)', {
+              exact: true,
+            });
+            await expect(price).toHaveAttribute('aria-required', 'true');
+            await expect(vat).toHaveAttribute('aria-required', 'true');
             await expect(price).toHaveValue('100000');
             await price.fill(fa ? '۵۰۰۵' : '5005');
-            await panel
-              .getByLabel(fa ? 'مالیات بر ارزش افزوده (%)' : 'VAT (%)', { exact: true })
-              .fill(fa ? '۱۰' : '10');
+            await vat.fill(fa ? '۱۰' : '10');
           } else {
             const amount = panel.getByLabel(fa ? 'مبلغ اصلاح (ریال)' : 'Adjustment amount (IRR)', {
               exact: true,
             });
+            await expect(amount).toHaveAttribute('aria-required', 'true');
             await amount.fill('0');
             await issue.click();
             await expect(amount).toHaveAttribute('aria-invalid', 'true');
@@ -367,6 +373,7 @@ for (const locale of ['fa', 'en'] as const)
           await expect(lookup).toBeDisabled();
           await expect(reason).toBeDisabled();
           const password = dialog.getByLabel(fa ? 'رمز عبور' : 'Password', { exact: true });
+          await expect(password).toHaveAttribute('aria-required', 'true');
           await expect(password).toBeFocused();
           await password.fill('test-only');
           await approveRiskConfirmation(page, locale, 'financial');

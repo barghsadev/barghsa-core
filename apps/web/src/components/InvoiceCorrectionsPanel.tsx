@@ -175,6 +175,7 @@ function OwnedInvoiceCorrectionsPanel() {
           <Input
             id="correction-invoice-id"
             {...lookup.bind('invoiceId')}
+            aria-required="true"
             dir="ltr"
             autoComplete="off"
             value={invoiceId}

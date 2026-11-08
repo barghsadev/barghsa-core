@@ -65,6 +65,7 @@ export default function RecoveryContactForm() {
             <Input
               id={`recovery-${key}`}
               required
+              aria-required="true"
               value={value}
               dir="ltr"
               autoComplete={key === 'code' ? 'one-time-code' : 'off'}

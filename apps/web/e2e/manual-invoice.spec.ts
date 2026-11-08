@@ -185,9 +185,11 @@ for (const locale of ['fa', 'en'] as const)
       await issue.click();
       await expect(panel.getByRole('combobox')).toHaveAttribute('aria-invalid', 'true');
       expect(previews).toHaveLength(0);
-      await panel
-        .getByRole('combobox', { name: fa ? 'پروفایل مشتری' : 'Customer profile' })
-        .selectOption(profileId);
+      const profile = panel.getByRole('combobox', {
+        name: fa ? 'پروفایل مشتری' : 'Customer profile',
+      });
+      await expect(profile).toHaveAttribute('aria-required', 'true');
+      await profile.selectOption(profileId);
       const description = panel.getByRole('textbox', {
         name: fa ? 'شرح ردیف' : 'Description',
         exact: true,
@@ -201,6 +203,8 @@ for (const locale of ['fa', 'en'] as const)
         name: fa ? 'مالیات بر ارزش افزوده (%)' : 'VAT (%)',
         exact: true,
       });
+      for (const field of [description, quantity, price, vat])
+        await expect(field).toHaveAttribute('aria-required', 'true');
       await description.fill(fa ? 'برق مصرفی' : 'Electricity');
       await price.fill(fa ? '۵۵۰۵۵' : '55055');
       await vat.fill('100.01');
@@ -211,6 +215,8 @@ for (const locale of ['fa', 'en'] as const)
       await panel
         .getByRole('button', { name: fa ? 'افزودن ردیف' : 'Add line', exact: true })
         .click();
+      for (const field of [description, quantity, price, vat])
+        await expect(field.nth(1)).toHaveAttribute('aria-required', 'true');
       await description.nth(1).fill(fa ? 'خدمات بدون مالیات' : 'Untaxed service');
       await quantity.nth(1).fill(fa ? '۲' : '2');
       await price.nth(1).fill(fa ? '۱۰۰' : '100');
@@ -273,6 +279,7 @@ for (const locale of ['fa', 'en'] as const)
       });
       await expect(dialog).toBeVisible();
       const password = dialog.getByLabel(fa ? 'رمز عبور' : 'Password', { exact: true });
+      await expect(password).toHaveAttribute('aria-required', 'true');
       await expect(password).toBeFocused();
       await password.fill('test-only');
       await approveRiskConfirmation(page, locale, 'financial');

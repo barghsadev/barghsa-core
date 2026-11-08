@@ -22,6 +22,17 @@ for (const locale of ['en', 'fa'] as const) {
       return route.fulfill({ status: fail ? 401 : 200, json: fail ? {} : { verified: true } });
     });
     await page.goto('/support');
+    for (const key of ['caseId', 'challengeId'] as const) {
+      await expect(
+        page.getByLabel(t(`auth.recovery.${key}`, locale), { exact: true })
+      ).toHaveAttribute('aria-required', 'true');
+    }
+    const digits = page
+      .getByRole('group', { name: t('auth.otp.inputLabel', locale) })
+      .getByRole('textbox');
+    await expect(digits).toHaveCount(6);
+    for (const input of await digits.all())
+      await expect(input).toHaveAttribute('aria-required', 'true');
     await page.locator('#recovery-caseId').fill(id);
     await page.locator('#recovery-challengeId').fill(challengeId);
     const digit = page.getByRole('textbox', {
@@ -55,7 +66,7 @@ for (const locale of ['en', 'fa'] as const) {
       true
     );
     await page.locator('form:has(#recovery-caseId)').screenshot({
-      path: `/Users/majid/.local/state/barghsa-manual-batches/release-0.2-closure/recovery-public-${locale}-${test.info().project.name}.png`,
+      path: test.info().outputPath('recovery-public.png'),
       fullPage: true,
     });
   });
@@ -104,12 +115,25 @@ for (const locale of ['en', 'fa'] as const) {
       return route.fulfill({ json: { id, state } });
     });
     await page.goto('/admin/crm/recovery');
+    for (const key of [
+      'profileId',
+      'newLogin',
+      'supportReference',
+      'reason',
+      'evidence',
+      'caseId',
+    ] as const)
+      await expect(
+        page.getByLabel(t(`auth.recovery.${key}`, locale), { exact: true })
+      ).toHaveAttribute('aria-required', 'true');
     await page.locator('#recovery-case-id').fill(id);
     await page
       .getByRole('button', { name: t('auth.recovery.load', locale), exact: true })
       .first()
       .click();
     await expect(page.getByText('new@example.test', { exact: true })).toBeVisible();
+    const notes = page.getByLabel(t('auth.recovery.notes', locale), { exact: true });
+    await expect(notes).toHaveAttribute('aria-required', 'true');
     const apply = page.getByRole('button', { name: t('auth.recovery.apply', locale), exact: true });
     await apply.click();
     const dialog = page.getByRole('dialog');
@@ -120,17 +144,24 @@ for (const locale of ['en', 'fa'] as const) {
       (await new AxeBuilder({ page }).include('[data-slot="dialog-content"]').analyze()).violations
     ).toEqual([]);
     await page.screenshot({
-      path: `/Users/majid/.local/state/barghsa-manual-batches/release-0.2-closure/recovery-staff-${locale}-${test.info().project.name}.png`,
+      path: test.info().outputPath('recovery-staff.png'),
       fullPage: true,
     });
     // No recovery command executes merely by opening its explicit confirmation.
     expect(writes).toHaveLength(0);
     await page.keyboard.press('Escape');
-    denied = true;
-    await page
+    const reload = page
       .getByRole('button', { name: t('auth.recovery.load', locale), exact: true })
-      .last()
-      .click();
+      .last();
+    state = 'applied';
+    await reload.click();
+    for (const key of ['oldNotice', 'newNotice'] as const)
+      await expect(
+        page.getByLabel(t(`auth.recovery.${key}`, locale), { exact: true })
+      ).toHaveAttribute('aria-required', 'true');
+    await expect(notes).not.toHaveAttribute('aria-required', 'true');
+    denied = true;
+    await reload.click();
     await expect(page.getByText('new@example.test', { exact: true })).toHaveCount(0);
     await expect(
       page.getByRole('alert').filter({ hasText: t('auth.recovery.error', locale) })

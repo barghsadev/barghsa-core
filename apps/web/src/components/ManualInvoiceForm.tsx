@@ -881,6 +881,7 @@ function OwnedManualInvoiceForm({
                 disabled={locked || !ready}
                 className="w-full"
                 required
+                aria-required="true"
               >
                 <NativeSelectOption value="" disabled>
                   {text('chooseProfile')}
@@ -921,6 +922,7 @@ function OwnedManualInvoiceForm({
                 id="correction-reason"
                 {...draft.bind('reason')}
                 required
+                aria-required="true"
                 maxLength={1000}
                 disabled={locked || unavailable}
                 value={reason}
@@ -940,6 +942,7 @@ function OwnedManualInvoiceForm({
                 id="correction-amount"
                 {...draft.bind('amount')}
                 required
+                aria-required="true"
                 dir="ltr"
                 inputMode="text"
                 maxLength={20}
@@ -990,6 +993,7 @@ function OwnedManualInvoiceForm({
                         id={`manual-description-${line.id}`}
                         {...draft.bind(`lines.${line.id}.description`)}
                         required
+                        aria-required="true"
                         maxLength={1000}
                         value={line.description}
                         onChange={(event) => updateLine(line.id, 'description', event.target.value)}
@@ -1008,6 +1012,7 @@ function OwnedManualInvoiceForm({
                         id={`manual-quantity-${line.id}`}
                         {...draft.bind(`lines.${line.id}.quantity`)}
                         required
+                        aria-required="true"
                         inputMode="numeric"
                         dir="ltr"
                         maxLength={10}
@@ -1028,6 +1033,7 @@ function OwnedManualInvoiceForm({
                         id={`manual-price-${line.id}`}
                         {...draft.bind(`lines.${line.id}.unitPrice`)}
                         required
+                        aria-required="true"
                         inputMode="numeric"
                         dir="ltr"
                         maxLength={19}
@@ -1046,6 +1052,7 @@ function OwnedManualInvoiceForm({
                         id={`manual-vat-${line.id}`}
                         {...draft.bind(`lines.${line.id}.vat`)}
                         required
+                        aria-required="true"
                         inputMode="decimal"
                         dir="ltr"
                         maxLength={6}
@@ -1359,6 +1366,7 @@ function OwnedManualInvoiceForm({
                   type="password"
                   autoComplete="current-password"
                   required
+                  aria-required="true"
                   value={password}
                   disabled={acting || unavailable}
                   aria-invalid={Boolean(stepError)}

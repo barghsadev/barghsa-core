@@ -159,6 +159,7 @@ function RecoveryWorkflow({ actor }: { actor: string | null }) {
               <Input
                 id={`recovery-${key}`}
                 required
+                aria-required="true"
                 value={draft[key]}
                 onChange={(e) => setDraft((old) => ({ ...old, [key]: e.target.value }))}
               />
@@ -170,6 +171,7 @@ function RecoveryWorkflow({ actor }: { actor: string | null }) {
               id="recovery-evidence"
               type="file"
               required
+              aria-required="true"
               multiple
               accept="application/pdf,image/jpeg,image/png,image/webp"
               onChange={(e) => setFiles(Array.from(e.target.files ?? []))}
@@ -192,6 +194,7 @@ function RecoveryWorkflow({ actor }: { actor: string | null }) {
           <Input
             id="recovery-case-id"
             required
+            aria-required="true"
             value={caseId}
             disabled={busy || !!action}
             onChange={(e) => {
@@ -259,6 +262,11 @@ function RecoveryWorkflow({ actor }: { actor: string | null }) {
           <Label htmlFor="recovery-notes">{t('auth.recovery.notes', locale)}</Label>
           <Input
             id="recovery-notes"
+            aria-required={
+              ['open', 'approved'].includes(data.state) && data.createdBy !== actor
+                ? true
+                : undefined
+            }
             value={notes}
             disabled={blocked}
             onChange={(e) => setNotes(e.target.value)}
@@ -313,6 +321,7 @@ function RecoveryWorkflow({ actor }: { actor: string | null }) {
                   </Label>
                   <Input
                     id={`recovery-notice-${key}`}
+                    aria-required="true"
                     disabled={blocked}
                     value={notices[key]}
                     onChange={(e) => setNotices((old) => ({ ...old, [key]: e.target.value }))}

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-08T00:12:25+00:00",
-  "source_commit": "501585d440fd84058a37ec7f75dd388146a6d08c",
+  "updated": "2026-11-08T00:21:58+00:00",
+  "source_commit": "4e51b652dc16d3d6f7cadc221a47447f2e14b594",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -24262,7 +24262,7 @@
             },
             {
               "path": "apps/web/e2e/account-recovery-closure.spec.ts",
-              "sha256": "5cc48fd3da675f4c08749e4cbb32c3b7a0f70d78d3f14a9040100d3abfee9887"
+              "sha256": "efd3c7fa73b3abf7e6266aa05bcccb1791c0bf0db7761fe1f451bb3167208a13"
             },
             {
               "path": "apps/web/e2e/electricity-journey.spec.ts",
@@ -24278,7 +24278,7 @@
             },
             {
               "path": "apps/web/src/components/RecoveryContactForm.tsx",
-              "sha256": "8679e0f8936d91b5db04bb080f52ff093de9a519994e4e6ac914494de25b4cc8"
+              "sha256": "2ea70c8a3c3d0d5b9d5149e802e0892e1cf871b91013127a0afcfd48775c5db2"
             },
             {
               "path": "apps/web/src/components/WizardLeaveDialog.tsx",
@@ -24290,7 +24290,7 @@
             },
             {
               "path": "apps/web/src/pages/AccountRecoveryPage.tsx",
-              "sha256": "f2eeb0fb100fab045ae6e116e40965d65f4952ce40f36578b651388165f47180"
+              "sha256": "5b1fded05c7642b0f3a61cfd0a87ad4f392ffe3831ea2db85c290d0bed0ebde9"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -26719,7 +26719,7 @@
             },
             {
               "path": "apps/web/src/components/OtpInput.tsx",
-              "sha256": "dcc1f52208c4d5cb0ecba24bf7546758863182f9f823b7e5b816e20fbca76988"
+              "sha256": "44a8f0443965e4bf51c53854162a118add9cd9d6f5ca5cf704351496c1a26a3e"
             },
             {
               "path": "apps/web/src/lib/public-auth-fetch.ts",
@@ -27395,7 +27395,7 @@
             },
             {
               "path": "apps/web/src/components/OtpInput.tsx",
-              "sha256": "dcc1f52208c4d5cb0ecba24bf7546758863182f9f823b7e5b816e20fbca76988"
+              "sha256": "44a8f0443965e4bf51c53854162a118add9cd9d6f5ca5cf704351496c1a26a3e"
             },
             {
               "path": "apps/web/src/lib/public-auth-fetch.ts",
@@ -28552,7 +28552,7 @@
             },
             {
               "path": "apps/web/e2e/account-recovery-closure.spec.ts",
-              "sha256": "5cc48fd3da675f4c08749e4cbb32c3b7a0f70d78d3f14a9040100d3abfee9887"
+              "sha256": "efd3c7fa73b3abf7e6266aa05bcccb1791c0bf0db7761fe1f451bb3167208a13"
             },
             {
               "path": "apps/web/e2e/electricity-journey.spec.ts",
@@ -28568,7 +28568,7 @@
             },
             {
               "path": "apps/web/src/components/RecoveryContactForm.tsx",
-              "sha256": "8679e0f8936d91b5db04bb080f52ff093de9a519994e4e6ac914494de25b4cc8"
+              "sha256": "2ea70c8a3c3d0d5b9d5149e802e0892e1cf871b91013127a0afcfd48775c5db2"
             },
             {
               "path": "apps/web/src/components/WizardLeaveDialog.tsx",
@@ -28580,7 +28580,7 @@
             },
             {
               "path": "apps/web/src/pages/AccountRecoveryPage.tsx",
-              "sha256": "f2eeb0fb100fab045ae6e116e40965d65f4952ce40f36578b651388165f47180"
+              "sha256": "5b1fded05c7642b0f3a61cfd0a87ad4f392ffe3831ea2db85c290d0bed0ebde9"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -114297,7 +114297,7 @@
             },
             {
               "path": "apps/web/e2e/manual-invoice.spec.ts",
-              "sha256": "bbe3704042000cca9aaa2e52270d7a6f588ca5d9086b6fd99bd483ab5d943f70"
+              "sha256": "7e65a7550d2d1e35fcb14712df620751d442c84b23b735df065265c869055b15"
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.test.tsx",
@@ -114305,7 +114305,7 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "8574d79e67a5eb5369d64f24cfa443ae3b4925c9e37ed750bb2defc9b6adeaa2"
+              "sha256": "4a57a6ccff2cb73e396887ee8361c8336a1a515fdddb6e3b5360f3930e34189a"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -115568,7 +115568,7 @@
             },
             {
               "path": "apps/web/e2e/manual-invoice.spec.ts",
-              "sha256": "bbe3704042000cca9aaa2e52270d7a6f588ca5d9086b6fd99bd483ab5d943f70"
+              "sha256": "7e65a7550d2d1e35fcb14712df620751d442c84b23b735df065265c869055b15"
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.test.tsx",
@@ -115576,7 +115576,7 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "8574d79e67a5eb5369d64f24cfa443ae3b4925c9e37ed750bb2defc9b6adeaa2"
+              "sha256": "4a57a6ccff2cb73e396887ee8361c8336a1a515fdddb6e3b5360f3930e34189a"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -116804,7 +116804,7 @@
             },
             {
               "path": "apps/web/e2e/manual-invoice.spec.ts",
-              "sha256": "bbe3704042000cca9aaa2e52270d7a6f588ca5d9086b6fd99bd483ab5d943f70"
+              "sha256": "7e65a7550d2d1e35fcb14712df620751d442c84b23b735df065265c869055b15"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.tsx",
@@ -117421,7 +117421,7 @@
             },
             {
               "path": "apps/web/e2e/manual-invoice.spec.ts",
-              "sha256": "bbe3704042000cca9aaa2e52270d7a6f588ca5d9086b6fd99bd483ab5d943f70"
+              "sha256": "7e65a7550d2d1e35fcb14712df620751d442c84b23b735df065265c869055b15"
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.test.tsx",
@@ -117429,7 +117429,7 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "8574d79e67a5eb5369d64f24cfa443ae3b4925c9e37ed750bb2defc9b6adeaa2"
+              "sha256": "4a57a6ccff2cb73e396887ee8361c8336a1a515fdddb6e3b5360f3930e34189a"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -118691,7 +118691,7 @@
             },
             {
               "path": "apps/web/e2e/manual-invoice.spec.ts",
-              "sha256": "bbe3704042000cca9aaa2e52270d7a6f588ca5d9086b6fd99bd483ab5d943f70"
+              "sha256": "7e65a7550d2d1e35fcb14712df620751d442c84b23b735df065265c869055b15"
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.test.tsx",
@@ -118699,7 +118699,7 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "8574d79e67a5eb5369d64f24cfa443ae3b4925c9e37ed750bb2defc9b6adeaa2"
+              "sha256": "4a57a6ccff2cb73e396887ee8361c8336a1a515fdddb6e3b5360f3930e34189a"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -119962,7 +119962,7 @@
             },
             {
               "path": "apps/web/e2e/manual-invoice.spec.ts",
-              "sha256": "bbe3704042000cca9aaa2e52270d7a6f588ca5d9086b6fd99bd483ab5d943f70"
+              "sha256": "7e65a7550d2d1e35fcb14712df620751d442c84b23b735df065265c869055b15"
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.test.tsx",
@@ -119970,7 +119970,7 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "8574d79e67a5eb5369d64f24cfa443ae3b4925c9e37ed750bb2defc9b6adeaa2"
+              "sha256": "4a57a6ccff2cb73e396887ee8361c8336a1a515fdddb6e3b5360f3930e34189a"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -121232,7 +121232,7 @@
             },
             {
               "path": "apps/web/e2e/manual-invoice.spec.ts",
-              "sha256": "bbe3704042000cca9aaa2e52270d7a6f588ca5d9086b6fd99bd483ab5d943f70"
+              "sha256": "7e65a7550d2d1e35fcb14712df620751d442c84b23b735df065265c869055b15"
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.test.tsx",
@@ -121240,7 +121240,7 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "8574d79e67a5eb5369d64f24cfa443ae3b4925c9e37ed750bb2defc9b6adeaa2"
+              "sha256": "4a57a6ccff2cb73e396887ee8361c8336a1a515fdddb6e3b5360f3930e34189a"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -122520,7 +122520,7 @@
             },
             {
               "path": "apps/web/e2e/manual-invoice.spec.ts",
-              "sha256": "bbe3704042000cca9aaa2e52270d7a6f588ca5d9086b6fd99bd483ab5d943f70"
+              "sha256": "7e65a7550d2d1e35fcb14712df620751d442c84b23b735df065265c869055b15"
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.test.tsx",
@@ -122528,7 +122528,7 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "8574d79e67a5eb5369d64f24cfa443ae3b4925c9e37ed750bb2defc9b6adeaa2"
+              "sha256": "4a57a6ccff2cb73e396887ee8361c8336a1a515fdddb6e3b5360f3930e34189a"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -123790,7 +123790,7 @@
             },
             {
               "path": "apps/web/e2e/manual-invoice.spec.ts",
-              "sha256": "bbe3704042000cca9aaa2e52270d7a6f588ca5d9086b6fd99bd483ab5d943f70"
+              "sha256": "7e65a7550d2d1e35fcb14712df620751d442c84b23b735df065265c869055b15"
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.test.tsx",
@@ -123798,7 +123798,7 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "8574d79e67a5eb5369d64f24cfa443ae3b4925c9e37ed750bb2defc9b6adeaa2"
+              "sha256": "4a57a6ccff2cb73e396887ee8361c8336a1a515fdddb6e3b5360f3930e34189a"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -125057,7 +125057,7 @@
             },
             {
               "path": "apps/web/e2e/invoice-corrections.spec.ts",
-              "sha256": "dda46448d56144f30cacdbae493113b774650bb0fad0fcd9a3fba6128faa8906"
+              "sha256": "266e9ef07f1d91de4d01567aba71983d3e46a709432d2b78ba5818a56835173d"
             },
             {
               "path": "apps/web/e2e/invoice-customer-deadline.spec.ts",
@@ -126049,7 +126049,7 @@
             },
             {
               "path": "apps/web/e2e/invoice-corrections.spec.ts",
-              "sha256": "dda46448d56144f30cacdbae493113b774650bb0fad0fcd9a3fba6128faa8906"
+              "sha256": "266e9ef07f1d91de4d01567aba71983d3e46a709432d2b78ba5818a56835173d"
             },
             {
               "path": "apps/web/e2e/invoice-customer-deadline.spec.ts",
@@ -127041,7 +127041,7 @@
             },
             {
               "path": "apps/web/e2e/invoice-corrections.spec.ts",
-              "sha256": "dda46448d56144f30cacdbae493113b774650bb0fad0fcd9a3fba6128faa8906"
+              "sha256": "266e9ef07f1d91de4d01567aba71983d3e46a709432d2b78ba5818a56835173d"
             },
             {
               "path": "apps/web/e2e/invoice-customer-deadline.spec.ts",
@@ -128033,7 +128033,7 @@
             },
             {
               "path": "apps/web/e2e/invoice-corrections.spec.ts",
-              "sha256": "dda46448d56144f30cacdbae493113b774650bb0fad0fcd9a3fba6128faa8906"
+              "sha256": "266e9ef07f1d91de4d01567aba71983d3e46a709432d2b78ba5818a56835173d"
             },
             {
               "path": "apps/web/e2e/invoice-customer-deadline.spec.ts",
@@ -129025,7 +129025,7 @@
             },
             {
               "path": "apps/web/e2e/invoice-corrections.spec.ts",
-              "sha256": "dda46448d56144f30cacdbae493113b774650bb0fad0fcd9a3fba6128faa8906"
+              "sha256": "266e9ef07f1d91de4d01567aba71983d3e46a709432d2b78ba5818a56835173d"
             },
             {
               "path": "apps/web/e2e/invoice-customer-deadline.spec.ts",
@@ -130017,7 +130017,7 @@
             },
             {
               "path": "apps/web/e2e/invoice-corrections.spec.ts",
-              "sha256": "dda46448d56144f30cacdbae493113b774650bb0fad0fcd9a3fba6128faa8906"
+              "sha256": "266e9ef07f1d91de4d01567aba71983d3e46a709432d2b78ba5818a56835173d"
             },
             {
               "path": "apps/web/e2e/invoice-customer-deadline.spec.ts",
@@ -131105,7 +131105,7 @@
             },
             {
               "path": "apps/web/e2e/invoice-corrections.spec.ts",
-              "sha256": "dda46448d56144f30cacdbae493113b774650bb0fad0fcd9a3fba6128faa8906"
+              "sha256": "266e9ef07f1d91de4d01567aba71983d3e46a709432d2b78ba5818a56835173d"
             },
             {
               "path": "apps/web/e2e/invoice-customer-deadline.spec.ts",
@@ -132213,7 +132213,7 @@
             },
             {
               "path": "apps/web/e2e/invoice-corrections.spec.ts",
-              "sha256": "dda46448d56144f30cacdbae493113b774650bb0fad0fcd9a3fba6128faa8906"
+              "sha256": "266e9ef07f1d91de4d01567aba71983d3e46a709432d2b78ba5818a56835173d"
             },
             {
               "path": "apps/web/e2e/invoice-customer-deadline.spec.ts",
@@ -133301,7 +133301,7 @@
             },
             {
               "path": "apps/web/e2e/invoice-corrections.spec.ts",
-              "sha256": "dda46448d56144f30cacdbae493113b774650bb0fad0fcd9a3fba6128faa8906"
+              "sha256": "266e9ef07f1d91de4d01567aba71983d3e46a709432d2b78ba5818a56835173d"
             },
             {
               "path": "apps/web/e2e/invoice-customer-deadline.spec.ts",
@@ -134409,7 +134409,7 @@
             },
             {
               "path": "apps/web/e2e/invoice-corrections.spec.ts",
-              "sha256": "dda46448d56144f30cacdbae493113b774650bb0fad0fcd9a3fba6128faa8906"
+              "sha256": "266e9ef07f1d91de4d01567aba71983d3e46a709432d2b78ba5818a56835173d"
             },
             {
               "path": "apps/web/e2e/invoice-customer-deadline.spec.ts",
@@ -135381,7 +135381,7 @@
             },
             {
               "path": "apps/web/e2e/invoice-corrections.spec.ts",
-              "sha256": "dda46448d56144f30cacdbae493113b774650bb0fad0fcd9a3fba6128faa8906"
+              "sha256": "266e9ef07f1d91de4d01567aba71983d3e46a709432d2b78ba5818a56835173d"
             },
             {
               "path": "apps/web/e2e/invoice-customer-deadline.spec.ts",
@@ -135401,7 +135401,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceCorrectionsPanel.tsx",
-              "sha256": "7203ac95ba6d81d9e7de0ddeda7e47ee98488fd6eb60b21d520de73473d07655"
+              "sha256": "ebf20e782877f50e037abc79f86a348213a45b8902b47932275c1a5063ab9c42"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.tsx",
@@ -136159,7 +136159,7 @@
             },
             {
               "path": "apps/web/e2e/invoice-corrections.spec.ts",
-              "sha256": "dda46448d56144f30cacdbae493113b774650bb0fad0fcd9a3fba6128faa8906"
+              "sha256": "266e9ef07f1d91de4d01567aba71983d3e46a709432d2b78ba5818a56835173d"
             },
             {
               "path": "apps/web/e2e/invoice-customer-deadline.spec.ts",
@@ -136179,7 +136179,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceCorrectionsPanel.tsx",
-              "sha256": "7203ac95ba6d81d9e7de0ddeda7e47ee98488fd6eb60b21d520de73473d07655"
+              "sha256": "ebf20e782877f50e037abc79f86a348213a45b8902b47932275c1a5063ab9c42"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.tsx",
@@ -136915,7 +136915,7 @@
             },
             {
               "path": "apps/web/e2e/invoice-corrections.spec.ts",
-              "sha256": "dda46448d56144f30cacdbae493113b774650bb0fad0fcd9a3fba6128faa8906"
+              "sha256": "266e9ef07f1d91de4d01567aba71983d3e46a709432d2b78ba5818a56835173d"
             },
             {
               "path": "apps/web/e2e/invoice-customer-deadline.spec.ts",
@@ -290243,7 +290243,7 @@
             },
             {
               "path": "apps/web/e2e/account-recovery-closure.spec.ts",
-              "sha256": "5cc48fd3da675f4c08749e4cbb32c3b7a0f70d78d3f14a9040100d3abfee9887"
+              "sha256": "efd3c7fa73b3abf7e6266aa05bcccb1791c0bf0db7761fe1f451bb3167208a13"
             },
             {
               "path": "apps/web/e2e/electricity-journey.spec.ts",
@@ -290259,7 +290259,7 @@
             },
             {
               "path": "apps/web/src/components/RecoveryContactForm.tsx",
-              "sha256": "8679e0f8936d91b5db04bb080f52ff093de9a519994e4e6ac914494de25b4cc8"
+              "sha256": "2ea70c8a3c3d0d5b9d5149e802e0892e1cf871b91013127a0afcfd48775c5db2"
             },
             {
               "path": "apps/web/src/components/WizardLeaveDialog.tsx",
@@ -290271,7 +290271,7 @@
             },
             {
               "path": "apps/web/src/pages/AccountRecoveryPage.tsx",
-              "sha256": "f2eeb0fb100fab045ae6e116e40965d65f4952ce40f36578b651388165f47180"
+              "sha256": "5b1fded05c7642b0f3a61cfd0a87ad4f392ffe3831ea2db85c290d0bed0ebde9"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -297786,7 +297786,7 @@
             },
             {
               "path": "apps/web/e2e/account-recovery-closure.spec.ts",
-              "sha256": "5cc48fd3da675f4c08749e4cbb32c3b7a0f70d78d3f14a9040100d3abfee9887"
+              "sha256": "efd3c7fa73b3abf7e6266aa05bcccb1791c0bf0db7761fe1f451bb3167208a13"
             },
             {
               "path": "apps/web/e2e/electricity-journey.spec.ts",
@@ -297802,7 +297802,7 @@
             },
             {
               "path": "apps/web/src/components/RecoveryContactForm.tsx",
-              "sha256": "8679e0f8936d91b5db04bb080f52ff093de9a519994e4e6ac914494de25b4cc8"
+              "sha256": "2ea70c8a3c3d0d5b9d5149e802e0892e1cf871b91013127a0afcfd48775c5db2"
             },
             {
               "path": "apps/web/src/components/WizardLeaveDialog.tsx",
@@ -297814,7 +297814,7 @@
             },
             {
               "path": "apps/web/src/pages/AccountRecoveryPage.tsx",
-              "sha256": "f2eeb0fb100fab045ae6e116e40965d65f4952ce40f36578b651388165f47180"
+              "sha256": "5b1fded05c7642b0f3a61cfd0a87ad4f392ffe3831ea2db85c290d0bed0ebde9"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -318325,7 +318325,7 @@
             },
             {
               "path": "apps/web/e2e/account-recovery-closure.spec.ts",
-              "sha256": "5cc48fd3da675f4c08749e4cbb32c3b7a0f70d78d3f14a9040100d3abfee9887"
+              "sha256": "efd3c7fa73b3abf7e6266aa05bcccb1791c0bf0db7761fe1f451bb3167208a13"
             },
             {
               "path": "apps/web/e2e/electricity-journey.spec.ts",
@@ -318341,7 +318341,7 @@
             },
             {
               "path": "apps/web/src/components/RecoveryContactForm.tsx",
-              "sha256": "8679e0f8936d91b5db04bb080f52ff093de9a519994e4e6ac914494de25b4cc8"
+              "sha256": "2ea70c8a3c3d0d5b9d5149e802e0892e1cf871b91013127a0afcfd48775c5db2"
             },
             {
               "path": "apps/web/src/components/WizardLeaveDialog.tsx",
@@ -318353,7 +318353,7 @@
             },
             {
               "path": "apps/web/src/pages/AccountRecoveryPage.tsx",
-              "sha256": "f2eeb0fb100fab045ae6e116e40965d65f4952ce40f36578b651388165f47180"
+              "sha256": "5b1fded05c7642b0f3a61cfd0a87ad4f392ffe3831ea2db85c290d0bed0ebde9"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -348954,7 +348954,7 @@
             },
             {
               "path": "apps/web/e2e/account-recovery-closure.spec.ts",
-              "sha256": "5cc48fd3da675f4c08749e4cbb32c3b7a0f70d78d3f14a9040100d3abfee9887"
+              "sha256": "efd3c7fa73b3abf7e6266aa05bcccb1791c0bf0db7761fe1f451bb3167208a13"
             },
             {
               "path": "apps/web/e2e/electricity-journey.spec.ts",
@@ -348970,7 +348970,7 @@
             },
             {
               "path": "apps/web/src/components/RecoveryContactForm.tsx",
-              "sha256": "8679e0f8936d91b5db04bb080f52ff093de9a519994e4e6ac914494de25b4cc8"
+              "sha256": "2ea70c8a3c3d0d5b9d5149e802e0892e1cf871b91013127a0afcfd48775c5db2"
             },
             {
               "path": "apps/web/src/components/WizardLeaveDialog.tsx",
@@ -348982,7 +348982,7 @@
             },
             {
               "path": "apps/web/src/pages/AccountRecoveryPage.tsx",
-              "sha256": "f2eeb0fb100fab045ae6e116e40965d65f4952ce40f36578b651388165f47180"
+              "sha256": "5b1fded05c7642b0f3a61cfd0a87ad4f392ffe3831ea2db85c290d0bed0ebde9"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -492773,7 +492773,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceCorrectionsPanel.tsx",
-              "sha256": "7203ac95ba6d81d9e7de0ddeda7e47ee98488fd6eb60b21d520de73473d07655"
+              "sha256": "ebf20e782877f50e037abc79f86a348213a45b8902b47932275c1a5063ab9c42"
             },
             {
               "path": "apps/web/src/components/InvoiceDueAtPanel.tsx",
@@ -494281,7 +494281,7 @@
             },
             {
               "path": "apps/web/src/pages/AccountRecoveryPage.tsx",
-              "sha256": "f2eeb0fb100fab045ae6e116e40965d65f4952ce40f36578b651388165f47180"
+              "sha256": "5b1fded05c7642b0f3a61cfd0a87ad4f392ffe3831ea2db85c290d0bed0ebde9"
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
@@ -495163,7 +495163,7 @@
             },
             {
               "path": "apps/web/src/pages/AccountRecoveryPage.tsx",
-              "sha256": "f2eeb0fb100fab045ae6e116e40965d65f4952ce40f36578b651388165f47180"
+              "sha256": "5b1fded05c7642b0f3a61cfd0a87ad4f392ffe3831ea2db85c290d0bed0ebde9"
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
@@ -495986,7 +495986,7 @@
             },
             {
               "path": "apps/web/src/pages/AccountRecoveryPage.tsx",
-              "sha256": "f2eeb0fb100fab045ae6e116e40965d65f4952ce40f36578b651388165f47180"
+              "sha256": "5b1fded05c7642b0f3a61cfd0a87ad4f392ffe3831ea2db85c290d0bed0ebde9"
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
@@ -497590,7 +497590,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceCorrectionsPanel.tsx",
-              "sha256": "7203ac95ba6d81d9e7de0ddeda7e47ee98488fd6eb60b21d520de73473d07655"
+              "sha256": "ebf20e782877f50e037abc79f86a348213a45b8902b47932275c1a5063ab9c42"
             },
             {
               "path": "apps/web/src/components/InvoiceDueAtPanel.tsx",
@@ -516704,7 +516704,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Service checkout, invoice and wallet bank receipts, and individual and legal onboarding have current required-state and inline error evidence. Verify remaining native and conditional fields in recovery, staff invoicing and other staff/customer forms against each validator before acceptance."
+        "Checkout, bank receipts, onboarding, staff manual invoices and both correction modes, claimant and staff recovery, and the shared OTP controls have current required-state evidence. Verify other remaining staff/customer forms for accessible names, conditional required states and linked field errors before acceptance."
       ],
       "owner": null,
       "depends_on": [],
@@ -516728,7 +516728,8 @@
           "release-0.5-electricity-address-validation",
           "release-0.5-provider-required-fields",
           "release-0.5-saving-receipt-required",
-          "release-0.5-onboarding-required"
+          "release-0.5-onboarding-required",
+          "release-0.5-invoice-recovery-required"
         ],
         "current_acceptance": null
       }
@@ -516913,7 +516914,7 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "8574d79e67a5eb5369d64f24cfa443ae3b4925c9e37ed750bb2defc9b6adeaa2"
+              "sha256": "4a57a6ccff2cb73e396887ee8361c8336a1a515fdddb6e3b5360f3930e34189a"
             },
             {
               "path": "apps/web/src/components/ProfileVerificationReview.tsx",
@@ -516953,7 +516954,7 @@
             },
             {
               "path": "apps/web/src/pages/AccountRecoveryPage.tsx",
-              "sha256": "f2eeb0fb100fab045ae6e116e40965d65f4952ce40f36578b651388165f47180"
+              "sha256": "5b1fded05c7642b0f3a61cfd0a87ad4f392ffe3831ea2db85c290d0bed0ebde9"
             },
             {
               "path": "apps/web/src/pages/AdminBrandingConfig.tsx",
@@ -518236,7 +518237,7 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "8574d79e67a5eb5369d64f24cfa443ae3b4925c9e37ed750bb2defc9b6adeaa2"
+              "sha256": "4a57a6ccff2cb73e396887ee8361c8336a1a515fdddb6e3b5360f3930e34189a"
             },
             {
               "path": "apps/web/src/components/ProfileVerificationReview.tsx",
@@ -518276,7 +518277,7 @@
             },
             {
               "path": "apps/web/src/pages/AccountRecoveryPage.tsx",
-              "sha256": "f2eeb0fb100fab045ae6e116e40965d65f4952ce40f36578b651388165f47180"
+              "sha256": "5b1fded05c7642b0f3a61cfd0a87ad4f392ffe3831ea2db85c290d0bed0ebde9"
             },
             {
               "path": "apps/web/src/pages/AdminBrandingConfig.tsx",
@@ -518910,7 +518911,7 @@
             },
             {
               "path": "apps/web/src/components/OtpInput.tsx",
-              "sha256": "dcc1f52208c4d5cb0ecba24bf7546758863182f9f823b7e5b816e20fbca76988"
+              "sha256": "44a8f0443965e4bf51c53854162a118add9cd9d6f5ca5cf704351496c1a26a3e"
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
@@ -518918,7 +518919,7 @@
             },
             {
               "path": "apps/web/src/components/RecoveryContactForm.tsx",
-              "sha256": "8679e0f8936d91b5db04bb080f52ff093de9a519994e4e6ac914494de25b4cc8"
+              "sha256": "2ea70c8a3c3d0d5b9d5149e802e0892e1cf871b91013127a0afcfd48775c5db2"
             },
             {
               "path": "apps/web/src/components/SkipLink.tsx",
@@ -519738,7 +519739,7 @@
             },
             {
               "path": "apps/web/src/components/OtpInput.tsx",
-              "sha256": "dcc1f52208c4d5cb0ecba24bf7546758863182f9f823b7e5b816e20fbca76988"
+              "sha256": "44a8f0443965e4bf51c53854162a118add9cd9d6f5ca5cf704351496c1a26a3e"
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
@@ -519746,7 +519747,7 @@
             },
             {
               "path": "apps/web/src/components/RecoveryContactForm.tsx",
-              "sha256": "8679e0f8936d91b5db04bb080f52ff093de9a519994e4e6ac914494de25b4cc8"
+              "sha256": "2ea70c8a3c3d0d5b9d5149e802e0892e1cf871b91013127a0afcfd48775c5db2"
             },
             {
               "path": "apps/web/src/components/SkipLink.tsx",
@@ -520392,7 +520393,7 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "8574d79e67a5eb5369d64f24cfa443ae3b4925c9e37ed750bb2defc9b6adeaa2"
+              "sha256": "4a57a6ccff2cb73e396887ee8361c8336a1a515fdddb6e3b5360f3930e34189a"
             },
             {
               "path": "apps/web/src/components/ProfileVerificationReview.tsx",
@@ -520432,7 +520433,7 @@
             },
             {
               "path": "apps/web/src/pages/AccountRecoveryPage.tsx",
-              "sha256": "f2eeb0fb100fab045ae6e116e40965d65f4952ce40f36578b651388165f47180"
+              "sha256": "5b1fded05c7642b0f3a61cfd0a87ad4f392ffe3831ea2db85c290d0bed0ebde9"
             },
             {
               "path": "apps/web/src/pages/AdminBrandingConfig.tsx",
@@ -521066,7 +521067,7 @@
             },
             {
               "path": "apps/web/src/components/OtpInput.tsx",
-              "sha256": "dcc1f52208c4d5cb0ecba24bf7546758863182f9f823b7e5b816e20fbca76988"
+              "sha256": "44a8f0443965e4bf51c53854162a118add9cd9d6f5ca5cf704351496c1a26a3e"
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
@@ -521074,7 +521075,7 @@
             },
             {
               "path": "apps/web/src/components/RecoveryContactForm.tsx",
-              "sha256": "8679e0f8936d91b5db04bb080f52ff093de9a519994e4e6ac914494de25b4cc8"
+              "sha256": "2ea70c8a3c3d0d5b9d5149e802e0892e1cf871b91013127a0afcfd48775c5db2"
             },
             {
               "path": "apps/web/src/components/SkipLink.tsx",
@@ -544848,7 +544849,7 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "8574d79e67a5eb5369d64f24cfa443ae3b4925c9e37ed750bb2defc9b6adeaa2"
+              "sha256": "4a57a6ccff2cb73e396887ee8361c8336a1a515fdddb6e3b5360f3930e34189a"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -546713,7 +546714,7 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "8574d79e67a5eb5369d64f24cfa443ae3b4925c9e37ed750bb2defc9b6adeaa2"
+              "sha256": "4a57a6ccff2cb73e396887ee8361c8336a1a515fdddb6e3b5360f3930e34189a"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -548579,7 +548580,7 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "8574d79e67a5eb5369d64f24cfa443ae3b4925c9e37ed750bb2defc9b6adeaa2"
+              "sha256": "4a57a6ccff2cb73e396887ee8361c8336a1a515fdddb6e3b5360f3930e34189a"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -550414,7 +550415,7 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "8574d79e67a5eb5369d64f24cfa443ae3b4925c9e37ed750bb2defc9b6adeaa2"
+              "sha256": "4a57a6ccff2cb73e396887ee8361c8336a1a515fdddb6e3b5360f3930e34189a"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -552275,7 +552276,7 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "8574d79e67a5eb5369d64f24cfa443ae3b4925c9e37ed750bb2defc9b6adeaa2"
+              "sha256": "4a57a6ccff2cb73e396887ee8361c8336a1a515fdddb6e3b5360f3930e34189a"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -554145,7 +554146,7 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "8574d79e67a5eb5369d64f24cfa443ae3b4925c9e37ed750bb2defc9b6adeaa2"
+              "sha256": "4a57a6ccff2cb73e396887ee8361c8336a1a515fdddb6e3b5360f3930e34189a"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -555988,7 +555989,7 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "8574d79e67a5eb5369d64f24cfa443ae3b4925c9e37ed750bb2defc9b6adeaa2"
+              "sha256": "4a57a6ccff2cb73e396887ee8361c8336a1a515fdddb6e3b5360f3930e34189a"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -557795,7 +557796,7 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "8574d79e67a5eb5369d64f24cfa443ae3b4925c9e37ed750bb2defc9b6adeaa2"
+              "sha256": "4a57a6ccff2cb73e396887ee8361c8336a1a515fdddb6e3b5360f3930e34189a"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -559602,7 +559603,7 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "8574d79e67a5eb5369d64f24cfa443ae3b4925c9e37ed750bb2defc9b6adeaa2"
+              "sha256": "4a57a6ccff2cb73e396887ee8361c8336a1a515fdddb6e3b5360f3930e34189a"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -561410,7 +561411,7 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "8574d79e67a5eb5369d64f24cfa443ae3b4925c9e37ed750bb2defc9b6adeaa2"
+              "sha256": "4a57a6ccff2cb73e396887ee8361c8336a1a515fdddb6e3b5360f3930e34189a"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -563217,7 +563218,7 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "8574d79e67a5eb5369d64f24cfa443ae3b4925c9e37ed750bb2defc9b6adeaa2"
+              "sha256": "4a57a6ccff2cb73e396887ee8361c8336a1a515fdddb6e3b5360f3930e34189a"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -564994,7 +564995,7 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "8574d79e67a5eb5369d64f24cfa443ae3b4925c9e37ed750bb2defc9b6adeaa2"
+              "sha256": "4a57a6ccff2cb73e396887ee8361c8336a1a515fdddb6e3b5360f3930e34189a"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -566888,7 +566889,7 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "8574d79e67a5eb5369d64f24cfa443ae3b4925c9e37ed750bb2defc9b6adeaa2"
+              "sha256": "4a57a6ccff2cb73e396887ee8361c8336a1a515fdddb6e3b5360f3930e34189a"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -568832,7 +568833,7 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "8574d79e67a5eb5369d64f24cfa443ae3b4925c9e37ed750bb2defc9b6adeaa2"
+              "sha256": "4a57a6ccff2cb73e396887ee8361c8336a1a515fdddb6e3b5360f3930e34189a"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -570726,7 +570727,7 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "8574d79e67a5eb5369d64f24cfa443ae3b4925c9e37ed750bb2defc9b6adeaa2"
+              "sha256": "4a57a6ccff2cb73e396887ee8361c8336a1a515fdddb6e3b5360f3930e34189a"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -572620,7 +572621,7 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "8574d79e67a5eb5369d64f24cfa443ae3b4925c9e37ed750bb2defc9b6adeaa2"
+              "sha256": "4a57a6ccff2cb73e396887ee8361c8336a1a515fdddb6e3b5360f3930e34189a"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -574514,7 +574515,7 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "8574d79e67a5eb5369d64f24cfa443ae3b4925c9e37ed750bb2defc9b6adeaa2"
+              "sha256": "4a57a6ccff2cb73e396887ee8361c8336a1a515fdddb6e3b5360f3930e34189a"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -576408,7 +576409,7 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "8574d79e67a5eb5369d64f24cfa443ae3b4925c9e37ed750bb2defc9b6adeaa2"
+              "sha256": "4a57a6ccff2cb73e396887ee8361c8336a1a515fdddb6e3b5360f3930e34189a"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -578302,7 +578303,7 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "8574d79e67a5eb5369d64f24cfa443ae3b4925c9e37ed750bb2defc9b6adeaa2"
+              "sha256": "4a57a6ccff2cb73e396887ee8361c8336a1a515fdddb6e3b5360f3930e34189a"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -580196,7 +580197,7 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "8574d79e67a5eb5369d64f24cfa443ae3b4925c9e37ed750bb2defc9b6adeaa2"
+              "sha256": "4a57a6ccff2cb73e396887ee8361c8336a1a515fdddb6e3b5360f3930e34189a"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -582090,7 +582091,7 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "8574d79e67a5eb5369d64f24cfa443ae3b4925c9e37ed750bb2defc9b6adeaa2"
+              "sha256": "4a57a6ccff2cb73e396887ee8361c8336a1a515fdddb6e3b5360f3930e34189a"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -583984,7 +583985,7 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "8574d79e67a5eb5369d64f24cfa443ae3b4925c9e37ed750bb2defc9b6adeaa2"
+              "sha256": "4a57a6ccff2cb73e396887ee8361c8336a1a515fdddb6e3b5360f3930e34189a"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -585878,7 +585879,7 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "8574d79e67a5eb5369d64f24cfa443ae3b4925c9e37ed750bb2defc9b6adeaa2"
+              "sha256": "4a57a6ccff2cb73e396887ee8361c8336a1a515fdddb6e3b5360f3930e34189a"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -587772,7 +587773,7 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "8574d79e67a5eb5369d64f24cfa443ae3b4925c9e37ed750bb2defc9b6adeaa2"
+              "sha256": "4a57a6ccff2cb73e396887ee8361c8336a1a515fdddb6e3b5360f3930e34189a"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -590405,7 +590406,7 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "8574d79e67a5eb5369d64f24cfa443ae3b4925c9e37ed750bb2defc9b6adeaa2"
+              "sha256": "4a57a6ccff2cb73e396887ee8361c8336a1a515fdddb6e3b5360f3930e34189a"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -592299,7 +592300,7 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "8574d79e67a5eb5369d64f24cfa443ae3b4925c9e37ed750bb2defc9b6adeaa2"
+              "sha256": "4a57a6ccff2cb73e396887ee8361c8336a1a515fdddb6e3b5360f3930e34189a"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -594308,7 +594309,7 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "8574d79e67a5eb5369d64f24cfa443ae3b4925c9e37ed750bb2defc9b6adeaa2"
+              "sha256": "4a57a6ccff2cb73e396887ee8361c8336a1a515fdddb6e3b5360f3930e34189a"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -596111,7 +596112,7 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "8574d79e67a5eb5369d64f24cfa443ae3b4925c9e37ed750bb2defc9b6adeaa2"
+              "sha256": "4a57a6ccff2cb73e396887ee8361c8336a1a515fdddb6e3b5360f3930e34189a"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -597914,7 +597915,7 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "8574d79e67a5eb5369d64f24cfa443ae3b4925c9e37ed750bb2defc9b6adeaa2"
+              "sha256": "4a57a6ccff2cb73e396887ee8361c8336a1a515fdddb6e3b5360f3930e34189a"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -599717,7 +599718,7 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "8574d79e67a5eb5369d64f24cfa443ae3b4925c9e37ed750bb2defc9b6adeaa2"
+              "sha256": "4a57a6ccff2cb73e396887ee8361c8336a1a515fdddb6e3b5360f3930e34189a"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -601520,7 +601521,7 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "8574d79e67a5eb5369d64f24cfa443ae3b4925c9e37ed750bb2defc9b6adeaa2"
+              "sha256": "4a57a6ccff2cb73e396887ee8361c8336a1a515fdddb6e3b5360f3930e34189a"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -603323,7 +603324,7 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "8574d79e67a5eb5369d64f24cfa443ae3b4925c9e37ed750bb2defc9b6adeaa2"
+              "sha256": "4a57a6ccff2cb73e396887ee8361c8336a1a515fdddb6e3b5360f3930e34189a"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -605126,7 +605127,7 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "8574d79e67a5eb5369d64f24cfa443ae3b4925c9e37ed750bb2defc9b6adeaa2"
+              "sha256": "4a57a6ccff2cb73e396887ee8361c8336a1a515fdddb6e3b5360f3930e34189a"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -606995,7 +606996,7 @@
             },
             {
               "path": "apps/web/src/components/OtpInput.tsx",
-              "sha256": "dcc1f52208c4d5cb0ecba24bf7546758863182f9f823b7e5b816e20fbca76988"
+              "sha256": "44a8f0443965e4bf51c53854162a118add9cd9d6f5ca5cf704351496c1a26a3e"
             },
             {
               "path": "apps/web/src/components/PasswordField.test.tsx",
@@ -607822,7 +607823,7 @@
             },
             {
               "path": "apps/web/src/components/OtpInput.tsx",
-              "sha256": "dcc1f52208c4d5cb0ecba24bf7546758863182f9f823b7e5b816e20fbca76988"
+              "sha256": "44a8f0443965e4bf51c53854162a118add9cd9d6f5ca5cf704351496c1a26a3e"
             },
             {
               "path": "apps/web/src/components/PasswordField.test.tsx",
@@ -608649,7 +608650,7 @@
             },
             {
               "path": "apps/web/src/components/OtpInput.tsx",
-              "sha256": "dcc1f52208c4d5cb0ecba24bf7546758863182f9f823b7e5b816e20fbca76988"
+              "sha256": "44a8f0443965e4bf51c53854162a118add9cd9d6f5ca5cf704351496c1a26a3e"
             },
             {
               "path": "apps/web/src/components/PasswordField.test.tsx",
@@ -609476,7 +609477,7 @@
             },
             {
               "path": "apps/web/src/components/OtpInput.tsx",
-              "sha256": "dcc1f52208c4d5cb0ecba24bf7546758863182f9f823b7e5b816e20fbca76988"
+              "sha256": "44a8f0443965e4bf51c53854162a118add9cd9d6f5ca5cf704351496c1a26a3e"
             },
             {
               "path": "apps/web/src/components/PasswordField.test.tsx",
@@ -610303,7 +610304,7 @@
             },
             {
               "path": "apps/web/src/components/OtpInput.tsx",
-              "sha256": "dcc1f52208c4d5cb0ecba24bf7546758863182f9f823b7e5b816e20fbca76988"
+              "sha256": "44a8f0443965e4bf51c53854162a118add9cd9d6f5ca5cf704351496c1a26a3e"
             },
             {
               "path": "apps/web/src/components/PasswordField.test.tsx",
@@ -623112,7 +623113,7 @@
             },
             {
               "path": "apps/web/src/components/OtpInput.tsx",
-              "sha256": "dcc1f52208c4d5cb0ecba24bf7546758863182f9f823b7e5b816e20fbca76988"
+              "sha256": "44a8f0443965e4bf51c53854162a118add9cd9d6f5ca5cf704351496c1a26a3e"
             },
             {
               "path": "apps/web/src/components/PasswordField.test.tsx",
@@ -623939,7 +623940,7 @@
             },
             {
               "path": "apps/web/src/components/OtpInput.tsx",
-              "sha256": "dcc1f52208c4d5cb0ecba24bf7546758863182f9f823b7e5b816e20fbca76988"
+              "sha256": "44a8f0443965e4bf51c53854162a118add9cd9d6f5ca5cf704351496c1a26a3e"
             },
             {
               "path": "apps/web/src/components/PasswordField.test.tsx",
@@ -624766,7 +624767,7 @@
             },
             {
               "path": "apps/web/src/components/OtpInput.tsx",
-              "sha256": "dcc1f52208c4d5cb0ecba24bf7546758863182f9f823b7e5b816e20fbca76988"
+              "sha256": "44a8f0443965e4bf51c53854162a118add9cd9d6f5ca5cf704351496c1a26a3e"
             },
             {
               "path": "apps/web/src/components/PasswordField.test.tsx",
@@ -625593,7 +625594,7 @@
             },
             {
               "path": "apps/web/src/components/OtpInput.tsx",
-              "sha256": "dcc1f52208c4d5cb0ecba24bf7546758863182f9f823b7e5b816e20fbca76988"
+              "sha256": "44a8f0443965e4bf51c53854162a118add9cd9d6f5ca5cf704351496c1a26a3e"
             },
             {
               "path": "apps/web/src/components/PasswordField.test.tsx",
@@ -626420,7 +626421,7 @@
             },
             {
               "path": "apps/web/src/components/OtpInput.tsx",
-              "sha256": "dcc1f52208c4d5cb0ecba24bf7546758863182f9f823b7e5b816e20fbca76988"
+              "sha256": "44a8f0443965e4bf51c53854162a118add9cd9d6f5ca5cf704351496c1a26a3e"
             },
             {
               "path": "apps/web/src/components/PasswordField.test.tsx",
@@ -627247,7 +627248,7 @@
             },
             {
               "path": "apps/web/src/components/OtpInput.tsx",
-              "sha256": "dcc1f52208c4d5cb0ecba24bf7546758863182f9f823b7e5b816e20fbca76988"
+              "sha256": "44a8f0443965e4bf51c53854162a118add9cd9d6f5ca5cf704351496c1a26a3e"
             },
             {
               "path": "apps/web/src/components/PasswordField.test.tsx",
@@ -628074,7 +628075,7 @@
             },
             {
               "path": "apps/web/src/components/OtpInput.tsx",
-              "sha256": "dcc1f52208c4d5cb0ecba24bf7546758863182f9f823b7e5b816e20fbca76988"
+              "sha256": "44a8f0443965e4bf51c53854162a118add9cd9d6f5ca5cf704351496c1a26a3e"
             },
             {
               "path": "apps/web/src/components/PasswordField.test.tsx",
@@ -628901,7 +628902,7 @@
             },
             {
               "path": "apps/web/src/components/OtpInput.tsx",
-              "sha256": "dcc1f52208c4d5cb0ecba24bf7546758863182f9f823b7e5b816e20fbca76988"
+              "sha256": "44a8f0443965e4bf51c53854162a118add9cd9d6f5ca5cf704351496c1a26a3e"
             },
             {
               "path": "apps/web/src/components/PasswordField.test.tsx",
@@ -629728,7 +629729,7 @@
             },
             {
               "path": "apps/web/src/components/OtpInput.tsx",
-              "sha256": "dcc1f52208c4d5cb0ecba24bf7546758863182f9f823b7e5b816e20fbca76988"
+              "sha256": "44a8f0443965e4bf51c53854162a118add9cd9d6f5ca5cf704351496c1a26a3e"
             },
             {
               "path": "apps/web/src/components/PasswordField.test.tsx",
@@ -630555,7 +630556,7 @@
             },
             {
               "path": "apps/web/src/components/OtpInput.tsx",
-              "sha256": "dcc1f52208c4d5cb0ecba24bf7546758863182f9f823b7e5b816e20fbca76988"
+              "sha256": "44a8f0443965e4bf51c53854162a118add9cd9d6f5ca5cf704351496c1a26a3e"
             },
             {
               "path": "apps/web/src/components/PasswordField.test.tsx",
@@ -631382,7 +631383,7 @@
             },
             {
               "path": "apps/web/src/components/OtpInput.tsx",
-              "sha256": "dcc1f52208c4d5cb0ecba24bf7546758863182f9f823b7e5b816e20fbca76988"
+              "sha256": "44a8f0443965e4bf51c53854162a118add9cd9d6f5ca5cf704351496c1a26a3e"
             },
             {
               "path": "apps/web/src/components/PasswordField.test.tsx",
@@ -632209,7 +632210,7 @@
             },
             {
               "path": "apps/web/src/components/OtpInput.tsx",
-              "sha256": "dcc1f52208c4d5cb0ecba24bf7546758863182f9f823b7e5b816e20fbca76988"
+              "sha256": "44a8f0443965e4bf51c53854162a118add9cd9d6f5ca5cf704351496c1a26a3e"
             },
             {
               "path": "apps/web/src/components/PasswordField.test.tsx",
@@ -707272,7 +707273,7 @@
             },
             {
               "path": "apps/web/e2e/manual-invoice.spec.ts",
-              "sha256": "bbe3704042000cca9aaa2e52270d7a6f588ca5d9086b6fd99bd483ab5d943f70"
+              "sha256": "7e65a7550d2d1e35fcb14712df620751d442c84b23b735df065265c869055b15"
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.test.tsx",
@@ -707280,7 +707281,7 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "8574d79e67a5eb5369d64f24cfa443ae3b4925c9e37ed750bb2defc9b6adeaa2"
+              "sha256": "4a57a6ccff2cb73e396887ee8361c8336a1a515fdddb6e3b5360f3930e34189a"
             },
             {
               "path": "apps/web/src/components/ManualInvoicePanel.pagination.test.tsx",
@@ -707452,7 +707453,7 @@
             },
             {
               "path": "apps/web/e2e/invoice-corrections.spec.ts",
-              "sha256": "dda46448d56144f30cacdbae493113b774650bb0fad0fcd9a3fba6128faa8906"
+              "sha256": "266e9ef07f1d91de4d01567aba71983d3e46a709432d2b78ba5818a56835173d"
             },
             {
               "path": "apps/web/e2e/invoice-customer-deadline.spec.ts",
@@ -707752,7 +707753,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceCorrectionsPanel.tsx",
-              "sha256": "7203ac95ba6d81d9e7de0ddeda7e47ee98488fd6eb60b21d520de73473d07655"
+              "sha256": "ebf20e782877f50e037abc79f86a348213a45b8902b47932275c1a5063ab9c42"
             },
             {
               "path": "packages/i18n/src/invoice-corrections.ts",
@@ -723599,7 +723600,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Customer solar intake, electricity revision and cancellation and earlier checkout and staff address review journeys now have bounded preview recovery. Remaining native and conditional forms, contrast, command feedback and other route state verification stay open."
+        "Staff manual invoicing and invoice corrections plus claimant and restricted staff recovery have current required-control evidence. Wider form, contrast, command feedback and route state acceptance remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -723678,7 +723679,8 @@
           "release-0.5-banner-dismiss-contrast",
           "release-0.5-checkout-read-recovery",
           "release-0.5-staff-saving-address-read",
-          "release-0.5-customer-review-deadlines"
+          "release-0.5-customer-review-deadlines",
+          "release-0.5-invoice-recovery-required"
         ]
       }
     },
@@ -724034,7 +724036,7 @@
             },
             {
               "path": "apps/web/src/components/ManualInvoiceForm.tsx",
-              "sha256": "8574d79e67a5eb5369d64f24cfa443ae3b4925c9e37ed750bb2defc9b6adeaa2"
+              "sha256": "4a57a6ccff2cb73e396887ee8361c8336a1a515fdddb6e3b5360f3930e34189a"
             },
             {
               "path": "apps/web/src/components/NotificationBell.tsx",
@@ -724074,7 +724076,7 @@
             },
             {
               "path": "apps/web/src/components/OtpInput.tsx",
-              "sha256": "dcc1f52208c4d5cb0ecba24bf7546758863182f9f823b7e5b816e20fbca76988"
+              "sha256": "44a8f0443965e4bf51c53854162a118add9cd9d6f5ca5cf704351496c1a26a3e"
             },
             {
               "path": "apps/web/src/components/OwnershipBanner.tsx",
@@ -724134,7 +724136,7 @@
             },
             {
               "path": "apps/web/src/components/RecoveryContactForm.tsx",
-              "sha256": "8679e0f8936d91b5db04bb080f52ff093de9a519994e4e6ac914494de25b4cc8"
+              "sha256": "2ea70c8a3c3d0d5b9d5149e802e0892e1cf871b91013127a0afcfd48775c5db2"
             },
             {
               "path": "apps/web/src/components/RefundFinancialReviewSummary.tsx",
@@ -724558,7 +724560,7 @@
             },
             {
               "path": "apps/web/src/pages/AccountRecoveryPage.tsx",
-              "sha256": "f2eeb0fb100fab045ae6e116e40965d65f4952ce40f36578b651388165f47180"
+              "sha256": "5b1fded05c7642b0f3a61cfd0a87ad4f392ffe3831ea2db85c290d0bed0ebde9"
             },
             {
               "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
@@ -725187,6 +725189,10 @@
             {
               "path": "apps/web/src/components/ElectricityQuoteErrorNotice.tsx",
               "sha256": "a182bf301d2663e619a59821f4855b372f8e9fe423c4ebf9a43ac6b2b2178aa6"
+            },
+            {
+              "path": "apps/web/src/components/InvoiceCorrectionsPanel.tsx",
+              "sha256": "ebf20e782877f50e037abc79f86a348213a45b8902b47932275c1a5063ab9c42"
             }
           ],
           "checks": [
@@ -725210,7 +725216,8 @@
             "Checkout read recovery passed current source coverage, production size and cold authentication checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-checkout-read-recovery/proof.json",
             "Paid saving staff address review recovery passed current source coverage, production size and cold authentication checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-saving-address-read/proof.json",
             "Solar and electricity customer review recovery passed current source coverage, production size and cold authentication checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-customer-review-deadlines/proof.json",
-            "Critical and advisory browser cases pass and prior performance evidence is renewed by exact asset equality. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-accessibility-advisory/proof.json"
+            "Critical and advisory browser cases pass and prior performance evidence is renewed by exact asset equality. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-accessibility-advisory/proof.json",
+            "Required invoice and recovery fields passed current source coverage, production size and cold authentication checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-recovery-required/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -791674,6 +791681,65 @@
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-accessibility-advisory/reviewed.patch",
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-accessibility-advisory",
       "release_disposition": "Advisory reporting and strict critical behavior are verified. Owner merge policy and wider v0.5.0 acceptance remain open."
+    },
+    "release-0.5-invoice-recovery-required": {
+      "batch": "release-0.5-invoice-recovery-required",
+      "base_commit": "4e51b652dc16d3d6f7cadc221a47447f2e14b594",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.05.01.05",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.05.01.05",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/account-recovery-closure.spec.ts",
+          "sha256": "efd3c7fa73b3abf7e6266aa05bcccb1791c0bf0db7761fe1f451bb3167208a13"
+        },
+        {
+          "path": "apps/web/e2e/invoice-corrections.spec.ts",
+          "sha256": "266e9ef07f1d91de4d01567aba71983d3e46a709432d2b78ba5818a56835173d"
+        },
+        {
+          "path": "apps/web/e2e/manual-invoice.spec.ts",
+          "sha256": "7e65a7550d2d1e35fcb14712df620751d442c84b23b735df065265c869055b15"
+        },
+        {
+          "path": "apps/web/src/components/InvoiceCorrectionsPanel.tsx",
+          "sha256": "ebf20e782877f50e037abc79f86a348213a45b8902b47932275c1a5063ab9c42"
+        },
+        {
+          "path": "apps/web/src/components/ManualInvoiceForm.tsx",
+          "sha256": "4a57a6ccff2cb73e396887ee8361c8336a1a515fdddb6e3b5360f3930e34189a"
+        },
+        {
+          "path": "apps/web/src/components/OtpInput.tsx",
+          "sha256": "44a8f0443965e4bf51c53854162a118add9cd9d6f5ca5cf704351496c1a26a3e"
+        },
+        {
+          "path": "apps/web/src/components/RecoveryContactForm.tsx",
+          "sha256": "2ea70c8a3c3d0d5b9d5149e802e0892e1cf871b91013127a0afcfd48775c5db2"
+        },
+        {
+          "path": "apps/web/src/pages/AccountRecoveryPage.tsx",
+          "sha256": "5b1fded05c7642b0f3a61cfd0a87ad4f392ffe3831ea2db85c290d0bed0ebde9"
+        }
+      ],
+      "checks": [
+        "Staff manual invoices and both correction modes announce required controls for their current mode, including dynamically added line fields, correction source and step-up password. Existing inline errors, preview and exact financial command assertions passed.",
+        "Claimant case and challenge IDs and all six OTP digits announce required state. Restricted staff creation and lookup inputs do the same; review notes are required for an eligible independent review, and both contact-notice receipts are required at completion.",
+        "Browser checks in Persian and English retained pre-login CSRF, rejected OTP input, no writes on confirmation open and removal of denied private detail. The shared OTP login, registration and password-reset callers also passed.",
+        "36 Chromium and 26 Mobile Safari cases and 87 targeted unit cases passed. Eight coverage groups, 98 bundle budgets, three cold authentication transfers, scoped lint, formatting and typecheck passed."
+      ],
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-recovery-required/proof.json",
+      "source_scope_proof_sha256": "547915363168348036a83f52663b68fbf011a36c3b97e89a450016eda07d37b2",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-recovery-required/renewed-bindings.json",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-recovery-required/reviewed.patch",
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-recovery-required",
+      "release_disposition": "Invoice and recovery required-field evidence recorded. Wider form and UI verification and the v0.5.0 release criteria remain open."
     }
   },
   "historical_improvements": [
