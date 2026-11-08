@@ -47,6 +47,11 @@ It strengthens text, form controls and focus outlines in both light and dark
 themes, and does not send an account setting change. The shared stylesheet
 also keeps a visible focus outline when the operating system forces colors.
 
+Use the shared input border for empty one-time-code fields so each position
+stays visible before a digit is entered. Keep titles, descriptions and prices
+fully opaque on unavailable saving checkout plans. The disabled radio and
+localized availability label convey the state.
+
 Standalone loading, error and not-found views keep the same skip link and
 main landmark as ordinary pages. A fallback inside the workspace reuses its
 main landmark. When an already verified session is denied on the next

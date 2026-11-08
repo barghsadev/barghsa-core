@@ -24,7 +24,7 @@ for (const locale of ['en', 'fa'] as const)
   for (const dark of [false, true])
     test(`saving and email provider actions retain contrast at rest and on hover (${locale}, dark=${dark})`, async ({
       page,
-    }) => {
+    }, info) => {
       await page.setViewportSize({ width: 1280, height: 900 });
       await page.emulateMedia({ colorScheme: dark ? 'dark' : 'light', reducedMotion: 'reduce' });
       await page.addInitScript((value) => localStorage.setItem('barghsa.locale', value), locale);
@@ -57,6 +57,12 @@ for (const locale of ['en', 'fa'] as const)
         route.fulfill({
           json: { activeProfileId: profileId, profileStatus: 'ACTIVE', isVerified: true },
         })
+      );
+      await page.route(`**/api/profiles/${profileId}/addresses`, (route) =>
+        route.fulfill({ json: { addresses: [] } })
+      );
+      await page.route('**/api/saving/orders/draft?*', (route) =>
+        route.fulfill({ json: { currentStep: 1, data: null, updatedAt: null } })
       );
       await page.route('**/api/public/branding/config', (route) =>
         route.fulfill({
@@ -173,6 +179,44 @@ for (const locale of ['en', 'fa'] as const)
         });
         expect(await measureControlContrast(description, 'text')).toBeGreaterThanOrEqual(4.5);
       }
+
+      await order.click();
+      await expect(page).toHaveURL(/\/savings\/order$/);
+      const checkoutChoice = page.getByRole('radio', {
+        name: new RegExp(unavailable.title[locale]),
+      });
+      const checkoutLabel = page.locator('label').filter({ has: checkoutChoice });
+      const checkoutDescription = checkoutLabel.getByText(unavailable.description[locale], {
+        exact: true,
+      });
+      const availability = checkoutLabel.getByText(tSaving('unavailable', locale), { exact: true });
+      await expect(checkoutChoice).toBeDisabled();
+      await expect(availability).toBeVisible();
+      const checkoutMeasurements = [];
+      for (const high of [false, true]) {
+        await setHighContrast(high);
+        const opacity = await checkoutLabel.evaluate((node) =>
+          Number(getComputedStyle(node).opacity)
+        );
+        const description = await measureControlContrast(
+          checkoutDescription,
+          'text',
+          undefined,
+          opacity
+        );
+        const status = await measureControlContrast(availability, 'text');
+        checkoutMeasurements.push({ high, dark, opacity, description, status });
+        expect.soft(opacity, 'Unavailable checkout plan text is fully opaque').toBe(1);
+        expect
+          .soft(description, 'Unavailable checkout plan description')
+          .toBeGreaterThanOrEqual(4.5);
+        expect.soft(status, 'Unavailable checkout plan status').toBeGreaterThanOrEqual(4.5);
+      }
+      await info.attach('saving-plan-contrast', {
+        body: JSON.stringify(checkoutMeasurements),
+        contentType: 'application/json',
+      });
+      await checkoutLabel.screenshot({ path: info.outputPath('unavailable-saving-plan.png') });
 
       staff = true;
       await page.goto('/admin/providers');

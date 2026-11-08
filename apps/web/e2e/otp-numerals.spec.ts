@@ -1,13 +1,22 @@
 import { test, expect } from './coverage-fixture';
 import { mockPublicAuthCsrf } from './public-auth-fixture';
+import { measureControlContrast } from './control-contrast';
 
 for (const sample of [
-  { name: 'Persian keyboard', value: '۱۲۳۴۵۶', paste: false },
-  { name: 'Arabic keyboard', value: '١٢٣٤٥٦', paste: false },
-  { name: 'mixed pasted code', value: '۱2٣۴5٦', paste: true },
-  { name: 'ASCII keyboard', value: '123456', paste: false },
+  { name: 'Persian keyboard', value: '۱۲۳۴۵۶', paste: false, dark: false },
+  { name: 'Arabic keyboard', value: '١٢٣٤٥٦', paste: false, dark: true },
+  { name: 'mixed pasted code', value: '۱2٣۴5٦', paste: true, dark: false },
+  { name: 'ASCII keyboard', value: '123456', paste: false, dark: true },
 ]) {
-  test(`OTP normalizes ${sample.name} and keeps digit order in RTL`, async ({ page }) => {
+  test(`OTP normalizes ${sample.name} and keeps digit order in RTL`, async ({ page }, info) => {
+    await page.emulateMedia({
+      colorScheme: sample.dark ? 'dark' : 'light',
+      reducedMotion: 'reduce',
+    });
+    await page.addInitScript(
+      (theme) => localStorage.setItem('barghsa.theme.v1', theme),
+      sample.dark ? 'dark' : 'light'
+    );
     await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
     await mockPublicAuthCsrf(page);
     await page.route('**/api/auth/login', (route) =>
@@ -52,6 +61,30 @@ for (const sample of [
     await page.locator('button[type=submit]').click();
     const inputs = page.locator('input[inputmode=numeric]');
     await expect(inputs).toHaveCount(6);
+    const root = page.locator('html');
+    await expect
+      .poll(() => root.evaluate((node) => node.classList.contains('dark')))
+      .toBe(sample.dark);
+    const measurements = [];
+    for (const high of [false, true]) {
+      await root.evaluate((node, enabled) => {
+        if (enabled) node.dataset.contrast = 'more';
+        else delete node.dataset.contrast;
+      }, high);
+      await inputs.first().focus();
+      await page.keyboard.press('Tab');
+      await expect(inputs.nth(1)).toBeFocused();
+      const empty = await measureControlContrast(inputs.last(), 'underline');
+      const focus = await measureControlContrast(inputs.nth(1), 'focus');
+      measurements.push({ high, dark: sample.dark, empty, focus });
+      expect.soft(empty, 'Empty OTP input boundary').toBeGreaterThanOrEqual(3);
+      expect.soft(focus, 'OTP keyboard focus ring').toBeGreaterThanOrEqual(3);
+    }
+    await info.attach('otp-contrast', {
+      body: JSON.stringify(measurements),
+      contentType: 'application/json',
+    });
+    await root.evaluate((node) => delete node.dataset.contrast);
     const first = await inputs.first().boundingBox();
     const last = await inputs.last().boundingBox();
     if (sample.paste) {

@@ -234,11 +234,9 @@ export const OtpInput = forwardRef<OtpInputHandle, OtpInputProps>(function OtpIn
               error
                 ? 'border-destructive text-destructive'
                 : digit
-                  ? 'border-primary text-foreground'
-                  : 'border-muted-foreground/30 text-foreground'
-            } ${
-              disabled ? 'opacity-50 cursor-not-allowed' : 'focus:border-primary focus:border-b-3'
-            }`}
+                  ? 'border-ring text-foreground'
+                  : 'border-input text-foreground'
+            } ${disabled ? 'opacity-50 cursor-not-allowed' : 'focus:border-ring focus:border-b-3'}`}
           />
         ))}
       </div>

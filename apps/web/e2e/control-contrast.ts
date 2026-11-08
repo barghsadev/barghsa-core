@@ -2,11 +2,12 @@ import type { Locator } from '@playwright/test';
 
 export async function measureControlContrast(
   control: Locator,
-  kind: 'boundary' | 'indicator' | 'focus' | 'text',
-  indicator?: string
+  kind: 'boundary' | 'underline' | 'indicator' | 'focus' | 'text',
+  indicator?: string,
+  textOpacity = 1
 ) {
   return control.evaluate(
-    (element, { kind, indicator }) => {
+    (element, { kind, indicator, textOpacity }) => {
       const canvas = document.createElement('canvas');
       canvas.width = canvas.height = 1;
       const context = canvas.getContext('2d')!;
@@ -39,11 +40,18 @@ export async function measureControlContrast(
         surroundings.push(getComputedStyle(ancestor).backgroundColor);
       const style = getComputedStyle(element);
       const fill = [...surroundings, style.backgroundColor];
-      if (kind === 'text') return compare([...fill, style.color], fill);
-      if (kind === 'boundary') {
+      if (kind === 'text') {
+        const ink =
+          textOpacity === 1
+            ? style.color
+            : `color-mix(in srgb, ${style.color} ${textOpacity * 100}%, transparent)`;
+        return compare([...fill, ink], fill);
+      }
+      if (kind === 'boundary' || kind === 'underline') {
+        const edge = kind === 'boundary' ? 'Top' : 'Bottom';
         const border =
-          style.borderTopStyle !== 'none' && parseFloat(style.borderTopWidth) > 0
-            ? style.borderTopColor
+          style[`border${edge}Style`] !== 'none' && parseFloat(style[`border${edge}Width`]) > 0
+            ? style[`border${edge}Color`]
             : 'transparent';
         return Math.max(compare(fill, surroundings), compare([...fill, border], surroundings));
       }
@@ -61,6 +69,6 @@ export async function measureControlContrast(
       const color = target.matches('svg') ? cue.color : cue.backgroundColor;
       return compare([...fill, color], fill);
     },
-    { kind, indicator }
+    { kind, indicator, textOpacity }
   );
 }

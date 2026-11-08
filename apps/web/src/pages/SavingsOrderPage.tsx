@@ -900,7 +900,7 @@ function OwnedSavingsOrderPage() {
                         {plans.map((plan) => (
                           <label
                             key={plan.id}
-                            className={`flex gap-3 rounded-md border p-4 ${!plan.available ? 'opacity-60' : 'cursor-pointer'}`}
+                            className={`flex gap-3 rounded-md border p-4 ${plan.available ? 'cursor-pointer' : 'cursor-not-allowed bg-muted/30'}`}
                           >
                             <input
                               type="radio"
@@ -917,6 +917,11 @@ function OwnedSavingsOrderPage() {
                             />
                             <span className="space-y-1">
                               <span className="block font-medium">{title(plan)}</span>
+                              {!plan.available && (
+                                <span className="block text-xs font-medium text-muted-foreground">
+                                  {copy('unavailable')}
+                                </span>
+                              )}
                               <span className="block text-sm text-muted-foreground">
                                 {plan.description?.[locale]}
                               </span>
