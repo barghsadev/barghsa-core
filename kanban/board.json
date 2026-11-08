@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-08T12:21:29+00:00",
-  "source_commit": "594bce3147b72ebb568b2ce15ea078bc332f0828",
+  "updated": "2026-11-08T12:32:01+00:00",
+  "source_commit": "bbfa25264d60b278f5ee7a0d17fe6935dc2d8970",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -36443,7 +36443,7 @@
           "source_evidence": [
             {
               "path": "packages/i18n/src/saving.ts",
-              "sha256": "9e0f65c18d4349a2829bae4aae8a4e0554bb4a4280e563e676b13aa40d1ac85a"
+              "sha256": "09a3929bc59a130052d4300a23c4a614793d4b7a2b04554e81c11a08a79d0d9e"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -37326,7 +37326,7 @@
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
-              "sha256": "427d29912c72cfee31e064606c894b550162ea74cf9706a154d29b1af32818b8"
+              "sha256": "4f28cd74cb6860c15a5eb3e0e7b7936cca6606763605f9a26d90a5e7c041452c"
             },
             {
               "path": "apps/web/e2e/solar-journey.spec.ts",
@@ -37362,7 +37362,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "d17f7fd7b1ab1f7be39254c82aaee5e9e3fbf468ed6f56f212bc2ec388bafd0e"
+              "sha256": "845e8ddde1bd8fa2a98c4812d40cd1e47bd1be1e664f73c8c11db41143ade671"
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
@@ -37394,7 +37394,7 @@
             },
             {
               "path": "packages/i18n/src/saving.ts",
-              "sha256": "9e0f65c18d4349a2829bae4aae8a4e0554bb4a4280e563e676b13aa40d1ac85a"
+              "sha256": "09a3929bc59a130052d4300a23c4a614793d4b7a2b04554e81c11a08a79d0d9e"
             },
             {
               "path": "packages/i18n/src/solar.ts",
@@ -38719,7 +38719,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "d17f7fd7b1ab1f7be39254c82aaee5e9e3fbf468ed6f56f212bc2ec388bafd0e"
+              "sha256": "845e8ddde1bd8fa2a98c4812d40cd1e47bd1be1e664f73c8c11db41143ade671"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -40075,7 +40075,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "d17f7fd7b1ab1f7be39254c82aaee5e9e3fbf468ed6f56f212bc2ec388bafd0e"
+              "sha256": "845e8ddde1bd8fa2a98c4812d40cd1e47bd1be1e664f73c8c11db41143ade671"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -41439,7 +41439,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "d17f7fd7b1ab1f7be39254c82aaee5e9e3fbf468ed6f56f212bc2ec388bafd0e"
+              "sha256": "845e8ddde1bd8fa2a98c4812d40cd1e47bd1be1e664f73c8c11db41143ade671"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -349949,7 +349949,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "d17f7fd7b1ab1f7be39254c82aaee5e9e3fbf468ed6f56f212bc2ec388bafd0e"
+              "sha256": "845e8ddde1bd8fa2a98c4812d40cd1e47bd1be1e664f73c8c11db41143ade671"
             },
             {
               "path": "apps/web/src/pages/saving-order.test.tsx",
@@ -350938,7 +350938,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "d17f7fd7b1ab1f7be39254c82aaee5e9e3fbf468ed6f56f212bc2ec388bafd0e"
+              "sha256": "845e8ddde1bd8fa2a98c4812d40cd1e47bd1be1e664f73c8c11db41143ade671"
             },
             {
               "path": "apps/web/src/pages/saving-order.test.tsx",
@@ -351929,7 +351929,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "d17f7fd7b1ab1f7be39254c82aaee5e9e3fbf468ed6f56f212bc2ec388bafd0e"
+              "sha256": "845e8ddde1bd8fa2a98c4812d40cd1e47bd1be1e664f73c8c11db41143ade671"
             },
             {
               "path": "apps/web/src/pages/saving-order.test.tsx",
@@ -352918,7 +352918,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "d17f7fd7b1ab1f7be39254c82aaee5e9e3fbf468ed6f56f212bc2ec388bafd0e"
+              "sha256": "845e8ddde1bd8fa2a98c4812d40cd1e47bd1be1e664f73c8c11db41143ade671"
             },
             {
               "path": "apps/web/src/pages/saving-order.test.tsx",
@@ -353907,7 +353907,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "d17f7fd7b1ab1f7be39254c82aaee5e9e3fbf468ed6f56f212bc2ec388bafd0e"
+              "sha256": "845e8ddde1bd8fa2a98c4812d40cd1e47bd1be1e664f73c8c11db41143ade671"
             },
             {
               "path": "apps/web/src/pages/saving-order.test.tsx",
@@ -354896,7 +354896,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "d17f7fd7b1ab1f7be39254c82aaee5e9e3fbf468ed6f56f212bc2ec388bafd0e"
+              "sha256": "845e8ddde1bd8fa2a98c4812d40cd1e47bd1be1e664f73c8c11db41143ade671"
             },
             {
               "path": "apps/web/src/pages/saving-order.test.tsx",
@@ -355886,7 +355886,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "d17f7fd7b1ab1f7be39254c82aaee5e9e3fbf468ed6f56f212bc2ec388bafd0e"
+              "sha256": "845e8ddde1bd8fa2a98c4812d40cd1e47bd1be1e664f73c8c11db41143ade671"
             },
             {
               "path": "apps/web/src/pages/saving-order.test.tsx",
@@ -356875,7 +356875,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "d17f7fd7b1ab1f7be39254c82aaee5e9e3fbf468ed6f56f212bc2ec388bafd0e"
+              "sha256": "845e8ddde1bd8fa2a98c4812d40cd1e47bd1be1e664f73c8c11db41143ade671"
             },
             {
               "path": "apps/web/src/pages/saving-order.test.tsx",
@@ -357864,7 +357864,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "d17f7fd7b1ab1f7be39254c82aaee5e9e3fbf468ed6f56f212bc2ec388bafd0e"
+              "sha256": "845e8ddde1bd8fa2a98c4812d40cd1e47bd1be1e664f73c8c11db41143ade671"
             },
             {
               "path": "apps/web/src/pages/saving-order.test.tsx",
@@ -358853,7 +358853,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "d17f7fd7b1ab1f7be39254c82aaee5e9e3fbf468ed6f56f212bc2ec388bafd0e"
+              "sha256": "845e8ddde1bd8fa2a98c4812d40cd1e47bd1be1e664f73c8c11db41143ade671"
             },
             {
               "path": "apps/web/src/pages/saving-order.test.tsx",
@@ -359796,7 +359796,7 @@
           "source_evidence": [
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "d17f7fd7b1ab1f7be39254c82aaee5e9e3fbf468ed6f56f212bc2ec388bafd0e"
+              "sha256": "845e8ddde1bd8fa2a98c4812d40cd1e47bd1be1e664f73c8c11db41143ade671"
             },
             {
               "path": "apps/web/src/pages/saving-order.test.tsx",
@@ -359808,7 +359808,7 @@
             },
             {
               "path": "packages/i18n/src/saving.ts",
-              "sha256": "9e0f65c18d4349a2829bae4aae8a4e0554bb4a4280e563e676b13aa40d1ac85a"
+              "sha256": "09a3929bc59a130052d4300a23c4a614793d4b7a2b04554e81c11a08a79d0d9e"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -360564,7 +360564,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "d17f7fd7b1ab1f7be39254c82aaee5e9e3fbf468ed6f56f212bc2ec388bafd0e"
+              "sha256": "845e8ddde1bd8fa2a98c4812d40cd1e47bd1be1e664f73c8c11db41143ade671"
             },
             {
               "path": "apps/web/src/pages/saving-order.test.tsx",
@@ -361507,7 +361507,7 @@
           "source_evidence": [
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "d17f7fd7b1ab1f7be39254c82aaee5e9e3fbf468ed6f56f212bc2ec388bafd0e"
+              "sha256": "845e8ddde1bd8fa2a98c4812d40cd1e47bd1be1e664f73c8c11db41143ade671"
             },
             {
               "path": "apps/web/src/pages/saving-order.test.tsx",
@@ -361519,7 +361519,7 @@
             },
             {
               "path": "packages/i18n/src/saving.ts",
-              "sha256": "9e0f65c18d4349a2829bae4aae8a4e0554bb4a4280e563e676b13aa40d1ac85a"
+              "sha256": "09a3929bc59a130052d4300a23c4a614793d4b7a2b04554e81c11a08a79d0d9e"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -361591,7 +361591,7 @@
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
-              "sha256": "427d29912c72cfee31e064606c894b550162ea74cf9706a154d29b1af32818b8"
+              "sha256": "4f28cd74cb6860c15a5eb3e0e7b7936cca6606763605f9a26d90a5e7c041452c"
             },
             {
               "path": "apps/api/src/test/submission-audit.ts",
@@ -362280,7 +362280,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "d17f7fd7b1ab1f7be39254c82aaee5e9e3fbf468ed6f56f212bc2ec388bafd0e"
+              "sha256": "845e8ddde1bd8fa2a98c4812d40cd1e47bd1be1e664f73c8c11db41143ade671"
             },
             {
               "path": "apps/web/src/pages/saving-order.test.tsx",
@@ -363269,7 +363269,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "d17f7fd7b1ab1f7be39254c82aaee5e9e3fbf468ed6f56f212bc2ec388bafd0e"
+              "sha256": "845e8ddde1bd8fa2a98c4812d40cd1e47bd1be1e664f73c8c11db41143ade671"
             },
             {
               "path": "apps/web/src/pages/saving-order.test.tsx",
@@ -364258,7 +364258,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "d17f7fd7b1ab1f7be39254c82aaee5e9e3fbf468ed6f56f212bc2ec388bafd0e"
+              "sha256": "845e8ddde1bd8fa2a98c4812d40cd1e47bd1be1e664f73c8c11db41143ade671"
             },
             {
               "path": "apps/web/src/pages/saving-order.test.tsx",
@@ -365249,7 +365249,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "d17f7fd7b1ab1f7be39254c82aaee5e9e3fbf468ed6f56f212bc2ec388bafd0e"
+              "sha256": "845e8ddde1bd8fa2a98c4812d40cd1e47bd1be1e664f73c8c11db41143ade671"
             },
             {
               "path": "apps/web/src/pages/saving-order.test.tsx",
@@ -366238,7 +366238,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "d17f7fd7b1ab1f7be39254c82aaee5e9e3fbf468ed6f56f212bc2ec388bafd0e"
+              "sha256": "845e8ddde1bd8fa2a98c4812d40cd1e47bd1be1e664f73c8c11db41143ade671"
             },
             {
               "path": "apps/web/src/pages/saving-order.test.tsx",
@@ -367232,7 +367232,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "d17f7fd7b1ab1f7be39254c82aaee5e9e3fbf468ed6f56f212bc2ec388bafd0e"
+              "sha256": "845e8ddde1bd8fa2a98c4812d40cd1e47bd1be1e664f73c8c11db41143ade671"
             },
             {
               "path": "apps/web/src/pages/saving-order.test.tsx",
@@ -368230,7 +368230,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "d17f7fd7b1ab1f7be39254c82aaee5e9e3fbf468ed6f56f212bc2ec388bafd0e"
+              "sha256": "845e8ddde1bd8fa2a98c4812d40cd1e47bd1be1e664f73c8c11db41143ade671"
             },
             {
               "path": "apps/web/src/pages/saving-order.test.tsx",
@@ -369228,7 +369228,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "d17f7fd7b1ab1f7be39254c82aaee5e9e3fbf468ed6f56f212bc2ec388bafd0e"
+              "sha256": "845e8ddde1bd8fa2a98c4812d40cd1e47bd1be1e664f73c8c11db41143ade671"
             },
             {
               "path": "apps/web/src/pages/saving-order.test.tsx",
@@ -383777,7 +383777,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "d17f7fd7b1ab1f7be39254c82aaee5e9e3fbf468ed6f56f212bc2ec388bafd0e"
+              "sha256": "845e8ddde1bd8fa2a98c4812d40cd1e47bd1be1e664f73c8c11db41143ade671"
             },
             {
               "path": "apps/web/src/pages/saving-catalogue-forms.test.tsx",
@@ -383817,7 +383817,7 @@
             },
             {
               "path": "packages/i18n/src/saving.ts",
-              "sha256": "9e0f65c18d4349a2829bae4aae8a4e0554bb4a4280e563e676b13aa40d1ac85a"
+              "sha256": "09a3929bc59a130052d4300a23c4a614793d4b7a2b04554e81c11a08a79d0d9e"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -384634,7 +384634,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "d17f7fd7b1ab1f7be39254c82aaee5e9e3fbf468ed6f56f212bc2ec388bafd0e"
+              "sha256": "845e8ddde1bd8fa2a98c4812d40cd1e47bd1be1e664f73c8c11db41143ade671"
             },
             {
               "path": "apps/web/src/pages/saving-catalogue-forms.test.tsx",
@@ -384674,7 +384674,7 @@
             },
             {
               "path": "packages/i18n/src/saving.ts",
-              "sha256": "9e0f65c18d4349a2829bae4aae8a4e0554bb4a4280e563e676b13aa40d1ac85a"
+              "sha256": "09a3929bc59a130052d4300a23c4a614793d4b7a2b04554e81c11a08a79d0d9e"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -385492,7 +385492,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "d17f7fd7b1ab1f7be39254c82aaee5e9e3fbf468ed6f56f212bc2ec388bafd0e"
+              "sha256": "845e8ddde1bd8fa2a98c4812d40cd1e47bd1be1e664f73c8c11db41143ade671"
             },
             {
               "path": "apps/web/src/pages/saving-catalogue-forms.test.tsx",
@@ -385532,7 +385532,7 @@
             },
             {
               "path": "packages/i18n/src/saving.ts",
-              "sha256": "9e0f65c18d4349a2829bae4aae8a4e0554bb4a4280e563e676b13aa40d1ac85a"
+              "sha256": "09a3929bc59a130052d4300a23c4a614793d4b7a2b04554e81c11a08a79d0d9e"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -389415,7 +389415,7 @@
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
-              "sha256": "427d29912c72cfee31e064606c894b550162ea74cf9706a154d29b1af32818b8"
+              "sha256": "4f28cd74cb6860c15a5eb3e0e7b7936cca6606763605f9a26d90a5e7c041452c"
             },
             {
               "path": "packages/i18n/src/solar.ts",
@@ -390055,7 +390055,7 @@
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
-              "sha256": "427d29912c72cfee31e064606c894b550162ea74cf9706a154d29b1af32818b8"
+              "sha256": "4f28cd74cb6860c15a5eb3e0e7b7936cca6606763605f9a26d90a5e7c041452c"
             },
             {
               "path": "packages/i18n/src/solar.ts",
@@ -421546,7 +421546,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "d17f7fd7b1ab1f7be39254c82aaee5e9e3fbf468ed6f56f212bc2ec388bafd0e"
+              "sha256": "845e8ddde1bd8fa2a98c4812d40cd1e47bd1be1e664f73c8c11db41143ade671"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -491359,7 +491359,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "d17f7fd7b1ab1f7be39254c82aaee5e9e3fbf468ed6f56f212bc2ec388bafd0e"
+              "sha256": "845e8ddde1bd8fa2a98c4812d40cd1e47bd1be1e664f73c8c11db41143ade671"
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
@@ -497047,7 +497047,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "f3269c030e158c92986f025995192167a258fdfd23b28c4b002e7d70f73a4c04"
+              "sha256": "c238f5aadf0fc263de3243495f48ab82517485966f0f982f16648d63fb65793b"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -508317,7 +508317,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "d17f7fd7b1ab1f7be39254c82aaee5e9e3fbf468ed6f56f212bc2ec388bafd0e"
+              "sha256": "845e8ddde1bd8fa2a98c4812d40cd1e47bd1be1e664f73c8c11db41143ade671"
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
@@ -512332,7 +512332,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "d17f7fd7b1ab1f7be39254c82aaee5e9e3fbf468ed6f56f212bc2ec388bafd0e"
+              "sha256": "845e8ddde1bd8fa2a98c4812d40cd1e47bd1be1e664f73c8c11db41143ade671"
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
@@ -514923,7 +514923,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "d17f7fd7b1ab1f7be39254c82aaee5e9e3fbf468ed6f56f212bc2ec388bafd0e"
+              "sha256": "845e8ddde1bd8fa2a98c4812d40cd1e47bd1be1e664f73c8c11db41143ade671"
             },
             {
               "path": "apps/web/e2e/crm-detail-permissions.spec.ts",
@@ -517997,7 +517997,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "d17f7fd7b1ab1f7be39254c82aaee5e9e3fbf468ed6f56f212bc2ec388bafd0e"
+              "sha256": "845e8ddde1bd8fa2a98c4812d40cd1e47bd1be1e664f73c8c11db41143ade671"
             },
             {
               "path": "apps/web/src/pages/ServiceSettingsEditor.tsx",
@@ -518105,7 +518105,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "f3269c030e158c92986f025995192167a258fdfd23b28c4b002e7d70f73a4c04"
+              "sha256": "c238f5aadf0fc263de3243495f48ab82517485966f0f982f16648d63fb65793b"
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
@@ -519001,7 +519001,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "d17f7fd7b1ab1f7be39254c82aaee5e9e3fbf468ed6f56f212bc2ec388bafd0e"
+              "sha256": "845e8ddde1bd8fa2a98c4812d40cd1e47bd1be1e664f73c8c11db41143ade671"
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
@@ -519213,7 +519213,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "f3269c030e158c92986f025995192167a258fdfd23b28c4b002e7d70f73a4c04"
+              "sha256": "c238f5aadf0fc263de3243495f48ab82517485966f0f982f16648d63fb65793b"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -546347,7 +546347,7 @@
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
-              "sha256": "427d29912c72cfee31e064606c894b550162ea74cf9706a154d29b1af32818b8"
+              "sha256": "4f28cd74cb6860c15a5eb3e0e7b7936cca6606763605f9a26d90a5e7c041452c"
             },
             {
               "path": "apps/web/e2e/ui-interaction.spec.ts",
@@ -546895,7 +546895,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "d17f7fd7b1ab1f7be39254c82aaee5e9e3fbf468ed6f56f212bc2ec388bafd0e"
+              "sha256": "845e8ddde1bd8fa2a98c4812d40cd1e47bd1be1e664f73c8c11db41143ade671"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -548213,7 +548213,7 @@
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
-              "sha256": "427d29912c72cfee31e064606c894b550162ea74cf9706a154d29b1af32818b8"
+              "sha256": "4f28cd74cb6860c15a5eb3e0e7b7936cca6606763605f9a26d90a5e7c041452c"
             },
             {
               "path": "apps/web/e2e/ui-interaction.spec.ts",
@@ -548761,7 +548761,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "d17f7fd7b1ab1f7be39254c82aaee5e9e3fbf468ed6f56f212bc2ec388bafd0e"
+              "sha256": "845e8ddde1bd8fa2a98c4812d40cd1e47bd1be1e664f73c8c11db41143ade671"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -550080,7 +550080,7 @@
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
-              "sha256": "427d29912c72cfee31e064606c894b550162ea74cf9706a154d29b1af32818b8"
+              "sha256": "4f28cd74cb6860c15a5eb3e0e7b7936cca6606763605f9a26d90a5e7c041452c"
             },
             {
               "path": "apps/web/e2e/ui-interaction.spec.ts",
@@ -550628,7 +550628,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "d17f7fd7b1ab1f7be39254c82aaee5e9e3fbf468ed6f56f212bc2ec388bafd0e"
+              "sha256": "845e8ddde1bd8fa2a98c4812d40cd1e47bd1be1e664f73c8c11db41143ade671"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -551916,7 +551916,7 @@
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
-              "sha256": "427d29912c72cfee31e064606c894b550162ea74cf9706a154d29b1af32818b8"
+              "sha256": "4f28cd74cb6860c15a5eb3e0e7b7936cca6606763605f9a26d90a5e7c041452c"
             },
             {
               "path": "apps/web/e2e/ui-interaction.spec.ts",
@@ -552464,7 +552464,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "d17f7fd7b1ab1f7be39254c82aaee5e9e3fbf468ed6f56f212bc2ec388bafd0e"
+              "sha256": "845e8ddde1bd8fa2a98c4812d40cd1e47bd1be1e664f73c8c11db41143ade671"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -553778,7 +553778,7 @@
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
-              "sha256": "427d29912c72cfee31e064606c894b550162ea74cf9706a154d29b1af32818b8"
+              "sha256": "4f28cd74cb6860c15a5eb3e0e7b7936cca6606763605f9a26d90a5e7c041452c"
             },
             {
               "path": "apps/web/e2e/ui-interaction.spec.ts",
@@ -554326,7 +554326,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "d17f7fd7b1ab1f7be39254c82aaee5e9e3fbf468ed6f56f212bc2ec388bafd0e"
+              "sha256": "845e8ddde1bd8fa2a98c4812d40cd1e47bd1be1e664f73c8c11db41143ade671"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -555649,7 +555649,7 @@
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
-              "sha256": "427d29912c72cfee31e064606c894b550162ea74cf9706a154d29b1af32818b8"
+              "sha256": "4f28cd74cb6860c15a5eb3e0e7b7936cca6606763605f9a26d90a5e7c041452c"
             },
             {
               "path": "apps/web/e2e/ui-interaction.spec.ts",
@@ -556197,7 +556197,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "d17f7fd7b1ab1f7be39254c82aaee5e9e3fbf468ed6f56f212bc2ec388bafd0e"
+              "sha256": "845e8ddde1bd8fa2a98c4812d40cd1e47bd1be1e664f73c8c11db41143ade671"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -557493,7 +557493,7 @@
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
-              "sha256": "427d29912c72cfee31e064606c894b550162ea74cf9706a154d29b1af32818b8"
+              "sha256": "4f28cd74cb6860c15a5eb3e0e7b7936cca6606763605f9a26d90a5e7c041452c"
             },
             {
               "path": "apps/web/e2e/ui-interaction.spec.ts",
@@ -558041,7 +558041,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "d17f7fd7b1ab1f7be39254c82aaee5e9e3fbf468ed6f56f212bc2ec388bafd0e"
+              "sha256": "845e8ddde1bd8fa2a98c4812d40cd1e47bd1be1e664f73c8c11db41143ade671"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -559301,7 +559301,7 @@
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
-              "sha256": "427d29912c72cfee31e064606c894b550162ea74cf9706a154d29b1af32818b8"
+              "sha256": "4f28cd74cb6860c15a5eb3e0e7b7936cca6606763605f9a26d90a5e7c041452c"
             },
             {
               "path": "apps/web/e2e/ui-interaction.spec.ts",
@@ -559849,7 +559849,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "d17f7fd7b1ab1f7be39254c82aaee5e9e3fbf468ed6f56f212bc2ec388bafd0e"
+              "sha256": "845e8ddde1bd8fa2a98c4812d40cd1e47bd1be1e664f73c8c11db41143ade671"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -561109,7 +561109,7 @@
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
-              "sha256": "427d29912c72cfee31e064606c894b550162ea74cf9706a154d29b1af32818b8"
+              "sha256": "4f28cd74cb6860c15a5eb3e0e7b7936cca6606763605f9a26d90a5e7c041452c"
             },
             {
               "path": "apps/web/e2e/ui-interaction.spec.ts",
@@ -561657,7 +561657,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "d17f7fd7b1ab1f7be39254c82aaee5e9e3fbf468ed6f56f212bc2ec388bafd0e"
+              "sha256": "845e8ddde1bd8fa2a98c4812d40cd1e47bd1be1e664f73c8c11db41143ade671"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -562918,7 +562918,7 @@
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
-              "sha256": "427d29912c72cfee31e064606c894b550162ea74cf9706a154d29b1af32818b8"
+              "sha256": "4f28cd74cb6860c15a5eb3e0e7b7936cca6606763605f9a26d90a5e7c041452c"
             },
             {
               "path": "apps/web/e2e/ui-interaction.spec.ts",
@@ -563466,7 +563466,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "d17f7fd7b1ab1f7be39254c82aaee5e9e3fbf468ed6f56f212bc2ec388bafd0e"
+              "sha256": "845e8ddde1bd8fa2a98c4812d40cd1e47bd1be1e664f73c8c11db41143ade671"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -564726,7 +564726,7 @@
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
-              "sha256": "427d29912c72cfee31e064606c894b550162ea74cf9706a154d29b1af32818b8"
+              "sha256": "4f28cd74cb6860c15a5eb3e0e7b7936cca6606763605f9a26d90a5e7c041452c"
             },
             {
               "path": "apps/web/e2e/ui-interaction.spec.ts",
@@ -565274,7 +565274,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "d17f7fd7b1ab1f7be39254c82aaee5e9e3fbf468ed6f56f212bc2ec388bafd0e"
+              "sha256": "845e8ddde1bd8fa2a98c4812d40cd1e47bd1be1e664f73c8c11db41143ade671"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -567120,7 +567120,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "d17f7fd7b1ab1f7be39254c82aaee5e9e3fbf468ed6f56f212bc2ec388bafd0e"
+              "sha256": "845e8ddde1bd8fa2a98c4812d40cd1e47bd1be1e664f73c8c11db41143ade671"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -567520,7 +567520,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "f3269c030e158c92986f025995192167a258fdfd23b28c4b002e7d70f73a4c04"
+              "sha256": "c238f5aadf0fc263de3243495f48ab82517485966f0f982f16648d63fb65793b"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -567548,7 +567548,7 @@
             },
             {
               "path": "packages/i18n/src/saving.ts",
-              "sha256": "9e0f65c18d4349a2829bae4aae8a4e0554bb4a4280e563e676b13aa40d1ac85a"
+              "sha256": "09a3929bc59a130052d4300a23c4a614793d4b7a2b04554e81c11a08a79d0d9e"
             },
             {
               "path": "packages/i18n/src/service-feedback.ts",
@@ -569015,7 +569015,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "d17f7fd7b1ab1f7be39254c82aaee5e9e3fbf468ed6f56f212bc2ec388bafd0e"
+              "sha256": "845e8ddde1bd8fa2a98c4812d40cd1e47bd1be1e664f73c8c11db41143ade671"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -569415,7 +569415,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "f3269c030e158c92986f025995192167a258fdfd23b28c4b002e7d70f73a4c04"
+              "sha256": "c238f5aadf0fc263de3243495f48ab82517485966f0f982f16648d63fb65793b"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -569443,7 +569443,7 @@
             },
             {
               "path": "packages/i18n/src/saving.ts",
-              "sha256": "9e0f65c18d4349a2829bae4aae8a4e0554bb4a4280e563e676b13aa40d1ac85a"
+              "sha256": "09a3929bc59a130052d4300a23c4a614793d4b7a2b04554e81c11a08a79d0d9e"
             },
             {
               "path": "packages/i18n/src/service-feedback.ts",
@@ -570219,7 +570219,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "The shared customer settings write deadline is verified for profile edits, addresses, profile switching and saving intake. Continue reconciling ordinary command feedback, including customer journeys whose read state prevents safe recovery."
+        "Profile, address and saving intake recovery have current customer evidence. Reconcile remaining ordinary CRUD feedback across the full route inventory and confirm that transactional commands preserve their owned recovery."
       ],
       "owner": null,
       "depends_on": [],
@@ -570279,7 +570279,8 @@
           "release-0.5-ticket-command-deadline",
           "release-0.5-verified-upload-deadline",
           "release-0.5-verification-mode-recovery",
-          "release-0.5-customer-settings-deadline"
+          "release-0.5-customer-settings-deadline",
+          "release-0.5-saving-intake-recovery"
         ],
         "current_acceptance": null
       }
@@ -570990,7 +570991,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "d17f7fd7b1ab1f7be39254c82aaee5e9e3fbf468ed6f56f212bc2ec388bafd0e"
+              "sha256": "845e8ddde1bd8fa2a98c4812d40cd1e47bd1be1e664f73c8c11db41143ade671"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -571390,7 +571391,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "f3269c030e158c92986f025995192167a258fdfd23b28c4b002e7d70f73a4c04"
+              "sha256": "c238f5aadf0fc263de3243495f48ab82517485966f0f982f16648d63fb65793b"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -571418,7 +571419,7 @@
             },
             {
               "path": "packages/i18n/src/saving.ts",
-              "sha256": "9e0f65c18d4349a2829bae4aae8a4e0554bb4a4280e563e676b13aa40d1ac85a"
+              "sha256": "09a3929bc59a130052d4300a23c4a614793d4b7a2b04554e81c11a08a79d0d9e"
             },
             {
               "path": "packages/i18n/src/service-feedback.ts",
@@ -572885,7 +572886,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "d17f7fd7b1ab1f7be39254c82aaee5e9e3fbf468ed6f56f212bc2ec388bafd0e"
+              "sha256": "845e8ddde1bd8fa2a98c4812d40cd1e47bd1be1e664f73c8c11db41143ade671"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -573285,7 +573286,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "f3269c030e158c92986f025995192167a258fdfd23b28c4b002e7d70f73a4c04"
+              "sha256": "c238f5aadf0fc263de3243495f48ab82517485966f0f982f16648d63fb65793b"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -573313,7 +573314,7 @@
             },
             {
               "path": "packages/i18n/src/saving.ts",
-              "sha256": "9e0f65c18d4349a2829bae4aae8a4e0554bb4a4280e563e676b13aa40d1ac85a"
+              "sha256": "09a3929bc59a130052d4300a23c4a614793d4b7a2b04554e81c11a08a79d0d9e"
             },
             {
               "path": "packages/i18n/src/service-feedback.ts",
@@ -574780,7 +574781,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "d17f7fd7b1ab1f7be39254c82aaee5e9e3fbf468ed6f56f212bc2ec388bafd0e"
+              "sha256": "845e8ddde1bd8fa2a98c4812d40cd1e47bd1be1e664f73c8c11db41143ade671"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -575180,7 +575181,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "f3269c030e158c92986f025995192167a258fdfd23b28c4b002e7d70f73a4c04"
+              "sha256": "c238f5aadf0fc263de3243495f48ab82517485966f0f982f16648d63fb65793b"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -575208,7 +575209,7 @@
             },
             {
               "path": "packages/i18n/src/saving.ts",
-              "sha256": "9e0f65c18d4349a2829bae4aae8a4e0554bb4a4280e563e676b13aa40d1ac85a"
+              "sha256": "09a3929bc59a130052d4300a23c4a614793d4b7a2b04554e81c11a08a79d0d9e"
             },
             {
               "path": "packages/i18n/src/service-feedback.ts",
@@ -576675,7 +576676,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "d17f7fd7b1ab1f7be39254c82aaee5e9e3fbf468ed6f56f212bc2ec388bafd0e"
+              "sha256": "845e8ddde1bd8fa2a98c4812d40cd1e47bd1be1e664f73c8c11db41143ade671"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -577075,7 +577076,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "f3269c030e158c92986f025995192167a258fdfd23b28c4b002e7d70f73a4c04"
+              "sha256": "c238f5aadf0fc263de3243495f48ab82517485966f0f982f16648d63fb65793b"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -577103,7 +577104,7 @@
             },
             {
               "path": "packages/i18n/src/saving.ts",
-              "sha256": "9e0f65c18d4349a2829bae4aae8a4e0554bb4a4280e563e676b13aa40d1ac85a"
+              "sha256": "09a3929bc59a130052d4300a23c4a614793d4b7a2b04554e81c11a08a79d0d9e"
             },
             {
               "path": "packages/i18n/src/service-feedback.ts",
@@ -578570,7 +578571,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "d17f7fd7b1ab1f7be39254c82aaee5e9e3fbf468ed6f56f212bc2ec388bafd0e"
+              "sha256": "845e8ddde1bd8fa2a98c4812d40cd1e47bd1be1e664f73c8c11db41143ade671"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -578970,7 +578971,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "f3269c030e158c92986f025995192167a258fdfd23b28c4b002e7d70f73a4c04"
+              "sha256": "c238f5aadf0fc263de3243495f48ab82517485966f0f982f16648d63fb65793b"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -578998,7 +578999,7 @@
             },
             {
               "path": "packages/i18n/src/saving.ts",
-              "sha256": "9e0f65c18d4349a2829bae4aae8a4e0554bb4a4280e563e676b13aa40d1ac85a"
+              "sha256": "09a3929bc59a130052d4300a23c4a614793d4b7a2b04554e81c11a08a79d0d9e"
             },
             {
               "path": "packages/i18n/src/service-feedback.ts",
@@ -580465,7 +580466,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "d17f7fd7b1ab1f7be39254c82aaee5e9e3fbf468ed6f56f212bc2ec388bafd0e"
+              "sha256": "845e8ddde1bd8fa2a98c4812d40cd1e47bd1be1e664f73c8c11db41143ade671"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -580865,7 +580866,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "f3269c030e158c92986f025995192167a258fdfd23b28c4b002e7d70f73a4c04"
+              "sha256": "c238f5aadf0fc263de3243495f48ab82517485966f0f982f16648d63fb65793b"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -580893,7 +580894,7 @@
             },
             {
               "path": "packages/i18n/src/saving.ts",
-              "sha256": "9e0f65c18d4349a2829bae4aae8a4e0554bb4a4280e563e676b13aa40d1ac85a"
+              "sha256": "09a3929bc59a130052d4300a23c4a614793d4b7a2b04554e81c11a08a79d0d9e"
             },
             {
               "path": "packages/i18n/src/service-feedback.ts",
@@ -582360,7 +582361,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "d17f7fd7b1ab1f7be39254c82aaee5e9e3fbf468ed6f56f212bc2ec388bafd0e"
+              "sha256": "845e8ddde1bd8fa2a98c4812d40cd1e47bd1be1e664f73c8c11db41143ade671"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -582760,7 +582761,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "f3269c030e158c92986f025995192167a258fdfd23b28c4b002e7d70f73a4c04"
+              "sha256": "c238f5aadf0fc263de3243495f48ab82517485966f0f982f16648d63fb65793b"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -582788,7 +582789,7 @@
             },
             {
               "path": "packages/i18n/src/saving.ts",
-              "sha256": "9e0f65c18d4349a2829bae4aae8a4e0554bb4a4280e563e676b13aa40d1ac85a"
+              "sha256": "09a3929bc59a130052d4300a23c4a614793d4b7a2b04554e81c11a08a79d0d9e"
             },
             {
               "path": "packages/i18n/src/service-feedback.ts",
@@ -584255,7 +584256,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "d17f7fd7b1ab1f7be39254c82aaee5e9e3fbf468ed6f56f212bc2ec388bafd0e"
+              "sha256": "845e8ddde1bd8fa2a98c4812d40cd1e47bd1be1e664f73c8c11db41143ade671"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -584655,7 +584656,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "f3269c030e158c92986f025995192167a258fdfd23b28c4b002e7d70f73a4c04"
+              "sha256": "c238f5aadf0fc263de3243495f48ab82517485966f0f982f16648d63fb65793b"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -584683,7 +584684,7 @@
             },
             {
               "path": "packages/i18n/src/saving.ts",
-              "sha256": "9e0f65c18d4349a2829bae4aae8a4e0554bb4a4280e563e676b13aa40d1ac85a"
+              "sha256": "09a3929bc59a130052d4300a23c4a614793d4b7a2b04554e81c11a08a79d0d9e"
             },
             {
               "path": "packages/i18n/src/service-feedback.ts",
@@ -586150,7 +586151,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "d17f7fd7b1ab1f7be39254c82aaee5e9e3fbf468ed6f56f212bc2ec388bafd0e"
+              "sha256": "845e8ddde1bd8fa2a98c4812d40cd1e47bd1be1e664f73c8c11db41143ade671"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -586550,7 +586551,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "f3269c030e158c92986f025995192167a258fdfd23b28c4b002e7d70f73a4c04"
+              "sha256": "c238f5aadf0fc263de3243495f48ab82517485966f0f982f16648d63fb65793b"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -586578,7 +586579,7 @@
             },
             {
               "path": "packages/i18n/src/saving.ts",
-              "sha256": "9e0f65c18d4349a2829bae4aae8a4e0554bb4a4280e563e676b13aa40d1ac85a"
+              "sha256": "09a3929bc59a130052d4300a23c4a614793d4b7a2b04554e81c11a08a79d0d9e"
             },
             {
               "path": "packages/i18n/src/service-feedback.ts",
@@ -588045,7 +588046,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "d17f7fd7b1ab1f7be39254c82aaee5e9e3fbf468ed6f56f212bc2ec388bafd0e"
+              "sha256": "845e8ddde1bd8fa2a98c4812d40cd1e47bd1be1e664f73c8c11db41143ade671"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -588445,7 +588446,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "f3269c030e158c92986f025995192167a258fdfd23b28c4b002e7d70f73a4c04"
+              "sha256": "c238f5aadf0fc263de3243495f48ab82517485966f0f982f16648d63fb65793b"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -588473,7 +588474,7 @@
             },
             {
               "path": "packages/i18n/src/saving.ts",
-              "sha256": "9e0f65c18d4349a2829bae4aae8a4e0554bb4a4280e563e676b13aa40d1ac85a"
+              "sha256": "09a3929bc59a130052d4300a23c4a614793d4b7a2b04554e81c11a08a79d0d9e"
             },
             {
               "path": "packages/i18n/src/service-feedback.ts",
@@ -589940,7 +589941,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "d17f7fd7b1ab1f7be39254c82aaee5e9e3fbf468ed6f56f212bc2ec388bafd0e"
+              "sha256": "845e8ddde1bd8fa2a98c4812d40cd1e47bd1be1e664f73c8c11db41143ade671"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -590340,7 +590341,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "f3269c030e158c92986f025995192167a258fdfd23b28c4b002e7d70f73a4c04"
+              "sha256": "c238f5aadf0fc263de3243495f48ab82517485966f0f982f16648d63fb65793b"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -590368,7 +590369,7 @@
             },
             {
               "path": "packages/i18n/src/saving.ts",
-              "sha256": "9e0f65c18d4349a2829bae4aae8a4e0554bb4a4280e563e676b13aa40d1ac85a"
+              "sha256": "09a3929bc59a130052d4300a23c4a614793d4b7a2b04554e81c11a08a79d0d9e"
             },
             {
               "path": "packages/i18n/src/service-feedback.ts",
@@ -591604,7 +591605,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "f3269c030e158c92986f025995192167a258fdfd23b28c4b002e7d70f73a4c04"
+              "sha256": "c238f5aadf0fc263de3243495f48ab82517485966f0f982f16648d63fb65793b"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -592575,7 +592576,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "d17f7fd7b1ab1f7be39254c82aaee5e9e3fbf468ed6f56f212bc2ec388bafd0e"
+              "sha256": "845e8ddde1bd8fa2a98c4812d40cd1e47bd1be1e664f73c8c11db41143ade671"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -592975,7 +592976,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "f3269c030e158c92986f025995192167a258fdfd23b28c4b002e7d70f73a4c04"
+              "sha256": "c238f5aadf0fc263de3243495f48ab82517485966f0f982f16648d63fb65793b"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -593003,7 +593004,7 @@
             },
             {
               "path": "packages/i18n/src/saving.ts",
-              "sha256": "9e0f65c18d4349a2829bae4aae8a4e0554bb4a4280e563e676b13aa40d1ac85a"
+              "sha256": "09a3929bc59a130052d4300a23c4a614793d4b7a2b04554e81c11a08a79d0d9e"
             },
             {
               "path": "packages/i18n/src/service-feedback.ts",
@@ -594470,7 +594471,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "d17f7fd7b1ab1f7be39254c82aaee5e9e3fbf468ed6f56f212bc2ec388bafd0e"
+              "sha256": "845e8ddde1bd8fa2a98c4812d40cd1e47bd1be1e664f73c8c11db41143ade671"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -594870,7 +594871,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "f3269c030e158c92986f025995192167a258fdfd23b28c4b002e7d70f73a4c04"
+              "sha256": "c238f5aadf0fc263de3243495f48ab82517485966f0f982f16648d63fb65793b"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -594898,7 +594899,7 @@
             },
             {
               "path": "packages/i18n/src/saving.ts",
-              "sha256": "9e0f65c18d4349a2829bae4aae8a4e0554bb4a4280e563e676b13aa40d1ac85a"
+              "sha256": "09a3929bc59a130052d4300a23c4a614793d4b7a2b04554e81c11a08a79d0d9e"
             },
             {
               "path": "packages/i18n/src/service-feedback.ts",
@@ -595674,7 +595675,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Customer settings command recovery has current browser evidence. Saving intake already bounds its profile, plans and saved-address reads, but only renders a generic error with no retry when one fails. Continue matching the remaining conditional states to the route inventory and current native evidence."
+        "Saving intake now covers bounded retries, a valid empty catalogue and an empty address list. Match the remaining conditional list, detail, dashboard and staff route states to the inventory and current native evidence."
       ],
       "owner": null,
       "depends_on": [],
@@ -595746,7 +595747,8 @@
           "release-0.5-ticket-command-deadline",
           "release-0.5-verified-upload-deadline",
           "release-0.5-verification-mode-recovery",
-          "release-0.5-customer-settings-deadline"
+          "release-0.5-customer-settings-deadline",
+          "release-0.5-saving-intake-recovery"
         ],
         "current_acceptance": null
       }
@@ -595899,7 +595901,7 @@
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
-              "sha256": "427d29912c72cfee31e064606c894b550162ea74cf9706a154d29b1af32818b8"
+              "sha256": "4f28cd74cb6860c15a5eb3e0e7b7936cca6606763605f9a26d90a5e7c041452c"
             },
             {
               "path": "apps/web/e2e/ui-interaction.spec.ts",
@@ -596447,7 +596449,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "d17f7fd7b1ab1f7be39254c82aaee5e9e3fbf468ed6f56f212bc2ec388bafd0e"
+              "sha256": "845e8ddde1bd8fa2a98c4812d40cd1e47bd1be1e664f73c8c11db41143ade671"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -597703,7 +597705,7 @@
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
-              "sha256": "427d29912c72cfee31e064606c894b550162ea74cf9706a154d29b1af32818b8"
+              "sha256": "4f28cd74cb6860c15a5eb3e0e7b7936cca6606763605f9a26d90a5e7c041452c"
             },
             {
               "path": "apps/web/e2e/ui-interaction.spec.ts",
@@ -598251,7 +598253,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "d17f7fd7b1ab1f7be39254c82aaee5e9e3fbf468ed6f56f212bc2ec388bafd0e"
+              "sha256": "845e8ddde1bd8fa2a98c4812d40cd1e47bd1be1e664f73c8c11db41143ade671"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -599507,7 +599509,7 @@
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
-              "sha256": "427d29912c72cfee31e064606c894b550162ea74cf9706a154d29b1af32818b8"
+              "sha256": "4f28cd74cb6860c15a5eb3e0e7b7936cca6606763605f9a26d90a5e7c041452c"
             },
             {
               "path": "apps/web/e2e/ui-interaction.spec.ts",
@@ -600055,7 +600057,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "d17f7fd7b1ab1f7be39254c82aaee5e9e3fbf468ed6f56f212bc2ec388bafd0e"
+              "sha256": "845e8ddde1bd8fa2a98c4812d40cd1e47bd1be1e664f73c8c11db41143ade671"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -601311,7 +601313,7 @@
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
-              "sha256": "427d29912c72cfee31e064606c894b550162ea74cf9706a154d29b1af32818b8"
+              "sha256": "4f28cd74cb6860c15a5eb3e0e7b7936cca6606763605f9a26d90a5e7c041452c"
             },
             {
               "path": "apps/web/e2e/ui-interaction.spec.ts",
@@ -601859,7 +601861,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "d17f7fd7b1ab1f7be39254c82aaee5e9e3fbf468ed6f56f212bc2ec388bafd0e"
+              "sha256": "845e8ddde1bd8fa2a98c4812d40cd1e47bd1be1e664f73c8c11db41143ade671"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -603115,7 +603117,7 @@
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
-              "sha256": "427d29912c72cfee31e064606c894b550162ea74cf9706a154d29b1af32818b8"
+              "sha256": "4f28cd74cb6860c15a5eb3e0e7b7936cca6606763605f9a26d90a5e7c041452c"
             },
             {
               "path": "apps/web/e2e/ui-interaction.spec.ts",
@@ -603663,7 +603665,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "d17f7fd7b1ab1f7be39254c82aaee5e9e3fbf468ed6f56f212bc2ec388bafd0e"
+              "sha256": "845e8ddde1bd8fa2a98c4812d40cd1e47bd1be1e664f73c8c11db41143ade671"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -604919,7 +604921,7 @@
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
-              "sha256": "427d29912c72cfee31e064606c894b550162ea74cf9706a154d29b1af32818b8"
+              "sha256": "4f28cd74cb6860c15a5eb3e0e7b7936cca6606763605f9a26d90a5e7c041452c"
             },
             {
               "path": "apps/web/e2e/ui-interaction.spec.ts",
@@ -605467,7 +605469,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "d17f7fd7b1ab1f7be39254c82aaee5e9e3fbf468ed6f56f212bc2ec388bafd0e"
+              "sha256": "845e8ddde1bd8fa2a98c4812d40cd1e47bd1be1e664f73c8c11db41143ade671"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -606723,7 +606725,7 @@
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
-              "sha256": "427d29912c72cfee31e064606c894b550162ea74cf9706a154d29b1af32818b8"
+              "sha256": "4f28cd74cb6860c15a5eb3e0e7b7936cca6606763605f9a26d90a5e7c041452c"
             },
             {
               "path": "apps/web/e2e/ui-interaction.spec.ts",
@@ -607271,7 +607273,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "d17f7fd7b1ab1f7be39254c82aaee5e9e3fbf468ed6f56f212bc2ec388bafd0e"
+              "sha256": "845e8ddde1bd8fa2a98c4812d40cd1e47bd1be1e664f73c8c11db41143ade671"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -651392,7 +651394,7 @@
             },
             {
               "path": "packages/i18n/src/saving.ts",
-              "sha256": "9e0f65c18d4349a2829bae4aae8a4e0554bb4a4280e563e676b13aa40d1ac85a"
+              "sha256": "09a3929bc59a130052d4300a23c4a614793d4b7a2b04554e81c11a08a79d0d9e"
             },
             {
               "path": "packages/i18n/src/shell.ts",
@@ -652032,7 +652034,7 @@
             },
             {
               "path": "packages/i18n/src/saving.ts",
-              "sha256": "9e0f65c18d4349a2829bae4aae8a4e0554bb4a4280e563e676b13aa40d1ac85a"
+              "sha256": "09a3929bc59a130052d4300a23c4a614793d4b7a2b04554e81c11a08a79d0d9e"
             },
             {
               "path": "packages/i18n/src/shell.ts",
@@ -652672,7 +652674,7 @@
             },
             {
               "path": "packages/i18n/src/saving.ts",
-              "sha256": "9e0f65c18d4349a2829bae4aae8a4e0554bb4a4280e563e676b13aa40d1ac85a"
+              "sha256": "09a3929bc59a130052d4300a23c4a614793d4b7a2b04554e81c11a08a79d0d9e"
             },
             {
               "path": "packages/i18n/src/shell.ts",
@@ -653310,7 +653312,7 @@
             },
             {
               "path": "packages/i18n/src/saving.ts",
-              "sha256": "9e0f65c18d4349a2829bae4aae8a4e0554bb4a4280e563e676b13aa40d1ac85a"
+              "sha256": "09a3929bc59a130052d4300a23c4a614793d4b7a2b04554e81c11a08a79d0d9e"
             },
             {
               "path": "packages/i18n/src/shell.ts",
@@ -653948,7 +653950,7 @@
             },
             {
               "path": "packages/i18n/src/saving.ts",
-              "sha256": "9e0f65c18d4349a2829bae4aae8a4e0554bb4a4280e563e676b13aa40d1ac85a"
+              "sha256": "09a3929bc59a130052d4300a23c4a614793d4b7a2b04554e81c11a08a79d0d9e"
             },
             {
               "path": "packages/i18n/src/shell.ts",
@@ -654588,7 +654590,7 @@
             },
             {
               "path": "packages/i18n/src/saving.ts",
-              "sha256": "9e0f65c18d4349a2829bae4aae8a4e0554bb4a4280e563e676b13aa40d1ac85a"
+              "sha256": "09a3929bc59a130052d4300a23c4a614793d4b7a2b04554e81c11a08a79d0d9e"
             },
             {
               "path": "packages/i18n/src/shell.ts",
@@ -655227,7 +655229,7 @@
             },
             {
               "path": "packages/i18n/src/saving.ts",
-              "sha256": "9e0f65c18d4349a2829bae4aae8a4e0554bb4a4280e563e676b13aa40d1ac85a"
+              "sha256": "09a3929bc59a130052d4300a23c4a614793d4b7a2b04554e81c11a08a79d0d9e"
             },
             {
               "path": "packages/i18n/src/shell.ts",
@@ -655866,7 +655868,7 @@
             },
             {
               "path": "packages/i18n/src/saving.ts",
-              "sha256": "9e0f65c18d4349a2829bae4aae8a4e0554bb4a4280e563e676b13aa40d1ac85a"
+              "sha256": "09a3929bc59a130052d4300a23c4a614793d4b7a2b04554e81c11a08a79d0d9e"
             },
             {
               "path": "packages/i18n/src/shell.ts",
@@ -656505,7 +656507,7 @@
             },
             {
               "path": "packages/i18n/src/saving.ts",
-              "sha256": "9e0f65c18d4349a2829bae4aae8a4e0554bb4a4280e563e676b13aa40d1ac85a"
+              "sha256": "09a3929bc59a130052d4300a23c4a614793d4b7a2b04554e81c11a08a79d0d9e"
             },
             {
               "path": "packages/i18n/src/shell.ts",
@@ -657144,7 +657146,7 @@
             },
             {
               "path": "packages/i18n/src/saving.ts",
-              "sha256": "9e0f65c18d4349a2829bae4aae8a4e0554bb4a4280e563e676b13aa40d1ac85a"
+              "sha256": "09a3929bc59a130052d4300a23c4a614793d4b7a2b04554e81c11a08a79d0d9e"
             },
             {
               "path": "packages/i18n/src/shell.ts",
@@ -657783,7 +657785,7 @@
             },
             {
               "path": "packages/i18n/src/saving.ts",
-              "sha256": "9e0f65c18d4349a2829bae4aae8a4e0554bb4a4280e563e676b13aa40d1ac85a"
+              "sha256": "09a3929bc59a130052d4300a23c4a614793d4b7a2b04554e81c11a08a79d0d9e"
             },
             {
               "path": "packages/i18n/src/shell.ts",
@@ -658422,7 +658424,7 @@
             },
             {
               "path": "packages/i18n/src/saving.ts",
-              "sha256": "9e0f65c18d4349a2829bae4aae8a4e0554bb4a4280e563e676b13aa40d1ac85a"
+              "sha256": "09a3929bc59a130052d4300a23c4a614793d4b7a2b04554e81c11a08a79d0d9e"
             },
             {
               "path": "packages/i18n/src/shell.ts",
@@ -667513,7 +667515,7 @@
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
-              "sha256": "427d29912c72cfee31e064606c894b550162ea74cf9706a154d29b1af32818b8"
+              "sha256": "4f28cd74cb6860c15a5eb3e0e7b7936cca6606763605f9a26d90a5e7c041452c"
             },
             {
               "path": "apps/web/package.json",
@@ -667661,7 +667663,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "d17f7fd7b1ab1f7be39254c82aaee5e9e3fbf468ed6f56f212bc2ec388bafd0e"
+              "sha256": "845e8ddde1bd8fa2a98c4812d40cd1e47bd1be1e664f73c8c11db41143ade671"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -667757,7 +667759,7 @@
             },
             {
               "path": "packages/i18n/src/saving.ts",
-              "sha256": "9e0f65c18d4349a2829bae4aae8a4e0554bb4a4280e563e676b13aa40d1ac85a"
+              "sha256": "09a3929bc59a130052d4300a23c4a614793d4b7a2b04554e81c11a08a79d0d9e"
             },
             {
               "path": "packages/i18n/src/solar.ts",
@@ -668181,7 +668183,7 @@
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
-              "sha256": "427d29912c72cfee31e064606c894b550162ea74cf9706a154d29b1af32818b8"
+              "sha256": "4f28cd74cb6860c15a5eb3e0e7b7936cca6606763605f9a26d90a5e7c041452c"
             },
             {
               "path": "apps/web/package.json",
@@ -668329,7 +668331,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "d17f7fd7b1ab1f7be39254c82aaee5e9e3fbf468ed6f56f212bc2ec388bafd0e"
+              "sha256": "845e8ddde1bd8fa2a98c4812d40cd1e47bd1be1e664f73c8c11db41143ade671"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -668425,7 +668427,7 @@
             },
             {
               "path": "packages/i18n/src/saving.ts",
-              "sha256": "9e0f65c18d4349a2829bae4aae8a4e0554bb4a4280e563e676b13aa40d1ac85a"
+              "sha256": "09a3929bc59a130052d4300a23c4a614793d4b7a2b04554e81c11a08a79d0d9e"
             },
             {
               "path": "packages/i18n/src/solar.ts",
@@ -668848,7 +668850,7 @@
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
-              "sha256": "427d29912c72cfee31e064606c894b550162ea74cf9706a154d29b1af32818b8"
+              "sha256": "4f28cd74cb6860c15a5eb3e0e7b7936cca6606763605f9a26d90a5e7c041452c"
             },
             {
               "path": "apps/web/package.json",
@@ -668996,7 +668998,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "d17f7fd7b1ab1f7be39254c82aaee5e9e3fbf468ed6f56f212bc2ec388bafd0e"
+              "sha256": "845e8ddde1bd8fa2a98c4812d40cd1e47bd1be1e664f73c8c11db41143ade671"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -669092,7 +669094,7 @@
             },
             {
               "path": "packages/i18n/src/saving.ts",
-              "sha256": "9e0f65c18d4349a2829bae4aae8a4e0554bb4a4280e563e676b13aa40d1ac85a"
+              "sha256": "09a3929bc59a130052d4300a23c4a614793d4b7a2b04554e81c11a08a79d0d9e"
             },
             {
               "path": "packages/i18n/src/solar.ts",
@@ -669517,7 +669519,7 @@
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
-              "sha256": "427d29912c72cfee31e064606c894b550162ea74cf9706a154d29b1af32818b8"
+              "sha256": "4f28cd74cb6860c15a5eb3e0e7b7936cca6606763605f9a26d90a5e7c041452c"
             },
             {
               "path": "apps/web/package.json",
@@ -669665,7 +669667,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "d17f7fd7b1ab1f7be39254c82aaee5e9e3fbf468ed6f56f212bc2ec388bafd0e"
+              "sha256": "845e8ddde1bd8fa2a98c4812d40cd1e47bd1be1e664f73c8c11db41143ade671"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -669761,7 +669763,7 @@
             },
             {
               "path": "packages/i18n/src/saving.ts",
-              "sha256": "9e0f65c18d4349a2829bae4aae8a4e0554bb4a4280e563e676b13aa40d1ac85a"
+              "sha256": "09a3929bc59a130052d4300a23c4a614793d4b7a2b04554e81c11a08a79d0d9e"
             },
             {
               "path": "packages/i18n/src/solar.ts",
@@ -670186,7 +670188,7 @@
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
-              "sha256": "427d29912c72cfee31e064606c894b550162ea74cf9706a154d29b1af32818b8"
+              "sha256": "4f28cd74cb6860c15a5eb3e0e7b7936cca6606763605f9a26d90a5e7c041452c"
             },
             {
               "path": "apps/web/package.json",
@@ -670334,7 +670336,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "d17f7fd7b1ab1f7be39254c82aaee5e9e3fbf468ed6f56f212bc2ec388bafd0e"
+              "sha256": "845e8ddde1bd8fa2a98c4812d40cd1e47bd1be1e664f73c8c11db41143ade671"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -670430,7 +670432,7 @@
             },
             {
               "path": "packages/i18n/src/saving.ts",
-              "sha256": "9e0f65c18d4349a2829bae4aae8a4e0554bb4a4280e563e676b13aa40d1ac85a"
+              "sha256": "09a3929bc59a130052d4300a23c4a614793d4b7a2b04554e81c11a08a79d0d9e"
             },
             {
               "path": "packages/i18n/src/solar.ts",
@@ -670852,7 +670854,7 @@
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
-              "sha256": "427d29912c72cfee31e064606c894b550162ea74cf9706a154d29b1af32818b8"
+              "sha256": "4f28cd74cb6860c15a5eb3e0e7b7936cca6606763605f9a26d90a5e7c041452c"
             },
             {
               "path": "apps/web/package.json",
@@ -671000,7 +671002,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "d17f7fd7b1ab1f7be39254c82aaee5e9e3fbf468ed6f56f212bc2ec388bafd0e"
+              "sha256": "845e8ddde1bd8fa2a98c4812d40cd1e47bd1be1e664f73c8c11db41143ade671"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -671096,7 +671098,7 @@
             },
             {
               "path": "packages/i18n/src/saving.ts",
-              "sha256": "9e0f65c18d4349a2829bae4aae8a4e0554bb4a4280e563e676b13aa40d1ac85a"
+              "sha256": "09a3929bc59a130052d4300a23c4a614793d4b7a2b04554e81c11a08a79d0d9e"
             },
             {
               "path": "packages/i18n/src/solar.ts",
@@ -671518,7 +671520,7 @@
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
-              "sha256": "427d29912c72cfee31e064606c894b550162ea74cf9706a154d29b1af32818b8"
+              "sha256": "4f28cd74cb6860c15a5eb3e0e7b7936cca6606763605f9a26d90a5e7c041452c"
             },
             {
               "path": "apps/web/package.json",
@@ -671666,7 +671668,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "d17f7fd7b1ab1f7be39254c82aaee5e9e3fbf468ed6f56f212bc2ec388bafd0e"
+              "sha256": "845e8ddde1bd8fa2a98c4812d40cd1e47bd1be1e664f73c8c11db41143ade671"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -671762,7 +671764,7 @@
             },
             {
               "path": "packages/i18n/src/saving.ts",
-              "sha256": "9e0f65c18d4349a2829bae4aae8a4e0554bb4a4280e563e676b13aa40d1ac85a"
+              "sha256": "09a3929bc59a130052d4300a23c4a614793d4b7a2b04554e81c11a08a79d0d9e"
             },
             {
               "path": "packages/i18n/src/solar.ts",
@@ -672185,7 +672187,7 @@
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
-              "sha256": "427d29912c72cfee31e064606c894b550162ea74cf9706a154d29b1af32818b8"
+              "sha256": "4f28cd74cb6860c15a5eb3e0e7b7936cca6606763605f9a26d90a5e7c041452c"
             },
             {
               "path": "apps/web/package.json",
@@ -672333,7 +672335,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "d17f7fd7b1ab1f7be39254c82aaee5e9e3fbf468ed6f56f212bc2ec388bafd0e"
+              "sha256": "845e8ddde1bd8fa2a98c4812d40cd1e47bd1be1e664f73c8c11db41143ade671"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -672429,7 +672431,7 @@
             },
             {
               "path": "packages/i18n/src/saving.ts",
-              "sha256": "9e0f65c18d4349a2829bae4aae8a4e0554bb4a4280e563e676b13aa40d1ac85a"
+              "sha256": "09a3929bc59a130052d4300a23c4a614793d4b7a2b04554e81c11a08a79d0d9e"
             },
             {
               "path": "packages/i18n/src/solar.ts",
@@ -672851,7 +672853,7 @@
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
-              "sha256": "427d29912c72cfee31e064606c894b550162ea74cf9706a154d29b1af32818b8"
+              "sha256": "4f28cd74cb6860c15a5eb3e0e7b7936cca6606763605f9a26d90a5e7c041452c"
             },
             {
               "path": "apps/web/package.json",
@@ -672999,7 +673001,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "d17f7fd7b1ab1f7be39254c82aaee5e9e3fbf468ed6f56f212bc2ec388bafd0e"
+              "sha256": "845e8ddde1bd8fa2a98c4812d40cd1e47bd1be1e664f73c8c11db41143ade671"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -673095,7 +673097,7 @@
             },
             {
               "path": "packages/i18n/src/saving.ts",
-              "sha256": "9e0f65c18d4349a2829bae4aae8a4e0554bb4a4280e563e676b13aa40d1ac85a"
+              "sha256": "09a3929bc59a130052d4300a23c4a614793d4b7a2b04554e81c11a08a79d0d9e"
             },
             {
               "path": "packages/i18n/src/solar.ts",
@@ -673518,7 +673520,7 @@
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
-              "sha256": "427d29912c72cfee31e064606c894b550162ea74cf9706a154d29b1af32818b8"
+              "sha256": "4f28cd74cb6860c15a5eb3e0e7b7936cca6606763605f9a26d90a5e7c041452c"
             },
             {
               "path": "apps/web/package.json",
@@ -673666,7 +673668,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "d17f7fd7b1ab1f7be39254c82aaee5e9e3fbf468ed6f56f212bc2ec388bafd0e"
+              "sha256": "845e8ddde1bd8fa2a98c4812d40cd1e47bd1be1e664f73c8c11db41143ade671"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -673762,7 +673764,7 @@
             },
             {
               "path": "packages/i18n/src/saving.ts",
-              "sha256": "9e0f65c18d4349a2829bae4aae8a4e0554bb4a4280e563e676b13aa40d1ac85a"
+              "sha256": "09a3929bc59a130052d4300a23c4a614793d4b7a2b04554e81c11a08a79d0d9e"
             },
             {
               "path": "packages/i18n/src/solar.ts",
@@ -685658,7 +685660,7 @@
             },
             {
               "path": "packages/i18n/src/saving.ts",
-              "sha256": "9e0f65c18d4349a2829bae4aae8a4e0554bb4a4280e563e676b13aa40d1ac85a"
+              "sha256": "09a3929bc59a130052d4300a23c4a614793d4b7a2b04554e81c11a08a79d0d9e"
             },
             {
               "path": "packages/i18n/src/solar.ts",
@@ -686499,7 +686501,7 @@
             },
             {
               "path": "packages/i18n/src/saving.ts",
-              "sha256": "9e0f65c18d4349a2829bae4aae8a4e0554bb4a4280e563e676b13aa40d1ac85a"
+              "sha256": "09a3929bc59a130052d4300a23c4a614793d4b7a2b04554e81c11a08a79d0d9e"
             },
             {
               "path": "packages/i18n/src/solar.ts",
@@ -687342,7 +687344,7 @@
             },
             {
               "path": "packages/i18n/src/saving.ts",
-              "sha256": "9e0f65c18d4349a2829bae4aae8a4e0554bb4a4280e563e676b13aa40d1ac85a"
+              "sha256": "09a3929bc59a130052d4300a23c4a614793d4b7a2b04554e81c11a08a79d0d9e"
             },
             {
               "path": "packages/i18n/src/solar.ts",
@@ -688183,7 +688185,7 @@
             },
             {
               "path": "packages/i18n/src/saving.ts",
-              "sha256": "9e0f65c18d4349a2829bae4aae8a4e0554bb4a4280e563e676b13aa40d1ac85a"
+              "sha256": "09a3929bc59a130052d4300a23c4a614793d4b7a2b04554e81c11a08a79d0d9e"
             },
             {
               "path": "packages/i18n/src/solar.ts",
@@ -689024,7 +689026,7 @@
             },
             {
               "path": "packages/i18n/src/saving.ts",
-              "sha256": "9e0f65c18d4349a2829bae4aae8a4e0554bb4a4280e563e676b13aa40d1ac85a"
+              "sha256": "09a3929bc59a130052d4300a23c4a614793d4b7a2b04554e81c11a08a79d0d9e"
             },
             {
               "path": "packages/i18n/src/solar.ts",
@@ -689869,7 +689871,7 @@
             },
             {
               "path": "packages/i18n/src/saving.ts",
-              "sha256": "9e0f65c18d4349a2829bae4aae8a4e0554bb4a4280e563e676b13aa40d1ac85a"
+              "sha256": "09a3929bc59a130052d4300a23c4a614793d4b7a2b04554e81c11a08a79d0d9e"
             },
             {
               "path": "packages/i18n/src/solar.ts",
@@ -690714,7 +690716,7 @@
             },
             {
               "path": "packages/i18n/src/saving.ts",
-              "sha256": "9e0f65c18d4349a2829bae4aae8a4e0554bb4a4280e563e676b13aa40d1ac85a"
+              "sha256": "09a3929bc59a130052d4300a23c4a614793d4b7a2b04554e81c11a08a79d0d9e"
             },
             {
               "path": "packages/i18n/src/solar.ts",
@@ -691555,7 +691557,7 @@
             },
             {
               "path": "packages/i18n/src/saving.ts",
-              "sha256": "9e0f65c18d4349a2829bae4aae8a4e0554bb4a4280e563e676b13aa40d1ac85a"
+              "sha256": "09a3929bc59a130052d4300a23c4a614793d4b7a2b04554e81c11a08a79d0d9e"
             },
             {
               "path": "packages/i18n/src/solar.ts",
@@ -692396,7 +692398,7 @@
             },
             {
               "path": "packages/i18n/src/saving.ts",
-              "sha256": "9e0f65c18d4349a2829bae4aae8a4e0554bb4a4280e563e676b13aa40d1ac85a"
+              "sha256": "09a3929bc59a130052d4300a23c4a614793d4b7a2b04554e81c11a08a79d0d9e"
             },
             {
               "path": "packages/i18n/src/solar.ts",
@@ -693238,7 +693240,7 @@
             },
             {
               "path": "packages/i18n/src/saving.ts",
-              "sha256": "9e0f65c18d4349a2829bae4aae8a4e0554bb4a4280e563e676b13aa40d1ac85a"
+              "sha256": "09a3929bc59a130052d4300a23c4a614793d4b7a2b04554e81c11a08a79d0d9e"
             },
             {
               "path": "packages/i18n/src/solar.ts",
@@ -694085,7 +694087,7 @@
             },
             {
               "path": "packages/i18n/src/saving.ts",
-              "sha256": "9e0f65c18d4349a2829bae4aae8a4e0554bb4a4280e563e676b13aa40d1ac85a"
+              "sha256": "09a3929bc59a130052d4300a23c4a614793d4b7a2b04554e81c11a08a79d0d9e"
             },
             {
               "path": "packages/i18n/src/solar.ts",
@@ -705650,7 +705652,7 @@
             },
             {
               "path": "packages/i18n/src/saving.ts",
-              "sha256": "9e0f65c18d4349a2829bae4aae8a4e0554bb4a4280e563e676b13aa40d1ac85a"
+              "sha256": "09a3929bc59a130052d4300a23c4a614793d4b7a2b04554e81c11a08a79d0d9e"
             },
             {
               "path": "packages/i18n/src/solar.ts",
@@ -707726,7 +707728,7 @@
             },
             {
               "path": "packages/i18n/src/saving.ts",
-              "sha256": "9e0f65c18d4349a2829bae4aae8a4e0554bb4a4280e563e676b13aa40d1ac85a"
+              "sha256": "09a3929bc59a130052d4300a23c4a614793d4b7a2b04554e81c11a08a79d0d9e"
             },
             {
               "path": "packages/i18n/src/solar.ts",
@@ -714437,7 +714439,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "d17f7fd7b1ab1f7be39254c82aaee5e9e3fbf468ed6f56f212bc2ec388bafd0e"
+              "sha256": "845e8ddde1bd8fa2a98c4812d40cd1e47bd1be1e664f73c8c11db41143ade671"
             },
             {
               "path": "apps/web/src/pages/saving-order.test.tsx",
@@ -725390,7 +725392,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Customer settings command recovery has current evidence. Remaining command feedback and route states, live Sentry delivery and required GitHub accessibility enforcement still gate full adoption."
+        "Saving intake retry and empty states have current evidence. Remaining command feedback and route states, live Sentry delivery and required GitHub accessibility enforcement still gate full adoption."
       ],
       "owner": null,
       "depends_on": [],
@@ -725526,7 +725528,8 @@
           "release-0.5-ticket-command-deadline",
           "release-0.5-verified-upload-deadline",
           "release-0.5-verification-mode-recovery",
-          "release-0.5-customer-settings-deadline"
+          "release-0.5-customer-settings-deadline",
+          "release-0.5-saving-intake-recovery"
         ]
       }
     },
@@ -726662,7 +726665,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "d17f7fd7b1ab1f7be39254c82aaee5e9e3fbf468ed6f56f212bc2ec388bafd0e"
+              "sha256": "845e8ddde1bd8fa2a98c4812d40cd1e47bd1be1e664f73c8c11db41143ade671"
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
@@ -726854,7 +726857,7 @@
             },
             {
               "path": "packages/i18n/src/saving.ts",
-              "sha256": "9e0f65c18d4349a2829bae4aae8a4e0554bb4a4280e563e676b13aa40d1ac85a"
+              "sha256": "09a3929bc59a130052d4300a23c4a614793d4b7a2b04554e81c11a08a79d0d9e"
             },
             {
               "path": "packages/i18n/src/service-feedback.ts",
@@ -727327,7 +727330,8 @@
             "Renewed ticket command, verification banner and route and interaction budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-ticket-command-deadline/proof.json",
             "Renewed verified attachment, receipt preparation and route and interaction budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-verified-upload-deadline/proof.json",
             "Renewed verification-mode and workflow recovery and route and interaction budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-verification-mode-recovery/proof.json",
-            "Renewed shared customer settings command and route and interaction budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-customer-settings-deadline/proof.json"
+            "Renewed shared customer settings command and route and interaction budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-customer-settings-deadline/proof.json",
+            "Renewed saving intake recovery, accessibility and route and interaction budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-intake-recovery/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -799452,6 +799456,90 @@
       "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-customer-settings-deadline/renewed-bindings.json",
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-customer-settings-deadline/reviewed.patch",
       "release_disposition": "Verified bounded customer settings acknowledgements and safe recovery. v0.5.0 acceptance remains open."
+    },
+    "release-0.5-saving-intake-recovery": {
+      "batch": "release-0.5-saving-intake-recovery",
+      "base_commit": "bbfa25264d60b278f5ee7a0d17fe6935dc2d8970",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.11.01.03",
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.11.01.03",
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": ".size-limit.json",
+          "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+        },
+        {
+          "path": "apps/web/e2e/saving-journey.spec.ts",
+          "sha256": "77976864944a20622a822db4aab4bb561358bee6e6a3081ce28ed6e3d00e01df"
+        },
+        {
+          "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
+          "sha256": "4f28cd74cb6860c15a5eb3e0e7b7936cca6606763605f9a26d90a5e7c041452c"
+        },
+        {
+          "path": "apps/web/src/components/ValidatedFormWizard.tsx",
+          "sha256": "a4f7bcfc93067b2dd7551481827be753a25159dd1bdc138138f44c020ec225b5"
+        },
+        {
+          "path": "apps/web/src/hooks/useFormDraft.ts",
+          "sha256": "1323dc6eefd9e38d6fff5c7de26ea94e7550b3d418b05121507a82254a79e8a9"
+        },
+        {
+          "path": "apps/web/src/hooks/useOwnedIntakeRead.ts",
+          "sha256": "c27c459219107efbb57baa6c20ce5fb371aefad522daf07db605b72ea0e524ab"
+        },
+        {
+          "path": "apps/web/src/hooks/useSettingsCommand.ts",
+          "sha256": "d26862e04f82d8839ffdee8d100a33ad4aa33119afdff0d129ca336deffbb843"
+        },
+        {
+          "path": "apps/web/src/hooks/useWizardDraftProtection.ts",
+          "sha256": "8693d23d55e7c6febf2c9adb4ee82f47728e4c92934837380be18d395bea36bb"
+        },
+        {
+          "path": "apps/web/src/lib/server-query-client.ts",
+          "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
+        },
+        {
+          "path": "apps/web/src/pages/SavingsOrderPage.tsx",
+          "sha256": "845e8ddde1bd8fa2a98c4812d40cd1e47bd1be1e664f73c8c11db41143ade671"
+        },
+        {
+          "path": "docs/design/notification-recovery.md",
+          "sha256": "c238f5aadf0fc263de3243495f48ab82517485966f0f982f16648d63fb65793b"
+        },
+        {
+          "path": "packages/i18n/src/saving.ts",
+          "sha256": "09a3929bc59a130052d4300a23c4a614793d4b7a2b04554e81c11a08a79d0d9e"
+        },
+        {
+          "path": "scripts/check-changed-coverage.py",
+          "sha256": "721aa5763bb62336c0e4c454b8e36e2f15ff1e14bf4b0136c7c7946424bbd736"
+        },
+        {
+          "path": "scripts/check-route-budgets.mjs",
+          "sha256": "4dd831c645a9dbf1e6fd9b0c211b5559e4fc22652373b31525bd4f4aae38186d"
+        }
+      ],
+      "checks": [
+        "Saving intake offers a bounded profile and plans retry and a separate owned address-list retry. The address retry keeps the draft and issues no address, draft or order write. Valid empty plans avoid reading private drafts and addresses. Valid empty addresses explain how to add an address while preventing progression until a current address is available.",
+        "A failed address read disables the wizard navigation, save and submit controls until recovery. Definitive write-authority loss clears the displayed address state and closes the wizard. The initial native test caught a Continue control that looked enabled while its handler refused input. After the controls were disabled explicitly, the original assertion passed across Chromium and Mobile Safari.",
+        "Twelve saving and intake-loader unit cases, 28 Chromium and Mobile Safari production browser cases, 14 instrumented Chromium cases, all nine changed-coverage groups, all 100 unchanged bundle budgets, formatting, scoped lint and web typecheck passed. Six cold-auth receipts carry forward from byte-identical runtime files."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-intake-recovery",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-intake-recovery/proof.json",
+      "source_scope_proof_sha256": "fbe9c79564fe6e1c38761ce2b0143706b45bbaa016149235bc3eacc8ed893a74",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-intake-recovery/renewed-bindings.json",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-intake-recovery/reviewed.patch",
+      "release_disposition": "Verified saving intake retries and empty states with the existing draft and authority checks. v0.5.0 acceptance remains open."
     }
   },
   "historical_improvements": [
@@ -799502,12 +799590,12 @@
       "release-readiness#R-04.01",
       "release-readiness#R-04.02"
     ],
-    "goal": "Add saving-intake recovery for failed profile, plans and saved-address reads using the existing bounded loader. Preserve the working draft retry. Preserve profile isolation and the captured quote and submission safeguards. Continue matching remaining route states to existing native evidence. Live Sentry delivery and GitHub accessibility enforcement remain separate v0.5.0 gates."
+    "goal": "Reconcile the remaining customer and staff command feedback and conditional route states against the existing route inventory and native evidence. Build only demonstrated gaps. Live Sentry delivery and GitHub accessibility enforcement remain separate v0.5.0 gates."
   },
   "launch_forecast": {
     "status": "deadline_at_risk_until_v0_5_and_operational_gates_close",
     "next_update_after": "v0.5.0 remaining UI criteria and owner decisions",
-    "method": "v0.4.0 staging and Telegram receipts are verified. v0.5.0 form semantics, guarded electricity drafts, solar document completion, ticket acknowledgement, verified attachment and verification-mode recovery, shared customer settings acknowledgement recovery and scoped customer electricity, shell, onboarding, terms and invitation recovery are verified. Five launch-required criteria remain open, including the live Sentry receipt and GitHub accessibility enforcement. The November 9 sequence remains at risk."
+    "method": "v0.4.0 staging and Telegram receipts are verified. v0.5.0 form semantics, guarded electricity drafts, solar document completion, ticket acknowledgement, verified attachment and verification-mode recovery, shared customer settings acknowledgement and saving intake recovery, and scoped customer electricity, shell, onboarding, terms and invitation recovery are verified. Five launch-required criteria remain open, including the live Sentry receipt and GitHub accessibility enforcement. The November 9 sequence remains at risk."
   },
   "capabilities": [
     {

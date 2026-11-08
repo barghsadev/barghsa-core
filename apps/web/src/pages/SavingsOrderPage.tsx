@@ -149,7 +149,10 @@ function OwnedSavingsOrderPage() {
   const [plans, setPlans] = useState<Plan[]>([]);
   const [addresses, setAddresses] = useState<Address[]>([]);
   const [loading, setLoading] = useState(true);
-  const [loadError, setLoadError] = useState(false);
+  const [addressLoading, setAddressLoading] = useState(true);
+  const [loadError, setLoadError] = useState<'intake' | 'addresses' | 'authority' | null>(null);
+  const [intakeAttempt, setIntakeAttempt] = useState(0);
+  const [addressAttempt, setAddressAttempt] = useState(0);
   const wizard = useWizardStep('/savings/order', 6);
   const { step } = wizard;
   const [verification, setVerification] = useState<'idle' | 'checking' | 'verified' | 'manual'>(
@@ -291,12 +294,16 @@ function OwnedSavingsOrderPage() {
   const addressCommand = useSettingsCommand(
     JSON.stringify([actorId, contextRevision, profileId]),
     () => {
-      setLoadError(true);
+      setLoadError('authority');
       setAddresses([]);
       setAddressId('');
       setAddingAddress(false);
     },
-    () => !!profileId && !loadError && getProfileContextRevision() === contextRevision
+    () =>
+      !!profileId &&
+      !addressLoading &&
+      !loadError &&
+      getProfileContextRevision() === contextRevision
   );
   const savingAddress = addressCommand.busy;
   const addressErrorMessage = addressErrors.length
@@ -322,9 +329,10 @@ function OwnedSavingsOrderPage() {
     operation: profileId ?? undefined,
   });
   const [draftSaved, setDraftSaved] = useState(false);
-  const draftKey = profileId
-    ? `/api/saving/orders/draft?profileId=${encodeURIComponent(profileId)}`
-    : null;
+  const draftKey =
+    profileId && plans.length
+      ? `/api/saving/orders/draft?profileId=${encodeURIComponent(profileId)}`
+      : null;
   const {
     draft,
     loading: draftLoading,
@@ -341,7 +349,7 @@ function OwnedSavingsOrderPage() {
     profileId,
     data: currentDraft,
     step,
-    ready: !!draft && !loading && !draftLoading && !draftError,
+    ready: !!draft && !loading && !loadError && !draftLoading && !draftError,
     saveDraft,
     go: wizard.go,
     extraDirty: addressDirty,
@@ -383,22 +391,23 @@ function OwnedSavingsOrderPage() {
           ),
         ]);
         if (controller.signal.aborted) return;
+        if (!Array.isArray(catalogue?.plans)) throw new Error('Invalid saving plans');
         const active = profile.profiles.find((item) => item.id === profile.activeProfileId);
         setProfileId(
           active && (active.profileType ?? active.type) === 'INDIVIDUAL' ? active.id : null
         );
         setPlans(catalogue.plans);
       } catch {
-        if (!controller.signal.aborted) setLoadError(true);
+        if (!controller.signal.aborted) setLoadError('intake');
       } finally {
         if (!controller.signal.aborted) setLoading(false);
       }
     })();
     return () => controller.abort();
-  }, [readIntake, intakeScope]);
+  }, [readIntake, intakeScope, intakeAttempt]);
 
   useEffect(() => {
-    if (!profileId) return;
+    if (!profileId || !plans.length) return;
     const controller = new AbortController();
     void readIntake<{ addresses: Address[] }>(
       queryKeys.profiles.list(
@@ -411,17 +420,31 @@ function OwnedSavingsOrderPage() {
     )
       .then((result) => {
         if (!controller.signal.aborted) {
+          if (!Array.isArray(result?.addresses)) throw new Error('Invalid saved addresses');
+          const main = result.addresses.find((item) => item.mainAddress);
           setAddresses(result.addresses);
-          setAddressId(
-            (current) => current || result.addresses.find((item) => item.mainAddress)?.id || ''
-          );
+          setAddressId((current) => current || main?.id || '');
         }
       })
       .catch(() => {
-        if (!controller.signal.aborted) setLoadError(true);
+        if (!controller.signal.aborted) setLoadError('addresses');
+      })
+      .finally(() => {
+        if (!controller.signal.aborted) setAddressLoading(false);
       });
     return () => controller.abort();
-  }, [profileId, readIntake, intakeScope]);
+  }, [profileId, plans.length, readIntake, intakeScope, addressAttempt]);
+
+  function retryIntakeRead() {
+    if (loadError === 'intake') {
+      setLoading(true);
+      setIntakeAttempt((attempt) => attempt + 1);
+    } else if (loadError === 'addresses') {
+      setAddressLoading(true);
+      setAddressAttempt((attempt) => attempt + 1);
+    } else return;
+    setLoadError(null);
+  }
 
   useEffect(() => {
     if (!profileId || !draft || loading || hydratedProfile.current === profileId) return;
@@ -665,7 +688,9 @@ function OwnedSavingsOrderPage() {
             (duplicate?.duplicate === false ||
               (duplicate?.preventActiveDuplicates === false && duplicateAcknowledged))
           : step === 4
-            ? !addressDirty && addresses.some((address) => address.id === addressId)
+            ? !addressLoading &&
+              !addressDirty &&
+              addresses.some((address) => address.id === addressId)
             : step === 5
               ? agreementAccepted && giftCode.trim() === appliedGiftCode
               : false;
@@ -744,7 +769,10 @@ function OwnedSavingsOrderPage() {
     });
   }
 
-  const showWizard = !loading && !!profileId && !!draft && !draftLoading && !draftError;
+  const showWizard =
+    !loading && loadError !== 'authority' && !!profileId && !!draft && !draftLoading && !draftError;
+  const commandBlocked = protection.busy || protection.completed.current || submission.unconfirmed;
+  const controlsBlocked = !!loadError || commandBlocked;
   return (
     <div
       className="mx-auto w-full max-w-4xl space-y-6 p-4 md:p-8"
@@ -779,9 +807,14 @@ function OwnedSavingsOrderPage() {
       </header>
       {loading && <LoadingStatus>{copy('loading')}</LoadingStatus>}
       {loadError && (
-        <p role="alert" className="text-destructive">
-          {copy('error')}
-        </p>
+        <div role="alert" className="space-y-2 text-destructive">
+          <p>{copy(loadError === 'intake' ? 'intakeLoadError' : 'addressLoadError')}</p>
+          {loadError !== 'authority' && (
+            <Button variant="outline" onClick={retryIntakeRead}>
+              {copy('retry')}
+            </Button>
+          )}
+        </div>
       )}
       {draftError && profileId && (
         <div role="alert" className="space-y-2 text-destructive">
@@ -792,7 +825,8 @@ function OwnedSavingsOrderPage() {
         </div>
       )}
       {draftLoading && profileId && <LoadingStatus>{copy('loading')}</LoadingStatus>}
-      {!loading && !profileId && <p role="alert">{copy('profileRequired')}</p>}
+      {!loading && !loadError && !profileId && <p role="alert">{copy('profileRequired')}</p>}
+      {!loading && !loadError && profileId && !plans.length && <p role="status">{copy('empty')}</p>}
       {addressCommand.phase !== 'ready' && (
         <div role="alert" className="space-y-2">
           <p>{copy('addressUnconfirmed')}</p>
@@ -835,14 +869,11 @@ function OwnedSavingsOrderPage() {
           onPendingChange={fields.setValidationPending}
           disabled={
             loading ||
-            loadError ||
             draftLoading ||
             !!draftError ||
             !!addressCommand.locked ||
             !profileId ||
-            protection.busy ||
-            protection.completed.current ||
-            submission.unconfirmed ||
+            controlsBlocked ||
             submitting
           }
           onInvalidStep={(target) => wizard.go(target, step)}
@@ -875,22 +906,11 @@ function OwnedSavingsOrderPage() {
           submittingLabel={copy('submitting')}
           saving={savingDraft}
           submitting={submitting}
-          backDisabled={
-            protection.busy ||
-            protection.completed.current ||
-            addressDirty ||
-            submission.unconfirmed
-          }
-          saveDisabled={
-            protection.busy ||
-            protection.completed.current ||
-            addressDirty ||
-            submission.unconfirmed
-          }
-          nextDisabled={
-            !canNext || protection.busy || protection.completed.current || submission.unconfirmed
-          }
+          backDisabled={controlsBlocked || addressDirty}
+          saveDisabled={controlsBlocked || addressDirty}
+          nextDisabled={controlsBlocked || !canNext}
           submitDisabled={
+            controlsBlocked ||
             !financialGate.allowed ||
             !quote ||
             quoting ||
@@ -898,10 +918,7 @@ function OwnedSavingsOrderPage() {
             !hardwareConfirmed ||
             !agreementAccepted ||
             !submitForReview ||
-            addressDirty ||
-            protection.busy ||
-            submission.unconfirmed ||
-            protection.completed.current
+            addressDirty
           }
           onBack={() => void protection.save(step - 1)}
           onSave={() => void saveNow()}
@@ -913,13 +930,7 @@ function OwnedSavingsOrderPage() {
               <CardContent className="space-y-5 pt-6">
                 <fieldset
                   className="min-w-0 space-y-5"
-                  disabled={
-                    pending ||
-                    protection.busy ||
-                    protection.completed.current ||
-                    submission.unconfirmed ||
-                    !!addressCommand.locked
-                  }
+                  disabled={pending || commandBlocked || !!addressCommand.locked}
                 >
                   {step === 1 && (
                     <section className="space-y-3">
@@ -1125,6 +1136,10 @@ function OwnedSavingsOrderPage() {
                       <h2 id="saving-address-title" className="text-xl font-semibold">
                         {copy('chooseAddress')}
                       </h2>
+                      {addressLoading && <LoadingStatus>{copy('loading')}</LoadingStatus>}
+                      {!addressLoading && !loadError && !addresses.length && (
+                        <p role="status">{copy('noSavedAddresses')}</p>
+                      )}
                       {addresses.length > 0 && (
                         <div
                           role="radiogroup"
@@ -1150,6 +1165,7 @@ function OwnedSavingsOrderPage() {
                       )}
                       <Button
                         variant="outline"
+                        disabled={addressLoading || !!loadError}
                         onClick={() => {
                           if (addingAddress) {
                             setProvinceId('');

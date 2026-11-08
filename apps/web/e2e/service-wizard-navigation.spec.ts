@@ -282,6 +282,90 @@ async function open(page: Page, mode: Mode, locale: Locale) {
 }
 
 for (const locale of ['en', 'fa'] as const)
+  test(`saving retries profile and plan intake and addresses without writing (${locale})`, async ({
+    page,
+  }) => {
+    await page.clock.install({ time: new Date('2026-10-02T10:00:00Z') });
+    const state = await fixture(page, 'saving', locale);
+    let plans = 0;
+    let addresses = 0;
+    let addressWrites = 0;
+    await page.route('**/api/saving/plans', (route) => {
+      if (++plans > 1) return route.fallback();
+    });
+    await page.route(`**/api/profiles/${profileId}/addresses`, (route) => {
+      if (route.request().method() !== 'GET') {
+        addressWrites++;
+        return route.fallback();
+      }
+      if (++addresses > 1) return route.fulfill({ json: { addresses: [] } });
+    });
+    await page.goto(path('saving'));
+    const next = button(page, 'electricity.order.next', locale);
+    const alert = (key: string) =>
+      page.getByRole('alert').filter({ hasText: tSaving(key, locale) });
+    const retry = (key: string) =>
+      alert(key).getByRole('button', { name: tSaving('retry', locale), exact: true });
+
+    await expect.poll(() => plans).toBe(1);
+    await expect(next).toHaveCount(0);
+    await page.clock.fastForward(15_001);
+    await expect(alert('intakeLoadError')).toBeVisible();
+    await expect(alert('profileRequired')).toHaveCount(0);
+    expect(addresses).toBe(0);
+    await retry('intakeLoadError').click();
+    await expect.poll(() => addresses).toBe(1);
+    await page.clock.fastForward(15_001);
+    await expect(alert('addressLoadError')).toBeVisible();
+    await expect(next).toBeDisabled();
+    expect(plans).toBe(2);
+    expect(addresses).toBe(1);
+    await retry('addressLoadError').click();
+    await expect.poll(() => addresses).toBe(2);
+    await expect(next).toBeEnabled();
+    expect(state.saves).toHaveLength(0);
+    expect(state.orders).toHaveLength(0);
+    expect(addressWrites).toBe(0);
+    expect(plans).toBe(2);
+
+    await next.click();
+    await page.getByLabel(tSaving('confirmHardware', locale), { exact: true }).check();
+    await next.click();
+    await expect(next).toBeEnabled();
+    await next.click();
+    await expect(
+      page.getByText(tSaving('noSavedAddresses', locale), { exact: true })
+    ).toBeVisible();
+    await expect(page.getByRole('button', { name: tSaving('newAddress', locale) })).toBeEnabled();
+    await expect(next).toBeDisabled();
+    expect(state.orders).toHaveLength(0);
+    expect(addressWrites).toBe(0);
+  });
+
+test('saving shows the empty catalogue before requesting a private draft or addresses', async ({
+  page,
+}) => {
+  const state = await fixture(page, 'saving', 'en');
+  let privateReads = 0;
+  await page.route('**/api/saving/plans', (route) => route.fulfill({ json: { plans: [] } }));
+  await page.route(
+    (url) =>
+      url.pathname === '/api/saving/orders/draft' ||
+      url.pathname === `/api/profiles/${profileId}/addresses`,
+    (route) => {
+      privateReads++;
+      return route.fallback();
+    }
+  );
+  await page.goto(path('saving'));
+  await expect(page.getByText(tSaving('empty', 'en'), { exact: true })).toBeVisible();
+  await expect(button(page, 'electricity.order.next', 'en')).toHaveCount(0);
+  expect(privateReads).toBe(0);
+  expect(state.saves).toHaveLength(0);
+  expect(state.orders).toHaveLength(0);
+});
+
+for (const locale of ['en', 'fa'] as const)
   test(`saving dependent address recovery validates the saved city acknowledgement (${locale})`, async ({
     page,
   }) => {
