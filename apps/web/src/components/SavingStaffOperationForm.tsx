@@ -384,6 +384,9 @@ function OwnedSavingStaffOperationForm({
   }
   const frozen = !!captured.current || pending.current || uncertain;
   const blocked = busy || !!owner.current;
+  const reviewing = order.status === 'awaiting_staff_review';
+  const explanationRequired =
+    !reviewing && order.stages.some((row) => row.status === 'in_progress');
   const command = captured.current;
   return (
     <div data-testid="saving-staff-operation-form" className="space-y-3">
@@ -395,7 +398,7 @@ function OwnedSavingStaffOperationForm({
             prepare(intent.current);
           }}
         >
-          {order.status === 'awaiting_staff_review' && (
+          {reviewing && (
             <div className="flex flex-wrap gap-2">
               <Button
                 type="button"
@@ -424,6 +427,7 @@ function OwnedSavingStaffOperationForm({
                 <FormControl>
                   <Input
                     {...field}
+                    aria-required={explanationRequired || undefined}
                     disabled={frozen}
                     onChange={(event) => {
                       if (frozen || !active()) return;
@@ -433,9 +437,7 @@ function OwnedSavingStaffOperationForm({
                   />
                 </FormControl>
                 <FormDescription>
-                  {formCopy(
-                    order.status === 'awaiting_staff_review' ? 'rejectionHelp' : 'explanationHelp'
-                  )}
+                  {formCopy(reviewing ? 'rejectionHelp' : 'explanationHelp')}
                 </FormDescription>
                 <FormMessage reserveSpace />
               </FormItem>

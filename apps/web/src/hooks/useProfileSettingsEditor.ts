@@ -366,6 +366,10 @@ export function useProfileSettingsEditor(locale: Locale) {
     form,
     feedback,
     values,
+    addressRequired:
+      !!profile &&
+      acceptedIdentity === identity &&
+      profilePatch(values, profile).fullAddress !== undefined,
     command,
     locked,
     copy,

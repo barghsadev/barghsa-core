@@ -857,6 +857,7 @@ function OwnedAdminDocumentTemplatesPage({ queries }: { queries?: ListQueryBindi
                                 name={field.name}
                                 ref={field.ref}
                                 onBlur={field.onBlur}
+                                aria-required={!retained.length || undefined}
                                 aria-describedby="document-template-file-help"
                                 disabled={locked}
                                 className="block w-full text-sm"

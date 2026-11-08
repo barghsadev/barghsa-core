@@ -1312,6 +1312,9 @@ function OwnedAdminElectricityOrdersPage({ queries }: { queries?: StaffOrderList
                               <FormControl>
                                 <Textarea
                                   {...field}
+                                  aria-required={
+                                    detail.commercialStatus !== 'awaiting_staff_review' || undefined
+                                  }
                                   disabled={
                                     reviewLoading ||
                                     form.formState.isSubmitting ||

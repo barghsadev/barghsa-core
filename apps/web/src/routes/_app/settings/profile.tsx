@@ -111,6 +111,7 @@ function SettingsProfilePage() {
     availableProfiles,
     defaultError,
     form,
+    addressRequired,
     feedback,
     command,
     locked,
@@ -604,6 +605,7 @@ function SettingsProfilePage() {
                           <NativeSelect
                             {...field}
                             id="profile-province"
+                            aria-required={addressRequired || undefined}
                             value={provinceId}
                             onChange={(event) => {
                               change('provinceId', event.target.value);
@@ -650,6 +652,7 @@ function SettingsProfilePage() {
                           <DependentSelect
                             {...field}
                             id="profile-city"
+                            aria-required={addressRequired || undefined}
                             dependencyValue={provinceId}
                             value={cityId}
                             ready={cityOptions.ready}
@@ -722,6 +725,7 @@ function SettingsProfilePage() {
                         <textarea
                           {...field}
                           id="profile-address"
+                          aria-required={addressRequired || undefined}
                           disabled={locked}
                           value={fullAddress}
                           onChange={(e) => change('fullAddress', e.target.value)}
@@ -752,6 +756,7 @@ function SettingsProfilePage() {
                         <Input
                           {...field}
                           id="profile-postal-code"
+                          aria-required={addressRequired || undefined}
                           disabled={locked}
                           value={postalCode}
                           onChange={(e) => change('postalCode', e.target.value)}

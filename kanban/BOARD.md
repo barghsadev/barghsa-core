@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-08T08:24:46+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-08T08:38:06+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.4.0**. Next milestone: **v0.5.0**.
 
@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 867 | Accepted with unchanged source bindings. |
+| done | 868 | Accepted with unchanged source bindings. |
 | verify | 470 | Existing work may be complete; inspect evidence before building. |
-| partial | 26 | An earlier review found unmet criteria; reconcile later fixes. |
+| partial | 25 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 5 | New, concrete work or release checks. |
 | in_progress | 0 | Existing work to finish. |
 | blocked | 1 | Named owner or external prerequisite. |
@@ -39,9 +39,8 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Close the remaining evidenced electricity, profile, saving and template field semantics and reconcile final form evidence, command acknowledgements and route states. Resolve accessibility enforcement and live route reporting before accepting v0.5.0.
+Implement privacy-safe route error reporting and reconcile its live receiver. Close demonstrated command acknowledgement and bespoke route state gaps. Verify the owner accessibility policy before accepting v0.5.0.
 
-- `07-ui-ux-design.md#T-07.05.01.05`: Ensure all form inputs have programmatically associated labels (`<label htmlFor>` or `aria-label`). Error messages use `aria-describedby` or `aria-errormessage` to link to the input. Required fields use `aria-required="true"`.
 - `07-ui-ux-design.md#T-07.05.01.08`: Ensure all color combinations pass WCAG AA contrast ratios: normal text ≥ 4.5:1, large text ≥ 3:1, UI components ≥ 3:1. Verify with automated tools. Provide a "high contrast" mode toggle that strengthens all contrast ratios.
 - `07-ui-ux-design.md#T-07.05.02.04`: Add CI gate: a11y violations on critical pages block PR merge. Non-critical pages warn but do not block. Violations must be triaged with reason or exemption.
 - `07-ui-ux-design.md#T-07.11.01.03`: Create an API response interceptor that auto-shows toasts for: successful CRUD operations ("Invoice created", "Profile updated", "Order submitted"), API errors (error message from API), network failures ("Connection lost. Retrying...").
@@ -724,7 +723,7 @@ Customer and admin workflows work on desktop/mobile in both languages and themes
 | `07-ui-ux-design.md#T-07.05.01.02` | done | Recorded batch work | Ensure all interactive elements have visible focus indicators. Define a custom focus ring via `:focus-visible` in CSS: `outline: 2px solid var(--ring)`, `outline-offset: 2px`. Never use `outline: none` without a visible replacement. |
 | `07-ui-ux-design.md#T-07.05.01.03` | done | Recorded batch work | Implement a `FocusTrap` component for modals, sheets, and dropdowns. When open, Tab/Shift+Tab cycles within the dialog. Focus returns to trigger on close. |
 | `07-ui-ux-design.md#T-07.05.01.04` | done | Recorded batch work | Add `aria-live="polite"` region for dynamic content updates (toast messages, notifications count, form submission status). `aria-live="assertive"` for critical errors (payment failures, session expiry). |
-| `07-ui-ux-design.md#T-07.05.01.05` | partial | Recorded batch work | Ensure all form inputs have programmatically associated labels (`<label htmlFor>` or `aria-label`). Error messages use `aria-describedby` or `aria-errormessage` to link to the input. Required fields use `aria-required="true"`. |
+| `07-ui-ux-design.md#T-07.05.01.05` | done | Recorded batch work | Ensure all form inputs have programmatically associated labels (`<label htmlFor>` or `aria-label`). Error messages use `aria-describedby` or `aria-errormessage` to link to the input. Required fields use `aria-required="true"`. |
 | `07-ui-ux-design.md#T-07.05.01.06` | done | Recorded batch work | Ensure all images have meaningful `alt` text. Decorative icons use `aria-hidden="true"`. Status icons (success/error/warning) have screen-reader-visible text (visually hidden `sr-only` label). |
 | `07-ui-ux-design.md#T-07.05.01.07` | done | Recorded batch work | Implement proper heading hierarchy (`h1` → `h2` → `h3` → `h4`) on every page. A single `<h1>` per page. Landmarks: `<header>`, `<nav>`, `<main>`, `<aside>`, `<footer>` with `aria-label` when multiple instances exist. |
 | `07-ui-ux-design.md#T-07.05.01.08` | done | Recorded batch work | Ensure all color combinations pass WCAG AA contrast ratios: normal text ≥ 4.5:1, large text ≥ 3:1, UI components ≥ 3:1. Verify with automated tools. Provide a "high contrast" mode toggle that strengthens all contrast ratios. |

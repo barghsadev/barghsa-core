@@ -27,6 +27,13 @@ for (const [locale, theme] of [
       page.getByRole('button', { name: copy('request-changes'), exact: true })
     ).toBeDisabled();
     const form = page.getByTestId('electricity-staff-reason-form');
+    const reason = page.locator('#electricity-review-reason');
+    await expect(reason).toHaveAttribute('aria-required', 'true');
+    await page.getByRole('button', { name: copy('reject'), exact: true }).click();
+    await expect(reason).toBeFocused();
+    await expect(reason).toHaveAttribute('aria-describedby', /-message/);
+    expect(state.staffPreviews).toHaveLength(0);
+    expect(state.staffWrites).toHaveLength(0);
     expect(
       (
         await new AxeBuilder({ page })
@@ -37,7 +44,7 @@ for (const [locale, theme] of [
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
       true
     );
-    await page.locator('#electricity-review-reason').fill('Unable to deliver approved supply');
+    await reason.fill('Unable to deliver approved supply');
     await page.getByRole('button', { name: copy('reject'), exact: true }).click();
     const dialog = page.getByRole('dialog');
     await expect(dialog).toContainText('Unable to deliver approved supply');

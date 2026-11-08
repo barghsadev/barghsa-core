@@ -579,6 +579,7 @@ function OwnedKnowledgeAssistantPanel({
           active={open}
           textareaProps={{
             ...form.bind('message'),
+            'aria-required': true,
             'aria-invalid': serverMessageError || form.bind('message')['aria-invalid'],
             'aria-describedby': serverMessageError
               ? form.errorId('message')

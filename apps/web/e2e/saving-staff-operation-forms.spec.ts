@@ -80,6 +80,7 @@ for (const [locale, theme] of [
     await page.goto(`/admin/saving-orders?lane=review&orderId=${savingChangeOrder}`);
     const note = page.locator('#saving-staff-note');
     await expect(note).toBeVisible();
+    await expect(note).not.toHaveAttribute('aria-required', 'true');
     await expect(note).not.toHaveAttribute('aria-invalid', 'true');
     await action(page, 'staffReject').click();
     await expect(action(page, 'staffReject')).toBeDisabled();
@@ -244,6 +245,8 @@ for (const [locale, theme] of [
     const intent = locale === 'en' ? 'complete' : 'skip';
     const submit = () => action(page, intent === 'complete' ? 'staffComplete' : 'staffSkip');
     await expect(handover).toBeVisible();
+    await expect(note).toHaveAttribute('aria-required', 'true');
+    await expect(handover).not.toHaveAttribute('aria-required', 'true');
     await submit().click();
     await expect(submit()).toBeDisabled();
     await form(page).locator('form').dispatchEvent('submit');

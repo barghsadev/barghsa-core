@@ -143,6 +143,7 @@ for (const kind of ['customer', 'admin'] as const)
         form = chat.locator('form');
       const send = chat.getByRole('button', { name: label('send'), exact: true });
       const sendQuestion = () => (info.project.use.isMobile ? send.tap() : send.click());
+      await expect(input).toHaveAttribute('aria-required', 'true');
       await sendQuestion();
       const first = kind === 'admin' ? chat.locator('#test-chat-agent') : input;
       await expect(first).toBeFocused();

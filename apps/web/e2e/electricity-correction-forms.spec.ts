@@ -134,6 +134,7 @@ for (const [locale, theme] of [
     await page.goto(`/admin/electricity-orders?orderId=${correctionOrder}`);
     const staffForm = page.getByTestId('electricity-staff-reason-form');
     const reason = page.locator('#electricity-review-reason');
+    await expect(reason).not.toHaveAttribute('aria-required', 'true');
     const changes = page.getByRole('button', { name: staffText('request-changes'), exact: true });
     await expect(reason).toBeVisible();
     await expect(reason).not.toHaveAttribute('aria-invalid', 'true');

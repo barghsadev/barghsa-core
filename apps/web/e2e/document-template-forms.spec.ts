@@ -217,11 +217,14 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(upload).toHaveAccessibleDescription(word('fileHelp'));
     const summary = page.locator('#document-template-summary');
     const retained = form.getByRole('checkbox');
+    await expect(upload).not.toHaveAttribute('aria-required', 'true');
     await retained.uncheck();
+    await expect(upload).toHaveAttribute('aria-required', 'true');
     await form.getByRole('button', { name: word('publishVersion'), exact: true }).click();
     await expect(upload).toHaveAttribute('aria-invalid', 'true');
     await expect(upload).toBeFocused();
     await retained.check();
+    await expect(upload).not.toHaveAttribute('aria-required', 'true');
     await upload.setInputFiles({
       name: 'TERMS.pdf',
       mimeType: 'application/pdf',

@@ -225,11 +225,25 @@ for (const locale of ['en', 'fa'] as const) {
       legal = page.locator('#profile-legalName');
     const full = page.locator('#profile-address'),
       postal = page.locator('#profile-postal-code');
+    const addressFields = [
+      page.locator('#profile-province'),
+      page.locator('#profile-city'),
+      full,
+      postal,
+    ];
     await expect(legal).toHaveValue('Original Company');
     await expect(page.locator('#profile-city')).toHaveValue(cityId);
     await expect(page.locator('#profile-city')).toBeEnabled();
     await title.fill('  Captured profile  ');
     await legal.fill(' ');
+    for (const field of addressFields)
+      await expect(field).not.toHaveAttribute('aria-required', 'true');
+    const originalAddress = await full.inputValue();
+    await full.fill('Temporary address edit');
+    for (const field of addressFields) await expect(field).toHaveAttribute('aria-required', 'true');
+    await full.fill(originalAddress);
+    for (const field of addressFields)
+      await expect(field).not.toHaveAttribute('aria-required', 'true');
     await full.fill('  Retained main address  ');
     await postal.fill('2345678901');
     await owner

@@ -117,11 +117,15 @@ Staff quantity increase approvals and rejections require a reason. Staff may
 leave the proposed approval date blank for the server to select it. Price
 proposals require a contract, percentage, effective date, reason and
 contractual basis.
+The staff order reason is required when rejection is the only decision.
 
 Saving hardware changes require a replacement product and a reason. Cancelling
 an upgrade requires its own reason. Staff changes to a paid saving order's
 installation address require a replacement address and a reason. Customers
 responding to a consultation information request must enter their response.
+Saving fulfillment stage actions require an explanation. At staff review,
+approval can proceed with an empty reason. Equipment handover details are
+required for completion and optional when skipping the stage.
 Solar contract issuance requires a source,
 title, terms, reason and value kind. The selected kind determines which value
 field is required. Invoice lines require a description, quantity, price and VAT
@@ -143,15 +147,22 @@ required. Trusting a device during sign-in remains optional.
 Account settings mark the new username or contact, its required verification
 codes, the selected timezone, and Telegram verification and step-up fields
 required when shown. Timezone search remains optional.
+Editing any profile address field makes the full address group required.
+Returning all four fields to their saved values removes that requirement.
 
 Document retention years, legal reasons, and hold expiry each link to their
 own validation errors. Hold expiry remains optional. Upload policy formats
 require at least one selection, so the group explains the requirement without
 marking each checkbox required. A rejected confirmation password links to its
 own error.
+Publishing a document template version requires a new file when no existing
+file is retained. The file input updates its required state as that selection
+changes.
 
 Knowledge editors require a source address when staff select URL or API
 sources. The URL field retains its entry instructions when an error appears.
+The customer assistant marks its question required and links validation
+feedback to the question input.
 AI policy editors identify the required fields for the selected rule type.
 Membership selectors require a choice, and priority overrides can be left blank.
 
