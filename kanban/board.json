@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-08T22:02:32+00:00",
-  "source_commit": "7e90b1ca4ccfa32b22abc8a3e20651bd8c47720a",
+  "updated": "2026-11-08T22:07:43+00:00",
+  "source_commit": "3924a61181949b6371da4c3a9e1fd5700313faec",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -598484,7 +598484,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "The named public support, guide, wallet and invoice conditional journeys have current source-bound evidence. Consolidate the original route and shared-pattern criteria against the 93-route census and the recorded conditional proofs. Identify remaining unbound or failed cases before accepting the whole requirement."
+        "All 91 conditional route entries are linked to a named case or matching direct source evidence, including fresh geography checks. Confirm the applicable loading, empty, error, stale context and interaction criteria against those scoped receipts, and validate any affected shared dependencies before accepting the requirement."
       ],
       "owner": null,
       "depends_on": [],
@@ -598601,7 +598601,8 @@
           "release-0.5-settings-pane-read-states",
           "release-0.5-auth-terminal-recovery",
           "release-0.5-public-support-recovery",
-          "release-0.5-invoice-post-receipt"
+          "release-0.5-invoice-post-receipt",
+          "release-0.5-original-route-reconciliation"
         ],
         "current_acceptance": null
       }
@@ -728248,7 +728249,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "The named public support, guide, wallet and invoice conditional journeys have current source-bound evidence. Consolidate the original route and shared-pattern criteria against the 93-route census and the recorded conditional proofs. Identify remaining unbound or failed cases before accepting the whole requirement."
+        "All 91 conditional route entries are linked to a named case or matching direct source evidence, including fresh geography checks. Confirm the applicable loading, empty, error, stale context and interaction criteria against those scoped receipts, and validate any affected shared dependencies before accepting the requirement."
       ],
       "owner": null,
       "depends_on": [],
@@ -728431,7 +728432,8 @@
           "release-0.5-settings-pane-read-states",
           "release-0.5-auth-terminal-recovery",
           "release-0.5-public-support-recovery",
-          "release-0.5-invoice-post-receipt"
+          "release-0.5-invoice-post-receipt",
+          "release-0.5-original-route-reconciliation"
         ]
       }
     },
@@ -807567,6 +807569,81 @@
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-post-receipt/reviewed.patch",
       "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-post-receipt/renewed-bindings.json",
       "release_disposition": "Verified the named finance conditional states on the current implementation. v0.5.0 remains open."
+    },
+    "release-0.5-original-route-reconciliation": {
+      "batch": "release-0.5-original-route-reconciliation",
+      "base_commit": "3924a61181949b6371da4c3a9e1fd5700313faec",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/src/routeTree.gen.ts",
+          "sha256": "c1524622f37c4dc26c3fc7f5746d3a9a2d962c8397db0ab77e61efa0422be658"
+        },
+        {
+          "path": "apps/web/src/routes/admin/geography.tsx",
+          "sha256": "0be59af2eef20494dbc2950aaa7222340c28f4c12beca1000e0f4f2a2f776585"
+        },
+        {
+          "path": "apps/web/src/pages/AdminGeographyPage.tsx",
+          "sha256": "12af4bf16aff204ee7d29e9cd7cf691898c514a75a2a08c80004d3d230314794"
+        },
+        {
+          "path": "apps/web/src/pages/AdminGeographyDialog.tsx",
+          "sha256": "aabee2e1853e727021758d9bbbfdf1c8e5cf04211001a98a895ed1eed768e519"
+        },
+        {
+          "path": "apps/web/src/components/GeographyRecordTable.tsx",
+          "sha256": "27483ac0cc35d905763a60ae69d329a385f69e8dd456e98ae8ba69f7776f461c"
+        },
+        {
+          "path": "apps/web/src/hooks/useGeographyList.ts",
+          "sha256": "3ad2c1946666e29fbebd10fd8d1f059e3443d00f8e141092d7b2e6fb19090615"
+        },
+        {
+          "path": "apps/web/src/lib/geography-api.ts",
+          "sha256": "e34e61e4c0e87274ffd8c8219ecbad6253a2202dcfa513458142568f3505ae57"
+        },
+        {
+          "path": "apps/web/e2e/geography.spec.ts",
+          "sha256": "5f72e52c834a427c3326efcf257ddefb75e3268658376514e95265f7a75b788c"
+        },
+        {
+          "path": "apps/web/e2e/geography-tables.spec.ts",
+          "sha256": "2d06a7a7487584dd3410825c3d5dead51d55df4f4b2eb7e2c36aae8ec7da44d5"
+        },
+        {
+          "path": "apps/web/e2e/geography-recovery.spec.ts",
+          "sha256": "0afb82382be4c2d2d53518da480bc30d6f6bf20694bc3909822877a6d9c13f22"
+        },
+        {
+          "path": "apps/web/src/pages/geography-recovery.test.tsx",
+          "sha256": "d0e0bc412e7090b51dfb9ff26920f3947fac764737b808d216662d754d3d4436"
+        },
+        {
+          "path": "apps/web/src/pages/geography-pagination.test.tsx",
+          "sha256": "aba20476ae0396c0cb6f8c9bf941b8ef0763faea868f327287ae23606ba61d73"
+        },
+        {
+          "path": "apps/web/src/hooks/useGeographyList.test.tsx",
+          "sha256": "362f6ecb39480a071f2555ef8c25944ee9e27dd2cb246e42fe13d146b9548aac"
+        }
+      ],
+      "checks": [
+        "The current router matches the 98-path inventory. The linked populated layout proof records 93 routes in both directions, themes and engines. Five redirects are separate. The inventory identifies later source changes for scoped review.",
+        "Twenty-two Chromium and Mobile Safari cases and 25 targeted units passed for admin geography. The checks cover paging and filters, malformed results, empty collections, independent city reads, retained drafts, denied scope, stale reads and keyboard scrolling. The production runtime matches main apart from an unrelated unit fixture, documentation and board metadata.",
+        "All 91 conditional route entries now have a named case or a batch with matching direct route source. Review matching batch receipts for the specific original criteria they exercised before using them for acceptance. Populated layout and direct source matches are evidence indexes."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-original-route-reconciliation",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-original-route-reconciliation/proof.json",
+      "source_scope_proof_sha256": "97ed30c5a7e5bd1f9a277bd455604b06791a8440365140ffe09c0e2a152be5ea",
+      "release_disposition": "Verified the geography conditional cases and reconciled the current route inventory. v0.5.0 remains open."
     }
   },
   "historical_improvements": [
@@ -807617,7 +807694,7 @@
       "release-readiness#R-04.01",
       "release-readiness#R-04.02"
     ],
-    "goal": "Reconcile the original route and shared-pattern acceptance against the existing source-bound census and conditional evidence. Verify concrete uncovered cases. GitHub merge enforcement and staging Sentry delivery remain independent gates."
+    "goal": "Resolve the specific conditional criteria against the linked per-route evidence. Start with candidates whose receipts do not explicitly cover their route's original criteria. GitHub merge enforcement and staging Sentry delivery remain independent gates."
   },
   "launch_forecast": {
     "status": "deadline_at_risk_until_v0_5_and_operational_gates_close",
