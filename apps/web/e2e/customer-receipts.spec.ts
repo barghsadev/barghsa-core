@@ -253,6 +253,43 @@ async function confirmReceipt(page: Page, locale: 'en' | 'fa', payerReference = 
 
 for (const kind of ['wallet', 'invoice'] as const) {
   for (const locale of ['en', 'fa'] as const) {
+    test(`${kind} receipt retains the file and amount when storage record acknowledgement stalls (${locale})`, async ({
+      page,
+    }) => {
+      const { prefix, uploads, submissions, receipts } = await setup(page, locale, kind);
+      const amountInput = page.getByTestId(`${prefix}-amount`);
+      const originalAmount = await amountInput.inputValue();
+      const file = page.getByTestId(`${prefix}-file`);
+      const submit = page.getByTestId(`${prefix}-submit`);
+      let recordRequests = 0;
+      await page.route('**/api/upload/*/record', (route) => {
+        if (++recordRequests > 1) return route.fallback();
+      });
+      await page.clock.install();
+      await submit.click();
+      await expect.poll(() => recordRequests).toBe(1);
+      await expect(submit).toBeDisabled();
+      await page.clock.fastForward(15_001);
+      const error =
+        kind === 'invoice'
+          ? 'invoices.details.receiptUploadError'
+          : 'wallet.page.receiptUploadError';
+      await expect(page.getByTestId(`${prefix}-error`)).toContainText(t(error, locale));
+      await expect(submit).toBeEnabled();
+      await expect(amountInput).toHaveValue(originalAmount);
+      await expect(file).toHaveValue(/receipt\.pdf$/);
+      await expect(page.getByRole('dialog')).toHaveCount(0);
+      expect(uploads).toHaveLength(1);
+      expect(submissions).toHaveLength(0);
+      await submit.click();
+      await confirmReceipt(page, locale);
+      await expect(page.getByTestId(`${prefix}-success`)).toBeVisible();
+      expect(recordRequests).toBe(2);
+      expect(submissions).toHaveLength(1);
+      expect(submissions[0]?.body.attachmentKey).toBe('receipts/upload-2.pdf');
+      expect(receipts.size).toBe(1);
+    });
+
     test(`${kind} receipt retries a lost acknowledgement without creating another upload or receipt (${locale})`, async ({
       page,
     }) => {

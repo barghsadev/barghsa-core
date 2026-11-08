@@ -74,6 +74,8 @@ Solar document submission waits up to 15 seconds for a receipt bound to the requ
 
 Customer and staff ticket commands wait up to 15 seconds for response headers and the receipt body. An unconfirmed reply keeps the captured text, ordered attachment references and submission key. Explicit retry uses the same payload with the current CSRF token. A scope change or loss of authority cancels the transport and suppresses obsolete replies.
 
+Shared verified attachments use a 15-second deadline for each reservation, verification and record acknowledgement. The object transfer uses the signed URL's lifetime, up to 15 minutes, to allow slow links. A stalled stage ends preparation and leaves the caller's draft available. A late reply cannot start the next stage. The bank-receipt form also cancels attachment preparation when its owner changes.
+
 Staff invoice and wallet receipt decisions also use the 15-second deadline. A stalled password verification leaves the decision unsent. An unknown write outcome clears the captured review and reloads the current receipt before staff can review and submit another decision.
 
 Onboarding start, profile completion and dashboard-profile selection use the same deadline. After an unconfirmed start, Retry checks for an active setup before creation becomes available. Profile completion can retry the same owned profile explicitly. An unconfirmed dashboard selection keeps the reviewed choice for exact retry and offers a fresh journey read. When that read confirms completion, opening the dashboard honors the currently active profile without writing another choice.

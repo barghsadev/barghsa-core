@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-08T11:47:32+00:00",
-  "source_commit": "f4cb97fbff31d0b0c76d9c94f497dce0d3dff1bc",
+  "updated": "2026-11-08T11:56:09+00:00",
+  "source_commit": "d2a19084f5c33e6c43770f40243e2b87febfd693",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -35528,7 +35528,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.tsx",
-              "sha256": "ac8660d3578cee1ecc5c791144ebfabcbd9ddafd5780614c76596962484aba77"
+              "sha256": "47262b576580541642b72e570a1d8718d13e6ac83893f3842f7142c467a3b5a7"
             },
             {
               "path": "apps/web/src/pages/InvoicesPage.tsx",
@@ -63220,7 +63220,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.tsx",
-              "sha256": "ac8660d3578cee1ecc5c791144ebfabcbd9ddafd5780614c76596962484aba77"
+              "sha256": "47262b576580541642b72e570a1d8718d13e6ac83893f3842f7142c467a3b5a7"
             },
             {
               "path": "apps/web/src/pages/InvoicesPage.tsx",
@@ -140661,7 +140661,7 @@
             },
             {
               "path": "apps/web/e2e/customer-receipts.spec.ts",
-              "sha256": "dcd7b53008e8e6bb5c38dd12960b5846184247253b990f270111b5ab65068156"
+              "sha256": "3b8c7d1e7f86d908b1076657b39fcc9072588336ff923fd1efe1630b362432a4"
             },
             {
               "path": "apps/web/src/hooks/useReceiptForm.ts",
@@ -140677,7 +140677,7 @@
             },
             {
               "path": "apps/web/src/lib/invoice-bank-receipt-upload.ts",
-              "sha256": "dfe32ad752b61256cfdd269f07e3a91a03a95cf6560c4902e9e372a2cc605cd3"
+              "sha256": "742fc25dcdc5cacd7862b2d52ac31c385e064c22dd372a1baabbb11161d016e7"
             },
             {
               "path": "apps/web/src/lib/online-topup-action.ts",
@@ -146096,7 +146096,7 @@
             },
             {
               "path": "apps/web/e2e/customer-receipts.spec.ts",
-              "sha256": "dcd7b53008e8e6bb5c38dd12960b5846184247253b990f270111b5ab65068156"
+              "sha256": "3b8c7d1e7f86d908b1076657b39fcc9072588336ff923fd1efe1630b362432a4"
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptHistory.test.tsx",
@@ -146144,7 +146144,7 @@
             },
             {
               "path": "apps/web/src/lib/invoice-bank-receipt-upload.test.ts",
-              "sha256": "ff51d788718e0c256d60f4e943bb6a7eaecb6c5d4bf7d0b547e0c52cf7f4075f"
+              "sha256": "a5944920d50de64d65a9929febd63c8696dded1fe50855578cbef21aa41780b6"
             },
             {
               "path": "apps/web/src/lib/invoice-receipt-response.test.ts",
@@ -146164,7 +146164,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.test.tsx",
-              "sha256": "8cdb0a16474666d232480d15a7305e4a012453f32e78c380c28b32f20ab1c56b"
+              "sha256": "5805397b0714b33ebcb23cb3dcdd1b4003fbaa0cafac6ac892468aa9d6666543"
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
@@ -146686,7 +146686,7 @@
             },
             {
               "path": "apps/web/e2e/customer-receipts.spec.ts",
-              "sha256": "dcd7b53008e8e6bb5c38dd12960b5846184247253b990f270111b5ab65068156"
+              "sha256": "3b8c7d1e7f86d908b1076657b39fcc9072588336ff923fd1efe1630b362432a4"
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptHistory.test.tsx",
@@ -146738,11 +146738,11 @@
             },
             {
               "path": "apps/web/src/lib/invoice-bank-receipt-upload.test.ts",
-              "sha256": "ff51d788718e0c256d60f4e943bb6a7eaecb6c5d4bf7d0b547e0c52cf7f4075f"
+              "sha256": "a5944920d50de64d65a9929febd63c8696dded1fe50855578cbef21aa41780b6"
             },
             {
               "path": "apps/web/src/lib/invoice-bank-receipt-upload.ts",
-              "sha256": "dfe32ad752b61256cfdd269f07e3a91a03a95cf6560c4902e9e372a2cc605cd3"
+              "sha256": "742fc25dcdc5cacd7862b2d52ac31c385e064c22dd372a1baabbb11161d016e7"
             },
             {
               "path": "apps/web/src/lib/invoice-receipt-response.test.ts",
@@ -146762,11 +146762,11 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.test.tsx",
-              "sha256": "8cdb0a16474666d232480d15a7305e4a012453f32e78c380c28b32f20ab1c56b"
+              "sha256": "5805397b0714b33ebcb23cb3dcdd1b4003fbaa0cafac6ac892468aa9d6666543"
             },
             {
               "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.tsx",
-              "sha256": "ac8660d3578cee1ecc5c791144ebfabcbd9ddafd5780614c76596962484aba77"
+              "sha256": "47262b576580541642b72e570a1d8718d13e6ac83893f3842f7142c467a3b5a7"
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
@@ -147306,7 +147306,7 @@
             },
             {
               "path": "apps/web/e2e/customer-receipts.spec.ts",
-              "sha256": "dcd7b53008e8e6bb5c38dd12960b5846184247253b990f270111b5ab65068156"
+              "sha256": "3b8c7d1e7f86d908b1076657b39fcc9072588336ff923fd1efe1630b362432a4"
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptHistory.test.tsx",
@@ -147354,7 +147354,7 @@
             },
             {
               "path": "apps/web/src/lib/invoice-bank-receipt-upload.test.ts",
-              "sha256": "ff51d788718e0c256d60f4e943bb6a7eaecb6c5d4bf7d0b547e0c52cf7f4075f"
+              "sha256": "a5944920d50de64d65a9929febd63c8696dded1fe50855578cbef21aa41780b6"
             },
             {
               "path": "apps/web/src/lib/invoice-receipt-response.test.ts",
@@ -147374,7 +147374,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.test.tsx",
-              "sha256": "8cdb0a16474666d232480d15a7305e4a012453f32e78c380c28b32f20ab1c56b"
+              "sha256": "5805397b0714b33ebcb23cb3dcdd1b4003fbaa0cafac6ac892468aa9d6666543"
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
@@ -147943,7 +147943,7 @@
             },
             {
               "path": "apps/web/e2e/customer-receipts.spec.ts",
-              "sha256": "dcd7b53008e8e6bb5c38dd12960b5846184247253b990f270111b5ab65068156"
+              "sha256": "3b8c7d1e7f86d908b1076657b39fcc9072588336ff923fd1efe1630b362432a4"
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptHistory.test.tsx",
@@ -147991,7 +147991,7 @@
             },
             {
               "path": "apps/web/src/lib/invoice-bank-receipt-upload.test.ts",
-              "sha256": "ff51d788718e0c256d60f4e943bb6a7eaecb6c5d4bf7d0b547e0c52cf7f4075f"
+              "sha256": "a5944920d50de64d65a9929febd63c8696dded1fe50855578cbef21aa41780b6"
             },
             {
               "path": "apps/web/src/lib/invoice-receipt-response.test.ts",
@@ -148011,7 +148011,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.test.tsx",
-              "sha256": "8cdb0a16474666d232480d15a7305e4a012453f32e78c380c28b32f20ab1c56b"
+              "sha256": "5805397b0714b33ebcb23cb3dcdd1b4003fbaa0cafac6ac892468aa9d6666543"
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
@@ -148682,7 +148682,7 @@
             },
             {
               "path": "apps/web/e2e/customer-receipts.spec.ts",
-              "sha256": "dcd7b53008e8e6bb5c38dd12960b5846184247253b990f270111b5ab65068156"
+              "sha256": "3b8c7d1e7f86d908b1076657b39fcc9072588336ff923fd1efe1630b362432a4"
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptHistory.test.tsx",
@@ -148730,7 +148730,7 @@
             },
             {
               "path": "apps/web/src/lib/invoice-bank-receipt-upload.test.ts",
-              "sha256": "ff51d788718e0c256d60f4e943bb6a7eaecb6c5d4bf7d0b547e0c52cf7f4075f"
+              "sha256": "a5944920d50de64d65a9929febd63c8696dded1fe50855578cbef21aa41780b6"
             },
             {
               "path": "apps/web/src/lib/invoice-receipt-response.test.ts",
@@ -148750,7 +148750,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.test.tsx",
-              "sha256": "8cdb0a16474666d232480d15a7305e4a012453f32e78c380c28b32f20ab1c56b"
+              "sha256": "5805397b0714b33ebcb23cb3dcdd1b4003fbaa0cafac6ac892468aa9d6666543"
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
@@ -149184,7 +149184,7 @@
             },
             {
               "path": "apps/web/e2e/customer-receipts.spec.ts",
-              "sha256": "dcd7b53008e8e6bb5c38dd12960b5846184247253b990f270111b5ab65068156"
+              "sha256": "3b8c7d1e7f86d908b1076657b39fcc9072588336ff923fd1efe1630b362432a4"
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptHistory.test.tsx",
@@ -149232,7 +149232,7 @@
             },
             {
               "path": "apps/web/src/lib/invoice-bank-receipt-upload.test.ts",
-              "sha256": "ff51d788718e0c256d60f4e943bb6a7eaecb6c5d4bf7d0b547e0c52cf7f4075f"
+              "sha256": "a5944920d50de64d65a9929febd63c8696dded1fe50855578cbef21aa41780b6"
             },
             {
               "path": "apps/web/src/lib/invoice-receipt-response.test.ts",
@@ -149252,7 +149252,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.test.tsx",
-              "sha256": "8cdb0a16474666d232480d15a7305e4a012453f32e78c380c28b32f20ab1c56b"
+              "sha256": "5805397b0714b33ebcb23cb3dcdd1b4003fbaa0cafac6ac892468aa9d6666543"
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
@@ -149664,7 +149664,7 @@
             },
             {
               "path": "apps/web/e2e/customer-receipts.spec.ts",
-              "sha256": "dcd7b53008e8e6bb5c38dd12960b5846184247253b990f270111b5ab65068156"
+              "sha256": "3b8c7d1e7f86d908b1076657b39fcc9072588336ff923fd1efe1630b362432a4"
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptHistory.test.tsx",
@@ -149712,7 +149712,7 @@
             },
             {
               "path": "apps/web/src/lib/invoice-bank-receipt-upload.test.ts",
-              "sha256": "ff51d788718e0c256d60f4e943bb6a7eaecb6c5d4bf7d0b547e0c52cf7f4075f"
+              "sha256": "a5944920d50de64d65a9929febd63c8696dded1fe50855578cbef21aa41780b6"
             },
             {
               "path": "apps/web/src/lib/invoice-receipt-response.test.ts",
@@ -149732,7 +149732,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.test.tsx",
-              "sha256": "8cdb0a16474666d232480d15a7305e4a012453f32e78c380c28b32f20ab1c56b"
+              "sha256": "5805397b0714b33ebcb23cb3dcdd1b4003fbaa0cafac6ac892468aa9d6666543"
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
@@ -150145,7 +150145,7 @@
             },
             {
               "path": "apps/web/e2e/customer-receipts.spec.ts",
-              "sha256": "dcd7b53008e8e6bb5c38dd12960b5846184247253b990f270111b5ab65068156"
+              "sha256": "3b8c7d1e7f86d908b1076657b39fcc9072588336ff923fd1efe1630b362432a4"
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptHistory.test.tsx",
@@ -150193,7 +150193,7 @@
             },
             {
               "path": "apps/web/src/lib/invoice-bank-receipt-upload.test.ts",
-              "sha256": "ff51d788718e0c256d60f4e943bb6a7eaecb6c5d4bf7d0b547e0c52cf7f4075f"
+              "sha256": "a5944920d50de64d65a9929febd63c8696dded1fe50855578cbef21aa41780b6"
             },
             {
               "path": "apps/web/src/lib/invoice-receipt-response.test.ts",
@@ -150213,7 +150213,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.test.tsx",
-              "sha256": "8cdb0a16474666d232480d15a7305e4a012453f32e78c380c28b32f20ab1c56b"
+              "sha256": "5805397b0714b33ebcb23cb3dcdd1b4003fbaa0cafac6ac892468aa9d6666543"
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
@@ -150627,7 +150627,7 @@
             },
             {
               "path": "apps/web/e2e/customer-receipts.spec.ts",
-              "sha256": "dcd7b53008e8e6bb5c38dd12960b5846184247253b990f270111b5ab65068156"
+              "sha256": "3b8c7d1e7f86d908b1076657b39fcc9072588336ff923fd1efe1630b362432a4"
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptHistory.test.tsx",
@@ -150675,7 +150675,7 @@
             },
             {
               "path": "apps/web/src/lib/invoice-bank-receipt-upload.test.ts",
-              "sha256": "ff51d788718e0c256d60f4e943bb6a7eaecb6c5d4bf7d0b547e0c52cf7f4075f"
+              "sha256": "a5944920d50de64d65a9929febd63c8696dded1fe50855578cbef21aa41780b6"
             },
             {
               "path": "apps/web/src/lib/invoice-receipt-response.test.ts",
@@ -150695,7 +150695,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.test.tsx",
-              "sha256": "8cdb0a16474666d232480d15a7305e4a012453f32e78c380c28b32f20ab1c56b"
+              "sha256": "5805397b0714b33ebcb23cb3dcdd1b4003fbaa0cafac6ac892468aa9d6666543"
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
@@ -151117,7 +151117,7 @@
             },
             {
               "path": "apps/web/e2e/customer-receipts.spec.ts",
-              "sha256": "dcd7b53008e8e6bb5c38dd12960b5846184247253b990f270111b5ab65068156"
+              "sha256": "3b8c7d1e7f86d908b1076657b39fcc9072588336ff923fd1efe1630b362432a4"
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptHistory.test.tsx",
@@ -151165,7 +151165,7 @@
             },
             {
               "path": "apps/web/src/lib/invoice-bank-receipt-upload.test.ts",
-              "sha256": "ff51d788718e0c256d60f4e943bb6a7eaecb6c5d4bf7d0b547e0c52cf7f4075f"
+              "sha256": "a5944920d50de64d65a9929febd63c8696dded1fe50855578cbef21aa41780b6"
             },
             {
               "path": "apps/web/src/lib/invoice-receipt-response.test.ts",
@@ -151185,7 +151185,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.test.tsx",
-              "sha256": "8cdb0a16474666d232480d15a7305e4a012453f32e78c380c28b32f20ab1c56b"
+              "sha256": "5805397b0714b33ebcb23cb3dcdd1b4003fbaa0cafac6ac892468aa9d6666543"
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
@@ -151599,7 +151599,7 @@
             },
             {
               "path": "apps/web/e2e/customer-receipts.spec.ts",
-              "sha256": "dcd7b53008e8e6bb5c38dd12960b5846184247253b990f270111b5ab65068156"
+              "sha256": "3b8c7d1e7f86d908b1076657b39fcc9072588336ff923fd1efe1630b362432a4"
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptHistory.test.tsx",
@@ -151647,7 +151647,7 @@
             },
             {
               "path": "apps/web/src/lib/invoice-bank-receipt-upload.test.ts",
-              "sha256": "ff51d788718e0c256d60f4e943bb6a7eaecb6c5d4bf7d0b547e0c52cf7f4075f"
+              "sha256": "a5944920d50de64d65a9929febd63c8696dded1fe50855578cbef21aa41780b6"
             },
             {
               "path": "apps/web/src/lib/invoice-receipt-response.test.ts",
@@ -151667,7 +151667,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.test.tsx",
-              "sha256": "8cdb0a16474666d232480d15a7305e4a012453f32e78c380c28b32f20ab1c56b"
+              "sha256": "5805397b0714b33ebcb23cb3dcdd1b4003fbaa0cafac6ac892468aa9d6666543"
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
@@ -483102,7 +483102,7 @@
             },
             {
               "path": "apps/web/e2e/customer-receipts.spec.ts",
-              "sha256": "dcd7b53008e8e6bb5c38dd12960b5846184247253b990f270111b5ab65068156"
+              "sha256": "3b8c7d1e7f86d908b1076657b39fcc9072588336ff923fd1efe1630b362432a4"
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
@@ -483694,7 +483694,7 @@
             },
             {
               "path": "apps/web/e2e/customer-receipts.spec.ts",
-              "sha256": "dcd7b53008e8e6bb5c38dd12960b5846184247253b990f270111b5ab65068156"
+              "sha256": "3b8c7d1e7f86d908b1076657b39fcc9072588336ff923fd1efe1630b362432a4"
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
@@ -484286,7 +484286,7 @@
             },
             {
               "path": "apps/web/e2e/customer-receipts.spec.ts",
-              "sha256": "dcd7b53008e8e6bb5c38dd12960b5846184247253b990f270111b5ab65068156"
+              "sha256": "3b8c7d1e7f86d908b1076657b39fcc9072588336ff923fd1efe1630b362432a4"
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
@@ -484878,7 +484878,7 @@
             },
             {
               "path": "apps/web/e2e/customer-receipts.spec.ts",
-              "sha256": "dcd7b53008e8e6bb5c38dd12960b5846184247253b990f270111b5ab65068156"
+              "sha256": "3b8c7d1e7f86d908b1076657b39fcc9072588336ff923fd1efe1630b362432a4"
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
@@ -497047,7 +497047,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "87bbf3bf41c8070db79663ce6350a80a81c635d3456a7df978b311f544beb7f0"
+              "sha256": "e129f37c8e2b831b06194580001f5c715465f62f53c90fb5b660ace2829a4798"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -512324,7 +512324,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.tsx",
-              "sha256": "ac8660d3578cee1ecc5c791144ebfabcbd9ddafd5780614c76596962484aba77"
+              "sha256": "47262b576580541642b72e570a1d8718d13e6ac83893f3842f7142c467a3b5a7"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -516933,7 +516933,7 @@
             },
             {
               "path": "apps/web/e2e/customer-receipts.spec.ts",
-              "sha256": "dcd7b53008e8e6bb5c38dd12960b5846184247253b990f270111b5ab65068156"
+              "sha256": "3b8c7d1e7f86d908b1076657b39fcc9072588336ff923fd1efe1630b362432a4"
             },
             {
               "path": "apps/web/e2e/document-list-recovery.spec.ts",
@@ -517993,7 +517993,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.tsx",
-              "sha256": "ac8660d3578cee1ecc5c791144ebfabcbd9ddafd5780614c76596962484aba77"
+              "sha256": "47262b576580541642b72e570a1d8718d13e6ac83893f3842f7142c467a3b5a7"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -518105,7 +518105,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "87bbf3bf41c8070db79663ce6350a80a81c635d3456a7df978b311f544beb7f0"
+              "sha256": "e129f37c8e2b831b06194580001f5c715465f62f53c90fb5b660ace2829a4798"
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
@@ -518507,7 +518507,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.tsx",
-              "sha256": "ac8660d3578cee1ecc5c791144ebfabcbd9ddafd5780614c76596962484aba77"
+              "sha256": "47262b576580541642b72e570a1d8718d13e6ac83893f3842f7142c467a3b5a7"
             },
             {
               "path": "apps/web/src/pages/WalletPage.tsx",
@@ -519213,7 +519213,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "87bbf3bf41c8070db79663ce6350a80a81c635d3456a7df978b311f544beb7f0"
+              "sha256": "e129f37c8e2b831b06194580001f5c715465f62f53c90fb5b660ace2829a4798"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -519946,7 +519946,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.tsx",
-              "sha256": "ac8660d3578cee1ecc5c791144ebfabcbd9ddafd5780614c76596962484aba77"
+              "sha256": "47262b576580541642b72e570a1d8718d13e6ac83893f3842f7142c467a3b5a7"
             },
             {
               "path": "apps/web/src/pages/WalletPage.tsx",
@@ -522102,7 +522102,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.tsx",
-              "sha256": "ac8660d3578cee1ecc5c791144ebfabcbd9ddafd5780614c76596962484aba77"
+              "sha256": "47262b576580541642b72e570a1d8718d13e6ac83893f3842f7142c467a3b5a7"
             },
             {
               "path": "apps/web/src/pages/WalletPage.tsx",
@@ -567520,7 +567520,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "87bbf3bf41c8070db79663ce6350a80a81c635d3456a7df978b311f544beb7f0"
+              "sha256": "e129f37c8e2b831b06194580001f5c715465f62f53c90fb5b660ace2829a4798"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -569415,7 +569415,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "87bbf3bf41c8070db79663ce6350a80a81c635d3456a7df978b311f544beb7f0"
+              "sha256": "e129f37c8e2b831b06194580001f5c715465f62f53c90fb5b660ace2829a4798"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -570219,7 +570219,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Customer and staff ticket writes now bound response headers and body, preserve captured commands, and cancel obsolete transports. The shared verified upload preparation and the verification-mode draft write still need bounded feedback."
+        "Shared verified attachment preparation now has bounded metadata and transfer waits, preserves receipt and ticket drafts and aborts obsolete invoice uploads. The verification-mode draft still needs a bounded save and a current-version check after an unknown reply."
       ],
       "owner": null,
       "depends_on": [],
@@ -570276,7 +570276,8 @@
           "release-0.5-customer-electricity-command-recovery",
           "release-0.5-electricity-draft-recovery",
           "release-0.5-solar-document-completion",
-          "release-0.5-ticket-command-deadline"
+          "release-0.5-ticket-command-deadline",
+          "release-0.5-verified-upload-deadline"
         ],
         "current_acceptance": null
       }
@@ -571387,7 +571388,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "87bbf3bf41c8070db79663ce6350a80a81c635d3456a7df978b311f544beb7f0"
+              "sha256": "e129f37c8e2b831b06194580001f5c715465f62f53c90fb5b660ace2829a4798"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -573282,7 +573283,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "87bbf3bf41c8070db79663ce6350a80a81c635d3456a7df978b311f544beb7f0"
+              "sha256": "e129f37c8e2b831b06194580001f5c715465f62f53c90fb5b660ace2829a4798"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -575177,7 +575178,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "87bbf3bf41c8070db79663ce6350a80a81c635d3456a7df978b311f544beb7f0"
+              "sha256": "e129f37c8e2b831b06194580001f5c715465f62f53c90fb5b660ace2829a4798"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -577072,7 +577073,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "87bbf3bf41c8070db79663ce6350a80a81c635d3456a7df978b311f544beb7f0"
+              "sha256": "e129f37c8e2b831b06194580001f5c715465f62f53c90fb5b660ace2829a4798"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -578967,7 +578968,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "87bbf3bf41c8070db79663ce6350a80a81c635d3456a7df978b311f544beb7f0"
+              "sha256": "e129f37c8e2b831b06194580001f5c715465f62f53c90fb5b660ace2829a4798"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -580862,7 +580863,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "87bbf3bf41c8070db79663ce6350a80a81c635d3456a7df978b311f544beb7f0"
+              "sha256": "e129f37c8e2b831b06194580001f5c715465f62f53c90fb5b660ace2829a4798"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -582757,7 +582758,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "87bbf3bf41c8070db79663ce6350a80a81c635d3456a7df978b311f544beb7f0"
+              "sha256": "e129f37c8e2b831b06194580001f5c715465f62f53c90fb5b660ace2829a4798"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -584652,7 +584653,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "87bbf3bf41c8070db79663ce6350a80a81c635d3456a7df978b311f544beb7f0"
+              "sha256": "e129f37c8e2b831b06194580001f5c715465f62f53c90fb5b660ace2829a4798"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -586547,7 +586548,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "87bbf3bf41c8070db79663ce6350a80a81c635d3456a7df978b311f544beb7f0"
+              "sha256": "e129f37c8e2b831b06194580001f5c715465f62f53c90fb5b660ace2829a4798"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -588442,7 +588443,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "87bbf3bf41c8070db79663ce6350a80a81c635d3456a7df978b311f544beb7f0"
+              "sha256": "e129f37c8e2b831b06194580001f5c715465f62f53c90fb5b660ace2829a4798"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -590337,7 +590338,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "87bbf3bf41c8070db79663ce6350a80a81c635d3456a7df978b311f544beb7f0"
+              "sha256": "e129f37c8e2b831b06194580001f5c715465f62f53c90fb5b660ace2829a4798"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -591601,7 +591602,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "87bbf3bf41c8070db79663ce6350a80a81c635d3456a7df978b311f544beb7f0"
+              "sha256": "e129f37c8e2b831b06194580001f5c715465f62f53c90fb5b660ace2829a4798"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -592972,7 +592973,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "87bbf3bf41c8070db79663ce6350a80a81c635d3456a7df978b311f544beb7f0"
+              "sha256": "e129f37c8e2b831b06194580001f5c715465f62f53c90fb5b660ace2829a4798"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -594867,7 +594868,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "87bbf3bf41c8070db79663ce6350a80a81c635d3456a7df978b311f544beb7f0"
+              "sha256": "e129f37c8e2b831b06194580001f5c715465f62f53c90fb5b660ace2829a4798"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -595671,7 +595672,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Ticket command recovery and the verification banner have current production browser evidence. Continue matching the remaining route loading, empty and error states to current source and related native evidence."
+        "Verified upload preparation and the associated invoice and wallet timeout recovery have current browser evidence. Continue matching remaining route loading, empty and error states against current source and native evidence."
       ],
       "owner": null,
       "depends_on": [],
@@ -595740,7 +595741,8 @@
           "release-0.5-customer-electricity-command-recovery",
           "release-0.5-electricity-draft-recovery",
           "release-0.5-solar-document-completion",
-          "release-0.5-ticket-command-deadline"
+          "release-0.5-ticket-command-deadline",
+          "release-0.5-verified-upload-deadline"
         ],
         "current_acceptance": null
       }
@@ -674280,7 +674282,7 @@
             },
             {
               "path": "apps/web/src/lib/invoice-bank-receipt-upload.ts",
-              "sha256": "dfe32ad752b61256cfdd269f07e3a91a03a95cf6560c4902e9e372a2cc605cd3"
+              "sha256": "742fc25dcdc5cacd7862b2d52ac31c385e064c22dd372a1baabbb11161d016e7"
             },
             {
               "path": "apps/web/src/lib/notifications.ts",
@@ -674812,7 +674814,7 @@
             },
             {
               "path": "apps/web/src/lib/invoice-bank-receipt-upload.ts",
-              "sha256": "dfe32ad752b61256cfdd269f07e3a91a03a95cf6560c4902e9e372a2cc605cd3"
+              "sha256": "742fc25dcdc5cacd7862b2d52ac31c385e064c22dd372a1baabbb11161d016e7"
             },
             {
               "path": "apps/web/src/lib/notifications.ts",
@@ -675348,7 +675350,7 @@
             },
             {
               "path": "apps/web/src/lib/invoice-bank-receipt-upload.ts",
-              "sha256": "dfe32ad752b61256cfdd269f07e3a91a03a95cf6560c4902e9e372a2cc605cd3"
+              "sha256": "742fc25dcdc5cacd7862b2d52ac31c385e064c22dd372a1baabbb11161d016e7"
             },
             {
               "path": "apps/web/src/lib/notifications.ts",
@@ -675881,7 +675883,7 @@
             },
             {
               "path": "apps/web/src/lib/invoice-bank-receipt-upload.ts",
-              "sha256": "dfe32ad752b61256cfdd269f07e3a91a03a95cf6560c4902e9e372a2cc605cd3"
+              "sha256": "742fc25dcdc5cacd7862b2d52ac31c385e064c22dd372a1baabbb11161d016e7"
             },
             {
               "path": "apps/web/src/lib/notifications.ts",
@@ -676413,7 +676415,7 @@
             },
             {
               "path": "apps/web/src/lib/invoice-bank-receipt-upload.ts",
-              "sha256": "dfe32ad752b61256cfdd269f07e3a91a03a95cf6560c4902e9e372a2cc605cd3"
+              "sha256": "742fc25dcdc5cacd7862b2d52ac31c385e064c22dd372a1baabbb11161d016e7"
             },
             {
               "path": "apps/web/src/lib/notifications.ts",
@@ -676947,7 +676949,7 @@
             },
             {
               "path": "apps/web/src/lib/invoice-bank-receipt-upload.ts",
-              "sha256": "dfe32ad752b61256cfdd269f07e3a91a03a95cf6560c4902e9e372a2cc605cd3"
+              "sha256": "742fc25dcdc5cacd7862b2d52ac31c385e064c22dd372a1baabbb11161d016e7"
             },
             {
               "path": "apps/web/src/lib/notifications.ts",
@@ -709702,7 +709704,7 @@
             },
             {
               "path": "apps/web/e2e/customer-receipts.spec.ts",
-              "sha256": "dcd7b53008e8e6bb5c38dd12960b5846184247253b990f270111b5ab65068156"
+              "sha256": "3b8c7d1e7f86d908b1076657b39fcc9072588336ff923fd1efe1630b362432a4"
             },
             {
               "path": "apps/web/src/lib/invoice-bank-receipt-fields.ts",
@@ -709710,7 +709712,7 @@
             },
             {
               "path": "apps/web/src/lib/invoice-bank-receipt-upload.ts",
-              "sha256": "dfe32ad752b61256cfdd269f07e3a91a03a95cf6560c4902e9e372a2cc605cd3"
+              "sha256": "742fc25dcdc5cacd7862b2d52ac31c385e064c22dd372a1baabbb11161d016e7"
             },
             {
               "path": "packages/shared/src/finance/wallet-bank-receipt-topup.ts",
@@ -710082,7 +710084,7 @@
             },
             {
               "path": "apps/web/src/lib/invoice-bank-receipt-upload.test.ts",
-              "sha256": "ff51d788718e0c256d60f4e943bb6a7eaecb6c5d4bf7d0b547e0c52cf7f4075f"
+              "sha256": "a5944920d50de64d65a9929febd63c8696dded1fe50855578cbef21aa41780b6"
             },
             {
               "path": "apps/web/src/lib/invoice-receipt-response.test.ts",
@@ -710102,7 +710104,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.test.tsx",
-              "sha256": "8cdb0a16474666d232480d15a7305e4a012453f32e78c380c28b32f20ab1c56b"
+              "sha256": "5805397b0714b33ebcb23cb3dcdd1b4003fbaa0cafac6ac892468aa9d6666543"
             },
             {
               "path": "apps/web/src/pages/customer-bank-receipt-history-scope.test.tsx",
@@ -710178,7 +710180,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.tsx",
-              "sha256": "ac8660d3578cee1ecc5c791144ebfabcbd9ddafd5780614c76596962484aba77"
+              "sha256": "47262b576580541642b72e570a1d8718d13e6ac83893f3842f7142c467a3b5a7"
             },
             {
               "path": "packages/shared/src/finance/invoice-bank-receipt-upload.ts",
@@ -725384,7 +725386,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "The scoped ticket command and verification banner changes have current evidence. Remaining command feedback and route states, the live Sentry receipt and required GitHub accessibility enforcement still gate full adoption."
+        "Verified upload and receipt recovery has current evidence. Remaining command feedback and route states, live Sentry delivery and required GitHub accessibility enforcement still gate full adoption."
       ],
       "owner": null,
       "depends_on": [],
@@ -725517,7 +725519,8 @@
           "release-0.5-customer-electricity-command-recovery",
           "release-0.5-electricity-draft-recovery",
           "release-0.5-solar-document-completion",
-          "release-0.5-ticket-command-deadline"
+          "release-0.5-ticket-command-deadline",
+          "release-0.5-verified-upload-deadline"
         ]
       }
     },
@@ -727017,7 +727020,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.tsx",
-              "sha256": "ac8660d3578cee1ecc5c791144ebfabcbd9ddafd5780614c76596962484aba77"
+              "sha256": "47262b576580541642b72e570a1d8718d13e6ac83893f3842f7142c467a3b5a7"
             },
             {
               "path": "apps/web/src/pages/TosRichText.tsx",
@@ -727041,7 +727044,7 @@
             },
             {
               "path": "apps/web/src/lib/invoice-bank-receipt-upload.ts",
-              "sha256": "dfe32ad752b61256cfdd269f07e3a91a03a95cf6560c4902e9e372a2cc605cd3"
+              "sha256": "742fc25dcdc5cacd7862b2d52ac31c385e064c22dd372a1baabbb11161d016e7"
             },
             {
               "path": "apps/web/src/components/CrmAddressEditor.tsx",
@@ -727303,7 +727306,8 @@
             "Renewed customer electricity cancellation and increase coverage and the route and interaction budget measurements. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-customer-electricity-command-recovery/proof.json",
             "Renewed guarded electricity draft recovery coverage and the route and interaction budget measurements. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-draft-recovery/proof.json",
             "Renewed solar document completion coverage and the route and interaction budget measurements. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-solar-document-completion/proof.json",
-            "Renewed ticket command, verification banner and route and interaction budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-ticket-command-deadline/proof.json"
+            "Renewed ticket command, verification banner and route and interaction budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-ticket-command-deadline/proof.json",
+            "Renewed verified attachment, receipt preparation and route and interaction budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-verified-upload-deadline/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -799097,6 +799101,136 @@
       "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ticket-command-deadline/renewed-bindings.json",
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ticket-command-deadline/reviewed.patch",
       "release_disposition": "Verified scoped ticket command acknowledgement and verification banner bundle. v0.5.0 acceptance remains open."
+    },
+    "release-0.5-verified-upload-deadline": {
+      "batch": "release-0.5-verified-upload-deadline",
+      "base_commit": "d2a19084f5c33e6c43770f40243e2b87febfd693",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.11.01.03",
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.11.01.03",
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": ".size-limit.json",
+          "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+        },
+        {
+          "path": "apps/api/src/upload/upload.controller.ts",
+          "sha256": "8148fdf77c21ea21b8a89f057239fbfe1c3d125a8480db7d2bb1fa32aa34cade"
+        },
+        {
+          "path": "apps/api/src/upload/upload.service.ts",
+          "sha256": "0f44b511cef397bebf63dd1af63e869577d53abac278a7aee5d94dc2d9f6959e"
+        },
+        {
+          "path": "apps/web/e2e/crm-corrections.spec.ts",
+          "sha256": "698688c26febd5e37bdacda275406343a337f89b468a246b0e885d277d609534"
+        },
+        {
+          "path": "apps/web/e2e/customer-receipts.spec.ts",
+          "sha256": "3b8c7d1e7f86d908b1076657b39fcc9072588336ff923fd1efe1630b362432a4"
+        },
+        {
+          "path": "apps/web/e2e/onboarding-wizard.spec.ts",
+          "sha256": "f1be7aefa9c6c4226ced1c283ac81993543e78a95d3ac571fcb18d38bcd7c7cd"
+        },
+        {
+          "path": "apps/web/e2e/ticket-forms.spec.ts",
+          "sha256": "5cce4db6d72741214fb2b8942af57c68146e111453e6c1444efd805d69b5116e"
+        },
+        {
+          "path": "apps/web/e2e/verification-policy-settings.spec.ts",
+          "sha256": "561850d40f64e14743cbd6372f952eaa2dd99c7230fe7015376c5e7801e6fcae"
+        },
+        {
+          "path": "apps/web/src/components/ProfileVerificationReview.tsx",
+          "sha256": "7375c1469ffb553b90abf6dd06ed3d4bef6875ffb5440ef36bd76a0e3c5cfd2c"
+        },
+        {
+          "path": "apps/web/src/components/TicketIntakeForm.tsx",
+          "sha256": "aeeaa3705c2bc42b6c0635892d0b018076de480307d19551748d433d858f4bc7"
+        },
+        {
+          "path": "apps/web/src/components/TicketReplyInput.tsx",
+          "sha256": "0043941fc1efb8426b6b03adffa7ee158651820abb5e1c8a3d6b6ec66da3cf96"
+        },
+        {
+          "path": "apps/web/src/lib/bank-receipt-topup-action.ts",
+          "sha256": "03fa7edc325ad5181ac1d93923e351d5fcf3bbaf6e6cf42e4c3049dc77b99486"
+        },
+        {
+          "path": "apps/web/src/lib/invoice-bank-receipt-upload.test.ts",
+          "sha256": "a5944920d50de64d65a9929febd63c8696dded1fe50855578cbef21aa41780b6"
+        },
+        {
+          "path": "apps/web/src/lib/invoice-bank-receipt-upload.ts",
+          "sha256": "742fc25dcdc5cacd7862b2d52ac31c385e064c22dd372a1baabbb11161d016e7"
+        },
+        {
+          "path": "apps/web/src/lib/server-query-client.ts",
+          "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
+        },
+        {
+          "path": "apps/web/src/pages/AccountRecoveryPage.tsx",
+          "sha256": "5b1fded05c7642b0f3a61cfd0a87ad4f392ffe3831ea2db85c290d0bed0ebde9"
+        },
+        {
+          "path": "apps/web/src/pages/CrmCorrectionsPage.tsx",
+          "sha256": "5d2d8f0ffcaa7f957a78ff4c3b707a2cd7cd4d96b6594b5dad0f2eee6718b83c"
+        },
+        {
+          "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.test.tsx",
+          "sha256": "5805397b0714b33ebcb23cb3dcdd1b4003fbaa0cafac6ac892468aa9d6666543"
+        },
+        {
+          "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.tsx",
+          "sha256": "47262b576580541642b72e570a1d8718d13e6ac83893f3842f7142c467a3b5a7"
+        },
+        {
+          "path": "apps/web/src/pages/WalletPage.tsx",
+          "sha256": "44ee2de825c64b4a53473aaf8a022175959f36ed543fa97f6d582949c89be630"
+        },
+        {
+          "path": "apps/web/src/routes/onboarding/legal/$profileId.tsx",
+          "sha256": "c17a8b1020cf61df5b60490c8ffdc2539592646295f583e25800fb22a83a7a07"
+        },
+        {
+          "path": "docs/design/notification-recovery.md",
+          "sha256": "e129f37c8e2b831b06194580001f5c715465f62f53c90fb5b660ace2829a4798"
+        },
+        {
+          "path": "packages/shared/src/finance/invoice-bank-receipt-upload.ts",
+          "sha256": "a7f686830dc8171b15c38a6216f1f94f0afe4b0861691e21a4f621745ebf55dd"
+        },
+        {
+          "path": "scripts/check-changed-coverage.py",
+          "sha256": "721aa5763bb62336c0e4c454b8e36e2f15ff1e14bf4b0136c7c7946424bbd736"
+        },
+        {
+          "path": "scripts/check-route-budgets.mjs",
+          "sha256": "4dd831c645a9dbf1e6fd9b0c211b5559e4fc22652373b31525bd4f4aae38186d"
+        }
+      ],
+      "checks": [
+        "Verified attachment preparation bounds reservation, verification and record acknowledgements to 15 seconds per stage. The transfer is bounded by the signed URL lifetime up to 15 minutes. Timed-out replies cannot advance the old attempt. Invoice or profile changes cancel the invoice form's old upload.",
+        "The client preserves declared upload scope, MIME and size, the write-once storage precondition, the confirmed byte-verification response and the record prerequisite. Existing caller drafts remain available for deliberate retry. The API, storage contract and business writes are unchanged.",
+        "The initial unit run had one expected-argument assertion failure because the invoice form now passes its AbortSignal. The final invoice run passed all 17 cases, including new cancellation assertions. The other unit cases passed against unchanged sources and fixtures, giving 126 distinct targeted unit cases.",
+        "Forty Chromium and Mobile Safari cases and 20 instrumented Chromium cases passed. The matrix covers stalled invoice and wallet receipt preparation, exact financial acknowledgements, ticket attachments, CRM corrections and verification evidence, and company onboarding documents.",
+        "All nine changed-coverage groups, all 100 unchanged bundle budgets, formatting, scoped lint and web typecheck passed. Six cold-auth receipts carry forward from byte-identical runtime files."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-verified-upload-deadline",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-verified-upload-deadline/proof.json",
+      "source_scope_proof_sha256": "53c85e7f430e2a420543e7f2a0ee59935a78e1cf0dd404c5eea8a07215dcab86",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-verified-upload-deadline/renewed-bindings.json",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-verified-upload-deadline/reviewed.patch",
+      "release_disposition": "Verified bounded shared attachment preparation and receipt recovery. v0.5.0 acceptance remains open."
     }
   },
   "historical_improvements": [
@@ -799147,12 +799281,12 @@
       "release-readiness#R-04.01",
       "release-readiness#R-04.02"
     ],
-    "goal": "Close demonstrated ordinary command feedback gaps in verified upload preparation and the versioned verification-mode draft, preserving uploaded-file integrity and version checks. Reconcile remaining route loading, empty and error evidence with the existing route inventory. Live Sentry delivery and GitHub accessibility enforcement remain separate v0.5.0 gates."
+    "goal": "Finish the versioned verification-mode draft save and current-version recovery. Inspect the remaining ordinary commands and reconcile route loading, empty and error evidence with the existing source inventory. Live Sentry delivery and GitHub accessibility enforcement remain separate v0.5.0 gates."
   },
   "launch_forecast": {
     "status": "deadline_at_risk_until_v0_5_and_operational_gates_close",
     "next_update_after": "v0.5.0 remaining UI criteria and owner decisions",
-    "method": "v0.4.0 staging and Telegram receipts are verified. v0.5.0 form semantics, guarded electricity drafts, solar document completion, ticket acknowledgement and scoped customer electricity, shell, onboarding, terms and invitation recovery are verified. Five launch-required criteria remain open, including the live Sentry receipt and GitHub accessibility enforcement. The November 9 sequence remains at risk."
+    "method": "v0.4.0 staging and Telegram receipts are verified. v0.5.0 form semantics, guarded electricity drafts, solar document completion, ticket acknowledgement, verified attachment preparation and scoped customer electricity, shell, onboarding, terms and invitation recovery are verified. Five launch-required criteria remain open, including the live Sentry receipt and GitHub accessibility enforcement. The November 9 sequence remains at risk."
   },
   "capabilities": [
     {

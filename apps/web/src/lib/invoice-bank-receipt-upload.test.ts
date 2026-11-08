@@ -62,7 +62,10 @@ describe('invoice bank receipt upload helpers (T-04.3.01.02)', () => {
   });
 });
 
-afterEach(() => vi.unstubAllGlobals());
+afterEach(() => {
+  vi.useRealTimers();
+  vi.unstubAllGlobals();
+});
 for (const upload of [
   uploadInvoiceReceiptAttachment,
   uploadVerificationEvidence,
@@ -157,4 +160,89 @@ it('omits profileId for account-level ticket attachments, matching the upload AP
     )
   ).toBe('uploads/document/ticket.pdf');
   expect(JSON.parse(request.mock.calls[3]![1].body)).not.toHaveProperty('profileId');
+});
+
+const receiptFile = () => new File(['%PDF'], 'receipt.pdf', { type: 'application/pdf' });
+const reservedUpload = () =>
+  Response.json({
+    key: 'uploads/document/receipt.pdf',
+    presignedUrl: 'https://storage.example.test/receipt',
+    expiresIn: 60,
+  });
+
+it.each([
+  { step: 'reservation receipt', index: 0, milliseconds: 15_000 },
+  { step: 'file transfer', index: 1, milliseconds: 60_000 },
+  { step: 'verification receipt', index: 2, milliseconds: 15_000 },
+  { step: 'storage record', index: 3, milliseconds: 15_000 },
+])(
+  'stops after a stalled $step without advancing or replaying the upload',
+  async ({ index, milliseconds }) => {
+    vi.useFakeTimers();
+    const replies = [
+      reservedUpload(),
+      new Response(null, { status: 200 }),
+      Response.json({ status: 'confirmed' }),
+      Response.json({ status: 'recorded' }),
+    ];
+    let finish!: () => void;
+    const request = vi.fn(async (_url: string, _options: RequestInit): Promise<Response> => {
+      const step = request.mock.calls.length - 1;
+      const reply = replies[step]!;
+      if (step !== index) return reply;
+      if (index === 0 || index === 2) {
+        const body = await reply.json();
+        return Object.assign(reply, {
+          json: () =>
+            new Promise<unknown>((resolve) => {
+              finish = () => resolve(body);
+            }),
+        });
+      }
+      return new Promise((resolve) => {
+        finish = () => resolve(reply);
+      });
+    });
+    vi.stubGlobal('fetch', request);
+    const pending = uploadInvoiceReceiptAttachment(receiptFile(), 'profile');
+    const failure = expect(pending).rejects.toMatchObject({ name: 'TimeoutError' });
+    await vi.advanceTimersByTimeAsync(milliseconds - 1);
+    expect(request).toHaveBeenCalledTimes(index + 1);
+    expect(request.mock.calls[index]![1].signal?.aborted).toBe(false);
+    await vi.advanceTimersByTimeAsync(1);
+    await failure;
+    expect(request.mock.calls[index]![1].signal?.aborted).toBe(true);
+    finish();
+    await vi.advanceTimersByTimeAsync(0);
+    expect(request).toHaveBeenCalledTimes(index + 1);
+  }
+);
+
+it('accepts a file transfer longer than the metadata deadline and honors owner cancellation', async () => {
+  vi.useFakeTimers();
+  const owner = new AbortController();
+  let finish!: (response: Response) => void;
+  const request = vi
+    .fn<(path: string, options: RequestInit) => Promise<Response>>()
+    .mockResolvedValueOnce(reservedUpload())
+    .mockImplementationOnce(() => new Promise((resolve) => (finish = resolve)))
+    .mockResolvedValueOnce(Response.json({ status: 'confirmed' }))
+    .mockResolvedValueOnce(Response.json({ status: 'recorded' }))
+    .mockResolvedValueOnce(reservedUpload())
+    .mockImplementationOnce(() => new Promise(() => {}));
+  vi.stubGlobal('fetch', request);
+  const slow = uploadInvoiceReceiptAttachment(receiptFile(), 'profile', owner.signal);
+  await vi.advanceTimersByTimeAsync(16_000);
+  expect(request).toHaveBeenCalledTimes(2);
+  expect(request.mock.calls[1]![1].signal?.aborted).toBe(false);
+  finish(new Response(null, { status: 200 }));
+  await expect(slow).resolves.toBe('uploads/document/receipt.pdf');
+  const pending = uploadInvoiceReceiptAttachment(receiptFile(), 'profile', owner.signal);
+  const cancelled = expect(pending).rejects.toMatchObject({ name: 'AbortError' });
+  await vi.advanceTimersByTimeAsync(0);
+  expect(request).toHaveBeenCalledTimes(6);
+  owner.abort();
+  await cancelled;
+  expect(request.mock.calls[5]![1].signal?.aborted).toBe(true);
+  expect(request).toHaveBeenCalledTimes(6);
 });

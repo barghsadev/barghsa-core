@@ -258,7 +258,7 @@ it('recovers a held active-profile read without losing the draft or uploading ea
     vi.useRealTimers();
   }
   await submit();
-  expect(upload).toHaveBeenCalledWith(expect.any(File), 'profile-1');
+  expect(upload).toHaveBeenCalledWith(expect.any(File), 'profile-1', expect.any(AbortSignal));
   expect(submitInvoiceBankReceipt).not.toHaveBeenCalled();
 });
 
@@ -441,10 +441,13 @@ it.each(['invoice', 'profile'] as const)(
     await render();
     await valid();
     await submit();
+    const signal = upload.mock.calls[0]![2] as AbortSignal;
+    expect(signal.aborted).toBe(false);
     await act(async () => {
       if (scope === 'invoice') root.render(<InvoiceBankReceiptUploadForm invoiceId="invoice-2" />);
       else refreshProfileContext();
     });
+    expect(signal.aborted).toBe(true);
     expect(field('amount').value).toBe('');
     await act(async () => finish('old-profile-key'));
     expect(loadInvoiceBankReceiptSubmissionReview).not.toHaveBeenCalled();

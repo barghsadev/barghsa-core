@@ -15,6 +15,7 @@ import {
   parseInvoiceBankReceiptAmountIrR,
 } from '@barghsa/shared/finance/browser';
 import { withCsrf } from './csrf.js';
+import { readWithDeadline } from './server-query-client.js';
 
 export { INVOICE_BANK_RECEIPT_FILE_ACCEPT };
 export {
@@ -53,9 +54,10 @@ export function mapInvoiceReceiptSubmitError(status: number): InvoiceReceiptErro
 
 export async function uploadInvoiceReceiptAttachment(
   file: File,
-  profileId: string
+  profileId: string,
+  signal?: AbortSignal
 ): Promise<string | null> {
-  return uploadVerifiedAttachment(file, profileId, BANK_RECEIPT_STORAGE_PURPOSE);
+  return uploadVerifiedAttachment(file, profileId, BANK_RECEIPT_STORAGE_PURPOSE, undefined, signal);
 }
 
 export async function uploadVerificationEvidence(
@@ -91,7 +93,8 @@ async function uploadVerifiedAttachment(
   file: File,
   profileId: string | null,
   purpose: string,
-  ticketId?: string
+  ticketId?: string,
+  ownerSignal = new AbortController().signal
 ): Promise<string | null> {
   const evaluated = evaluateInvoiceBankReceiptClientFile({
     name: file.name,
@@ -102,71 +105,75 @@ async function uploadVerifiedAttachment(
   const category = evaluated.category;
   const contentType = file.type || invoiceBankReceiptContentTypeFromName(file.name);
   if (!contentType) return null;
-  const presignRes = await fetch('/api/upload/presigned-url', {
-    method: 'POST',
-    credentials: 'include',
-    headers: withCsrf({
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    }),
-    body: JSON.stringify({
-      fileName: file.name,
-      contentType,
-      fileSize: file.size,
-      category,
-      purpose,
-      ...(profileId ? { profileId } : {}),
-      ...(ticketId ? { ticketId } : {}),
-      metadata: { recordType: 'receipt' },
-    }),
+  const fields = {
+    fileName: file.name,
+    contentType,
+    fileSize: file.size,
+    category,
+    purpose,
+    ...(profileId ? { profileId } : {}),
+    ...(ticketId ? { ticketId } : {}),
+  };
+  const jsonHeaders = () =>
+    withCsrf({ Accept: 'application/json', 'Content-Type': 'application/json' });
+  const presign = await readWithDeadline(ownerSignal, async (signal) => {
+    const response = await fetch('/api/upload/presigned-url', {
+      method: 'POST',
+      credentials: 'include',
+      headers: jsonHeaders(),
+      body: JSON.stringify({ ...fields, metadata: { recordType: 'receipt' } }),
+      signal,
+    });
+    return response.ok ? readResponseObject(response) : null;
   });
-  const presign = await readResponseObject(presignRes);
-  if (
-    !presignRes.ok ||
-    typeof presign.key !== 'string' ||
-    typeof presign.presignedUrl !== 'string'
-  ) {
+  if (!presign || typeof presign.key !== 'string' || typeof presign.presignedUrl !== 'string') {
     return null;
   }
 
-  const putRes = await fetch(presign.presignedUrl, {
-    method: 'PUT',
-    body: file,
-    headers: {
-      'Content-Type': contentType,
-      'If-None-Match': '*',
-    },
-  });
+  const { key, presignedUrl, expiresIn } = presign;
+  // Match the reservation window and allow the upload to use slower links.
+  const uploadWindow =
+    typeof expiresIn === 'number' && Number.isFinite(expiresIn) && expiresIn > 0
+      ? Math.min(expiresIn, 900)
+      : 900;
+  const putRes = await readWithDeadline(
+    ownerSignal,
+    (signal) =>
+      fetch(presignedUrl, {
+        method: 'PUT',
+        body: file,
+        headers: {
+          'Content-Type': contentType,
+          'If-None-Match': '*',
+        },
+        signal,
+      }),
+    uploadWindow * 1000
+  );
   if (!putRes.ok) return null;
 
-  const encodedKey = encodeURIComponent(presign.key);
-  const verifyRes = await fetch(`/api/upload/${encodedKey}/verify`, {
-    method: 'POST',
-    credentials: 'include',
-    headers: withCsrf({ Accept: 'application/json' }),
+  const encodedKey = encodeURIComponent(key);
+  const verify = await readWithDeadline(ownerSignal, async (signal) => {
+    const response = await fetch(`/api/upload/${encodedKey}/verify`, {
+      method: 'POST',
+      credentials: 'include',
+      headers: withCsrf({ Accept: 'application/json' }),
+      signal,
+    });
+    return response.ok ? readResponseObject(response) : null;
   });
-  const verify = await readResponseObject(verifyRes);
-  if (!verifyRes.ok || verify.status !== 'confirmed') return null;
+  if (verify?.status !== 'confirmed') return null;
 
-  const recordRes = await fetch(`/api/upload/${encodedKey}/record`, {
-    method: 'POST',
-    credentials: 'include',
-    headers: withCsrf({
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    }),
-    body: JSON.stringify({
-      fileName: file.name,
-      contentType,
-      fileSize: file.size,
-      category,
-      purpose,
-      ...(profileId ? { profileId } : {}),
-      ...(ticketId ? { ticketId } : {}),
-    }),
-  });
-  if (!recordRes.ok) return null;
-  return presign.key;
+  const recordRes = await readWithDeadline(ownerSignal, (signal) =>
+    fetch(`/api/upload/${encodedKey}/record`, {
+      method: 'POST',
+      credentials: 'include',
+      headers: jsonHeaders(),
+      body: JSON.stringify(fields),
+      signal,
+    })
+  );
+  return recordRes.ok ? key : null;
 }
 
 export async function submitInvoiceBankReceipt(input: {

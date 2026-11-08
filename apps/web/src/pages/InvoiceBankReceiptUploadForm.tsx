@@ -121,7 +121,7 @@ function InvoiceReceiptForm({ invoiceId, onSubmitted }: InvoiceBankReceiptUpload
       const attachmentKey =
         uploaded?.file === selectedFile && uploaded.profileId === profileId
           ? uploaded.key
-          : await uploadInvoiceReceiptAttachment(selectedFile, profileId);
+          : await uploadInvoiceReceiptAttachment(selectedFile, profileId, request.signal);
       if (!current()) return;
       if (!attachmentKey) {
         setError('upload');
