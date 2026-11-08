@@ -147,6 +147,7 @@ it('captures exact step-up values and maps retry validation back to the unlocked
   await submit();
   await vi.waitFor(() => expect(harness.command).not.toBeNull());
   expect(harness.command!.action.body).toEqual({ timezone: 'UTC', start_hour: 10, end_hour: 21 });
+  expect(harness.command!.action.responseDeadline).toBe(true);
   expect(field('start').matches(':disabled')).toBe(true);
   await act(async () => {
     expect(harness.command!.onValidationError(['endHour'])).toBe(true);

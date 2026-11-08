@@ -322,6 +322,7 @@ export default function DeadLetterPanel({
       description: `${label(`${kind}Confirm`)} ${row.eventKey} · ${channelLabel(row.channel, uiLocale)} · ${row.recipientKey ?? ''}`,
       path: `/api/admin/failed-notifications/${row.id}/${kind}`,
       method: 'POST',
+      responseDeadline: true,
       successStatus: 200,
       conflictMessage: label('conflict'),
       forbiddenMessage: label('accessDenied'),

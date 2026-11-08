@@ -1,4 +1,5 @@
 import { t } from '@barghsa/i18n/admin-ui';
+import { approveRiskConfirmation } from './confirmation-fixture';
 import { crmShell } from './crm-shell-fixture';
 import { test, expect } from './coverage-fixture';
 import AxeBuilder from '@axe-core/playwright';
@@ -185,6 +186,7 @@ for (const locale of ['en', 'fa'] as const) {
       page,
     }) => {
       await crmShell(page, locale);
+      if (kind === 'retry') await page.clock.install();
       await page.route('**/api/admin/failed-notifications/access', (route) =>
         route.fulfill({ json: { canView: true, canRetry: true } })
       );
@@ -202,7 +204,9 @@ for (const locale of ['en', 'fa'] as const) {
       await page.route(`**/api/admin/failed-notifications/${row.id}`, (route) =>
         route.fulfill({ json: row })
       );
+      const stalled = Symbol('stalled acknowledgement');
       const responses = [
+        ...(kind === 'retry' ? [stalled] : []),
         null,
         { ...acknowledged, id: row.outboxId },
         { ...acknowledged, jobId: row.outboxId },
@@ -214,6 +218,7 @@ for (const locale of ['en', 'fa'] as const) {
         expect(route.request().method()).toBe('POST');
         const response = responses[calls++];
         saved = calls === responses.length;
+        if (response === stalled) return;
         return route.fulfill({ json: response });
       });
       await page.goto('/admin/failed-notifications');
@@ -223,8 +228,19 @@ for (const locale of ['en', 'fa'] as const) {
       await page.getByRole('button', { name: `${label} ${row.eventKey}`, exact: true }).click();
       const dialog = page.getByRole('dialog');
       const confirm = dialog.getByRole('button', { name: fa ? 'تأیید' : 'Confirm', exact: true });
-      for (let index = 0; index < responses.length - 1; index++) {
+      async function submitDecision() {
+        if (kind === 'dismiss') {
+          await expect(confirm).toBeDisabled();
+          await approveRiskConfirmation(page, locale, 'destructive');
+        }
         await confirm.click();
+      }
+      for (let index = 0; index < responses.length - 1; index++) {
+        await submitDecision();
+        if (responses[index] === stalled) {
+          await expect.poll(() => calls).toBe(index + 1);
+          await page.clock.fastForward(15_001);
+        }
         await expect(dialog).toContainText(t('admin.operationalReview.title', locale));
         await expect(confirm).toHaveCount(0);
         await expect(
@@ -244,7 +260,7 @@ for (const locale of ['en', 'fa'] as const) {
         await expect(decision).toBeEnabled();
         await decision.click();
       }
-      await confirm.click();
+      await submitDecision();
       await expect(dialog).toHaveCount(0);
       await expect(
         page.locator(

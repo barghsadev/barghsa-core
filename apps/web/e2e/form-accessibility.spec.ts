@@ -2119,6 +2119,7 @@ for (const locale of ['en', 'fa']) {
     page,
   }) => {
     await crmShell(page, locale);
+    if (locale === 'en') await page.clock.install();
     await page.route('**/api/admin/notifications/templates*', (route) =>
       route.fulfill({ json: [] })
     );
@@ -2144,6 +2145,7 @@ for (const locale of ['en', 'fa']) {
         end_hour: 21,
       });
       if (writes === 1) {
+        if (locale === 'en') return;
         await new Promise<void>((resolve) => {
           finish = resolve;
         });
@@ -2165,24 +2167,34 @@ for (const locale of ['en', 'fa']) {
     await expect(panel.getByRole('alert')).toBeVisible();
     await expect(save).toBeDisabled();
     await expect(panel.locator('select').first()).toBeDisabled();
-    await panel
-      .getByRole('button', {
-        name: notificationFormText('refresh', locale as 'en' | 'fa'),
-        exact: true,
-      })
-      .click();
+    const refresh = panel.getByRole('button', {
+      name: notificationFormText('refresh', locale as 'en' | 'fa'),
+      exact: true,
+    });
+    const reset = panel.getByRole('button', {
+      name: notificationFormText('reset', locale as 'en' | 'fa'),
+      exact: true,
+    });
+    await refresh.click();
     await expect(panel.locator('#delivery-window-timezone')).toHaveValue('Asia/Tokyo');
     const start = panel.locator('#delivery-window-start');
     await start.fill('08:00');
     await save.click();
     await expect.poll(() => writes).toBe(1);
     await expect(start).toBeDisabled();
-    finish!();
-    await expect(panel.getByRole('alert')).toContainText(
-      locale === 'fa' ? 'خطا در ذخیره' : 'Failed to save'
-    );
+    if (locale === 'en') await page.clock.fastForward(15_001);
+    else finish!();
+    const saveError = panel
+      .getByRole('alert')
+      .filter({ hasText: locale === 'fa' ? 'خطا در ذخیره' : 'Failed to save' });
+    await expect(saveError).toBeVisible();
     await expect(start).toHaveValue('08:00');
-    await expect(save).toBeEnabled();
+    await expect(save).toBeDisabled();
+    await expect(reset).toBeDisabled();
+    expect(writes).toBe(1);
+    await refresh.click();
+    await reset.click();
+    await start.fill('08:00');
     await save.click();
     await expect.poll(() => writes).toBe(2);
     await expect(panel.getByRole('alert')).toHaveCount(2);
@@ -2191,35 +2203,71 @@ for (const locale of ['en', 'fa']) {
         hasText: notificationFormText('uncertain', locale as 'en' | 'fa'),
       })
     ).toBeVisible();
-    await expect(
-      panel
-        .getByRole('alert')
-        .filter({ hasText: locale === 'fa' ? 'خطا در ذخیره' : 'Failed to save' })
-    ).toBeVisible();
+    await expect(saveError).toBeVisible();
     await expect(panel.getByRole('status')).toHaveCount(0);
     await expect(save).toBeDisabled();
-    await panel
-      .getByRole('button', {
-        name: notificationFormText('refresh', locale as 'en' | 'fa'),
-        exact: true,
-      })
-      .click();
-    await panel
-      .getByRole('button', {
-        name: notificationFormText('reset', locale as 'en' | 'fa'),
-        exact: true,
-      })
-      .click();
+    await refresh.click();
+    await reset.click();
     await start.fill('08:00');
     await save.click();
     await expect(panel.getByRole('status')).toBeVisible();
     await expect(panel.getByRole('alert')).toHaveCount(0);
     await start.fill('07:00');
     await expect(panel.getByRole('status')).toHaveCount(0);
-    expect(reads).toBe(3);
+    expect(reads).toBe(4);
     expect(writes).toBe(3);
   });
 }
+
+test('protected delivery window timeout requires a fresh read and explicit reset', async ({
+  page,
+}) => {
+  await crmShell(page, 'en');
+  await page.clock.install();
+  await page.route('**/api/admin/notifications/templates*', (route) => route.fulfill({ json: [] }));
+  const writes: unknown[] = [];
+  let reads = 0;
+  await page.route('**/api/admin/config/delivery-window', (route) => {
+    if (route.request().method() === 'GET') {
+      reads++;
+      return route.fulfill({
+        json: { timezone: 'UTC', startHour: writes.length === 2 ? 9.25 : 9, endHour: 21 },
+      });
+    }
+    writes.push(route.request().postDataJSON());
+    if (writes.length === 1)
+      return route.fulfill({ status: 403, json: { error: 'AUTHZ:STEP_UP_REQUIRED' } });
+  });
+  await page.route('**/api/auth/step-up', (route) => route.fulfill({ json: { ok: true } }));
+  await page.goto('/admin/notifications');
+  const panel = page.getByRole('region', { name: 'Daily Delivery Window', exact: true });
+  const start = panel.locator('#delivery-window-start');
+  await start.fill('09:15');
+  await panel.getByRole('button', { name: 'Save', exact: true }).click();
+  const dialog = page.getByRole('dialog');
+  const submit = dialog.locator('button[type=submit]');
+  const refresh = dialog.getByRole('button', {
+    name: notificationFormText('refresh', 'en'),
+    exact: true,
+  });
+  await dialog.locator('input[type=password]').fill('test-only');
+  await submit.click();
+  await expect.poll(() => writes.length).toBe(2);
+  await expect(refresh).toBeDisabled();
+  await page.clock.fastForward(15_001);
+  await expect(refresh).toBeEnabled();
+  await expect(submit).toBeDisabled();
+  expect(reads).toBe(1);
+  await refresh.click();
+  await expect(dialog).toHaveCount(0);
+  await expect(start).toHaveValue('09:15');
+  await expect(start).toBeDisabled();
+  await panel.getByRole('button', { name: notificationFormText('reset', 'en') }).click();
+  await expect(start).toBeEnabled();
+  await expect(panel.getByRole('status')).toHaveCount(0);
+  expect(reads).toBe(2);
+  expect(writes).toEqual(Array(2).fill({ timezone: 'UTC', start_hour: 9.25, end_hour: 21 }));
+});
 
 for (const locale of ['en', 'fa']) {
   test(`delivery window preserves minute values through cancelled and retried password confirmation (${locale})`, async ({

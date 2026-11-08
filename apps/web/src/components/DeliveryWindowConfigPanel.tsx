@@ -7,6 +7,10 @@ import {
   type DeliveryWindowConfig,
 } from '@barghsa/shared/notifications';
 import { withCsrf } from '../lib/csrf.js';
+import { readWithDeadline } from '../lib/server-query-client.js';
+import { getProfileContextRevision, useProfileContextRevision } from '../lib/profile-context.js';
+import { sendToast } from '../lib/toast-api.js';
+import { confirmationText } from '@barghsa/i18n/confirmation';
 import { useState, useEffect, useRef, useCallback, type FormEvent } from 'react';
 import { LoadingStatus, Alert, Button } from '@barghsa/ui';
 import { tWorkspace as t } from '@barghsa/i18n/workspace-admin';
@@ -35,6 +39,7 @@ const TIMEZONE_OPTIONS = [
 ];
 /** Newly scheduled daytime messages use this minute-precision window; existing schedules retain theirs. */
 export default function DeliveryWindowConfigPanel({ uiLocale }: { uiLocale: Locale }) {
+  const profileRevision = useProfileContextRevision();
   const label = (key: string) => t(`admin.notifications.window.${key}`, uiLocale);
   const messages = {
     timezone: notificationFormText('timezone', uiLocale),
@@ -52,8 +57,9 @@ export default function DeliveryWindowConfigPanel({ uiLocale }: { uiLocale: Loca
   const applyErrors = useActionFieldErrors(editor.form, messages, messages.endHour);
   const [stale, setStale] = useState(false),
     [uncertain, setUncertain] = useState(false),
-    [recovered, setRecovered] = useState(false),
+    [recoveryAttempt, setRecoveryAttempt] = useState<number | null>(null),
     [saving, setSaving] = useState(false),
+    [protectedBusy, setProtectedBusy] = useState(false),
     [saved, setSaved] = useState(false),
     [error, setError] = useState<string | null>(null);
   const [command, setCommand] = useState<{
@@ -67,25 +73,32 @@ export default function DeliveryWindowConfigPanel({ uiLocale }: { uiLocale: Loca
     basis = useRef<string | null>(null),
     refreshButton = useRef<HTMLButtonElement>(null),
     mounted = useRef(false),
-    observed = useRef<DeliveryWindowConfig | null>(null);
+    write = useRef<AbortController | null>(null);
   commandRef.current = command;
   const clearPrivate = useCallback(() => {
     generation.current++;
     editor.setValidationPending(false);
     networkOwner.current++;
+    write.current?.abort();
     basis.current = null;
     commandRef.current = null;
     setCommand(null);
     editor.form.reset(windowValues(DEFAULT_DELIVERY_WINDOW));
     setStale(false);
     setUncertain(false);
+    setRecoveryAttempt(null);
     setSaved(false);
     setSaving(false);
+    setProtectedBusy(false);
     setError(null);
   }, [editor.form.reset]);
   const scope = useCatalogueScope(clearPrivate);
   const resource = useCatalogueResource(scope, '/api/admin/config/delivery-window', validWindow);
   const config = resource.data;
+  const recovered =
+    recoveryAttempt !== null &&
+    resource.readAttempt !== null &&
+    resource.readAttempt >= recoveryAttempt;
   const ready =
     !!config && !resource.loading && !resource.error && !scope.denied && !stale && !uncertain;
   const live = useRef({ ready, epoch: scope.version });
@@ -95,49 +108,56 @@ export default function DeliveryWindowConfigPanel({ uiLocale }: { uiLocale: Loca
     return () => {
       mounted.current = false;
       generation.current++;
+      write.current?.abort();
     };
   }, []);
   useEffect(() => {
     if (!config) return;
-    if (config !== observed.current) {
-      if (uncertain) setRecovered(true);
-      observed.current = config;
-    }
     const next = windowBasis(config);
     if (basis.current !== next) {
       generation.current++;
       commandRef.current = null;
       setCommand(null);
+      setProtectedBusy(false);
       if (basis.current !== null && editor.form.formState.isDirty) setStale(true);
       else if (!uncertain) editor.form.reset(windowValues(config));
       basis.current = next;
     }
   }, [config, editor.form.reset, editor.form.formState.isDirty, uncertain]);
   const current = (version: number, epoch: number) =>
-    mounted.current && generation.current === version && scope.live.current === epoch;
+    mounted.current &&
+    generation.current === version &&
+    scope.live.current === epoch &&
+    getProfileContextRevision() === profileRevision;
+  function markUnconfirmed() {
+    setUncertain(true);
+    setRecoveryAttempt(null);
+  }
   function refresh() {
+    if (protectedBusy) return;
     generation.current++;
-    if (saving) {
-      setUncertain(true);
-      setRecovered(false);
-    } else editor.setValidationPending(false);
+    if (saving) markUnconfirmed();
+    else editor.setValidationPending(false);
     commandRef.current = null;
     setCommand(null);
     setSaved(false);
     setError(null);
-    resource.retry();
+    const attempt = resource.retry();
+    if (uncertain && !saving) setRecoveryAttempt(attempt);
   }
   function acceptSaved(result: unknown, expected: DeliveryWindowConfig) {
-    if (!validWindow(result) || windowBasis(result) !== windowBasis(expected)) {
-      setRecovered(false);
-      setUncertain(true);
+    if (
+      !validWindow(result) ||
+      windowBasis(result) !== windowBasis(expected) ||
+      !resource.accept(result)
+    ) {
       throw new Error(label('saveFailed'));
     }
-    resource.accept(result);
     basis.current = windowBasis(result);
     editor.form.reset(windowValues(result));
     setStale(false);
     setUncertain(false);
+    setRecoveryAttempt(null);
     setSaved(true);
   }
   async function submit(event: FormEvent) {
@@ -163,14 +183,21 @@ export default function DeliveryWindowConfigPanel({ uiLocale }: { uiLocale: Loca
             end_hour: expected.endHour,
           };
         const owner = ++networkOwner.current;
+        const controller = new AbortController();
+        write.current = controller;
+        let unknown = true;
         setSaving(true);
         try {
-          const res = await fetch('/api/admin/config/delivery-window', {
-            method: 'PUT',
-            headers: withCsrf({ 'Content-Type': 'application/json' }),
-            body: JSON.stringify(body),
+          const { res, result } = await readWithDeadline(controller.signal, async (signal) => {
+            const res = await fetch('/api/admin/config/delivery-window', {
+              method: 'PUT',
+              headers: withCsrf({ 'Content-Type': 'application/json' }),
+              body: JSON.stringify(body),
+              signal,
+            });
+            const result: unknown = await res.json().catch(() => null);
+            return { res, result };
           });
-          const result: unknown = await res.json().catch(() => null);
           if (!current(version, epoch)) return;
           const record = responseRecord(result),
             nested = responseRecord(record?.error),
@@ -187,6 +214,7 @@ export default function DeliveryWindowConfigPanel({ uiLocale }: { uiLocale: Loca
                 method: 'PUT' as const,
                 body,
                 requiresPassword: true,
+                responseDeadline: true as const,
               },
               expected,
               generation: version,
@@ -201,18 +229,25 @@ export default function DeliveryWindowConfigPanel({ uiLocale }: { uiLocale: Loca
           }
           if (res.status === 400 && Array.isArray(nested?.fields) && applyErrors(nested.fields))
             return;
-          if (!res.ok) throw new Error(label('saveFailed'));
+          if (!res.ok) {
+            unknown = res.status >= 500;
+            throw new Error(label('saveFailed'));
+          }
           acceptSaved(result, expected);
         } catch {
-          if (current(version, epoch)) setError(label('saveFailed'));
+          if (current(version, epoch)) {
+            setError(label('saveFailed'));
+            if (unknown) {
+              markUnconfirmed();
+              sendToast('warning', confirmationText('unconfirmed', uiLocale));
+            } else sendToast('error', label('saveFailed'));
+          }
         } finally {
-          if (owner === networkOwner.current) {
+          if (write.current === controller) write.current = null;
+          if (mounted.current && owner === networkOwner.current) {
             setSaving(false);
             editor.setValidationPending(false);
-            if (generation.current !== version) {
-              setUncertain(true);
-              setRecovered(false);
-            }
+            if (generation.current !== version) markUnconfirmed();
           }
         }
       }
@@ -243,7 +278,7 @@ export default function DeliveryWindowConfigPanel({ uiLocale }: { uiLocale: Loca
         type="button"
         variant="outline"
         ref={refreshButton}
-        disabled={resource.loading}
+        disabled={resource.loading || protectedBusy}
         onClick={() => (scope.denied ? scope.recover() : refresh())}
       >
         {notificationFormText('refresh', uiLocale)}
@@ -265,11 +300,12 @@ export default function DeliveryWindowConfigPanel({ uiLocale }: { uiLocale: Loca
             !config || resource.loading || resource.error || busy || (uncertain && !recovered)
           }
           onClick={() => {
-            if (config) {
+            if (config && (!uncertain || recovered)) {
               generation.current++;
               editor.form.reset(windowValues(config));
               setStale(false);
               setUncertain(false);
+              setRecoveryAttempt(null);
               setError(null);
             }
           }}
@@ -283,7 +319,7 @@ export default function DeliveryWindowConfigPanel({ uiLocale }: { uiLocale: Loca
           {catalogueRootMessage(editor.errors) && (
             <Alert variant="destructive">{catalogueRootMessage(editor.errors)}</Alert>
           )}
-          <fieldset disabled={!config || busy || stale || uncertain} className="space-y-4">
+          <fieldset disabled={!ready || busy} className="space-y-4">
             <legend className="sr-only">{label('title')}</legend>
             <div>
               <label htmlFor="delivery-window-timezone" className="block text-sm font-medium mb-1">
@@ -367,8 +403,17 @@ export default function DeliveryWindowConfigPanel({ uiLocale }: { uiLocale: Loca
           confirmationDisabled={!ready || command.generation !== generation.current}
           onDenied={scope.deny}
           onValidationError={applyErrors}
+          onPendingChange={setProtectedBusy}
+          onUnconfirmed={() => {
+            if (current(command.generation, scope.version)) markUnconfirmed();
+          }}
           summary={
-            <Button type="button" variant="outline" disabled={resource.loading} onClick={refresh}>
+            <Button
+              type="button"
+              variant="outline"
+              disabled={resource.loading || protectedBusy}
+              onClick={refresh}
+            >
               {notificationFormText('refresh', uiLocale)}
             </Button>
           }

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-08T13:05:46+00:00",
-  "source_commit": "55e2d4ea048ac70e12e3f1ec1f4bcc4064cb72c6",
+  "updated": "2026-11-08T13:18:00+00:00",
+  "source_commit": "1c273447dfabdcdba3235392b90663b6af5ad047",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -22887,7 +22887,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "7044cac978bc8de13f00be0268a882d67a9eb9ad19e16ca7f0efce1801b2672c"
+              "sha256": "821f88929bc15b9c00f1b20b2304d7ebae5462f561d8761498de2c887fb115bc"
             },
             {
               "path": "apps/web/e2e/session-cookies.spec.ts",
@@ -23546,7 +23546,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "7044cac978bc8de13f00be0268a882d67a9eb9ad19e16ca7f0efce1801b2672c"
+              "sha256": "821f88929bc15b9c00f1b20b2304d7ebae5462f561d8761498de2c887fb115bc"
             },
             {
               "path": "apps/web/src/routes/_app/settings/security.tsx",
@@ -25350,7 +25350,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "7044cac978bc8de13f00be0268a882d67a9eb9ad19e16ca7f0efce1801b2672c"
+              "sha256": "821f88929bc15b9c00f1b20b2304d7ebae5462f561d8761498de2c887fb115bc"
             },
             {
               "path": "apps/web/e2e/trusted-devices.spec.ts",
@@ -30657,7 +30657,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "7044cac978bc8de13f00be0268a882d67a9eb9ad19e16ca7f0efce1801b2672c"
+              "sha256": "821f88929bc15b9c00f1b20b2304d7ebae5462f561d8761498de2c887fb115bc"
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
@@ -31516,7 +31516,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "7044cac978bc8de13f00be0268a882d67a9eb9ad19e16ca7f0efce1801b2672c"
+              "sha256": "821f88929bc15b9c00f1b20b2304d7ebae5462f561d8761498de2c887fb115bc"
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
@@ -31783,7 +31783,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "7044cac978bc8de13f00be0268a882d67a9eb9ad19e16ca7f0efce1801b2672c"
+              "sha256": "821f88929bc15b9c00f1b20b2304d7ebae5462f561d8761498de2c887fb115bc"
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
@@ -33221,7 +33221,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "7044cac978bc8de13f00be0268a882d67a9eb9ad19e16ca7f0efce1801b2672c"
+              "sha256": "821f88929bc15b9c00f1b20b2304d7ebae5462f561d8761498de2c887fb115bc"
             },
             {
               "path": "apps/web/e2e/profile-settings-name.spec.ts",
@@ -33460,7 +33460,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "7044cac978bc8de13f00be0268a882d67a9eb9ad19e16ca7f0efce1801b2672c"
+              "sha256": "821f88929bc15b9c00f1b20b2304d7ebae5462f561d8761498de2c887fb115bc"
             },
             {
               "path": "apps/web/e2e/profile-settings-name.spec.ts",
@@ -34043,7 +34043,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "7044cac978bc8de13f00be0268a882d67a9eb9ad19e16ca7f0efce1801b2672c"
+              "sha256": "821f88929bc15b9c00f1b20b2304d7ebae5462f561d8761498de2c887fb115bc"
             },
             {
               "path": "apps/web/e2e/profile-settings-name.spec.ts",
@@ -35336,7 +35336,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "7044cac978bc8de13f00be0268a882d67a9eb9ad19e16ca7f0efce1801b2672c"
+              "sha256": "821f88929bc15b9c00f1b20b2304d7ebae5462f561d8761498de2c887fb115bc"
             },
             {
               "path": "apps/web/e2e/notification-brand-preview.spec.ts",
@@ -35364,7 +35364,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "2a468cb5f8c08d10bbd306dd659ffb228092d7520313141a5327056a9c1a4a18"
+              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
             },
             {
               "path": "apps/web/src/components/DefaultProfileModal.tsx",
@@ -35372,7 +35372,7 @@
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
-              "sha256": "745f213c42e304b2af95df68e26844beeb3666e56556b87416fc845160c79096"
+              "sha256": "fe314282a7a0e7c026e2b9962e69699ec84098e59eeabfc3810781babc42f3d0"
             },
             {
               "path": "apps/web/src/components/NotificationBell.tsx",
@@ -63076,7 +63076,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "2a468cb5f8c08d10bbd306dd659ffb228092d7520313141a5327056a9c1a4a18"
+              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
             },
             {
               "path": "apps/web/src/components/DefaultProfileModal.tsx",
@@ -63084,7 +63084,7 @@
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
-              "sha256": "745f213c42e304b2af95df68e26844beeb3666e56556b87416fc845160c79096"
+              "sha256": "fe314282a7a0e7c026e2b9962e69699ec84098e59eeabfc3810781babc42f3d0"
             },
             {
               "path": "apps/web/src/components/NotificationBell.tsx",
@@ -63899,7 +63899,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "7044cac978bc8de13f00be0268a882d67a9eb9ad19e16ca7f0efce1801b2672c"
+              "sha256": "821f88929bc15b9c00f1b20b2304d7ebae5462f561d8761498de2c887fb115bc"
             },
             {
               "path": "apps/web/e2e/geography-native-forms.spec.ts",
@@ -64560,7 +64560,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "7044cac978bc8de13f00be0268a882d67a9eb9ad19e16ca7f0efce1801b2672c"
+              "sha256": "821f88929bc15b9c00f1b20b2304d7ebae5462f561d8761498de2c887fb115bc"
             },
             {
               "path": "apps/web/e2e/geography-native-forms.spec.ts",
@@ -65220,7 +65220,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "7044cac978bc8de13f00be0268a882d67a9eb9ad19e16ca7f0efce1801b2672c"
+              "sha256": "821f88929bc15b9c00f1b20b2304d7ebae5462f561d8761498de2c887fb115bc"
             },
             {
               "path": "apps/web/e2e/geography-native-forms.spec.ts",
@@ -65879,7 +65879,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "7044cac978bc8de13f00be0268a882d67a9eb9ad19e16ca7f0efce1801b2672c"
+              "sha256": "821f88929bc15b9c00f1b20b2304d7ebae5462f561d8761498de2c887fb115bc"
             },
             {
               "path": "apps/web/e2e/geography-native-forms.spec.ts",
@@ -73587,7 +73587,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "2a468cb5f8c08d10bbd306dd659ffb228092d7520313141a5327056a9c1a4a18"
+              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
@@ -75885,7 +75885,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "7044cac978bc8de13f00be0268a882d67a9eb9ad19e16ca7f0efce1801b2672c"
+              "sha256": "821f88929bc15b9c00f1b20b2304d7ebae5462f561d8761498de2c887fb115bc"
             },
             {
               "path": "apps/web/e2e/notification-forms.spec.ts",
@@ -75893,7 +75893,7 @@
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
-              "sha256": "745f213c42e304b2af95df68e26844beeb3666e56556b87416fc845160c79096"
+              "sha256": "fe314282a7a0e7c026e2b9962e69699ec84098e59eeabfc3810781babc42f3d0"
             },
             {
               "path": "apps/web/src/lib/catalogue-form-schemas.ts",
@@ -76294,7 +76294,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "7044cac978bc8de13f00be0268a882d67a9eb9ad19e16ca7f0efce1801b2672c"
+              "sha256": "821f88929bc15b9c00f1b20b2304d7ebae5462f561d8761498de2c887fb115bc"
             },
             {
               "path": "apps/web/e2e/notification-forms.spec.ts",
@@ -76302,7 +76302,7 @@
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
-              "sha256": "745f213c42e304b2af95df68e26844beeb3666e56556b87416fc845160c79096"
+              "sha256": "fe314282a7a0e7c026e2b9962e69699ec84098e59eeabfc3810781babc42f3d0"
             },
             {
               "path": "apps/web/src/lib/catalogue-form-schemas.ts",
@@ -76725,7 +76725,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "7044cac978bc8de13f00be0268a882d67a9eb9ad19e16ca7f0efce1801b2672c"
+              "sha256": "821f88929bc15b9c00f1b20b2304d7ebae5462f561d8761498de2c887fb115bc"
             },
             {
               "path": "apps/web/e2e/notification-forms.spec.ts",
@@ -76733,7 +76733,7 @@
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
-              "sha256": "745f213c42e304b2af95df68e26844beeb3666e56556b87416fc845160c79096"
+              "sha256": "fe314282a7a0e7c026e2b9962e69699ec84098e59eeabfc3810781babc42f3d0"
             },
             {
               "path": "apps/web/src/lib/catalogue-form-schemas.ts",
@@ -89404,7 +89404,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "7044cac978bc8de13f00be0268a882d67a9eb9ad19e16ca7f0efce1801b2672c"
+              "sha256": "821f88929bc15b9c00f1b20b2304d7ebae5462f561d8761498de2c887fb115bc"
             },
             {
               "path": "apps/web/e2e/notification-forms.spec.ts",
@@ -89412,7 +89412,7 @@
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
-              "sha256": "745f213c42e304b2af95df68e26844beeb3666e56556b87416fc845160c79096"
+              "sha256": "fe314282a7a0e7c026e2b9962e69699ec84098e59eeabfc3810781babc42f3d0"
             },
             {
               "path": "apps/web/src/lib/catalogue-form-schemas.ts",
@@ -97832,7 +97832,7 @@
             },
             {
               "path": "apps/web/e2e/failed-notifications-recovery.spec.ts",
-              "sha256": "c74abca015d9af6bc71d65efc66a90e9bebeeabc51da82975e34fd474c0fa2ad"
+              "sha256": "735a2e1c4bfeb3b2fdb654e7c9965e2f71f96e42fddef49b23893feb394d61cb"
             },
             {
               "path": "apps/web/e2e/failed-notifications.spec.ts",
@@ -97848,7 +97848,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "2a468cb5f8c08d10bbd306dd659ffb228092d7520313141a5327056a9c1a4a18"
+              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
             },
             {
               "path": "apps/web/src/components/OperationalQueueTable.tsx",
@@ -98230,7 +98230,7 @@
             },
             {
               "path": "apps/web/e2e/failed-notifications-recovery.spec.ts",
-              "sha256": "c74abca015d9af6bc71d65efc66a90e9bebeeabc51da82975e34fd474c0fa2ad"
+              "sha256": "735a2e1c4bfeb3b2fdb654e7c9965e2f71f96e42fddef49b23893feb394d61cb"
             },
             {
               "path": "apps/web/e2e/failed-notifications.spec.ts",
@@ -98246,7 +98246,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "2a468cb5f8c08d10bbd306dd659ffb228092d7520313141a5327056a9c1a4a18"
+              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
             },
             {
               "path": "apps/web/src/components/OperationalQueueTable.tsx",
@@ -490975,11 +490975,11 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "2a468cb5f8c08d10bbd306dd659ffb228092d7520313141a5327056a9c1a4a18"
+              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
-              "sha256": "745f213c42e304b2af95df68e26844beeb3666e56556b87416fc845160c79096"
+              "sha256": "fe314282a7a0e7c026e2b9962e69699ec84098e59eeabfc3810781babc42f3d0"
             },
             {
               "path": "apps/web/src/components/GiftProfilePicker.tsx",
@@ -492750,7 +492750,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "2a468cb5f8c08d10bbd306dd659ffb228092d7520313141a5327056a9c1a4a18"
+              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
             },
             {
               "path": "apps/web/src/components/DefaultProfileModal.tsx",
@@ -492758,7 +492758,7 @@
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
-              "sha256": "745f213c42e304b2af95df68e26844beeb3666e56556b87416fc845160c79096"
+              "sha256": "fe314282a7a0e7c026e2b9962e69699ec84098e59eeabfc3810781babc42f3d0"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
@@ -497047,7 +497047,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "cea4593365deee8d3e06b38da96549a831fc6e92ed966d6a0cb0096e0ab8e0f5"
+              "sha256": "b1bdf2cf185b75edfde3a4817d61336c6d530d9c8258098b1f0c25848221371a"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -497572,7 +497572,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "2a468cb5f8c08d10bbd306dd659ffb228092d7520313141a5327056a9c1a4a18"
+              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
             },
             {
               "path": "apps/web/src/components/DefaultProfileModal.tsx",
@@ -497580,7 +497580,7 @@
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
-              "sha256": "745f213c42e304b2af95df68e26844beeb3666e56556b87416fc845160c79096"
+              "sha256": "fe314282a7a0e7c026e2b9962e69699ec84098e59eeabfc3810781babc42f3d0"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
@@ -511362,7 +511362,7 @@
             },
             {
               "path": "apps/web/e2e/failed-notifications-recovery.spec.ts",
-              "sha256": "c74abca015d9af6bc71d65efc66a90e9bebeeabc51da82975e34fd474c0fa2ad"
+              "sha256": "735a2e1c4bfeb3b2fdb654e7c9965e2f71f96e42fddef49b23893feb394d61cb"
             },
             {
               "path": "apps/web/e2e/finance-list-query.spec.ts",
@@ -511418,7 +511418,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "2a468cb5f8c08d10bbd306dd659ffb228092d7520313141a5327056a9c1a4a18"
+              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
             },
             {
               "path": "apps/web/src/components/DeliveryProviderTable.tsx",
@@ -517021,7 +517021,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "7044cac978bc8de13f00be0268a882d67a9eb9ad19e16ca7f0efce1801b2672c"
+              "sha256": "821f88929bc15b9c00f1b20b2304d7ebae5462f561d8761498de2c887fb115bc"
             },
             {
               "path": "apps/web/e2e/form-fields-component.spec.ts",
@@ -517437,7 +517437,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "2a468cb5f8c08d10bbd306dd659ffb228092d7520313141a5327056a9c1a4a18"
+              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
             },
             {
               "path": "apps/web/src/components/DocumentDestructionQueue.tsx",
@@ -518105,7 +518105,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "cea4593365deee8d3e06b38da96549a831fc6e92ed966d6a0cb0096e0ab8e0f5"
+              "sha256": "b1bdf2cf185b75edfde3a4817d61336c6d530d9c8258098b1f0c25848221371a"
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
@@ -518363,7 +518363,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "7044cac978bc8de13f00be0268a882d67a9eb9ad19e16ca7f0efce1801b2672c"
+              "sha256": "821f88929bc15b9c00f1b20b2304d7ebae5462f561d8761498de2c887fb115bc"
             },
             {
               "path": "apps/web/e2e/form-fields-component.spec.ts",
@@ -519213,7 +519213,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "cea4593365deee8d3e06b38da96549a831fc6e92ed966d6a0cb0096e0ab8e0f5"
+              "sha256": "b1bdf2cf185b75edfde3a4817d61336c6d530d9c8258098b1f0c25848221371a"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -519802,7 +519802,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "7044cac978bc8de13f00be0268a882d67a9eb9ad19e16ca7f0efce1801b2672c"
+              "sha256": "821f88929bc15b9c00f1b20b2304d7ebae5462f561d8761498de2c887fb115bc"
             },
             {
               "path": "apps/web/e2e/form-fields-component.spec.ts",
@@ -520396,7 +520396,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "7044cac978bc8de13f00be0268a882d67a9eb9ad19e16ca7f0efce1801b2672c"
+              "sha256": "821f88929bc15b9c00f1b20b2304d7ebae5462f561d8761498de2c887fb115bc"
             },
             {
               "path": "apps/web/e2e/green-rules.spec.ts",
@@ -521224,7 +521224,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "7044cac978bc8de13f00be0268a882d67a9eb9ad19e16ca7f0efce1801b2672c"
+              "sha256": "821f88929bc15b9c00f1b20b2304d7ebae5462f561d8761498de2c887fb115bc"
             },
             {
               "path": "apps/web/e2e/green-rules.spec.ts",
@@ -521958,7 +521958,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "7044cac978bc8de13f00be0268a882d67a9eb9ad19e16ca7f0efce1801b2672c"
+              "sha256": "821f88929bc15b9c00f1b20b2304d7ebae5462f561d8761498de2c887fb115bc"
             },
             {
               "path": "apps/web/e2e/form-fields-component.spec.ts",
@@ -522552,7 +522552,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "7044cac978bc8de13f00be0268a882d67a9eb9ad19e16ca7f0efce1801b2672c"
+              "sha256": "821f88929bc15b9c00f1b20b2304d7ebae5462f561d8761498de2c887fb115bc"
             },
             {
               "path": "apps/web/e2e/green-rules.spec.ts",
@@ -546439,7 +546439,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "2a468cb5f8c08d10bbd306dd659ffb228092d7520313141a5327056a9c1a4a18"
+              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
             },
             {
               "path": "apps/web/src/components/DocumentDestructionQueue.tsx",
@@ -546659,7 +546659,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "3f9c6894aa0695bdd5d2422c7dc010f71b125350d79d5ab112afb12ff0dad442"
+              "sha256": "faac6f1e8b017745587020cc5ce3ca1d2c686978e0defdb5a431bcb213cb62d7"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -548305,7 +548305,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "2a468cb5f8c08d10bbd306dd659ffb228092d7520313141a5327056a9c1a4a18"
+              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
             },
             {
               "path": "apps/web/src/components/DocumentDestructionQueue.tsx",
@@ -548525,7 +548525,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "3f9c6894aa0695bdd5d2422c7dc010f71b125350d79d5ab112afb12ff0dad442"
+              "sha256": "faac6f1e8b017745587020cc5ce3ca1d2c686978e0defdb5a431bcb213cb62d7"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -550172,7 +550172,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "2a468cb5f8c08d10bbd306dd659ffb228092d7520313141a5327056a9c1a4a18"
+              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
             },
             {
               "path": "apps/web/src/components/DocumentDestructionQueue.tsx",
@@ -550392,7 +550392,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "3f9c6894aa0695bdd5d2422c7dc010f71b125350d79d5ab112afb12ff0dad442"
+              "sha256": "faac6f1e8b017745587020cc5ce3ca1d2c686978e0defdb5a431bcb213cb62d7"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -552008,7 +552008,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "2a468cb5f8c08d10bbd306dd659ffb228092d7520313141a5327056a9c1a4a18"
+              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
             },
             {
               "path": "apps/web/src/components/DocumentDestructionQueue.tsx",
@@ -552228,7 +552228,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "3f9c6894aa0695bdd5d2422c7dc010f71b125350d79d5ab112afb12ff0dad442"
+              "sha256": "faac6f1e8b017745587020cc5ce3ca1d2c686978e0defdb5a431bcb213cb62d7"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -553870,7 +553870,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "2a468cb5f8c08d10bbd306dd659ffb228092d7520313141a5327056a9c1a4a18"
+              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
             },
             {
               "path": "apps/web/src/components/DocumentDestructionQueue.tsx",
@@ -554090,7 +554090,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "3f9c6894aa0695bdd5d2422c7dc010f71b125350d79d5ab112afb12ff0dad442"
+              "sha256": "faac6f1e8b017745587020cc5ce3ca1d2c686978e0defdb5a431bcb213cb62d7"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -555741,7 +555741,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "2a468cb5f8c08d10bbd306dd659ffb228092d7520313141a5327056a9c1a4a18"
+              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
             },
             {
               "path": "apps/web/src/components/DocumentDestructionQueue.tsx",
@@ -555961,7 +555961,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "3f9c6894aa0695bdd5d2422c7dc010f71b125350d79d5ab112afb12ff0dad442"
+              "sha256": "faac6f1e8b017745587020cc5ce3ca1d2c686978e0defdb5a431bcb213cb62d7"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -557585,7 +557585,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "2a468cb5f8c08d10bbd306dd659ffb228092d7520313141a5327056a9c1a4a18"
+              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
             },
             {
               "path": "apps/web/src/components/DocumentDestructionQueue.tsx",
@@ -557805,7 +557805,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "3f9c6894aa0695bdd5d2422c7dc010f71b125350d79d5ab112afb12ff0dad442"
+              "sha256": "faac6f1e8b017745587020cc5ce3ca1d2c686978e0defdb5a431bcb213cb62d7"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -559393,7 +559393,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "2a468cb5f8c08d10bbd306dd659ffb228092d7520313141a5327056a9c1a4a18"
+              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
             },
             {
               "path": "apps/web/src/components/DocumentDestructionQueue.tsx",
@@ -559613,7 +559613,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "3f9c6894aa0695bdd5d2422c7dc010f71b125350d79d5ab112afb12ff0dad442"
+              "sha256": "faac6f1e8b017745587020cc5ce3ca1d2c686978e0defdb5a431bcb213cb62d7"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -561201,7 +561201,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "2a468cb5f8c08d10bbd306dd659ffb228092d7520313141a5327056a9c1a4a18"
+              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
             },
             {
               "path": "apps/web/src/components/DocumentDestructionQueue.tsx",
@@ -561421,7 +561421,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "3f9c6894aa0695bdd5d2422c7dc010f71b125350d79d5ab112afb12ff0dad442"
+              "sha256": "faac6f1e8b017745587020cc5ce3ca1d2c686978e0defdb5a431bcb213cb62d7"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -563010,7 +563010,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "2a468cb5f8c08d10bbd306dd659ffb228092d7520313141a5327056a9c1a4a18"
+              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
             },
             {
               "path": "apps/web/src/components/DocumentDestructionQueue.tsx",
@@ -563230,7 +563230,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "3f9c6894aa0695bdd5d2422c7dc010f71b125350d79d5ab112afb12ff0dad442"
+              "sha256": "faac6f1e8b017745587020cc5ce3ca1d2c686978e0defdb5a431bcb213cb62d7"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -564818,7 +564818,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "2a468cb5f8c08d10bbd306dd659ffb228092d7520313141a5327056a9c1a4a18"
+              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
             },
             {
               "path": "apps/web/src/components/DocumentDestructionQueue.tsx",
@@ -565038,7 +565038,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "3f9c6894aa0695bdd5d2422c7dc010f71b125350d79d5ab112afb12ff0dad442"
+              "sha256": "faac6f1e8b017745587020cc5ce3ca1d2c686978e0defdb5a431bcb213cb62d7"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -566616,11 +566616,11 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "2a468cb5f8c08d10bbd306dd659ffb228092d7520313141a5327056a9c1a4a18"
+              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
-              "sha256": "745f213c42e304b2af95df68e26844beeb3666e56556b87416fc845160c79096"
+              "sha256": "fe314282a7a0e7c026e2b9962e69699ec84098e59eeabfc3810781babc42f3d0"
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
@@ -566820,7 +566820,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "3f9c6894aa0695bdd5d2422c7dc010f71b125350d79d5ab112afb12ff0dad442"
+              "sha256": "faac6f1e8b017745587020cc5ce3ca1d2c686978e0defdb5a431bcb213cb62d7"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -567520,7 +567520,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "cea4593365deee8d3e06b38da96549a831fc6e92ed966d6a0cb0096e0ab8e0f5"
+              "sha256": "b1bdf2cf185b75edfde3a4817d61336c6d530d9c8258098b1f0c25848221371a"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -568511,11 +568511,11 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "2a468cb5f8c08d10bbd306dd659ffb228092d7520313141a5327056a9c1a4a18"
+              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
-              "sha256": "745f213c42e304b2af95df68e26844beeb3666e56556b87416fc845160c79096"
+              "sha256": "fe314282a7a0e7c026e2b9962e69699ec84098e59eeabfc3810781babc42f3d0"
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
@@ -568715,7 +568715,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "3f9c6894aa0695bdd5d2422c7dc010f71b125350d79d5ab112afb12ff0dad442"
+              "sha256": "faac6f1e8b017745587020cc5ce3ca1d2c686978e0defdb5a431bcb213cb62d7"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -569415,7 +569415,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "cea4593365deee8d3e06b38da96549a831fc6e92ed966d6a0cb0096e0ab8e0f5"
+              "sha256": "b1bdf2cf185b75edfde3a4817d61336c6d530d9c8258098b1f0c25848221371a"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -570219,7 +570219,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Staff invoice deadlines, default periods, manual issuance, corrections and reminder toggles now have bounded recovery and current browser evidence. Delivery-window settings still wait indefinitely for a direct save acknowledgement. Reconcile the remaining ordinary CRUD and transactional feedback against current route evidence."
+        "Delivery-window and failed-notification queue actions now have bounded recovery and current browser evidence. Customer notification correction resolution still has an unbounded acknowledgement and no owned recovery for a lost write reply. Reconcile the remaining CRUD and transactional feedback against current route evidence."
       ],
       "owner": null,
       "depends_on": [],
@@ -570283,7 +570283,8 @@
           "release-0.5-saving-intake-recovery",
           "release-0.5-notification-template-command-recovery",
           "release-0.5-staff-invoice-command-recovery",
-          "release-0.5-invoice-deadline-reminder-recovery"
+          "release-0.5-invoice-deadline-reminder-recovery",
+          "release-0.5-delivery-window-queue-recovery"
         ],
         "current_acceptance": null
       }
@@ -570490,11 +570491,11 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "2a468cb5f8c08d10bbd306dd659ffb228092d7520313141a5327056a9c1a4a18"
+              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
-              "sha256": "745f213c42e304b2af95df68e26844beeb3666e56556b87416fc845160c79096"
+              "sha256": "fe314282a7a0e7c026e2b9962e69699ec84098e59eeabfc3810781babc42f3d0"
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
@@ -570694,7 +570695,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "3f9c6894aa0695bdd5d2422c7dc010f71b125350d79d5ab112afb12ff0dad442"
+              "sha256": "faac6f1e8b017745587020cc5ce3ca1d2c686978e0defdb5a431bcb213cb62d7"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -571394,7 +571395,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "cea4593365deee8d3e06b38da96549a831fc6e92ed966d6a0cb0096e0ab8e0f5"
+              "sha256": "b1bdf2cf185b75edfde3a4817d61336c6d530d9c8258098b1f0c25848221371a"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -572385,11 +572386,11 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "2a468cb5f8c08d10bbd306dd659ffb228092d7520313141a5327056a9c1a4a18"
+              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
-              "sha256": "745f213c42e304b2af95df68e26844beeb3666e56556b87416fc845160c79096"
+              "sha256": "fe314282a7a0e7c026e2b9962e69699ec84098e59eeabfc3810781babc42f3d0"
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
@@ -572589,7 +572590,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "3f9c6894aa0695bdd5d2422c7dc010f71b125350d79d5ab112afb12ff0dad442"
+              "sha256": "faac6f1e8b017745587020cc5ce3ca1d2c686978e0defdb5a431bcb213cb62d7"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -573289,7 +573290,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "cea4593365deee8d3e06b38da96549a831fc6e92ed966d6a0cb0096e0ab8e0f5"
+              "sha256": "b1bdf2cf185b75edfde3a4817d61336c6d530d9c8258098b1f0c25848221371a"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -574280,11 +574281,11 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "2a468cb5f8c08d10bbd306dd659ffb228092d7520313141a5327056a9c1a4a18"
+              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
-              "sha256": "745f213c42e304b2af95df68e26844beeb3666e56556b87416fc845160c79096"
+              "sha256": "fe314282a7a0e7c026e2b9962e69699ec84098e59eeabfc3810781babc42f3d0"
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
@@ -574484,7 +574485,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "3f9c6894aa0695bdd5d2422c7dc010f71b125350d79d5ab112afb12ff0dad442"
+              "sha256": "faac6f1e8b017745587020cc5ce3ca1d2c686978e0defdb5a431bcb213cb62d7"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -575184,7 +575185,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "cea4593365deee8d3e06b38da96549a831fc6e92ed966d6a0cb0096e0ab8e0f5"
+              "sha256": "b1bdf2cf185b75edfde3a4817d61336c6d530d9c8258098b1f0c25848221371a"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -576175,11 +576176,11 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "2a468cb5f8c08d10bbd306dd659ffb228092d7520313141a5327056a9c1a4a18"
+              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
-              "sha256": "745f213c42e304b2af95df68e26844beeb3666e56556b87416fc845160c79096"
+              "sha256": "fe314282a7a0e7c026e2b9962e69699ec84098e59eeabfc3810781babc42f3d0"
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
@@ -576379,7 +576380,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "3f9c6894aa0695bdd5d2422c7dc010f71b125350d79d5ab112afb12ff0dad442"
+              "sha256": "faac6f1e8b017745587020cc5ce3ca1d2c686978e0defdb5a431bcb213cb62d7"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -577079,7 +577080,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "cea4593365deee8d3e06b38da96549a831fc6e92ed966d6a0cb0096e0ab8e0f5"
+              "sha256": "b1bdf2cf185b75edfde3a4817d61336c6d530d9c8258098b1f0c25848221371a"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -578070,11 +578071,11 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "2a468cb5f8c08d10bbd306dd659ffb228092d7520313141a5327056a9c1a4a18"
+              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
-              "sha256": "745f213c42e304b2af95df68e26844beeb3666e56556b87416fc845160c79096"
+              "sha256": "fe314282a7a0e7c026e2b9962e69699ec84098e59eeabfc3810781babc42f3d0"
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
@@ -578274,7 +578275,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "3f9c6894aa0695bdd5d2422c7dc010f71b125350d79d5ab112afb12ff0dad442"
+              "sha256": "faac6f1e8b017745587020cc5ce3ca1d2c686978e0defdb5a431bcb213cb62d7"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -578974,7 +578975,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "cea4593365deee8d3e06b38da96549a831fc6e92ed966d6a0cb0096e0ab8e0f5"
+              "sha256": "b1bdf2cf185b75edfde3a4817d61336c6d530d9c8258098b1f0c25848221371a"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -579965,11 +579966,11 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "2a468cb5f8c08d10bbd306dd659ffb228092d7520313141a5327056a9c1a4a18"
+              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
-              "sha256": "745f213c42e304b2af95df68e26844beeb3666e56556b87416fc845160c79096"
+              "sha256": "fe314282a7a0e7c026e2b9962e69699ec84098e59eeabfc3810781babc42f3d0"
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
@@ -580169,7 +580170,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "3f9c6894aa0695bdd5d2422c7dc010f71b125350d79d5ab112afb12ff0dad442"
+              "sha256": "faac6f1e8b017745587020cc5ce3ca1d2c686978e0defdb5a431bcb213cb62d7"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -580869,7 +580870,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "cea4593365deee8d3e06b38da96549a831fc6e92ed966d6a0cb0096e0ab8e0f5"
+              "sha256": "b1bdf2cf185b75edfde3a4817d61336c6d530d9c8258098b1f0c25848221371a"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -581860,11 +581861,11 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "2a468cb5f8c08d10bbd306dd659ffb228092d7520313141a5327056a9c1a4a18"
+              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
-              "sha256": "745f213c42e304b2af95df68e26844beeb3666e56556b87416fc845160c79096"
+              "sha256": "fe314282a7a0e7c026e2b9962e69699ec84098e59eeabfc3810781babc42f3d0"
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
@@ -582064,7 +582065,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "3f9c6894aa0695bdd5d2422c7dc010f71b125350d79d5ab112afb12ff0dad442"
+              "sha256": "faac6f1e8b017745587020cc5ce3ca1d2c686978e0defdb5a431bcb213cb62d7"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -582764,7 +582765,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "cea4593365deee8d3e06b38da96549a831fc6e92ed966d6a0cb0096e0ab8e0f5"
+              "sha256": "b1bdf2cf185b75edfde3a4817d61336c6d530d9c8258098b1f0c25848221371a"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -583755,11 +583756,11 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "2a468cb5f8c08d10bbd306dd659ffb228092d7520313141a5327056a9c1a4a18"
+              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
-              "sha256": "745f213c42e304b2af95df68e26844beeb3666e56556b87416fc845160c79096"
+              "sha256": "fe314282a7a0e7c026e2b9962e69699ec84098e59eeabfc3810781babc42f3d0"
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
@@ -583959,7 +583960,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "3f9c6894aa0695bdd5d2422c7dc010f71b125350d79d5ab112afb12ff0dad442"
+              "sha256": "faac6f1e8b017745587020cc5ce3ca1d2c686978e0defdb5a431bcb213cb62d7"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -584659,7 +584660,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "cea4593365deee8d3e06b38da96549a831fc6e92ed966d6a0cb0096e0ab8e0f5"
+              "sha256": "b1bdf2cf185b75edfde3a4817d61336c6d530d9c8258098b1f0c25848221371a"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -585650,11 +585651,11 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "2a468cb5f8c08d10bbd306dd659ffb228092d7520313141a5327056a9c1a4a18"
+              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
-              "sha256": "745f213c42e304b2af95df68e26844beeb3666e56556b87416fc845160c79096"
+              "sha256": "fe314282a7a0e7c026e2b9962e69699ec84098e59eeabfc3810781babc42f3d0"
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
@@ -585854,7 +585855,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "3f9c6894aa0695bdd5d2422c7dc010f71b125350d79d5ab112afb12ff0dad442"
+              "sha256": "faac6f1e8b017745587020cc5ce3ca1d2c686978e0defdb5a431bcb213cb62d7"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -586554,7 +586555,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "cea4593365deee8d3e06b38da96549a831fc6e92ed966d6a0cb0096e0ab8e0f5"
+              "sha256": "b1bdf2cf185b75edfde3a4817d61336c6d530d9c8258098b1f0c25848221371a"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -587545,11 +587546,11 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "2a468cb5f8c08d10bbd306dd659ffb228092d7520313141a5327056a9c1a4a18"
+              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
-              "sha256": "745f213c42e304b2af95df68e26844beeb3666e56556b87416fc845160c79096"
+              "sha256": "fe314282a7a0e7c026e2b9962e69699ec84098e59eeabfc3810781babc42f3d0"
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
@@ -587749,7 +587750,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "3f9c6894aa0695bdd5d2422c7dc010f71b125350d79d5ab112afb12ff0dad442"
+              "sha256": "faac6f1e8b017745587020cc5ce3ca1d2c686978e0defdb5a431bcb213cb62d7"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -588449,7 +588450,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "cea4593365deee8d3e06b38da96549a831fc6e92ed966d6a0cb0096e0ab8e0f5"
+              "sha256": "b1bdf2cf185b75edfde3a4817d61336c6d530d9c8258098b1f0c25848221371a"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -589440,11 +589441,11 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "2a468cb5f8c08d10bbd306dd659ffb228092d7520313141a5327056a9c1a4a18"
+              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
-              "sha256": "745f213c42e304b2af95df68e26844beeb3666e56556b87416fc845160c79096"
+              "sha256": "fe314282a7a0e7c026e2b9962e69699ec84098e59eeabfc3810781babc42f3d0"
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
@@ -589644,7 +589645,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "3f9c6894aa0695bdd5d2422c7dc010f71b125350d79d5ab112afb12ff0dad442"
+              "sha256": "faac6f1e8b017745587020cc5ce3ca1d2c686978e0defdb5a431bcb213cb62d7"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -590344,7 +590345,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "cea4593365deee8d3e06b38da96549a831fc6e92ed966d6a0cb0096e0ab8e0f5"
+              "sha256": "b1bdf2cf185b75edfde3a4817d61336c6d530d9c8258098b1f0c25848221371a"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -591608,7 +591609,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "cea4593365deee8d3e06b38da96549a831fc6e92ed966d6a0cb0096e0ab8e0f5"
+              "sha256": "b1bdf2cf185b75edfde3a4817d61336c6d530d9c8258098b1f0c25848221371a"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -592075,11 +592076,11 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "2a468cb5f8c08d10bbd306dd659ffb228092d7520313141a5327056a9c1a4a18"
+              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
-              "sha256": "745f213c42e304b2af95df68e26844beeb3666e56556b87416fc845160c79096"
+              "sha256": "fe314282a7a0e7c026e2b9962e69699ec84098e59eeabfc3810781babc42f3d0"
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
@@ -592279,7 +592280,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "3f9c6894aa0695bdd5d2422c7dc010f71b125350d79d5ab112afb12ff0dad442"
+              "sha256": "faac6f1e8b017745587020cc5ce3ca1d2c686978e0defdb5a431bcb213cb62d7"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -592979,7 +592980,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "cea4593365deee8d3e06b38da96549a831fc6e92ed966d6a0cb0096e0ab8e0f5"
+              "sha256": "b1bdf2cf185b75edfde3a4817d61336c6d530d9c8258098b1f0c25848221371a"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -593970,11 +593971,11 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "2a468cb5f8c08d10bbd306dd659ffb228092d7520313141a5327056a9c1a4a18"
+              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
-              "sha256": "745f213c42e304b2af95df68e26844beeb3666e56556b87416fc845160c79096"
+              "sha256": "fe314282a7a0e7c026e2b9962e69699ec84098e59eeabfc3810781babc42f3d0"
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
@@ -594174,7 +594175,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "3f9c6894aa0695bdd5d2422c7dc010f71b125350d79d5ab112afb12ff0dad442"
+              "sha256": "faac6f1e8b017745587020cc5ce3ca1d2c686978e0defdb5a431bcb213cb62d7"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -594874,7 +594875,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "cea4593365deee8d3e06b38da96549a831fc6e92ed966d6a0cb0096e0ab8e0f5"
+              "sha256": "b1bdf2cf185b75edfde3a4817d61336c6d530d9c8258098b1f0c25848221371a"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -595678,7 +595679,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Invoice deadline and reminder reconciliation now preserve drafts or acknowledged sibling cells and require a successful current read. Match the remaining conditional list, detail, dashboard and staff route states to the inventory and current native evidence."
+        "Delivery-window resets now require a successful post-failure read, and a stalled dead-letter write reaches the existing review. Match the remaining conditional list, detail, dashboard and staff route states to the inventory and current native evidence."
       ],
       "owner": null,
       "depends_on": [],
@@ -595754,7 +595755,8 @@
           "release-0.5-saving-intake-recovery",
           "release-0.5-notification-template-command-recovery",
           "release-0.5-staff-invoice-command-recovery",
-          "release-0.5-invoice-deadline-reminder-recovery"
+          "release-0.5-invoice-deadline-reminder-recovery",
+          "release-0.5-delivery-window-queue-recovery"
         ],
         "current_acceptance": null
       }
@@ -595999,7 +596001,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "2a468cb5f8c08d10bbd306dd659ffb228092d7520313141a5327056a9c1a4a18"
+              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
             },
             {
               "path": "apps/web/src/components/DocumentDestructionQueue.tsx",
@@ -596219,7 +596221,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "3f9c6894aa0695bdd5d2422c7dc010f71b125350d79d5ab112afb12ff0dad442"
+              "sha256": "faac6f1e8b017745587020cc5ce3ca1d2c686978e0defdb5a431bcb213cb62d7"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -597803,7 +597805,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "2a468cb5f8c08d10bbd306dd659ffb228092d7520313141a5327056a9c1a4a18"
+              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
             },
             {
               "path": "apps/web/src/components/DocumentDestructionQueue.tsx",
@@ -598023,7 +598025,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "3f9c6894aa0695bdd5d2422c7dc010f71b125350d79d5ab112afb12ff0dad442"
+              "sha256": "faac6f1e8b017745587020cc5ce3ca1d2c686978e0defdb5a431bcb213cb62d7"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -599607,7 +599609,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "2a468cb5f8c08d10bbd306dd659ffb228092d7520313141a5327056a9c1a4a18"
+              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
             },
             {
               "path": "apps/web/src/components/DocumentDestructionQueue.tsx",
@@ -599827,7 +599829,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "3f9c6894aa0695bdd5d2422c7dc010f71b125350d79d5ab112afb12ff0dad442"
+              "sha256": "faac6f1e8b017745587020cc5ce3ca1d2c686978e0defdb5a431bcb213cb62d7"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -601411,7 +601413,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "2a468cb5f8c08d10bbd306dd659ffb228092d7520313141a5327056a9c1a4a18"
+              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
             },
             {
               "path": "apps/web/src/components/DocumentDestructionQueue.tsx",
@@ -601631,7 +601633,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "3f9c6894aa0695bdd5d2422c7dc010f71b125350d79d5ab112afb12ff0dad442"
+              "sha256": "faac6f1e8b017745587020cc5ce3ca1d2c686978e0defdb5a431bcb213cb62d7"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -603215,7 +603217,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "2a468cb5f8c08d10bbd306dd659ffb228092d7520313141a5327056a9c1a4a18"
+              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
             },
             {
               "path": "apps/web/src/components/DocumentDestructionQueue.tsx",
@@ -603435,7 +603437,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "3f9c6894aa0695bdd5d2422c7dc010f71b125350d79d5ab112afb12ff0dad442"
+              "sha256": "faac6f1e8b017745587020cc5ce3ca1d2c686978e0defdb5a431bcb213cb62d7"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -605019,7 +605021,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "2a468cb5f8c08d10bbd306dd659ffb228092d7520313141a5327056a9c1a4a18"
+              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
             },
             {
               "path": "apps/web/src/components/DocumentDestructionQueue.tsx",
@@ -605239,7 +605241,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "3f9c6894aa0695bdd5d2422c7dc010f71b125350d79d5ab112afb12ff0dad442"
+              "sha256": "faac6f1e8b017745587020cc5ce3ca1d2c686978e0defdb5a431bcb213cb62d7"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -606823,7 +606825,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "2a468cb5f8c08d10bbd306dd659ffb228092d7520313141a5327056a9c1a4a18"
+              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
             },
             {
               "path": "apps/web/src/components/DocumentDestructionQueue.tsx",
@@ -607043,7 +607045,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "3f9c6894aa0695bdd5d2422c7dc010f71b125350d79d5ab112afb12ff0dad442"
+              "sha256": "faac6f1e8b017745587020cc5ce3ca1d2c686978e0defdb5a431bcb213cb62d7"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -634634,7 +634636,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "2a468cb5f8c08d10bbd306dd659ffb228092d7520313141a5327056a9c1a4a18"
+              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
             },
             {
               "path": "apps/web/src/components/DeliveryProviderTable.tsx",
@@ -635758,7 +635760,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "2a468cb5f8c08d10bbd306dd659ffb228092d7520313141a5327056a9c1a4a18"
+              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
             },
             {
               "path": "apps/web/src/components/DeliveryProviderTable.tsx",
@@ -636882,7 +636884,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "2a468cb5f8c08d10bbd306dd659ffb228092d7520313141a5327056a9c1a4a18"
+              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
             },
             {
               "path": "apps/web/src/components/DeliveryProviderTable.tsx",
@@ -638009,7 +638011,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "2a468cb5f8c08d10bbd306dd659ffb228092d7520313141a5327056a9c1a4a18"
+              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
             },
             {
               "path": "apps/web/src/components/DeliveryProviderTable.tsx",
@@ -639136,7 +639138,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "2a468cb5f8c08d10bbd306dd659ffb228092d7520313141a5327056a9c1a4a18"
+              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
             },
             {
               "path": "apps/web/src/components/DeliveryProviderTable.tsx",
@@ -640290,7 +640292,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "2a468cb5f8c08d10bbd306dd659ffb228092d7520313141a5327056a9c1a4a18"
+              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
             },
             {
               "path": "apps/web/src/components/DeliveryProviderTable.tsx",
@@ -641413,7 +641415,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "2a468cb5f8c08d10bbd306dd659ffb228092d7520313141a5327056a9c1a4a18"
+              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
             },
             {
               "path": "apps/web/src/components/DeliveryProviderTable.tsx",
@@ -642536,7 +642538,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "2a468cb5f8c08d10bbd306dd659ffb228092d7520313141a5327056a9c1a4a18"
+              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
             },
             {
               "path": "apps/web/src/components/DeliveryProviderTable.tsx",
@@ -643660,7 +643662,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "2a468cb5f8c08d10bbd306dd659ffb228092d7520313141a5327056a9c1a4a18"
+              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
             },
             {
               "path": "apps/web/src/components/DeliveryProviderTable.tsx",
@@ -644802,7 +644804,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "2a468cb5f8c08d10bbd306dd659ffb228092d7520313141a5327056a9c1a4a18"
+              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
             },
             {
               "path": "apps/web/src/components/DeliveryProviderTable.tsx",
@@ -645927,7 +645929,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "2a468cb5f8c08d10bbd306dd659ffb228092d7520313141a5327056a9c1a4a18"
+              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
             },
             {
               "path": "apps/web/src/components/DeliveryProviderTable.tsx",
@@ -677427,7 +677429,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "2a468cb5f8c08d10bbd306dd659ffb228092d7520313141a5327056a9c1a4a18"
+              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
             },
             {
               "path": "apps/web/src/components/DeliveryProviderTable.tsx",
@@ -678549,7 +678551,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "2a468cb5f8c08d10bbd306dd659ffb228092d7520313141a5327056a9c1a4a18"
+              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
             },
             {
               "path": "apps/web/src/components/DeliveryProviderTable.tsx",
@@ -679671,7 +679673,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "2a468cb5f8c08d10bbd306dd659ffb228092d7520313141a5327056a9c1a4a18"
+              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
             },
             {
               "path": "apps/web/src/components/DeliveryProviderTable.tsx",
@@ -680793,7 +680795,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "2a468cb5f8c08d10bbd306dd659ffb228092d7520313141a5327056a9c1a4a18"
+              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
             },
             {
               "path": "apps/web/src/components/DeliveryProviderTable.tsx",
@@ -718800,7 +718802,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "7044cac978bc8de13f00be0268a882d67a9eb9ad19e16ca7f0efce1801b2672c"
+              "sha256": "821f88929bc15b9c00f1b20b2304d7ebae5462f561d8761498de2c887fb115bc"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -718964,7 +718966,7 @@
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
-              "sha256": "745f213c42e304b2af95df68e26844beeb3666e56556b87416fc845160c79096"
+              "sha256": "fe314282a7a0e7c026e2b9962e69699ec84098e59eeabfc3810781babc42f3d0"
             },
             {
               "path": "apps/web/src/components/DocumentDestructionQueue.tsx",
@@ -722682,7 +722684,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "7044cac978bc8de13f00be0268a882d67a9eb9ad19e16ca7f0efce1801b2672c"
+              "sha256": "821f88929bc15b9c00f1b20b2304d7ebae5462f561d8761498de2c887fb115bc"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -722838,7 +722840,7 @@
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
-              "sha256": "745f213c42e304b2af95df68e26844beeb3666e56556b87416fc845160c79096"
+              "sha256": "fe314282a7a0e7c026e2b9962e69699ec84098e59eeabfc3810781babc42f3d0"
             },
             {
               "path": "apps/web/src/components/DocumentDestructionQueue.tsx",
@@ -725398,7 +725400,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "The staff invoice deadline and reminder settings have current recovery evidence. Remaining command feedback and route states, live Sentry delivery and required GitHub accessibility enforcement still gate full adoption."
+        "Delivery-window and dead-letter recovery have current evidence. Remaining command feedback and route states, live Sentry delivery and required GitHub accessibility enforcement still gate full adoption."
       ],
       "owner": null,
       "depends_on": [],
@@ -725538,7 +725540,8 @@
           "release-0.5-saving-intake-recovery",
           "release-0.5-notification-template-command-recovery",
           "release-0.5-staff-invoice-command-recovery",
-          "release-0.5-invoice-deadline-reminder-recovery"
+          "release-0.5-invoice-deadline-reminder-recovery",
+          "release-0.5-delivery-window-queue-recovery"
         ]
       }
     },
@@ -725770,7 +725773,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "2a468cb5f8c08d10bbd306dd659ffb228092d7520313141a5327056a9c1a4a18"
+              "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
             },
             {
               "path": "apps/web/src/components/DefaultProfileModal.tsx",
@@ -725778,7 +725781,7 @@
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
-              "sha256": "745f213c42e304b2af95df68e26844beeb3666e56556b87416fc845160c79096"
+              "sha256": "fe314282a7a0e7c026e2b9962e69699ec84098e59eeabfc3810781babc42f3d0"
             },
             {
               "path": "apps/web/src/components/DirectionAware.tsx",
@@ -727355,7 +727358,8 @@
             "Renewed saving intake recovery, accessibility and route and interaction budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-intake-recovery/proof.json",
             "Renewed notification template recovery and route and interaction budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-template-command-recovery/proof.json",
             "Renewed staff invoice recovery and route and interaction budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-invoice-command-recovery/proof.json",
-            "Renewed invoice deadline and reminder recovery and route and interaction budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-deadline-reminder-recovery/proof.json"
+            "Renewed invoice deadline and reminder recovery and route and interaction budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-deadline-reminder-recovery/proof.json",
+            "Renewed delivery-window and dead-letter recovery and route and interaction budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-delivery-window-queue-recovery/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -799868,6 +799872,106 @@
       "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-deadline-reminder-recovery/renewed-bindings.json",
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-deadline-reminder-recovery/reviewed.patch",
       "release_disposition": "Verified single-invoice deadline and reminder acknowledgement recovery with existing permission, concurrency and receipt safeguards. v0.5.0 acceptance remains open."
+    },
+    "release-0.5-delivery-window-queue-recovery": {
+      "batch": "release-0.5-delivery-window-queue-recovery",
+      "base_commit": "1c273447dfabdcdba3235392b90663b6af5ad047",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.11.01.03",
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.11.01.03",
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": ".size-limit.json",
+          "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+        },
+        {
+          "path": "apps/web/e2e/confirmation-fixture.ts",
+          "sha256": "8d842de5577a9f43a5ca0efcf8e6a00e18e6ea1fb53116555fac8cbd7608bb61"
+        },
+        {
+          "path": "apps/web/e2e/failed-notifications-recovery.spec.ts",
+          "sha256": "735a2e1c4bfeb3b2fdb654e7c9965e2f71f96e42fddef49b23893feb394d61cb"
+        },
+        {
+          "path": "apps/web/e2e/failed-notifications.spec.ts",
+          "sha256": "f958980c3dcbaf02cc621fe150abb4602e7fdce039a93287ed7938d956f9309b"
+        },
+        {
+          "path": "apps/web/e2e/form-accessibility.spec.ts",
+          "sha256": "821f88929bc15b9c00f1b20b2304d7ebae5462f561d8761498de2c887fb115bc"
+        },
+        {
+          "path": "apps/web/src/components/DeadLetterPanel.tsx",
+          "sha256": "f9aeb75075ded30d72ebc0e233e2c0a9e469bfd5ab53b4111c181202ecb4e2d4"
+        },
+        {
+          "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
+          "sha256": "fe314282a7a0e7c026e2b9962e69699ec84098e59eeabfc3810781babc42f3d0"
+        },
+        {
+          "path": "apps/web/src/components/TeamActionDialog.tsx",
+          "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+        },
+        {
+          "path": "apps/web/src/components/delivery-window-forms.test.tsx",
+          "sha256": "faac6f1e8b017745587020cc5ce3ca1d2c686978e0defdb5a431bcb213cb62d7"
+        },
+        {
+          "path": "apps/web/src/hooks/useCatalogueResource.ts",
+          "sha256": "a189459305295c7cef7c9741922109d25540db7eba3141d8e8d8a61941792dee"
+        },
+        {
+          "path": "apps/web/src/lib/notification-form.ts",
+          "sha256": "16fc69914d5fcf49c32b5252f1c0ceedd6c1103168e23768ce988e7ac2d06758"
+        },
+        {
+          "path": "apps/web/src/lib/server-query-client.ts",
+          "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
+        },
+        {
+          "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
+          "sha256": "6f8ad189784814f9baed2e0efb2a0287f48decfaab602738c5bb47f8befb505d"
+        },
+        {
+          "path": "docs/design/notification-recovery.md",
+          "sha256": "b1bdf2cf185b75edfde3a4817d61336c6d530d9c8258098b1f0c25848221371a"
+        },
+        {
+          "path": "packages/i18n/src/confirmation.ts",
+          "sha256": "4dd854d1d4c048b6d6d80b7bc3648b5cf3eafa4e445a3ef1142f4c5663b5438e"
+        },
+        {
+          "path": "packages/i18n/src/notification-forms.ts",
+          "sha256": "426fb5a38c9e3b014e8dd65935c6e1029b2055f8b119cefbf87b074ada74eedc"
+        },
+        {
+          "path": "scripts/check-changed-coverage.py",
+          "sha256": "721aa5763bb62336c0e4c454b8e36e2f15ff1e14bf4b0136c7c7946424bbd736"
+        },
+        {
+          "path": "scripts/check-route-budgets.mjs",
+          "sha256": "4dd831c645a9dbf1e6fd9b0c211b5559e4fc22652373b31525bd4f4aae38186d"
+        }
+      ],
+      "checks": [
+        "Delivery-window writes bound direct and password-confirmed acknowledgement and retain the captured minute precision and validated current scope. An unknown result keeps the draft and blocks editing. Reset requires an explicit successful read issued after uncertainty. A refresh during the write cannot qualify, a malformed or failed read leaves the lock, and a local mutation receipt is not a recovery read.",
+        "The native protected timeout confirms two exact captured writes including the challenge, verifies that the running dialog cannot start a read and that the recovery read issues no further write or saved toast. Dead-letter retry, resolve and dismiss bind responses to the captured row. A stalled retry opens the existing unconfirmed review and requires an explicit fresh decision instead of automatic dispatch.",
+        "Sixty-two unit cases, 30 production Chromium and Mobile Safari cases, 15 instrumented Chromium cases, all nine changed-coverage groups, all 100 unchanged bundle budgets, formatting, scoped lint and web typecheck passed. The four initial dismissal cases stopped at the typed destructive gate. The corrected fixture checks that gate before testing all receipts, and those cases passed against the identical application assets. Six cold-auth receipts carry forward from byte-identical runtime files."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-delivery-window-queue-recovery",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-delivery-window-queue-recovery/proof.json",
+      "source_scope_proof_sha256": "8df5cefa5c822dc0ce46e15a345d3a27965e81b8c587429b23611df447f010e1",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-delivery-window-queue-recovery/renewed-bindings.json",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-delivery-window-queue-recovery/reviewed.patch",
+      "release_disposition": "Verified delivery-window settings and dead-letter action recovery with existing permission and receipt safeguards. v0.5.0 acceptance remains open."
     }
   },
   "historical_improvements": [
@@ -799918,12 +800022,12 @@
       "release-readiness#R-04.01",
       "release-readiness#R-04.02"
     ],
-    "goal": "Close the unbounded staff delivery-window save acknowledgement and reconcile remaining notification settings and conditional route states against native evidence. Live Sentry delivery and required GitHub accessibility enforcement remain separate v0.5.0 gates."
+    "goal": "Close the unbounded customer notification correction resolution and verify fresh reads, owned notes and queue recovery. Continue matching remaining conditional route states to native evidence. Live Sentry delivery and required GitHub accessibility enforcement remain separate v0.5.0 gates."
   },
   "launch_forecast": {
     "status": "deadline_at_risk_until_v0_5_and_operational_gates_close",
     "next_update_after": "v0.5.0 remaining UI criteria and owner decisions",
-    "method": "v0.4.0 staging and Telegram receipts are verified. v0.5.0 form semantics, guarded electricity drafts, solar document completion, ticket acknowledgement, verified attachment and verification-mode recovery, shared customer settings acknowledgement and saving intake recovery, staff notification template, invoice command and reminder recovery, and scoped customer electricity, shell, onboarding, terms and invitation recovery are verified. Five launch-required criteria remain open, including the live Sentry receipt and GitHub accessibility enforcement. The November 9 sequence remains at risk."
+    "method": "v0.4.0 staging and Telegram receipts are verified. v0.5.0 form semantics, guarded electricity drafts, solar document completion, ticket acknowledgement, verified attachment and verification-mode recovery, shared customer settings acknowledgement and saving intake recovery, staff notification template, delivery-window, dead-letter, invoice and reminder recovery, and scoped customer electricity, shell, onboarding, terms and invitation recovery are verified. Five launch-required criteria remain open, including the live Sentry receipt and GitHub accessibility enforcement. The November 9 sequence remains at risk."
   },
   "capabilities": [
     {
