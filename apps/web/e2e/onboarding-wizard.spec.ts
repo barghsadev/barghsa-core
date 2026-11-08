@@ -1040,6 +1040,55 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(page.locator('dl[aria-label]').last()).toContainText(
       locale === 'fa' ? 'تأیید شده' : 'Verified'
     );
+    const heading = page.getByRole('heading', {
+      name: t('onboarding.complete.title', locale),
+      exact: true,
+    });
+    await heading.scrollIntoViewIfNeeded();
+    const notice = page.locator('[data-sonner-toast][data-visible="true"]').first();
+    await expect(notice).toBeVisible();
+    await expect
+      .poll(async () => {
+        const headingBottom = await heading.evaluate(
+          (element) => element.getBoundingClientRect().bottom
+        );
+        const noticeTop = await notice.evaluate((element) => element.getBoundingClientRect().top);
+        return noticeTop - headingBottom;
+      })
+      .toBeGreaterThanOrEqual(15.5);
+    const layering = await heading.evaluate((element) => {
+      const particle = document.querySelector<HTMLElement>('.animate-confetti-drop')!;
+      const saved = particle.getAttribute('style')!;
+      const box = element.getBoundingClientRect();
+      const x = box.left + box.width / 2;
+      const y = box.top + box.height / 2;
+      const context = document.createElement('canvas').getContext('2d')!;
+      context.fillStyle = getComputedStyle(element.parentElement!).backgroundColor;
+      context.fillRect(0, 0, 1, 1);
+      try {
+        // Put a real particle over the heading and temporarily enable hit testing.
+        Object.assign(particle.style, {
+          position: 'fixed',
+          left: `${x - 10}px`,
+          top: `${y - 10}px`,
+          width: '20px',
+          height: '20px',
+          animation: 'none',
+          opacity: '1',
+          pointerEvents: 'auto',
+        });
+        return {
+          headingOnTop: element.contains(document.elementFromPoint(x, y)),
+          surfaceAlpha: context.getImageData(0, 0, 1, 1).data[3],
+        };
+      } finally {
+        particle.setAttribute('style', saved);
+      }
+    });
+    expect(layering).toEqual({ headingOnTop: true, surfaceAlpha: 255 });
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await expect(page.locator('.animate-confetti-drop').first()).toBeHidden();
+    await page.emulateMedia({ reducedMotion: 'no-preference' });
     await dismissMessages(page, locale);
     await expect(page.getByRole('radio', { name: 'Person Owner', exact: true })).toBeChecked();
     expect(state.finishes).toHaveLength(0);
@@ -1050,7 +1099,7 @@ for (const locale of ['en', 'fa'] as const) {
     );
     if (locale === 'fa')
       await page.screenshot({
-        path: '/tmp/barghsa-onboarding-journeys-fa-summary.png',
+        path: test.info().outputPath('onboarding-journeys-fa-summary.png'),
         fullPage: true,
       });
     const done = page.getByRole('button', {

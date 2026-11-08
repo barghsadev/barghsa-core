@@ -55,7 +55,7 @@ function Confetti() {
 
   return (
     <div
-      className="pointer-events-none fixed inset-0 z-50 overflow-hidden motion-reduce:hidden"
+      className="pointer-events-none absolute inset-0 z-0 overflow-hidden motion-reduce:hidden"
       aria-hidden="true"
     >
       <style>{`@keyframes confetti-drop {0% {transform:translateY(-10vh) rotate(0deg);opacity:1;}100% {transform:translateY(100vh) rotate(720deg);opacity:0;}} .animate-confetti-drop {animation:confetti-drop ease-in forwards;}`}</style>
@@ -192,12 +192,12 @@ function Completion({ profileId, journeyId }: { profileId?: string; journeyId?: 
   const profiles: OnboardingJourneyProfile[] = journey?.profiles ?? (profile ? [profile] : []);
   return (
     <div
-      className="container relative mx-auto flex min-h-screen items-center justify-center p-4"
+      className="container relative isolate mx-auto flex min-h-screen items-center justify-center p-4"
       dir={locale === 'fa' ? 'rtl' : 'ltr'}
     >
       {status === 'complete' && <Confetti />}
-      <div className="w-full max-w-lg text-center space-y-5">
-        <h1 className="text-2xl font-bold">
+      <div className="relative z-10 w-full max-w-lg space-y-5 bg-background text-center">
+        <h1 className="text-2xl font-bold" data-toast-anchor>
           {t(
             status === 'complete'
               ? 'onboarding.complete.title'

@@ -72,7 +72,11 @@ export function BreadcrumbBar({
     />
   );
   return (
-    <nav aria-label={shellText('breadcrumbs', locale)} className="shell-breadcrumbs">
+    <nav
+      aria-label={shellText('breadcrumbs', locale)}
+      className="shell-breadcrumbs"
+      data-toast-anchor
+    >
       <ol className="flex min-w-0 flex-wrap items-center gap-2">
         {parents.map((crumb) => (
           <li key={crumb.to} className="hidden items-center gap-2 lg:flex">

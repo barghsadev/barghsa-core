@@ -6,25 +6,28 @@ import { useLocale } from '../hooks/useLocale.js';
 import { useTheme } from '../hooks/useTheme.js';
 import { connectToast } from '../lib/toast-api.js';
 
-/** Account banners can move the topbar; reserve its actual viewport bounds. */
-function headerOffset() {
-  return Math.max(16, (document.querySelector('header')?.getBoundingClientRect().bottom ?? 0) + 16);
+function toastAnchor() {
+  return document.querySelector('[data-toast-anchor]') ?? document.querySelector('header');
+}
+
+function anchorOffset(anchor = toastAnchor()) {
+  return Math.max(16, (anchor?.getBoundingClientRect().bottom ?? 0) + 16);
 }
 
 function useToastTop() {
-  const [top, setTop] = useState(headerOffset);
+  const [top, setTop] = useState(() => anchorOffset());
   useLayoutEffect(() => {
     let frame = 0;
-    let header: Element | null = null;
+    let anchor: Element | null = null;
     const update = () => {
       frame = 0;
-      const next = document.querySelector('header');
-      if (next !== header) {
-        if (header) resize?.unobserve(header);
-        header = next;
-        if (header) resize?.observe(header);
+      const next = toastAnchor();
+      if (next !== anchor) {
+        if (anchor) resize?.unobserve(anchor);
+        anchor = next;
+        if (anchor) resize?.observe(anchor);
       }
-      setTop(headerOffset());
+      setTop(anchorOffset(anchor));
     };
     const queue = () => {
       if (!frame) frame = requestAnimationFrame(update);

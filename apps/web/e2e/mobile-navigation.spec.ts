@@ -122,6 +122,13 @@ for (const locale of ['en', 'fa'] as const)
         `a[href="${area === 'customer' ? '/contracts' : '/admin/contracts'}"]`
       );
       await expect(target).toBeVisible();
+      await expect(dialog).toHaveCSS('opacity', '1');
+      await expect(dialog).toHaveCSS('transition-property', 'opacity, transform, translate');
+      await page.emulateMedia({ colorScheme: 'dark' });
+      await expect(page.locator('html')).toHaveClass(/dark/);
+      expect(await measureControlContrast(target, 'text')).toBeGreaterThanOrEqual(4.5);
+      await page.emulateMedia({ colorScheme: 'light' });
+      await expect(page.locator('html')).not.toHaveClass(/dark/);
       expect(
         (await new AxeBuilder({ page }).include('[role="dialog"]').analyze()).violations
       ).toEqual([]);

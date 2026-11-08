@@ -7,6 +7,7 @@ import { crmShell } from './crm-shell-fixture';
 import { fullNavigation } from './navigation-fixture';
 import { DEFAULT_BRAND_CONFIG } from '../src/lib/brand-config';
 import { feedbackText } from '@barghsa/i18n/feedback';
+import { shellText } from '@barghsa/i18n/shell';
 import { tSolar } from '@barghsa/i18n/solar';
 
 const baseBrand = {
@@ -355,6 +356,19 @@ for (const locale of ['en', 'fa'] as const) {
       await expect(list).toHaveAttribute('data-sonner-theme', darkMode ? 'dark' : 'light');
       // Measure readable, settled content rather than the entrance fade.
       await expect(notice).toHaveCSS('opacity', '1');
+      const breadcrumb = page.getByRole('navigation', {
+        name: shellText('breadcrumbs', locale),
+        exact: true,
+      });
+      await expect
+        .poll(async () => {
+          const crumbBottom = await breadcrumb.evaluate(
+            (element) => element.getBoundingClientRect().bottom
+          );
+          const noticeTop = await notice.evaluate((element) => element.getBoundingClientRect().top);
+          return noticeTop - crumbBottom;
+        })
+        .toBeGreaterThanOrEqual(15.5);
       const contrast = await new AxeBuilder({ page })
         .include('[data-sonner-toaster]')
         .withRules(['color-contrast'])

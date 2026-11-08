@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-08T03:47:17+00:00",
-  "source_commit": "43daade0600ba44710262bde3cf66b9164fa698d",
+  "updated": "2026-11-08T04:05:41+00:00",
+  "source_commit": "2443529d476bbda7836fe67e628b0f0b763d5f5a",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -29899,7 +29899,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "431c02a2dca694d5ef0a60a047857aa4da1004e3c4b52e4fe4a8c27a24e8f6d7"
+              "sha256": "af1e521c7d2d1ae2f24f467f310c553a54656f1d34e5a3e27e5c4e8f99bf8922"
             },
             {
               "path": "apps/web/e2e/profile-display-name.spec.ts",
@@ -30660,7 +30660,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "431c02a2dca694d5ef0a60a047857aa4da1004e3c4b52e4fe4a8c27a24e8f6d7"
+              "sha256": "af1e521c7d2d1ae2f24f467f310c553a54656f1d34e5a3e27e5c4e8f99bf8922"
             },
             {
               "path": "apps/web/e2e/verification-banner.spec.ts",
@@ -31282,7 +31282,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "431c02a2dca694d5ef0a60a047857aa4da1004e3c4b52e4fe4a8c27a24e8f6d7"
+              "sha256": "af1e521c7d2d1ae2f24f467f310c553a54656f1d34e5a3e27e5c4e8f99bf8922"
             },
             {
               "path": "apps/web/src/routes/onboarding/index.tsx",
@@ -31519,7 +31519,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "431c02a2dca694d5ef0a60a047857aa4da1004e3c4b52e4fe4a8c27a24e8f6d7"
+              "sha256": "af1e521c7d2d1ae2f24f467f310c553a54656f1d34e5a3e27e5c4e8f99bf8922"
             },
             {
               "path": "apps/web/src/lib/profile-digits.ts",
@@ -31786,7 +31786,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "431c02a2dca694d5ef0a60a047857aa4da1004e3c4b52e4fe4a8c27a24e8f6d7"
+              "sha256": "af1e521c7d2d1ae2f24f467f310c553a54656f1d34e5a3e27e5c4e8f99bf8922"
             },
             {
               "path": "apps/web/src/hooks/useOnboardingDraft.ts",
@@ -32012,11 +32012,11 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "431c02a2dca694d5ef0a60a047857aa4da1004e3c4b52e4fe4a8c27a24e8f6d7"
+              "sha256": "af1e521c7d2d1ae2f24f467f310c553a54656f1d34e5a3e27e5c4e8f99bf8922"
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "b2b327214da24e5275e8b17c43d18f6d18786a5fadce7fdc1f716b61db38e268"
+              "sha256": "12b606cc853ef954bdd3ea9fe3b63bd9fc3ce1845c6159a919d45c42117c2485"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -32232,7 +32232,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "431c02a2dca694d5ef0a60a047857aa4da1004e3c4b52e4fe4a8c27a24e8f6d7"
+              "sha256": "af1e521c7d2d1ae2f24f467f310c553a54656f1d34e5a3e27e5c4e8f99bf8922"
             },
             {
               "path": "apps/web/e2e/profile-display-name.spec.ts",
@@ -32555,7 +32555,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "431c02a2dca694d5ef0a60a047857aa4da1004e3c4b52e4fe4a8c27a24e8f6d7"
+              "sha256": "af1e521c7d2d1ae2f24f467f310c553a54656f1d34e5a3e27e5c4e8f99bf8922"
             },
             {
               "path": "apps/web/e2e/profile-display-name.spec.ts",
@@ -489937,7 +489937,7 @@
           "source_evidence": [
             {
               "path": "apps/web/e2e/mobile-navigation.spec.ts",
-              "sha256": "526309b7ae030ba43419edcf2a439dd94cdf1898f88782dde96b22f1e494aa52"
+              "sha256": "1b4f4d234434551c71ab48e915ebd798fbeab5ab8be2d65ad2ba9595f5c883b9"
             },
             {
               "path": "apps/web/e2e/navigation-fixture.ts",
@@ -489953,7 +489953,7 @@
             },
             {
               "path": "apps/web/src/components/BreadcrumbBar.tsx",
-              "sha256": "295d41846879a0754c3840fbaf94156c79c29d4837e318ad8f424dc02bc94407"
+              "sha256": "0fbcb3fb8dff20757dabf806caa924dcfe36dbc62527101c4df4b3f1342c054f"
             },
             {
               "path": "apps/web/src/lib/navigation-config.test.ts",
@@ -490211,7 +490211,7 @@
           "source_evidence": [
             {
               "path": "apps/web/e2e/mobile-navigation.spec.ts",
-              "sha256": "526309b7ae030ba43419edcf2a439dd94cdf1898f88782dde96b22f1e494aa52"
+              "sha256": "1b4f4d234434551c71ab48e915ebd798fbeab5ab8be2d65ad2ba9595f5c883b9"
             },
             {
               "path": "apps/web/e2e/navigation-fixture.ts",
@@ -490227,7 +490227,7 @@
             },
             {
               "path": "apps/web/src/components/BreadcrumbBar.tsx",
-              "sha256": "295d41846879a0754c3840fbaf94156c79c29d4837e318ad8f424dc02bc94407"
+              "sha256": "0fbcb3fb8dff20757dabf806caa924dcfe36dbc62527101c4df4b3f1342c054f"
             },
             {
               "path": "apps/web/src/lib/navigation-config.test.ts",
@@ -491042,7 +491042,7 @@
             },
             {
               "path": "apps/web/src/components/SonnerToaster.tsx",
-              "sha256": "78cbfbb7a42915bb09c07693aaf8a141c096d4c12d1dd9b1716da356c7320490"
+              "sha256": "2df3996b4ae3a45fa02360eb45c28f07e405a3fcb38c98d4840a93d9ecdac6b3"
             },
             {
               "path": "apps/web/src/components/StaffEffectivePermissions.tsx",
@@ -496998,7 +496998,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "1ba02df26dc816a3cc999da3c67e0a488d23f0f7879fda04cbfa1d32f8d5c551"
+              "sha256": "06295c3583bdd44e610638c659eac2dcaa2cb417882f6b188325c30200df9cc2"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -498958,7 +498958,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "b2b327214da24e5275e8b17c43d18f6d18786a5fadce7fdc1f716b61db38e268"
+              "sha256": "12b606cc853ef954bdd3ea9fe3b63bd9fc3ce1845c6159a919d45c42117c2485"
             },
             {
               "path": "apps/web/src/test/branding-settings-fixtures.ts",
@@ -499502,7 +499502,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "b2b327214da24e5275e8b17c43d18f6d18786a5fadce7fdc1f716b61db38e268"
+              "sha256": "12b606cc853ef954bdd3ea9fe3b63bd9fc3ce1845c6159a919d45c42117c2485"
             },
             {
               "path": "apps/web/src/test/branding-settings-fixtures.ts",
@@ -500046,7 +500046,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "b2b327214da24e5275e8b17c43d18f6d18786a5fadce7fdc1f716b61db38e268"
+              "sha256": "12b606cc853ef954bdd3ea9fe3b63bd9fc3ce1845c6159a919d45c42117c2485"
             },
             {
               "path": "apps/web/src/test/branding-settings-fixtures.ts",
@@ -500590,7 +500590,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "b2b327214da24e5275e8b17c43d18f6d18786a5fadce7fdc1f716b61db38e268"
+              "sha256": "12b606cc853ef954bdd3ea9fe3b63bd9fc3ce1845c6159a919d45c42117c2485"
             },
             {
               "path": "apps/web/src/test/branding-settings-fixtures.ts",
@@ -501134,7 +501134,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "b2b327214da24e5275e8b17c43d18f6d18786a5fadce7fdc1f716b61db38e268"
+              "sha256": "12b606cc853ef954bdd3ea9fe3b63bd9fc3ce1845c6159a919d45c42117c2485"
             },
             {
               "path": "apps/web/src/test/branding-settings-fixtures.ts",
@@ -501678,7 +501678,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "b2b327214da24e5275e8b17c43d18f6d18786a5fadce7fdc1f716b61db38e268"
+              "sha256": "12b606cc853ef954bdd3ea9fe3b63bd9fc3ce1845c6159a919d45c42117c2485"
             },
             {
               "path": "apps/web/src/test/branding-settings-fixtures.ts",
@@ -502222,7 +502222,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "b2b327214da24e5275e8b17c43d18f6d18786a5fadce7fdc1f716b61db38e268"
+              "sha256": "12b606cc853ef954bdd3ea9fe3b63bd9fc3ce1845c6159a919d45c42117c2485"
             },
             {
               "path": "apps/web/src/test/branding-settings-fixtures.ts",
@@ -502766,7 +502766,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "b2b327214da24e5275e8b17c43d18f6d18786a5fadce7fdc1f716b61db38e268"
+              "sha256": "12b606cc853ef954bdd3ea9fe3b63bd9fc3ce1845c6159a919d45c42117c2485"
             },
             {
               "path": "apps/web/src/test/branding-settings-fixtures.ts",
@@ -503310,7 +503310,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "b2b327214da24e5275e8b17c43d18f6d18786a5fadce7fdc1f716b61db38e268"
+              "sha256": "12b606cc853ef954bdd3ea9fe3b63bd9fc3ce1845c6159a919d45c42117c2485"
             },
             {
               "path": "apps/web/src/test/branding-settings-fixtures.ts",
@@ -503854,7 +503854,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "b2b327214da24e5275e8b17c43d18f6d18786a5fadce7fdc1f716b61db38e268"
+              "sha256": "12b606cc853ef954bdd3ea9fe3b63bd9fc3ce1845c6159a919d45c42117c2485"
             },
             {
               "path": "apps/web/src/test/branding-settings-fixtures.ts",
@@ -504398,7 +504398,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "b2b327214da24e5275e8b17c43d18f6d18786a5fadce7fdc1f716b61db38e268"
+              "sha256": "12b606cc853ef954bdd3ea9fe3b63bd9fc3ce1845c6159a919d45c42117c2485"
             },
             {
               "path": "apps/web/src/test/branding-settings-fixtures.ts",
@@ -504942,7 +504942,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "b2b327214da24e5275e8b17c43d18f6d18786a5fadce7fdc1f716b61db38e268"
+              "sha256": "12b606cc853ef954bdd3ea9fe3b63bd9fc3ce1845c6159a919d45c42117c2485"
             },
             {
               "path": "apps/web/src/test/branding-settings-fixtures.ts",
@@ -505486,7 +505486,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "b2b327214da24e5275e8b17c43d18f6d18786a5fadce7fdc1f716b61db38e268"
+              "sha256": "12b606cc853ef954bdd3ea9fe3b63bd9fc3ce1845c6159a919d45c42117c2485"
             },
             {
               "path": "apps/web/src/test/branding-settings-fixtures.ts",
@@ -506030,7 +506030,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "b2b327214da24e5275e8b17c43d18f6d18786a5fadce7fdc1f716b61db38e268"
+              "sha256": "12b606cc853ef954bdd3ea9fe3b63bd9fc3ce1845c6159a919d45c42117c2485"
             },
             {
               "path": "apps/web/src/test/branding-settings-fixtures.ts",
@@ -506404,7 +506404,7 @@
             },
             {
               "path": "apps/web/src/components/BreadcrumbBar.tsx",
-              "sha256": "295d41846879a0754c3840fbaf94156c79c29d4837e318ad8f424dc02bc94407"
+              "sha256": "0fbcb3fb8dff20757dabf806caa924dcfe36dbc62527101c4df4b3f1342c054f"
             },
             {
               "path": "apps/web/src/components/DirectionAware.tsx",
@@ -506988,7 +506988,7 @@
             },
             {
               "path": "apps/web/src/components/BreadcrumbBar.tsx",
-              "sha256": "295d41846879a0754c3840fbaf94156c79c29d4837e318ad8f424dc02bc94407"
+              "sha256": "0fbcb3fb8dff20757dabf806caa924dcfe36dbc62527101c4df4b3f1342c054f"
             },
             {
               "path": "apps/web/src/components/DirectionAware.tsx",
@@ -507572,7 +507572,7 @@
             },
             {
               "path": "apps/web/src/components/BreadcrumbBar.tsx",
-              "sha256": "295d41846879a0754c3840fbaf94156c79c29d4837e318ad8f424dc02bc94407"
+              "sha256": "0fbcb3fb8dff20757dabf806caa924dcfe36dbc62527101c4df4b3f1342c054f"
             },
             {
               "path": "apps/web/src/components/DirectionAware.tsx",
@@ -512329,7 +512329,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "b2b327214da24e5275e8b17c43d18f6d18786a5fadce7fdc1f716b61db38e268"
+              "sha256": "12b606cc853ef954bdd3ea9fe3b63bd9fc3ce1845c6159a919d45c42117c2485"
             },
             {
               "path": "apps/web/src/routes/onboarding/index.tsx",
@@ -512568,7 +512568,7 @@
             },
             {
               "path": "apps/web/e2e/mobile-navigation.spec.ts",
-              "sha256": "526309b7ae030ba43419edcf2a439dd94cdf1898f88782dde96b22f1e494aa52"
+              "sha256": "1b4f4d234434551c71ab48e915ebd798fbeab5ab8be2d65ad2ba9595f5c883b9"
             },
             {
               "path": "apps/web/e2e/navigation-access.spec.ts",
@@ -512624,7 +512624,7 @@
             },
             {
               "path": "apps/web/src/components/BreadcrumbBar.tsx",
-              "sha256": "295d41846879a0754c3840fbaf94156c79c29d4837e318ad8f424dc02bc94407"
+              "sha256": "0fbcb3fb8dff20757dabf806caa924dcfe36dbc62527101c4df4b3f1342c054f"
             },
             {
               "path": "apps/web/src/components/CrmProfileRecords.tsx",
@@ -512652,7 +512652,7 @@
             },
             {
               "path": "apps/web/src/components/MobileNavigationSheet.tsx",
-              "sha256": "f1a8c0d947a93f2fdf8129271c62b6e0df6a30bb95c6275677989afd3656801e"
+              "sha256": "e627c0272b1c9c08b03845a5793cc3e89bb6a5b0bef99235167d9a735d475c14"
             },
             {
               "path": "apps/web/src/components/NotificationBell.tsx",
@@ -513367,7 +513367,7 @@
             },
             {
               "path": "apps/web/e2e/mobile-navigation.spec.ts",
-              "sha256": "526309b7ae030ba43419edcf2a439dd94cdf1898f88782dde96b22f1e494aa52"
+              "sha256": "1b4f4d234434551c71ab48e915ebd798fbeab5ab8be2d65ad2ba9595f5c883b9"
             },
             {
               "path": "apps/web/e2e/navigation-access.spec.ts",
@@ -513423,7 +513423,7 @@
             },
             {
               "path": "apps/web/src/components/BreadcrumbBar.tsx",
-              "sha256": "295d41846879a0754c3840fbaf94156c79c29d4837e318ad8f424dc02bc94407"
+              "sha256": "0fbcb3fb8dff20757dabf806caa924dcfe36dbc62527101c4df4b3f1342c054f"
             },
             {
               "path": "apps/web/src/components/CrmProfileRecords.tsx",
@@ -513451,7 +513451,7 @@
             },
             {
               "path": "apps/web/src/components/MobileNavigationSheet.tsx",
-              "sha256": "f1a8c0d947a93f2fdf8129271c62b6e0df6a30bb95c6275677989afd3656801e"
+              "sha256": "e627c0272b1c9c08b03845a5793cc3e89bb6a5b0bef99235167d9a735d475c14"
             },
             {
               "path": "apps/web/src/components/NotificationBell.tsx",
@@ -514165,7 +514165,7 @@
             },
             {
               "path": "apps/web/e2e/mobile-navigation.spec.ts",
-              "sha256": "526309b7ae030ba43419edcf2a439dd94cdf1898f88782dde96b22f1e494aa52"
+              "sha256": "1b4f4d234434551c71ab48e915ebd798fbeab5ab8be2d65ad2ba9595f5c883b9"
             },
             {
               "path": "apps/web/e2e/navigation-access.spec.ts",
@@ -514221,7 +514221,7 @@
             },
             {
               "path": "apps/web/src/components/BreadcrumbBar.tsx",
-              "sha256": "295d41846879a0754c3840fbaf94156c79c29d4837e318ad8f424dc02bc94407"
+              "sha256": "0fbcb3fb8dff20757dabf806caa924dcfe36dbc62527101c4df4b3f1342c054f"
             },
             {
               "path": "apps/web/src/components/CrmProfileRecords.tsx",
@@ -514249,7 +514249,7 @@
             },
             {
               "path": "apps/web/src/components/MobileNavigationSheet.tsx",
-              "sha256": "f1a8c0d947a93f2fdf8129271c62b6e0df6a30bb95c6275677989afd3656801e"
+              "sha256": "e627c0272b1c9c08b03845a5793cc3e89bb6a5b0bef99235167d9a735d475c14"
             },
             {
               "path": "apps/web/src/components/NotificationBell.tsx",
@@ -515038,7 +515038,7 @@
             },
             {
               "path": "apps/web/e2e/feedback.spec.ts",
-              "sha256": "437285df1c50e39fa61fab089b1835e518304e3a3e55c749578369b86b8c357e"
+              "sha256": "28be1608c02d9bf54e92ace0cabc9df9cd3e8e53003fa7e5bcdfda4a4322c031"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -515050,7 +515050,7 @@
             },
             {
               "path": "apps/web/e2e/mobile-navigation.spec.ts",
-              "sha256": "526309b7ae030ba43419edcf2a439dd94cdf1898f88782dde96b22f1e494aa52"
+              "sha256": "1b4f4d234434551c71ab48e915ebd798fbeab5ab8be2d65ad2ba9595f5c883b9"
             },
             {
               "path": "apps/web/e2e/navigation-fixture.ts",
@@ -515190,7 +515190,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "ccac09f6e18293277758dbda4a3dc9e7218a5d3dbbc4047d5c44d8e8eb9edf5a"
+              "sha256": "8693069c0f9ba9e8b8eed6f0449d0f3be0cff578f06ae24d2baf53c2632cf843"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -515570,7 +515570,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "ccac09f6e18293277758dbda4a3dc9e7218a5d3dbbc4047d5c44d8e8eb9edf5a"
+              "sha256": "8693069c0f9ba9e8b8eed6f0449d0f3be0cff578f06ae24d2baf53c2632cf843"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -516009,7 +516009,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "ccac09f6e18293277758dbda4a3dc9e7218a5d3dbbc4047d5c44d8e8eb9edf5a"
+              "sha256": "8693069c0f9ba9e8b8eed6f0449d0f3be0cff578f06ae24d2baf53c2632cf843"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -516344,7 +516344,7 @@
             },
             {
               "path": "apps/web/e2e/feedback.spec.ts",
-              "sha256": "437285df1c50e39fa61fab089b1835e518304e3a3e55c749578369b86b8c357e"
+              "sha256": "28be1608c02d9bf54e92ace0cabc9df9cd3e8e53003fa7e5bcdfda4a4322c031"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -516356,7 +516356,7 @@
             },
             {
               "path": "apps/web/e2e/mobile-navigation.spec.ts",
-              "sha256": "526309b7ae030ba43419edcf2a439dd94cdf1898f88782dde96b22f1e494aa52"
+              "sha256": "1b4f4d234434551c71ab48e915ebd798fbeab5ab8be2d65ad2ba9595f5c883b9"
             },
             {
               "path": "apps/web/e2e/navigation-fixture.ts",
@@ -516496,7 +516496,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "ccac09f6e18293277758dbda4a3dc9e7218a5d3dbbc4047d5c44d8e8eb9edf5a"
+              "sha256": "8693069c0f9ba9e8b8eed6f0449d0f3be0cff578f06ae24d2baf53c2632cf843"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -517004,7 +517004,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "ccac09f6e18293277758dbda4a3dc9e7218a5d3dbbc4047d5c44d8e8eb9edf5a"
+              "sha256": "8693069c0f9ba9e8b8eed6f0449d0f3be0cff578f06ae24d2baf53c2632cf843"
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
@@ -517597,7 +517597,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "The populated fixture census now covers light, dark and high-contrast states in both languages across 93 route patterns. Settings navigation and the public brand marks have direct contrast regressions with current evidence. Clipping, overlap and gradient observations still need review. Remaining conditional control states need evidence."
+        "The 93-route populated fixture census includes both languages, themes and contrast settings. Direct evidence also covers onboarding completion overlays, the service-targets notice and breadcrumb, the scrollable More menu and public Terms and Support gradients. Other reported overlap, clipped text and conditional control states still need review."
       ],
       "owner": null,
       "depends_on": [],
@@ -517623,7 +517623,8 @@
           "release-0.5-banner-dismiss-contrast",
           "release-0.5-otp-and-saving-contrast",
           "release-0.5-current-contrast",
-          "release-0.5-contrast-mode-closure"
+          "release-0.5-contrast-mode-closure",
+          "release-0.5-contrast-occlusion"
         ],
         "current_acceptance": null
       }
@@ -517814,7 +517815,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "ccac09f6e18293277758dbda4a3dc9e7218a5d3dbbc4047d5c44d8e8eb9edf5a"
+              "sha256": "8693069c0f9ba9e8b8eed6f0449d0f3be0cff578f06ae24d2baf53c2632cf843"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -518330,7 +518331,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "ccac09f6e18293277758dbda4a3dc9e7218a5d3dbbc4047d5c44d8e8eb9edf5a"
+              "sha256": "8693069c0f9ba9e8b8eed6f0449d0f3be0cff578f06ae24d2baf53c2632cf843"
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
@@ -518796,11 +518797,11 @@
             },
             {
               "path": "apps/web/e2e/mobile-navigation.spec.ts",
-              "sha256": "526309b7ae030ba43419edcf2a439dd94cdf1898f88782dde96b22f1e494aa52"
+              "sha256": "1b4f4d234434551c71ab48e915ebd798fbeab5ab8be2d65ad2ba9595f5c883b9"
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "431c02a2dca694d5ef0a60a047857aa4da1004e3c4b52e4fe4a8c27a24e8f6d7"
+              "sha256": "af1e521c7d2d1ae2f24f467f310c553a54656f1d34e5a3e27e5c4e8f99bf8922"
             },
             {
               "path": "apps/web/e2e/order-comment-forms.spec.ts",
@@ -519048,7 +519049,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "ccac09f6e18293277758dbda4a3dc9e7218a5d3dbbc4047d5c44d8e8eb9edf5a"
+              "sha256": "8693069c0f9ba9e8b8eed6f0449d0f3be0cff578f06ae24d2baf53c2632cf843"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -519624,11 +519625,11 @@
             },
             {
               "path": "apps/web/e2e/mobile-navigation.spec.ts",
-              "sha256": "526309b7ae030ba43419edcf2a439dd94cdf1898f88782dde96b22f1e494aa52"
+              "sha256": "1b4f4d234434551c71ab48e915ebd798fbeab5ab8be2d65ad2ba9595f5c883b9"
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "431c02a2dca694d5ef0a60a047857aa4da1004e3c4b52e4fe4a8c27a24e8f6d7"
+              "sha256": "af1e521c7d2d1ae2f24f467f310c553a54656f1d34e5a3e27e5c4e8f99bf8922"
             },
             {
               "path": "apps/web/e2e/order-comment-forms.spec.ts",
@@ -519876,7 +519877,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "ccac09f6e18293277758dbda4a3dc9e7218a5d3dbbc4047d5c44d8e8eb9edf5a"
+              "sha256": "8693069c0f9ba9e8b8eed6f0449d0f3be0cff578f06ae24d2baf53c2632cf843"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -520486,7 +520487,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "ccac09f6e18293277758dbda4a3dc9e7218a5d3dbbc4047d5c44d8e8eb9edf5a"
+              "sha256": "8693069c0f9ba9e8b8eed6f0449d0f3be0cff578f06ae24d2baf53c2632cf843"
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
@@ -520952,11 +520953,11 @@
             },
             {
               "path": "apps/web/e2e/mobile-navigation.spec.ts",
-              "sha256": "526309b7ae030ba43419edcf2a439dd94cdf1898f88782dde96b22f1e494aa52"
+              "sha256": "1b4f4d234434551c71ab48e915ebd798fbeab5ab8be2d65ad2ba9595f5c883b9"
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "431c02a2dca694d5ef0a60a047857aa4da1004e3c4b52e4fe4a8c27a24e8f6d7"
+              "sha256": "af1e521c7d2d1ae2f24f467f310c553a54656f1d34e5a3e27e5c4e8f99bf8922"
             },
             {
               "path": "apps/web/e2e/order-comment-forms.spec.ts",
@@ -521204,7 +521205,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "ccac09f6e18293277758dbda4a3dc9e7218a5d3dbbc4047d5c44d8e8eb9edf5a"
+              "sha256": "8693069c0f9ba9e8b8eed6f0449d0f3be0cff578f06ae24d2baf53c2632cf843"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -564877,7 +564878,7 @@
             },
             {
               "path": "apps/web/e2e/feedback.spec.ts",
-              "sha256": "437285df1c50e39fa61fab089b1835e518304e3a3e55c749578369b86b8c357e"
+              "sha256": "28be1608c02d9bf54e92ace0cabc9df9cd3e8e53003fa7e5bcdfda4a4322c031"
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
@@ -565065,7 +565066,7 @@
             },
             {
               "path": "apps/web/src/components/SonnerToaster.tsx",
-              "sha256": "78cbfbb7a42915bb09c07693aaf8a141c096d4c12d1dd9b1716da356c7320490"
+              "sha256": "2df3996b4ae3a45fa02360eb45c28f07e405a3fcb38c98d4840a93d9ecdac6b3"
             },
             {
               "path": "apps/web/src/components/StepReviewPage.test.tsx",
@@ -565857,7 +565858,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "1ba02df26dc816a3cc999da3c67e0a488d23f0f7879fda04cbfa1d32f8d5c551"
+              "sha256": "06295c3583bdd44e610638c659eac2dcaa2cb417882f6b188325c30200df9cc2"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -566771,7 +566772,7 @@
             },
             {
               "path": "apps/web/e2e/feedback.spec.ts",
-              "sha256": "437285df1c50e39fa61fab089b1835e518304e3a3e55c749578369b86b8c357e"
+              "sha256": "28be1608c02d9bf54e92ace0cabc9df9cd3e8e53003fa7e5bcdfda4a4322c031"
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
@@ -566959,7 +566960,7 @@
             },
             {
               "path": "apps/web/src/components/SonnerToaster.tsx",
-              "sha256": "78cbfbb7a42915bb09c07693aaf8a141c096d4c12d1dd9b1716da356c7320490"
+              "sha256": "2df3996b4ae3a45fa02360eb45c28f07e405a3fcb38c98d4840a93d9ecdac6b3"
             },
             {
               "path": "apps/web/src/components/StepReviewPage.test.tsx",
@@ -567751,7 +567752,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "1ba02df26dc816a3cc999da3c67e0a488d23f0f7879fda04cbfa1d32f8d5c551"
+              "sha256": "06295c3583bdd44e610638c659eac2dcaa2cb417882f6b188325c30200df9cc2"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -568720,7 +568721,7 @@
             },
             {
               "path": "apps/web/e2e/feedback.spec.ts",
-              "sha256": "437285df1c50e39fa61fab089b1835e518304e3a3e55c749578369b86b8c357e"
+              "sha256": "28be1608c02d9bf54e92ace0cabc9df9cd3e8e53003fa7e5bcdfda4a4322c031"
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
@@ -568908,7 +568909,7 @@
             },
             {
               "path": "apps/web/src/components/SonnerToaster.tsx",
-              "sha256": "78cbfbb7a42915bb09c07693aaf8a141c096d4c12d1dd9b1716da356c7320490"
+              "sha256": "2df3996b4ae3a45fa02360eb45c28f07e405a3fcb38c98d4840a93d9ecdac6b3"
             },
             {
               "path": "apps/web/src/components/StepReviewPage.test.tsx",
@@ -569700,7 +569701,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "1ba02df26dc816a3cc999da3c67e0a488d23f0f7879fda04cbfa1d32f8d5c551"
+              "sha256": "06295c3583bdd44e610638c659eac2dcaa2cb417882f6b188325c30200df9cc2"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -570614,7 +570615,7 @@
             },
             {
               "path": "apps/web/e2e/feedback.spec.ts",
-              "sha256": "437285df1c50e39fa61fab089b1835e518304e3a3e55c749578369b86b8c357e"
+              "sha256": "28be1608c02d9bf54e92ace0cabc9df9cd3e8e53003fa7e5bcdfda4a4322c031"
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
@@ -570802,7 +570803,7 @@
             },
             {
               "path": "apps/web/src/components/SonnerToaster.tsx",
-              "sha256": "78cbfbb7a42915bb09c07693aaf8a141c096d4c12d1dd9b1716da356c7320490"
+              "sha256": "2df3996b4ae3a45fa02360eb45c28f07e405a3fcb38c98d4840a93d9ecdac6b3"
             },
             {
               "path": "apps/web/src/components/StepReviewPage.test.tsx",
@@ -571594,7 +571595,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "1ba02df26dc816a3cc999da3c67e0a488d23f0f7879fda04cbfa1d32f8d5c551"
+              "sha256": "06295c3583bdd44e610638c659eac2dcaa2cb417882f6b188325c30200df9cc2"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -572508,7 +572509,7 @@
             },
             {
               "path": "apps/web/e2e/feedback.spec.ts",
-              "sha256": "437285df1c50e39fa61fab089b1835e518304e3a3e55c749578369b86b8c357e"
+              "sha256": "28be1608c02d9bf54e92ace0cabc9df9cd3e8e53003fa7e5bcdfda4a4322c031"
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
@@ -572696,7 +572697,7 @@
             },
             {
               "path": "apps/web/src/components/SonnerToaster.tsx",
-              "sha256": "78cbfbb7a42915bb09c07693aaf8a141c096d4c12d1dd9b1716da356c7320490"
+              "sha256": "2df3996b4ae3a45fa02360eb45c28f07e405a3fcb38c98d4840a93d9ecdac6b3"
             },
             {
               "path": "apps/web/src/components/StepReviewPage.test.tsx",
@@ -573488,7 +573489,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "1ba02df26dc816a3cc999da3c67e0a488d23f0f7879fda04cbfa1d32f8d5c551"
+              "sha256": "06295c3583bdd44e610638c659eac2dcaa2cb417882f6b188325c30200df9cc2"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -574402,7 +574403,7 @@
             },
             {
               "path": "apps/web/e2e/feedback.spec.ts",
-              "sha256": "437285df1c50e39fa61fab089b1835e518304e3a3e55c749578369b86b8c357e"
+              "sha256": "28be1608c02d9bf54e92ace0cabc9df9cd3e8e53003fa7e5bcdfda4a4322c031"
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
@@ -574590,7 +574591,7 @@
             },
             {
               "path": "apps/web/src/components/SonnerToaster.tsx",
-              "sha256": "78cbfbb7a42915bb09c07693aaf8a141c096d4c12d1dd9b1716da356c7320490"
+              "sha256": "2df3996b4ae3a45fa02360eb45c28f07e405a3fcb38c98d4840a93d9ecdac6b3"
             },
             {
               "path": "apps/web/src/components/StepReviewPage.test.tsx",
@@ -575382,7 +575383,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "1ba02df26dc816a3cc999da3c67e0a488d23f0f7879fda04cbfa1d32f8d5c551"
+              "sha256": "06295c3583bdd44e610638c659eac2dcaa2cb417882f6b188325c30200df9cc2"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -576296,7 +576297,7 @@
             },
             {
               "path": "apps/web/e2e/feedback.spec.ts",
-              "sha256": "437285df1c50e39fa61fab089b1835e518304e3a3e55c749578369b86b8c357e"
+              "sha256": "28be1608c02d9bf54e92ace0cabc9df9cd3e8e53003fa7e5bcdfda4a4322c031"
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
@@ -576484,7 +576485,7 @@
             },
             {
               "path": "apps/web/src/components/SonnerToaster.tsx",
-              "sha256": "78cbfbb7a42915bb09c07693aaf8a141c096d4c12d1dd9b1716da356c7320490"
+              "sha256": "2df3996b4ae3a45fa02360eb45c28f07e405a3fcb38c98d4840a93d9ecdac6b3"
             },
             {
               "path": "apps/web/src/components/StepReviewPage.test.tsx",
@@ -577276,7 +577277,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "1ba02df26dc816a3cc999da3c67e0a488d23f0f7879fda04cbfa1d32f8d5c551"
+              "sha256": "06295c3583bdd44e610638c659eac2dcaa2cb417882f6b188325c30200df9cc2"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -578190,7 +578191,7 @@
             },
             {
               "path": "apps/web/e2e/feedback.spec.ts",
-              "sha256": "437285df1c50e39fa61fab089b1835e518304e3a3e55c749578369b86b8c357e"
+              "sha256": "28be1608c02d9bf54e92ace0cabc9df9cd3e8e53003fa7e5bcdfda4a4322c031"
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
@@ -578378,7 +578379,7 @@
             },
             {
               "path": "apps/web/src/components/SonnerToaster.tsx",
-              "sha256": "78cbfbb7a42915bb09c07693aaf8a141c096d4c12d1dd9b1716da356c7320490"
+              "sha256": "2df3996b4ae3a45fa02360eb45c28f07e405a3fcb38c98d4840a93d9ecdac6b3"
             },
             {
               "path": "apps/web/src/components/StepReviewPage.test.tsx",
@@ -579170,7 +579171,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "1ba02df26dc816a3cc999da3c67e0a488d23f0f7879fda04cbfa1d32f8d5c551"
+              "sha256": "06295c3583bdd44e610638c659eac2dcaa2cb417882f6b188325c30200df9cc2"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -580084,7 +580085,7 @@
             },
             {
               "path": "apps/web/e2e/feedback.spec.ts",
-              "sha256": "437285df1c50e39fa61fab089b1835e518304e3a3e55c749578369b86b8c357e"
+              "sha256": "28be1608c02d9bf54e92ace0cabc9df9cd3e8e53003fa7e5bcdfda4a4322c031"
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
@@ -580272,7 +580273,7 @@
             },
             {
               "path": "apps/web/src/components/SonnerToaster.tsx",
-              "sha256": "78cbfbb7a42915bb09c07693aaf8a141c096d4c12d1dd9b1716da356c7320490"
+              "sha256": "2df3996b4ae3a45fa02360eb45c28f07e405a3fcb38c98d4840a93d9ecdac6b3"
             },
             {
               "path": "apps/web/src/components/StepReviewPage.test.tsx",
@@ -581064,7 +581065,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "1ba02df26dc816a3cc999da3c67e0a488d23f0f7879fda04cbfa1d32f8d5c551"
+              "sha256": "06295c3583bdd44e610638c659eac2dcaa2cb417882f6b188325c30200df9cc2"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -581978,7 +581979,7 @@
             },
             {
               "path": "apps/web/e2e/feedback.spec.ts",
-              "sha256": "437285df1c50e39fa61fab089b1835e518304e3a3e55c749578369b86b8c357e"
+              "sha256": "28be1608c02d9bf54e92ace0cabc9df9cd3e8e53003fa7e5bcdfda4a4322c031"
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
@@ -582166,7 +582167,7 @@
             },
             {
               "path": "apps/web/src/components/SonnerToaster.tsx",
-              "sha256": "78cbfbb7a42915bb09c07693aaf8a141c096d4c12d1dd9b1716da356c7320490"
+              "sha256": "2df3996b4ae3a45fa02360eb45c28f07e405a3fcb38c98d4840a93d9ecdac6b3"
             },
             {
               "path": "apps/web/src/components/StepReviewPage.test.tsx",
@@ -582958,7 +582959,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "1ba02df26dc816a3cc999da3c67e0a488d23f0f7879fda04cbfa1d32f8d5c551"
+              "sha256": "06295c3583bdd44e610638c659eac2dcaa2cb417882f6b188325c30200df9cc2"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -583872,7 +583873,7 @@
             },
             {
               "path": "apps/web/e2e/feedback.spec.ts",
-              "sha256": "437285df1c50e39fa61fab089b1835e518304e3a3e55c749578369b86b8c357e"
+              "sha256": "28be1608c02d9bf54e92ace0cabc9df9cd3e8e53003fa7e5bcdfda4a4322c031"
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
@@ -584060,7 +584061,7 @@
             },
             {
               "path": "apps/web/src/components/SonnerToaster.tsx",
-              "sha256": "78cbfbb7a42915bb09c07693aaf8a141c096d4c12d1dd9b1716da356c7320490"
+              "sha256": "2df3996b4ae3a45fa02360eb45c28f07e405a3fcb38c98d4840a93d9ecdac6b3"
             },
             {
               "path": "apps/web/src/components/StepReviewPage.test.tsx",
@@ -584852,7 +584853,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "1ba02df26dc816a3cc999da3c67e0a488d23f0f7879fda04cbfa1d32f8d5c551"
+              "sha256": "06295c3583bdd44e610638c659eac2dcaa2cb417882f6b188325c30200df9cc2"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -585766,7 +585767,7 @@
             },
             {
               "path": "apps/web/e2e/feedback.spec.ts",
-              "sha256": "437285df1c50e39fa61fab089b1835e518304e3a3e55c749578369b86b8c357e"
+              "sha256": "28be1608c02d9bf54e92ace0cabc9df9cd3e8e53003fa7e5bcdfda4a4322c031"
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
@@ -585954,7 +585955,7 @@
             },
             {
               "path": "apps/web/src/components/SonnerToaster.tsx",
-              "sha256": "78cbfbb7a42915bb09c07693aaf8a141c096d4c12d1dd9b1716da356c7320490"
+              "sha256": "2df3996b4ae3a45fa02360eb45c28f07e405a3fcb38c98d4840a93d9ecdac6b3"
             },
             {
               "path": "apps/web/src/components/StepReviewPage.test.tsx",
@@ -586746,7 +586747,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "1ba02df26dc816a3cc999da3c67e0a488d23f0f7879fda04cbfa1d32f8d5c551"
+              "sha256": "06295c3583bdd44e610638c659eac2dcaa2cb417882f6b188325c30200df9cc2"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -587660,7 +587661,7 @@
             },
             {
               "path": "apps/web/e2e/feedback.spec.ts",
-              "sha256": "437285df1c50e39fa61fab089b1835e518304e3a3e55c749578369b86b8c357e"
+              "sha256": "28be1608c02d9bf54e92ace0cabc9df9cd3e8e53003fa7e5bcdfda4a4322c031"
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
@@ -587848,7 +587849,7 @@
             },
             {
               "path": "apps/web/src/components/SonnerToaster.tsx",
-              "sha256": "78cbfbb7a42915bb09c07693aaf8a141c096d4c12d1dd9b1716da356c7320490"
+              "sha256": "2df3996b4ae3a45fa02360eb45c28f07e405a3fcb38c98d4840a93d9ecdac6b3"
             },
             {
               "path": "apps/web/src/components/StepReviewPage.test.tsx",
@@ -588640,7 +588641,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "1ba02df26dc816a3cc999da3c67e0a488d23f0f7879fda04cbfa1d32f8d5c551"
+              "sha256": "06295c3583bdd44e610638c659eac2dcaa2cb417882f6b188325c30200df9cc2"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -589903,7 +589904,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "1ba02df26dc816a3cc999da3c67e0a488d23f0f7879fda04cbfa1d32f8d5c551"
+              "sha256": "06295c3583bdd44e610638c659eac2dcaa2cb417882f6b188325c30200df9cc2"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -590293,7 +590294,7 @@
             },
             {
               "path": "apps/web/e2e/feedback.spec.ts",
-              "sha256": "437285df1c50e39fa61fab089b1835e518304e3a3e55c749578369b86b8c357e"
+              "sha256": "28be1608c02d9bf54e92ace0cabc9df9cd3e8e53003fa7e5bcdfda4a4322c031"
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
@@ -590481,7 +590482,7 @@
             },
             {
               "path": "apps/web/src/components/SonnerToaster.tsx",
-              "sha256": "78cbfbb7a42915bb09c07693aaf8a141c096d4c12d1dd9b1716da356c7320490"
+              "sha256": "2df3996b4ae3a45fa02360eb45c28f07e405a3fcb38c98d4840a93d9ecdac6b3"
             },
             {
               "path": "apps/web/src/components/StepReviewPage.test.tsx",
@@ -591273,7 +591274,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "1ba02df26dc816a3cc999da3c67e0a488d23f0f7879fda04cbfa1d32f8d5c551"
+              "sha256": "06295c3583bdd44e610638c659eac2dcaa2cb417882f6b188325c30200df9cc2"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -592187,7 +592188,7 @@
             },
             {
               "path": "apps/web/e2e/feedback.spec.ts",
-              "sha256": "437285df1c50e39fa61fab089b1835e518304e3a3e55c749578369b86b8c357e"
+              "sha256": "28be1608c02d9bf54e92ace0cabc9df9cd3e8e53003fa7e5bcdfda4a4322c031"
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
@@ -592375,7 +592376,7 @@
             },
             {
               "path": "apps/web/src/components/SonnerToaster.tsx",
-              "sha256": "78cbfbb7a42915bb09c07693aaf8a141c096d4c12d1dd9b1716da356c7320490"
+              "sha256": "2df3996b4ae3a45fa02360eb45c28f07e405a3fcb38c98d4840a93d9ecdac6b3"
             },
             {
               "path": "apps/web/src/components/StepReviewPage.test.tsx",
@@ -593167,7 +593168,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "1ba02df26dc816a3cc999da3c67e0a488d23f0f7879fda04cbfa1d32f8d5c551"
+              "sha256": "06295c3583bdd44e610638c659eac2dcaa2cb417882f6b188325c30200df9cc2"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -610970,7 +610971,7 @@
             },
             {
               "path": "apps/web/e2e/mobile-navigation.spec.ts",
-              "sha256": "526309b7ae030ba43419edcf2a439dd94cdf1898f88782dde96b22f1e494aa52"
+              "sha256": "1b4f4d234434551c71ab48e915ebd798fbeab5ab8be2d65ad2ba9595f5c883b9"
             },
             {
               "path": "apps/web/e2e/navigation-access.spec.ts",
@@ -611026,7 +611027,7 @@
             },
             {
               "path": "apps/web/src/components/BreadcrumbBar.tsx",
-              "sha256": "295d41846879a0754c3840fbaf94156c79c29d4837e318ad8f424dc02bc94407"
+              "sha256": "0fbcb3fb8dff20757dabf806caa924dcfe36dbc62527101c4df4b3f1342c054f"
             },
             {
               "path": "apps/web/src/components/CrmProfileRecords.tsx",
@@ -611054,7 +611055,7 @@
             },
             {
               "path": "apps/web/src/components/MobileNavigationSheet.tsx",
-              "sha256": "f1a8c0d947a93f2fdf8129271c62b6e0df6a30bb95c6275677989afd3656801e"
+              "sha256": "e627c0272b1c9c08b03845a5793cc3e89bb6a5b0bef99235167d9a735d475c14"
             },
             {
               "path": "apps/web/src/components/NotificationBell.tsx",
@@ -611768,7 +611769,7 @@
             },
             {
               "path": "apps/web/e2e/mobile-navigation.spec.ts",
-              "sha256": "526309b7ae030ba43419edcf2a439dd94cdf1898f88782dde96b22f1e494aa52"
+              "sha256": "1b4f4d234434551c71ab48e915ebd798fbeab5ab8be2d65ad2ba9595f5c883b9"
             },
             {
               "path": "apps/web/e2e/navigation-access.spec.ts",
@@ -611824,7 +611825,7 @@
             },
             {
               "path": "apps/web/src/components/BreadcrumbBar.tsx",
-              "sha256": "295d41846879a0754c3840fbaf94156c79c29d4837e318ad8f424dc02bc94407"
+              "sha256": "0fbcb3fb8dff20757dabf806caa924dcfe36dbc62527101c4df4b3f1342c054f"
             },
             {
               "path": "apps/web/src/components/CrmProfileRecords.tsx",
@@ -611852,7 +611853,7 @@
             },
             {
               "path": "apps/web/src/components/MobileNavigationSheet.tsx",
-              "sha256": "f1a8c0d947a93f2fdf8129271c62b6e0df6a30bb95c6275677989afd3656801e"
+              "sha256": "e627c0272b1c9c08b03845a5793cc3e89bb6a5b0bef99235167d9a735d475c14"
             },
             {
               "path": "apps/web/src/components/NotificationBell.tsx",
@@ -612566,7 +612567,7 @@
             },
             {
               "path": "apps/web/e2e/mobile-navigation.spec.ts",
-              "sha256": "526309b7ae030ba43419edcf2a439dd94cdf1898f88782dde96b22f1e494aa52"
+              "sha256": "1b4f4d234434551c71ab48e915ebd798fbeab5ab8be2d65ad2ba9595f5c883b9"
             },
             {
               "path": "apps/web/e2e/navigation-access.spec.ts",
@@ -612622,7 +612623,7 @@
             },
             {
               "path": "apps/web/src/components/BreadcrumbBar.tsx",
-              "sha256": "295d41846879a0754c3840fbaf94156c79c29d4837e318ad8f424dc02bc94407"
+              "sha256": "0fbcb3fb8dff20757dabf806caa924dcfe36dbc62527101c4df4b3f1342c054f"
             },
             {
               "path": "apps/web/src/components/CrmProfileRecords.tsx",
@@ -612650,7 +612651,7 @@
             },
             {
               "path": "apps/web/src/components/MobileNavigationSheet.tsx",
-              "sha256": "f1a8c0d947a93f2fdf8129271c62b6e0df6a30bb95c6275677989afd3656801e"
+              "sha256": "e627c0272b1c9c08b03845a5793cc3e89bb6a5b0bef99235167d9a735d475c14"
             },
             {
               "path": "apps/web/src/components/NotificationBell.tsx",
@@ -613364,7 +613365,7 @@
             },
             {
               "path": "apps/web/e2e/mobile-navigation.spec.ts",
-              "sha256": "526309b7ae030ba43419edcf2a439dd94cdf1898f88782dde96b22f1e494aa52"
+              "sha256": "1b4f4d234434551c71ab48e915ebd798fbeab5ab8be2d65ad2ba9595f5c883b9"
             },
             {
               "path": "apps/web/e2e/navigation-access.spec.ts",
@@ -613420,7 +613421,7 @@
             },
             {
               "path": "apps/web/src/components/BreadcrumbBar.tsx",
-              "sha256": "295d41846879a0754c3840fbaf94156c79c29d4837e318ad8f424dc02bc94407"
+              "sha256": "0fbcb3fb8dff20757dabf806caa924dcfe36dbc62527101c4df4b3f1342c054f"
             },
             {
               "path": "apps/web/src/components/CrmProfileRecords.tsx",
@@ -613448,7 +613449,7 @@
             },
             {
               "path": "apps/web/src/components/MobileNavigationSheet.tsx",
-              "sha256": "f1a8c0d947a93f2fdf8129271c62b6e0df6a30bb95c6275677989afd3656801e"
+              "sha256": "e627c0272b1c9c08b03845a5793cc3e89bb6a5b0bef99235167d9a735d475c14"
             },
             {
               "path": "apps/web/src/components/NotificationBell.tsx",
@@ -614166,7 +614167,7 @@
             },
             {
               "path": "apps/web/e2e/mobile-navigation.spec.ts",
-              "sha256": "526309b7ae030ba43419edcf2a439dd94cdf1898f88782dde96b22f1e494aa52"
+              "sha256": "1b4f4d234434551c71ab48e915ebd798fbeab5ab8be2d65ad2ba9595f5c883b9"
             },
             {
               "path": "apps/web/e2e/navigation-access.spec.ts",
@@ -614222,7 +614223,7 @@
             },
             {
               "path": "apps/web/src/components/BreadcrumbBar.tsx",
-              "sha256": "295d41846879a0754c3840fbaf94156c79c29d4837e318ad8f424dc02bc94407"
+              "sha256": "0fbcb3fb8dff20757dabf806caa924dcfe36dbc62527101c4df4b3f1342c054f"
             },
             {
               "path": "apps/web/src/components/CrmProfileRecords.tsx",
@@ -614250,7 +614251,7 @@
             },
             {
               "path": "apps/web/src/components/MobileNavigationSheet.tsx",
-              "sha256": "f1a8c0d947a93f2fdf8129271c62b6e0df6a30bb95c6275677989afd3656801e"
+              "sha256": "e627c0272b1c9c08b03845a5793cc3e89bb6a5b0bef99235167d9a735d475c14"
             },
             {
               "path": "apps/web/src/components/NotificationBell.tsx",
@@ -614964,7 +614965,7 @@
             },
             {
               "path": "apps/web/e2e/mobile-navigation.spec.ts",
-              "sha256": "526309b7ae030ba43419edcf2a439dd94cdf1898f88782dde96b22f1e494aa52"
+              "sha256": "1b4f4d234434551c71ab48e915ebd798fbeab5ab8be2d65ad2ba9595f5c883b9"
             },
             {
               "path": "apps/web/e2e/navigation-access.spec.ts",
@@ -615020,7 +615021,7 @@
             },
             {
               "path": "apps/web/src/components/BreadcrumbBar.tsx",
-              "sha256": "295d41846879a0754c3840fbaf94156c79c29d4837e318ad8f424dc02bc94407"
+              "sha256": "0fbcb3fb8dff20757dabf806caa924dcfe36dbc62527101c4df4b3f1342c054f"
             },
             {
               "path": "apps/web/src/components/CrmProfileRecords.tsx",
@@ -615048,7 +615049,7 @@
             },
             {
               "path": "apps/web/src/components/MobileNavigationSheet.tsx",
-              "sha256": "f1a8c0d947a93f2fdf8129271c62b6e0df6a30bb95c6275677989afd3656801e"
+              "sha256": "e627c0272b1c9c08b03845a5793cc3e89bb6a5b0bef99235167d9a735d475c14"
             },
             {
               "path": "apps/web/src/components/NotificationBell.tsx",
@@ -615762,7 +615763,7 @@
             },
             {
               "path": "apps/web/e2e/mobile-navigation.spec.ts",
-              "sha256": "526309b7ae030ba43419edcf2a439dd94cdf1898f88782dde96b22f1e494aa52"
+              "sha256": "1b4f4d234434551c71ab48e915ebd798fbeab5ab8be2d65ad2ba9595f5c883b9"
             },
             {
               "path": "apps/web/e2e/navigation-access.spec.ts",
@@ -615818,7 +615819,7 @@
             },
             {
               "path": "apps/web/src/components/BreadcrumbBar.tsx",
-              "sha256": "295d41846879a0754c3840fbaf94156c79c29d4837e318ad8f424dc02bc94407"
+              "sha256": "0fbcb3fb8dff20757dabf806caa924dcfe36dbc62527101c4df4b3f1342c054f"
             },
             {
               "path": "apps/web/src/components/CrmProfileRecords.tsx",
@@ -615846,7 +615847,7 @@
             },
             {
               "path": "apps/web/src/components/MobileNavigationSheet.tsx",
-              "sha256": "f1a8c0d947a93f2fdf8129271c62b6e0df6a30bb95c6275677989afd3656801e"
+              "sha256": "e627c0272b1c9c08b03845a5793cc3e89bb6a5b0bef99235167d9a735d475c14"
             },
             {
               "path": "apps/web/src/components/NotificationBell.tsx",
@@ -616561,7 +616562,7 @@
             },
             {
               "path": "apps/web/e2e/mobile-navigation.spec.ts",
-              "sha256": "526309b7ae030ba43419edcf2a439dd94cdf1898f88782dde96b22f1e494aa52"
+              "sha256": "1b4f4d234434551c71ab48e915ebd798fbeab5ab8be2d65ad2ba9595f5c883b9"
             },
             {
               "path": "apps/web/e2e/navigation-access.spec.ts",
@@ -616617,7 +616618,7 @@
             },
             {
               "path": "apps/web/src/components/BreadcrumbBar.tsx",
-              "sha256": "295d41846879a0754c3840fbaf94156c79c29d4837e318ad8f424dc02bc94407"
+              "sha256": "0fbcb3fb8dff20757dabf806caa924dcfe36dbc62527101c4df4b3f1342c054f"
             },
             {
               "path": "apps/web/src/components/CrmProfileRecords.tsx",
@@ -616645,7 +616646,7 @@
             },
             {
               "path": "apps/web/src/components/MobileNavigationSheet.tsx",
-              "sha256": "f1a8c0d947a93f2fdf8129271c62b6e0df6a30bb95c6275677989afd3656801e"
+              "sha256": "e627c0272b1c9c08b03845a5793cc3e89bb6a5b0bef99235167d9a735d475c14"
             },
             {
               "path": "apps/web/src/components/NotificationBell.tsx",
@@ -617360,7 +617361,7 @@
             },
             {
               "path": "apps/web/e2e/mobile-navigation.spec.ts",
-              "sha256": "526309b7ae030ba43419edcf2a439dd94cdf1898f88782dde96b22f1e494aa52"
+              "sha256": "1b4f4d234434551c71ab48e915ebd798fbeab5ab8be2d65ad2ba9595f5c883b9"
             },
             {
               "path": "apps/web/e2e/navigation-access.spec.ts",
@@ -617416,7 +617417,7 @@
             },
             {
               "path": "apps/web/src/components/BreadcrumbBar.tsx",
-              "sha256": "295d41846879a0754c3840fbaf94156c79c29d4837e318ad8f424dc02bc94407"
+              "sha256": "0fbcb3fb8dff20757dabf806caa924dcfe36dbc62527101c4df4b3f1342c054f"
             },
             {
               "path": "apps/web/src/components/CrmProfileRecords.tsx",
@@ -617444,7 +617445,7 @@
             },
             {
               "path": "apps/web/src/components/MobileNavigationSheet.tsx",
-              "sha256": "f1a8c0d947a93f2fdf8129271c62b6e0df6a30bb95c6275677989afd3656801e"
+              "sha256": "e627c0272b1c9c08b03845a5793cc3e89bb6a5b0bef99235167d9a735d475c14"
             },
             {
               "path": "apps/web/src/components/NotificationBell.tsx",
@@ -618159,7 +618160,7 @@
             },
             {
               "path": "apps/web/e2e/mobile-navigation.spec.ts",
-              "sha256": "526309b7ae030ba43419edcf2a439dd94cdf1898f88782dde96b22f1e494aa52"
+              "sha256": "1b4f4d234434551c71ab48e915ebd798fbeab5ab8be2d65ad2ba9595f5c883b9"
             },
             {
               "path": "apps/web/e2e/navigation-access.spec.ts",
@@ -618215,7 +618216,7 @@
             },
             {
               "path": "apps/web/src/components/BreadcrumbBar.tsx",
-              "sha256": "295d41846879a0754c3840fbaf94156c79c29d4837e318ad8f424dc02bc94407"
+              "sha256": "0fbcb3fb8dff20757dabf806caa924dcfe36dbc62527101c4df4b3f1342c054f"
             },
             {
               "path": "apps/web/src/components/CrmProfileRecords.tsx",
@@ -618243,7 +618244,7 @@
             },
             {
               "path": "apps/web/src/components/MobileNavigationSheet.tsx",
-              "sha256": "f1a8c0d947a93f2fdf8129271c62b6e0df6a30bb95c6275677989afd3656801e"
+              "sha256": "e627c0272b1c9c08b03845a5793cc3e89bb6a5b0bef99235167d9a735d475c14"
             },
             {
               "path": "apps/web/src/components/NotificationBell.tsx",
@@ -618958,7 +618959,7 @@
             },
             {
               "path": "apps/web/e2e/mobile-navigation.spec.ts",
-              "sha256": "526309b7ae030ba43419edcf2a439dd94cdf1898f88782dde96b22f1e494aa52"
+              "sha256": "1b4f4d234434551c71ab48e915ebd798fbeab5ab8be2d65ad2ba9595f5c883b9"
             },
             {
               "path": "apps/web/e2e/navigation-access.spec.ts",
@@ -619014,7 +619015,7 @@
             },
             {
               "path": "apps/web/src/components/BreadcrumbBar.tsx",
-              "sha256": "295d41846879a0754c3840fbaf94156c79c29d4837e318ad8f424dc02bc94407"
+              "sha256": "0fbcb3fb8dff20757dabf806caa924dcfe36dbc62527101c4df4b3f1342c054f"
             },
             {
               "path": "apps/web/src/components/CrmProfileRecords.tsx",
@@ -619042,7 +619043,7 @@
             },
             {
               "path": "apps/web/src/components/MobileNavigationSheet.tsx",
-              "sha256": "f1a8c0d947a93f2fdf8129271c62b6e0df6a30bb95c6275677989afd3656801e"
+              "sha256": "e627c0272b1c9c08b03845a5793cc3e89bb6a5b0bef99235167d9a735d475c14"
             },
             {
               "path": "apps/web/src/components/NotificationBell.tsx",
@@ -619757,7 +619758,7 @@
             },
             {
               "path": "apps/web/e2e/mobile-navigation.spec.ts",
-              "sha256": "526309b7ae030ba43419edcf2a439dd94cdf1898f88782dde96b22f1e494aa52"
+              "sha256": "1b4f4d234434551c71ab48e915ebd798fbeab5ab8be2d65ad2ba9595f5c883b9"
             },
             {
               "path": "apps/web/e2e/navigation-access.spec.ts",
@@ -619813,7 +619814,7 @@
             },
             {
               "path": "apps/web/src/components/BreadcrumbBar.tsx",
-              "sha256": "295d41846879a0754c3840fbaf94156c79c29d4837e318ad8f424dc02bc94407"
+              "sha256": "0fbcb3fb8dff20757dabf806caa924dcfe36dbc62527101c4df4b3f1342c054f"
             },
             {
               "path": "apps/web/src/components/CrmProfileRecords.tsx",
@@ -619841,7 +619842,7 @@
             },
             {
               "path": "apps/web/src/components/MobileNavigationSheet.tsx",
-              "sha256": "f1a8c0d947a93f2fdf8129271c62b6e0df6a30bb95c6275677989afd3656801e"
+              "sha256": "e627c0272b1c9c08b03845a5793cc3e89bb6a5b0bef99235167d9a735d475c14"
             },
             {
               "path": "apps/web/src/components/NotificationBell.tsx",
@@ -620556,7 +620557,7 @@
             },
             {
               "path": "apps/web/e2e/mobile-navigation.spec.ts",
-              "sha256": "526309b7ae030ba43419edcf2a439dd94cdf1898f88782dde96b22f1e494aa52"
+              "sha256": "1b4f4d234434551c71ab48e915ebd798fbeab5ab8be2d65ad2ba9595f5c883b9"
             },
             {
               "path": "apps/web/e2e/navigation-access.spec.ts",
@@ -620612,7 +620613,7 @@
             },
             {
               "path": "apps/web/src/components/BreadcrumbBar.tsx",
-              "sha256": "295d41846879a0754c3840fbaf94156c79c29d4837e318ad8f424dc02bc94407"
+              "sha256": "0fbcb3fb8dff20757dabf806caa924dcfe36dbc62527101c4df4b3f1342c054f"
             },
             {
               "path": "apps/web/src/components/CrmProfileRecords.tsx",
@@ -620640,7 +620641,7 @@
             },
             {
               "path": "apps/web/src/components/MobileNavigationSheet.tsx",
-              "sha256": "f1a8c0d947a93f2fdf8129271c62b6e0df6a30bb95c6275677989afd3656801e"
+              "sha256": "e627c0272b1c9c08b03845a5793cc3e89bb6a5b0bef99235167d9a735d475c14"
             },
             {
               "path": "apps/web/src/components/NotificationBell.tsx",
@@ -621355,7 +621356,7 @@
             },
             {
               "path": "apps/web/e2e/mobile-navigation.spec.ts",
-              "sha256": "526309b7ae030ba43419edcf2a439dd94cdf1898f88782dde96b22f1e494aa52"
+              "sha256": "1b4f4d234434551c71ab48e915ebd798fbeab5ab8be2d65ad2ba9595f5c883b9"
             },
             {
               "path": "apps/web/e2e/navigation-access.spec.ts",
@@ -621411,7 +621412,7 @@
             },
             {
               "path": "apps/web/src/components/BreadcrumbBar.tsx",
-              "sha256": "295d41846879a0754c3840fbaf94156c79c29d4837e318ad8f424dc02bc94407"
+              "sha256": "0fbcb3fb8dff20757dabf806caa924dcfe36dbc62527101c4df4b3f1342c054f"
             },
             {
               "path": "apps/web/src/components/CrmProfileRecords.tsx",
@@ -621439,7 +621440,7 @@
             },
             {
               "path": "apps/web/src/components/MobileNavigationSheet.tsx",
-              "sha256": "f1a8c0d947a93f2fdf8129271c62b6e0df6a30bb95c6275677989afd3656801e"
+              "sha256": "e627c0272b1c9c08b03845a5793cc3e89bb6a5b0bef99235167d9a735d475c14"
             },
             {
               "path": "apps/web/src/components/NotificationBell.tsx",
@@ -622154,7 +622155,7 @@
             },
             {
               "path": "apps/web/e2e/mobile-navigation.spec.ts",
-              "sha256": "526309b7ae030ba43419edcf2a439dd94cdf1898f88782dde96b22f1e494aa52"
+              "sha256": "1b4f4d234434551c71ab48e915ebd798fbeab5ab8be2d65ad2ba9595f5c883b9"
             },
             {
               "path": "apps/web/e2e/navigation-access.spec.ts",
@@ -622210,7 +622211,7 @@
             },
             {
               "path": "apps/web/src/components/BreadcrumbBar.tsx",
-              "sha256": "295d41846879a0754c3840fbaf94156c79c29d4837e318ad8f424dc02bc94407"
+              "sha256": "0fbcb3fb8dff20757dabf806caa924dcfe36dbc62527101c4df4b3f1342c054f"
             },
             {
               "path": "apps/web/src/components/CrmProfileRecords.tsx",
@@ -622238,7 +622239,7 @@
             },
             {
               "path": "apps/web/src/components/MobileNavigationSheet.tsx",
-              "sha256": "f1a8c0d947a93f2fdf8129271c62b6e0df6a30bb95c6275677989afd3656801e"
+              "sha256": "e627c0272b1c9c08b03845a5793cc3e89bb6a5b0bef99235167d9a735d475c14"
             },
             {
               "path": "apps/web/src/components/NotificationBell.tsx",
@@ -665770,7 +665771,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "431c02a2dca694d5ef0a60a047857aa4da1004e3c4b52e4fe4a8c27a24e8f6d7"
+              "sha256": "af1e521c7d2d1ae2f24f467f310c553a54656f1d34e5a3e27e5c4e8f99bf8922"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -665970,7 +665971,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "b2b327214da24e5275e8b17c43d18f6d18786a5fadce7fdc1f716b61db38e268"
+              "sha256": "12b606cc853ef954bdd3ea9fe3b63bd9fc3ce1845c6159a919d45c42117c2485"
             },
             {
               "path": "apps/web/src/routes/onboarding/index.tsx",
@@ -666438,7 +666439,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "431c02a2dca694d5ef0a60a047857aa4da1004e3c4b52e4fe4a8c27a24e8f6d7"
+              "sha256": "af1e521c7d2d1ae2f24f467f310c553a54656f1d34e5a3e27e5c4e8f99bf8922"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -666638,7 +666639,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "b2b327214da24e5275e8b17c43d18f6d18786a5fadce7fdc1f716b61db38e268"
+              "sha256": "12b606cc853ef954bdd3ea9fe3b63bd9fc3ce1845c6159a919d45c42117c2485"
             },
             {
               "path": "apps/web/src/routes/onboarding/index.tsx",
@@ -667105,7 +667106,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "431c02a2dca694d5ef0a60a047857aa4da1004e3c4b52e4fe4a8c27a24e8f6d7"
+              "sha256": "af1e521c7d2d1ae2f24f467f310c553a54656f1d34e5a3e27e5c4e8f99bf8922"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -667305,7 +667306,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "b2b327214da24e5275e8b17c43d18f6d18786a5fadce7fdc1f716b61db38e268"
+              "sha256": "12b606cc853ef954bdd3ea9fe3b63bd9fc3ce1845c6159a919d45c42117c2485"
             },
             {
               "path": "apps/web/src/routes/onboarding/index.tsx",
@@ -667774,7 +667775,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "431c02a2dca694d5ef0a60a047857aa4da1004e3c4b52e4fe4a8c27a24e8f6d7"
+              "sha256": "af1e521c7d2d1ae2f24f467f310c553a54656f1d34e5a3e27e5c4e8f99bf8922"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -667974,7 +667975,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "b2b327214da24e5275e8b17c43d18f6d18786a5fadce7fdc1f716b61db38e268"
+              "sha256": "12b606cc853ef954bdd3ea9fe3b63bd9fc3ce1845c6159a919d45c42117c2485"
             },
             {
               "path": "apps/web/src/routes/onboarding/index.tsx",
@@ -668443,7 +668444,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "431c02a2dca694d5ef0a60a047857aa4da1004e3c4b52e4fe4a8c27a24e8f6d7"
+              "sha256": "af1e521c7d2d1ae2f24f467f310c553a54656f1d34e5a3e27e5c4e8f99bf8922"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -668643,7 +668644,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "b2b327214da24e5275e8b17c43d18f6d18786a5fadce7fdc1f716b61db38e268"
+              "sha256": "12b606cc853ef954bdd3ea9fe3b63bd9fc3ce1845c6159a919d45c42117c2485"
             },
             {
               "path": "apps/web/src/routes/onboarding/index.tsx",
@@ -669109,7 +669110,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "431c02a2dca694d5ef0a60a047857aa4da1004e3c4b52e4fe4a8c27a24e8f6d7"
+              "sha256": "af1e521c7d2d1ae2f24f467f310c553a54656f1d34e5a3e27e5c4e8f99bf8922"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -669309,7 +669310,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "b2b327214da24e5275e8b17c43d18f6d18786a5fadce7fdc1f716b61db38e268"
+              "sha256": "12b606cc853ef954bdd3ea9fe3b63bd9fc3ce1845c6159a919d45c42117c2485"
             },
             {
               "path": "apps/web/src/routes/onboarding/index.tsx",
@@ -669775,7 +669776,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "431c02a2dca694d5ef0a60a047857aa4da1004e3c4b52e4fe4a8c27a24e8f6d7"
+              "sha256": "af1e521c7d2d1ae2f24f467f310c553a54656f1d34e5a3e27e5c4e8f99bf8922"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -669975,7 +669976,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "b2b327214da24e5275e8b17c43d18f6d18786a5fadce7fdc1f716b61db38e268"
+              "sha256": "12b606cc853ef954bdd3ea9fe3b63bd9fc3ce1845c6159a919d45c42117c2485"
             },
             {
               "path": "apps/web/src/routes/onboarding/index.tsx",
@@ -670442,7 +670443,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "431c02a2dca694d5ef0a60a047857aa4da1004e3c4b52e4fe4a8c27a24e8f6d7"
+              "sha256": "af1e521c7d2d1ae2f24f467f310c553a54656f1d34e5a3e27e5c4e8f99bf8922"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -670642,7 +670643,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "b2b327214da24e5275e8b17c43d18f6d18786a5fadce7fdc1f716b61db38e268"
+              "sha256": "12b606cc853ef954bdd3ea9fe3b63bd9fc3ce1845c6159a919d45c42117c2485"
             },
             {
               "path": "apps/web/src/routes/onboarding/index.tsx",
@@ -671108,7 +671109,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "431c02a2dca694d5ef0a60a047857aa4da1004e3c4b52e4fe4a8c27a24e8f6d7"
+              "sha256": "af1e521c7d2d1ae2f24f467f310c553a54656f1d34e5a3e27e5c4e8f99bf8922"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -671308,7 +671309,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "b2b327214da24e5275e8b17c43d18f6d18786a5fadce7fdc1f716b61db38e268"
+              "sha256": "12b606cc853ef954bdd3ea9fe3b63bd9fc3ce1845c6159a919d45c42117c2485"
             },
             {
               "path": "apps/web/src/routes/onboarding/index.tsx",
@@ -671775,7 +671776,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "431c02a2dca694d5ef0a60a047857aa4da1004e3c4b52e4fe4a8c27a24e8f6d7"
+              "sha256": "af1e521c7d2d1ae2f24f467f310c553a54656f1d34e5a3e27e5c4e8f99bf8922"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -671975,7 +671976,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "b2b327214da24e5275e8b17c43d18f6d18786a5fadce7fdc1f716b61db38e268"
+              "sha256": "12b606cc853ef954bdd3ea9fe3b63bd9fc3ce1845c6159a919d45c42117c2485"
             },
             {
               "path": "apps/web/src/routes/onboarding/index.tsx",
@@ -692888,7 +692889,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "431c02a2dca694d5ef0a60a047857aa4da1004e3c4b52e4fe4a8c27a24e8f6d7"
+              "sha256": "af1e521c7d2d1ae2f24f467f310c553a54656f1d34e5a3e27e5c4e8f99bf8922"
             },
             {
               "path": "apps/web/e2e/team-catalogue-recovery.spec.ts",
@@ -693084,7 +693085,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "b2b327214da24e5275e8b17c43d18f6d18786a5fadce7fdc1f716b61db38e268"
+              "sha256": "12b606cc853ef954bdd3ea9fe3b63bd9fc3ce1845c6159a919d45c42117c2485"
             },
             {
               "path": "apps/web/src/routes/onboarding/index.tsx",
@@ -693518,7 +693519,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "431c02a2dca694d5ef0a60a047857aa4da1004e3c4b52e4fe4a8c27a24e8f6d7"
+              "sha256": "af1e521c7d2d1ae2f24f467f310c553a54656f1d34e5a3e27e5c4e8f99bf8922"
             },
             {
               "path": "apps/web/e2e/team-catalogue-recovery.spec.ts",
@@ -693714,7 +693715,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "b2b327214da24e5275e8b17c43d18f6d18786a5fadce7fdc1f716b61db38e268"
+              "sha256": "12b606cc853ef954bdd3ea9fe3b63bd9fc3ce1845c6159a919d45c42117c2485"
             },
             {
               "path": "apps/web/src/routes/onboarding/index.tsx",
@@ -694148,7 +694149,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "431c02a2dca694d5ef0a60a047857aa4da1004e3c4b52e4fe4a8c27a24e8f6d7"
+              "sha256": "af1e521c7d2d1ae2f24f467f310c553a54656f1d34e5a3e27e5c4e8f99bf8922"
             },
             {
               "path": "apps/web/e2e/team-catalogue-recovery.spec.ts",
@@ -694344,7 +694345,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "b2b327214da24e5275e8b17c43d18f6d18786a5fadce7fdc1f716b61db38e268"
+              "sha256": "12b606cc853ef954bdd3ea9fe3b63bd9fc3ce1845c6159a919d45c42117c2485"
             },
             {
               "path": "apps/web/src/routes/onboarding/index.tsx",
@@ -694779,7 +694780,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "431c02a2dca694d5ef0a60a047857aa4da1004e3c4b52e4fe4a8c27a24e8f6d7"
+              "sha256": "af1e521c7d2d1ae2f24f467f310c553a54656f1d34e5a3e27e5c4e8f99bf8922"
             },
             {
               "path": "apps/web/e2e/team-catalogue-recovery.spec.ts",
@@ -694975,7 +694976,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "b2b327214da24e5275e8b17c43d18f6d18786a5fadce7fdc1f716b61db38e268"
+              "sha256": "12b606cc853ef954bdd3ea9fe3b63bd9fc3ce1845c6159a919d45c42117c2485"
             },
             {
               "path": "apps/web/src/routes/onboarding/index.tsx",
@@ -695409,7 +695410,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "431c02a2dca694d5ef0a60a047857aa4da1004e3c4b52e4fe4a8c27a24e8f6d7"
+              "sha256": "af1e521c7d2d1ae2f24f467f310c553a54656f1d34e5a3e27e5c4e8f99bf8922"
             },
             {
               "path": "apps/web/e2e/team-catalogue-recovery.spec.ts",
@@ -695605,7 +695606,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "b2b327214da24e5275e8b17c43d18f6d18786a5fadce7fdc1f716b61db38e268"
+              "sha256": "12b606cc853ef954bdd3ea9fe3b63bd9fc3ce1845c6159a919d45c42117c2485"
             },
             {
               "path": "apps/web/src/routes/onboarding/index.tsx",
@@ -696039,7 +696040,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "431c02a2dca694d5ef0a60a047857aa4da1004e3c4b52e4fe4a8c27a24e8f6d7"
+              "sha256": "af1e521c7d2d1ae2f24f467f310c553a54656f1d34e5a3e27e5c4e8f99bf8922"
             },
             {
               "path": "apps/web/e2e/team-catalogue-recovery.spec.ts",
@@ -696235,7 +696236,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "b2b327214da24e5275e8b17c43d18f6d18786a5fadce7fdc1f716b61db38e268"
+              "sha256": "12b606cc853ef954bdd3ea9fe3b63bd9fc3ce1845c6159a919d45c42117c2485"
             },
             {
               "path": "apps/web/src/routes/onboarding/index.tsx",
@@ -696669,7 +696670,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "431c02a2dca694d5ef0a60a047857aa4da1004e3c4b52e4fe4a8c27a24e8f6d7"
+              "sha256": "af1e521c7d2d1ae2f24f467f310c553a54656f1d34e5a3e27e5c4e8f99bf8922"
             },
             {
               "path": "apps/web/e2e/team-catalogue-recovery.spec.ts",
@@ -696865,7 +696866,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "b2b327214da24e5275e8b17c43d18f6d18786a5fadce7fdc1f716b61db38e268"
+              "sha256": "12b606cc853ef954bdd3ea9fe3b63bd9fc3ce1845c6159a919d45c42117c2485"
             },
             {
               "path": "apps/web/src/routes/onboarding/index.tsx",
@@ -697300,7 +697301,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "431c02a2dca694d5ef0a60a047857aa4da1004e3c4b52e4fe4a8c27a24e8f6d7"
+              "sha256": "af1e521c7d2d1ae2f24f467f310c553a54656f1d34e5a3e27e5c4e8f99bf8922"
             },
             {
               "path": "apps/web/e2e/team-catalogue-recovery.spec.ts",
@@ -697496,7 +697497,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "b2b327214da24e5275e8b17c43d18f6d18786a5fadce7fdc1f716b61db38e268"
+              "sha256": "12b606cc853ef954bdd3ea9fe3b63bd9fc3ce1845c6159a919d45c42117c2485"
             },
             {
               "path": "apps/web/src/routes/onboarding/index.tsx",
@@ -697930,7 +697931,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "431c02a2dca694d5ef0a60a047857aa4da1004e3c4b52e4fe4a8c27a24e8f6d7"
+              "sha256": "af1e521c7d2d1ae2f24f467f310c553a54656f1d34e5a3e27e5c4e8f99bf8922"
             },
             {
               "path": "apps/web/e2e/team-catalogue-recovery.spec.ts",
@@ -698126,7 +698127,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "b2b327214da24e5275e8b17c43d18f6d18786a5fadce7fdc1f716b61db38e268"
+              "sha256": "12b606cc853ef954bdd3ea9fe3b63bd9fc3ce1845c6159a919d45c42117c2485"
             },
             {
               "path": "apps/web/src/routes/onboarding/index.tsx",
@@ -698560,7 +698561,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "431c02a2dca694d5ef0a60a047857aa4da1004e3c4b52e4fe4a8c27a24e8f6d7"
+              "sha256": "af1e521c7d2d1ae2f24f467f310c553a54656f1d34e5a3e27e5c4e8f99bf8922"
             },
             {
               "path": "apps/web/e2e/team-catalogue-recovery.spec.ts",
@@ -698756,7 +698757,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "b2b327214da24e5275e8b17c43d18f6d18786a5fadce7fdc1f716b61db38e268"
+              "sha256": "12b606cc853ef954bdd3ea9fe3b63bd9fc3ce1845c6159a919d45c42117c2485"
             },
             {
               "path": "apps/web/src/routes/onboarding/index.tsx",
@@ -723622,7 +723623,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Existing forms, wallet, staff knowledge search, notifications, export and guide recovery retain current evidence. The populated contrast census has all locale and theme cells, with direct checks for settings navigation and public marks. Contract-limit feedback is verified. Unresolved contrast observations and broader conditional UI adoption remain open."
+        "Existing forms, wallet, staff knowledge search, notifications, export and guide recovery retain evidence. The populated contrast census, onboarding overlay checks, notice placement, the More menu and public headings have direct evidence. Remaining contrast observations and broader conditional UI adoption stay open."
       ],
       "owner": null,
       "depends_on": [],
@@ -723719,7 +723720,8 @@
           "release-0.5-assistant-stream-deadlines",
           "release-0.5-schema-form-census",
           "release-0.5-current-contrast",
-          "release-0.5-contrast-mode-closure"
+          "release-0.5-contrast-mode-closure",
+          "release-0.5-contrast-occlusion"
         ]
       }
     },
@@ -723803,7 +723805,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "431c02a2dca694d5ef0a60a047857aa4da1004e3c4b52e4fe4a8c27a24e8f6d7"
+              "sha256": "af1e521c7d2d1ae2f24f467f310c553a54656f1d34e5a3e27e5c4e8f99bf8922"
             },
             {
               "path": "apps/web/e2e/solar-construction-progress.spec.ts",
@@ -723875,7 +723877,7 @@
             },
             {
               "path": "apps/web/src/components/BreadcrumbBar.tsx",
-              "sha256": "295d41846879a0754c3840fbaf94156c79c29d4837e318ad8f424dc02bc94407"
+              "sha256": "0fbcb3fb8dff20757dabf806caa924dcfe36dbc62527101c4df4b3f1342c054f"
             },
             {
               "path": "apps/web/src/components/CatalogueEditorFeedback.tsx",
@@ -724255,7 +724257,7 @@
             },
             {
               "path": "apps/web/src/components/SonnerToaster.tsx",
-              "sha256": "78cbfbb7a42915bb09c07693aaf8a141c096d4c12d1dd9b1716da356c7320490"
+              "sha256": "2df3996b4ae3a45fa02360eb45c28f07e405a3fcb38c98d4840a93d9ecdac6b3"
             },
             {
               "path": "apps/web/src/components/StaffEffectivePermissions.tsx",
@@ -724967,7 +724969,7 @@
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
-              "sha256": "b2b327214da24e5275e8b17c43d18f6d18786a5fadce7fdc1f716b61db38e268"
+              "sha256": "12b606cc853ef954bdd3ea9fe3b63bd9fc3ce1845c6159a919d45c42117c2485"
             },
             {
               "path": "apps/web/src/routes/onboarding/index.tsx",
@@ -725312,6 +725314,10 @@
             {
               "path": "apps/web/src/lib/knowledge-answer-stream.ts",
               "sha256": "35ceaf982b334e1828f563ac3f18b0f668f6067eeebdd8f1f4f34e6f7d0033fa"
+            },
+            {
+              "path": "apps/web/src/components/MobileNavigationSheet.tsx",
+              "sha256": "e627c0272b1c9c08b03845a5793cc3e89bb6a5b0bef99235167d9a735d475c14"
             }
           ],
           "checks": [
@@ -725352,7 +725358,8 @@
             "Profile export deadline recovery passed current production, coverage and bundle checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-profile-export-deadlines/proof.json",
             "Customer guide answer deadlines passed current production, coverage and bundle checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-assistant-stream-deadlines/proof.json",
             "Saved-address, maintenance and reconciliation form semantics passed current production, coverage and bundle checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-schema-form-census/proof.json",
-            "Renewed production contrast and verified settings feedback checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-contrast-mode-closure/proof.json"
+            "Renewed production contrast and verified settings feedback checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-contrast-mode-closure/proof.json",
+            "Renewed onboarding, navigation and feedback browser and performance evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-contrast-occlusion/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -793269,6 +793276,70 @@
       "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-contrast-mode-closure/renewed-bindings.json",
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-contrast-mode-closure/reviewed.patch",
       "release_disposition": "Closed the missing populated contrast theme cells and verified repairs to settings navigation, public marks and contract-limit feedback. Other v0.5.0 acceptance criteria remain open."
+    },
+    "release-0.5-contrast-occlusion": {
+      "batch": "release-0.5-contrast-occlusion",
+      "base_commit": "2443529d476bbda7836fe67e628b0f0b763d5f5a",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.05.01.08",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.05.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/feedback.spec.ts",
+          "sha256": "28be1608c02d9bf54e92ace0cabc9df9cd3e8e53003fa7e5bcdfda4a4322c031"
+        },
+        {
+          "path": "apps/web/e2e/mobile-navigation.spec.ts",
+          "sha256": "1b4f4d234434551c71ab48e915ebd798fbeab5ab8be2d65ad2ba9595f5c883b9"
+        },
+        {
+          "path": "apps/web/e2e/onboarding-wizard.spec.ts",
+          "sha256": "af1e521c7d2d1ae2f24f467f310c553a54656f1d34e5a3e27e5c4e8f99bf8922"
+        },
+        {
+          "path": "apps/web/src/components/BreadcrumbBar.tsx",
+          "sha256": "0fbcb3fb8dff20757dabf806caa924dcfe36dbc62527101c4df4b3f1342c054f"
+        },
+        {
+          "path": "apps/web/src/components/MobileNavigationSheet.tsx",
+          "sha256": "e627c0272b1c9c08b03845a5793cc3e89bb6a5b0bef99235167d9a735d475c14"
+        },
+        {
+          "path": "apps/web/src/components/SonnerToaster.tsx",
+          "sha256": "2df3996b4ae3a45fa02360eb45c28f07e405a3fcb38c98d4840a93d9ecdac6b3"
+        },
+        {
+          "path": "apps/web/src/routes/onboarding/complete.tsx",
+          "sha256": "12b606cc853ef954bdd3ea9fe3b63bd9fc3ce1845c6159a919d45c42117c2485"
+        },
+        {
+          "path": "docs/design/accessibility.md",
+          "sha256": "8693069c0f9ba9e8b8eed6f0449d0f3be0cff578f06ae24d2baf53c2632cf843"
+        },
+        {
+          "path": "docs/design/notification-recovery.md",
+          "sha256": "06295c3583bdd44e610638c659eac2dcaa2cb417882f6b188325c30200df9cc2"
+        }
+      ],
+      "checks": [
+        "The onboarding completion panel stays opaque above the confetti. The completion notice sits below the heading. Production Chromium and Mobile Safari checked paint order, reduced motion and the notice gap in both languages.",
+        "The More menu keeps the foreground and background in sync when the device theme changes. Across 960 measured scrolled text states, the minimum was 5.3129:1.",
+        "Across 64 pixel-backed measurements of the large public Terms and Support headings, the minimum was 4.1317:1. The cases covered both browsers, languages, themes, contrast modes and phone and desktop widths.",
+        "The original service-targets overlap was replayed in four Chromium cases. The breadcrumb and notice had at least 15.5 CSS pixels of separation. Sixteen text measurements passed with a minimum of 5.9729:1.",
+        "48 production browser cases, four service-targets cases, 20 instrumented Chromium cases, 26 related unit cases, eight changed-coverage groups, 98 bundle budgets, six cold-auth measurements, scoped formatting, lint and web typecheck passed. One instrumented case required a targeted retry after an ENOSPC screenshot error. Its failed-run coverage record was excluded."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-contrast-occlusion",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-contrast-occlusion/proof.json",
+      "source_scope_proof_sha256": "5b4908f3b469e23fc82f6d331783742e4d9d4d54e1d8f79eefd6506a39ec7301",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-contrast-occlusion/renewed-bindings.json",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-contrast-occlusion/reviewed.patch",
+      "release_disposition": "Verified the onboarding and service-targets overlap fixes and measured the More menu and public headings. Other v0.5.0 acceptance criteria remain open."
     }
   },
   "historical_improvements": [

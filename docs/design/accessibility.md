@@ -47,6 +47,9 @@ primary fill and foreground.
 
 Keep readable content opaque during page and list entrance animations. Even
 a brief fade of the whole row can put its text below the contrast floor.
+Onboarding confetti stays behind the opaque completion panel and respects
+reduced motion. The More menu animates movement and opacity. Its background
+and text colors switch together when the theme changes.
 
 Measure touch targets on populated pages with a coarse pointer. A native
 checkbox or radio can use its associated label as the target; test the label

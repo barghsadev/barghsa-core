@@ -24,7 +24,7 @@ export default function MobileNavigationSheet({
         side={locale === 'fa' ? 'right' : 'left'}
         dir={locale === 'fa' ? 'rtl' : 'ltr'}
         closeLabel={shellText('close', locale)}
-        className="w-full sm:max-w-md"
+        className="w-full transition-[opacity,transform,translate] sm:max-w-md"
       >
         <SheetHeader className="border-b px-5 py-5 pe-14">
           <SheetTitle>{shellText('more', locale)}</SheetTitle>
@@ -43,7 +43,7 @@ export default function MobileNavigationSheet({
                     <Link
                       to={to}
                       activeOptions={{ exact: true }}
-                      className="shell-navigation-link"
+                      className="shell-navigation-link transition-none"
                       aria-current={currentTo === to ? 'page' : undefined}
                       onClick={() => onOpenChange(false)}
                     >
