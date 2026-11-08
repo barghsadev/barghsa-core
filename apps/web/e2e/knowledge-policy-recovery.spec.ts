@@ -1,5 +1,5 @@
 import AxeBuilder from '@axe-core/playwright';
-import { test, expect, type Page } from './coverage-fixture';
+import { test, expect, type Page, type Route } from './coverage-fixture';
 import { t } from '@barghsa/i18n/admin-ui';
 import { t as appT } from '@barghsa/i18n/app';
 import {
@@ -37,6 +37,67 @@ async function inspect(page: Page, name: string, locale: string, project: string
 for (const locale of ['en', 'fa'] as const) {
   const k = (key: string) => t(`admin.kb.${key}`, locale),
     p = (key: string) => t(`admin.policies.${key}`, locale);
+  for (const kind of ['knowledge-bases', 'kb-groups'] as const) {
+    test(`${kind} search times out, retries explicitly and retires old results (${locale})`, async ({
+      page,
+    }) => {
+      await shell(page, locale);
+      const group = kind === 'kb-groups';
+      const target = group ? kg : kb;
+      await page.route('**/api/admin/knowledge-bases', (route) => route.fulfill({ json: [kb] }));
+      await page.route('**/api/admin/kb-groups', (route) => route.fulfill({ json: [kg] }));
+      await page.route(`**/api/admin/${kind}/${target.id}`, (route) =>
+        route.fulfill({ json: group ? { ...kg, members: [kb] } : kb })
+      );
+      const requests: unknown[] = [],
+        held: Route[] = [];
+      const matches = (excerpt: string) => [
+        { id: 'passage', kbId: kb.id, excerpt, score: 0.9, metadata: {} },
+      ];
+      await page.route(`**/api/admin/${kind}/${target.id}/query`, (route) => {
+        requests.push(route.request().postDataJSON());
+        if (requests.length === 2) return route.fulfill({ json: matches('Fresh search result') });
+        held.push(route);
+      });
+      await page.goto('/admin/knowledge-bases');
+      if (group) await page.getByRole('button', { name: k(kind), exact: true }).click();
+      await page.getByRole('button', { name: `${k('open')} ${target.title}`, exact: true }).click();
+      const query = page.getByLabel(k('testQuery'), { exact: true });
+      const submit = page.getByRole('button', { name: k('runQuery'), exact: true });
+      const input = { query: 'retained passage', limit: 5 };
+      await query.fill(input.query);
+      await page.clock.install();
+      try {
+        await submit.click();
+        await expect.poll(() => requests).toEqual([input]);
+        await expect(query).toBeDisabled();
+        await page.clock.fastForward(15_200);
+        const error = page.getByRole('alert').filter({ hasText: k('queryError') });
+        await expect(error).toBeVisible();
+        await expect(query).toHaveValue(input.query);
+        await expect(submit).toBeEnabled();
+        await held[0]!.fulfill({ json: matches('Late search result') }).catch(() => {});
+        await expect(error).toBeVisible();
+        await expect(page.getByText('Late search result')).toHaveCount(0);
+        expect(requests).toEqual([input]);
+
+        await submit.click();
+        await expect(page.getByText('Fresh search result')).toBeVisible();
+        await expect(error).toHaveCount(0);
+        expect(requests).toEqual([input, input]);
+
+        await submit.click();
+        await expect.poll(() => requests).toEqual([input, input, input]);
+        const other = group ? 'knowledge-bases' : 'kb-groups';
+        await page.getByRole('button', { name: k(other), exact: true }).click();
+        await expect(query).toHaveCount(0);
+        await held[1]!.fulfill({ json: matches('Previous catalogue result') }).catch(() => {});
+        await expect(page.getByText('Previous catalogue result')).toHaveCount(0);
+      } finally {
+        await Promise.all(held.map((route) => route.abort().catch(() => {})));
+      }
+    });
+  }
   test(`knowledge retries retain query results and document-picker selection (${locale})`, async ({
     page,
   }, info) => {

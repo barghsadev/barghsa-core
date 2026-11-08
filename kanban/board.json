@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-08T02:20:40+00:00",
-  "source_commit": "63c746a4e4544e20f4536d5cdb030bf6d2aa4887",
+  "updated": "2026-11-08T02:26:35+00:00",
+  "source_commit": "dd74b3df901a4849298250e4d0effaa0427b7fdb",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -102492,7 +102492,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
+              "sha256": "4b0ceb5d0a2cdb3582cf3a3eb6f121093f2abc80ee5e4190b594f0414e03f170"
             },
             {
               "path": "apps/web/src/components/KnowledgeBaseDocumentPicker.tsx",
@@ -451787,7 +451787,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
+              "sha256": "4b0ceb5d0a2cdb3582cf3a3eb6f121093f2abc80ee5e4190b594f0414e03f170"
             },
             {
               "path": "apps/web/src/components/KnowledgeBaseDocumentPicker.tsx",
@@ -452239,7 +452239,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
+              "sha256": "4b0ceb5d0a2cdb3582cf3a3eb6f121093f2abc80ee5e4190b594f0414e03f170"
             },
             {
               "path": "apps/web/src/components/KnowledgeBaseDocumentPicker.tsx",
@@ -452693,7 +452693,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
+              "sha256": "4b0ceb5d0a2cdb3582cf3a3eb6f121093f2abc80ee5e4190b594f0414e03f170"
             },
             {
               "path": "apps/web/src/components/KnowledgeBaseDocumentPicker.tsx",
@@ -453146,7 +453146,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
+              "sha256": "4b0ceb5d0a2cdb3582cf3a3eb6f121093f2abc80ee5e4190b594f0414e03f170"
             },
             {
               "path": "apps/web/src/components/KnowledgeBaseDocumentPicker.tsx",
@@ -491170,7 +491170,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
+              "sha256": "4b0ceb5d0a2cdb3582cf3a3eb6f121093f2abc80ee5e4190b594f0414e03f170"
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
@@ -494321,7 +494321,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
+              "sha256": "4b0ceb5d0a2cdb3582cf3a3eb6f121093f2abc80ee5e4190b594f0414e03f170"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -495203,7 +495203,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
+              "sha256": "4b0ceb5d0a2cdb3582cf3a3eb6f121093f2abc80ee5e4190b594f0414e03f170"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -496026,7 +496026,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
+              "sha256": "4b0ceb5d0a2cdb3582cf3a3eb6f121093f2abc80ee5e4190b594f0414e03f170"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -511519,7 +511519,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
+              "sha256": "4b0ceb5d0a2cdb3582cf3a3eb6f121093f2abc80ee5e4190b594f0414e03f170"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -545156,7 +545156,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
+              "sha256": "4b0ceb5d0a2cdb3582cf3a3eb6f121093f2abc80ee5e4190b594f0414e03f170"
             },
             {
               "path": "apps/web/src/pages/AdminLayout.tsx",
@@ -547021,7 +547021,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
+              "sha256": "4b0ceb5d0a2cdb3582cf3a3eb6f121093f2abc80ee5e4190b594f0414e03f170"
             },
             {
               "path": "apps/web/src/pages/AdminLayout.tsx",
@@ -548887,7 +548887,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
+              "sha256": "4b0ceb5d0a2cdb3582cf3a3eb6f121093f2abc80ee5e4190b594f0414e03f170"
             },
             {
               "path": "apps/web/src/pages/AdminLayout.tsx",
@@ -550722,7 +550722,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
+              "sha256": "4b0ceb5d0a2cdb3582cf3a3eb6f121093f2abc80ee5e4190b594f0414e03f170"
             },
             {
               "path": "apps/web/src/pages/AdminLayout.tsx",
@@ -552583,7 +552583,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
+              "sha256": "4b0ceb5d0a2cdb3582cf3a3eb6f121093f2abc80ee5e4190b594f0414e03f170"
             },
             {
               "path": "apps/web/src/pages/AdminLayout.tsx",
@@ -554453,7 +554453,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
+              "sha256": "4b0ceb5d0a2cdb3582cf3a3eb6f121093f2abc80ee5e4190b594f0414e03f170"
             },
             {
               "path": "apps/web/src/pages/AdminLayout.tsx",
@@ -556296,7 +556296,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
+              "sha256": "4b0ceb5d0a2cdb3582cf3a3eb6f121093f2abc80ee5e4190b594f0414e03f170"
             },
             {
               "path": "apps/web/src/pages/AdminLayout.tsx",
@@ -558103,7 +558103,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
+              "sha256": "4b0ceb5d0a2cdb3582cf3a3eb6f121093f2abc80ee5e4190b594f0414e03f170"
             },
             {
               "path": "apps/web/src/pages/AdminLayout.tsx",
@@ -559910,7 +559910,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
+              "sha256": "4b0ceb5d0a2cdb3582cf3a3eb6f121093f2abc80ee5e4190b594f0414e03f170"
             },
             {
               "path": "apps/web/src/pages/AdminLayout.tsx",
@@ -561718,7 +561718,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
+              "sha256": "4b0ceb5d0a2cdb3582cf3a3eb6f121093f2abc80ee5e4190b594f0414e03f170"
             },
             {
               "path": "apps/web/src/pages/AdminLayout.tsx",
@@ -563525,7 +563525,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
+              "sha256": "4b0ceb5d0a2cdb3582cf3a3eb6f121093f2abc80ee5e4190b594f0414e03f170"
             },
             {
               "path": "apps/web/src/pages/AdminLayout.tsx",
@@ -565358,7 +565358,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
+              "sha256": "4b0ceb5d0a2cdb3582cf3a3eb6f121093f2abc80ee5e4190b594f0414e03f170"
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
@@ -567252,7 +567252,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
+              "sha256": "4b0ceb5d0a2cdb3582cf3a3eb6f121093f2abc80ee5e4190b594f0414e03f170"
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
@@ -569198,7 +569198,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
+              "sha256": "4b0ceb5d0a2cdb3582cf3a3eb6f121093f2abc80ee5e4190b594f0414e03f170"
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
@@ -571092,7 +571092,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
+              "sha256": "4b0ceb5d0a2cdb3582cf3a3eb6f121093f2abc80ee5e4190b594f0414e03f170"
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
@@ -572986,7 +572986,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
+              "sha256": "4b0ceb5d0a2cdb3582cf3a3eb6f121093f2abc80ee5e4190b594f0414e03f170"
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
@@ -574880,7 +574880,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
+              "sha256": "4b0ceb5d0a2cdb3582cf3a3eb6f121093f2abc80ee5e4190b594f0414e03f170"
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
@@ -576774,7 +576774,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
+              "sha256": "4b0ceb5d0a2cdb3582cf3a3eb6f121093f2abc80ee5e4190b594f0414e03f170"
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
@@ -578668,7 +578668,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
+              "sha256": "4b0ceb5d0a2cdb3582cf3a3eb6f121093f2abc80ee5e4190b594f0414e03f170"
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
@@ -580562,7 +580562,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
+              "sha256": "4b0ceb5d0a2cdb3582cf3a3eb6f121093f2abc80ee5e4190b594f0414e03f170"
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
@@ -582456,7 +582456,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
+              "sha256": "4b0ceb5d0a2cdb3582cf3a3eb6f121093f2abc80ee5e4190b594f0414e03f170"
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
@@ -584350,7 +584350,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
+              "sha256": "4b0ceb5d0a2cdb3582cf3a3eb6f121093f2abc80ee5e4190b594f0414e03f170"
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
@@ -586244,7 +586244,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
+              "sha256": "4b0ceb5d0a2cdb3582cf3a3eb6f121093f2abc80ee5e4190b594f0414e03f170"
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
@@ -588138,7 +588138,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
+              "sha256": "4b0ceb5d0a2cdb3582cf3a3eb6f121093f2abc80ee5e4190b594f0414e03f170"
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
@@ -590771,7 +590771,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
+              "sha256": "4b0ceb5d0a2cdb3582cf3a3eb6f121093f2abc80ee5e4190b594f0414e03f170"
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
@@ -592665,7 +592665,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
+              "sha256": "4b0ceb5d0a2cdb3582cf3a3eb6f121093f2abc80ee5e4190b594f0414e03f170"
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
@@ -593964,7 +593964,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Invoice receipt authority and review reads, security and preference reads, and scoped commerce previews retain recovery evidence. Online wallet confirmation now bounds the request and receipt body. Remaining bespoke list, detail and staff route states need verification."
+        "Invoice receipt authority and review reads, security and preference reads, and scoped commerce previews retain recovery evidence. Wallet confirmation and both staff knowledge test search types bound the request and receipt body. Remaining bespoke list, detail and staff route states need verification."
       ],
       "owner": null,
       "depends_on": [],
@@ -594006,7 +594006,8 @@
           "release-0.5-customer-review-deadlines",
           "release-0.5-settings-read-deadlines",
           "release-0.5-invoice-receipt-read-deadlines",
-          "release-0.5-wallet-return-deadline"
+          "release-0.5-wallet-return-deadline",
+          "release-0.5-knowledge-query-deadline"
         ],
         "current_acceptance": null
       }
@@ -594621,7 +594622,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
+              "sha256": "4b0ceb5d0a2cdb3582cf3a3eb6f121093f2abc80ee5e4190b594f0414e03f170"
             },
             {
               "path": "apps/web/src/pages/AdminLayout.tsx",
@@ -596424,7 +596425,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
+              "sha256": "4b0ceb5d0a2cdb3582cf3a3eb6f121093f2abc80ee5e4190b594f0414e03f170"
             },
             {
               "path": "apps/web/src/pages/AdminLayout.tsx",
@@ -598227,7 +598228,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
+              "sha256": "4b0ceb5d0a2cdb3582cf3a3eb6f121093f2abc80ee5e4190b594f0414e03f170"
             },
             {
               "path": "apps/web/src/pages/AdminLayout.tsx",
@@ -600030,7 +600031,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
+              "sha256": "4b0ceb5d0a2cdb3582cf3a3eb6f121093f2abc80ee5e4190b594f0414e03f170"
             },
             {
               "path": "apps/web/src/pages/AdminLayout.tsx",
@@ -601833,7 +601834,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
+              "sha256": "4b0ceb5d0a2cdb3582cf3a3eb6f121093f2abc80ee5e4190b594f0414e03f170"
             },
             {
               "path": "apps/web/src/pages/AdminLayout.tsx",
@@ -603636,7 +603637,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
+              "sha256": "4b0ceb5d0a2cdb3582cf3a3eb6f121093f2abc80ee5e4190b594f0414e03f170"
             },
             {
               "path": "apps/web/src/pages/AdminLayout.tsx",
@@ -605439,7 +605440,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
+              "sha256": "4b0ceb5d0a2cdb3582cf3a3eb6f121093f2abc80ee5e4190b594f0414e03f170"
             },
             {
               "path": "apps/web/src/pages/AdminLayout.tsx",
@@ -633113,7 +633114,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
+              "sha256": "4b0ceb5d0a2cdb3582cf3a3eb6f121093f2abc80ee5e4190b594f0414e03f170"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -634237,7 +634238,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
+              "sha256": "4b0ceb5d0a2cdb3582cf3a3eb6f121093f2abc80ee5e4190b594f0414e03f170"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -635361,7 +635362,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
+              "sha256": "4b0ceb5d0a2cdb3582cf3a3eb6f121093f2abc80ee5e4190b594f0414e03f170"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -636488,7 +636489,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
+              "sha256": "4b0ceb5d0a2cdb3582cf3a3eb6f121093f2abc80ee5e4190b594f0414e03f170"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -637615,7 +637616,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
+              "sha256": "4b0ceb5d0a2cdb3582cf3a3eb6f121093f2abc80ee5e4190b594f0414e03f170"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -638769,7 +638770,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
+              "sha256": "4b0ceb5d0a2cdb3582cf3a3eb6f121093f2abc80ee5e4190b594f0414e03f170"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -639892,7 +639893,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
+              "sha256": "4b0ceb5d0a2cdb3582cf3a3eb6f121093f2abc80ee5e4190b594f0414e03f170"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -641015,7 +641016,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
+              "sha256": "4b0ceb5d0a2cdb3582cf3a3eb6f121093f2abc80ee5e4190b594f0414e03f170"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -642139,7 +642140,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
+              "sha256": "4b0ceb5d0a2cdb3582cf3a3eb6f121093f2abc80ee5e4190b594f0414e03f170"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -643281,7 +643282,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
+              "sha256": "4b0ceb5d0a2cdb3582cf3a3eb6f121093f2abc80ee5e4190b594f0414e03f170"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -644406,7 +644407,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
+              "sha256": "4b0ceb5d0a2cdb3582cf3a3eb6f121093f2abc80ee5e4190b594f0414e03f170"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -675906,7 +675907,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
+              "sha256": "4b0ceb5d0a2cdb3582cf3a3eb6f121093f2abc80ee5e4190b594f0414e03f170"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -677028,7 +677029,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
+              "sha256": "4b0ceb5d0a2cdb3582cf3a3eb6f121093f2abc80ee5e4190b594f0414e03f170"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -678150,7 +678151,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
+              "sha256": "4b0ceb5d0a2cdb3582cf3a3eb6f121093f2abc80ee5e4190b594f0414e03f170"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -679272,7 +679273,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
+              "sha256": "4b0ceb5d0a2cdb3582cf3a3eb6f121093f2abc80ee5e4190b594f0414e03f170"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -700808,7 +700809,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
+              "sha256": "4b0ceb5d0a2cdb3582cf3a3eb6f121093f2abc80ee5e4190b594f0414e03f170"
             },
             {
               "path": "apps/web/src/routes/admin/agent-slots.tsx",
@@ -717560,7 +717561,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
+              "sha256": "4b0ceb5d0a2cdb3582cf3a3eb6f121093f2abc80ee5e4190b594f0414e03f170"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -721425,7 +721426,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
+              "sha256": "4b0ceb5d0a2cdb3582cf3a3eb6f121093f2abc80ee5e4190b594f0414e03f170"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -723612,7 +723613,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "The native-required declaration inventory, scoped wallet confirmation recovery and both customer team role editors have current evidence. Remaining schema-only forms, contrast, broader command feedback and route state adoption stay open."
+        "The native-required declaration inventory, scoped wallet confirmation, customer team role editors and staff knowledge test search recovery have current evidence. Remaining schema-only forms, contrast, broader command feedback and route state adoption stay open."
       ],
       "owner": null,
       "depends_on": [],
@@ -723702,7 +723703,8 @@
           "release-0.5-ai-knowledge-required-fields",
           "release-0.5-remaining-native-form-controls",
           "release-0.5-wallet-return-deadline",
-          "release-0.5-required-team-role-group"
+          "release-0.5-required-team-role-group",
+          "release-0.5-knowledge-query-deadline"
         ]
       }
     },
@@ -724682,7 +724684,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
-              "sha256": "4fb539b08c3bdc76d6892dc63adda61cdd5218982ef87aba44eee91921cbee5a"
+              "sha256": "4b0ceb5d0a2cdb3582cf3a3eb6f121093f2abc80ee5e4190b594f0414e03f170"
             },
             {
               "path": "apps/web/src/pages/AdminLayout.tsx",
@@ -725305,7 +725307,8 @@
             "AI and knowledge catalogue form accessibility passed source coverage and browser checks. Both final asset trees matched the checked production build with all budgets and cold authentication transfers passing. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-ai-knowledge-required-fields/proof.json",
             "Remaining native form controls and related validation links passed source coverage and browser checks. Both final asset trees matched the checked production build with all budgets and cold authentication transfers passing. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-remaining-native-form-controls/proof.json",
             "Wallet return recovery passed current production, coverage and bundle checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-wallet-return-deadline/final/proof.json",
-            "Customer team role group passed current production, coverage and bundle checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-team-role-group/proof.json"
+            "Customer team role group passed current production, coverage and bundle checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-team-role-group/proof.json",
+            "Knowledge test search recovery passed current production, coverage and bundle checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-knowledge-query-deadline/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -792539,6 +792542,40 @@
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-team-role-group/reviewed.patch",
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-team-role-group",
       "release_disposition": "Required role selection verified in both customer team editors. The v0.5.0 milestone remains open."
+    },
+    "release-0.5-knowledge-query-deadline": {
+      "batch": "release-0.5-knowledge-query-deadline",
+      "base_commit": "dd74b3df901a4849298250e4d0effaa0427b7fdb",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/knowledge-policy-recovery.spec.ts",
+          "sha256": "968214c68886442b4f6106fd2294f3d5c182aced41e056c18df26b52f1084bb3"
+        },
+        {
+          "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
+          "sha256": "4b0ceb5d0a2cdb3582cf3a3eb6f121093f2abc80ee5e4190b594f0414e03f170"
+        }
+      ],
+      "checks": [
+        "The knowledge-base and knowledge-group test queries use the existing 15-second read deadline across the response and receipt body. A stalled result ends loading, retains the submitted query, and offers a staff-initiated retry.",
+        "Both endpoints preserve same-origin CSRF, field-error mapping, ranked receipts and scope denial. Tests verified that a late result after a timeout or a catalogue switch is discarded. No request is automatically replayed.",
+        "Twenty-eight production browser cases on Chromium and Mobile Safari, 14 Chromium coverage cases, 76 related unit cases, eight source-bound coverage groups, 98 bundle budgets, formatting, lint and web typecheck passed. The prior six cold auth checks apply to the 30 byte-identical auth build files."
+      ],
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-knowledge-query-deadline/proof.json",
+      "source_scope_proof_sha256": "1f600e3d9cc913b539ab419feee22cdd700b1427f63c07803222cdc16ef9012c",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-knowledge-query-deadline/renewed-bindings.json",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-knowledge-query-deadline/reviewed.patch",
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-knowledge-query-deadline",
+      "release_disposition": "Bounded recovery verified in both staff knowledge test search views. The v0.5.0 milestone remains open."
     }
   },
   "historical_improvements": [

@@ -40,6 +40,7 @@ import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialo
 import { useLocale } from '../hooks/useLocale.js';
 import { useCatalogueResource, useCatalogueScope } from '../hooks/useCatalogueResource.js';
 import { withCsrf } from '../lib/csrf.js';
+import { readWithDeadline } from '../lib/server-query-client.js';
 interface Entry {
   id: string;
   title: string;
@@ -673,39 +674,43 @@ function OwnedKnowledgeBasesPage({
     setQueryState('loading');
     setQueryResult(null);
     try {
-      const response = await fetch(`/api/admin/${kind}/${targetId}/query`, {
-        method: 'POST',
-        signal: request.signal,
-        headers: withCsrf({ 'content-type': 'application/json' }),
-        body: JSON.stringify({ query, limit: 5 }),
+      const { status, ok, value } = await readWithDeadline(request.signal, async (signal) => {
+        const response = await fetch(`/api/admin/${kind}/${targetId}/query`, {
+          method: 'POST',
+          signal,
+          headers: withCsrf({ 'content-type': 'application/json' }),
+          body: JSON.stringify({ query, limit: 5 }),
+        });
+        const value: unknown =
+          response.ok || response.status === 400 ? await response.json() : null;
+        return { status: response.status, ok: response.ok, value };
       });
       if (!current()) return;
-      if (response.status === 401 || response.status === 403) {
+      if (status === 401 || status === 403) {
         scope.deny();
         return;
       }
-      if (response.status === 400) {
-        const value: unknown = await response.json();
-        if (!current()) return;
-        if (
-          record(value) &&
-          record(value.error) &&
-          value.error.code === 'VALIDATION:INPUT:INVALID' &&
-          Array.isArray(value.error.fields) &&
-          fields(value.error.fields)
-        ) {
-          setQueryState('idle');
-          return;
-        }
+      if (
+        status === 400 &&
+        record(value) &&
+        record(value.error) &&
+        value.error.code === 'VALIDATION:INPUT:INVALID' &&
+        Array.isArray(value.error.fields) &&
+        fields(value.error.fields)
+      ) {
+        setQueryState('idle');
+        return;
       }
-      if (!response.ok) throw new Error('Query failed');
-      const results: unknown = await response.json();
-      if (!current()) return;
-      if (!validQuery(results)) throw new Error('Invalid query');
-      setQueryResult({ id: targetId, rows: results });
+      if (!ok || !validQuery(value)) throw new Error('Query failed');
+      setQueryResult({ id: targetId, rows: value });
       setQueryState('idle');
     } catch {
       if (current()) setQueryState('error');
+    } finally {
+      if (queryRequest.current === request) {
+        queryRequest.current = null;
+        if (!request.signal.aborted && commandVersion !== generation.current) setQueryState('idle');
+      }
     }
   }
   return (
