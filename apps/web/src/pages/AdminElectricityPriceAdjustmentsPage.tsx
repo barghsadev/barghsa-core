@@ -1237,9 +1237,12 @@ function PriceWorkspace({
               ++readGeneration.current;
               readAbort.current?.abort();
               setLoading(false);
-              command.owner.attempted = true;
             }
             notify();
+          }}
+          onCommandDispatch={(dispatched) => {
+            if (live(command) && command.action === action)
+              command.owner.attempted = dispatched || command.owner.uncertain;
           }}
           onSuccess={async (value) => {
             if (!live(command) || command.action !== action) return;

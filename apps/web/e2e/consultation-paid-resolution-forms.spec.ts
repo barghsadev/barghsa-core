@@ -358,6 +358,7 @@ for (const [locale, theme] of [
   test(`consultation uncovered credit recovery retains its exact original plan (${locale}, ${theme})`, async ({
     page,
   }, info) => {
+    await page.clock.install();
     const { state, review, persist, progressRefunds } = await setupConsultationPaidResolution(
       page,
       locale
@@ -435,8 +436,10 @@ for (const [locale, theme] of [
     expect(receipt).not.toHaveProperty('cancelledInvoiceId');
     progressRefunds(recoveryRequest);
     expect(state.rows[recoveryRequest]!.uncovered_credit).toBe('0');
-    await state.heldWrite!.fulfill({ status: 503, json: {} });
+    const held = state.heldWrite!;
+    await page.clock.fastForward(15_001);
     await expect(retry(page)).toBeEnabled();
+    await held.fulfill({ status: 503, json: {} }).catch(() => {});
     await expect(reason(page)).toBeDisabled();
     await expect(feeForm(page).locator('button[type=submit]')).toBeDisabled();
     await expect(button(page, 'complete')).toBeDisabled();

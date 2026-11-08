@@ -292,6 +292,7 @@ it('keeps a valid original reason after owned confirmation feedback and focuses 
     const dialog = gate.dialog!;
     await act(async () => {
       dialog.onPendingChange!(true);
+      dialog.onCommandDispatch!(true);
       expect(dialog.onValidationError!(['reason'])).toBe(false);
       const code = ErrorCodes.VALIDATION_INPUT_INVALID.code;
       const mapped = dialog.action!.errorMessages![code];
@@ -325,6 +326,7 @@ it.each([ErrorCodes.CONFLICT_STATE.code, ErrorCodes.VALIDATION_INPUT_INVALID.cod
       const dialog = gate.dialog!;
       await act(async () => {
         dialog.onPendingChange!(true);
+        dialog.onCommandDispatch!(true);
         expect(dialog.onValidationError!(['reason'])).toBe(false);
         const mapped = dialog.action!.errorMessages![code];
         if (typeof mapped === 'function') mapped({ error: { code, fields: ['reason'] } });
@@ -401,6 +403,7 @@ it('retains an unknown command across malformed receipts, exact retries and late
       body = first.action!.body;
     await act(async () => {
       first.onPendingChange!(true);
+      first.onCommandDispatch!(true);
     });
     await expect(first.onSuccess({})).rejects.toThrow('Unconfirmed decision');
     await act(async () => first.onUnconfirmed!());
@@ -428,6 +431,7 @@ it('retains an unknown command across malformed receipts, exact retries and late
     expect(page.host.querySelector('[role=dialog]')).not.toBeNull();
     await act(async () => {
       retry.onPendingChange!(true);
+      retry.onCommandDispatch!(true);
       const code = ErrorCodes.CONFLICT_STATE.code;
       const mapped = retry.action!.errorMessages![code];
       if (typeof mapped === 'function')

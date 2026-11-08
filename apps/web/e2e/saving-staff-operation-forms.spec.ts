@@ -237,6 +237,7 @@ for (const [locale, theme] of [
   test(`saving stage handover retains exact optional intent and source privacy (${locale}, ${theme})`, async ({
     page,
   }, info) => {
+    await page.clock.install();
     const { state, persistStage } = await setupSavingStaffOperations(page, locale, 'stage');
     const release = await holdSchema(page);
     await page.goto(`/admin/saving-orders?lane=fulfillment&orderId=${savingChangeOrder}`);
@@ -321,8 +322,10 @@ for (const [locale, theme] of [
       nextStage: 'process_completion',
     });
     // The command committed, but its response was lost. GET state cannot unlock the captured action.
-    await state.heldWrite!.fulfill({ status: 503, json: {} });
+    const held = state.heldWrite!;
+    await page.clock.fastForward(15_001);
     await expect(retry(page)).toBeVisible();
+    await held.fulfill({ status: 503, json: {} }).catch(() => {});
     await expect(note).toBeDisabled();
     await expect(handover).toBeDisabled();
     const reads = state.reads.length;

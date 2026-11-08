@@ -1,7 +1,7 @@
 import { approveRiskConfirmation } from './confirmation-fixture';
 import { productionManifest } from './production-manifest';
 import AxeBuilder from '@axe-core/playwright';
-import type { Locator, Page } from '@playwright/test';
+import type { Locator, Page, Route } from '@playwright/test';
 import { t } from '@barghsa/i18n/app';
 import { t as adminText } from '@barghsa/i18n/admin-ui';
 import { test, expect } from './coverage-fixture';
@@ -254,6 +254,53 @@ for (const [locale, theme] of [
       'finalized'
     );
   });
+  test(`stalled electricity price verification releases an unsent command (${locale}, ${theme})`, async ({
+    page,
+  }) => {
+    await page.clock.install();
+    const state = await setupElectricityPriceAdjustmentForms(page, locale, theme === 'dark');
+    state.auth.context = 'staff';
+    state.reviewMode = 'success';
+    let verification: Route | undefined;
+    await page.route('**/api/auth/step-up', (route) => {
+      verification = route;
+    });
+    await page.goto('/admin/electricity-price-adjustments');
+    const picker = page.locator('#electricity-price-contract');
+    await picker.fill(contractId);
+    await picker.press('Enter');
+    const review = page.getByTestId('electricity-price-proposal-form').getByRole('button', {
+      name: copy('reviewProposal'),
+      exact: true,
+    });
+    await page.locator('#price-percent').fill('10.25');
+    await page.locator('#price-effective').fill('2026-10-09T12:00');
+    const reason = page.locator('#price-reason');
+    await reason.fill('Tariff reviewed');
+    await page.locator('#price-basis').fill('Contract clause 7');
+    await review.click();
+    const dialog = page.getByRole('dialog');
+    const confirm = dialog.locator('button[type=submit]');
+    await approveRiskConfirmation(page, locale, 'financial');
+    await confirm.click();
+    await expect.poll(() => !!state.writeRoute).toBe(true);
+    await state.writeRoute!.fulfill({ status: 403, json: { requiresStepUp: true } });
+    await dialog.getByLabel(app('team.password'), { exact: true }).fill('fixture-only-password');
+    await confirm.click();
+    await expect.poll(() => !!verification).toBe(true);
+    await page.clock.fastForward(15_001);
+    await expect(dialog.getByRole('alert')).toBeVisible();
+    await dialog.getByRole('button', { name: app('team.cancel'), exact: true }).click();
+    await expect(dialog).toHaveCount(0);
+    await expect(review).toBeEnabled();
+    await expect(reason).toHaveValue('Tariff reviewed');
+    await expect(
+      page.getByRole('button', { name: app('electricity.priceForm.retryCaptured'), exact: true })
+    ).toHaveCount(0);
+    await verification!.fulfill({ json: { verified: true } }).catch(() => {});
+    expect(state.writes).toHaveLength(1);
+    expect(state.previews).toHaveLength(1);
+  });
   test(`staff electricity price proposal recovers from a stalled acknowledgement (${locale}, ${theme})`, async ({
     page,
   }) => {
@@ -293,6 +340,16 @@ for (const [locale, theme] of [
     expect(state.writes).toEqual([captured]);
     await stale.fulfill({ status: 403, json: { error: 'AUTHZ:FORBIDDEN' } }).catch(() => {});
     await expect(retry).toBeEnabled();
+    state.writeRoute = undefined;
+    await retry.click();
+    await approveRiskConfirmation(page, locale, 'financial');
+    await dialog.locator('button[type=submit]').click();
+    await expect.poll(() => !!state.writeRoute).toBe(true);
+    await state.writeRoute!.fulfill({ status: 403, json: { requiresStepUp: true } });
+    await expect(dialog.getByLabel(app('team.password'), { exact: true })).toBeVisible();
+    await dialog.getByRole('button', { name: app('team.cancel'), exact: true }).click();
+    await expect(retry).toBeEnabled();
+    expect(state.writes).toEqual([captured, captured]);
     state.writeMode = 'success';
     await retry.click();
     await expect(dialog.locator('button[type=submit]')).toBeDisabled();
@@ -304,7 +361,7 @@ for (const [locale, theme] of [
     expect((await replay).postData()).toBe(original);
     await expect(dialog).toHaveCount(0);
     await expect(page.getByRole('button', { name: copy('cancel'), exact: true })).toBeEnabled();
-    expect(state.writes).toEqual([captured, captured]);
+    expect(state.writes).toEqual([captured, captured, captured]);
     expect(state.previews).toHaveLength(1);
   });
 

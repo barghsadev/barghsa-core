@@ -1,5 +1,6 @@
 import { test, expect } from './coverage-fixture';
 import AxeBuilder from '@axe-core/playwright';
+import type { Route } from '@playwright/test';
 import { crmShell } from './crm-shell-fixture';
 import { tSolar } from '@barghsa/i18n/solar';
 import { t } from '@barghsa/i18n/app';
@@ -44,10 +45,11 @@ for (const locale of ['en', 'fa'] as const) {
   test(`${locale}: staff reviews a public tracking update with step-up and exact retry, then the customer sees dated shipment information`, async ({
     page,
   }, info) => {
+    await page.clock.install();
     await setup(page, locale);
     let revision = 0,
       needsStepUp = true,
-      lost = true;
+      stalled: Route | undefined;
     let current = detail();
     const writes: Record<string, unknown>[] = [],
       previews: Record<string, unknown>[] = [];
@@ -68,9 +70,9 @@ for (const locale of ['en', 'fa'] as const) {
             revision: ++revision,
           };
         } else expect(body).toEqual(writes[1]);
-        if (lost) {
-          lost = false;
-          return r.fulfill({ status: 503, json: {} });
+        if (!stalled) {
+          stalled = r;
+          return;
         }
         return r.fulfill({ json: current });
       }
@@ -120,7 +122,11 @@ for (const locale of ['en', 'fa'] as const) {
     await dialog.getByRole('button', { name: t('team.confirm', locale), exact: true }).click();
     await dialog.getByLabel(t('team.password', locale), { exact: true }).fill('test-only-password');
     await dialog.getByRole('button', { name: t('team.confirm', locale), exact: true }).click();
+    await expect.poll(() => !!stalled).toBe(true);
+    expect(writes).toHaveLength(2);
+    await page.clock.fastForward(15_001);
     await expect(dialog.getByRole('alert')).toBeVisible();
+    await stalled!.fulfill({ status: 503, json: {} }).catch(() => {});
     await dialog.getByRole('button', { name: t('team.confirm', locale), exact: true }).click();
     await expect(dialog).toHaveCount(0);
     expect(previews).toHaveLength(1);

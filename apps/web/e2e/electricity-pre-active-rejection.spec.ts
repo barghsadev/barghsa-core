@@ -1,5 +1,6 @@
 import { approveRiskConfirmation } from './confirmation-fixture';
 import AxeBuilder from '@axe-core/playwright';
+import { t as appText } from '@barghsa/i18n/app';
 import { t as adminText } from '@barghsa/i18n/admin-ui';
 import { test, expect } from './coverage-fixture';
 import {
@@ -14,12 +15,13 @@ for (const [locale, theme] of [
   test(`staff rejects an approved electricity order with its exact confirmed state (${locale})`, async ({
     page,
   }, info) => {
+    await page.clock.install();
     const { state } = await setupElectricityCorrectionForms(page, locale, theme === 'dark');
     state.context = 'staff';
     state.staff.commercialStatus = 'approved';
     state.staff.contractState = 'AwaitingCustomerAcceptance';
     state.staffReviewMode = 'success';
-    state.staffWriteMode = 'success';
+    state.staffWriteMode = 'held';
     const copy = (key: string) => adminText(`admin.electricityOrders.${key}`, locale);
     await page.goto(`/admin/electricity-orders?orderId=${correctionOrder}`);
     await expect(page.getByRole('button', { name: copy('approve'), exact: true })).toBeDisabled();
@@ -55,8 +57,29 @@ for (const [locale, theme] of [
     await approveRiskConfirmation(page, locale, 'both');
     await expect(confirm).toBeEnabled();
     await confirm.click();
-    await expect(dialog).toHaveCount(0);
+    await expect.poll(() => !!state.staffWrite).toBe(true);
+    const held = state.staffWrite!;
+    const payload = held.request().postData();
     expect(state.staffWrites).toHaveLength(1);
+    await page.clock.fastForward(15_001);
+    const retry = page.getByRole('button', {
+      name: appText('electricity.staffReasonForm.retry', locale),
+      exact: true,
+    });
+    await expect(retry).toBeEnabled();
+    await expect(dialog).toHaveCount(0);
+    await expect(reason).toHaveValue('Unable to deliver approved supply');
+    await held.fulfill({ status: 403, json: { error: 'AUTHZ:FORBIDDEN' } }).catch(() => {});
+    state.staffWriteMode = 'success';
+    await retry.click();
+    await expect(confirm).toBeDisabled();
+    await approveRiskConfirmation(page, locale, 'both');
+    const replay = page.waitForRequest((request) => request.url() === held.request().url());
+    await confirm.click();
+    expect((await replay).postData()).toBe(payload);
+    await expect(dialog).toHaveCount(0);
+    expect(state.staffWrites).toHaveLength(2);
+    expect(state.staffWrites[1]).toEqual(state.staffWrites[0]);
     expect(state.staffWrites[0]).toMatchObject({
       expectedVersionId: state.staff.versionId,
       expectedReviewHash: 'b'.repeat(64),

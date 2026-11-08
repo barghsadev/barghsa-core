@@ -49,6 +49,7 @@ vi.mock('./TeamActionDialog.js', () => ({
               pending.current = true;
               props.onPendingChange?.(true);
               try {
+                props.onCommandDispatch?.(true);
                 const response = await fetch(props.action.path, {
                   method: props.action.method,
                   body: JSON.stringify(props.action.body),

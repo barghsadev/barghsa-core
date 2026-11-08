@@ -995,6 +995,7 @@ function OwnedAdminConsultationsPage({ queries }: { queries?: ConsultationListQu
             description: `${capturedSource.profile_name} · ${copy(paid ? 'adjustPaidFee' : 'feeOffer')}`,
             path: `/api/admin/consultations/requests/${selectedId}/${path}`,
             method: 'POST',
+            responseDeadline: true,
             successStatus: 200,
             body: { ...terms, idempotencyKey: offerKey, expectedReviewHash: review.hash },
             forbiddenMessage: copy('actionError'),
@@ -1172,6 +1173,7 @@ function OwnedAdminConsultationsPage({ queries }: { queries?: ConsultationListQu
         description: `${source.profile_name} · ${title}`,
         path: `/api/admin/consultations/requests/${source.id}/${intent === 'recover_refund' ? 'refund-recovery' : `paid-${intent}`}`,
         method: 'POST',
+        responseDeadline: true,
         successStatus: 200,
         body: { idempotencyKey: crypto.randomUUID(), reason, expectedReviewHash: review.hash },
         forbiddenMessage: copy('actionError'),
@@ -1957,16 +1959,13 @@ function OwnedAdminConsultationsPage({ queries }: { queries?: ConsultationListQu
           confirmationDisabled={unconfirmed}
           onPendingChange={(pending) => {
             if (!currentAction()) return;
-            if (pending && resolutionCommand.current) {
-              resolutionCommand.current.attempted = true;
-              invalidateFeeReads();
-            }
-            if (pending && feeCommand.current) {
-              feeCommand.current.attempted = true;
-              invalidateFeeReads();
-            }
+            if (pending && (resolutionCommand.current || feeCommand.current)) invalidateFeeReads();
             commandPendingRef.current = pending;
             setCommandPending(pending);
+          }}
+          onCommandDispatch={(dispatched) => {
+            const command = feeCommand.current ?? resolutionCommand.current;
+            if (command && currentAction()) command.attempted = dispatched || command.uncertain;
           }}
           onValidationError={(fields) =>
             currentAction() &&

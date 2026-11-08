@@ -321,6 +321,7 @@ function OwnedSavingStaffOperationForm({
               currentIntent.kind === 'decision' ? 'staffReviewConfirm' : 'staffStageReviewConfirm'
             ),
             method: 'POST',
+            responseDeadline: true,
             successStatus: 200,
             path:
               currentIntent.kind === 'decision'
@@ -568,10 +569,13 @@ function OwnedSavingStaffOperationForm({
             if (!live(command, action)) return;
             pending.current = value;
             if (value) {
-              command.owner.attempted = true;
               onPending();
               notify();
             }
+          }}
+          onCommandDispatch={(dispatched) => {
+            if (live(command, action))
+              command.owner.attempted = dispatched || command.owner.uncertain;
           }}
           onSuccess={async (value) => {
             if (!live(command, action)) return;

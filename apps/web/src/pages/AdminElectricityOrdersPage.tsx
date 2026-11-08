@@ -629,6 +629,7 @@ function OwnedAdminElectricityOrdersPage({ queries }: { queries?: StaffOrderList
             description: copy('confirm'),
             path: `/api/staff/electricity/orders/${encodeURIComponent(order.orderId)}/${decision}`,
             method: 'POST',
+            responseDeadline: true,
             successStatus: 200,
             body: {
               idempotencyKey: crypto.randomUUID(),
@@ -1545,8 +1546,12 @@ function OwnedAdminElectricityOrdersPage({ queries }: { queries?: StaffOrderList
           onPendingChange={(value) => {
             const command = captured.current;
             if (!command || !live(command) || command.action !== action) return;
-            if (value) command.attempted = true;
             pending.current = value;
+          }}
+          onCommandDispatch={(dispatched) => {
+            const command = captured.current;
+            if (command && live(command) && command.action === action)
+              command.attempted = dispatched || command.unconfirmed;
           }}
           onUnconfirmed={() => {
             const command = captured.current;

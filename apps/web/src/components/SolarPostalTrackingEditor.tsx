@@ -375,6 +375,7 @@ function OwnedSolarPostalTrackingEditor({
               description: copy('postalTrackingReviewDescription'),
               path,
               method: 'POST',
+              responseDeadline: true,
               successStatus: 200,
               body: { ...body, expectedReviewHash: value.hash },
               conflictMessage: copy('postalTrackingChanged'),
@@ -622,8 +623,11 @@ function OwnedSolarPostalTrackingEditor({
             if (proposalRef.current !== proposal || proposal.generation !== generation.current)
               return;
             commandPendingRef.current = pending;
-            if (pending) proposal.attempted = true;
             setCommandPending(pending);
+          }}
+          onCommandDispatch={(dispatched) => {
+            if (proposalRef.current === proposal && proposal.generation === generation.current)
+              proposal.attempted = dispatched || proposal.unconfirmed;
           }}
           onDenied={() => {
             if (proposalRef.current === proposal && proposal.generation === generation.current)

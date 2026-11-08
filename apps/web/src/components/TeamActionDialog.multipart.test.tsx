@@ -135,7 +135,8 @@ it('ends a stalled step-up without sending or marking the captured command uncer
   );
   vi.stubGlobal('fetch', fetcher);
   const onUnconfirmed = vi.fn(),
-    onSuccess = vi.fn(async () => {});
+    onSuccess = vi.fn(async () => {}),
+    onCommandDispatch = vi.fn();
   await act(async () =>
     root.render(
       <TeamActionDialog
@@ -150,6 +151,7 @@ it('ends a stalled step-up without sending or marking the captured command uncer
         onClose={vi.fn()}
         onSuccess={onSuccess}
         onUnconfirmed={onUnconfirmed}
+        onCommandDispatch={onCommandDispatch}
       />
     )
   );
@@ -172,6 +174,7 @@ it('ends a stalled step-up without sending or marking the captured command uncer
     expect(confirm.disabled).toBe(false);
     expect(document.body.querySelector('[role=alert]')).not.toBeNull();
     expect(onUnconfirmed).not.toHaveBeenCalled();
+    expect(onCommandDispatch).not.toHaveBeenCalled();
     expect(onSuccess).not.toHaveBeenCalled();
     expect(fetcher).toHaveBeenCalledOnce();
   } finally {

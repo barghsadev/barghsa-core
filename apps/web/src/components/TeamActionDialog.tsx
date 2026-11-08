@@ -64,6 +64,7 @@ export function TeamActionDialog({
   onValidationError,
   onUnconfirmed,
   onPendingChange,
+  onCommandDispatch,
   risk: reviewRisk,
 }: (
   | { action: TeamAction; verification?: never; selection?: never }
@@ -84,6 +85,8 @@ export function TeamActionDialog({
   onValidationError?: (fields: unknown[]) => boolean;
   onUnconfirmed?: () => void;
   onPendingChange?: (pending: boolean) => void;
+  /** Report dispatch separately from verification. A step-up refusal clears dispatch. */
+  onCommandDispatch?: (dispatched: boolean) => void;
   /** For verification-only flows, the caller owns the reviewed command. */
   risk?: TeamAction['risk'];
 }) {
@@ -218,8 +221,9 @@ export function TeamActionDialog({
           : action.body instanceof FormData
             ? action.body
             : JSON.stringify(action.body);
-      commandSent = true;
       const { response, data } = await request(async (signal) => {
+        commandSent = true;
+        onCommandDispatch?.(true);
         const response = await fetch(action.path, {
           method: action.method,
           credentials: 'include',
@@ -238,6 +242,8 @@ export function TeamActionDialog({
         response.status === 403 &&
         (code === ErrorCodes.AUTHZ_STEP_UP_REQUIRED.code || data?.requiresStepUp === true)
       ) {
+        commandSent = false;
+        onCommandDispatch?.(false);
         if (data?.requiresOtp === true || action.requiresOtp) setNeedsOtp(true);
         else {
           focusPasswordFor.current = action;

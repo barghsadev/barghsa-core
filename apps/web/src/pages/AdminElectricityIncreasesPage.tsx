@@ -1169,7 +1169,10 @@ function OwnedAdminElectricityIncreasesPage({ queries }: { queries?: ListQueryBi
           onPendingChange={(value) => {
             if (!live(command) || command.action !== action) return;
             pending.current = value;
-            if (value) command.attempted = true;
+          }}
+          onCommandDispatch={(dispatched) => {
+            if (live(command) && command.action === action)
+              command.attempted = dispatched || command.unconfirmed;
           }}
           onSuccess={async (result) => {
             if (!live(command) || command.action !== action) return;

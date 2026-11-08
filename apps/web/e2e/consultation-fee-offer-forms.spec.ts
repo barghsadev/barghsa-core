@@ -274,14 +274,17 @@ for (const [locale, theme] of [
     );
     state.writeMode = 'held';
     state.heldWrite = undefined;
+    await page.clock.install();
     await confirm(page).click();
     await expect.poll(() => !!state.heldWrite).toBe(true);
     const replaceCommand = state.writes.at(-1)!;
     const replaced = persist(replaceCommand);
     expect(replaced.invoiceId).not.toBe(oldInvoice);
     expect(state.invoices.get(oldInvoice!)!.state).toBe('Cancelled');
-    await state.heldWrite!.fulfill({ status: 503, json: {} });
+    const held = state.heldWrite!;
+    await page.clock.fastForward(15_001);
     await expect(retry(page)).toBeVisible();
+    await held.fulfill({ status: 503, json: {} }).catch(() => {});
     state.writeMode = 'success';
     await retry(page).click();
     await approveRiskConfirmation(page, locale, 'financial');
