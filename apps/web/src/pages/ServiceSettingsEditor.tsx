@@ -233,7 +233,10 @@ export function ServiceSettingsEditor({
           finalFocus={refreshButton}
           confirmationDisabled={!editor.ready || editor.uncertain}
           onDenied={editor.onDenied}
-          onPendingChange={editor.onPendingChange}
+          onCommandDispatch={editor.onPendingChange}
+          onPendingChange={(pending) => {
+            if (!pending) editor.onPendingChange(false);
+          }}
           onUnconfirmed={editor.onUnconfirmed}
           onValidationError={(keys) =>
             keys.every((key) => fields.some((field) => field.hours === key)) &&

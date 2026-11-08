@@ -68,7 +68,7 @@ it('keeps earlier consultation work visible after loading another queue page', a
       id === 'first-work'
         ? '86000000-0000-4000-8000-000000000001'
         : '86000000-0000-4000-8000-000000000002',
-    profile_id: 'profile-1',
+    profile_id: '22222222-2222-4222-8222-222222222222',
     profile_name: id,
     status: 'submitted',
     product_snapshot: { title: { en: 'Consultation', fa: 'مشاوره' } },

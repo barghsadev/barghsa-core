@@ -159,3 +159,5 @@ The staff invoice ledger validates rows and page cursors before replacing the cu
 The solar construction queue and staff consultation queue validate their rows and cursors before accepting a page. A failed queue read keeps the previous rows available while staff retry the same query. Consultation team options and request details recover independently. An invalid financial or payment field keeps consultation actions unavailable until a valid detail arrives.
 
 Saved addresses announce loading again during an explicit retry. The empty-list message requires a successful read for the active profile. A denied read withdraws private addresses and disables editing. An account with profiles but no active selection gets a link to the dashboard to choose a profile.
+
+Service targets and escalation settings allow a refresh while password verification is pending. If the required read fails, finishing password verification cannot send the reviewed write. After dispatch, the editor waits for the write outcome before enabling refresh again.

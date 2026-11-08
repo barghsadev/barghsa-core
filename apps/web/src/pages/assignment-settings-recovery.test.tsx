@@ -467,8 +467,12 @@ for (const scenario of [
     await submit('[role=dialog] form');
     await fill('[role=dialog] input[type=password]', 'synthetic-password');
     await submit('[role=dialog] form');
+    const resourceReads = () =>
+      calls.mock.calls.filter(([url, init]) => url === scenario.resource && !init?.method).length;
+    const beforeRefresh = resourceReads();
     failed = true;
     await click(scenario.refresh, true);
+    expect(resourceReads()).toBe(beforeRefresh + 1);
     await act(async () => resolve(reply({ verified: true })));
     expect(calls.mock.calls.filter(([, init]) => init?.method === 'PUT')).toHaveLength(1);
     expect(confirm().disabled).toBe(true);

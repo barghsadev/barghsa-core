@@ -29,12 +29,20 @@ const path = () =>
     : kind === 'refund'
       ? '/api/admin/wallet-refunds/contract-obligations'
       : '/api/admin/contract-activation-rules';
+const activationRules = ['electricity', 'savings', 'solar'].map((serviceType) => ({
+  serviceType,
+  revision: 1,
+  signatureRequired: serviceType === 'solar',
+  paymentRequired: serviceType === 'electricity',
+  serviceStartRequired: false,
+  updatedAt: '2026-09-21T12:00:00Z',
+}));
 const current = () =>
   kind === 'list'
     ? { contracts: [], nextBefore: null }
     : kind === 'refund'
       ? { obligations: [], nextBefore: null }
-      : { rules: [], canEdit: false };
+      : { rules: activationRules, canEdit: false };
 beforeEach(() => {
   vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
   host = document.createElement('div');
@@ -150,22 +158,19 @@ for (const name of ['list', 'refund', 'rules'])
                 nextBefore: null,
               }
             : {
-                rules: [
-                  {
-                    serviceType: 'electricity',
-                    revision: 1,
-                    signatureRequired: false,
-                    paymentRequired: true,
-                    serviceStartRequired: false,
-                  },
-                ],
+                rules: activationRules.map((rule) => ({ ...rule, signatureRequired: true })),
                 canEdit: true,
               };
       await act(async () => oldFinish(obsolete));
       expect(host.textContent).not.toContain('obsolete-private-list');
       expect(host.textContent).not.toContain('99900');
       expect(host.textContent).not.toContain('99,900');
-      expect(host.querySelector('input[type=checkbox]')).toBeNull();
+      const ruleFields = [...host.querySelectorAll<HTMLInputElement>('input[type=checkbox]')];
+      if (name === 'rules' && change !== 'unmount') {
+        expect(ruleFields).toHaveLength(9);
+        expect(ruleFields[0]!.checked).toBe(false);
+        expect(ruleFields.every((input) => input.disabled)).toBe(true);
+      } else expect(ruleFields).toHaveLength(0);
       if (change !== 'unmount')
         expect(host.textContent).toContain(
           contractText(

@@ -224,7 +224,8 @@ for (const locale of ['en', 'fa'] as const)
     async () => {
       harness.locale = locale;
       const words = locale === 'fa' ? fa : en;
-      const fetcher = vi.fn(async (_url: string, _options: RequestInit) => response(rules()));
+      const saved = rules();
+      const fetcher = vi.fn(async (_url: string, _options: RequestInit) => response(saved));
       vi.stubGlobal('fetch', fetcher);
       await render(<ContractActivationRules />);
       expect(fetcher).not.toHaveBeenCalled();
@@ -232,6 +233,7 @@ for (const locale of ['en', 'fa'] as const)
       const electricity = container.querySelectorAll('fieldset')[0]!,
         solar = container.querySelectorAll('fieldset')[2]!;
       const fields = electricity.querySelectorAll('input');
+      expect(fields[0]!.checked).toBe(false);
       expect(fields[1]!.disabled).toBe(true);
       expect(solar.querySelector('input')!.disabled).toBe(true);
       expect(electricity.querySelector('button')!.disabled).toBe(true);
@@ -258,18 +260,25 @@ for (const locale of ['en', 'fa'] as const)
         signatureRequired: true,
         paymentRequired: true,
         serviceStartRequired: false,
+        updatedAt: '2026-09-22T12:00:00Z',
       };
       await expect(harness.finish!({ ...receipt, serviceType: 'savings' })).rejects.toThrow(
         'mismatch'
       );
       expect(fetcher).toHaveBeenCalledTimes(1);
+      saved.rules[0] = receipt;
       harness.receipt = receipt;
       await click('Confirm');
       expect(fetcher).toHaveBeenCalledTimes(2);
-      expect(container.querySelector('input')!.checked).toBe(false);
+      expect(container.querySelector('input')!.checked).toBe(true);
+      fetcher.mockImplementationOnce(() => new Promise<Response>(() => {}));
+      await click(words.refresh);
+      expect(fetcher).toHaveBeenCalledTimes(3);
+      const pendingSignal = fetcher.mock.calls[2]![1].signal;
+      expect(pendingSignal?.aborted).toBe(false);
       await click(words.activationRules);
       expect(container.querySelector('fieldset')).toBeNull();
-      expect(fetcher.mock.calls[0]![1].signal?.aborted).toBe(true);
+      expect(pendingSignal?.aborted).toBe(true);
     }
   );
 it('keeps view-only rules disabled and recovers failed loads', async () => {
