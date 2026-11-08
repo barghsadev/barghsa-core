@@ -204,7 +204,15 @@ for (const locale of ['en', 'fa'] as const)
     await page.route(`**/api/consultations/requests/${requestId}`, (route) => {
       offerReads++;
       return route.fulfill({
-        json: { request: customerRequest(), history, adjustments: [], refunds: [] },
+        json: {
+          request:
+            offerReads === 1
+              ? { ...customerRequest(), scope: { private: 'Invalid detail' } }
+              : customerRequest(),
+          history,
+          adjustments: [],
+          refunds: [],
+        },
       });
     });
     await page.route('**/api/admin/consultations/teams', (route) =>
@@ -322,6 +330,15 @@ for (const locale of ['en', 'fa'] as const)
     await page.getByRole('checkbox', { name: consultationCopy('confirm', locale) }).check();
     await page.getByRole('button', { name: consultationCopy('request', locale) }).click();
     await expect(page).toHaveURL(new RegExp(`/consultations/${requestId}$`));
+    await expect(
+      page.getByRole('heading', { name: consultationCopy('details', locale), exact: true })
+    ).toBeVisible();
+    await expect(
+      page.getByText(consultationCopy('loadError', locale), { exact: true })
+    ).toBeVisible();
+    await expect(page.getByText(consultationCopy('noFee', locale))).toHaveCount(0);
+    await page.getByRole('button', { name: consultationCopy('informationReload', locale) }).click();
+    await expect.poll(() => offerReads).toBe(2);
     await expect(page.getByText(consultationCopy('noFee', locale))).toBeVisible();
 
     operatingContext = 'staff';

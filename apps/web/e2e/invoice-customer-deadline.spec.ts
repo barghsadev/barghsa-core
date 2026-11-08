@@ -150,6 +150,10 @@ for (const locale of ['fa', 'en'] as const)
               chain: [adjustment],
             },
           });
+        if (!darkMode && reads === 3)
+          return route.fulfill({
+            json: { ...details, chain: [invoice, { ...adjustment, lines: null }] },
+          });
         return route.fulfill({ json: details });
       });
       if (!darkMode) await page.clock.install();
@@ -171,6 +175,10 @@ for (const locale of ['fa', 'en'] as const)
           await expect(page.getByTestId(`invoice-card-${adjustmentId}`)).toHaveCount(0);
           await retry.click();
           await expect.poll(() => reads).toBe(3);
+          await expect(failed).toBeVisible();
+          await expect(page.getByTestId(`invoice-card-${invoiceId}`)).toHaveCount(0);
+          await retry.click();
+          await expect.poll(() => reads).toBe(4);
           await expect(page.getByTestId(`invoice-card-${invoiceId}`)).toBeVisible();
         } finally {
           release();

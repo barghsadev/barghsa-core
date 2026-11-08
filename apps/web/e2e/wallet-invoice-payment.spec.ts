@@ -460,10 +460,9 @@ for (const locale of ['en', 'fa'] as const)
     await confirm.click();
     await expect.poll(() => writes.length).toBe(1);
     await page.clock.runFor(15_100);
-    await expect(dialog.getByRole('alert')).toBeVisible();
-    await expect(
-      dialog.getByText(confirmationText('unconfirmed', locale), { exact: true })
-    ).toBeVisible();
+    const warning = dialog.getByRole('alert');
+    await expect(warning).toBeVisible();
+    await expect(warning).toHaveText(confirmationText('unconfirmed', locale));
     expect(writes).toHaveLength(1);
     await expect(panel.getByRole('status')).toHaveCount(0);
     release();

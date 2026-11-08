@@ -94,6 +94,14 @@ interface Detail {
   refunds: Array<{ id: string; amount: string; state: string; destination: string }>;
 }
 
+function optionalText(value: unknown): boolean {
+  return value == null || typeof value === 'string';
+}
+
+function validTimestamp(value: unknown): boolean {
+  return typeof value === 'string' && Number.isFinite(Date.parse(value));
+}
+
 async function postConsultationAction(
   requestId: string,
   action: 'provide-info' | 'offer-review' | 'accept' | 'decline',
@@ -216,13 +224,30 @@ export function ConsultationDetailPage() {
         typeof value.request.status !== 'string' ||
         typeof value.request.product_snapshot?.title?.en !== 'string' ||
         typeof value.request.product_snapshot?.title?.fa !== 'string' ||
+        !validTimestamp(value.request.submitted_at) ||
+        typeof value.request.has_paid_invoice !== 'boolean' ||
+        ![
+          value.request.staff_owner_username,
+          value.request.staff_owner_id,
+          value.request.staff_team,
+          value.request.scope,
+          value.request.deliverables,
+          value.request.expected_next_step,
+          value.request.invoice_id,
+          value.request.invoice_state,
+        ].every(optionalText) ||
+        ![value.request.offer_valid_until, value.request.accepted_at].every(
+          (stamp) => stamp == null || validTimestamp(stamp)
+        ) ||
         !Array.isArray(value.history) ||
         !value.history.every(
           (event) =>
+            event &&
             typeof event.status === 'string' &&
             typeof event.actor_type === 'string' &&
             (event.reason === null || typeof event.reason === 'string') &&
-            typeof event.created_at === 'string'
+            optionalText(event.actor_name) &&
+            validTimestamp(event.created_at)
         ) ||
         !Array.isArray(value.adjustments) ||
         !Array.isArray(value.refunds)
@@ -232,10 +257,21 @@ export function ConsultationDetailPage() {
         (value.request.fee !== null &&
           (typeof value.request.fee !== 'string' || !/^[0-9]+$/.test(value.request.fee))) ||
         !value.adjustments.every(
-          (item) => item && typeof item.amount === 'string' && /^[0-9]+$/.test(item.amount)
+          (item) =>
+            item &&
+            typeof item.id === 'string' &&
+            typeof item.state === 'string' &&
+            (item.adjustment_kind === 'charge' || item.adjustment_kind === 'credit') &&
+            typeof item.amount === 'string' &&
+            /^[0-9]+$/.test(item.amount)
         ) ||
         !value.refunds.every(
-          (item) => item && typeof item.amount === 'string' && /^[0-9]+$/.test(item.amount)
+          (item) =>
+            item &&
+            typeof item.id === 'string' &&
+            typeof item.state === 'string' &&
+            typeof item.amount === 'string' &&
+            /^[0-9]+$/.test(item.amount)
         )
       )
         throw new Error('request');

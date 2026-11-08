@@ -151,3 +151,5 @@ Team role changes, member removals and invitation withdrawals wait up to 15 seco
 A customer dashboard widget checks the active profile and its own response before rendering. An incomplete or malformed response opens a retry in that widget while successful cards stay available. A successful empty response keeps its empty-state message. Wallet and invoice amounts stay in exact integer rials.
 
 The saving catalogue keeps its last verified plans and published terms visible during a recoverable refresh. A fresh, valid catalogue is required before it offers an order link again. A sign-in or permission denial clears the previously displayed plans.
+
+Invoice details check line items, linked invoices and activity before rendering. Consultation details check the display text, timeline, dates and recorded payment flag before offering actions. An invalid initial response leaves the detail heading and an explicit retry available.

@@ -182,6 +182,115 @@ async function readJson<T>(res: Response): Promise<T> {
   return (await res.json()) as T;
 }
 
+function record(value: unknown): value is Record<string, unknown> {
+  return !!value && typeof value === 'object' && !Array.isArray(value);
+}
+
+function amount(value: unknown): boolean {
+  return typeof value === 'string' && /^-?\d+$/.test(value);
+}
+
+function optionalText(value: unknown): boolean {
+  return value == null || typeof value === 'string';
+}
+
+function validInvoiceLine(value: unknown): boolean {
+  return (
+    record(value) &&
+    typeof value.description === 'string' &&
+    typeof value.quantity === 'number' &&
+    Number.isFinite(value.quantity) &&
+    (!Number.isInteger(value.quantity) || Number.isSafeInteger(value.quantity)) &&
+    [value.unitPrice, value.lineTotal, value.vatAmount].every(amount)
+  );
+}
+
+function validInvoiceNode(value: unknown): value is CustomerInvoiceNode {
+  return (
+    record(value) &&
+    typeof value.invoiceId === 'string' &&
+    value.invoiceId.length > 0 &&
+    typeof value.role === 'string' &&
+    typeof value.state === 'string' &&
+    amount(value.totalAmount) &&
+    amount(value.paidAmount) &&
+    [
+      value.adjustmentKind,
+      value.issuedAt,
+      value.payableFrom,
+      value.dueAt,
+      value.periodStart,
+      value.periodEnd,
+      value.explanation,
+      value.dueAtOverrideReason,
+    ].every(optionalText) &&
+    Array.isArray(value.lines) &&
+    value.lines.every(validInvoiceLine)
+  );
+}
+
+function optionalRows(value: unknown, valid: (row: Record<string, unknown>) => boolean): boolean {
+  return (
+    value == null ||
+    (Array.isArray(value) && value.every((row: unknown) => record(row) && valid(row)))
+  );
+}
+
+function validActivityRow(row: Record<string, unknown>): boolean {
+  return typeof row.id === 'string' && typeof row.state === 'string' && amount(row.amount);
+}
+
+function validInvoiceDetails(value: unknown, invoiceId: string): value is CustomerInvoiceDetails {
+  return (
+    record(value) &&
+    value.viewedInvoiceId === invoiceId &&
+    typeof value.originalInvoiceId === 'string' &&
+    validInvoiceNode(value.invoice) &&
+    value.invoice.invoiceId === invoiceId &&
+    Array.isArray(value.chain) &&
+    value.chain.every(validInvoiceNode) &&
+    [
+      value.consultationId,
+      value.contractId,
+      value.contractState,
+      value.electricityOrderId,
+      value.savingOrderId,
+      value.solarRequestId,
+    ].every(optionalText) &&
+    optionalRows(
+      value.payments,
+      (row) =>
+        validActivityRow(row) && typeof row.source === 'string' && typeof row.createdAt === 'string'
+    ) &&
+    optionalRows(
+      value.bankReceipts,
+      (row) =>
+        validActivityRow(row) &&
+        typeof row.paymentDate === 'string' &&
+        typeof row.payerReference === 'string' &&
+        typeof row.createdAt === 'string' &&
+        [row.bankName, row.customerNote, row.rejectionReason, row.confirmedAt].every(
+          optionalText
+        ) &&
+        optionalRows(
+          row.statusHistory,
+          (event) =>
+            typeof event.state === 'string' &&
+            typeof event.occurredAt === 'string' &&
+            typeof event.backfilled === 'boolean' &&
+            [event.actorType, event.actorName, event.reason].every(optionalText)
+        )
+    ) &&
+    optionalRows(
+      value.refunds,
+      (row) =>
+        validActivityRow(row) &&
+        typeof row.destination === 'string' &&
+        typeof row.updatedAt === 'string'
+    )
+  );
+}
+
 export async function fetchInvoiceDetails(
   invoiceId: string,
   signal: AbortSignal
@@ -197,12 +306,8 @@ export async function fetchInvoiceDetails(
   if (!res.ok) {
     throw new InvoiceRequestError(res.status, `HTTP ${res.status}`);
   }
-  const data = await readJson<CustomerInvoiceDetails>(res);
-  if (
-    data?.viewedInvoiceId !== invoiceId ||
-    data.invoice?.invoiceId !== invoiceId ||
-    !Array.isArray(data.chain)
-  )
+  const data: unknown = await res.json();
+  if (!validInvoiceDetails(data, invoiceId))
     throw new InvoiceRequestError(502, 'Invalid invoice details');
   return data;
 }

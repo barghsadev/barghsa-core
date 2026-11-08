@@ -969,6 +969,32 @@ it.each(['fee', 'adjustment', 'refund'] as const)(
   }
 );
 
+it('recovers locally from invalid consultation display and authority fields', async () => {
+  const original = detail();
+  const replies = [
+    { ...original, request: { ...original.request, scope: { private: 'Invalid scope' } } },
+    { ...original, history: [{ ...baseline[0], actor_name: { private: 'Invalid name' } }] },
+    { ...original, request: { ...original.request, has_paid_invoice: 'false' } },
+    original,
+  ];
+  let reads = 0;
+  const view = await mount(ConsultationDetailPage, async () => Response.json(replies[reads++]));
+  try {
+    for (let read = 1; read <= 3; read++) {
+      expect(reads).toBe(read);
+      expect(view.host.querySelector('h1')).not.toBeNull();
+      expect(view.host.querySelector('form')).toBeNull();
+      expect(view.host.textContent).toContain(copy('loadError'));
+      await view.click(copy('informationReload'));
+    }
+    expect(reads).toBe(4);
+    expect(view.host.querySelector('form')).not.toBeNull();
+    expect(view.host.textContent).toContain('Private requested detail');
+  } finally {
+    await view.close();
+  }
+});
+
 it('keeps consultation detail reads manual and cancels an explicit reload on unmount', async () => {
   let reads = 0,
     finish!: (response: Response) => void,

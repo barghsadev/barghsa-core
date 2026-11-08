@@ -25,6 +25,44 @@ describe('customer invoice helpers (T-04.1.05.04)', () => {
     );
   });
 
+  it('rejects a matching detail receipt with an invalid correction chain or activity', async () => {
+    const invoiceId = 'invoice-1';
+    const invoice = {
+      invoiceId,
+      role: 'original',
+      state: 'Unpaid',
+      totalAmount: '9007199254740993',
+      paidAmount: '0',
+      explanation: null,
+      lines: [],
+    };
+    const payload = {
+      viewedInvoiceId: invoiceId,
+      originalInvoiceId: invoiceId,
+      invoice,
+      chain: [invoice],
+    };
+    const signal = new AbortController().signal;
+    for (const malformed of [
+      { ...payload, invoice: { ...invoice, lines: null } },
+      { ...payload, chain: [invoice, null] },
+      { ...payload, invoice: { ...invoice, totalAmount: 9007199254740992 } },
+      { ...payload, payments: {} },
+      { ...payload, refunds: [null] },
+    ]) {
+      vi.stubGlobal(
+        'fetch',
+        vi.fn(async () => Response.json(malformed))
+      );
+      await expect(fetchInvoiceDetails(invoiceId, signal)).rejects.toMatchObject({ status: 502 });
+    }
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () => Response.json(payload))
+    );
+    await expect(fetchInvoiceDetails(invoiceId, signal)).resolves.toEqual(payload);
+  });
+
   it('preserves malformed money text instead of displaying a fabricated numeric amount', () => {
     expect(formatIrr('unavailable', 'en')).toBe('unavailable');
   });
