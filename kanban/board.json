@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-08T13:44:09+00:00",
-  "source_commit": "f50146aede04a311623805a1606e787685013c55",
+  "updated": "2026-11-08T13:56:02+00:00",
+  "source_commit": "53d27da7f10c27d6bf483265c7c4041a143df319",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -25342,7 +25342,7 @@
             },
             {
               "path": "apps/web/e2e/admin-otp-step-up.spec.ts",
-              "sha256": "743b3d7882f7ce4a34e601bc5959ccb3f1f51ff721ba2b1bd4a26bca583b69fd"
+              "sha256": "aab6a440312550208f7ca36e46f1ec5ecff931b260058da29020057a0fcc80ce"
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
@@ -49658,11 +49658,11 @@
             },
             {
               "path": "apps/web/e2e/staff-creation.spec.ts",
-              "sha256": "19d87f79c35f7f4878e93ba940511323f1e9bf0d140dc72f94cd7fcfe6ccb21e"
+              "sha256": "2a41a8eaeada41e21dd7274708228d3d5603667a10774e0108b14b9a4448603f"
             },
             {
               "path": "apps/web/e2e/staff-users.spec.ts",
-              "sha256": "b3b2bd993031f630239dad4cde501e3d0241513dab7f224c08f06a74c0906b7c"
+              "sha256": "b0f8af992ce11bb9e59adb53e56426a4a8f9dfaefbb88b6f4be7e7b1c17b2fe2"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -49674,7 +49674,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "7ca5ccb3e290b758247576b5fb7f28430e8e2996771e7ad5b266e4dae50eac3e"
+              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
             },
             {
               "path": "packages/db/src/schema/staff-roles.ts",
@@ -50373,11 +50373,11 @@
             },
             {
               "path": "apps/web/e2e/staff-creation.spec.ts",
-              "sha256": "19d87f79c35f7f4878e93ba940511323f1e9bf0d140dc72f94cd7fcfe6ccb21e"
+              "sha256": "2a41a8eaeada41e21dd7274708228d3d5603667a10774e0108b14b9a4448603f"
             },
             {
               "path": "apps/web/e2e/staff-users.spec.ts",
-              "sha256": "b3b2bd993031f630239dad4cde501e3d0241513dab7f224c08f06a74c0906b7c"
+              "sha256": "b0f8af992ce11bb9e59adb53e56426a4a8f9dfaefbb88b6f4be7e7b1c17b2fe2"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -50389,7 +50389,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "7ca5ccb3e290b758247576b5fb7f28430e8e2996771e7ad5b266e4dae50eac3e"
+              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
             },
             {
               "path": "packages/db/src/schema/staff-roles.ts",
@@ -67062,7 +67062,7 @@
             },
             {
               "path": "apps/web/src/pages/staff-directory-recovery.test.tsx",
-              "sha256": "348f2464d4775cf26a39b72d53234ca7dc61d59e137338b32538a5cfc2558a90"
+              "sha256": "bf65df647e8e4648a5f5e2cc334ee31177729425b0c1c379e8fde3217f47c65c"
             },
             {
               "path": "packages/db/src/schema/staff-roles.ts",
@@ -109692,11 +109692,11 @@
             },
             {
               "path": "apps/web/e2e/staff-creation.spec.ts",
-              "sha256": "19d87f79c35f7f4878e93ba940511323f1e9bf0d140dc72f94cd7fcfe6ccb21e"
+              "sha256": "2a41a8eaeada41e21dd7274708228d3d5603667a10774e0108b14b9a4448603f"
             },
             {
               "path": "apps/web/e2e/staff-users.spec.ts",
-              "sha256": "b3b2bd993031f630239dad4cde501e3d0241513dab7f224c08f06a74c0906b7c"
+              "sha256": "b0f8af992ce11bb9e59adb53e56426a4a8f9dfaefbb88b6f4be7e7b1c17b2fe2"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -109712,11 +109712,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "7ca5ccb3e290b758247576b5fb7f28430e8e2996771e7ad5b266e4dae50eac3e"
+              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
             },
             {
               "path": "apps/web/src/pages/staff-directory-recovery.test.tsx",
-              "sha256": "348f2464d4775cf26a39b72d53234ca7dc61d59e137338b32538a5cfc2558a90"
+              "sha256": "bf65df647e8e4648a5f5e2cc334ee31177729425b0c1c379e8fde3217f47c65c"
             },
             {
               "path": "packages/db/src/schema/staff-roles.ts",
@@ -110368,7 +110368,7 @@
             },
             {
               "path": "apps/web/e2e/staff-users.spec.ts",
-              "sha256": "b3b2bd993031f630239dad4cde501e3d0241513dab7f224c08f06a74c0906b7c"
+              "sha256": "b0f8af992ce11bb9e59adb53e56426a4a8f9dfaefbb88b6f4be7e7b1c17b2fe2"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -110384,11 +110384,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "7ca5ccb3e290b758247576b5fb7f28430e8e2996771e7ad5b266e4dae50eac3e"
+              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
             },
             {
               "path": "apps/web/src/pages/staff-directory-recovery.test.tsx",
-              "sha256": "348f2464d4775cf26a39b72d53234ca7dc61d59e137338b32538a5cfc2558a90"
+              "sha256": "bf65df647e8e4648a5f5e2cc334ee31177729425b0c1c379e8fde3217f47c65c"
             },
             {
               "path": "packages/db/src/schema/staff-roles.ts",
@@ -491259,7 +491259,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "7ca5ccb3e290b758247576b5fb7f28430e8e2996771e7ad5b266e4dae50eac3e"
+              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.tsx",
@@ -494403,7 +494403,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "7ca5ccb3e290b758247576b5fb7f28430e8e2996771e7ad5b266e4dae50eac3e"
+              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
@@ -495286,7 +495286,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "7ca5ccb3e290b758247576b5fb7f28430e8e2996771e7ad5b266e4dae50eac3e"
+              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
@@ -496110,7 +496110,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "7ca5ccb3e290b758247576b5fb7f28430e8e2996771e7ad5b266e4dae50eac3e"
+              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
@@ -497047,7 +497047,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "f717a98e5f374f0ef602ed0a9a575500781f61210168a1af745eb15481c4e043"
+              "sha256": "1215f3507c23d9db82e9000ed19d5c39dfb2fa2619823ca5fc76e4cb754aca81"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -511594,7 +511594,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "7ca5ccb3e290b758247576b5fb7f28430e8e2996771e7ad5b266e4dae50eac3e"
+              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
@@ -512272,7 +512272,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "7ca5ccb3e290b758247576b5fb7f28430e8e2996771e7ad5b266e4dae50eac3e"
+              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.tsx",
@@ -515557,7 +515557,7 @@
             },
             {
               "path": "apps/web/e2e/staff-users.spec.ts",
-              "sha256": "b3b2bd993031f630239dad4cde501e3d0241513dab7f224c08f06a74c0906b7c"
+              "sha256": "b0f8af992ce11bb9e59adb53e56426a4a8f9dfaefbb88b6f4be7e7b1c17b2fe2"
             },
             {
               "path": "apps/web/e2e/staff-wallet-receipt-views.spec.ts",
@@ -515996,7 +515996,7 @@
             },
             {
               "path": "apps/web/e2e/staff-users.spec.ts",
-              "sha256": "b3b2bd993031f630239dad4cde501e3d0241513dab7f224c08f06a74c0906b7c"
+              "sha256": "b0f8af992ce11bb9e59adb53e56426a4a8f9dfaefbb88b6f4be7e7b1c17b2fe2"
             },
             {
               "path": "apps/web/e2e/staff-wallet-receipt-views.spec.ts",
@@ -517937,7 +517937,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "7ca5ccb3e290b758247576b5fb7f28430e8e2996771e7ad5b266e4dae50eac3e"
+              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.tsx",
@@ -518105,7 +518105,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "f717a98e5f374f0ef602ed0a9a575500781f61210168a1af745eb15481c4e043"
+              "sha256": "1215f3507c23d9db82e9000ed19d5c39dfb2fa2619823ca5fc76e4cb754aca81"
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
@@ -519213,7 +519213,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "f717a98e5f374f0ef602ed0a9a575500781f61210168a1af745eb15481c4e043"
+              "sha256": "1215f3507c23d9db82e9000ed19d5c39dfb2fa2619823ca5fc76e4cb754aca81"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -519382,7 +519382,7 @@
             },
             {
               "path": "apps/web/e2e/staff-users.spec.ts",
-              "sha256": "b3b2bd993031f630239dad4cde501e3d0241513dab7f224c08f06a74c0906b7c"
+              "sha256": "b0f8af992ce11bb9e59adb53e56426a4a8f9dfaefbb88b6f4be7e7b1c17b2fe2"
             },
             {
               "path": "apps/web/e2e/staff-wallet-receipt-views.spec.ts",
@@ -520480,7 +520480,7 @@
             },
             {
               "path": "apps/web/e2e/staff-creation.spec.ts",
-              "sha256": "19d87f79c35f7f4878e93ba940511323f1e9bf0d140dc72f94cd7fcfe6ccb21e"
+              "sha256": "2a41a8eaeada41e21dd7274708228d3d5603667a10774e0108b14b9a4448603f"
             },
             {
               "path": "apps/web/e2e/staff-dashboard-widgets.spec.ts",
@@ -520488,7 +520488,7 @@
             },
             {
               "path": "apps/web/e2e/staff-users.spec.ts",
-              "sha256": "b3b2bd993031f630239dad4cde501e3d0241513dab7f224c08f06a74c0906b7c"
+              "sha256": "b0f8af992ce11bb9e59adb53e56426a4a8f9dfaefbb88b6f4be7e7b1c17b2fe2"
             },
             {
               "path": "apps/web/e2e/team-catalogue-recovery.spec.ts",
@@ -521308,7 +521308,7 @@
             },
             {
               "path": "apps/web/e2e/staff-creation.spec.ts",
-              "sha256": "19d87f79c35f7f4878e93ba940511323f1e9bf0d140dc72f94cd7fcfe6ccb21e"
+              "sha256": "2a41a8eaeada41e21dd7274708228d3d5603667a10774e0108b14b9a4448603f"
             },
             {
               "path": "apps/web/e2e/staff-dashboard-widgets.spec.ts",
@@ -521316,7 +521316,7 @@
             },
             {
               "path": "apps/web/e2e/staff-users.spec.ts",
-              "sha256": "b3b2bd993031f630239dad4cde501e3d0241513dab7f224c08f06a74c0906b7c"
+              "sha256": "b0f8af992ce11bb9e59adb53e56426a4a8f9dfaefbb88b6f4be7e7b1c17b2fe2"
             },
             {
               "path": "apps/web/e2e/team-catalogue-recovery.spec.ts",
@@ -522636,7 +522636,7 @@
             },
             {
               "path": "apps/web/e2e/staff-creation.spec.ts",
-              "sha256": "19d87f79c35f7f4878e93ba940511323f1e9bf0d140dc72f94cd7fcfe6ccb21e"
+              "sha256": "2a41a8eaeada41e21dd7274708228d3d5603667a10774e0108b14b9a4448603f"
             },
             {
               "path": "apps/web/e2e/staff-dashboard-widgets.spec.ts",
@@ -522644,7 +522644,7 @@
             },
             {
               "path": "apps/web/e2e/staff-users.spec.ts",
-              "sha256": "b3b2bd993031f630239dad4cde501e3d0241513dab7f224c08f06a74c0906b7c"
+              "sha256": "b0f8af992ce11bb9e59adb53e56426a4a8f9dfaefbb88b6f4be7e7b1c17b2fe2"
             },
             {
               "path": "apps/web/e2e/team-catalogue-recovery.spec.ts",
@@ -546840,7 +546840,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "7ca5ccb3e290b758247576b5fb7f28430e8e2996771e7ad5b266e4dae50eac3e"
+              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.test.tsx",
@@ -547188,7 +547188,7 @@
             },
             {
               "path": "apps/web/src/pages/staff-directory-recovery.test.tsx",
-              "sha256": "348f2464d4775cf26a39b72d53234ca7dc61d59e137338b32538a5cfc2558a90"
+              "sha256": "bf65df647e8e4648a5f5e2cc334ee31177729425b0c1c379e8fde3217f47c65c"
             },
             {
               "path": "apps/web/src/pages/staff-order-list-query.test.tsx",
@@ -548706,7 +548706,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "7ca5ccb3e290b758247576b5fb7f28430e8e2996771e7ad5b266e4dae50eac3e"
+              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.test.tsx",
@@ -549054,7 +549054,7 @@
             },
             {
               "path": "apps/web/src/pages/staff-directory-recovery.test.tsx",
-              "sha256": "348f2464d4775cf26a39b72d53234ca7dc61d59e137338b32538a5cfc2558a90"
+              "sha256": "bf65df647e8e4648a5f5e2cc334ee31177729425b0c1c379e8fde3217f47c65c"
             },
             {
               "path": "apps/web/src/pages/staff-order-list-query.test.tsx",
@@ -550573,7 +550573,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "7ca5ccb3e290b758247576b5fb7f28430e8e2996771e7ad5b266e4dae50eac3e"
+              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.test.tsx",
@@ -550921,7 +550921,7 @@
             },
             {
               "path": "apps/web/src/pages/staff-directory-recovery.test.tsx",
-              "sha256": "348f2464d4775cf26a39b72d53234ca7dc61d59e137338b32538a5cfc2558a90"
+              "sha256": "bf65df647e8e4648a5f5e2cc334ee31177729425b0c1c379e8fde3217f47c65c"
             },
             {
               "path": "apps/web/src/pages/staff-order-list-query.test.tsx",
@@ -552409,7 +552409,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "7ca5ccb3e290b758247576b5fb7f28430e8e2996771e7ad5b266e4dae50eac3e"
+              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.test.tsx",
@@ -552757,7 +552757,7 @@
             },
             {
               "path": "apps/web/src/pages/staff-directory-recovery.test.tsx",
-              "sha256": "348f2464d4775cf26a39b72d53234ca7dc61d59e137338b32538a5cfc2558a90"
+              "sha256": "bf65df647e8e4648a5f5e2cc334ee31177729425b0c1c379e8fde3217f47c65c"
             },
             {
               "path": "apps/web/src/pages/staff-order-list-query.test.tsx",
@@ -554271,7 +554271,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "7ca5ccb3e290b758247576b5fb7f28430e8e2996771e7ad5b266e4dae50eac3e"
+              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.test.tsx",
@@ -554619,7 +554619,7 @@
             },
             {
               "path": "apps/web/src/pages/staff-directory-recovery.test.tsx",
-              "sha256": "348f2464d4775cf26a39b72d53234ca7dc61d59e137338b32538a5cfc2558a90"
+              "sha256": "bf65df647e8e4648a5f5e2cc334ee31177729425b0c1c379e8fde3217f47c65c"
             },
             {
               "path": "apps/web/src/pages/staff-order-list-query.test.tsx",
@@ -556142,7 +556142,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "7ca5ccb3e290b758247576b5fb7f28430e8e2996771e7ad5b266e4dae50eac3e"
+              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.test.tsx",
@@ -556490,7 +556490,7 @@
             },
             {
               "path": "apps/web/src/pages/staff-directory-recovery.test.tsx",
-              "sha256": "348f2464d4775cf26a39b72d53234ca7dc61d59e137338b32538a5cfc2558a90"
+              "sha256": "bf65df647e8e4648a5f5e2cc334ee31177729425b0c1c379e8fde3217f47c65c"
             },
             {
               "path": "apps/web/src/pages/staff-order-list-query.test.tsx",
@@ -557986,7 +557986,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "7ca5ccb3e290b758247576b5fb7f28430e8e2996771e7ad5b266e4dae50eac3e"
+              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.test.tsx",
@@ -558334,7 +558334,7 @@
             },
             {
               "path": "apps/web/src/pages/staff-directory-recovery.test.tsx",
-              "sha256": "348f2464d4775cf26a39b72d53234ca7dc61d59e137338b32538a5cfc2558a90"
+              "sha256": "bf65df647e8e4648a5f5e2cc334ee31177729425b0c1c379e8fde3217f47c65c"
             },
             {
               "path": "apps/web/src/pages/staff-order-list-query.test.tsx",
@@ -559794,7 +559794,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "7ca5ccb3e290b758247576b5fb7f28430e8e2996771e7ad5b266e4dae50eac3e"
+              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.test.tsx",
@@ -560142,7 +560142,7 @@
             },
             {
               "path": "apps/web/src/pages/staff-directory-recovery.test.tsx",
-              "sha256": "348f2464d4775cf26a39b72d53234ca7dc61d59e137338b32538a5cfc2558a90"
+              "sha256": "bf65df647e8e4648a5f5e2cc334ee31177729425b0c1c379e8fde3217f47c65c"
             },
             {
               "path": "apps/web/src/pages/staff-order-list-query.test.tsx",
@@ -561602,7 +561602,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "7ca5ccb3e290b758247576b5fb7f28430e8e2996771e7ad5b266e4dae50eac3e"
+              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.test.tsx",
@@ -561950,7 +561950,7 @@
             },
             {
               "path": "apps/web/src/pages/staff-directory-recovery.test.tsx",
-              "sha256": "348f2464d4775cf26a39b72d53234ca7dc61d59e137338b32538a5cfc2558a90"
+              "sha256": "bf65df647e8e4648a5f5e2cc334ee31177729425b0c1c379e8fde3217f47c65c"
             },
             {
               "path": "apps/web/src/pages/staff-order-list-query.test.tsx",
@@ -563411,7 +563411,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "7ca5ccb3e290b758247576b5fb7f28430e8e2996771e7ad5b266e4dae50eac3e"
+              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.test.tsx",
@@ -563759,7 +563759,7 @@
             },
             {
               "path": "apps/web/src/pages/staff-directory-recovery.test.tsx",
-              "sha256": "348f2464d4775cf26a39b72d53234ca7dc61d59e137338b32538a5cfc2558a90"
+              "sha256": "bf65df647e8e4648a5f5e2cc334ee31177729425b0c1c379e8fde3217f47c65c"
             },
             {
               "path": "apps/web/src/pages/staff-order-list-query.test.tsx",
@@ -565219,7 +565219,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "7ca5ccb3e290b758247576b5fb7f28430e8e2996771e7ad5b266e4dae50eac3e"
+              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.test.tsx",
@@ -565567,7 +565567,7 @@
             },
             {
               "path": "apps/web/src/pages/staff-directory-recovery.test.tsx",
-              "sha256": "348f2464d4775cf26a39b72d53234ca7dc61d59e137338b32538a5cfc2558a90"
+              "sha256": "bf65df647e8e4648a5f5e2cc334ee31177729425b0c1c379e8fde3217f47c65c"
             },
             {
               "path": "apps/web/src/pages/staff-order-list-query.test.tsx",
@@ -567045,7 +567045,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "7ca5ccb3e290b758247576b5fb7f28430e8e2996771e7ad5b266e4dae50eac3e"
+              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.test.tsx",
@@ -567441,7 +567441,7 @@
             },
             {
               "path": "apps/web/src/pages/staff-directory-recovery.test.tsx",
-              "sha256": "348f2464d4775cf26a39b72d53234ca7dc61d59e137338b32538a5cfc2558a90"
+              "sha256": "bf65df647e8e4648a5f5e2cc334ee31177729425b0c1c379e8fde3217f47c65c"
             },
             {
               "path": "apps/web/src/pages/staff-order-list-query.test.tsx",
@@ -567521,7 +567521,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "f717a98e5f374f0ef602ed0a9a575500781f61210168a1af745eb15481c4e043"
+              "sha256": "1215f3507c23d9db82e9000ed19d5c39dfb2fa2619823ca5fc76e4cb754aca81"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -568940,7 +568940,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "7ca5ccb3e290b758247576b5fb7f28430e8e2996771e7ad5b266e4dae50eac3e"
+              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.test.tsx",
@@ -569336,7 +569336,7 @@
             },
             {
               "path": "apps/web/src/pages/staff-directory-recovery.test.tsx",
-              "sha256": "348f2464d4775cf26a39b72d53234ca7dc61d59e137338b32538a5cfc2558a90"
+              "sha256": "bf65df647e8e4648a5f5e2cc334ee31177729425b0c1c379e8fde3217f47c65c"
             },
             {
               "path": "apps/web/src/pages/staff-order-list-query.test.tsx",
@@ -569416,7 +569416,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "f717a98e5f374f0ef602ed0a9a575500781f61210168a1af745eb15481c4e043"
+              "sha256": "1215f3507c23d9db82e9000ed19d5c39dfb2fa2619823ca5fc76e4cb754aca81"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -570220,7 +570220,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Staff team and assignment-rule writes now have bounded acknowledgement and require a valid post-failure read before new confirmation. Staff account creation, role change, activation resend and disable still lack bounded confirmation recovery. Role change, activation resend and disable also accept any successful response without validating its receipt. Reconcile remaining CRUD and transactional feedback against current route evidence."
+        "Staff account creation, role changes, activation resends and disables now have bounded, command-specific acknowledgement and fresh authority recovery. CRM verification-correction creation and decision writes still lack bounded and owned recovery. Reconcile remaining CRUD and transactional feedback against current route evidence."
       ],
       "owner": null,
       "depends_on": [],
@@ -570289,7 +570289,8 @@
           "release-0.5-hosted-ci-repairs",
           "release-0.5-customer-correction-recovery",
           "release-0.5-failed-job-command-recovery",
-          "release-0.5-staff-team-command-recovery"
+          "release-0.5-staff-team-command-recovery",
+          "release-0.5-staff-directory-command-recovery"
         ],
         "current_acceptance": null
       }
@@ -570924,7 +570925,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "7ca5ccb3e290b758247576b5fb7f28430e8e2996771e7ad5b266e4dae50eac3e"
+              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.test.tsx",
@@ -571320,7 +571321,7 @@
             },
             {
               "path": "apps/web/src/pages/staff-directory-recovery.test.tsx",
-              "sha256": "348f2464d4775cf26a39b72d53234ca7dc61d59e137338b32538a5cfc2558a90"
+              "sha256": "bf65df647e8e4648a5f5e2cc334ee31177729425b0c1c379e8fde3217f47c65c"
             },
             {
               "path": "apps/web/src/pages/staff-order-list-query.test.tsx",
@@ -571400,7 +571401,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "f717a98e5f374f0ef602ed0a9a575500781f61210168a1af745eb15481c4e043"
+              "sha256": "1215f3507c23d9db82e9000ed19d5c39dfb2fa2619823ca5fc76e4cb754aca81"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -572819,7 +572820,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "7ca5ccb3e290b758247576b5fb7f28430e8e2996771e7ad5b266e4dae50eac3e"
+              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.test.tsx",
@@ -573215,7 +573216,7 @@
             },
             {
               "path": "apps/web/src/pages/staff-directory-recovery.test.tsx",
-              "sha256": "348f2464d4775cf26a39b72d53234ca7dc61d59e137338b32538a5cfc2558a90"
+              "sha256": "bf65df647e8e4648a5f5e2cc334ee31177729425b0c1c379e8fde3217f47c65c"
             },
             {
               "path": "apps/web/src/pages/staff-order-list-query.test.tsx",
@@ -573295,7 +573296,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "f717a98e5f374f0ef602ed0a9a575500781f61210168a1af745eb15481c4e043"
+              "sha256": "1215f3507c23d9db82e9000ed19d5c39dfb2fa2619823ca5fc76e4cb754aca81"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -574714,7 +574715,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "7ca5ccb3e290b758247576b5fb7f28430e8e2996771e7ad5b266e4dae50eac3e"
+              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.test.tsx",
@@ -575110,7 +575111,7 @@
             },
             {
               "path": "apps/web/src/pages/staff-directory-recovery.test.tsx",
-              "sha256": "348f2464d4775cf26a39b72d53234ca7dc61d59e137338b32538a5cfc2558a90"
+              "sha256": "bf65df647e8e4648a5f5e2cc334ee31177729425b0c1c379e8fde3217f47c65c"
             },
             {
               "path": "apps/web/src/pages/staff-order-list-query.test.tsx",
@@ -575190,7 +575191,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "f717a98e5f374f0ef602ed0a9a575500781f61210168a1af745eb15481c4e043"
+              "sha256": "1215f3507c23d9db82e9000ed19d5c39dfb2fa2619823ca5fc76e4cb754aca81"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -576609,7 +576610,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "7ca5ccb3e290b758247576b5fb7f28430e8e2996771e7ad5b266e4dae50eac3e"
+              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.test.tsx",
@@ -577005,7 +577006,7 @@
             },
             {
               "path": "apps/web/src/pages/staff-directory-recovery.test.tsx",
-              "sha256": "348f2464d4775cf26a39b72d53234ca7dc61d59e137338b32538a5cfc2558a90"
+              "sha256": "bf65df647e8e4648a5f5e2cc334ee31177729425b0c1c379e8fde3217f47c65c"
             },
             {
               "path": "apps/web/src/pages/staff-order-list-query.test.tsx",
@@ -577085,7 +577086,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "f717a98e5f374f0ef602ed0a9a575500781f61210168a1af745eb15481c4e043"
+              "sha256": "1215f3507c23d9db82e9000ed19d5c39dfb2fa2619823ca5fc76e4cb754aca81"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -578504,7 +578505,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "7ca5ccb3e290b758247576b5fb7f28430e8e2996771e7ad5b266e4dae50eac3e"
+              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.test.tsx",
@@ -578900,7 +578901,7 @@
             },
             {
               "path": "apps/web/src/pages/staff-directory-recovery.test.tsx",
-              "sha256": "348f2464d4775cf26a39b72d53234ca7dc61d59e137338b32538a5cfc2558a90"
+              "sha256": "bf65df647e8e4648a5f5e2cc334ee31177729425b0c1c379e8fde3217f47c65c"
             },
             {
               "path": "apps/web/src/pages/staff-order-list-query.test.tsx",
@@ -578980,7 +578981,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "f717a98e5f374f0ef602ed0a9a575500781f61210168a1af745eb15481c4e043"
+              "sha256": "1215f3507c23d9db82e9000ed19d5c39dfb2fa2619823ca5fc76e4cb754aca81"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -580399,7 +580400,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "7ca5ccb3e290b758247576b5fb7f28430e8e2996771e7ad5b266e4dae50eac3e"
+              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.test.tsx",
@@ -580795,7 +580796,7 @@
             },
             {
               "path": "apps/web/src/pages/staff-directory-recovery.test.tsx",
-              "sha256": "348f2464d4775cf26a39b72d53234ca7dc61d59e137338b32538a5cfc2558a90"
+              "sha256": "bf65df647e8e4648a5f5e2cc334ee31177729425b0c1c379e8fde3217f47c65c"
             },
             {
               "path": "apps/web/src/pages/staff-order-list-query.test.tsx",
@@ -580875,7 +580876,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "f717a98e5f374f0ef602ed0a9a575500781f61210168a1af745eb15481c4e043"
+              "sha256": "1215f3507c23d9db82e9000ed19d5c39dfb2fa2619823ca5fc76e4cb754aca81"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -582294,7 +582295,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "7ca5ccb3e290b758247576b5fb7f28430e8e2996771e7ad5b266e4dae50eac3e"
+              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.test.tsx",
@@ -582690,7 +582691,7 @@
             },
             {
               "path": "apps/web/src/pages/staff-directory-recovery.test.tsx",
-              "sha256": "348f2464d4775cf26a39b72d53234ca7dc61d59e137338b32538a5cfc2558a90"
+              "sha256": "bf65df647e8e4648a5f5e2cc334ee31177729425b0c1c379e8fde3217f47c65c"
             },
             {
               "path": "apps/web/src/pages/staff-order-list-query.test.tsx",
@@ -582770,7 +582771,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "f717a98e5f374f0ef602ed0a9a575500781f61210168a1af745eb15481c4e043"
+              "sha256": "1215f3507c23d9db82e9000ed19d5c39dfb2fa2619823ca5fc76e4cb754aca81"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -584189,7 +584190,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "7ca5ccb3e290b758247576b5fb7f28430e8e2996771e7ad5b266e4dae50eac3e"
+              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.test.tsx",
@@ -584585,7 +584586,7 @@
             },
             {
               "path": "apps/web/src/pages/staff-directory-recovery.test.tsx",
-              "sha256": "348f2464d4775cf26a39b72d53234ca7dc61d59e137338b32538a5cfc2558a90"
+              "sha256": "bf65df647e8e4648a5f5e2cc334ee31177729425b0c1c379e8fde3217f47c65c"
             },
             {
               "path": "apps/web/src/pages/staff-order-list-query.test.tsx",
@@ -584665,7 +584666,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "f717a98e5f374f0ef602ed0a9a575500781f61210168a1af745eb15481c4e043"
+              "sha256": "1215f3507c23d9db82e9000ed19d5c39dfb2fa2619823ca5fc76e4cb754aca81"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -586084,7 +586085,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "7ca5ccb3e290b758247576b5fb7f28430e8e2996771e7ad5b266e4dae50eac3e"
+              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.test.tsx",
@@ -586480,7 +586481,7 @@
             },
             {
               "path": "apps/web/src/pages/staff-directory-recovery.test.tsx",
-              "sha256": "348f2464d4775cf26a39b72d53234ca7dc61d59e137338b32538a5cfc2558a90"
+              "sha256": "bf65df647e8e4648a5f5e2cc334ee31177729425b0c1c379e8fde3217f47c65c"
             },
             {
               "path": "apps/web/src/pages/staff-order-list-query.test.tsx",
@@ -586560,7 +586561,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "f717a98e5f374f0ef602ed0a9a575500781f61210168a1af745eb15481c4e043"
+              "sha256": "1215f3507c23d9db82e9000ed19d5c39dfb2fa2619823ca5fc76e4cb754aca81"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -587979,7 +587980,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "7ca5ccb3e290b758247576b5fb7f28430e8e2996771e7ad5b266e4dae50eac3e"
+              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.test.tsx",
@@ -588375,7 +588376,7 @@
             },
             {
               "path": "apps/web/src/pages/staff-directory-recovery.test.tsx",
-              "sha256": "348f2464d4775cf26a39b72d53234ca7dc61d59e137338b32538a5cfc2558a90"
+              "sha256": "bf65df647e8e4648a5f5e2cc334ee31177729425b0c1c379e8fde3217f47c65c"
             },
             {
               "path": "apps/web/src/pages/staff-order-list-query.test.tsx",
@@ -588455,7 +588456,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "f717a98e5f374f0ef602ed0a9a575500781f61210168a1af745eb15481c4e043"
+              "sha256": "1215f3507c23d9db82e9000ed19d5c39dfb2fa2619823ca5fc76e4cb754aca81"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -589874,7 +589875,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "7ca5ccb3e290b758247576b5fb7f28430e8e2996771e7ad5b266e4dae50eac3e"
+              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.test.tsx",
@@ -590270,7 +590271,7 @@
             },
             {
               "path": "apps/web/src/pages/staff-directory-recovery.test.tsx",
-              "sha256": "348f2464d4775cf26a39b72d53234ca7dc61d59e137338b32538a5cfc2558a90"
+              "sha256": "bf65df647e8e4648a5f5e2cc334ee31177729425b0c1c379e8fde3217f47c65c"
             },
             {
               "path": "apps/web/src/pages/staff-order-list-query.test.tsx",
@@ -590350,7 +590351,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "f717a98e5f374f0ef602ed0a9a575500781f61210168a1af745eb15481c4e043"
+              "sha256": "1215f3507c23d9db82e9000ed19d5c39dfb2fa2619823ca5fc76e4cb754aca81"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -591614,7 +591615,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "f717a98e5f374f0ef602ed0a9a575500781f61210168a1af745eb15481c4e043"
+              "sha256": "1215f3507c23d9db82e9000ed19d5c39dfb2fa2619823ca5fc76e4cb754aca81"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -592509,7 +592510,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "7ca5ccb3e290b758247576b5fb7f28430e8e2996771e7ad5b266e4dae50eac3e"
+              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.test.tsx",
@@ -592905,7 +592906,7 @@
             },
             {
               "path": "apps/web/src/pages/staff-directory-recovery.test.tsx",
-              "sha256": "348f2464d4775cf26a39b72d53234ca7dc61d59e137338b32538a5cfc2558a90"
+              "sha256": "bf65df647e8e4648a5f5e2cc334ee31177729425b0c1c379e8fde3217f47c65c"
             },
             {
               "path": "apps/web/src/pages/staff-order-list-query.test.tsx",
@@ -592985,7 +592986,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "f717a98e5f374f0ef602ed0a9a575500781f61210168a1af745eb15481c4e043"
+              "sha256": "1215f3507c23d9db82e9000ed19d5c39dfb2fa2619823ca5fc76e4cb754aca81"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -594404,7 +594405,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "7ca5ccb3e290b758247576b5fb7f28430e8e2996771e7ad5b266e4dae50eac3e"
+              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.test.tsx",
@@ -594800,7 +594801,7 @@
             },
             {
               "path": "apps/web/src/pages/staff-directory-recovery.test.tsx",
-              "sha256": "348f2464d4775cf26a39b72d53234ca7dc61d59e137338b32538a5cfc2558a90"
+              "sha256": "bf65df647e8e4648a5f5e2cc334ee31177729425b0c1c379e8fde3217f47c65c"
             },
             {
               "path": "apps/web/src/pages/staff-order-list-query.test.tsx",
@@ -594880,7 +594881,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "f717a98e5f374f0ef602ed0a9a575500781f61210168a1af745eb15481c4e043"
+              "sha256": "1215f3507c23d9db82e9000ed19d5c39dfb2fa2619823ca5fc76e4cb754aca81"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -595684,7 +595685,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Staff team and assignment-rule recovery preserve their separate drafts and reject reads started before the uncertain result. Match remaining conditional list, detail, dashboard and staff route states to the inventory and current native evidence."
+        "Staff directory reads now validate the returned staff identities, roles and status before unlocking a command. Match remaining conditional list, detail, dashboard and staff route states to the inventory and current native evidence."
       ],
       "owner": null,
       "depends_on": [],
@@ -595764,7 +595765,8 @@
           "release-0.5-delivery-window-queue-recovery",
           "release-0.5-customer-correction-recovery",
           "release-0.5-failed-job-command-recovery",
-          "release-0.5-staff-team-command-recovery"
+          "release-0.5-staff-team-command-recovery",
+          "release-0.5-staff-directory-command-recovery"
         ],
         "current_acceptance": null
       }
@@ -596409,7 +596411,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "7ca5ccb3e290b758247576b5fb7f28430e8e2996771e7ad5b266e4dae50eac3e"
+              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.test.tsx",
@@ -596757,7 +596759,7 @@
             },
             {
               "path": "apps/web/src/pages/staff-directory-recovery.test.tsx",
-              "sha256": "348f2464d4775cf26a39b72d53234ca7dc61d59e137338b32538a5cfc2558a90"
+              "sha256": "bf65df647e8e4648a5f5e2cc334ee31177729425b0c1c379e8fde3217f47c65c"
             },
             {
               "path": "apps/web/src/pages/staff-order-list-query.test.tsx",
@@ -598213,7 +598215,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "7ca5ccb3e290b758247576b5fb7f28430e8e2996771e7ad5b266e4dae50eac3e"
+              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.test.tsx",
@@ -598561,7 +598563,7 @@
             },
             {
               "path": "apps/web/src/pages/staff-directory-recovery.test.tsx",
-              "sha256": "348f2464d4775cf26a39b72d53234ca7dc61d59e137338b32538a5cfc2558a90"
+              "sha256": "bf65df647e8e4648a5f5e2cc334ee31177729425b0c1c379e8fde3217f47c65c"
             },
             {
               "path": "apps/web/src/pages/staff-order-list-query.test.tsx",
@@ -600017,7 +600019,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "7ca5ccb3e290b758247576b5fb7f28430e8e2996771e7ad5b266e4dae50eac3e"
+              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.test.tsx",
@@ -600365,7 +600367,7 @@
             },
             {
               "path": "apps/web/src/pages/staff-directory-recovery.test.tsx",
-              "sha256": "348f2464d4775cf26a39b72d53234ca7dc61d59e137338b32538a5cfc2558a90"
+              "sha256": "bf65df647e8e4648a5f5e2cc334ee31177729425b0c1c379e8fde3217f47c65c"
             },
             {
               "path": "apps/web/src/pages/staff-order-list-query.test.tsx",
@@ -601821,7 +601823,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "7ca5ccb3e290b758247576b5fb7f28430e8e2996771e7ad5b266e4dae50eac3e"
+              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.test.tsx",
@@ -602169,7 +602171,7 @@
             },
             {
               "path": "apps/web/src/pages/staff-directory-recovery.test.tsx",
-              "sha256": "348f2464d4775cf26a39b72d53234ca7dc61d59e137338b32538a5cfc2558a90"
+              "sha256": "bf65df647e8e4648a5f5e2cc334ee31177729425b0c1c379e8fde3217f47c65c"
             },
             {
               "path": "apps/web/src/pages/staff-order-list-query.test.tsx",
@@ -603625,7 +603627,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "7ca5ccb3e290b758247576b5fb7f28430e8e2996771e7ad5b266e4dae50eac3e"
+              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.test.tsx",
@@ -603973,7 +603975,7 @@
             },
             {
               "path": "apps/web/src/pages/staff-directory-recovery.test.tsx",
-              "sha256": "348f2464d4775cf26a39b72d53234ca7dc61d59e137338b32538a5cfc2558a90"
+              "sha256": "bf65df647e8e4648a5f5e2cc334ee31177729425b0c1c379e8fde3217f47c65c"
             },
             {
               "path": "apps/web/src/pages/staff-order-list-query.test.tsx",
@@ -605429,7 +605431,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "7ca5ccb3e290b758247576b5fb7f28430e8e2996771e7ad5b266e4dae50eac3e"
+              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.test.tsx",
@@ -605777,7 +605779,7 @@
             },
             {
               "path": "apps/web/src/pages/staff-directory-recovery.test.tsx",
-              "sha256": "348f2464d4775cf26a39b72d53234ca7dc61d59e137338b32538a5cfc2558a90"
+              "sha256": "bf65df647e8e4648a5f5e2cc334ee31177729425b0c1c379e8fde3217f47c65c"
             },
             {
               "path": "apps/web/src/pages/staff-order-list-query.test.tsx",
@@ -607233,7 +607235,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "7ca5ccb3e290b758247576b5fb7f28430e8e2996771e7ad5b266e4dae50eac3e"
+              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.test.tsx",
@@ -607581,7 +607583,7 @@
             },
             {
               "path": "apps/web/src/pages/staff-directory-recovery.test.tsx",
-              "sha256": "348f2464d4775cf26a39b72d53234ca7dc61d59e137338b32538a5cfc2558a90"
+              "sha256": "bf65df647e8e4648a5f5e2cc334ee31177729425b0c1c379e8fde3217f47c65c"
             },
             {
               "path": "apps/web/src/pages/staff-order-list-query.test.tsx",
@@ -634920,7 +634922,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "7ca5ccb3e290b758247576b5fb7f28430e8e2996771e7ad5b266e4dae50eac3e"
+              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
@@ -636044,7 +636046,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "7ca5ccb3e290b758247576b5fb7f28430e8e2996771e7ad5b266e4dae50eac3e"
+              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
@@ -637168,7 +637170,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "7ca5ccb3e290b758247576b5fb7f28430e8e2996771e7ad5b266e4dae50eac3e"
+              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
@@ -638295,7 +638297,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "7ca5ccb3e290b758247576b5fb7f28430e8e2996771e7ad5b266e4dae50eac3e"
+              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
@@ -639422,7 +639424,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "7ca5ccb3e290b758247576b5fb7f28430e8e2996771e7ad5b266e4dae50eac3e"
+              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
@@ -640576,7 +640578,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "7ca5ccb3e290b758247576b5fb7f28430e8e2996771e7ad5b266e4dae50eac3e"
+              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
@@ -641699,7 +641701,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "7ca5ccb3e290b758247576b5fb7f28430e8e2996771e7ad5b266e4dae50eac3e"
+              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
@@ -642822,7 +642824,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "7ca5ccb3e290b758247576b5fb7f28430e8e2996771e7ad5b266e4dae50eac3e"
+              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
@@ -643946,7 +643948,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "7ca5ccb3e290b758247576b5fb7f28430e8e2996771e7ad5b266e4dae50eac3e"
+              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
@@ -645088,7 +645090,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "7ca5ccb3e290b758247576b5fb7f28430e8e2996771e7ad5b266e4dae50eac3e"
+              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
@@ -646213,7 +646215,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "7ca5ccb3e290b758247576b5fb7f28430e8e2996771e7ad5b266e4dae50eac3e"
+              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
@@ -677713,7 +677715,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "7ca5ccb3e290b758247576b5fb7f28430e8e2996771e7ad5b266e4dae50eac3e"
+              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
@@ -678835,7 +678837,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "7ca5ccb3e290b758247576b5fb7f28430e8e2996771e7ad5b266e4dae50eac3e"
+              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
@@ -679957,7 +679959,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "7ca5ccb3e290b758247576b5fb7f28430e8e2996771e7ad5b266e4dae50eac3e"
+              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
@@ -681079,7 +681081,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "7ca5ccb3e290b758247576b5fb7f28430e8e2996771e7ad5b266e4dae50eac3e"
+              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
@@ -701441,7 +701443,7 @@
             },
             {
               "path": "apps/web/e2e/admin-otp-step-up.spec.ts",
-              "sha256": "743b3d7882f7ce4a34e601bc5959ccb3f1f51ff721ba2b1bd4a26bca583b69fd"
+              "sha256": "aab6a440312550208f7ca36e46f1ec5ecff931b260058da29020057a0fcc80ce"
             },
             {
               "path": "apps/web/e2e/otp-step-up-fixture.ts",
@@ -701469,7 +701471,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "7ca5ccb3e290b758247576b5fb7f28430e8e2996771e7ad5b266e4dae50eac3e"
+              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
             }
           ],
           "checks": [
@@ -701902,7 +701904,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "7ca5ccb3e290b758247576b5fb7f28430e8e2996771e7ad5b266e4dae50eac3e"
+              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
             },
             {
               "path": "apps/web/src/components/EffectivePermissionsView.tsx",
@@ -713419,7 +713421,7 @@
             },
             {
               "path": "apps/web/src/pages/staff-directory-recovery.test.tsx",
-              "sha256": "348f2464d4775cf26a39b72d53234ca7dc61d59e137338b32538a5cfc2558a90"
+              "sha256": "bf65df647e8e4648a5f5e2cc334ee31177729425b0c1c379e8fde3217f47c65c"
             },
             {
               "path": "packages/db/src/schema/staff-roles.ts",
@@ -713439,7 +713441,7 @@
             },
             {
               "path": "apps/web/e2e/staff-users.spec.ts",
-              "sha256": "b3b2bd993031f630239dad4cde501e3d0241513dab7f224c08f06a74c0906b7c"
+              "sha256": "b0f8af992ce11bb9e59adb53e56426a4a8f9dfaefbb88b6f4be7e7b1c17b2fe2"
             },
             {
               "path": "apps/web/src/components/StaffPermissionHistory.tsx",
@@ -713447,7 +713449,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "7ca5ccb3e290b758247576b5fb7f28430e8e2996771e7ad5b266e4dae50eac3e"
+              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
             },
             {
               "path": "apps/api/src/profiles/agents.service.ts",
@@ -725408,7 +725410,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Staff team and assignment-rule recovery, failed jobs, customer notification corrections, delivery windows and dead-letter actions have current evidence. Remaining command feedback and route states, live Sentry delivery and required GitHub accessibility enforcement still gate full adoption."
+        "Staff account and team workflows, assignment rules, failed jobs, notification corrections, delivery windows and dead-letter actions have current evidence. Remaining command feedback and route states, live Sentry delivery and required GitHub accessibility enforcement still gate full adoption."
       ],
       "owner": null,
       "depends_on": [],
@@ -725553,7 +725555,8 @@
           "release-0.5-hosted-ci-repairs",
           "release-0.5-customer-correction-recovery",
           "release-0.5-failed-job-command-recovery",
-          "release-0.5-staff-team-command-recovery"
+          "release-0.5-staff-team-command-recovery",
+          "release-0.5-staff-directory-command-recovery"
         ]
       }
     },
@@ -726581,7 +726584,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
-              "sha256": "7ca5ccb3e290b758247576b5fb7f28430e8e2996771e7ad5b266e4dae50eac3e"
+              "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.tsx",
@@ -727374,7 +727377,8 @@
             "Renewed delivery-window and dead-letter recovery and route and interaction budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-delivery-window-queue-recovery/proof.json",
             "Renewed customer correction recovery and route and interaction budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-customer-correction-recovery/proof.json",
             "Renewed failed-job recovery and route and interaction budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-failed-job-command-recovery/proof.json",
-            "Renewed staff team and assignment-rule recovery and route and interaction budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-team-command-recovery/proof.json"
+            "Renewed staff team and assignment-rule recovery and route and interaction budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-team-command-recovery/proof.json",
+            "Renewed staff directory recovery and route and interaction budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-directory-command-recovery/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -800356,6 +800360,130 @@
       "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-team-command-recovery/renewed-bindings.json",
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-team-command-recovery/reviewed.patch",
       "release_disposition": "Verified staff team and assignment-rule command recovery with current authority and captured drafts. v0.5.0 acceptance remains open."
+    },
+    "release-0.5-staff-directory-command-recovery": {
+      "batch": "release-0.5-staff-directory-command-recovery",
+      "base_commit": "53d27da7f10c27d6bf483265c7c4041a143df319",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.11.01.03",
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.11.01.03",
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": ".size-limit.json",
+          "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+        },
+        {
+          "path": "apps/api/src/admin/admin.controller.ts",
+          "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+        },
+        {
+          "path": "apps/api/src/admin/admin.service.ts",
+          "sha256": "3824ec29da0f99cf604f6b7234591bdbfbbd2ddedd8dbae29d37e1f2bbf30d10"
+        },
+        {
+          "path": "apps/web/e2e/admin-otp-step-up.spec.ts",
+          "sha256": "aab6a440312550208f7ca36e46f1ec5ecff931b260058da29020057a0fcc80ce"
+        },
+        {
+          "path": "apps/web/e2e/catalogue-form-fixture.ts",
+          "sha256": "d628dc1b6830b741901854f7107cee5a094dd9b33b286d20097b66f47629a74a"
+        },
+        {
+          "path": "apps/web/e2e/confirmation-fixture.ts",
+          "sha256": "8d842de5577a9f43a5ca0efcf8e6a00e18e6ea1fb53116555fac8cbd7608bb61"
+        },
+        {
+          "path": "apps/web/e2e/coverage-fixture.ts",
+          "sha256": "07949862684b86d6ff241d5f71e59e6c71a5cc1ddc70655b0d508beb53865dac"
+        },
+        {
+          "path": "apps/web/e2e/otp-step-up-fixture.ts",
+          "sha256": "744cbb721ce869b1fe4fdda57f173276ac59a4d7394428621d0006912348d1c4"
+        },
+        {
+          "path": "apps/web/e2e/staff-access-native-forms.spec.ts",
+          "sha256": "bd8936820ea091a7be4cb4b7af82e35eb37f40d175ec89930ba1a0bd9f046718"
+        },
+        {
+          "path": "apps/web/e2e/staff-creation.spec.ts",
+          "sha256": "2a41a8eaeada41e21dd7274708228d3d5603667a10774e0108b14b9a4448603f"
+        },
+        {
+          "path": "apps/web/e2e/staff-directory-recovery.spec.ts",
+          "sha256": "3e4c7f173f3d6bdeb425227d8bb7011a51cb8539f1c7d3c4f1b277f38430c8a2"
+        },
+        {
+          "path": "apps/web/e2e/staff-directory-tables.spec.ts",
+          "sha256": "5b8d0cbfc2cfdf9199178efd7fd30967c84227e71e8ce7cea7f44bdae82d3393"
+        },
+        {
+          "path": "apps/web/e2e/staff-users.spec.ts",
+          "sha256": "b0f8af992ce11bb9e59adb53e56426a4a8f9dfaefbb88b6f4be7e7b1c17b2fe2"
+        },
+        {
+          "path": "apps/web/src/components/TeamActionDialog.tsx",
+          "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+        },
+        {
+          "path": "apps/web/src/hooks/useStaffQueryRead.ts",
+          "sha256": "e21695a1a08c18ea78dcc4a17a19555992e8a94ba3284fea02d3a587bd8ca4e0"
+        },
+        {
+          "path": "apps/web/src/lib/staff-access-form-schemas.ts",
+          "sha256": "daaffd774d095448b7fe75f57103eaa7085203491271620a503b0adeda3702e6"
+        },
+        {
+          "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
+          "sha256": "105d2a69d884e9a81c39665bb3d226a99fee2405b54a2d0b05933e271fc5ad59"
+        },
+        {
+          "path": "apps/web/src/pages/staff-directory-recovery.test.tsx",
+          "sha256": "bf65df647e8e4648a5f5e2cc334ee31177729425b0c1c379e8fde3217f47c65c"
+        },
+        {
+          "path": "apps/web/src/test/staff-directory-fixtures.ts",
+          "sha256": "0ddeb100432a4fa4374ed9b00e4d6a37ee881027d1fdfe4daa69b7a50640550c"
+        },
+        {
+          "path": "docs/design/notification-recovery.md",
+          "sha256": "1215f3507c23d9db82e9000ed19d5c39dfb2fa2619823ca5fc76e4cb754aca81"
+        },
+        {
+          "path": "packages/i18n/src/admin-ui-messages.ts",
+          "sha256": "59fa5644efb09da3f8315c471160fb615ddba59eb5b89e39979b0dbd798c20cf"
+        },
+        {
+          "path": "packages/i18n/src/confirmation.ts",
+          "sha256": "4dd854d1d4c048b6d6d80b7bc3648b5cf3eafa4e445a3ef1142f4c5663b5438e"
+        },
+        {
+          "path": "scripts/check-changed-coverage.py",
+          "sha256": "721aa5763bb62336c0e4c454b8e36e2f15ff1e14bf4b0136c7c7946424bbd736"
+        },
+        {
+          "path": "scripts/check-route-budgets.mjs",
+          "sha256": "4dd831c645a9dbf1e6fd9b0c211b5559e4fc22652373b31525bd4f4aae38186d"
+        }
+      ],
+      "checks": [
+        "Staff creation, role changes, activation resends and disabling require bounded, command-specific receipts. Creation verifies the username and activation method before showing an exact one-time password or a queue notice. Role changes verify the target and complete role set before success or self reauthentication. Disable verifies the target, account status and acknowledgement fields. Activation confirms queueing only.",
+        "An uncertain command retires the captured confirmation and requires new access and directory reads where authorized. A malformed directory cannot unlock writes. A committed disable with a lost response has no optimistic success or duplicate send. Tests preserve the role draft, typed confirmation, OTP step-up, resend cooldown, current authorization, rotating CSRF and responsive accessibility.",
+        "Passed 26 unit cases, 44 production browser and 22 instrumented Chromium cases, all nine coverage groups, and 100 bundle budgets. Formatting, scoped lint and web typecheck passed. A final type annotation produces byte-identical executable output from the same esbuild version, so existing browser and unit receipts apply. Two initial Mobile Safari cases selected hidden desktop cells. The four corrected responsive cases passed on the same executable assets. One instrumented case initially could not save its coverage record because the disk was full. Its isolated rerun passed and supplied the missing record. Six cold-auth receipts carry forward from byte-identical runtime files."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-directory-command-recovery",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-directory-command-recovery/proof.json",
+      "source_scope_proof_sha256": "126f60d8a632404cd44632b55653446dc24b250acd6f27fc141f96dd9ad8391e",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-directory-command-recovery/renewed-bindings.json",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-directory-command-recovery/reviewed.patch",
+      "release_disposition": "Verified staff directory command receipts and recovery with current authority and captured drafts. v0.5.0 acceptance remains open."
     }
   },
   "historical_improvements": [
@@ -800406,12 +800534,12 @@
       "release-readiness#R-04.01",
       "release-readiness#R-04.02"
     ],
-    "goal": "Close staff directory account creation, role change, activation resend and disable confirmation recovery together. Bind role, activation and disable success to their exact receipts or verified current state. Continue reconciling remaining customer and staff route states and feedback in related cohorts. Live Sentry delivery and required GitHub accessibility enforcement remain separate v0.5.0 gates."
+    "goal": "Close CRM verification-correction creation and decision acknowledgement recovery with the existing evidence, current profile and reviewer authority guards. Continue reconciling remaining customer and staff route states and feedback in related cohorts. Live Sentry delivery and required GitHub accessibility enforcement remain separate v0.5.0 gates."
   },
   "launch_forecast": {
     "status": "deadline_at_risk_until_v0_5_and_operational_gates_close",
     "next_update_after": "v0.5.0 remaining UI criteria and owner decisions",
-    "method": "v0.4.0 staging and Telegram receipts are verified. v0.5.0 form semantics, guarded electricity drafts, solar document completion, ticket acknowledgement, verified attachment and verification-mode recovery, shared customer settings acknowledgement and saving intake recovery, staff notification template, customer correction, delivery-window, dead-letter, failed jobs, staff team and assignment-rule, invoice and reminder recovery, and scoped customer electricity, shell, onboarding, terms and invitation recovery are verified. Five launch-required criteria remain open, including the live Sentry receipt and GitHub accessibility enforcement. The November 9 sequence remains at risk."
+    "method": "v0.4.0 staging and Telegram receipts are verified. v0.5.0 form semantics, guarded electricity drafts, solar document completion, ticket acknowledgement, verified attachment and verification-mode recovery, shared customer settings acknowledgement and saving intake recovery, staff notification template, customer correction, delivery-window, dead-letter, failed jobs, staff directory, staff team and assignment-rule, invoice and reminder recovery, and scoped customer electricity, shell, onboarding, terms and invitation recovery are verified. Five launch-required criteria remain open, including the live Sentry receipt and GitHub accessibility enforcement. The November 9 sequence remains at risk."
   },
   "capabilities": [
     {

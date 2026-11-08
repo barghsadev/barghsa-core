@@ -62,6 +62,7 @@ for (const locale of ['en', 'fa'] as const) {
               json: {
                 userId: 'new-staff',
                 username: 'new.staff@example.test',
+                activationMethod: 'tempPassword',
                 temporaryPassword: 'One-time-fixture-password!',
               },
             }

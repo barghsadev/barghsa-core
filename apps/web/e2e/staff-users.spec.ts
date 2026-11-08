@@ -1,8 +1,11 @@
 import { test, expect } from './coverage-fixture';
 import AxeBuilder from '@axe-core/playwright';
-import { mockOtpStepUp } from './otp-step-up-fixture';
+import { completeOtp, mockOtpStepUp } from './otp-step-up-fixture';
 import { approveRiskConfirmation } from './confirmation-fixture';
 import { t } from '@barghsa/i18n/admin-ui';
+import { confirmationText } from '@barghsa/i18n/confirmation';
+import { setupCatalogueForms } from './catalogue-form-fixture';
+import { staffAccess, staffRoles, staffUser } from '../src/test/staff-directory-fixtures';
 
 test.use({ timezoneId: 'America/Los_Angeles' });
 
@@ -78,7 +81,9 @@ for (const locale of ['en', 'fa'] as const) {
         });
       if (failSave) return route.fulfill({ status: 503, json: {} });
       allowed = false;
-      return route.fulfill({ json: { roleIds: ['role-finance'] } });
+      return route.fulfill({
+        json: { userId: 'target', roleIds: ['role-finance'], previousRoleIds: [] },
+      });
     });
     await page.goto('/admin/users');
     await expect(page.getByRole('alert')).toBeVisible();
@@ -131,10 +136,24 @@ for (const locale of ['en', 'fa'] as const) {
     expect(attempts).toHaveLength(0);
     await code.fill('123456');
     await dialog.getByRole('button', { name: word('verify'), exact: true }).click();
-    await expect(dialog.getByRole('alert')).toBeVisible();
+    await expect(dialog).toHaveCount(0);
+    await expect(
+      page.getByRole('alert').filter({ hasText: confirmationText('unconfirmed', locale) })
+    ).toBeVisible();
     expect(attempts).toHaveLength(1);
     failSave = false;
-    await dialog.getByRole('button', { name: fa ? 'تأیید' : 'Confirm', exact: true }).click();
+    const save = page.getByRole('button', {
+      name: t('admin.staff.saveRoles', locale),
+      exact: true,
+    });
+    await expect(save).toBeDisabled();
+    await page.getByRole('button', { name: t('admin.staff.refresh', locale), exact: true }).click();
+    await expect(save).toBeEnabled();
+    await expect(page.locator('#staff-role-reason')).toHaveValue('New duties');
+    expect(attempts).toHaveLength(1);
+    await save.click();
+    await approveRiskConfirmation(page, locale, 'destructive');
+    await completeOtp(dialog, locale);
     await expect(dialog).toHaveCount(0);
     expect(attempts).toEqual(Array(2).fill({ roleIds: ['role-finance'], reason: 'New duties' }));
     await expect(page.locator('table:visible, ol[role=list]:visible')).toHaveCount(0);
@@ -375,7 +394,7 @@ for (const locale of ['en', 'fa'] as const) {
             headers: { 'retry-after': '3' },
             json: { error: 'AUTH:OTP:RATE_LIMITED' },
           })
-        : route.fulfill({ json: { deliveryStatus: 'queued' } });
+        : route.fulfill({ json: attempts === 2 ? { ok: true } : { deliveryStatus: 'queued' } });
     });
     await page.goto('/admin/users');
     await page
@@ -395,6 +414,20 @@ for (const locale of ['en', 'fa'] as const) {
     await confirm.click();
     await expect(dialog).toHaveCount(0);
     expect(attempts).toBe(2);
+    const queued = page.getByText(t('admin.staff.linkQueued', locale), { exact: true });
+    const resend = page.getByRole('button', {
+      name: t('admin.staff.resendActivation', locale),
+      exact: true,
+    });
+    await expect(queued).toHaveCount(0);
+    await expect(resend).toBeDisabled();
+    await page.getByRole('button', { name: t('admin.staff.refresh', locale), exact: true }).click();
+    await expect(resend).toBeEnabled();
+    expect(attempts).toBe(2);
+    await resend.click();
+    await confirm.click();
+    await expect(dialog).toHaveCount(0);
+    expect(attempts).toBe(3);
     await expect(
       page.getByText(
         fa
@@ -403,5 +436,62 @@ for (const locale of ['en', 'fa'] as const) {
         { exact: true }
       )
     ).toBeVisible();
+  });
+
+  test(`a committed staff disable with a lost reply requires fresh authority and directory (${locale})`, async ({
+    page,
+  }) => {
+    await setupCatalogueForms(page, locale, locale === 'fa');
+    await page.clock.install();
+    const text = (key: string) => t(`admin.staff.${key}`, locale);
+    let disabled = false;
+    let writes = 0;
+    let accessReads = 0;
+    await page.route('**/api/admin/staff-access', (route) => {
+      accessReads++;
+      return route.fulfill({ json: staffAccess });
+    });
+    await page.route('**/api/admin/staff-role-options', (route) =>
+      route.fulfill({ json: staffRoles })
+    );
+    await page.route('**/api/admin/staff?*', (route) =>
+      route.fulfill({
+        json: { items: [{ ...staffUser, status: disabled ? 'disabled' : 'active' }], total: 1 },
+      })
+    );
+    await page.route(`**/api/admin/staff/${staffUser.userId}/disable`, (route) => {
+      expect(route.request().method()).toBe('POST');
+      writes++;
+      disabled = true;
+    });
+    await page.goto('/admin/users');
+    const disable = page.getByRole('button', { name: text('disable'), exact: true });
+    const refresh = page.getByRole('button', { name: text('refresh'), exact: true });
+    const dialog = page.getByRole('dialog');
+    const confirm = dialog.getByRole('button', {
+      name: confirmationText('confirm', locale),
+      exact: true,
+    });
+    await disable.click();
+    await expect(confirm).toBeDisabled();
+    await approveRiskConfirmation(page, locale, 'destructive');
+    await confirm.click();
+    await expect.poll(() => writes).toBe(1);
+    const initialAccessReads = accessReads;
+    await page.clock.fastForward(15_001);
+    await expect(dialog).toHaveCount(0);
+    await expect(
+      page.getByRole('alert').filter({ hasText: confirmationText('unconfirmed', locale) })
+    ).toBeVisible();
+    await expect(disable).toBeDisabled();
+    await expect(page.getByText(text('saved'), { exact: true })).toHaveCount(0);
+    expect(accessReads).toBe(initialAccessReads);
+    await refresh.click();
+    await expect(disable).toHaveCount(0);
+    await expect(
+      page.getByText(text('disabled'), { exact: true }).and(page.locator(':visible'))
+    ).toBeVisible();
+    expect(accessReads).toBe(initialAccessReads + 1);
+    expect(writes).toBe(1);
   });
 }

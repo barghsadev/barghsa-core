@@ -20,6 +20,7 @@ const captured = vi.hoisted(() => ({
   action: null as TeamAction | null,
   success: null as ((data: unknown) => Promise<void>) | null,
   close: null as (() => void) | null,
+  unconfirmed: null as (() => void) | null,
 }));
 vi.mock('../components/StaffPermissionHistory.js', () => ({ StaffPermissionHistory: () => null }));
 vi.mock('../components/TeamActionDialog.js', () => ({
@@ -27,14 +28,17 @@ vi.mock('../components/TeamActionDialog.js', () => ({
     action,
     onSuccess,
     onClose,
+    onUnconfirmed,
   }: {
     action: TeamAction;
     onSuccess: (data: unknown) => Promise<void>;
     onClose: () => void;
+    onUnconfirmed?: () => void;
   }) => {
     captured.action = action;
     captured.success = onSuccess;
     captured.close = onClose;
+    captured.unconfirmed = onUnconfirmed ?? null;
     return <div role="dialog">{action.title}</div>;
   },
 }));
@@ -48,6 +52,7 @@ beforeEach(() => {
   root = createRoot(host);
   captured.action = null;
   captured.success = null;
+  captured.unconfirmed = null;
 });
 afterEach(async () => {
   await act(async () => root.unmount());
@@ -527,10 +532,68 @@ it('malformed staff creation confirmation retains input instead of claiming an a
   );
   expect(captured.action?.path).toBe('/api/admin/users/create-staff');
   await expect(captured.success!({})).rejects.toThrow('Unconfirmed staff creation');
+  await expect(
+    captured.success!({
+      userId: 'wrong-method',
+      username: 'new.staff@example.test',
+      activationMethod: 'tempPassword',
+      temporaryPassword: 'Unrelated password',
+    })
+  ).rejects.toThrow('Unconfirmed staff creation');
+  await act(async () => captured.unconfirmed!());
+  expect(host.querySelector('[role=dialog]')).toBeNull();
+  expect(host.textContent).toContain('The outcome is unconfirmed');
   expect(host.querySelector<HTMLInputElement>('#staff-username')!.value).toBe(
     'new.staff@example.test'
   );
   expect(host.querySelector('#staff-created-password')).toBeNull();
+  await click('Refresh staff and access');
+  expect(host.textContent).not.toContain('The outcome is unconfirmed');
+  expect(host.querySelector<HTMLInputElement>('#staff-username')!.value).toBe(
+    'new.staff@example.test'
+  );
+});
+it('incorrect role and disable receipts cannot confirm a different staff account', async () => {
+  let malformed = false;
+  vi.stubGlobal(
+    'fetch',
+    vi.fn(async (url: RequestInfo | URL) =>
+      malformed && String(url).startsWith('/api/admin/staff?')
+        ? Response.json({ items: [{ userId: 'wrong-row' }], total: 1 })
+        : read(url)
+    )
+  );
+  await render(Users);
+  await click('Edit roles');
+  await fill('#staff-role-reason', 'Preserve this reason');
+  await click('Save roles');
+  const roles = captured.success!;
+  const body = captured.action!.body as { roleIds: string[] };
+  await expect(roles({ userId: 'other-account', roleIds: body.roleIds })).rejects.toThrow(
+    'Unconfirmed staff roles'
+  );
+  await act(async () => captured.unconfirmed!());
+  malformed = true;
+  await click('Refresh staff and access');
+  expect(host.textContent).toContain('The outcome is unconfirmed');
+  expect(host.querySelector<HTMLTextAreaElement>('#staff-role-reason')!.value).toBe(
+    'Preserve this reason'
+  );
+  malformed = false;
+  await click('Refresh staff and access');
+  expect(host.textContent).not.toContain('The outcome is unconfirmed');
+  await click('Disable account');
+  const disable = captured.success!;
+  await expect(
+    disable({
+      userId: 'other-account',
+      username: staffUser.username,
+      status: 'disabled',
+      disabledAt: '2026-11-01T10:00:00Z',
+      alreadyDisabled: false,
+    })
+  ).rejects.toThrow('Unconfirmed staff disable');
+  expect(host.textContent).not.toContain('Changes saved');
 });
 it('an actor change removes the prior creator one-time password even when both actors can create staff', async () => {
   let actor = 'admin';
@@ -547,13 +610,16 @@ it('an actor change removes the prior creator one-time password even when both a
   await fill('#staff-username', 'new.staff@example.test');
   await fill('#staff-firstName', 'New');
   await fill('#staff-lastName', 'Staff');
+  await act(async () => host.querySelector<HTMLInputElement>('input[value=tempPassword]')!.click());
   await approveVisibleConfirmation();
   await act(async () =>
     host.querySelector<HTMLButtonElement>('form button[type="submit"]')!.click()
   );
   await act(async () => {
     await captured.success!({
+      userId: 'new-staff',
       username: 'new.staff@example.test',
+      activationMethod: 'tempPassword',
       temporaryPassword: 'One-time-only',
     });
     captured.close!();

@@ -6,6 +6,7 @@ import { StaffEffectivePermissions } from '../components/StaffEffectivePermissio
 import { StaffPermissionHistory } from '../components/StaffPermissionHistory.js';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { t } from '@barghsa/i18n/admin-ui';
+import { confirmationText } from '@barghsa/i18n/confirmation';
 import {
   LoadingStatus,
   Alert,
@@ -30,7 +31,9 @@ import {
 } from '../components/CatalogueEditorFeedback.js';
 import type { StaffCreationDraft, StaffRoleDraft } from '../lib/staff-access-form-schemas.js';
 
-type StaffAction = TeamAction & { pageOffset: number };
+type StaffAction = TeamAction & { pageOffset: number } & (
+    { kind: 'create' } | { kind: 'roles' | 'activation' | 'disable'; target: Staff }
+  );
 
 interface Access {
   userId: string;
@@ -69,6 +72,17 @@ const blank = () => ({
 });
 
 const staffBasis = (staff: Staff) => JSON.stringify({ ...staff, lastLoginAt: null });
+const validStaff = (row: Staff) =>
+  !!row &&
+  typeof row.userId === 'string' &&
+  !!row.userId &&
+  typeof row.username === 'string' &&
+  !!row.username &&
+  (row.status === 'active' || row.status === 'disabled') &&
+  Array.isArray(row.roles) &&
+  row.roles.every(
+    (role) => !!role && typeof role.roleId === 'string' && typeof role.name === 'string'
+  );
 
 export default function AdminStaffUsersPage({ queries }: { queries?: ListQueryBinding } = {}) {
   const read = useStaffQueryRead('profiles');
@@ -126,6 +140,7 @@ export default function AdminStaffUsersPage({ queries }: { queries?: ListQueryBi
     generation: number;
   } | null>(null);
   const [action, setAction] = useState<StaffAction | null>(null);
+  const [unconfirmed, setUnconfirmed] = useState(false);
   const [created, setCreated] = useState<{ username: string; password?: string } | null>(null);
   const [saved, setSaved] = useState(false);
   const [activationNotice, setActivationNotice] = useState(false);
@@ -146,6 +161,7 @@ export default function AdminStaffUsersPage({ queries }: { queries?: ListQueryBi
     accessRef = useRef<Access | null>(null),
     editingRef = useRef<Staff | null>(null),
     actionRef = useRef<StaffAction | null>(null),
+    recoveryRef = useRef<{ access?: Access } | null>(null),
     rowsRef = useRef<Staff[]>([]),
     rolesRef = useRef<Role[]>([]);
   const offsetRef = useRef(offset);
@@ -170,8 +186,17 @@ export default function AdminStaffUsersPage({ queries }: { queries?: ListQueryBi
     setAction(null);
   }
   function openAction(value: StaffAction) {
-    actionRef.current = value;
-    setAction(value);
+    const command: StaffAction = {
+      ...value,
+      responseDeadline: true,
+      successStatus: value.kind === 'create' ? 201 : 200,
+    };
+    actionRef.current = command;
+    setAction(command);
+  }
+  function clearRecovery() {
+    recoveryRef.current = null;
+    setUnconfirmed(false);
   }
   function denyAccess() {
     accessRef.current = null;
@@ -181,6 +206,7 @@ export default function AdminStaffUsersPage({ queries }: { queries?: ListQueryBi
     rolesRef.current = [];
     setRoles([]);
     clearAction();
+    clearRecovery();
     setEditing(null);
     setShowCreate(false);
     setDraft(blank());
@@ -206,6 +232,7 @@ export default function AdminStaffUsersPage({ queries }: { queries?: ListQueryBi
   }
   useEffect(() => {
     const controller = new AbortController();
+    const recovering = recoveryRef.current;
     setAccessLoading(true);
     setAccessError(false);
     void (async () => {
@@ -233,6 +260,7 @@ export default function AdminStaffUsersPage({ queries }: { queries?: ListQueryBi
         if (accessRef.current && JSON.stringify(accessRef.current) !== JSON.stringify(next))
           clearAction();
         if (accessRef.current && accessRef.current.userId !== next.userId) {
+          clearRecovery();
           setCreated(null);
           setDraft(blank());
           setShowCreate(false);
@@ -264,6 +292,10 @@ export default function AdminStaffUsersPage({ queries }: { queries?: ListQueryBi
         accessRef.current = next;
         setAccess(next);
         setAccessVersion((v) => v + 1);
+        if (recovering && recoveryRef.current === recovering) {
+          if (next.canView) recovering.access = next;
+          else clearRecovery();
+        }
       } catch (failure) {
         if (!controller.signal.aborted) {
           if (deniedRead(failure)) denyAccess();
@@ -281,6 +313,8 @@ export default function AdminStaffUsersPage({ queries }: { queries?: ListQueryBi
   useEffect(() => {
     if (accessLoading || accessError || !access?.canView) return;
     const controller = new AbortController();
+    const recovering = recoveryRef.current;
+    const recoveryAccess = recovering?.access;
     setLoading(true);
     setError(false);
     void (async () => {
@@ -292,7 +326,14 @@ export default function AdminStaffUsersPage({ queries }: { queries?: ListQueryBi
           staffQueryJson,
           accessVersion
         )) as StaffList;
-        if (!data || !Array.isArray(data.items) || !Number.isInteger(data.total) || data.total < 0)
+        if (
+          !data ||
+          !Array.isArray(data.items) ||
+          !data.items.every(validStaff) ||
+          new Set(data.items.map((row) => row.userId)).size !== data.items.length ||
+          !Number.isInteger(data.total) ||
+          data.total < 0
+        )
           throw new Error('Invalid staff list');
         if (controller.signal.aborted || !accessRef.current) return;
         const inspected = permissionTargetRef.current;
@@ -308,15 +349,22 @@ export default function AdminStaffUsersPage({ queries }: { queries?: ListQueryBi
         const captured = actionRef.current;
         if (
           captured &&
+          captured.kind !== 'create' &&
           rowsRef.current.some(
             (row) =>
-              captured.path.includes(encodeURIComponent(row.userId)) &&
+              captured.target.userId === row.userId &&
               !data.items.some((fresh) => staffBasis(row) === staffBasis(fresh))
           )
         )
           clearAction();
         rowsRef.current = data.items;
         setList(data);
+        if (
+          recovering &&
+          recoveryRef.current === recovering &&
+          recoveryAccess === accessRef.current
+        )
+          clearRecovery();
       } catch (failure) {
         if (!controller.signal.aborted && accessRef.current) {
           if (deniedRead(failure)) denyAccess();
@@ -395,6 +443,7 @@ export default function AdminStaffUsersPage({ queries }: { queries?: ListQueryBi
     error ||
     accessLoading ||
     accessError ||
+    unconfirmed ||
     !!action ||
     !!permissionTarget ||
     validationPending;
@@ -455,6 +504,7 @@ export default function AdminStaffUsersPage({ queries }: { queries?: ListQueryBi
         setSaved(false);
         setCreated(null);
         openAction({
+          kind: 'create',
           pageOffset: offset,
           title: label('create'),
           description: `${value.firstName} ${value.lastName} (${value.username}). ${label('roles')}: ${roleSummary(value.roleIds)}. ${label(value.activationMethod === 'link' ? 'linkHelp' : 'passwordOnce')}`,
@@ -474,6 +524,8 @@ export default function AdminStaffUsersPage({ queries }: { queries?: ListQueryBi
       } else if (target) {
         const value = roleForm.form.getValues();
         openAction({
+          kind: 'roles',
+          target,
           pageOffset: offset,
           risk: 'destructive',
           title: label('editRoles'),
@@ -482,7 +534,6 @@ export default function AdminStaffUsersPage({ queries }: { queries?: ListQueryBi
           method: 'PUT',
           requiresOtp: true,
           body: { roleIds: [...value.roleIds], reason: value.reason.trim() },
-          signsOut: target.userId === actor.userId,
           forbiddenMessage: label('forbidden'),
         });
       }
@@ -649,6 +700,8 @@ export default function AdminStaffUsersPage({ queries }: { queries?: ListQueryBi
                 setActivationNotice(false);
                 setSaved(false);
                 openAction({
+                  kind: 'activation',
+                  target: staff,
                   pageOffset: offset,
                   title: label('resendActivation'),
                   description: `${staff.username}. ${label('resendHelp')}`,
@@ -690,6 +743,8 @@ export default function AdminStaffUsersPage({ queries }: { queries?: ListQueryBi
               onClick={() => {
                 setSaved(false);
                 openAction({
+                  kind: 'disable',
+                  target: staff,
                   pageOffset: offset,
                   risk: 'destructive',
                   title: label('disable'),
@@ -737,6 +792,9 @@ export default function AdminStaffUsersPage({ queries }: { queries?: ListQueryBi
         )}
       </header>
       <CommandFeedback message={saved ? label('saved') : null} />
+      {unconfirmed && (
+        <Alert variant="destructive">{confirmationText('unconfirmed', locale)}</Alert>
+      )}
       {activationNotice && <p role="status">{label('linkQueued')}</p>}
       {created && (
         <section className="space-y-3 rounded-lg border bg-card p-4" aria-label={label('created')}>
@@ -1102,16 +1160,27 @@ export default function AdminStaffUsersPage({ queries }: { queries?: ListQueryBi
             error ||
             accessLoading ||
             accessError ||
-            ((action.path === '/api/admin/users/create-staff' || action.path.endsWith('/roles')) &&
+            ((action.kind === 'create' || action.kind === 'roles') &&
               (optionsLoading || optionsError))
           }
-          onDenied={() => denyAccess()}
+          onDenied={() => {
+            if (actionGeneration === workGeneration.current && actionRef.current === action)
+              denyAccess();
+          }}
+          onUnconfirmed={() => {
+            if (actionGeneration !== workGeneration.current || actionRef.current !== action) return;
+            recoveryRef.current = {};
+            setUnconfirmed(true);
+            setSaved(false);
+            setActivationNotice(false);
+            clearAction();
+          }}
           onValidationError={(fields) => {
             if (actionGeneration !== workGeneration.current || actionRef.current !== action)
               return false;
-            return action.path === '/api/admin/users/create-staff'
+            return action.kind === 'create'
               ? createErrors(fields)
-              : action.path.endsWith('/roles')
+              : action.kind === 'roles'
                 ? roleErrors(fields)
                 : false;
           }}
@@ -1129,25 +1198,55 @@ export default function AdminStaffUsersPage({ queries }: { queries?: ListQueryBi
               accessError
             )
               return;
-            if (action.path === '/api/admin/users/create-staff') {
-              const data = result as { username: string; temporaryPassword?: string };
+            const data = result as Record<string, unknown> | null;
+            if (action.kind === 'create') {
               const request = action.body as { username: string; activationMethod: string };
+              const password = data?.temporaryPassword;
               if (
                 !data ||
-                typeof data.username !== 'string' ||
+                typeof data.userId !== 'string' ||
+                !data.userId ||
                 data.username !== request.username ||
-                (data.temporaryPassword != null && typeof data.temporaryPassword !== 'string') ||
-                (request.activationMethod === 'tempPassword' && !data.temporaryPassword?.trim())
+                data.activationMethod !== request.activationMethod ||
+                (request.activationMethod === 'tempPassword'
+                  ? typeof password !== 'string' || !password.trim()
+                  : password !== undefined || data.deliveryStatus !== 'queued')
               )
                 throw new Error('Unconfirmed staff creation');
               setCreated({
-                username: data.username,
-                ...(data.temporaryPassword ? { password: data.temporaryPassword } : {}),
+                username: request.username,
+                ...(typeof password === 'string' ? { password } : {}),
               });
               setDraft(blank());
               setShowCreate(false);
+            } else if (action.kind === 'roles') {
+              const expected = (action.body as { roleIds: string[] }).roleIds;
+              if (
+                data?.userId !== action.target.userId ||
+                !Array.isArray(data.roleIds) ||
+                data.roleIds.length !== expected.length ||
+                new Set(data.roleIds).size !== expected.length ||
+                !data.roleIds.every((role) => expected.includes(role))
+              )
+                throw new Error('Unconfirmed staff roles');
+              if (action.target.userId === accessRef.current.userId) {
+                window.location.assign('/login');
+                return;
+              }
+            } else if (action.kind === 'activation') {
+              if (data?.deliveryStatus !== 'queued')
+                throw new Error('Unconfirmed activation resend');
+              setActivationNotice(true);
+            } else if (
+              data?.userId !== action.target.userId ||
+              data.username !== action.target.username ||
+              data.status !== 'disabled' ||
+              typeof data.disabledAt !== 'string' ||
+              !Number.isFinite(Date.parse(data.disabledAt)) ||
+              typeof data.alreadyDisabled !== 'boolean'
+            ) {
+              throw new Error('Unconfirmed staff disable');
             }
-            if (action.path.endsWith('/resend-activation')) setActivationNotice(true);
             setEditing(null);
             setSaved(true);
             refreshAccess();

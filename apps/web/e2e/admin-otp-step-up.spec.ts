@@ -2,6 +2,7 @@ import AxeBuilder from '@axe-core/playwright';
 import { test, expect } from './coverage-fixture';
 import { crmShell } from './crm-shell-fixture';
 import { mockOtpStepUp } from './otp-step-up-fixture';
+import { approveRiskConfirmation } from './confirmation-fixture';
 import { t } from '@barghsa/i18n/admin-ui';
 import { tWalletReceipts } from '@barghsa/i18n/wallet-receipts';
 import { providerText, smsProviderText } from '@barghsa/i18n/providers';
@@ -166,7 +167,12 @@ for (const locale of ['en', 'fa'] as const)
           word = (key: string) => t(`admin.stepUp.${key}`, locale);
         await expect(dialog).toContainText(word('required'));
         expect(writes).toEqual([]);
-        await dialog.getByRole('button', { name: word('send'), exact: true }).click();
+        const send = dialog.getByRole('button', { name: word('send'), exact: true });
+        if (action === 'roles') {
+          await expect(send).toBeDisabled();
+          await approveRiskConfirmation(page, locale, 'destructive');
+        }
+        await send.click();
         const code = dialog.getByLabel(word('code'), { exact: true });
         await expect(code).toBeFocused();
         await code.fill(locale === 'fa' ? '۱۲۳۴۵۶' : '123456');
