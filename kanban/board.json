@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-08T23:00:16+00:00",
-  "source_commit": "3237fb620759422805e316441f5048cbc11c1218",
+  "updated": "2026-11-08T23:28:19+00:00",
+  "source_commit": "a07c4dc44c015caa0b5fa3ab2f343d33bcabbb8e",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -24262,7 +24262,7 @@
             },
             {
               "path": "apps/web/e2e/account-recovery-closure.spec.ts",
-              "sha256": "b9d03cbf46eb9c265143ad7fdab5c22ae0e4c8255832026bc4af75bd88da9a89"
+              "sha256": "946a8074a85458bf96f0a23f376e798820e620d84f868c2e0dcaafc0ce54db34"
             },
             {
               "path": "apps/web/e2e/electricity-journey.spec.ts",
@@ -24290,7 +24290,7 @@
             },
             {
               "path": "apps/web/src/pages/AccountRecoveryPage.tsx",
-              "sha256": "3b67b23ec2f48ed7369957eb49951b7ce1de493b570e04f8e934cf19897d1f5b"
+              "sha256": "b60a6a8d933d095170a0aea17ee963fa5df152d93913592158c37a832619f390"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -28553,7 +28553,7 @@
             },
             {
               "path": "apps/web/e2e/account-recovery-closure.spec.ts",
-              "sha256": "b9d03cbf46eb9c265143ad7fdab5c22ae0e4c8255832026bc4af75bd88da9a89"
+              "sha256": "946a8074a85458bf96f0a23f376e798820e620d84f868c2e0dcaafc0ce54db34"
             },
             {
               "path": "apps/web/e2e/electricity-journey.spec.ts",
@@ -28581,7 +28581,7 @@
             },
             {
               "path": "apps/web/src/pages/AccountRecoveryPage.tsx",
-              "sha256": "3b67b23ec2f48ed7369957eb49951b7ce1de493b570e04f8e934cf19897d1f5b"
+              "sha256": "b60a6a8d933d095170a0aea17ee963fa5df152d93913592158c37a832619f390"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -35500,7 +35500,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "d077d47d6b42c9817baf4b12a93af4ef76608537ccfb43f6b4e456a7f2556377"
+              "sha256": "e6ecdb1cfb1df5fa0b5e3f3807178d9c973ad9c5455a3fd2906b5951b4f9c5d7"
             },
             {
               "path": "apps/web/src/pages/ChartsPage.tsx",
@@ -63196,7 +63196,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "d077d47d6b42c9817baf4b12a93af4ef76608537ccfb43f6b4e456a7f2556377"
+              "sha256": "e6ecdb1cfb1df5fa0b5e3f3807178d9c973ad9c5455a3fd2906b5951b4f9c5d7"
             },
             {
               "path": "apps/web/src/pages/ChartsPage.tsx",
@@ -141108,7 +141108,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "d077d47d6b42c9817baf4b12a93af4ef76608537ccfb43f6b4e456a7f2556377"
+              "sha256": "e6ecdb1cfb1df5fa0b5e3f3807178d9c973ad9c5455a3fd2906b5951b4f9c5d7"
             },
             {
               "path": "apps/web/src/pages/WalletPage.errors.test.tsx",
@@ -290267,7 +290267,7 @@
             },
             {
               "path": "apps/web/e2e/account-recovery-closure.spec.ts",
-              "sha256": "b9d03cbf46eb9c265143ad7fdab5c22ae0e4c8255832026bc4af75bd88da9a89"
+              "sha256": "946a8074a85458bf96f0a23f376e798820e620d84f868c2e0dcaafc0ce54db34"
             },
             {
               "path": "apps/web/e2e/electricity-journey.spec.ts",
@@ -290295,7 +290295,7 @@
             },
             {
               "path": "apps/web/src/pages/AccountRecoveryPage.tsx",
-              "sha256": "3b67b23ec2f48ed7369957eb49951b7ce1de493b570e04f8e934cf19897d1f5b"
+              "sha256": "b60a6a8d933d095170a0aea17ee963fa5df152d93913592158c37a832619f390"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -297810,7 +297810,7 @@
             },
             {
               "path": "apps/web/e2e/account-recovery-closure.spec.ts",
-              "sha256": "b9d03cbf46eb9c265143ad7fdab5c22ae0e4c8255832026bc4af75bd88da9a89"
+              "sha256": "946a8074a85458bf96f0a23f376e798820e620d84f868c2e0dcaafc0ce54db34"
             },
             {
               "path": "apps/web/e2e/electricity-journey.spec.ts",
@@ -297838,7 +297838,7 @@
             },
             {
               "path": "apps/web/src/pages/AccountRecoveryPage.tsx",
-              "sha256": "3b67b23ec2f48ed7369957eb49951b7ce1de493b570e04f8e934cf19897d1f5b"
+              "sha256": "b60a6a8d933d095170a0aea17ee963fa5df152d93913592158c37a832619f390"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -318349,7 +318349,7 @@
             },
             {
               "path": "apps/web/e2e/account-recovery-closure.spec.ts",
-              "sha256": "b9d03cbf46eb9c265143ad7fdab5c22ae0e4c8255832026bc4af75bd88da9a89"
+              "sha256": "946a8074a85458bf96f0a23f376e798820e620d84f868c2e0dcaafc0ce54db34"
             },
             {
               "path": "apps/web/e2e/electricity-journey.spec.ts",
@@ -318377,7 +318377,7 @@
             },
             {
               "path": "apps/web/src/pages/AccountRecoveryPage.tsx",
-              "sha256": "3b67b23ec2f48ed7369957eb49951b7ce1de493b570e04f8e934cf19897d1f5b"
+              "sha256": "b60a6a8d933d095170a0aea17ee963fa5df152d93913592158c37a832619f390"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -348978,7 +348978,7 @@
             },
             {
               "path": "apps/web/e2e/account-recovery-closure.spec.ts",
-              "sha256": "b9d03cbf46eb9c265143ad7fdab5c22ae0e4c8255832026bc4af75bd88da9a89"
+              "sha256": "946a8074a85458bf96f0a23f376e798820e620d84f868c2e0dcaafc0ce54db34"
             },
             {
               "path": "apps/web/e2e/electricity-journey.spec.ts",
@@ -349006,7 +349006,7 @@
             },
             {
               "path": "apps/web/src/pages/AccountRecoveryPage.tsx",
-              "sha256": "3b67b23ec2f48ed7369957eb49951b7ce1de493b570e04f8e934cf19897d1f5b"
+              "sha256": "b60a6a8d933d095170a0aea17ee963fa5df152d93913592158c37a832619f390"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -491283,7 +491283,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "d077d47d6b42c9817baf4b12a93af4ef76608537ccfb43f6b4e456a7f2556377"
+              "sha256": "e6ecdb1cfb1df5fa0b5e3f3807178d9c973ad9c5455a3fd2906b5951b4f9c5d7"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -494327,7 +494327,7 @@
             },
             {
               "path": "apps/web/src/pages/AccountRecoveryPage.tsx",
-              "sha256": "3b67b23ec2f48ed7369957eb49951b7ce1de493b570e04f8e934cf19897d1f5b"
+              "sha256": "b60a6a8d933d095170a0aea17ee963fa5df152d93913592158c37a832619f390"
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
@@ -494415,7 +494415,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "d077d47d6b42c9817baf4b12a93af4ef76608537ccfb43f6b4e456a7f2556377"
+              "sha256": "e6ecdb1cfb1df5fa0b5e3f3807178d9c973ad9c5455a3fd2906b5951b4f9c5d7"
             },
             {
               "path": "apps/web/src/pages/BankReceiptsPage.tsx",
@@ -495210,7 +495210,7 @@
             },
             {
               "path": "apps/web/src/pages/AccountRecoveryPage.tsx",
-              "sha256": "3b67b23ec2f48ed7369957eb49951b7ce1de493b570e04f8e934cf19897d1f5b"
+              "sha256": "b60a6a8d933d095170a0aea17ee963fa5df152d93913592158c37a832619f390"
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
@@ -495298,7 +495298,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "d077d47d6b42c9817baf4b12a93af4ef76608537ccfb43f6b4e456a7f2556377"
+              "sha256": "e6ecdb1cfb1df5fa0b5e3f3807178d9c973ad9c5455a3fd2906b5951b4f9c5d7"
             },
             {
               "path": "apps/web/src/pages/BankReceiptsPage.tsx",
@@ -496034,7 +496034,7 @@
             },
             {
               "path": "apps/web/src/pages/AccountRecoveryPage.tsx",
-              "sha256": "3b67b23ec2f48ed7369957eb49951b7ce1de493b570e04f8e934cf19897d1f5b"
+              "sha256": "b60a6a8d933d095170a0aea17ee963fa5df152d93913592158c37a832619f390"
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
@@ -496122,7 +496122,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "d077d47d6b42c9817baf4b12a93af4ef76608537ccfb43f6b4e456a7f2556377"
+              "sha256": "e6ecdb1cfb1df5fa0b5e3f3807178d9c973ad9c5455a3fd2906b5951b4f9c5d7"
             },
             {
               "path": "apps/web/src/pages/BankReceiptsPage.tsx",
@@ -515605,7 +515605,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "d077d47d6b42c9817baf4b12a93af4ef76608537ccfb43f6b4e456a7f2556377"
+              "sha256": "e6ecdb1cfb1df5fa0b5e3f3807178d9c973ad9c5455a3fd2906b5951b4f9c5d7"
             },
             {
               "path": "apps/web/src/providers/BrandThemeProvider.tsx",
@@ -516044,7 +516044,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "d077d47d6b42c9817baf4b12a93af4ef76608537ccfb43f6b4e456a7f2556377"
+              "sha256": "e6ecdb1cfb1df5fa0b5e3f3807178d9c973ad9c5455a3fd2906b5951b4f9c5d7"
             },
             {
               "path": "apps/web/src/providers/BrandThemeProvider.tsx",
@@ -516817,7 +516817,7 @@
             },
             {
               "path": "apps/web/e2e/account-recovery-closure.spec.ts",
-              "sha256": "b9d03cbf46eb9c265143ad7fdab5c22ae0e4c8255832026bc4af75bd88da9a89"
+              "sha256": "946a8074a85458bf96f0a23f376e798820e620d84f868c2e0dcaafc0ce54db34"
             },
             {
               "path": "apps/web/e2e/account-settings-forms.spec.ts",
@@ -517837,7 +517837,7 @@
             },
             {
               "path": "apps/web/src/pages/AccountRecoveryPage.tsx",
-              "sha256": "3b67b23ec2f48ed7369957eb49951b7ce1de493b570e04f8e934cf19897d1f5b"
+              "sha256": "b60a6a8d933d095170a0aea17ee963fa5df152d93913592158c37a832619f390"
             },
             {
               "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
@@ -518479,7 +518479,7 @@
             },
             {
               "path": "apps/web/src/pages/AccountRecoveryPage.tsx",
-              "sha256": "3b67b23ec2f48ed7369957eb49951b7ce1de493b570e04f8e934cf19897d1f5b"
+              "sha256": "b60a6a8d933d095170a0aea17ee963fa5df152d93913592158c37a832619f390"
             },
             {
               "path": "apps/web/src/pages/AdminBrandingConfig.tsx",
@@ -519431,7 +519431,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "d077d47d6b42c9817baf4b12a93af4ef76608537ccfb43f6b4e456a7f2556377"
+              "sha256": "e6ecdb1cfb1df5fa0b5e3f3807178d9c973ad9c5455a3fd2906b5951b4f9c5d7"
             },
             {
               "path": "apps/web/src/providers/BrandThemeProvider.tsx",
@@ -519919,7 +519919,7 @@
             },
             {
               "path": "apps/web/src/pages/AccountRecoveryPage.tsx",
-              "sha256": "3b67b23ec2f48ed7369957eb49951b7ce1de493b570e04f8e934cf19897d1f5b"
+              "sha256": "b60a6a8d933d095170a0aea17ee963fa5df152d93913592158c37a832619f390"
             },
             {
               "path": "apps/web/src/pages/AdminBrandingConfig.tsx",
@@ -522075,7 +522075,7 @@
             },
             {
               "path": "apps/web/src/pages/AccountRecoveryPage.tsx",
-              "sha256": "3b67b23ec2f48ed7369957eb49951b7ce1de493b570e04f8e934cf19897d1f5b"
+              "sha256": "b60a6a8d933d095170a0aea17ee963fa5df152d93913592158c37a832619f390"
             },
             {
               "path": "apps/web/src/pages/AdminBrandingConfig.tsx",
@@ -546875,7 +546875,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "d077d47d6b42c9817baf4b12a93af4ef76608537ccfb43f6b4e456a7f2556377"
+              "sha256": "e6ecdb1cfb1df5fa0b5e3f3807178d9c973ad9c5455a3fd2906b5951b4f9c5d7"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -548741,7 +548741,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "d077d47d6b42c9817baf4b12a93af4ef76608537ccfb43f6b4e456a7f2556377"
+              "sha256": "e6ecdb1cfb1df5fa0b5e3f3807178d9c973ad9c5455a3fd2906b5951b4f9c5d7"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -550608,7 +550608,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "d077d47d6b42c9817baf4b12a93af4ef76608537ccfb43f6b4e456a7f2556377"
+              "sha256": "e6ecdb1cfb1df5fa0b5e3f3807178d9c973ad9c5455a3fd2906b5951b4f9c5d7"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -552444,7 +552444,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "d077d47d6b42c9817baf4b12a93af4ef76608537ccfb43f6b4e456a7f2556377"
+              "sha256": "e6ecdb1cfb1df5fa0b5e3f3807178d9c973ad9c5455a3fd2906b5951b4f9c5d7"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -554306,7 +554306,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "d077d47d6b42c9817baf4b12a93af4ef76608537ccfb43f6b4e456a7f2556377"
+              "sha256": "e6ecdb1cfb1df5fa0b5e3f3807178d9c973ad9c5455a3fd2906b5951b4f9c5d7"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -556177,7 +556177,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "d077d47d6b42c9817baf4b12a93af4ef76608537ccfb43f6b4e456a7f2556377"
+              "sha256": "e6ecdb1cfb1df5fa0b5e3f3807178d9c973ad9c5455a3fd2906b5951b4f9c5d7"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -558021,7 +558021,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "d077d47d6b42c9817baf4b12a93af4ef76608537ccfb43f6b4e456a7f2556377"
+              "sha256": "e6ecdb1cfb1df5fa0b5e3f3807178d9c973ad9c5455a3fd2906b5951b4f9c5d7"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -559829,7 +559829,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "d077d47d6b42c9817baf4b12a93af4ef76608537ccfb43f6b4e456a7f2556377"
+              "sha256": "e6ecdb1cfb1df5fa0b5e3f3807178d9c973ad9c5455a3fd2906b5951b4f9c5d7"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -561637,7 +561637,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "d077d47d6b42c9817baf4b12a93af4ef76608537ccfb43f6b4e456a7f2556377"
+              "sha256": "e6ecdb1cfb1df5fa0b5e3f3807178d9c973ad9c5455a3fd2906b5951b4f9c5d7"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -563446,7 +563446,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "d077d47d6b42c9817baf4b12a93af4ef76608537ccfb43f6b4e456a7f2556377"
+              "sha256": "e6ecdb1cfb1df5fa0b5e3f3807178d9c973ad9c5455a3fd2906b5951b4f9c5d7"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -565254,7 +565254,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "d077d47d6b42c9817baf4b12a93af4ef76608537ccfb43f6b4e456a7f2556377"
+              "sha256": "e6ecdb1cfb1df5fa0b5e3f3807178d9c973ad9c5455a3fd2906b5951b4f9c5d7"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -570335,7 +570335,7 @@
             },
             {
               "path": "apps/web/e2e/account-recovery-closure.spec.ts",
-              "sha256": "b9d03cbf46eb9c265143ad7fdab5c22ae0e4c8255832026bc4af75bd88da9a89"
+              "sha256": "946a8074a85458bf96f0a23f376e798820e620d84f868c2e0dcaafc0ce54db34"
             },
             {
               "path": "apps/web/e2e/account-settings-forms.spec.ts",
@@ -572251,7 +572251,7 @@
             },
             {
               "path": "apps/web/src/pages/AccountRecoveryPage.tsx",
-              "sha256": "3b67b23ec2f48ed7369957eb49951b7ce1de493b570e04f8e934cf19897d1f5b"
+              "sha256": "b60a6a8d933d095170a0aea17ee963fa5df152d93913592158c37a832619f390"
             },
             {
               "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
@@ -572443,7 +572443,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "d077d47d6b42c9817baf4b12a93af4ef76608537ccfb43f6b4e456a7f2556377"
+              "sha256": "e6ecdb1cfb1df5fa0b5e3f3807178d9c973ad9c5455a3fd2906b5951b4f9c5d7"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -598485,7 +598485,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Registration and onboarding prerequisite waits, staff storage/upload policy/verification/terms recovery, saving catalogue and order intake, solar request intake, and wallet receipt review have named scoped evidence. Bind original conditional and interaction cases for the remaining operational and service route families, including route-specific denied, empty, loading and retry states where applicable."
+        "Named scoped cases now include entry and intake flows, staff configuration, operational service queues, CRM and staff directory, contracts, documents, inbox, and wallet review. Bind remaining configuration and customer service route cases and verify any still-unmeasured route-specific loading, empty, denied, stale and recovery interactions against the original criteria."
       ],
       "owner": null,
       "depends_on": [],
@@ -598606,7 +598606,8 @@
           "release-0.5-original-route-reconciliation",
           "release-0.5-public-auth-deadline",
           "release-0.5-entry-prerequisites",
-          "release-0.5-intake-response-recovery"
+          "release-0.5-intake-response-recovery",
+          "release-0.5-operational-route-receipts"
         ],
         "current_acceptance": null
       }
@@ -599284,7 +599285,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "d077d47d6b42c9817baf4b12a93af4ef76608537ccfb43f6b4e456a7f2556377"
+              "sha256": "e6ecdb1cfb1df5fa0b5e3f3807178d9c973ad9c5455a3fd2906b5951b4f9c5d7"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -601088,7 +601089,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "d077d47d6b42c9817baf4b12a93af4ef76608537ccfb43f6b4e456a7f2556377"
+              "sha256": "e6ecdb1cfb1df5fa0b5e3f3807178d9c973ad9c5455a3fd2906b5951b4f9c5d7"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -602892,7 +602893,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "d077d47d6b42c9817baf4b12a93af4ef76608537ccfb43f6b4e456a7f2556377"
+              "sha256": "e6ecdb1cfb1df5fa0b5e3f3807178d9c973ad9c5455a3fd2906b5951b4f9c5d7"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -604696,7 +604697,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "d077d47d6b42c9817baf4b12a93af4ef76608537ccfb43f6b4e456a7f2556377"
+              "sha256": "e6ecdb1cfb1df5fa0b5e3f3807178d9c973ad9c5455a3fd2906b5951b4f9c5d7"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -606500,7 +606501,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "d077d47d6b42c9817baf4b12a93af4ef76608537ccfb43f6b4e456a7f2556377"
+              "sha256": "e6ecdb1cfb1df5fa0b5e3f3807178d9c973ad9c5455a3fd2906b5951b4f9c5d7"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -608304,7 +608305,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "d077d47d6b42c9817baf4b12a93af4ef76608537ccfb43f6b4e456a7f2556377"
+              "sha256": "e6ecdb1cfb1df5fa0b5e3f3807178d9c973ad9c5455a3fd2906b5951b4f9c5d7"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -610108,7 +610109,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "d077d47d6b42c9817baf4b12a93af4ef76608537ccfb43f6b4e456a7f2556377"
+              "sha256": "e6ecdb1cfb1df5fa0b5e3f3807178d9c973ad9c5455a3fd2906b5951b4f9c5d7"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -637779,7 +637780,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "d077d47d6b42c9817baf4b12a93af4ef76608537ccfb43f6b4e456a7f2556377"
+              "sha256": "e6ecdb1cfb1df5fa0b5e3f3807178d9c973ad9c5455a3fd2906b5951b4f9c5d7"
             },
             {
               "path": "apps/web/src/pages/BankReceiptsPage.tsx",
@@ -638903,7 +638904,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "d077d47d6b42c9817baf4b12a93af4ef76608537ccfb43f6b4e456a7f2556377"
+              "sha256": "e6ecdb1cfb1df5fa0b5e3f3807178d9c973ad9c5455a3fd2906b5951b4f9c5d7"
             },
             {
               "path": "apps/web/src/pages/BankReceiptsPage.tsx",
@@ -640027,7 +640028,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "d077d47d6b42c9817baf4b12a93af4ef76608537ccfb43f6b4e456a7f2556377"
+              "sha256": "e6ecdb1cfb1df5fa0b5e3f3807178d9c973ad9c5455a3fd2906b5951b4f9c5d7"
             },
             {
               "path": "apps/web/src/pages/BankReceiptsPage.tsx",
@@ -641154,7 +641155,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "d077d47d6b42c9817baf4b12a93af4ef76608537ccfb43f6b4e456a7f2556377"
+              "sha256": "e6ecdb1cfb1df5fa0b5e3f3807178d9c973ad9c5455a3fd2906b5951b4f9c5d7"
             },
             {
               "path": "apps/web/src/pages/BankReceiptsPage.tsx",
@@ -642281,7 +642282,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "d077d47d6b42c9817baf4b12a93af4ef76608537ccfb43f6b4e456a7f2556377"
+              "sha256": "e6ecdb1cfb1df5fa0b5e3f3807178d9c973ad9c5455a3fd2906b5951b4f9c5d7"
             },
             {
               "path": "apps/web/src/pages/BankReceiptsPage.tsx",
@@ -643435,7 +643436,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "d077d47d6b42c9817baf4b12a93af4ef76608537ccfb43f6b4e456a7f2556377"
+              "sha256": "e6ecdb1cfb1df5fa0b5e3f3807178d9c973ad9c5455a3fd2906b5951b4f9c5d7"
             },
             {
               "path": "apps/web/src/pages/BankReceiptsPage.tsx",
@@ -644558,7 +644559,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "d077d47d6b42c9817baf4b12a93af4ef76608537ccfb43f6b4e456a7f2556377"
+              "sha256": "e6ecdb1cfb1df5fa0b5e3f3807178d9c973ad9c5455a3fd2906b5951b4f9c5d7"
             },
             {
               "path": "apps/web/src/pages/BankReceiptsPage.tsx",
@@ -645681,7 +645682,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "d077d47d6b42c9817baf4b12a93af4ef76608537ccfb43f6b4e456a7f2556377"
+              "sha256": "e6ecdb1cfb1df5fa0b5e3f3807178d9c973ad9c5455a3fd2906b5951b4f9c5d7"
             },
             {
               "path": "apps/web/src/pages/BankReceiptsPage.tsx",
@@ -646805,7 +646806,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "d077d47d6b42c9817baf4b12a93af4ef76608537ccfb43f6b4e456a7f2556377"
+              "sha256": "e6ecdb1cfb1df5fa0b5e3f3807178d9c973ad9c5455a3fd2906b5951b4f9c5d7"
             },
             {
               "path": "apps/web/src/pages/BankReceiptsPage.tsx",
@@ -647947,7 +647948,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "d077d47d6b42c9817baf4b12a93af4ef76608537ccfb43f6b4e456a7f2556377"
+              "sha256": "e6ecdb1cfb1df5fa0b5e3f3807178d9c973ad9c5455a3fd2906b5951b4f9c5d7"
             },
             {
               "path": "apps/web/src/pages/BankReceiptsPage.tsx",
@@ -649072,7 +649073,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "d077d47d6b42c9817baf4b12a93af4ef76608537ccfb43f6b4e456a7f2556377"
+              "sha256": "e6ecdb1cfb1df5fa0b5e3f3807178d9c973ad9c5455a3fd2906b5951b4f9c5d7"
             },
             {
               "path": "apps/web/src/pages/BankReceiptsPage.tsx",
@@ -680574,7 +680575,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "d077d47d6b42c9817baf4b12a93af4ef76608537ccfb43f6b4e456a7f2556377"
+              "sha256": "e6ecdb1cfb1df5fa0b5e3f3807178d9c973ad9c5455a3fd2906b5951b4f9c5d7"
             },
             {
               "path": "apps/web/src/pages/BankReceiptsPage.tsx",
@@ -681696,7 +681697,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "d077d47d6b42c9817baf4b12a93af4ef76608537ccfb43f6b4e456a7f2556377"
+              "sha256": "e6ecdb1cfb1df5fa0b5e3f3807178d9c973ad9c5455a3fd2906b5951b4f9c5d7"
             },
             {
               "path": "apps/web/src/pages/BankReceiptsPage.tsx",
@@ -682818,7 +682819,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "d077d47d6b42c9817baf4b12a93af4ef76608537ccfb43f6b4e456a7f2556377"
+              "sha256": "e6ecdb1cfb1df5fa0b5e3f3807178d9c973ad9c5455a3fd2906b5951b4f9c5d7"
             },
             {
               "path": "apps/web/src/pages/BankReceiptsPage.tsx",
@@ -683940,7 +683941,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "d077d47d6b42c9817baf4b12a93af4ef76608537ccfb43f6b4e456a7f2556377"
+              "sha256": "e6ecdb1cfb1df5fa0b5e3f3807178d9c973ad9c5455a3fd2906b5951b4f9c5d7"
             },
             {
               "path": "apps/web/src/pages/BankReceiptsPage.tsx",
@@ -706592,7 +706593,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "d077d47d6b42c9817baf4b12a93af4ef76608537ccfb43f6b4e456a7f2556377"
+              "sha256": "e6ecdb1cfb1df5fa0b5e3f3807178d9c973ad9c5455a3fd2906b5951b4f9c5d7"
             },
             {
               "path": "apps/web/src/test/bank-receipt-review-fixture.ts",
@@ -712644,7 +712645,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "d077d47d6b42c9817baf4b12a93af4ef76608537ccfb43f6b4e456a7f2556377"
+              "sha256": "e6ecdb1cfb1df5fa0b5e3f3807178d9c973ad9c5455a3fd2906b5951b4f9c5d7"
             },
             {
               "path": "apps/worker/src/notifications/receipt-notices.integration.test.ts",
@@ -728254,7 +728255,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Registration and onboarding prerequisite waits, staff storage/upload policy/verification/terms recovery, saving catalogue and order intake, solar request intake, and wallet receipt review have named scoped evidence. Bind original conditional and interaction cases for the remaining operational and service route families, including route-specific denied, empty, loading and retry states where applicable."
+        "Named scoped cases now include entry and intake flows, staff configuration, operational service queues, CRM and staff directory, contracts, documents, inbox, and wallet review. Bind remaining configuration and customer service route cases and verify any still-unmeasured route-specific loading, empty, denied, stale and recovery interactions against the original criteria."
       ],
       "owner": null,
       "depends_on": [],
@@ -728441,7 +728442,8 @@
           "release-0.5-original-route-reconciliation",
           "release-0.5-public-auth-deadline",
           "release-0.5-entry-prerequisites",
-          "release-0.5-intake-response-recovery"
+          "release-0.5-intake-response-recovery",
+          "release-0.5-operational-route-receipts"
         ]
       }
     },
@@ -729321,7 +729323,7 @@
             },
             {
               "path": "apps/web/src/pages/AccountRecoveryPage.tsx",
-              "sha256": "3b67b23ec2f48ed7369957eb49951b7ce1de493b570e04f8e934cf19897d1f5b"
+              "sha256": "b60a6a8d933d095170a0aea17ee963fa5df152d93913592158c37a832619f390"
             },
             {
               "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
@@ -729493,7 +729495,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-              "sha256": "d077d47d6b42c9817baf4b12a93af4ef76608537ccfb43f6b4e456a7f2556377"
+              "sha256": "e6ecdb1cfb1df5fa0b5e3f3807178d9c973ad9c5455a3fd2906b5951b4f9c5d7"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -730373,7 +730375,8 @@
             "Invoice receipt history recovery passed all 101 route and interaction budgets. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-post-receipt/proof.json",
             "Public auth deadlines passed all 101 budgets and six cold-auth checks; staff wallet receipts measured 499.98 KB. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-public-auth-deadline/proof.json",
             "Registration and setup prerequisite loading passed all 101 budgets and six cold-auth transfer checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-entry-prerequisites/proof.json",
-            "Service intake and the wallet receipt view pass all 101 unchanged budgets. The cold-auth build files match the prior checked transfer. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-intake-response-recovery/proof.json"
+            "Service intake and the wallet receipt view pass all 101 unchanged budgets. The cold-auth build files match the prior checked transfer. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-intake-response-recovery/proof.json",
+            "The operational batch passes all 101 transfer budgets, with byte-matched auth assets and targeted native regression evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-operational-route-receipts/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -808029,6 +808032,45 @@
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-intake-response-recovery/reviewed.patch",
       "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-intake-response-recovery/renewed-bindings.json",
       "release_disposition": "Saving, solar and wallet receipt recovery cases verified on the current source. Four required v0.5.0 criteria remain open."
+    },
+    "release-0.5-operational-route-receipts": {
+      "batch": "release-0.5-operational-route-receipts",
+      "base_commit": "a07c4dc44c015caa0b5fa3ab2f343d33bcabbb8e",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/account-recovery-closure.spec.ts",
+          "sha256": "946a8074a85458bf96f0a23f376e798820e620d84f868c2e0dcaafc0ce54db34"
+        },
+        {
+          "path": "apps/web/src/pages/AccountRecoveryPage.tsx",
+          "sha256": "b60a6a8d933d095170a0aea17ee963fa5df152d93913592158c37a832619f390"
+        },
+        {
+          "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
+          "sha256": "e6ecdb1cfb1df5fa0b5e3f3807178d9c973ad9c5455a3fd2906b5951b4f9c5d7"
+        }
+      ],
+      "checks": [
+        "The operational browser sweep reproduced four failures from a duplicate warning in uncertain account recovery creation. The corrected cases pass in English and Persian on Chromium and Mobile Safari. The retry preserves the captured target, payload and idempotency key and reviews it under an explicit title.",
+        "Wallet receipt translation lookups use the original keys and locale. Focused cases cover allocation, step-up, stale decisions and financial recovery. The first rebuild measured 500.02 KB. The final rebuild measured 499.99 KB against the unchanged 500 KB cap.",
+        "160 distinct passing native cases are mapped to 22 routes with named scenarios, browser, build and direct source. The final build repeats affected recovery and wallet cases. Four recovery cases supplied browser coverage for the same recovery source. Eighty-seven wallet unit tests supply final-source coverage. The unchanged coverage floors and 101 transfer budgets pass.",
+        "Auth build files match the previously measured cold-transfer build except for the release metadata."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-operational-route-receipts",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-operational-route-receipts/proof.json",
+      "source_scope_proof_sha256": "00a89b4bb4d02a890701a65ac880d7adb6b5e3ac95f94a4eef6581867c937f15",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-operational-route-receipts/reviewed.patch",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-operational-route-receipts/renewed-bindings.json",
+      "release_disposition": "Recorded 22 route-specific case sets and corrected protected recovery dialog feedback. v0.5.0 still has four required acceptance items."
     }
   },
   "historical_improvements": [
@@ -808079,12 +808121,12 @@
       "release-readiness#R-04.01",
       "release-readiness#R-04.02"
     ],
-    "goal": "Bind original conditional and interaction cases for the remaining operational and service routes. The saving catalogue and wizard, solar intake and staff wallet receipt receipts are indexed in the latest evidence. GitHub merge enforcement and staging Sentry delivery are independent gates."
+    "goal": "The latest receipt identifies 23 routes without named cases in the current index. Start with staff configuration, then the electricity wizard, detail, and remaining account and onboarding routes. Bind existing passing receipts first and check the unmeasured states. GitHub merge enforcement and staging Sentry delivery remain independent gates."
   },
   "launch_forecast": {
     "status": "deadline_at_risk_until_v0_5_and_operational_gates_close",
     "next_update_after": "v0.5.0 remaining UI criteria and owner decisions",
-    "method": "v0.4.0 staging and Telegram receipts are verified. v0.5.0 has populated layouts for 93 routes and renewed entry, staff configuration, saving, solar and wallet receipt cases. Four required criteria remain open and the November 9 sequence remains at risk."
+    "method": "v0.4.0 staging and Telegram receipts are verified. v0.5.0 has recorded layouts for 93 routes and updated interaction evidence for 22 operational and record routes. Four required items remain open and the November 9 sequence remains at risk."
   },
   "capabilities": [
     {

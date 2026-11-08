@@ -352,15 +352,19 @@ for (const locale of ['en', 'fa'] as const) {
     await confirm.click();
     await expect.poll(() => submissions.length).toBe(1);
     await page.clock.runFor(15_100);
-    await expect(
-      dialog.getByText(confirmationText('unconfirmed', locale), { exact: true })
-    ).toBeVisible();
+    const warning = confirmationText('unconfirmed', locale);
+    await expect(dialog.getByRole('alert')).toHaveText(warning);
+    await expect(dialog.getByText(warning, { exact: true })).toHaveCount(1);
     await dialog
       .getByRole('button', { name: locale === 'fa' ? 'انصراف' : 'Cancel', exact: true })
       .click();
     release();
     await expect(create).toBeDisabled();
     await page.getByRole('button', { name: word('retryCreation'), exact: true }).click();
+    await expect(
+      dialog.getByRole('heading', { name: word('retryCreation'), exact: true })
+    ).toBeVisible();
+    await expect(dialog).toContainText('support-1');
     expect(submissions).toHaveLength(1);
     await confirm.click();
     await expect(dialog).toHaveCount(0);

@@ -220,7 +220,12 @@ function RecoveryWorkflow({ actor }: { actor: string | null }) {
       {heldCreation && !action && (
         <div className="space-y-2">
           <p role="alert">{confirmationText('unconfirmed', locale)}</p>
-          <Button variant="outline" onClick={() => setAction({ ...heldCreation })}>
+          <Button
+            variant="outline"
+            onClick={() =>
+              setAction({ ...heldCreation, title: t('auth.recovery.retryCreation', locale) })
+            }
+          >
             {t('auth.recovery.retryCreation', locale)}
           </Button>
         </div>
@@ -411,7 +416,6 @@ function RecoveryWorkflow({ actor }: { actor: string | null }) {
       {action && (
         <TeamActionDialog
           action={action}
-          summary={heldCreation ? <p>{confirmationText('unconfirmed', locale)}</p> : undefined}
           onClose={() => setAction(null)}
           onDenied={() => scope.deny()}
           onUnconfirmed={() => {

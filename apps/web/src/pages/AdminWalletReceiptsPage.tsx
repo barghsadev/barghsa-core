@@ -248,6 +248,7 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
   const [nextCursor, setNextCursor] = useState<FinanceCursor | null>(null);
   const time = useAccountTime();
   const locale = useLocale();
+  const copy = (key: string) => t(`admin.walletReceipts.${key}`, locale);
   const numbers = useFinancialFormatting(locale);
   const isRtl = locale === 'fa';
   const { view, setView } = useListView('staff-wallet-receipts-pending');
@@ -281,7 +282,7 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
   const [allocationInputInvalid, setAllocationInputInvalid] = useState(false);
   const invoiceError =
     confirmation.invoice.errors.invoiceId?.message ??
-    (allocationInputInvalid ? t('admin.walletReceipts.error.invoiceId', locale) : undefined);
+    (allocationInputInvalid ? copy('error.invoiceId') : undefined);
   const [allocationLoading, setAllocationLoading] = useState(false);
   const [financialReview, setFinancialReview] = useState<BankReceiptConfirmationReview | null>(
     null
@@ -400,8 +401,7 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
         controller.signal,
         async (res) => {
           if ([401, 403].includes(res.status)) return null;
-          if (!res.ok)
-            throw new Error(await parseError(res, t('admin.walletReceipts.error.load', locale)));
+          if (!res.ok) throw new Error(await parseError(res, copy('error.load')));
           return {
             data: (await res.json()) as {
               items?: BankReceiptReviewDto[];
@@ -417,7 +417,7 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
         return;
       }
       const { data } = packet;
-      if (!Array.isArray(data.items)) throw new Error(t('admin.walletReceipts.error.load', locale));
+      if (!Array.isArray(data.items)) throw new Error(copy('error.load'));
       if (controller.signal.aborted || accessOwner !== accessGeneration.current) return;
       const next = data.items;
       setNextCursor(data.nextCursor ?? null);
@@ -436,9 +436,7 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
       }
     } catch (err) {
       if (!controller.signal.aborted && accessOwner === accessGeneration.current)
-        setQueueError(
-          err instanceof Error ? err.message : t('admin.walletReceipts.error.load', locale)
-        );
+        setQueueError(err instanceof Error ? err.message : copy('error.load'));
     } finally {
       if (!controller.signal.aborted && accessOwner === accessGeneration.current) setLoading(false);
     }
@@ -525,9 +523,7 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
     }
     if (trimmed && !isTransactionUuid(trimmed)) {
       setAllocation(null);
-      setAllocationError(
-        selected.dualApproval ? t('admin.walletReceipts.error.invoiceId', locale) : null
-      );
+      setAllocationError(selected.dualApproval ? copy('error.invoiceId') : null);
       setAllocationLoading(false);
       return;
     }
@@ -555,7 +551,7 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
           const owned =
             !selected.dualApproval && fields && confirmation.invoice.applyServerErrors(fields);
           setAllocationInputInvalid(Boolean(owned));
-          setAllocationError(t('admin.walletReceipts.error.allocation', locale));
+          setAllocationError(copy('error.allocation'));
           return;
         }
         const review = parseBankReceiptConfirmationReview(data);
@@ -590,7 +586,7 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
         );
       } catch {
         if (!controller.signal.aborted && owner === workGeneration.current) {
-          setAllocationError(t('admin.walletReceipts.review.error', locale));
+          setAllocationError(copy('review.error'));
         }
       } finally {
         if (!controller.signal.aborted && owner === workGeneration.current)
@@ -695,7 +691,7 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
       (res.status === 403 && readErrorCode(data) === ErrorCodes.AUTHZ_FORBIDDEN.code)
     ) {
       denyAccess();
-      setError(t('admin.walletReceipts.queue.forbidden', locale));
+      setError(copy('queue.forbidden'));
       return 'obsolete';
     }
     if (!res.ok) {
@@ -717,8 +713,8 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
       } else {
         setError(
           res.status === 409 && action.kind === 'confirm'
-            ? t('admin.walletReceipts.review.changed', locale)
-            : t('admin.walletReceipts.error.save', locale)
+            ? copy('review.changed')
+            : copy('error.save')
         );
       }
       return 'error';
@@ -736,7 +732,7 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
     )
       return recoverDecision();
     if (dto.state === 'Pending' && dto.dualApproval) {
-      setStatus(t('admin.walletReceipts.approvalPending', locale));
+      setStatus(copy('approvalPending'));
       invalidateDecision();
       selectedRef.current = dto;
       setSelected(dto);
@@ -751,11 +747,11 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
     const message =
       action.kind === 'confirm'
         ? action.emergencyOverrideReason !== undefined
-          ? t('admin.walletReceipts.emergencyConfirmed', locale)
+          ? copy('emergencyConfirmed')
           : overpay
-            ? t('admin.walletReceipts.overpaymentConfirmed', locale)
-            : t('admin.walletReceipts.confirmed', locale)
-        : t('admin.walletReceipts.rejected', locale);
+            ? copy('overpaymentConfirmed')
+            : copy('confirmed')
+        : copy('rejected');
     rowsRef.current = rowsRef.current.filter((row) => row.transactionId !== dto.transactionId);
     setItems(rowsRef.current);
     selectReceipt(rowsRef.current[0]?.transactionId ?? null);
@@ -800,21 +796,21 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
             />
           ) : (
             <FinancialReviewSummary
-              title={t('admin.walletReceipts.reason', locale)}
+              title={copy('reason')}
               rows={[
                 {
                   id: 'receipt',
-                  label: t('admin.walletReceipts.review.refresh', locale),
+                  label: copy('review.refresh'),
                   value: action.transactionId,
                 },
                 {
                   id: 'reason',
-                  label: t('admin.walletReceipts.reason', locale),
+                  label: copy('reason'),
                   value: action.reason,
                 },
               ]}
               total={{
-                label: t('admin.walletReceipts.amount', locale),
+                label: copy('amount'),
                 value: numbers.reviewMoney(receipt.amount),
               }}
             />
@@ -844,8 +840,7 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
         setStepUpOpen(true);
       }
     } catch {
-      if (action.generation === workGeneration.current)
-        setError(t('admin.walletReceipts.error.save', locale));
+      if (action.generation === workGeneration.current) setError(copy('error.save'));
     } finally {
       if (writeOwner.current === action) {
         writeOwner.current = null;
@@ -967,13 +962,13 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
       const verified = await receiptRequest((signal) => verifyStepUp(stepUpPassword, signal));
       if (!ownsDecision(currentAction)) return;
       if (!verified) {
-        setStepUpError(t('admin.walletReceipts.stepUp.failed', locale));
+        setStepUpError(copy('stepUp.failed'));
         return;
       }
       const outcome = await postDecision(currentAction);
       if (currentAction.generation !== workGeneration.current || accessDenied.current) return;
       if (outcome === 'step_up') {
-        setStepUpError(t('admin.walletReceipts.stepUp.failed', locale));
+        setStepUpError(copy('stepUp.failed'));
         return;
       }
       if (outcome === 'ok' || outcome === 'error') {
@@ -982,8 +977,7 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
         setStepUpPassword('');
       }
     } catch {
-      if (ownsDecision(currentAction))
-        setStepUpError(t('admin.walletReceipts.stepUp.failed', locale));
+      if (ownsDecision(currentAction)) setStepUpError(copy('stepUp.failed'));
     } finally {
       if (currentAction.generation === workGeneration.current) setStepUpSubmitting(false);
     }
@@ -1025,10 +1019,8 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
     >
       {time.notice}
       <header>
-        <h1 className="text-2xl font-bold">{t('admin.walletReceipts.title', locale)}</h1>
-        <p className="text-muted-foreground mt-2">
-          {t('admin.walletReceipts.description', locale)}
-        </p>
+        <h1 className="text-2xl font-bold">{copy('title')}</h1>
+        <p className="text-muted-foreground mt-2">{copy('description')}</p>
       </header>
 
       <WalletTopUpLimitConfigPanel />
@@ -1044,7 +1036,7 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
       <ListPage>
         <ListPage.Toolbar filters={<ReceiptQueueControls binding={queueBinding} />}>
           <div className="flex flex-wrap items-center justify-between gap-3">
-            <h2 className="font-semibold">{t('admin.walletReceipts.queueLabel', locale)}</h2>
+            <h2 className="font-semibold">{copy('queueLabel')}</h2>
             <ListViewToggle
               value={view}
               onChange={setView}
@@ -1059,7 +1051,7 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
               disabled={loading || acting || stepUpOpen}
               onClick={() => void loadQueue()}
             >
-              {t('admin.walletReceipts.queue.refresh', locale)}
+              {copy('queue.refresh')}
             </Button>
           </div>
         </ListPage.Toolbar>
@@ -1078,21 +1070,21 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
             error={!!queueError || denied}
             empty={!items.length}
             retainContent={!!items.length && !denied}
-            loadingView={<LoadingStatus>{t('admin.walletReceipts.loading', locale)}</LoadingStatus>}
+            loadingView={<LoadingStatus>{copy('loading')}</LoadingStatus>}
             errorView={
               <div role="alert" className="space-y-2">
-                <p>{denied ? t('admin.walletReceipts.queue.forbidden', locale) : queueError}</p>
+                <p>{denied ? copy('queue.forbidden') : queueError}</p>
                 {!denied && (
                   <Button variant="outline" onClick={() => void loadQueue()}>
-                    {t('admin.walletReceipts.queue.retry', locale)}
+                    {copy('queue.retry')}
                   </Button>
                 )}
               </div>
             }
-            emptyView={<p role="status">{t('admin.walletReceipts.empty', locale)}</p>}
+            emptyView={<p role="status">{copy('empty')}</p>}
           >
             <nav
-              aria-label={t('admin.walletReceipts.queueLabel', locale)}
+              aria-label={copy('queueLabel')}
               className="bg-card text-card-foreground rounded-lg border border-border p-3 space-y-1"
             >
               <StaffWalletReceiptList
@@ -1122,17 +1114,15 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
               className="min-w-0 bg-card text-card-foreground rounded-lg border border-border p-6 space-y-4"
             >
               <h2 id="receipt-review-heading" className="text-lg font-semibold">
-                {t('admin.walletReceipts.reviewTitle', locale)}
+                {copy('reviewTitle')}
               </h2>
 
-              {detailLoading && (
-                <LoadingStatus>{t('admin.walletReceipts.detail.loading', locale)}</LoadingStatus>
-              )}
+              {detailLoading && <LoadingStatus>{copy('detail.loading')}</LoadingStatus>}
               {detailError && (
                 <div role="alert" className="space-y-2">
-                  <p>{t('admin.walletReceipts.detail.error', locale)}</p>
+                  <p>{copy('detail.error')}</p>
                   <Button variant="outline" onClick={() => setDetailRevision((v) => v + 1)}>
-                    {t('admin.walletReceipts.detail.retry', locale)}
+                    {copy('detail.retry')}
                   </Button>
                 </div>
               )}
@@ -1141,61 +1131,48 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
                   className="rounded border border-warning/20 bg-warning-soft p-3 text-sm text-foreground"
                   role="status"
                 >
-                  {t('admin.walletReceipts.approvalPending', locale)}
+                  {copy('approvalPending')}
                 </p>
               )}
               <dl className="grid grid-cols-1 gap-2 text-sm">
                 {receiptDetail(
-                  t('admin.walletReceipts.amount', locale),
+                  copy('amount'),
                   `${numbers.irrDigits(selected.amount)} ${selected.currency}`,
                   'font-medium'
                 )}
                 {receiptDetail(
-                  t('admin.walletReceipts.paymentDate', locale),
+                  copy('paymentDate'),
                   formatPaymentDate(selected.paymentDate, locale)
                 )}
                 {receiptDetail(
-                  t('admin.walletReceipts.payerReference', locale),
-                  selected.payerReference ?? t('admin.walletReceipts.none', locale),
+                  copy('payerReference'),
+                  selected.payerReference ?? copy('none'),
                   'font-mono text-sm',
                   'ltr'
                 )}
                 {receiptDetail(
                   adminText('admin.invoiceReceipts.bankName', locale),
-                  selected.bankName ?? t('admin.walletReceipts.none', locale),
+                  selected.bankName ?? copy('none'),
                   'break-words'
                 )}
-                {receiptDetail(
-                  t('admin.walletReceipts.walletId', locale),
-                  selected.walletId,
-                  'font-mono text-sm',
-                  'ltr'
-                )}
-                {receiptDetail(
-                  t('admin.walletReceipts.submittedAt', locale),
-                  time.format(selected.submittedAt)
-                )}
-                {receiptDetail(
-                  t('admin.walletReceipts.note', locale),
-                  selected.customerNote ?? t('admin.walletReceipts.none', locale)
-                )}
+                {receiptDetail(copy('walletId'), selected.walletId, 'font-mono text-sm', 'ltr')}
+                {receiptDetail(copy('submittedAt'), time.format(selected.submittedAt))}
+                {receiptDetail(copy('note'), selected.customerNote ?? copy('none'))}
               </dl>
 
               <div>
-                <h3 className="text-sm font-medium text-foreground mb-2">
-                  {t('admin.walletReceipts.attachment', locale)}
-                </h3>
+                <h3 className="text-sm font-medium text-foreground mb-2">{copy('attachment')}</h3>
                 {selected.attachmentUrl ? (
                   <StaffReceiptAttachmentPreview
                     key={selected.transactionId}
                     url={selected.attachmentUrl}
                     attachmentKey={selected.attachmentKey}
-                    label={t('admin.walletReceipts.attachmentAlt', locale)}
-                    openLabel={t('admin.walletReceipts.openAttachment', locale)}
+                    label={copy('attachmentAlt')}
+                    openLabel={copy('openAttachment')}
                   />
                 ) : (
                   <p className="break-all text-sm text-muted-foreground" dir="ltr">
-                    {selected.attachmentKey ?? t('admin.walletReceipts.none', locale)}
+                    {selected.attachmentKey ?? copy('none')}
                   </p>
                 )}
               </div>
@@ -1220,7 +1197,7 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
                         htmlFor="apply-invoice-id"
                         className="block text-sm font-medium text-foreground mb-1"
                       >
-                        {t('admin.walletReceipts.invoiceId', locale)}
+                        {copy('invoiceId')}
                       </label>
                       <input
                         id="apply-invoice-id"
@@ -1234,13 +1211,13 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
                         spellCheck={false}
                         value={invoiceId}
                         onChange={(e) => setInvoiceId(e.target.value)}
-                        placeholder={t('admin.walletReceipts.invoiceIdPlaceholder', locale)}
+                        placeholder={copy('invoiceIdPlaceholder')}
                         aria-invalid={Boolean(invoiceError) || undefined}
                         aria-describedby={`apply-invoice-hint${invoiceError ? ` ${confirmation.invoice.errorId('invoiceId')}` : ''}`}
                         className="w-full border border-input rounded px-3 py-2 font-mono text-sm"
                       />
                       <p id="apply-invoice-hint" className="text-xs text-muted-foreground mt-1">
-                        {t('admin.walletReceipts.invoiceIdHint', locale)}
+                        {copy('invoiceIdHint')}
                       </p>
                       {!selected.dualApproval && (
                         <p
@@ -1249,7 +1226,7 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
                           aria-hidden={!invoiceError || undefined}
                           className={`text-sm text-destructive mt-1${invoiceError ? '' : ' invisible'}`}
                         >
-                          {invoiceError ?? t('admin.walletReceipts.error.invoiceId', locale)}
+                          {invoiceError ?? copy('error.invoiceId')}
                         </p>
                       )}
                     </div>
@@ -1260,11 +1237,7 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
                       </p>
                     )}
 
-                    {allocationLoading && (
-                      <LoadingStatus>
-                        {t('admin.walletReceipts.review.loading', locale)}
-                      </LoadingStatus>
-                    )}
+                    {allocationLoading && <LoadingStatus>{copy('review.loading')}</LoadingStatus>}
                     {financialReview && (
                       <BankReceiptFinancialReview
                         review={financialReview}
@@ -1278,7 +1251,7 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
                       onClick={() => setReviewRevision((v) => v + 1)}
                       className="rounded border px-3 py-2"
                     >
-                      {t('admin.walletReceipts.review.refresh', locale)}
+                      {copy('review.refresh')}
                     </button>
 
                     <button
@@ -1296,10 +1269,10 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
                     >
                       {confirmationWorking && receiptCommandSpinner}
                       {confirmationWorking
-                        ? t('admin.walletReceipts.saving', locale)
+                        ? copy('saving')
                         : allocation?.isOverpayment
-                          ? t('admin.walletReceipts.confirmOverpayment', locale)
-                          : t('admin.walletReceipts.confirm', locale)}
+                          ? copy('confirmOverpayment')
+                          : copy('confirm')}
                     </button>
                   </form>
 
@@ -1310,17 +1283,15 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
                       aria-busy={confirmationWorking || undefined}
                     >
                       <fieldset className="space-y-3 rounded border border-amber-500 p-4">
-                        <legend className="px-1 font-medium">
-                          {t('admin.walletReceipts.emergencyTitle', locale)}
-                        </legend>
+                        <legend className="px-1 font-medium">{copy('emergencyTitle')}</legend>
                         <p id="receipt-emergency-hint" className="text-sm">
-                          {t('admin.walletReceipts.emergencyHint', locale)}
+                          {copy('emergencyHint')}
                         </p>
                         <label
                           htmlFor="receipt-emergency-reason"
                           className="block text-sm font-medium"
                         >
-                          {t('admin.walletReceipts.emergencyReason', locale)}
+                          {copy('emergencyReason')}
                         </label>
                         <textarea
                           id="receipt-emergency-reason"
@@ -1348,7 +1319,7 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
                           className={`text-sm text-destructive${confirmation.emergency.errors.emergencyOverrideReason ? '' : ' invisible'}`}
                         >
                           {confirmation.emergency.errors.emergencyOverrideReason?.message ??
-                            t('admin.walletReceipts.error.emergencyReason', locale)}
+                            copy('error.emergencyReason')}
                         </p>
                         <button
                           type="submit"
@@ -1363,7 +1334,7 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
                           className="rounded bg-amber-900 px-4 py-2 text-white disabled:opacity-50"
                         >
                           {confirmationWorking && receiptCommandSpinner}
-                          {t('admin.walletReceipts.emergencyConfirm', locale)}
+                          {copy('emergencyConfirm')}
                         </button>
                       </fieldset>
                     </form>
@@ -1375,7 +1346,7 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
                         htmlFor="reject-reason"
                         className="block text-sm font-medium text-foreground mb-1"
                       >
-                        {t('admin.walletReceipts.reason', locale)}{' '}
+                        {copy('reason')}{' '}
                         <span className="text-destructive" aria-hidden="true">
                           *
                         </span>
@@ -1407,7 +1378,7 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
                         </p>
                       )}
                       <p id="reject-reason-hint" className="text-xs text-muted-foreground mt-1">
-                        {t('admin.walletReceipts.reasonHint', locale)}
+                        {copy('reasonHint')}
                       </p>
                     </div>
                     <button
@@ -1419,15 +1390,13 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
                       className="px-4 py-2 bg-red-700 text-white rounded hover:bg-red-800 disabled:opacity-50"
                     >
                       {rejectionWorking && receiptCommandSpinner}
-                      {rejectionWorking
-                        ? t('admin.walletReceipts.saving', locale)
-                        : t('admin.walletReceipts.reject', locale)}
+                      {rejectionWorking ? copy('saving') : copy('reject')}
                     </button>
                   </form>
                 </div>
               ) : (
                 <p className="text-sm text-warning" role="status">
-                  {t('admin.walletReceipts.alreadyDecided', locale)}
+                  {copy('alreadyDecided')}
                 </p>
               )}
             </section>
@@ -1455,19 +1424,15 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
             className="w-full max-w-md rounded-lg bg-card text-card-foreground p-6 shadow-lg space-y-4"
           >
             <h3 id="wallet-receipt-step-up-title" className="text-lg font-semibold text-foreground">
-              {t('admin.walletReceipts.stepUp.title', locale)}
+              {copy('stepUp.title')}
             </h3>
             <p id="wallet-receipt-step-up-description" className="text-sm text-muted-foreground">
-              {t('admin.walletReceipts.stepUp.description', locale)}
+              {copy('stepUp.description')}
             </p>
             {pendingAction?.kind === 'confirm' && (
               <>
                 {time.notice}
-                <ScrollArea
-                  className="h-[35dvh]"
-                  role="region"
-                  aria-label={t('admin.walletReceipts.review.title', locale)}
-                >
+                <ScrollArea className="h-[35dvh]" role="region" aria-label={copy('review.title')}>
                   <BankReceiptFinancialReview
                     review={pendingAction.review}
                     formatDate={time.format}
@@ -1481,7 +1446,7 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
                 htmlFor="wallet-receipt-step-up-password"
                 className="block text-sm font-medium text-foreground mb-1"
               >
-                {t('admin.walletReceipts.stepUp.passwordLabel', locale)}
+                {copy('stepUp.passwordLabel')}
               </label>
               <input
                 ref={stepUpPasswordRef}
@@ -1522,9 +1487,7 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
                 }
                 className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
               >
-                {stepUpSubmitting
-                  ? t('admin.walletReceipts.stepUp.verifying', locale)
-                  : t('admin.walletReceipts.stepUp.submit', locale)}
+                {stepUpSubmitting ? copy('stepUp.verifying') : copy('stepUp.submit')}
               </button>
               <button
                 type="button"
@@ -1533,7 +1496,7 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
                 disabled={stepUpSubmitting}
                 className="px-4 py-2 border border-input rounded text-foreground hover:bg-muted disabled:opacity-50"
               >
-                {t('admin.walletReceipts.stepUp.cancel', locale)}
+                {copy('stepUp.cancel')}
               </button>
             </div>
           </form>
