@@ -203,6 +203,29 @@ for (const locale of ['en', 'fa'] as const)
           await input.focus();
           await expect(input).toBeFocused();
           await measure('input focus', input, 'focus');
+          const delivery = page.getByRole('tablist', { name: 'Delivery channels', exact: true });
+          await measure(
+            'selected pill tab',
+            delivery.getByRole('tab', { selected: true }),
+            'boundary'
+          );
+          const select = page.getByRole('combobox', { name: 'Category', exact: true });
+          await select.press('Enter');
+          const option = page.getByRole('option', { name: 'Alpha', selected: true, exact: true });
+          await expect(option).toBeVisible();
+          await measure('selected option checkmark', option, 'indicator', 'svg');
+          await page.keyboard.press('Escape');
+          const actions = page.getByRole('button', { name: 'Actions', exact: true });
+          await actions.press('Enter');
+          const item = page.getByRole('menuitemcheckbox', { name: 'Selected action', exact: true });
+          await expect(item).toBeChecked();
+          await measure('selected menu checkmark', item, 'indicator', 'svg');
+          await page.keyboard.press('Escape');
+          await measure(
+            'slider thumb',
+            page.locator('[data-slot=slider-thumb]').first(),
+            'boundary'
+          );
         }
       }
       await info.attach('essential-control-contrast', {

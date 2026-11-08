@@ -2,6 +2,7 @@ import AxeBuilder from '@axe-core/playwright';
 import { providerText, smsProviderText } from '@barghsa/i18n/providers';
 import { test, expect } from './coverage-fixture';
 import { crmShell } from './crm-shell-fixture';
+import { measureControlContrast } from './control-contrast';
 
 const stamp = '2026-09-24T12:00:00Z';
 const healthMetrics = {
@@ -123,6 +124,9 @@ for (const locale of ['en', 'fa'] as const) {
         });
       });
       await page.goto('/admin/providers');
+      const selectedTab = page.getByRole('tab', { name: smsText('email'), selected: true });
+      await expect(selectedTab).toBeVisible();
+      expect(await measureControlContrast(selectedTab, 'boundary')).toBeGreaterThanOrEqual(3);
       await page.setViewportSize({ width: 390, height: 844 });
       const cards = page.getByRole('list', { name: emailText('title'), exact: true });
       const draft = cards.locator(':scope > li').filter({ hasText: emailDraft.label });
@@ -216,6 +220,9 @@ for (const locale of ['en', 'fa'] as const) {
       });
       await page.goto('/admin/providers');
       await page.getByRole('tab', { name: 'SMS.ir', exact: true }).click();
+      const selectedTab = page.getByRole('tab', { name: smsText('sms'), selected: true });
+      await expect(selectedTab).toBeVisible();
+      expect(await measureControlContrast(selectedTab, 'boundary')).toBeGreaterThanOrEqual(3);
       await page.setViewportSize({ width: 390, height: 844 });
       const cards = page.getByRole('list', { name: smsText('title'), exact: true });
       const draft = cards.locator(':scope > li').filter({ hasText: smsDraft.label });

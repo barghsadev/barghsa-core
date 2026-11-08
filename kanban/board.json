@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-08T04:50:22+00:00",
-  "source_commit": "46a5136dddd077ed377b240936b75aa9d92b9da9",
+  "updated": "2026-11-08T05:00:23+00:00",
+  "source_commit": "42aa702931fd6e37b25b39b4286c2e1e04c82a12",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -35351,7 +35351,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "f1bd9442fabf40b108a45ad9b1e8bd5c4358c4acce1472bd88000fdacb9a738d"
+              "sha256": "9194ddf096d056dc9180fcb2ce636d0176108e0a0128b8003c4eebecfb931487"
             },
             {
               "path": "apps/web/e2e/timezone-settings.spec.ts",
@@ -63044,7 +63044,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "f1bd9442fabf40b108a45ad9b1e8bd5c4358c4acce1472bd88000fdacb9a738d"
+              "sha256": "9194ddf096d056dc9180fcb2ce636d0176108e0a0128b8003c4eebecfb931487"
             },
             {
               "path": "apps/web/e2e/timezone-settings.spec.ts",
@@ -476368,7 +476368,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/tabs.tsx",
-              "sha256": "02d5920a3099c97c667b7796d913e4cb99da26ae66779b2682fe1bf1736c8871"
+              "sha256": "047a78faecdf468ef5bf460a6c88b3d15087185a6d6259194d7e7d4b7ff63fa2"
             },
             {
               "path": "packages/ui/src/components/ui/text-filter.test.tsx",
@@ -477193,7 +477193,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "f1bd9442fabf40b108a45ad9b1e8bd5c4358c4acce1472bd88000fdacb9a738d"
+              "sha256": "9194ddf096d056dc9180fcb2ce636d0176108e0a0128b8003c4eebecfb931487"
             },
             {
               "path": "apps/web/e2e/ui-identity-loading.spec.ts",
@@ -477477,7 +477477,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/tabs.tsx",
-              "sha256": "02d5920a3099c97c667b7796d913e4cb99da26ae66779b2682fe1bf1736c8871"
+              "sha256": "047a78faecdf468ef5bf460a6c88b3d15087185a6d6259194d7e7d4b7ff63fa2"
             },
             {
               "path": "packages/ui/src/components/ui/text-filter.test.tsx",
@@ -478047,7 +478047,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "f1bd9442fabf40b108a45ad9b1e8bd5c4358c4acce1472bd88000fdacb9a738d"
+              "sha256": "9194ddf096d056dc9180fcb2ce636d0176108e0a0128b8003c4eebecfb931487"
             },
             {
               "path": "apps/web/e2e/ui-identity-loading.spec.ts",
@@ -478331,7 +478331,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/tabs.tsx",
-              "sha256": "02d5920a3099c97c667b7796d913e4cb99da26ae66779b2682fe1bf1736c8871"
+              "sha256": "047a78faecdf468ef5bf460a6c88b3d15087185a6d6259194d7e7d4b7ff63fa2"
             },
             {
               "path": "packages/ui/src/components/ui/text-filter.test.tsx",
@@ -479053,7 +479053,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/tabs.tsx",
-              "sha256": "02d5920a3099c97c667b7796d913e4cb99da26ae66779b2682fe1bf1736c8871"
+              "sha256": "047a78faecdf468ef5bf460a6c88b3d15087185a6d6259194d7e7d4b7ff63fa2"
             },
             {
               "path": "packages/ui/src/components/ui/text-filter.test.tsx",
@@ -479658,7 +479658,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "f1bd9442fabf40b108a45ad9b1e8bd5c4358c4acce1472bd88000fdacb9a738d"
+              "sha256": "9194ddf096d056dc9180fcb2ce636d0176108e0a0128b8003c4eebecfb931487"
             },
             {
               "path": "apps/web/e2e/ui-identity-loading.spec.ts",
@@ -479942,7 +479942,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/tabs.tsx",
-              "sha256": "02d5920a3099c97c667b7796d913e4cb99da26ae66779b2682fe1bf1736c8871"
+              "sha256": "047a78faecdf468ef5bf460a6c88b3d15087185a6d6259194d7e7d4b7ff63fa2"
             },
             {
               "path": "packages/ui/src/components/ui/text-filter.test.tsx",
@@ -480666,7 +480666,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/tabs.tsx",
-              "sha256": "02d5920a3099c97c667b7796d913e4cb99da26ae66779b2682fe1bf1736c8871"
+              "sha256": "047a78faecdf468ef5bf460a6c88b3d15087185a6d6259194d7e7d4b7ff63fa2"
             },
             {
               "path": "packages/ui/src/components/ui/text-filter.test.tsx",
@@ -481271,7 +481271,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "f1bd9442fabf40b108a45ad9b1e8bd5c4358c4acce1472bd88000fdacb9a738d"
+              "sha256": "9194ddf096d056dc9180fcb2ce636d0176108e0a0128b8003c4eebecfb931487"
             },
             {
               "path": "apps/web/e2e/ui-identity-loading.spec.ts",
@@ -481555,7 +481555,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/tabs.tsx",
-              "sha256": "02d5920a3099c97c667b7796d913e4cb99da26ae66779b2682fe1bf1736c8871"
+              "sha256": "047a78faecdf468ef5bf460a6c88b3d15087185a6d6259194d7e7d4b7ff63fa2"
             },
             {
               "path": "packages/ui/src/components/ui/text-filter.test.tsx",
@@ -482014,7 +482014,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "f1bd9442fabf40b108a45ad9b1e8bd5c4358c4acce1472bd88000fdacb9a738d"
+              "sha256": "9194ddf096d056dc9180fcb2ce636d0176108e0a0128b8003c4eebecfb931487"
             },
             {
               "path": "apps/web/e2e/ui-identity-loading.spec.ts",
@@ -482298,7 +482298,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/tabs.tsx",
-              "sha256": "02d5920a3099c97c667b7796d913e4cb99da26ae66779b2682fe1bf1736c8871"
+              "sha256": "047a78faecdf468ef5bf460a6c88b3d15087185a6d6259194d7e7d4b7ff63fa2"
             },
             {
               "path": "packages/ui/src/components/ui/text-filter.test.tsx",
@@ -482756,7 +482756,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "f1bd9442fabf40b108a45ad9b1e8bd5c4358c4acce1472bd88000fdacb9a738d"
+              "sha256": "9194ddf096d056dc9180fcb2ce636d0176108e0a0128b8003c4eebecfb931487"
             },
             {
               "path": "apps/web/e2e/ui-identity-loading.spec.ts",
@@ -486712,7 +486712,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "f1bd9442fabf40b108a45ad9b1e8bd5c4358c4acce1472bd88000fdacb9a738d"
+              "sha256": "9194ddf096d056dc9180fcb2ce636d0176108e0a0128b8003c4eebecfb931487"
             },
             {
               "path": "apps/web/e2e/ui-identity-loading.spec.ts",
@@ -487058,7 +487058,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/tabs.tsx",
-              "sha256": "02d5920a3099c97c667b7796d913e4cb99da26ae66779b2682fe1bf1736c8871"
+              "sha256": "047a78faecdf468ef5bf460a6c88b3d15087185a6d6259194d7e7d4b7ff63fa2"
             },
             {
               "path": "packages/ui/src/components/ui/tooltip.tsx",
@@ -487300,7 +487300,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/tabs.tsx",
-              "sha256": "02d5920a3099c97c667b7796d913e4cb99da26ae66779b2682fe1bf1736c8871"
+              "sha256": "047a78faecdf468ef5bf460a6c88b3d15087185a6d6259194d7e7d4b7ff63fa2"
             },
             {
               "path": "packages/ui/src/components/ui/tooltip.tsx",
@@ -487542,7 +487542,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/tabs.tsx",
-              "sha256": "02d5920a3099c97c667b7796d913e4cb99da26ae66779b2682fe1bf1736c8871"
+              "sha256": "047a78faecdf468ef5bf460a6c88b3d15087185a6d6259194d7e7d4b7ff63fa2"
             },
             {
               "path": "packages/ui/src/components/ui/tooltip.tsx",
@@ -490520,7 +490520,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "f1bd9442fabf40b108a45ad9b1e8bd5c4358c4acce1472bd88000fdacb9a738d"
+              "sha256": "9194ddf096d056dc9180fcb2ce636d0176108e0a0128b8003c4eebecfb931487"
             },
             {
               "path": "apps/web/e2e/ui-identity-loading.spec.ts",
@@ -490894,7 +490894,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "f1bd9442fabf40b108a45ad9b1e8bd5c4358c4acce1472bd88000fdacb9a738d"
+              "sha256": "9194ddf096d056dc9180fcb2ce636d0176108e0a0128b8003c4eebecfb931487"
             },
             {
               "path": "apps/web/e2e/ui-identity-loading.spec.ts",
@@ -491907,7 +491907,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "f1bd9442fabf40b108a45ad9b1e8bd5c4358c4acce1472bd88000fdacb9a738d"
+              "sha256": "9194ddf096d056dc9180fcb2ce636d0176108e0a0128b8003c4eebecfb931487"
             },
             {
               "path": "apps/web/e2e/ui-identity-loading.spec.ts",
@@ -498870,7 +498870,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "f1bd9442fabf40b108a45ad9b1e8bd5c4358c4acce1472bd88000fdacb9a738d"
+              "sha256": "9194ddf096d056dc9180fcb2ce636d0176108e0a0128b8003c4eebecfb931487"
             },
             {
               "path": "apps/web/index.html",
@@ -499414,7 +499414,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "f1bd9442fabf40b108a45ad9b1e8bd5c4358c4acce1472bd88000fdacb9a738d"
+              "sha256": "9194ddf096d056dc9180fcb2ce636d0176108e0a0128b8003c4eebecfb931487"
             },
             {
               "path": "apps/web/index.html",
@@ -499958,7 +499958,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "f1bd9442fabf40b108a45ad9b1e8bd5c4358c4acce1472bd88000fdacb9a738d"
+              "sha256": "9194ddf096d056dc9180fcb2ce636d0176108e0a0128b8003c4eebecfb931487"
             },
             {
               "path": "apps/web/index.html",
@@ -500502,7 +500502,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "f1bd9442fabf40b108a45ad9b1e8bd5c4358c4acce1472bd88000fdacb9a738d"
+              "sha256": "9194ddf096d056dc9180fcb2ce636d0176108e0a0128b8003c4eebecfb931487"
             },
             {
               "path": "apps/web/index.html",
@@ -501046,7 +501046,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "f1bd9442fabf40b108a45ad9b1e8bd5c4358c4acce1472bd88000fdacb9a738d"
+              "sha256": "9194ddf096d056dc9180fcb2ce636d0176108e0a0128b8003c4eebecfb931487"
             },
             {
               "path": "apps/web/index.html",
@@ -501590,7 +501590,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "f1bd9442fabf40b108a45ad9b1e8bd5c4358c4acce1472bd88000fdacb9a738d"
+              "sha256": "9194ddf096d056dc9180fcb2ce636d0176108e0a0128b8003c4eebecfb931487"
             },
             {
               "path": "apps/web/index.html",
@@ -502134,7 +502134,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "f1bd9442fabf40b108a45ad9b1e8bd5c4358c4acce1472bd88000fdacb9a738d"
+              "sha256": "9194ddf096d056dc9180fcb2ce636d0176108e0a0128b8003c4eebecfb931487"
             },
             {
               "path": "apps/web/index.html",
@@ -502678,7 +502678,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "f1bd9442fabf40b108a45ad9b1e8bd5c4358c4acce1472bd88000fdacb9a738d"
+              "sha256": "9194ddf096d056dc9180fcb2ce636d0176108e0a0128b8003c4eebecfb931487"
             },
             {
               "path": "apps/web/index.html",
@@ -503222,7 +503222,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "f1bd9442fabf40b108a45ad9b1e8bd5c4358c4acce1472bd88000fdacb9a738d"
+              "sha256": "9194ddf096d056dc9180fcb2ce636d0176108e0a0128b8003c4eebecfb931487"
             },
             {
               "path": "apps/web/index.html",
@@ -503766,7 +503766,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "f1bd9442fabf40b108a45ad9b1e8bd5c4358c4acce1472bd88000fdacb9a738d"
+              "sha256": "9194ddf096d056dc9180fcb2ce636d0176108e0a0128b8003c4eebecfb931487"
             },
             {
               "path": "apps/web/index.html",
@@ -504310,7 +504310,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "f1bd9442fabf40b108a45ad9b1e8bd5c4358c4acce1472bd88000fdacb9a738d"
+              "sha256": "9194ddf096d056dc9180fcb2ce636d0176108e0a0128b8003c4eebecfb931487"
             },
             {
               "path": "apps/web/index.html",
@@ -504854,7 +504854,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "f1bd9442fabf40b108a45ad9b1e8bd5c4358c4acce1472bd88000fdacb9a738d"
+              "sha256": "9194ddf096d056dc9180fcb2ce636d0176108e0a0128b8003c4eebecfb931487"
             },
             {
               "path": "apps/web/index.html",
@@ -505398,7 +505398,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "f1bd9442fabf40b108a45ad9b1e8bd5c4358c4acce1472bd88000fdacb9a738d"
+              "sha256": "9194ddf096d056dc9180fcb2ce636d0176108e0a0128b8003c4eebecfb931487"
             },
             {
               "path": "apps/web/index.html",
@@ -505942,7 +505942,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "f1bd9442fabf40b108a45ad9b1e8bd5c4358c4acce1472bd88000fdacb9a738d"
+              "sha256": "9194ddf096d056dc9180fcb2ce636d0176108e0a0128b8003c4eebecfb931487"
             },
             {
               "path": "apps/web/index.html",
@@ -506720,7 +506720,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/tabs.tsx",
-              "sha256": "02d5920a3099c97c667b7796d913e4cb99da26ae66779b2682fe1bf1736c8871"
+              "sha256": "047a78faecdf468ef5bf460a6c88b3d15087185a6d6259194d7e7d4b7ff63fa2"
             },
             {
               "path": "packages/ui/src/components/ui/text-filter.test.tsx",
@@ -507304,7 +507304,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/tabs.tsx",
-              "sha256": "02d5920a3099c97c667b7796d913e4cb99da26ae66779b2682fe1bf1736c8871"
+              "sha256": "047a78faecdf468ef5bf460a6c88b3d15087185a6d6259194d7e7d4b7ff63fa2"
             },
             {
               "path": "packages/ui/src/components/ui/text-filter.test.tsx",
@@ -507888,7 +507888,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/tabs.tsx",
-              "sha256": "02d5920a3099c97c667b7796d913e4cb99da26ae66779b2682fe1bf1736c8871"
+              "sha256": "047a78faecdf468ef5bf460a6c88b3d15087185a6d6259194d7e7d4b7ff63fa2"
             },
             {
               "path": "packages/ui/src/components/ui/text-filter.test.tsx",
@@ -511949,7 +511949,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "f1bd9442fabf40b108a45ad9b1e8bd5c4358c4acce1472bd88000fdacb9a738d"
+              "sha256": "9194ddf096d056dc9180fcb2ce636d0176108e0a0128b8003c4eebecfb931487"
             },
             {
               "path": "apps/web/src/components/AcceptedSavingAgreement.tsx",
@@ -515190,7 +515190,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "3f5f9060c7fd40584437e7d7514d31c30a09ed3ecb64b411890ca1b419a925ff"
+              "sha256": "13ec3f0318509886dcd825fe4039afcd3d2a09e6aa95820247615eb30ec7d013"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -515570,7 +515570,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "3f5f9060c7fd40584437e7d7514d31c30a09ed3ecb64b411890ca1b419a925ff"
+              "sha256": "13ec3f0318509886dcd825fe4039afcd3d2a09e6aa95820247615eb30ec7d013"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -516009,7 +516009,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "3f5f9060c7fd40584437e7d7514d31c30a09ed3ecb64b411890ca1b419a925ff"
+              "sha256": "13ec3f0318509886dcd825fe4039afcd3d2a09e6aa95820247615eb30ec7d013"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -516496,7 +516496,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "3f5f9060c7fd40584437e7d7514d31c30a09ed3ecb64b411890ca1b419a925ff"
+              "sha256": "13ec3f0318509886dcd825fe4039afcd3d2a09e6aa95820247615eb30ec7d013"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -517004,7 +517004,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "3f5f9060c7fd40584437e7d7514d31c30a09ed3ecb64b411890ca1b419a925ff"
+              "sha256": "13ec3f0318509886dcd825fe4039afcd3d2a09e6aa95820247615eb30ec7d013"
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
@@ -517593,12 +517593,10 @@
         "story": "07-ui-ux-design.md#spec-607f66e8d225"
       },
       "requirement": "| **T-07.05.01.08** | Ensure all color combinations pass WCAG AA contrast ratios: normal text ≥ 4.5:1, large text ≥ 3:1, UI components ≥ 3:1. Verify with automated tools. Provide a \"high contrast\" mode toggle that strengthens all contrast ratios. | L |",
-      "status": "partial",
+      "status": "done",
       "release": "0.5.0",
       "launch_required": true,
-      "remaining": [
-        "The 93-route contrast census retains its prior evidence. The three historical Mobile Safari notice overlaps were repaired and retested. The targeted Safari staff links pass when scrolled into view. The active saving notice stack can still temporarily cover non-interactive progress labels. All five completed step labels were readable after the notices were dismissed. The remaining opposite-theme inconclusive results and conditional control states still need direct acceptance evidence."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -517627,9 +517625,115 @@
           "release-0.5-contrast-occlusion",
           "release-0.5-reveal-clipped-text",
           "release-0.5-remaining-contrast",
-          "release-0.5-order-notice-placement"
+          "release-0.5-order-notice-placement",
+          "release-0.5-conditional-control-contrast"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "status": "accepted",
+          "reviewed_sha": "ca34a99a53f2a97817aeb4956714b69ddbd8edfd",
+          "source_evidence": [
+            {
+              "path": "apps/web/e2e/consumer-theme.spec.ts",
+              "sha256": "99384b22c9a1215d9d674157bfae9c99c3883d7fc7e75fcab037d6085a4060c0"
+            },
+            {
+              "path": "apps/web/e2e/control-contrast.ts",
+              "sha256": "86da99d6e70a98e7085ed785c3a4dc7b7d7018074f64a29b2e70ca23cdd599b2"
+            },
+            {
+              "path": "apps/web/e2e/delivery-provider-tables.spec.ts",
+              "sha256": "98a4155928a3b54f7637bd50ccb45b2edb50fc2d44bcee985b4c84a6edcdbfae"
+            },
+            {
+              "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
+              "sha256": "374eaac6d058d75b86eedecd1f587bb8ea3856671070c8ffa50e042f4ac4a435"
+            },
+            {
+              "path": "apps/web/e2e/fixtures/theme/main.tsx",
+              "sha256": "84179158bb8f63c8ff3649c00f74185d0040640cd5a04ae634f18aafd39e27d7"
+            },
+            {
+              "path": "apps/web/e2e/mobile-navigation.spec.ts",
+              "sha256": "1b4f4d234434551c71ab48e915ebd798fbeab5ab8be2d65ad2ba9595f5c883b9"
+            },
+            {
+              "path": "apps/web/e2e/order-comment-forms.spec.ts",
+              "sha256": "cb90e27a3a9e022a4a92b511443472f03689d7cd8fe9a861aa4540879b0bf9a6"
+            },
+            {
+              "path": "apps/web/e2e/otp-numerals.spec.ts",
+              "sha256": "2f4878e6e49f4c18f3eeb986c95dc0e3d03060a8d96518da8727f538187b842c"
+            },
+            {
+              "path": "apps/web/e2e/saving-journey.spec.ts",
+              "sha256": "cda99d70141e67c042608e65108ca5447de7b0561857a019a48a4774b7d940a2"
+            },
+            {
+              "path": "apps/web/e2e/theme-components.spec.ts",
+              "sha256": "9194ddf096d056dc9180fcb2ce636d0176108e0a0128b8003c4eebecfb931487"
+            },
+            {
+              "path": "apps/web/src/components/SonnerToaster.tsx",
+              "sha256": "8be0c97f692feefe7a212b0ba94755c3b63079f907581cfec5b8e359a32d0407"
+            },
+            {
+              "path": "apps/web/src/hooks/useTheme.ts",
+              "sha256": "ff4644e3c418d83e3d700a55bedab25e50cad2ab90f7eb8dd3f0f1befff43266"
+            },
+            {
+              "path": "apps/web/src/pages/AdminDeliveryProvidersPage.tsx",
+              "sha256": "23fb5f4467d4b2482b0ea61d390657af674d0cd7cd0bdefbde269faa998405b1"
+            },
+            {
+              "path": "apps/web/src/providers/BrandThemeProvider.tsx",
+              "sha256": "8e2cb24dbab8576970cd9d4622e5f930ab9a4ca71ff222ddacb0b9da051a7abc"
+            },
+            {
+              "path": "docs/design/accessibility.md",
+              "sha256": "13ec3f0318509886dcd825fe4039afcd3d2a09e6aa95820247615eb30ec7d013"
+            },
+            {
+              "path": "docs/design/notification-recovery.md",
+              "sha256": "bc857d6bf499bd0f7eb317bfec14579a68bcf921f1da12f3a36d7ca4befb3e40"
+            },
+            {
+              "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
+              "sha256": "9787045b1eaa1c1b23648a3259e9b207f8038005e8cf3c5466bf1107d68d1c56"
+            },
+            {
+              "path": "packages/ui/src/components/ui/native-select.tsx",
+              "sha256": "9f77b4a8cab34acff6a9b4169d39d6ce1b98ac7ed01ea1ae62aaa95523efbfd0"
+            },
+            {
+              "path": "packages/ui/src/components/ui/select.tsx",
+              "sha256": "f4e5434b0e7c46c3a902545f07b9a0cb84f33378d945c3079683c584f14a129f"
+            },
+            {
+              "path": "packages/ui/src/components/ui/slider.tsx",
+              "sha256": "854e4b2651be65b4263c6227d32b52cb41794ac85306c3f6c88840a9eacd210b"
+            },
+            {
+              "path": "packages/ui/src/components/ui/tabs.tsx",
+              "sha256": "047a78faecdf468ef5bf460a6c88b3d15087185a6d6259194d7e7d4b7ff63fa2"
+            },
+            {
+              "path": "packages/ui/src/styles.css",
+              "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
+            }
+          ],
+          "checks": [
+            "The 93-route populated text census, all locale and theme cells, and the remaining clipped-text replays have source-bound evidence. The final 17 opposite-theme cases resolved all 38 previously inconclusive cells with 304 direct measurements and no remaining inconclusive or violating observations.",
+            "The saving and electricity pages place notices below their introductory controls. The staff sidebar labels pass when revealed by scrolling. Saving step labels retain their screen-reader states and meet contrast after the user dismisses active notices. Transient visibility stays tracked under UI adoption.",
+            "The original selected provider pill measured 1.0692:1. The foreground border raised the minimum across 32 selected-pill measurements to 7.7589:1. All 608 measured control cues passed, with a minimum of 3.2560:1. The measurements covered both themes, locales and contrast modes, boundary branding colors, Chromium and Mobile Safari.",
+            "The five Mobile Safari native-control cases passed. Solar postal reported no inconclusive or violating contrast results. Eight direct staff select text measurements passed, with a minimum of 11.9559:1.",
+            "16 production browser cases, 16 affected keyboard and palette cases, eight instrumented Chromium cases, eight changed-coverage groups, UI distribution checks, 98 bundle budgets, six cold-auth measurements, scoped lint and formatting and both package typechecks passed."
+          ],
+          "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-conditional-control-contrast/proof.json",
+          "scope_dispositions": [
+            "This task accepts measured text and visual cue contrast in supported UI themes and user settings. Conditional form semantics, command feedback, recovery and broader UI adoption remain separate.",
+            "An active saving notice may temporarily cover passive step labels. The step text ratios were measured after normal notice dismissal. The order heading and return link retain their clear placement."
+          ]
+        }
       }
     },
     {
@@ -517818,7 +517922,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "3f5f9060c7fd40584437e7d7514d31c30a09ed3ecb64b411890ca1b419a925ff"
+              "sha256": "13ec3f0318509886dcd825fe4039afcd3d2a09e6aa95820247615eb30ec7d013"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -518334,7 +518438,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "3f5f9060c7fd40584437e7d7514d31c30a09ed3ecb64b411890ca1b419a925ff"
+              "sha256": "13ec3f0318509886dcd825fe4039afcd3d2a09e6aa95820247615eb30ec7d013"
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
@@ -519052,7 +519156,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "3f5f9060c7fd40584437e7d7514d31c30a09ed3ecb64b411890ca1b419a925ff"
+              "sha256": "13ec3f0318509886dcd825fe4039afcd3d2a09e6aa95820247615eb30ec7d013"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -519880,7 +519984,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "3f5f9060c7fd40584437e7d7514d31c30a09ed3ecb64b411890ca1b419a925ff"
+              "sha256": "13ec3f0318509886dcd825fe4039afcd3d2a09e6aa95820247615eb30ec7d013"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -520490,7 +520594,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "3f5f9060c7fd40584437e7d7514d31c30a09ed3ecb64b411890ca1b419a925ff"
+              "sha256": "13ec3f0318509886dcd825fe4039afcd3d2a09e6aa95820247615eb30ec7d013"
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
@@ -521208,7 +521312,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "3f5f9060c7fd40584437e7d7514d31c30a09ed3ecb64b411890ca1b419a925ff"
+              "sha256": "13ec3f0318509886dcd825fe4039afcd3d2a09e6aa95820247615eb30ec7d013"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -521708,7 +521812,7 @@
             },
             {
               "path": "apps/web/e2e/fixtures/theme/main.tsx",
-              "sha256": "557f24995225882b8a99acdae19455c7b96f538dedff33f00ac895133cf8e591"
+              "sha256": "84179158bb8f63c8ff3649c00f74185d0040640cd5a04ae634f18aafd39e27d7"
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
@@ -521720,7 +521824,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "f1bd9442fabf40b108a45ad9b1e8bd5c4358c4acce1472bd88000fdacb9a738d"
+              "sha256": "9194ddf096d056dc9180fcb2ce636d0176108e0a0128b8003c4eebecfb931487"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -522120,7 +522224,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/tabs.tsx",
-              "sha256": "02d5920a3099c97c667b7796d913e4cb99da26ae66779b2682fe1bf1736c8871"
+              "sha256": "047a78faecdf468ef5bf460a6c88b3d15087185a6d6259194d7e7d4b7ff63fa2"
             },
             {
               "path": "packages/ui/src/components/ui/text-filter.test.tsx",
@@ -522615,7 +522719,7 @@
             },
             {
               "path": "apps/web/e2e/fixtures/theme/main.tsx",
-              "sha256": "557f24995225882b8a99acdae19455c7b96f538dedff33f00ac895133cf8e591"
+              "sha256": "84179158bb8f63c8ff3649c00f74185d0040640cd5a04ae634f18aafd39e27d7"
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
@@ -522627,7 +522731,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "f1bd9442fabf40b108a45ad9b1e8bd5c4358c4acce1472bd88000fdacb9a738d"
+              "sha256": "9194ddf096d056dc9180fcb2ce636d0176108e0a0128b8003c4eebecfb931487"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -523027,7 +523131,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/tabs.tsx",
-              "sha256": "02d5920a3099c97c667b7796d913e4cb99da26ae66779b2682fe1bf1736c8871"
+              "sha256": "047a78faecdf468ef5bf460a6c88b3d15087185a6d6259194d7e7d4b7ff63fa2"
             },
             {
               "path": "packages/ui/src/components/ui/text-filter.test.tsx",
@@ -523522,7 +523626,7 @@
             },
             {
               "path": "apps/web/e2e/fixtures/theme/main.tsx",
-              "sha256": "557f24995225882b8a99acdae19455c7b96f538dedff33f00ac895133cf8e591"
+              "sha256": "84179158bb8f63c8ff3649c00f74185d0040640cd5a04ae634f18aafd39e27d7"
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
@@ -523534,7 +523638,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "f1bd9442fabf40b108a45ad9b1e8bd5c4358c4acce1472bd88000fdacb9a738d"
+              "sha256": "9194ddf096d056dc9180fcb2ce636d0176108e0a0128b8003c4eebecfb931487"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -523934,7 +524038,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/tabs.tsx",
-              "sha256": "02d5920a3099c97c667b7796d913e4cb99da26ae66779b2682fe1bf1736c8871"
+              "sha256": "047a78faecdf468ef5bf460a6c88b3d15087185a6d6259194d7e7d4b7ff63fa2"
             },
             {
               "path": "packages/ui/src/components/ui/text-filter.test.tsx",
@@ -524429,7 +524533,7 @@
             },
             {
               "path": "apps/web/e2e/fixtures/theme/main.tsx",
-              "sha256": "557f24995225882b8a99acdae19455c7b96f538dedff33f00ac895133cf8e591"
+              "sha256": "84179158bb8f63c8ff3649c00f74185d0040640cd5a04ae634f18aafd39e27d7"
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
@@ -524441,7 +524545,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "f1bd9442fabf40b108a45ad9b1e8bd5c4358c4acce1472bd88000fdacb9a738d"
+              "sha256": "9194ddf096d056dc9180fcb2ce636d0176108e0a0128b8003c4eebecfb931487"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -524841,7 +524945,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/tabs.tsx",
-              "sha256": "02d5920a3099c97c667b7796d913e4cb99da26ae66779b2682fe1bf1736c8871"
+              "sha256": "047a78faecdf468ef5bf460a6c88b3d15087185a6d6259194d7e7d4b7ff63fa2"
             },
             {
               "path": "packages/ui/src/components/ui/text-filter.test.tsx",
@@ -525336,7 +525440,7 @@
             },
             {
               "path": "apps/web/e2e/fixtures/theme/main.tsx",
-              "sha256": "557f24995225882b8a99acdae19455c7b96f538dedff33f00ac895133cf8e591"
+              "sha256": "84179158bb8f63c8ff3649c00f74185d0040640cd5a04ae634f18aafd39e27d7"
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
@@ -525348,7 +525452,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "f1bd9442fabf40b108a45ad9b1e8bd5c4358c4acce1472bd88000fdacb9a738d"
+              "sha256": "9194ddf096d056dc9180fcb2ce636d0176108e0a0128b8003c4eebecfb931487"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -525748,7 +525852,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/tabs.tsx",
-              "sha256": "02d5920a3099c97c667b7796d913e4cb99da26ae66779b2682fe1bf1736c8871"
+              "sha256": "047a78faecdf468ef5bf460a6c88b3d15087185a6d6259194d7e7d4b7ff63fa2"
             },
             {
               "path": "packages/ui/src/components/ui/text-filter.test.tsx",
@@ -526243,7 +526347,7 @@
             },
             {
               "path": "apps/web/e2e/fixtures/theme/main.tsx",
-              "sha256": "557f24995225882b8a99acdae19455c7b96f538dedff33f00ac895133cf8e591"
+              "sha256": "84179158bb8f63c8ff3649c00f74185d0040640cd5a04ae634f18aafd39e27d7"
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
@@ -526255,7 +526359,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "f1bd9442fabf40b108a45ad9b1e8bd5c4358c4acce1472bd88000fdacb9a738d"
+              "sha256": "9194ddf096d056dc9180fcb2ce636d0176108e0a0128b8003c4eebecfb931487"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -526655,7 +526759,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/tabs.tsx",
-              "sha256": "02d5920a3099c97c667b7796d913e4cb99da26ae66779b2682fe1bf1736c8871"
+              "sha256": "047a78faecdf468ef5bf460a6c88b3d15087185a6d6259194d7e7d4b7ff63fa2"
             },
             {
               "path": "packages/ui/src/components/ui/text-filter.test.tsx",
@@ -527150,7 +527254,7 @@
             },
             {
               "path": "apps/web/e2e/fixtures/theme/main.tsx",
-              "sha256": "557f24995225882b8a99acdae19455c7b96f538dedff33f00ac895133cf8e591"
+              "sha256": "84179158bb8f63c8ff3649c00f74185d0040640cd5a04ae634f18aafd39e27d7"
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
@@ -527162,7 +527266,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "f1bd9442fabf40b108a45ad9b1e8bd5c4358c4acce1472bd88000fdacb9a738d"
+              "sha256": "9194ddf096d056dc9180fcb2ce636d0176108e0a0128b8003c4eebecfb931487"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -527562,7 +527666,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/tabs.tsx",
-              "sha256": "02d5920a3099c97c667b7796d913e4cb99da26ae66779b2682fe1bf1736c8871"
+              "sha256": "047a78faecdf468ef5bf460a6c88b3d15087185a6d6259194d7e7d4b7ff63fa2"
             },
             {
               "path": "packages/ui/src/components/ui/text-filter.test.tsx",
@@ -528057,7 +528161,7 @@
             },
             {
               "path": "apps/web/e2e/fixtures/theme/main.tsx",
-              "sha256": "557f24995225882b8a99acdae19455c7b96f538dedff33f00ac895133cf8e591"
+              "sha256": "84179158bb8f63c8ff3649c00f74185d0040640cd5a04ae634f18aafd39e27d7"
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
@@ -528069,7 +528173,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "f1bd9442fabf40b108a45ad9b1e8bd5c4358c4acce1472bd88000fdacb9a738d"
+              "sha256": "9194ddf096d056dc9180fcb2ce636d0176108e0a0128b8003c4eebecfb931487"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -528469,7 +528573,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/tabs.tsx",
-              "sha256": "02d5920a3099c97c667b7796d913e4cb99da26ae66779b2682fe1bf1736c8871"
+              "sha256": "047a78faecdf468ef5bf460a6c88b3d15087185a6d6259194d7e7d4b7ff63fa2"
             },
             {
               "path": "packages/ui/src/components/ui/text-filter.test.tsx",
@@ -528964,7 +529068,7 @@
             },
             {
               "path": "apps/web/e2e/fixtures/theme/main.tsx",
-              "sha256": "557f24995225882b8a99acdae19455c7b96f538dedff33f00ac895133cf8e591"
+              "sha256": "84179158bb8f63c8ff3649c00f74185d0040640cd5a04ae634f18aafd39e27d7"
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
@@ -528976,7 +529080,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "f1bd9442fabf40b108a45ad9b1e8bd5c4358c4acce1472bd88000fdacb9a738d"
+              "sha256": "9194ddf096d056dc9180fcb2ce636d0176108e0a0128b8003c4eebecfb931487"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -529376,7 +529480,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/tabs.tsx",
-              "sha256": "02d5920a3099c97c667b7796d913e4cb99da26ae66779b2682fe1bf1736c8871"
+              "sha256": "047a78faecdf468ef5bf460a6c88b3d15087185a6d6259194d7e7d4b7ff63fa2"
             },
             {
               "path": "packages/ui/src/components/ui/text-filter.test.tsx",
@@ -529871,7 +529975,7 @@
             },
             {
               "path": "apps/web/e2e/fixtures/theme/main.tsx",
-              "sha256": "557f24995225882b8a99acdae19455c7b96f538dedff33f00ac895133cf8e591"
+              "sha256": "84179158bb8f63c8ff3649c00f74185d0040640cd5a04ae634f18aafd39e27d7"
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
@@ -529883,7 +529987,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "f1bd9442fabf40b108a45ad9b1e8bd5c4358c4acce1472bd88000fdacb9a738d"
+              "sha256": "9194ddf096d056dc9180fcb2ce636d0176108e0a0128b8003c4eebecfb931487"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -530283,7 +530387,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/tabs.tsx",
-              "sha256": "02d5920a3099c97c667b7796d913e4cb99da26ae66779b2682fe1bf1736c8871"
+              "sha256": "047a78faecdf468ef5bf460a6c88b3d15087185a6d6259194d7e7d4b7ff63fa2"
             },
             {
               "path": "packages/ui/src/components/ui/text-filter.test.tsx",
@@ -530778,7 +530882,7 @@
             },
             {
               "path": "apps/web/e2e/fixtures/theme/main.tsx",
-              "sha256": "557f24995225882b8a99acdae19455c7b96f538dedff33f00ac895133cf8e591"
+              "sha256": "84179158bb8f63c8ff3649c00f74185d0040640cd5a04ae634f18aafd39e27d7"
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
@@ -530790,7 +530894,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "f1bd9442fabf40b108a45ad9b1e8bd5c4358c4acce1472bd88000fdacb9a738d"
+              "sha256": "9194ddf096d056dc9180fcb2ce636d0176108e0a0128b8003c4eebecfb931487"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -531190,7 +531294,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/tabs.tsx",
-              "sha256": "02d5920a3099c97c667b7796d913e4cb99da26ae66779b2682fe1bf1736c8871"
+              "sha256": "047a78faecdf468ef5bf460a6c88b3d15087185a6d6259194d7e7d4b7ff63fa2"
             },
             {
               "path": "packages/ui/src/components/ui/text-filter.test.tsx",
@@ -531685,7 +531789,7 @@
             },
             {
               "path": "apps/web/e2e/fixtures/theme/main.tsx",
-              "sha256": "557f24995225882b8a99acdae19455c7b96f538dedff33f00ac895133cf8e591"
+              "sha256": "84179158bb8f63c8ff3649c00f74185d0040640cd5a04ae634f18aafd39e27d7"
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
@@ -531697,7 +531801,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "f1bd9442fabf40b108a45ad9b1e8bd5c4358c4acce1472bd88000fdacb9a738d"
+              "sha256": "9194ddf096d056dc9180fcb2ce636d0176108e0a0128b8003c4eebecfb931487"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -532097,7 +532201,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/tabs.tsx",
-              "sha256": "02d5920a3099c97c667b7796d913e4cb99da26ae66779b2682fe1bf1736c8871"
+              "sha256": "047a78faecdf468ef5bf460a6c88b3d15087185a6d6259194d7e7d4b7ff63fa2"
             },
             {
               "path": "packages/ui/src/components/ui/text-filter.test.tsx",
@@ -532592,7 +532696,7 @@
             },
             {
               "path": "apps/web/e2e/fixtures/theme/main.tsx",
-              "sha256": "557f24995225882b8a99acdae19455c7b96f538dedff33f00ac895133cf8e591"
+              "sha256": "84179158bb8f63c8ff3649c00f74185d0040640cd5a04ae634f18aafd39e27d7"
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
@@ -532604,7 +532708,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "f1bd9442fabf40b108a45ad9b1e8bd5c4358c4acce1472bd88000fdacb9a738d"
+              "sha256": "9194ddf096d056dc9180fcb2ce636d0176108e0a0128b8003c4eebecfb931487"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -533004,7 +533108,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/tabs.tsx",
-              "sha256": "02d5920a3099c97c667b7796d913e4cb99da26ae66779b2682fe1bf1736c8871"
+              "sha256": "047a78faecdf468ef5bf460a6c88b3d15087185a6d6259194d7e7d4b7ff63fa2"
             },
             {
               "path": "packages/ui/src/components/ui/text-filter.test.tsx",
@@ -533499,7 +533603,7 @@
             },
             {
               "path": "apps/web/e2e/fixtures/theme/main.tsx",
-              "sha256": "557f24995225882b8a99acdae19455c7b96f538dedff33f00ac895133cf8e591"
+              "sha256": "84179158bb8f63c8ff3649c00f74185d0040640cd5a04ae634f18aafd39e27d7"
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
@@ -533511,7 +533615,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "f1bd9442fabf40b108a45ad9b1e8bd5c4358c4acce1472bd88000fdacb9a738d"
+              "sha256": "9194ddf096d056dc9180fcb2ce636d0176108e0a0128b8003c4eebecfb931487"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -533911,7 +534015,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/tabs.tsx",
-              "sha256": "02d5920a3099c97c667b7796d913e4cb99da26ae66779b2682fe1bf1736c8871"
+              "sha256": "047a78faecdf468ef5bf460a6c88b3d15087185a6d6259194d7e7d4b7ff63fa2"
             },
             {
               "path": "packages/ui/src/components/ui/text-filter.test.tsx",
@@ -534406,7 +534510,7 @@
             },
             {
               "path": "apps/web/e2e/fixtures/theme/main.tsx",
-              "sha256": "557f24995225882b8a99acdae19455c7b96f538dedff33f00ac895133cf8e591"
+              "sha256": "84179158bb8f63c8ff3649c00f74185d0040640cd5a04ae634f18aafd39e27d7"
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
@@ -534418,7 +534522,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "f1bd9442fabf40b108a45ad9b1e8bd5c4358c4acce1472bd88000fdacb9a738d"
+              "sha256": "9194ddf096d056dc9180fcb2ce636d0176108e0a0128b8003c4eebecfb931487"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -534818,7 +534922,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/tabs.tsx",
-              "sha256": "02d5920a3099c97c667b7796d913e4cb99da26ae66779b2682fe1bf1736c8871"
+              "sha256": "047a78faecdf468ef5bf460a6c88b3d15087185a6d6259194d7e7d4b7ff63fa2"
             },
             {
               "path": "packages/ui/src/components/ui/text-filter.test.tsx",
@@ -535313,7 +535417,7 @@
             },
             {
               "path": "apps/web/e2e/fixtures/theme/main.tsx",
-              "sha256": "557f24995225882b8a99acdae19455c7b96f538dedff33f00ac895133cf8e591"
+              "sha256": "84179158bb8f63c8ff3649c00f74185d0040640cd5a04ae634f18aafd39e27d7"
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
@@ -535325,7 +535429,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "f1bd9442fabf40b108a45ad9b1e8bd5c4358c4acce1472bd88000fdacb9a738d"
+              "sha256": "9194ddf096d056dc9180fcb2ce636d0176108e0a0128b8003c4eebecfb931487"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -535725,7 +535829,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/tabs.tsx",
-              "sha256": "02d5920a3099c97c667b7796d913e4cb99da26ae66779b2682fe1bf1736c8871"
+              "sha256": "047a78faecdf468ef5bf460a6c88b3d15087185a6d6259194d7e7d4b7ff63fa2"
             },
             {
               "path": "packages/ui/src/components/ui/text-filter.test.tsx",
@@ -536220,7 +536324,7 @@
             },
             {
               "path": "apps/web/e2e/fixtures/theme/main.tsx",
-              "sha256": "557f24995225882b8a99acdae19455c7b96f538dedff33f00ac895133cf8e591"
+              "sha256": "84179158bb8f63c8ff3649c00f74185d0040640cd5a04ae634f18aafd39e27d7"
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
@@ -536232,7 +536336,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "f1bd9442fabf40b108a45ad9b1e8bd5c4358c4acce1472bd88000fdacb9a738d"
+              "sha256": "9194ddf096d056dc9180fcb2ce636d0176108e0a0128b8003c4eebecfb931487"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -536632,7 +536736,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/tabs.tsx",
-              "sha256": "02d5920a3099c97c667b7796d913e4cb99da26ae66779b2682fe1bf1736c8871"
+              "sha256": "047a78faecdf468ef5bf460a6c88b3d15087185a6d6259194d7e7d4b7ff63fa2"
             },
             {
               "path": "packages/ui/src/components/ui/text-filter.test.tsx",
@@ -537127,7 +537231,7 @@
             },
             {
               "path": "apps/web/e2e/fixtures/theme/main.tsx",
-              "sha256": "557f24995225882b8a99acdae19455c7b96f538dedff33f00ac895133cf8e591"
+              "sha256": "84179158bb8f63c8ff3649c00f74185d0040640cd5a04ae634f18aafd39e27d7"
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
@@ -537139,7 +537243,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "f1bd9442fabf40b108a45ad9b1e8bd5c4358c4acce1472bd88000fdacb9a738d"
+              "sha256": "9194ddf096d056dc9180fcb2ce636d0176108e0a0128b8003c4eebecfb931487"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -537539,7 +537643,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/tabs.tsx",
-              "sha256": "02d5920a3099c97c667b7796d913e4cb99da26ae66779b2682fe1bf1736c8871"
+              "sha256": "047a78faecdf468ef5bf460a6c88b3d15087185a6d6259194d7e7d4b7ff63fa2"
             },
             {
               "path": "packages/ui/src/components/ui/text-filter.test.tsx",
@@ -538034,7 +538138,7 @@
             },
             {
               "path": "apps/web/e2e/fixtures/theme/main.tsx",
-              "sha256": "557f24995225882b8a99acdae19455c7b96f538dedff33f00ac895133cf8e591"
+              "sha256": "84179158bb8f63c8ff3649c00f74185d0040640cd5a04ae634f18aafd39e27d7"
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
@@ -538046,7 +538150,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "f1bd9442fabf40b108a45ad9b1e8bd5c4358c4acce1472bd88000fdacb9a738d"
+              "sha256": "9194ddf096d056dc9180fcb2ce636d0176108e0a0128b8003c4eebecfb931487"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -538446,7 +538550,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/tabs.tsx",
-              "sha256": "02d5920a3099c97c667b7796d913e4cb99da26ae66779b2682fe1bf1736c8871"
+              "sha256": "047a78faecdf468ef5bf460a6c88b3d15087185a6d6259194d7e7d4b7ff63fa2"
             },
             {
               "path": "packages/ui/src/components/ui/text-filter.test.tsx",
@@ -538941,7 +539045,7 @@
             },
             {
               "path": "apps/web/e2e/fixtures/theme/main.tsx",
-              "sha256": "557f24995225882b8a99acdae19455c7b96f538dedff33f00ac895133cf8e591"
+              "sha256": "84179158bb8f63c8ff3649c00f74185d0040640cd5a04ae634f18aafd39e27d7"
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
@@ -538953,7 +539057,7 @@
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
-              "sha256": "f1bd9442fabf40b108a45ad9b1e8bd5c4358c4acce1472bd88000fdacb9a738d"
+              "sha256": "9194ddf096d056dc9180fcb2ce636d0176108e0a0128b8003c4eebecfb931487"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -539353,7 +539457,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/tabs.tsx",
-              "sha256": "02d5920a3099c97c667b7796d913e4cb99da26ae66779b2682fe1bf1736c8871"
+              "sha256": "047a78faecdf468ef5bf460a6c88b3d15087185a6d6259194d7e7d4b7ff63fa2"
             },
             {
               "path": "packages/ui/src/components/ui/text-filter.test.tsx",
@@ -545871,7 +545975,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/tabs.tsx",
-              "sha256": "02d5920a3099c97c667b7796d913e4cb99da26ae66779b2682fe1bf1736c8871"
+              "sha256": "047a78faecdf468ef5bf460a6c88b3d15087185a6d6259194d7e7d4b7ff63fa2"
             },
             {
               "path": "packages/ui/src/components/ui/text-filter.test.tsx",
@@ -547736,7 +547840,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/tabs.tsx",
-              "sha256": "02d5920a3099c97c667b7796d913e4cb99da26ae66779b2682fe1bf1736c8871"
+              "sha256": "047a78faecdf468ef5bf460a6c88b3d15087185a6d6259194d7e7d4b7ff63fa2"
             },
             {
               "path": "packages/ui/src/components/ui/text-filter.test.tsx",
@@ -549602,7 +549706,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/tabs.tsx",
-              "sha256": "02d5920a3099c97c667b7796d913e4cb99da26ae66779b2682fe1bf1736c8871"
+              "sha256": "047a78faecdf468ef5bf460a6c88b3d15087185a6d6259194d7e7d4b7ff63fa2"
             },
             {
               "path": "packages/ui/src/components/ui/text-filter.test.tsx",
@@ -551437,7 +551541,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/tabs.tsx",
-              "sha256": "02d5920a3099c97c667b7796d913e4cb99da26ae66779b2682fe1bf1736c8871"
+              "sha256": "047a78faecdf468ef5bf460a6c88b3d15087185a6d6259194d7e7d4b7ff63fa2"
             },
             {
               "path": "packages/ui/src/components/ui/text-filter.test.tsx",
@@ -553298,7 +553402,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/tabs.tsx",
-              "sha256": "02d5920a3099c97c667b7796d913e4cb99da26ae66779b2682fe1bf1736c8871"
+              "sha256": "047a78faecdf468ef5bf460a6c88b3d15087185a6d6259194d7e7d4b7ff63fa2"
             },
             {
               "path": "packages/ui/src/components/ui/text-filter.test.tsx",
@@ -555168,7 +555272,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/tabs.tsx",
-              "sha256": "02d5920a3099c97c667b7796d913e4cb99da26ae66779b2682fe1bf1736c8871"
+              "sha256": "047a78faecdf468ef5bf460a6c88b3d15087185a6d6259194d7e7d4b7ff63fa2"
             },
             {
               "path": "packages/ui/src/components/ui/text-filter.test.tsx",
@@ -557011,7 +557115,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/tabs.tsx",
-              "sha256": "02d5920a3099c97c667b7796d913e4cb99da26ae66779b2682fe1bf1736c8871"
+              "sha256": "047a78faecdf468ef5bf460a6c88b3d15087185a6d6259194d7e7d4b7ff63fa2"
             },
             {
               "path": "packages/ui/src/components/ui/text-filter.test.tsx",
@@ -558818,7 +558922,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/tabs.tsx",
-              "sha256": "02d5920a3099c97c667b7796d913e4cb99da26ae66779b2682fe1bf1736c8871"
+              "sha256": "047a78faecdf468ef5bf460a6c88b3d15087185a6d6259194d7e7d4b7ff63fa2"
             },
             {
               "path": "packages/ui/src/components/ui/text-filter.test.tsx",
@@ -560625,7 +560729,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/tabs.tsx",
-              "sha256": "02d5920a3099c97c667b7796d913e4cb99da26ae66779b2682fe1bf1736c8871"
+              "sha256": "047a78faecdf468ef5bf460a6c88b3d15087185a6d6259194d7e7d4b7ff63fa2"
             },
             {
               "path": "packages/ui/src/components/ui/text-filter.test.tsx",
@@ -562433,7 +562537,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/tabs.tsx",
-              "sha256": "02d5920a3099c97c667b7796d913e4cb99da26ae66779b2682fe1bf1736c8871"
+              "sha256": "047a78faecdf468ef5bf460a6c88b3d15087185a6d6259194d7e7d4b7ff63fa2"
             },
             {
               "path": "packages/ui/src/components/ui/text-filter.test.tsx",
@@ -564240,7 +564344,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/tabs.tsx",
-              "sha256": "02d5920a3099c97c667b7796d913e4cb99da26ae66779b2682fe1bf1736c8871"
+              "sha256": "047a78faecdf468ef5bf460a6c88b3d15087185a6d6259194d7e7d4b7ff63fa2"
             },
             {
               "path": "packages/ui/src/components/ui/text-filter.test.tsx",
@@ -566157,7 +566261,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/tabs.tsx",
-              "sha256": "02d5920a3099c97c667b7796d913e4cb99da26ae66779b2682fe1bf1736c8871"
+              "sha256": "047a78faecdf468ef5bf460a6c88b3d15087185a6d6259194d7e7d4b7ff63fa2"
             },
             {
               "path": "packages/ui/src/components/ui/text-filter.test.tsx",
@@ -568051,7 +568155,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/tabs.tsx",
-              "sha256": "02d5920a3099c97c667b7796d913e4cb99da26ae66779b2682fe1bf1736c8871"
+              "sha256": "047a78faecdf468ef5bf460a6c88b3d15087185a6d6259194d7e7d4b7ff63fa2"
             },
             {
               "path": "packages/ui/src/components/ui/text-filter.test.tsx",
@@ -570000,7 +570104,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/tabs.tsx",
-              "sha256": "02d5920a3099c97c667b7796d913e4cb99da26ae66779b2682fe1bf1736c8871"
+              "sha256": "047a78faecdf468ef5bf460a6c88b3d15087185a6d6259194d7e7d4b7ff63fa2"
             },
             {
               "path": "packages/ui/src/components/ui/text-filter.test.tsx",
@@ -571894,7 +571998,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/tabs.tsx",
-              "sha256": "02d5920a3099c97c667b7796d913e4cb99da26ae66779b2682fe1bf1736c8871"
+              "sha256": "047a78faecdf468ef5bf460a6c88b3d15087185a6d6259194d7e7d4b7ff63fa2"
             },
             {
               "path": "packages/ui/src/components/ui/text-filter.test.tsx",
@@ -573788,7 +573892,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/tabs.tsx",
-              "sha256": "02d5920a3099c97c667b7796d913e4cb99da26ae66779b2682fe1bf1736c8871"
+              "sha256": "047a78faecdf468ef5bf460a6c88b3d15087185a6d6259194d7e7d4b7ff63fa2"
             },
             {
               "path": "packages/ui/src/components/ui/text-filter.test.tsx",
@@ -575682,7 +575786,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/tabs.tsx",
-              "sha256": "02d5920a3099c97c667b7796d913e4cb99da26ae66779b2682fe1bf1736c8871"
+              "sha256": "047a78faecdf468ef5bf460a6c88b3d15087185a6d6259194d7e7d4b7ff63fa2"
             },
             {
               "path": "packages/ui/src/components/ui/text-filter.test.tsx",
@@ -577576,7 +577680,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/tabs.tsx",
-              "sha256": "02d5920a3099c97c667b7796d913e4cb99da26ae66779b2682fe1bf1736c8871"
+              "sha256": "047a78faecdf468ef5bf460a6c88b3d15087185a6d6259194d7e7d4b7ff63fa2"
             },
             {
               "path": "packages/ui/src/components/ui/text-filter.test.tsx",
@@ -579470,7 +579574,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/tabs.tsx",
-              "sha256": "02d5920a3099c97c667b7796d913e4cb99da26ae66779b2682fe1bf1736c8871"
+              "sha256": "047a78faecdf468ef5bf460a6c88b3d15087185a6d6259194d7e7d4b7ff63fa2"
             },
             {
               "path": "packages/ui/src/components/ui/text-filter.test.tsx",
@@ -581364,7 +581468,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/tabs.tsx",
-              "sha256": "02d5920a3099c97c667b7796d913e4cb99da26ae66779b2682fe1bf1736c8871"
+              "sha256": "047a78faecdf468ef5bf460a6c88b3d15087185a6d6259194d7e7d4b7ff63fa2"
             },
             {
               "path": "packages/ui/src/components/ui/text-filter.test.tsx",
@@ -583258,7 +583362,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/tabs.tsx",
-              "sha256": "02d5920a3099c97c667b7796d913e4cb99da26ae66779b2682fe1bf1736c8871"
+              "sha256": "047a78faecdf468ef5bf460a6c88b3d15087185a6d6259194d7e7d4b7ff63fa2"
             },
             {
               "path": "packages/ui/src/components/ui/text-filter.test.tsx",
@@ -585152,7 +585256,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/tabs.tsx",
-              "sha256": "02d5920a3099c97c667b7796d913e4cb99da26ae66779b2682fe1bf1736c8871"
+              "sha256": "047a78faecdf468ef5bf460a6c88b3d15087185a6d6259194d7e7d4b7ff63fa2"
             },
             {
               "path": "packages/ui/src/components/ui/text-filter.test.tsx",
@@ -587046,7 +587150,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/tabs.tsx",
-              "sha256": "02d5920a3099c97c667b7796d913e4cb99da26ae66779b2682fe1bf1736c8871"
+              "sha256": "047a78faecdf468ef5bf460a6c88b3d15087185a6d6259194d7e7d4b7ff63fa2"
             },
             {
               "path": "packages/ui/src/components/ui/text-filter.test.tsx",
@@ -588940,7 +589044,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/tabs.tsx",
-              "sha256": "02d5920a3099c97c667b7796d913e4cb99da26ae66779b2682fe1bf1736c8871"
+              "sha256": "047a78faecdf468ef5bf460a6c88b3d15087185a6d6259194d7e7d4b7ff63fa2"
             },
             {
               "path": "packages/ui/src/components/ui/text-filter.test.tsx",
@@ -591573,7 +591677,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/tabs.tsx",
-              "sha256": "02d5920a3099c97c667b7796d913e4cb99da26ae66779b2682fe1bf1736c8871"
+              "sha256": "047a78faecdf468ef5bf460a6c88b3d15087185a6d6259194d7e7d4b7ff63fa2"
             },
             {
               "path": "packages/ui/src/components/ui/text-filter.test.tsx",
@@ -593467,7 +593571,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/tabs.tsx",
-              "sha256": "02d5920a3099c97c667b7796d913e4cb99da26ae66779b2682fe1bf1736c8871"
+              "sha256": "047a78faecdf468ef5bf460a6c88b3d15087185a6d6259194d7e7d4b7ff63fa2"
             },
             {
               "path": "packages/ui/src/components/ui/text-filter.test.tsx",
@@ -595343,7 +595447,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/tabs.tsx",
-              "sha256": "02d5920a3099c97c667b7796d913e4cb99da26ae66779b2682fe1bf1736c8871"
+              "sha256": "047a78faecdf468ef5bf460a6c88b3d15087185a6d6259194d7e7d4b7ff63fa2"
             },
             {
               "path": "packages/ui/src/components/ui/text-filter.test.tsx",
@@ -597146,7 +597250,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/tabs.tsx",
-              "sha256": "02d5920a3099c97c667b7796d913e4cb99da26ae66779b2682fe1bf1736c8871"
+              "sha256": "047a78faecdf468ef5bf460a6c88b3d15087185a6d6259194d7e7d4b7ff63fa2"
             },
             {
               "path": "packages/ui/src/components/ui/text-filter.test.tsx",
@@ -598949,7 +599053,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/tabs.tsx",
-              "sha256": "02d5920a3099c97c667b7796d913e4cb99da26ae66779b2682fe1bf1736c8871"
+              "sha256": "047a78faecdf468ef5bf460a6c88b3d15087185a6d6259194d7e7d4b7ff63fa2"
             },
             {
               "path": "packages/ui/src/components/ui/text-filter.test.tsx",
@@ -600752,7 +600856,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/tabs.tsx",
-              "sha256": "02d5920a3099c97c667b7796d913e4cb99da26ae66779b2682fe1bf1736c8871"
+              "sha256": "047a78faecdf468ef5bf460a6c88b3d15087185a6d6259194d7e7d4b7ff63fa2"
             },
             {
               "path": "packages/ui/src/components/ui/text-filter.test.tsx",
@@ -602555,7 +602659,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/tabs.tsx",
-              "sha256": "02d5920a3099c97c667b7796d913e4cb99da26ae66779b2682fe1bf1736c8871"
+              "sha256": "047a78faecdf468ef5bf460a6c88b3d15087185a6d6259194d7e7d4b7ff63fa2"
             },
             {
               "path": "packages/ui/src/components/ui/text-filter.test.tsx",
@@ -604358,7 +604462,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/tabs.tsx",
-              "sha256": "02d5920a3099c97c667b7796d913e4cb99da26ae66779b2682fe1bf1736c8871"
+              "sha256": "047a78faecdf468ef5bf460a6c88b3d15087185a6d6259194d7e7d4b7ff63fa2"
             },
             {
               "path": "packages/ui/src/components/ui/text-filter.test.tsx",
@@ -606161,7 +606265,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/tabs.tsx",
-              "sha256": "02d5920a3099c97c667b7796d913e4cb99da26ae66779b2682fe1bf1736c8871"
+              "sha256": "047a78faecdf468ef5bf460a6c88b3d15087185a6d6259194d7e7d4b7ff63fa2"
             },
             {
               "path": "packages/ui/src/components/ui/text-filter.test.tsx",
@@ -723626,7 +723730,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "The saving and electricity notice journeys retain exact verified responses and accessible introductory content. The prior Safari staff sidebar and dismissed-notice saving step contrast observations have direct measurements. Remaining opposite-theme contrast, other conditional control evidence and broader UI adoption stay open."
+        "Supported themes and the previously inconclusive text and conditional cue states now have contrast evidence. Saving notices can transiently overlap passive step labels. Conditional form semantics, verified command feedback, bespoke recovery and the live policy gates still need closure."
       ],
       "owner": null,
       "depends_on": [],
@@ -723727,7 +723831,8 @@
           "release-0.5-contrast-occlusion",
           "release-0.5-reveal-clipped-text",
           "release-0.5-remaining-contrast",
-          "release-0.5-order-notice-placement"
+          "release-0.5-order-notice-placement",
+          "release-0.5-conditional-control-contrast"
         ]
       }
     },
@@ -725328,6 +725433,10 @@
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
               "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
+            },
+            {
+              "path": "packages/ui/src/components/ui/tabs.tsx",
+              "sha256": "047a78faecdf468ef5bf460a6c88b3d15087185a6d6259194d7e7d4b7ff63fa2"
             }
           ],
           "checks": [
@@ -725372,7 +725481,8 @@
             "Renewed onboarding, navigation and feedback browser and performance evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-contrast-occlusion/proof.json",
             "Renewed auth layout transfer, bundle and browser evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-reveal-clipped-text/proof.json",
             "Renewed shared dialog motion, cold-auth and bundle evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-remaining-contrast/proof.json",
-            "Renewed order notice placement, cold-auth and bundle evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-order-notice-placement/proof.json"
+            "Renewed order notice placement, cold-auth and bundle evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-order-notice-placement/proof.json",
+            "Renewed conditional control contrast and package performance evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-conditional-control-contrast/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -793494,6 +793604,121 @@
       "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-order-notice-placement/renewed-bindings.json",
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-order-notice-placement/reviewed.patch",
       "release_disposition": "Fixed notice placement on the three affected order routes. Verified visible saving step labels and staff navigation clipping cases in Mobile Safari. Opposite-theme observations and conditional controls remain open."
+    },
+    "release-0.5-conditional-control-contrast": {
+      "batch": "release-0.5-conditional-control-contrast",
+      "base_commit": "42aa702931fd6e37b25b39b4286c2e1e04c82a12",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.05.01.08",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "partial_task_keys": [
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/consumer-theme.spec.ts",
+          "sha256": "99384b22c9a1215d9d674157bfae9c99c3883d7fc7e75fcab037d6085a4060c0"
+        },
+        {
+          "path": "apps/web/e2e/control-contrast.ts",
+          "sha256": "86da99d6e70a98e7085ed785c3a4dc7b7d7018074f64a29b2e70ca23cdd599b2"
+        },
+        {
+          "path": "apps/web/e2e/delivery-provider-tables.spec.ts",
+          "sha256": "98a4155928a3b54f7637bd50ccb45b2edb50fc2d44bcee985b4c84a6edcdbfae"
+        },
+        {
+          "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
+          "sha256": "374eaac6d058d75b86eedecd1f587bb8ea3856671070c8ffa50e042f4ac4a435"
+        },
+        {
+          "path": "apps/web/e2e/fixtures/theme/main.tsx",
+          "sha256": "84179158bb8f63c8ff3649c00f74185d0040640cd5a04ae634f18aafd39e27d7"
+        },
+        {
+          "path": "apps/web/e2e/mobile-navigation.spec.ts",
+          "sha256": "1b4f4d234434551c71ab48e915ebd798fbeab5ab8be2d65ad2ba9595f5c883b9"
+        },
+        {
+          "path": "apps/web/e2e/order-comment-forms.spec.ts",
+          "sha256": "cb90e27a3a9e022a4a92b511443472f03689d7cd8fe9a861aa4540879b0bf9a6"
+        },
+        {
+          "path": "apps/web/e2e/otp-numerals.spec.ts",
+          "sha256": "2f4878e6e49f4c18f3eeb986c95dc0e3d03060a8d96518da8727f538187b842c"
+        },
+        {
+          "path": "apps/web/e2e/saving-journey.spec.ts",
+          "sha256": "cda99d70141e67c042608e65108ca5447de7b0561857a019a48a4774b7d940a2"
+        },
+        {
+          "path": "apps/web/e2e/theme-components.spec.ts",
+          "sha256": "9194ddf096d056dc9180fcb2ce636d0176108e0a0128b8003c4eebecfb931487"
+        },
+        {
+          "path": "apps/web/src/components/SonnerToaster.tsx",
+          "sha256": "8be0c97f692feefe7a212b0ba94755c3b63079f907581cfec5b8e359a32d0407"
+        },
+        {
+          "path": "apps/web/src/hooks/useTheme.ts",
+          "sha256": "ff4644e3c418d83e3d700a55bedab25e50cad2ab90f7eb8dd3f0f1befff43266"
+        },
+        {
+          "path": "apps/web/src/pages/AdminDeliveryProvidersPage.tsx",
+          "sha256": "23fb5f4467d4b2482b0ea61d390657af674d0cd7cd0bdefbde269faa998405b1"
+        },
+        {
+          "path": "apps/web/src/providers/BrandThemeProvider.tsx",
+          "sha256": "8e2cb24dbab8576970cd9d4622e5f930ab9a4ca71ff222ddacb0b9da051a7abc"
+        },
+        {
+          "path": "docs/design/accessibility.md",
+          "sha256": "13ec3f0318509886dcd825fe4039afcd3d2a09e6aa95820247615eb30ec7d013"
+        },
+        {
+          "path": "docs/design/notification-recovery.md",
+          "sha256": "bc857d6bf499bd0f7eb317bfec14579a68bcf921f1da12f3a36d7ca4befb3e40"
+        },
+        {
+          "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
+          "sha256": "9787045b1eaa1c1b23648a3259e9b207f8038005e8cf3c5466bf1107d68d1c56"
+        },
+        {
+          "path": "packages/ui/src/components/ui/native-select.tsx",
+          "sha256": "9f77b4a8cab34acff6a9b4169d39d6ce1b98ac7ed01ea1ae62aaa95523efbfd0"
+        },
+        {
+          "path": "packages/ui/src/components/ui/select.tsx",
+          "sha256": "f4e5434b0e7c46c3a902545f07b9a0cb84f33378d945c3079683c584f14a129f"
+        },
+        {
+          "path": "packages/ui/src/components/ui/slider.tsx",
+          "sha256": "854e4b2651be65b4263c6227d32b52cb41794ac85306c3f6c88840a9eacd210b"
+        },
+        {
+          "path": "packages/ui/src/components/ui/tabs.tsx",
+          "sha256": "047a78faecdf468ef5bf460a6c88b3d15087185a6d6259194d7e7d4b7ff63fa2"
+        },
+        {
+          "path": "packages/ui/src/styles.css",
+          "sha256": "4d846c375707dbacfc9534145d774ac25af381a4644aa7ca44575c978a3fa71f"
+        }
+      ],
+      "checks": [
+        "The 93-route populated text census, all locale and theme cells, and the remaining clipped-text replays have source-bound evidence. The final 17 opposite-theme cases resolved all 38 previously inconclusive cells with 304 direct measurements and no remaining inconclusive or violating observations.",
+        "The saving and electricity pages place notices below their introductory controls. The staff sidebar labels pass when revealed by scrolling. Saving step labels retain their screen-reader states and meet contrast after the user dismisses active notices. Transient visibility stays tracked under UI adoption.",
+        "The original selected provider pill measured 1.0692:1. The foreground border raised the minimum across 32 selected-pill measurements to 7.7589:1. All 608 measured control cues passed, with a minimum of 3.2560:1. The measurements covered both themes, locales and contrast modes, boundary branding colors, Chromium and Mobile Safari.",
+        "The five Mobile Safari native-control cases passed. Solar postal reported no inconclusive or violating contrast results. Eight direct staff select text measurements passed, with a minimum of 11.9559:1.",
+        "16 production browser cases, 16 affected keyboard and palette cases, eight instrumented Chromium cases, eight changed-coverage groups, UI distribution checks, 98 bundle budgets, six cold-auth measurements, scoped lint and formatting and both package typechecks passed."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-conditional-control-contrast",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-conditional-control-contrast/proof.json",
+      "source_scope_proof_sha256": "0ff9ca0dedd2dd5d872f22fb873af9868bce8f219bc65d640d123e3ac688d1be",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-conditional-control-contrast/renewed-bindings.json",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-conditional-control-contrast/reviewed.patch",
+      "release_disposition": "Accepted the contrast task. Other v0.5.0 product adoption and operational gates remain open."
     }
   },
   "historical_improvements": [

@@ -68,6 +68,8 @@ The high contrast switch in account settings applies to the current browser.
 It strengthens text, form controls and focus outlines in both light and dark
 themes, and does not send an account setting change. The shared stylesheet
 also keeps a visible focus outline when the operating system forces colors.
+Selected pill tabs use a foreground border. The border identifies selection
+when the adjacent fills are close in color.
 
 Use the shared input border for empty one-time-code fields so each position
 stays visible before a digit is entered. Keep titles, descriptions and prices

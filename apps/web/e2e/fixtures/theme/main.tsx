@@ -248,6 +248,12 @@ function Controls() {
         <TabsContent value="one">First section</TabsContent>
         <TabsContent value="two">Second section</TabsContent>
       </Tabs>
+      <Tabs defaultValue="email">
+        <TabsList variant="pills" aria-label="Delivery channels">
+          <TabsTrigger value="email">Email channel</TabsTrigger>
+          <TabsTrigger value="sms">SMS channel</TabsTrigger>
+        </TabsList>
+      </Tabs>
       <Select defaultValue="alpha">
         <SelectTrigger aria-label="Category" className="w-full">
           <SelectValue />
