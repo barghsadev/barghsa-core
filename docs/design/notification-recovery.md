@@ -18,6 +18,8 @@ The invoice receipt form distinguishes an empty active-profile selection from a 
 
 Online wallet returns wait up to 15 seconds for confirmation, including the receipt body. A timeout leaves the payment outcome unknown because settlement may continue on the server. The customer can check the same payment again explicitly. Only a matching receipt in the current wallet view can trigger a balance refresh.
 
+Profile export requests and preparation use the same browser deadline. An explicit retry keeps the original request key or saved export ticket. If a retry of a failed job times out, reload its status before offering another retry. The server may have queued the job even if the browser never received the receipt.
+
 In electricity and saving order discussions, an explicit retry after a transport failure announces the connection retry. Keep the failed page cursor, existing comments and unsent draft. HTTP errors and invalid response bodies retain inline recovery.
 
 `useToast` supports localized keys or domain-localized strings, all four severities, and a promise helper. Pass a validated operation promise. Its rejection still reaches the caller; it does not retry the operation. Only the latest operation owns the persistent progress notice, and a profile-context dismissal prevents a late result from restoring old content.

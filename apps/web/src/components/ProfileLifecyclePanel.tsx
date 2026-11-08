@@ -60,6 +60,7 @@ function LifecyclePanel({ authorized }: { authorized: () => boolean }) {
   const command = useRef<Command | null>(null),
     busy = useRef(false),
     alive = useRef(true);
+  const commandRequest = useRef<AbortController | null>(null);
   const permitted = () => alive.current && authorized();
   function denied(response: Response) {
     if (![401, 403].includes(response.status) || !permitted()) return false;
@@ -125,6 +126,7 @@ function LifecyclePanel({ authorized }: { authorized: () => boolean }) {
     return () => {
       alive.current = false;
       controller.abort();
+      commandRequest.current?.abort();
       for (const read of reads.current) read.abort();
       reads.current.clear();
     };
@@ -134,45 +136,51 @@ function LifecyclePanel({ authorized }: { authorized: () => boolean }) {
     if (next) command.current = next;
     const captured = command.current;
     if (!captured) return;
+    const request = new AbortController();
+    commandRequest.current = request;
+    const post = (path: string, status: number, body?: string) =>
+      readWithDeadline(request.signal, async (signal) => {
+        const response = await fetch(path, {
+          method: 'POST',
+          credentials: 'include',
+          signal,
+          headers:
+            body === undefined ? withCsrf() : withCsrf({ 'Content-Type': 'application/json' }),
+          ...(body === undefined ? {} : { body }),
+        });
+        const receipt: unknown = response.status === status ? await response.json() : null;
+        return { response, receipt };
+      });
     busy.current = true;
     setSubmitting(captured.type);
     setSubmitError(false);
     try {
       if (captured.stage === 'request') {
-        const response = await fetch('/api/tickets/lifecycle-requests', {
-          method: 'POST',
-          credentials: 'include',
-          headers: withCsrf({ 'Content-Type': 'application/json' }),
-          body: JSON.stringify(captured.body),
-        });
+        const { response, receipt } = await post(
+          '/api/tickets/lifecycle-requests',
+          201,
+          JSON.stringify(captured.body)
+        );
         if (!permitted() || denied(response)) return;
         if (response.status !== 201) throw new Error('Request failed');
-        const receipt: unknown = await response.json();
-        if (!permitted()) return;
         if (!lifecycleRequestReceipt(receipt, captured.profileId, captured.type))
           throw new Error('Invalid receipt');
         captured.ticketId = receipt.ticketId;
         captured.stage = captured.type === 'export' ? 'export' : 'read';
       }
       if (captured.stage === 'export') {
-        const response = await fetch(
+        const { response, receipt } = await post(
           `/api/tickets/lifecycle-requests/${captured.ticketId}/export`,
-          {
-            method: 'POST',
-            credentials: 'include',
-            headers: withCsrf(),
-          }
+          202
         );
         if (!permitted() || denied(response)) return;
         if (response.status !== 202) throw new Error('Export could not be queued');
-        const receipt: unknown = await response.json();
-        if (!permitted()) return;
         if (!lifecycleExportReceipt(receipt, captured.ticketId!))
           throw new Error('Invalid export receipt');
         captured.jobId = receipt.jobId;
         captured.stage = 'read';
       }
-      const data = await refresh();
+      const data = await refresh(request.signal);
       if (!permitted() || !data) return;
       if (
         !data.requests.some(
@@ -196,6 +204,7 @@ function LifecyclePanel({ authorized }: { authorized: () => boolean }) {
         }
       }
     } finally {
+      commandRequest.current = null;
       busy.current = false;
       if (permitted()) setSubmitting(null);
     }

@@ -67,7 +67,7 @@ it('recovers a failed job through the retry endpoint and resumes polling', async
   const retry = host.querySelector('button')!;
   expect(retry.textContent).toBe('Try again');
   await act(async () => retry.click());
-  expect(retryFailedJob).toHaveBeenCalledWith('job-1');
+  expect(retryFailedJob).toHaveBeenCalledWith('job-1', expect.any(AbortSignal));
   expect(host.textContent).toContain('Queued');
   expect(fetchJobStatus).toHaveBeenCalledTimes(2);
 });
@@ -99,4 +99,51 @@ it('aborts an old job read and never displays its late result for another job', 
   await act(async () => finish(status('completed', 100)));
   expect(host.textContent).toContain('30%');
   expect(host.querySelector('a')).toBeNull();
+});
+
+it('requires a fresh status after a stalled retry and ignores its late receipt', async () => {
+  let finish!: (job: JobStatus) => void;
+  vi.mocked(fetchJobStatus)
+    .mockResolvedValueOnce(status('failed', 25))
+    .mockResolvedValueOnce(status('processing', 40));
+  vi.mocked(retryFailedJob).mockImplementationOnce(
+    () =>
+      new Promise((resolve) => {
+        finish = resolve;
+      })
+  );
+  await act(async () => root.render(<JobProgress jobId="job-1" />));
+  const retry = host.querySelector('button')!;
+  await act(async () => retry.click());
+  expect(retry.disabled).toBe(true);
+  await act(async () => vi.advanceTimersByTimeAsync(15_000));
+  expect(vi.mocked(retryFailedJob).mock.calls[0]![1]?.aborted).toBe(true);
+  await act(async () => finish(status('queued', 0)));
+  expect(host.querySelector('button')?.textContent).toBe('Reload status');
+  await act(async () => host.querySelector('button')!.click());
+  expect(retryFailedJob).toHaveBeenCalledTimes(1);
+  expect(fetchJobStatus).toHaveBeenCalledTimes(2);
+  expect(host.textContent).toContain('40%');
+});
+
+it('cancels a pending retry on job change without refreshing or publishing its receipt', async () => {
+  let finish!: (job: JobStatus) => void;
+  vi.mocked(fetchJobStatus)
+    .mockResolvedValueOnce(status('failed', 25))
+    .mockResolvedValueOnce({ ...status('processing', 35), id: 'job-2' });
+  vi.mocked(retryFailedJob).mockImplementationOnce(
+    () =>
+      new Promise((resolve) => {
+        finish = resolve;
+      })
+  );
+  await act(async () => root.render(<JobProgress jobId="job-1" />));
+  await act(async () => host.querySelector('button')!.click());
+  const signal = vi.mocked(retryFailedJob).mock.calls[0]![1]!;
+  await act(async () => root.render(<JobProgress jobId="job-2" />));
+  expect(signal.aborted).toBe(true);
+  await act(async () => finish(status('queued', 0)));
+  expect(fetchJobStatus).toHaveBeenCalledTimes(2);
+  expect(host.textContent).toContain('35%');
+  expect(host.textContent).not.toContain('Queued');
 });

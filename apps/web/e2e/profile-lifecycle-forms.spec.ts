@@ -1,5 +1,5 @@
 import AxeBuilder from '@axe-core/playwright';
-import type { Locator, Page } from '@playwright/test';
+import type { Locator, Page, Route } from '@playwright/test';
 import { test, expect } from './coverage-fixture';
 import {
   setupTicketForms,
@@ -192,6 +192,111 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(success(page)).toHaveText(confirmationText('recorded', locale));
     await quality(page, 'profile-lifecycle');
     await capture(page, owner, info.outputPath('export-queued.png'));
+  });
+  test(`lifecycle ${locale}: stalled export steps recover with the same ticket and job`, async ({
+    page,
+  }) => {
+    await setupTicketForms(page, locale, false);
+    const value = { ...actualLifecyclePreview(), profileId };
+    const creates: unknown[] = [],
+      held: Route[] = [];
+    let exports = 0,
+      statusReads = 0,
+      jobRetries = 0;
+    const exportPath = `/api/tickets/lifecycle-requests/${ticketId}/export`;
+    await page.route('**/api/tickets/lifecycle-preview', (route) => route.fulfill({ json: value }));
+    await page.route('**/api/tickets/lifecycle-requests', (route) => {
+      creates.push(route.request().postDataJSON());
+      if (creates.length === 1) {
+        held.push(route);
+        return;
+      }
+      return route.fulfill({
+        status: 201,
+        json: { ticketId, profileId, type: 'export', created: false },
+      });
+    });
+    await page.route(`**${exportPath}`, (route) => {
+      if (++exports === 1) {
+        held.push(route);
+        return;
+      }
+      value.requests = [
+        {
+          ticketId,
+          type: 'export',
+          status: 'open',
+          createdAt: lifecycleInstant,
+          exportJobId: jobId,
+          exportExpiresAt: null,
+        },
+      ];
+      return route.fulfill({ status: 202, json: { ticketId, jobId, created: false } });
+    });
+    await page.route(`**/api/jobs/${jobId}`, (route) => {
+      if (++statusReads === 1) {
+        held.push(route);
+        return;
+      }
+      return route.fulfill({
+        json: {
+          id: jobId,
+          type: 'profile-export',
+          status: 'completed',
+          progress_pct: 100,
+          result_url: exportPath,
+        },
+      });
+    });
+    await page.route(`**/api/jobs/${jobId}/retry`, (route) => {
+      jobRetries++;
+      return route.fulfill({ status: 500, json: {} });
+    });
+    await page.goto('/settings/privacy');
+    const owner = page.locator('[data-slot=profile-lifecycle]');
+    const start = owner.getByRole('button', {
+      name: t('settings.privacy.export.action', locale),
+      exact: true,
+    });
+    const retry = owner.getByRole('button', {
+      name: lifecycleFormText('retry', locale),
+      exact: true,
+    });
+    await expect(start).toBeEnabled();
+    await page.clock.install();
+    try {
+      await start.click();
+      await expect.poll(() => held.length).toBe(1);
+      await page.clock.fastForward(15_200);
+      await expect(retry).toBeEnabled();
+      expect(creates).toHaveLength(1);
+      expect(exports).toBe(0);
+      await expect(success(page)).toHaveCount(0);
+
+      await retry.click();
+      await expect.poll(() => held.length).toBe(2);
+      expect(creates[1]).toEqual(creates[0]);
+      await page.clock.fastForward(15_200);
+      await expect(retry).toBeEnabled();
+      expect(exports).toBe(1);
+      expect(statusReads).toBe(0);
+
+      await retry.click();
+      await expect.poll(() => held.length).toBe(3);
+      await page.clock.fastForward(15_200);
+      const reload = owner.getByRole('button', { name: t('jobs.retryLoad', locale), exact: true });
+      await expect(reload).toBeEnabled();
+      await expect(owner.locator(`a[href="${exportPath}"]`)).toHaveCount(0);
+      expect(statusReads).toBe(1);
+      await reload.click();
+      await expect(owner.locator(`a[href="${exportPath}"]`)).toBeVisible();
+      expect(creates).toHaveLength(2);
+      expect(exports).toBe(2);
+      expect(statusReads).toBe(2);
+      expect(jobRetries).toBe(0);
+    } finally {
+      await Promise.all(held.map((route) => route.abort().catch(() => {})));
+    }
   });
   test(`lifecycle ${locale}: native staff errors and changed-review consent`, async ({
     page,

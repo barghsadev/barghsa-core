@@ -61,3 +61,9 @@ it('sends the current CSRF proof when retrying a failed job', async () => {
   expect(options.method).toBe('POST');
   expect(new Headers(options.headers).get('X-CSRF-Token')).toBe('proof');
 });
+
+it('rejects a retry receipt unless the same job is queued', async () => {
+  const fetcher = vi.fn().mockResolvedValue({ ok: true, json: async () => job });
+  vi.stubGlobal('fetch', fetcher);
+  await expect(retryFailedJob('job-1')).rejects.toThrow('Invalid job retry response');
+});

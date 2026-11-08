@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-08T02:43:25+00:00",
-  "source_commit": "f95638175e39e5030ebbce41c4a56f21f88fe3d5",
+  "updated": "2026-11-08T02:50:37+00:00",
+  "source_commit": "dff7c02eac4a14b66d87da585c62bd00124b997b",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -192199,7 +192199,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "db48f88a6e054d5c64ff64b7311b521f9d06bbc833b2191978e4b21eb48c381a"
+              "sha256": "e9a3b0d45e52638d95f3d3dfbfb6c600408438c324ddc7e1b8da2935584c5900"
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
@@ -192207,7 +192207,7 @@
             },
             {
               "path": "apps/web/src/components/jobs/JobProgress.tsx",
-              "sha256": "80ee0148b83fbc3aed32769fb776281e611f4e32204a6157fccac2e9825d406d"
+              "sha256": "ef3c046d8b160cd26c5552567d678fcb400f9927f4c10561736bc38bea106a29"
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.test.tsx",
@@ -192223,7 +192223,7 @@
             },
             {
               "path": "apps/web/src/components/jobs/JobProgress.test.tsx",
-              "sha256": "7c89bd61d83274c1dec6b313aa85e3232cfcc88f8674f1fe51345bf3411e7671"
+              "sha256": "b72367ed138c646f65fb4907ab777e8c57679335ba8757581ed02a2e618e4ffe"
             },
             {
               "path": "apps/web/src/lib/profile-lifecycle-form.ts",
@@ -192235,7 +192235,7 @@
             },
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
-              "sha256": "c413d4a98a7ebf6c9ca577fc9d5f7b7ea9cc5523c07b22806e4f50565c2bb2d1"
+              "sha256": "be329894feef39a2b3357e2e97493b9c80d39754b840c5f34f35d897f9487da8"
             },
             {
               "path": "apps/web/e2e/operating-context.spec.ts",
@@ -193111,7 +193111,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "db48f88a6e054d5c64ff64b7311b521f9d06bbc833b2191978e4b21eb48c381a"
+              "sha256": "e9a3b0d45e52638d95f3d3dfbfb6c600408438c324ddc7e1b8da2935584c5900"
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
@@ -193119,7 +193119,7 @@
             },
             {
               "path": "apps/web/src/components/jobs/JobProgress.tsx",
-              "sha256": "80ee0148b83fbc3aed32769fb776281e611f4e32204a6157fccac2e9825d406d"
+              "sha256": "ef3c046d8b160cd26c5552567d678fcb400f9927f4c10561736bc38bea106a29"
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.test.tsx",
@@ -193135,7 +193135,7 @@
             },
             {
               "path": "apps/web/src/components/jobs/JobProgress.test.tsx",
-              "sha256": "7c89bd61d83274c1dec6b313aa85e3232cfcc88f8674f1fe51345bf3411e7671"
+              "sha256": "b72367ed138c646f65fb4907ab777e8c57679335ba8757581ed02a2e618e4ffe"
             },
             {
               "path": "apps/web/src/lib/profile-lifecycle-form.ts",
@@ -193147,7 +193147,7 @@
             },
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
-              "sha256": "c413d4a98a7ebf6c9ca577fc9d5f7b7ea9cc5523c07b22806e4f50565c2bb2d1"
+              "sha256": "be329894feef39a2b3357e2e97493b9c80d39754b840c5f34f35d897f9487da8"
             },
             {
               "path": "apps/web/e2e/operating-context.spec.ts",
@@ -194123,7 +194123,7 @@
             },
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
-              "sha256": "c413d4a98a7ebf6c9ca577fc9d5f7b7ea9cc5523c07b22806e4f50565c2bb2d1"
+              "sha256": "be329894feef39a2b3357e2e97493b9c80d39754b840c5f34f35d897f9487da8"
             },
             {
               "path": "apps/web/e2e/ticket-forms-fixture.ts",
@@ -194155,7 +194155,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "db48f88a6e054d5c64ff64b7311b521f9d06bbc833b2191978e4b21eb48c381a"
+              "sha256": "e9a3b0d45e52638d95f3d3dfbfb6c600408438c324ddc7e1b8da2935584c5900"
             },
             {
               "path": "apps/web/src/components/ProfileMenu.tsx",
@@ -194163,11 +194163,11 @@
             },
             {
               "path": "apps/web/src/components/jobs/JobProgress.test.tsx",
-              "sha256": "7c89bd61d83274c1dec6b313aa85e3232cfcc88f8674f1fe51345bf3411e7671"
+              "sha256": "b72367ed138c646f65fb4907ab777e8c57679335ba8757581ed02a2e618e4ffe"
             },
             {
               "path": "apps/web/src/components/jobs/JobProgress.tsx",
-              "sha256": "80ee0148b83fbc3aed32769fb776281e611f4e32204a6157fccac2e9825d406d"
+              "sha256": "ef3c046d8b160cd26c5552567d678fcb400f9927f4c10561736bc38bea106a29"
             },
             {
               "path": "apps/web/src/components/profile-lifecycle-test-fixture.ts",
@@ -195236,7 +195236,7 @@
             },
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
-              "sha256": "c413d4a98a7ebf6c9ca577fc9d5f7b7ea9cc5523c07b22806e4f50565c2bb2d1"
+              "sha256": "be329894feef39a2b3357e2e97493b9c80d39754b840c5f34f35d897f9487da8"
             },
             {
               "path": "apps/web/e2e/saving-fulfillment-history.spec.ts",
@@ -195280,7 +195280,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "db48f88a6e054d5c64ff64b7311b521f9d06bbc833b2191978e4b21eb48c381a"
+              "sha256": "e9a3b0d45e52638d95f3d3dfbfb6c600408438c324ddc7e1b8da2935584c5900"
             },
             {
               "path": "apps/web/src/components/ProfileMenu.tsx",
@@ -195304,11 +195304,11 @@
             },
             {
               "path": "apps/web/src/components/jobs/JobProgress.test.tsx",
-              "sha256": "7c89bd61d83274c1dec6b313aa85e3232cfcc88f8674f1fe51345bf3411e7671"
+              "sha256": "b72367ed138c646f65fb4907ab777e8c57679335ba8757581ed02a2e618e4ffe"
             },
             {
               "path": "apps/web/src/components/jobs/JobProgress.tsx",
-              "sha256": "80ee0148b83fbc3aed32769fb776281e611f4e32204a6157fccac2e9825d406d"
+              "sha256": "ef3c046d8b160cd26c5552567d678fcb400f9927f4c10561736bc38bea106a29"
             },
             {
               "path": "apps/web/src/components/profile-lifecycle-test-fixture.ts",
@@ -197174,7 +197174,7 @@
             },
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
-              "sha256": "c413d4a98a7ebf6c9ca577fc9d5f7b7ea9cc5523c07b22806e4f50565c2bb2d1"
+              "sha256": "be329894feef39a2b3357e2e97493b9c80d39754b840c5f34f35d897f9487da8"
             },
             {
               "path": "apps/web/e2e/saving-fulfillment-history.spec.ts",
@@ -197218,7 +197218,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "db48f88a6e054d5c64ff64b7311b521f9d06bbc833b2191978e4b21eb48c381a"
+              "sha256": "e9a3b0d45e52638d95f3d3dfbfb6c600408438c324ddc7e1b8da2935584c5900"
             },
             {
               "path": "apps/web/src/components/ProfileMenu.tsx",
@@ -197242,11 +197242,11 @@
             },
             {
               "path": "apps/web/src/components/jobs/JobProgress.test.tsx",
-              "sha256": "7c89bd61d83274c1dec6b313aa85e3232cfcc88f8674f1fe51345bf3411e7671"
+              "sha256": "b72367ed138c646f65fb4907ab777e8c57679335ba8757581ed02a2e618e4ffe"
             },
             {
               "path": "apps/web/src/components/jobs/JobProgress.tsx",
-              "sha256": "80ee0148b83fbc3aed32769fb776281e611f4e32204a6157fccac2e9825d406d"
+              "sha256": "ef3c046d8b160cd26c5552567d678fcb400f9927f4c10561736bc38bea106a29"
             },
             {
               "path": "apps/web/src/components/profile-lifecycle-test-fixture.ts",
@@ -198935,7 +198935,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "db48f88a6e054d5c64ff64b7311b521f9d06bbc833b2191978e4b21eb48c381a"
+              "sha256": "e9a3b0d45e52638d95f3d3dfbfb6c600408438c324ddc7e1b8da2935584c5900"
             },
             {
               "path": "apps/web/src/components/ProfileClosureReview.tsx",
@@ -198943,7 +198943,7 @@
             },
             {
               "path": "apps/web/src/components/jobs/JobProgress.tsx",
-              "sha256": "80ee0148b83fbc3aed32769fb776281e611f4e32204a6157fccac2e9825d406d"
+              "sha256": "ef3c046d8b160cd26c5552567d678fcb400f9927f4c10561736bc38bea106a29"
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.test.tsx",
@@ -198959,7 +198959,7 @@
             },
             {
               "path": "apps/web/src/components/jobs/JobProgress.test.tsx",
-              "sha256": "7c89bd61d83274c1dec6b313aa85e3232cfcc88f8674f1fe51345bf3411e7671"
+              "sha256": "b72367ed138c646f65fb4907ab777e8c57679335ba8757581ed02a2e618e4ffe"
             },
             {
               "path": "apps/web/src/lib/profile-lifecycle-form.ts",
@@ -198971,7 +198971,7 @@
             },
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
-              "sha256": "c413d4a98a7ebf6c9ca577fc9d5f7b7ea9cc5523c07b22806e4f50565c2bb2d1"
+              "sha256": "be329894feef39a2b3357e2e97493b9c80d39754b840c5f34f35d897f9487da8"
             },
             {
               "path": "apps/web/e2e/operating-context.spec.ts",
@@ -464938,7 +464938,7 @@
             },
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
-              "sha256": "c413d4a98a7ebf6c9ca577fc9d5f7b7ea9cc5523c07b22806e4f50565c2bb2d1"
+              "sha256": "be329894feef39a2b3357e2e97493b9c80d39754b840c5f34f35d897f9487da8"
             },
             {
               "path": "apps/web/e2e/ticket-forms-fixture.ts",
@@ -464946,23 +464946,23 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "db48f88a6e054d5c64ff64b7311b521f9d06bbc833b2191978e4b21eb48c381a"
+              "sha256": "e9a3b0d45e52638d95f3d3dfbfb6c600408438c324ddc7e1b8da2935584c5900"
             },
             {
               "path": "apps/web/src/components/jobs/JobProgress.test.tsx",
-              "sha256": "7c89bd61d83274c1dec6b313aa85e3232cfcc88f8674f1fe51345bf3411e7671"
+              "sha256": "b72367ed138c646f65fb4907ab777e8c57679335ba8757581ed02a2e618e4ffe"
             },
             {
               "path": "apps/web/src/components/jobs/JobProgress.tsx",
-              "sha256": "80ee0148b83fbc3aed32769fb776281e611f4e32204a6157fccac2e9825d406d"
+              "sha256": "ef3c046d8b160cd26c5552567d678fcb400f9927f4c10561736bc38bea106a29"
             },
             {
               "path": "apps/web/src/lib/jobs.test.ts",
-              "sha256": "79c7ebe666c0afb50b04f6b4df3fa1328652d826e5605dfa2a0d68a601772b60"
+              "sha256": "32ad07a925f5adb955b6ca1a856357c59e881836cb5fe7b9c8933ff716fa5d82"
             },
             {
               "path": "apps/web/src/lib/jobs.ts",
-              "sha256": "493488f14b6636005a2e2ab53484ae198fec104583394e9555a282e22c5b6f29"
+              "sha256": "18d90b4a7514dca091d4c085f4d73f4814feb1ad114de36d1d498060f37a6141"
             },
             {
               "path": "apps/worker/src/jobs/async-runner.integration.test.ts",
@@ -465279,7 +465279,7 @@
             },
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
-              "sha256": "c413d4a98a7ebf6c9ca577fc9d5f7b7ea9cc5523c07b22806e4f50565c2bb2d1"
+              "sha256": "be329894feef39a2b3357e2e97493b9c80d39754b840c5f34f35d897f9487da8"
             },
             {
               "path": "apps/web/e2e/ticket-forms-fixture.ts",
@@ -465287,23 +465287,23 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "db48f88a6e054d5c64ff64b7311b521f9d06bbc833b2191978e4b21eb48c381a"
+              "sha256": "e9a3b0d45e52638d95f3d3dfbfb6c600408438c324ddc7e1b8da2935584c5900"
             },
             {
               "path": "apps/web/src/components/jobs/JobProgress.test.tsx",
-              "sha256": "7c89bd61d83274c1dec6b313aa85e3232cfcc88f8674f1fe51345bf3411e7671"
+              "sha256": "b72367ed138c646f65fb4907ab777e8c57679335ba8757581ed02a2e618e4ffe"
             },
             {
               "path": "apps/web/src/components/jobs/JobProgress.tsx",
-              "sha256": "80ee0148b83fbc3aed32769fb776281e611f4e32204a6157fccac2e9825d406d"
+              "sha256": "ef3c046d8b160cd26c5552567d678fcb400f9927f4c10561736bc38bea106a29"
             },
             {
               "path": "apps/web/src/lib/jobs.test.ts",
-              "sha256": "79c7ebe666c0afb50b04f6b4df3fa1328652d826e5605dfa2a0d68a601772b60"
+              "sha256": "32ad07a925f5adb955b6ca1a856357c59e881836cb5fe7b9c8933ff716fa5d82"
             },
             {
               "path": "apps/web/src/lib/jobs.ts",
-              "sha256": "493488f14b6636005a2e2ab53484ae198fec104583394e9555a282e22c5b6f29"
+              "sha256": "18d90b4a7514dca091d4c085f4d73f4814feb1ad114de36d1d498060f37a6141"
             },
             {
               "path": "apps/worker/src/jobs/async-runner.integration.test.ts",
@@ -465644,7 +465644,7 @@
             },
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
-              "sha256": "c413d4a98a7ebf6c9ca577fc9d5f7b7ea9cc5523c07b22806e4f50565c2bb2d1"
+              "sha256": "be329894feef39a2b3357e2e97493b9c80d39754b840c5f34f35d897f9487da8"
             },
             {
               "path": "apps/web/e2e/ticket-forms-fixture.ts",
@@ -465652,23 +465652,23 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "db48f88a6e054d5c64ff64b7311b521f9d06bbc833b2191978e4b21eb48c381a"
+              "sha256": "e9a3b0d45e52638d95f3d3dfbfb6c600408438c324ddc7e1b8da2935584c5900"
             },
             {
               "path": "apps/web/src/components/jobs/JobProgress.test.tsx",
-              "sha256": "7c89bd61d83274c1dec6b313aa85e3232cfcc88f8674f1fe51345bf3411e7671"
+              "sha256": "b72367ed138c646f65fb4907ab777e8c57679335ba8757581ed02a2e618e4ffe"
             },
             {
               "path": "apps/web/src/components/jobs/JobProgress.tsx",
-              "sha256": "80ee0148b83fbc3aed32769fb776281e611f4e32204a6157fccac2e9825d406d"
+              "sha256": "ef3c046d8b160cd26c5552567d678fcb400f9927f4c10561736bc38bea106a29"
             },
             {
               "path": "apps/web/src/lib/jobs.test.ts",
-              "sha256": "79c7ebe666c0afb50b04f6b4df3fa1328652d826e5605dfa2a0d68a601772b60"
+              "sha256": "32ad07a925f5adb955b6ca1a856357c59e881836cb5fe7b9c8933ff716fa5d82"
             },
             {
               "path": "apps/web/src/lib/jobs.ts",
-              "sha256": "493488f14b6636005a2e2ab53484ae198fec104583394e9555a282e22c5b6f29"
+              "sha256": "18d90b4a7514dca091d4c085f4d73f4814feb1ad114de36d1d498060f37a6141"
             },
             {
               "path": "apps/worker/src/jobs/async-runner.integration.test.ts",
@@ -465986,7 +465986,7 @@
             },
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
-              "sha256": "c413d4a98a7ebf6c9ca577fc9d5f7b7ea9cc5523c07b22806e4f50565c2bb2d1"
+              "sha256": "be329894feef39a2b3357e2e97493b9c80d39754b840c5f34f35d897f9487da8"
             },
             {
               "path": "apps/web/e2e/ticket-forms-fixture.ts",
@@ -465994,23 +465994,23 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "db48f88a6e054d5c64ff64b7311b521f9d06bbc833b2191978e4b21eb48c381a"
+              "sha256": "e9a3b0d45e52638d95f3d3dfbfb6c600408438c324ddc7e1b8da2935584c5900"
             },
             {
               "path": "apps/web/src/components/jobs/JobProgress.test.tsx",
-              "sha256": "7c89bd61d83274c1dec6b313aa85e3232cfcc88f8674f1fe51345bf3411e7671"
+              "sha256": "b72367ed138c646f65fb4907ab777e8c57679335ba8757581ed02a2e618e4ffe"
             },
             {
               "path": "apps/web/src/components/jobs/JobProgress.tsx",
-              "sha256": "80ee0148b83fbc3aed32769fb776281e611f4e32204a6157fccac2e9825d406d"
+              "sha256": "ef3c046d8b160cd26c5552567d678fcb400f9927f4c10561736bc38bea106a29"
             },
             {
               "path": "apps/web/src/lib/jobs.test.ts",
-              "sha256": "79c7ebe666c0afb50b04f6b4df3fa1328652d826e5605dfa2a0d68a601772b60"
+              "sha256": "32ad07a925f5adb955b6ca1a856357c59e881836cb5fe7b9c8933ff716fa5d82"
             },
             {
               "path": "apps/web/src/lib/jobs.ts",
-              "sha256": "493488f14b6636005a2e2ab53484ae198fec104583394e9555a282e22c5b6f29"
+              "sha256": "18d90b4a7514dca091d4c085f4d73f4814feb1ad114de36d1d498060f37a6141"
             },
             {
               "path": "apps/worker/src/jobs/async-runner.integration.test.ts",
@@ -487757,7 +487757,7 @@
             },
             {
               "path": "apps/web/src/components/jobs/JobProgress.test.tsx",
-              "sha256": "7c89bd61d83274c1dec6b313aa85e3232cfcc88f8674f1fe51345bf3411e7671"
+              "sha256": "b72367ed138c646f65fb4907ab777e8c57679335ba8757581ed02a2e618e4ffe"
             },
             {
               "path": "packages/ui/scripts/distribution.check.mjs",
@@ -488057,7 +488057,7 @@
             },
             {
               "path": "apps/web/src/components/jobs/JobProgress.test.tsx",
-              "sha256": "7c89bd61d83274c1dec6b313aa85e3232cfcc88f8674f1fe51345bf3411e7671"
+              "sha256": "b72367ed138c646f65fb4907ab777e8c57679335ba8757581ed02a2e618e4ffe"
             },
             {
               "path": "packages/ui/scripts/distribution.check.mjs",
@@ -488357,7 +488357,7 @@
             },
             {
               "path": "apps/web/src/components/jobs/JobProgress.test.tsx",
-              "sha256": "7c89bd61d83274c1dec6b313aa85e3232cfcc88f8674f1fe51345bf3411e7671"
+              "sha256": "b72367ed138c646f65fb4907ab777e8c57679335ba8757581ed02a2e618e4ffe"
             },
             {
               "path": "packages/ui/scripts/distribution.check.mjs",
@@ -488657,7 +488657,7 @@
             },
             {
               "path": "apps/web/src/components/jobs/JobProgress.test.tsx",
-              "sha256": "7c89bd61d83274c1dec6b313aa85e3232cfcc88f8674f1fe51345bf3411e7671"
+              "sha256": "b72367ed138c646f65fb4907ab777e8c57679335ba8757581ed02a2e618e4ffe"
             },
             {
               "path": "packages/ui/scripts/distribution.check.mjs",
@@ -488957,7 +488957,7 @@
             },
             {
               "path": "apps/web/src/components/jobs/JobProgress.test.tsx",
-              "sha256": "7c89bd61d83274c1dec6b313aa85e3232cfcc88f8674f1fe51345bf3411e7671"
+              "sha256": "b72367ed138c646f65fb4907ab777e8c57679335ba8757581ed02a2e618e4ffe"
             },
             {
               "path": "packages/ui/scripts/distribution.check.mjs",
@@ -490994,7 +490994,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "db48f88a6e054d5c64ff64b7311b521f9d06bbc833b2191978e4b21eb48c381a"
+              "sha256": "e9a3b0d45e52638d95f3d3dfbfb6c600408438c324ddc7e1b8da2935584c5900"
             },
             {
               "path": "apps/web/src/components/ProfileMenu.tsx",
@@ -494045,7 +494045,7 @@
             },
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
-              "sha256": "c413d4a98a7ebf6c9ca577fc9d5f7b7ea9cc5523c07b22806e4f50565c2bb2d1"
+              "sha256": "be329894feef39a2b3357e2e97493b9c80d39754b840c5f34f35d897f9487da8"
             },
             {
               "path": "apps/web/e2e/staff-directory-recovery.spec.ts",
@@ -494177,7 +494177,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "db48f88a6e054d5c64ff64b7311b521f9d06bbc833b2191978e4b21eb48c381a"
+              "sha256": "e9a3b0d45e52638d95f3d3dfbfb6c600408438c324ddc7e1b8da2935584c5900"
             },
             {
               "path": "apps/web/src/components/PublishedTermsHistory.tsx",
@@ -494927,7 +494927,7 @@
             },
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
-              "sha256": "c413d4a98a7ebf6c9ca577fc9d5f7b7ea9cc5523c07b22806e4f50565c2bb2d1"
+              "sha256": "be329894feef39a2b3357e2e97493b9c80d39754b840c5f34f35d897f9487da8"
             },
             {
               "path": "apps/web/e2e/staff-directory-recovery.spec.ts",
@@ -495059,7 +495059,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "db48f88a6e054d5c64ff64b7311b521f9d06bbc833b2191978e4b21eb48c381a"
+              "sha256": "e9a3b0d45e52638d95f3d3dfbfb6c600408438c324ddc7e1b8da2935584c5900"
             },
             {
               "path": "apps/web/src/components/PublishedTermsHistory.tsx",
@@ -495750,7 +495750,7 @@
             },
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
-              "sha256": "c413d4a98a7ebf6c9ca577fc9d5f7b7ea9cc5523c07b22806e4f50565c2bb2d1"
+              "sha256": "be329894feef39a2b3357e2e97493b9c80d39754b840c5f34f35d897f9487da8"
             },
             {
               "path": "apps/web/e2e/staff-directory-recovery.spec.ts",
@@ -495882,7 +495882,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "db48f88a6e054d5c64ff64b7311b521f9d06bbc833b2191978e4b21eb48c381a"
+              "sha256": "e9a3b0d45e52638d95f3d3dfbfb6c600408438c324ddc7e1b8da2935584c5900"
             },
             {
               "path": "apps/web/src/components/PublishedTermsHistory.tsx",
@@ -496998,7 +496998,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "c6d20e666109f9320df3f20765f60c54631898f2ecf8ab3d4ef30233cb2b1276"
+              "sha256": "6a0f8470e241e6cdccfa5287963181735b4693d58f3f45bc7867de051cef447c"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -512688,7 +512688,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "db48f88a6e054d5c64ff64b7311b521f9d06bbc833b2191978e4b21eb48c381a"
+              "sha256": "e9a3b0d45e52638d95f3d3dfbfb6c600408438c324ddc7e1b8da2935584c5900"
             },
             {
               "path": "apps/web/src/components/ProfileMenu.tsx",
@@ -513487,7 +513487,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "db48f88a6e054d5c64ff64b7311b521f9d06bbc833b2191978e4b21eb48c381a"
+              "sha256": "e9a3b0d45e52638d95f3d3dfbfb6c600408438c324ddc7e1b8da2935584c5900"
             },
             {
               "path": "apps/web/src/components/ProfileMenu.tsx",
@@ -514285,7 +514285,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "db48f88a6e054d5c64ff64b7311b521f9d06bbc833b2191978e4b21eb48c381a"
+              "sha256": "e9a3b0d45e52638d95f3d3dfbfb6c600408438c324ddc7e1b8da2935584c5900"
             },
             {
               "path": "apps/web/src/components/ProfileMenu.tsx",
@@ -514856,7 +514856,7 @@
           "source_evidence": [
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
-              "sha256": "c413d4a98a7ebf6c9ca577fc9d5f7b7ea9cc5523c07b22806e4f50565c2bb2d1"
+              "sha256": "be329894feef39a2b3357e2e97493b9c80d39754b840c5f34f35d897f9487da8"
             },
             {
               "path": "apps/web/e2e/security-settings-forms.spec.ts",
@@ -518921,7 +518921,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "db48f88a6e054d5c64ff64b7311b521f9d06bbc833b2191978e4b21eb48c381a"
+              "sha256": "e9a3b0d45e52638d95f3d3dfbfb6c600408438c324ddc7e1b8da2935584c5900"
             },
             {
               "path": "apps/web/src/components/RecoveryContactForm.tsx",
@@ -519749,7 +519749,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "db48f88a6e054d5c64ff64b7311b521f9d06bbc833b2191978e4b21eb48c381a"
+              "sha256": "e9a3b0d45e52638d95f3d3dfbfb6c600408438c324ddc7e1b8da2935584c5900"
             },
             {
               "path": "apps/web/src/components/RecoveryContactForm.tsx",
@@ -521077,7 +521077,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "db48f88a6e054d5c64ff64b7311b521f9d06bbc833b2191978e4b21eb48c381a"
+              "sha256": "e9a3b0d45e52638d95f3d3dfbfb6c600408438c324ddc7e1b8da2935584c5900"
             },
             {
               "path": "apps/web/src/components/RecoveryContactForm.tsx",
@@ -565854,7 +565854,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "c6d20e666109f9320df3f20765f60c54631898f2ecf8ab3d4ef30233cb2b1276"
+              "sha256": "6a0f8470e241e6cdccfa5287963181735b4693d58f3f45bc7867de051cef447c"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -567748,7 +567748,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "c6d20e666109f9320df3f20765f60c54631898f2ecf8ab3d4ef30233cb2b1276"
+              "sha256": "6a0f8470e241e6cdccfa5287963181735b4693d58f3f45bc7867de051cef447c"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -568551,7 +568551,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Customer invoice and wallet receipts distinguish acknowledged pending results from unknown outcomes. Electricity and saving discussions announce explicit transport retries. Online wallet returns announce unknown outcomes after a deadline and offer an explicit recheck. Wider verified CRUD and read feedback adoption remains open."
+        "Customer invoice and wallet receipts distinguish acknowledged pending results from unknown outcomes. Electricity and saving discussions announce explicit transport retries. Wallet returns and profile lifecycle commands explain unknown outcomes and offer a scoped retry or status recheck. Wider verified CRUD and read feedback adoption remains open."
       ],
       "owner": null,
       "depends_on": [],
@@ -568583,7 +568583,8 @@
           "release-0.5-ownership-transfer-receipt",
           "release-0.5-geography-retry-feedback",
           "release-0.5-receipt-and-comment-feedback",
-          "release-0.5-wallet-return-deadline"
+          "release-0.5-wallet-return-deadline",
+          "release-0.5-profile-export-deadlines"
         ],
         "current_acceptance": null
       }
@@ -569694,7 +569695,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "c6d20e666109f9320df3f20765f60c54631898f2ecf8ab3d4ef30233cb2b1276"
+              "sha256": "6a0f8470e241e6cdccfa5287963181735b4693d58f3f45bc7867de051cef447c"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -571588,7 +571589,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "c6d20e666109f9320df3f20765f60c54631898f2ecf8ab3d4ef30233cb2b1276"
+              "sha256": "6a0f8470e241e6cdccfa5287963181735b4693d58f3f45bc7867de051cef447c"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -573482,7 +573483,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "c6d20e666109f9320df3f20765f60c54631898f2ecf8ab3d4ef30233cb2b1276"
+              "sha256": "6a0f8470e241e6cdccfa5287963181735b4693d58f3f45bc7867de051cef447c"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -575376,7 +575377,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "c6d20e666109f9320df3f20765f60c54631898f2ecf8ab3d4ef30233cb2b1276"
+              "sha256": "6a0f8470e241e6cdccfa5287963181735b4693d58f3f45bc7867de051cef447c"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -577270,7 +577271,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "c6d20e666109f9320df3f20765f60c54631898f2ecf8ab3d4ef30233cb2b1276"
+              "sha256": "6a0f8470e241e6cdccfa5287963181735b4693d58f3f45bc7867de051cef447c"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -579164,7 +579165,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "c6d20e666109f9320df3f20765f60c54631898f2ecf8ab3d4ef30233cb2b1276"
+              "sha256": "6a0f8470e241e6cdccfa5287963181735b4693d58f3f45bc7867de051cef447c"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -581058,7 +581059,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "c6d20e666109f9320df3f20765f60c54631898f2ecf8ab3d4ef30233cb2b1276"
+              "sha256": "6a0f8470e241e6cdccfa5287963181735b4693d58f3f45bc7867de051cef447c"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -582952,7 +582953,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "c6d20e666109f9320df3f20765f60c54631898f2ecf8ab3d4ef30233cb2b1276"
+              "sha256": "6a0f8470e241e6cdccfa5287963181735b4693d58f3f45bc7867de051cef447c"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -584846,7 +584847,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "c6d20e666109f9320df3f20765f60c54631898f2ecf8ab3d4ef30233cb2b1276"
+              "sha256": "6a0f8470e241e6cdccfa5287963181735b4693d58f3f45bc7867de051cef447c"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -586740,7 +586741,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "c6d20e666109f9320df3f20765f60c54631898f2ecf8ab3d4ef30233cb2b1276"
+              "sha256": "6a0f8470e241e6cdccfa5287963181735b4693d58f3f45bc7867de051cef447c"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -588634,7 +588635,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "c6d20e666109f9320df3f20765f60c54631898f2ecf8ab3d4ef30233cb2b1276"
+              "sha256": "6a0f8470e241e6cdccfa5287963181735b4693d58f3f45bc7867de051cef447c"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -589897,7 +589898,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "c6d20e666109f9320df3f20765f60c54631898f2ecf8ab3d4ef30233cb2b1276"
+              "sha256": "6a0f8470e241e6cdccfa5287963181735b4693d58f3f45bc7867de051cef447c"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -591267,7 +591268,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "c6d20e666109f9320df3f20765f60c54631898f2ecf8ab3d4ef30233cb2b1276"
+              "sha256": "6a0f8470e241e6cdccfa5287963181735b4693d58f3f45bc7867de051cef447c"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -593161,7 +593162,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "c6d20e666109f9320df3f20765f60c54631898f2ecf8ab3d4ef30233cb2b1276"
+              "sha256": "6a0f8470e241e6cdccfa5287963181735b4693d58f3f45bc7867de051cef447c"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -593964,7 +593965,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Invoice receipt, security and preference reads, commerce previews, wallet confirmation and staff knowledge test searches retain their recovery evidence. Customer and staff notification previews and badge polls now use a bounded deadline. Remaining bespoke list, detail and staff states need verification."
+        "Invoice receipt, security and preference reads, commerce previews, wallet confirmation, staff knowledge test searches and notification header recovery retain their evidence. Profile export ticket creation, job preparation, and job progress now have bounded recovery. Remaining bespoke list, detail and staff states need verification."
       ],
       "owner": null,
       "depends_on": [],
@@ -594008,7 +594009,8 @@
           "release-0.5-invoice-receipt-read-deadlines",
           "release-0.5-wallet-return-deadline",
           "release-0.5-knowledge-query-deadline",
-          "release-0.5-header-notification-deadlines"
+          "release-0.5-header-notification-deadlines",
+          "release-0.5-profile-export-deadlines"
         ],
         "current_acceptance": null
       }
@@ -611082,7 +611084,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "db48f88a6e054d5c64ff64b7311b521f9d06bbc833b2191978e4b21eb48c381a"
+              "sha256": "e9a3b0d45e52638d95f3d3dfbfb6c600408438c324ddc7e1b8da2935584c5900"
             },
             {
               "path": "apps/web/src/components/ProfileMenu.tsx",
@@ -611880,7 +611882,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "db48f88a6e054d5c64ff64b7311b521f9d06bbc833b2191978e4b21eb48c381a"
+              "sha256": "e9a3b0d45e52638d95f3d3dfbfb6c600408438c324ddc7e1b8da2935584c5900"
             },
             {
               "path": "apps/web/src/components/ProfileMenu.tsx",
@@ -612678,7 +612680,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "db48f88a6e054d5c64ff64b7311b521f9d06bbc833b2191978e4b21eb48c381a"
+              "sha256": "e9a3b0d45e52638d95f3d3dfbfb6c600408438c324ddc7e1b8da2935584c5900"
             },
             {
               "path": "apps/web/src/components/ProfileMenu.tsx",
@@ -613476,7 +613478,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "db48f88a6e054d5c64ff64b7311b521f9d06bbc833b2191978e4b21eb48c381a"
+              "sha256": "e9a3b0d45e52638d95f3d3dfbfb6c600408438c324ddc7e1b8da2935584c5900"
             },
             {
               "path": "apps/web/src/components/ProfileMenu.tsx",
@@ -614278,7 +614280,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "db48f88a6e054d5c64ff64b7311b521f9d06bbc833b2191978e4b21eb48c381a"
+              "sha256": "e9a3b0d45e52638d95f3d3dfbfb6c600408438c324ddc7e1b8da2935584c5900"
             },
             {
               "path": "apps/web/src/components/ProfileMenu.tsx",
@@ -615076,7 +615078,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "db48f88a6e054d5c64ff64b7311b521f9d06bbc833b2191978e4b21eb48c381a"
+              "sha256": "e9a3b0d45e52638d95f3d3dfbfb6c600408438c324ddc7e1b8da2935584c5900"
             },
             {
               "path": "apps/web/src/components/ProfileMenu.tsx",
@@ -615874,7 +615876,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "db48f88a6e054d5c64ff64b7311b521f9d06bbc833b2191978e4b21eb48c381a"
+              "sha256": "e9a3b0d45e52638d95f3d3dfbfb6c600408438c324ddc7e1b8da2935584c5900"
             },
             {
               "path": "apps/web/src/components/ProfileMenu.tsx",
@@ -616673,7 +616675,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "db48f88a6e054d5c64ff64b7311b521f9d06bbc833b2191978e4b21eb48c381a"
+              "sha256": "e9a3b0d45e52638d95f3d3dfbfb6c600408438c324ddc7e1b8da2935584c5900"
             },
             {
               "path": "apps/web/src/components/ProfileMenu.tsx",
@@ -617472,7 +617474,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "db48f88a6e054d5c64ff64b7311b521f9d06bbc833b2191978e4b21eb48c381a"
+              "sha256": "e9a3b0d45e52638d95f3d3dfbfb6c600408438c324ddc7e1b8da2935584c5900"
             },
             {
               "path": "apps/web/src/components/ProfileMenu.tsx",
@@ -618271,7 +618273,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "db48f88a6e054d5c64ff64b7311b521f9d06bbc833b2191978e4b21eb48c381a"
+              "sha256": "e9a3b0d45e52638d95f3d3dfbfb6c600408438c324ddc7e1b8da2935584c5900"
             },
             {
               "path": "apps/web/src/components/ProfileMenu.tsx",
@@ -619070,7 +619072,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "db48f88a6e054d5c64ff64b7311b521f9d06bbc833b2191978e4b21eb48c381a"
+              "sha256": "e9a3b0d45e52638d95f3d3dfbfb6c600408438c324ddc7e1b8da2935584c5900"
             },
             {
               "path": "apps/web/src/components/ProfileMenu.tsx",
@@ -619869,7 +619871,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "db48f88a6e054d5c64ff64b7311b521f9d06bbc833b2191978e4b21eb48c381a"
+              "sha256": "e9a3b0d45e52638d95f3d3dfbfb6c600408438c324ddc7e1b8da2935584c5900"
             },
             {
               "path": "apps/web/src/components/ProfileMenu.tsx",
@@ -620668,7 +620670,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "db48f88a6e054d5c64ff64b7311b521f9d06bbc833b2191978e4b21eb48c381a"
+              "sha256": "e9a3b0d45e52638d95f3d3dfbfb6c600408438c324ddc7e1b8da2935584c5900"
             },
             {
               "path": "apps/web/src/components/ProfileMenu.tsx",
@@ -621467,7 +621469,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "db48f88a6e054d5c64ff64b7311b521f9d06bbc833b2191978e4b21eb48c381a"
+              "sha256": "e9a3b0d45e52638d95f3d3dfbfb6c600408438c324ddc7e1b8da2935584c5900"
             },
             {
               "path": "apps/web/src/components/ProfileMenu.tsx",
@@ -622266,7 +622268,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "db48f88a6e054d5c64ff64b7311b521f9d06bbc833b2191978e4b21eb48c381a"
+              "sha256": "e9a3b0d45e52638d95f3d3dfbfb6c600408438c324ddc7e1b8da2935584c5900"
             },
             {
               "path": "apps/web/src/components/ProfileMenu.tsx",
@@ -717094,7 +717096,7 @@
             },
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
-              "sha256": "c413d4a98a7ebf6c9ca577fc9d5f7b7ea9cc5523c07b22806e4f50565c2bb2d1"
+              "sha256": "be329894feef39a2b3357e2e97493b9c80d39754b840c5f34f35d897f9487da8"
             },
             {
               "path": "apps/web/e2e/provider-forms.spec.ts",
@@ -717266,7 +717268,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "db48f88a6e054d5c64ff64b7311b521f9d06bbc833b2191978e4b21eb48c381a"
+              "sha256": "e9a3b0d45e52638d95f3d3dfbfb6c600408438c324ddc7e1b8da2935584c5900"
             },
             {
               "path": "apps/web/src/components/ProviderAlertHistory.tsx",
@@ -717298,11 +717300,11 @@
             },
             {
               "path": "apps/web/src/components/jobs/JobProgress.test.tsx",
-              "sha256": "7c89bd61d83274c1dec6b313aa85e3232cfcc88f8674f1fe51345bf3411e7671"
+              "sha256": "b72367ed138c646f65fb4907ab777e8c57679335ba8757581ed02a2e618e4ffe"
             },
             {
               "path": "apps/web/src/components/jobs/JobProgress.tsx",
-              "sha256": "80ee0148b83fbc3aed32769fb776281e611f4e32204a6157fccac2e9825d406d"
+              "sha256": "ef3c046d8b160cd26c5552567d678fcb400f9927f4c10561736bc38bea106a29"
             },
             {
               "path": "apps/web/src/hooks/useActionFieldErrors.ts",
@@ -717418,11 +717420,11 @@
             },
             {
               "path": "apps/web/src/lib/jobs.test.ts",
-              "sha256": "79c7ebe666c0afb50b04f6b4df3fa1328652d826e5605dfa2a0d68a601772b60"
+              "sha256": "32ad07a925f5adb955b6ca1a856357c59e881836cb5fe7b9c8933ff716fa5d82"
             },
             {
               "path": "apps/web/src/lib/jobs.ts",
-              "sha256": "493488f14b6636005a2e2ab53484ae198fec104583394e9555a282e22c5b6f29"
+              "sha256": "18d90b4a7514dca091d4c085f4d73f4814feb1ad114de36d1d498060f37a6141"
             },
             {
               "path": "apps/web/src/lib/knowledge-assistant.test.ts",
@@ -720975,7 +720977,7 @@
             },
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
-              "sha256": "c413d4a98a7ebf6c9ca577fc9d5f7b7ea9cc5523c07b22806e4f50565c2bb2d1"
+              "sha256": "be329894feef39a2b3357e2e97493b9c80d39754b840c5f34f35d897f9487da8"
             },
             {
               "path": "apps/web/e2e/provider-forms.spec.ts",
@@ -721139,7 +721141,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "db48f88a6e054d5c64ff64b7311b521f9d06bbc833b2191978e4b21eb48c381a"
+              "sha256": "e9a3b0d45e52638d95f3d3dfbfb6c600408438c324ddc7e1b8da2935584c5900"
             },
             {
               "path": "apps/web/src/components/ProviderAlertHistory.tsx",
@@ -721163,11 +721165,11 @@
             },
             {
               "path": "apps/web/src/components/jobs/JobProgress.test.tsx",
-              "sha256": "7c89bd61d83274c1dec6b313aa85e3232cfcc88f8674f1fe51345bf3411e7671"
+              "sha256": "b72367ed138c646f65fb4907ab777e8c57679335ba8757581ed02a2e618e4ffe"
             },
             {
               "path": "apps/web/src/components/jobs/JobProgress.tsx",
-              "sha256": "80ee0148b83fbc3aed32769fb776281e611f4e32204a6157fccac2e9825d406d"
+              "sha256": "ef3c046d8b160cd26c5552567d678fcb400f9927f4c10561736bc38bea106a29"
             },
             {
               "path": "apps/web/src/hooks/useActionFieldErrors.ts",
@@ -721283,11 +721285,11 @@
             },
             {
               "path": "apps/web/src/lib/jobs.test.ts",
-              "sha256": "79c7ebe666c0afb50b04f6b4df3fa1328652d826e5605dfa2a0d68a601772b60"
+              "sha256": "32ad07a925f5adb955b6ca1a856357c59e881836cb5fe7b9c8933ff716fa5d82"
             },
             {
               "path": "apps/web/src/lib/jobs.ts",
-              "sha256": "493488f14b6636005a2e2ab53484ae198fec104583394e9555a282e22c5b6f29"
+              "sha256": "18d90b4a7514dca091d4c085f4d73f4814feb1ad114de36d1d498060f37a6141"
             },
             {
               "path": "apps/web/src/lib/knowledge-assistant.test.ts",
@@ -723614,7 +723616,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "The native-required declaration inventory, wallet confirmation, team role editors, staff knowledge search, and customer and staff notification header recovery have current evidence. Remaining schema-only forms, contrast, broader command feedback and route state adoption stay open."
+        "Native-required controls, scoped wallet confirmation, customer team roles, staff knowledge search, notification header recovery and profile export recovery have current evidence. Remaining schema-only forms, contrast, broader command feedback and route state adoption stay open."
       ],
       "owner": null,
       "depends_on": [],
@@ -723706,7 +723708,8 @@
           "release-0.5-wallet-return-deadline",
           "release-0.5-required-team-role-group",
           "release-0.5-knowledge-query-deadline",
-          "release-0.5-header-notification-deadlines"
+          "release-0.5-header-notification-deadlines",
+          "release-0.5-profile-export-deadlines"
         ]
       }
     },
@@ -724130,7 +724133,7 @@
             },
             {
               "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
-              "sha256": "db48f88a6e054d5c64ff64b7311b521f9d06bbc833b2191978e4b21eb48c381a"
+              "sha256": "e9a3b0d45e52638d95f3d3dfbfb6c600408438c324ddc7e1b8da2935584c5900"
             },
             {
               "path": "apps/web/src/components/ProfileMenu.tsx",
@@ -725287,6 +725290,14 @@
             {
               "path": "apps/web/src/lib/notification-content.ts",
               "sha256": "cbc3e81a5dc5779d7364bd801badbffbbce84b614afb92e722dde10aaf0ac467"
+            },
+            {
+              "path": "apps/web/src/components/jobs/JobProgress.tsx",
+              "sha256": "ef3c046d8b160cd26c5552567d678fcb400f9927f4c10561736bc38bea106a29"
+            },
+            {
+              "path": "apps/web/src/lib/jobs.ts",
+              "sha256": "18d90b4a7514dca091d4c085f4d73f4814feb1ad114de36d1d498060f37a6141"
             }
           ],
           "checks": [
@@ -725323,7 +725334,8 @@
             "Wallet return recovery passed current production, coverage and bundle checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-wallet-return-deadline/final/proof.json",
             "Customer team role group passed current production, coverage and bundle checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-team-role-group/proof.json",
             "Knowledge test search recovery passed current production, coverage and bundle checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-knowledge-query-deadline/proof.json",
-            "Shared notification header recovery passed current production, coverage and bundle checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-header-notification-deadlines/candidate/proof.json"
+            "Shared notification header recovery passed current production, coverage and bundle checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-header-notification-deadlines/candidate/proof.json",
+            "Profile export deadline recovery passed current production, coverage and bundle checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-profile-export-deadlines/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -792662,6 +792674,62 @@
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-header-notification-deadlines/candidate/reviewed.patch",
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-header-notification-deadlines/candidate",
       "release_disposition": "Bounded notification header recovery verified in both customer and staff workspaces. The v0.5.0 milestone remains open."
+    },
+    "release-0.5-profile-export-deadlines": {
+      "batch": "release-0.5-profile-export-deadlines",
+      "base_commit": "dff7c02eac4a14b66d87da585c62bd00124b997b",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "07-ui-ux-design.md#T-07.11.01.03",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "07-ui-ux-design.md#T-07.11.01.03",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
+          "sha256": "be329894feef39a2b3357e2e97493b9c80d39754b840c5f34f35d897f9487da8"
+        },
+        {
+          "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
+          "sha256": "e9a3b0d45e52638d95f3d3dfbfb6c600408438c324ddc7e1b8da2935584c5900"
+        },
+        {
+          "path": "apps/web/src/components/jobs/JobProgress.test.tsx",
+          "sha256": "b72367ed138c646f65fb4907ab777e8c57679335ba8757581ed02a2e618e4ffe"
+        },
+        {
+          "path": "apps/web/src/components/jobs/JobProgress.tsx",
+          "sha256": "ef3c046d8b160cd26c5552567d678fcb400f9927f4c10561736bc38bea106a29"
+        },
+        {
+          "path": "apps/web/src/lib/jobs.test.ts",
+          "sha256": "32ad07a925f5adb955b6ca1a856357c59e881836cb5fe7b9c8933ff716fa5d82"
+        },
+        {
+          "path": "apps/web/src/lib/jobs.ts",
+          "sha256": "18d90b4a7514dca091d4c085f4d73f4814feb1ad114de36d1d498060f37a6141"
+        },
+        {
+          "path": "docs/design/notification-recovery.md",
+          "sha256": "6a0f8470e241e6cdccfa5287963181735b4693d58f3f45bc7867de051cef447c"
+        }
+      ],
+      "checks": [
+        "Customer lifecycle request and export preparation use the existing 15-second browser deadline for headers and receipt bodies. A timeout preserves the captured command. Explicit retries keep the original request key or saved export ticket and do not repeat confirmed stages.",
+        "The profile export job uses the same deadline for polling and explicit retry. An uncertain retry requires a fresh status read before another retry. Current job identity and safe result URL checks are preserved. Tests covered late receipts, job switches, retained authorization, and the exact customer export ticket and job.",
+        "Sixteen production browser cases on Chromium and Mobile Safari, eight Chromium coverage cases, 27 related unit cases, eight source-bound coverage groups, 98 bundle budgets, formatting, lint and web typecheck passed. The prior six cold auth checks apply to the 30 byte-identical auth build files."
+      ],
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-profile-export-deadlines/proof.json",
+      "source_scope_proof_sha256": "4d681f7acce2e01b6d9ae23e52880f9bd3fff29a2000c4ea1f288330023a6596",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-profile-export-deadlines/renewed-bindings.json",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-profile-export-deadlines/reviewed.patch",
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-profile-export-deadlines",
+      "release_disposition": "Verified the customer profile export path through bounded request, preparation, and progress recovery. The v0.5.0 milestone remains open."
     }
   },
   "historical_improvements": [

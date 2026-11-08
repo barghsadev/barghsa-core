@@ -19,7 +19,8 @@ function parseJob(value: unknown, id: string): JobStatus {
   if (
     job.id !== id ||
     typeof job.type !== 'string' ||
-    !['queued', 'processing', 'completed', 'failed'].includes(String(job.status)) ||
+    typeof job.status !== 'string' ||
+    !['queued', 'processing', 'completed', 'failed'].includes(job.status) ||
     !Number.isInteger(job.progress_pct) ||
     Number(job.progress_pct) < 0 ||
     Number(job.progress_pct) > 100 ||
@@ -38,12 +39,15 @@ export async function fetchJobStatus(id: string, signal?: AbortSignal): Promise<
   return parseJob(await response.json(), id);
 }
 
-export async function retryFailedJob(id: string): Promise<JobStatus> {
+export async function retryFailedJob(id: string, signal?: AbortSignal): Promise<JobStatus> {
   const response = await fetch(`/api/jobs/${encodeURIComponent(id)}/retry`, {
     method: 'POST',
     credentials: 'include',
     headers: withCsrf(),
+    ...(signal ? { signal } : {}),
   });
   if (!response.ok) throw new Error(`Job retry HTTP ${response.status}`);
-  return parseJob(await response.json(), id);
+  const job = parseJob(await response.json(), id);
+  if (job.status !== 'queued') throw new Error('Invalid job retry response');
+  return job;
 }
