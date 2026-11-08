@@ -1,4 +1,5 @@
 import { contractReview } from './contract-review-fixture';
+import { approveRiskConfirmation } from './confirmation-fixture';
 import { documentUploadPolicy } from '../src/test/document-list-fixtures.js';
 import { test, expect } from './upload-fixture';
 import { en, fa } from '../../../packages/i18n/src/contracts';
@@ -194,12 +195,18 @@ for (const locale of ['en', 'fa'] as const)
         await expect(
           detail.getByRole('button', { name: words.accept, exact: true })
         ).toBeDisabled();
-        await detail.getByRole('checkbox', { name: words.acceptAcknowledgement }).check();
+        const acknowledgement = detail.getByRole('checkbox', { name: words.acceptAcknowledgement });
+        await expect(acknowledgement).toHaveAttribute('aria-required', 'true');
+        await acknowledgement.check();
       }
       await detail
         .getByRole('button', { name: staff ? words.publish : words.accept, exact: true })
         .click();
       const dialog = page.getByRole('dialog');
+      if (!staff) {
+        await expect(dialog.getByRole('button', { name: confirm, exact: true })).toBeDisabled();
+        await approveRiskConfirmation(page, locale, 'financial');
+      }
       await dialog.getByRole('button', { name: confirm, exact: true }).click();
       await dialog
         .getByLabel(locale === 'fa' ? 'رمز عبور خود را تأیید کنید' : 'Confirm your password', {

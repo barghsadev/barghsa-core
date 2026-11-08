@@ -100,6 +100,12 @@ count and links invalid selections to the inline error. Reviewer notes become
 required when staff select rejection. The CRM archive dialog keeps its scroll
 area within the viewport as its height changes.
 
+New contract drafts require a profile, service, title and terms. Imported
+revisions can preserve their existing title and terms. The selected value
+kind determines whether its amount or description is required. Draft changes,
+activation edits and staff requests for changes require a reason. Activation
+dates, the initial invoice and the linked order stay optional.
+
 Document retention years, legal reasons, and hold expiry each link to their
 own validation errors. Hold expiry remains optional. Upload policy formats
 require at least one selection, so the group explains the requirement without

@@ -154,6 +154,9 @@ for (const [locale, theme] of [
       .getByRole('button', { name: word('draftSearch'), exact: true })
       .click();
     await draftField(page, 'draftProfile').selectOption(profileId);
+    for (const key of ['draftProfile', 'serviceType', 'titleField', 'draftTerms', 'contextReason'])
+      await expect(draftField(page, key)).toHaveAttribute('aria-required', 'true');
+    await expect(draftField(page, 'draftOrder')).not.toHaveAttribute('aria-required', 'true');
     await draftField(page, 'draftOrder').selectOption(linkedOrderId);
     await draftField(page, 'serviceType').selectOption('savings');
     await expect(draftField(page, 'draftOrder')).toHaveValue('');
@@ -162,8 +165,14 @@ for (const [locale, theme] of [
     await draftField(page, 'titleField').fill('  New staff contract  ');
     await draftField(page, 'draftTerms').fill('  New staff terms\n  ');
     await draftField(page, 'statedContractValue').selectOption('fixed');
+    await expect(draftField(page, 'fixedContractAmount')).toHaveAttribute('aria-required', 'true');
     await draftField(page, 'fixedContractAmount').fill('9007199254740993');
     await draftField(page, 'statedContractValue').selectOption('variable');
+    await expect(draftField(page, 'fixedContractAmount')).toHaveCount(0);
+    await expect(draftField(page, 'variableContractDescription')).toHaveAttribute(
+      'aria-required',
+      'true'
+    );
     await draftField(page, 'variableContractDescription').fill('  Hidden variable draft  ');
     await draftField(page, 'statedContractValue').selectOption('fixed');
     await page.locator('#contracts-number').fill('  23  ');
@@ -275,6 +284,9 @@ for (const [locale, theme] of [
       .getByRole('button', { name: word('draftEdit'), exact: true })
       .click();
     await expect(draftField(page, 'draftTerms')).toHaveValue(originalContent.text);
+    for (const key of ['titleField', 'draftTerms'])
+      await expect(draftField(page, key)).not.toHaveAttribute('aria-required', 'true');
+    await expect(draftField(page, 'contextReason')).toHaveAttribute('aria-required', 'true');
     await draftField(page, 'draftTerms').fill('  Revised imported delivery terms  ');
     await draftField(page, 'contextReason').fill('  Correct the imported delivery  ');
     await draftSubmit(page).click();
@@ -324,6 +336,10 @@ for (const [locale, theme] of [
       invoice = page.locator('#contract-context-invoice'),
       reason = page.locator('#contract-context-reason');
     const contextSubmit = contextForm(page).locator('button[type=submit]');
+    await expect(reason).toHaveAccessibleName(word('contextReason'));
+    await expect(reason).toHaveAttribute('aria-required', 'true');
+    for (const optional of [start, end, invoice])
+      await expect(optional).not.toHaveAttribute('aria-required', 'true');
     await expect(start).toHaveValue('2030-01-02T11:30');
     await expect(end).toHaveValue('2030-01-03T11:30');
     await invoice.fill('invalid-invoice');

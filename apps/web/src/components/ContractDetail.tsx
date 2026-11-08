@@ -847,6 +847,7 @@ function ContractDetailContent({
               <label className="flex items-start gap-2">
                 <input
                   type="checkbox"
+                  aria-required="true"
                   checked={acknowledged}
                   onChange={(event) => setAcknowledged(event.target.checked)}
                   className="mt-1 size-4"
@@ -887,7 +888,7 @@ function ContractDetailContent({
                       <FormItem id="contract-change-reason">
                         <FormLabel>{word('reason')}</FormLabel>
                         <FormControl>
-                          <Textarea {...field} disabled={!!command.current} />
+                          <Textarea {...field} aria-required="true" disabled={!!command.current} />
                         </FormControl>
                         <FormDescription>{copy('reasonHelp')}</FormDescription>
                         <FormMessage />

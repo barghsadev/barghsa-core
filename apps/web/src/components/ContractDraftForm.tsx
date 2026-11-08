@@ -191,6 +191,7 @@ export default function DraftForm({
     label: string,
     help?: string
   ) {
+    const required = !existing || (name !== 'title' && name !== 'text');
     return (
       <FormField
         control={form.control}
@@ -202,6 +203,7 @@ export default function DraftForm({
               {name === 'title' || name === 'commercialValueAmountIrr' ? (
                 <Input
                   {...field}
+                  aria-required={required || undefined}
                   dir={name === 'commercialValueAmountIrr' ? 'ltr' : undefined}
                   inputMode={name === 'commercialValueAmountIrr' ? 'numeric' : undefined}
                   disabled={
@@ -214,6 +216,7 @@ export default function DraftForm({
               ) : (
                 <Textarea
                   {...field}
+                  aria-required={required || undefined}
                   rows={name === 'text' ? 8 : 3}
                   disabled={
                     command.frozen ||
@@ -269,6 +272,7 @@ export default function DraftForm({
                     <FormControl>
                       <ContractDraftChoices
                         {...field}
+                        aria-required="true"
                         labelled
                         disabled={command.frozen}
                         coordination={coordination}
@@ -302,6 +306,7 @@ export default function DraftForm({
                     <FormControl>
                       <NativeSelect
                         {...field}
+                        aria-required="true"
                         disabled={command.frozen}
                         onChange={(event) => {
                           if (command.blocked()) return;

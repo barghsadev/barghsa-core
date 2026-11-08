@@ -291,7 +291,7 @@ function Editor({
                     <FormLabel>{word(label)}</FormLabel>
                     <FormControl>
                       {name === 'changeDescription' ? (
-                        <Textarea {...field} disabled={command.frozen} />
+                        <Textarea {...field} aria-required="true" disabled={command.frozen} />
                       ) : (
                         <Input
                           {...field}

@@ -138,6 +138,8 @@ for (const [locale, theme] of [
     state.holdRead = false;
     await page.getByRole('button', { name: rowName(8), exact: true }).click();
     await expect(reason).toBeEnabled();
+    await expect(reason).toHaveAccessibleName(word('reason'));
+    await expect(reason).toHaveAttribute('aria-required', 'true');
     await reason.fill('Fresh private review draft');
     await error(oldRead, 403, ErrorCodes.AUTHZ_FORBIDDEN.code);
     await expect(reason).toHaveValue('Fresh private review draft');
