@@ -322,6 +322,10 @@ export const fa: I18nDictionary = {
   'invoices.details.receiptSubmit': 'ارسال رسید',
   'invoices.details.receiptSubmitting': 'در حال ارسال رسید…',
   'invoices.details.receiptReviewLoading': 'در حال آماده‌سازی بررسی رسید…',
+  'invoices.details.receiptReviewFailed':
+    'بررسی رسید انجام نشد. برای بررسی دوباره، فرم را ارسال کنید.',
+  'invoices.details.receiptProfileLoading': 'در حال دریافت پروفایل فعال…',
+  'invoices.details.receiptProfileUnavailable': 'دریافت پروفایل فعال انجام نشد. دوباره تلاش کنید.',
   'invoices.details.receiptReviewTitle': 'بررسی رسید فاکتور',
   'invoices.details.receiptReviewDescription':
     'مبلغ، فاکتور و اطلاعات واریز را پیش از ثبت بررسی کنید.',
@@ -1186,6 +1190,10 @@ export const en: I18nDictionary = {
   'invoices.details.receiptSubmit': 'Submit receipt',
   'invoices.details.receiptSubmitting': 'Submitting receipt…',
   'invoices.details.receiptReviewLoading': 'Preparing receipt review…',
+  'invoices.details.receiptReviewFailed':
+    'Could not load the receipt review. Submit the form to try again.',
+  'invoices.details.receiptProfileLoading': 'Loading the active profile…',
+  'invoices.details.receiptProfileUnavailable': 'Could not load the active profile. Try again.',
   'invoices.details.receiptReviewTitle': 'Review invoice receipt',
   'invoices.details.receiptReviewDescription':
     'Check the invoice, amount and transfer details before submitting.',

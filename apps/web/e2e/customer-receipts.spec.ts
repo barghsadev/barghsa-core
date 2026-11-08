@@ -3,6 +3,7 @@ import { approveRiskConfirmation } from './confirmation-fixture';
 import AxeBuilder from '@axe-core/playwright';
 import { confirmationText } from '@barghsa/i18n/confirmation';
 import { feedbackText } from '@barghsa/i18n/feedback';
+import { t } from '@barghsa/i18n/app';
 import { test, expect, type Page } from './coverage-fixture';
 
 const profileId = '11111111-1111-4111-8111-111111111111';
@@ -75,6 +76,7 @@ async function setup(
     route.fulfill({ json: { balance: '100', currency: 'IRR', onlineTopUpLimit: 0 } })
   );
   const receipts = new Map<string, Record<string, unknown>>();
+  let invoiceReviewProfile = profileId;
   const invoice = {
     invoiceId,
     role: 'original',
@@ -163,12 +165,12 @@ async function setup(
           schemaVersion: 1,
           scope: {
             action: 'invoice.bank-receipt-submission',
-            profileId,
+            profileId: invoiceReviewProfile,
             resourceId: invoiceId,
           },
           data: {
             invoiceId,
-            profileId,
+            profileId: invoiceReviewProfile,
             invoiceState: 'Unpaid',
             invoiceTotalIrR: amount,
             invoicePaidIrR: '0',
@@ -222,7 +224,18 @@ async function setup(
     await page.getByTestId(`${prefix}-note`).fill('  Customer note  ');
     await page.getByTestId(`${prefix}-file`).setInputFiles(pdf);
   }
-  return { form, prefix, uploads, submissions, receipts, invoice, endpoint };
+  return {
+    form,
+    prefix,
+    uploads,
+    submissions,
+    receipts,
+    invoice,
+    endpoint,
+    setInvoiceReviewProfile: (id: string) => {
+      invoiceReviewProfile = id;
+    },
+  };
 }
 
 async function confirmReceipt(page: Page, locale: 'en' | 'fa', payerReference = 'TRACK-123') {
@@ -362,7 +375,57 @@ for (const kind of ['wallet', 'invoice'] as const) {
   }
 }
 
-for (const locale of ['en', 'fa']) {
+for (const locale of ['en', 'fa'] as const) {
+  test(`invoice receipt retries a held review and rejects a foreign profile snapshot (${locale})`, async ({
+    page,
+  }, info) => {
+    await page.clock.install();
+    const { endpoint, uploads, submissions, setInvoiceReviewProfile } = await setup(
+      page,
+      locale,
+      'invoice'
+    );
+    const reviews: unknown[] = [];
+    await page.route(`**${endpoint}/review`, (route) => {
+      reviews.push(route.request().postDataJSON());
+      if (reviews.length > 1) return route.fallback();
+    });
+    const submit = page.getByTestId('invoice-receipt-submit');
+    const error = page.getByTestId('invoice-receipt-error');
+    const file = page.getByTestId('invoice-receipt-file');
+    const dialog = page.getByRole('dialog');
+    await submit.click();
+    await expect.poll(() => reviews.length).toBe(1);
+    await expect(submit).toBeDisabled();
+    await expect(dialog).toHaveCount(0);
+    expect(submissions).toEqual([]);
+    await page.clock.fastForward(15_200);
+    await expect(error).toContainText(t('invoices.details.receiptReviewFailed', locale));
+    await expect(submit).toBeEnabled();
+    await expect(file).not.toHaveValue('');
+    await expect(page.getByTestId('invoice-receipt-amount')).toHaveValue(amount);
+    expect(reviews).toHaveLength(1);
+    await error.screenshot({ path: info.outputPath('invoice-receipt-review-retry.png') });
+
+    setInvoiceReviewProfile('33333333-3333-4333-8333-333333333333');
+    await submit.click();
+    await expect(error).toContainText(t('invoices.details.receiptConflict', locale));
+    await expect(dialog).toHaveCount(0);
+    expect(submissions).toEqual([]);
+
+    setInvoiceReviewProfile(profileId);
+    await submit.click();
+    await expect(dialog).toBeVisible();
+    expect(reviews).toEqual([reviews[0], reviews[0], reviews[0]]);
+    expect(uploads).toHaveLength(1);
+    expect(submissions).toEqual([]);
+    await confirmReceipt(page, locale);
+    await expect(page.getByTestId('invoice-receipt-success')).toBeVisible();
+    expect(submissions).toHaveLength(1);
+    expect(submissions[0]!.body.expectedReviewHash).toBe('a'.repeat(64));
+    expect(submissions[0]!.body.amount).toBe(amount);
+  });
+
   test(`invoice activity remains readable and accessible on mobile (${locale})`, async ({
     page,
   }) => {

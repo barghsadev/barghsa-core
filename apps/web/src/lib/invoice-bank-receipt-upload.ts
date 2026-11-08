@@ -207,11 +207,14 @@ export async function submitInvoiceBankReceipt(input: {
   return { ok: true, state: 'Submitted', amount: confirmedAmount };
 }
 
-export async function fetchActiveProfileId(): Promise<string | null> {
-  const res = await fetch('/api/profiles', { credentials: 'include' });
-  if (!res.ok) return null;
+export async function fetchActiveProfileId(signal?: AbortSignal): Promise<string | null> {
+  const res = await fetch('/api/profiles', {
+    credentials: 'include',
+    ...(signal ? { signal } : {}),
+  });
+  if (!res.ok) throw new Error('Active profile unavailable');
   const data = await readResponseObject(res);
-  return typeof data.activeProfileId === 'string' && data.activeProfileId.length > 0
-    ? data.activeProfileId
-    : null;
+  const id = data.activeProfileId;
+  if (id === null || (typeof id === 'string' && id.trim())) return id;
+  throw new Error('Invalid active profile response');
 }

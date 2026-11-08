@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-08T00:52:36+00:00",
-  "source_commit": "797828249a0cbdb9ca48530f435ee254d5d0a91b",
+  "updated": "2026-11-08T00:59:43+00:00",
+  "source_commit": "9f33e7ea356e12787fdb04efeaa4e559a92721b0",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -24366,7 +24366,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "releases/0.2.0.md",
@@ -28656,7 +28656,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "releases/0.2.0.md",
@@ -35527,7 +35527,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.tsx",
-              "sha256": "1903cfa7b0065647e16f7ee3be928f364d39f64e123b7ddf6aa9baf34dc33c22"
+              "sha256": "ac8660d3578cee1ecc5c791144ebfabcbd9ddafd5780614c76596962484aba77"
             },
             {
               "path": "apps/web/src/pages/InvoicesPage.tsx",
@@ -63208,7 +63208,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.tsx",
-              "sha256": "1903cfa7b0065647e16f7ee3be928f364d39f64e123b7ddf6aa9baf34dc33c22"
+              "sha256": "ac8660d3578cee1ecc5c791144ebfabcbd9ddafd5780614c76596962484aba77"
             },
             {
               "path": "apps/web/src/pages/InvoicesPage.tsx",
@@ -140637,7 +140637,7 @@
             },
             {
               "path": "apps/web/e2e/customer-receipts.spec.ts",
-              "sha256": "a714c9d1237d3f254f4f0763cd22bfbf7d610a6e7c106c36573f0c25c6ee9cc0"
+              "sha256": "dcd7b53008e8e6bb5c38dd12960b5846184247253b990f270111b5ab65068156"
             },
             {
               "path": "apps/web/src/hooks/useReceiptForm.ts",
@@ -140653,7 +140653,7 @@
             },
             {
               "path": "apps/web/src/lib/invoice-bank-receipt-upload.ts",
-              "sha256": "0e5d69a4e5ab4296674eda98a302216b70c55b8df96fb2e5d360b10c91f0bd64"
+              "sha256": "dfe32ad752b61256cfdd269f07e3a91a03a95cf6560c4902e9e372a2cc605cd3"
             },
             {
               "path": "apps/web/src/lib/online-topup-action.ts",
@@ -146072,7 +146072,7 @@
             },
             {
               "path": "apps/web/e2e/customer-receipts.spec.ts",
-              "sha256": "a714c9d1237d3f254f4f0763cd22bfbf7d610a6e7c106c36573f0c25c6ee9cc0"
+              "sha256": "dcd7b53008e8e6bb5c38dd12960b5846184247253b990f270111b5ab65068156"
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptHistory.test.tsx",
@@ -146124,7 +146124,7 @@
             },
             {
               "path": "apps/web/src/lib/invoice-receipt-response.test.ts",
-              "sha256": "08545351dc31979e8261c3cd26d5f9ee9d4bb3b7f6af77056ad4e4bb72903ba5"
+              "sha256": "d9e3857d5705965c29f6beed2d5f7712e8e0ccde0e0a0b5c5ce82d7ac3c55338"
             },
             {
               "path": "apps/web/src/lib/wallet-history-query.test.ts",
@@ -146140,7 +146140,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.test.tsx",
-              "sha256": "4c48861ab56803261a1eddab8b8a8912090ee390a3d17585e4e1731460e99d38"
+              "sha256": "8cdb0a16474666d232480d15a7305e4a012453f32e78c380c28b32f20ab1c56b"
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
@@ -146662,7 +146662,7 @@
             },
             {
               "path": "apps/web/e2e/customer-receipts.spec.ts",
-              "sha256": "a714c9d1237d3f254f4f0763cd22bfbf7d610a6e7c106c36573f0c25c6ee9cc0"
+              "sha256": "dcd7b53008e8e6bb5c38dd12960b5846184247253b990f270111b5ab65068156"
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptHistory.test.tsx",
@@ -146718,11 +146718,11 @@
             },
             {
               "path": "apps/web/src/lib/invoice-bank-receipt-upload.ts",
-              "sha256": "0e5d69a4e5ab4296674eda98a302216b70c55b8df96fb2e5d360b10c91f0bd64"
+              "sha256": "dfe32ad752b61256cfdd269f07e3a91a03a95cf6560c4902e9e372a2cc605cd3"
             },
             {
               "path": "apps/web/src/lib/invoice-receipt-response.test.ts",
-              "sha256": "08545351dc31979e8261c3cd26d5f9ee9d4bb3b7f6af77056ad4e4bb72903ba5"
+              "sha256": "d9e3857d5705965c29f6beed2d5f7712e8e0ccde0e0a0b5c5ce82d7ac3c55338"
             },
             {
               "path": "apps/web/src/lib/wallet-history-query.test.ts",
@@ -146738,11 +146738,11 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.test.tsx",
-              "sha256": "4c48861ab56803261a1eddab8b8a8912090ee390a3d17585e4e1731460e99d38"
+              "sha256": "8cdb0a16474666d232480d15a7305e4a012453f32e78c380c28b32f20ab1c56b"
             },
             {
               "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.tsx",
-              "sha256": "1903cfa7b0065647e16f7ee3be928f364d39f64e123b7ddf6aa9baf34dc33c22"
+              "sha256": "ac8660d3578cee1ecc5c791144ebfabcbd9ddafd5780614c76596962484aba77"
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
@@ -147282,7 +147282,7 @@
             },
             {
               "path": "apps/web/e2e/customer-receipts.spec.ts",
-              "sha256": "a714c9d1237d3f254f4f0763cd22bfbf7d610a6e7c106c36573f0c25c6ee9cc0"
+              "sha256": "dcd7b53008e8e6bb5c38dd12960b5846184247253b990f270111b5ab65068156"
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptHistory.test.tsx",
@@ -147334,7 +147334,7 @@
             },
             {
               "path": "apps/web/src/lib/invoice-receipt-response.test.ts",
-              "sha256": "08545351dc31979e8261c3cd26d5f9ee9d4bb3b7f6af77056ad4e4bb72903ba5"
+              "sha256": "d9e3857d5705965c29f6beed2d5f7712e8e0ccde0e0a0b5c5ce82d7ac3c55338"
             },
             {
               "path": "apps/web/src/lib/wallet-history-query.test.ts",
@@ -147350,7 +147350,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.test.tsx",
-              "sha256": "4c48861ab56803261a1eddab8b8a8912090ee390a3d17585e4e1731460e99d38"
+              "sha256": "8cdb0a16474666d232480d15a7305e4a012453f32e78c380c28b32f20ab1c56b"
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
@@ -147919,7 +147919,7 @@
             },
             {
               "path": "apps/web/e2e/customer-receipts.spec.ts",
-              "sha256": "a714c9d1237d3f254f4f0763cd22bfbf7d610a6e7c106c36573f0c25c6ee9cc0"
+              "sha256": "dcd7b53008e8e6bb5c38dd12960b5846184247253b990f270111b5ab65068156"
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptHistory.test.tsx",
@@ -147971,7 +147971,7 @@
             },
             {
               "path": "apps/web/src/lib/invoice-receipt-response.test.ts",
-              "sha256": "08545351dc31979e8261c3cd26d5f9ee9d4bb3b7f6af77056ad4e4bb72903ba5"
+              "sha256": "d9e3857d5705965c29f6beed2d5f7712e8e0ccde0e0a0b5c5ce82d7ac3c55338"
             },
             {
               "path": "apps/web/src/lib/wallet-history-query.test.ts",
@@ -147987,7 +147987,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.test.tsx",
-              "sha256": "4c48861ab56803261a1eddab8b8a8912090ee390a3d17585e4e1731460e99d38"
+              "sha256": "8cdb0a16474666d232480d15a7305e4a012453f32e78c380c28b32f20ab1c56b"
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
@@ -148658,7 +148658,7 @@
             },
             {
               "path": "apps/web/e2e/customer-receipts.spec.ts",
-              "sha256": "a714c9d1237d3f254f4f0763cd22bfbf7d610a6e7c106c36573f0c25c6ee9cc0"
+              "sha256": "dcd7b53008e8e6bb5c38dd12960b5846184247253b990f270111b5ab65068156"
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptHistory.test.tsx",
@@ -148710,7 +148710,7 @@
             },
             {
               "path": "apps/web/src/lib/invoice-receipt-response.test.ts",
-              "sha256": "08545351dc31979e8261c3cd26d5f9ee9d4bb3b7f6af77056ad4e4bb72903ba5"
+              "sha256": "d9e3857d5705965c29f6beed2d5f7712e8e0ccde0e0a0b5c5ce82d7ac3c55338"
             },
             {
               "path": "apps/web/src/lib/wallet-history-query.test.ts",
@@ -148726,7 +148726,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.test.tsx",
-              "sha256": "4c48861ab56803261a1eddab8b8a8912090ee390a3d17585e4e1731460e99d38"
+              "sha256": "8cdb0a16474666d232480d15a7305e4a012453f32e78c380c28b32f20ab1c56b"
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
@@ -149160,7 +149160,7 @@
             },
             {
               "path": "apps/web/e2e/customer-receipts.spec.ts",
-              "sha256": "a714c9d1237d3f254f4f0763cd22bfbf7d610a6e7c106c36573f0c25c6ee9cc0"
+              "sha256": "dcd7b53008e8e6bb5c38dd12960b5846184247253b990f270111b5ab65068156"
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptHistory.test.tsx",
@@ -149212,7 +149212,7 @@
             },
             {
               "path": "apps/web/src/lib/invoice-receipt-response.test.ts",
-              "sha256": "08545351dc31979e8261c3cd26d5f9ee9d4bb3b7f6af77056ad4e4bb72903ba5"
+              "sha256": "d9e3857d5705965c29f6beed2d5f7712e8e0ccde0e0a0b5c5ce82d7ac3c55338"
             },
             {
               "path": "apps/web/src/lib/wallet-history-query.test.ts",
@@ -149228,7 +149228,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.test.tsx",
-              "sha256": "4c48861ab56803261a1eddab8b8a8912090ee390a3d17585e4e1731460e99d38"
+              "sha256": "8cdb0a16474666d232480d15a7305e4a012453f32e78c380c28b32f20ab1c56b"
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
@@ -149640,7 +149640,7 @@
             },
             {
               "path": "apps/web/e2e/customer-receipts.spec.ts",
-              "sha256": "a714c9d1237d3f254f4f0763cd22bfbf7d610a6e7c106c36573f0c25c6ee9cc0"
+              "sha256": "dcd7b53008e8e6bb5c38dd12960b5846184247253b990f270111b5ab65068156"
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptHistory.test.tsx",
@@ -149692,7 +149692,7 @@
             },
             {
               "path": "apps/web/src/lib/invoice-receipt-response.test.ts",
-              "sha256": "08545351dc31979e8261c3cd26d5f9ee9d4bb3b7f6af77056ad4e4bb72903ba5"
+              "sha256": "d9e3857d5705965c29f6beed2d5f7712e8e0ccde0e0a0b5c5ce82d7ac3c55338"
             },
             {
               "path": "apps/web/src/lib/wallet-history-query.test.ts",
@@ -149708,7 +149708,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.test.tsx",
-              "sha256": "4c48861ab56803261a1eddab8b8a8912090ee390a3d17585e4e1731460e99d38"
+              "sha256": "8cdb0a16474666d232480d15a7305e4a012453f32e78c380c28b32f20ab1c56b"
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
@@ -150121,7 +150121,7 @@
             },
             {
               "path": "apps/web/e2e/customer-receipts.spec.ts",
-              "sha256": "a714c9d1237d3f254f4f0763cd22bfbf7d610a6e7c106c36573f0c25c6ee9cc0"
+              "sha256": "dcd7b53008e8e6bb5c38dd12960b5846184247253b990f270111b5ab65068156"
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptHistory.test.tsx",
@@ -150173,7 +150173,7 @@
             },
             {
               "path": "apps/web/src/lib/invoice-receipt-response.test.ts",
-              "sha256": "08545351dc31979e8261c3cd26d5f9ee9d4bb3b7f6af77056ad4e4bb72903ba5"
+              "sha256": "d9e3857d5705965c29f6beed2d5f7712e8e0ccde0e0a0b5c5ce82d7ac3c55338"
             },
             {
               "path": "apps/web/src/lib/wallet-history-query.test.ts",
@@ -150189,7 +150189,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.test.tsx",
-              "sha256": "4c48861ab56803261a1eddab8b8a8912090ee390a3d17585e4e1731460e99d38"
+              "sha256": "8cdb0a16474666d232480d15a7305e4a012453f32e78c380c28b32f20ab1c56b"
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
@@ -150603,7 +150603,7 @@
             },
             {
               "path": "apps/web/e2e/customer-receipts.spec.ts",
-              "sha256": "a714c9d1237d3f254f4f0763cd22bfbf7d610a6e7c106c36573f0c25c6ee9cc0"
+              "sha256": "dcd7b53008e8e6bb5c38dd12960b5846184247253b990f270111b5ab65068156"
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptHistory.test.tsx",
@@ -150655,7 +150655,7 @@
             },
             {
               "path": "apps/web/src/lib/invoice-receipt-response.test.ts",
-              "sha256": "08545351dc31979e8261c3cd26d5f9ee9d4bb3b7f6af77056ad4e4bb72903ba5"
+              "sha256": "d9e3857d5705965c29f6beed2d5f7712e8e0ccde0e0a0b5c5ce82d7ac3c55338"
             },
             {
               "path": "apps/web/src/lib/wallet-history-query.test.ts",
@@ -150671,7 +150671,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.test.tsx",
-              "sha256": "4c48861ab56803261a1eddab8b8a8912090ee390a3d17585e4e1731460e99d38"
+              "sha256": "8cdb0a16474666d232480d15a7305e4a012453f32e78c380c28b32f20ab1c56b"
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
@@ -151093,7 +151093,7 @@
             },
             {
               "path": "apps/web/e2e/customer-receipts.spec.ts",
-              "sha256": "a714c9d1237d3f254f4f0763cd22bfbf7d610a6e7c106c36573f0c25c6ee9cc0"
+              "sha256": "dcd7b53008e8e6bb5c38dd12960b5846184247253b990f270111b5ab65068156"
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptHistory.test.tsx",
@@ -151145,7 +151145,7 @@
             },
             {
               "path": "apps/web/src/lib/invoice-receipt-response.test.ts",
-              "sha256": "08545351dc31979e8261c3cd26d5f9ee9d4bb3b7f6af77056ad4e4bb72903ba5"
+              "sha256": "d9e3857d5705965c29f6beed2d5f7712e8e0ccde0e0a0b5c5ce82d7ac3c55338"
             },
             {
               "path": "apps/web/src/lib/wallet-history-query.test.ts",
@@ -151161,7 +151161,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.test.tsx",
-              "sha256": "4c48861ab56803261a1eddab8b8a8912090ee390a3d17585e4e1731460e99d38"
+              "sha256": "8cdb0a16474666d232480d15a7305e4a012453f32e78c380c28b32f20ab1c56b"
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
@@ -151575,7 +151575,7 @@
             },
             {
               "path": "apps/web/e2e/customer-receipts.spec.ts",
-              "sha256": "a714c9d1237d3f254f4f0763cd22bfbf7d610a6e7c106c36573f0c25c6ee9cc0"
+              "sha256": "dcd7b53008e8e6bb5c38dd12960b5846184247253b990f270111b5ab65068156"
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptHistory.test.tsx",
@@ -151627,7 +151627,7 @@
             },
             {
               "path": "apps/web/src/lib/invoice-receipt-response.test.ts",
-              "sha256": "08545351dc31979e8261c3cd26d5f9ee9d4bb3b7f6af77056ad4e4bb72903ba5"
+              "sha256": "d9e3857d5705965c29f6beed2d5f7712e8e0ccde0e0a0b5c5ce82d7ac3c55338"
             },
             {
               "path": "apps/web/src/lib/wallet-history-query.test.ts",
@@ -151643,7 +151643,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.test.tsx",
-              "sha256": "4c48861ab56803261a1eddab8b8a8912090ee390a3d17585e4e1731460e99d38"
+              "sha256": "8cdb0a16474666d232480d15a7305e4a012453f32e78c380c28b32f20ab1c56b"
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
@@ -290347,7 +290347,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "releases/0.2.0.md",
@@ -297890,7 +297890,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "releases/0.2.0.md",
@@ -318429,7 +318429,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "releases/0.2.0.md",
@@ -349058,7 +349058,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "releases/0.2.0.md",
@@ -483057,7 +483057,7 @@
             },
             {
               "path": "apps/web/e2e/customer-receipts.spec.ts",
-              "sha256": "a714c9d1237d3f254f4f0763cd22bfbf7d610a6e7c106c36573f0c25c6ee9cc0"
+              "sha256": "dcd7b53008e8e6bb5c38dd12960b5846184247253b990f270111b5ab65068156"
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
@@ -483649,7 +483649,7 @@
             },
             {
               "path": "apps/web/e2e/customer-receipts.spec.ts",
-              "sha256": "a714c9d1237d3f254f4f0763cd22bfbf7d610a6e7c106c36573f0c25c6ee9cc0"
+              "sha256": "dcd7b53008e8e6bb5c38dd12960b5846184247253b990f270111b5ab65068156"
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
@@ -484241,7 +484241,7 @@
             },
             {
               "path": "apps/web/e2e/customer-receipts.spec.ts",
-              "sha256": "a714c9d1237d3f254f4f0763cd22bfbf7d610a6e7c106c36573f0c25c6ee9cc0"
+              "sha256": "dcd7b53008e8e6bb5c38dd12960b5846184247253b990f270111b5ab65068156"
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
@@ -484833,7 +484833,7 @@
             },
             {
               "path": "apps/web/e2e/customer-receipts.spec.ts",
-              "sha256": "a714c9d1237d3f254f4f0763cd22bfbf7d610a6e7c106c36573f0c25c6ee9cc0"
+              "sha256": "dcd7b53008e8e6bb5c38dd12960b5846184247253b990f270111b5ab65068156"
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
@@ -493061,7 +493061,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "packages/ui/README.md",
@@ -496998,7 +496998,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "404329e8f6ac56ab14add18d0fd00a7ff20bdd69a331b87b8574f690b675be6b"
+              "sha256": "00db037afaa8b9951d7eb583d059d3bc2169dbee7d77a0e7823a18b18d48eb7d"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -497878,7 +497878,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "packages/ui/README.md",
@@ -512273,7 +512273,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.tsx",
-              "sha256": "1903cfa7b0065647e16f7ee3be928f364d39f64e123b7ddf6aa9baf34dc33c22"
+              "sha256": "ac8660d3578cee1ecc5c791144ebfabcbd9ddafd5780614c76596962484aba77"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -512896,7 +512896,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "packages/shared/package.json",
@@ -513695,7 +513695,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "packages/shared/package.json",
@@ -514493,7 +514493,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "packages/shared/package.json",
@@ -516982,7 +516982,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.tsx",
-              "sha256": "1903cfa7b0065647e16f7ee3be928f364d39f64e123b7ddf6aa9baf34dc33c22"
+              "sha256": "ac8660d3578cee1ecc5c791144ebfabcbd9ddafd5780614c76596962484aba77"
             },
             {
               "path": "apps/web/src/pages/WalletPage.tsx",
@@ -518305,7 +518305,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.tsx",
-              "sha256": "1903cfa7b0065647e16f7ee3be928f364d39f64e123b7ddf6aa9baf34dc33c22"
+              "sha256": "ac8660d3578cee1ecc5c791144ebfabcbd9ddafd5780614c76596962484aba77"
             },
             {
               "path": "apps/web/src/pages/WalletPage.tsx",
@@ -520461,7 +520461,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.tsx",
-              "sha256": "1903cfa7b0065647e16f7ee3be928f364d39f64e123b7ddf6aa9baf34dc33c22"
+              "sha256": "ac8660d3578cee1ecc5c791144ebfabcbd9ddafd5780614c76596962484aba77"
             },
             {
               "path": "apps/web/src/pages/WalletPage.tsx",
@@ -565847,7 +565847,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "404329e8f6ac56ab14add18d0fd00a7ff20bdd69a331b87b8574f690b675be6b"
+              "sha256": "00db037afaa8b9951d7eb583d059d3bc2169dbee7d77a0e7823a18b18d48eb7d"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -567741,7 +567741,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "404329e8f6ac56ab14add18d0fd00a7ff20bdd69a331b87b8574f690b675be6b"
+              "sha256": "00db037afaa8b9951d7eb583d059d3bc2169dbee7d77a0e7823a18b18d48eb7d"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -569686,7 +569686,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "404329e8f6ac56ab14add18d0fd00a7ff20bdd69a331b87b8574f690b675be6b"
+              "sha256": "00db037afaa8b9951d7eb583d059d3bc2169dbee7d77a0e7823a18b18d48eb7d"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -571580,7 +571580,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "404329e8f6ac56ab14add18d0fd00a7ff20bdd69a331b87b8574f690b675be6b"
+              "sha256": "00db037afaa8b9951d7eb583d059d3bc2169dbee7d77a0e7823a18b18d48eb7d"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -573474,7 +573474,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "404329e8f6ac56ab14add18d0fd00a7ff20bdd69a331b87b8574f690b675be6b"
+              "sha256": "00db037afaa8b9951d7eb583d059d3bc2169dbee7d77a0e7823a18b18d48eb7d"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -575368,7 +575368,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "404329e8f6ac56ab14add18d0fd00a7ff20bdd69a331b87b8574f690b675be6b"
+              "sha256": "00db037afaa8b9951d7eb583d059d3bc2169dbee7d77a0e7823a18b18d48eb7d"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -577262,7 +577262,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "404329e8f6ac56ab14add18d0fd00a7ff20bdd69a331b87b8574f690b675be6b"
+              "sha256": "00db037afaa8b9951d7eb583d059d3bc2169dbee7d77a0e7823a18b18d48eb7d"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -579156,7 +579156,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "404329e8f6ac56ab14add18d0fd00a7ff20bdd69a331b87b8574f690b675be6b"
+              "sha256": "00db037afaa8b9951d7eb583d059d3bc2169dbee7d77a0e7823a18b18d48eb7d"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -581050,7 +581050,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "404329e8f6ac56ab14add18d0fd00a7ff20bdd69a331b87b8574f690b675be6b"
+              "sha256": "00db037afaa8b9951d7eb583d059d3bc2169dbee7d77a0e7823a18b18d48eb7d"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -582944,7 +582944,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "404329e8f6ac56ab14add18d0fd00a7ff20bdd69a331b87b8574f690b675be6b"
+              "sha256": "00db037afaa8b9951d7eb583d059d3bc2169dbee7d77a0e7823a18b18d48eb7d"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -584838,7 +584838,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "404329e8f6ac56ab14add18d0fd00a7ff20bdd69a331b87b8574f690b675be6b"
+              "sha256": "00db037afaa8b9951d7eb583d059d3bc2169dbee7d77a0e7823a18b18d48eb7d"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -586732,7 +586732,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "404329e8f6ac56ab14add18d0fd00a7ff20bdd69a331b87b8574f690b675be6b"
+              "sha256": "00db037afaa8b9951d7eb583d059d3bc2169dbee7d77a0e7823a18b18d48eb7d"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -588626,7 +588626,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "404329e8f6ac56ab14add18d0fd00a7ff20bdd69a331b87b8574f690b675be6b"
+              "sha256": "00db037afaa8b9951d7eb583d059d3bc2169dbee7d77a0e7823a18b18d48eb7d"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -589889,7 +589889,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "404329e8f6ac56ab14add18d0fd00a7ff20bdd69a331b87b8574f690b675be6b"
+              "sha256": "00db037afaa8b9951d7eb583d059d3bc2169dbee7d77a0e7823a18b18d48eb7d"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -591259,7 +591259,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "404329e8f6ac56ab14add18d0fd00a7ff20bdd69a331b87b8574f690b675be6b"
+              "sha256": "00db037afaa8b9951d7eb583d059d3bc2169dbee7d77a0e7823a18b18d48eb7d"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -593153,7 +593153,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "404329e8f6ac56ab14add18d0fd00a7ff20bdd69a331b87b8574f690b675be6b"
+              "sha256": "00db037afaa8b9951d7eb583d059d3bc2169dbee7d77a0e7823a18b18d48eb7d"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -593956,7 +593956,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Owned security session and trusted-device reads and preference reads now stop loading on their deadline and recover explicitly. Customer and staff commerce preview evidence remains current. Remaining bespoke list, detail and staff route states need verification."
+        "Invoice receipt authority and review timeouts have bounded recovery while keeping the staged draft and current confirmation gate. Security and preference reads and the other scoped commerce previews retain current evidence. Remaining bespoke list, detail and staff route states need verification."
       ],
       "owner": null,
       "depends_on": [],
@@ -593996,7 +593996,8 @@
           "release-0.5-checkout-read-recovery",
           "release-0.5-staff-saving-address-read",
           "release-0.5-customer-review-deadlines",
-          "release-0.5-settings-read-deadlines"
+          "release-0.5-settings-read-deadlines",
+          "release-0.5-invoice-receipt-read-deadlines"
         ],
         "current_acceptance": null
       }
@@ -611278,7 +611279,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "packages/shared/package.json",
@@ -612076,7 +612077,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "packages/shared/package.json",
@@ -612874,7 +612875,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "packages/shared/package.json",
@@ -613672,7 +613673,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "packages/shared/package.json",
@@ -614474,7 +614475,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "packages/shared/package.json",
@@ -615272,7 +615273,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "packages/shared/package.json",
@@ -616070,7 +616071,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "packages/shared/package.json",
@@ -616869,7 +616870,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "packages/shared/package.json",
@@ -617668,7 +617669,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "packages/shared/package.json",
@@ -618467,7 +618468,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "packages/shared/package.json",
@@ -619266,7 +619267,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "packages/shared/package.json",
@@ -620065,7 +620066,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "packages/shared/package.json",
@@ -620864,7 +620865,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "packages/shared/package.json",
@@ -621663,7 +621664,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "packages/shared/package.json",
@@ -622462,7 +622463,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "packages/shared/package.json",
@@ -645684,7 +645685,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "packages/shared/package.json",
@@ -646513,7 +646514,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "packages/shared/package.json",
@@ -647350,7 +647351,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "packages/shared/package.json",
@@ -648171,7 +648172,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "packages/shared/package.json",
@@ -648991,7 +648992,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "packages/shared/package.json",
@@ -649645,7 +649646,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "packages/shared/package.json",
@@ -650285,7 +650286,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "packages/shared/package.json",
@@ -650925,7 +650926,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "packages/shared/package.json",
@@ -651563,7 +651564,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "packages/shared/package.json",
@@ -652201,7 +652202,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "packages/shared/package.json",
@@ -652841,7 +652842,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "packages/shared/package.json",
@@ -653480,7 +653481,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "packages/shared/package.json",
@@ -654119,7 +654120,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "packages/shared/package.json",
@@ -654758,7 +654759,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "packages/shared/package.json",
@@ -655397,7 +655398,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "packages/shared/package.json",
@@ -656036,7 +656037,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "packages/shared/package.json",
@@ -656675,7 +656676,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "packages/shared/package.json",
@@ -657403,7 +657404,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "packages/shared/package.json",
@@ -658085,7 +658086,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "packages/shared/package.json",
@@ -658769,7 +658770,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "packages/shared/package.json",
@@ -659451,7 +659452,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "packages/shared/package.json",
@@ -660132,7 +660133,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "packages/shared/package.json",
@@ -661312,7 +661313,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "packages/shared/package.json",
@@ -661994,7 +661995,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "packages/shared/package.json",
@@ -662677,7 +662678,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "packages/shared/package.json",
@@ -663358,7 +663359,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "packages/shared/package.json",
@@ -664038,7 +664039,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "packages/shared/package.json",
@@ -664718,7 +664719,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "packages/shared/package.json",
@@ -665398,7 +665399,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "packages/shared/package.json",
@@ -666006,7 +666007,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "packages/shared/package.json",
@@ -666674,7 +666675,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "packages/shared/package.json",
@@ -667341,7 +667342,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "packages/shared/package.json",
@@ -668010,7 +668011,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "packages/shared/package.json",
@@ -668679,7 +668680,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "packages/shared/package.json",
@@ -669345,7 +669346,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "packages/shared/package.json",
@@ -670011,7 +670012,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "packages/shared/package.json",
@@ -670678,7 +670679,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "packages/shared/package.json",
@@ -671344,7 +671345,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "packages/shared/package.json",
@@ -672011,7 +672012,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "packages/shared/package.json",
@@ -672527,7 +672528,7 @@
             },
             {
               "path": "apps/web/src/lib/invoice-bank-receipt-upload.ts",
-              "sha256": "0e5d69a4e5ab4296674eda98a302216b70c55b8df96fb2e5d360b10c91f0bd64"
+              "sha256": "dfe32ad752b61256cfdd269f07e3a91a03a95cf6560c4902e9e372a2cc605cd3"
             },
             {
               "path": "apps/web/src/lib/notifications.ts",
@@ -672607,7 +672608,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "packages/shared/package.json",
@@ -673059,7 +673060,7 @@
             },
             {
               "path": "apps/web/src/lib/invoice-bank-receipt-upload.ts",
-              "sha256": "0e5d69a4e5ab4296674eda98a302216b70c55b8df96fb2e5d360b10c91f0bd64"
+              "sha256": "dfe32ad752b61256cfdd269f07e3a91a03a95cf6560c4902e9e372a2cc605cd3"
             },
             {
               "path": "apps/web/src/lib/notifications.ts",
@@ -673139,7 +673140,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "packages/shared/package.json",
@@ -673595,7 +673596,7 @@
             },
             {
               "path": "apps/web/src/lib/invoice-bank-receipt-upload.ts",
-              "sha256": "0e5d69a4e5ab4296674eda98a302216b70c55b8df96fb2e5d360b10c91f0bd64"
+              "sha256": "dfe32ad752b61256cfdd269f07e3a91a03a95cf6560c4902e9e372a2cc605cd3"
             },
             {
               "path": "apps/web/src/lib/notifications.ts",
@@ -673675,7 +673676,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "packages/shared/package.json",
@@ -674128,7 +674129,7 @@
             },
             {
               "path": "apps/web/src/lib/invoice-bank-receipt-upload.ts",
-              "sha256": "0e5d69a4e5ab4296674eda98a302216b70c55b8df96fb2e5d360b10c91f0bd64"
+              "sha256": "dfe32ad752b61256cfdd269f07e3a91a03a95cf6560c4902e9e372a2cc605cd3"
             },
             {
               "path": "apps/web/src/lib/notifications.ts",
@@ -674208,7 +674209,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "packages/shared/package.json",
@@ -674660,7 +674661,7 @@
             },
             {
               "path": "apps/web/src/lib/invoice-bank-receipt-upload.ts",
-              "sha256": "0e5d69a4e5ab4296674eda98a302216b70c55b8df96fb2e5d360b10c91f0bd64"
+              "sha256": "dfe32ad752b61256cfdd269f07e3a91a03a95cf6560c4902e9e372a2cc605cd3"
             },
             {
               "path": "apps/web/src/lib/notifications.ts",
@@ -674740,7 +674741,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "packages/shared/package.json",
@@ -675194,7 +675195,7 @@
             },
             {
               "path": "apps/web/src/lib/invoice-bank-receipt-upload.ts",
-              "sha256": "0e5d69a4e5ab4296674eda98a302216b70c55b8df96fb2e5d360b10c91f0bd64"
+              "sha256": "dfe32ad752b61256cfdd269f07e3a91a03a95cf6560c4902e9e372a2cc605cd3"
             },
             {
               "path": "apps/web/src/lib/notifications.ts",
@@ -675274,7 +675275,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "packages/shared/package.json",
@@ -680352,7 +680353,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "packages/shared/package.json",
@@ -680925,7 +680926,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "packages/shared/package.json",
@@ -681497,7 +681498,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "packages/shared/package.json",
@@ -682071,7 +682072,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "packages/shared/package.json",
@@ -682643,7 +682644,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "packages/shared/package.json",
@@ -683215,7 +683216,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "packages/shared/package.json",
@@ -683905,7 +683906,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "packages/shared/package.json",
@@ -684746,7 +684747,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "packages/shared/package.json",
@@ -685589,7 +685590,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "packages/shared/package.json",
@@ -686430,7 +686431,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "packages/shared/package.json",
@@ -687271,7 +687272,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "packages/shared/package.json",
@@ -688116,7 +688117,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "packages/shared/package.json",
@@ -688961,7 +688962,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "packages/shared/package.json",
@@ -689802,7 +689803,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "packages/shared/package.json",
@@ -690643,7 +690644,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "packages/shared/package.json",
@@ -691485,7 +691486,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "packages/shared/package.json",
@@ -692332,7 +692333,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "packages/shared/package.json",
@@ -693096,7 +693097,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "packages/shared/src/agent-permissions/index.ts",
@@ -693726,7 +693727,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "packages/shared/src/agent-permissions/index.ts",
@@ -694356,7 +694357,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "packages/shared/src/agent-permissions/index.ts",
@@ -694987,7 +694988,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "packages/shared/src/agent-permissions/index.ts",
@@ -695617,7 +695618,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "packages/shared/src/agent-permissions/index.ts",
@@ -696247,7 +696248,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "packages/shared/src/agent-permissions/index.ts",
@@ -696877,7 +696878,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "packages/shared/src/agent-permissions/index.ts",
@@ -697508,7 +697509,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "packages/shared/src/agent-permissions/index.ts",
@@ -698138,7 +698139,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "packages/shared/src/agent-permissions/index.ts",
@@ -698768,7 +698769,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "packages/shared/src/agent-permissions/index.ts",
@@ -707923,7 +707924,7 @@
             },
             {
               "path": "apps/web/e2e/customer-receipts.spec.ts",
-              "sha256": "a714c9d1237d3f254f4f0763cd22bfbf7d610a6e7c106c36573f0c25c6ee9cc0"
+              "sha256": "dcd7b53008e8e6bb5c38dd12960b5846184247253b990f270111b5ab65068156"
             },
             {
               "path": "apps/web/src/lib/invoice-bank-receipt-fields.ts",
@@ -707931,7 +707932,7 @@
             },
             {
               "path": "apps/web/src/lib/invoice-bank-receipt-upload.ts",
-              "sha256": "0e5d69a4e5ab4296674eda98a302216b70c55b8df96fb2e5d360b10c91f0bd64"
+              "sha256": "dfe32ad752b61256cfdd269f07e3a91a03a95cf6560c4902e9e372a2cc605cd3"
             },
             {
               "path": "packages/shared/src/finance/wallet-bank-receipt-topup.ts",
@@ -708307,7 +708308,7 @@
             },
             {
               "path": "apps/web/src/lib/invoice-receipt-response.test.ts",
-              "sha256": "08545351dc31979e8261c3cd26d5f9ee9d4bb3b7f6af77056ad4e4bb72903ba5"
+              "sha256": "d9e3857d5705965c29f6beed2d5f7712e8e0ccde0e0a0b5c5ce82d7ac3c55338"
             },
             {
               "path": "apps/web/src/lib/wallet-history-query.test.ts",
@@ -708323,7 +708324,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.test.tsx",
-              "sha256": "4c48861ab56803261a1eddab8b8a8912090ee390a3d17585e4e1731460e99d38"
+              "sha256": "8cdb0a16474666d232480d15a7305e4a012453f32e78c380c28b32f20ab1c56b"
             },
             {
               "path": "apps/web/src/pages/customer-bank-receipt-history-scope.test.tsx",
@@ -708399,7 +708400,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.tsx",
-              "sha256": "1903cfa7b0065647e16f7ee3be928f364d39f64e123b7ddf6aa9baf34dc33c22"
+              "sha256": "ac8660d3578cee1ecc5c791144ebfabcbd9ddafd5780614c76596962484aba77"
             },
             {
               "path": "packages/shared/src/finance/invoice-bank-receipt-upload.ts",
@@ -723602,7 +723603,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Security and account preference loading and retry have current bilingual browser evidence. Wider form, contrast, command feedback and route state acceptance remain open."
+        "Customer invoice receipt profile and review loading, error and retry have current scoped evidence. Wider form, contrast, command feedback and route state acceptance remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -723684,7 +723685,8 @@
           "release-0.5-customer-review-deadlines",
           "release-0.5-invoice-recovery-required",
           "release-0.5-receipt-and-comment-feedback",
-          "release-0.5-settings-read-deadlines"
+          "release-0.5-settings-read-deadlines",
+          "release-0.5-invoice-receipt-read-deadlines"
         ]
       }
     },
@@ -725040,7 +725042,7 @@
             },
             {
               "path": "packages/i18n/src/workspace.ts",
-              "sha256": "194dabb9ee74e986d7f2cb12ce3b1e79374000f19c51d1e5df982c92bd8378e7"
+              "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
             },
             {
               "path": "packages/shared/src/notifications/email-branding.ts",
@@ -725184,7 +725186,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.tsx",
-              "sha256": "1903cfa7b0065647e16f7ee3be928f364d39f64e123b7ddf6aa9baf34dc33c22"
+              "sha256": "ac8660d3578cee1ecc5c791144ebfabcbd9ddafd5780614c76596962484aba77"
             },
             {
               "path": "apps/web/src/pages/TosRichText.tsx",
@@ -725201,6 +725203,14 @@
             {
               "path": "apps/web/src/hooks/useSecuritySettings.ts",
               "sha256": "b147234e1376089f842f94f1a6969c0336715489441a8b0f922b8411af54005b"
+            },
+            {
+              "path": "apps/web/src/lib/invoice-bank-receipt-review-action.ts",
+              "sha256": "a1b65681d8c546d39d6939fa0c6bec7ce4d5231b835c62306ee7273f6cb9c714"
+            },
+            {
+              "path": "apps/web/src/lib/invoice-bank-receipt-upload.ts",
+              "sha256": "dfe32ad752b61256cfdd269f07e3a91a03a95cf6560c4902e9e372a2cc605cd3"
             }
           ],
           "checks": [
@@ -725227,7 +725237,8 @@
             "Critical and advisory browser cases pass and prior performance evidence is renewed by exact asset equality. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-accessibility-advisory/proof.json",
             "Required invoice and recovery fields passed current source coverage, production size and cold authentication checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-recovery-required/proof.json",
             "Receipt and comment feedback passed current source coverage, production size and cold authentication checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-receipt-and-comment-feedback/proof.json",
-            "Settings deadline recovery passed current source coverage, production size and cold authentication checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-settings-read-deadlines/proof.json"
+            "Settings deadline recovery passed current source coverage, production size and cold authentication checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-settings-read-deadlines/proof.json",
+            "Invoice receipt deadline recovery passed current source coverage, production size and cold authentication checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-receipt-read-deadlines/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -791863,6 +791874,65 @@
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-settings-read-deadlines/reviewed.patch",
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-settings-read-deadlines",
       "release_disposition": "Account settings deadline recovery recorded. Wider route state verification and v0.5.0 release criteria remain open."
+    },
+    "release-0.5-invoice-receipt-read-deadlines": {
+      "batch": "release-0.5-invoice-receipt-read-deadlines",
+      "base_commit": "9f33e7ea356e12787fdb04efeaa4e559a92721b0",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/customer-receipts.spec.ts",
+          "sha256": "dcd7b53008e8e6bb5c38dd12960b5846184247253b990f270111b5ab65068156"
+        },
+        {
+          "path": "apps/web/src/lib/invoice-bank-receipt-review-action.ts",
+          "sha256": "a1b65681d8c546d39d6939fa0c6bec7ce4d5231b835c62306ee7273f6cb9c714"
+        },
+        {
+          "path": "apps/web/src/lib/invoice-bank-receipt-upload.ts",
+          "sha256": "dfe32ad752b61256cfdd269f07e3a91a03a95cf6560c4902e9e372a2cc605cd3"
+        },
+        {
+          "path": "apps/web/src/lib/invoice-receipt-response.test.ts",
+          "sha256": "d9e3857d5705965c29f6beed2d5f7712e8e0ccde0e0a0b5c5ce82d7ac3c55338"
+        },
+        {
+          "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.test.tsx",
+          "sha256": "8cdb0a16474666d232480d15a7305e4a012453f32e78c380c28b32f20ab1c56b"
+        },
+        {
+          "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.tsx",
+          "sha256": "ac8660d3578cee1ecc5c791144ebfabcbd9ddafd5780614c76596962484aba77"
+        },
+        {
+          "path": "docs/design/notification-recovery.md",
+          "sha256": "00db037afaa8b9951d7eb583d059d3bc2169dbee7d77a0e7823a18b18d48eb7d"
+        },
+        {
+          "path": "packages/i18n/src/workspace.ts",
+          "sha256": "a299bf127f6e927d70f013f9d882b857973c1010781c64f8cc8944aa38d2f487"
+        }
+      ],
+      "checks": [
+        "The invoice receipt form distinguishes a valid empty active-profile selection from a failed or malformed authority response. It ends loading at the query deadline, offers an explicit profile retry, retains the draft and prevents upload and review until a fresh active profile resolves.",
+        "The readonly receipt review uses the existing deadline and current profile revision. The preview preserves the staged attachment on an explicit retry and validates the expected profile, invoice and reviewed values before displaying confirmation. The owner profile is not sent as a request selector.",
+        "A held preview and a foreign-profile snapshot sent no receipt. A fresh matching preview reused the same amount, fields and attachment and submitted once after explicit confirmation. Existing wallet and invoice money and lost-acknowledgement assertions also passed.",
+        "52 browser cases, 69 distinct affected web unit cases and three workspace translation cases passed. Eight changed-coverage groups, 98 bundle budgets, three cold auth transfers, formatting, scoped lint and web/i18n typecheck passed."
+      ],
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-receipt-read-deadlines/proof.json",
+      "source_scope_proof_sha256": "059036ebe58d2e105735691d14b18b2300e86cf407161e510d948f711cb61a2f",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-receipt-read-deadlines/renewed-bindings.json",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-receipt-read-deadlines/reviewed.patch",
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-receipt-read-deadlines",
+      "release_disposition": "Invoice receipt profile and review recovery recorded. Wider route state verification and v0.5.0 release criteria remain open."
     }
   },
   "historical_improvements": [

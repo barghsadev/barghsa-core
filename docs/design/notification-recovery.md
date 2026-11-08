@@ -14,6 +14,8 @@ Map public error codes to localized messages and use a safe fallback for unrecog
 
 For customer invoice and wallet bank receipts, announce submission only after the response confirms the reviewed amount and pending state. A lost or malformed acknowledgement leaves the outcome unconfirmed and asks the customer to check current status. A wallet retry of the same reviewed receipt keeps its original idempotency key and attachment. A failed history or balance refresh does not overturn an acknowledged receipt.
 
+The invoice receipt form distinguishes an empty active-profile selection from a failed profile read. A fresh profile is required before upload. If the receipt review times out, the draft and staged attachment remain available for an explicit retry. A review must match the active profile, invoice and captured receipt fields before confirmation can open.
+
 In electricity and saving order discussions, an explicit retry after a transport failure announces the connection retry. Keep the failed page cursor, existing comments and unsent draft. HTTP errors and invalid response bodies retain inline recovery.
 
 `useToast` supports localized keys or domain-localized strings, all four severities, and a promise helper. Pass a validated operation promise. Its rejection still reaches the caller; it does not retry the operation. Only the latest operation owns the persistent progress notice, and a profile-context dismissal prevents a late result from restoring old content.

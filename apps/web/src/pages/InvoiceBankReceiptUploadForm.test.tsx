@@ -223,8 +223,43 @@ it('does not upload without an active profile', async () => {
   await render();
   await valid();
   await submit();
-  expect(alert()).not.toBeNull();
+  expect(alert()?.textContent).toContain('No active profile was found.');
+  expect(field('submit').disabled).toBe(true);
   expect(upload).not.toHaveBeenCalled();
+});
+
+it('recovers a held active-profile read without losing the draft or uploading early', async () => {
+  vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
+  let finish!: (id: string) => void;
+  vi.mocked(fetchActiveProfileId).mockImplementationOnce(
+    () =>
+      new Promise((resolve) => {
+        finish = resolve;
+      })
+  );
+  try {
+    await render();
+    await valid();
+    expect(field('submit').disabled).toBe(true);
+    await submit();
+    expect(upload).not.toHaveBeenCalled();
+    await act(async () => vi.advanceTimersByTimeAsync(15_001));
+    expect(vi.mocked(fetchActiveProfileId).mock.calls[0]![0]?.aborted).toBe(true);
+    expect(alert()?.textContent).toContain('Could not load the active profile.');
+    expect(field('submit').disabled).toBe(true);
+    const retry = alert()!.querySelector('button')!;
+    await act(async () => retry.click());
+    expect(fetchActiveProfileId).toHaveBeenCalledTimes(2);
+    expect(field('submit').disabled).toBe(false);
+    await act(async () => finish('obsolete-profile'));
+    expect(field('amount').value).toBe('100');
+    expect(field('file').files?.[0]?.name).toBe('receipt.pdf');
+  } finally {
+    vi.useRealTimers();
+  }
+  await submit();
+  expect(upload).toHaveBeenCalledWith(expect.any(File), 'profile-1');
+  expect(submitInvoiceBankReceipt).not.toHaveBeenCalled();
 });
 
 it.each(['missing', 'rejected'])(

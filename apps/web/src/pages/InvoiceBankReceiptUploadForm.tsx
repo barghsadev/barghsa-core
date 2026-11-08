@@ -1,10 +1,11 @@
 import { lazy, Suspense, useEffect, useRef, useState } from 'react';
-import { Alert, AlertDescription } from '@barghsa/ui';
+import { Alert, AlertDescription, Button, LoadingStatus } from '@barghsa/ui';
 import { FormField } from '@barghsa/ui/form';
 import { Loader2 } from 'lucide-react';
 import { getProfileContextRevision, useProfileContextRevision } from '../lib/profile-context.js';
 import { useCommandFeedback } from '../hooks/useCommandFeedback.js';
 import { useReceiptForm } from '../hooks/useReceiptForm.js';
+import { readWithDeadline } from '../lib/server-query-client.js';
 import { t } from '@barghsa/i18n/app';
 import { confirmationText } from '@barghsa/i18n/confirmation';
 import type { InvoiceBankReceiptSubmissionReview } from '@barghsa/shared/finance';
@@ -32,12 +33,13 @@ const InvoiceBankReceiptSubmissionReviewDialog = lazy(
   () => import('../components/InvoiceBankReceiptSubmissionReviewDialog.js')
 );
 
-const ERROR_I18N: Record<InvoiceReceiptError, string> = {
+const ERROR_I18N: Record<InvoiceReceiptError | 'review', string> = {
   'invalid-amount': 'invoices.details.receiptInvalidAmount',
   'invalid-date': 'invoices.details.receiptInvalidDate',
   'invalid-payer-ref': 'invoices.details.receiptInvalidPayerRef',
   'invalid-file': 'invoices.details.receiptInvalidFile',
   upload: 'invoices.details.receiptUploadError',
+  review: 'invoices.details.receiptReviewFailed',
   conflict: 'invoices.details.receiptConflict',
   'no-profile': 'invoices.details.receiptNoProfile',
   generic: 'invoices.details.receiptGenericError',
@@ -58,7 +60,11 @@ function InvoiceReceiptForm({ invoiceId, onSubmitted }: InvoiceBankReceiptUpload
   const locale = useLocale();
   const revision = useProfileContextRevision();
   const fileInput = useRef<HTMLInputElement>(null);
-  const [profileId, setProfileId] = useState<string | null>(null);
+  const [profile, setProfile] = useState<
+    { status: 'loading' | 'failed' } | { status: 'loaded'; id: string | null }
+  >({ status: 'loading' });
+  const [profileAttempt, setProfileAttempt] = useState(0);
+  const profileId = profile.status === 'loaded' ? profile.id : null;
   const draft = useReceiptForm('invoice', parseInvoiceBankReceiptAmountIrR);
   const [amountInput, setAmountInput] = draft.field('amount');
   const [paymentDate, setPaymentDate] = draft.field('paymentDate');
@@ -68,10 +74,13 @@ function InvoiceReceiptForm({ invoiceId, onSubmitted }: InvoiceBankReceiptUpload
   const [, setFile] = draft.field('file');
   const mounted = useRef(false);
   const pending = useRef(false);
+  const previewRequest = useRef<AbortController | null>(null);
+  const isCurrent = () => mounted.current && getProfileContextRevision() === revision;
   useEffect(() => {
     mounted.current = true;
     return () => {
       mounted.current = false;
+      previewRequest.current?.abort();
     };
   }, []);
   const [uploaded, setUploaded] = useState<{ file: File; profileId: string; key: string } | null>(
@@ -79,68 +88,82 @@ function InvoiceReceiptForm({ invoiceId, onSubmitted }: InvoiceBankReceiptUpload
   );
   const [review, setReview] = useState<InvoiceBankReceiptSubmissionReview | null>(null);
   const [submitting, setSubmitting] = useState(false);
-  const [error, setError] = useState<InvoiceReceiptError | 'unconfirmed' | null>(null);
+  const [error, setError] = useState<InvoiceReceiptError | 'review' | 'unconfirmed' | null>(null);
   const [success, setSuccess] = useState(false);
 
   useEffect(() => {
-    let cancelled = false;
-    void fetchActiveProfileId().then((id) => {
-      if (!cancelled) setProfileId(id);
-    });
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+    const request = new AbortController();
+    const current = () => !request.signal.aborted && getProfileContextRevision() === revision;
+    void readWithDeadline(request.signal, fetchActiveProfileId).then(
+      (id) => {
+        if (current()) setProfile({ status: 'loaded', id });
+      },
+      () => {
+        if (current()) setProfile({ status: 'failed' });
+      }
+    );
+    return () => request.abort();
+  }, [profileAttempt, revision]);
 
   const handleSubmit = draft.form.handleSubmit(async (values) => {
-    if (pending.current || review || !mounted.current) return;
-    if (!profileId) {
-      setError('no-profile');
-      return;
-    }
+    if (pending.current || review || !isCurrent() || !profileId) return;
     const selectedFile = values.file;
     if (!selectedFile) return;
     pending.current = true;
+    const request = new AbortController();
+    previewRequest.current = request;
+    const current = () => isCurrent() && !request.signal.aborted;
     setSubmitting(true);
     setError(null);
     setSuccess(false);
+    let failure: 'upload' | 'review' = 'upload';
     try {
       const attachmentKey =
         uploaded?.file === selectedFile && uploaded.profileId === profileId
           ? uploaded.key
           : await uploadInvoiceReceiptAttachment(selectedFile, profileId);
-      if (!mounted.current) return;
+      if (!current()) return;
       if (!attachmentKey) {
         setError('upload');
         return;
       }
       setUploaded({ file: selectedFile, profileId, key: attachmentKey });
+      failure = 'review';
       const { loadInvoiceBankReceiptSubmissionReview } =
         await import('../lib/invoice-bank-receipt-review-action.js');
-      const result = await loadInvoiceBankReceiptSubmissionReview({
-        invoiceId,
-        amountIrR: parseInvoiceBankReceiptAmountIrR(
-          normalizeIrrAmountDigits(values.amount)
-        )!.toString(),
-        paymentDate: values.paymentDate,
-        payerReference: values.payerReference.trim(),
-        bankName: values.bankName.trim() || null,
-        attachmentKey,
-        customerNote: values.customerNote.trim() || null,
-      });
-      if (!mounted.current) return;
+      if (!current()) return;
+      const result = await readWithDeadline(request.signal, (signal) =>
+        loadInvoiceBankReceiptSubmissionReview(
+          {
+            invoiceId,
+            profileId,
+            amountIrR: parseInvoiceBankReceiptAmountIrR(
+              normalizeIrrAmountDigits(values.amount)
+            )!.toString(),
+            paymentDate: values.paymentDate,
+            payerReference: values.payerReference.trim(),
+            bankName: values.bankName.trim() || null,
+            attachmentKey,
+            customerNote: values.customerNote.trim() || null,
+          },
+          signal
+        )
+      );
+      if (!current()) return;
       if (result.kind === 'error') {
         const fields = result.fields ?? [];
         if (draft.applyServerErrors(fields)) {
           if (fields.includes('attachmentKey')) setUploaded(null);
-        } else setError(mapInvoiceReceiptSubmitError(result.status));
+        } else
+          setError(result.status >= 500 ? 'review' : mapInvoiceReceiptSubmitError(result.status));
         return;
       }
       setReview(result.review);
     } catch {
-      if (mounted.current) setError('upload');
+      if (current()) setError(failure);
     } finally {
-      if (mounted.current) {
+      if (current()) {
+        previewRequest.current = null;
         pending.current = false;
         setSubmitting(false);
       }
@@ -148,8 +171,7 @@ function InvoiceReceiptForm({ invoiceId, onSubmitted }: InvoiceBankReceiptUpload
   });
 
   async function confirmSubmission() {
-    const current = () => mounted.current && getProfileContextRevision() === revision;
-    if (!review || pending.current || !current()) return;
+    if (!review || pending.current || !isCurrent()) return;
     pending.current = true;
     setSubmitting(true);
     setError(null);
@@ -165,7 +187,7 @@ function InvoiceReceiptForm({ invoiceId, onSubmitted }: InvoiceBankReceiptUpload
         ...(review.data.customerNote ? { customerNote: review.data.customerNote } : {}),
         expectedReviewHash: review.hash,
       });
-      if (!current()) return;
+      if (!isCurrent()) return;
       if (!result.ok) {
         setReview(null);
         const fields = result.fields ?? [];
@@ -195,12 +217,12 @@ function InvoiceReceiptForm({ invoiceId, onSubmitted }: InvoiceBankReceiptUpload
       if (fileInput.current) fileInput.current.value = '';
       await onSubmitted?.();
     } catch {
-      if (current() && !confirmed) {
+      if (isCurrent() && !confirmed) {
         setReview(null);
         setError('unconfirmed');
       }
     } finally {
-      if (current()) {
+      if (isCurrent()) {
         pending.current = false;
         setSubmitting(false);
       }
@@ -233,6 +255,32 @@ function InvoiceReceiptForm({ invoiceId, onSubmitted }: InvoiceBankReceiptUpload
             {t('invoices.details.receiptSubtitle', locale)}
           </p>
         </div>
+
+        {profile.status === 'loading' && (
+          <LoadingStatus>{t('invoices.details.receiptProfileLoading', locale)}</LoadingStatus>
+        )}
+        {!profileId && profile.status !== 'loading' && (
+          <Alert variant="destructive" data-testid="invoice-receipt-profile-error">
+            <AlertDescription>
+              {t(
+                profile.status === 'failed'
+                  ? 'invoices.details.receiptProfileUnavailable'
+                  : 'invoices.details.receiptNoProfile',
+                locale
+              )}
+            </AlertDescription>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => {
+                setProfile({ status: 'loading' });
+                setProfileAttempt((attempt) => attempt + 1);
+              }}
+            >
+              {t('dashboard.profile.retry', locale)}
+            </Button>
+          </Alert>
+        )}
 
         {successMessage && (
           <div
@@ -454,7 +502,7 @@ function InvoiceReceiptForm({ invoiceId, onSubmitted }: InvoiceBankReceiptUpload
         <button
           type="submit"
           data-testid="invoice-receipt-submit"
-          disabled={locked}
+          disabled={locked || !profileId}
           aria-busy={busy || undefined}
           className="w-full rounded-lg border border-primary bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground disabled:opacity-60"
         >
