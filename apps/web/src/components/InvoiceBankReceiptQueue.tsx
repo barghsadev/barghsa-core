@@ -177,6 +177,7 @@ function OwnedInvoiceBankReceiptQueue({
   const [reviewState, setReviewState] = useState<'idle' | 'loading' | 'error'>('idle');
   const [revision, setRevision] = useState(0);
   const [listRevision, setListRevision] = useState(0);
+  const [detailRevision, setDetailRevision] = useState(0);
   const detailRef = useRef<HTMLElement>(null);
   const selectedIdRef = useRef(selectedId);
   selectedIdRef.current = selectedId;
@@ -209,7 +210,7 @@ function OwnedInvoiceBankReceiptQueue({
     setAction(null);
     setFinancialReview(null);
     setReviewState('idle');
-  }, [selectedId, selectedSource, revision]);
+  }, [selectedId, selectedSource, revision, detailRevision]);
   useEffect(() => {
     if (selectedId) detailRef.current?.scrollIntoView?.({ block: 'start' });
   }, [selectedId, selectedSource]);
@@ -284,7 +285,7 @@ function OwnedInvoiceBankReceiptQueue({
       else if (selectedSource === 'pending') setAllocationError(true);
     });
     return () => controller.abort();
-  }, [selectedId, selectedSource, revision, readStaff]);
+  }, [selectedId, selectedSource, revision, detailRevision, readStaff]);
 
   function refresh() {
     setRevision((value) => value + 1);
@@ -500,7 +501,18 @@ function OwnedInvoiceBankReceiptQueue({
             </Button>
           </div>
           {detailState === 'loading' ? <PageLoading label={word('loading')} /> : null}
-          {detailState === 'error' ? <p role="alert">{word('detailError')}</p> : null}
+          {detailState === 'error' || allocationError ? (
+            <div className="space-y-2">
+              <Alert variant="destructive">
+                <AlertDescription>
+                  {word(detailState === 'error' ? 'detailError' : 'allocationError')}
+                </AlertDescription>
+              </Alert>
+              <Button variant="outline" onClick={() => setDetailRevision((value) => value + 1)}>
+                {appText('historyPagination.retry', locale)}
+              </Button>
+            </div>
+          ) : null}
           {detail ? (
             <>
               <dl className="grid gap-2 text-sm sm:grid-cols-2">
@@ -600,11 +612,6 @@ function OwnedInvoiceBankReceiptQueue({
                     <dd>{appText(`invoices.state.${allocation.invoiceState}`, locale)}</dd>
                   </div>
                 </dl>
-              ) : null}
-              {allocationError ? (
-                <Alert variant="destructive">
-                  <AlertDescription>{word('allocationError')}</AlertDescription>
-                </Alert>
               ) : null}
               {selectedSource === 'history' &&
               detail.state === 'Confirmed' &&

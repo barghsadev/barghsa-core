@@ -78,6 +78,8 @@ for (const locale of ['en', 'fa'] as const)
       let queueReads = 0,
         detailReads = 0,
         allocationReads = 0,
+        detailFailure = true,
+        allocationFailure = false,
         failed = true;
       const historyReads: string[] = [];
       const queueQueries: string[] = [];
@@ -98,7 +100,9 @@ for (const locale of ['en', 'fa'] as const)
         });
       });
       await page.route(`**/api/admin/invoices/bank-receipts/${receiptId}`, (r) => {
+        expect(r.request().method()).toBe('GET');
         detailReads++;
+        if (detailFailure) return r.fulfill({ status: 503, json: {} });
         return r.fulfill({
           json: {
             ...receipt,
@@ -125,7 +129,9 @@ for (const locale of ['en', 'fa'] as const)
         });
       });
       await page.route(`**/api/admin/invoices/bank-receipts/${receiptId}/allocation`, (r) => {
+        expect(r.request().method()).toBe('GET');
         allocationReads++;
+        if (allocationFailure) return r.fulfill({ status: 503, json: {} });
         return r.fulfill({
           json: {
             receiptId,
@@ -203,8 +209,24 @@ for (const locale of ['en', 'fa'] as const)
       const position = await viewport.evaluate((node) => node.scrollLeft);
       await viewport.press(locale === 'fa' ? 'ArrowLeft' : 'ArrowRight');
       await expect.poll(() => viewport.evaluate((node) => node.scrollLeft)).not.toBe(position);
+      const queueBeforeDetail = queueReads;
       await pending.getByRole('button', { name: word('open'), exact: true }).click();
       const detail = queue.getByRole('region', { name: word('detail'), exact: true });
+      const retry = detail.getByRole('button', {
+        name: appText('historyPagination.retry', locale),
+        exact: true,
+      });
+      await expect(detail.getByRole('alert')).toContainText(word('detailError'));
+      detailFailure = false;
+      allocationFailure = true;
+      await retry.click();
+      await expect(detail.getByRole('alert')).toContainText(word('allocationError'));
+      await detail.locator('#invoice-receipt-reason').fill('Keep investigation');
+      allocationFailure = false;
+      await retry.click();
+      await expect(retry).toHaveCount(0);
+      await expect(detail.locator('#invoice-receipt-reason')).toHaveValue('Keep investigation');
+      expect([queueReads, detailReads, allocationReads]).toEqual([queueBeforeDetail, 3, 3]);
       const timeline = detail.locator('[data-slot=status-timeline]');
       await expect(timeline.getByRole('listitem')).toHaveCount(2);
       await expect(timeline.locator('bdi').nth(0)).toHaveText(

@@ -82,6 +82,8 @@ Shared verified attachments use a 15-second deadline for each reservation, verif
 
 Staff invoice and wallet receipt decisions also use the 15-second deadline. A stalled password verification leaves the decision unsent. An unknown write outcome clears the captured review and reloads the current receipt before staff can review and submit another decision.
 
+Staff can retry a failed invoice receipt detail or allocation read from the selected receipt. The retry fetches that receipt and its applicable allocation, and keeps the list, history and rejection draft in place.
+
 Onboarding start, profile completion and dashboard-profile selection use the same deadline. After an unconfirmed start, Retry checks for an active setup before creation becomes available. Profile completion can retry the same owned profile explicitly. An unconfirmed dashboard selection keeps the reviewed choice for exact retry and offers a fresh journey read. When that read confirms completion, opening the dashboard honors the currently active profile without writing another choice.
 
 Terms draft saves, publication and discard use the same response deadline. An unknown result keeps local draft text, retires the old publication preview and disables writes until version history is read again. Revision checks and explicit publication or discard confirmation still apply to a new attempt.

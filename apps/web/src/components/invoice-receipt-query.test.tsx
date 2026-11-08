@@ -4,6 +4,7 @@ import { refreshProfileContext } from '../lib/profile-context.js';
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { beforeEach, afterEach, expect, it, vi } from 'vitest';
+import { t } from '@barghsa/i18n/app';
 import { InvoiceBankReceiptQueue } from './InvoiceBankReceiptQueue.js';
 vi.mock('../hooks/useLocale.js', () => ({ useLocale: () => 'en' }));
 vi.mock('../hooks/useAccountTime.js', () => ({
@@ -94,6 +95,7 @@ beforeEach(() => {
 afterEach(async () => {
   await act(async () => root.unmount());
   host.remove();
+  vi.useRealTimers();
   vi.unstubAllGlobals();
 });
 async function render(present = true, actor = 'staff-one') {
@@ -111,6 +113,44 @@ async function render(present = true, actor = 'staff-one') {
     )
   );
 }
+for (const name of ['detail', 'allocation'])
+  it(`retries a stalled receipt ${name} without refreshing the queue or dispatching a decision`, async () => {
+    vi.useFakeTimers();
+    kind = name;
+    await render();
+    await vi.waitFor(() => expect(finish).toBeDefined());
+    const first = finish!;
+    const stalledSignal = signal!;
+    await act(async () => vi.advanceTimersByTimeAsync(15_000));
+    expect(stalledSignal.aborted).toBe(true);
+
+    const retry = [...host.querySelectorAll('button')].find(
+      (button) => button.textContent === t('historyPagination.retry', 'en')
+    );
+    expect(retry).toBeDefined();
+    const fetcher = vi.mocked(fetch);
+    const reads = fetcher.mock.calls.length;
+    await act(async () => retry!.click());
+    expect(fetcher.mock.calls.slice(reads).map(([url]) => String(url))).toEqual([
+      base + '/' + receiptId,
+      base + '/' + receiptId + '/allocation',
+    ]);
+    expect(host.textContent).toContain('Current receipt');
+    expect(host.textContent).toContain('150000 IRR');
+    expect(retry!.isConnected).toBe(false);
+
+    await act(async () =>
+      first(
+        name === 'detail'
+          ? { ...receipt, payerReference: 'Obsolete receipt' }
+          : { ...allocation, walletCreditAmount: '777777777777777777' }
+      )
+    );
+    expect(host.textContent).not.toContain('Obsolete receipt');
+    expect(host.textContent).not.toContain('777777777777777777');
+    expect(fetcher.mock.calls.every(([, init]) => !init?.method && !init?.body)).toBe(true);
+  });
+
 for (const name of ['queue', 'detail', 'allocation'])
   it.each(['unmount', 'actor', 'profile-context'])(
     'owns full receipt ' + name + ' bytes on %s without private work or commands',

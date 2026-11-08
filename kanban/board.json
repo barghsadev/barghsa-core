@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-08T20:52:05+00:00",
-  "source_commit": "63f2977de1cde8468ec986f1380c3b205a50df98",
+  "updated": "2026-11-08T20:58:59+00:00",
+  "source_commit": "e53efdef86b6ba06427d7d336cedc5a3f9d33afa",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -14641,7 +14641,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -15257,7 +15257,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -15999,7 +15999,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -16606,7 +16606,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -17227,7 +17227,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -17849,7 +17849,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -18470,7 +18470,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -19095,7 +19095,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -19755,7 +19755,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -20597,7 +20597,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -21450,7 +21450,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -22242,7 +22242,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -22975,7 +22975,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -23630,7 +23630,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -25682,7 +25682,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -26804,7 +26804,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -27628,7 +27628,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -29330,7 +29330,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -30012,7 +30012,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -32656,7 +32656,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -33552,7 +33552,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -34275,7 +34275,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -38931,7 +38931,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -40287,7 +40287,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -41651,7 +41651,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -43625,7 +43625,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -44636,7 +44636,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -45863,7 +45863,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -47032,7 +47032,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -48531,7 +48531,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/invoice-source-query.test.tsx",
@@ -49766,7 +49766,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -50857,7 +50857,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -51724,7 +51724,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -52582,7 +52582,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -53609,7 +53609,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -54672,7 +54672,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -55375,7 +55375,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -56726,7 +56726,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -57837,7 +57837,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -58948,7 +58948,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -60386,7 +60386,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -67677,7 +67677,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -69365,7 +69365,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -71310,7 +71310,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -72731,7 +72731,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -80639,7 +80639,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -90336,7 +90336,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -91744,7 +91744,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -93122,7 +93122,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -94165,7 +94165,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -95214,7 +95214,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -99038,7 +99038,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -104720,7 +104720,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -109808,7 +109808,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -114673,7 +114673,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -115944,7 +115944,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -117797,7 +117797,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -119067,7 +119067,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -120338,7 +120338,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -121608,7 +121608,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -122896,7 +122896,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -124166,7 +124166,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -135665,7 +135665,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -136447,7 +136447,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -143117,7 +143117,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -145484,7 +145484,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -152396,7 +152396,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -153427,7 +153427,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -155602,7 +155602,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -156634,7 +156634,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -157663,7 +157663,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -158692,7 +158692,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -160291,7 +160291,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -161319,7 +161319,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -162347,7 +162347,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -181193,7 +181193,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/invoice-source-query.test.tsx",
@@ -182381,7 +182381,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/invoice-source-query.test.tsx",
@@ -183866,7 +183866,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/invoice-source-query.test.tsx",
@@ -184995,7 +184995,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/invoice-source-query.test.tsx",
@@ -186332,7 +186332,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -186891,7 +186891,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/invoice-source-query.test.tsx",
@@ -188210,7 +188210,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -188945,7 +188945,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -189680,7 +189680,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -190415,7 +190415,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -191150,7 +191150,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -191776,7 +191776,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -192511,7 +192511,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -193423,7 +193423,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -194367,7 +194367,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -195748,7 +195748,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -197686,7 +197686,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -199247,7 +199247,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -200336,7 +200336,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -201688,7 +201688,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -203040,7 +203040,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -204393,7 +204393,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -205705,7 +205705,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -207017,7 +207017,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -208329,7 +208329,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -209641,7 +209641,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -210953,7 +210953,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -212265,7 +212265,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -213578,7 +213578,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -214890,7 +214890,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -216203,7 +216203,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -217515,7 +217515,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -218827,7 +218827,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -220139,7 +220139,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -221451,7 +221451,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -222763,7 +222763,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -224076,7 +224076,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -225388,7 +225388,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -226700,7 +226700,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -228012,7 +228012,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -229324,7 +229324,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -230636,7 +230636,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -231949,7 +231949,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -233262,7 +233262,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -234575,7 +234575,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -235887,7 +235887,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -237199,7 +237199,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -238511,7 +238511,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -242476,7 +242476,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -243495,7 +243495,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -244513,7 +244513,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -245531,7 +245531,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -246549,7 +246549,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -247567,7 +247567,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -248587,7 +248587,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -249621,7 +249621,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -250656,7 +250656,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -253542,7 +253542,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -254680,7 +254680,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -255814,7 +255814,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -256947,7 +256947,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -258081,7 +258081,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -259215,7 +259215,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -260354,7 +260354,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -261491,7 +261491,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -262626,7 +262626,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -263764,7 +263764,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -264904,7 +264904,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -266039,7 +266039,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -267173,7 +267173,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -268308,7 +268308,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -269443,7 +269443,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -270579,7 +270579,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -320224,7 +320224,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -321122,7 +321122,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -322023,7 +322023,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -322921,7 +322921,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -323820,7 +323820,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -324718,7 +324718,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -325618,7 +325618,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -326522,7 +326522,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -327545,7 +327545,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -328607,7 +328607,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -329669,7 +329669,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -330731,7 +330731,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -331793,7 +331793,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -332855,7 +332855,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -333917,7 +333917,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -334859,7 +334859,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -335765,7 +335765,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -336672,7 +336672,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -337415,7 +337415,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/invoice-source-query.test.tsx",
@@ -338753,7 +338753,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -339312,7 +339312,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/invoice-source-query.test.tsx",
@@ -340650,7 +340650,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -341210,7 +341210,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/invoice-source-query.test.tsx",
@@ -342339,7 +342339,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/invoice-source-query.test.tsx",
@@ -343470,7 +343470,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/invoice-source-query.test.tsx",
@@ -344600,7 +344600,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/invoice-source-query.test.tsx",
@@ -345721,7 +345721,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/invoice-source-query.test.tsx",
@@ -347003,7 +347003,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -347738,7 +347738,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -348474,7 +348474,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -350209,7 +350209,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -351198,7 +351198,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -352189,7 +352189,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -353178,7 +353178,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -354167,7 +354167,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -355156,7 +355156,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -356146,7 +356146,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -357135,7 +357135,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -358124,7 +358124,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -359113,7 +359113,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -360824,7 +360824,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -362540,7 +362540,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -363529,7 +363529,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -364518,7 +364518,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -365509,7 +365509,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -366498,7 +366498,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -367492,7 +367492,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -368490,7 +368490,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -369488,7 +369488,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -370711,7 +370711,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -371993,7 +371993,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -373275,7 +373275,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -374557,7 +374557,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -375840,7 +375840,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -376858,7 +376858,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -377713,7 +377713,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -378564,7 +378564,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -379415,7 +379415,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -380265,7 +380265,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -381153,7 +381153,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -382117,7 +382117,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -383080,7 +383080,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -384017,7 +384017,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -384874,7 +384874,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -385732,7 +385732,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -386542,7 +386542,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -387311,7 +387311,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -388080,7 +388080,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -388851,7 +388851,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -390899,7 +390899,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -391668,7 +391668,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -392437,7 +392437,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -393207,7 +393207,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -393977,7 +393977,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -394748,7 +394748,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -395523,7 +395523,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -396292,7 +396292,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -397061,7 +397061,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -397752,7 +397752,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -398325,7 +398325,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -398898,7 +398898,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -399472,7 +399472,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -400049,7 +400049,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -400622,7 +400622,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -401196,7 +401196,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -401771,7 +401771,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -402344,7 +402344,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -402917,7 +402917,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -403984,7 +403984,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -405330,7 +405330,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -406677,7 +406677,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -408023,7 +408023,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -409369,7 +409369,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -410716,7 +410716,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -412064,7 +412064,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -414715,7 +414715,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -416060,7 +416060,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -421730,7 +421730,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -423464,7 +423464,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -460903,7 +460903,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -490991,7 +490991,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptQueue.tsx",
-              "sha256": "0a411648725edf534878c2ac6b57051f1a028c7dc0f456f9e4a1386e1bbb5d0f"
+              "sha256": "3db127ada835f6f97aee01887ebaaa8804d86a0d8d91b2468e13e2e3da160fea"
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.tsx",
@@ -492810,7 +492810,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptQueue.tsx",
-              "sha256": "0a411648725edf534878c2ac6b57051f1a028c7dc0f456f9e4a1386e1bbb5d0f"
+              "sha256": "3db127ada835f6f97aee01887ebaaa8804d86a0d8d91b2468e13e2e3da160fea"
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptSubmissionReviewDialog.tsx",
@@ -493134,7 +493134,7 @@
             },
             {
               "path": "apps/web/e2e/staff-invoice-receipt-views.spec.ts",
-              "sha256": "393a778b27ab3b763cc96d4e583ce3ec6b4f8debc4458f9e6008cd2a2c7474f6"
+              "sha256": "cecc460ec6ee4b1da2c79322d4ebe689aa0e2c3032dc02fd77d59e127992fd80"
             },
             {
               "path": "apps/web/e2e/ui-navigation.spec.ts",
@@ -493218,7 +493218,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -494099,7 +494099,7 @@
             },
             {
               "path": "apps/web/e2e/staff-invoice-receipt-views.spec.ts",
-              "sha256": "393a778b27ab3b763cc96d4e583ce3ec6b4f8debc4458f9e6008cd2a2c7474f6"
+              "sha256": "cecc460ec6ee4b1da2c79322d4ebe689aa0e2c3032dc02fd77d59e127992fd80"
             },
             {
               "path": "apps/web/e2e/staff-receipt-rejection-forms.spec.ts",
@@ -494195,7 +494195,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptQueue.tsx",
-              "sha256": "0a411648725edf534878c2ac6b57051f1a028c7dc0f456f9e4a1386e1bbb5d0f"
+              "sha256": "3db127ada835f6f97aee01887ebaaa8804d86a0d8d91b2468e13e2e3da160fea"
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.tsx",
@@ -494982,7 +494982,7 @@
             },
             {
               "path": "apps/web/e2e/staff-invoice-receipt-views.spec.ts",
-              "sha256": "393a778b27ab3b763cc96d4e583ce3ec6b4f8debc4458f9e6008cd2a2c7474f6"
+              "sha256": "cecc460ec6ee4b1da2c79322d4ebe689aa0e2c3032dc02fd77d59e127992fd80"
             },
             {
               "path": "apps/web/e2e/staff-receipt-rejection-forms.spec.ts",
@@ -495078,7 +495078,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptQueue.tsx",
-              "sha256": "0a411648725edf534878c2ac6b57051f1a028c7dc0f456f9e4a1386e1bbb5d0f"
+              "sha256": "3db127ada835f6f97aee01887ebaaa8804d86a0d8d91b2468e13e2e3da160fea"
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.tsx",
@@ -495806,7 +495806,7 @@
             },
             {
               "path": "apps/web/e2e/staff-invoice-receipt-views.spec.ts",
-              "sha256": "393a778b27ab3b763cc96d4e583ce3ec6b4f8debc4458f9e6008cd2a2c7474f6"
+              "sha256": "cecc460ec6ee4b1da2c79322d4ebe689aa0e2c3032dc02fd77d59e127992fd80"
             },
             {
               "path": "apps/web/e2e/staff-receipt-rejection-forms.spec.ts",
@@ -495902,7 +495902,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptQueue.tsx",
-              "sha256": "0a411648725edf534878c2ac6b57051f1a028c7dc0f456f9e4a1386e1bbb5d0f"
+              "sha256": "3db127ada835f6f97aee01887ebaaa8804d86a0d8d91b2468e13e2e3da160fea"
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.tsx",
@@ -497047,7 +497047,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "da842357a007ca5390517df1a634ee743300e0a655a83bda86d9c08a3b32bbd8"
+              "sha256": "71d18d7ec979b0c6f59fa6f7b1447215a12a501df6965354b378625b724e684c"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -497632,7 +497632,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptQueue.tsx",
-              "sha256": "0a411648725edf534878c2ac6b57051f1a028c7dc0f456f9e4a1386e1bbb5d0f"
+              "sha256": "3db127ada835f6f97aee01887ebaaa8804d86a0d8d91b2468e13e2e3da160fea"
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptSubmissionReviewDialog.tsx",
@@ -497956,7 +497956,7 @@
             },
             {
               "path": "apps/web/e2e/staff-invoice-receipt-views.spec.ts",
-              "sha256": "393a778b27ab3b763cc96d4e583ce3ec6b4f8debc4458f9e6008cd2a2c7474f6"
+              "sha256": "cecc460ec6ee4b1da2c79322d4ebe689aa0e2c3032dc02fd77d59e127992fd80"
             },
             {
               "path": "apps/web/e2e/ui-navigation.spec.ts",
@@ -498040,7 +498040,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -518105,7 +518105,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "da842357a007ca5390517df1a634ee743300e0a655a83bda86d9c08a3b32bbd8"
+              "sha256": "71d18d7ec979b0c6f59fa6f7b1447215a12a501df6965354b378625b724e684c"
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
@@ -519213,7 +519213,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "da842357a007ca5390517df1a634ee743300e0a655a83bda86d9c08a3b32bbd8"
+              "sha256": "71d18d7ec979b0c6f59fa6f7b1447215a12a501df6965354b378625b724e684c"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -546498,7 +546498,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptQueue.tsx",
-              "sha256": "0a411648725edf534878c2ac6b57051f1a028c7dc0f456f9e4a1386e1bbb5d0f"
+              "sha256": "3db127ada835f6f97aee01887ebaaa8804d86a0d8d91b2468e13e2e3da160fea"
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptSubmissionReviewDialog.tsx",
@@ -546678,7 +546678,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/invoice-receipt-review-query.test.tsx",
@@ -548364,7 +548364,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptQueue.tsx",
-              "sha256": "0a411648725edf534878c2ac6b57051f1a028c7dc0f456f9e4a1386e1bbb5d0f"
+              "sha256": "3db127ada835f6f97aee01887ebaaa8804d86a0d8d91b2468e13e2e3da160fea"
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptSubmissionReviewDialog.tsx",
@@ -548544,7 +548544,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/invoice-receipt-review-query.test.tsx",
@@ -550231,7 +550231,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptQueue.tsx",
-              "sha256": "0a411648725edf534878c2ac6b57051f1a028c7dc0f456f9e4a1386e1bbb5d0f"
+              "sha256": "3db127ada835f6f97aee01887ebaaa8804d86a0d8d91b2468e13e2e3da160fea"
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptSubmissionReviewDialog.tsx",
@@ -550411,7 +550411,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/invoice-receipt-review-query.test.tsx",
@@ -552067,7 +552067,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptQueue.tsx",
-              "sha256": "0a411648725edf534878c2ac6b57051f1a028c7dc0f456f9e4a1386e1bbb5d0f"
+              "sha256": "3db127ada835f6f97aee01887ebaaa8804d86a0d8d91b2468e13e2e3da160fea"
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptSubmissionReviewDialog.tsx",
@@ -552247,7 +552247,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/invoice-receipt-review-query.test.tsx",
@@ -553929,7 +553929,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptQueue.tsx",
-              "sha256": "0a411648725edf534878c2ac6b57051f1a028c7dc0f456f9e4a1386e1bbb5d0f"
+              "sha256": "3db127ada835f6f97aee01887ebaaa8804d86a0d8d91b2468e13e2e3da160fea"
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptSubmissionReviewDialog.tsx",
@@ -554109,7 +554109,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/invoice-receipt-review-query.test.tsx",
@@ -555800,7 +555800,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptQueue.tsx",
-              "sha256": "0a411648725edf534878c2ac6b57051f1a028c7dc0f456f9e4a1386e1bbb5d0f"
+              "sha256": "3db127ada835f6f97aee01887ebaaa8804d86a0d8d91b2468e13e2e3da160fea"
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptSubmissionReviewDialog.tsx",
@@ -555980,7 +555980,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/invoice-receipt-review-query.test.tsx",
@@ -557644,7 +557644,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptQueue.tsx",
-              "sha256": "0a411648725edf534878c2ac6b57051f1a028c7dc0f456f9e4a1386e1bbb5d0f"
+              "sha256": "3db127ada835f6f97aee01887ebaaa8804d86a0d8d91b2468e13e2e3da160fea"
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptSubmissionReviewDialog.tsx",
@@ -557824,7 +557824,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/invoice-receipt-review-query.test.tsx",
@@ -559452,7 +559452,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptQueue.tsx",
-              "sha256": "0a411648725edf534878c2ac6b57051f1a028c7dc0f456f9e4a1386e1bbb5d0f"
+              "sha256": "3db127ada835f6f97aee01887ebaaa8804d86a0d8d91b2468e13e2e3da160fea"
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptSubmissionReviewDialog.tsx",
@@ -559632,7 +559632,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/invoice-receipt-review-query.test.tsx",
@@ -561260,7 +561260,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptQueue.tsx",
-              "sha256": "0a411648725edf534878c2ac6b57051f1a028c7dc0f456f9e4a1386e1bbb5d0f"
+              "sha256": "3db127ada835f6f97aee01887ebaaa8804d86a0d8d91b2468e13e2e3da160fea"
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptSubmissionReviewDialog.tsx",
@@ -561440,7 +561440,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/invoice-receipt-review-query.test.tsx",
@@ -563069,7 +563069,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptQueue.tsx",
-              "sha256": "0a411648725edf534878c2ac6b57051f1a028c7dc0f456f9e4a1386e1bbb5d0f"
+              "sha256": "3db127ada835f6f97aee01887ebaaa8804d86a0d8d91b2468e13e2e3da160fea"
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptSubmissionReviewDialog.tsx",
@@ -563249,7 +563249,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/invoice-receipt-review-query.test.tsx",
@@ -564877,7 +564877,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptQueue.tsx",
-              "sha256": "0a411648725edf534878c2ac6b57051f1a028c7dc0f456f9e4a1386e1bbb5d0f"
+              "sha256": "3db127ada835f6f97aee01887ebaaa8804d86a0d8d91b2468e13e2e3da160fea"
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptSubmissionReviewDialog.tsx",
@@ -565057,7 +565057,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/invoice-receipt-review-query.test.tsx",
@@ -566839,7 +566839,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/invoice-receipt-review-query.test.tsx",
@@ -567523,7 +567523,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "da842357a007ca5390517df1a634ee743300e0a655a83bda86d9c08a3b32bbd8"
+              "sha256": "71d18d7ec979b0c6f59fa6f7b1447215a12a501df6965354b378625b724e684c"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -568734,7 +568734,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/invoice-receipt-review-query.test.tsx",
@@ -569418,7 +569418,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "da842357a007ca5390517df1a634ee743300e0a655a83bda86d9c08a3b32bbd8"
+              "sha256": "71d18d7ec979b0c6f59fa6f7b1447215a12a501df6965354b378625b724e684c"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -570866,7 +570866,7 @@
             },
             {
               "path": "apps/web/e2e/staff-invoice-receipt-views.spec.ts",
-              "sha256": "393a778b27ab3b763cc96d4e583ce3ec6b4f8debc4458f9e6008cd2a2c7474f6"
+              "sha256": "cecc460ec6ee4b1da2c79322d4ebe689aa0e2c3032dc02fd77d59e127992fd80"
             },
             {
               "path": "apps/web/e2e/staff-operation-tables.spec.ts",
@@ -571226,7 +571226,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptQueue.tsx",
-              "sha256": "0a411648725edf534878c2ac6b57051f1a028c7dc0f456f9e4a1386e1bbb5d0f"
+              "sha256": "3db127ada835f6f97aee01887ebaaa8804d86a0d8d91b2468e13e2e3da160fea"
             },
             {
               "path": "apps/web/src/components/InvoiceCorrectionsPanel.tsx",
@@ -571626,7 +571626,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/invoice-receipt-review-query.test.tsx",
@@ -573070,7 +573070,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "da842357a007ca5390517df1a634ee743300e0a655a83bda86d9c08a3b32bbd8"
+              "sha256": "71d18d7ec979b0c6f59fa6f7b1447215a12a501df6965354b378625b724e684c"
             },
             {
               "path": "scripts/check-changed-coverage.py",
@@ -573516,7 +573516,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/invoice-receipt-review-query.test.tsx",
@@ -574200,7 +574200,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "da842357a007ca5390517df1a634ee743300e0a655a83bda86d9c08a3b32bbd8"
+              "sha256": "71d18d7ec979b0c6f59fa6f7b1447215a12a501df6965354b378625b724e684c"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -575411,7 +575411,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/invoice-receipt-review-query.test.tsx",
@@ -576095,7 +576095,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "da842357a007ca5390517df1a634ee743300e0a655a83bda86d9c08a3b32bbd8"
+              "sha256": "71d18d7ec979b0c6f59fa6f7b1447215a12a501df6965354b378625b724e684c"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -577306,7 +577306,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/invoice-receipt-review-query.test.tsx",
@@ -577990,7 +577990,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "da842357a007ca5390517df1a634ee743300e0a655a83bda86d9c08a3b32bbd8"
+              "sha256": "71d18d7ec979b0c6f59fa6f7b1447215a12a501df6965354b378625b724e684c"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -579201,7 +579201,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/invoice-receipt-review-query.test.tsx",
@@ -579885,7 +579885,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "da842357a007ca5390517df1a634ee743300e0a655a83bda86d9c08a3b32bbd8"
+              "sha256": "71d18d7ec979b0c6f59fa6f7b1447215a12a501df6965354b378625b724e684c"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -581096,7 +581096,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/invoice-receipt-review-query.test.tsx",
@@ -581780,7 +581780,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "da842357a007ca5390517df1a634ee743300e0a655a83bda86d9c08a3b32bbd8"
+              "sha256": "71d18d7ec979b0c6f59fa6f7b1447215a12a501df6965354b378625b724e684c"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -582991,7 +582991,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/invoice-receipt-review-query.test.tsx",
@@ -583675,7 +583675,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "da842357a007ca5390517df1a634ee743300e0a655a83bda86d9c08a3b32bbd8"
+              "sha256": "71d18d7ec979b0c6f59fa6f7b1447215a12a501df6965354b378625b724e684c"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -584886,7 +584886,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/invoice-receipt-review-query.test.tsx",
@@ -585570,7 +585570,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "da842357a007ca5390517df1a634ee743300e0a655a83bda86d9c08a3b32bbd8"
+              "sha256": "71d18d7ec979b0c6f59fa6f7b1447215a12a501df6965354b378625b724e684c"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -586781,7 +586781,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/invoice-receipt-review-query.test.tsx",
@@ -587465,7 +587465,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "da842357a007ca5390517df1a634ee743300e0a655a83bda86d9c08a3b32bbd8"
+              "sha256": "71d18d7ec979b0c6f59fa6f7b1447215a12a501df6965354b378625b724e684c"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -588676,7 +588676,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/invoice-receipt-review-query.test.tsx",
@@ -589360,7 +589360,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "da842357a007ca5390517df1a634ee743300e0a655a83bda86d9c08a3b32bbd8"
+              "sha256": "71d18d7ec979b0c6f59fa6f7b1447215a12a501df6965354b378625b724e684c"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -590571,7 +590571,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/invoice-receipt-review-query.test.tsx",
@@ -591255,7 +591255,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "da842357a007ca5390517df1a634ee743300e0a655a83bda86d9c08a3b32bbd8"
+              "sha256": "71d18d7ec979b0c6f59fa6f7b1447215a12a501df6965354b378625b724e684c"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -592466,7 +592466,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/invoice-receipt-review-query.test.tsx",
@@ -593150,7 +593150,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "da842357a007ca5390517df1a634ee743300e0a655a83bda86d9c08a3b32bbd8"
+              "sha256": "71d18d7ec979b0c6f59fa6f7b1447215a12a501df6965354b378625b724e684c"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -594414,7 +594414,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "da842357a007ca5390517df1a634ee743300e0a655a83bda86d9c08a3b32bbd8"
+              "sha256": "71d18d7ec979b0c6f59fa6f7b1447215a12a501df6965354b378625b724e684c"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -595101,7 +595101,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/invoice-receipt-review-query.test.tsx",
@@ -595785,7 +595785,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "da842357a007ca5390517df1a634ee743300e0a655a83bda86d9c08a3b32bbd8"
+              "sha256": "71d18d7ec979b0c6f59fa6f7b1447215a12a501df6965354b378625b724e684c"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -596996,7 +596996,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/invoice-receipt-review-query.test.tsx",
@@ -597680,7 +597680,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "da842357a007ca5390517df1a634ee743300e0a655a83bda86d9c08a3b32bbd8"
+              "sha256": "71d18d7ec979b0c6f59fa6f7b1447215a12a501df6965354b378625b724e684c"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -598484,7 +598484,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Current conditional receipts cover the named document, template, invoice, inbox and chat journeys. Reconcile the remaining original conditional requirements for each route and widget, including loaded-empty states and scoped recovery of independent panels."
+        "Staff invoice receipt detail and allocation now have scoped retries with exact source-bound evidence. Reconcile the remaining original conditional requirements for other routes and widgets, including loaded-empty states and scoped recovery of independent panels."
       ],
       "owner": null,
       "depends_on": [],
@@ -598595,7 +598595,8 @@
           "release-0.5-route-theme-layout",
           "release-0.5-sensitive-otp-deadline",
           "release-0.5-admin-test-chat-deadline",
-          "release-0.5-carried-route-evidence"
+          "release-0.5-carried-route-evidence",
+          "release-0.5-invoice-receipt-detail-retry"
         ],
         "current_acceptance": null
       }
@@ -598896,7 +598897,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptQueue.tsx",
-              "sha256": "0a411648725edf534878c2ac6b57051f1a028c7dc0f456f9e4a1386e1bbb5d0f"
+              "sha256": "3db127ada835f6f97aee01887ebaaa8804d86a0d8d91b2468e13e2e3da160fea"
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptSubmissionReviewDialog.tsx",
@@ -599076,7 +599077,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/invoice-receipt-review-query.test.tsx",
@@ -600700,7 +600701,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptQueue.tsx",
-              "sha256": "0a411648725edf534878c2ac6b57051f1a028c7dc0f456f9e4a1386e1bbb5d0f"
+              "sha256": "3db127ada835f6f97aee01887ebaaa8804d86a0d8d91b2468e13e2e3da160fea"
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptSubmissionReviewDialog.tsx",
@@ -600880,7 +600881,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/invoice-receipt-review-query.test.tsx",
@@ -602504,7 +602505,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptQueue.tsx",
-              "sha256": "0a411648725edf534878c2ac6b57051f1a028c7dc0f456f9e4a1386e1bbb5d0f"
+              "sha256": "3db127ada835f6f97aee01887ebaaa8804d86a0d8d91b2468e13e2e3da160fea"
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptSubmissionReviewDialog.tsx",
@@ -602684,7 +602685,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/invoice-receipt-review-query.test.tsx",
@@ -604308,7 +604309,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptQueue.tsx",
-              "sha256": "0a411648725edf534878c2ac6b57051f1a028c7dc0f456f9e4a1386e1bbb5d0f"
+              "sha256": "3db127ada835f6f97aee01887ebaaa8804d86a0d8d91b2468e13e2e3da160fea"
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptSubmissionReviewDialog.tsx",
@@ -604488,7 +604489,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/invoice-receipt-review-query.test.tsx",
@@ -606112,7 +606113,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptQueue.tsx",
-              "sha256": "0a411648725edf534878c2ac6b57051f1a028c7dc0f456f9e4a1386e1bbb5d0f"
+              "sha256": "3db127ada835f6f97aee01887ebaaa8804d86a0d8d91b2468e13e2e3da160fea"
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptSubmissionReviewDialog.tsx",
@@ -606292,7 +606293,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/invoice-receipt-review-query.test.tsx",
@@ -607916,7 +607917,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptQueue.tsx",
-              "sha256": "0a411648725edf534878c2ac6b57051f1a028c7dc0f456f9e4a1386e1bbb5d0f"
+              "sha256": "3db127ada835f6f97aee01887ebaaa8804d86a0d8d91b2468e13e2e3da160fea"
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptSubmissionReviewDialog.tsx",
@@ -608096,7 +608097,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/invoice-receipt-review-query.test.tsx",
@@ -609720,7 +609721,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptQueue.tsx",
-              "sha256": "0a411648725edf534878c2ac6b57051f1a028c7dc0f456f9e4a1386e1bbb5d0f"
+              "sha256": "3db127ada835f6f97aee01887ebaaa8804d86a0d8d91b2468e13e2e3da160fea"
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptSubmissionReviewDialog.tsx",
@@ -609900,7 +609901,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/invoice-receipt-review-query.test.tsx",
@@ -637519,7 +637520,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptQueue.tsx",
-              "sha256": "0a411648725edf534878c2ac6b57051f1a028c7dc0f456f9e4a1386e1bbb5d0f"
+              "sha256": "3db127ada835f6f97aee01887ebaaa8804d86a0d8d91b2468e13e2e3da160fea"
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.tsx",
@@ -638643,7 +638644,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptQueue.tsx",
-              "sha256": "0a411648725edf534878c2ac6b57051f1a028c7dc0f456f9e4a1386e1bbb5d0f"
+              "sha256": "3db127ada835f6f97aee01887ebaaa8804d86a0d8d91b2468e13e2e3da160fea"
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.tsx",
@@ -639767,7 +639768,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptQueue.tsx",
-              "sha256": "0a411648725edf534878c2ac6b57051f1a028c7dc0f456f9e4a1386e1bbb5d0f"
+              "sha256": "3db127ada835f6f97aee01887ebaaa8804d86a0d8d91b2468e13e2e3da160fea"
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.tsx",
@@ -640894,7 +640895,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptQueue.tsx",
-              "sha256": "0a411648725edf534878c2ac6b57051f1a028c7dc0f456f9e4a1386e1bbb5d0f"
+              "sha256": "3db127ada835f6f97aee01887ebaaa8804d86a0d8d91b2468e13e2e3da160fea"
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.tsx",
@@ -642021,7 +642022,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptQueue.tsx",
-              "sha256": "0a411648725edf534878c2ac6b57051f1a028c7dc0f456f9e4a1386e1bbb5d0f"
+              "sha256": "3db127ada835f6f97aee01887ebaaa8804d86a0d8d91b2468e13e2e3da160fea"
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.tsx",
@@ -643175,7 +643176,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptQueue.tsx",
-              "sha256": "0a411648725edf534878c2ac6b57051f1a028c7dc0f456f9e4a1386e1bbb5d0f"
+              "sha256": "3db127ada835f6f97aee01887ebaaa8804d86a0d8d91b2468e13e2e3da160fea"
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.tsx",
@@ -644298,7 +644299,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptQueue.tsx",
-              "sha256": "0a411648725edf534878c2ac6b57051f1a028c7dc0f456f9e4a1386e1bbb5d0f"
+              "sha256": "3db127ada835f6f97aee01887ebaaa8804d86a0d8d91b2468e13e2e3da160fea"
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.tsx",
@@ -645421,7 +645422,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptQueue.tsx",
-              "sha256": "0a411648725edf534878c2ac6b57051f1a028c7dc0f456f9e4a1386e1bbb5d0f"
+              "sha256": "3db127ada835f6f97aee01887ebaaa8804d86a0d8d91b2468e13e2e3da160fea"
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.tsx",
@@ -646545,7 +646546,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptQueue.tsx",
-              "sha256": "0a411648725edf534878c2ac6b57051f1a028c7dc0f456f9e4a1386e1bbb5d0f"
+              "sha256": "3db127ada835f6f97aee01887ebaaa8804d86a0d8d91b2468e13e2e3da160fea"
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.tsx",
@@ -647687,7 +647688,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptQueue.tsx",
-              "sha256": "0a411648725edf534878c2ac6b57051f1a028c7dc0f456f9e4a1386e1bbb5d0f"
+              "sha256": "3db127ada835f6f97aee01887ebaaa8804d86a0d8d91b2468e13e2e3da160fea"
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.tsx",
@@ -648812,7 +648813,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptQueue.tsx",
-              "sha256": "0a411648725edf534878c2ac6b57051f1a028c7dc0f456f9e4a1386e1bbb5d0f"
+              "sha256": "3db127ada835f6f97aee01887ebaaa8804d86a0d8d91b2468e13e2e3da160fea"
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.tsx",
@@ -650012,7 +650013,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptQueue.tsx",
-              "sha256": "0a411648725edf534878c2ac6b57051f1a028c7dc0f456f9e4a1386e1bbb5d0f"
+              "sha256": "3db127ada835f6f97aee01887ebaaa8804d86a0d8d91b2468e13e2e3da160fea"
             },
             {
               "path": "apps/web/src/components/InvoicePaymentSummary.test.tsx",
@@ -650841,7 +650842,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptQueue.tsx",
-              "sha256": "0a411648725edf534878c2ac6b57051f1a028c7dc0f456f9e4a1386e1bbb5d0f"
+              "sha256": "3db127ada835f6f97aee01887ebaaa8804d86a0d8d91b2468e13e2e3da160fea"
             },
             {
               "path": "apps/web/src/components/InvoicePaymentSummary.test.tsx",
@@ -651678,7 +651679,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptQueue.tsx",
-              "sha256": "0a411648725edf534878c2ac6b57051f1a028c7dc0f456f9e4a1386e1bbb5d0f"
+              "sha256": "3db127ada835f6f97aee01887ebaaa8804d86a0d8d91b2468e13e2e3da160fea"
             },
             {
               "path": "apps/web/src/components/InvoicePaymentSummary.test.tsx",
@@ -652499,7 +652500,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptQueue.tsx",
-              "sha256": "0a411648725edf534878c2ac6b57051f1a028c7dc0f456f9e4a1386e1bbb5d0f"
+              "sha256": "3db127ada835f6f97aee01887ebaaa8804d86a0d8d91b2468e13e2e3da160fea"
             },
             {
               "path": "apps/web/src/components/InvoicePaymentSummary.test.tsx",
@@ -653319,7 +653320,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptQueue.tsx",
-              "sha256": "0a411648725edf534878c2ac6b57051f1a028c7dc0f456f9e4a1386e1bbb5d0f"
+              "sha256": "3db127ada835f6f97aee01887ebaaa8804d86a0d8d91b2468e13e2e3da160fea"
             },
             {
               "path": "apps/web/src/components/InvoicePaymentSummary.test.tsx",
@@ -680314,7 +680315,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptQueue.tsx",
-              "sha256": "0a411648725edf534878c2ac6b57051f1a028c7dc0f456f9e4a1386e1bbb5d0f"
+              "sha256": "3db127ada835f6f97aee01887ebaaa8804d86a0d8d91b2468e13e2e3da160fea"
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.tsx",
@@ -681436,7 +681437,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptQueue.tsx",
-              "sha256": "0a411648725edf534878c2ac6b57051f1a028c7dc0f456f9e4a1386e1bbb5d0f"
+              "sha256": "3db127ada835f6f97aee01887ebaaa8804d86a0d8d91b2468e13e2e3da160fea"
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.tsx",
@@ -682558,7 +682559,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptQueue.tsx",
-              "sha256": "0a411648725edf534878c2ac6b57051f1a028c7dc0f456f9e4a1386e1bbb5d0f"
+              "sha256": "3db127ada835f6f97aee01887ebaaa8804d86a0d8d91b2468e13e2e3da160fea"
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.tsx",
@@ -683680,7 +683681,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptQueue.tsx",
-              "sha256": "0a411648725edf534878c2ac6b57051f1a028c7dc0f456f9e4a1386e1bbb5d0f"
+              "sha256": "3db127ada835f6f97aee01887ebaaa8804d86a0d8d91b2468e13e2e3da160fea"
             },
             {
               "path": "apps/web/src/components/InvoiceLedger.tsx",
@@ -708758,7 +708759,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -710826,7 +710827,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -714288,7 +714289,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -718721,7 +718722,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -723428,7 +723429,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -727274,7 +727275,7 @@
             },
             {
               "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
-              "sha256": "b91e8e26c5aea1032f817f92ecce0764321d3ad7c6a333617edc94f5bbc6c065"
+              "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -728242,7 +728243,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "The 27 prior-only populated routes now have measurements on the current production build, and the shared composer paths were refreshed. Finish the original route and widget conditional acceptance, including exact loading, empty, error, keyboard, forms, filters and stale-context evidence where applicable."
+        "The carried populated layouts have current measurements. Staff invoice receipt detail and allocation recovery now have named browser and authority tests. Finish the original route and widget conditional acceptance."
       ],
       "owner": null,
       "depends_on": [],
@@ -728419,7 +728420,8 @@
           "release-0.5-navigation-theme-transition",
           "release-0.5-sensitive-otp-deadline",
           "release-0.5-admin-test-chat-deadline",
-          "release-0.5-carried-route-evidence"
+          "release-0.5-carried-route-evidence",
+          "release-0.5-invoice-receipt-detail-retry"
         ]
       }
     },
@@ -728727,7 +728729,7 @@
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptQueue.tsx",
-              "sha256": "0a411648725edf534878c2ac6b57051f1a028c7dc0f456f9e4a1386e1bbb5d0f"
+              "sha256": "3db127ada835f6f97aee01887ebaaa8804d86a0d8d91b2468e13e2e3da160fea"
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptSubmissionReviewDialog.tsx",
@@ -730342,7 +730344,8 @@
             "Renewed record workspace route budgets, measured coverage and cold auth evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-record-workspace-read-states/proof.json",
             "The selected navigation palette now retains 4.5:1 across both account theme changes. All 101 route and interaction budgets passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-navigation-theme-transition/proof.json",
             "Sensitive-action OTP deadlines passed across all 32 scoped native cases. The critical coverage group and all 101 bundle budgets passed. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-sensitive-otp-deadline/proof.json",
-            "The isolated admin preview keeps its request ID after a timeout or pending receipt. The shared chat composer and all 101 budgets passed scoped verification. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-admin-test-chat-deadline/proof.json"
+            "The isolated admin preview keeps its request ID after a timeout or pending receipt. The shared chat composer and all 101 budgets passed scoped verification. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-admin-test-chat-deadline/proof.json",
+            "Staff invoice receipt recovery passed its critical coverage gate and all 101 bundle budgets. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-receipt-detail-retry/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -806984,6 +806987,49 @@
       "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-carried-route-evidence/proof.json",
       "source_scope_proof_sha256": "44edae46367ad7a03f8489f70d95165444c23dcbd9b42154eff0abbe2efc4526",
       "release_disposition": "Verified the current populated route layouts and the named conditional cases. v0.5.0 acceptance remains open."
+    },
+    "release-0.5-invoice-receipt-detail-retry": {
+      "batch": "release-0.5-invoice-receipt-detail-retry",
+      "base_commit": "e53efdef86b6ba06427d7d336cedc5a3f9d33afa",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/staff-invoice-receipt-views.spec.ts",
+          "sha256": "cecc460ec6ee4b1da2c79322d4ebe689aa0e2c3032dc02fd77d59e127992fd80"
+        },
+        {
+          "path": "apps/web/src/components/InvoiceBankReceiptQueue.tsx",
+          "sha256": "3db127ada835f6f97aee01887ebaaa8804d86a0d8d91b2468e13e2e3da160fea"
+        },
+        {
+          "path": "apps/web/src/components/invoice-receipt-query.test.tsx",
+          "sha256": "7d45becfaa72f55c288cde0d1dfc5c64af1d77c59420d02d65a35529dfa075b8"
+        },
+        {
+          "path": "docs/design/notification-recovery.md",
+          "sha256": "71d18d7ec979b0c6f59fa6f7b1447215a12a501df6965354b378625b724e684c"
+        }
+      ],
+      "checks": [
+        "Staff can retry the selected invoice receipt detail and its allocation from the local error. The scoped recovery retains the queue, history, selection and raw rejection reason. The fresh reads retire the old review.",
+        "Simulated 15-second body stalls show that the transport aborts, only the current receipt and allocation are reread, and a late response cannot replace the recovered data. All recovery packets are reads. Existing authority withdrawal and command confirmation checks also passed.",
+        "The eight production browser cases exercised both recovery paths in Persian and English, light and dark themes, Chromium and mobile Safari. They keep the exact financial metadata, responsive view, queue count and typed draft. 43 scoped units passed. The unchanged critical gate measured 205/216 lines and 209/238 branches.",
+        "Production and auth builds, changed-file lint, formatting and typecheck passed. The first budget command exhausted the default temporary directory after measuring the route payloads. The same assets passed all 101 gzip and Size Limit checks with the temporary directory on the RAM volume."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-receipt-detail-retry",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-receipt-detail-retry/proof.json",
+      "source_scope_proof_sha256": "0c74e74ca4f2d90674bb0a4324c352352d2ce79feeeac77e57695e435df5fe4f",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-receipt-detail-retry/renewed-bindings.json",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-receipt-detail-retry/reviewed.patch",
+      "release_disposition": "Verified local recovery for staff invoice receipt detail and allocation. v0.5.0 remains open."
     }
   },
   "historical_improvements": [
@@ -807034,12 +807080,12 @@
       "release-readiness#R-04.01",
       "release-readiness#R-04.02"
     ],
-    "goal": "Reconcile the remaining original route and widget conditional-state acceptance against the source-bound receipts. The 27 carried populated layouts now have current measurements. GitHub merge enforcement and staging Sentry delivery remain independent gates."
+    "goal": "Finish route and widget conditional acceptance using the named source-bound receipts. Verify remaining independent panes and loaded-empty states. GitHub merge enforcement and staging Sentry delivery remain independent gates."
   },
   "launch_forecast": {
     "status": "deadline_at_risk_until_v0_5_and_operational_gates_close",
     "next_update_after": "v0.5.0 remaining UI criteria and owner decisions",
-    "method": "v0.4.0 staging and Telegram receipts are verified. v0.5.0 has source-bound populated layouts for 93 routes. Four launch-required criteria remain open and the November 9 sequence remains at risk."
+    "method": "v0.4.0 staging and Telegram receipts are verified. v0.5.0 has populated layout evidence for all 93 routes and verified local receipt detail recovery. Four launch-required criteria remain open and the November 9 sequence remains at risk."
   },
   "capabilities": [
     {
