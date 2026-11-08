@@ -180,7 +180,50 @@ for (const locale of ['en', 'fa'] as const)
       expect(
         await openCredit.evaluate((button) => button.getBoundingClientRect().height)
       ).toBeGreaterThanOrEqual(44);
-      await openCredit.click();
+      const opening = await page.evaluateHandle(() => {
+        let evidence: { opacity: string; keyframes: (string | number | undefined)[] } | null = null;
+        const listen = (event: AnimationEvent) => {
+          const popup = event.target;
+          if (
+            !(popup instanceof HTMLElement) ||
+            !popup.matches('[data-slot="dialog-content"][data-open]')
+          )
+            return;
+          const effect = popup
+            .getAnimations()
+            .find(
+              (animation) =>
+                animation instanceof CSSAnimation && animation.animationName === event.animationName
+            )?.effect;
+          if (effect instanceof KeyframeEffect) {
+            evidence = {
+              opacity: getComputedStyle(popup).opacity,
+              keyframes: effect.getKeyframes().map((frame) => frame.opacity),
+            };
+          }
+        };
+        document.addEventListener('animationstart', listen);
+        return {
+          read: () => evidence,
+          release: () => document.removeEventListener('animationstart', listen),
+        };
+      });
+      try {
+        await openCredit.click();
+        await expect.poll(() => opening.evaluate((monitor) => monitor.read())).not.toBeNull();
+        const effect = await opening.evaluate((monitor) => monitor.read());
+        await info.attach('dialog-opening-opacity', {
+          body: JSON.stringify(effect),
+          contentType: 'application/json',
+        });
+        expect(effect?.opacity).toBe('1');
+        expect(
+          effect?.keyframes.every((opacity) => opacity === undefined || Number(opacity) === 1)
+        ).toBe(true);
+      } finally {
+        await opening.evaluate((monitor) => monitor.release());
+        await opening.dispose();
+      }
       let dialog = page.getByRole('dialog', { name: copy('viewCalculation'), exact: true });
       await expect(dialog).toContainText(creditAdjustmentId);
       await expect(dialog).toContainText(copy('source.original_invoice'));

@@ -47,6 +47,8 @@ primary fill and foreground.
 
 Keep readable content opaque during page and list entrance animations. Even
 a brief fade of the whole row can put its text below the contrast floor.
+Dialog panels stay opaque while scaling in or out. The backdrop can fade
+independently.
 Onboarding confetti stays behind the opaque completion panel and respects
 reduced motion. The More menu animates movement and opacity. Its background
 and text colors switch together when the theme changes.

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-08T04:16:55+00:00",
-  "source_commit": "7382fb588bcd4f867e75a3a2d6da5835fc195bca",
+  "updated": "2026-11-08T04:33:46+00:00",
+  "source_commit": "564392c3813ce73a3938886e70fa02fca016c7a6",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -187942,7 +187942,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-price-adjustment-history.spec.ts",
-              "sha256": "60cfcd404df62caae028c4fc8bea0b8fc6848b4248e4e6e0657abb93cbc590ae"
+              "sha256": "827318ad46bfd3d7728e401042f2ba1258e36adb17e74f679a15f6ac70586ae4"
             },
             {
               "path": "apps/web/src/lib/electricity-price-adjustment-row.test.ts",
@@ -188677,7 +188677,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-price-adjustment-history.spec.ts",
-              "sha256": "60cfcd404df62caae028c4fc8bea0b8fc6848b4248e4e6e0657abb93cbc590ae"
+              "sha256": "827318ad46bfd3d7728e401042f2ba1258e36adb17e74f679a15f6ac70586ae4"
             },
             {
               "path": "apps/web/src/lib/electricity-price-adjustment-row.test.ts",
@@ -189412,7 +189412,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-price-adjustment-history.spec.ts",
-              "sha256": "60cfcd404df62caae028c4fc8bea0b8fc6848b4248e4e6e0657abb93cbc590ae"
+              "sha256": "827318ad46bfd3d7728e401042f2ba1258e36adb17e74f679a15f6ac70586ae4"
             },
             {
               "path": "apps/web/src/lib/electricity-price-adjustment-row.test.ts",
@@ -190147,7 +190147,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-price-adjustment-history.spec.ts",
-              "sha256": "60cfcd404df62caae028c4fc8bea0b8fc6848b4248e4e6e0657abb93cbc590ae"
+              "sha256": "827318ad46bfd3d7728e401042f2ba1258e36adb17e74f679a15f6ac70586ae4"
             },
             {
               "path": "apps/web/src/lib/electricity-price-adjustment-row.test.ts",
@@ -190882,7 +190882,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-price-adjustment-history.spec.ts",
-              "sha256": "60cfcd404df62caae028c4fc8bea0b8fc6848b4248e4e6e0657abb93cbc590ae"
+              "sha256": "827318ad46bfd3d7728e401042f2ba1258e36adb17e74f679a15f6ac70586ae4"
             },
             {
               "path": "apps/web/src/lib/electricity-price-adjustment-row.test.ts",
@@ -191588,7 +191588,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-price-adjustment-history.spec.ts",
-              "sha256": "60cfcd404df62caae028c4fc8bea0b8fc6848b4248e4e6e0657abb93cbc590ae"
+              "sha256": "827318ad46bfd3d7728e401042f2ba1258e36adb17e74f679a15f6ac70586ae4"
             },
             {
               "path": "apps/web/src/components/RefundPanel.test.tsx",
@@ -253414,7 +253414,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/styles.css",
@@ -254552,7 +254552,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/styles.css",
@@ -255686,7 +255686,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/styles.css",
@@ -256819,7 +256819,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/styles.css",
@@ -257953,7 +257953,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/styles.css",
@@ -259087,7 +259087,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/styles.css",
@@ -260226,7 +260226,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/styles.css",
@@ -261363,7 +261363,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/styles.css",
@@ -262498,7 +262498,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/styles.css",
@@ -263636,7 +263636,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/styles.css",
@@ -264776,7 +264776,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/styles.css",
@@ -265911,7 +265911,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/styles.css",
@@ -267045,7 +267045,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/styles.css",
@@ -268180,7 +268180,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/styles.css",
@@ -269315,7 +269315,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/styles.css",
@@ -270451,7 +270451,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/styles.css",
@@ -345689,7 +345689,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-price-adjustment-history.spec.ts",
-              "sha256": "60cfcd404df62caae028c4fc8bea0b8fc6848b4248e4e6e0657abb93cbc590ae"
+              "sha256": "827318ad46bfd3d7728e401042f2ba1258e36adb17e74f679a15f6ac70586ae4"
             },
             {
               "path": "apps/web/src/components/deadline-query.test.tsx",
@@ -346735,7 +346735,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-price-adjustment-history.spec.ts",
-              "sha256": "60cfcd404df62caae028c4fc8bea0b8fc6848b4248e4e6e0657abb93cbc590ae"
+              "sha256": "827318ad46bfd3d7728e401042f2ba1258e36adb17e74f679a15f6ac70586ae4"
             },
             {
               "path": "apps/web/src/lib/electricity-price-adjustment-row.test.ts",
@@ -347470,7 +347470,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-price-adjustment-history.spec.ts",
-              "sha256": "60cfcd404df62caae028c4fc8bea0b8fc6848b4248e4e6e0657abb93cbc590ae"
+              "sha256": "827318ad46bfd3d7728e401042f2ba1258e36adb17e74f679a15f6ac70586ae4"
             },
             {
               "path": "apps/web/src/lib/electricity-price-adjustment-row.test.ts",
@@ -348206,7 +348206,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-price-adjustment-history.spec.ts",
-              "sha256": "60cfcd404df62caae028c4fc8bea0b8fc6848b4248e4e6e0657abb93cbc590ae"
+              "sha256": "827318ad46bfd3d7728e401042f2ba1258e36adb17e74f679a15f6ac70586ae4"
             },
             {
               "path": "apps/web/src/lib/electricity-price-adjustment-row.test.ts",
@@ -476232,7 +476232,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -477337,7 +477337,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -478191,7 +478191,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -478917,7 +478917,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -479802,7 +479802,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -480530,7 +480530,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -481415,7 +481415,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -482158,7 +482158,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -485439,7 +485439,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -485759,7 +485759,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -486079,7 +486079,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -486399,7 +486399,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -506580,7 +506580,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -507164,7 +507164,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -507748,7 +507748,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -512908,7 +512908,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
@@ -513707,7 +513707,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
@@ -514505,7 +514505,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
@@ -515190,7 +515190,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "8693069c0f9ba9e8b8eed6f0449d0f3be0cff578f06ae24d2baf53c2632cf843"
+              "sha256": "3f5f9060c7fd40584437e7d7514d31c30a09ed3ecb64b411890ca1b419a925ff"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -515570,7 +515570,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "8693069c0f9ba9e8b8eed6f0449d0f3be0cff578f06ae24d2baf53c2632cf843"
+              "sha256": "3f5f9060c7fd40584437e7d7514d31c30a09ed3ecb64b411890ca1b419a925ff"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -515594,7 +515594,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -516009,7 +516009,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "8693069c0f9ba9e8b8eed6f0449d0f3be0cff578f06ae24d2baf53c2632cf843"
+              "sha256": "3f5f9060c7fd40584437e7d7514d31c30a09ed3ecb64b411890ca1b419a925ff"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -516033,7 +516033,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -516496,7 +516496,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "8693069c0f9ba9e8b8eed6f0449d0f3be0cff578f06ae24d2baf53c2632cf843"
+              "sha256": "3f5f9060c7fd40584437e7d7514d31c30a09ed3ecb64b411890ca1b419a925ff"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -517004,7 +517004,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "8693069c0f9ba9e8b8eed6f0449d0f3be0cff578f06ae24d2baf53c2632cf843"
+              "sha256": "3f5f9060c7fd40584437e7d7514d31c30a09ed3ecb64b411890ca1b419a925ff"
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
@@ -517597,7 +517597,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "The 93-route populated fixture census includes both languages, themes and contrast settings. Direct evidence covers onboarding, the auth language switch, service-targets notices, electricity and saving breadcrumbs, the More menu and public gradients. The staff queue and AI navigation text measurements reached the contrast thresholds after scrolling. The upload-policy dialog title and description also passed. Remaining clipped text and conditional control states outside these measured cases need review."
+        "The 93-route fixture census and the previously missing theme cells have browser evidence. The historical clipping replay measured 4518 text states and verified 52 native text and punctuation cases separately. The shared dialog now stays opaque during its animation. Mobile Safari still showed transient notice overlap on saving, advanced electricity and the order detail link, as well as offscreen staff navigation and completed saving steps requiring direct review. Remaining opposite-theme inconclusive observations and conditional control states need acceptance evidence."
       ],
       "owner": null,
       "depends_on": [],
@@ -517625,7 +517625,8 @@
           "release-0.5-current-contrast",
           "release-0.5-contrast-mode-closure",
           "release-0.5-contrast-occlusion",
-          "release-0.5-reveal-clipped-text"
+          "release-0.5-reveal-clipped-text",
+          "release-0.5-remaining-contrast"
         ],
         "current_acceptance": null
       }
@@ -517816,7 +517817,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "8693069c0f9ba9e8b8eed6f0449d0f3be0cff578f06ae24d2baf53c2632cf843"
+              "sha256": "3f5f9060c7fd40584437e7d7514d31c30a09ed3ecb64b411890ca1b419a925ff"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -517840,7 +517841,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -518332,7 +518333,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "8693069c0f9ba9e8b8eed6f0449d0f3be0cff578f06ae24d2baf53c2632cf843"
+              "sha256": "3f5f9060c7fd40584437e7d7514d31c30a09ed3ecb64b411890ca1b419a925ff"
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
@@ -519050,7 +519051,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "8693069c0f9ba9e8b8eed6f0449d0f3be0cff578f06ae24d2baf53c2632cf843"
+              "sha256": "3f5f9060c7fd40584437e7d7514d31c30a09ed3ecb64b411890ca1b419a925ff"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -519066,7 +519067,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/progress.tsx",
@@ -519878,7 +519879,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "8693069c0f9ba9e8b8eed6f0449d0f3be0cff578f06ae24d2baf53c2632cf843"
+              "sha256": "3f5f9060c7fd40584437e7d7514d31c30a09ed3ecb64b411890ca1b419a925ff"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -519894,7 +519895,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/progress.tsx",
@@ -520488,7 +520489,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "8693069c0f9ba9e8b8eed6f0449d0f3be0cff578f06ae24d2baf53c2632cf843"
+              "sha256": "3f5f9060c7fd40584437e7d7514d31c30a09ed3ecb64b411890ca1b419a925ff"
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
@@ -521206,7 +521207,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "8693069c0f9ba9e8b8eed6f0449d0f3be0cff578f06ae24d2baf53c2632cf843"
+              "sha256": "3f5f9060c7fd40584437e7d7514d31c30a09ed3ecb64b411890ca1b419a925ff"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -521222,7 +521223,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/progress.tsx",
@@ -521978,7 +521979,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -522885,7 +522886,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -523792,7 +523793,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -524699,7 +524700,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -525606,7 +525607,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -526513,7 +526514,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -527420,7 +527421,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -528327,7 +528328,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -529234,7 +529235,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -530141,7 +530142,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -531048,7 +531049,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -531955,7 +531956,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -532862,7 +532863,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -533769,7 +533770,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -534676,7 +534677,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -535583,7 +535584,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -536490,7 +536491,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -537397,7 +537398,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -538304,7 +538305,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -539211,7 +539212,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -545729,7 +545730,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -547594,7 +547595,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -549460,7 +549461,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -551295,7 +551296,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -553156,7 +553157,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -555026,7 +555027,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -556869,7 +556870,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -558676,7 +558677,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -560483,7 +560484,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -562291,7 +562292,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -564098,7 +564099,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -566011,7 +566012,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -567905,7 +567906,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -569854,7 +569855,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -571748,7 +571749,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -573642,7 +573643,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -575536,7 +575537,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -577430,7 +577431,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -579324,7 +579325,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -581218,7 +581219,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -583112,7 +583113,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -585006,7 +585007,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -586900,7 +586901,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -588794,7 +588795,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -591427,7 +591428,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -593321,7 +593322,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -595201,7 +595202,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -597004,7 +597005,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -598807,7 +598808,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -600610,7 +600611,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -602413,7 +602414,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -604216,7 +604217,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -606019,7 +606020,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -611312,7 +611313,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
@@ -612110,7 +612111,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
@@ -612908,7 +612909,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
@@ -613706,7 +613707,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
@@ -614508,7 +614509,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
@@ -615306,7 +615307,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
@@ -616104,7 +616105,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
@@ -616903,7 +616904,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
@@ -617702,7 +617703,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
@@ -618501,7 +618502,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
@@ -619300,7 +619301,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
@@ -620099,7 +620100,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
@@ -620898,7 +620899,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
@@ -621697,7 +621698,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
@@ -622496,7 +622497,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/popover.tsx",
@@ -633429,7 +633430,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -634553,7 +634554,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -635677,7 +635678,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -636804,7 +636805,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -637931,7 +637932,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -639085,7 +639086,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -640208,7 +640209,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -641331,7 +641332,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -642455,7 +642456,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -643597,7 +643598,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -644722,7 +644723,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -676222,7 +676223,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -677344,7 +677345,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -678466,7 +678467,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -679588,7 +679589,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -709281,7 +709282,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-price-adjustment-history.spec.ts",
-              "sha256": "60cfcd404df62caae028c4fc8bea0b8fc6848b4248e4e6e0657abb93cbc590ae"
+              "sha256": "827318ad46bfd3d7728e401042f2ba1258e36adb17e74f679a15f6ac70586ae4"
             },
             {
               "path": "apps/web/src/lib/electricity-price-adjustment-row.test.ts",
@@ -712090,7 +712091,7 @@
             },
             {
               "path": "packages/ui/src/components/ui/dialog.tsx",
-              "sha256": "4777386fc4462687fcb71282e849635705c8c46be6ca847b8cf85a79803ecc29"
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             },
             {
               "path": "packages/ui/src/styles.css",
@@ -712542,7 +712543,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-price-adjustment-history.spec.ts",
-              "sha256": "60cfcd404df62caae028c4fc8bea0b8fc6848b4248e4e6e0657abb93cbc590ae"
+              "sha256": "827318ad46bfd3d7728e401042f2ba1258e36adb17e74f679a15f6ac70586ae4"
             },
             {
               "path": "apps/web/src/lib/electricity-price-adjustment-row.test.ts",
@@ -723624,7 +723625,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Existing forms, wallet, staff knowledge search, notifications, export and guide recovery retain evidence. The auth language switch remains usable during the verified password-change notice. The affected staff headings, electricity and saving breadcrumbs and upload-policy dialog have direct contrast evidence. Remaining contrast observations and broader conditional UI adoption stay open."
+        "The shared dialog opacity fix preserves the staff calculation, upload policy and wallet approval journeys. The historical contrast replay and direct control checks verified the measured states. Mobile Safari toast and clipping observations, other conditional control evidence and broader UI adoption stay open."
       ],
       "owner": null,
       "depends_on": [],
@@ -723723,7 +723724,8 @@
           "release-0.5-current-contrast",
           "release-0.5-contrast-mode-closure",
           "release-0.5-contrast-occlusion",
-          "release-0.5-reveal-clipped-text"
+          "release-0.5-reveal-clipped-text",
+          "release-0.5-remaining-contrast"
         ]
       }
     },
@@ -725320,6 +725322,10 @@
             {
               "path": "apps/web/src/components/MobileNavigationSheet.tsx",
               "sha256": "e627c0272b1c9c08b03845a5793cc3e89bb6a5b0bef99235167d9a735d475c14"
+            },
+            {
+              "path": "packages/ui/src/components/ui/dialog.tsx",
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
             }
           ],
           "checks": [
@@ -725362,7 +725368,8 @@
             "Saved-address, maintenance and reconciliation form semantics passed current production, coverage and bundle checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-schema-form-census/proof.json",
             "Renewed production contrast and verified settings feedback checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-contrast-mode-closure/proof.json",
             "Renewed onboarding, navigation and feedback browser and performance evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-contrast-occlusion/proof.json",
-            "Renewed auth layout transfer, bundle and browser evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-reveal-clipped-text/proof.json"
+            "Renewed auth layout transfer, bundle and browser evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-reveal-clipped-text/proof.json",
+            "Renewed shared dialog motion, cold-auth and bundle evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-remaining-contrast/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -793382,6 +793389,45 @@
       "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-reveal-clipped-text/renewed-bindings.json",
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-reveal-clipped-text/reviewed.patch",
       "release_disposition": "Reproduced and fixed the login language switch overlap. Checked reported clipping in staff queues and AI administration and the upload dialog title and description. Other v0.5.0 acceptance criteria remain open."
+    },
+    "release-0.5-remaining-contrast": {
+      "batch": "release-0.5-remaining-contrast",
+      "base_commit": "564392c3813ce73a3938886e70fa02fca016c7a6",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.05.01.08",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.05.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/electricity-price-adjustment-history.spec.ts",
+          "sha256": "827318ad46bfd3d7728e401042f2ba1258e36adb17e74f679a15f6ac70586ae4"
+        },
+        {
+          "path": "docs/design/accessibility.md",
+          "sha256": "3f5f9060c7fd40584437e7d7514d31c30a09ed3ecb64b411890ca1b419a925ff"
+        },
+        {
+          "path": "packages/ui/src/components/ui/dialog.tsx",
+          "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
+        }
+      ],
+      "checks": [
+        "A Chromium staff price calculation replay measured 3.55:1 during the old dialog fade. A separate opening-frame test measured opacity below 0.01 and keyframes from zero to one. The shared dialog panel keeps its scale motion and leaves the backdrop fade in place. Eight final browser cases verified an opaque opening panel and preserved the calculation, focus return and financial assertions.",
+        "167 diagnostic journeys passed on the previous build. They measured 4518 visible text states after inspecting historical clipped-text observations across Chromium and Mobile Safari. The minimum measured ratio was 4.6540:1. Four notification diagnostics passed on targeted replay after the extra inspection exceeded the ordinary runner timeout.",
+        "Thirteen further Chromium journeys verified 52 native text and document-template punctuation measurements. The minimum was 5.0012:1. Empty fields without text were kept separate from contrast passes.",
+        "24 final production browser cases, 12 instrumented Chromium cases, seven confirmation unit cases, eight source-bound coverage groups, package distribution checks, 98 bundle budgets, six cold-auth measurements, scoped formatting, lint and both package typechecks passed."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-remaining-contrast",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-remaining-contrast/proof.json",
+      "source_scope_proof_sha256": "ab1d5d185056c1b1234d434d789333d5348fbb0d010d7f2b7c6ea98aa943f863",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-remaining-contrast/renewed-bindings.json",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-remaining-contrast/reviewed.patch",
+      "release_disposition": "Fixed shared dialog readability during opening and closing. Measured the remaining historical clipping observations where the text could be revealed. Specific WebKit overlap observations and conditional control evidence remain open."
     }
   },
   "historical_improvements": [
