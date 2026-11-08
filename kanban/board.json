@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-08T19:20:28+00:00",
-  "source_commit": "bd3642e11476c45fc9b44208b055463bf5d82b83",
+  "updated": "2026-11-08T19:33:59+00:00",
+  "source_commit": "da9fd377aec54f89135619cc21ff850da1e36fb1",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -96205,19 +96205,19 @@
             },
             {
               "path": "apps/web/e2e/staff-wallet-ledger.spec.ts",
-              "sha256": "4d9f1edb9ba1d12ea80ad8400e1cce1bab552f33df250e47ef8a2af004919041"
+              "sha256": "49e6713d652e9c9c83d7bb18fe151024f43814dc37e670d71622389b5a9ed8e9"
             },
             {
               "path": "apps/web/src/components/WalletReceiptHistoryDetails.tsx",
-              "sha256": "ccf89ff92e130ada0f1fefd549ad500d997d88a7024cf66365113394cc5cc723"
+              "sha256": "eabd72339250d6358292ebd3e378ae068917ae1781e2e0155748a4d7f4697f20"
             },
             {
               "path": "apps/web/src/components/WalletTransactionList.test.tsx",
-              "sha256": "3050d60e880c755e44e0f10080944dfd813773e19a2eb26ea7feb059330c1ffd"
+              "sha256": "6afd6e7e45bf5ffb49c7a7f170cbd926dc48e94a8e7080457c1d35d11c72e879"
             },
             {
               "path": "apps/web/src/components/WalletTransactionList.tsx",
-              "sha256": "2c9d49eaf18c1bf4c642218a9cec642e61d3abbb25bb9a19b6862a743f029195"
+              "sha256": "e431321e1fba98b44f2b5b56212e774e7fca90b91683952cdfccd6d11c4af4f3"
             },
             {
               "path": "apps/web/src/components/WalletTransactionRecords.tsx",
@@ -107175,19 +107175,19 @@
             },
             {
               "path": "apps/web/e2e/staff-wallet-ledger.spec.ts",
-              "sha256": "4d9f1edb9ba1d12ea80ad8400e1cce1bab552f33df250e47ef8a2af004919041"
+              "sha256": "49e6713d652e9c9c83d7bb18fe151024f43814dc37e670d71622389b5a9ed8e9"
             },
             {
               "path": "apps/web/src/components/WalletReceiptHistoryDetails.tsx",
-              "sha256": "ccf89ff92e130ada0f1fefd549ad500d997d88a7024cf66365113394cc5cc723"
+              "sha256": "eabd72339250d6358292ebd3e378ae068917ae1781e2e0155748a4d7f4697f20"
             },
             {
               "path": "apps/web/src/components/WalletTransactionList.test.tsx",
-              "sha256": "3050d60e880c755e44e0f10080944dfd813773e19a2eb26ea7feb059330c1ffd"
+              "sha256": "6afd6e7e45bf5ffb49c7a7f170cbd926dc48e94a8e7080457c1d35d11c72e879"
             },
             {
               "path": "apps/web/src/components/WalletTransactionList.tsx",
-              "sha256": "2c9d49eaf18c1bf4c642218a9cec642e61d3abbb25bb9a19b6862a743f029195"
+              "sha256": "e431321e1fba98b44f2b5b56212e774e7fca90b91683952cdfccd6d11c4af4f3"
             },
             {
               "path": "apps/web/src/components/WalletTransactionRecords.tsx",
@@ -146120,11 +146120,11 @@
             },
             {
               "path": "apps/web/src/components/WalletTransactionList.test.tsx",
-              "sha256": "3050d60e880c755e44e0f10080944dfd813773e19a2eb26ea7feb059330c1ffd"
+              "sha256": "6afd6e7e45bf5ffb49c7a7f170cbd926dc48e94a8e7080457c1d35d11c72e879"
             },
             {
               "path": "apps/web/src/components/WalletTransactionList.tsx",
-              "sha256": "2c9d49eaf18c1bf4c642218a9cec642e61d3abbb25bb9a19b6862a743f029195"
+              "sha256": "e431321e1fba98b44f2b5b56212e774e7fca90b91683952cdfccd6d11c4af4f3"
             },
             {
               "path": "apps/web/src/components/WalletTransactionRecords.test.tsx",
@@ -146710,11 +146710,11 @@
             },
             {
               "path": "apps/web/src/components/WalletTransactionList.test.tsx",
-              "sha256": "3050d60e880c755e44e0f10080944dfd813773e19a2eb26ea7feb059330c1ffd"
+              "sha256": "6afd6e7e45bf5ffb49c7a7f170cbd926dc48e94a8e7080457c1d35d11c72e879"
             },
             {
               "path": "apps/web/src/components/WalletTransactionList.tsx",
-              "sha256": "2c9d49eaf18c1bf4c642218a9cec642e61d3abbb25bb9a19b6862a743f029195"
+              "sha256": "e431321e1fba98b44f2b5b56212e774e7fca90b91683952cdfccd6d11c4af4f3"
             },
             {
               "path": "apps/web/src/components/WalletTransactionRecords.test.tsx",
@@ -147330,11 +147330,11 @@
             },
             {
               "path": "apps/web/src/components/WalletTransactionList.test.tsx",
-              "sha256": "3050d60e880c755e44e0f10080944dfd813773e19a2eb26ea7feb059330c1ffd"
+              "sha256": "6afd6e7e45bf5ffb49c7a7f170cbd926dc48e94a8e7080457c1d35d11c72e879"
             },
             {
               "path": "apps/web/src/components/WalletTransactionList.tsx",
-              "sha256": "2c9d49eaf18c1bf4c642218a9cec642e61d3abbb25bb9a19b6862a743f029195"
+              "sha256": "e431321e1fba98b44f2b5b56212e774e7fca90b91683952cdfccd6d11c4af4f3"
             },
             {
               "path": "apps/web/src/components/WalletTransactionRecords.test.tsx",
@@ -147967,11 +147967,11 @@
             },
             {
               "path": "apps/web/src/components/WalletTransactionList.test.tsx",
-              "sha256": "3050d60e880c755e44e0f10080944dfd813773e19a2eb26ea7feb059330c1ffd"
+              "sha256": "6afd6e7e45bf5ffb49c7a7f170cbd926dc48e94a8e7080457c1d35d11c72e879"
             },
             {
               "path": "apps/web/src/components/WalletTransactionList.tsx",
-              "sha256": "2c9d49eaf18c1bf4c642218a9cec642e61d3abbb25bb9a19b6862a743f029195"
+              "sha256": "e431321e1fba98b44f2b5b56212e774e7fca90b91683952cdfccd6d11c4af4f3"
             },
             {
               "path": "apps/web/src/components/WalletTransactionRecords.test.tsx",
@@ -148706,11 +148706,11 @@
             },
             {
               "path": "apps/web/src/components/WalletTransactionList.test.tsx",
-              "sha256": "3050d60e880c755e44e0f10080944dfd813773e19a2eb26ea7feb059330c1ffd"
+              "sha256": "6afd6e7e45bf5ffb49c7a7f170cbd926dc48e94a8e7080457c1d35d11c72e879"
             },
             {
               "path": "apps/web/src/components/WalletTransactionList.tsx",
-              "sha256": "2c9d49eaf18c1bf4c642218a9cec642e61d3abbb25bb9a19b6862a743f029195"
+              "sha256": "e431321e1fba98b44f2b5b56212e774e7fca90b91683952cdfccd6d11c4af4f3"
             },
             {
               "path": "apps/web/src/components/WalletTransactionRecords.test.tsx",
@@ -149208,11 +149208,11 @@
             },
             {
               "path": "apps/web/src/components/WalletTransactionList.test.tsx",
-              "sha256": "3050d60e880c755e44e0f10080944dfd813773e19a2eb26ea7feb059330c1ffd"
+              "sha256": "6afd6e7e45bf5ffb49c7a7f170cbd926dc48e94a8e7080457c1d35d11c72e879"
             },
             {
               "path": "apps/web/src/components/WalletTransactionList.tsx",
-              "sha256": "2c9d49eaf18c1bf4c642218a9cec642e61d3abbb25bb9a19b6862a743f029195"
+              "sha256": "e431321e1fba98b44f2b5b56212e774e7fca90b91683952cdfccd6d11c4af4f3"
             },
             {
               "path": "apps/web/src/components/WalletTransactionRecords.test.tsx",
@@ -149688,11 +149688,11 @@
             },
             {
               "path": "apps/web/src/components/WalletTransactionList.test.tsx",
-              "sha256": "3050d60e880c755e44e0f10080944dfd813773e19a2eb26ea7feb059330c1ffd"
+              "sha256": "6afd6e7e45bf5ffb49c7a7f170cbd926dc48e94a8e7080457c1d35d11c72e879"
             },
             {
               "path": "apps/web/src/components/WalletTransactionList.tsx",
-              "sha256": "2c9d49eaf18c1bf4c642218a9cec642e61d3abbb25bb9a19b6862a743f029195"
+              "sha256": "e431321e1fba98b44f2b5b56212e774e7fca90b91683952cdfccd6d11c4af4f3"
             },
             {
               "path": "apps/web/src/components/WalletTransactionRecords.test.tsx",
@@ -150169,11 +150169,11 @@
             },
             {
               "path": "apps/web/src/components/WalletTransactionList.test.tsx",
-              "sha256": "3050d60e880c755e44e0f10080944dfd813773e19a2eb26ea7feb059330c1ffd"
+              "sha256": "6afd6e7e45bf5ffb49c7a7f170cbd926dc48e94a8e7080457c1d35d11c72e879"
             },
             {
               "path": "apps/web/src/components/WalletTransactionList.tsx",
-              "sha256": "2c9d49eaf18c1bf4c642218a9cec642e61d3abbb25bb9a19b6862a743f029195"
+              "sha256": "e431321e1fba98b44f2b5b56212e774e7fca90b91683952cdfccd6d11c4af4f3"
             },
             {
               "path": "apps/web/src/components/WalletTransactionRecords.test.tsx",
@@ -150651,11 +150651,11 @@
             },
             {
               "path": "apps/web/src/components/WalletTransactionList.test.tsx",
-              "sha256": "3050d60e880c755e44e0f10080944dfd813773e19a2eb26ea7feb059330c1ffd"
+              "sha256": "6afd6e7e45bf5ffb49c7a7f170cbd926dc48e94a8e7080457c1d35d11c72e879"
             },
             {
               "path": "apps/web/src/components/WalletTransactionList.tsx",
-              "sha256": "2c9d49eaf18c1bf4c642218a9cec642e61d3abbb25bb9a19b6862a743f029195"
+              "sha256": "e431321e1fba98b44f2b5b56212e774e7fca90b91683952cdfccd6d11c4af4f3"
             },
             {
               "path": "apps/web/src/components/WalletTransactionRecords.test.tsx",
@@ -151141,11 +151141,11 @@
             },
             {
               "path": "apps/web/src/components/WalletTransactionList.test.tsx",
-              "sha256": "3050d60e880c755e44e0f10080944dfd813773e19a2eb26ea7feb059330c1ffd"
+              "sha256": "6afd6e7e45bf5ffb49c7a7f170cbd926dc48e94a8e7080457c1d35d11c72e879"
             },
             {
               "path": "apps/web/src/components/WalletTransactionList.tsx",
-              "sha256": "2c9d49eaf18c1bf4c642218a9cec642e61d3abbb25bb9a19b6862a743f029195"
+              "sha256": "e431321e1fba98b44f2b5b56212e774e7fca90b91683952cdfccd6d11c4af4f3"
             },
             {
               "path": "apps/web/src/components/WalletTransactionRecords.test.tsx",
@@ -151623,11 +151623,11 @@
             },
             {
               "path": "apps/web/src/components/WalletTransactionList.test.tsx",
-              "sha256": "3050d60e880c755e44e0f10080944dfd813773e19a2eb26ea7feb059330c1ffd"
+              "sha256": "6afd6e7e45bf5ffb49c7a7f170cbd926dc48e94a8e7080457c1d35d11c72e879"
             },
             {
               "path": "apps/web/src/components/WalletTransactionList.tsx",
-              "sha256": "2c9d49eaf18c1bf4c642218a9cec642e61d3abbb25bb9a19b6862a743f029195"
+              "sha256": "e431321e1fba98b44f2b5b56212e774e7fca90b91683952cdfccd6d11c4af4f3"
             },
             {
               "path": "apps/web/src/components/WalletTransactionRecords.test.tsx",
@@ -181093,7 +181093,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits-http.integration.test.ts",
@@ -182249,7 +182249,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/openapi.json",
@@ -183766,7 +183766,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits-http.integration.test.ts",
@@ -184895,7 +184895,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits-http.integration.test.ts",
@@ -186024,7 +186024,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits-http.integration.test.ts",
@@ -186791,7 +186791,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits-http.integration.test.ts",
@@ -337315,7 +337315,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits-http.integration.test.ts",
@@ -338445,7 +338445,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits-http.integration.test.ts",
@@ -339212,7 +339212,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits-http.integration.test.ts",
@@ -340342,7 +340342,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits-http.integration.test.ts",
@@ -341110,7 +341110,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits-http.integration.test.ts",
@@ -342239,7 +342239,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits-http.integration.test.ts",
@@ -343370,7 +343370,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits-http.integration.test.ts",
@@ -344500,7 +344500,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits-http.integration.test.ts",
@@ -477226,7 +477226,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -478080,7 +478080,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -479691,7 +479691,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -481304,7 +481304,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -482047,7 +482047,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -482789,7 +482789,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -483098,7 +483098,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/web/e2e/customer-receipts.spec.ts",
@@ -483690,7 +483690,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/web/e2e/customer-receipts.spec.ts",
@@ -484282,7 +484282,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/web/e2e/customer-receipts.spec.ts",
@@ -484874,7 +484874,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/web/e2e/customer-receipts.spec.ts",
@@ -486745,7 +486745,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -490541,7 +490541,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/web/e2e/account-menu.spec.ts",
@@ -490923,7 +490923,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -491131,7 +491131,7 @@
             },
             {
               "path": "apps/web/src/components/WalletTransactionList.tsx",
-              "sha256": "2c9d49eaf18c1bf4c642218a9cec642e61d3abbb25bb9a19b6862a743f029195"
+              "sha256": "e431321e1fba98b44f2b5b56212e774e7fca90b91683952cdfccd6d11c4af4f3"
             },
             {
               "path": "apps/web/src/pages/AIChat.tsx",
@@ -491940,7 +491940,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -492978,11 +492978,11 @@
             },
             {
               "path": "apps/web/src/components/WalletReceiptHistoryDetails.tsx",
-              "sha256": "ccf89ff92e130ada0f1fefd549ad500d997d88a7024cf66365113394cc5cc723"
+              "sha256": "eabd72339250d6358292ebd3e378ae068917ae1781e2e0155748a4d7f4697f20"
             },
             {
               "path": "apps/web/src/components/WalletTransactionList.tsx",
-              "sha256": "2c9d49eaf18c1bf4c642218a9cec642e61d3abbb25bb9a19b6862a743f029195"
+              "sha256": "e431321e1fba98b44f2b5b56212e774e7fca90b91683952cdfccd6d11c4af4f3"
             },
             {
               "path": "apps/web/src/components/WalletTransactionRecords.tsx",
@@ -493162,7 +493162,7 @@
             },
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": ".semgrep/security.yml",
@@ -494055,7 +494055,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/web/build.mjs",
@@ -494259,7 +494259,7 @@
             },
             {
               "path": "apps/web/src/components/WalletTransactionList.tsx",
-              "sha256": "2c9d49eaf18c1bf4c642218a9cec642e61d3abbb25bb9a19b6862a743f029195"
+              "sha256": "e431321e1fba98b44f2b5b56212e774e7fca90b91683952cdfccd6d11c4af4f3"
             },
             {
               "path": "apps/web/src/components/contract-draft-deferred.test.tsx",
@@ -494938,7 +494938,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/web/build.mjs",
@@ -495142,7 +495142,7 @@
             },
             {
               "path": "apps/web/src/components/WalletTransactionList.tsx",
-              "sha256": "2c9d49eaf18c1bf4c642218a9cec642e61d3abbb25bb9a19b6862a743f029195"
+              "sha256": "e431321e1fba98b44f2b5b56212e774e7fca90b91683952cdfccd6d11c4af4f3"
             },
             {
               "path": "apps/web/src/components/contract-draft-deferred.test.tsx",
@@ -495762,7 +495762,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/web/build.mjs",
@@ -495966,7 +495966,7 @@
             },
             {
               "path": "apps/web/src/components/WalletTransactionList.tsx",
-              "sha256": "2c9d49eaf18c1bf4c642218a9cec642e61d3abbb25bb9a19b6862a743f029195"
+              "sha256": "e431321e1fba98b44f2b5b56212e774e7fca90b91683952cdfccd6d11c4af4f3"
             },
             {
               "path": "apps/web/src/components/contract-draft-deferred.test.tsx",
@@ -496639,7 +496639,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/web/build.mjs",
@@ -496671,11 +496671,11 @@
             },
             {
               "path": "apps/web/e2e/staff-wallet-ledger.spec.ts",
-              "sha256": "4d9f1edb9ba1d12ea80ad8400e1cce1bab552f33df250e47ef8a2af004919041"
+              "sha256": "49e6713d652e9c9c83d7bb18fe151024f43814dc37e670d71622389b5a9ed8e9"
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
-              "sha256": "2fcdbd4e2601c41322c5a8edad99d8ea0bb1c484645645fdc0ed32f0bf41a8e8"
+              "sha256": "7b1d93ed217966adc4728762c8f668c77c00418df6d60f37d4aefee3aa01094e"
             },
             {
               "path": "apps/web/package.json",
@@ -496779,7 +496779,7 @@
             },
             {
               "path": "apps/web/src/components/WalletReceiptHistoryDetails.tsx",
-              "sha256": "ccf89ff92e130ada0f1fefd549ad500d997d88a7024cf66365113394cc5cc723"
+              "sha256": "eabd72339250d6358292ebd3e378ae068917ae1781e2e0155748a4d7f4697f20"
             },
             {
               "path": "apps/web/src/components/WalletTopUpLimitConfigPanel.tsx",
@@ -496787,11 +496787,11 @@
             },
             {
               "path": "apps/web/src/components/WalletTransactionList.test.tsx",
-              "sha256": "3050d60e880c755e44e0f10080944dfd813773e19a2eb26ea7feb059330c1ffd"
+              "sha256": "6afd6e7e45bf5ffb49c7a7f170cbd926dc48e94a8e7080457c1d35d11c72e879"
             },
             {
               "path": "apps/web/src/components/WalletTransactionList.tsx",
-              "sha256": "2c9d49eaf18c1bf4c642218a9cec642e61d3abbb25bb9a19b6862a743f029195"
+              "sha256": "e431321e1fba98b44f2b5b56212e774e7fca90b91683952cdfccd6d11c4af4f3"
             },
             {
               "path": "apps/web/src/components/account-gate-query.test.tsx",
@@ -497047,7 +497047,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "cf77e6073084a8100de428dae7e0394ca75ab582d4fba871d09e7bbf792f7b9b"
+              "sha256": "2449f3f30c987b1c068ffb3cd094ad506578e408b2654729aece5a318042f44e"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -497800,11 +497800,11 @@
             },
             {
               "path": "apps/web/src/components/WalletReceiptHistoryDetails.tsx",
-              "sha256": "ccf89ff92e130ada0f1fefd549ad500d997d88a7024cf66365113394cc5cc723"
+              "sha256": "eabd72339250d6358292ebd3e378ae068917ae1781e2e0155748a4d7f4697f20"
             },
             {
               "path": "apps/web/src/components/WalletTransactionList.tsx",
-              "sha256": "2c9d49eaf18c1bf4c642218a9cec642e61d3abbb25bb9a19b6862a743f029195"
+              "sha256": "e431321e1fba98b44f2b5b56212e774e7fca90b91683952cdfccd6d11c4af4f3"
             },
             {
               "path": "apps/web/src/components/WalletTransactionRecords.tsx",
@@ -497984,7 +497984,7 @@
             },
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": ".semgrep/security.yml",
@@ -498837,7 +498837,7 @@
             },
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/openapi.json",
@@ -499381,7 +499381,7 @@
             },
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/openapi.json",
@@ -499925,7 +499925,7 @@
             },
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/openapi.json",
@@ -500469,7 +500469,7 @@
             },
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/openapi.json",
@@ -501013,7 +501013,7 @@
             },
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/openapi.json",
@@ -501557,7 +501557,7 @@
             },
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/openapi.json",
@@ -502101,7 +502101,7 @@
             },
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/openapi.json",
@@ -502645,7 +502645,7 @@
             },
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/openapi.json",
@@ -503189,7 +503189,7 @@
             },
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/openapi.json",
@@ -503733,7 +503733,7 @@
             },
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/openapi.json",
@@ -504277,7 +504277,7 @@
             },
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/openapi.json",
@@ -504821,7 +504821,7 @@
             },
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/openapi.json",
@@ -505365,7 +505365,7 @@
             },
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/openapi.json",
@@ -505909,7 +505909,7 @@
             },
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/openapi.json",
@@ -506395,7 +506395,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/web/build.mjs",
@@ -506979,7 +506979,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/web/build.mjs",
@@ -507563,7 +507563,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/web/build.mjs",
@@ -508464,7 +508464,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/web/build.mjs",
@@ -508869,7 +508869,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/web/build.mjs",
@@ -509272,7 +509272,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/web/build.mjs",
@@ -509675,7 +509675,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/web/build.mjs",
@@ -510078,7 +510078,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/web/build.mjs",
@@ -510388,7 +510388,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/web/build.mjs",
@@ -510698,7 +510698,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/web/build.mjs",
@@ -511008,7 +511008,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/web/build.mjs",
@@ -511334,7 +511334,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/web/build.mjs",
@@ -512523,7 +512523,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/package.json",
@@ -513322,7 +513322,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/package.json",
@@ -514120,7 +514120,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/package.json",
@@ -515061,7 +515061,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/web/build.mjs",
@@ -515121,7 +515121,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
-              "sha256": "2fcdbd4e2601c41322c5a8edad99d8ea0bb1c484645645fdc0ed32f0bf41a8e8"
+              "sha256": "7b1d93ed217966adc4728762c8f668c77c00418df6d60f37d4aefee3aa01094e"
             },
             {
               "path": "apps/web/package.json",
@@ -515493,7 +515493,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/web/build.mjs",
@@ -515565,7 +515565,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
-              "sha256": "2fcdbd4e2601c41322c5a8edad99d8ea0bb1c484645645fdc0ed32f0bf41a8e8"
+              "sha256": "7b1d93ed217966adc4728762c8f668c77c00418df6d60f37d4aefee3aa01094e"
             },
             {
               "path": "apps/web/index.html",
@@ -515932,7 +515932,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/web/build.mjs",
@@ -516004,7 +516004,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
-              "sha256": "2fcdbd4e2601c41322c5a8edad99d8ea0bb1c484645645fdc0ed32f0bf41a8e8"
+              "sha256": "7b1d93ed217966adc4728762c8f668c77c00418df6d60f37d4aefee3aa01094e"
             },
             {
               "path": "apps/web/index.html",
@@ -516367,7 +516367,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/web/build.mjs",
@@ -516427,7 +516427,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
-              "sha256": "2fcdbd4e2601c41322c5a8edad99d8ea0bb1c484645645fdc0ed32f0bf41a8e8"
+              "sha256": "7b1d93ed217966adc4728762c8f668c77c00418df6d60f37d4aefee3aa01094e"
             },
             {
               "path": "apps/web/package.json",
@@ -516805,7 +516805,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/src/user-settings/conversation-identity.service.ts",
@@ -517265,7 +517265,7 @@
             },
             {
               "path": "apps/web/e2e/staff-wallet-ledger.spec.ts",
-              "sha256": "4d9f1edb9ba1d12ea80ad8400e1cce1bab552f33df250e47ef8a2af004919041"
+              "sha256": "49e6713d652e9c9c83d7bb18fe151024f43814dc37e670d71622389b5a9ed8e9"
             },
             {
               "path": "apps/web/e2e/storage-policy-forms.spec.ts",
@@ -517325,7 +517325,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
-              "sha256": "2fcdbd4e2601c41322c5a8edad99d8ea0bb1c484645645fdc0ed32f0bf41a8e8"
+              "sha256": "7b1d93ed217966adc4728762c8f668c77c00418df6d60f37d4aefee3aa01094e"
             },
             {
               "path": "apps/web/package.json",
@@ -518105,7 +518105,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "cf77e6073084a8100de428dae7e0394ca75ab582d4fba871d09e7bbf792f7b9b"
+              "sha256": "2449f3f30c987b1c068ffb3cd094ad506578e408b2654729aece5a318042f44e"
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
@@ -518315,7 +518315,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/web/build.mjs",
@@ -519213,7 +519213,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "cf77e6073084a8100de428dae7e0394ca75ab582d4fba871d09e7bbf792f7b9b"
+              "sha256": "2449f3f30c987b1c068ffb3cd094ad506578e408b2654729aece5a318042f44e"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -519318,7 +519318,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/web/build.mjs",
@@ -519390,7 +519390,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
-              "sha256": "2fcdbd4e2601c41322c5a8edad99d8ea0bb1c484645645fdc0ed32f0bf41a8e8"
+              "sha256": "7b1d93ed217966adc4728762c8f668c77c00418df6d60f37d4aefee3aa01094e"
             },
             {
               "path": "apps/web/index.html",
@@ -519754,7 +519754,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/web/build.mjs",
@@ -520280,7 +520280,7 @@
             },
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/web/build.mjs",
@@ -520516,7 +520516,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
-              "sha256": "2fcdbd4e2601c41322c5a8edad99d8ea0bb1c484645645fdc0ed32f0bf41a8e8"
+              "sha256": "7b1d93ed217966adc4728762c8f668c77c00418df6d60f37d4aefee3aa01094e"
             },
             {
               "path": "apps/web/package.json",
@@ -521108,7 +521108,7 @@
             },
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/web/build.mjs",
@@ -521344,7 +521344,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
-              "sha256": "2fcdbd4e2601c41322c5a8edad99d8ea0bb1c484645645fdc0ed32f0bf41a8e8"
+              "sha256": "7b1d93ed217966adc4728762c8f668c77c00418df6d60f37d4aefee3aa01094e"
             },
             {
               "path": "apps/web/package.json",
@@ -521910,7 +521910,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/web/build.mjs",
@@ -522436,7 +522436,7 @@
             },
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/web/build.mjs",
@@ -522672,7 +522672,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
-              "sha256": "2fcdbd4e2601c41322c5a8edad99d8ea0bb1c484645645fdc0ed32f0bf41a8e8"
+              "sha256": "7b1d93ed217966adc4728762c8f668c77c00418df6d60f37d4aefee3aa01094e"
             },
             {
               "path": "apps/web/package.json",
@@ -523282,7 +523282,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/openapi.json",
@@ -524190,7 +524190,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/openapi.json",
@@ -525098,7 +525098,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/openapi.json",
@@ -526006,7 +526006,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/openapi.json",
@@ -526914,7 +526914,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/openapi.json",
@@ -527822,7 +527822,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/openapi.json",
@@ -528730,7 +528730,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/openapi.json",
@@ -529638,7 +529638,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/openapi.json",
@@ -530546,7 +530546,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/openapi.json",
@@ -531454,7 +531454,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/openapi.json",
@@ -532362,7 +532362,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/openapi.json",
@@ -533270,7 +533270,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/openapi.json",
@@ -534178,7 +534178,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/openapi.json",
@@ -535086,7 +535086,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/openapi.json",
@@ -535994,7 +535994,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/openapi.json",
@@ -536902,7 +536902,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/openapi.json",
@@ -537810,7 +537810,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/openapi.json",
@@ -538718,7 +538718,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/openapi.json",
@@ -539626,7 +539626,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/openapi.json",
@@ -540534,7 +540534,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/openapi.json",
@@ -541428,7 +541428,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/web/build.mjs",
@@ -541831,7 +541831,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/web/build.mjs",
@@ -542234,7 +542234,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/web/build.mjs",
@@ -542637,7 +542637,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/web/build.mjs",
@@ -543045,7 +543045,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/web/build.mjs",
@@ -543454,7 +543454,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/web/build.mjs",
@@ -543857,7 +543857,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/web/build.mjs",
@@ -544260,7 +544260,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/web/build.mjs",
@@ -544664,7 +544664,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/web/build.mjs",
@@ -545069,7 +545069,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/web/build.mjs",
@@ -545472,7 +545472,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/web/build.mjs",
@@ -545876,7 +545876,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/web/build.mjs",
@@ -546321,7 +546321,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/web/build.mjs",
@@ -548187,7 +548187,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/web/build.mjs",
@@ -550054,7 +550054,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/web/build.mjs",
@@ -551890,7 +551890,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/web/build.mjs",
@@ -553752,7 +553752,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/web/build.mjs",
@@ -555623,7 +555623,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/web/build.mjs",
@@ -557467,7 +557467,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/web/build.mjs",
@@ -559275,7 +559275,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/web/build.mjs",
@@ -561083,7 +561083,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/web/build.mjs",
@@ -562892,7 +562892,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/web/build.mjs",
@@ -564700,7 +564700,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/web/build.mjs",
@@ -566502,7 +566502,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/openapi.json",
@@ -567522,7 +567522,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "cf77e6073084a8100de428dae7e0394ca75ab582d4fba871d09e7bbf792f7b9b"
+              "sha256": "2449f3f30c987b1c068ffb3cd094ad506578e408b2654729aece5a318042f44e"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -568397,7 +568397,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/openapi.json",
@@ -569417,7 +569417,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "cf77e6073084a8100de428dae7e0394ca75ab582d4fba871d09e7bbf792f7b9b"
+              "sha256": "2449f3f30c987b1c068ffb3cd094ad506578e408b2654729aece5a318042f44e"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -570313,7 +570313,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/src/profiles/agents.controller.ts",
@@ -570893,7 +570893,7 @@
             },
             {
               "path": "apps/web/e2e/staff-wallet-ledger.spec.ts",
-              "sha256": "4d9f1edb9ba1d12ea80ad8400e1cce1bab552f33df250e47ef8a2af004919041"
+              "sha256": "49e6713d652e9c9c83d7bb18fe151024f43814dc37e670d71622389b5a9ed8e9"
             },
             {
               "path": "apps/web/e2e/staff-wallet-receipt-views.spec.ts",
@@ -570985,7 +570985,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
-              "sha256": "2fcdbd4e2601c41322c5a8edad99d8ea0bb1c484645645fdc0ed32f0bf41a8e8"
+              "sha256": "7b1d93ed217966adc4728762c8f668c77c00418df6d60f37d4aefee3aa01094e"
             },
             {
               "path": "apps/web/package.json",
@@ -571525,7 +571525,7 @@
             },
             {
               "path": "apps/web/src/components/WalletReceiptHistoryDetails.tsx",
-              "sha256": "ccf89ff92e130ada0f1fefd549ad500d997d88a7024cf66365113394cc5cc723"
+              "sha256": "eabd72339250d6358292ebd3e378ae068917ae1781e2e0155748a4d7f4697f20"
             },
             {
               "path": "apps/web/src/components/WalletTopUpLimitConfigPanel.test.tsx",
@@ -571537,11 +571537,11 @@
             },
             {
               "path": "apps/web/src/components/WalletTransactionList.test.tsx",
-              "sha256": "3050d60e880c755e44e0f10080944dfd813773e19a2eb26ea7feb059330c1ffd"
+              "sha256": "6afd6e7e45bf5ffb49c7a7f170cbd926dc48e94a8e7080457c1d35d11c72e879"
             },
             {
               "path": "apps/web/src/components/WalletTransactionList.tsx",
-              "sha256": "2c9d49eaf18c1bf4c642218a9cec642e61d3abbb25bb9a19b6862a743f029195"
+              "sha256": "e431321e1fba98b44f2b5b56212e774e7fca90b91683952cdfccd6d11c4af4f3"
             },
             {
               "path": "apps/web/src/components/WizardLeaveDialog.tsx",
@@ -573069,7 +573069,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "cf77e6073084a8100de428dae7e0394ca75ab582d4fba871d09e7bbf792f7b9b"
+              "sha256": "2449f3f30c987b1c068ffb3cd094ad506578e408b2654729aece5a318042f44e"
             },
             {
               "path": "scripts/check-changed-coverage.py",
@@ -573179,7 +573179,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/openapi.json",
@@ -574199,7 +574199,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "cf77e6073084a8100de428dae7e0394ca75ab582d4fba871d09e7bbf792f7b9b"
+              "sha256": "2449f3f30c987b1c068ffb3cd094ad506578e408b2654729aece5a318042f44e"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -575074,7 +575074,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/openapi.json",
@@ -576094,7 +576094,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "cf77e6073084a8100de428dae7e0394ca75ab582d4fba871d09e7bbf792f7b9b"
+              "sha256": "2449f3f30c987b1c068ffb3cd094ad506578e408b2654729aece5a318042f44e"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -576969,7 +576969,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/openapi.json",
@@ -577989,7 +577989,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "cf77e6073084a8100de428dae7e0394ca75ab582d4fba871d09e7bbf792f7b9b"
+              "sha256": "2449f3f30c987b1c068ffb3cd094ad506578e408b2654729aece5a318042f44e"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -578864,7 +578864,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/openapi.json",
@@ -579884,7 +579884,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "cf77e6073084a8100de428dae7e0394ca75ab582d4fba871d09e7bbf792f7b9b"
+              "sha256": "2449f3f30c987b1c068ffb3cd094ad506578e408b2654729aece5a318042f44e"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -580759,7 +580759,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/openapi.json",
@@ -581779,7 +581779,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "cf77e6073084a8100de428dae7e0394ca75ab582d4fba871d09e7bbf792f7b9b"
+              "sha256": "2449f3f30c987b1c068ffb3cd094ad506578e408b2654729aece5a318042f44e"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -582654,7 +582654,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/openapi.json",
@@ -583674,7 +583674,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "cf77e6073084a8100de428dae7e0394ca75ab582d4fba871d09e7bbf792f7b9b"
+              "sha256": "2449f3f30c987b1c068ffb3cd094ad506578e408b2654729aece5a318042f44e"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -584549,7 +584549,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/openapi.json",
@@ -585569,7 +585569,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "cf77e6073084a8100de428dae7e0394ca75ab582d4fba871d09e7bbf792f7b9b"
+              "sha256": "2449f3f30c987b1c068ffb3cd094ad506578e408b2654729aece5a318042f44e"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -586444,7 +586444,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/openapi.json",
@@ -587464,7 +587464,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "cf77e6073084a8100de428dae7e0394ca75ab582d4fba871d09e7bbf792f7b9b"
+              "sha256": "2449f3f30c987b1c068ffb3cd094ad506578e408b2654729aece5a318042f44e"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -588339,7 +588339,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/openapi.json",
@@ -589359,7 +589359,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "cf77e6073084a8100de428dae7e0394ca75ab582d4fba871d09e7bbf792f7b9b"
+              "sha256": "2449f3f30c987b1c068ffb3cd094ad506578e408b2654729aece5a318042f44e"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -590234,7 +590234,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/openapi.json",
@@ -591254,7 +591254,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "cf77e6073084a8100de428dae7e0394ca75ab582d4fba871d09e7bbf792f7b9b"
+              "sha256": "2449f3f30c987b1c068ffb3cd094ad506578e408b2654729aece5a318042f44e"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -592129,7 +592129,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/openapi.json",
@@ -593149,7 +593149,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "cf77e6073084a8100de428dae7e0394ca75ab582d4fba871d09e7bbf792f7b9b"
+              "sha256": "2449f3f30c987b1c068ffb3cd094ad506578e408b2654729aece5a318042f44e"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -594005,7 +594005,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/web/build.mjs",
@@ -594037,11 +594037,11 @@
             },
             {
               "path": "apps/web/e2e/staff-wallet-ledger.spec.ts",
-              "sha256": "4d9f1edb9ba1d12ea80ad8400e1cce1bab552f33df250e47ef8a2af004919041"
+              "sha256": "49e6713d652e9c9c83d7bb18fe151024f43814dc37e670d71622389b5a9ed8e9"
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
-              "sha256": "2fcdbd4e2601c41322c5a8edad99d8ea0bb1c484645645fdc0ed32f0bf41a8e8"
+              "sha256": "7b1d93ed217966adc4728762c8f668c77c00418df6d60f37d4aefee3aa01094e"
             },
             {
               "path": "apps/web/package.json",
@@ -594145,7 +594145,7 @@
             },
             {
               "path": "apps/web/src/components/WalletReceiptHistoryDetails.tsx",
-              "sha256": "ccf89ff92e130ada0f1fefd549ad500d997d88a7024cf66365113394cc5cc723"
+              "sha256": "eabd72339250d6358292ebd3e378ae068917ae1781e2e0155748a4d7f4697f20"
             },
             {
               "path": "apps/web/src/components/WalletTopUpLimitConfigPanel.tsx",
@@ -594153,11 +594153,11 @@
             },
             {
               "path": "apps/web/src/components/WalletTransactionList.test.tsx",
-              "sha256": "3050d60e880c755e44e0f10080944dfd813773e19a2eb26ea7feb059330c1ffd"
+              "sha256": "6afd6e7e45bf5ffb49c7a7f170cbd926dc48e94a8e7080457c1d35d11c72e879"
             },
             {
               "path": "apps/web/src/components/WalletTransactionList.tsx",
-              "sha256": "2c9d49eaf18c1bf4c642218a9cec642e61d3abbb25bb9a19b6862a743f029195"
+              "sha256": "e431321e1fba98b44f2b5b56212e774e7fca90b91683952cdfccd6d11c4af4f3"
             },
             {
               "path": "apps/web/src/components/account-gate-query.test.tsx",
@@ -594413,7 +594413,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "cf77e6073084a8100de428dae7e0394ca75ab582d4fba871d09e7bbf792f7b9b"
+              "sha256": "2449f3f30c987b1c068ffb3cd094ad506578e408b2654729aece5a318042f44e"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -594764,7 +594764,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/openapi.json",
@@ -595784,7 +595784,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "cf77e6073084a8100de428dae7e0394ca75ab582d4fba871d09e7bbf792f7b9b"
+              "sha256": "2449f3f30c987b1c068ffb3cd094ad506578e408b2654729aece5a318042f44e"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -596659,7 +596659,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/openapi.json",
@@ -597679,7 +597679,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "cf77e6073084a8100de428dae7e0394ca75ab582d4fba871d09e7bbf792f7b9b"
+              "sha256": "2449f3f30c987b1c068ffb3cd094ad506578e408b2654729aece5a318042f44e"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -598483,7 +598483,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "The 98-route reconciliation binds current route paths and direct state owners. Reuse focused conditional evidence for remaining contract and document workspaces, staff inbox and wallet ledger, provider and service settings panes, and customer account/privacy panels. Verify uncovered loading, empty and error views without repeating verified journeys."
+        "Customer wallet history and the staff ledger now have current recovery evidence, including malformed rows, permission denial, accepted-page retention and exact cursor retry. Use the 98-route reconciliation to match existing conditional evidence for contract and document workspaces, staff inbox, provider settings and customer account/privacy panels. Verify uncovered loading, empty and error views."
       ],
       "owner": null,
       "depends_on": [],
@@ -598588,7 +598588,8 @@
           "release-0.5-staff-finance-read-validation",
           "release-0.5-staff-service-queue-validation",
           "release-0.5-address-states-and-route-reconciliation",
-          "release-0.5-hosted-affected-web-repair"
+          "release-0.5-hosted-affected-web-repair",
+          "release-0.5-wallet-ledger-read-recovery"
         ],
         "current_acceptance": null
       }
@@ -598713,7 +598714,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/web/build.mjs",
@@ -600517,7 +600518,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/web/build.mjs",
@@ -602321,7 +602322,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/web/build.mjs",
@@ -604125,7 +604126,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/web/build.mjs",
@@ -605929,7 +605930,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/web/build.mjs",
@@ -607733,7 +607734,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/web/build.mjs",
@@ -609537,7 +609538,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/web/build.mjs",
@@ -611307,7 +611308,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/openapi.json",
@@ -612134,7 +612135,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/openapi.json",
@@ -612961,7 +612962,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/openapi.json",
@@ -613788,7 +613789,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/openapi.json",
@@ -614615,7 +614616,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/openapi.json",
@@ -615455,7 +615456,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/package.json",
@@ -616253,7 +616254,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/package.json",
@@ -617051,7 +617052,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/package.json",
@@ -617849,7 +617850,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/package.json",
@@ -618651,7 +618652,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/package.json",
@@ -619449,7 +619450,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/package.json",
@@ -620247,7 +620248,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/package.json",
@@ -621046,7 +621047,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/package.json",
@@ -621845,7 +621846,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/package.json",
@@ -622644,7 +622645,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/package.json",
@@ -623443,7 +623444,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/package.json",
@@ -624242,7 +624243,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/package.json",
@@ -625041,7 +625042,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/package.json",
@@ -625840,7 +625841,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/package.json",
@@ -626639,7 +626640,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/package.json",
@@ -627424,7 +627425,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/openapi.json",
@@ -628251,7 +628252,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/openapi.json",
@@ -629078,7 +629079,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/openapi.json",
@@ -629905,7 +629906,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/openapi.json",
@@ -630732,7 +630733,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/openapi.json",
@@ -631559,7 +631560,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/openapi.json",
@@ -632386,7 +632387,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/openapi.json",
@@ -633213,7 +633214,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/openapi.json",
@@ -634040,7 +634041,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/openapi.json",
@@ -634867,7 +634868,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/openapi.json",
@@ -635694,7 +635695,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/openapi.json",
@@ -636521,7 +636522,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/openapi.json",
@@ -637376,7 +637377,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/web/build.mjs",
@@ -637540,7 +637541,7 @@
             },
             {
               "path": "apps/web/src/components/WalletTransactionList.tsx",
-              "sha256": "2c9d49eaf18c1bf4c642218a9cec642e61d3abbb25bb9a19b6862a743f029195"
+              "sha256": "e431321e1fba98b44f2b5b56212e774e7fca90b91683952cdfccd6d11c4af4f3"
             },
             {
               "path": "apps/web/src/hooks/useHistoryFilterDraft.ts",
@@ -638500,7 +638501,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/web/build.mjs",
@@ -638664,7 +638665,7 @@
             },
             {
               "path": "apps/web/src/components/WalletTransactionList.tsx",
-              "sha256": "2c9d49eaf18c1bf4c642218a9cec642e61d3abbb25bb9a19b6862a743f029195"
+              "sha256": "e431321e1fba98b44f2b5b56212e774e7fca90b91683952cdfccd6d11c4af4f3"
             },
             {
               "path": "apps/web/src/hooks/useHistoryFilterDraft.ts",
@@ -639624,7 +639625,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/web/build.mjs",
@@ -639788,7 +639789,7 @@
             },
             {
               "path": "apps/web/src/components/WalletTransactionList.tsx",
-              "sha256": "2c9d49eaf18c1bf4c642218a9cec642e61d3abbb25bb9a19b6862a743f029195"
+              "sha256": "e431321e1fba98b44f2b5b56212e774e7fca90b91683952cdfccd6d11c4af4f3"
             },
             {
               "path": "apps/web/src/hooks/useHistoryFilterDraft.ts",
@@ -640751,7 +640752,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/web/build.mjs",
@@ -640915,7 +640916,7 @@
             },
             {
               "path": "apps/web/src/components/WalletTransactionList.tsx",
-              "sha256": "2c9d49eaf18c1bf4c642218a9cec642e61d3abbb25bb9a19b6862a743f029195"
+              "sha256": "e431321e1fba98b44f2b5b56212e774e7fca90b91683952cdfccd6d11c4af4f3"
             },
             {
               "path": "apps/web/src/hooks/useHistoryFilterDraft.ts",
@@ -641878,7 +641879,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/web/build.mjs",
@@ -642042,7 +642043,7 @@
             },
             {
               "path": "apps/web/src/components/WalletTransactionList.tsx",
-              "sha256": "2c9d49eaf18c1bf4c642218a9cec642e61d3abbb25bb9a19b6862a743f029195"
+              "sha256": "e431321e1fba98b44f2b5b56212e774e7fca90b91683952cdfccd6d11c4af4f3"
             },
             {
               "path": "apps/web/src/hooks/useHistoryFilterDraft.ts",
@@ -643032,7 +643033,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/web/build.mjs",
@@ -643196,7 +643197,7 @@
             },
             {
               "path": "apps/web/src/components/WalletTransactionList.tsx",
-              "sha256": "2c9d49eaf18c1bf4c642218a9cec642e61d3abbb25bb9a19b6862a743f029195"
+              "sha256": "e431321e1fba98b44f2b5b56212e774e7fca90b91683952cdfccd6d11c4af4f3"
             },
             {
               "path": "apps/web/src/hooks/useHistoryFilterDraft.ts",
@@ -644155,7 +644156,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/web/build.mjs",
@@ -644319,7 +644320,7 @@
             },
             {
               "path": "apps/web/src/components/WalletTransactionList.tsx",
-              "sha256": "2c9d49eaf18c1bf4c642218a9cec642e61d3abbb25bb9a19b6862a743f029195"
+              "sha256": "e431321e1fba98b44f2b5b56212e774e7fca90b91683952cdfccd6d11c4af4f3"
             },
             {
               "path": "apps/web/src/hooks/useHistoryFilterDraft.ts",
@@ -645278,7 +645279,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/web/build.mjs",
@@ -645442,7 +645443,7 @@
             },
             {
               "path": "apps/web/src/components/WalletTransactionList.tsx",
-              "sha256": "2c9d49eaf18c1bf4c642218a9cec642e61d3abbb25bb9a19b6862a743f029195"
+              "sha256": "e431321e1fba98b44f2b5b56212e774e7fca90b91683952cdfccd6d11c4af4f3"
             },
             {
               "path": "apps/web/src/hooks/useHistoryFilterDraft.ts",
@@ -646402,7 +646403,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/web/build.mjs",
@@ -646566,7 +646567,7 @@
             },
             {
               "path": "apps/web/src/components/WalletTransactionList.tsx",
-              "sha256": "2c9d49eaf18c1bf4c642218a9cec642e61d3abbb25bb9a19b6862a743f029195"
+              "sha256": "e431321e1fba98b44f2b5b56212e774e7fca90b91683952cdfccd6d11c4af4f3"
             },
             {
               "path": "apps/web/src/hooks/useHistoryFilterDraft.ts",
@@ -647544,7 +647545,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/web/build.mjs",
@@ -647708,7 +647709,7 @@
             },
             {
               "path": "apps/web/src/components/WalletTransactionList.tsx",
-              "sha256": "2c9d49eaf18c1bf4c642218a9cec642e61d3abbb25bb9a19b6862a743f029195"
+              "sha256": "e431321e1fba98b44f2b5b56212e774e7fca90b91683952cdfccd6d11c4af4f3"
             },
             {
               "path": "apps/web/src/hooks/useHistoryFilterDraft.ts",
@@ -648669,7 +648670,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/web/build.mjs",
@@ -648833,7 +648834,7 @@
             },
             {
               "path": "apps/web/src/components/WalletTransactionList.tsx",
-              "sha256": "2c9d49eaf18c1bf4c642218a9cec642e61d3abbb25bb9a19b6862a743f029195"
+              "sha256": "e431321e1fba98b44f2b5b56212e774e7fca90b91683952cdfccd6d11c4af4f3"
             },
             {
               "path": "apps/web/src/hooks/useHistoryFilterDraft.ts",
@@ -650053,7 +650054,7 @@
             },
             {
               "path": "apps/web/src/components/WalletReceiptHistoryDetails.tsx",
-              "sha256": "ccf89ff92e130ada0f1fefd549ad500d997d88a7024cf66365113394cc5cc723"
+              "sha256": "eabd72339250d6358292ebd3e378ae068917ae1781e2e0155748a4d7f4697f20"
             },
             {
               "path": "apps/web/src/hooks/useAccountTime.test.tsx",
@@ -650882,7 +650883,7 @@
             },
             {
               "path": "apps/web/src/components/WalletReceiptHistoryDetails.tsx",
-              "sha256": "ccf89ff92e130ada0f1fefd549ad500d997d88a7024cf66365113394cc5cc723"
+              "sha256": "eabd72339250d6358292ebd3e378ae068917ae1781e2e0155748a4d7f4697f20"
             },
             {
               "path": "apps/web/src/hooks/useAccountTime.test.tsx",
@@ -651719,7 +651720,7 @@
             },
             {
               "path": "apps/web/src/components/WalletReceiptHistoryDetails.tsx",
-              "sha256": "ccf89ff92e130ada0f1fefd549ad500d997d88a7024cf66365113394cc5cc723"
+              "sha256": "eabd72339250d6358292ebd3e378ae068917ae1781e2e0155748a4d7f4697f20"
             },
             {
               "path": "apps/web/src/hooks/useAccountTime.test.tsx",
@@ -652540,7 +652541,7 @@
             },
             {
               "path": "apps/web/src/components/WalletReceiptHistoryDetails.tsx",
-              "sha256": "ccf89ff92e130ada0f1fefd549ad500d997d88a7024cf66365113394cc5cc723"
+              "sha256": "eabd72339250d6358292ebd3e378ae068917ae1781e2e0155748a4d7f4697f20"
             },
             {
               "path": "apps/web/src/hooks/useAccountTime.test.tsx",
@@ -653360,7 +653361,7 @@
             },
             {
               "path": "apps/web/src/components/WalletReceiptHistoryDetails.tsx",
-              "sha256": "ccf89ff92e130ada0f1fefd549ad500d997d88a7024cf66365113394cc5cc723"
+              "sha256": "eabd72339250d6358292ebd3e378ae068917ae1781e2e0155748a4d7f4697f20"
             },
             {
               "path": "apps/web/src/hooks/useAccountTime.test.tsx",
@@ -680169,7 +680170,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/web/build.mjs",
@@ -680333,7 +680334,7 @@
             },
             {
               "path": "apps/web/src/components/WalletTransactionList.tsx",
-              "sha256": "2c9d49eaf18c1bf4c642218a9cec642e61d3abbb25bb9a19b6862a743f029195"
+              "sha256": "e431321e1fba98b44f2b5b56212e774e7fca90b91683952cdfccd6d11c4af4f3"
             },
             {
               "path": "apps/web/src/hooks/useHistoryFilterDraft.ts",
@@ -681291,7 +681292,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/web/build.mjs",
@@ -681455,7 +681456,7 @@
             },
             {
               "path": "apps/web/src/components/WalletTransactionList.tsx",
-              "sha256": "2c9d49eaf18c1bf4c642218a9cec642e61d3abbb25bb9a19b6862a743f029195"
+              "sha256": "e431321e1fba98b44f2b5b56212e774e7fca90b91683952cdfccd6d11c4af4f3"
             },
             {
               "path": "apps/web/src/hooks/useHistoryFilterDraft.ts",
@@ -682413,7 +682414,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/web/build.mjs",
@@ -682577,7 +682578,7 @@
             },
             {
               "path": "apps/web/src/components/WalletTransactionList.tsx",
-              "sha256": "2c9d49eaf18c1bf4c642218a9cec642e61d3abbb25bb9a19b6862a743f029195"
+              "sha256": "e431321e1fba98b44f2b5b56212e774e7fca90b91683952cdfccd6d11c4af4f3"
             },
             {
               "path": "apps/web/src/hooks/useHistoryFilterDraft.ts",
@@ -683535,7 +683536,7 @@
           "source_evidence": [
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/web/build.mjs",
@@ -683699,7 +683700,7 @@
             },
             {
               "path": "apps/web/src/components/WalletTransactionList.tsx",
-              "sha256": "2c9d49eaf18c1bf4c642218a9cec642e61d3abbb25bb9a19b6862a743f029195"
+              "sha256": "e431321e1fba98b44f2b5b56212e774e7fca90b91683952cdfccd6d11c4af4f3"
             },
             {
               "path": "apps/web/src/hooks/useHistoryFilterDraft.ts",
@@ -688280,11 +688281,11 @@
             },
             {
               "path": "apps/web/src/components/WalletTransactionList.test.tsx",
-              "sha256": "3050d60e880c755e44e0f10080944dfd813773e19a2eb26ea7feb059330c1ffd"
+              "sha256": "6afd6e7e45bf5ffb49c7a7f170cbd926dc48e94a8e7080457c1d35d11c72e879"
             },
             {
               "path": "apps/web/src/components/WalletTransactionList.tsx",
-              "sha256": "2c9d49eaf18c1bf4c642218a9cec642e61d3abbb25bb9a19b6862a743f029195"
+              "sha256": "e431321e1fba98b44f2b5b56212e774e7fca90b91683952cdfccd6d11c4af4f3"
             },
             {
               "path": "apps/web/src/components/WalletTransactionRecords.test.tsx",
@@ -689121,11 +689122,11 @@
             },
             {
               "path": "apps/web/src/components/WalletTransactionList.test.tsx",
-              "sha256": "3050d60e880c755e44e0f10080944dfd813773e19a2eb26ea7feb059330c1ffd"
+              "sha256": "6afd6e7e45bf5ffb49c7a7f170cbd926dc48e94a8e7080457c1d35d11c72e879"
             },
             {
               "path": "apps/web/src/components/WalletTransactionList.tsx",
-              "sha256": "2c9d49eaf18c1bf4c642218a9cec642e61d3abbb25bb9a19b6862a743f029195"
+              "sha256": "e431321e1fba98b44f2b5b56212e774e7fca90b91683952cdfccd6d11c4af4f3"
             },
             {
               "path": "apps/web/src/components/WalletTransactionRecords.test.tsx",
@@ -689964,11 +689965,11 @@
             },
             {
               "path": "apps/web/src/components/WalletTransactionList.test.tsx",
-              "sha256": "3050d60e880c755e44e0f10080944dfd813773e19a2eb26ea7feb059330c1ffd"
+              "sha256": "6afd6e7e45bf5ffb49c7a7f170cbd926dc48e94a8e7080457c1d35d11c72e879"
             },
             {
               "path": "apps/web/src/components/WalletTransactionList.tsx",
-              "sha256": "2c9d49eaf18c1bf4c642218a9cec642e61d3abbb25bb9a19b6862a743f029195"
+              "sha256": "e431321e1fba98b44f2b5b56212e774e7fca90b91683952cdfccd6d11c4af4f3"
             },
             {
               "path": "apps/web/src/components/WalletTransactionRecords.test.tsx",
@@ -690805,11 +690806,11 @@
             },
             {
               "path": "apps/web/src/components/WalletTransactionList.test.tsx",
-              "sha256": "3050d60e880c755e44e0f10080944dfd813773e19a2eb26ea7feb059330c1ffd"
+              "sha256": "6afd6e7e45bf5ffb49c7a7f170cbd926dc48e94a8e7080457c1d35d11c72e879"
             },
             {
               "path": "apps/web/src/components/WalletTransactionList.tsx",
-              "sha256": "2c9d49eaf18c1bf4c642218a9cec642e61d3abbb25bb9a19b6862a743f029195"
+              "sha256": "e431321e1fba98b44f2b5b56212e774e7fca90b91683952cdfccd6d11c4af4f3"
             },
             {
               "path": "apps/web/src/components/WalletTransactionRecords.test.tsx",
@@ -691646,11 +691647,11 @@
             },
             {
               "path": "apps/web/src/components/WalletTransactionList.test.tsx",
-              "sha256": "3050d60e880c755e44e0f10080944dfd813773e19a2eb26ea7feb059330c1ffd"
+              "sha256": "6afd6e7e45bf5ffb49c7a7f170cbd926dc48e94a8e7080457c1d35d11c72e879"
             },
             {
               "path": "apps/web/src/components/WalletTransactionList.tsx",
-              "sha256": "2c9d49eaf18c1bf4c642218a9cec642e61d3abbb25bb9a19b6862a743f029195"
+              "sha256": "e431321e1fba98b44f2b5b56212e774e7fca90b91683952cdfccd6d11c4af4f3"
             },
             {
               "path": "apps/web/src/components/WalletTransactionRecords.test.tsx",
@@ -692491,11 +692492,11 @@
             },
             {
               "path": "apps/web/src/components/WalletTransactionList.test.tsx",
-              "sha256": "3050d60e880c755e44e0f10080944dfd813773e19a2eb26ea7feb059330c1ffd"
+              "sha256": "6afd6e7e45bf5ffb49c7a7f170cbd926dc48e94a8e7080457c1d35d11c72e879"
             },
             {
               "path": "apps/web/src/components/WalletTransactionList.tsx",
-              "sha256": "2c9d49eaf18c1bf4c642218a9cec642e61d3abbb25bb9a19b6862a743f029195"
+              "sha256": "e431321e1fba98b44f2b5b56212e774e7fca90b91683952cdfccd6d11c4af4f3"
             },
             {
               "path": "apps/web/src/components/WalletTransactionRecords.test.tsx",
@@ -693336,11 +693337,11 @@
             },
             {
               "path": "apps/web/src/components/WalletTransactionList.test.tsx",
-              "sha256": "3050d60e880c755e44e0f10080944dfd813773e19a2eb26ea7feb059330c1ffd"
+              "sha256": "6afd6e7e45bf5ffb49c7a7f170cbd926dc48e94a8e7080457c1d35d11c72e879"
             },
             {
               "path": "apps/web/src/components/WalletTransactionList.tsx",
-              "sha256": "2c9d49eaf18c1bf4c642218a9cec642e61d3abbb25bb9a19b6862a743f029195"
+              "sha256": "e431321e1fba98b44f2b5b56212e774e7fca90b91683952cdfccd6d11c4af4f3"
             },
             {
               "path": "apps/web/src/components/WalletTransactionRecords.test.tsx",
@@ -694177,11 +694178,11 @@
             },
             {
               "path": "apps/web/src/components/WalletTransactionList.test.tsx",
-              "sha256": "3050d60e880c755e44e0f10080944dfd813773e19a2eb26ea7feb059330c1ffd"
+              "sha256": "6afd6e7e45bf5ffb49c7a7f170cbd926dc48e94a8e7080457c1d35d11c72e879"
             },
             {
               "path": "apps/web/src/components/WalletTransactionList.tsx",
-              "sha256": "2c9d49eaf18c1bf4c642218a9cec642e61d3abbb25bb9a19b6862a743f029195"
+              "sha256": "e431321e1fba98b44f2b5b56212e774e7fca90b91683952cdfccd6d11c4af4f3"
             },
             {
               "path": "apps/web/src/components/WalletTransactionRecords.test.tsx",
@@ -695018,11 +695019,11 @@
             },
             {
               "path": "apps/web/src/components/WalletTransactionList.test.tsx",
-              "sha256": "3050d60e880c755e44e0f10080944dfd813773e19a2eb26ea7feb059330c1ffd"
+              "sha256": "6afd6e7e45bf5ffb49c7a7f170cbd926dc48e94a8e7080457c1d35d11c72e879"
             },
             {
               "path": "apps/web/src/components/WalletTransactionList.tsx",
-              "sha256": "2c9d49eaf18c1bf4c642218a9cec642e61d3abbb25bb9a19b6862a743f029195"
+              "sha256": "e431321e1fba98b44f2b5b56212e774e7fca90b91683952cdfccd6d11c4af4f3"
             },
             {
               "path": "apps/web/src/components/WalletTransactionRecords.test.tsx",
@@ -695860,11 +695861,11 @@
             },
             {
               "path": "apps/web/src/components/WalletTransactionList.test.tsx",
-              "sha256": "3050d60e880c755e44e0f10080944dfd813773e19a2eb26ea7feb059330c1ffd"
+              "sha256": "6afd6e7e45bf5ffb49c7a7f170cbd926dc48e94a8e7080457c1d35d11c72e879"
             },
             {
               "path": "apps/web/src/components/WalletTransactionList.tsx",
-              "sha256": "2c9d49eaf18c1bf4c642218a9cec642e61d3abbb25bb9a19b6862a743f029195"
+              "sha256": "e431321e1fba98b44f2b5b56212e774e7fca90b91683952cdfccd6d11c4af4f3"
             },
             {
               "path": "apps/web/src/components/WalletTransactionRecords.test.tsx",
@@ -696707,11 +696708,11 @@
             },
             {
               "path": "apps/web/src/components/WalletTransactionList.test.tsx",
-              "sha256": "3050d60e880c755e44e0f10080944dfd813773e19a2eb26ea7feb059330c1ffd"
+              "sha256": "6afd6e7e45bf5ffb49c7a7f170cbd926dc48e94a8e7080457c1d35d11c72e879"
             },
             {
               "path": "apps/web/src/components/WalletTransactionList.tsx",
-              "sha256": "2c9d49eaf18c1bf4c642218a9cec642e61d3abbb25bb9a19b6862a743f029195"
+              "sha256": "e431321e1fba98b44f2b5b56212e774e7fca90b91683952cdfccd6d11c4af4f3"
             },
             {
               "path": "apps/web/src/components/WalletTransactionRecords.test.tsx",
@@ -709971,15 +709972,15 @@
           "source_evidence": [
             {
               "path": "apps/web/src/components/WalletTransactionList.tsx",
-              "sha256": "2c9d49eaf18c1bf4c642218a9cec642e61d3abbb25bb9a19b6862a743f029195"
+              "sha256": "e431321e1fba98b44f2b5b56212e774e7fca90b91683952cdfccd6d11c4af4f3"
             },
             {
               "path": "apps/web/src/components/WalletTransactionList.test.tsx",
-              "sha256": "3050d60e880c755e44e0f10080944dfd813773e19a2eb26ea7feb059330c1ffd"
+              "sha256": "6afd6e7e45bf5ffb49c7a7f170cbd926dc48e94a8e7080457c1d35d11c72e879"
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
-              "sha256": "2fcdbd4e2601c41322c5a8edad99d8ea0bb1c484645645fdc0ed32f0bf41a8e8"
+              "sha256": "7b1d93ed217966adc4728762c8f668c77c00418df6d60f37d4aefee3aa01094e"
             },
             {
               "path": "apps/web/src/components/WalletTransactionRecords.tsx",
@@ -712910,11 +712911,11 @@
             },
             {
               "path": "apps/web/src/components/WalletTransactionList.test.tsx",
-              "sha256": "3050d60e880c755e44e0f10080944dfd813773e19a2eb26ea7feb059330c1ffd"
+              "sha256": "6afd6e7e45bf5ffb49c7a7f170cbd926dc48e94a8e7080457c1d35d11c72e879"
             },
             {
               "path": "apps/web/src/components/WalletTransactionList.tsx",
-              "sha256": "2c9d49eaf18c1bf4c642218a9cec642e61d3abbb25bb9a19b6862a743f029195"
+              "sha256": "e431321e1fba98b44f2b5b56212e774e7fca90b91683952cdfccd6d11c4af4f3"
             },
             {
               "path": "apps/web/src/components/WalletTransactionRecords.test.tsx",
@@ -713694,7 +713695,7 @@
             },
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits-http.integration.test.ts",
@@ -716959,7 +716960,7 @@
             },
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/src/electricity/electricity-increase-forms.controller.test.ts",
@@ -728232,7 +728233,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Saved-address and service-target recovery passed current focused checks. The six failures from GitHub run 42512612547 were reproduced and resolved locally. Confirm the affected hosted tests on the pushed repair. Finish conditional evidence reconciliation. Required GitHub merge enforcement and a staging Sentry receipt remain open."
+        "Saved addresses, service settings and customer/staff wallet history have current conditional evidence. Confirm hosted affected-web tests on the pushed source and finish route-state reconciliation. Required GitHub merge enforcement and staging Sentry delivery remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -728402,7 +728403,8 @@
           "release-0.5-staff-finance-read-validation",
           "release-0.5-staff-service-queue-validation",
           "release-0.5-address-states-and-route-reconciliation",
-          "release-0.5-hosted-affected-web-repair"
+          "release-0.5-hosted-affected-web-repair",
+          "release-0.5-wallet-ledger-read-recovery"
         ]
       }
     },
@@ -728434,7 +728436,7 @@
             },
             {
               "path": ".size-limit.json",
-              "sha256": "8a4373c99af595ece97c39c5fdb5bd914f124e8cf5d7abb5a7295779b81733fa"
+              "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -728494,7 +728496,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
-              "sha256": "2fcdbd4e2601c41322c5a8edad99d8ea0bb1c484645645fdc0ed32f0bf41a8e8"
+              "sha256": "7b1d93ed217966adc4728762c8f668c77c00418df6d60f37d4aefee3aa01094e"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -729018,7 +729020,7 @@
             },
             {
               "path": "apps/web/src/components/WalletReceiptHistoryDetails.tsx",
-              "sha256": "ccf89ff92e130ada0f1fefd549ad500d997d88a7024cf66365113394cc5cc723"
+              "sha256": "eabd72339250d6358292ebd3e378ae068917ae1781e2e0155748a4d7f4697f20"
             },
             {
               "path": "apps/web/src/components/WalletTopUpLimitConfigPanel.tsx",
@@ -729026,7 +729028,7 @@
             },
             {
               "path": "apps/web/src/components/WalletTransactionList.tsx",
-              "sha256": "2c9d49eaf18c1bf4c642218a9cec642e61d3abbb25bb9a19b6862a743f029195"
+              "sha256": "e431321e1fba98b44f2b5b56212e774e7fca90b91683952cdfccd6d11c4af4f3"
             },
             {
               "path": "apps/web/src/components/WalletTransactionRecords.tsx",
@@ -730316,7 +730318,8 @@
             "Renewed staff finance and operations browser, coverage and route budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-finance-read-validation/proof.json",
             "Renewed staff service queue browser, coverage and route budget evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-service-queue-validation/proof.json",
             "Renewed route budgets, changed-source coverage and cold auth asset comparison. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-address-states-and-route-reconciliation/proof.json",
-            "Renewed service-settings route budgets, changed-source coverage and cold auth asset comparison. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-hosted-affected-web-repair/proof.json"
+            "Renewed service-settings route budgets, changed-source coverage and cold auth asset comparison. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-hosted-affected-web-repair/proof.json",
+            "Renewed wallet history route budgets, changed-source coverage and cold auth asset comparison. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-wallet-ledger-read-recovery/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -806289,6 +806292,134 @@
       "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-hosted-affected-web-repair/renewed-bindings.json",
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-hosted-affected-web-repair/reviewed.patch",
       "release_disposition": "Resolved six affected web failures locally and verified service settings. v0.5.0 remains open."
+    },
+    "release-0.5-wallet-ledger-read-recovery": {
+      "batch": "release-0.5-wallet-ledger-read-recovery",
+      "base_commit": "da9fd377aec54f89135619cc21ff850da1e36fb1",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": ".size-limit.json",
+          "sha256": "46cb2e55db667dd1281b054f015922f82f2dae462c950e20a7dc0b66ccf30a54"
+        },
+        {
+          "path": "apps/api/src/wallet/staff-wallet-ledger.controller.ts",
+          "sha256": "764f677d49b62241a3279ee2aed96af002cba030ed4c86b8647f441ea3ee7001"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet-history.ts",
+          "sha256": "743dffb6c1175fdbfdc7efcf2b02d26a514146681154ce8e5b017db6190b9a36"
+        },
+        {
+          "path": "apps/web/e2e/coverage-fixture.ts",
+          "sha256": "07949862684b86d6ff241d5f71e59e6c71a5cc1ddc70655b0d508beb53865dac"
+        },
+        {
+          "path": "apps/web/e2e/staff-wallet-ledger.spec.ts",
+          "sha256": "49e6713d652e9c9c83d7bb18fe151024f43814dc37e670d71622389b5a9ed8e9"
+        },
+        {
+          "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
+          "sha256": "7b1d93ed217966adc4728762c8f668c77c00418df6d60f37d4aefee3aa01094e"
+        },
+        {
+          "path": "apps/web/playwright.config.ts",
+          "sha256": "ad9a9e23b46599266a7fe0dcfd7185e12e612cdc50c040453533d1fccbea85cf"
+        },
+        {
+          "path": "apps/web/src/components/ReceiptAttachmentPreview.test.tsx",
+          "sha256": "e92aa690daded62f61d18a103115fb4eaf8e0b91349be9cdae3fecfed8d3e9f7"
+        },
+        {
+          "path": "apps/web/src/components/ReceiptAttachmentPreview.tsx",
+          "sha256": "fd41cfbf651dd573b4aa3644ed7b4e6b45b877702f14bf5b2ee1a4e097cc510e"
+        },
+        {
+          "path": "apps/web/src/components/WalletReceiptHistoryDetails.tsx",
+          "sha256": "eabd72339250d6358292ebd3e378ae068917ae1781e2e0155748a4d7f4697f20"
+        },
+        {
+          "path": "apps/web/src/components/WalletReceiptTimeline.tsx",
+          "sha256": "e3cf3b64ac1528f8bb15f7246f696fe4fe044841732b48301da6922e20378178"
+        },
+        {
+          "path": "apps/web/src/components/WalletTransactionList.test.tsx",
+          "sha256": "6afd6e7e45bf5ffb49c7a7f170cbd926dc48e94a8e7080457c1d35d11c72e879"
+        },
+        {
+          "path": "apps/web/src/components/WalletTransactionList.tsx",
+          "sha256": "e431321e1fba98b44f2b5b56212e774e7fca90b91683952cdfccd6d11c4af4f3"
+        },
+        {
+          "path": "apps/web/src/components/WalletTransactionRecords.test.tsx",
+          "sha256": "b2b7b1ee2e4a6279442d8d35539ec6477ec9283edadec7fd2df88ac66025c3e8"
+        },
+        {
+          "path": "apps/web/src/components/WalletTransactionRecords.tsx",
+          "sha256": "6cf41ecc77b3098a284b2591e71b31c5ad76ed1f79582af4efecf3ede65de05f"
+        },
+        {
+          "path": "apps/web/src/lib/wallet-history-query.test.ts",
+          "sha256": "7772a04f7ef16c8357696fda6d6d41e9c6736db3302cbe4334fef555b5aeff36"
+        },
+        {
+          "path": "apps/web/src/lib/wallet-history-query.ts",
+          "sha256": "28bc78be78cd624dd0a0464afca06c2f717eb62bdea2dd6d8ca8ee35be832be7"
+        },
+        {
+          "path": "apps/web/src/pages/StaffWalletLedgerPage.tsx",
+          "sha256": "854a4e64f40d3ee6789e79da64010745a577316fa3a232ba4dadd8d9cf894428"
+        },
+        {
+          "path": "apps/web/src/pages/WalletPage.tsx",
+          "sha256": "44ee2de825c64b4a53473aaf8a022175959f36ed543fa97f6d582949c89be630"
+        },
+        {
+          "path": "docs/design/notification-recovery.md",
+          "sha256": "2449f3f30c987b1c068ffb3cd094ad506578e408b2654729aece5a318042f44e"
+        },
+        {
+          "path": "package.json",
+          "sha256": "886264b44b4a98229d8f38d01775db77f95128e8eb80eb1f70f2c41f97c784ff"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "aab5a31e236ab70a7c588c676e3a0a2cf0bb8250e8d96ecdc469c9be175dcfa2"
+        },
+        {
+          "path": "scripts/check-changed-coverage.py",
+          "sha256": "721aa5763bb62336c0e4c454b8e36e2f15ff1e14bf4b0136c7c7946424bbd736"
+        },
+        {
+          "path": "scripts/check-route-budgets.mjs",
+          "sha256": "4dd831c645a9dbf1e6fd9b0c211b5559e4fc22652373b31525bd4f4aae38186d"
+        },
+        {
+          "path": "scripts/run-production-browser.mjs",
+          "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+        }
+      ],
+      "checks": [
+        "Reproduced a render failure from a decimal amount and a separate render failure from a missing receipt timeline. Wallet history now validates each row and its receipt projection before accepting either customer or staff results.",
+        "The list keeps its last valid page for a transient or malformed response and retries the exact cursor. Staff denial still removes private links and rows. Staff browser tests recover from a malformed successful response on the same filters. Customer receipt history and ledger links retain the recorded dates, exact integer amounts and existing profile checks.",
+        "The first build exceeded the initial Wallet budget by 230 bytes. Attachment preview now loads when its receipt disclosure opens. The Wallet route passes at 299.61 KB with its original 300 KB limit. The new interaction measures 0.80 KB and has a separate budget.",
+        "The first budget-compliant browser run stopped one Chromium case at a screenshot write to a full temporary filesystem. The fixture now uses Playwright's artifact directory. The two Persian dark cases passed there. Instrumentation was collected again on clean source after a draft documentation change made the first coverage receipt dirty.",
+        "Passed targeted wallet, receipt and filter units, 16 native Chromium and mobile Safari cases in Persian and English and two instrumented Chromium cases. All nine coverage groups, 101 route and interaction budgets, typecheck, lint and formatting passed. Cold auth retained all 31 verified asset hashes."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-wallet-ledger-read-recovery",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-wallet-ledger-read-recovery/proof.json",
+      "source_scope_proof_sha256": "82dcee7c7cbba59072a178522d0d11fc1c8c315fe4f2b891f3dbf000576e3f01",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-wallet-ledger-read-recovery/renewed-bindings.json",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-wallet-ledger-read-recovery/reviewed.patch",
+      "release_disposition": "Verified wallet history recovery for customer and staff. v0.5.0 remains open."
     }
   },
   "historical_improvements": [
@@ -806344,7 +806475,7 @@
   "launch_forecast": {
     "status": "deadline_at_risk_until_v0_5_and_operational_gates_close",
     "next_update_after": "v0.5.0 remaining UI criteria and owner decisions",
-    "method": "v0.4.0 staging and Telegram receipts are verified. v0.5.0 service settings recovery and all six hosted affected-web failures have passing local evidence. Four launch-required criteria remain open and the November 9 sequence remains at risk."
+    "method": "v0.4.0 staging and Telegram receipts are verified. v0.5.0 customer and staff wallet history recovery passed scoped checks. Six previous hosted failures have passing local evidence. Four launch-required criteria remain open and the November 9 sequence remains at risk."
   },
   "capabilities": [
     {

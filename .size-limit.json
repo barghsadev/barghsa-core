@@ -100,6 +100,12 @@
     "limitKB": 5
   },
   {
+    "name": "Wallet receipt attachment preview on demand",
+    "phase": "interaction",
+    "entries": ["src/components/ReceiptAttachmentPreview.tsx"],
+    "limitKB": 15
+  },
+  {
     "name": "Wallet top-up review on demand",
     "phase": "interaction",
     "entries": ["src/components/OnlineTopUpReviewDialog.tsx"],

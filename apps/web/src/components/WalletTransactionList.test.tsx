@@ -56,7 +56,7 @@ const tx = {
   description: 'Bank transfer' as string | null,
   createdAt: '2026-09-01T12:00:00.123456Z',
 };
-const response = (transactions = [tx], nextCursor: string | null = null) => ({
+const response = (transactions: unknown[] = [tx], nextCursor: string | null = null) => ({
   ok: true,
   json: async () => ({ transactions, nextCursor }),
 });
@@ -278,11 +278,15 @@ describe('WalletTransactionList', () => {
     await click('Try again');
     expect(host.textContent).toContain('No transactions match these filters.');
   });
-  it('retains accepted rows on a page failure and retries the same cursor', async () => {
+  it.each([
+    ['HTTP failure', { ok: false, status: 503 }],
+    ['invalid amount', response([{ ...tx, amount: '1.50' }])],
+    ['invalid receipt', response([{ ...tx, bankReceipt: { timeline: null } }])],
+  ])('retains accepted rows after %s and retries the same cursor', async (_, failure) => {
     const fetcher = vi
       .fn()
       .mockResolvedValueOnce(response([tx], 'page-two'))
-      .mockResolvedValueOnce({ ok: false, status: 503 })
+      .mockResolvedValueOnce(failure)
       .mockResolvedValueOnce(response([{ ...tx, id: 'tx-2', description: 'Second page' }]));
     vi.stubGlobal('fetch', fetcher);
     await render();

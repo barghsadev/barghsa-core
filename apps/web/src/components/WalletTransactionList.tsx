@@ -1,7 +1,11 @@
 import { useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
 import { LoadingStatus, Button, ListPage, ListViewToggle, type ListView } from '@barghsa/ui';
 import { useListQuery, type ListQueryBinding } from '../hooks/useListQuery.js';
-import { walletHistoryQueryOptions } from '../lib/wallet-history-query.js';
+import {
+  walletHistoryQueryOptions,
+  walletHistoryStates,
+  walletHistoryTypes,
+} from '../lib/wallet-history-query.js';
 import { WalletHistoryFilters } from './WalletHistoryFilters.js';
 import { t, type Locale } from '@barghsa/i18n/workspace';
 import { WalletTransactionRecords, type WalletTransaction } from './WalletTransactionRecords.js';
@@ -15,6 +19,58 @@ import { useManualServerRead } from '../hooks/useServerQuery.js';
 interface Page {
   transactions: WalletTransaction[];
   nextCursor: string | null;
+}
+
+function record(value: unknown): value is Record<string, unknown> {
+  return !!value && typeof value === 'object' && !Array.isArray(value);
+}
+
+function textOrNull(value: unknown): boolean {
+  return value === null || typeof value === 'string';
+}
+
+function timestamp(value: unknown): boolean {
+  return typeof value === 'string' && Number.isFinite(Date.parse(value));
+}
+
+function validBankReceipt(value: unknown): boolean {
+  if (!record(value) || !record(value.timeline)) return false;
+  const { awaiting, events } = value.timeline;
+  return (
+    [
+      value.paymentDate,
+      value.payerReference,
+      value.bankName,
+      value.customerNote,
+      value.rejectionReason,
+    ].every(textOrNull) &&
+    (awaiting === null || awaiting === 'review' || awaiting === 'second_approval') &&
+    Array.isArray(events) &&
+    events.every(
+      (event: unknown) =>
+        record(event) &&
+        ['submitted', 'approval_requested', 'confirmed', 'rejected'].some(
+          (state) => state === event.state
+        ) &&
+        (event.occurredAt === null || timestamp(event.occurredAt))
+    )
+  );
+}
+
+function validTransaction(value: unknown): value is WalletTransaction {
+  return (
+    record(value) &&
+    typeof value.id === 'string' &&
+    value.id.length > 0 &&
+    walletHistoryTypes.some((type) => type === value.type) &&
+    walletHistoryStates.some((state) => state === value.state) &&
+    typeof value.amount === 'string' &&
+    /^-?\d+$/.test(value.amount) &&
+    textOrNull(value.refId) &&
+    textOrNull(value.description) &&
+    timestamp(value.createdAt) &&
+    (value.bankReceipt === undefined || validBankReceipt(value.bankReceipt))
+  );
 }
 
 /** Profile/query ownership prevents obsolete financial history from returning. */
@@ -175,14 +231,16 @@ function HistoryPage({
         if ([401, 403, 404].includes(response.status)) return null;
         throw new Error('History unavailable');
       }
-      const data = (await response.json()) as Page & { profileId?: string };
+      const data: unknown = await response.json();
       if (
+        !record(data) ||
         !Array.isArray(data.transactions) ||
+        !data.transactions.every(validTransaction) ||
         (staff && data.profileId !== profileId) ||
         !(data.nextCursor === null || typeof data.nextCursor === 'string')
       )
         throw new Error('Invalid history');
-      return data;
+      return { transactions: data.transactions, nextCursor: data.nextCursor };
     })
       .then((data) => {
         if (!current()) return;

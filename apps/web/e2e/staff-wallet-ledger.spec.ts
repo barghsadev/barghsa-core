@@ -134,6 +134,7 @@ for (const locale of ['en', 'fa'] as const) {
   }) => {
     await crmShell(page, locale);
     let denied = false;
+    let invalid = false;
     const queries: URLSearchParams[] = [];
     await page.route(
       `**/api/admin/reconciliation/wallets/${paymentProfileId}/transactions?*`,
@@ -143,7 +144,11 @@ for (const locale of ['en', 'fa'] as const) {
           status: denied ? 403 : 200,
           json: denied
             ? {}
-            : { profileId: paymentProfileId, transactions: [transaction], nextCursor: null },
+            : {
+                profileId: paymentProfileId,
+                transactions: [invalid ? { ...transaction, amount: '1.50' } : transaction],
+                nextCursor: null,
+              },
         });
       }
     );
@@ -164,5 +169,19 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(page.getByText(transaction.description, { exact: true })).toHaveCount(0);
     await expect(page.getByRole('link', { name: new RegExp(paymentInvoiceId) })).toHaveCount(0);
     expect(queries.at(-1)!.get('min')).toBe(amount);
+
+    const retry = page.getByRole('button', { name: walletText('wallet.history.retry', locale) });
+    denied = false;
+    invalid = true;
+    await retry.click();
+    await expect(
+      page.getByRole('alert').filter({ hasText: walletText('wallet.history.error', locale) })
+    ).toBeVisible();
+    await expect(page.getByText(transaction.description, { exact: true })).toHaveCount(0);
+    const failedQuery = queries.at(-1)!.toString();
+    invalid = false;
+    await retry.click();
+    await expect(page.getByText(transaction.description, { exact: true })).toBeVisible();
+    expect(queries.at(-1)!.toString()).toBe(failedQuery);
   });
 }

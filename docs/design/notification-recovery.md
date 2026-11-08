@@ -161,3 +161,5 @@ The solar construction queue and staff consultation queue validate their rows an
 Saved addresses announce loading again during an explicit retry. The empty-list message requires a successful read for the active profile. A denied read withdraws private addresses and disables editing. An account with profiles but no active selection gets a link to the dashboard to choose a profile.
 
 Service targets and escalation settings allow a refresh while password verification is pending. If the required read fails, finishing password verification cannot send the reviewed write. After dispatch, the editor waits for the write outcome before enabling refresh again.
+
+Wallet history checks transaction rows and receipt timelines before rendering. A malformed page keeps the previous verified rows visible and retries the same filters and cursor. A denied read withdraws the previous rows and their links. Amounts remain signed integer rial strings through display. The private attachment preview loads when the receipt details are opened. The image request still waits for its own disclosure.

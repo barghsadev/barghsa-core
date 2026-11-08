@@ -1,10 +1,15 @@
+import { lazy, Suspense } from 'react';
+import { LoadingStatus } from '@barghsa/ui';
 import { tWalletReceipts as t } from '@barghsa/i18n/wallet-receipts';
 import { t as appText, type Locale } from '@barghsa/i18n/workspace';
 import type { WalletBankReceiptHistory } from '@barghsa/shared/finance';
 import type { useAccountTime } from '../hooks/useAccountTime.js';
-import { ReceiptAttachmentPreview } from './ReceiptAttachmentPreview.js';
 import { ReceiptDepositDate } from './ReceiptDepositDate.js';
 import { WalletReceiptTimeline } from './WalletReceiptTimeline.js';
+
+const ReceiptAttachmentPreview = lazy(async () => ({
+  default: (await import('./ReceiptAttachmentPreview.js')).ReceiptAttachmentPreview,
+}));
 
 export function WalletReceiptHistoryDetails({
   receiptId,
@@ -71,7 +76,15 @@ export function WalletReceiptHistoryDetails({
             </p>
           </div>
         )}
-        <ReceiptAttachmentPreview profileId={profileId} receiptId={receiptId} locale={locale} />
+        {open && (
+          <Suspense
+            fallback={
+              <LoadingStatus>{appText('invoices.activity.previewLoading', locale)}</LoadingStatus>
+            }
+          >
+            <ReceiptAttachmentPreview profileId={profileId} receiptId={receiptId} locale={locale} />
+          </Suspense>
+        )}
         <a
           href={`/api/wallet/${encodeURIComponent(profileId)}/bank-receipt-top-ups/${encodeURIComponent(receiptId)}/attachment`}
           target="_blank"

@@ -257,7 +257,9 @@ for (const locale of ['en', 'fa'] as const)
             .locator('[data-slot="card"]')
             .first()
             .screenshot({
-              path: `/tmp/barghsa-wallet-views-card-fa-dark-${test.info().project.name}.png`,
+              path: test
+                .info()
+                .outputPath(`barghsa-wallet-views-card-fa-dark-${test.info().project.name}.png`),
             });
         const count = reads;
         const summary = details.locator(':scope > summary');
@@ -564,7 +566,9 @@ for (const locale of ['en', 'fa'] as const)
         );
         if (locale === 'fa' && darkMode)
           await history.locator('[data-slot=scroll-area]').screenshot({
-            path: `/tmp/barghsa-wallet-views-fa-dark-${test.info().project.name}.png`,
+            path: test
+              .info()
+              .outputPath(`barghsa-wallet-views-fa-dark-${test.info().project.name}.png`),
           });
         await history
           .getByRole('button', { name: t('historyFilters.clearAll', locale), exact: true })
