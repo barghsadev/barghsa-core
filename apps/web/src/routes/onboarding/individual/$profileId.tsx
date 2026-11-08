@@ -1,23 +1,25 @@
 import { Skeleton } from '@barghsa/ui';
 import { useOnboardingForm } from '../../../hooks/useOnboardingForm.js';
-import { OnboardingWizard, OnboardingReview } from '../../../components/OnboardingWizard.js';
+import {
+  OnboardingWizard,
+  OnboardingReview,
+  OnboardingSubmissionNotice,
+} from '../../../components/OnboardingWizard.js';
 import { useOnboardingDraft } from '../../../hooks/useOnboardingDraft.js';
-import { parseOnboardingProfile } from '../../../lib/onboarding-profile.js';
+import { useOnboardingSubmission } from '../../../hooks/useOnboardingSubmission.js';
+import { useProfileContextRevision } from '../../../lib/profile-context.js';
 import { wizardStepSearch } from '../../../lib/wizard-step.js';
 import { useGeographyOptions } from '../../../hooks/useGeographyOptions.js';
 import { GeographyLoadError } from '../../../components/GeographyLoadError.js';
 import { useNumberFormatting } from '../../../hooks/useNumberFormatting.js';
 import { useLocale } from '../../../hooks/useLocale.js';
-import { withCsrf } from '../../../lib/csrf.js';
 import { normalizeProfileDigits } from '../../../lib/profile-digits.js';
-import { useState, useCallback, useEffect, useRef } from 'react';
+import { useCallback } from 'react';
 import { createFileRoute, useRouter, useParams, Link } from '@tanstack/react-router';
-import { toast } from '../../../lib/toast-api.js';
 import { t } from '@barghsa/i18n/app';
 import { validateNationalId, validatePostalCode } from '@barghsa/shared/validation';
-import { ErrorCodes } from '@barghsa/shared/errors';
 import { ChevronRightIcon } from 'lucide-react';
-import { Input, Label, Alert, AlertTitle, AlertDescription, DependentSelect } from '@barghsa/ui';
+import { Input, Label, DependentSelect } from '@barghsa/ui';
 
 export const Route = createFileRoute('/onboarding/individual/$profileId')({
   // Presentation-only input is bounded when the wizard component loads.
@@ -27,17 +29,17 @@ export const Route = createFileRoute('/onboarding/individual/$profileId')({
 
 function IndividualProfileFormPage() {
   const { profileId } = useParams({ from: '/onboarding/individual/$profileId' });
-  return <IndividualProfileForm key={profileId} profileId={profileId} />;
+  const { onboardingUserId } = Route.useRouteContext();
+  const revision = useProfileContextRevision();
+  return (
+    <IndividualProfileForm
+      key={JSON.stringify([onboardingUserId, profileId, revision])}
+      profileId={profileId}
+    />
+  );
 }
 
 function IndividualProfileForm({ profileId }: { profileId: string }) {
-  const mounted = useRef(true);
-  useEffect(() => {
-    mounted.current = true;
-    return () => {
-      mounted.current = false;
-    };
-  }, []);
   const router = useRouter();
   const { step = 1 } = wizardStepSearch(Route.useSearch(), 3);
   const changeStep = (step: number) =>
@@ -85,10 +87,6 @@ function IndividualProfileForm({ profileId }: { profileId: string }) {
   const loadingProvinces = provinceOptions.loading;
   const geographyUnavailable =
     provinceOptions.loading || provinceOptions.error || cityOptions.loading || cityOptions.error;
-
-  // Submission
-  const [submitting, setSubmitting] = useState(false);
-  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const restoreDraft = useCallback(
     (data: Record<string, string>) => {
@@ -188,81 +186,22 @@ function IndividualProfileForm({ profileId }: { profileId: string }) {
 
   const handleBlur = fields.blur;
 
-  const handleSubmit = useCallback(async () => {
-    setSubmitError(null);
-
-    if (!draft.ready || geographyUnavailable) return;
-
-    setSubmitting(true);
-
-    try {
-      const draftVersion = await draft.flush();
-      if (draftVersion === undefined) return;
-      const response = await fetch(`/api/onboarding/individual/${profileId}`, {
-        method: 'POST',
-        credentials: 'include',
-        headers: withCsrf({ 'Content-Type': 'application/json' }),
-        body: JSON.stringify({
-          draftVersion,
-          title: title.trim() || undefined,
-          firstName: firstName.trim(),
-          lastName: lastName.trim(),
-          nationalId: nationalId.trim(),
-          provinceId: selectedProvinceId,
-          cityId: selectedCityId,
-          fullAddress: fullAddress.trim(),
-          postalCode: postalCode.trim(),
-        }),
-      });
-
-      const body: Record<string, unknown> = await response.json().catch(() => ({}));
-      if (!mounted.current) return;
-
-      if (!response.ok) {
-        const errorCode =
-          typeof body?.error === 'string'
-            ? body.error
-            : ((body?.error as Record<string, unknown>)?.code as string | undefined);
-
-        if (errorCode === ErrorCodes.CONFLICT_VERSION.code) {
-          draft.markConflict();
-          setSubmitError(t('onboarding.draft.conflict', locale));
-        } else if (errorCode === ErrorCodes.CONFLICT_DUPLICATE.code) {
-          setSubmitError(t('onboarding.individual.error.duplicateNationalId', locale));
-        } else {
-          setSubmitError(t('onboarding.individual.error.submit', locale));
-        }
-        return;
-      }
-
-      parseOnboardingProfile(body, profileId, 'INDIVIDUAL');
-      draft.markSubmitted();
-      toast.success(t('onboarding.individual.saved', locale));
-      router.navigate({
-        to: '/onboarding/complete',
-        search: { profileId },
-        replace: true,
-      });
-    } catch {
-      setSubmitError(t('onboarding.individual.error.submit', locale));
-    } finally {
-      setSubmitting(false);
-    }
-  }, [
-    draft,
-    profileId,
-    title,
-    firstName,
-    lastName,
-    nationalId,
-    selectedProvinceId,
-    selectedCityId,
-    fullAddress,
-    postalCode,
-    geographyUnavailable,
-    locale,
-    router,
-  ]);
+  const submission = useOnboardingSubmission(profileId, 'INDIVIDUAL', draft);
+  const { submitting } = submission;
+  const locked = submitting || submission.unconfirmed;
+  async function handleSubmit() {
+    if (geographyUnavailable) return;
+    await submission.submit({
+      title: title.trim() || undefined,
+      firstName: firstName.trim(),
+      lastName: lastName.trim(),
+      nationalId: nationalId.trim(),
+      provinceId: selectedProvinceId,
+      cityId: selectedCityId,
+      fullAddress: fullAddress.trim(),
+      postalCode: postalCode.trim(),
+    });
+  }
 
   return (
     <div
@@ -284,15 +223,7 @@ function IndividualProfileForm({ profileId }: { profileId: string }) {
           {t('onboarding.individual.subtitle', locale)}
         </p>
 
-        {/* Submit error alert */}
-        {submitError && (
-          <Alert variant="destructive" className="mb-6" role="alert">
-            <AlertTitle className="sr-only">
-              {t('settings.security.error.title', locale)}
-            </AlertTitle>
-            <AlertDescription>{submitError}</AlertDescription>
-          </Alert>
-        )}
+        <OnboardingSubmissionNotice {...submission} />
 
         <GeographyLoadError
           {...provinceOptions}
@@ -306,7 +237,7 @@ function IndividualProfileForm({ profileId }: { profileId: string }) {
           onStepChange={changeStep}
           draft={draft}
           submitting={submitting}
-          disabled={false}
+          disabled={submission.unconfirmed}
           onSubmit={handleSubmit}
           steps={[
             {
@@ -331,7 +262,7 @@ function IndividualProfileForm({ profileId }: { profileId: string }) {
                       value={title}
                       onChange={(e) => setTitle(e.target.value)}
                       onBlur={() => handleBlur('title')}
-                      disabled={submitting}
+                      disabled={locked}
                       placeholder={t('onboarding.individual.title.placeholder', locale)}
                       aria-invalid={touched.title && !!errors.title}
                       aria-describedby={touched.title && errors.title ? 'title-error' : undefined}
@@ -362,7 +293,7 @@ function IndividualProfileForm({ profileId }: { profileId: string }) {
                         value={firstName}
                         onChange={(e) => setFirstName(e.target.value)}
                         onBlur={() => handleBlur('firstName')}
-                        disabled={submitting}
+                        disabled={locked}
                         placeholder={t('onboarding.individual.firstName.placeholder', locale)}
                         aria-invalid={touched.firstName && !!errors.firstName}
                         aria-describedby={
@@ -394,7 +325,7 @@ function IndividualProfileForm({ profileId }: { profileId: string }) {
                         value={lastName}
                         onChange={(e) => setLastName(e.target.value)}
                         onBlur={() => handleBlur('lastName')}
-                        disabled={submitting}
+                        disabled={locked}
                         placeholder={t('onboarding.individual.lastName.placeholder', locale)}
                         aria-invalid={touched.lastName && !!errors.lastName}
                         aria-describedby={
@@ -432,7 +363,7 @@ function IndividualProfileForm({ profileId }: { profileId: string }) {
                         setNationalId(val);
                       }}
                       onBlur={() => handleBlur('nationalId')}
-                      disabled={submitting}
+                      disabled={locked}
                       placeholder={t('onboarding.individual.nationalId.placeholder', locale)}
                       aria-invalid={touched.nationalId && !!errors.nationalId}
                       aria-describedby={
@@ -480,7 +411,7 @@ function IndividualProfileForm({ profileId }: { profileId: string }) {
                             setSelectedCityId('');
                           }}
                           onBlur={() => handleBlur('provinceId')}
-                          disabled={submitting || !provinceOptions.ready}
+                          disabled={locked || !provinceOptions.ready}
                           className="flex h-11 w-full pointer-coarse:min-h-[45px]! rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                           aria-invalid={touched.provinceId && !!errors.provinceId}
                           aria-describedby={
@@ -529,7 +460,7 @@ function IndividualProfileForm({ profileId }: { profileId: string }) {
                         placeholder={t('onboarding.individual.city.placeholder', locale)}
                         onChange={(e) => setSelectedCityId(e.target.value)}
                         onBlur={() => handleBlur('cityId')}
-                        disabled={submitting}
+                        disabled={locked}
                         aria-invalid={touched.cityId && !!errors.cityId}
                         aria-describedby={
                           touched.cityId && errors.cityId ? 'cityId-error' : undefined
@@ -566,7 +497,7 @@ function IndividualProfileForm({ profileId }: { profileId: string }) {
                       value={fullAddress}
                       onChange={(e) => setFullAddress(e.target.value)}
                       onBlur={() => handleBlur('fullAddress')}
-                      disabled={submitting}
+                      disabled={locked}
                       placeholder={t('onboarding.individual.address.placeholder', locale)}
                       className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                       aria-invalid={touched.fullAddress && !!errors.fullAddress}
@@ -607,7 +538,7 @@ function IndividualProfileForm({ profileId }: { profileId: string }) {
                         setPostalCode(val);
                       }}
                       onBlur={() => handleBlur('postalCode')}
-                      disabled={submitting}
+                      disabled={locked}
                       placeholder={t('onboarding.individual.postalCode.placeholder', locale)}
                       aria-invalid={touched.postalCode && !!errors.postalCode}
                       aria-describedby={

@@ -60,10 +60,10 @@ function OwnedVerificationBanner({
   const reader = useId();
   const sequence = useRef(0);
   const [status, setStatus] = useState<VerificationStatusResponse | null>(null);
-  const [verifying, setVerifying] = useState(false);
-  const [verified, setVerified] = useState(false);
+  const [verification, setVerification] = useState<'idle' | 'working' | 'verified' | 'error'>(
+    'idle'
+  );
   const [dismissed, setDismissed] = useState<string | null>(null);
-  const [hasError, setHasError] = useState(false);
   const router = useRouter();
   const pathname = useLocation({ select: (location) => location.pathname });
 
@@ -181,41 +181,34 @@ function OwnedVerificationBanner({
   // Don't render if profile is verified or verification is not required
   if (status.isVerified || !status.verificationRequired) return null;
 
-  // Don't render if no active profile at all. Capture the non-null status
-  // for use inside the handleAutoVerify closure, which TypeScript cannot
-  // narrow across function boundaries.
-  if (!status.activeProfileId) return null;
-  const currentStatus = status;
+  const profileId = status.activeProfileId;
+  if (!profileId) return null;
 
   async function handleAutoVerify() {
-    if (!currentStatus.activeProfileId) return;
-    setVerifying(true);
-    setHasError(false);
+    setVerification('working');
 
     try {
-      const response = await fetch(`/api/profiles/${currentStatus.activeProfileId}/verify`, {
+      const response = await fetch(`/api/profiles/${profileId}/verify`, {
         method: 'POST',
         credentials: 'include',
         headers: withCsrf({ 'Content-Type': 'application/json', 'Accept-Language': locale }),
       });
 
       if (response.ok) {
-        setVerified(true);
+        setVerification('verified');
         // Refresh the page after a brief delay to reflect the new status
         setTimeout(() => {
           router.invalidate();
         }, 1500);
       } else {
-        setVerifying(false);
-        setHasError(true);
+        setVerification('error');
       }
     } catch {
-      setVerifying(false);
-      setHasError(true);
+      setVerification('error');
     }
   }
 
-  if (verified) {
+  if (verification === 'verified') {
     return (
       <div
         className="bg-success-soft border-success/20 border px-4 py-3 text-sm text-success"
@@ -238,26 +231,26 @@ function OwnedVerificationBanner({
       <div className="mx-auto flex max-w-7xl items-center justify-between">
         <div className="flex flex-col gap-1">
           <span>{t('verification.banner.title', locale)}</span>
-          {!currentStatus.canAutoVerify && (
+          {!status.canAutoVerify && (
             <span className="text-xs">{t('verification.banner.manualHelp', locale)}</span>
           )}
           <Link to="/tickets" className="text-xs underline underline-offset-2">
             {t('verification.banner.support', locale)}
           </Link>
-          {hasError && (
+          {verification === 'error' && (
             <span className="text-xs text-destructive">
               {t('verification.banner.error', locale)}
             </span>
           )}
         </div>
         <div className="flex items-center gap-3">
-          {currentStatus.canAutoVerify && (
+          {status.canAutoVerify && (
             <button
               onClick={handleAutoVerify}
-              disabled={verifying}
+              disabled={verification === 'working'}
               className="min-h-11 rounded bg-foreground px-3 py-1 text-xs font-medium text-background hover:underline disabled:opacity-50"
             >
-              {verifying
+              {verification === 'working'
                 ? t('verification.banner.verifying', locale)
                 : t('verification.banner.verify', locale)}
             </button>

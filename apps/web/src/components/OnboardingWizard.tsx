@@ -8,15 +8,47 @@ import {
   type ReactNode,
 } from 'react';
 import { useBlocker } from '@tanstack/react-router';
-import { Button } from '@barghsa/ui';
+import { Alert, AlertDescription, AlertTitle, Button } from '@barghsa/ui';
 import { FormStep, type FieldErrors, type UseFormReturn } from '@barghsa/ui/form';
 import { t } from '@barghsa/i18n/app';
+import { t as draftText } from '@barghsa/i18n/onboarding-drafts';
 import { useLocale } from '../hooks/useLocale.js';
 import type { useOnboardingDraft } from '../hooks/useOnboardingDraft.js';
+import type { useOnboardingSubmission } from '../hooks/useOnboardingSubmission.js';
 import { FormWizard } from './FormWizard.js';
 import { StepReviewPage } from './StepReviewPage.js';
 
 const LeaveDialog = lazy(() => import('./WizardLeaveDialog.js'));
+
+export function OnboardingSubmissionNotice({
+  message,
+  unconfirmed,
+  check,
+  checking,
+}: Pick<
+  ReturnType<typeof useOnboardingSubmission>,
+  'message' | 'unconfirmed' | 'check' | 'checking'
+>) {
+  const locale = useLocale();
+  if (!message) return null;
+  return (
+    <Alert variant="destructive" className="mb-6" role="alert">
+      <AlertTitle className="sr-only">{t('settings.security.error.title', locale)}</AlertTitle>
+      <AlertDescription>{message}</AlertDescription>
+      {unconfirmed && (
+        <Button
+          type="button"
+          variant="outline"
+          aria-busy={checking || undefined}
+          disabled={checking}
+          onClick={check}
+        >
+          {draftText(checking ? 'checkingSubmission' : 'checkSubmission', locale)}
+        </Button>
+      )}
+    </Alert>
+  );
+}
 
 interface Props {
   steps: {

@@ -5,6 +5,7 @@ import { useAccountUser } from './useAccountUser.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { queryKeys } from '../lib/query-keys.js';
 import { withCsrf } from '../lib/csrf.js';
+import { readWithDeadline } from '../lib/server-query-client.js';
 
 type DraftStatus = 'loading' | 'saved' | 'saving' | 'error' | 'conflict';
 export function useOnboardingDraft(
@@ -36,6 +37,7 @@ export function useOnboardingDraft(
     conflicted = useRef(false),
     submitted = useRef(false);
   const pending = useRef<Promise<number | undefined> | null>(null);
+  const writeOwner = useRef<AbortController | null>(null);
   const queryKey = queryKeys.profiles.detail(
     {
       context: 'customer',
@@ -50,7 +52,7 @@ export function useOnboardingDraft(
     enabled: false,
     manual: true,
     read: async (signal) => {
-      const response = await fetch(`/api/onboarding/draft/${profileId}`, {
+      const response = await fetch(`/api/onboarding/draft/${encodeURIComponent(profileId)}`, {
         credentials: 'include',
         signal,
       });
@@ -117,6 +119,7 @@ export function useOnboardingDraft(
       });
     return () => {
       controller.abort();
+      writeOwner.current?.abort();
       void client.cancelQueries({ queryKey, exact: true });
       generation.current++;
       loaded.current = false;
@@ -142,24 +145,30 @@ export function useOnboardingDraft(
     if (snapshot === saved.current) return version.current;
     const expectedVersion = version.current;
     setStatus('saving');
+    const owner = new AbortController();
+    writeOwner.current = owner;
     const request = (async () => {
       try {
-        const response = await fetch(`/api/onboarding/draft/${profileId}`, {
-          method: 'PUT',
-          credentials: 'include',
-          headers: withCsrf({ 'Content-Type': 'application/json' }),
-          body: JSON.stringify({ expectedVersion, data: JSON.parse(snapshot) }),
+        const { status, body } = await readWithDeadline(owner.signal, async (signal) => {
+          const response = await fetch(`/api/onboarding/draft/${encodeURIComponent(profileId)}`, {
+            method: 'PUT',
+            credentials: 'include',
+            signal,
+            headers: withCsrf({ 'Content-Type': 'application/json' }),
+            body: JSON.stringify({ expectedVersion, data: JSON.parse(snapshot) }),
+          });
+          return {
+            status: response.status,
+            body: response.ok ? ((await response.json()) as { version: number }) : null,
+          };
         });
         if (epoch !== generation.current || currentIdentity.current !== identity) return;
-        if (response.status === 409) {
+        if (status === 409) {
           conflicted.current = true;
           setStatus('conflict');
           return;
         }
-        if (!response.ok) throw new Error('Draft save failed');
-        const body = (await response.json()) as { version: number };
-        if (epoch !== generation.current || currentIdentity.current !== identity) return;
-        if (body.version !== expectedVersion + 1) throw new Error('Invalid draft version');
+        if (body?.version !== expectedVersion + 1) throw new Error('Unconfirmed draft save');
         version.current = body.version;
         saved.current = snapshot;
         setStatus('saved');
@@ -174,6 +183,7 @@ export function useOnboardingDraft(
     try {
       return await request;
     } finally {
+      if (writeOwner.current === owner) writeOwner.current = null;
       if (pending.current === request) pending.current = null;
     }
   }, [profileId, identity]);

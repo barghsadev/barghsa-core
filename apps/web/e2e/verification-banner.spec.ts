@@ -129,6 +129,19 @@ test('the available verification action has readable text in both themes', async
       },
     })
   );
+  let calls = 0;
+  let releaseFirst!: () => void;
+  const held = new Promise<void>((resolve) => {
+    releaseFirst = resolve;
+  });
+  await page.route('**/api/profiles/*/verify', async (route) => {
+    expect(route.request().method()).toBe('POST');
+    if (++calls === 1) {
+      await held;
+      return route.fulfill({ status: 503, json: {} });
+    }
+    return route.fulfill({ json: {} });
+  });
   await page.goto('/tickets');
   const verify = page.getByRole('button', { name: /^(تأیید خودکار|Auto-verify)$/ });
   const dismiss = page.getByRole('button', { name: /^(بستن|Dismiss)$/ });
@@ -160,6 +173,23 @@ test('the available verification action has readable text in both themes', async
       await page.mouse.move(0, 0);
     }
     await page.locator('html').evaluate((root) => delete root.dataset.contrast);
+  }
+  try {
+    await verify.click();
+    await expect(page.getByRole('button', { name: /^(در حال تأیید…|Verifying…)$/ })).toBeDisabled();
+    await expect.poll(() => calls).toBe(1);
+    releaseFirst();
+    await expect(
+      page.getByText(/خطایی رخ داده است|An error occurred\. Please try again/)
+    ).toBeVisible();
+    await expect(verify).toBeEnabled();
+    await verify.click();
+    await expect(
+      page.getByText(/پروفایل شما با موفقیت تأیید شد|Your profile has been verified successfully/)
+    ).toBeVisible();
+    expect(calls).toBe(2);
+  } finally {
+    releaseFirst();
   }
 });
 

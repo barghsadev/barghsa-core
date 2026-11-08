@@ -16,6 +16,13 @@ export const fa = {
   denied: 'دسترسی شما تغییر کرده است. دوباره وارد حساب شوید.',
   retry: 'تلاش دوباره',
   more: 'پروفایل‌های بیشتر',
+  submissionUnconfirmed:
+    'ثبت پروفایل تأیید نشد. پیش از تلاش دوباره، وضعیت ذخیره‌شده را بررسی کنید.',
+  checkSubmission: 'بررسی پروفایل ذخیره‌شده',
+  checkingSubmission: 'در حال بررسی پروفایل…',
+  submissionCheckFailed: 'وضعیت ذخیره‌شده پروفایل در دسترس نیست. دوباره بررسی کنید.',
+  legalDuplicate: 'این شناسه ملی قبلاً ثبت شده است',
+  legalSaved: 'پروفایل حقوقی با موفقیت ذخیره شد',
 };
 export const en: Record<keyof typeof fa, string> = {
   title: 'Unfinished profiles',
@@ -33,6 +40,13 @@ export const en: Record<keyof typeof fa, string> = {
   denied: 'Your access changed. Sign in again.',
   retry: 'Retry',
   more: 'More profiles',
+  submissionUnconfirmed:
+    'Profile submission could not be confirmed. Check the saved profile before trying again.',
+  checkSubmission: 'Check saved profile',
+  checkingSubmission: 'Checking profile…',
+  submissionCheckFailed: 'The saved profile status is unavailable. Check again.',
+  legalDuplicate: 'This national identifier is already registered',
+  legalSaved: 'Legal profile saved successfully',
 };
 export function t(key: keyof typeof fa, locale: Locale = 'fa') {
   return lookup(locale === 'fa' ? fa : en, key) ?? key;

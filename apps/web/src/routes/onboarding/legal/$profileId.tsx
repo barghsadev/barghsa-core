@@ -1,7 +1,12 @@
 import { Skeleton } from '@barghsa/ui';
 import { useOnboardingForm } from '../../../hooks/useOnboardingForm.js';
-import { OnboardingWizard, OnboardingReview } from '../../../components/OnboardingWizard.js';
-import { parseOnboardingProfile } from '../../../lib/onboarding-profile.js';
+import {
+  OnboardingWizard,
+  OnboardingReview,
+  OnboardingSubmissionNotice,
+} from '../../../components/OnboardingWizard.js';
+import { useOnboardingSubmission } from '../../../hooks/useOnboardingSubmission.js';
+import { useProfileContextRevision } from '../../../lib/profile-context.js';
 import { wizardStepSearch } from '../../../lib/wizard-step.js';
 import { useGeographyOptions } from '../../../hooks/useGeographyOptions.js';
 import { GeographyLoadError } from '../../../components/GeographyLoadError.js';
@@ -9,29 +14,17 @@ import { useNumberFormatting } from '../../../hooks/useNumberFormatting.js';
 import { uploadLegalProfileDocument } from '../../../lib/invoice-bank-receipt-upload.js';
 import { useOnboardingDraft } from '../../../hooks/useOnboardingDraft.js';
 import { t } from '@barghsa/i18n/app';
-import { withCsrf } from '../../../lib/csrf.js';
 import { normalizeProfileDigits } from '../../../lib/profile-digits.js';
-import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
+import { useState, useCallback, useRef, useMemo } from 'react';
 import { createFileRoute, useRouter, useParams, Link } from '@tanstack/react-router';
-import { toast } from '../../../lib/toast-api.js';
 import { useLocale } from '../../../hooks/useLocale.js';
 import {
   validateLegalNationalIdentifier,
   validatePostalCode,
   validateNationalId,
 } from '@barghsa/shared/validation';
-import { ErrorCodes } from '@barghsa/shared/errors';
 import { ChevronRightIcon, UploadIcon } from 'lucide-react';
-import {
-  Input,
-  Label,
-  DependentSelect,
-  Alert,
-  AlertTitle,
-  AlertDescription,
-  DatePicker,
-  datePickerCalendarDate,
-} from '@barghsa/ui';
+import { Input, Label, DependentSelect, DatePicker, datePickerCalendarDate } from '@barghsa/ui';
 
 export const Route = createFileRoute('/onboarding/legal/$profileId')({
   // Presentation-only input is bounded when the wizard component loads.
@@ -83,17 +76,17 @@ function documentList(value: string): Array<{ key: string; name: string }> {
 
 function LegalProfileFormPage() {
   const { profileId } = useParams({ from: '/onboarding/legal/$profileId' });
-  return <LegalProfileForm key={profileId} profileId={profileId} />;
+  const { onboardingUserId } = Route.useRouteContext();
+  const revision = useProfileContextRevision();
+  return (
+    <LegalProfileForm
+      key={JSON.stringify([onboardingUserId, profileId, revision])}
+      profileId={profileId}
+    />
+  );
 }
 
 function LegalProfileForm({ profileId }: { profileId: string }) {
-  const mounted = useRef(true);
-  useEffect(() => {
-    mounted.current = true;
-    return () => {
-      mounted.current = false;
-    };
-  }, []);
   const router = useRouter();
   const { step = 1 } = wizardStepSearch(Route.useSearch(), 5);
   const changeStep = (step: number) =>
@@ -206,10 +199,6 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
     cityOptions,
     representativeCityOptions,
   ].some((options) => options.loading || options.error);
-
-  // Submission
-  const [submitting, setSubmitting] = useState(false);
-  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const [documentKeys] = fields.field('documentKeys');
   const documents = useMemo(() => documentList(documentKeys), [documentKeys]);
@@ -421,122 +410,35 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
   const handleBlur = fields.blur;
   const values = fields.values;
 
-  const handleSubmit = useCallback(async () => {
-    if (geographyUnavailable) return;
-    setSubmitError(null);
-
-    if (!draft.ready || uploading) return;
-
-    setSubmitting(true);
-
-    try {
-      const draftVersion = await draft.flush();
-      if (draftVersion === undefined) return;
-      const response = await fetch(`/api/onboarding/legal/${profileId}`, {
-        method: 'POST',
-        credentials: 'include',
-        headers: withCsrf({ 'Content-Type': 'application/json' }),
-        body: JSON.stringify({
-          draftVersion,
-          documents: documents.map((document) => document.key),
-          ...Object.fromEntries(
-            Object.entries(representative).map(([key, value]) => [key, value.trim()])
-          ),
-          legalName: legalName.trim(),
-          nationalIdentifier: nationalIdentifier.trim(),
-          registrationNumber: registrationNumber.trim(),
-          companyTypeId: companyTypeId || undefined,
-          registrationDate: registrationDate || undefined,
-          economicCode: economicCode.trim() || undefined,
-          officialPhone: officialPhone.trim() || undefined,
-          officialEmail: officialEmail.trim() || undefined,
-          officialProvinceId: officialProvinceId || undefined,
-          officialCityId: officialCityId || undefined,
-          officialFullAddress: officialFullAddress.trim() || undefined,
-          officialPostalCode: officialPostalCode.trim() || undefined,
-          representativeTitle: representativeTitle.trim(),
-          representativeRelationship: representativeRelationship.trim(),
-        }),
-      });
-
-      const body: Record<string, unknown> = await response.json().catch(() => ({}));
-      if (!mounted.current) return;
-
-      if (!response.ok) {
-        const errorCode =
-          typeof body?.error === 'string'
-            ? body.error
-            : ((body?.error as Record<string, unknown>)?.code as string | undefined);
-
-        if (errorCode === ErrorCodes.CONFLICT_VERSION.code) {
-          draft.markConflict();
-          setSubmitError(t('onboarding.draft.conflict', locale));
-        } else if (errorCode === ErrorCodes.CONFLICT_DUPLICATE.code) {
-          setSubmitError(
-            isRtl
-              ? 'این شناسه ملی قبلاً ثبت شده است'
-              : 'This national identifier is already registered'
-          );
-        } else {
-          setSubmitError(
-            isRtl
-              ? 'ذخیره‌سازی با خطا مواجه شد. لطفاً دوباره تلاش کنید'
-              : 'Failed to save. Please try again'
-          );
-        }
-        return;
-      }
-
-      parseOnboardingProfile(body, profileId, 'LEGAL');
-      draft.markSubmitted();
-      toast.success(
-        isRtl ? 'پروفایل حقوقی با موفقیت ذخیره شد' : 'Legal profile saved successfully'
-      );
-      router.navigate({
-        to: '/onboarding/complete',
-        search: { profileId },
-        replace: true,
-      });
-    } catch {
-      setSubmitError(
-        isRtl
-          ? 'ذخیره‌سازی با خطا مواجه شد. لطفاً دوباره تلاش کنید'
-          : 'Failed to save. Please try again'
-      );
-    } finally {
-      setSubmitting(false);
-    }
-  }, [
-    profileId,
-    documents,
-    uploading,
-    draft.ready,
-    draft.flush,
-    draft.markConflict,
-    draft.markSubmitted,
-    locale,
-    representative,
-    legalName,
-    nationalIdentifier,
-    registrationNumber,
-    companyTypeId,
-    registrationDate,
-    economicCode,
-    officialPhone,
-    officialEmail,
-    officialProvinceId,
-    officialCityId,
-    officialFullAddress,
-    officialPostalCode,
-    representativeTitle,
-    representativeRelationship,
-    geographyUnavailable,
-    isRtl,
-    router,
-  ]);
+  const submission = useOnboardingSubmission(profileId, 'LEGAL', draft);
+  const { submitting } = submission;
+  const locked = submitting || submission.unconfirmed;
+  async function handleSubmit() {
+    if (geographyUnavailable || uploadInFlight.current) return;
+    await submission.submit({
+      documents: documents.map((document) => document.key),
+      ...Object.fromEntries(
+        Object.entries(representative).map(([key, value]) => [key, value.trim()])
+      ),
+      legalName: legalName.trim(),
+      nationalIdentifier: nationalIdentifier.trim(),
+      registrationNumber: registrationNumber.trim(),
+      companyTypeId: companyTypeId || undefined,
+      registrationDate: registrationDate || undefined,
+      economicCode: economicCode.trim() || undefined,
+      officialPhone: officialPhone.trim() || undefined,
+      officialEmail: officialEmail.trim() || undefined,
+      officialProvinceId: officialProvinceId || undefined,
+      officialCityId: officialCityId || undefined,
+      officialFullAddress: officialFullAddress.trim() || undefined,
+      officialPostalCode: officialPostalCode.trim() || undefined,
+      representativeTitle: representativeTitle.trim(),
+      representativeRelationship: representativeRelationship.trim(),
+    });
+  }
 
   async function uploadDocuments(files: File[]) {
-    if (uploadInFlight.current || submitting || !draft.ready || !files.length) return;
+    if (uploadInFlight.current || locked || !draft.ready || !files.length) return;
     if (documents.length + files.length > 5) {
       setUploadError(true);
       return;
@@ -609,7 +511,7 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
               value={value}
               onChange={(event) => onChange(event.target.value)}
               onBlur={() => handleBlur(field)}
-              disabled={submitting}
+              disabled={locked}
               aria-invalid={isTouched && !!error}
               aria-describedby={isTouched && error ? `${field}-error` : undefined}
               className="flex min-h-20 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
@@ -632,7 +534,7 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
             timezone="Asia/Tehran"
             numerals={numbers.number(1) === '1' ? 'latn' : 'arabext'}
             value={datePickerCalendarDate(value, 'Asia/Tehran')}
-            disabled={submitting}
+            disabled={locked}
             onChange={(date) =>
               onChange(
                 date
@@ -653,7 +555,7 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
             value={value}
             onChange={(e) => onChange(e.target.value)}
             onBlur={() => handleBlur(field)}
-            disabled={submitting}
+            disabled={locked}
             placeholder={options?.placeholder}
             aria-invalid={isTouched && !!error}
             aria-describedby={isTouched && error ? `${field}-error` : undefined}
@@ -690,15 +592,7 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
             : 'Please enter the legal entity information'}
         </p>
 
-        {/* Submit error alert */}
-        {submitError && (
-          <Alert variant="destructive" className="mb-6" role="alert">
-            <AlertTitle className="sr-only">
-              {t('settings.security.error.title', locale)}
-            </AlertTitle>
-            <AlertDescription>{submitError}</AlertDescription>
-          </Alert>
-        )}
+        <OnboardingSubmissionNotice {...submission} />
 
         <GeographyLoadError
           {...provinceOptions}
@@ -713,7 +607,7 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
           working={uploading}
           draft={draft}
           submitting={submitting}
-          disabled={uploading}
+          disabled={uploading || submission.unconfirmed}
           onSubmit={handleSubmit}
           steps={[
             {
@@ -726,7 +620,7 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
               content: (
                 <>
                   {' '}
-                  <fieldset disabled={!draft.ready || submitting}>
+                  <fieldset disabled={!draft.ready || locked}>
                     <legend className="mb-4 text-lg font-semibold border-b pb-2 w-full">
                       {isRtl ? 'اطلاعات نماینده' : 'Authorized Representative'}
                     </legend>
@@ -796,7 +690,7 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
                                   dependencyValue: city.provinceId ?? '',
                                 }))}
                                 placeholder={t(`onboarding.legal.${field}`, locale)}
-                                disabled={submitting}
+                                disabled={locked}
                                 onChange={(event) =>
                                   setRepresentative((prev) => ({
                                     ...prev,
@@ -816,7 +710,7 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
                                 required
                                 aria-required="true"
                                 value={representative[field]}
-                                disabled={submitting || !provinceOptions.ready}
+                                disabled={locked || !provinceOptions.ready}
                                 onChange={(event) =>
                                   setRepresentative((prev) => ({
                                     ...prev,
@@ -905,7 +799,7 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
               content: (
                 <>
                   {' '}
-                  <fieldset disabled={!draft.ready || submitting}>
+                  <fieldset disabled={!draft.ready || locked}>
                     <legend className="mb-4 text-lg font-semibold border-b pb-2 w-full">
                       {isRtl ? 'اطلاعات شخص حقوقی' : 'Legal Entity'}
                     </legend>
@@ -988,7 +882,7 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
                               value={companyTypeId}
                               onChange={(e) => setCompanyTypeId(e.target.value)}
                               onBlur={() => handleBlur('companyTypeId')}
-                              disabled={submitting}
+                              disabled={locked}
                               className="flex h-11 w-full pointer-coarse:min-h-[45px]! rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                               aria-invalid={touched.companyTypeId && !!errors.companyTypeId}
                               aria-describedby={
@@ -1084,7 +978,7 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
               content: (
                 <>
                   {' '}
-                  <fieldset disabled={!draft.ready || submitting}>
+                  <fieldset disabled={!draft.ready || locked}>
                     <legend className="mb-4 text-lg font-semibold border-b pb-2 w-full">
                       {isRtl ? 'آدرس رسمی' : 'Official Address'}
                     </legend>
@@ -1121,7 +1015,7 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
                                 ? 'officialProvinceId-error'
                                 : undefined
                             }
-                            disabled={submitting || !provinceOptions.ready}
+                            disabled={locked || !provinceOptions.ready}
                             className="flex h-11 w-full pointer-coarse:min-h-[45px]! rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                           >
                             <option value="">
@@ -1171,7 +1065,7 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
                           placeholder={t('onboarding.individual.city.placeholder', locale)}
                           onChange={(e) => setOfficialCityId(e.target.value)}
                           onBlur={() => handleBlur('officialCityId')}
-                          disabled={submitting}
+                          disabled={locked}
                           aria-invalid={touched.officialCityId && !!errors.officialCityId}
                           aria-describedby={
                             touched.officialCityId && errors.officialCityId
@@ -1215,7 +1109,7 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
                         value={officialFullAddress}
                         onChange={(e) => setOfficialFullAddress(e.target.value)}
                         onBlur={() => handleBlur('officialFullAddress')}
-                        disabled={submitting}
+                        disabled={locked}
                         placeholder={isRtl ? 'آدرس کامل محل شرکت' : 'Full company address'}
                         className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                         aria-invalid={touched.officialFullAddress && !!errors.officialFullAddress}
@@ -1262,7 +1156,7 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
                           setOfficialPostalCode(val);
                         }}
                         onBlur={() => handleBlur('officialPostalCode')}
-                        disabled={submitting}
+                        disabled={locked}
                         placeholder={isRtl ? 'کد پستی ۱۰ رقمی' : '10-digit postal code'}
                         aria-invalid={touched.officialPostalCode && !!errors.officialPostalCode}
                         aria-describedby={
@@ -1292,7 +1186,7 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
               content: (
                 <>
                   {' '}
-                  <fieldset disabled={!draft.ready || submitting}>
+                  <fieldset disabled={!draft.ready || locked}>
                     <legend className="mb-4 text-lg font-semibold border-b pb-2 w-full">
                       {isRtl ? 'بارگذاری مدارک' : 'Document Upload'}
                     </legend>
@@ -1317,7 +1211,7 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
                       <button
                         type="button"
                         onClick={() => documentInput.current?.click()}
-                        disabled={submitting || uploading}
+                        disabled={locked || uploading}
                         aria-describedby={
                           uploadError
                             ? 'document-upload-rules document-upload-error'
@@ -1346,7 +1240,7 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
                         multiple
                         accept=".pdf,.jpg,.jpeg,.png"
                         onChange={handleFileChange}
-                        disabled={submitting || uploading}
+                        disabled={locked || uploading}
                       />
                     </div>
 
@@ -1361,7 +1255,7 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
                             <button
                               type="button"
                               onClick={() => removeDocument(idx)}
-                              disabled={submitting || uploading}
+                              disabled={locked || uploading}
                               className="text-destructive hover:text-destructive/80 text-xs ml-2"
                               aria-label={isRtl ? `حذف ${doc.name}` : `Remove ${doc.name}`}
                             >

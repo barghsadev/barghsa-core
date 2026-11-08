@@ -1,6 +1,7 @@
 import { t } from '@barghsa/i18n/app';
 import { loadingText } from '@barghsa/i18n/loading-feedback';
 import { confirmationText } from '@barghsa/i18n/confirmation';
+import { t as draftText } from '@barghsa/i18n/onboarding-drafts';
 import AxeBuilder from '@axe-core/playwright';
 import { skipToMain } from './critical-accessibility';
 import { test, expect, type Page, type Route } from './coverage-fixture';
@@ -52,6 +53,10 @@ async function fixture(
     saveStatus: 200,
     loadStatus: 200,
     invalidReceipt: false,
+    profileStatus: 'DRAFT',
+    profileReadStatus: 200,
+    profileReads: 0,
+    permitClosedTransport: false,
     submissions: [] as Record<string, unknown>[],
     completeRequests: 0,
     saveRequests: [] as Record<string, unknown>[],
@@ -111,7 +116,8 @@ async function fixture(
       return r.fulfill({ status: state.saveStatus, json: { error: 'CONFLICT:VERSION_CONFLICT' } });
     expect(input.expectedVersion).toBe(state.draft.version);
     state.draft = { version: state.draft.version + 1, data: input.data };
-    return r.fulfill({ json: state.draft });
+    const reply = r.fulfill({ json: state.draft });
+    return state.permitClosedTransport ? reply.catch(() => {}) : reply;
   });
   const receipt = () => ({
     id: state.invalidReceipt ? 'wrong-profile' : profileId,
@@ -122,10 +128,19 @@ async function fixture(
       ? { firstName: state.draft.data.firstName, lastName: state.draft.data.lastName }
       : { title: state.draft.data.legalName }),
   });
+  await page.route(`**/api/profiles/${profileId}`, (r) => {
+    expect(r.request().method()).toBe('GET');
+    state.profileReads++;
+    return r.fulfill({
+      status: state.profileReadStatus,
+      json: { ...receipt(), status: state.profileStatus },
+    });
+  });
   await page.route(`**/api/onboarding/${type.toLowerCase()}/${profileId}`, async (r) => {
     state.submissions.push(r.request().postDataJSON());
     await state.submitGate;
-    return r.fulfill({ json: receipt() });
+    const reply = r.fulfill({ json: receipt() });
+    return state.permitClosedTransport ? reply.catch(() => {}) : reply;
   });
   await page.route(`**/api/onboarding/complete/${profileId}`, (r) => {
     state.completeRequests++;
@@ -539,6 +554,102 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(page.locator('dl[aria-label]')).toContainText('Person Owner');
     expect(state.submissions).toHaveLength(1);
   });
+
+  test(`stalled company submission recovers only from the saved profile (${locale})`, async ({
+    page,
+  }) => {
+    const state = await fixture(page, locale, 'LEGAL', { ...legal });
+    state.permitClosedTransport = true;
+    let finishSubmit!: () => void;
+    state.submitGate = new Promise<void>((resolve) => {
+      finishSubmit = resolve;
+    });
+    await page.clock.install();
+    try {
+      await page.goto(`/onboarding/legal/${profileId}?step=5`);
+      await expect(page.locator('fieldset:not([hidden]) > section')).toContainText(legal.legalName);
+      await submit(page, locale);
+      await expect.poll(() => state.submissions.length).toBe(1);
+      await page.clock.fastForward(15_200);
+      const main = page.getByRole('main');
+      const review = main.getByRole('button', { name: draftText('checkSubmission', locale) });
+      const submitButton = main.getByRole('button', {
+        name: t('onboarding.wizard.submit', locale),
+        exact: true,
+      });
+      await expect(main.getByRole('alert')).toContainText(
+        draftText('submissionUnconfirmed', locale)
+      );
+      await expect(submitButton).toBeDisabled();
+      state.profileReadStatus = 503;
+      await review.click();
+      await expect(main.getByRole('alert')).toContainText(
+        draftText('submissionCheckFailed', locale)
+      );
+      await expect(submitButton).toBeDisabled();
+      expect(state.submissions).toHaveLength(1);
+      expect(state.completeRequests).toBe(0);
+
+      state.profileReadStatus = 200;
+      state.profileStatus = 'PENDING_VERIFICATION';
+      await review.click();
+      await expect(page).toHaveURL(new RegExp(`/onboarding/complete\\?profileId=${profileId}$`));
+      await expect(page.locator('dl[aria-label]')).toContainText(legal.legalName);
+      expect(state.profileReads).toBe(2);
+      expect(state.submissions).toHaveLength(1);
+      expect(state.completeRequests).toBe(1);
+    } finally {
+      finishSubmit();
+    }
+  });
+
+  test(`stalled draft save retains edits and rejects a stale retry (${locale})`, async ({
+    page,
+  }) => {
+    const state = await fixture(page, locale, 'INDIVIDUAL', { ...individual });
+    state.permitClosedTransport = true;
+    let finishSave!: () => void;
+    state.saveGate = new Promise<void>((resolve) => {
+      finishSave = resolve;
+    });
+    await page.clock.install();
+    try {
+      await page.goto(`/onboarding/individual/${profileId}`);
+      const firstName = page.locator('#firstName');
+      await expect(firstName).toHaveValue(individual.firstName);
+      await firstName.fill('Retained Person');
+      await page
+        .getByRole('button', { name: t('onboarding.wizard.save', locale), exact: true })
+        .click();
+      await expect.poll(() => state.saveRequests.length).toBe(1);
+      await page.clock.fastForward(15_200);
+      await expect(
+        page.getByText(t('onboarding.draft.error', locale), { exact: true })
+      ).toBeVisible();
+      await expect(firstName).toHaveValue('Retained Person');
+      expect(state.saveRequests).toHaveLength(1);
+      finishSave();
+      await expect.poll(() => state.draft.version).toBe(1);
+      state.saveStatus = 409;
+      await page
+        .getByRole('button', { name: t('onboarding.draft.retry', locale), exact: true })
+        .click();
+      await expect(
+        page.getByText(t('onboarding.draft.conflict', locale), { exact: true })
+      ).toBeVisible();
+      expect(state.saveRequests.map((entry) => entry.expectedVersion)).toEqual([0, 0]);
+      await page
+        .getByRole('button', { name: t('onboarding.draft.reload', locale), exact: true })
+        .click();
+      await expect(firstName).toHaveValue('Retained Person');
+      await expect(
+        page.getByText(t('onboarding.draft.saved', locale), { exact: true })
+      ).toBeVisible();
+      expect(state.submissions).toHaveLength(0);
+    } finally {
+      finishSave();
+    }
+  });
 }
 
 for (const locale of ['en', 'fa'] as const) {
@@ -731,6 +842,10 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(page).toHaveURL(new RegExp(`/onboarding/individual/${profileId}\\?step=3$`));
     expect(state.completeRequests).toBe(0);
     state.invalidReceipt = false;
+    await page.getByRole('button', { name: draftText('checkSubmission', locale) }).click();
+    await expect(page.getByText(draftText('submissionUnconfirmed', locale))).toHaveCount(0);
+    expect(state.profileReads).toBe(1);
+    expect(state.submissions).toHaveLength(1);
     await submit(page, locale);
     await expect(page).toHaveURL(new RegExp(`/onboarding/complete\\?profileId=${profileId}$`));
     await expect(page.locator('dl[aria-label]')).toContainText('Person Owner');
