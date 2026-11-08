@@ -254,7 +254,10 @@ it('retains exact captured body/key/hash after malformed receipt, close and reje
   const body = JSON.stringify(first.action?.body);
   expect(first.action?.successStatus).toBe(200);
   expect(owner).not.toBeNull();
-  await act(async () => first.onPendingChange?.(true));
+  await act(async () => {
+    first.onPendingChange?.(true);
+    first.onCommandDispatch?.(true);
+  });
   await expect(first.onSuccess({ ...createdContract, invoiceIds: [] })).rejects.toThrow('receipt');
   await act(async () => {
     first.onUnconfirmed?.();
@@ -296,6 +299,7 @@ it('maps only complete active owned errors and unlocks first definitive rejectio
   const first = await opened();
   await act(async () => {
     first.onPendingChange?.(true);
+    first.onCommandDispatch?.(true);
     (first.action?.errorMessages?.['VALIDATION:INPUT:INVALID'] as (v: unknown) => string)(
       solarOwnedError(['invoiceLine0UnitPrice'])
     );
@@ -315,6 +319,7 @@ it('maps only complete active owned errors and unlocks first definitive rejectio
   const next = await opened();
   await act(async () => {
     next.onPendingChange?.(true);
+    next.onCommandDispatch?.(true);
     (next.action?.errorMessages?.['VALIDATION:INPUT:INVALID'] as (v: unknown) => string)(
       solarOwnedError(['title', 'profileId'])
     );
@@ -480,6 +485,7 @@ it('complete current missing write withdraws selected private form while malform
   const dialog = await opened();
   await act(async () => {
     dialog.onPendingChange?.(true);
+    dialog.onCommandDispatch?.(true);
     (dialog.action?.errorMessages?.['NOT_FOUND:RESOURCE'] as (value: unknown) => string)({
       error: { code: 'NOT_FOUND:RESOURCE', message: 'missing', correlationId: 'broken' },
     });

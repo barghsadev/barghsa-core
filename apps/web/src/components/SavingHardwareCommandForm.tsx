@@ -322,6 +322,7 @@ function OwnedSavingHardwareCommandForm({
             ),
             method: 'POST',
             path: `/api/staff/saving/orders/${order.id}/${cancellation ? 'cancel-hardware-upgrade' : 'amend-hardware'}`,
+            responseDeadline: true,
             successStatus: cancellation ? 200 : 201,
             body: Object.freeze({
               ...body,
@@ -510,10 +511,13 @@ function OwnedSavingHardwareCommandForm({
             if (!live(command, action)) return;
             pending.current = value;
             if (value) {
-              command.owner.attempted = true;
               onPending();
               notify();
             }
+          }}
+          onCommandDispatch={(dispatched) => {
+            if (live(command, action))
+              command.owner.attempted = dispatched || command.owner.uncertain;
           }}
           onSuccess={async (value) => {
             if (!live(command, action)) return;

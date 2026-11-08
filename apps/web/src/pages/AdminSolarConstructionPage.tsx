@@ -384,6 +384,7 @@ function OwnedAdminSolarConstructionPage({
             description: copy('constructionReviewDescription'),
             path: `/api/admin/solar/construction/${encodeURIComponent(captured.requestId)}`,
             method: 'POST',
+            responseDeadline: true,
             successStatus: 200,
             body: { ...captured.command, expectedReviewHash: hash },
             conflictMessage: copy('constructionConflict'),
@@ -673,9 +674,12 @@ function OwnedAdminSolarConstructionPage({
           onPendingChange={(value) => {
             const captured = reviewed.current;
             if (!captured || !live(captured)) return;
-            if (value) captured.attempted = true;
             pendingRef.current = value;
             setPending(value);
+          }}
+          onCommandDispatch={(dispatched) => {
+            const captured = reviewed.current;
+            if (captured && live(captured)) captured.attempted = dispatched || captured.unconfirmed;
           }}
           onUnconfirmed={() => {
             if (reviewed.current) unconfirmed(reviewed.current);

@@ -375,6 +375,7 @@ function OwnedSolarContractForm({
             path,
             method: 'POST',
             body: { ...body, expectedReviewHash: review.hash },
+            responseDeadline: true,
             successStatus: 200,
           },
           review,
@@ -691,10 +692,12 @@ function OwnedSolarContractForm({
             action={action}
             onPendingChange={(value) => {
               if (current(captured)) {
-                if (value) captured.attempted = true;
                 pendingRef.current = value;
                 setPending(value);
               }
+            }}
+            onCommandDispatch={(dispatched) => {
+              if (current(captured)) captured.attempted = dispatched || captured.uncertain;
             }}
             onUnconfirmed={() => {
               if (current(captured)) {

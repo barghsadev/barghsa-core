@@ -84,7 +84,7 @@ function OwnedVerificationBanner({
 
     async function fetchStatus() {
       try {
-        const response = await client.fetchQuery({
+        const data = await client.fetchQuery({
           queryKey: key,
           staleTime: 0,
           gcTime: 0,
@@ -97,31 +97,13 @@ function OwnedVerificationBanner({
                 signal,
                 headers: { Accept: 'application/json', 'Accept-Language': locale },
               });
-              return {
-                ok: response.ok,
-                status: response.status,
-                data: response.ok ? ((await response.json()) as VerificationStatusResponse) : null,
-              };
+              return response.ok ? ((await response.json()) as VerificationStatusResponse) : null;
             }),
         });
-
-        // Not authenticated — no banner
-        if (response.status === 401) {
-          if (!controller.signal.aborted) setLoading(false);
-          return;
-        }
-
-        if (!response.ok) {
-          if (!controller.signal.aborted) setLoading(false);
-          return;
-        }
-
-        const data = response.data;
-        if (!controller.signal.aborted) {
-          setStatus(data);
-          setLoading(false);
-        }
+        if (!controller.signal.aborted) setStatus(data);
       } catch {
+        // The previous status was cleared before the read.
+      } finally {
         if (!controller.signal.aborted) setLoading(false);
       }
     }

@@ -1,5 +1,5 @@
 import { fullNavigation } from './navigation-fixture';
-import { test, expect, type Page } from './coverage-fixture';
+import { checkpointBrowserCoverage, test, expect, type Page, type Route } from './coverage-fixture';
 import AxeBuilder from '@axe-core/playwright';
 import { crmShell } from './crm-shell-fixture';
 import { tSolar } from '@barghsa/i18n/solar';
@@ -50,7 +50,7 @@ for (const locale of ['en', 'fa'] as const) {
     );
     let revision = 0,
       needsStepUp = true,
-      lost = true;
+      heldProgress: Route | undefined;
     const writes: Array<Record<string, unknown>> = [],
       previews: Array<Record<string, unknown>> = [];
     const saved = new Map<string, Record<string, unknown>>();
@@ -82,9 +82,9 @@ for (const locale of ['en', 'fa'] as const) {
           saved.set(operation, body);
           revision++;
         } else expect(body).toEqual(saved.get(operation));
-        if (lost) {
-          lost = false;
-          return r.fulfill({ status: 503, json: {} });
+        if (!heldProgress) {
+          heldProgress = r;
+          return;
         }
         return r.fulfill({ json: savedProgress() });
       }
@@ -108,6 +108,7 @@ for (const locale of ['en', 'fa'] as const) {
     ).toBeVisible();
     const progress = scope(page, 'constructionTitle', locale);
     await expect(progress.locator('[data-slot=progress-stepper]>li')).toHaveCount(6);
+    await page.clock.install();
     for (const [index, stage] of constructionStages.entries()) {
       await page
         .getByLabel(copy('constructionNote'), { exact: true })
@@ -122,7 +123,11 @@ for (const locale of ['en', 'fa'] as const) {
           .getByLabel(t('team.password', locale), { exact: true })
           .fill('test-only-password');
         await dialog.getByRole('button', { name: t('team.confirm', locale), exact: true }).click();
+        await expect.poll(() => !!heldProgress).toBe(true);
+        expect(writes).toHaveLength(2);
+        await page.clock.fastForward(15_001);
         await expect(dialog.getByRole('alert')).toBeVisible();
+        await heldProgress!.fulfill({ status: 503, json: {} }).catch(() => {});
         const cancel = dialog.getByRole('button', { name: t('team.cancel', locale), exact: true });
         await expect(cancel).toBeEnabled();
         await cancel.click();
@@ -143,6 +148,7 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(progress.locator('[aria-current=step]')).toHaveCount(0);
     await expect(progress.locator('script,img')).toHaveCount(0);
     expect((await new AxeBuilder({ page }).include('main').analyze()).violations).toEqual([]);
+    await checkpointBrowserCoverage(page);
     await page.route('**/api/auth/user', (r) =>
       r.fulfill({
         json: {

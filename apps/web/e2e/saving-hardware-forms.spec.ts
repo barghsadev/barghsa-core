@@ -253,6 +253,7 @@ for (const [locale, theme] of [
     await acknowledge(page, 'both');
     await inspect(page, dialog, '[role="dialog"]', confirm(page));
     state.cancelWriteMode = 'held';
+    await page.clock.install();
     await confirm(page).click();
     await expect.poll(() => !!state.cancelWriteRoute).toBe(true);
     const command = state.cancelWrites.at(-1)!,
@@ -267,10 +268,12 @@ for (const [locale, theme] of [
       idempotencyKey: expect.stringMatching(keyPattern),
     });
     persistCancellation(command);
-    await state.cancelWriteRoute!.fulfill({ status: 503, json: {} });
+    const heldCancellation = state.cancelWriteRoute!;
+    await page.clock.fastForward(15_001);
     await expect(dialog).toHaveCount(0);
     const retry = page.getByTestId(`saving-upgrade-cancel-retry-${upgradeId}`);
     await expect(retry).toHaveText(formCopy('retryCancellation'));
+    await heldCancellation.fulfill({ status: 503, json: {} }).catch(() => {});
     await expect(rowReason).toBeDisabled();
     await expect(
       addressForm.getByRole('button', { name: copy('staffAmendAddress'), exact: true })

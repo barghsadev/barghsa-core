@@ -314,6 +314,7 @@ for (const [locale, theme] of [
       );
       state.needsStepUp = true;
       state.writeMode = 'held';
+      await page.clock.install();
       await approveRiskConfirmation(page, locale, 'financial');
       await confirm().click();
       const password = dialog.getByLabel(t('team.password', locale), { exact: true });
@@ -334,9 +335,12 @@ for (const [locale, theme] of [
         invoiceIds: [expect.stringMatching(generatedId)],
       });
       expect(receipt.contractId).not.toBe(receipt.invoiceIds[0]);
-      await state.heldWrite!.fulfill({ json: { ...receipt, status: 'published' } });
+      const heldContract = state.heldWrite!;
+      await page.clock.fastForward(15_001);
       await expect(retry).toBeEnabled();
       await expect(dialog).toHaveCount(0);
+      await heldContract.fulfill({ json: receipt }).catch(() => {});
+      expect(state.writes).toHaveLength(2);
       await expect(field('title')).toBeDisabled();
       const readCount = state.reads.length,
         optionCount = state.optionsReads.length,
@@ -369,6 +373,7 @@ for (const [locale, theme] of [
         '  Independent final review draft  '
       );
       for (const malformed of [
+        { ...receipt, status: 'published' },
         { ...receipt, invoiceIds: [] },
         { ...receipt, invoiceIds: [receipt.contractId] },
         { ...receipt, requestId: firstSolar },

@@ -204,6 +204,14 @@ export async function setupSolarContractIssue(page: Page, locale: 'en' | 'fa') {
       .addCookies([
         { name: 'barghsa_csrf', value: state.csrf, url: new URL(route.request().url()).origin },
       ]);
+    // WebKit can resume an intercepted response before the frame sees the cookie update.
+    await page.evaluate((token) => {
+      const cookie = `barghsa_csrf=${encodeURIComponent(token)}`;
+      document.cookie = `${cookie}; Path=/; SameSite=Lax`;
+      if (!document.cookie.split(';').some((value) => value.trim() === cookie)) {
+        throw new Error('Test verification cookie was not installed');
+      }
+    }, state.csrf);
     return route.fulfill({
       headers: { 'set-cookie': `barghsa_csrf=${state.csrf}; Path=/; SameSite=Lax` },
       json: { verified: true },

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-08T09:16:00+00:00",
-  "source_commit": "7e28b11ef3014f6630bead748eedeb1e902a511b",
+  "updated": "2026-11-08T09:29:55+00:00",
+  "source_commit": "eaf5cbd72482e76dd9877a6ae46a421ff8a5b6ed",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -30669,7 +30669,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "ca21efe49d15fc41fc6d366c51da3cb0e7eb7a745812ecb6009d9faafd69b331"
+              "sha256": "cb5e3e1f38127dd28459e161eaceb9d54d12818dae17d6fb79e73619997a4303"
             },
             {
               "path": "apps/web/src/routes/_app/electricity/order.tsx",
@@ -60050,7 +60050,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "ca21efe49d15fc41fc6d366c51da3cb0e7eb7a745812ecb6009d9faafd69b331"
+              "sha256": "cb5e3e1f38127dd28459e161eaceb9d54d12818dae17d6fb79e73619997a4303"
             },
             {
               "path": "apps/web/src/components/NotificationBell.tsx",
@@ -195268,7 +195268,7 @@
             },
             {
               "path": "apps/web/e2e/solar-construction-progress.spec.ts",
-              "sha256": "4a95d913b53e07345de8f24a25bdcbfeddd87c90c7653bc28b5e2ed13c5f5b5d"
+              "sha256": "62196e4de6fe6e78e6fcbef2be765f100e3f1f1aa20668e2c59af5c6f28233ea"
             },
             {
               "path": "apps/web/e2e/status-timelines.spec.ts",
@@ -197206,7 +197206,7 @@
             },
             {
               "path": "apps/web/e2e/solar-construction-progress.spec.ts",
-              "sha256": "4a95d913b53e07345de8f24a25bdcbfeddd87c90c7653bc28b5e2ed13c5f5b5d"
+              "sha256": "62196e4de6fe6e78e6fcbef2be765f100e3f1f1aa20668e2c59af5c6f28233ea"
             },
             {
               "path": "apps/web/e2e/status-timelines.spec.ts",
@@ -386342,7 +386342,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "858695d3c3c195a7ac6e43c400ea089f24e87b1574810e926fa904d6920e3376"
+              "sha256": "f6aeb3fe60a4ca195914211202cf0639e4e55e43cfb1bd5219669e7fb707155e"
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
@@ -387111,7 +387111,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "858695d3c3c195a7ac6e43c400ea089f24e87b1574810e926fa904d6920e3376"
+              "sha256": "f6aeb3fe60a4ca195914211202cf0639e4e55e43cfb1bd5219669e7fb707155e"
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
@@ -387880,7 +387880,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "858695d3c3c195a7ac6e43c400ea089f24e87b1574810e926fa904d6920e3376"
+              "sha256": "f6aeb3fe60a4ca195914211202cf0639e4e55e43cfb1bd5219669e7fb707155e"
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
@@ -388651,7 +388651,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "858695d3c3c195a7ac6e43c400ea089f24e87b1574810e926fa904d6920e3376"
+              "sha256": "f6aeb3fe60a4ca195914211202cf0639e4e55e43cfb1bd5219669e7fb707155e"
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
@@ -390699,7 +390699,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "858695d3c3c195a7ac6e43c400ea089f24e87b1574810e926fa904d6920e3376"
+              "sha256": "f6aeb3fe60a4ca195914211202cf0639e4e55e43cfb1bd5219669e7fb707155e"
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
@@ -391468,7 +391468,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "858695d3c3c195a7ac6e43c400ea089f24e87b1574810e926fa904d6920e3376"
+              "sha256": "f6aeb3fe60a4ca195914211202cf0639e4e55e43cfb1bd5219669e7fb707155e"
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
@@ -392237,7 +392237,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "858695d3c3c195a7ac6e43c400ea089f24e87b1574810e926fa904d6920e3376"
+              "sha256": "f6aeb3fe60a4ca195914211202cf0639e4e55e43cfb1bd5219669e7fb707155e"
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
@@ -393007,7 +393007,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "858695d3c3c195a7ac6e43c400ea089f24e87b1574810e926fa904d6920e3376"
+              "sha256": "f6aeb3fe60a4ca195914211202cf0639e4e55e43cfb1bd5219669e7fb707155e"
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
@@ -393777,7 +393777,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "858695d3c3c195a7ac6e43c400ea089f24e87b1574810e926fa904d6920e3376"
+              "sha256": "f6aeb3fe60a4ca195914211202cf0639e4e55e43cfb1bd5219669e7fb707155e"
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
@@ -394548,7 +394548,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "858695d3c3c195a7ac6e43c400ea089f24e87b1574810e926fa904d6920e3376"
+              "sha256": "f6aeb3fe60a4ca195914211202cf0639e4e55e43cfb1bd5219669e7fb707155e"
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
@@ -395323,7 +395323,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "858695d3c3c195a7ac6e43c400ea089f24e87b1574810e926fa904d6920e3376"
+              "sha256": "f6aeb3fe60a4ca195914211202cf0639e4e55e43cfb1bd5219669e7fb707155e"
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
@@ -396092,7 +396092,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "858695d3c3c195a7ac6e43c400ea089f24e87b1574810e926fa904d6920e3376"
+              "sha256": "f6aeb3fe60a4ca195914211202cf0639e4e55e43cfb1bd5219669e7fb707155e"
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
@@ -396861,7 +396861,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "858695d3c3c195a7ac6e43c400ea089f24e87b1574810e926fa904d6920e3376"
+              "sha256": "f6aeb3fe60a4ca195914211202cf0639e4e55e43cfb1bd5219669e7fb707155e"
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
@@ -403664,11 +403664,11 @@
             },
             {
               "path": "apps/web/e2e/solar-contract-issue-form-fixture.ts",
-              "sha256": "7fb3d04bd879ee6e8c5afc510f97e28ff9751a03700815fd536a39ccd6e9e9a4"
+              "sha256": "afb6a3e0239078bc86d7e38a4053793e77d5fc8fecd8917e219a5a06b4ee98b3"
             },
             {
               "path": "apps/web/e2e/solar-contract-issue-forms.spec.ts",
-              "sha256": "1ca166cf680d1cd406c4678e6902eb183ae2cff9b0610e6c9adb200278cf544a"
+              "sha256": "3401f30f2dad9bb6803d6333009414f2c0fe6593eb694d88a27e245dd7a53266"
             },
             {
               "path": "apps/web/e2e/solar-postal-form-fixture.ts",
@@ -403684,7 +403684,7 @@
             },
             {
               "path": "apps/web/src/components/SolarContractForm.tsx",
-              "sha256": "6ebecbc889273aa40d93d585a90f7558504df6d793914ad1eea918da8dbfa97a"
+              "sha256": "8acef0c5d19fa9703612ed3dd84086b85cdadc6131e9ba4618e58916fd58ec29"
             },
             {
               "path": "apps/web/src/components/SolarPostalPanel.test.tsx",
@@ -403696,7 +403696,7 @@
             },
             {
               "path": "apps/web/src/components/solar-contract-forms.test.tsx",
-              "sha256": "c59441f18ba405e84206dfdec8a02d0cc5ecf2f8014bc37048b39e805cc5d070"
+              "sha256": "eb6b2db457db2474d0233add66c6911d5507aa3cbd18a2dd85a106fc00f6fab7"
             },
             {
               "path": "apps/web/src/components/solar-postal-forms.test.tsx",
@@ -405010,11 +405010,11 @@
             },
             {
               "path": "apps/web/e2e/solar-contract-issue-form-fixture.ts",
-              "sha256": "7fb3d04bd879ee6e8c5afc510f97e28ff9751a03700815fd536a39ccd6e9e9a4"
+              "sha256": "afb6a3e0239078bc86d7e38a4053793e77d5fc8fecd8917e219a5a06b4ee98b3"
             },
             {
               "path": "apps/web/e2e/solar-contract-issue-forms.spec.ts",
-              "sha256": "1ca166cf680d1cd406c4678e6902eb183ae2cff9b0610e6c9adb200278cf544a"
+              "sha256": "3401f30f2dad9bb6803d6333009414f2c0fe6593eb694d88a27e245dd7a53266"
             },
             {
               "path": "apps/web/e2e/solar-postal-form-fixture.ts",
@@ -405030,7 +405030,7 @@
             },
             {
               "path": "apps/web/src/components/SolarContractForm.tsx",
-              "sha256": "6ebecbc889273aa40d93d585a90f7558504df6d793914ad1eea918da8dbfa97a"
+              "sha256": "8acef0c5d19fa9703612ed3dd84086b85cdadc6131e9ba4618e58916fd58ec29"
             },
             {
               "path": "apps/web/src/components/SolarPostalPanel.test.tsx",
@@ -405042,7 +405042,7 @@
             },
             {
               "path": "apps/web/src/components/solar-contract-forms.test.tsx",
-              "sha256": "c59441f18ba405e84206dfdec8a02d0cc5ecf2f8014bc37048b39e805cc5d070"
+              "sha256": "eb6b2db457db2474d0233add66c6911d5507aa3cbd18a2dd85a106fc00f6fab7"
             },
             {
               "path": "apps/web/src/components/solar-postal-forms.test.tsx",
@@ -406357,11 +406357,11 @@
             },
             {
               "path": "apps/web/e2e/solar-contract-issue-form-fixture.ts",
-              "sha256": "7fb3d04bd879ee6e8c5afc510f97e28ff9751a03700815fd536a39ccd6e9e9a4"
+              "sha256": "afb6a3e0239078bc86d7e38a4053793e77d5fc8fecd8917e219a5a06b4ee98b3"
             },
             {
               "path": "apps/web/e2e/solar-contract-issue-forms.spec.ts",
-              "sha256": "1ca166cf680d1cd406c4678e6902eb183ae2cff9b0610e6c9adb200278cf544a"
+              "sha256": "3401f30f2dad9bb6803d6333009414f2c0fe6593eb694d88a27e245dd7a53266"
             },
             {
               "path": "apps/web/e2e/solar-postal-form-fixture.ts",
@@ -406377,7 +406377,7 @@
             },
             {
               "path": "apps/web/src/components/SolarContractForm.tsx",
-              "sha256": "6ebecbc889273aa40d93d585a90f7558504df6d793914ad1eea918da8dbfa97a"
+              "sha256": "8acef0c5d19fa9703612ed3dd84086b85cdadc6131e9ba4618e58916fd58ec29"
             },
             {
               "path": "apps/web/src/components/SolarPostalPanel.test.tsx",
@@ -406389,7 +406389,7 @@
             },
             {
               "path": "apps/web/src/components/solar-contract-forms.test.tsx",
-              "sha256": "c59441f18ba405e84206dfdec8a02d0cc5ecf2f8014bc37048b39e805cc5d070"
+              "sha256": "eb6b2db457db2474d0233add66c6911d5507aa3cbd18a2dd85a106fc00f6fab7"
             },
             {
               "path": "apps/web/src/components/solar-postal-forms.test.tsx",
@@ -407703,11 +407703,11 @@
             },
             {
               "path": "apps/web/e2e/solar-contract-issue-form-fixture.ts",
-              "sha256": "7fb3d04bd879ee6e8c5afc510f97e28ff9751a03700815fd536a39ccd6e9e9a4"
+              "sha256": "afb6a3e0239078bc86d7e38a4053793e77d5fc8fecd8917e219a5a06b4ee98b3"
             },
             {
               "path": "apps/web/e2e/solar-contract-issue-forms.spec.ts",
-              "sha256": "1ca166cf680d1cd406c4678e6902eb183ae2cff9b0610e6c9adb200278cf544a"
+              "sha256": "3401f30f2dad9bb6803d6333009414f2c0fe6593eb694d88a27e245dd7a53266"
             },
             {
               "path": "apps/web/e2e/solar-postal-form-fixture.ts",
@@ -407723,7 +407723,7 @@
             },
             {
               "path": "apps/web/src/components/SolarContractForm.tsx",
-              "sha256": "6ebecbc889273aa40d93d585a90f7558504df6d793914ad1eea918da8dbfa97a"
+              "sha256": "8acef0c5d19fa9703612ed3dd84086b85cdadc6131e9ba4618e58916fd58ec29"
             },
             {
               "path": "apps/web/src/components/SolarPostalPanel.test.tsx",
@@ -407735,7 +407735,7 @@
             },
             {
               "path": "apps/web/src/components/solar-contract-forms.test.tsx",
-              "sha256": "c59441f18ba405e84206dfdec8a02d0cc5ecf2f8014bc37048b39e805cc5d070"
+              "sha256": "eb6b2db457db2474d0233add66c6911d5507aa3cbd18a2dd85a106fc00f6fab7"
             },
             {
               "path": "apps/web/src/components/solar-postal-forms.test.tsx",
@@ -409049,11 +409049,11 @@
             },
             {
               "path": "apps/web/e2e/solar-contract-issue-form-fixture.ts",
-              "sha256": "7fb3d04bd879ee6e8c5afc510f97e28ff9751a03700815fd536a39ccd6e9e9a4"
+              "sha256": "afb6a3e0239078bc86d7e38a4053793e77d5fc8fecd8917e219a5a06b4ee98b3"
             },
             {
               "path": "apps/web/e2e/solar-contract-issue-forms.spec.ts",
-              "sha256": "1ca166cf680d1cd406c4678e6902eb183ae2cff9b0610e6c9adb200278cf544a"
+              "sha256": "3401f30f2dad9bb6803d6333009414f2c0fe6593eb694d88a27e245dd7a53266"
             },
             {
               "path": "apps/web/e2e/solar-postal-form-fixture.ts",
@@ -409069,7 +409069,7 @@
             },
             {
               "path": "apps/web/src/components/SolarContractForm.tsx",
-              "sha256": "6ebecbc889273aa40d93d585a90f7558504df6d793914ad1eea918da8dbfa97a"
+              "sha256": "8acef0c5d19fa9703612ed3dd84086b85cdadc6131e9ba4618e58916fd58ec29"
             },
             {
               "path": "apps/web/src/components/SolarPostalPanel.test.tsx",
@@ -409081,7 +409081,7 @@
             },
             {
               "path": "apps/web/src/components/solar-contract-forms.test.tsx",
-              "sha256": "c59441f18ba405e84206dfdec8a02d0cc5ecf2f8014bc37048b39e805cc5d070"
+              "sha256": "eb6b2db457db2474d0233add66c6911d5507aa3cbd18a2dd85a106fc00f6fab7"
             },
             {
               "path": "apps/web/src/components/solar-postal-forms.test.tsx",
@@ -410396,11 +410396,11 @@
             },
             {
               "path": "apps/web/e2e/solar-contract-issue-form-fixture.ts",
-              "sha256": "7fb3d04bd879ee6e8c5afc510f97e28ff9751a03700815fd536a39ccd6e9e9a4"
+              "sha256": "afb6a3e0239078bc86d7e38a4053793e77d5fc8fecd8917e219a5a06b4ee98b3"
             },
             {
               "path": "apps/web/e2e/solar-contract-issue-forms.spec.ts",
-              "sha256": "1ca166cf680d1cd406c4678e6902eb183ae2cff9b0610e6c9adb200278cf544a"
+              "sha256": "3401f30f2dad9bb6803d6333009414f2c0fe6593eb694d88a27e245dd7a53266"
             },
             {
               "path": "apps/web/e2e/solar-postal-form-fixture.ts",
@@ -410416,7 +410416,7 @@
             },
             {
               "path": "apps/web/src/components/SolarContractForm.tsx",
-              "sha256": "6ebecbc889273aa40d93d585a90f7558504df6d793914ad1eea918da8dbfa97a"
+              "sha256": "8acef0c5d19fa9703612ed3dd84086b85cdadc6131e9ba4618e58916fd58ec29"
             },
             {
               "path": "apps/web/src/components/SolarPostalPanel.test.tsx",
@@ -410428,7 +410428,7 @@
             },
             {
               "path": "apps/web/src/components/solar-contract-forms.test.tsx",
-              "sha256": "c59441f18ba405e84206dfdec8a02d0cc5ecf2f8014bc37048b39e805cc5d070"
+              "sha256": "eb6b2db457db2474d0233add66c6911d5507aa3cbd18a2dd85a106fc00f6fab7"
             },
             {
               "path": "apps/web/src/components/solar-postal-forms.test.tsx",
@@ -411744,11 +411744,11 @@
             },
             {
               "path": "apps/web/e2e/solar-contract-issue-form-fixture.ts",
-              "sha256": "7fb3d04bd879ee6e8c5afc510f97e28ff9751a03700815fd536a39ccd6e9e9a4"
+              "sha256": "afb6a3e0239078bc86d7e38a4053793e77d5fc8fecd8917e219a5a06b4ee98b3"
             },
             {
               "path": "apps/web/e2e/solar-contract-issue-forms.spec.ts",
-              "sha256": "1ca166cf680d1cd406c4678e6902eb183ae2cff9b0610e6c9adb200278cf544a"
+              "sha256": "3401f30f2dad9bb6803d6333009414f2c0fe6593eb694d88a27e245dd7a53266"
             },
             {
               "path": "apps/web/e2e/solar-postal-form-fixture.ts",
@@ -411764,7 +411764,7 @@
             },
             {
               "path": "apps/web/src/components/SolarContractForm.tsx",
-              "sha256": "6ebecbc889273aa40d93d585a90f7558504df6d793914ad1eea918da8dbfa97a"
+              "sha256": "8acef0c5d19fa9703612ed3dd84086b85cdadc6131e9ba4618e58916fd58ec29"
             },
             {
               "path": "apps/web/src/components/SolarPostalPanel.test.tsx",
@@ -411776,7 +411776,7 @@
             },
             {
               "path": "apps/web/src/components/solar-contract-forms.test.tsx",
-              "sha256": "c59441f18ba405e84206dfdec8a02d0cc5ecf2f8014bc37048b39e805cc5d070"
+              "sha256": "eb6b2db457db2474d0233add66c6911d5507aa3cbd18a2dd85a106fc00f6fab7"
             },
             {
               "path": "apps/web/src/components/solar-postal-forms.test.tsx",
@@ -413088,11 +413088,11 @@
             },
             {
               "path": "apps/web/e2e/solar-contract-issue-form-fixture.ts",
-              "sha256": "7fb3d04bd879ee6e8c5afc510f97e28ff9751a03700815fd536a39ccd6e9e9a4"
+              "sha256": "afb6a3e0239078bc86d7e38a4053793e77d5fc8fecd8917e219a5a06b4ee98b3"
             },
             {
               "path": "apps/web/e2e/solar-contract-issue-forms.spec.ts",
-              "sha256": "1ca166cf680d1cd406c4678e6902eb183ae2cff9b0610e6c9adb200278cf544a"
+              "sha256": "3401f30f2dad9bb6803d6333009414f2c0fe6593eb694d88a27e245dd7a53266"
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
@@ -413104,7 +413104,7 @@
             },
             {
               "path": "apps/web/src/components/SolarContractForm.tsx",
-              "sha256": "6ebecbc889273aa40d93d585a90f7558504df6d793914ad1eea918da8dbfa97a"
+              "sha256": "8acef0c5d19fa9703612ed3dd84086b85cdadc6131e9ba4618e58916fd58ec29"
             },
             {
               "path": "apps/web/src/components/contract-review-signature-forms.test.tsx",
@@ -413112,7 +413112,7 @@
             },
             {
               "path": "apps/web/src/components/solar-contract-forms.test.tsx",
-              "sha256": "c59441f18ba405e84206dfdec8a02d0cc5ecf2f8014bc37048b39e805cc5d070"
+              "sha256": "eb6b2db457db2474d0233add66c6911d5507aa3cbd18a2dd85a106fc00f6fab7"
             },
             {
               "path": "apps/web/src/lib/contract-guidance.test.ts",
@@ -414395,11 +414395,11 @@
             },
             {
               "path": "apps/web/e2e/solar-contract-issue-form-fixture.ts",
-              "sha256": "7fb3d04bd879ee6e8c5afc510f97e28ff9751a03700815fd536a39ccd6e9e9a4"
+              "sha256": "afb6a3e0239078bc86d7e38a4053793e77d5fc8fecd8917e219a5a06b4ee98b3"
             },
             {
               "path": "apps/web/e2e/solar-contract-issue-forms.spec.ts",
-              "sha256": "1ca166cf680d1cd406c4678e6902eb183ae2cff9b0610e6c9adb200278cf544a"
+              "sha256": "3401f30f2dad9bb6803d6333009414f2c0fe6593eb694d88a27e245dd7a53266"
             },
             {
               "path": "apps/web/e2e/solar-postal-form-fixture.ts",
@@ -414415,7 +414415,7 @@
             },
             {
               "path": "apps/web/src/components/SolarContractForm.tsx",
-              "sha256": "6ebecbc889273aa40d93d585a90f7558504df6d793914ad1eea918da8dbfa97a"
+              "sha256": "8acef0c5d19fa9703612ed3dd84086b85cdadc6131e9ba4618e58916fd58ec29"
             },
             {
               "path": "apps/web/src/components/SolarPostalPanel.test.tsx",
@@ -414427,7 +414427,7 @@
             },
             {
               "path": "apps/web/src/components/solar-contract-forms.test.tsx",
-              "sha256": "c59441f18ba405e84206dfdec8a02d0cc5ecf2f8014bc37048b39e805cc5d070"
+              "sha256": "eb6b2db457db2474d0233add66c6911d5507aa3cbd18a2dd85a106fc00f6fab7"
             },
             {
               "path": "apps/web/src/components/solar-postal-forms.test.tsx",
@@ -415740,11 +415740,11 @@
             },
             {
               "path": "apps/web/e2e/solar-contract-issue-form-fixture.ts",
-              "sha256": "7fb3d04bd879ee6e8c5afc510f97e28ff9751a03700815fd536a39ccd6e9e9a4"
+              "sha256": "afb6a3e0239078bc86d7e38a4053793e77d5fc8fecd8917e219a5a06b4ee98b3"
             },
             {
               "path": "apps/web/e2e/solar-contract-issue-forms.spec.ts",
-              "sha256": "1ca166cf680d1cd406c4678e6902eb183ae2cff9b0610e6c9adb200278cf544a"
+              "sha256": "3401f30f2dad9bb6803d6333009414f2c0fe6593eb694d88a27e245dd7a53266"
             },
             {
               "path": "apps/web/e2e/solar-postal-form-fixture.ts",
@@ -415760,7 +415760,7 @@
             },
             {
               "path": "apps/web/src/components/SolarContractForm.tsx",
-              "sha256": "6ebecbc889273aa40d93d585a90f7558504df6d793914ad1eea918da8dbfa97a"
+              "sha256": "8acef0c5d19fa9703612ed3dd84086b85cdadc6131e9ba4618e58916fd58ec29"
             },
             {
               "path": "apps/web/src/components/SolarPostalPanel.test.tsx",
@@ -415772,7 +415772,7 @@
             },
             {
               "path": "apps/web/src/components/solar-contract-forms.test.tsx",
-              "sha256": "c59441f18ba405e84206dfdec8a02d0cc5ecf2f8014bc37048b39e805cc5d070"
+              "sha256": "eb6b2db457db2474d0233add66c6911d5507aa3cbd18a2dd85a106fc00f6fab7"
             },
             {
               "path": "apps/web/src/components/solar-postal-forms.test.tsx",
@@ -417081,11 +417081,11 @@
             },
             {
               "path": "apps/web/e2e/solar-contract-issue-form-fixture.ts",
-              "sha256": "7fb3d04bd879ee6e8c5afc510f97e28ff9751a03700815fd536a39ccd6e9e9a4"
+              "sha256": "afb6a3e0239078bc86d7e38a4053793e77d5fc8fecd8917e219a5a06b4ee98b3"
             },
             {
               "path": "apps/web/e2e/solar-contract-issue-forms.spec.ts",
-              "sha256": "1ca166cf680d1cd406c4678e6902eb183ae2cff9b0610e6c9adb200278cf544a"
+              "sha256": "3401f30f2dad9bb6803d6333009414f2c0fe6593eb694d88a27e245dd7a53266"
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
@@ -417097,7 +417097,7 @@
             },
             {
               "path": "apps/web/src/components/SolarContractForm.tsx",
-              "sha256": "6ebecbc889273aa40d93d585a90f7558504df6d793914ad1eea918da8dbfa97a"
+              "sha256": "8acef0c5d19fa9703612ed3dd84086b85cdadc6131e9ba4618e58916fd58ec29"
             },
             {
               "path": "apps/web/src/components/contract-review-signature-forms.test.tsx",
@@ -417105,7 +417105,7 @@
             },
             {
               "path": "apps/web/src/components/solar-contract-forms.test.tsx",
-              "sha256": "c59441f18ba405e84206dfdec8a02d0cc5ecf2f8014bc37048b39e805cc5d070"
+              "sha256": "eb6b2db457db2474d0233add66c6911d5507aa3cbd18a2dd85a106fc00f6fab7"
             },
             {
               "path": "apps/web/src/lib/contract-guidance.test.ts",
@@ -418381,11 +418381,11 @@
             },
             {
               "path": "apps/web/e2e/solar-contract-issue-form-fixture.ts",
-              "sha256": "7fb3d04bd879ee6e8c5afc510f97e28ff9751a03700815fd536a39ccd6e9e9a4"
+              "sha256": "afb6a3e0239078bc86d7e38a4053793e77d5fc8fecd8917e219a5a06b4ee98b3"
             },
             {
               "path": "apps/web/e2e/solar-contract-issue-forms.spec.ts",
-              "sha256": "1ca166cf680d1cd406c4678e6902eb183ae2cff9b0610e6c9adb200278cf544a"
+              "sha256": "3401f30f2dad9bb6803d6333009414f2c0fe6593eb694d88a27e245dd7a53266"
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
@@ -418397,7 +418397,7 @@
             },
             {
               "path": "apps/web/src/components/SolarContractForm.tsx",
-              "sha256": "6ebecbc889273aa40d93d585a90f7558504df6d793914ad1eea918da8dbfa97a"
+              "sha256": "8acef0c5d19fa9703612ed3dd84086b85cdadc6131e9ba4618e58916fd58ec29"
             },
             {
               "path": "apps/web/src/components/contract-review-signature-forms.test.tsx",
@@ -418405,7 +418405,7 @@
             },
             {
               "path": "apps/web/src/components/solar-contract-forms.test.tsx",
-              "sha256": "c59441f18ba405e84206dfdec8a02d0cc5ecf2f8014bc37048b39e805cc5d070"
+              "sha256": "eb6b2db457db2474d0233add66c6911d5507aa3cbd18a2dd85a106fc00f6fab7"
             },
             {
               "path": "apps/web/src/lib/contract-guidance.test.ts",
@@ -419681,11 +419681,11 @@
             },
             {
               "path": "apps/web/e2e/solar-contract-issue-form-fixture.ts",
-              "sha256": "7fb3d04bd879ee6e8c5afc510f97e28ff9751a03700815fd536a39ccd6e9e9a4"
+              "sha256": "afb6a3e0239078bc86d7e38a4053793e77d5fc8fecd8917e219a5a06b4ee98b3"
             },
             {
               "path": "apps/web/e2e/solar-contract-issue-forms.spec.ts",
-              "sha256": "1ca166cf680d1cd406c4678e6902eb183ae2cff9b0610e6c9adb200278cf544a"
+              "sha256": "3401f30f2dad9bb6803d6333009414f2c0fe6593eb694d88a27e245dd7a53266"
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
@@ -419697,7 +419697,7 @@
             },
             {
               "path": "apps/web/src/components/SolarContractForm.tsx",
-              "sha256": "6ebecbc889273aa40d93d585a90f7558504df6d793914ad1eea918da8dbfa97a"
+              "sha256": "8acef0c5d19fa9703612ed3dd84086b85cdadc6131e9ba4618e58916fd58ec29"
             },
             {
               "path": "apps/web/src/components/contract-review-signature-forms.test.tsx",
@@ -419705,7 +419705,7 @@
             },
             {
               "path": "apps/web/src/components/solar-contract-forms.test.tsx",
-              "sha256": "c59441f18ba405e84206dfdec8a02d0cc5ecf2f8014bc37048b39e805cc5d070"
+              "sha256": "eb6b2db457db2474d0233add66c6911d5507aa3cbd18a2dd85a106fc00f6fab7"
             },
             {
               "path": "apps/web/src/lib/contract-guidance.test.ts",
@@ -421490,7 +421490,7 @@
             },
             {
               "path": "apps/web/src/components/SolarContractForm.tsx",
-              "sha256": "6ebecbc889273aa40d93d585a90f7558504df6d793914ad1eea918da8dbfa97a"
+              "sha256": "8acef0c5d19fa9703612ed3dd84086b85cdadc6131e9ba4618e58916fd58ec29"
             },
             {
               "path": "apps/web/src/components/WalletInvoicePaymentPanel.tsx",
@@ -491243,7 +491243,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "858695d3c3c195a7ac6e43c400ea089f24e87b1574810e926fa904d6920e3376"
+              "sha256": "f6aeb3fe60a4ca195914211202cf0639e4e55e43cfb1bd5219669e7fb707155e"
             },
             {
               "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
@@ -492958,7 +492958,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "ca21efe49d15fc41fc6d366c51da3cb0e7eb7a745812ecb6009d9faafd69b331"
+              "sha256": "cb5e3e1f38127dd28459e161eaceb9d54d12818dae17d6fb79e73619997a4303"
             },
             {
               "path": "apps/web/src/components/VersionedSettingsCard.tsx",
@@ -494387,7 +494387,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "858695d3c3c195a7ac6e43c400ea089f24e87b1574810e926fa904d6920e3376"
+              "sha256": "f6aeb3fe60a4ca195914211202cf0639e4e55e43cfb1bd5219669e7fb707155e"
             },
             {
               "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
@@ -495270,7 +495270,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "858695d3c3c195a7ac6e43c400ea089f24e87b1574810e926fa904d6920e3376"
+              "sha256": "f6aeb3fe60a4ca195914211202cf0639e4e55e43cfb1bd5219669e7fb707155e"
             },
             {
               "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
@@ -496094,7 +496094,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "858695d3c3c195a7ac6e43c400ea089f24e87b1574810e926fa904d6920e3376"
+              "sha256": "f6aeb3fe60a4ca195914211202cf0639e4e55e43cfb1bd5219669e7fb707155e"
             },
             {
               "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
@@ -496667,7 +496667,7 @@
             },
             {
               "path": "apps/web/e2e/solar-contract-issue-forms.spec.ts",
-              "sha256": "1ca166cf680d1cd406c4678e6902eb183ae2cff9b0610e6c9adb200278cf544a"
+              "sha256": "3401f30f2dad9bb6803d6333009414f2c0fe6593eb694d88a27e245dd7a53266"
             },
             {
               "path": "apps/web/e2e/staff-wallet-ledger.spec.ts",
@@ -496743,7 +496743,7 @@
             },
             {
               "path": "apps/web/src/components/SavingHardwareCommandForm.tsx",
-              "sha256": "e3e03c9a5c3a7b9c336b52be5519ec0d842cfecafc9d00e8dae20e228efe76f9"
+              "sha256": "f0f647ced11fae45862e669f1cecfab7c230dfa8e251e3730bf8243d0b0268f9"
             },
             {
               "path": "apps/web/src/components/SavingOrderChangePanel.test.tsx",
@@ -496763,7 +496763,7 @@
             },
             {
               "path": "apps/web/src/components/SolarContractForm.tsx",
-              "sha256": "6ebecbc889273aa40d93d585a90f7558504df6d793914ad1eea918da8dbfa97a"
+              "sha256": "8acef0c5d19fa9703612ed3dd84086b85cdadc6131e9ba4618e58916fd58ec29"
             },
             {
               "path": "apps/web/src/components/SolarPostalTrackingEditor.tsx",
@@ -496815,7 +496815,7 @@
             },
             {
               "path": "apps/web/src/components/solar-contract-forms.test.tsx",
-              "sha256": "c59441f18ba405e84206dfdec8a02d0cc5ecf2f8014bc37048b39e805cc5d070"
+              "sha256": "eb6b2db457db2474d0233add66c6911d5507aa3cbd18a2dd85a106fc00f6fab7"
             },
             {
               "path": "apps/web/src/components/solar-financial-query.test.tsx",
@@ -496919,7 +496919,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "858695d3c3c195a7ac6e43c400ea089f24e87b1574810e926fa904d6920e3376"
+              "sha256": "f6aeb3fe60a4ca195914211202cf0639e4e55e43cfb1bd5219669e7fb707155e"
             },
             {
               "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
@@ -497047,7 +497047,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "f01f5e49cff86e3a6341b8064a5f25c8c3aeb7b4f77cdf26e58d1a80f838bf87"
+              "sha256": "5044a15e3d75280b24dd900b9c4d3703d9ab3dc892d6379c02a9015ffde5d967"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -497780,7 +497780,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "ca21efe49d15fc41fc6d366c51da3cb0e7eb7a745812ecb6009d9faafd69b331"
+              "sha256": "cb5e3e1f38127dd28459e161eaceb9d54d12818dae17d6fb79e73619997a4303"
             },
             {
               "path": "apps/web/src/components/VersionedSettingsCard.tsx",
@@ -508197,7 +508197,7 @@
             },
             {
               "path": "apps/web/src/components/SolarContractForm.tsx",
-              "sha256": "6ebecbc889273aa40d93d585a90f7558504df6d793914ad1eea918da8dbfa97a"
+              "sha256": "8acef0c5d19fa9703612ed3dd84086b85cdadc6131e9ba4618e58916fd58ec29"
             },
             {
               "path": "apps/web/src/components/SolarPostalTrackingEditor.tsx",
@@ -508285,7 +508285,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "858695d3c3c195a7ac6e43c400ea089f24e87b1574810e926fa904d6920e3376"
+              "sha256": "f6aeb3fe60a4ca195914211202cf0639e4e55e43cfb1bd5219669e7fb707155e"
             },
             {
               "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
@@ -512104,7 +512104,7 @@
             },
             {
               "path": "apps/web/src/components/SolarContractForm.tsx",
-              "sha256": "6ebecbc889273aa40d93d585a90f7558504df6d793914ad1eea918da8dbfa97a"
+              "sha256": "8acef0c5d19fa9703612ed3dd84086b85cdadc6131e9ba4618e58916fd58ec29"
             },
             {
               "path": "apps/web/src/components/SolarPostalTrackingEditor.tsx",
@@ -512256,7 +512256,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "858695d3c3c195a7ac6e43c400ea089f24e87b1574810e926fa904d6920e3376"
+              "sha256": "f6aeb3fe60a4ca195914211202cf0639e4e55e43cfb1bd5219669e7fb707155e"
             },
             {
               "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
@@ -512771,7 +512771,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "ca21efe49d15fc41fc6d366c51da3cb0e7eb7a745812ecb6009d9faafd69b331"
+              "sha256": "cb5e3e1f38127dd28459e161eaceb9d54d12818dae17d6fb79e73619997a4303"
             },
             {
               "path": "apps/web/src/hooks/useAccountUser.tsx",
@@ -513570,7 +513570,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "ca21efe49d15fc41fc6d366c51da3cb0e7eb7a745812ecb6009d9faafd69b331"
+              "sha256": "cb5e3e1f38127dd28459e161eaceb9d54d12818dae17d6fb79e73619997a4303"
             },
             {
               "path": "apps/web/src/hooks/useAccountUser.tsx",
@@ -514368,7 +514368,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "ca21efe49d15fc41fc6d366c51da3cb0e7eb7a745812ecb6009d9faafd69b331"
+              "sha256": "cb5e3e1f38127dd28459e161eaceb9d54d12818dae17d6fb79e73619997a4303"
             },
             {
               "path": "apps/web/src/hooks/useAccountUser.tsx",
@@ -515165,7 +515165,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "ca21efe49d15fc41fc6d366c51da3cb0e7eb7a745812ecb6009d9faafd69b331"
+              "sha256": "cb5e3e1f38127dd28459e161eaceb9d54d12818dae17d6fb79e73619997a4303"
             },
             {
               "path": "apps/web/src/components/route-states.test.tsx",
@@ -515601,7 +515601,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "ca21efe49d15fc41fc6d366c51da3cb0e7eb7a745812ecb6009d9faafd69b331"
+              "sha256": "cb5e3e1f38127dd28459e161eaceb9d54d12818dae17d6fb79e73619997a4303"
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
@@ -516040,7 +516040,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "ca21efe49d15fc41fc6d366c51da3cb0e7eb7a745812ecb6009d9faafd69b331"
+              "sha256": "cb5e3e1f38127dd28459e161eaceb9d54d12818dae17d6fb79e73619997a4303"
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
@@ -516471,7 +516471,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "ca21efe49d15fc41fc6d366c51da3cb0e7eb7a745812ecb6009d9faafd69b331"
+              "sha256": "cb5e3e1f38127dd28459e161eaceb9d54d12818dae17d6fb79e73619997a4303"
             },
             {
               "path": "apps/web/src/components/route-states.test.tsx",
@@ -517165,7 +517165,7 @@
             },
             {
               "path": "apps/web/e2e/saving-hardware-forms.spec.ts",
-              "sha256": "ed010d19dca77ae27f882f7635f249fd7372ee72a7662759b98501ad63b34263"
+              "sha256": "4f7aacd16a0f6516f166d765218100d065b2b64b660ee7eaa542cd94a9da4a5a"
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
@@ -517189,11 +517189,11 @@
             },
             {
               "path": "apps/web/e2e/solar-contract-issue-form-fixture.ts",
-              "sha256": "7fb3d04bd879ee6e8c5afc510f97e28ff9751a03700815fd536a39ccd6e9e9a4"
+              "sha256": "afb6a3e0239078bc86d7e38a4053793e77d5fc8fecd8917e219a5a06b4ee98b3"
             },
             {
               "path": "apps/web/e2e/solar-contract-issue-forms.spec.ts",
-              "sha256": "1ca166cf680d1cd406c4678e6902eb183ae2cff9b0610e6c9adb200278cf544a"
+              "sha256": "3401f30f2dad9bb6803d6333009414f2c0fe6593eb694d88a27e245dd7a53266"
             },
             {
               "path": "apps/web/e2e/solar-document-review-form-fixture.ts",
@@ -517565,7 +517565,7 @@
             },
             {
               "path": "apps/web/src/components/SavingHardwareCommandForm.tsx",
-              "sha256": "e3e03c9a5c3a7b9c336b52be5519ec0d842cfecafc9d00e8dae20e228efe76f9"
+              "sha256": "f0f647ced11fae45862e669f1cecfab7c230dfa8e251e3730bf8243d0b0268f9"
             },
             {
               "path": "apps/web/src/components/SavingOrderChangePanel.tsx",
@@ -517589,7 +517589,7 @@
             },
             {
               "path": "apps/web/src/components/SolarContractForm.tsx",
-              "sha256": "6ebecbc889273aa40d93d585a90f7558504df6d793914ad1eea918da8dbfa97a"
+              "sha256": "8acef0c5d19fa9703612ed3dd84086b85cdadc6131e9ba4618e58916fd58ec29"
             },
             {
               "path": "apps/web/src/components/SolarPostalPanel.tsx",
@@ -518105,7 +518105,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "f01f5e49cff86e3a6341b8064a5f25c8c3aeb7b4f77cdf26e58d1a80f838bf87"
+              "sha256": "5044a15e3d75280b24dd900b9c4d3703d9ab3dc892d6379c02a9015ffde5d967"
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
@@ -518869,7 +518869,7 @@
             },
             {
               "path": "apps/web/src/components/SolarContractForm.tsx",
-              "sha256": "6ebecbc889273aa40d93d585a90f7558504df6d793914ad1eea918da8dbfa97a"
+              "sha256": "8acef0c5d19fa9703612ed3dd84086b85cdadc6131e9ba4618e58916fd58ec29"
             },
             {
               "path": "apps/web/src/components/SolarPostalTrackingEditor.tsx",
@@ -518965,7 +518965,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "858695d3c3c195a7ac6e43c400ea089f24e87b1574810e926fa904d6920e3376"
+              "sha256": "f6aeb3fe60a4ca195914211202cf0639e4e55e43cfb1bd5219669e7fb707155e"
             },
             {
               "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
@@ -519213,7 +519213,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "f01f5e49cff86e3a6341b8064a5f25c8c3aeb7b4f77cdf26e58d1a80f838bf87"
+              "sha256": "5044a15e3d75280b24dd900b9c4d3703d9ab3dc892d6379c02a9015ffde5d967"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -519426,7 +519426,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "ca21efe49d15fc41fc6d366c51da3cb0e7eb7a745812ecb6009d9faafd69b331"
+              "sha256": "cb5e3e1f38127dd28459e161eaceb9d54d12818dae17d6fb79e73619997a4303"
             },
             {
               "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
@@ -520468,7 +520468,7 @@
             },
             {
               "path": "apps/web/e2e/solar-contract-issue-forms.spec.ts",
-              "sha256": "1ca166cf680d1cd406c4678e6902eb183ae2cff9b0610e6c9adb200278cf544a"
+              "sha256": "3401f30f2dad9bb6803d6333009414f2c0fe6593eb694d88a27e245dd7a53266"
             },
             {
               "path": "apps/web/e2e/solar-operation-forms.spec.ts",
@@ -521296,7 +521296,7 @@
             },
             {
               "path": "apps/web/e2e/solar-contract-issue-forms.spec.ts",
-              "sha256": "1ca166cf680d1cd406c4678e6902eb183ae2cff9b0610e6c9adb200278cf544a"
+              "sha256": "3401f30f2dad9bb6803d6333009414f2c0fe6593eb694d88a27e245dd7a53266"
             },
             {
               "path": "apps/web/e2e/solar-operation-forms.spec.ts",
@@ -522624,7 +522624,7 @@
             },
             {
               "path": "apps/web/e2e/solar-contract-issue-forms.spec.ts",
-              "sha256": "1ca166cf680d1cd406c4678e6902eb183ae2cff9b0610e6c9adb200278cf544a"
+              "sha256": "3401f30f2dad9bb6803d6333009414f2c0fe6593eb694d88a27e245dd7a53266"
             },
             {
               "path": "apps/web/e2e/solar-operation-forms.spec.ts",
@@ -546535,7 +546535,7 @@
             },
             {
               "path": "apps/web/src/components/SavingHardwareCommandForm.tsx",
-              "sha256": "e3e03c9a5c3a7b9c336b52be5519ec0d842cfecafc9d00e8dae20e228efe76f9"
+              "sha256": "f0f647ced11fae45862e669f1cecfab7c230dfa8e251e3730bf8243d0b0268f9"
             },
             {
               "path": "apps/web/src/components/SavingOrderChangePanel.test.tsx",
@@ -546567,7 +546567,7 @@
             },
             {
               "path": "apps/web/src/components/SolarContractForm.tsx",
-              "sha256": "6ebecbc889273aa40d93d585a90f7558504df6d793914ad1eea918da8dbfa97a"
+              "sha256": "8acef0c5d19fa9703612ed3dd84086b85cdadc6131e9ba4618e58916fd58ec29"
             },
             {
               "path": "apps/web/src/components/StepReviewPage.test.tsx",
@@ -546703,7 +546703,7 @@
             },
             {
               "path": "apps/web/src/components/solar-contract-forms.test.tsx",
-              "sha256": "c59441f18ba405e84206dfdec8a02d0cc5ecf2f8014bc37048b39e805cc5d070"
+              "sha256": "eb6b2db457db2474d0233add66c6911d5507aa3cbd18a2dd85a106fc00f6fab7"
             },
             {
               "path": "apps/web/src/components/solar-financial-query.test.tsx",
@@ -548401,7 +548401,7 @@
             },
             {
               "path": "apps/web/src/components/SavingHardwareCommandForm.tsx",
-              "sha256": "e3e03c9a5c3a7b9c336b52be5519ec0d842cfecafc9d00e8dae20e228efe76f9"
+              "sha256": "f0f647ced11fae45862e669f1cecfab7c230dfa8e251e3730bf8243d0b0268f9"
             },
             {
               "path": "apps/web/src/components/SavingOrderChangePanel.test.tsx",
@@ -548433,7 +548433,7 @@
             },
             {
               "path": "apps/web/src/components/SolarContractForm.tsx",
-              "sha256": "6ebecbc889273aa40d93d585a90f7558504df6d793914ad1eea918da8dbfa97a"
+              "sha256": "8acef0c5d19fa9703612ed3dd84086b85cdadc6131e9ba4618e58916fd58ec29"
             },
             {
               "path": "apps/web/src/components/StepReviewPage.test.tsx",
@@ -548569,7 +548569,7 @@
             },
             {
               "path": "apps/web/src/components/solar-contract-forms.test.tsx",
-              "sha256": "c59441f18ba405e84206dfdec8a02d0cc5ecf2f8014bc37048b39e805cc5d070"
+              "sha256": "eb6b2db457db2474d0233add66c6911d5507aa3cbd18a2dd85a106fc00f6fab7"
             },
             {
               "path": "apps/web/src/components/solar-financial-query.test.tsx",
@@ -550268,7 +550268,7 @@
             },
             {
               "path": "apps/web/src/components/SavingHardwareCommandForm.tsx",
-              "sha256": "e3e03c9a5c3a7b9c336b52be5519ec0d842cfecafc9d00e8dae20e228efe76f9"
+              "sha256": "f0f647ced11fae45862e669f1cecfab7c230dfa8e251e3730bf8243d0b0268f9"
             },
             {
               "path": "apps/web/src/components/SavingOrderChangePanel.test.tsx",
@@ -550300,7 +550300,7 @@
             },
             {
               "path": "apps/web/src/components/SolarContractForm.tsx",
-              "sha256": "6ebecbc889273aa40d93d585a90f7558504df6d793914ad1eea918da8dbfa97a"
+              "sha256": "8acef0c5d19fa9703612ed3dd84086b85cdadc6131e9ba4618e58916fd58ec29"
             },
             {
               "path": "apps/web/src/components/StepReviewPage.test.tsx",
@@ -550436,7 +550436,7 @@
             },
             {
               "path": "apps/web/src/components/solar-contract-forms.test.tsx",
-              "sha256": "c59441f18ba405e84206dfdec8a02d0cc5ecf2f8014bc37048b39e805cc5d070"
+              "sha256": "eb6b2db457db2474d0233add66c6911d5507aa3cbd18a2dd85a106fc00f6fab7"
             },
             {
               "path": "apps/web/src/components/solar-financial-query.test.tsx",
@@ -552104,7 +552104,7 @@
             },
             {
               "path": "apps/web/src/components/SavingHardwareCommandForm.tsx",
-              "sha256": "e3e03c9a5c3a7b9c336b52be5519ec0d842cfecafc9d00e8dae20e228efe76f9"
+              "sha256": "f0f647ced11fae45862e669f1cecfab7c230dfa8e251e3730bf8243d0b0268f9"
             },
             {
               "path": "apps/web/src/components/SavingOrderChangePanel.test.tsx",
@@ -552136,7 +552136,7 @@
             },
             {
               "path": "apps/web/src/components/SolarContractForm.tsx",
-              "sha256": "6ebecbc889273aa40d93d585a90f7558504df6d793914ad1eea918da8dbfa97a"
+              "sha256": "8acef0c5d19fa9703612ed3dd84086b85cdadc6131e9ba4618e58916fd58ec29"
             },
             {
               "path": "apps/web/src/components/StepReviewPage.test.tsx",
@@ -552272,7 +552272,7 @@
             },
             {
               "path": "apps/web/src/components/solar-contract-forms.test.tsx",
-              "sha256": "c59441f18ba405e84206dfdec8a02d0cc5ecf2f8014bc37048b39e805cc5d070"
+              "sha256": "eb6b2db457db2474d0233add66c6911d5507aa3cbd18a2dd85a106fc00f6fab7"
             },
             {
               "path": "apps/web/src/components/solar-financial-query.test.tsx",
@@ -553966,7 +553966,7 @@
             },
             {
               "path": "apps/web/src/components/SavingHardwareCommandForm.tsx",
-              "sha256": "e3e03c9a5c3a7b9c336b52be5519ec0d842cfecafc9d00e8dae20e228efe76f9"
+              "sha256": "f0f647ced11fae45862e669f1cecfab7c230dfa8e251e3730bf8243d0b0268f9"
             },
             {
               "path": "apps/web/src/components/SavingOrderChangePanel.test.tsx",
@@ -553998,7 +553998,7 @@
             },
             {
               "path": "apps/web/src/components/SolarContractForm.tsx",
-              "sha256": "6ebecbc889273aa40d93d585a90f7558504df6d793914ad1eea918da8dbfa97a"
+              "sha256": "8acef0c5d19fa9703612ed3dd84086b85cdadc6131e9ba4618e58916fd58ec29"
             },
             {
               "path": "apps/web/src/components/StepReviewPage.test.tsx",
@@ -554134,7 +554134,7 @@
             },
             {
               "path": "apps/web/src/components/solar-contract-forms.test.tsx",
-              "sha256": "c59441f18ba405e84206dfdec8a02d0cc5ecf2f8014bc37048b39e805cc5d070"
+              "sha256": "eb6b2db457db2474d0233add66c6911d5507aa3cbd18a2dd85a106fc00f6fab7"
             },
             {
               "path": "apps/web/src/components/solar-financial-query.test.tsx",
@@ -555837,7 +555837,7 @@
             },
             {
               "path": "apps/web/src/components/SavingHardwareCommandForm.tsx",
-              "sha256": "e3e03c9a5c3a7b9c336b52be5519ec0d842cfecafc9d00e8dae20e228efe76f9"
+              "sha256": "f0f647ced11fae45862e669f1cecfab7c230dfa8e251e3730bf8243d0b0268f9"
             },
             {
               "path": "apps/web/src/components/SavingOrderChangePanel.test.tsx",
@@ -555869,7 +555869,7 @@
             },
             {
               "path": "apps/web/src/components/SolarContractForm.tsx",
-              "sha256": "6ebecbc889273aa40d93d585a90f7558504df6d793914ad1eea918da8dbfa97a"
+              "sha256": "8acef0c5d19fa9703612ed3dd84086b85cdadc6131e9ba4618e58916fd58ec29"
             },
             {
               "path": "apps/web/src/components/StepReviewPage.test.tsx",
@@ -556005,7 +556005,7 @@
             },
             {
               "path": "apps/web/src/components/solar-contract-forms.test.tsx",
-              "sha256": "c59441f18ba405e84206dfdec8a02d0cc5ecf2f8014bc37048b39e805cc5d070"
+              "sha256": "eb6b2db457db2474d0233add66c6911d5507aa3cbd18a2dd85a106fc00f6fab7"
             },
             {
               "path": "apps/web/src/components/solar-financial-query.test.tsx",
@@ -557681,7 +557681,7 @@
             },
             {
               "path": "apps/web/src/components/SavingHardwareCommandForm.tsx",
-              "sha256": "e3e03c9a5c3a7b9c336b52be5519ec0d842cfecafc9d00e8dae20e228efe76f9"
+              "sha256": "f0f647ced11fae45862e669f1cecfab7c230dfa8e251e3730bf8243d0b0268f9"
             },
             {
               "path": "apps/web/src/components/SavingOrderChangePanel.test.tsx",
@@ -557713,7 +557713,7 @@
             },
             {
               "path": "apps/web/src/components/SolarContractForm.tsx",
-              "sha256": "6ebecbc889273aa40d93d585a90f7558504df6d793914ad1eea918da8dbfa97a"
+              "sha256": "8acef0c5d19fa9703612ed3dd84086b85cdadc6131e9ba4618e58916fd58ec29"
             },
             {
               "path": "apps/web/src/components/StepReviewPage.test.tsx",
@@ -557849,7 +557849,7 @@
             },
             {
               "path": "apps/web/src/components/solar-contract-forms.test.tsx",
-              "sha256": "c59441f18ba405e84206dfdec8a02d0cc5ecf2f8014bc37048b39e805cc5d070"
+              "sha256": "eb6b2db457db2474d0233add66c6911d5507aa3cbd18a2dd85a106fc00f6fab7"
             },
             {
               "path": "apps/web/src/components/solar-financial-query.test.tsx",
@@ -559489,7 +559489,7 @@
             },
             {
               "path": "apps/web/src/components/SavingHardwareCommandForm.tsx",
-              "sha256": "e3e03c9a5c3a7b9c336b52be5519ec0d842cfecafc9d00e8dae20e228efe76f9"
+              "sha256": "f0f647ced11fae45862e669f1cecfab7c230dfa8e251e3730bf8243d0b0268f9"
             },
             {
               "path": "apps/web/src/components/SavingOrderChangePanel.test.tsx",
@@ -559521,7 +559521,7 @@
             },
             {
               "path": "apps/web/src/components/SolarContractForm.tsx",
-              "sha256": "6ebecbc889273aa40d93d585a90f7558504df6d793914ad1eea918da8dbfa97a"
+              "sha256": "8acef0c5d19fa9703612ed3dd84086b85cdadc6131e9ba4618e58916fd58ec29"
             },
             {
               "path": "apps/web/src/components/StepReviewPage.test.tsx",
@@ -559657,7 +559657,7 @@
             },
             {
               "path": "apps/web/src/components/solar-contract-forms.test.tsx",
-              "sha256": "c59441f18ba405e84206dfdec8a02d0cc5ecf2f8014bc37048b39e805cc5d070"
+              "sha256": "eb6b2db457db2474d0233add66c6911d5507aa3cbd18a2dd85a106fc00f6fab7"
             },
             {
               "path": "apps/web/src/components/solar-financial-query.test.tsx",
@@ -561297,7 +561297,7 @@
             },
             {
               "path": "apps/web/src/components/SavingHardwareCommandForm.tsx",
-              "sha256": "e3e03c9a5c3a7b9c336b52be5519ec0d842cfecafc9d00e8dae20e228efe76f9"
+              "sha256": "f0f647ced11fae45862e669f1cecfab7c230dfa8e251e3730bf8243d0b0268f9"
             },
             {
               "path": "apps/web/src/components/SavingOrderChangePanel.test.tsx",
@@ -561329,7 +561329,7 @@
             },
             {
               "path": "apps/web/src/components/SolarContractForm.tsx",
-              "sha256": "6ebecbc889273aa40d93d585a90f7558504df6d793914ad1eea918da8dbfa97a"
+              "sha256": "8acef0c5d19fa9703612ed3dd84086b85cdadc6131e9ba4618e58916fd58ec29"
             },
             {
               "path": "apps/web/src/components/StepReviewPage.test.tsx",
@@ -561465,7 +561465,7 @@
             },
             {
               "path": "apps/web/src/components/solar-contract-forms.test.tsx",
-              "sha256": "c59441f18ba405e84206dfdec8a02d0cc5ecf2f8014bc37048b39e805cc5d070"
+              "sha256": "eb6b2db457db2474d0233add66c6911d5507aa3cbd18a2dd85a106fc00f6fab7"
             },
             {
               "path": "apps/web/src/components/solar-financial-query.test.tsx",
@@ -563106,7 +563106,7 @@
             },
             {
               "path": "apps/web/src/components/SavingHardwareCommandForm.tsx",
-              "sha256": "e3e03c9a5c3a7b9c336b52be5519ec0d842cfecafc9d00e8dae20e228efe76f9"
+              "sha256": "f0f647ced11fae45862e669f1cecfab7c230dfa8e251e3730bf8243d0b0268f9"
             },
             {
               "path": "apps/web/src/components/SavingOrderChangePanel.test.tsx",
@@ -563138,7 +563138,7 @@
             },
             {
               "path": "apps/web/src/components/SolarContractForm.tsx",
-              "sha256": "6ebecbc889273aa40d93d585a90f7558504df6d793914ad1eea918da8dbfa97a"
+              "sha256": "8acef0c5d19fa9703612ed3dd84086b85cdadc6131e9ba4618e58916fd58ec29"
             },
             {
               "path": "apps/web/src/components/StepReviewPage.test.tsx",
@@ -563274,7 +563274,7 @@
             },
             {
               "path": "apps/web/src/components/solar-contract-forms.test.tsx",
-              "sha256": "c59441f18ba405e84206dfdec8a02d0cc5ecf2f8014bc37048b39e805cc5d070"
+              "sha256": "eb6b2db457db2474d0233add66c6911d5507aa3cbd18a2dd85a106fc00f6fab7"
             },
             {
               "path": "apps/web/src/components/solar-financial-query.test.tsx",
@@ -564914,7 +564914,7 @@
             },
             {
               "path": "apps/web/src/components/SavingHardwareCommandForm.tsx",
-              "sha256": "e3e03c9a5c3a7b9c336b52be5519ec0d842cfecafc9d00e8dae20e228efe76f9"
+              "sha256": "f0f647ced11fae45862e669f1cecfab7c230dfa8e251e3730bf8243d0b0268f9"
             },
             {
               "path": "apps/web/src/components/SavingOrderChangePanel.test.tsx",
@@ -564946,7 +564946,7 @@
             },
             {
               "path": "apps/web/src/components/SolarContractForm.tsx",
-              "sha256": "6ebecbc889273aa40d93d585a90f7558504df6d793914ad1eea918da8dbfa97a"
+              "sha256": "8acef0c5d19fa9703612ed3dd84086b85cdadc6131e9ba4618e58916fd58ec29"
             },
             {
               "path": "apps/web/src/components/StepReviewPage.test.tsx",
@@ -565082,7 +565082,7 @@
             },
             {
               "path": "apps/web/src/components/solar-contract-forms.test.tsx",
-              "sha256": "c59441f18ba405e84206dfdec8a02d0cc5ecf2f8014bc37048b39e805cc5d070"
+              "sha256": "eb6b2db457db2474d0233add66c6911d5507aa3cbd18a2dd85a106fc00f6fab7"
             },
             {
               "path": "apps/web/src/components/solar-financial-query.test.tsx",
@@ -566752,7 +566752,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "ca21efe49d15fc41fc6d366c51da3cb0e7eb7a745812ecb6009d9faafd69b331"
+              "sha256": "cb5e3e1f38127dd28459e161eaceb9d54d12818dae17d6fb79e73619997a4303"
             },
             {
               "path": "apps/web/src/components/VerificationPolicySettings.tsx",
@@ -566872,7 +566872,7 @@
             },
             {
               "path": "apps/web/src/components/solar-contract-forms.test.tsx",
-              "sha256": "c59441f18ba405e84206dfdec8a02d0cc5ecf2f8014bc37048b39e805cc5d070"
+              "sha256": "eb6b2db457db2474d0233add66c6911d5507aa3cbd18a2dd85a106fc00f6fab7"
             },
             {
               "path": "apps/web/src/components/solar-financial-query.test.tsx",
@@ -567520,7 +567520,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "f01f5e49cff86e3a6341b8064a5f25c8c3aeb7b4f77cdf26e58d1a80f838bf87"
+              "sha256": "5044a15e3d75280b24dd900b9c4d3703d9ab3dc892d6379c02a9015ffde5d967"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -568647,7 +568647,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "ca21efe49d15fc41fc6d366c51da3cb0e7eb7a745812ecb6009d9faafd69b331"
+              "sha256": "cb5e3e1f38127dd28459e161eaceb9d54d12818dae17d6fb79e73619997a4303"
             },
             {
               "path": "apps/web/src/components/VerificationPolicySettings.tsx",
@@ -568767,7 +568767,7 @@
             },
             {
               "path": "apps/web/src/components/solar-contract-forms.test.tsx",
-              "sha256": "c59441f18ba405e84206dfdec8a02d0cc5ecf2f8014bc37048b39e805cc5d070"
+              "sha256": "eb6b2db457db2474d0233add66c6911d5507aa3cbd18a2dd85a106fc00f6fab7"
             },
             {
               "path": "apps/web/src/components/solar-financial-query.test.tsx",
@@ -569415,7 +569415,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "f01f5e49cff86e3a6341b8064a5f25c8c3aeb7b4f77cdf26e58d1a80f838bf87"
+              "sha256": "5044a15e3d75280b24dd900b9c4d3703d9ab3dc892d6379c02a9015ffde5d967"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -570219,7 +570219,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Scoped staff electricity order, quantity and price decisions, saving operations, solar postal tracking and consultation fee and paid resolution now distinguish verification from a possibly committed write. Retained command recovery is proven. Reconcile remaining confirmation callers and ordinary command feedback before accepting this criterion."
+        "Scoped electricity, saving, solar and consultation commands distinguish verification from a possibly committed write. Saving hardware, solar construction and solar contract issue now also pass bounded acknowledgement checks. Reconcile contract signature, staff receipt review and remaining ordinary command feedback before accepting this criterion."
       ],
       "owner": null,
       "depends_on": [],
@@ -570265,7 +570265,8 @@
           "release-0.5-account-command-recovery",
           "release-0.5-preference-write-recovery",
           "release-0.5-electricity-staff-acknowledgement",
-          "release-0.5-staff-command-delivery"
+          "release-0.5-staff-command-delivery",
+          "release-0.5-saving-solar-confirmation"
         ],
         "current_acceptance": null
       }
@@ -570608,7 +570609,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "ca21efe49d15fc41fc6d366c51da3cb0e7eb7a745812ecb6009d9faafd69b331"
+              "sha256": "cb5e3e1f38127dd28459e161eaceb9d54d12818dae17d6fb79e73619997a4303"
             },
             {
               "path": "apps/web/src/components/VerificationPolicySettings.tsx",
@@ -570728,7 +570729,7 @@
             },
             {
               "path": "apps/web/src/components/solar-contract-forms.test.tsx",
-              "sha256": "c59441f18ba405e84206dfdec8a02d0cc5ecf2f8014bc37048b39e805cc5d070"
+              "sha256": "eb6b2db457db2474d0233add66c6911d5507aa3cbd18a2dd85a106fc00f6fab7"
             },
             {
               "path": "apps/web/src/components/solar-financial-query.test.tsx",
@@ -571376,7 +571377,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "f01f5e49cff86e3a6341b8064a5f25c8c3aeb7b4f77cdf26e58d1a80f838bf87"
+              "sha256": "5044a15e3d75280b24dd900b9c4d3703d9ab3dc892d6379c02a9015ffde5d967"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -572503,7 +572504,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "ca21efe49d15fc41fc6d366c51da3cb0e7eb7a745812ecb6009d9faafd69b331"
+              "sha256": "cb5e3e1f38127dd28459e161eaceb9d54d12818dae17d6fb79e73619997a4303"
             },
             {
               "path": "apps/web/src/components/VerificationPolicySettings.tsx",
@@ -572623,7 +572624,7 @@
             },
             {
               "path": "apps/web/src/components/solar-contract-forms.test.tsx",
-              "sha256": "c59441f18ba405e84206dfdec8a02d0cc5ecf2f8014bc37048b39e805cc5d070"
+              "sha256": "eb6b2db457db2474d0233add66c6911d5507aa3cbd18a2dd85a106fc00f6fab7"
             },
             {
               "path": "apps/web/src/components/solar-financial-query.test.tsx",
@@ -573271,7 +573272,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "f01f5e49cff86e3a6341b8064a5f25c8c3aeb7b4f77cdf26e58d1a80f838bf87"
+              "sha256": "5044a15e3d75280b24dd900b9c4d3703d9ab3dc892d6379c02a9015ffde5d967"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -574398,7 +574399,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "ca21efe49d15fc41fc6d366c51da3cb0e7eb7a745812ecb6009d9faafd69b331"
+              "sha256": "cb5e3e1f38127dd28459e161eaceb9d54d12818dae17d6fb79e73619997a4303"
             },
             {
               "path": "apps/web/src/components/VerificationPolicySettings.tsx",
@@ -574518,7 +574519,7 @@
             },
             {
               "path": "apps/web/src/components/solar-contract-forms.test.tsx",
-              "sha256": "c59441f18ba405e84206dfdec8a02d0cc5ecf2f8014bc37048b39e805cc5d070"
+              "sha256": "eb6b2db457db2474d0233add66c6911d5507aa3cbd18a2dd85a106fc00f6fab7"
             },
             {
               "path": "apps/web/src/components/solar-financial-query.test.tsx",
@@ -575166,7 +575167,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "f01f5e49cff86e3a6341b8064a5f25c8c3aeb7b4f77cdf26e58d1a80f838bf87"
+              "sha256": "5044a15e3d75280b24dd900b9c4d3703d9ab3dc892d6379c02a9015ffde5d967"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -576293,7 +576294,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "ca21efe49d15fc41fc6d366c51da3cb0e7eb7a745812ecb6009d9faafd69b331"
+              "sha256": "cb5e3e1f38127dd28459e161eaceb9d54d12818dae17d6fb79e73619997a4303"
             },
             {
               "path": "apps/web/src/components/VerificationPolicySettings.tsx",
@@ -576413,7 +576414,7 @@
             },
             {
               "path": "apps/web/src/components/solar-contract-forms.test.tsx",
-              "sha256": "c59441f18ba405e84206dfdec8a02d0cc5ecf2f8014bc37048b39e805cc5d070"
+              "sha256": "eb6b2db457db2474d0233add66c6911d5507aa3cbd18a2dd85a106fc00f6fab7"
             },
             {
               "path": "apps/web/src/components/solar-financial-query.test.tsx",
@@ -577061,7 +577062,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "f01f5e49cff86e3a6341b8064a5f25c8c3aeb7b4f77cdf26e58d1a80f838bf87"
+              "sha256": "5044a15e3d75280b24dd900b9c4d3703d9ab3dc892d6379c02a9015ffde5d967"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -578188,7 +578189,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "ca21efe49d15fc41fc6d366c51da3cb0e7eb7a745812ecb6009d9faafd69b331"
+              "sha256": "cb5e3e1f38127dd28459e161eaceb9d54d12818dae17d6fb79e73619997a4303"
             },
             {
               "path": "apps/web/src/components/VerificationPolicySettings.tsx",
@@ -578308,7 +578309,7 @@
             },
             {
               "path": "apps/web/src/components/solar-contract-forms.test.tsx",
-              "sha256": "c59441f18ba405e84206dfdec8a02d0cc5ecf2f8014bc37048b39e805cc5d070"
+              "sha256": "eb6b2db457db2474d0233add66c6911d5507aa3cbd18a2dd85a106fc00f6fab7"
             },
             {
               "path": "apps/web/src/components/solar-financial-query.test.tsx",
@@ -578956,7 +578957,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "f01f5e49cff86e3a6341b8064a5f25c8c3aeb7b4f77cdf26e58d1a80f838bf87"
+              "sha256": "5044a15e3d75280b24dd900b9c4d3703d9ab3dc892d6379c02a9015ffde5d967"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -580083,7 +580084,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "ca21efe49d15fc41fc6d366c51da3cb0e7eb7a745812ecb6009d9faafd69b331"
+              "sha256": "cb5e3e1f38127dd28459e161eaceb9d54d12818dae17d6fb79e73619997a4303"
             },
             {
               "path": "apps/web/src/components/VerificationPolicySettings.tsx",
@@ -580203,7 +580204,7 @@
             },
             {
               "path": "apps/web/src/components/solar-contract-forms.test.tsx",
-              "sha256": "c59441f18ba405e84206dfdec8a02d0cc5ecf2f8014bc37048b39e805cc5d070"
+              "sha256": "eb6b2db457db2474d0233add66c6911d5507aa3cbd18a2dd85a106fc00f6fab7"
             },
             {
               "path": "apps/web/src/components/solar-financial-query.test.tsx",
@@ -580851,7 +580852,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "f01f5e49cff86e3a6341b8064a5f25c8c3aeb7b4f77cdf26e58d1a80f838bf87"
+              "sha256": "5044a15e3d75280b24dd900b9c4d3703d9ab3dc892d6379c02a9015ffde5d967"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -581978,7 +581979,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "ca21efe49d15fc41fc6d366c51da3cb0e7eb7a745812ecb6009d9faafd69b331"
+              "sha256": "cb5e3e1f38127dd28459e161eaceb9d54d12818dae17d6fb79e73619997a4303"
             },
             {
               "path": "apps/web/src/components/VerificationPolicySettings.tsx",
@@ -582098,7 +582099,7 @@
             },
             {
               "path": "apps/web/src/components/solar-contract-forms.test.tsx",
-              "sha256": "c59441f18ba405e84206dfdec8a02d0cc5ecf2f8014bc37048b39e805cc5d070"
+              "sha256": "eb6b2db457db2474d0233add66c6911d5507aa3cbd18a2dd85a106fc00f6fab7"
             },
             {
               "path": "apps/web/src/components/solar-financial-query.test.tsx",
@@ -582746,7 +582747,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "f01f5e49cff86e3a6341b8064a5f25c8c3aeb7b4f77cdf26e58d1a80f838bf87"
+              "sha256": "5044a15e3d75280b24dd900b9c4d3703d9ab3dc892d6379c02a9015ffde5d967"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -583873,7 +583874,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "ca21efe49d15fc41fc6d366c51da3cb0e7eb7a745812ecb6009d9faafd69b331"
+              "sha256": "cb5e3e1f38127dd28459e161eaceb9d54d12818dae17d6fb79e73619997a4303"
             },
             {
               "path": "apps/web/src/components/VerificationPolicySettings.tsx",
@@ -583993,7 +583994,7 @@
             },
             {
               "path": "apps/web/src/components/solar-contract-forms.test.tsx",
-              "sha256": "c59441f18ba405e84206dfdec8a02d0cc5ecf2f8014bc37048b39e805cc5d070"
+              "sha256": "eb6b2db457db2474d0233add66c6911d5507aa3cbd18a2dd85a106fc00f6fab7"
             },
             {
               "path": "apps/web/src/components/solar-financial-query.test.tsx",
@@ -584641,7 +584642,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "f01f5e49cff86e3a6341b8064a5f25c8c3aeb7b4f77cdf26e58d1a80f838bf87"
+              "sha256": "5044a15e3d75280b24dd900b9c4d3703d9ab3dc892d6379c02a9015ffde5d967"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -585768,7 +585769,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "ca21efe49d15fc41fc6d366c51da3cb0e7eb7a745812ecb6009d9faafd69b331"
+              "sha256": "cb5e3e1f38127dd28459e161eaceb9d54d12818dae17d6fb79e73619997a4303"
             },
             {
               "path": "apps/web/src/components/VerificationPolicySettings.tsx",
@@ -585888,7 +585889,7 @@
             },
             {
               "path": "apps/web/src/components/solar-contract-forms.test.tsx",
-              "sha256": "c59441f18ba405e84206dfdec8a02d0cc5ecf2f8014bc37048b39e805cc5d070"
+              "sha256": "eb6b2db457db2474d0233add66c6911d5507aa3cbd18a2dd85a106fc00f6fab7"
             },
             {
               "path": "apps/web/src/components/solar-financial-query.test.tsx",
@@ -586536,7 +586537,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "f01f5e49cff86e3a6341b8064a5f25c8c3aeb7b4f77cdf26e58d1a80f838bf87"
+              "sha256": "5044a15e3d75280b24dd900b9c4d3703d9ab3dc892d6379c02a9015ffde5d967"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -587663,7 +587664,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "ca21efe49d15fc41fc6d366c51da3cb0e7eb7a745812ecb6009d9faafd69b331"
+              "sha256": "cb5e3e1f38127dd28459e161eaceb9d54d12818dae17d6fb79e73619997a4303"
             },
             {
               "path": "apps/web/src/components/VerificationPolicySettings.tsx",
@@ -587783,7 +587784,7 @@
             },
             {
               "path": "apps/web/src/components/solar-contract-forms.test.tsx",
-              "sha256": "c59441f18ba405e84206dfdec8a02d0cc5ecf2f8014bc37048b39e805cc5d070"
+              "sha256": "eb6b2db457db2474d0233add66c6911d5507aa3cbd18a2dd85a106fc00f6fab7"
             },
             {
               "path": "apps/web/src/components/solar-financial-query.test.tsx",
@@ -588431,7 +588432,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "f01f5e49cff86e3a6341b8064a5f25c8c3aeb7b4f77cdf26e58d1a80f838bf87"
+              "sha256": "5044a15e3d75280b24dd900b9c4d3703d9ab3dc892d6379c02a9015ffde5d967"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -589558,7 +589559,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "ca21efe49d15fc41fc6d366c51da3cb0e7eb7a745812ecb6009d9faafd69b331"
+              "sha256": "cb5e3e1f38127dd28459e161eaceb9d54d12818dae17d6fb79e73619997a4303"
             },
             {
               "path": "apps/web/src/components/VerificationPolicySettings.tsx",
@@ -589678,7 +589679,7 @@
             },
             {
               "path": "apps/web/src/components/solar-contract-forms.test.tsx",
-              "sha256": "c59441f18ba405e84206dfdec8a02d0cc5ecf2f8014bc37048b39e805cc5d070"
+              "sha256": "eb6b2db457db2474d0233add66c6911d5507aa3cbd18a2dd85a106fc00f6fab7"
             },
             {
               "path": "apps/web/src/components/solar-financial-query.test.tsx",
@@ -590326,7 +590327,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "f01f5e49cff86e3a6341b8064a5f25c8c3aeb7b4f77cdf26e58d1a80f838bf87"
+              "sha256": "5044a15e3d75280b24dd900b9c4d3703d9ab3dc892d6379c02a9015ffde5d967"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -591210,7 +591211,7 @@
             },
             {
               "path": "apps/web/e2e/solar-contract-issue-forms.spec.ts",
-              "sha256": "1ca166cf680d1cd406c4678e6902eb183ae2cff9b0610e6c9adb200278cf544a"
+              "sha256": "3401f30f2dad9bb6803d6333009414f2c0fe6593eb694d88a27e245dd7a53266"
             },
             {
               "path": "apps/web/e2e/staff-wallet-ledger.spec.ts",
@@ -591286,7 +591287,7 @@
             },
             {
               "path": "apps/web/src/components/SavingHardwareCommandForm.tsx",
-              "sha256": "e3e03c9a5c3a7b9c336b52be5519ec0d842cfecafc9d00e8dae20e228efe76f9"
+              "sha256": "f0f647ced11fae45862e669f1cecfab7c230dfa8e251e3730bf8243d0b0268f9"
             },
             {
               "path": "apps/web/src/components/SavingOrderChangePanel.test.tsx",
@@ -591306,7 +591307,7 @@
             },
             {
               "path": "apps/web/src/components/SolarContractForm.tsx",
-              "sha256": "6ebecbc889273aa40d93d585a90f7558504df6d793914ad1eea918da8dbfa97a"
+              "sha256": "8acef0c5d19fa9703612ed3dd84086b85cdadc6131e9ba4618e58916fd58ec29"
             },
             {
               "path": "apps/web/src/components/SolarPostalTrackingEditor.tsx",
@@ -591358,7 +591359,7 @@
             },
             {
               "path": "apps/web/src/components/solar-contract-forms.test.tsx",
-              "sha256": "c59441f18ba405e84206dfdec8a02d0cc5ecf2f8014bc37048b39e805cc5d070"
+              "sha256": "eb6b2db457db2474d0233add66c6911d5507aa3cbd18a2dd85a106fc00f6fab7"
             },
             {
               "path": "apps/web/src/components/solar-financial-query.test.tsx",
@@ -591462,7 +591463,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "858695d3c3c195a7ac6e43c400ea089f24e87b1574810e926fa904d6920e3376"
+              "sha256": "f6aeb3fe60a4ca195914211202cf0639e4e55e43cfb1bd5219669e7fb707155e"
             },
             {
               "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
@@ -591590,7 +591591,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "f01f5e49cff86e3a6341b8064a5f25c8c3aeb7b4f77cdf26e58d1a80f838bf87"
+              "sha256": "5044a15e3d75280b24dd900b9c4d3703d9ab3dc892d6379c02a9015ffde5d967"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -592193,7 +592194,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "ca21efe49d15fc41fc6d366c51da3cb0e7eb7a745812ecb6009d9faafd69b331"
+              "sha256": "cb5e3e1f38127dd28459e161eaceb9d54d12818dae17d6fb79e73619997a4303"
             },
             {
               "path": "apps/web/src/components/VerificationPolicySettings.tsx",
@@ -592313,7 +592314,7 @@
             },
             {
               "path": "apps/web/src/components/solar-contract-forms.test.tsx",
-              "sha256": "c59441f18ba405e84206dfdec8a02d0cc5ecf2f8014bc37048b39e805cc5d070"
+              "sha256": "eb6b2db457db2474d0233add66c6911d5507aa3cbd18a2dd85a106fc00f6fab7"
             },
             {
               "path": "apps/web/src/components/solar-financial-query.test.tsx",
@@ -592961,7 +592962,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "f01f5e49cff86e3a6341b8064a5f25c8c3aeb7b4f77cdf26e58d1a80f838bf87"
+              "sha256": "5044a15e3d75280b24dd900b9c4d3703d9ab3dc892d6379c02a9015ffde5d967"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -594088,7 +594089,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "ca21efe49d15fc41fc6d366c51da3cb0e7eb7a745812ecb6009d9faafd69b331"
+              "sha256": "cb5e3e1f38127dd28459e161eaceb9d54d12818dae17d6fb79e73619997a4303"
             },
             {
               "path": "apps/web/src/components/VerificationPolicySettings.tsx",
@@ -594208,7 +594209,7 @@
             },
             {
               "path": "apps/web/src/components/solar-contract-forms.test.tsx",
-              "sha256": "c59441f18ba405e84206dfdec8a02d0cc5ecf2f8014bc37048b39e805cc5d070"
+              "sha256": "eb6b2db457db2474d0233add66c6911d5507aa3cbd18a2dd85a106fc00f6fab7"
             },
             {
               "path": "apps/web/src/components/solar-financial-query.test.tsx",
@@ -594856,7 +594857,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "f01f5e49cff86e3a6341b8064a5f25c8c3aeb7b4f77cdf26e58d1a80f838bf87"
+              "sha256": "5044a15e3d75280b24dd900b9c4d3703d9ab3dc892d6379c02a9015ffde5d967"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -595660,7 +595661,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "The shared confirmation deadline is verified across the four launch services for the scoped replayable commands. Remaining confirmation callers require their own receipt or fresh-read recovery and bespoke route loading, empty and error states need reconciliation."
+        "The shared confirmation deadline is verified for scoped launch commands, including saving hardware, solar construction and solar contract issuance. Remaining confirmation callers need their applicable receipt or fresh-read recovery. Bespoke route loading, empty and error states still need reconciliation."
       ],
       "owner": null,
       "depends_on": [],
@@ -595718,7 +595719,8 @@
           "release-0.5-account-command-recovery",
           "release-0.5-preference-write-recovery",
           "release-0.5-electricity-staff-acknowledgement",
-          "release-0.5-staff-command-delivery"
+          "release-0.5-staff-command-delivery",
+          "release-0.5-saving-solar-confirmation"
         ],
         "current_acceptance": null
       }
@@ -596059,7 +596061,7 @@
             },
             {
               "path": "apps/web/src/components/SavingHardwareCommandForm.tsx",
-              "sha256": "e3e03c9a5c3a7b9c336b52be5519ec0d842cfecafc9d00e8dae20e228efe76f9"
+              "sha256": "f0f647ced11fae45862e669f1cecfab7c230dfa8e251e3730bf8243d0b0268f9"
             },
             {
               "path": "apps/web/src/components/SavingOrderChangePanel.test.tsx",
@@ -596091,7 +596093,7 @@
             },
             {
               "path": "apps/web/src/components/SolarContractForm.tsx",
-              "sha256": "6ebecbc889273aa40d93d585a90f7558504df6d793914ad1eea918da8dbfa97a"
+              "sha256": "8acef0c5d19fa9703612ed3dd84086b85cdadc6131e9ba4618e58916fd58ec29"
             },
             {
               "path": "apps/web/src/components/StepReviewPage.test.tsx",
@@ -596227,7 +596229,7 @@
             },
             {
               "path": "apps/web/src/components/solar-contract-forms.test.tsx",
-              "sha256": "c59441f18ba405e84206dfdec8a02d0cc5ecf2f8014bc37048b39e805cc5d070"
+              "sha256": "eb6b2db457db2474d0233add66c6911d5507aa3cbd18a2dd85a106fc00f6fab7"
             },
             {
               "path": "apps/web/src/components/solar-financial-query.test.tsx",
@@ -597863,7 +597865,7 @@
             },
             {
               "path": "apps/web/src/components/SavingHardwareCommandForm.tsx",
-              "sha256": "e3e03c9a5c3a7b9c336b52be5519ec0d842cfecafc9d00e8dae20e228efe76f9"
+              "sha256": "f0f647ced11fae45862e669f1cecfab7c230dfa8e251e3730bf8243d0b0268f9"
             },
             {
               "path": "apps/web/src/components/SavingOrderChangePanel.test.tsx",
@@ -597895,7 +597897,7 @@
             },
             {
               "path": "apps/web/src/components/SolarContractForm.tsx",
-              "sha256": "6ebecbc889273aa40d93d585a90f7558504df6d793914ad1eea918da8dbfa97a"
+              "sha256": "8acef0c5d19fa9703612ed3dd84086b85cdadc6131e9ba4618e58916fd58ec29"
             },
             {
               "path": "apps/web/src/components/StepReviewPage.test.tsx",
@@ -598031,7 +598033,7 @@
             },
             {
               "path": "apps/web/src/components/solar-contract-forms.test.tsx",
-              "sha256": "c59441f18ba405e84206dfdec8a02d0cc5ecf2f8014bc37048b39e805cc5d070"
+              "sha256": "eb6b2db457db2474d0233add66c6911d5507aa3cbd18a2dd85a106fc00f6fab7"
             },
             {
               "path": "apps/web/src/components/solar-financial-query.test.tsx",
@@ -599667,7 +599669,7 @@
             },
             {
               "path": "apps/web/src/components/SavingHardwareCommandForm.tsx",
-              "sha256": "e3e03c9a5c3a7b9c336b52be5519ec0d842cfecafc9d00e8dae20e228efe76f9"
+              "sha256": "f0f647ced11fae45862e669f1cecfab7c230dfa8e251e3730bf8243d0b0268f9"
             },
             {
               "path": "apps/web/src/components/SavingOrderChangePanel.test.tsx",
@@ -599699,7 +599701,7 @@
             },
             {
               "path": "apps/web/src/components/SolarContractForm.tsx",
-              "sha256": "6ebecbc889273aa40d93d585a90f7558504df6d793914ad1eea918da8dbfa97a"
+              "sha256": "8acef0c5d19fa9703612ed3dd84086b85cdadc6131e9ba4618e58916fd58ec29"
             },
             {
               "path": "apps/web/src/components/StepReviewPage.test.tsx",
@@ -599835,7 +599837,7 @@
             },
             {
               "path": "apps/web/src/components/solar-contract-forms.test.tsx",
-              "sha256": "c59441f18ba405e84206dfdec8a02d0cc5ecf2f8014bc37048b39e805cc5d070"
+              "sha256": "eb6b2db457db2474d0233add66c6911d5507aa3cbd18a2dd85a106fc00f6fab7"
             },
             {
               "path": "apps/web/src/components/solar-financial-query.test.tsx",
@@ -601471,7 +601473,7 @@
             },
             {
               "path": "apps/web/src/components/SavingHardwareCommandForm.tsx",
-              "sha256": "e3e03c9a5c3a7b9c336b52be5519ec0d842cfecafc9d00e8dae20e228efe76f9"
+              "sha256": "f0f647ced11fae45862e669f1cecfab7c230dfa8e251e3730bf8243d0b0268f9"
             },
             {
               "path": "apps/web/src/components/SavingOrderChangePanel.test.tsx",
@@ -601503,7 +601505,7 @@
             },
             {
               "path": "apps/web/src/components/SolarContractForm.tsx",
-              "sha256": "6ebecbc889273aa40d93d585a90f7558504df6d793914ad1eea918da8dbfa97a"
+              "sha256": "8acef0c5d19fa9703612ed3dd84086b85cdadc6131e9ba4618e58916fd58ec29"
             },
             {
               "path": "apps/web/src/components/StepReviewPage.test.tsx",
@@ -601639,7 +601641,7 @@
             },
             {
               "path": "apps/web/src/components/solar-contract-forms.test.tsx",
-              "sha256": "c59441f18ba405e84206dfdec8a02d0cc5ecf2f8014bc37048b39e805cc5d070"
+              "sha256": "eb6b2db457db2474d0233add66c6911d5507aa3cbd18a2dd85a106fc00f6fab7"
             },
             {
               "path": "apps/web/src/components/solar-financial-query.test.tsx",
@@ -603275,7 +603277,7 @@
             },
             {
               "path": "apps/web/src/components/SavingHardwareCommandForm.tsx",
-              "sha256": "e3e03c9a5c3a7b9c336b52be5519ec0d842cfecafc9d00e8dae20e228efe76f9"
+              "sha256": "f0f647ced11fae45862e669f1cecfab7c230dfa8e251e3730bf8243d0b0268f9"
             },
             {
               "path": "apps/web/src/components/SavingOrderChangePanel.test.tsx",
@@ -603307,7 +603309,7 @@
             },
             {
               "path": "apps/web/src/components/SolarContractForm.tsx",
-              "sha256": "6ebecbc889273aa40d93d585a90f7558504df6d793914ad1eea918da8dbfa97a"
+              "sha256": "8acef0c5d19fa9703612ed3dd84086b85cdadc6131e9ba4618e58916fd58ec29"
             },
             {
               "path": "apps/web/src/components/StepReviewPage.test.tsx",
@@ -603443,7 +603445,7 @@
             },
             {
               "path": "apps/web/src/components/solar-contract-forms.test.tsx",
-              "sha256": "c59441f18ba405e84206dfdec8a02d0cc5ecf2f8014bc37048b39e805cc5d070"
+              "sha256": "eb6b2db457db2474d0233add66c6911d5507aa3cbd18a2dd85a106fc00f6fab7"
             },
             {
               "path": "apps/web/src/components/solar-financial-query.test.tsx",
@@ -605079,7 +605081,7 @@
             },
             {
               "path": "apps/web/src/components/SavingHardwareCommandForm.tsx",
-              "sha256": "e3e03c9a5c3a7b9c336b52be5519ec0d842cfecafc9d00e8dae20e228efe76f9"
+              "sha256": "f0f647ced11fae45862e669f1cecfab7c230dfa8e251e3730bf8243d0b0268f9"
             },
             {
               "path": "apps/web/src/components/SavingOrderChangePanel.test.tsx",
@@ -605111,7 +605113,7 @@
             },
             {
               "path": "apps/web/src/components/SolarContractForm.tsx",
-              "sha256": "6ebecbc889273aa40d93d585a90f7558504df6d793914ad1eea918da8dbfa97a"
+              "sha256": "8acef0c5d19fa9703612ed3dd84086b85cdadc6131e9ba4618e58916fd58ec29"
             },
             {
               "path": "apps/web/src/components/StepReviewPage.test.tsx",
@@ -605247,7 +605249,7 @@
             },
             {
               "path": "apps/web/src/components/solar-contract-forms.test.tsx",
-              "sha256": "c59441f18ba405e84206dfdec8a02d0cc5ecf2f8014bc37048b39e805cc5d070"
+              "sha256": "eb6b2db457db2474d0233add66c6911d5507aa3cbd18a2dd85a106fc00f6fab7"
             },
             {
               "path": "apps/web/src/components/solar-financial-query.test.tsx",
@@ -606883,7 +606885,7 @@
             },
             {
               "path": "apps/web/src/components/SavingHardwareCommandForm.tsx",
-              "sha256": "e3e03c9a5c3a7b9c336b52be5519ec0d842cfecafc9d00e8dae20e228efe76f9"
+              "sha256": "f0f647ced11fae45862e669f1cecfab7c230dfa8e251e3730bf8243d0b0268f9"
             },
             {
               "path": "apps/web/src/components/SavingOrderChangePanel.test.tsx",
@@ -606915,7 +606917,7 @@
             },
             {
               "path": "apps/web/src/components/SolarContractForm.tsx",
-              "sha256": "6ebecbc889273aa40d93d585a90f7558504df6d793914ad1eea918da8dbfa97a"
+              "sha256": "8acef0c5d19fa9703612ed3dd84086b85cdadc6131e9ba4618e58916fd58ec29"
             },
             {
               "path": "apps/web/src/components/StepReviewPage.test.tsx",
@@ -607051,7 +607053,7 @@
             },
             {
               "path": "apps/web/src/components/solar-contract-forms.test.tsx",
-              "sha256": "c59441f18ba405e84206dfdec8a02d0cc5ecf2f8014bc37048b39e805cc5d070"
+              "sha256": "eb6b2db457db2474d0233add66c6911d5507aa3cbd18a2dd85a106fc00f6fab7"
             },
             {
               "path": "apps/web/src/components/solar-financial-query.test.tsx",
@@ -612833,7 +612835,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "ca21efe49d15fc41fc6d366c51da3cb0e7eb7a745812ecb6009d9faafd69b331"
+              "sha256": "cb5e3e1f38127dd28459e161eaceb9d54d12818dae17d6fb79e73619997a4303"
             },
             {
               "path": "apps/web/src/hooks/useAccountUser.tsx",
@@ -613631,7 +613633,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "ca21efe49d15fc41fc6d366c51da3cb0e7eb7a745812ecb6009d9faafd69b331"
+              "sha256": "cb5e3e1f38127dd28459e161eaceb9d54d12818dae17d6fb79e73619997a4303"
             },
             {
               "path": "apps/web/src/hooks/useAccountUser.tsx",
@@ -614429,7 +614431,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "ca21efe49d15fc41fc6d366c51da3cb0e7eb7a745812ecb6009d9faafd69b331"
+              "sha256": "cb5e3e1f38127dd28459e161eaceb9d54d12818dae17d6fb79e73619997a4303"
             },
             {
               "path": "apps/web/src/hooks/useAccountUser.tsx",
@@ -615227,7 +615229,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "ca21efe49d15fc41fc6d366c51da3cb0e7eb7a745812ecb6009d9faafd69b331"
+              "sha256": "cb5e3e1f38127dd28459e161eaceb9d54d12818dae17d6fb79e73619997a4303"
             },
             {
               "path": "apps/web/src/hooks/useAccountUser.tsx",
@@ -616029,7 +616031,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "ca21efe49d15fc41fc6d366c51da3cb0e7eb7a745812ecb6009d9faafd69b331"
+              "sha256": "cb5e3e1f38127dd28459e161eaceb9d54d12818dae17d6fb79e73619997a4303"
             },
             {
               "path": "apps/web/src/hooks/useAccountUser.tsx",
@@ -616827,7 +616829,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "ca21efe49d15fc41fc6d366c51da3cb0e7eb7a745812ecb6009d9faafd69b331"
+              "sha256": "cb5e3e1f38127dd28459e161eaceb9d54d12818dae17d6fb79e73619997a4303"
             },
             {
               "path": "apps/web/src/hooks/useAccountUser.tsx",
@@ -617625,7 +617627,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "ca21efe49d15fc41fc6d366c51da3cb0e7eb7a745812ecb6009d9faafd69b331"
+              "sha256": "cb5e3e1f38127dd28459e161eaceb9d54d12818dae17d6fb79e73619997a4303"
             },
             {
               "path": "apps/web/src/hooks/useAccountUser.tsx",
@@ -618424,7 +618426,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "ca21efe49d15fc41fc6d366c51da3cb0e7eb7a745812ecb6009d9faafd69b331"
+              "sha256": "cb5e3e1f38127dd28459e161eaceb9d54d12818dae17d6fb79e73619997a4303"
             },
             {
               "path": "apps/web/src/hooks/useAccountUser.tsx",
@@ -619223,7 +619225,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "ca21efe49d15fc41fc6d366c51da3cb0e7eb7a745812ecb6009d9faafd69b331"
+              "sha256": "cb5e3e1f38127dd28459e161eaceb9d54d12818dae17d6fb79e73619997a4303"
             },
             {
               "path": "apps/web/src/hooks/useAccountUser.tsx",
@@ -620022,7 +620024,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "ca21efe49d15fc41fc6d366c51da3cb0e7eb7a745812ecb6009d9faafd69b331"
+              "sha256": "cb5e3e1f38127dd28459e161eaceb9d54d12818dae17d6fb79e73619997a4303"
             },
             {
               "path": "apps/web/src/hooks/useAccountUser.tsx",
@@ -620821,7 +620823,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "ca21efe49d15fc41fc6d366c51da3cb0e7eb7a745812ecb6009d9faafd69b331"
+              "sha256": "cb5e3e1f38127dd28459e161eaceb9d54d12818dae17d6fb79e73619997a4303"
             },
             {
               "path": "apps/web/src/hooks/useAccountUser.tsx",
@@ -621620,7 +621622,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "ca21efe49d15fc41fc6d366c51da3cb0e7eb7a745812ecb6009d9faafd69b331"
+              "sha256": "cb5e3e1f38127dd28459e161eaceb9d54d12818dae17d6fb79e73619997a4303"
             },
             {
               "path": "apps/web/src/hooks/useAccountUser.tsx",
@@ -622419,7 +622421,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "ca21efe49d15fc41fc6d366c51da3cb0e7eb7a745812ecb6009d9faafd69b331"
+              "sha256": "cb5e3e1f38127dd28459e161eaceb9d54d12818dae17d6fb79e73619997a4303"
             },
             {
               "path": "apps/web/src/hooks/useAccountUser.tsx",
@@ -623218,7 +623220,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "ca21efe49d15fc41fc6d366c51da3cb0e7eb7a745812ecb6009d9faafd69b331"
+              "sha256": "cb5e3e1f38127dd28459e161eaceb9d54d12818dae17d6fb79e73619997a4303"
             },
             {
               "path": "apps/web/src/hooks/useAccountUser.tsx",
@@ -624017,7 +624019,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "ca21efe49d15fc41fc6d366c51da3cb0e7eb7a745812ecb6009d9faafd69b331"
+              "sha256": "cb5e3e1f38127dd28459e161eaceb9d54d12818dae17d6fb79e73619997a4303"
             },
             {
               "path": "apps/web/src/hooks/useAccountUser.tsx",
@@ -634858,7 +634860,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "858695d3c3c195a7ac6e43c400ea089f24e87b1574810e926fa904d6920e3376"
+              "sha256": "f6aeb3fe60a4ca195914211202cf0639e4e55e43cfb1bd5219669e7fb707155e"
             },
             {
               "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
@@ -635982,7 +635984,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "858695d3c3c195a7ac6e43c400ea089f24e87b1574810e926fa904d6920e3376"
+              "sha256": "f6aeb3fe60a4ca195914211202cf0639e4e55e43cfb1bd5219669e7fb707155e"
             },
             {
               "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
@@ -637106,7 +637108,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "858695d3c3c195a7ac6e43c400ea089f24e87b1574810e926fa904d6920e3376"
+              "sha256": "f6aeb3fe60a4ca195914211202cf0639e4e55e43cfb1bd5219669e7fb707155e"
             },
             {
               "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
@@ -638233,7 +638235,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "858695d3c3c195a7ac6e43c400ea089f24e87b1574810e926fa904d6920e3376"
+              "sha256": "f6aeb3fe60a4ca195914211202cf0639e4e55e43cfb1bd5219669e7fb707155e"
             },
             {
               "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
@@ -639360,7 +639362,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "858695d3c3c195a7ac6e43c400ea089f24e87b1574810e926fa904d6920e3376"
+              "sha256": "f6aeb3fe60a4ca195914211202cf0639e4e55e43cfb1bd5219669e7fb707155e"
             },
             {
               "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
@@ -640514,7 +640516,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "858695d3c3c195a7ac6e43c400ea089f24e87b1574810e926fa904d6920e3376"
+              "sha256": "f6aeb3fe60a4ca195914211202cf0639e4e55e43cfb1bd5219669e7fb707155e"
             },
             {
               "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
@@ -641637,7 +641639,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "858695d3c3c195a7ac6e43c400ea089f24e87b1574810e926fa904d6920e3376"
+              "sha256": "f6aeb3fe60a4ca195914211202cf0639e4e55e43cfb1bd5219669e7fb707155e"
             },
             {
               "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
@@ -642760,7 +642762,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "858695d3c3c195a7ac6e43c400ea089f24e87b1574810e926fa904d6920e3376"
+              "sha256": "f6aeb3fe60a4ca195914211202cf0639e4e55e43cfb1bd5219669e7fb707155e"
             },
             {
               "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
@@ -643884,7 +643886,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "858695d3c3c195a7ac6e43c400ea089f24e87b1574810e926fa904d6920e3376"
+              "sha256": "f6aeb3fe60a4ca195914211202cf0639e4e55e43cfb1bd5219669e7fb707155e"
             },
             {
               "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
@@ -645026,7 +645028,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "858695d3c3c195a7ac6e43c400ea089f24e87b1574810e926fa904d6920e3376"
+              "sha256": "f6aeb3fe60a4ca195914211202cf0639e4e55e43cfb1bd5219669e7fb707155e"
             },
             {
               "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
@@ -646151,7 +646153,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "858695d3c3c195a7ac6e43c400ea089f24e87b1574810e926fa904d6920e3376"
+              "sha256": "f6aeb3fe60a4ca195914211202cf0639e4e55e43cfb1bd5219669e7fb707155e"
             },
             {
               "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
@@ -677651,7 +677653,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "858695d3c3c195a7ac6e43c400ea089f24e87b1574810e926fa904d6920e3376"
+              "sha256": "f6aeb3fe60a4ca195914211202cf0639e4e55e43cfb1bd5219669e7fb707155e"
             },
             {
               "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
@@ -678773,7 +678775,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "858695d3c3c195a7ac6e43c400ea089f24e87b1574810e926fa904d6920e3376"
+              "sha256": "f6aeb3fe60a4ca195914211202cf0639e4e55e43cfb1bd5219669e7fb707155e"
             },
             {
               "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
@@ -679895,7 +679897,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "858695d3c3c195a7ac6e43c400ea089f24e87b1574810e926fa904d6920e3376"
+              "sha256": "f6aeb3fe60a4ca195914211202cf0639e4e55e43cfb1bd5219669e7fb707155e"
             },
             {
               "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
@@ -681017,7 +681019,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "858695d3c3c195a7ac6e43c400ea089f24e87b1574810e926fa904d6920e3376"
+              "sha256": "f6aeb3fe60a4ca195914211202cf0639e4e55e43cfb1bd5219669e7fb707155e"
             },
             {
               "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
@@ -685294,7 +685296,7 @@
             },
             {
               "path": "apps/web/e2e/solar-construction-progress.spec.ts",
-              "sha256": "4a95d913b53e07345de8f24a25bdcbfeddd87c90c7653bc28b5e2ed13c5f5b5d"
+              "sha256": "62196e4de6fe6e78e6fcbef2be765f100e3f1f1aa20668e2c59af5c6f28233ea"
             },
             {
               "path": "apps/web/e2e/solar-operation-form-fixture.ts",
@@ -685550,7 +685552,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "858695d3c3c195a7ac6e43c400ea089f24e87b1574810e926fa904d6920e3376"
+              "sha256": "f6aeb3fe60a4ca195914211202cf0639e4e55e43cfb1bd5219669e7fb707155e"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -686135,7 +686137,7 @@
             },
             {
               "path": "apps/web/e2e/solar-construction-progress.spec.ts",
-              "sha256": "4a95d913b53e07345de8f24a25bdcbfeddd87c90c7653bc28b5e2ed13c5f5b5d"
+              "sha256": "62196e4de6fe6e78e6fcbef2be765f100e3f1f1aa20668e2c59af5c6f28233ea"
             },
             {
               "path": "apps/web/e2e/solar-operation-form-fixture.ts",
@@ -686391,7 +686393,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "858695d3c3c195a7ac6e43c400ea089f24e87b1574810e926fa904d6920e3376"
+              "sha256": "f6aeb3fe60a4ca195914211202cf0639e4e55e43cfb1bd5219669e7fb707155e"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -686978,7 +686980,7 @@
             },
             {
               "path": "apps/web/e2e/solar-construction-progress.spec.ts",
-              "sha256": "4a95d913b53e07345de8f24a25bdcbfeddd87c90c7653bc28b5e2ed13c5f5b5d"
+              "sha256": "62196e4de6fe6e78e6fcbef2be765f100e3f1f1aa20668e2c59af5c6f28233ea"
             },
             {
               "path": "apps/web/e2e/solar-operation-form-fixture.ts",
@@ -687234,7 +687236,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "858695d3c3c195a7ac6e43c400ea089f24e87b1574810e926fa904d6920e3376"
+              "sha256": "f6aeb3fe60a4ca195914211202cf0639e4e55e43cfb1bd5219669e7fb707155e"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -687819,7 +687821,7 @@
             },
             {
               "path": "apps/web/e2e/solar-construction-progress.spec.ts",
-              "sha256": "4a95d913b53e07345de8f24a25bdcbfeddd87c90c7653bc28b5e2ed13c5f5b5d"
+              "sha256": "62196e4de6fe6e78e6fcbef2be765f100e3f1f1aa20668e2c59af5c6f28233ea"
             },
             {
               "path": "apps/web/e2e/solar-operation-form-fixture.ts",
@@ -688075,7 +688077,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "858695d3c3c195a7ac6e43c400ea089f24e87b1574810e926fa904d6920e3376"
+              "sha256": "f6aeb3fe60a4ca195914211202cf0639e4e55e43cfb1bd5219669e7fb707155e"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -688660,7 +688662,7 @@
             },
             {
               "path": "apps/web/e2e/solar-construction-progress.spec.ts",
-              "sha256": "4a95d913b53e07345de8f24a25bdcbfeddd87c90c7653bc28b5e2ed13c5f5b5d"
+              "sha256": "62196e4de6fe6e78e6fcbef2be765f100e3f1f1aa20668e2c59af5c6f28233ea"
             },
             {
               "path": "apps/web/e2e/solar-operation-form-fixture.ts",
@@ -688916,7 +688918,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "858695d3c3c195a7ac6e43c400ea089f24e87b1574810e926fa904d6920e3376"
+              "sha256": "f6aeb3fe60a4ca195914211202cf0639e4e55e43cfb1bd5219669e7fb707155e"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -689505,7 +689507,7 @@
             },
             {
               "path": "apps/web/e2e/solar-construction-progress.spec.ts",
-              "sha256": "4a95d913b53e07345de8f24a25bdcbfeddd87c90c7653bc28b5e2ed13c5f5b5d"
+              "sha256": "62196e4de6fe6e78e6fcbef2be765f100e3f1f1aa20668e2c59af5c6f28233ea"
             },
             {
               "path": "apps/web/e2e/solar-operation-form-fixture.ts",
@@ -689761,7 +689763,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "858695d3c3c195a7ac6e43c400ea089f24e87b1574810e926fa904d6920e3376"
+              "sha256": "f6aeb3fe60a4ca195914211202cf0639e4e55e43cfb1bd5219669e7fb707155e"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -690350,7 +690352,7 @@
             },
             {
               "path": "apps/web/e2e/solar-construction-progress.spec.ts",
-              "sha256": "4a95d913b53e07345de8f24a25bdcbfeddd87c90c7653bc28b5e2ed13c5f5b5d"
+              "sha256": "62196e4de6fe6e78e6fcbef2be765f100e3f1f1aa20668e2c59af5c6f28233ea"
             },
             {
               "path": "apps/web/e2e/solar-operation-form-fixture.ts",
@@ -690606,7 +690608,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "858695d3c3c195a7ac6e43c400ea089f24e87b1574810e926fa904d6920e3376"
+              "sha256": "f6aeb3fe60a4ca195914211202cf0639e4e55e43cfb1bd5219669e7fb707155e"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -691191,7 +691193,7 @@
             },
             {
               "path": "apps/web/e2e/solar-construction-progress.spec.ts",
-              "sha256": "4a95d913b53e07345de8f24a25bdcbfeddd87c90c7653bc28b5e2ed13c5f5b5d"
+              "sha256": "62196e4de6fe6e78e6fcbef2be765f100e3f1f1aa20668e2c59af5c6f28233ea"
             },
             {
               "path": "apps/web/e2e/solar-operation-form-fixture.ts",
@@ -691447,7 +691449,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "858695d3c3c195a7ac6e43c400ea089f24e87b1574810e926fa904d6920e3376"
+              "sha256": "f6aeb3fe60a4ca195914211202cf0639e4e55e43cfb1bd5219669e7fb707155e"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -692032,7 +692034,7 @@
             },
             {
               "path": "apps/web/e2e/solar-construction-progress.spec.ts",
-              "sha256": "4a95d913b53e07345de8f24a25bdcbfeddd87c90c7653bc28b5e2ed13c5f5b5d"
+              "sha256": "62196e4de6fe6e78e6fcbef2be765f100e3f1f1aa20668e2c59af5c6f28233ea"
             },
             {
               "path": "apps/web/e2e/solar-operation-form-fixture.ts",
@@ -692288,7 +692290,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "858695d3c3c195a7ac6e43c400ea089f24e87b1574810e926fa904d6920e3376"
+              "sha256": "f6aeb3fe60a4ca195914211202cf0639e4e55e43cfb1bd5219669e7fb707155e"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -692874,7 +692876,7 @@
             },
             {
               "path": "apps/web/e2e/solar-construction-progress.spec.ts",
-              "sha256": "4a95d913b53e07345de8f24a25bdcbfeddd87c90c7653bc28b5e2ed13c5f5b5d"
+              "sha256": "62196e4de6fe6e78e6fcbef2be765f100e3f1f1aa20668e2c59af5c6f28233ea"
             },
             {
               "path": "apps/web/e2e/solar-operation-form-fixture.ts",
@@ -693130,7 +693132,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "858695d3c3c195a7ac6e43c400ea089f24e87b1574810e926fa904d6920e3376"
+              "sha256": "f6aeb3fe60a4ca195914211202cf0639e4e55e43cfb1bd5219669e7fb707155e"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -693721,7 +693723,7 @@
             },
             {
               "path": "apps/web/e2e/solar-construction-progress.spec.ts",
-              "sha256": "4a95d913b53e07345de8f24a25bdcbfeddd87c90c7653bc28b5e2ed13c5f5b5d"
+              "sha256": "62196e4de6fe6e78e6fcbef2be765f100e3f1f1aa20668e2c59af5c6f28233ea"
             },
             {
               "path": "apps/web/e2e/solar-operation-form-fixture.ts",
@@ -693977,7 +693979,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "858695d3c3c195a7ac6e43c400ea089f24e87b1574810e926fa904d6920e3376"
+              "sha256": "f6aeb3fe60a4ca195914211202cf0639e4e55e43cfb1bd5219669e7fb707155e"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -714781,7 +714783,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "858695d3c3c195a7ac6e43c400ea089f24e87b1574810e926fa904d6920e3376"
+              "sha256": "f6aeb3fe60a4ca195914211202cf0639e4e55e43cfb1bd5219669e7fb707155e"
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
@@ -715053,11 +715055,11 @@
             },
             {
               "path": "apps/web/e2e/solar-contract-issue-form-fixture.ts",
-              "sha256": "7fb3d04bd879ee6e8c5afc510f97e28ff9751a03700815fd536a39ccd6e9e9a4"
+              "sha256": "afb6a3e0239078bc86d7e38a4053793e77d5fc8fecd8917e219a5a06b4ee98b3"
             },
             {
               "path": "apps/web/e2e/solar-contract-issue-forms.spec.ts",
-              "sha256": "1ca166cf680d1cd406c4678e6902eb183ae2cff9b0610e6c9adb200278cf544a"
+              "sha256": "3401f30f2dad9bb6803d6333009414f2c0fe6593eb694d88a27e245dd7a53266"
             },
             {
               "path": "apps/web/e2e/solar-postal-form-fixture.ts",
@@ -715073,7 +715075,7 @@
             },
             {
               "path": "apps/web/src/components/SolarContractForm.tsx",
-              "sha256": "6ebecbc889273aa40d93d585a90f7558504df6d793914ad1eea918da8dbfa97a"
+              "sha256": "8acef0c5d19fa9703612ed3dd84086b85cdadc6131e9ba4618e58916fd58ec29"
             },
             {
               "path": "apps/web/src/components/SolarPostalPanel.test.tsx",
@@ -715085,7 +715087,7 @@
             },
             {
               "path": "apps/web/src/components/solar-contract-forms.test.tsx",
-              "sha256": "c59441f18ba405e84206dfdec8a02d0cc5ecf2f8014bc37048b39e805cc5d070"
+              "sha256": "eb6b2db457db2474d0233add66c6911d5507aa3cbd18a2dd85a106fc00f6fab7"
             },
             {
               "path": "apps/web/src/components/solar-postal-forms.test.tsx",
@@ -725362,7 +725364,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Form semantics are accepted. Scoped financial and fulfillment confirmations now pass bounded acknowledgement and exact replay checks. Remaining command feedback, bespoke route states, configured live Sentry receipt and GitHub accessibility enforcement remain open."
+        "Form semantics are accepted. Scoped financial and fulfillment confirmations pass bounded acknowledgement and exact replay checks, including saving hardware and solar construction and contract issuance. Remaining command feedback, bespoke route states, configured live Sentry receipt and GitHub accessibility enforcement remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -725484,7 +725486,8 @@
           "release-0.5-solar-postal-required",
           "release-0.5-conditional-form-closure",
           "release-0.5-route-error-delivery",
-          "release-0.5-staff-command-delivery"
+          "release-0.5-staff-command-delivery",
+          "release-0.5-saving-solar-confirmation"
         ]
       }
     },
@@ -725572,7 +725575,7 @@
             },
             {
               "path": "apps/web/e2e/solar-construction-progress.spec.ts",
-              "sha256": "4a95d913b53e07345de8f24a25bdcbfeddd87c90c7653bc28b5e2ed13c5f5b5d"
+              "sha256": "62196e4de6fe6e78e6fcbef2be765f100e3f1f1aa20668e2c59af5c6f28233ea"
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
@@ -725968,7 +725971,7 @@
             },
             {
               "path": "apps/web/src/components/SavingHardwareCommandForm.tsx",
-              "sha256": "e3e03c9a5c3a7b9c336b52be5519ec0d842cfecafc9d00e8dae20e228efe76f9"
+              "sha256": "f0f647ced11fae45862e669f1cecfab7c230dfa8e251e3730bf8243d0b0268f9"
             },
             {
               "path": "apps/web/src/components/SavingInventoryPanel.tsx",
@@ -726008,7 +726011,7 @@
             },
             {
               "path": "apps/web/src/components/SolarContractForm.tsx",
-              "sha256": "6ebecbc889273aa40d93d585a90f7558504df6d793914ad1eea918da8dbfa97a"
+              "sha256": "8acef0c5d19fa9703612ed3dd84086b85cdadc6131e9ba4618e58916fd58ec29"
             },
             {
               "path": "apps/web/src/components/SolarPostalPanel.tsx",
@@ -726084,7 +726087,7 @@
             },
             {
               "path": "apps/web/src/components/VerificationBanner.tsx",
-              "sha256": "ca21efe49d15fc41fc6d366c51da3cb0e7eb7a745812ecb6009d9faafd69b331"
+              "sha256": "cb5e3e1f38127dd28459e161eaceb9d54d12818dae17d6fb79e73619997a4303"
             },
             {
               "path": "apps/web/src/components/VerificationPolicySettings.tsx",
@@ -726496,7 +726499,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
-              "sha256": "858695d3c3c195a7ac6e43c400ea089f24e87b1574810e926fa904d6920e3376"
+              "sha256": "f6aeb3fe60a4ca195914211202cf0639e4e55e43cfb1bd5219669e7fb707155e"
             },
             {
               "path": "apps/web/src/pages/AdminSolarDocumentsPage.tsx",
@@ -727207,7 +727210,8 @@
             "Renewed solar postal form performance evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-solar-postal-required/proof.json",
             "Renewed conditional form accessibility and performance evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-conditional-form-closure/proof.json",
             "Renewed on-demand route reporting coverage, route budgets and cold auth evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-error-delivery/proof.json",
-            "Renewed launch service staff confirmation and shared dialog performance evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-command-delivery/proof.json"
+            "Renewed launch service staff confirmation and shared dialog performance evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-command-delivery/proof.json",
+            "Renewed saving and solar confirmations and the verification banner's customer bundle measurement. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-solar-confirmation/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -797663,6 +797667,147 @@
       "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-command-delivery/renewed-bindings.json",
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-command-delivery/reviewed.patch",
       "release_disposition": "Verified bounded staff command acknowledgement and exact manual replay in the scoped launch service flows. v0.5.0 acceptance remains open."
+    },
+    "release-0.5-saving-solar-confirmation": {
+      "batch": "release-0.5-saving-solar-confirmation",
+      "base_commit": "eaf5cbd72482e76dd9877a6ae46a421ff8a5b6ed",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.11.01.03",
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.11.01.03",
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": ".size-limit.json",
+          "sha256": "3e22df1ae210db450940af0674c699c1b6c8f9df91db74ff0f2b2488d5d0f946"
+        },
+        {
+          "path": "apps/api/src/solar/solar-progress.service.ts",
+          "sha256": "fdc2fd327a7dad27453f5a9d0183ec5eb979a04d8e2eff90c9cf92badf6f52fd"
+        },
+        {
+          "path": "apps/web/e2e/confirmation-fixture.ts",
+          "sha256": "8d842de5577a9f43a5ca0efcf8e6a00e18e6ea1fb53116555fac8cbd7608bb61"
+        },
+        {
+          "path": "apps/web/e2e/coverage-fixture.ts",
+          "sha256": "07949862684b86d6ff241d5f71e59e6c71a5cc1ddc70655b0d508beb53865dac"
+        },
+        {
+          "path": "apps/web/e2e/saving-change-address-form-fixture.ts",
+          "sha256": "cb6481eeec981a79fc67eca356844782a6dc156f824ea6ccab188970016fa873"
+        },
+        {
+          "path": "apps/web/e2e/saving-hardware-form-fixture.ts",
+          "sha256": "de05adddf55ff6c8d87bb5b96c61a3485c5c3066d5fc757b92b1ff91fd962c89"
+        },
+        {
+          "path": "apps/web/e2e/saving-hardware-forms.spec.ts",
+          "sha256": "4f7aacd16a0f6516f166d765218100d065b2b64b660ee7eaa542cd94a9da4a5a"
+        },
+        {
+          "path": "apps/web/e2e/solar-construction-progress.spec.ts",
+          "sha256": "62196e4de6fe6e78e6fcbef2be765f100e3f1f1aa20668e2c59af5c6f28233ea"
+        },
+        {
+          "path": "apps/web/e2e/solar-contract-issue-form-fixture.ts",
+          "sha256": "afb6a3e0239078bc86d7e38a4053793e77d5fc8fecd8917e219a5a06b4ee98b3"
+        },
+        {
+          "path": "apps/web/e2e/solar-contract-issue-forms.spec.ts",
+          "sha256": "3401f30f2dad9bb6803d6333009414f2c0fe6593eb694d88a27e245dd7a53266"
+        },
+        {
+          "path": "apps/web/e2e/solar-operation-form-fixture.ts",
+          "sha256": "4bb2ae99176347d0b908754a1f4660a02f017db18afe98de61e81e9ad92bd013"
+        },
+        {
+          "path": "apps/web/e2e/verification-banner.spec.ts",
+          "sha256": "d4d4881781d88bfbfdf68d762b55b556e534565268c94cb5327a6d9acd3527a3"
+        },
+        {
+          "path": "apps/web/e2e/verification-notices.spec.ts",
+          "sha256": "303c61496c067ab572537fdcf1f8c2051aeea8f86ca216b3478a48023f556be9"
+        },
+        {
+          "path": "apps/web/src/components/SavingHardwareCommandForm.tsx",
+          "sha256": "f0f647ced11fae45862e669f1cecfab7c230dfa8e251e3730bf8243d0b0268f9"
+        },
+        {
+          "path": "apps/web/src/components/SolarContractForm.tsx",
+          "sha256": "8acef0c5d19fa9703612ed3dd84086b85cdadc6131e9ba4618e58916fd58ec29"
+        },
+        {
+          "path": "apps/web/src/components/TeamActionDialog.tsx",
+          "sha256": "9ec72b76b803e4699e0432a8b50052232f2751bb353e671cdd6706cc1de29ff5"
+        },
+        {
+          "path": "apps/web/src/components/VerificationBanner.tsx",
+          "sha256": "cb5e3e1f38127dd28459e161eaceb9d54d12818dae17d6fb79e73619997a4303"
+        },
+        {
+          "path": "apps/web/src/components/root-profile-query.test.tsx",
+          "sha256": "5339b11d7f0fd0513daf391727489851ae104133e06e539c0f835fdf01d32c34"
+        },
+        {
+          "path": "apps/web/src/components/solar-contract-forms.test.tsx",
+          "sha256": "eb6b2db457db2474d0233add66c6911d5507aa3cbd18a2dd85a106fc00f6fab7"
+        },
+        {
+          "path": "apps/web/src/lib/csrf.ts",
+          "sha256": "9ae9d43859271c9fcf38aa560cc4369e5a9930a679fccb54b6b754f6f43ef209"
+        },
+        {
+          "path": "apps/web/src/lib/saving-hardware-form.ts",
+          "sha256": "dc9860dcfc4d8f9824d2aa7f1942646a0cec7ff79cf65232d79af097d94f059f"
+        },
+        {
+          "path": "apps/web/src/lib/solar-contract-form.ts",
+          "sha256": "22b3d0dd764e28b7c0322768697d06b65e64d933fee962ff4e6cb77f1b02fa6e"
+        },
+        {
+          "path": "apps/web/src/lib/solar-progress-form.ts",
+          "sha256": "7749a522e429a8f60a185c79cb4f1334c9a764586c96573e7dae556885d354d3"
+        },
+        {
+          "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
+          "sha256": "f6aeb3fe60a4ca195914211202cf0639e4e55e43cfb1bd5219669e7fb707155e"
+        },
+        {
+          "path": "apps/web/src/pages/saving-hardware-forms.test.tsx",
+          "sha256": "184695340094e1d33dd0085b97a3ec431197512238955aadd61b7e3bfd5f22ef"
+        },
+        {
+          "path": "apps/web/src/pages/solar-progress-forms.test.tsx",
+          "sha256": "6d81ea4741342cb4fe58716259b2db11b6c5624287232772ff05a1f3d2026868"
+        },
+        {
+          "path": "docs/design/notification-recovery.md",
+          "sha256": "5044a15e3d75280b24dd900b9c4d3703d9ab3dc892d6379c02a9015ffde5d967"
+        },
+        {
+          "path": "scripts/check-route-budgets.mjs",
+          "sha256": "4dd831c645a9dbf1e6fd9b0c211b5559e4fc22652373b31525bd4f4aae38186d"
+        }
+      ],
+      "checks": [
+        "Three baseline cases reproduced the missing acknowledgement deadline for saving upgrade cancellation, solar construction progress and solar contract issuance.",
+        "Saving hardware amendments and cancellations, solar contract issuance and construction milestones now use the 15-second command deadline. Verification is distinct from business dispatch. Uncertain writes keep the reviewed command and original idempotency key or construction operation ID for explicit recovery. Exact financial and progress receipts still govern completion.",
+        "Twenty production browser cases passed across Chromium and Mobile Safari, including Persian and English. Twenty-one instrumented Chromium cases passed, including solar queue recovery and verification-banner failure recovery. Seventy-four targeted unit cases passed across seven suites. The verification fixture now checks the rotated CSRF cookie in the WebKit page before releasing step-up. Existing CSRF, exact replay, validation and single-effect assertions passed.",
+        "Removed the verification banner's duplicate response handling with the same cancellation and authority scope. Electricity ordering is 254.94 KB gzip against its existing 255 KB limit. All 98 budgets, six byte-matched cold-auth transfers, eight combined changed-coverage groups, formatting, lint and web typecheck passed."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-solar-confirmation",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-solar-confirmation/proof.json",
+      "source_scope_proof_sha256": "49478cec7ecbc3abef05fda419e39cb1b0505b13da627f39bf0ea521571543ea",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-solar-confirmation/renewed-bindings.json",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-solar-confirmation/reviewed.patch",
+      "release_disposition": "Verified bounded saving hardware, solar construction and solar contract acknowledgements. v0.5.0 acceptance remains open."
     }
   },
   "historical_improvements": [
@@ -797713,12 +797858,12 @@
       "release-readiness#R-04.01",
       "release-readiness#R-04.02"
     ],
-    "goal": "Verify the existing captured recovery in saving hardware amendments and solar construction and contract issuance before applying bounded acknowledgement. Reconcile bespoke route states and obtain a live Sentry receipt and GitHub accessibility enforcement before accepting v0.5.0."
+    "goal": "Inspect existing receipt and fresh-read recovery in contract signature and staff receipt review, then reconcile bespoke route states. v0.5.0 still requires a configured live Sentry receipt and GitHub accessibility enforcement."
   },
   "launch_forecast": {
     "status": "deadline_at_risk_until_v0_5_and_operational_gates_close",
     "next_update_after": "v0.5.0 remaining UI criteria and owner decisions",
-    "method": "v0.4.0 staging and Telegram receipts are verified. v0.5.0 form semantics are accepted, route reporting passes local checks and scoped staff command acknowledgement is verified for all four launch services. Five launch-required criteria remain open, including live Sentry reporting and GitHub accessibility enforcement. The November 9 sequence remains at risk."
+    "method": "v0.4.0 staging and Telegram receipts are verified. v0.5.0 form semantics and scoped saving hardware, solar construction and contract acknowledgement are verified. Five launch-required criteria remain open, including the live Sentry receipt and GitHub accessibility enforcement. The November 9 sequence remains at risk."
   },
   "capabilities": [
     {
