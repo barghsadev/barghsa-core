@@ -1,4 +1,4 @@
-import { notificationContent } from '../lib/notifications.js';
+import { notificationContent } from '../lib/notification-content.js';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate, type NavigateOptions } from '@tanstack/react-router';
 import { t } from '@barghsa/i18n/app';

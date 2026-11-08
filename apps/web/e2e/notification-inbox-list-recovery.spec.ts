@@ -1,4 +1,4 @@
-import { test, expect } from './coverage-fixture';
+import { test, expect, type Route } from './coverage-fixture';
 import { crmShell } from './crm-shell-fixture';
 import { t } from '@barghsa/i18n/app';
 import AxeBuilder from '@axe-core/playwright';
@@ -117,18 +117,28 @@ for (const context of ['customer', 'staff'] as const)
         );
         let failed = false,
           denied = false,
-          writeFailed = true;
+          writeFailed = true,
+          holdBell = false,
+          heldBell: Route | undefined,
+          bellReads = 0;
         const cursors: Array<string | null> = [];
         await page.route('**/api/v1/notifications/unread-count', (route) =>
           route.fulfill({ json: { unread_count: 2 } })
         );
         await page.route('**/api/v1/notifications?*', (route) => {
           const q = new URL(route.request().url()).searchParams;
-          if (q.get('limit') === '10')
+          if (q.get('limit') === '10') {
+            bellReads++;
+            if (holdBell) {
+              holdBell = false;
+              heldBell = route;
+              return;
+            }
             return route.fulfill({
               status: denied ? 403 : failed ? 503 : 200,
               json: data('Bell notice'),
             });
+          }
           cursors.push(q.get('cursor'));
           return route.fulfill({
             status: denied ? 403 : failed ? 503 : 200,
@@ -213,6 +223,32 @@ for (const context of ['customer', 'staff'] as const)
         failed = false;
         await panel.getByRole('button', { name: text('retry'), exact: true }).click();
         await expect(panel.getByRole('button', { name: /Bell notice/ })).toBeEnabled();
+        if (theme === 'light') {
+          await page.keyboard.press('Escape');
+          await page.clock.install();
+          holdBell = true;
+          const previousReads = bellReads;
+          const retainedNotice = panel.getByRole('button', { name: /Bell notice/ });
+          try {
+            await bell.click();
+            await expect.poll(() => Boolean(heldBell)).toBe(true);
+            await expect(retainedNotice).toBeDisabled();
+            await page.clock.fastForward(15_200);
+            const error = panel.getByRole('alert');
+            await expect(error).toContainText(text('error.load'));
+            await expect(retainedNotice).toBeVisible();
+            await expect(retainedNotice).toBeDisabled();
+            await heldBell!.fulfill({ json: data('Late preview') }).catch(() => {});
+            await expect(panel.getByRole('button', { name: /Late preview/ })).toHaveCount(0);
+            expect(bellReads).toBe(previousReads + 1);
+            await panel.getByRole('button', { name: text('retry'), exact: true }).click();
+            await expect(error).toHaveCount(0);
+            await expect(retainedNotice).toBeEnabled();
+            expect(bellReads).toBe(previousReads + 2);
+          } finally {
+            await heldBell?.abort().catch(() => {});
+          }
+        }
         expect(
           (await new AxeBuilder({ page }).include('[data-testid=notification-panel]').analyze())
             .violations

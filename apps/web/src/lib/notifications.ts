@@ -1,6 +1,4 @@
 import { notificationLink } from '@barghsa/shared/notifications';
-import type { Locale } from '@barghsa/i18n/app';
-export { notificationContent } from './notification-content.js';
 import { withCsrf } from './csrf.js';
 import { isAccountSettingsPath } from './session-role.js';
 
@@ -12,9 +10,6 @@ import { isAccountSettingsPath } from './session-role.js';
  *   PATCH /api/v1/notifications/read-all
  *   PATCH /api/v1/notifications/:id/read
  *
- * Also provides pure helpers for rendering: interpolation of i18n title/body
- * templates with the row's `params`, and relative-time formatting. These are
- * kept dependency-free (no React) so they can be unit-tested in isolation.
  */
 
 /** A single notification as surfaced by the center. */
@@ -191,65 +186,12 @@ export async function markAllRead(): Promise<number> {
  * the real-time bell badge can short-poll every 30s without transporting a
  * full notification page.
  */
-export async function fetchUnreadCount(): Promise<number> {
+export async function fetchUnreadCount(signal?: AbortSignal): Promise<number> {
   const res = await fetch('/api/v1/notifications/unread-count', {
     credentials: 'include',
+    ...(signal && { signal }),
   });
   return responseCount(res);
-}
-
-/**
- * Interpolate an i18n template string with `params`.
- *
- * Accepts both `{name}` (used by the existing i18n dictionary) and the
- * template-engine double-brace `{{name}}` form, so stored title/body keys
- * render regardless of authoring style. Unknown placeholders are left as-is so
- * missing data never surfaces as `undefined`.
- */
-export function interpolate(template: string, params: Record<string, unknown> = {}): string {
-  return template.replace(/\{\{?(\w+)\}?\}/g, (match, name: string) =>
-    params[name] !== undefined && params[name] !== null ? String(params[name]) : match
-  );
-}
-
-const RELATIVE_UNITS: Array<{
-  unit: Intl.RelativeTimeFormatUnit;
-  seconds: number;
-}> = [
-  { unit: 'year', seconds: 365 * 24 * 60 * 60 },
-  { unit: 'month', seconds: 30 * 24 * 60 * 60 },
-  { unit: 'week', seconds: 7 * 24 * 60 * 60 },
-  { unit: 'day', seconds: 24 * 60 * 60 },
-  { unit: 'hour', seconds: 60 * 60 },
-  { unit: 'minute', seconds: 60 },
-];
-
-/**
- * Format a past timestamp as a compact relative string in the active locale,
- * e.g. "۳ دقیقه پیش" / "2 hours ago". Future timestamps (clock skew) and
- * anything older than ~a year fall back to an absolute short date.
- */
-export function formatRelativeTime(
-  date: string | Date,
-  locale: Locale,
-  now: Date = new Date()
-): string {
-  const target = date instanceof Date ? date : new Date(date);
-  if (Number.isNaN(target.getTime())) return '—';
-  const diffSeconds = Math.floor((target.getTime() - now.getTime()) / 1000);
-
-  if (diffSeconds > -30) return '';
-
-  const abs = Math.abs(diffSeconds);
-  const rtf = new Intl.RelativeTimeFormat(locale === 'fa' ? 'fa-IR' : 'en', { numeric: 'auto' });
-
-  for (const { unit, seconds } of RELATIVE_UNITS) {
-    if (abs >= seconds) {
-      return rtf.format(Math.round(diffSeconds / seconds), unit);
-    }
-  }
-  // Extremely recent (sub-minute)
-  return rtf.format(Math.round(diffSeconds / 60), 'minute');
 }
 
 /** True when the given timestamp is older than the supplied cutoff. */

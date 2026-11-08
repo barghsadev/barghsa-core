@@ -9,6 +9,7 @@ import { useLocale } from '../hooks/useLocale.js';
 import { useUnreadCount } from '../hooks/useUnreadCount.js';
 import { useUnreadDocumentTitle } from '../hooks/useUnreadDocumentTitle.js';
 import { sendToast } from '../lib/toast-api.js';
+import { readWithDeadline } from '../lib/server-query-client.js';
 import {
   fetchNotifications,
   isNotificationDenied,
@@ -52,6 +53,7 @@ export function NotificationBell({
   const [writing, setWriting] = useState(false);
   const writingRef = useRef(false);
   const requestVersion = useRef(0);
+  const preview = useRef<AbortController | null>(null);
 
   const { unreadCount, setUnreadCount, optimisticDecrement } = useUnreadCount(undefined, {
     enabled: !denied,
@@ -59,6 +61,7 @@ export function NotificationBell({
   });
   const clearDenied = useCallback(() => {
     requestVersion.current++;
+    preview.current?.abort();
     writingRef.current = false;
     setWriting(false);
     setItems([]);
@@ -77,9 +80,14 @@ export function NotificationBell({
   const load = useCallback(async () => {
     if (writingRef.current) return;
     const version = ++requestVersion.current;
+    preview.current?.abort();
+    const request = new AbortController();
+    preview.current = request;
     setLoading(true);
     try {
-      const page = await fetchNotifications(undefined, 'all', DROPDOWN_SIZE);
+      const page = await readWithDeadline(request.signal, (signal) =>
+        fetchNotifications(undefined, 'all', DROPDOWN_SIZE, signal)
+      );
       if (requestVersion.current !== version || liveContext.current !== operatingContext) return;
       setItems(page.data);
       setAcceptedContext(operatingContext);
@@ -106,6 +114,7 @@ export function NotificationBell({
     void load();
     return () => {
       requestVersion.current++;
+      preview.current?.abort();
       writingRef.current = false;
     };
   }, [load]);
@@ -124,8 +133,6 @@ export function NotificationBell({
     const previousCount = unreadCount;
     writingRef.current = true;
     setWriting(true);
-    setLoading(false);
-    setError(null);
     optimisticDecrement(item ? Number(!item.isRead) : unreadCount);
     setItems((prev) =>
       prev.map((row) => (!item || row.id === item.id ? { ...row, isRead: true } : row))

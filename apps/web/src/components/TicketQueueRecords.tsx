@@ -10,7 +10,7 @@ import {
 } from '@barghsa/ui';
 import { t, type Locale } from '@barghsa/i18n/app';
 import { HistoryTable, type HistoryColumn } from './HistoryTable.js';
-import { formatRelativeTime } from '../lib/notifications.js';
+import { formatRelativeTime } from '../lib/notification-content.js';
 
 export type TicketStatus =
   'open' | 'in_progress' | 'waiting_customer' | 'waiting_staff' | 'resolved' | 'closed';

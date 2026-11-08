@@ -25,6 +25,16 @@ for (const locale of ['fa', 'en'] as const) {
         .context;
       return route.fulfill({ json: { operatingContext } });
     });
+    const profileId = '01900000-0000-7000-8000-000000000010';
+    await page.route('**/api/profiles', (route) =>
+      route.fulfill({
+        json: {
+          profiles: [{ id: profileId, profileType: 'INDIVIDUAL', title: 'Customer profile' }],
+          activeProfileId: profileId,
+          hasDefault: true,
+        },
+      })
+    );
     const notices = [
       {
         id: '01900000-0000-7000-8000-000000000001',
@@ -107,9 +117,10 @@ for (const locale of ['fa', 'en'] as const) {
     await page.getByTestId('notification-bell').click();
     await page.getByTestId('notification-panel').locator('a[href="/admin/inbox"]').click();
     await expect(page).toHaveURL(/\/admin\/inbox$/);
-    await expect(page.locator('main')).toContainText(
+    await expect(page.getByRole('main')).toContainText(
       locale === 'fa' ? 'بررسی مالی' : 'Finance review'
     );
+    await expect(page.locator('main#main-content')).toHaveCount(1);
 
     await page.getByRole('button', { name: /امنیت حساب|Account security/ }).click();
     await expect(page).toHaveURL(/\/settings\/security$/);

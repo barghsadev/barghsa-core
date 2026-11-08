@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-08T02:26:35+00:00",
-  "source_commit": "dd74b3df901a4849298250e4d0effaa0427b7fdb",
+  "updated": "2026-11-08T02:43:25+00:00",
+  "source_commit": "f95638175e39e5030ebbce41c4a56f21f88fe3d5",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -35375,11 +35375,11 @@
             },
             {
               "path": "apps/web/src/components/NotificationBell.tsx",
-              "sha256": "1a9d070c502a43e57177dd4b7857ba727ceb270aff3eb35d4bdd43746658d28c"
+              "sha256": "b8d7da27155f21a7f6bbc30725c46eb2be7ec27c0745b34d8f8aa7e13b224422"
             },
             {
               "path": "apps/web/src/components/NotificationRow.tsx",
-              "sha256": "6ecba97ccd23cd592d527686add90bd9ff97be5b6f62d932370de896ca7737ff"
+              "sha256": "d6e7735a056912646ce620d9b79ca17824cd5dbbc9d9368dc914b6bb90f38deb"
             },
             {
               "path": "apps/web/src/components/OnlinePaymentReturnPanel.tsx",
@@ -35535,7 +35535,7 @@
             },
             {
               "path": "apps/web/src/pages/NotificationCenterPage.tsx",
-              "sha256": "393a9a3eaee2b8840a0094592b4040c59305327efb3b5a4d7d5c9bffcf7971de"
+              "sha256": "d0e38edec8e1a8a9733a0967dc8a5db591dec6b89153d7b605ab1bec6a0d8c37"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -56451,7 +56451,7 @@
             },
             {
               "path": "apps/web/src/components/TicketQueueRecords.tsx",
-              "sha256": "506fe00df5cbd8e3e86ce34f3e0791806e5148d6d05a32d824acf1a11f090448"
+              "sha256": "9f51c742e9daf033506db947590e02a6ceb8d33f200a4226d92f0baaadca7305"
             },
             {
               "path": "apps/web/src/components/TicketReplyInput.array.test.tsx",
@@ -57562,7 +57562,7 @@
             },
             {
               "path": "apps/web/src/components/TicketQueueRecords.tsx",
-              "sha256": "506fe00df5cbd8e3e86ce34f3e0791806e5148d6d05a32d824acf1a11f090448"
+              "sha256": "9f51c742e9daf033506db947590e02a6ceb8d33f200a4226d92f0baaadca7305"
             },
             {
               "path": "apps/web/src/components/TicketReplyInput.array.test.tsx",
@@ -58673,7 +58673,7 @@
             },
             {
               "path": "apps/web/src/components/TicketQueueRecords.tsx",
-              "sha256": "506fe00df5cbd8e3e86ce34f3e0791806e5148d6d05a32d824acf1a11f090448"
+              "sha256": "9f51c742e9daf033506db947590e02a6ceb8d33f200a4226d92f0baaadca7305"
             },
             {
               "path": "apps/web/src/components/TicketReplyInput.array.test.tsx",
@@ -60042,19 +60042,19 @@
             },
             {
               "path": "apps/web/src/components/NotificationBell.tsx",
-              "sha256": "1a9d070c502a43e57177dd4b7857ba727ceb270aff3eb35d4bdd43746658d28c"
+              "sha256": "b8d7da27155f21a7f6bbc30725c46eb2be7ec27c0745b34d8f8aa7e13b224422"
             },
             {
               "path": "apps/web/src/components/NotificationRow.tsx",
-              "sha256": "6ecba97ccd23cd592d527686add90bd9ff97be5b6f62d932370de896ca7737ff"
+              "sha256": "d6e7735a056912646ce620d9b79ca17824cd5dbbc9d9368dc914b6bb90f38deb"
             },
             {
               "path": "apps/web/src/pages/NotificationCenterPage.tsx",
-              "sha256": "393a9a3eaee2b8840a0094592b4040c59305327efb3b5a4d7d5c9bffcf7971de"
+              "sha256": "d0e38edec8e1a8a9733a0967dc8a5db591dec6b89153d7b605ab1bec6a0d8c37"
             },
             {
               "path": "apps/web/src/lib/notifications.ts",
-              "sha256": "481ab3fe2aff75d37192446896e2d46d166c8945a2666c76766aabbe05022bc5"
+              "sha256": "51e967361b532d0f58c7e2b248d17e1725162acd7f7d3a73df33627318318dfc"
             },
             {
               "path": "apps/web/e2e/verification-notices.spec.ts",
@@ -63076,11 +63076,11 @@
             },
             {
               "path": "apps/web/src/components/NotificationBell.tsx",
-              "sha256": "1a9d070c502a43e57177dd4b7857ba727ceb270aff3eb35d4bdd43746658d28c"
+              "sha256": "b8d7da27155f21a7f6bbc30725c46eb2be7ec27c0745b34d8f8aa7e13b224422"
             },
             {
               "path": "apps/web/src/components/NotificationRow.tsx",
-              "sha256": "6ecba97ccd23cd592d527686add90bd9ff97be5b6f62d932370de896ca7737ff"
+              "sha256": "d6e7735a056912646ce620d9b79ca17824cd5dbbc9d9368dc914b6bb90f38deb"
             },
             {
               "path": "apps/web/src/components/OnlinePaymentReturnPanel.tsx",
@@ -63216,7 +63216,7 @@
             },
             {
               "path": "apps/web/src/pages/NotificationCenterPage.tsx",
-              "sha256": "393a9a3eaee2b8840a0094592b4040c59305327efb3b5a4d7d5c9bffcf7971de"
+              "sha256": "d0e38edec8e1a8a9733a0967dc8a5db591dec6b89153d7b605ab1bec6a0d8c37"
             },
             {
               "path": "apps/web/src/pages/TosPreview.tsx",
@@ -73956,7 +73956,7 @@
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
-              "sha256": "058aa8ad8ea006b8f36dbc0ae7b3d9779d032fef6367b7a64ba44128ef397187"
+              "sha256": "7120dd69988871f50b5d4b0ae5b4a44483da4b10b7c0b5403df5bfabb2444265"
             },
             {
               "path": "apps/web/e2e/notification-inbox-query.spec.ts",
@@ -73972,11 +73972,11 @@
             },
             {
               "path": "apps/web/src/components/NotificationBell.tsx",
-              "sha256": "1a9d070c502a43e57177dd4b7857ba727ceb270aff3eb35d4bdd43746658d28c"
+              "sha256": "b8d7da27155f21a7f6bbc30725c46eb2be7ec27c0745b34d8f8aa7e13b224422"
             },
             {
               "path": "apps/web/src/components/NotificationRow.tsx",
-              "sha256": "6ecba97ccd23cd592d527686add90bd9ff97be5b6f62d932370de896ca7737ff"
+              "sha256": "d6e7735a056912646ce620d9b79ca17824cd5dbbc9d9368dc914b6bb90f38deb"
             },
             {
               "path": "apps/web/src/hooks/useNotificationAccessDenied.ts",
@@ -73984,11 +73984,11 @@
             },
             {
               "path": "apps/web/src/hooks/useUnreadCount.test.tsx",
-              "sha256": "4418eada09ce8d32fd706dbf832050aa3b6c10780f03647a174c2d750a1114ea"
+              "sha256": "a668fa761dad50f2b2f9b59ddbc6102f7a6c0ad9dafed71886846d28337c9615"
             },
             {
               "path": "apps/web/src/hooks/useUnreadCount.ts",
-              "sha256": "757f7260e38e001f96d29b2b0e3ad42149dbbb1991dd4ad1b543d644d8b0f0f8"
+              "sha256": "8e46a765f4ff0cb9f9365c3d706a91745dc9d37d24b43f941e4679584786e2a0"
             },
             {
               "path": "apps/web/src/hooks/useUnreadDocumentTitle.test.tsx",
@@ -74012,11 +74012,11 @@
             },
             {
               "path": "apps/web/src/lib/notifications.test.ts",
-              "sha256": "f5c16ca35423a2baecee72940ed1665a1c3e5f10ac29a1385761c26194a5734c"
+              "sha256": "f94602fe6d79b59075b75d123ef86ffee83159c4b9d1a941ea03ef2c504ceea1"
             },
             {
               "path": "apps/web/src/lib/notifications.ts",
-              "sha256": "481ab3fe2aff75d37192446896e2d46d166c8945a2666c76766aabbe05022bc5"
+              "sha256": "51e967361b532d0f58c7e2b248d17e1725162acd7f7d3a73df33627318318dfc"
             },
             {
               "path": "apps/web/src/lib/profile-context.ts",
@@ -74024,7 +74024,7 @@
             },
             {
               "path": "apps/web/src/pages/NotificationCenterPage.tsx",
-              "sha256": "393a9a3eaee2b8840a0094592b4040c59305327efb3b5a4d7d5c9bffcf7971de"
+              "sha256": "d0e38edec8e1a8a9733a0967dc8a5db591dec6b89153d7b605ab1bec6a0d8c37"
             },
             {
               "path": "apps/web/src/pages/notification-inbox-navigation.test.tsx",
@@ -74425,7 +74425,7 @@
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
-              "sha256": "058aa8ad8ea006b8f36dbc0ae7b3d9779d032fef6367b7a64ba44128ef397187"
+              "sha256": "7120dd69988871f50b5d4b0ae5b4a44483da4b10b7c0b5403df5bfabb2444265"
             },
             {
               "path": "apps/web/e2e/notification-inbox-query.spec.ts",
@@ -74441,11 +74441,11 @@
             },
             {
               "path": "apps/web/src/components/NotificationBell.tsx",
-              "sha256": "1a9d070c502a43e57177dd4b7857ba727ceb270aff3eb35d4bdd43746658d28c"
+              "sha256": "b8d7da27155f21a7f6bbc30725c46eb2be7ec27c0745b34d8f8aa7e13b224422"
             },
             {
               "path": "apps/web/src/components/NotificationRow.tsx",
-              "sha256": "6ecba97ccd23cd592d527686add90bd9ff97be5b6f62d932370de896ca7737ff"
+              "sha256": "d6e7735a056912646ce620d9b79ca17824cd5dbbc9d9368dc914b6bb90f38deb"
             },
             {
               "path": "apps/web/src/hooks/useNotificationAccessDenied.ts",
@@ -74453,11 +74453,11 @@
             },
             {
               "path": "apps/web/src/hooks/useUnreadCount.test.tsx",
-              "sha256": "4418eada09ce8d32fd706dbf832050aa3b6c10780f03647a174c2d750a1114ea"
+              "sha256": "a668fa761dad50f2b2f9b59ddbc6102f7a6c0ad9dafed71886846d28337c9615"
             },
             {
               "path": "apps/web/src/hooks/useUnreadCount.ts",
-              "sha256": "757f7260e38e001f96d29b2b0e3ad42149dbbb1991dd4ad1b543d644d8b0f0f8"
+              "sha256": "8e46a765f4ff0cb9f9365c3d706a91745dc9d37d24b43f941e4679584786e2a0"
             },
             {
               "path": "apps/web/src/hooks/useUnreadDocumentTitle.test.tsx",
@@ -74481,11 +74481,11 @@
             },
             {
               "path": "apps/web/src/lib/notifications.test.ts",
-              "sha256": "f5c16ca35423a2baecee72940ed1665a1c3e5f10ac29a1385761c26194a5734c"
+              "sha256": "f94602fe6d79b59075b75d123ef86ffee83159c4b9d1a941ea03ef2c504ceea1"
             },
             {
               "path": "apps/web/src/lib/notifications.ts",
-              "sha256": "481ab3fe2aff75d37192446896e2d46d166c8945a2666c76766aabbe05022bc5"
+              "sha256": "51e967361b532d0f58c7e2b248d17e1725162acd7f7d3a73df33627318318dfc"
             },
             {
               "path": "apps/web/src/lib/profile-context.ts",
@@ -74493,7 +74493,7 @@
             },
             {
               "path": "apps/web/src/pages/NotificationCenterPage.tsx",
-              "sha256": "393a9a3eaee2b8840a0094592b4040c59305327efb3b5a4d7d5c9bffcf7971de"
+              "sha256": "d0e38edec8e1a8a9733a0967dc8a5db591dec6b89153d7b605ab1bec6a0d8c37"
             },
             {
               "path": "apps/web/src/pages/notification-inbox-navigation.test.tsx",
@@ -74924,7 +74924,7 @@
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
-              "sha256": "058aa8ad8ea006b8f36dbc0ae7b3d9779d032fef6367b7a64ba44128ef397187"
+              "sha256": "7120dd69988871f50b5d4b0ae5b4a44483da4b10b7c0b5403df5bfabb2444265"
             },
             {
               "path": "apps/web/e2e/notification-inbox-query.spec.ts",
@@ -74940,11 +74940,11 @@
             },
             {
               "path": "apps/web/src/components/NotificationBell.tsx",
-              "sha256": "1a9d070c502a43e57177dd4b7857ba727ceb270aff3eb35d4bdd43746658d28c"
+              "sha256": "b8d7da27155f21a7f6bbc30725c46eb2be7ec27c0745b34d8f8aa7e13b224422"
             },
             {
               "path": "apps/web/src/components/NotificationRow.tsx",
-              "sha256": "6ecba97ccd23cd592d527686add90bd9ff97be5b6f62d932370de896ca7737ff"
+              "sha256": "d6e7735a056912646ce620d9b79ca17824cd5dbbc9d9368dc914b6bb90f38deb"
             },
             {
               "path": "apps/web/src/hooks/useNotificationAccessDenied.ts",
@@ -74952,11 +74952,11 @@
             },
             {
               "path": "apps/web/src/hooks/useUnreadCount.test.tsx",
-              "sha256": "4418eada09ce8d32fd706dbf832050aa3b6c10780f03647a174c2d750a1114ea"
+              "sha256": "a668fa761dad50f2b2f9b59ddbc6102f7a6c0ad9dafed71886846d28337c9615"
             },
             {
               "path": "apps/web/src/hooks/useUnreadCount.ts",
-              "sha256": "757f7260e38e001f96d29b2b0e3ad42149dbbb1991dd4ad1b543d644d8b0f0f8"
+              "sha256": "8e46a765f4ff0cb9f9365c3d706a91745dc9d37d24b43f941e4679584786e2a0"
             },
             {
               "path": "apps/web/src/hooks/useUnreadDocumentTitle.test.tsx",
@@ -74980,11 +74980,11 @@
             },
             {
               "path": "apps/web/src/lib/notifications.test.ts",
-              "sha256": "f5c16ca35423a2baecee72940ed1665a1c3e5f10ac29a1385761c26194a5734c"
+              "sha256": "f94602fe6d79b59075b75d123ef86ffee83159c4b9d1a941ea03ef2c504ceea1"
             },
             {
               "path": "apps/web/src/lib/notifications.ts",
-              "sha256": "481ab3fe2aff75d37192446896e2d46d166c8945a2666c76766aabbe05022bc5"
+              "sha256": "51e967361b532d0f58c7e2b248d17e1725162acd7f7d3a73df33627318318dfc"
             },
             {
               "path": "apps/web/src/lib/profile-context.ts",
@@ -74992,7 +74992,7 @@
             },
             {
               "path": "apps/web/src/pages/NotificationCenterPage.tsx",
-              "sha256": "393a9a3eaee2b8840a0094592b4040c59305327efb3b5a4d7d5c9bffcf7971de"
+              "sha256": "d0e38edec8e1a8a9733a0967dc8a5db591dec6b89153d7b605ab1bec6a0d8c37"
             },
             {
               "path": "apps/web/src/pages/notification-inbox-navigation.test.tsx",
@@ -75402,7 +75402,7 @@
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
-              "sha256": "058aa8ad8ea006b8f36dbc0ae7b3d9779d032fef6367b7a64ba44128ef397187"
+              "sha256": "7120dd69988871f50b5d4b0ae5b4a44483da4b10b7c0b5403df5bfabb2444265"
             },
             {
               "path": "apps/web/e2e/notification-inbox-query.spec.ts",
@@ -75418,11 +75418,11 @@
             },
             {
               "path": "apps/web/src/components/NotificationBell.tsx",
-              "sha256": "1a9d070c502a43e57177dd4b7857ba727ceb270aff3eb35d4bdd43746658d28c"
+              "sha256": "b8d7da27155f21a7f6bbc30725c46eb2be7ec27c0745b34d8f8aa7e13b224422"
             },
             {
               "path": "apps/web/src/components/NotificationRow.tsx",
-              "sha256": "6ecba97ccd23cd592d527686add90bd9ff97be5b6f62d932370de896ca7737ff"
+              "sha256": "d6e7735a056912646ce620d9b79ca17824cd5dbbc9d9368dc914b6bb90f38deb"
             },
             {
               "path": "apps/web/src/hooks/useNotificationAccessDenied.ts",
@@ -75430,11 +75430,11 @@
             },
             {
               "path": "apps/web/src/hooks/useUnreadCount.test.tsx",
-              "sha256": "4418eada09ce8d32fd706dbf832050aa3b6c10780f03647a174c2d750a1114ea"
+              "sha256": "a668fa761dad50f2b2f9b59ddbc6102f7a6c0ad9dafed71886846d28337c9615"
             },
             {
               "path": "apps/web/src/hooks/useUnreadCount.ts",
-              "sha256": "757f7260e38e001f96d29b2b0e3ad42149dbbb1991dd4ad1b543d644d8b0f0f8"
+              "sha256": "8e46a765f4ff0cb9f9365c3d706a91745dc9d37d24b43f941e4679584786e2a0"
             },
             {
               "path": "apps/web/src/hooks/useUnreadDocumentTitle.test.tsx",
@@ -75458,11 +75458,11 @@
             },
             {
               "path": "apps/web/src/lib/notifications.test.ts",
-              "sha256": "f5c16ca35423a2baecee72940ed1665a1c3e5f10ac29a1385761c26194a5734c"
+              "sha256": "f94602fe6d79b59075b75d123ef86ffee83159c4b9d1a941ea03ef2c504ceea1"
             },
             {
               "path": "apps/web/src/lib/notifications.ts",
-              "sha256": "481ab3fe2aff75d37192446896e2d46d166c8945a2666c76766aabbe05022bc5"
+              "sha256": "51e967361b532d0f58c7e2b248d17e1725162acd7f7d3a73df33627318318dfc"
             },
             {
               "path": "apps/web/src/lib/profile-context.ts",
@@ -75470,7 +75470,7 @@
             },
             {
               "path": "apps/web/src/pages/NotificationCenterPage.tsx",
-              "sha256": "393a9a3eaee2b8840a0094592b4040c59305327efb3b5a4d7d5c9bffcf7971de"
+              "sha256": "d0e38edec8e1a8a9733a0967dc8a5db591dec6b89153d7b605ab1bec6a0d8c37"
             },
             {
               "path": "apps/web/src/pages/notification-inbox-navigation.test.tsx",
@@ -92843,7 +92843,7 @@
             },
             {
               "path": "apps/web/src/components/TicketQueueRecords.tsx",
-              "sha256": "506fe00df5cbd8e3e86ce34f3e0791806e5148d6d05a32d824acf1a11f090448"
+              "sha256": "9f51c742e9daf033506db947590e02a6ceb8d33f200a4226d92f0baaadca7305"
             },
             {
               "path": "apps/web/src/components/TicketReplyInput.array.test.tsx",
@@ -93886,7 +93886,7 @@
             },
             {
               "path": "apps/web/src/components/TicketQueueRecords.tsx",
-              "sha256": "506fe00df5cbd8e3e86ce34f3e0791806e5148d6d05a32d824acf1a11f090448"
+              "sha256": "9f51c742e9daf033506db947590e02a6ceb8d33f200a4226d92f0baaadca7305"
             },
             {
               "path": "apps/web/src/components/TicketReplyInput.array.test.tsx",
@@ -94935,7 +94935,7 @@
             },
             {
               "path": "apps/web/src/components/TicketQueueRecords.tsx",
-              "sha256": "506fe00df5cbd8e3e86ce34f3e0791806e5148d6d05a32d824acf1a11f090448"
+              "sha256": "9f51c742e9daf033506db947590e02a6ceb8d33f200a4226d92f0baaadca7305"
             },
             {
               "path": "apps/web/src/components/TicketReplyInput.array.test.tsx",
@@ -97845,7 +97845,7 @@
             },
             {
               "path": "apps/web/src/components/TicketQueueRecords.tsx",
-              "sha256": "506fe00df5cbd8e3e86ce34f3e0791806e5148d6d05a32d824acf1a11f090448"
+              "sha256": "9f51c742e9daf033506db947590e02a6ceb8d33f200a4226d92f0baaadca7305"
             },
             {
               "path": "apps/web/src/hooks/useOperationalQueue.ts",
@@ -98243,7 +98243,7 @@
             },
             {
               "path": "apps/web/src/components/TicketQueueRecords.tsx",
-              "sha256": "506fe00df5cbd8e3e86ce34f3e0791806e5148d6d05a32d824acf1a11f090448"
+              "sha256": "9f51c742e9daf033506db947590e02a6ceb8d33f200a4226d92f0baaadca7305"
             },
             {
               "path": "apps/web/src/hooks/useOperationalQueue.ts",
@@ -492805,7 +492805,7 @@
             },
             {
               "path": "apps/web/src/components/NotificationBell.tsx",
-              "sha256": "1a9d070c502a43e57177dd4b7857ba727ceb270aff3eb35d4bdd43746658d28c"
+              "sha256": "b8d7da27155f21a7f6bbc30725c46eb2be7ec27c0745b34d8f8aa7e13b224422"
             },
             {
               "path": "apps/web/src/components/NotificationDeliveryHistory.tsx",
@@ -492813,7 +492813,7 @@
             },
             {
               "path": "apps/web/src/components/NotificationRow.tsx",
-              "sha256": "6ecba97ccd23cd592d527686add90bd9ff97be5b6f62d932370de896ca7737ff"
+              "sha256": "d6e7735a056912646ce620d9b79ca17824cd5dbbc9d9368dc914b6bb90f38deb"
             },
             {
               "path": "apps/web/src/components/NotificationStatusBadge.tsx",
@@ -492969,11 +492969,11 @@
             },
             {
               "path": "apps/web/src/lib/notification-content.ts",
-              "sha256": "c40e08a7747764c86dec9bbd324884513511277913fb5d68f17eb64ae9b5fe71"
+              "sha256": "cbc3e81a5dc5779d7364bd801badbffbbce84b614afb92e722dde10aaf0ac467"
             },
             {
               "path": "apps/web/src/lib/notifications.ts",
-              "sha256": "481ab3fe2aff75d37192446896e2d46d166c8945a2666c76766aabbe05022bc5"
+              "sha256": "51e967361b532d0f58c7e2b248d17e1725162acd7f7d3a73df33627318318dfc"
             },
             {
               "path": "apps/web/src/lib/server-query-client.ts",
@@ -494041,7 +494041,7 @@
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
-              "sha256": "058aa8ad8ea006b8f36dbc0ae7b3d9779d032fef6367b7a64ba44128ef397187"
+              "sha256": "7120dd69988871f50b5d4b0ae5b4a44483da4b10b7c0b5403df5bfabb2444265"
             },
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
@@ -494405,7 +494405,7 @@
             },
             {
               "path": "apps/web/src/pages/NotificationCenterPage.tsx",
-              "sha256": "393a9a3eaee2b8840a0094592b4040c59305327efb3b5a4d7d5c9bffcf7971de"
+              "sha256": "d0e38edec8e1a8a9733a0967dc8a5db591dec6b89153d7b605ab1bec6a0d8c37"
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
@@ -494923,7 +494923,7 @@
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
-              "sha256": "058aa8ad8ea006b8f36dbc0ae7b3d9779d032fef6367b7a64ba44128ef397187"
+              "sha256": "7120dd69988871f50b5d4b0ae5b4a44483da4b10b7c0b5403df5bfabb2444265"
             },
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
@@ -495287,7 +495287,7 @@
             },
             {
               "path": "apps/web/src/pages/NotificationCenterPage.tsx",
-              "sha256": "393a9a3eaee2b8840a0094592b4040c59305327efb3b5a4d7d5c9bffcf7971de"
+              "sha256": "d0e38edec8e1a8a9733a0967dc8a5db591dec6b89153d7b605ab1bec6a0d8c37"
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
@@ -495746,7 +495746,7 @@
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
-              "sha256": "058aa8ad8ea006b8f36dbc0ae7b3d9779d032fef6367b7a64ba44128ef397187"
+              "sha256": "7120dd69988871f50b5d4b0ae5b4a44483da4b10b7c0b5403df5bfabb2444265"
             },
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
@@ -496110,7 +496110,7 @@
             },
             {
               "path": "apps/web/src/pages/NotificationCenterPage.tsx",
-              "sha256": "393a9a3eaee2b8840a0094592b4040c59305327efb3b5a4d7d5c9bffcf7971de"
+              "sha256": "d0e38edec8e1a8a9733a0967dc8a5db591dec6b89153d7b605ab1bec6a0d8c37"
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
@@ -496610,7 +496610,7 @@
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
-              "sha256": "058aa8ad8ea006b8f36dbc0ae7b3d9779d032fef6367b7a64ba44128ef397187"
+              "sha256": "7120dd69988871f50b5d4b0ae5b4a44483da4b10b7c0b5403df5bfabb2444265"
             },
             {
               "path": "apps/web/e2e/saving-staff-operation-forms.spec.ts",
@@ -496822,7 +496822,7 @@
             },
             {
               "path": "apps/web/src/lib/notifications.ts",
-              "sha256": "481ab3fe2aff75d37192446896e2d46d166c8945a2666c76766aabbe05022bc5"
+              "sha256": "51e967361b532d0f58c7e2b248d17e1725162acd7f7d3a73df33627318318dfc"
             },
             {
               "path": "apps/web/src/lib/profile-context.ts",
@@ -496898,7 +496898,7 @@
             },
             {
               "path": "apps/web/src/pages/NotificationCenterPage.tsx",
-              "sha256": "393a9a3eaee2b8840a0094592b4040c59305327efb3b5a4d7d5c9bffcf7971de"
+              "sha256": "d0e38edec8e1a8a9733a0967dc8a5db591dec6b89153d7b605ab1bec6a0d8c37"
             },
             {
               "path": "apps/web/src/pages/WalletPage.errors.test.tsx",
@@ -497622,7 +497622,7 @@
             },
             {
               "path": "apps/web/src/components/NotificationBell.tsx",
-              "sha256": "1a9d070c502a43e57177dd4b7857ba727ceb270aff3eb35d4bdd43746658d28c"
+              "sha256": "b8d7da27155f21a7f6bbc30725c46eb2be7ec27c0745b34d8f8aa7e13b224422"
             },
             {
               "path": "apps/web/src/components/NotificationDeliveryHistory.tsx",
@@ -497630,7 +497630,7 @@
             },
             {
               "path": "apps/web/src/components/NotificationRow.tsx",
-              "sha256": "6ecba97ccd23cd592d527686add90bd9ff97be5b6f62d932370de896ca7737ff"
+              "sha256": "d6e7735a056912646ce620d9b79ca17824cd5dbbc9d9368dc914b6bb90f38deb"
             },
             {
               "path": "apps/web/src/components/NotificationStatusBadge.tsx",
@@ -497786,11 +497786,11 @@
             },
             {
               "path": "apps/web/src/lib/notification-content.ts",
-              "sha256": "c40e08a7747764c86dec9bbd324884513511277913fb5d68f17eb64ae9b5fe71"
+              "sha256": "cbc3e81a5dc5779d7364bd801badbffbbce84b614afb92e722dde10aaf0ac467"
             },
             {
               "path": "apps/web/src/lib/notifications.ts",
-              "sha256": "481ab3fe2aff75d37192446896e2d46d166c8945a2666c76766aabbe05022bc5"
+              "sha256": "51e967361b532d0f58c7e2b248d17e1725162acd7f7d3a73df33627318318dfc"
             },
             {
               "path": "apps/web/src/lib/server-query-client.ts",
@@ -511431,7 +511431,7 @@
             },
             {
               "path": "apps/web/src/components/TicketQueueRecords.tsx",
-              "sha256": "506fe00df5cbd8e3e86ce34f3e0791806e5148d6d05a32d824acf1a11f090448"
+              "sha256": "9f51c742e9daf033506db947590e02a6ceb8d33f200a4226d92f0baaadca7305"
             },
             {
               "path": "apps/web/src/components/WalletTransactionRecords.tsx",
@@ -512656,7 +512656,7 @@
             },
             {
               "path": "apps/web/src/components/NotificationBell.tsx",
-              "sha256": "1a9d070c502a43e57177dd4b7857ba727ceb270aff3eb35d4bdd43746658d28c"
+              "sha256": "b8d7da27155f21a7f6bbc30725c46eb2be7ec27c0745b34d8f8aa7e13b224422"
             },
             {
               "path": "apps/web/src/components/OperatingContextSwitch.tsx",
@@ -513455,7 +513455,7 @@
             },
             {
               "path": "apps/web/src/components/NotificationBell.tsx",
-              "sha256": "1a9d070c502a43e57177dd4b7857ba727ceb270aff3eb35d4bdd43746658d28c"
+              "sha256": "b8d7da27155f21a7f6bbc30725c46eb2be7ec27c0745b34d8f8aa7e13b224422"
             },
             {
               "path": "apps/web/src/components/OperatingContextSwitch.tsx",
@@ -514253,7 +514253,7 @@
             },
             {
               "path": "apps/web/src/components/NotificationBell.tsx",
-              "sha256": "1a9d070c502a43e57177dd4b7857ba727ceb270aff3eb35d4bdd43746658d28c"
+              "sha256": "b8d7da27155f21a7f6bbc30725c46eb2be7ec27c0745b34d8f8aa7e13b224422"
             },
             {
               "path": "apps/web/src/components/OperatingContextSwitch.tsx",
@@ -515494,7 +515494,7 @@
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
-              "sha256": "058aa8ad8ea006b8f36dbc0ae7b3d9779d032fef6367b7a64ba44128ef397187"
+              "sha256": "7120dd69988871f50b5d4b0ae5b4a44483da4b10b7c0b5403df5bfabb2444265"
             },
             {
               "path": "apps/web/e2e/online-payment-return.spec.ts",
@@ -515538,7 +515538,7 @@
             },
             {
               "path": "apps/web/src/components/NotificationBell.tsx",
-              "sha256": "1a9d070c502a43e57177dd4b7857ba727ceb270aff3eb35d4bdd43746658d28c"
+              "sha256": "b8d7da27155f21a7f6bbc30725c46eb2be7ec27c0745b34d8f8aa7e13b224422"
             },
             {
               "path": "apps/web/src/components/OnlinePaymentReturnPanel.tsx",
@@ -515933,7 +515933,7 @@
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
-              "sha256": "058aa8ad8ea006b8f36dbc0ae7b3d9779d032fef6367b7a64ba44128ef397187"
+              "sha256": "7120dd69988871f50b5d4b0ae5b4a44483da4b10b7c0b5403df5bfabb2444265"
             },
             {
               "path": "apps/web/e2e/online-payment-return.spec.ts",
@@ -515977,7 +515977,7 @@
             },
             {
               "path": "apps/web/src/components/NotificationBell.tsx",
-              "sha256": "1a9d070c502a43e57177dd4b7857ba727ceb270aff3eb35d4bdd43746658d28c"
+              "sha256": "b8d7da27155f21a7f6bbc30725c46eb2be7ec27c0745b34d8f8aa7e13b224422"
             },
             {
               "path": "apps/web/src/components/OnlinePaymentReturnPanel.tsx",
@@ -517735,7 +517735,7 @@
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
-              "sha256": "058aa8ad8ea006b8f36dbc0ae7b3d9779d032fef6367b7a64ba44128ef397187"
+              "sha256": "7120dd69988871f50b5d4b0ae5b4a44483da4b10b7c0b5403df5bfabb2444265"
             },
             {
               "path": "apps/web/e2e/online-payment-return.spec.ts",
@@ -517779,7 +517779,7 @@
             },
             {
               "path": "apps/web/src/components/NotificationBell.tsx",
-              "sha256": "1a9d070c502a43e57177dd4b7857ba727ceb270aff3eb35d4bdd43746658d28c"
+              "sha256": "b8d7da27155f21a7f6bbc30725c46eb2be7ec27c0745b34d8f8aa7e13b224422"
             },
             {
               "path": "apps/web/src/components/OnlinePaymentReturnPanel.tsx",
@@ -564878,7 +564878,7 @@
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
-              "sha256": "058aa8ad8ea006b8f36dbc0ae7b3d9779d032fef6367b7a64ba44128ef397187"
+              "sha256": "7120dd69988871f50b5d4b0ae5b4a44483da4b10b7c0b5403df5bfabb2444265"
             },
             {
               "path": "apps/web/package.json",
@@ -565010,7 +565010,7 @@
             },
             {
               "path": "apps/web/src/components/NotificationBell.tsx",
-              "sha256": "1a9d070c502a43e57177dd4b7857ba727ceb270aff3eb35d4bdd43746658d28c"
+              "sha256": "b8d7da27155f21a7f6bbc30725c46eb2be7ec27c0745b34d8f8aa7e13b224422"
             },
             {
               "path": "apps/web/src/components/NotificationDropdown.tsx",
@@ -565258,11 +565258,11 @@
             },
             {
               "path": "apps/web/src/hooks/useUnreadCount.test.tsx",
-              "sha256": "4418eada09ce8d32fd706dbf832050aa3b6c10780f03647a174c2d750a1114ea"
+              "sha256": "a668fa761dad50f2b2f9b59ddbc6102f7a6c0ad9dafed71886846d28337c9615"
             },
             {
               "path": "apps/web/src/hooks/useUnreadCount.ts",
-              "sha256": "757f7260e38e001f96d29b2b0e3ad42149dbbb1991dd4ad1b543d644d8b0f0f8"
+              "sha256": "8e46a765f4ff0cb9f9365c3d706a91745dc9d37d24b43f941e4679584786e2a0"
             },
             {
               "path": "apps/web/src/hooks/useUnreadDocumentTitle.test.tsx",
@@ -565442,7 +565442,7 @@
             },
             {
               "path": "apps/web/src/pages/NotificationCenterPage.tsx",
-              "sha256": "393a9a3eaee2b8840a0094592b4040c59305327efb3b5a4d7d5c9bffcf7971de"
+              "sha256": "d0e38edec8e1a8a9733a0967dc8a5db591dec6b89153d7b605ab1bec6a0d8c37"
             },
             {
               "path": "apps/web/src/pages/SavingAgreementEditor.tsx",
@@ -566772,7 +566772,7 @@
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
-              "sha256": "058aa8ad8ea006b8f36dbc0ae7b3d9779d032fef6367b7a64ba44128ef397187"
+              "sha256": "7120dd69988871f50b5d4b0ae5b4a44483da4b10b7c0b5403df5bfabb2444265"
             },
             {
               "path": "apps/web/package.json",
@@ -566904,7 +566904,7 @@
             },
             {
               "path": "apps/web/src/components/NotificationBell.tsx",
-              "sha256": "1a9d070c502a43e57177dd4b7857ba727ceb270aff3eb35d4bdd43746658d28c"
+              "sha256": "b8d7da27155f21a7f6bbc30725c46eb2be7ec27c0745b34d8f8aa7e13b224422"
             },
             {
               "path": "apps/web/src/components/NotificationDropdown.tsx",
@@ -567152,11 +567152,11 @@
             },
             {
               "path": "apps/web/src/hooks/useUnreadCount.test.tsx",
-              "sha256": "4418eada09ce8d32fd706dbf832050aa3b6c10780f03647a174c2d750a1114ea"
+              "sha256": "a668fa761dad50f2b2f9b59ddbc6102f7a6c0ad9dafed71886846d28337c9615"
             },
             {
               "path": "apps/web/src/hooks/useUnreadCount.ts",
-              "sha256": "757f7260e38e001f96d29b2b0e3ad42149dbbb1991dd4ad1b543d644d8b0f0f8"
+              "sha256": "8e46a765f4ff0cb9f9365c3d706a91745dc9d37d24b43f941e4679584786e2a0"
             },
             {
               "path": "apps/web/src/hooks/useUnreadDocumentTitle.test.tsx",
@@ -567336,7 +567336,7 @@
             },
             {
               "path": "apps/web/src/pages/NotificationCenterPage.tsx",
-              "sha256": "393a9a3eaee2b8840a0094592b4040c59305327efb3b5a4d7d5c9bffcf7971de"
+              "sha256": "d0e38edec8e1a8a9733a0967dc8a5db591dec6b89153d7b605ab1bec6a0d8c37"
             },
             {
               "path": "apps/web/src/pages/SavingAgreementEditor.tsx",
@@ -568718,7 +568718,7 @@
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
-              "sha256": "058aa8ad8ea006b8f36dbc0ae7b3d9779d032fef6367b7a64ba44128ef397187"
+              "sha256": "7120dd69988871f50b5d4b0ae5b4a44483da4b10b7c0b5403df5bfabb2444265"
             },
             {
               "path": "apps/web/package.json",
@@ -568850,7 +568850,7 @@
             },
             {
               "path": "apps/web/src/components/NotificationBell.tsx",
-              "sha256": "1a9d070c502a43e57177dd4b7857ba727ceb270aff3eb35d4bdd43746658d28c"
+              "sha256": "b8d7da27155f21a7f6bbc30725c46eb2be7ec27c0745b34d8f8aa7e13b224422"
             },
             {
               "path": "apps/web/src/components/NotificationDropdown.tsx",
@@ -569098,11 +569098,11 @@
             },
             {
               "path": "apps/web/src/hooks/useUnreadCount.test.tsx",
-              "sha256": "4418eada09ce8d32fd706dbf832050aa3b6c10780f03647a174c2d750a1114ea"
+              "sha256": "a668fa761dad50f2b2f9b59ddbc6102f7a6c0ad9dafed71886846d28337c9615"
             },
             {
               "path": "apps/web/src/hooks/useUnreadCount.ts",
-              "sha256": "757f7260e38e001f96d29b2b0e3ad42149dbbb1991dd4ad1b543d644d8b0f0f8"
+              "sha256": "8e46a765f4ff0cb9f9365c3d706a91745dc9d37d24b43f941e4679584786e2a0"
             },
             {
               "path": "apps/web/src/hooks/useUnreadDocumentTitle.test.tsx",
@@ -569282,7 +569282,7 @@
             },
             {
               "path": "apps/web/src/pages/NotificationCenterPage.tsx",
-              "sha256": "393a9a3eaee2b8840a0094592b4040c59305327efb3b5a4d7d5c9bffcf7971de"
+              "sha256": "d0e38edec8e1a8a9733a0967dc8a5db591dec6b89153d7b605ab1bec6a0d8c37"
             },
             {
               "path": "apps/web/src/pages/SavingAgreementEditor.tsx",
@@ -570612,7 +570612,7 @@
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
-              "sha256": "058aa8ad8ea006b8f36dbc0ae7b3d9779d032fef6367b7a64ba44128ef397187"
+              "sha256": "7120dd69988871f50b5d4b0ae5b4a44483da4b10b7c0b5403df5bfabb2444265"
             },
             {
               "path": "apps/web/package.json",
@@ -570744,7 +570744,7 @@
             },
             {
               "path": "apps/web/src/components/NotificationBell.tsx",
-              "sha256": "1a9d070c502a43e57177dd4b7857ba727ceb270aff3eb35d4bdd43746658d28c"
+              "sha256": "b8d7da27155f21a7f6bbc30725c46eb2be7ec27c0745b34d8f8aa7e13b224422"
             },
             {
               "path": "apps/web/src/components/NotificationDropdown.tsx",
@@ -570992,11 +570992,11 @@
             },
             {
               "path": "apps/web/src/hooks/useUnreadCount.test.tsx",
-              "sha256": "4418eada09ce8d32fd706dbf832050aa3b6c10780f03647a174c2d750a1114ea"
+              "sha256": "a668fa761dad50f2b2f9b59ddbc6102f7a6c0ad9dafed71886846d28337c9615"
             },
             {
               "path": "apps/web/src/hooks/useUnreadCount.ts",
-              "sha256": "757f7260e38e001f96d29b2b0e3ad42149dbbb1991dd4ad1b543d644d8b0f0f8"
+              "sha256": "8e46a765f4ff0cb9f9365c3d706a91745dc9d37d24b43f941e4679584786e2a0"
             },
             {
               "path": "apps/web/src/hooks/useUnreadDocumentTitle.test.tsx",
@@ -571176,7 +571176,7 @@
             },
             {
               "path": "apps/web/src/pages/NotificationCenterPage.tsx",
-              "sha256": "393a9a3eaee2b8840a0094592b4040c59305327efb3b5a4d7d5c9bffcf7971de"
+              "sha256": "d0e38edec8e1a8a9733a0967dc8a5db591dec6b89153d7b605ab1bec6a0d8c37"
             },
             {
               "path": "apps/web/src/pages/SavingAgreementEditor.tsx",
@@ -572506,7 +572506,7 @@
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
-              "sha256": "058aa8ad8ea006b8f36dbc0ae7b3d9779d032fef6367b7a64ba44128ef397187"
+              "sha256": "7120dd69988871f50b5d4b0ae5b4a44483da4b10b7c0b5403df5bfabb2444265"
             },
             {
               "path": "apps/web/package.json",
@@ -572638,7 +572638,7 @@
             },
             {
               "path": "apps/web/src/components/NotificationBell.tsx",
-              "sha256": "1a9d070c502a43e57177dd4b7857ba727ceb270aff3eb35d4bdd43746658d28c"
+              "sha256": "b8d7da27155f21a7f6bbc30725c46eb2be7ec27c0745b34d8f8aa7e13b224422"
             },
             {
               "path": "apps/web/src/components/NotificationDropdown.tsx",
@@ -572886,11 +572886,11 @@
             },
             {
               "path": "apps/web/src/hooks/useUnreadCount.test.tsx",
-              "sha256": "4418eada09ce8d32fd706dbf832050aa3b6c10780f03647a174c2d750a1114ea"
+              "sha256": "a668fa761dad50f2b2f9b59ddbc6102f7a6c0ad9dafed71886846d28337c9615"
             },
             {
               "path": "apps/web/src/hooks/useUnreadCount.ts",
-              "sha256": "757f7260e38e001f96d29b2b0e3ad42149dbbb1991dd4ad1b543d644d8b0f0f8"
+              "sha256": "8e46a765f4ff0cb9f9365c3d706a91745dc9d37d24b43f941e4679584786e2a0"
             },
             {
               "path": "apps/web/src/hooks/useUnreadDocumentTitle.test.tsx",
@@ -573070,7 +573070,7 @@
             },
             {
               "path": "apps/web/src/pages/NotificationCenterPage.tsx",
-              "sha256": "393a9a3eaee2b8840a0094592b4040c59305327efb3b5a4d7d5c9bffcf7971de"
+              "sha256": "d0e38edec8e1a8a9733a0967dc8a5db591dec6b89153d7b605ab1bec6a0d8c37"
             },
             {
               "path": "apps/web/src/pages/SavingAgreementEditor.tsx",
@@ -574400,7 +574400,7 @@
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
-              "sha256": "058aa8ad8ea006b8f36dbc0ae7b3d9779d032fef6367b7a64ba44128ef397187"
+              "sha256": "7120dd69988871f50b5d4b0ae5b4a44483da4b10b7c0b5403df5bfabb2444265"
             },
             {
               "path": "apps/web/package.json",
@@ -574532,7 +574532,7 @@
             },
             {
               "path": "apps/web/src/components/NotificationBell.tsx",
-              "sha256": "1a9d070c502a43e57177dd4b7857ba727ceb270aff3eb35d4bdd43746658d28c"
+              "sha256": "b8d7da27155f21a7f6bbc30725c46eb2be7ec27c0745b34d8f8aa7e13b224422"
             },
             {
               "path": "apps/web/src/components/NotificationDropdown.tsx",
@@ -574780,11 +574780,11 @@
             },
             {
               "path": "apps/web/src/hooks/useUnreadCount.test.tsx",
-              "sha256": "4418eada09ce8d32fd706dbf832050aa3b6c10780f03647a174c2d750a1114ea"
+              "sha256": "a668fa761dad50f2b2f9b59ddbc6102f7a6c0ad9dafed71886846d28337c9615"
             },
             {
               "path": "apps/web/src/hooks/useUnreadCount.ts",
-              "sha256": "757f7260e38e001f96d29b2b0e3ad42149dbbb1991dd4ad1b543d644d8b0f0f8"
+              "sha256": "8e46a765f4ff0cb9f9365c3d706a91745dc9d37d24b43f941e4679584786e2a0"
             },
             {
               "path": "apps/web/src/hooks/useUnreadDocumentTitle.test.tsx",
@@ -574964,7 +574964,7 @@
             },
             {
               "path": "apps/web/src/pages/NotificationCenterPage.tsx",
-              "sha256": "393a9a3eaee2b8840a0094592b4040c59305327efb3b5a4d7d5c9bffcf7971de"
+              "sha256": "d0e38edec8e1a8a9733a0967dc8a5db591dec6b89153d7b605ab1bec6a0d8c37"
             },
             {
               "path": "apps/web/src/pages/SavingAgreementEditor.tsx",
@@ -576294,7 +576294,7 @@
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
-              "sha256": "058aa8ad8ea006b8f36dbc0ae7b3d9779d032fef6367b7a64ba44128ef397187"
+              "sha256": "7120dd69988871f50b5d4b0ae5b4a44483da4b10b7c0b5403df5bfabb2444265"
             },
             {
               "path": "apps/web/package.json",
@@ -576426,7 +576426,7 @@
             },
             {
               "path": "apps/web/src/components/NotificationBell.tsx",
-              "sha256": "1a9d070c502a43e57177dd4b7857ba727ceb270aff3eb35d4bdd43746658d28c"
+              "sha256": "b8d7da27155f21a7f6bbc30725c46eb2be7ec27c0745b34d8f8aa7e13b224422"
             },
             {
               "path": "apps/web/src/components/NotificationDropdown.tsx",
@@ -576674,11 +576674,11 @@
             },
             {
               "path": "apps/web/src/hooks/useUnreadCount.test.tsx",
-              "sha256": "4418eada09ce8d32fd706dbf832050aa3b6c10780f03647a174c2d750a1114ea"
+              "sha256": "a668fa761dad50f2b2f9b59ddbc6102f7a6c0ad9dafed71886846d28337c9615"
             },
             {
               "path": "apps/web/src/hooks/useUnreadCount.ts",
-              "sha256": "757f7260e38e001f96d29b2b0e3ad42149dbbb1991dd4ad1b543d644d8b0f0f8"
+              "sha256": "8e46a765f4ff0cb9f9365c3d706a91745dc9d37d24b43f941e4679584786e2a0"
             },
             {
               "path": "apps/web/src/hooks/useUnreadDocumentTitle.test.tsx",
@@ -576858,7 +576858,7 @@
             },
             {
               "path": "apps/web/src/pages/NotificationCenterPage.tsx",
-              "sha256": "393a9a3eaee2b8840a0094592b4040c59305327efb3b5a4d7d5c9bffcf7971de"
+              "sha256": "d0e38edec8e1a8a9733a0967dc8a5db591dec6b89153d7b605ab1bec6a0d8c37"
             },
             {
               "path": "apps/web/src/pages/SavingAgreementEditor.tsx",
@@ -578188,7 +578188,7 @@
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
-              "sha256": "058aa8ad8ea006b8f36dbc0ae7b3d9779d032fef6367b7a64ba44128ef397187"
+              "sha256": "7120dd69988871f50b5d4b0ae5b4a44483da4b10b7c0b5403df5bfabb2444265"
             },
             {
               "path": "apps/web/package.json",
@@ -578320,7 +578320,7 @@
             },
             {
               "path": "apps/web/src/components/NotificationBell.tsx",
-              "sha256": "1a9d070c502a43e57177dd4b7857ba727ceb270aff3eb35d4bdd43746658d28c"
+              "sha256": "b8d7da27155f21a7f6bbc30725c46eb2be7ec27c0745b34d8f8aa7e13b224422"
             },
             {
               "path": "apps/web/src/components/NotificationDropdown.tsx",
@@ -578568,11 +578568,11 @@
             },
             {
               "path": "apps/web/src/hooks/useUnreadCount.test.tsx",
-              "sha256": "4418eada09ce8d32fd706dbf832050aa3b6c10780f03647a174c2d750a1114ea"
+              "sha256": "a668fa761dad50f2b2f9b59ddbc6102f7a6c0ad9dafed71886846d28337c9615"
             },
             {
               "path": "apps/web/src/hooks/useUnreadCount.ts",
-              "sha256": "757f7260e38e001f96d29b2b0e3ad42149dbbb1991dd4ad1b543d644d8b0f0f8"
+              "sha256": "8e46a765f4ff0cb9f9365c3d706a91745dc9d37d24b43f941e4679584786e2a0"
             },
             {
               "path": "apps/web/src/hooks/useUnreadDocumentTitle.test.tsx",
@@ -578752,7 +578752,7 @@
             },
             {
               "path": "apps/web/src/pages/NotificationCenterPage.tsx",
-              "sha256": "393a9a3eaee2b8840a0094592b4040c59305327efb3b5a4d7d5c9bffcf7971de"
+              "sha256": "d0e38edec8e1a8a9733a0967dc8a5db591dec6b89153d7b605ab1bec6a0d8c37"
             },
             {
               "path": "apps/web/src/pages/SavingAgreementEditor.tsx",
@@ -580082,7 +580082,7 @@
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
-              "sha256": "058aa8ad8ea006b8f36dbc0ae7b3d9779d032fef6367b7a64ba44128ef397187"
+              "sha256": "7120dd69988871f50b5d4b0ae5b4a44483da4b10b7c0b5403df5bfabb2444265"
             },
             {
               "path": "apps/web/package.json",
@@ -580214,7 +580214,7 @@
             },
             {
               "path": "apps/web/src/components/NotificationBell.tsx",
-              "sha256": "1a9d070c502a43e57177dd4b7857ba727ceb270aff3eb35d4bdd43746658d28c"
+              "sha256": "b8d7da27155f21a7f6bbc30725c46eb2be7ec27c0745b34d8f8aa7e13b224422"
             },
             {
               "path": "apps/web/src/components/NotificationDropdown.tsx",
@@ -580462,11 +580462,11 @@
             },
             {
               "path": "apps/web/src/hooks/useUnreadCount.test.tsx",
-              "sha256": "4418eada09ce8d32fd706dbf832050aa3b6c10780f03647a174c2d750a1114ea"
+              "sha256": "a668fa761dad50f2b2f9b59ddbc6102f7a6c0ad9dafed71886846d28337c9615"
             },
             {
               "path": "apps/web/src/hooks/useUnreadCount.ts",
-              "sha256": "757f7260e38e001f96d29b2b0e3ad42149dbbb1991dd4ad1b543d644d8b0f0f8"
+              "sha256": "8e46a765f4ff0cb9f9365c3d706a91745dc9d37d24b43f941e4679584786e2a0"
             },
             {
               "path": "apps/web/src/hooks/useUnreadDocumentTitle.test.tsx",
@@ -580646,7 +580646,7 @@
             },
             {
               "path": "apps/web/src/pages/NotificationCenterPage.tsx",
-              "sha256": "393a9a3eaee2b8840a0094592b4040c59305327efb3b5a4d7d5c9bffcf7971de"
+              "sha256": "d0e38edec8e1a8a9733a0967dc8a5db591dec6b89153d7b605ab1bec6a0d8c37"
             },
             {
               "path": "apps/web/src/pages/SavingAgreementEditor.tsx",
@@ -581976,7 +581976,7 @@
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
-              "sha256": "058aa8ad8ea006b8f36dbc0ae7b3d9779d032fef6367b7a64ba44128ef397187"
+              "sha256": "7120dd69988871f50b5d4b0ae5b4a44483da4b10b7c0b5403df5bfabb2444265"
             },
             {
               "path": "apps/web/package.json",
@@ -582108,7 +582108,7 @@
             },
             {
               "path": "apps/web/src/components/NotificationBell.tsx",
-              "sha256": "1a9d070c502a43e57177dd4b7857ba727ceb270aff3eb35d4bdd43746658d28c"
+              "sha256": "b8d7da27155f21a7f6bbc30725c46eb2be7ec27c0745b34d8f8aa7e13b224422"
             },
             {
               "path": "apps/web/src/components/NotificationDropdown.tsx",
@@ -582356,11 +582356,11 @@
             },
             {
               "path": "apps/web/src/hooks/useUnreadCount.test.tsx",
-              "sha256": "4418eada09ce8d32fd706dbf832050aa3b6c10780f03647a174c2d750a1114ea"
+              "sha256": "a668fa761dad50f2b2f9b59ddbc6102f7a6c0ad9dafed71886846d28337c9615"
             },
             {
               "path": "apps/web/src/hooks/useUnreadCount.ts",
-              "sha256": "757f7260e38e001f96d29b2b0e3ad42149dbbb1991dd4ad1b543d644d8b0f0f8"
+              "sha256": "8e46a765f4ff0cb9f9365c3d706a91745dc9d37d24b43f941e4679584786e2a0"
             },
             {
               "path": "apps/web/src/hooks/useUnreadDocumentTitle.test.tsx",
@@ -582540,7 +582540,7 @@
             },
             {
               "path": "apps/web/src/pages/NotificationCenterPage.tsx",
-              "sha256": "393a9a3eaee2b8840a0094592b4040c59305327efb3b5a4d7d5c9bffcf7971de"
+              "sha256": "d0e38edec8e1a8a9733a0967dc8a5db591dec6b89153d7b605ab1bec6a0d8c37"
             },
             {
               "path": "apps/web/src/pages/SavingAgreementEditor.tsx",
@@ -583870,7 +583870,7 @@
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
-              "sha256": "058aa8ad8ea006b8f36dbc0ae7b3d9779d032fef6367b7a64ba44128ef397187"
+              "sha256": "7120dd69988871f50b5d4b0ae5b4a44483da4b10b7c0b5403df5bfabb2444265"
             },
             {
               "path": "apps/web/package.json",
@@ -584002,7 +584002,7 @@
             },
             {
               "path": "apps/web/src/components/NotificationBell.tsx",
-              "sha256": "1a9d070c502a43e57177dd4b7857ba727ceb270aff3eb35d4bdd43746658d28c"
+              "sha256": "b8d7da27155f21a7f6bbc30725c46eb2be7ec27c0745b34d8f8aa7e13b224422"
             },
             {
               "path": "apps/web/src/components/NotificationDropdown.tsx",
@@ -584250,11 +584250,11 @@
             },
             {
               "path": "apps/web/src/hooks/useUnreadCount.test.tsx",
-              "sha256": "4418eada09ce8d32fd706dbf832050aa3b6c10780f03647a174c2d750a1114ea"
+              "sha256": "a668fa761dad50f2b2f9b59ddbc6102f7a6c0ad9dafed71886846d28337c9615"
             },
             {
               "path": "apps/web/src/hooks/useUnreadCount.ts",
-              "sha256": "757f7260e38e001f96d29b2b0e3ad42149dbbb1991dd4ad1b543d644d8b0f0f8"
+              "sha256": "8e46a765f4ff0cb9f9365c3d706a91745dc9d37d24b43f941e4679584786e2a0"
             },
             {
               "path": "apps/web/src/hooks/useUnreadDocumentTitle.test.tsx",
@@ -584434,7 +584434,7 @@
             },
             {
               "path": "apps/web/src/pages/NotificationCenterPage.tsx",
-              "sha256": "393a9a3eaee2b8840a0094592b4040c59305327efb3b5a4d7d5c9bffcf7971de"
+              "sha256": "d0e38edec8e1a8a9733a0967dc8a5db591dec6b89153d7b605ab1bec6a0d8c37"
             },
             {
               "path": "apps/web/src/pages/SavingAgreementEditor.tsx",
@@ -585764,7 +585764,7 @@
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
-              "sha256": "058aa8ad8ea006b8f36dbc0ae7b3d9779d032fef6367b7a64ba44128ef397187"
+              "sha256": "7120dd69988871f50b5d4b0ae5b4a44483da4b10b7c0b5403df5bfabb2444265"
             },
             {
               "path": "apps/web/package.json",
@@ -585896,7 +585896,7 @@
             },
             {
               "path": "apps/web/src/components/NotificationBell.tsx",
-              "sha256": "1a9d070c502a43e57177dd4b7857ba727ceb270aff3eb35d4bdd43746658d28c"
+              "sha256": "b8d7da27155f21a7f6bbc30725c46eb2be7ec27c0745b34d8f8aa7e13b224422"
             },
             {
               "path": "apps/web/src/components/NotificationDropdown.tsx",
@@ -586144,11 +586144,11 @@
             },
             {
               "path": "apps/web/src/hooks/useUnreadCount.test.tsx",
-              "sha256": "4418eada09ce8d32fd706dbf832050aa3b6c10780f03647a174c2d750a1114ea"
+              "sha256": "a668fa761dad50f2b2f9b59ddbc6102f7a6c0ad9dafed71886846d28337c9615"
             },
             {
               "path": "apps/web/src/hooks/useUnreadCount.ts",
-              "sha256": "757f7260e38e001f96d29b2b0e3ad42149dbbb1991dd4ad1b543d644d8b0f0f8"
+              "sha256": "8e46a765f4ff0cb9f9365c3d706a91745dc9d37d24b43f941e4679584786e2a0"
             },
             {
               "path": "apps/web/src/hooks/useUnreadDocumentTitle.test.tsx",
@@ -586328,7 +586328,7 @@
             },
             {
               "path": "apps/web/src/pages/NotificationCenterPage.tsx",
-              "sha256": "393a9a3eaee2b8840a0094592b4040c59305327efb3b5a4d7d5c9bffcf7971de"
+              "sha256": "d0e38edec8e1a8a9733a0967dc8a5db591dec6b89153d7b605ab1bec6a0d8c37"
             },
             {
               "path": "apps/web/src/pages/SavingAgreementEditor.tsx",
@@ -587658,7 +587658,7 @@
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
-              "sha256": "058aa8ad8ea006b8f36dbc0ae7b3d9779d032fef6367b7a64ba44128ef397187"
+              "sha256": "7120dd69988871f50b5d4b0ae5b4a44483da4b10b7c0b5403df5bfabb2444265"
             },
             {
               "path": "apps/web/package.json",
@@ -587790,7 +587790,7 @@
             },
             {
               "path": "apps/web/src/components/NotificationBell.tsx",
-              "sha256": "1a9d070c502a43e57177dd4b7857ba727ceb270aff3eb35d4bdd43746658d28c"
+              "sha256": "b8d7da27155f21a7f6bbc30725c46eb2be7ec27c0745b34d8f8aa7e13b224422"
             },
             {
               "path": "apps/web/src/components/NotificationDropdown.tsx",
@@ -588038,11 +588038,11 @@
             },
             {
               "path": "apps/web/src/hooks/useUnreadCount.test.tsx",
-              "sha256": "4418eada09ce8d32fd706dbf832050aa3b6c10780f03647a174c2d750a1114ea"
+              "sha256": "a668fa761dad50f2b2f9b59ddbc6102f7a6c0ad9dafed71886846d28337c9615"
             },
             {
               "path": "apps/web/src/hooks/useUnreadCount.ts",
-              "sha256": "757f7260e38e001f96d29b2b0e3ad42149dbbb1991dd4ad1b543d644d8b0f0f8"
+              "sha256": "8e46a765f4ff0cb9f9365c3d706a91745dc9d37d24b43f941e4679584786e2a0"
             },
             {
               "path": "apps/web/src/hooks/useUnreadDocumentTitle.test.tsx",
@@ -588222,7 +588222,7 @@
             },
             {
               "path": "apps/web/src/pages/NotificationCenterPage.tsx",
-              "sha256": "393a9a3eaee2b8840a0094592b4040c59305327efb3b5a4d7d5c9bffcf7971de"
+              "sha256": "d0e38edec8e1a8a9733a0967dc8a5db591dec6b89153d7b605ab1bec6a0d8c37"
             },
             {
               "path": "apps/web/src/pages/SavingAgreementEditor.tsx",
@@ -589509,7 +589509,7 @@
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
-              "sha256": "058aa8ad8ea006b8f36dbc0ae7b3d9779d032fef6367b7a64ba44128ef397187"
+              "sha256": "7120dd69988871f50b5d4b0ae5b4a44483da4b10b7c0b5403df5bfabb2444265"
             },
             {
               "path": "apps/web/e2e/saving-staff-operation-forms.spec.ts",
@@ -589721,7 +589721,7 @@
             },
             {
               "path": "apps/web/src/lib/notifications.ts",
-              "sha256": "481ab3fe2aff75d37192446896e2d46d166c8945a2666c76766aabbe05022bc5"
+              "sha256": "51e967361b532d0f58c7e2b248d17e1725162acd7f7d3a73df33627318318dfc"
             },
             {
               "path": "apps/web/src/lib/profile-context.ts",
@@ -589797,7 +589797,7 @@
             },
             {
               "path": "apps/web/src/pages/NotificationCenterPage.tsx",
-              "sha256": "393a9a3eaee2b8840a0094592b4040c59305327efb3b5a4d7d5c9bffcf7971de"
+              "sha256": "d0e38edec8e1a8a9733a0967dc8a5db591dec6b89153d7b605ab1bec6a0d8c37"
             },
             {
               "path": "apps/web/src/pages/WalletPage.errors.test.tsx",
@@ -590291,7 +590291,7 @@
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
-              "sha256": "058aa8ad8ea006b8f36dbc0ae7b3d9779d032fef6367b7a64ba44128ef397187"
+              "sha256": "7120dd69988871f50b5d4b0ae5b4a44483da4b10b7c0b5403df5bfabb2444265"
             },
             {
               "path": "apps/web/package.json",
@@ -590423,7 +590423,7 @@
             },
             {
               "path": "apps/web/src/components/NotificationBell.tsx",
-              "sha256": "1a9d070c502a43e57177dd4b7857ba727ceb270aff3eb35d4bdd43746658d28c"
+              "sha256": "b8d7da27155f21a7f6bbc30725c46eb2be7ec27c0745b34d8f8aa7e13b224422"
             },
             {
               "path": "apps/web/src/components/NotificationDropdown.tsx",
@@ -590671,11 +590671,11 @@
             },
             {
               "path": "apps/web/src/hooks/useUnreadCount.test.tsx",
-              "sha256": "4418eada09ce8d32fd706dbf832050aa3b6c10780f03647a174c2d750a1114ea"
+              "sha256": "a668fa761dad50f2b2f9b59ddbc6102f7a6c0ad9dafed71886846d28337c9615"
             },
             {
               "path": "apps/web/src/hooks/useUnreadCount.ts",
-              "sha256": "757f7260e38e001f96d29b2b0e3ad42149dbbb1991dd4ad1b543d644d8b0f0f8"
+              "sha256": "8e46a765f4ff0cb9f9365c3d706a91745dc9d37d24b43f941e4679584786e2a0"
             },
             {
               "path": "apps/web/src/hooks/useUnreadDocumentTitle.test.tsx",
@@ -590855,7 +590855,7 @@
             },
             {
               "path": "apps/web/src/pages/NotificationCenterPage.tsx",
-              "sha256": "393a9a3eaee2b8840a0094592b4040c59305327efb3b5a4d7d5c9bffcf7971de"
+              "sha256": "d0e38edec8e1a8a9733a0967dc8a5db591dec6b89153d7b605ab1bec6a0d8c37"
             },
             {
               "path": "apps/web/src/pages/SavingAgreementEditor.tsx",
@@ -592185,7 +592185,7 @@
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
-              "sha256": "058aa8ad8ea006b8f36dbc0ae7b3d9779d032fef6367b7a64ba44128ef397187"
+              "sha256": "7120dd69988871f50b5d4b0ae5b4a44483da4b10b7c0b5403df5bfabb2444265"
             },
             {
               "path": "apps/web/package.json",
@@ -592317,7 +592317,7 @@
             },
             {
               "path": "apps/web/src/components/NotificationBell.tsx",
-              "sha256": "1a9d070c502a43e57177dd4b7857ba727ceb270aff3eb35d4bdd43746658d28c"
+              "sha256": "b8d7da27155f21a7f6bbc30725c46eb2be7ec27c0745b34d8f8aa7e13b224422"
             },
             {
               "path": "apps/web/src/components/NotificationDropdown.tsx",
@@ -592565,11 +592565,11 @@
             },
             {
               "path": "apps/web/src/hooks/useUnreadCount.test.tsx",
-              "sha256": "4418eada09ce8d32fd706dbf832050aa3b6c10780f03647a174c2d750a1114ea"
+              "sha256": "a668fa761dad50f2b2f9b59ddbc6102f7a6c0ad9dafed71886846d28337c9615"
             },
             {
               "path": "apps/web/src/hooks/useUnreadCount.ts",
-              "sha256": "757f7260e38e001f96d29b2b0e3ad42149dbbb1991dd4ad1b543d644d8b0f0f8"
+              "sha256": "8e46a765f4ff0cb9f9365c3d706a91745dc9d37d24b43f941e4679584786e2a0"
             },
             {
               "path": "apps/web/src/hooks/useUnreadDocumentTitle.test.tsx",
@@ -592749,7 +592749,7 @@
             },
             {
               "path": "apps/web/src/pages/NotificationCenterPage.tsx",
-              "sha256": "393a9a3eaee2b8840a0094592b4040c59305327efb3b5a4d7d5c9bffcf7971de"
+              "sha256": "d0e38edec8e1a8a9733a0967dc8a5db591dec6b89153d7b605ab1bec6a0d8c37"
             },
             {
               "path": "apps/web/src/pages/SavingAgreementEditor.tsx",
@@ -593964,7 +593964,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Invoice receipt authority and review reads, security and preference reads, and scoped commerce previews retain recovery evidence. Wallet confirmation and both staff knowledge test search types bound the request and receipt body. Remaining bespoke list, detail and staff route states need verification."
+        "Invoice receipt, security and preference reads, commerce previews, wallet confirmation and staff knowledge test searches retain their recovery evidence. Customer and staff notification previews and badge polls now use a bounded deadline. Remaining bespoke list, detail and staff states need verification."
       ],
       "owner": null,
       "depends_on": [],
@@ -594007,7 +594007,8 @@
           "release-0.5-settings-read-deadlines",
           "release-0.5-invoice-receipt-read-deadlines",
           "release-0.5-wallet-return-deadline",
-          "release-0.5-knowledge-query-deadline"
+          "release-0.5-knowledge-query-deadline",
+          "release-0.5-header-notification-deadlines"
         ],
         "current_acceptance": null
       }
@@ -611049,7 +611050,7 @@
             },
             {
               "path": "apps/web/src/components/NotificationBell.tsx",
-              "sha256": "1a9d070c502a43e57177dd4b7857ba727ceb270aff3eb35d4bdd43746658d28c"
+              "sha256": "b8d7da27155f21a7f6bbc30725c46eb2be7ec27c0745b34d8f8aa7e13b224422"
             },
             {
               "path": "apps/web/src/components/OperatingContextSwitch.tsx",
@@ -611847,7 +611848,7 @@
             },
             {
               "path": "apps/web/src/components/NotificationBell.tsx",
-              "sha256": "1a9d070c502a43e57177dd4b7857ba727ceb270aff3eb35d4bdd43746658d28c"
+              "sha256": "b8d7da27155f21a7f6bbc30725c46eb2be7ec27c0745b34d8f8aa7e13b224422"
             },
             {
               "path": "apps/web/src/components/OperatingContextSwitch.tsx",
@@ -612645,7 +612646,7 @@
             },
             {
               "path": "apps/web/src/components/NotificationBell.tsx",
-              "sha256": "1a9d070c502a43e57177dd4b7857ba727ceb270aff3eb35d4bdd43746658d28c"
+              "sha256": "b8d7da27155f21a7f6bbc30725c46eb2be7ec27c0745b34d8f8aa7e13b224422"
             },
             {
               "path": "apps/web/src/components/OperatingContextSwitch.tsx",
@@ -613443,7 +613444,7 @@
             },
             {
               "path": "apps/web/src/components/NotificationBell.tsx",
-              "sha256": "1a9d070c502a43e57177dd4b7857ba727ceb270aff3eb35d4bdd43746658d28c"
+              "sha256": "b8d7da27155f21a7f6bbc30725c46eb2be7ec27c0745b34d8f8aa7e13b224422"
             },
             {
               "path": "apps/web/src/components/OperatingContextSwitch.tsx",
@@ -614245,7 +614246,7 @@
             },
             {
               "path": "apps/web/src/components/NotificationBell.tsx",
-              "sha256": "1a9d070c502a43e57177dd4b7857ba727ceb270aff3eb35d4bdd43746658d28c"
+              "sha256": "b8d7da27155f21a7f6bbc30725c46eb2be7ec27c0745b34d8f8aa7e13b224422"
             },
             {
               "path": "apps/web/src/components/OperatingContextSwitch.tsx",
@@ -615043,7 +615044,7 @@
             },
             {
               "path": "apps/web/src/components/NotificationBell.tsx",
-              "sha256": "1a9d070c502a43e57177dd4b7857ba727ceb270aff3eb35d4bdd43746658d28c"
+              "sha256": "b8d7da27155f21a7f6bbc30725c46eb2be7ec27c0745b34d8f8aa7e13b224422"
             },
             {
               "path": "apps/web/src/components/OperatingContextSwitch.tsx",
@@ -615841,7 +615842,7 @@
             },
             {
               "path": "apps/web/src/components/NotificationBell.tsx",
-              "sha256": "1a9d070c502a43e57177dd4b7857ba727ceb270aff3eb35d4bdd43746658d28c"
+              "sha256": "b8d7da27155f21a7f6bbc30725c46eb2be7ec27c0745b34d8f8aa7e13b224422"
             },
             {
               "path": "apps/web/src/components/OperatingContextSwitch.tsx",
@@ -616640,7 +616641,7 @@
             },
             {
               "path": "apps/web/src/components/NotificationBell.tsx",
-              "sha256": "1a9d070c502a43e57177dd4b7857ba727ceb270aff3eb35d4bdd43746658d28c"
+              "sha256": "b8d7da27155f21a7f6bbc30725c46eb2be7ec27c0745b34d8f8aa7e13b224422"
             },
             {
               "path": "apps/web/src/components/OperatingContextSwitch.tsx",
@@ -617439,7 +617440,7 @@
             },
             {
               "path": "apps/web/src/components/NotificationBell.tsx",
-              "sha256": "1a9d070c502a43e57177dd4b7857ba727ceb270aff3eb35d4bdd43746658d28c"
+              "sha256": "b8d7da27155f21a7f6bbc30725c46eb2be7ec27c0745b34d8f8aa7e13b224422"
             },
             {
               "path": "apps/web/src/components/OperatingContextSwitch.tsx",
@@ -618238,7 +618239,7 @@
             },
             {
               "path": "apps/web/src/components/NotificationBell.tsx",
-              "sha256": "1a9d070c502a43e57177dd4b7857ba727ceb270aff3eb35d4bdd43746658d28c"
+              "sha256": "b8d7da27155f21a7f6bbc30725c46eb2be7ec27c0745b34d8f8aa7e13b224422"
             },
             {
               "path": "apps/web/src/components/OperatingContextSwitch.tsx",
@@ -619037,7 +619038,7 @@
             },
             {
               "path": "apps/web/src/components/NotificationBell.tsx",
-              "sha256": "1a9d070c502a43e57177dd4b7857ba727ceb270aff3eb35d4bdd43746658d28c"
+              "sha256": "b8d7da27155f21a7f6bbc30725c46eb2be7ec27c0745b34d8f8aa7e13b224422"
             },
             {
               "path": "apps/web/src/components/OperatingContextSwitch.tsx",
@@ -619836,7 +619837,7 @@
             },
             {
               "path": "apps/web/src/components/NotificationBell.tsx",
-              "sha256": "1a9d070c502a43e57177dd4b7857ba727ceb270aff3eb35d4bdd43746658d28c"
+              "sha256": "b8d7da27155f21a7f6bbc30725c46eb2be7ec27c0745b34d8f8aa7e13b224422"
             },
             {
               "path": "apps/web/src/components/OperatingContextSwitch.tsx",
@@ -620635,7 +620636,7 @@
             },
             {
               "path": "apps/web/src/components/NotificationBell.tsx",
-              "sha256": "1a9d070c502a43e57177dd4b7857ba727ceb270aff3eb35d4bdd43746658d28c"
+              "sha256": "b8d7da27155f21a7f6bbc30725c46eb2be7ec27c0745b34d8f8aa7e13b224422"
             },
             {
               "path": "apps/web/src/components/OperatingContextSwitch.tsx",
@@ -621434,7 +621435,7 @@
             },
             {
               "path": "apps/web/src/components/NotificationBell.tsx",
-              "sha256": "1a9d070c502a43e57177dd4b7857ba727ceb270aff3eb35d4bdd43746658d28c"
+              "sha256": "b8d7da27155f21a7f6bbc30725c46eb2be7ec27c0745b34d8f8aa7e13b224422"
             },
             {
               "path": "apps/web/src/components/OperatingContextSwitch.tsx",
@@ -622233,7 +622234,7 @@
             },
             {
               "path": "apps/web/src/components/NotificationBell.tsx",
-              "sha256": "1a9d070c502a43e57177dd4b7857ba727ceb270aff3eb35d4bdd43746658d28c"
+              "sha256": "b8d7da27155f21a7f6bbc30725c46eb2be7ec27c0745b34d8f8aa7e13b224422"
             },
             {
               "path": "apps/web/src/components/OperatingContextSwitch.tsx",
@@ -633198,7 +633199,7 @@
             },
             {
               "path": "apps/web/src/pages/NotificationCenterPage.tsx",
-              "sha256": "393a9a3eaee2b8840a0094592b4040c59305327efb3b5a4d7d5c9bffcf7971de"
+              "sha256": "d0e38edec8e1a8a9733a0967dc8a5db591dec6b89153d7b605ab1bec6a0d8c37"
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
@@ -634322,7 +634323,7 @@
             },
             {
               "path": "apps/web/src/pages/NotificationCenterPage.tsx",
-              "sha256": "393a9a3eaee2b8840a0094592b4040c59305327efb3b5a4d7d5c9bffcf7971de"
+              "sha256": "d0e38edec8e1a8a9733a0967dc8a5db591dec6b89153d7b605ab1bec6a0d8c37"
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
@@ -635446,7 +635447,7 @@
             },
             {
               "path": "apps/web/src/pages/NotificationCenterPage.tsx",
-              "sha256": "393a9a3eaee2b8840a0094592b4040c59305327efb3b5a4d7d5c9bffcf7971de"
+              "sha256": "d0e38edec8e1a8a9733a0967dc8a5db591dec6b89153d7b605ab1bec6a0d8c37"
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
@@ -636573,7 +636574,7 @@
             },
             {
               "path": "apps/web/src/pages/NotificationCenterPage.tsx",
-              "sha256": "393a9a3eaee2b8840a0094592b4040c59305327efb3b5a4d7d5c9bffcf7971de"
+              "sha256": "d0e38edec8e1a8a9733a0967dc8a5db591dec6b89153d7b605ab1bec6a0d8c37"
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
@@ -637700,7 +637701,7 @@
             },
             {
               "path": "apps/web/src/pages/NotificationCenterPage.tsx",
-              "sha256": "393a9a3eaee2b8840a0094592b4040c59305327efb3b5a4d7d5c9bffcf7971de"
+              "sha256": "d0e38edec8e1a8a9733a0967dc8a5db591dec6b89153d7b605ab1bec6a0d8c37"
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
@@ -638854,7 +638855,7 @@
             },
             {
               "path": "apps/web/src/pages/NotificationCenterPage.tsx",
-              "sha256": "393a9a3eaee2b8840a0094592b4040c59305327efb3b5a4d7d5c9bffcf7971de"
+              "sha256": "d0e38edec8e1a8a9733a0967dc8a5db591dec6b89153d7b605ab1bec6a0d8c37"
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
@@ -639977,7 +639978,7 @@
             },
             {
               "path": "apps/web/src/pages/NotificationCenterPage.tsx",
-              "sha256": "393a9a3eaee2b8840a0094592b4040c59305327efb3b5a4d7d5c9bffcf7971de"
+              "sha256": "d0e38edec8e1a8a9733a0967dc8a5db591dec6b89153d7b605ab1bec6a0d8c37"
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
@@ -641100,7 +641101,7 @@
             },
             {
               "path": "apps/web/src/pages/NotificationCenterPage.tsx",
-              "sha256": "393a9a3eaee2b8840a0094592b4040c59305327efb3b5a4d7d5c9bffcf7971de"
+              "sha256": "d0e38edec8e1a8a9733a0967dc8a5db591dec6b89153d7b605ab1bec6a0d8c37"
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
@@ -642224,7 +642225,7 @@
             },
             {
               "path": "apps/web/src/pages/NotificationCenterPage.tsx",
-              "sha256": "393a9a3eaee2b8840a0094592b4040c59305327efb3b5a4d7d5c9bffcf7971de"
+              "sha256": "d0e38edec8e1a8a9733a0967dc8a5db591dec6b89153d7b605ab1bec6a0d8c37"
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
@@ -643366,7 +643367,7 @@
             },
             {
               "path": "apps/web/src/pages/NotificationCenterPage.tsx",
-              "sha256": "393a9a3eaee2b8840a0094592b4040c59305327efb3b5a4d7d5c9bffcf7971de"
+              "sha256": "d0e38edec8e1a8a9733a0967dc8a5db591dec6b89153d7b605ab1bec6a0d8c37"
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
@@ -644491,7 +644492,7 @@
             },
             {
               "path": "apps/web/src/pages/NotificationCenterPage.tsx",
-              "sha256": "393a9a3eaee2b8840a0094592b4040c59305327efb3b5a4d7d5c9bffcf7971de"
+              "sha256": "d0e38edec8e1a8a9733a0967dc8a5db591dec6b89153d7b605ab1bec6a0d8c37"
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
@@ -672482,7 +672483,7 @@
             },
             {
               "path": "apps/web/src/components/TicketQueueRecords.tsx",
-              "sha256": "506fe00df5cbd8e3e86ce34f3e0791806e5148d6d05a32d824acf1a11f090448"
+              "sha256": "9f51c742e9daf033506db947590e02a6ceb8d33f200a4226d92f0baaadca7305"
             },
             {
               "path": "apps/web/src/components/TicketReplyInput.array.test.tsx",
@@ -672542,7 +672543,7 @@
             },
             {
               "path": "apps/web/src/lib/notifications.ts",
-              "sha256": "481ab3fe2aff75d37192446896e2d46d166c8945a2666c76766aabbe05022bc5"
+              "sha256": "51e967361b532d0f58c7e2b248d17e1725162acd7f7d3a73df33627318318dfc"
             },
             {
               "path": "apps/web/src/lib/profile-context.ts",
@@ -673014,7 +673015,7 @@
             },
             {
               "path": "apps/web/src/components/TicketQueueRecords.tsx",
-              "sha256": "506fe00df5cbd8e3e86ce34f3e0791806e5148d6d05a32d824acf1a11f090448"
+              "sha256": "9f51c742e9daf033506db947590e02a6ceb8d33f200a4226d92f0baaadca7305"
             },
             {
               "path": "apps/web/src/components/TicketReplyInput.array.test.tsx",
@@ -673074,7 +673075,7 @@
             },
             {
               "path": "apps/web/src/lib/notifications.ts",
-              "sha256": "481ab3fe2aff75d37192446896e2d46d166c8945a2666c76766aabbe05022bc5"
+              "sha256": "51e967361b532d0f58c7e2b248d17e1725162acd7f7d3a73df33627318318dfc"
             },
             {
               "path": "apps/web/src/lib/profile-context.ts",
@@ -673550,7 +673551,7 @@
             },
             {
               "path": "apps/web/src/components/TicketQueueRecords.tsx",
-              "sha256": "506fe00df5cbd8e3e86ce34f3e0791806e5148d6d05a32d824acf1a11f090448"
+              "sha256": "9f51c742e9daf033506db947590e02a6ceb8d33f200a4226d92f0baaadca7305"
             },
             {
               "path": "apps/web/src/components/TicketReplyInput.array.test.tsx",
@@ -673610,7 +673611,7 @@
             },
             {
               "path": "apps/web/src/lib/notifications.ts",
-              "sha256": "481ab3fe2aff75d37192446896e2d46d166c8945a2666c76766aabbe05022bc5"
+              "sha256": "51e967361b532d0f58c7e2b248d17e1725162acd7f7d3a73df33627318318dfc"
             },
             {
               "path": "apps/web/src/lib/profile-context.ts",
@@ -674083,7 +674084,7 @@
             },
             {
               "path": "apps/web/src/components/TicketQueueRecords.tsx",
-              "sha256": "506fe00df5cbd8e3e86ce34f3e0791806e5148d6d05a32d824acf1a11f090448"
+              "sha256": "9f51c742e9daf033506db947590e02a6ceb8d33f200a4226d92f0baaadca7305"
             },
             {
               "path": "apps/web/src/components/TicketReplyInput.array.test.tsx",
@@ -674143,7 +674144,7 @@
             },
             {
               "path": "apps/web/src/lib/notifications.ts",
-              "sha256": "481ab3fe2aff75d37192446896e2d46d166c8945a2666c76766aabbe05022bc5"
+              "sha256": "51e967361b532d0f58c7e2b248d17e1725162acd7f7d3a73df33627318318dfc"
             },
             {
               "path": "apps/web/src/lib/profile-context.ts",
@@ -674615,7 +674616,7 @@
             },
             {
               "path": "apps/web/src/components/TicketQueueRecords.tsx",
-              "sha256": "506fe00df5cbd8e3e86ce34f3e0791806e5148d6d05a32d824acf1a11f090448"
+              "sha256": "9f51c742e9daf033506db947590e02a6ceb8d33f200a4226d92f0baaadca7305"
             },
             {
               "path": "apps/web/src/components/TicketReplyInput.array.test.tsx",
@@ -674675,7 +674676,7 @@
             },
             {
               "path": "apps/web/src/lib/notifications.ts",
-              "sha256": "481ab3fe2aff75d37192446896e2d46d166c8945a2666c76766aabbe05022bc5"
+              "sha256": "51e967361b532d0f58c7e2b248d17e1725162acd7f7d3a73df33627318318dfc"
             },
             {
               "path": "apps/web/src/lib/profile-context.ts",
@@ -675149,7 +675150,7 @@
             },
             {
               "path": "apps/web/src/components/TicketQueueRecords.tsx",
-              "sha256": "506fe00df5cbd8e3e86ce34f3e0791806e5148d6d05a32d824acf1a11f090448"
+              "sha256": "9f51c742e9daf033506db947590e02a6ceb8d33f200a4226d92f0baaadca7305"
             },
             {
               "path": "apps/web/src/components/TicketReplyInput.array.test.tsx",
@@ -675209,7 +675210,7 @@
             },
             {
               "path": "apps/web/src/lib/notifications.ts",
-              "sha256": "481ab3fe2aff75d37192446896e2d46d166c8945a2666c76766aabbe05022bc5"
+              "sha256": "51e967361b532d0f58c7e2b248d17e1725162acd7f7d3a73df33627318318dfc"
             },
             {
               "path": "apps/web/src/lib/profile-context.ts",
@@ -675991,7 +675992,7 @@
             },
             {
               "path": "apps/web/src/pages/NotificationCenterPage.tsx",
-              "sha256": "393a9a3eaee2b8840a0094592b4040c59305327efb3b5a4d7d5c9bffcf7971de"
+              "sha256": "d0e38edec8e1a8a9733a0967dc8a5db591dec6b89153d7b605ab1bec6a0d8c37"
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
@@ -677113,7 +677114,7 @@
             },
             {
               "path": "apps/web/src/pages/NotificationCenterPage.tsx",
-              "sha256": "393a9a3eaee2b8840a0094592b4040c59305327efb3b5a4d7d5c9bffcf7971de"
+              "sha256": "d0e38edec8e1a8a9733a0967dc8a5db591dec6b89153d7b605ab1bec6a0d8c37"
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
@@ -678235,7 +678236,7 @@
             },
             {
               "path": "apps/web/src/pages/NotificationCenterPage.tsx",
-              "sha256": "393a9a3eaee2b8840a0094592b4040c59305327efb3b5a4d7d5c9bffcf7971de"
+              "sha256": "d0e38edec8e1a8a9733a0967dc8a5db591dec6b89153d7b605ab1bec6a0d8c37"
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
@@ -679357,7 +679358,7 @@
             },
             {
               "path": "apps/web/src/pages/NotificationCenterPage.tsx",
-              "sha256": "393a9a3eaee2b8840a0094592b4040c59305327efb3b5a4d7d5c9bffcf7971de"
+              "sha256": "d0e38edec8e1a8a9733a0967dc8a5db591dec6b89153d7b605ab1bec6a0d8c37"
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
@@ -683620,7 +683621,7 @@
             },
             {
               "path": "apps/web/src/components/NotificationRow.tsx",
-              "sha256": "6ecba97ccd23cd592d527686add90bd9ff97be5b6f62d932370de896ca7737ff"
+              "sha256": "d6e7735a056912646ce620d9b79ca17824cd5dbbc9d9368dc914b6bb90f38deb"
             },
             {
               "path": "apps/web/src/components/NotificationStatusBadge.test.tsx",
@@ -683776,11 +683777,11 @@
             },
             {
               "path": "apps/web/src/lib/notifications.test.ts",
-              "sha256": "f5c16ca35423a2baecee72940ed1665a1c3e5f10ac29a1385761c26194a5734c"
+              "sha256": "f94602fe6d79b59075b75d123ef86ffee83159c4b9d1a941ea03ef2c504ceea1"
             },
             {
               "path": "apps/web/src/lib/notifications.ts",
-              "sha256": "481ab3fe2aff75d37192446896e2d46d166c8945a2666c76766aabbe05022bc5"
+              "sha256": "51e967361b532d0f58c7e2b248d17e1725162acd7f7d3a73df33627318318dfc"
             },
             {
               "path": "apps/web/src/lib/profile-context.ts",
@@ -684461,7 +684462,7 @@
             },
             {
               "path": "apps/web/src/components/NotificationRow.tsx",
-              "sha256": "6ecba97ccd23cd592d527686add90bd9ff97be5b6f62d932370de896ca7737ff"
+              "sha256": "d6e7735a056912646ce620d9b79ca17824cd5dbbc9d9368dc914b6bb90f38deb"
             },
             {
               "path": "apps/web/src/components/NotificationStatusBadge.test.tsx",
@@ -684617,11 +684618,11 @@
             },
             {
               "path": "apps/web/src/lib/notifications.test.ts",
-              "sha256": "f5c16ca35423a2baecee72940ed1665a1c3e5f10ac29a1385761c26194a5734c"
+              "sha256": "f94602fe6d79b59075b75d123ef86ffee83159c4b9d1a941ea03ef2c504ceea1"
             },
             {
               "path": "apps/web/src/lib/notifications.ts",
-              "sha256": "481ab3fe2aff75d37192446896e2d46d166c8945a2666c76766aabbe05022bc5"
+              "sha256": "51e967361b532d0f58c7e2b248d17e1725162acd7f7d3a73df33627318318dfc"
             },
             {
               "path": "apps/web/src/lib/profile-context.ts",
@@ -685304,7 +685305,7 @@
             },
             {
               "path": "apps/web/src/components/NotificationRow.tsx",
-              "sha256": "6ecba97ccd23cd592d527686add90bd9ff97be5b6f62d932370de896ca7737ff"
+              "sha256": "d6e7735a056912646ce620d9b79ca17824cd5dbbc9d9368dc914b6bb90f38deb"
             },
             {
               "path": "apps/web/src/components/NotificationStatusBadge.test.tsx",
@@ -685460,11 +685461,11 @@
             },
             {
               "path": "apps/web/src/lib/notifications.test.ts",
-              "sha256": "f5c16ca35423a2baecee72940ed1665a1c3e5f10ac29a1385761c26194a5734c"
+              "sha256": "f94602fe6d79b59075b75d123ef86ffee83159c4b9d1a941ea03ef2c504ceea1"
             },
             {
               "path": "apps/web/src/lib/notifications.ts",
-              "sha256": "481ab3fe2aff75d37192446896e2d46d166c8945a2666c76766aabbe05022bc5"
+              "sha256": "51e967361b532d0f58c7e2b248d17e1725162acd7f7d3a73df33627318318dfc"
             },
             {
               "path": "apps/web/src/lib/profile-context.ts",
@@ -686145,7 +686146,7 @@
             },
             {
               "path": "apps/web/src/components/NotificationRow.tsx",
-              "sha256": "6ecba97ccd23cd592d527686add90bd9ff97be5b6f62d932370de896ca7737ff"
+              "sha256": "d6e7735a056912646ce620d9b79ca17824cd5dbbc9d9368dc914b6bb90f38deb"
             },
             {
               "path": "apps/web/src/components/NotificationStatusBadge.test.tsx",
@@ -686301,11 +686302,11 @@
             },
             {
               "path": "apps/web/src/lib/notifications.test.ts",
-              "sha256": "f5c16ca35423a2baecee72940ed1665a1c3e5f10ac29a1385761c26194a5734c"
+              "sha256": "f94602fe6d79b59075b75d123ef86ffee83159c4b9d1a941ea03ef2c504ceea1"
             },
             {
               "path": "apps/web/src/lib/notifications.ts",
-              "sha256": "481ab3fe2aff75d37192446896e2d46d166c8945a2666c76766aabbe05022bc5"
+              "sha256": "51e967361b532d0f58c7e2b248d17e1725162acd7f7d3a73df33627318318dfc"
             },
             {
               "path": "apps/web/src/lib/profile-context.ts",
@@ -686986,7 +686987,7 @@
             },
             {
               "path": "apps/web/src/components/NotificationRow.tsx",
-              "sha256": "6ecba97ccd23cd592d527686add90bd9ff97be5b6f62d932370de896ca7737ff"
+              "sha256": "d6e7735a056912646ce620d9b79ca17824cd5dbbc9d9368dc914b6bb90f38deb"
             },
             {
               "path": "apps/web/src/components/NotificationStatusBadge.test.tsx",
@@ -687142,11 +687143,11 @@
             },
             {
               "path": "apps/web/src/lib/notifications.test.ts",
-              "sha256": "f5c16ca35423a2baecee72940ed1665a1c3e5f10ac29a1385761c26194a5734c"
+              "sha256": "f94602fe6d79b59075b75d123ef86ffee83159c4b9d1a941ea03ef2c504ceea1"
             },
             {
               "path": "apps/web/src/lib/notifications.ts",
-              "sha256": "481ab3fe2aff75d37192446896e2d46d166c8945a2666c76766aabbe05022bc5"
+              "sha256": "51e967361b532d0f58c7e2b248d17e1725162acd7f7d3a73df33627318318dfc"
             },
             {
               "path": "apps/web/src/lib/profile-context.ts",
@@ -687831,7 +687832,7 @@
             },
             {
               "path": "apps/web/src/components/NotificationRow.tsx",
-              "sha256": "6ecba97ccd23cd592d527686add90bd9ff97be5b6f62d932370de896ca7737ff"
+              "sha256": "d6e7735a056912646ce620d9b79ca17824cd5dbbc9d9368dc914b6bb90f38deb"
             },
             {
               "path": "apps/web/src/components/NotificationStatusBadge.test.tsx",
@@ -687987,11 +687988,11 @@
             },
             {
               "path": "apps/web/src/lib/notifications.test.ts",
-              "sha256": "f5c16ca35423a2baecee72940ed1665a1c3e5f10ac29a1385761c26194a5734c"
+              "sha256": "f94602fe6d79b59075b75d123ef86ffee83159c4b9d1a941ea03ef2c504ceea1"
             },
             {
               "path": "apps/web/src/lib/notifications.ts",
-              "sha256": "481ab3fe2aff75d37192446896e2d46d166c8945a2666c76766aabbe05022bc5"
+              "sha256": "51e967361b532d0f58c7e2b248d17e1725162acd7f7d3a73df33627318318dfc"
             },
             {
               "path": "apps/web/src/lib/profile-context.ts",
@@ -688676,7 +688677,7 @@
             },
             {
               "path": "apps/web/src/components/NotificationRow.tsx",
-              "sha256": "6ecba97ccd23cd592d527686add90bd9ff97be5b6f62d932370de896ca7737ff"
+              "sha256": "d6e7735a056912646ce620d9b79ca17824cd5dbbc9d9368dc914b6bb90f38deb"
             },
             {
               "path": "apps/web/src/components/NotificationStatusBadge.test.tsx",
@@ -688832,11 +688833,11 @@
             },
             {
               "path": "apps/web/src/lib/notifications.test.ts",
-              "sha256": "f5c16ca35423a2baecee72940ed1665a1c3e5f10ac29a1385761c26194a5734c"
+              "sha256": "f94602fe6d79b59075b75d123ef86ffee83159c4b9d1a941ea03ef2c504ceea1"
             },
             {
               "path": "apps/web/src/lib/notifications.ts",
-              "sha256": "481ab3fe2aff75d37192446896e2d46d166c8945a2666c76766aabbe05022bc5"
+              "sha256": "51e967361b532d0f58c7e2b248d17e1725162acd7f7d3a73df33627318318dfc"
             },
             {
               "path": "apps/web/src/lib/profile-context.ts",
@@ -689517,7 +689518,7 @@
             },
             {
               "path": "apps/web/src/components/NotificationRow.tsx",
-              "sha256": "6ecba97ccd23cd592d527686add90bd9ff97be5b6f62d932370de896ca7737ff"
+              "sha256": "d6e7735a056912646ce620d9b79ca17824cd5dbbc9d9368dc914b6bb90f38deb"
             },
             {
               "path": "apps/web/src/components/NotificationStatusBadge.test.tsx",
@@ -689673,11 +689674,11 @@
             },
             {
               "path": "apps/web/src/lib/notifications.test.ts",
-              "sha256": "f5c16ca35423a2baecee72940ed1665a1c3e5f10ac29a1385761c26194a5734c"
+              "sha256": "f94602fe6d79b59075b75d123ef86ffee83159c4b9d1a941ea03ef2c504ceea1"
             },
             {
               "path": "apps/web/src/lib/notifications.ts",
-              "sha256": "481ab3fe2aff75d37192446896e2d46d166c8945a2666c76766aabbe05022bc5"
+              "sha256": "51e967361b532d0f58c7e2b248d17e1725162acd7f7d3a73df33627318318dfc"
             },
             {
               "path": "apps/web/src/lib/profile-context.ts",
@@ -690358,7 +690359,7 @@
             },
             {
               "path": "apps/web/src/components/NotificationRow.tsx",
-              "sha256": "6ecba97ccd23cd592d527686add90bd9ff97be5b6f62d932370de896ca7737ff"
+              "sha256": "d6e7735a056912646ce620d9b79ca17824cd5dbbc9d9368dc914b6bb90f38deb"
             },
             {
               "path": "apps/web/src/components/NotificationStatusBadge.test.tsx",
@@ -690514,11 +690515,11 @@
             },
             {
               "path": "apps/web/src/lib/notifications.test.ts",
-              "sha256": "f5c16ca35423a2baecee72940ed1665a1c3e5f10ac29a1385761c26194a5734c"
+              "sha256": "f94602fe6d79b59075b75d123ef86ffee83159c4b9d1a941ea03ef2c504ceea1"
             },
             {
               "path": "apps/web/src/lib/notifications.ts",
-              "sha256": "481ab3fe2aff75d37192446896e2d46d166c8945a2666c76766aabbe05022bc5"
+              "sha256": "51e967361b532d0f58c7e2b248d17e1725162acd7f7d3a73df33627318318dfc"
             },
             {
               "path": "apps/web/src/lib/profile-context.ts",
@@ -691200,7 +691201,7 @@
             },
             {
               "path": "apps/web/src/components/NotificationRow.tsx",
-              "sha256": "6ecba97ccd23cd592d527686add90bd9ff97be5b6f62d932370de896ca7737ff"
+              "sha256": "d6e7735a056912646ce620d9b79ca17824cd5dbbc9d9368dc914b6bb90f38deb"
             },
             {
               "path": "apps/web/src/components/NotificationStatusBadge.test.tsx",
@@ -691356,11 +691357,11 @@
             },
             {
               "path": "apps/web/src/lib/notifications.test.ts",
-              "sha256": "f5c16ca35423a2baecee72940ed1665a1c3e5f10ac29a1385761c26194a5734c"
+              "sha256": "f94602fe6d79b59075b75d123ef86ffee83159c4b9d1a941ea03ef2c504ceea1"
             },
             {
               "path": "apps/web/src/lib/notifications.ts",
-              "sha256": "481ab3fe2aff75d37192446896e2d46d166c8945a2666c76766aabbe05022bc5"
+              "sha256": "51e967361b532d0f58c7e2b248d17e1725162acd7f7d3a73df33627318318dfc"
             },
             {
               "path": "apps/web/src/lib/profile-context.ts",
@@ -692047,7 +692048,7 @@
             },
             {
               "path": "apps/web/src/components/NotificationRow.tsx",
-              "sha256": "6ecba97ccd23cd592d527686add90bd9ff97be5b6f62d932370de896ca7737ff"
+              "sha256": "d6e7735a056912646ce620d9b79ca17824cd5dbbc9d9368dc914b6bb90f38deb"
             },
             {
               "path": "apps/web/src/components/NotificationStatusBadge.test.tsx",
@@ -692203,11 +692204,11 @@
             },
             {
               "path": "apps/web/src/lib/notifications.test.ts",
-              "sha256": "f5c16ca35423a2baecee72940ed1665a1c3e5f10ac29a1385761c26194a5734c"
+              "sha256": "f94602fe6d79b59075b75d123ef86ffee83159c4b9d1a941ea03ef2c504ceea1"
             },
             {
               "path": "apps/web/src/lib/notifications.ts",
-              "sha256": "481ab3fe2aff75d37192446896e2d46d166c8945a2666c76766aabbe05022bc5"
+              "sha256": "51e967361b532d0f58c7e2b248d17e1725162acd7f7d3a73df33627318318dfc"
             },
             {
               "path": "apps/web/src/lib/profile-context.ts",
@@ -711403,7 +711404,7 @@
             },
             {
               "path": "apps/web/src/components/TicketQueueRecords.tsx",
-              "sha256": "506fe00df5cbd8e3e86ce34f3e0791806e5148d6d05a32d824acf1a11f090448"
+              "sha256": "9f51c742e9daf033506db947590e02a6ceb8d33f200a4226d92f0baaadca7305"
             },
             {
               "path": "apps/web/src/components/TicketReplyInput.array.test.tsx",
@@ -717065,7 +717066,7 @@
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
-              "sha256": "058aa8ad8ea006b8f36dbc0ae7b3d9779d032fef6367b7a64ba44128ef397187"
+              "sha256": "7120dd69988871f50b5d4b0ae5b4a44483da4b10b7c0b5403df5bfabb2444265"
             },
             {
               "path": "apps/web/e2e/notification-inbox-query.spec.ts",
@@ -717241,7 +717242,7 @@
             },
             {
               "path": "apps/web/src/components/NotificationBell.tsx",
-              "sha256": "1a9d070c502a43e57177dd4b7857ba727ceb270aff3eb35d4bdd43746658d28c"
+              "sha256": "b8d7da27155f21a7f6bbc30725c46eb2be7ec27c0745b34d8f8aa7e13b224422"
             },
             {
               "path": "apps/web/src/components/NotificationDeliveryHistory.test.tsx",
@@ -717253,7 +717254,7 @@
             },
             {
               "path": "apps/web/src/components/NotificationRow.tsx",
-              "sha256": "6ecba97ccd23cd592d527686add90bd9ff97be5b6f62d932370de896ca7737ff"
+              "sha256": "d6e7735a056912646ce620d9b79ca17824cd5dbbc9d9368dc914b6bb90f38deb"
             },
             {
               "path": "apps/web/src/components/PreferenceSettingsStatus.tsx",
@@ -717333,11 +717334,11 @@
             },
             {
               "path": "apps/web/src/hooks/useUnreadCount.test.tsx",
-              "sha256": "4418eada09ce8d32fd706dbf832050aa3b6c10780f03647a174c2d750a1114ea"
+              "sha256": "a668fa761dad50f2b2f9b59ddbc6102f7a6c0ad9dafed71886846d28337c9615"
             },
             {
               "path": "apps/web/src/hooks/useUnreadCount.ts",
-              "sha256": "757f7260e38e001f96d29b2b0e3ad42149dbbb1991dd4ad1b543d644d8b0f0f8"
+              "sha256": "8e46a765f4ff0cb9f9365c3d706a91745dc9d37d24b43f941e4679584786e2a0"
             },
             {
               "path": "apps/web/src/hooks/useUnreadDocumentTitle.test.tsx",
@@ -717473,11 +717474,11 @@
             },
             {
               "path": "apps/web/src/lib/notifications.test.ts",
-              "sha256": "f5c16ca35423a2baecee72940ed1665a1c3e5f10ac29a1385761c26194a5734c"
+              "sha256": "f94602fe6d79b59075b75d123ef86ffee83159c4b9d1a941ea03ef2c504ceea1"
             },
             {
               "path": "apps/web/src/lib/notifications.ts",
-              "sha256": "481ab3fe2aff75d37192446896e2d46d166c8945a2666c76766aabbe05022bc5"
+              "sha256": "51e967361b532d0f58c7e2b248d17e1725162acd7f7d3a73df33627318318dfc"
             },
             {
               "path": "apps/web/src/lib/preference-settings-form.test.ts",
@@ -717581,7 +717582,7 @@
             },
             {
               "path": "apps/web/src/pages/NotificationCenterPage.tsx",
-              "sha256": "393a9a3eaee2b8840a0094592b4040c59305327efb3b5a4d7d5c9bffcf7971de"
+              "sha256": "d0e38edec8e1a8a9733a0967dc8a5db591dec6b89153d7b605ab1bec6a0d8c37"
             },
             {
               "path": "apps/web/src/pages/ai-admin-presentation.test.tsx",
@@ -720946,7 +720947,7 @@
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
-              "sha256": "058aa8ad8ea006b8f36dbc0ae7b3d9779d032fef6367b7a64ba44128ef397187"
+              "sha256": "7120dd69988871f50b5d4b0ae5b4a44483da4b10b7c0b5403df5bfabb2444265"
             },
             {
               "path": "apps/web/e2e/notification-inbox-query.spec.ts",
@@ -721114,7 +721115,7 @@
             },
             {
               "path": "apps/web/src/components/NotificationBell.tsx",
-              "sha256": "1a9d070c502a43e57177dd4b7857ba727ceb270aff3eb35d4bdd43746658d28c"
+              "sha256": "b8d7da27155f21a7f6bbc30725c46eb2be7ec27c0745b34d8f8aa7e13b224422"
             },
             {
               "path": "apps/web/src/components/NotificationDeliveryHistory.test.tsx",
@@ -721126,7 +721127,7 @@
             },
             {
               "path": "apps/web/src/components/NotificationRow.tsx",
-              "sha256": "6ecba97ccd23cd592d527686add90bd9ff97be5b6f62d932370de896ca7737ff"
+              "sha256": "d6e7735a056912646ce620d9b79ca17824cd5dbbc9d9368dc914b6bb90f38deb"
             },
             {
               "path": "apps/web/src/components/PreferenceSettingsStatus.tsx",
@@ -721198,11 +721199,11 @@
             },
             {
               "path": "apps/web/src/hooks/useUnreadCount.test.tsx",
-              "sha256": "4418eada09ce8d32fd706dbf832050aa3b6c10780f03647a174c2d750a1114ea"
+              "sha256": "a668fa761dad50f2b2f9b59ddbc6102f7a6c0ad9dafed71886846d28337c9615"
             },
             {
               "path": "apps/web/src/hooks/useUnreadCount.ts",
-              "sha256": "757f7260e38e001f96d29b2b0e3ad42149dbbb1991dd4ad1b543d644d8b0f0f8"
+              "sha256": "8e46a765f4ff0cb9f9365c3d706a91745dc9d37d24b43f941e4679584786e2a0"
             },
             {
               "path": "apps/web/src/hooks/useUnreadDocumentTitle.test.tsx",
@@ -721338,11 +721339,11 @@
             },
             {
               "path": "apps/web/src/lib/notifications.test.ts",
-              "sha256": "f5c16ca35423a2baecee72940ed1665a1c3e5f10ac29a1385761c26194a5734c"
+              "sha256": "f94602fe6d79b59075b75d123ef86ffee83159c4b9d1a941ea03ef2c504ceea1"
             },
             {
               "path": "apps/web/src/lib/notifications.ts",
-              "sha256": "481ab3fe2aff75d37192446896e2d46d166c8945a2666c76766aabbe05022bc5"
+              "sha256": "51e967361b532d0f58c7e2b248d17e1725162acd7f7d3a73df33627318318dfc"
             },
             {
               "path": "apps/web/src/lib/preference-settings-form.test.ts",
@@ -721446,7 +721447,7 @@
             },
             {
               "path": "apps/web/src/pages/NotificationCenterPage.tsx",
-              "sha256": "393a9a3eaee2b8840a0094592b4040c59305327efb3b5a4d7d5c9bffcf7971de"
+              "sha256": "d0e38edec8e1a8a9733a0967dc8a5db591dec6b89153d7b605ab1bec6a0d8c37"
             },
             {
               "path": "apps/web/src/pages/ai-admin-presentation.test.tsx",
@@ -723613,7 +723614,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "The native-required declaration inventory, scoped wallet confirmation, customer team role editors and staff knowledge test search recovery have current evidence. Remaining schema-only forms, contrast, broader command feedback and route state adoption stay open."
+        "The native-required declaration inventory, wallet confirmation, team role editors, staff knowledge search, and customer and staff notification header recovery have current evidence. Remaining schema-only forms, contrast, broader command feedback and route state adoption stay open."
       ],
       "owner": null,
       "depends_on": [],
@@ -723704,7 +723705,8 @@
           "release-0.5-remaining-native-form-controls",
           "release-0.5-wallet-return-deadline",
           "release-0.5-required-team-role-group",
-          "release-0.5-knowledge-query-deadline"
+          "release-0.5-knowledge-query-deadline",
+          "release-0.5-header-notification-deadlines"
         ]
       }
     },
@@ -724064,7 +724066,7 @@
             },
             {
               "path": "apps/web/src/components/NotificationBell.tsx",
-              "sha256": "1a9d070c502a43e57177dd4b7857ba727ceb270aff3eb35d4bdd43746658d28c"
+              "sha256": "b8d7da27155f21a7f6bbc30725c46eb2be7ec27c0745b34d8f8aa7e13b224422"
             },
             {
               "path": "apps/web/src/components/NotificationDeliveryHistory.tsx",
@@ -724280,7 +724282,7 @@
             },
             {
               "path": "apps/web/src/components/TicketQueueRecords.tsx",
-              "sha256": "506fe00df5cbd8e3e86ce34f3e0791806e5148d6d05a32d824acf1a11f090448"
+              "sha256": "9f51c742e9daf033506db947590e02a6ceb8d33f200a4226d92f0baaadca7305"
             },
             {
               "path": "apps/web/src/components/TicketReplyInput.tsx",
@@ -724524,7 +724526,7 @@
             },
             {
               "path": "apps/web/src/lib/notifications.ts",
-              "sha256": "481ab3fe2aff75d37192446896e2d46d166c8945a2666c76766aabbe05022bc5"
+              "sha256": "51e967361b532d0f58c7e2b248d17e1725162acd7f7d3a73df33627318318dfc"
             },
             {
               "path": "apps/web/src/lib/password-recovery-form.ts",
@@ -724824,7 +724826,7 @@
             },
             {
               "path": "apps/web/src/pages/NotificationCenterPage.tsx",
-              "sha256": "393a9a3eaee2b8840a0094592b4040c59305327efb3b5a4d7d5c9bffcf7971de"
+              "sha256": "d0e38edec8e1a8a9733a0967dc8a5db591dec6b89153d7b605ab1bec6a0d8c37"
             },
             {
               "path": "apps/web/src/pages/SavingAgreementEditor.tsx",
@@ -725273,6 +725275,18 @@
             {
               "path": "packages/i18n/src/team.ts",
               "sha256": "c3bbcbbdf704619a3c7a91be1daa684b67aba8e137cd337079fb26e92030f938"
+            },
+            {
+              "path": "apps/web/src/components/NotificationRow.tsx",
+              "sha256": "d6e7735a056912646ce620d9b79ca17824cd5dbbc9d9368dc914b6bb90f38deb"
+            },
+            {
+              "path": "apps/web/src/hooks/useUnreadCount.ts",
+              "sha256": "8e46a765f4ff0cb9f9365c3d706a91745dc9d37d24b43f941e4679584786e2a0"
+            },
+            {
+              "path": "apps/web/src/lib/notification-content.ts",
+              "sha256": "cbc3e81a5dc5779d7364bd801badbffbbce84b614afb92e722dde10aaf0ac467"
             }
           ],
           "checks": [
@@ -725308,7 +725322,8 @@
             "Remaining native form controls and related validation links passed source coverage and browser checks. Both final asset trees matched the checked production build with all budgets and cold authentication transfers passing. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-remaining-native-form-controls/proof.json",
             "Wallet return recovery passed current production, coverage and bundle checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-wallet-return-deadline/final/proof.json",
             "Customer team role group passed current production, coverage and bundle checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-team-role-group/proof.json",
-            "Knowledge test search recovery passed current production, coverage and bundle checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-knowledge-query-deadline/proof.json"
+            "Knowledge test search recovery passed current production, coverage and bundle checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-knowledge-query-deadline/proof.json",
+            "Shared notification header recovery passed current production, coverage and bundle checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-header-notification-deadlines/candidate/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -792576,6 +792591,77 @@
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-knowledge-query-deadline/reviewed.patch",
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-knowledge-query-deadline",
       "release_disposition": "Bounded recovery verified in both staff knowledge test search views. The v0.5.0 milestone remains open."
+    },
+    "release-0.5-header-notification-deadlines": {
+      "batch": "release-0.5-header-notification-deadlines",
+      "base_commit": "f95638175e39e5030ebbce41c4a56f21f88fe3d5",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
+          "sha256": "7120dd69988871f50b5d4b0ae5b4a44483da4b10b7c0b5403df5bfabb2444265"
+        },
+        {
+          "path": "apps/web/e2e/staff-inbox.spec.ts",
+          "sha256": "9397f0c12731f00b47a290c5b17e08d7d4a6add00c3aaeca0fb8ecdf85cde83f"
+        },
+        {
+          "path": "apps/web/src/components/NotificationBell.tsx",
+          "sha256": "b8d7da27155f21a7f6bbc30725c46eb2be7ec27c0745b34d8f8aa7e13b224422"
+        },
+        {
+          "path": "apps/web/src/components/NotificationRow.tsx",
+          "sha256": "d6e7735a056912646ce620d9b79ca17824cd5dbbc9d9368dc914b6bb90f38deb"
+        },
+        {
+          "path": "apps/web/src/components/TicketQueueRecords.tsx",
+          "sha256": "9f51c742e9daf033506db947590e02a6ceb8d33f200a4226d92f0baaadca7305"
+        },
+        {
+          "path": "apps/web/src/hooks/useUnreadCount.test.tsx",
+          "sha256": "a668fa761dad50f2b2f9b59ddbc6102f7a6c0ad9dafed71886846d28337c9615"
+        },
+        {
+          "path": "apps/web/src/hooks/useUnreadCount.ts",
+          "sha256": "8e46a765f4ff0cb9f9365c3d706a91745dc9d37d24b43f941e4679584786e2a0"
+        },
+        {
+          "path": "apps/web/src/lib/notification-content.ts",
+          "sha256": "cbc3e81a5dc5779d7364bd801badbffbbce84b614afb92e722dde10aaf0ac467"
+        },
+        {
+          "path": "apps/web/src/lib/notifications.test.ts",
+          "sha256": "f94602fe6d79b59075b75d123ef86ffee83159c4b9d1a941ea03ef2c504ceea1"
+        },
+        {
+          "path": "apps/web/src/lib/notifications.ts",
+          "sha256": "51e967361b532d0f58c7e2b248d17e1725162acd7f7d3a73df33627318318dfc"
+        },
+        {
+          "path": "apps/web/src/pages/NotificationCenterPage.tsx",
+          "sha256": "d0e38edec8e1a8a9733a0967dc8a5db591dec6b89153d7b605ab1bec6a0d8c37"
+        }
+      ],
+      "checks": [
+        "Customer and staff notification previews use the existing 15-second read deadline and cancel superseded or retired requests. A transient failure keeps accepted rows in the same scope with an explicit retry and blocks writes until a fresh result. Denial and profile changes retire private data.",
+        "A stalled unread-count poll releases its single-flight lock at the deadline. The next scheduled poll reconciles the badge. Unmount cancels the active request, and the existing revision fence preserves optimistic updates and authoritative counts.",
+        "The first run found an over-budget bundle and a staff test that included React's hidden retained shell during a loading transition. Presentation formatting moved out of the eager API module. The staff test now asserts the exposed main and one settled main target, and supplies the customer profile required after switching workspaces. All inbox, link and workspace-isolation checks remain.",
+        "Thirty-eight production browser cases on Chromium and Mobile Safari, 19 Chromium coverage cases, 92 unit cases, eight changed-coverage groups, 98 bundle budgets, lint, formatting and web typecheck passed. Six prior cold auth checks apply to 30 byte-identical auth assets."
+      ],
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-header-notification-deadlines/candidate/proof.json",
+      "source_scope_proof_sha256": "364849a38b3eba2c11f9b5e29ce1ecd92dde41c1f23548c16d965ae1589614fe",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-header-notification-deadlines/candidate/renewed-bindings.json",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-header-notification-deadlines/candidate/reviewed.patch",
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-header-notification-deadlines/candidate",
+      "release_disposition": "Bounded notification header recovery verified in both customer and staff workspaces. The v0.5.0 milestone remains open."
     }
   },
   "historical_improvements": [

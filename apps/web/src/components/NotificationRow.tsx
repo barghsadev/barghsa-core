@@ -1,10 +1,6 @@
 import { t, type Locale } from '@barghsa/i18n/app';
-import { notificationContent } from '../lib/notification-content.js';
-import {
-  formatRelativeTime,
-  toNavigationTarget,
-  type NotificationItem,
-} from '../lib/notifications.js';
+import { formatRelativeTime, notificationContent } from '../lib/notification-content.js';
+import { toNavigationTarget, type NotificationItem } from '../lib/notifications.js';
 import { NotificationStatusBadge } from './NotificationStatusBadge.js';
 
 /**

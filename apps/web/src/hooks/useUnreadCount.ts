@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { fetchUnreadCount, isNotificationDenied } from '../lib/notifications.js';
+import { readWithDeadline } from '../lib/server-query-client.js';
 
 /** Default short-poll interval for the real-time badge (T-05.02.04). */
 export const UNREAD_POLL_MS = 30_000;
@@ -35,33 +36,31 @@ export function useUnreadCount(
   currentOptions.current = options;
   const [unreadCount, setUnreadCountState] = useState(0);
   const mounted = useRef(true);
-  const inflight = useRef(false);
+  const inflight = useRef<AbortController | null>(null);
   const revision = useRef(0);
   const optimisticPending = useRef(false);
 
   const refresh = useCallback((): void => {
-    if (currentOptions.current.enabled === false || inflight.current || optimisticPending.current)
+    if (
+      !mounted.current ||
+      currentOptions.current.enabled === false ||
+      inflight.current ||
+      optimisticPending.current
+    )
       return;
     const started = revision.current;
-    inflight.current = true;
-    void fetchUnreadCount()
+    const request = new AbortController();
+    inflight.current = request;
+    const owns = () =>
+      inflight.current === request &&
+      currentOptions.current.enabled !== false &&
+      revision.current === started;
+    void readWithDeadline(request.signal, fetchUnreadCount)
       .then((count) => {
-        if (
-          mounted.current &&
-          currentOptions.current.enabled !== false &&
-          revision.current === started &&
-          !optimisticPending.current
-        )
-          setUnreadCountState(count);
+        if (owns()) setUnreadCountState(count);
       })
       .catch((error: unknown) => {
-        if (
-          mounted.current &&
-          currentOptions.current.enabled !== false &&
-          revision.current === started &&
-          !optimisticPending.current &&
-          isNotificationDenied(error)
-        ) {
+        if (owns() && isNotificationDenied(error)) {
           revision.current++;
           optimisticPending.current = false;
           setUnreadCountState(0);
@@ -70,7 +69,7 @@ export function useUnreadCount(
         // Transient failure retains the last accepted count.
       })
       .finally(() => {
-        inflight.current = false;
+        if (inflight.current === request) inflight.current = null;
       });
   }, []);
 
@@ -80,7 +79,7 @@ export function useUnreadCount(
       return () => {
         mounted.current = false;
       };
-    refresh();
+    queueMicrotask(refresh);
     const interval = window.setInterval(refresh, pollMs);
     const onVisibility = () => {
       if (!document.hidden) refresh();
@@ -88,6 +87,8 @@ export function useUnreadCount(
     document.addEventListener('visibilitychange', onVisibility);
     return () => {
       mounted.current = false;
+      inflight.current?.abort();
+      inflight.current = null;
       window.clearInterval(interval);
       document.removeEventListener('visibilitychange', onVisibility);
     };

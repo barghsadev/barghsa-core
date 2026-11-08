@@ -70,11 +70,29 @@ it('keeps optimistic reads stable until completion and resumes polling afterward
   await reply(1);
   expect(host.textContent).toBe('1');
 });
-it('does not overlap slow polls and cleans up after unmount', async () => {
-  await act(async () => vi.advanceTimersByTime(90000));
+it('bounds each poll, resumes on the next tick, and cancels on unmount', async () => {
   expect(requests).toHaveLength(1);
-  await act(async () => root.render(<QueryProvider>{null}</QueryProvider>));
+  const first = vi.mocked(fetch).mock.calls[0]![1]!.signal!;
+  await act(async () => vi.advanceTimersByTimeAsync(14_000));
+  await act(async () => state.refresh());
+  expect(requests).toHaveLength(1);
+  expect(first.aborted).toBe(false);
+  await act(async () => vi.advanceTimersByTimeAsync(1_000));
+  expect(first.aborted).toBe(true);
+  expect(requests).toHaveLength(1);
+  await act(async () => vi.advanceTimersByTimeAsync(15_000));
+  expect(requests).toHaveLength(2);
   await reply(5);
+  expect(host.textContent).toBe('0');
+  await reply(2);
+  expect(host.textContent).toBe('2');
+
+  await act(async () => vi.advanceTimersByTimeAsync(30_000));
+  expect(requests).toHaveLength(1);
+  const last = vi.mocked(fetch).mock.calls.at(-1)![1]!.signal!;
+  await act(async () => root.render(<QueryProvider>{null}</QueryProvider>));
+  expect(last.aborted).toBe(true);
+  await reply(9);
   await act(async () => vi.advanceTimersByTime(60000));
   expect(requests).toHaveLength(0);
   expect(host.textContent).toBe('');
