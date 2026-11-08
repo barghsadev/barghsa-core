@@ -206,10 +206,13 @@ for (const locale of ['en', 'fa'] as const)
       })
     );
     await page.route(`**/api/solar/requests/${requestId}/documents/complete`, (route) => {
-      expect(route.request().postDataJSON()).toEqual({ allDocumentsUploaded: true });
+      const input = route.request().postDataJSON();
+      expect(input).toEqual({ allDocumentsUploaded: true, idempotencyKey: expect.any(String) });
       expect(documentStatus).toBe('Available');
       requestStatus = 'documents_under_review';
-      return route.fulfill({ json: { status: requestStatus } });
+      return route.fulfill({
+        json: { status: requestStatus, requestId, idempotencyKey: input.idempotencyKey },
+      });
     });
     await page.route('**/api/documents?*', (route) =>
       route.fulfill({
@@ -1142,7 +1145,9 @@ for (const locale of ['en', 'fa'] as const)
       locale === 'fa' ? `Send the site plan. ${reference}` : `نقشه محل را بفرستید. ${reference}`;
     const requested =
       locale === 'fa' ? `Site ownership document ${reference}` : `مدرک مالکیت محل ${reference}`;
-    let completion: 'malformed' | 'rejected' | 'verified' = 'malformed';
+    let completion: 'stalled' | 'malformed' | 'rejected' | 'verified' = 'rejected';
+    let requestStatus = 'submitted';
+    const completionKeys: string[] = [];
     await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
     await page.route('**/api/auth/user', (route) =>
       route.fulfill({
@@ -1192,7 +1197,7 @@ for (const locale of ['en', 'fa'] as const)
                 request: {
                   id: requestId,
                   profile_id: profileId,
-                  status: 'submitted',
+                  status: requestStatus,
                   status_reason: update,
                   building_type: 'building_apartment',
                   grid_type: 'off_grid',
@@ -1225,12 +1230,24 @@ for (const locale of ['en', 'fa'] as const)
     });
     await page.route(`**/api/solar/requests/${requestId}/documents/complete`, (route) => {
       writes++;
-      expect(route.request().postDataJSON()).toEqual({ allDocumentsUploaded: true });
+      const input = route.request().postDataJSON();
+      expect(input).toEqual({ allDocumentsUploaded: true, idempotencyKey: expect.any(String) });
+      completionKeys.push(input.idempotencyKey);
+      if (completion === 'stalled') return;
       if (completion === 'malformed')
-        return route.fulfill({ json: { status: 'submitted', message: 'PRIVATE_WRONG_RECEIPT' } });
+        return route.fulfill({
+          json: {
+            status: 'documents_under_review',
+            requestId,
+            idempotencyKey: 'PRIVATE_WRONG_RECEIPT',
+          },
+        });
       if (completion === 'rejected')
         return route.fulfill({ status: 409, json: { message: 'PRIVATE_REJECTION' } });
-      return route.fulfill({ json: { status: 'documents_under_review' } });
+      requestStatus = 'documents_under_review';
+      return route.fulfill({
+        json: { status: requestStatus, requestId, idempotencyKey: input.idempotencyKey },
+      });
     });
     await page.goto(`/solar/requests/${requestId}`);
     const main = page.getByRole('main').last();
@@ -1326,26 +1343,47 @@ for (const locale of ['en', 'fa'] as const)
         hasText: solarCopy(key, locale),
       });
     await send.click();
-    await expect(errorToast('documentUnconfirmed')).toBeVisible();
-    await expect(sent).toHaveCount(0);
-    expect(writes).toBe(1);
-    await expect(checkbox).toBeChecked();
-    completion = 'rejected';
-    await send.click();
     await expect(errorToast('documentError')).toBeVisible();
     await expect(errorToast('documentUnconfirmed')).toHaveCount(0);
     await expect(sent).toHaveCount(0);
-    expect(writes).toBe(2);
-    completion = 'verified';
+    expect(writes).toBe(1);
+    await expect(checkbox).toBeChecked();
+    completion = 'stalled';
+    await page.clock.install();
     await send.click();
+    await expect.poll(() => writes).toBe(2);
+    await expect(send).toBeDisabled();
+    await page.clock.fastForward(15_001);
+    await expect(errorToast('documentUnconfirmed')).toBeVisible();
+    await expect(sent).toHaveCount(0);
+    expect(writes).toBe(2);
+    await expect(checkbox).toBeChecked();
+    await expect(checkbox).toBeDisabled();
+    await expect(send).toBeDisabled();
+    const retryCompletion = main.getByRole('button', {
+      name: solarCopy('retryDocumentSubmission', locale),
+      exact: true,
+    });
+    completion = 'malformed';
+    await retryCompletion.focus();
+    await page.keyboard.press('Enter');
+    await expect.poll(() => writes).toBe(3);
+    await expect(retryCompletion).toBeEnabled();
+    await expect(errorToast('documentUnconfirmed')).toBeVisible();
+    await expect(sent).toHaveCount(0);
+    completion = 'verified';
+    await retryCompletion.click();
     await expect(sent).toBeVisible();
     await expect(errorToast('documentError')).toHaveCount(0);
     await expect(
       main.getByRole('status').filter({ hasText: solarCopy('reviewSent', locale) })
     ).toBeVisible();
-    expect(writes).toBe(3);
-    expect(reads).toBe(2);
-    expect(documentReads).toBe(2);
+    await expect(checkbox).not.toBeChecked();
+    expect(writes).toBe(4);
+    expect(completionKeys[0]).not.toBe(completionKeys[1]);
+    expect(completionKeys.slice(1)).toEqual(Array(3).fill(completionKeys[1]));
+    expect(reads).toBe(3);
+    expect(documentReads).toBe(3);
     await expect(page.locator('[data-sonner-toaster]')).not.toContainText(/PRIVATE_/);
     await expect(connectionNotice).toHaveCount(0);
     await page.screenshot({ path: test.info().outputPath(`solar-document-review-${locale}.png`) });

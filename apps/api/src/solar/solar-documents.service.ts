@@ -8,6 +8,7 @@ import { getDbPool } from '@barghsa/db';
 import { v7 as uuidv7 } from 'uuid';
 import type { PoolClient } from 'pg';
 import { OrdersService } from '../orders/orders.service.js';
+import { idempotentMutation } from '../database/idempotency.js';
 import { requireCurrentSession, requireSessionStepUp } from '../session/session-step-up.js';
 import { requireStaffMutationPermission } from '../admin/staff-mutation-permission.js';
 import { notifySolarStatus } from './solar-status-notifications.js';
@@ -139,7 +140,7 @@ export class SolarDocumentsService {
     }
   }
 
-  async complete(actor: Actor, requestId: string, ip: string) {
+  async complete(actor: Actor, requestId: string, ip: string, idempotencyKey?: string) {
     const client = await getDbPool().connect();
     try {
       await client.query('BEGIN');
@@ -155,59 +156,75 @@ export class SolarDocumentsService {
         !(await this.orders.mayManageOrders(client, actor.userId, request.profile_id))
       )
         throw new NotFoundException('Solar request not found');
-      if (
-        ![
-          'submitted',
-          'uploading_documents',
-          'changes_requested',
-          'documents_under_review',
-        ].includes(request.status)
-      )
-        throw new ConflictException('Solar request is past document review');
-      const pending = await client.query<{ id: string }>(
-        `SELECT id FROM documents WHERE business_record_type='solar_request' AND business_record_id=$1
+      const submit = async () => {
+        if (
+          ![
+            'submitted',
+            'uploading_documents',
+            'changes_requested',
+            'documents_under_review',
+          ].includes(request.status)
+        )
+          throw new ConflictException('Solar request is past document review');
+        const pending = await client.query<{ id: string }>(
+          `SELECT id FROM documents WHERE business_record_type='solar_request' AND business_record_id=$1
          AND state IN ('Uploading','PendingScan')`,
-        [requestId]
-      );
-      if (pending.rowCount) throw new ConflictException('Wait for pending uploads to finish');
-      const available = await client.query<{ id: string; revision: number }>(
-        `UPDATE documents SET state='SubmittedForReview'
-         WHERE business_record_type='solar_request' AND business_record_id=$1 AND state='Available'
-         RETURNING id,revision`,
-        [requestId]
-      );
-      for (const document of available.rows)
-        await client.query(
-          `INSERT INTO document_events(document_id,revision,previous_state,state,actor_id)
-           VALUES($1,$2,'Available','SubmittedForReview',$3)`,
-          [document.id, document.revision, actor.userId]
-        );
-      if (request.status !== 'documents_under_review') {
-        await client.query(
-          "UPDATE solar_construction_requests SET status='documents_under_review',updated_at=NOW() WHERE id=$1",
           [requestId]
         );
-        await notifySolarStatus(client, requestId, request.status, 'documents_under_review', {
-          title: 'Solar documents submitted for review',
-          localizedContent: {
-            fa: { title: 'مدارک نیروگاه خورشیدی', body: 'مدارک شما برای بررسی کارشناسان ثبت شد.' },
-            en: {
-              title: 'Solar documents',
-              body: 'Your documents were submitted for staff review.',
+        if (pending.rowCount) throw new ConflictException('Wait for pending uploads to finish');
+        const available = await client.query<{ id: string; revision: number }>(
+          `UPDATE documents SET state='SubmittedForReview'
+         WHERE business_record_type='solar_request' AND business_record_id=$1 AND state='Available'
+         RETURNING id,revision`,
+          [requestId]
+        );
+        for (const document of available.rows)
+          await client.query(
+            `INSERT INTO document_events(document_id,revision,previous_state,state,actor_id)
+           VALUES($1,$2,'Available','SubmittedForReview',$3)`,
+            [document.id, document.revision, actor.userId]
+          );
+        if (request.status !== 'documents_under_review') {
+          await client.query(
+            "UPDATE solar_construction_requests SET status='documents_under_review',updated_at=NOW() WHERE id=$1",
+            [requestId]
+          );
+          await notifySolarStatus(client, requestId, request.status, 'documents_under_review', {
+            title: 'Solar documents submitted for review',
+            localizedContent: {
+              fa: {
+                title: 'مدارک نیروگاه خورشیدی',
+                body: 'مدارک شما برای بررسی کارشناسان ثبت شد.',
+              },
+              en: {
+                title: 'Solar documents',
+                body: 'Your documents were submitted for staff review.',
+              },
             },
-          },
-        });
-      }
-      await audit(
-        client,
-        actor,
-        'solar.documents.submitted',
-        requestId,
-        { documents: available.rowCount ?? 0, previousStatus: request.status },
-        ip
-      );
+          });
+        }
+        await audit(
+          client,
+          actor,
+          'solar.documents.submitted',
+          requestId,
+          { documents: available.rowCount ?? 0, previousStatus: request.status },
+          ip
+        );
+        return { status: 'documents_under_review' as const };
+      };
+      const result = idempotencyKey
+        ? await idempotentMutation(
+            client,
+            'solar_document_completion',
+            { requestId, idempotencyKey },
+            actor,
+            async () => ({ ...(await submit()), requestId, idempotencyKey })
+          )
+        : await submit();
+      await requireCurrentSession(client, actor);
       await client.query('COMMIT');
-      return { status: 'documents_under_review' };
+      return result;
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {});
       throw error;

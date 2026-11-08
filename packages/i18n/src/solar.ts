@@ -241,7 +241,8 @@ const en: Record<string, string> = {
   documentError: 'Could not update the document stage.',
   documentReadError: 'Could not load the document instructions.',
   documentUnconfirmed:
-    'Submission for review could not be confirmed. Check the request before sending it again.',
+    'Submission for review could not be confirmed. You can retry the same submission.',
+  retryDocumentSubmission: 'Retry the same submission',
   staffTitle: 'Solar document review',
   staffQueue: 'Requests awaiting documents',
   staffQueueLoadError: 'Could not load this request queue.',
@@ -622,7 +623,8 @@ const fa: Record<string, string> = {
   documentError: 'مرحله مدارک به‌روزرسانی نشد.',
   documentReadError: 'دستورالعمل مدارک بارگذاری نشد.',
   documentUnconfirmed:
-    'ارسال مدارک برای بررسی تأیید نشد. پیش از ارسال دوباره، وضعیت درخواست را بررسی کنید.',
+    'ارسال مدارک برای بررسی تأیید نشد. می‌توانید همان ارسال را دوباره امتحان کنید.',
+  retryDocumentSubmission: 'تلاش دوباره برای همان ارسال',
   staffTitle: 'بررسی مدارک نیروگاه خورشیدی',
   staffQueue: 'درخواست‌های در انتظار مدارک',
   staffQueueLoadError: 'دریافت صف درخواست‌ها انجام نشد.',

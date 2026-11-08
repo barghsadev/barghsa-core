@@ -76,6 +76,7 @@ it.each(['en', 'fa'] as const)(
 it('allows an empty solar document set to be sent for review', async () => {
   document.documentElement.lang = 'en';
   vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
+  let requestStatus = 'submitted';
   const fetchMock = vi.fn(async (url: string, options?: RequestInit) => {
     if (url === '/api/user/settings/timezone') return Response.json({ timezone: 'Asia/Tehran' });
     if (url === '/api/solar/requests/request-1' && !options?.method)
@@ -84,7 +85,7 @@ it('allows an empty solar document set to be sent for review', async () => {
           request: {
             id: 'request-1',
             profile_id: 'profile-1',
-            status: 'submitted',
+            status: requestStatus,
             building_type: 'building_apartment',
             grid_type: 'off_grid',
             agreement_version: 'v1',
@@ -101,8 +102,15 @@ it('allows an empty solar document set to be sent for review', async () => {
           requestedDocuments: [],
         })
       );
-    if (url === '/api/solar/requests/request-1/documents/complete' && options?.method === 'POST')
-      return new Response(JSON.stringify({ status: 'documents_under_review' }));
+    if (url === '/api/solar/requests/request-1/documents/complete' && options?.method === 'POST') {
+      const input = JSON.parse(options.body as string) as { idempotencyKey: string };
+      requestStatus = 'changes_requested';
+      return Response.json({
+        status: 'documents_under_review',
+        requestId: 'request-1',
+        idempotencyKey: input.idempotencyKey,
+      });
+    }
     throw new Error(`Unexpected ${url}`);
   });
   vi.stubGlobal('fetch', fetchMock);
@@ -134,8 +142,15 @@ it('allows an empty solar document set to be sent for review', async () => {
         url === '/api/solar/requests/request-1/documents/complete' && options?.method === 'POST'
     );
     expect(posted).toHaveLength(1);
-    expect(JSON.parse(posted[0]![1]!.body as string)).toEqual({ allDocumentsUploaded: true });
+    expect(JSON.parse(posted[0]![1]!.body as string)).toEqual({
+      allDocumentsUploaded: true,
+      idempotencyKey: expect.any(String),
+    });
     expect(container.textContent).toContain('Document set sent for review.');
+    expect(container.textContent).toContain(tSolar('status_changes_requested', 'en'));
+    expect(container.querySelector<HTMLInputElement>('input[type="checkbox"]')?.checked).toBe(
+      false
+    );
   } finally {
     await act(async () => root.unmount());
     container.remove();
@@ -324,12 +339,18 @@ it('cancels old account guidance and suppresses its late private reply without r
 it('does not publish an old document submission into a replacement account view', async () => {
   const announce = vi.spyOn(toast, 'success');
   let finish!: (response: Response) => void,
+    signal!: AbortSignal,
+    idempotencyKey!: string,
     next = false;
   const fetcher = vi.fn(async (url: string, init?: RequestInit) => {
-    if (init?.method === 'POST')
+    if (init?.method === 'POST') {
+      signal = init.signal as AbortSignal;
+      idempotencyKey = (JSON.parse(init.body as string) as { idempotencyKey: string })
+        .idempotencyKey;
       return new Promise<Response>((resolve) => {
         finish = resolve;
       });
+    }
     return Response.json(
       url.endsWith('/documents')
         ? guidance(next ? 'New guidance' : 'Old guidance')
@@ -344,9 +365,14 @@ it('does not publish an old document submission into a replacement account view'
     await act(async () => solarButton(view.host, 'Send documents for review').click());
     next = true;
     await view.actor('other-buyer');
+    expect(signal.aborted).toBe(true);
     expect(view.host.textContent).toContain('New site');
     expect(view.host.querySelector<HTMLInputElement>('input[type=checkbox]')!.checked).toBe(false);
-    await act(async () => finish(Response.json({ status: 'documents_under_review' })));
+    await act(async () =>
+      finish(
+        Response.json({ status: 'documents_under_review', requestId: 'request-1', idempotencyKey })
+      )
+    );
     expect(view.host.textContent).toContain('New guidance');
     expect(view.host.textContent).not.toContain('Document set sent for review.');
     expect(announce).not.toHaveBeenCalled();

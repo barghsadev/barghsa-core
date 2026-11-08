@@ -6,7 +6,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useServerDetailQuery } from '../hooks/useServerQuery.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
 import { getProfileContextRevision, useProfileContextRevision } from '../lib/profile-context.js';
-import { ServerQueryError } from '../lib/server-query-client.js';
+import { readWithDeadline, ServerQueryError } from '../lib/server-query-client.js';
 import { readAsyncResponse } from '../hooks/useAsyncData.js';
 import { announceReadRetry } from '../lib/read-retry-feedback.js';
 import { queryKeys } from '../lib/query-keys.js';
@@ -110,9 +110,10 @@ function SolarRequestDetail({
   const [documentOutcome, setDocumentOutcome] = useState<
     'reviewSent' | 'documentError' | 'documentUnconfirmed' | null
   >(null);
-  const documentSection = useRef<HTMLElement | null>(null);
   const [sendingDocuments, setSendingDocuments] = useState(false);
-  const completionPending = useRef(false);
+  const completionPending = useRef<AbortController | null>(null);
+  const completionKey = useRef<string | null>(null);
+  useEffect(() => () => completionPending.current?.abort(), []);
   const filters = useMemo<DocumentFilters>(
     () => ({
       kind: 'solar_request',
@@ -275,52 +276,83 @@ function SolarRequestDetail({
     };
   }, [requestId, request?.id, showDocuments, documentsVersion]);
 
-  async function completeDocuments() {
-    if (!allUploaded || !documentsInfo || documentsPending.current || completionPending.current)
+  async function completeDocuments(retry = false) {
+    if (
+      !allUploaded ||
+      !documentsInfo ||
+      detailPending.current ||
+      documentsPending.current ||
+      completionPending.current ||
+      retry !== (completionKey.current !== null)
+    )
       return;
-    completionPending.current = true;
+    const idempotencyKey = completionKey.current ?? crypto.randomUUID();
+    const controller = new AbortController();
+    completionKey.current = idempotencyKey;
+    completionPending.current = controller;
     setSendingDocuments(true);
-    setDocumentOutcome(null);
+    const isCurrent = () =>
+      !controller.signal.aborted && getProfileContextRevision() === profileRevision;
     function settle(outcome: NonNullable<typeof documentOutcome>) {
-      if (!documentSection.current || getProfileContextRevision() !== profileRevision) return;
+      if (!isCurrent()) return;
       setDocumentOutcome(outcome);
       if (outcome === 'reviewSent') {
-        setRequest((current) =>
-          current ? { ...current, status: 'documents_under_review' } : null
-        );
+        setAllUploaded(false);
+        detailPending.current = true;
+        setDetailVersion((value) => value + 1);
         toast.success(copy(outcome), { id: reader });
       } else {
         toast.error(copy(outcome), { id: reader });
       }
     }
     try {
-      const response = await fetch(
-        `/api/solar/requests/${encodeURIComponent(requestId)}/documents/complete`,
-        {
-          method: 'POST',
-          credentials: 'include',
-          headers: withCsrf({ 'Content-Type': 'application/json' }),
-          body: JSON.stringify({ allDocumentsUploaded: true }),
-        }
-      );
-      if ([400, 401, 403, 404, 409, 429].includes(response.status)) {
+      const { status, receipt } = await readWithDeadline(controller.signal, async (signal) => {
+        const response = await fetch(
+          `/api/solar/requests/${encodeURIComponent(requestId)}/documents/complete`,
+          {
+            method: 'POST',
+            credentials: 'include',
+            headers: withCsrf({ 'Content-Type': 'application/json' }),
+            body: JSON.stringify({ allDocumentsUploaded: true, idempotencyKey }),
+            signal,
+          }
+        );
+        const receipt: unknown = response.status === 200 ? await response.json() : null;
+        return { status: response.status, receipt };
+      });
+      if (!isCurrent()) return;
+      if ([401, 403, 404].includes(status)) {
+        completionKey.current = null;
+        setRequest(null);
+        setProgress(null);
+        setHistory([]);
+        setDocumentsInfo(null);
+        setDetailError('denied');
+        return;
+      }
+      if (!retry && [400, 409, 429].includes(status)) {
+        completionKey.current = null;
         settle('documentError');
         return;
       }
-      const receipt: unknown = response.ok ? await response.json() : null;
       if (
         !receipt ||
         typeof receipt !== 'object' ||
         !('status' in receipt) ||
-        receipt.status !== 'documents_under_review'
+        receipt.status !== 'documents_under_review' ||
+        !('requestId' in receipt) ||
+        receipt.requestId !== requestId ||
+        !('idempotencyKey' in receipt) ||
+        receipt.idempotencyKey !== idempotencyKey
       )
         throw new Error('Unconfirmed document submission');
+      completionKey.current = null;
       settle('reviewSent');
     } catch {
       settle('documentUnconfirmed');
     } finally {
-      completionPending.current = false;
-      setSendingDocuments(false);
+      completionPending.current = null;
+      if (isCurrent()) setSendingDocuments(false);
     }
   }
   const stages = ['requestStage', 'uploadStage', 'verifyStage', 'postalStage', 'finalStage'];
@@ -450,7 +482,6 @@ function SolarRequestDetail({
             'changes_requested',
           ].includes(request.status) && (
             <section
-              ref={documentSection}
               id="solar-documents"
               className="space-y-4 rounded-xl border p-5"
               aria-label={copy('documentGuidance')}
@@ -496,6 +527,7 @@ function SolarRequestDetail({
                 <input
                   type="checkbox"
                   checked={allUploaded}
+                  disabled={sendingDocuments || documentOutcome === 'documentUnconfirmed'}
                   onChange={(e) => setAllUploaded(e.target.checked)}
                 />
                 {copy('allUploaded')}
@@ -503,7 +535,13 @@ function SolarRequestDetail({
               <button
                 type="button"
                 className="rounded-md bg-primary px-4 py-2 text-primary-foreground disabled:opacity-50"
-                disabled={!allUploaded || !documentsInfo || sendingDocuments}
+                disabled={
+                  !allUploaded ||
+                  !documentsInfo ||
+                  sendingDocuments ||
+                  documentOutcome === 'documentUnconfirmed'
+                }
+                aria-busy={sendingDocuments}
                 onClick={() => void completeDocuments()}
               >
                 {copy('sendReview')}
@@ -512,6 +550,16 @@ function SolarRequestDetail({
                 <p role={documentOutcome === 'reviewSent' ? 'status' : 'alert'}>
                   {copy(documentOutcome)}
                 </p>
+              )}
+              {documentOutcome === 'documentUnconfirmed' && (
+                <button
+                  type="button"
+                  className="rounded-md border px-4 py-2"
+                  disabled={sendingDocuments || !documentsInfo}
+                  onClick={() => void completeDocuments(true)}
+                >
+                  {copy('retryDocumentSubmission')}
+                </button>
               )}
               {documentReadError && (
                 <div>

@@ -84,6 +84,53 @@ it('rolls back all four native document-completion delivery sinks and recovers i
   expect((await complete()).status, http.logs()).toBe(200);
   expect(await solarDeliverySnapshot(http.pool, id)).toEqual(before);
 });
+
+it('replays a keyed document submission once and checks current ownership before releasing its receipt', async () => {
+  const idempotencyKey = randomUUID();
+  const complete = () =>
+    fetch(`${http.base}/api/solar/requests/${id}/documents/complete`, {
+      method: 'POST',
+      headers: {
+        Cookie: `barghsa_session=${session}`,
+        'X-CSRF-Token': csrf,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ allDocumentsUploaded: true, idempotencyKey }),
+    });
+  const expected = { status: 'documents_under_review', requestId: id, idempotencyKey };
+  const auditCount = async () =>
+    (
+      await http.pool.query(
+        "SELECT count(*)::int AS count FROM audit_log WHERE event='solar.documents.submitted' AND metadata::jsonb->>'requestId'=$1",
+        [id]
+      )
+    ).rows[0].count;
+
+  const responses = await Promise.all([complete(), complete()]);
+  for (const response of responses) {
+    expect(response.status, http.logs()).toBe(200);
+    expect(await response.json()).toEqual(expected);
+  }
+  expect(await auditCount()).toBe(1);
+  await expectSolarStatusDeliveries(http.pool, id, owner, ['documents_under_review']);
+  const delivery = await solarDeliverySnapshot(http.pool, id);
+  await http.pool.query(
+    "UPDATE solar_construction_requests SET status='changes_requested' WHERE id=$1",
+    [id]
+  );
+  const replay = await complete();
+  expect(replay.status, http.logs()).toBe(200);
+  expect(await replay.json()).toEqual(expected);
+  expect(await auditCount()).toBe(1);
+  expect(await solarDeliverySnapshot(http.pool, id)).toEqual(delivery);
+  expect(
+    (await http.pool.query('SELECT status FROM solar_construction_requests WHERE id=$1', [id]))
+      .rows[0].status
+  ).toBe('changes_requested');
+  await http.pool.query('UPDATE profiles SET user_id=$2 WHERE id=$1', [profile, next]);
+  expect((await complete()).status).toBe(404);
+  expect(await auditCount()).toBe(1);
+});
 it('uses the current owner and keeps an active original manager inbox-only', async () => {
   await http.pool.query('UPDATE profiles SET user_id=$2 WHERE id=$1', [profile, next]);
   await change('submitted', 'documents_under_review', manager);

@@ -35,7 +35,9 @@ const guidance = z
       .max(30),
   })
   .strict();
-const complete = z.object({ allDocumentsUploaded: z.literal(true) }).strict();
+const complete = z
+  .object({ allDocumentsUploaded: z.literal(true), idempotencyKey: z.string().uuid().optional() })
+  .strict();
 const review = z
   .object({
     expectedRevision: z.number().int().positive(),
@@ -131,8 +133,8 @@ export class SolarDocumentsController {
     @Body() body: unknown,
     @Req() req: AuthenticatedRequest
   ) {
-    parse(complete, body);
-    return this.service.complete(req.session, id, req.ip ?? '127.0.0.1');
+    const input = parse(complete, body);
+    return this.service.complete(req.session, id, req.ip ?? '127.0.0.1', input.idempotencyKey);
   }
 }
 
