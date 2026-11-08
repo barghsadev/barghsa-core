@@ -22,7 +22,9 @@ import { useLocale } from '../hooks/useLocale.js';
 import { useFinancialFormatting } from '../hooks/useFinancialFormatting.js';
 import { withCsrf } from '../lib/csrf.js';
 import { useWizardStep } from '../hooks/useWizardStep.js';
-import { confirmedDraftReceipt, electricityOrderReceipt } from '../lib/form-receipt.js';
+import { confirmedDraftReceipt } from '../lib/form-receipt.js';
+import { useElectricityOrderSubmission } from '../hooks/useElectricityOrderSubmission.js';
+import { ElectricityOrderRecovery } from '../components/ElectricityOrderRecovery.js';
 import { formatJalaliDateTime, parseJalaliDateTime } from '../lib/jalali-date-time.js';
 import {
   ElectricityQuotePreviewError,
@@ -247,6 +249,8 @@ export function AdvancedElectricityOrderPage() {
   const wizard = useWizardStep('/electricity/advanced');
   const { step } = wizard;
   const command = useRef<symbol | null>(null);
+  const orderSubmission = useElectricityOrderSubmission('advanced', profileId);
+  const orderUnconfirmed = orderSubmission.unconfirmed;
   const generation = useRef(0);
   const completed = useRef(false);
   const savedSignature = useRef('');
@@ -261,12 +265,12 @@ export function AdvancedElectricityOrderPage() {
     shouldBlockFn: ({ current, next }) =>
       current.pathname !== next.pathname &&
       !completed.current &&
-      (hasUnsavedChanges() || !!command.current || fields.isPending()),
+      (hasUnsavedChanges() || orderUnconfirmed || !!command.current || fields.isPending()),
     enableBeforeUnload: () =>
-      !completed.current && (hasUnsavedChanges() || !!command.current || fields.isPending()),
+      !completed.current &&
+      (hasUnsavedChanges() || orderUnconfirmed || !!command.current || fields.isPending()),
     withResolver: true,
   });
-  const submission = useRef<{ fingerprint: string; key: string } | null>(null);
   const selectedAddress = addresses.find((address) => address.id === addressId);
   const startAt = useMemo(() => parseJalaliDateTime(start), [start]);
   const endAt = useMemo(() => parseJalaliDateTime(end), [end]);
@@ -485,6 +489,7 @@ export function AdvancedElectricityOrderPage() {
     if (next && step === 4 && !selectedAddress) return false;
     if (
       command.current ||
+      orderUnconfirmed ||
       completed.current ||
       loading ||
       loadError ||
@@ -552,8 +557,42 @@ export function AdvancedElectricityOrderPage() {
     locale,
     'financial'
   );
+  async function sendOrder(input?: object) {
+    if (command.current || completed.current || loading || loadError || blocked || !profileId)
+      return;
+    const token = Symbol();
+    command.current = token;
+    const epoch = generation.current;
+    setSubmitting(true);
+    const current = () => epoch === generation.current;
+    try {
+      const result = await orderSubmission.send(input, current);
+      if (!current()) return;
+      if (result.status === 'confirmed') {
+        completed.current = true;
+        toast.success(t('electricity.order.success.create', locale));
+        await navigate({
+          to: '/electricity/orders/$orderId',
+          params: { orderId: result.receipt.orderId },
+        }).catch(() => {});
+      } else if (result.status === 'quote-changed') {
+        setQuoteVersion((version) => version + 1);
+        toast.error(t('electricity.order.reviewChanged', locale));
+      } else if (result.status === 'unconfirmed') {
+        toast.error(t('electricity.order.unconfirmed', locale));
+      } else if (result.status === 'rejected') {
+        toast.error(t('electricity.order.error.create', locale));
+      }
+    } finally {
+      if (command.current === token) {
+        command.current = null;
+        setSubmitting(false);
+      }
+    }
+  }
+
   async function submit() {
-    if (!financialGate.allowed) return;
+    if (!financialGate.allowed || orderUnconfirmed) return;
     if (
       command.current ||
       completed.current ||
@@ -570,52 +609,16 @@ export function AdvancedElectricityOrderPage() {
       !endAt
     )
       return;
-    const token = Symbol();
-    command.current = token;
-    const epoch = generation.current;
-    setSubmitting(true);
-    const fingerprint = JSON.stringify({ ...previewInput, addressId, quote: quote.reviewDigest });
-    if (submission.current?.fingerprint !== fingerprint) {
-      submission.current = { fingerprint, key: crypto.randomUUID() };
-    }
-    try {
-      const response = await fetch('/api/electricity/orders/advanced', {
-        method: 'POST',
-        credentials: 'include',
-        headers: withCsrf({ 'Content-Type': 'application/json' }),
-        body: JSON.stringify({
-          ...previewInput,
-          idempotencyKey: submission.current.key,
-          expectedQuoteDigest: quote.reviewDigest,
-          address: {
-            provinceId: selectedAddress.provinceId,
-            cityId: selectedAddress.cityId,
-            fullAddress: selectedAddress.fullAddress,
-            postalCode: selectedAddress.postalCode,
-          },
-        }),
-      });
-      if (epoch !== generation.current) return;
-      if (response.status === 409) {
-        setQuoteVersion((version) => version + 1);
-        toast.error(t('electricity.order.reviewChanged', locale));
-        return;
-      }
-      if (!response.ok) throw new Error('Order failed');
-      const result = electricityOrderReceipt(await response.json());
-      if (epoch !== generation.current) return;
-      completed.current = true;
-      toast.success(t('electricity.order.success.create', locale));
-      await navigate({ to: '/electricity/orders/$orderId', params: { orderId: result.orderId } });
-    } catch {
-      if (epoch === generation.current && !completed.current)
-        toast.error(t('electricity.order.error.create', locale));
-    } finally {
-      if (command.current === token) {
-        command.current = null;
-        setSubmitting(false);
-      }
-    }
+    await sendOrder({
+      ...previewInput,
+      expectedQuoteDigest: quote.reviewDigest,
+      address: {
+        provinceId: selectedAddress.provinceId,
+        cityId: selectedAddress.cityId,
+        fullAddress: selectedAddress.fullAddress,
+        postalCode: selectedAddress.postalCode,
+      },
+    });
   }
 
   const title = t('electricity.advanced.title', locale);
@@ -672,45 +675,51 @@ export function AdvancedElectricityOrderPage() {
               submitting ? 'electricity.order.submitting' : 'electricity.order.savingDraft',
               locale
             )}
+            saveDisabled={orderUnconfirmed}
+            errorMessage={orderUnconfirmed ? t('electricity.order.unconfirmed', locale) : undefined}
             onSave={() => saveDraft(false)}
             onStay={() => blocker.reset()}
-            onDiscardSaved={async () => {
-              if (!profileId || command.current || completed.current) return false;
-              const token = Symbol();
-              command.current = token;
-              const epoch = generation.current;
-              setSaving(true);
-              try {
-                const response = await fetch(
-                  `/api/electricity/drafts/advanced?profileId=${profileId}`,
-                  {
-                    method: 'DELETE',
-                    credentials: 'include',
-                    headers: withCsrf(),
+            onDiscardSaved={
+              orderUnconfirmed
+                ? undefined
+                : async () => {
+                    if (!profileId || command.current || completed.current) return false;
+                    const token = Symbol();
+                    command.current = token;
+                    const epoch = generation.current;
+                    setSaving(true);
+                    try {
+                      const response = await fetch(
+                        `/api/electricity/drafts/advanced?profileId=${profileId}`,
+                        {
+                          method: 'DELETE',
+                          credentials: 'include',
+                          headers: withCsrf(),
+                        }
+                      );
+                      if (!response.ok) return false;
+                      const receipt: unknown = await response.json();
+                      return (
+                        epoch === generation.current &&
+                        typeof receipt === 'object' &&
+                        receipt !== null &&
+                        'discarded' in receipt &&
+                        receipt.discarded === true &&
+                        'profileId' in receipt &&
+                        receipt.profileId === profileId &&
+                        'mode' in receipt &&
+                        receipt.mode === 'advanced'
+                      );
+                    } catch {
+                      return false;
+                    } finally {
+                      if (command.current === token) {
+                        command.current = null;
+                        setSaving(false);
+                      }
+                    }
                   }
-                );
-                if (!response.ok) return false;
-                const receipt: unknown = await response.json();
-                return (
-                  epoch === generation.current &&
-                  typeof receipt === 'object' &&
-                  receipt !== null &&
-                  'discarded' in receipt &&
-                  receipt.discarded === true &&
-                  'profileId' in receipt &&
-                  receipt.profileId === profileId &&
-                  'mode' in receipt &&
-                  receipt.mode === 'advanced'
-                );
-              } catch {
-                return false;
-              } finally {
-                if (command.current === token) {
-                  command.current = null;
-                  setSaving(false);
-                }
-              }
-            }}
+            }
             onLeave={() => blocker.proceed()}
           />
         </Suspense>
@@ -721,11 +730,22 @@ export function AdvancedElectricityOrderPage() {
           {t('electricity.advanced.description', locale)}
         </p>
       </header>
+      {orderUnconfirmed && (
+        <ElectricityOrderRecovery busy={submitting} onRetry={() => void sendOrder()} />
+      )}
       <ValidatedFormWizard
         form={fields.form}
         errorId={fields.errorId}
         onPendingChange={fields.setValidationPending}
-        disabled={loading || loadError || blocked || completed.current || saving || submitting}
+        disabled={
+          orderUnconfirmed ||
+          loading ||
+          loadError ||
+          blocked ||
+          completed.current ||
+          saving ||
+          submitting
+        }
         onInvalidStep={(target) => wizard.go(target, step)}
         fields={[
           [
@@ -756,8 +776,10 @@ export function AdvancedElectricityOrderPage() {
         submittingLabel={t('electricity.order.submitting', locale)}
         saving={saving}
         submitting={submitting}
-        saveDisabled={completed.current}
+        backDisabled={orderUnconfirmed}
+        saveDisabled={orderUnconfirmed || completed.current}
         nextDisabled={
+          orderUnconfirmed ||
           completed.current ||
           (step === 1
             ? !validPeriod
@@ -765,6 +787,7 @@ export function AdvancedElectricityOrderPage() {
           (step === 4 && !selectedAddress)
         }
         submitDisabled={
+          orderUnconfirmed ||
           !financialGate.allowed ||
           completed.current ||
           !quote ||
@@ -782,7 +805,7 @@ export function AdvancedElectricityOrderPage() {
         {(pending) => (
           <fieldset
             className="min-w-0"
-            disabled={pending || saving || submitting || completed.current}
+            disabled={orderUnconfirmed || pending || saving || submitting || completed.current}
           >
             <legend className="sr-only">{t('electricity.order.steps', locale)}</legend>
             {step === 1 && (

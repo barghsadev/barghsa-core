@@ -37,7 +37,9 @@ import {
 } from '@barghsa/ui';
 import { useGeographyOptions, loadGeographyOptions } from '../hooks/useGeographyOptions.js';
 import { useWizardStep } from '../hooks/useWizardStep.js';
-import { confirmedDraftReceipt, electricityOrderReceipt } from '../lib/form-receipt.js';
+import { confirmedDraftReceipt } from '../lib/form-receipt.js';
+import { useElectricityOrderSubmission } from '../hooks/useElectricityOrderSubmission.js';
+import { ElectricityOrderRecovery } from '../components/ElectricityOrderRecovery.js';
 import { withCsrf } from '../lib/csrf.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
@@ -339,7 +341,8 @@ function OwnedSimpleElectricityOrderPage() {
   const [quoteError, setQuoteError] = useState('');
   const [quoting, setQuoting] = useState(false);
   const [quoteVersion, setQuoteVersion] = useState(0);
-  const submissionKey = useRef<{ fingerprint: string; key: string } | null>(null);
+  const orderSubmission = useElectricityOrderSubmission('simple', activeProfileId);
+  const orderUnconfirmed = orderSubmission.unconfirmed;
   const wizard = useWizardStep('/electricity/order');
   const { step } = wizard;
   const [draftLoading, setDraftLoading] = useState(true);
@@ -377,6 +380,7 @@ function OwnedSimpleElectricityOrderPage() {
       current.pathname !== next.pathname &&
       !completed.current &&
       (unsavedChanges ||
+        orderUnconfirmed ||
         !!draftSaveInFlight.current ||
         orderSaveInFlight.current ||
         addressSaveInFlight.current ||
@@ -384,6 +388,7 @@ function OwnedSimpleElectricityOrderPage() {
     enableBeforeUnload: () =>
       !completed.current &&
       (unsavedChanges ||
+        orderUnconfirmed ||
         !!draftSaveInFlight.current ||
         orderSaveInFlight.current ||
         addressSaveInFlight.current ||
@@ -988,6 +993,7 @@ function OwnedSimpleElectricityOrderPage() {
   }
 
   const saveDraft = async (advance: boolean, target = advance ? step + 1 : step) => {
+    if (orderUnconfirmed) return false;
     if (unsavedAddress) {
       toast.error(t('electricity.order.unsaved.address', locale));
       return false;
@@ -1080,8 +1086,49 @@ function OwnedSimpleElectricityOrderPage() {
     locale,
     'financial'
   );
-  const handleSubmitOrder = useCallback(async () => {
-    if (!financialGate.allowed) return;
+  async function sendOrder(input?: object) {
+    if (
+      !activeProfileId ||
+      checking ||
+      blocked !== false ||
+      verificationError ||
+      orderSaveInFlight.current ||
+      draftSaveInFlight.current ||
+      addressSaveInFlight.current ||
+      completed.current
+    )
+      return;
+    orderSaveInFlight.current = true;
+    setSubmitting(true);
+    const generation = verificationGeneration.current;
+    const draftEpoch = draftGeneration.current;
+    const current = () =>
+      generation === verificationGeneration.current && draftEpoch === draftGeneration.current;
+    try {
+      const result = await orderSubmission.send(input, current);
+      if (!current()) return;
+      if (result.status === 'confirmed') {
+        completed.current = true;
+        setOrderCreated(result.receipt);
+        toast.success(t('electricity.order.success.create', locale));
+      } else if (result.status === 'quote-changed') {
+        setQuoteVersion((version) => version + 1);
+        toast.error(t('electricity.order.reviewChanged', locale));
+      } else if (result.status === 'unconfirmed') {
+        toast.error(t('electricity.order.unconfirmed', locale));
+      } else if (result.status === 'rejected') {
+        toast.error(t('electricity.order.error.create', locale));
+      }
+    } finally {
+      if (current()) {
+        orderSaveInFlight.current = false;
+        setSubmitting(false);
+      }
+    }
+  }
+
+  async function handleSubmitOrder() {
+    if (!financialGate.allowed || orderUnconfirmed) return;
     if (
       orderSaveInFlight.current ||
       addressSaveInFlight.current ||
@@ -1115,25 +1162,10 @@ function OwnedSimpleElectricityOrderPage() {
       return;
     }
 
-    orderSaveInFlight.current = true;
-    setSubmitting(true);
-    const generation = verificationGeneration.current;
-    const draftEpoch = draftGeneration.current;
-    const fingerprint = JSON.stringify({
-      activeProfileId,
-      period,
-      totalKwh,
-      appliedGiftCode,
-      selectedAddressId,
-    });
-    if (submissionKey.current?.fingerprint !== fingerprint) {
-      submissionKey.current = { fingerprint, key: crypto.randomUUID() };
-    }
-    const input = {
+    await sendOrder({
       profileId: activeProfileId,
       period,
       totalKwh,
-      idempotencyKey: submissionKey.current.key,
       expectedQuoteDigest: quote.reviewDigest,
       ...(appliedGiftCode ? { giftCode: appliedGiftCode } : {}),
       address: {
@@ -1142,65 +1174,8 @@ function OwnedSimpleElectricityOrderPage() {
         fullAddress: selectedAddress.fullAddress,
         postalCode: selectedAddress.postalCode,
       },
-    };
-    try {
-      const res = await fetch('/api/electricity/orders/simple', {
-        method: 'POST',
-        headers: withCsrf({ 'Content-Type': 'application/json' }),
-        body: JSON.stringify(input),
-      });
-      if (generation !== verificationGeneration.current || draftEpoch !== draftGeneration.current)
-        return;
-
-      if (!res.ok) {
-        if (res.status === 409) {
-          setQuoteVersion((version) => version + 1);
-          toast.error(t('electricity.order.reviewChanged', locale));
-          return;
-        }
-        toast.error(t('electricity.order.error.create', locale));
-        return;
-      }
-
-      const result: unknown = await res.json();
-      if (generation !== verificationGeneration.current || draftEpoch !== draftGeneration.current)
-        return;
-      const receipt = electricityOrderReceipt(result);
-      completed.current = true;
-      setOrderCreated(receipt);
-      toast.success(t('electricity.order.success.create', locale));
-    } catch {
-      if (generation === verificationGeneration.current && draftEpoch === draftGeneration.current)
-        toast.error(t('electricity.order.error.create', locale));
-    } finally {
-      if (generation === verificationGeneration.current && draftEpoch === draftGeneration.current) {
-        orderSaveInFlight.current = false;
-        setSubmitting(false);
-      }
-    }
-  }, [
-    financialGate.allowed,
-    selectedProductId,
-    showNewAddressForm,
-    products,
-    loadingProducts,
-    productError,
-    selectedAddressId,
-    selectedAddress,
-    activeProfileId,
-    locale,
-    checking,
-    blocked,
-    verificationError,
-    loadingAddresses,
-    addressError,
-    period,
-    totalKwh,
-    appliedGiftCode,
-    quote,
-    quoting,
-    quoteError,
-  ]);
+    });
+  }
 
   // ── Render: Loading ─────────────────────────────────────────────────
 
@@ -1339,62 +1314,73 @@ function OwnedSimpleElectricityOrderPage() {
               submitting ? 'electricity.order.submitting' : 'electricity.order.savingDraft',
               locale
             )}
-            saveDisabled={draftLoading || draftError || unsavedAddress}
+            saveDisabled={orderUnconfirmed || draftLoading || draftError || unsavedAddress}
             errorMessage={
-              unsavedAddress ? t('electricity.order.unsaved.address', locale) : undefined
+              orderUnconfirmed
+                ? t('electricity.order.unconfirmed', locale)
+                : unsavedAddress
+                  ? t('electricity.order.unsaved.address', locale)
+                  : undefined
             }
             onSave={async () => (await saveDraft(false)) && !unsavedAddress}
             onStay={() => blocker.reset()}
-            onDiscardSaved={async () => {
-              if (
-                !activeProfileId ||
-                draftSaveInFlight.current ||
-                orderSaveInFlight.current ||
-                addressSaveInFlight.current ||
-                completed.current
-              )
-                return false;
-              const token = Symbol();
-              draftSaveInFlight.current = token;
-              const epoch = draftGeneration.current;
-              setSavingDraft(true);
-              try {
-                const response = await fetch(
-                  `/api/electricity/drafts/simple?profileId=${activeProfileId}`,
-                  {
-                    method: 'DELETE',
-                    credentials: 'include',
-                    headers: withCsrf(),
+            onDiscardSaved={
+              orderUnconfirmed
+                ? undefined
+                : async () => {
+                    if (
+                      !activeProfileId ||
+                      draftSaveInFlight.current ||
+                      orderSaveInFlight.current ||
+                      addressSaveInFlight.current ||
+                      completed.current
+                    )
+                      return false;
+                    const token = Symbol();
+                    draftSaveInFlight.current = token;
+                    const epoch = draftGeneration.current;
+                    setSavingDraft(true);
+                    try {
+                      const response = await fetch(
+                        `/api/electricity/drafts/simple?profileId=${activeProfileId}`,
+                        {
+                          method: 'DELETE',
+                          credentials: 'include',
+                          headers: withCsrf(),
+                        }
+                      );
+                      if (!response.ok) return false;
+                      const receipt: unknown = await response.json();
+                      return (
+                        epoch === draftGeneration.current &&
+                        typeof receipt === 'object' &&
+                        receipt !== null &&
+                        'discarded' in receipt &&
+                        receipt.discarded === true &&
+                        'profileId' in receipt &&
+                        receipt.profileId === activeProfileId &&
+                        'mode' in receipt &&
+                        receipt.mode === 'simple'
+                      );
+                    } catch {
+                      return false;
+                    } finally {
+                      if (draftSaveInFlight.current === token) {
+                        draftSaveInFlight.current = null;
+                        setSavingDraft(false);
+                      }
+                    }
                   }
-                );
-                if (!response.ok) return false;
-                const receipt: unknown = await response.json();
-                return (
-                  epoch === draftGeneration.current &&
-                  typeof receipt === 'object' &&
-                  receipt !== null &&
-                  'discarded' in receipt &&
-                  receipt.discarded === true &&
-                  'profileId' in receipt &&
-                  receipt.profileId === activeProfileId &&
-                  'mode' in receipt &&
-                  receipt.mode === 'simple'
-                );
-              } catch {
-                return false;
-              } finally {
-                if (draftSaveInFlight.current === token) {
-                  draftSaveInFlight.current = null;
-                  setSavingDraft(false);
-                }
-              }
-            }}
+            }
             onLeave={() => blocker.proceed()}
           />
         </Suspense>
       )}
       <h1 className="mb-2 text-2xl font-bold">{t('electricity.order.title', locale)}</h1>
       <p className="mb-6 text-muted-foreground">{t('electricity.order.description', locale)}</p>
+      {orderUnconfirmed && (
+        <ElectricityOrderRecovery busy={submitting} onRetry={() => void sendOrder()} />
+      )}
       <Suspense fallback={<p role="status">{t('electricity.order.previewLoading', locale)}</p>}>
         <ValidatedFormWizard
           form={fields.form}
@@ -1407,6 +1393,7 @@ function OwnedSimpleElectricityOrderPage() {
             draftLoading ||
             draftError ||
             completed.current ||
+            orderUnconfirmed ||
             submitting ||
             savingAddress ||
             savingDraft
@@ -1436,7 +1423,9 @@ function OwnedSimpleElectricityOrderPage() {
           submittingLabel={t('electricity.order.submitting', locale)}
           saving={savingDraft}
           submitting={submitting}
+          backDisabled={orderUnconfirmed}
           saveDisabled={
+            orderUnconfirmed ||
             draftLoading ||
             draftError ||
             quantityError ||
@@ -1445,6 +1434,7 @@ function OwnedSimpleElectricityOrderPage() {
             completed.current
           }
           nextDisabled={
+            orderUnconfirmed ||
             draftLoading ||
             draftError ||
             savingAddress ||
@@ -1460,6 +1450,7 @@ function OwnedSimpleElectricityOrderPage() {
                 !addresses.some((address) => address.id === selectedAddressId)))
           }
           submitDisabled={
+            orderUnconfirmed ||
             !financialGate.allowed ||
             draftLoading ||
             draftError ||
@@ -1482,7 +1473,14 @@ function OwnedSimpleElectricityOrderPage() {
           {(pending) => (
             <fieldset
               className="min-w-0"
-              disabled={pending || savingDraft || submitting || savingAddress || completed.current}
+              disabled={
+                orderUnconfirmed ||
+                pending ||
+                savingDraft ||
+                submitting ||
+                savingAddress ||
+                completed.current
+              }
             >
               <legend className="sr-only">{t('electricity.order.steps', locale)}</legend>
               {/* Step 1: Select Product */}
@@ -2156,6 +2154,7 @@ function OwnedSimpleElectricityOrderPage() {
                   }
                   postalCode={selectedAddress?.postalCode ?? ''}
                   editDisabled={
+                    orderUnconfirmed ||
                     savingDraft ||
                     submitting ||
                     savingAddress ||

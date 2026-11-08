@@ -351,12 +351,39 @@ it('retries a failed submission with the same idempotency key', async () => {
   await approveVisibleConfirmation();
   await act(async () => submit().click());
   const first = JSON.parse(orderCalls()[0]![1]!.body as string);
+  expect(submit().disabled).toBe(true);
+  expect(container.textContent).toContain(t('electricity.order.unconfirmed', 'en'));
+  const retry = () =>
+    [...container.querySelectorAll('button')].find(
+      (button) => button.textContent === t('electricity.order.retrySubmission', 'en')
+    )!;
+  let release!: (value: unknown) => void;
+  const stalled = response(saved, 201);
+  stalled.json = () =>
+    new Promise((resolve) => {
+      release = resolve;
+    });
+  orderReply = async () => stalled;
+  vi.useFakeTimers();
+  try {
+    await act(async () => retry().click());
+    await act(async () => vi.advanceTimersByTimeAsync(15_000));
+    expect(orderCalls()[1]![1]!.signal?.aborted).toBe(true);
+    expect(retry().disabled).toBe(false);
+    await act(async () => release(saved));
+    expect(navigate).not.toHaveBeenCalled();
+    expect(orderCalls()).toHaveLength(2);
+  } finally {
+    vi.useRealTimers();
+  }
   orderReply = async () => response(saved, 201);
   draftReply = async (input) => response(input);
-  await approveVisibleConfirmation();
-  await act(async () => submit().click());
+  await act(async () => retry().click());
   const second = JSON.parse(orderCalls()[1]![1]!.body as string);
   expect(second.idempotencyKey).toBe(first.idempotencyKey);
+  expect(orderCalls().map(([, options]) => options!.body)).toEqual(
+    Array(3).fill(orderCalls()[0]![1]!.body)
+  );
   expect(container.textContent).toContain(t('electricity.order.success.title', 'en'));
 });
 
@@ -456,12 +483,14 @@ it('retains the submission key when a success response has invalid order referen
   await approveVisibleConfirmation();
   await act(async () => submit().click());
   expect(navigate).not.toHaveBeenCalled();
-  await approveVisibleConfirmation();
-  expect(submit().disabled).toBe(false);
+  expect(submit().disabled).toBe(true);
   const first = JSON.parse(orderCalls()[0]![1]!.body as string);
   orderReply = async () => response(saved, 201);
-  await approveVisibleConfirmation();
-  await act(async () => submit().click());
+  const retry = [...container.querySelectorAll('button')].find(
+    (button) => button.textContent === t('electricity.order.retrySubmission', 'en')
+  )!;
+  expect(retry.disabled).toBe(false);
+  await act(async () => retry.click());
   const second = JSON.parse(orderCalls()[1]![1]!.body as string);
   expect(second.idempotencyKey).toBe(first.idempotencyKey);
   expect(navigate).toHaveBeenCalledWith({

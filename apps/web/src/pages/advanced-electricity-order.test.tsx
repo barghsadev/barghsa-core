@@ -499,19 +499,23 @@ it('sends one submission and retains its key until all order references are conf
   expect(container.querySelector('fieldset')?.disabled).toBe(true);
   await act(async () => finish(reply({ orderId: '11111111-1111-4111-8111-111111111111' }, 201)));
   expect(navigateMock).not.toHaveBeenCalled();
-  expect(submit().disabled).toBe(false);
+  expect(submit().disabled).toBe(true);
+  const retry = () =>
+    [...container.querySelectorAll('button')].find(
+      (button) => button.textContent === t('electricity.order.retrySubmission', 'en')
+    )!;
+  expect(retry().disabled).toBe(false);
   expect(success).not.toHaveBeenCalled();
-  expect(error).toHaveBeenCalledExactlyOnceWith('Failed to create order');
+  const unconfirmed = t('electricity.order.unconfirmed', 'en');
+  expect(error).toHaveBeenCalledExactlyOnceWith(unconfirmed);
   orderReply = () => Promise.reject(new TypeError('Internal transport detail'));
-  await approveVisibleConfirmation();
-  await act(async () => submit().click());
+  await act(async () => retry().click());
   expect(navigateMock).not.toHaveBeenCalled();
   expect(success).not.toHaveBeenCalled();
-  expect(error.mock.calls).toEqual([['Failed to create order'], ['Failed to create order']]);
+  expect(error.mock.calls).toEqual([[unconfirmed], [unconfirmed]]);
   orderReply = null;
   navigateMock.mockRejectedValueOnce(new Error('Navigation failed after the receipt'));
-  await approveVisibleConfirmation();
-  await act(async () => submit().click());
+  await act(async () => retry().click());
   expect(orderCalls()).toHaveLength(3);
   expect(orderCalls().map(([, options]) => options!.body)).toEqual(
     Array(3).fill(orderCalls()[0]![1]!.body)

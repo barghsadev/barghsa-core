@@ -789,6 +789,10 @@ export const fa: I18nDictionary = {
   'electricity.order.deliveryAddress': 'آدرس تحویل',
   'electricity.order.submitting': 'در حال ثبت سفارش…',
   'electricity.order.submit': 'ثبت سفارش',
+  'electricity.order.unconfirmed':
+    'ثبت سفارش تأیید نشده است. می‌توانید همان سفارش را دوباره ارسال کنید. اگر از این صفحه خارج می‌شوید، پیش از ثبت سفارش جدید، سفارش‌های خود را بررسی کنید.',
+  'electricity.order.retrySubmission': 'ارسال دوباره همان سفارش',
+  'electricity.order.checkOrders': 'بررسی سفارش‌ها',
   'electricity.order.error.noProduct': 'لطفاً یک محصول را انتخاب کنید',
   'electricity.order.error.noAddress': 'لطفاً یک آدرس را انتخاب کنید',
   'electricity.order.addressLoadFailed':
@@ -1663,6 +1667,10 @@ export const en: I18nDictionary = {
   'electricity.order.deliveryAddress': 'Delivery Address',
   'electricity.order.submitting': 'Submitting order…',
   'electricity.order.submit': 'Submit Order',
+  'electricity.order.unconfirmed':
+    'The order is unconfirmed. You can retry the same submission. If you leave this page, check your orders before starting a new one.',
+  'electricity.order.retrySubmission': 'Retry the same order',
+  'electricity.order.checkOrders': 'Check orders',
   'electricity.order.error.noProduct': 'Please select a product',
   'electricity.order.error.noAddress': 'Please select an address',
   'electricity.order.addressLoadFailed':

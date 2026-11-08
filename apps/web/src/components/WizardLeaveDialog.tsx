@@ -15,7 +15,7 @@ interface Props {
   workingLabel: string;
   onStay: () => void;
   onLeave: () => void;
-  onDiscardSaved?: () => Promise<boolean>;
+  onDiscardSaved?: (() => Promise<boolean>) | undefined;
 }
 
 export default function WizardLeaveDialog(props: Props) {

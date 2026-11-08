@@ -40,6 +40,7 @@ const products = (['thermal', 'green', 'free_market', 'energy_saving'] as const)
 );
 const startAt = '2026-10-04T10:00:00.000Z';
 const endAt = '2026-10-11T10:00:00.000Z';
+const fixtureNow = new Date('2026-10-02T10:00:00.000Z');
 const path = (mode: Mode) => (mode === 'simple' ? '/electricity/order' : '/electricity/advanced');
 const field = (page: Page, mode: Mode) =>
   page.locator(mode === 'simple' ? '#electricity-kwh' : '#advanced-thermal');
@@ -126,8 +127,10 @@ async function fixture(page: Page, mode: Mode, locale: Locale, step = 2) {
     saveGate: null as Promise<void> | null,
     orderGate: null as Promise<void> | null,
     invalidOrder: false,
+    orderBodies: [] as Array<string | null>,
+    orderReplies: 0,
   };
-  await page.clock.setFixedTime(new Date('2026-10-02T10:00:00.000Z'));
+  await page.clock.setFixedTime(fixtureNow);
   await page.addInitScript((value) => localStorage.setItem('barghsa.locale', value), locale);
   await page.route('**/api/**', (r) => r.fulfill({ status: 404, json: {} }));
   await page.route('**/api/public/branding/config', (r) =>
@@ -296,12 +299,14 @@ async function fixture(page: Page, mode: Mode, locale: Locale, step = 2) {
     });
   });
   await page.route(`**/api/electricity/orders/${mode}`, async (r) => {
+    state.orderBodies.push(r.request().postData());
     state.orders.push(r.request().postDataJSON());
+    const json = state.invalidOrder ? { orderId: receipt.orderId } : receipt;
     await state.orderGate;
-    return r.fulfill({
-      status: 201,
-      json: state.invalidOrder ? { orderId: receipt.orderId } : receipt,
+    await r.fulfill({ status: 201, json }).catch((error: unknown) => {
+      if (state.orderReplies !== 0 || !state.orderGate) throw error;
     });
+    state.orderReplies++;
   });
   return state;
 }
@@ -583,7 +588,6 @@ for (const locale of ['en', 'fa'] as const)
       page,
     }) => {
       const state = await fixture(page, mode, locale, 5);
-      state.invalidOrder = true;
       let finish!: () => void;
       state.orderGate = new Promise((resolve) => {
         finish = resolve;
@@ -592,7 +596,9 @@ for (const locale of ['en', 'fa'] as const)
       const submit = button(page, 'electricity.order.submit', locale);
       await approveRiskConfirmation(page, locale, 'financial');
       await expect(submit).toBeEnabled();
+      await page.clock.install({ time: fixtureNow });
       await submit.click();
+      await expect.poll(() => state.orders.length).toBe(1);
       await leave(page, locale);
       const actions = controls(page, locale);
       await expect(actions.dialog).toBeVisible();
@@ -600,15 +606,36 @@ for (const locale of ['en', 'fa'] as const)
       await expect(actions.discard).toBeDisabled();
       await actions.stay.click();
       expect(state.orders).toHaveLength(1);
+      const alert = page
+        .getByRole('alert')
+        .filter({ hasText: t('electricity.order.unconfirmed', locale) });
+      const retry = button(page, 'electricity.order.retrySubmission', locale);
+      await page.clock.fastForward(15_001);
+      await expect(alert).toBeVisible();
+      await expect(retry).toBeEnabled();
+      await expect(retry).toBeFocused();
+      await expect(submit).toBeDisabled();
+      await expect(button(page, 'electricity.order.back', locale)).toBeDisabled();
+      await expect(button(page, 'electricity.order.saveDraft', locale)).toBeDisabled();
+      expect(state.orders).toHaveLength(1);
       finish();
-      await approveRiskConfirmation(page, locale, 'financial');
-      await expect(submit).toBeEnabled();
+      await expect.poll(() => state.orderReplies).toBe(1);
+      state.orderGate = null;
+      await expect(alert).toBeVisible();
+      await expect(page).toHaveURL(/\?step=5$/);
+      state.invalidOrder = true;
+      await retry.click();
+      await expect.poll(() => state.orderReplies).toBe(2);
+      await expect(alert).toBeVisible();
+      await expect(retry).toBeEnabled();
       await expect(page).toHaveURL(/\?step=5$/);
       state.invalidOrder = false;
-      await submit.click();
+      await retry.click();
       await expect(page).toHaveURL(new RegExp(`/electricity/orders/${receipt.orderId}$`));
-      expect(state.orders).toHaveLength(2);
-      expect(state.orders[1]!.idempotencyKey).toBe(state.orders[0]!.idempotencyKey);
+      expect(state.orders).toHaveLength(3);
+      expect(state.orders[0]!.idempotencyKey).toMatch(/^[a-f0-9-]{36}$/);
+      expect(state.orderBodies[0]).not.toBeNull();
+      expect(state.orderBodies).toEqual(Array(3).fill(state.orderBodies[0]));
       await expect(page.getByRole('dialog')).not.toBeVisible();
     });
   }
