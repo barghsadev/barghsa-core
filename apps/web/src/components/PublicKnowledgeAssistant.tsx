@@ -14,6 +14,8 @@ import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { withCsrf } from '../lib/csrf.js';
 import { readWithDeadline } from '../lib/server-query-client.js';
 
+const QUESTION_DEADLINE_MS = 300_000;
+
 /** A public, stateless question. No account request, cookie or conversation history is sent. */
 export function PublicKnowledgeAssistant({ locale }: { locale: Locale }) {
   return <KnowledgeQuestionAssistant locale={locale} staff={false} />;
@@ -128,14 +130,21 @@ function OwnedKnowledgeQuestionAssistant({ locale, staff }: { locale: Locale; st
     setAnswer(null);
     try {
       const headers = { 'Content-Type': 'application/json', 'Accept-Language': locale };
-      const response = await fetch(endpoint + '/questions', {
-        method: 'POST',
-        credentials,
-        headers: staff ? withCsrf(headers) : headers,
-        body: JSON.stringify({ message }),
-        signal: controller.signal,
-      });
-      const body: unknown = await response.json().catch(() => null);
+      const { response, body } = await readWithDeadline(
+        controller.signal,
+        async (signal) => {
+          const response = await fetch(endpoint + '/questions', {
+            method: 'POST',
+            credentials,
+            headers: staff ? withCsrf(headers) : headers,
+            body: JSON.stringify({ message }),
+            signal,
+          });
+          const body: unknown = await response.json().catch(() => null);
+          return { response, body };
+        },
+        QUESTION_DEADLINE_MS
+      );
       if (controller.signal.aborted) return;
       if (!response.ok) {
         if (staff && (response.status === 401 || response.status === 403)) {
@@ -250,6 +259,7 @@ function OwnedKnowledgeQuestionAssistant({ locale, staff }: { locale: Locale; st
                 value: draft,
                 ref: input,
                 required: true,
+                'aria-required': true,
                 maxLength: 1000,
                 placeholder: copy('placeholder'),
                 'aria-invalid': fieldError || undefined,

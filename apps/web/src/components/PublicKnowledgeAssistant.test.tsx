@@ -96,6 +96,7 @@ it('keeps invalid questions local with owned accessible feedback', async () => {
   await fill('   ');
   await submit();
   const input = host.querySelector('textarea')!;
+  expect(input.getAttribute('aria-required')).toBe('true');
   expect(input.getAttribute('aria-invalid')).toBe('true');
   expect(document.activeElement).toBe(input);
   expect(input.getAttribute('aria-describedby')).toContain('public-knowledge-error');
@@ -169,6 +170,63 @@ it('aborts a pending answer on locale change and refuses its late result', async
   expect(host.textContent).not.toContain(answer.reply);
   expect(host.querySelector('button[type=submit]')!.hasAttribute('disabled')).toBe(false);
 });
+
+it.each([false, true])(
+  'recovers a stalled question body with an explicit retry (staff=%s)',
+  async (staff) => {
+    const stalled = Response.json(null);
+    let finish!: (body: unknown) => void;
+    vi.spyOn(stalled, 'json').mockImplementation(
+      () =>
+        new Promise((resolve) => {
+          finish = resolve;
+        })
+    );
+    const fetcher = vi
+      .fn<typeof fetch>()
+      .mockResolvedValueOnce(Response.json({ available: true }))
+      .mockResolvedValueOnce(stalled)
+      .mockResolvedValueOnce(Response.json(answer));
+    vi.stubGlobal('fetch', fetcher);
+    document.cookie = 'barghsa_csrf=knowledge-csrf; path=/';
+    const Assistant = staff ? StaffKnowledgeAssistant : PublicKnowledgeAssistant;
+    await act(async () =>
+      root.render(
+        <QueryComponentProvider>
+          <Assistant locale="en" />
+        </QueryComponentProvider>
+      )
+    );
+    const input = host.querySelector('textarea')!;
+    const send = host.querySelector<HTMLButtonElement>('button[type=submit]')!;
+    await fill('Retained question');
+    vi.useFakeTimers();
+    await submit();
+    expect(send.disabled).toBe(true);
+    expect(fetcher).toHaveBeenCalledTimes(2);
+    await act(async () => vi.advanceTimersByTimeAsync(300_000));
+    expect(host.querySelector('[role=alert]')?.textContent).toBe(
+      t('assistant.public.failure', 'en')
+    );
+    expect(send.disabled).toBe(false);
+    expect(input.value).toBe('Retained question');
+    expect(fetcher.mock.calls[1]![1]!.signal?.aborted).toBe(true);
+    await act(async () => finish({ ...answer, reply: 'Obsolete answer' }));
+    expect(host.textContent).not.toContain('Obsolete answer');
+    expect(fetcher).toHaveBeenCalledTimes(2);
+    await submit();
+    expect(fetcher).toHaveBeenCalledTimes(3);
+    expect(fetcher.mock.calls[2]![0]).toBe(
+      `/api/${staff ? 'staff' : 'public'}/knowledge/questions`
+    );
+    const request = fetcher.mock.calls[2]![1]!;
+    expect(request.credentials).toBe(staff ? 'include' : 'omit');
+    expect(new Headers(request.headers).get('X-CSRF-Token')).toBe(staff ? 'knowledge-csrf' : null);
+    expect(JSON.parse(request.body as string)).toEqual({ message: 'Retained question' });
+    expect(host.textContent).toContain(answer.reply);
+  }
+);
+
 it('refuses malformed success metadata and never renders a raw error message', async () => {
   const fetcher = vi
     .fn()

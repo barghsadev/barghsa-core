@@ -24,6 +24,8 @@ Conversation identity keeps the draft while it uploads a photo for up to 30 seco
 
 The customer guide allows up to 300 seconds for retrieval, answer generation and delivery, with a 15-second limit between stream reads. Partial text stays labelled unfinished until the final receipt validates the answer and its sources. After a timeout or an in-progress response, an explicit recheck uses the original request ID.
 
+The public and staff question forms allow up to 300 seconds for the response, including its body. A timeout keeps the question in the field and releases the send control. Sending it again takes an explicit action. A response from a timed-out request or an obsolete workspace cannot replace the current answer.
+
 In electricity and saving order discussions, an explicit retry after a transport failure announces the connection retry. Keep the failed page cursor, existing comments and unsent draft. HTTP errors and invalid response bodies retain inline recovery.
 
 `useToast` supports localized keys or domain-localized strings, all four severities, and a promise helper. Pass a validated operation promise. Its rejection still reaches the caller; it does not retry the operation. Only the latest operation owns the persistent progress notice, and a profile-context dismissal prevents a late result from restoring old content.

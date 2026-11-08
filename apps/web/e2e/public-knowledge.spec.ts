@@ -52,6 +52,7 @@ for (const locale of ['en', 'fa'] as const) {
         guide.getByRole('heading', { name: t('assistant.public.title', locale) })
       ).toBeVisible();
       const input = guide.getByLabel(t('assistant.public.question', locale), { exact: true });
+      await expect(input).toHaveAttribute('aria-required', 'true');
       const question =
         locale === 'fa' ? 'درباره خدمات برقسا توضیح دهید.' : 'Explain Barghsa services.';
       await input.fill(question);
@@ -95,13 +96,25 @@ for (const locale of ['en', 'fa'] as const) {
     'public guide recovers a changed slot and respects cooldown (' + locale + ')',
     async ({ page }) => {
       await setupCatalogueForms(page, locale, locale === 'fa');
+      await page.clock.install();
       let available = false;
       let asks = 0;
+      let releaseAnswer!: () => void;
+      const stalled = new Promise<void>((resolve) => {
+        releaseAnswer = resolve;
+      });
       await page.route('**/api/public/knowledge/availability', (route) =>
         route.fulfill({ json: { available } })
       );
-      await page.route('**/api/public/knowledge/questions', (route) => {
+      await page.route('**/api/public/knowledge/questions', async (route) => {
         asks++;
+        if (asks === 3) {
+          await stalled;
+          await route
+            .fulfill({ json: { ...answer, reply: 'Obsolete answer' } })
+            .catch(() => undefined);
+          return;
+        }
         return route.fulfill(
           asks === 1
             ? {
@@ -132,9 +145,22 @@ for (const locale of ['en', 'fa'] as const) {
       await expect(input).toHaveCount(0);
       await guide.getByRole('button', { name: t('assistant.public.refresh', locale) }).click();
       await input.fill('A new question');
+      try {
+        await send.click();
+        await expect.poll(() => asks).toBe(3);
+        await expect(send).toBeDisabled();
+        await page.clock.fastForward(300_001);
+        await expect(guide.getByRole('alert')).toHaveText(t('assistant.public.failure', locale));
+        await expect(input).toHaveValue('A new question');
+        await expect(send).toBeEnabled();
+        expect(asks).toBe(3);
+      } finally {
+        releaseAnswer();
+      }
       await send.click();
       await expect(guide).toContainText(answer.reply);
-      expect(asks).toBe(3);
+      await expect(guide).not.toContainText('Obsolete answer');
+      expect(asks).toBe(4);
     }
   );
 }

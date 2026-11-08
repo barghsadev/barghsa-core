@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-08T05:10:31+00:00",
-  "source_commit": "4b253844569f1b5af5421e3f10f64d9bd98d1c36",
+  "updated": "2026-11-08T05:18:45+00:00",
+  "source_commit": "c10da1680f887395a40c9226c9d0e2d50ce697ef",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -104444,7 +104444,7 @@
             },
             {
               "path": "apps/web/e2e/public-knowledge.spec.ts",
-              "sha256": "14e1f32835537db60c4ef1be7dc87312340567f38c37575781a79dfe09884716"
+              "sha256": "f39c8f0c1cff73d8c04593385a2d4f5d57223e6e9046edfa398da769bfab9a83"
             },
             {
               "path": "apps/web/e2e/staff-knowledge.spec.ts",
@@ -104468,11 +104468,11 @@
             },
             {
               "path": "apps/web/src/components/PublicKnowledgeAssistant.test.tsx",
-              "sha256": "59bd1c173041596b7a852214dd4f9402d6081417dc752418b0db333ae4252438"
+              "sha256": "3c4963075530a07dd3381b13a0827c9a135102e9de29247b72732db34d9895f8"
             },
             {
               "path": "apps/web/src/components/PublicKnowledgeAssistant.tsx",
-              "sha256": "50783bf5cdbd92b61ee78286a4ed71bb515e69bc73785c23c9457ea117454669"
+              "sha256": "bc483e6aabcc5cac56a0c0b3a02cf822cb8c377bc91d98f7744d7d94a52b7794"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -460598,7 +460598,7 @@
             },
             {
               "path": "apps/web/e2e/public-knowledge.spec.ts",
-              "sha256": "14e1f32835537db60c4ef1be7dc87312340567f38c37575781a79dfe09884716"
+              "sha256": "f39c8f0c1cff73d8c04593385a2d4f5d57223e6e9046edfa398da769bfab9a83"
             },
             {
               "path": "apps/web/e2e/staff-knowledge.spec.ts",
@@ -460622,11 +460622,11 @@
             },
             {
               "path": "apps/web/src/components/PublicKnowledgeAssistant.test.tsx",
-              "sha256": "59bd1c173041596b7a852214dd4f9402d6081417dc752418b0db333ae4252438"
+              "sha256": "3c4963075530a07dd3381b13a0827c9a135102e9de29247b72732db34d9895f8"
             },
             {
               "path": "apps/web/src/components/PublicKnowledgeAssistant.tsx",
-              "sha256": "50783bf5cdbd92b61ee78286a4ed71bb515e69bc73785c23c9457ea117454669"
+              "sha256": "bc483e6aabcc5cac56a0c0b3a02cf822cb8c377bc91d98f7744d7d94a52b7794"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -496998,7 +496998,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "662047e6855551b09a139f5260dfca65262eba2d44c9295a8c1b85c503d32c7e"
+              "sha256": "6b1ff5f50d58b95bea2b7d3be9ee21f0dd5e01188da56f14fae730010de71200"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -508122,7 +508122,7 @@
             },
             {
               "path": "apps/web/src/components/PublicKnowledgeAssistant.tsx",
-              "sha256": "50783bf5cdbd92b61ee78286a4ed71bb515e69bc73785c23c9457ea117454669"
+              "sha256": "bc483e6aabcc5cac56a0c0b3a02cf822cb8c377bc91d98f7744d7d94a52b7794"
             },
             {
               "path": "apps/web/src/components/RouteErrorBoundary.tsx",
@@ -512017,7 +512017,7 @@
             },
             {
               "path": "apps/web/src/components/PublicKnowledgeAssistant.tsx",
-              "sha256": "50783bf5cdbd92b61ee78286a4ed71bb515e69bc73785c23c9457ea117454669"
+              "sha256": "bc483e6aabcc5cac56a0c0b3a02cf822cb8c377bc91d98f7744d7d94a52b7794"
             },
             {
               "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
@@ -516704,7 +516704,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Existing checkout, recovery, CRM, document, AI and knowledge controls retain their evidence. Conversation identity now links name and photo validation errors to their controls in the customer and staff workspaces. Other conditional and schema-only fields still need verification."
+        "Existing checkout, recovery, CRM, document, AI, knowledge and identity control evidence remains current. Public and staff knowledge questions now expose their required state. Other conditional and schema-only fields still need verification."
       ],
       "owner": null,
       "depends_on": [],
@@ -516736,7 +516736,8 @@
           "release-0.5-remaining-native-form-controls",
           "release-0.5-required-team-role-group",
           "release-0.5-schema-form-census",
-          "release-0.5-identity-recovery"
+          "release-0.5-identity-recovery",
+          "release-0.5-knowledge-question-recovery"
         ],
         "current_acceptance": null
       }
@@ -517327,7 +517328,7 @@
             },
             {
               "path": "apps/web/src/components/PublicKnowledgeAssistant.tsx",
-              "sha256": "50783bf5cdbd92b61ee78286a4ed71bb515e69bc73785c23c9457ea117454669"
+              "sha256": "bc483e6aabcc5cac56a0c0b3a02cf822cb8c377bc91d98f7744d7d94a52b7794"
             },
             {
               "path": "apps/web/src/components/RouteErrorBoundary.tsx",
@@ -517695,7 +517696,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "662047e6855551b09a139f5260dfca65262eba2d44c9295a8c1b85c503d32c7e"
+              "sha256": "6b1ff5f50d58b95bea2b7d3be9ee21f0dd5e01188da56f14fae730010de71200"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -565966,7 +565967,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "662047e6855551b09a139f5260dfca65262eba2d44c9295a8c1b85c503d32c7e"
+              "sha256": "6b1ff5f50d58b95bea2b7d3be9ee21f0dd5e01188da56f14fae730010de71200"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -567860,7 +567861,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "662047e6855551b09a139f5260dfca65262eba2d44c9295a8c1b85c503d32c7e"
+              "sha256": "6b1ff5f50d58b95bea2b7d3be9ee21f0dd5e01188da56f14fae730010de71200"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -569810,7 +569811,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "662047e6855551b09a139f5260dfca65262eba2d44c9295a8c1b85c503d32c7e"
+              "sha256": "6b1ff5f50d58b95bea2b7d3be9ee21f0dd5e01188da56f14fae730010de71200"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -571704,7 +571705,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "662047e6855551b09a139f5260dfca65262eba2d44c9295a8c1b85c503d32c7e"
+              "sha256": "6b1ff5f50d58b95bea2b7d3be9ee21f0dd5e01188da56f14fae730010de71200"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -573598,7 +573599,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "662047e6855551b09a139f5260dfca65262eba2d44c9295a8c1b85c503d32c7e"
+              "sha256": "6b1ff5f50d58b95bea2b7d3be9ee21f0dd5e01188da56f14fae730010de71200"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -575492,7 +575493,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "662047e6855551b09a139f5260dfca65262eba2d44c9295a8c1b85c503d32c7e"
+              "sha256": "6b1ff5f50d58b95bea2b7d3be9ee21f0dd5e01188da56f14fae730010de71200"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -577386,7 +577387,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "662047e6855551b09a139f5260dfca65262eba2d44c9295a8c1b85c503d32c7e"
+              "sha256": "6b1ff5f50d58b95bea2b7d3be9ee21f0dd5e01188da56f14fae730010de71200"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -579280,7 +579281,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "662047e6855551b09a139f5260dfca65262eba2d44c9295a8c1b85c503d32c7e"
+              "sha256": "6b1ff5f50d58b95bea2b7d3be9ee21f0dd5e01188da56f14fae730010de71200"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -581174,7 +581175,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "662047e6855551b09a139f5260dfca65262eba2d44c9295a8c1b85c503d32c7e"
+              "sha256": "6b1ff5f50d58b95bea2b7d3be9ee21f0dd5e01188da56f14fae730010de71200"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -583068,7 +583069,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "662047e6855551b09a139f5260dfca65262eba2d44c9295a8c1b85c503d32c7e"
+              "sha256": "6b1ff5f50d58b95bea2b7d3be9ee21f0dd5e01188da56f14fae730010de71200"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -584962,7 +584963,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "662047e6855551b09a139f5260dfca65262eba2d44c9295a8c1b85c503d32c7e"
+              "sha256": "6b1ff5f50d58b95bea2b7d3be9ee21f0dd5e01188da56f14fae730010de71200"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -586856,7 +586857,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "662047e6855551b09a139f5260dfca65262eba2d44c9295a8c1b85c503d32c7e"
+              "sha256": "6b1ff5f50d58b95bea2b7d3be9ee21f0dd5e01188da56f14fae730010de71200"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -588750,7 +588751,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "662047e6855551b09a139f5260dfca65262eba2d44c9295a8c1b85c503d32c7e"
+              "sha256": "6b1ff5f50d58b95bea2b7d3be9ee21f0dd5e01188da56f14fae730010de71200"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -590013,7 +590014,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "662047e6855551b09a139f5260dfca65262eba2d44c9295a8c1b85c503d32c7e"
+              "sha256": "6b1ff5f50d58b95bea2b7d3be9ee21f0dd5e01188da56f14fae730010de71200"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -591383,7 +591384,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "662047e6855551b09a139f5260dfca65262eba2d44c9295a8c1b85c503d32c7e"
+              "sha256": "6b1ff5f50d58b95bea2b7d3be9ee21f0dd5e01188da56f14fae730010de71200"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -593277,7 +593278,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "662047e6855551b09a139f5260dfca65262eba2d44c9295a8c1b85c503d32c7e"
+              "sha256": "6b1ff5f50d58b95bea2b7d3be9ee21f0dd5e01188da56f14fae730010de71200"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -594080,7 +594081,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Existing commerce, guide, notification and profile export recovery retains its evidence. The conversation identity editor now bounds both photo upload and save response, preserves its draft and recovers the current revision explicitly. Remaining bespoke list, detail and staff states need verification."
+        "Existing commerce, guide, notification, profile export and conversation identity recovery evidence remains current. Public and staff knowledge question submissions now bound stalled responses, preserve the question and enable explicit retry. Remaining bespoke list, detail and staff states need verification."
       ],
       "owner": null,
       "depends_on": [],
@@ -594127,7 +594128,8 @@
           "release-0.5-header-notification-deadlines",
           "release-0.5-profile-export-deadlines",
           "release-0.5-assistant-stream-deadlines",
-          "release-0.5-identity-recovery"
+          "release-0.5-identity-recovery",
+          "release-0.5-knowledge-question-recovery"
         ],
         "current_acceptance": null
       }
@@ -657382,11 +657384,11 @@
             },
             {
               "path": "apps/web/src/components/PublicKnowledgeAssistant.test.tsx",
-              "sha256": "59bd1c173041596b7a852214dd4f9402d6081417dc752418b0db333ae4252438"
+              "sha256": "3c4963075530a07dd3381b13a0827c9a135102e9de29247b72732db34d9895f8"
             },
             {
               "path": "apps/web/src/components/PublicKnowledgeAssistant.tsx",
-              "sha256": "50783bf5cdbd92b61ee78286a4ed71bb515e69bc73785c23c9457ea117454669"
+              "sha256": "bc483e6aabcc5cac56a0c0b3a02cf822cb8c377bc91d98f7744d7d94a52b7794"
             },
             {
               "path": "apps/web/src/components/ResponseMetadataPanel.tsx",
@@ -658064,11 +658066,11 @@
             },
             {
               "path": "apps/web/src/components/PublicKnowledgeAssistant.test.tsx",
-              "sha256": "59bd1c173041596b7a852214dd4f9402d6081417dc752418b0db333ae4252438"
+              "sha256": "3c4963075530a07dd3381b13a0827c9a135102e9de29247b72732db34d9895f8"
             },
             {
               "path": "apps/web/src/components/PublicKnowledgeAssistant.tsx",
-              "sha256": "50783bf5cdbd92b61ee78286a4ed71bb515e69bc73785c23c9457ea117454669"
+              "sha256": "bc483e6aabcc5cac56a0c0b3a02cf822cb8c377bc91d98f7744d7d94a52b7794"
             },
             {
               "path": "apps/web/src/components/ResponseMetadataPanel.tsx",
@@ -658748,11 +658750,11 @@
             },
             {
               "path": "apps/web/src/components/PublicKnowledgeAssistant.test.tsx",
-              "sha256": "59bd1c173041596b7a852214dd4f9402d6081417dc752418b0db333ae4252438"
+              "sha256": "3c4963075530a07dd3381b13a0827c9a135102e9de29247b72732db34d9895f8"
             },
             {
               "path": "apps/web/src/components/PublicKnowledgeAssistant.tsx",
-              "sha256": "50783bf5cdbd92b61ee78286a4ed71bb515e69bc73785c23c9457ea117454669"
+              "sha256": "bc483e6aabcc5cac56a0c0b3a02cf822cb8c377bc91d98f7744d7d94a52b7794"
             },
             {
               "path": "apps/web/src/components/ResponseMetadataPanel.tsx",
@@ -659430,11 +659432,11 @@
             },
             {
               "path": "apps/web/src/components/PublicKnowledgeAssistant.test.tsx",
-              "sha256": "59bd1c173041596b7a852214dd4f9402d6081417dc752418b0db333ae4252438"
+              "sha256": "3c4963075530a07dd3381b13a0827c9a135102e9de29247b72732db34d9895f8"
             },
             {
               "path": "apps/web/src/components/PublicKnowledgeAssistant.tsx",
-              "sha256": "50783bf5cdbd92b61ee78286a4ed71bb515e69bc73785c23c9457ea117454669"
+              "sha256": "bc483e6aabcc5cac56a0c0b3a02cf822cb8c377bc91d98f7744d7d94a52b7794"
             },
             {
               "path": "apps/web/src/components/ResponseMetadataPanel.tsx",
@@ -660111,11 +660113,11 @@
             },
             {
               "path": "apps/web/src/components/PublicKnowledgeAssistant.test.tsx",
-              "sha256": "59bd1c173041596b7a852214dd4f9402d6081417dc752418b0db333ae4252438"
+              "sha256": "3c4963075530a07dd3381b13a0827c9a135102e9de29247b72732db34d9895f8"
             },
             {
               "path": "apps/web/src/components/PublicKnowledgeAssistant.tsx",
-              "sha256": "50783bf5cdbd92b61ee78286a4ed71bb515e69bc73785c23c9457ea117454669"
+              "sha256": "bc483e6aabcc5cac56a0c0b3a02cf822cb8c377bc91d98f7744d7d94a52b7794"
             },
             {
               "path": "apps/web/src/components/ResponseMetadataPanel.tsx",
@@ -661291,11 +661293,11 @@
             },
             {
               "path": "apps/web/src/components/PublicKnowledgeAssistant.test.tsx",
-              "sha256": "59bd1c173041596b7a852214dd4f9402d6081417dc752418b0db333ae4252438"
+              "sha256": "3c4963075530a07dd3381b13a0827c9a135102e9de29247b72732db34d9895f8"
             },
             {
               "path": "apps/web/src/components/PublicKnowledgeAssistant.tsx",
-              "sha256": "50783bf5cdbd92b61ee78286a4ed71bb515e69bc73785c23c9457ea117454669"
+              "sha256": "bc483e6aabcc5cac56a0c0b3a02cf822cb8c377bc91d98f7744d7d94a52b7794"
             },
             {
               "path": "apps/web/src/components/ResponseMetadataPanel.tsx",
@@ -661973,11 +661975,11 @@
             },
             {
               "path": "apps/web/src/components/PublicKnowledgeAssistant.test.tsx",
-              "sha256": "59bd1c173041596b7a852214dd4f9402d6081417dc752418b0db333ae4252438"
+              "sha256": "3c4963075530a07dd3381b13a0827c9a135102e9de29247b72732db34d9895f8"
             },
             {
               "path": "apps/web/src/components/PublicKnowledgeAssistant.tsx",
-              "sha256": "50783bf5cdbd92b61ee78286a4ed71bb515e69bc73785c23c9457ea117454669"
+              "sha256": "bc483e6aabcc5cac56a0c0b3a02cf822cb8c377bc91d98f7744d7d94a52b7794"
             },
             {
               "path": "apps/web/src/components/ResponseMetadataPanel.tsx",
@@ -662656,11 +662658,11 @@
             },
             {
               "path": "apps/web/src/components/PublicKnowledgeAssistant.test.tsx",
-              "sha256": "59bd1c173041596b7a852214dd4f9402d6081417dc752418b0db333ae4252438"
+              "sha256": "3c4963075530a07dd3381b13a0827c9a135102e9de29247b72732db34d9895f8"
             },
             {
               "path": "apps/web/src/components/PublicKnowledgeAssistant.tsx",
-              "sha256": "50783bf5cdbd92b61ee78286a4ed71bb515e69bc73785c23c9457ea117454669"
+              "sha256": "bc483e6aabcc5cac56a0c0b3a02cf822cb8c377bc91d98f7744d7d94a52b7794"
             },
             {
               "path": "apps/web/src/components/ResponseMetadataPanel.tsx",
@@ -663337,11 +663339,11 @@
             },
             {
               "path": "apps/web/src/components/PublicKnowledgeAssistant.test.tsx",
-              "sha256": "59bd1c173041596b7a852214dd4f9402d6081417dc752418b0db333ae4252438"
+              "sha256": "3c4963075530a07dd3381b13a0827c9a135102e9de29247b72732db34d9895f8"
             },
             {
               "path": "apps/web/src/components/PublicKnowledgeAssistant.tsx",
-              "sha256": "50783bf5cdbd92b61ee78286a4ed71bb515e69bc73785c23c9457ea117454669"
+              "sha256": "bc483e6aabcc5cac56a0c0b3a02cf822cb8c377bc91d98f7744d7d94a52b7794"
             },
             {
               "path": "apps/web/src/components/ResponseMetadataPanel.tsx",
@@ -664017,11 +664019,11 @@
             },
             {
               "path": "apps/web/src/components/PublicKnowledgeAssistant.test.tsx",
-              "sha256": "59bd1c173041596b7a852214dd4f9402d6081417dc752418b0db333ae4252438"
+              "sha256": "3c4963075530a07dd3381b13a0827c9a135102e9de29247b72732db34d9895f8"
             },
             {
               "path": "apps/web/src/components/PublicKnowledgeAssistant.tsx",
-              "sha256": "50783bf5cdbd92b61ee78286a4ed71bb515e69bc73785c23c9457ea117454669"
+              "sha256": "bc483e6aabcc5cac56a0c0b3a02cf822cb8c377bc91d98f7744d7d94a52b7794"
             },
             {
               "path": "apps/web/src/components/ResponseMetadataPanel.tsx",
@@ -664697,11 +664699,11 @@
             },
             {
               "path": "apps/web/src/components/PublicKnowledgeAssistant.test.tsx",
-              "sha256": "59bd1c173041596b7a852214dd4f9402d6081417dc752418b0db333ae4252438"
+              "sha256": "3c4963075530a07dd3381b13a0827c9a135102e9de29247b72732db34d9895f8"
             },
             {
               "path": "apps/web/src/components/PublicKnowledgeAssistant.tsx",
-              "sha256": "50783bf5cdbd92b61ee78286a4ed71bb515e69bc73785c23c9457ea117454669"
+              "sha256": "bc483e6aabcc5cac56a0c0b3a02cf822cb8c377bc91d98f7744d7d94a52b7794"
             },
             {
               "path": "apps/web/src/components/ResponseMetadataPanel.tsx",
@@ -665377,11 +665379,11 @@
             },
             {
               "path": "apps/web/src/components/PublicKnowledgeAssistant.test.tsx",
-              "sha256": "59bd1c173041596b7a852214dd4f9402d6081417dc752418b0db333ae4252438"
+              "sha256": "3c4963075530a07dd3381b13a0827c9a135102e9de29247b72732db34d9895f8"
             },
             {
               "path": "apps/web/src/components/PublicKnowledgeAssistant.tsx",
-              "sha256": "50783bf5cdbd92b61ee78286a4ed71bb515e69bc73785c23c9457ea117454669"
+              "sha256": "bc483e6aabcc5cac56a0c0b3a02cf822cb8c377bc91d98f7744d7d94a52b7794"
             },
             {
               "path": "apps/web/src/components/ResponseMetadataPanel.tsx",
@@ -717221,7 +717223,7 @@
             },
             {
               "path": "apps/web/e2e/public-knowledge.spec.ts",
-              "sha256": "14e1f32835537db60c4ef1be7dc87312340567f38c37575781a79dfe09884716"
+              "sha256": "f39c8f0c1cff73d8c04593385a2d4f5d57223e6e9046edfa398da769bfab9a83"
             },
             {
               "path": "apps/web/e2e/sms-provider-settings.spec.ts",
@@ -717397,11 +717399,11 @@
             },
             {
               "path": "apps/web/src/components/PublicKnowledgeAssistant.test.tsx",
-              "sha256": "59bd1c173041596b7a852214dd4f9402d6081417dc752418b0db333ae4252438"
+              "sha256": "3c4963075530a07dd3381b13a0827c9a135102e9de29247b72732db34d9895f8"
             },
             {
               "path": "apps/web/src/components/PublicKnowledgeAssistant.tsx",
-              "sha256": "50783bf5cdbd92b61ee78286a4ed71bb515e69bc73785c23c9457ea117454669"
+              "sha256": "bc483e6aabcc5cac56a0c0b3a02cf822cb8c377bc91d98f7744d7d94a52b7794"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
@@ -723733,7 +723735,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Supported themes and conditional control contrast retain their evidence. Conversation identity recovery, consent preservation and field feedback now have customer and staff evidence. Transient saving notice visibility, wider conditional form semantics, verified command feedback, bespoke recovery and live policy gates remain open."
+        "Supported themes, conditional control contrast and conversation identity retain their evidence. The public knowledge guide has bilingual production browser evidence for required state and recovery after a stalled answer. The staff form shares that implementation and has focused unit evidence. Transient saving notice visibility, wider conditional form semantics, verified command feedback, bespoke recovery and live policy gates remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -723836,7 +723838,8 @@
           "release-0.5-remaining-contrast",
           "release-0.5-order-notice-placement",
           "release-0.5-conditional-control-contrast",
-          "release-0.5-identity-recovery"
+          "release-0.5-identity-recovery",
+          "release-0.5-knowledge-question-recovery"
         ]
       }
     },
@@ -724276,7 +724279,7 @@
             },
             {
               "path": "apps/web/src/components/PublicKnowledgeAssistant.tsx",
-              "sha256": "50783bf5cdbd92b61ee78286a4ed71bb515e69bc73785c23c9457ea117454669"
+              "sha256": "bc483e6aabcc5cac56a0c0b3a02cf822cb8c377bc91d98f7744d7d94a52b7794"
             },
             {
               "path": "apps/web/src/components/PublishedTermsHistory.tsx",
@@ -725491,7 +725494,8 @@
             "Renewed shared dialog motion, cold-auth and bundle evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-remaining-contrast/proof.json",
             "Renewed order notice placement, cold-auth and bundle evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-order-notice-placement/proof.json",
             "Renewed conditional control contrast and package performance evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-conditional-control-contrast/proof.json",
-            "Renewed identity dialog recovery and package performance evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-identity-recovery/proof.json"
+            "Renewed identity dialog recovery and package performance evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-identity-recovery/proof.json",
+            "Renewed knowledge question recovery and package performance evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-knowledge-question-recovery/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -793799,6 +793803,66 @@
       "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-identity-recovery/renewed-bindings.json",
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-identity-recovery/reviewed.patch",
       "release_disposition": "Verified bounded conversation identity uploads, saved-state recovery and field feedback. Other v0.5.0 launch-required criteria remain open."
+    },
+    "release-0.5-knowledge-question-recovery": {
+      "batch": "release-0.5-knowledge-question-recovery",
+      "base_commit": "c10da1680f887395a40c9226c9d0e2d50ce697ef",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.05.01.05",
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.05.01.05",
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/public-knowledge.spec.ts",
+          "sha256": "f39c8f0c1cff73d8c04593385a2d4f5d57223e6e9046edfa398da769bfab9a83"
+        },
+        {
+          "path": "apps/web/src/components/AssistantChatComponents.tsx",
+          "sha256": "b9401f85513103ef037b17f980034e6f34c06887ff1c45e3c2e58012e2b20405"
+        },
+        {
+          "path": "apps/web/src/components/PublicKnowledgeAssistant.test.tsx",
+          "sha256": "3c4963075530a07dd3381b13a0827c9a135102e9de29247b72732db34d9895f8"
+        },
+        {
+          "path": "apps/web/src/components/PublicKnowledgeAssistant.tsx",
+          "sha256": "bc483e6aabcc5cac56a0c0b3a02cf822cb8c377bc91d98f7744d7d94a52b7794"
+        },
+        {
+          "path": "apps/web/src/hooks/useChatRetryAfter.ts",
+          "sha256": "74df5ab812845e9f2f41183652bc0a433ff1e528a513a3ca79a82d79d80f39fb"
+        },
+        {
+          "path": "apps/web/src/lib/server-query-client.ts",
+          "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
+        },
+        {
+          "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
+          "sha256": "aac2bba202491026fca5474bea1b8f3eb64cbc0854d7626607e455037b4850ca"
+        },
+        {
+          "path": "docs/design/notification-recovery.md",
+          "sha256": "6b1ff5f50d58b95bea2b7d3be9ee21f0dd5e01188da56f14fae730010de71200"
+        }
+      ],
+      "checks": [
+        "The public and staff question fields expose required state and retain their localized label, invalid state and linked error.",
+        "A stalled question response or response body has a 300-second deadline. The form keeps the draft and returns control for an explicit retry. A late result cannot replace the current answer. Existing scope, credentials, CSRF, cooldown and answer validation checks remain in the exercised paths.",
+        "The baseline reproduced the missing required state and the stalled response body for both public and staff. The fix passed 20 unit cases, eight production browser cases in English and Persian across Chromium and Mobile Safari, four instrumented Chromium cases, eight coverage groups, 98 bundle budgets, six cold-auth checks, scoped formatting, lint and web typecheck."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-knowledge-question-recovery",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-knowledge-question-recovery/proof.json",
+      "source_scope_proof_sha256": "ac1eba01f4704151883662e259480685047a4456f21f96b8b427fec1ccd9d969",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-knowledge-question-recovery/renewed-bindings.json",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-knowledge-question-recovery/reviewed.patch",
+      "release_disposition": "Verified bounded knowledge question recovery and required field semantics. Other v0.5.0 launch criteria remain open."
     }
   },
   "historical_improvements": [
