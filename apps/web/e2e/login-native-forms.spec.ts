@@ -4,6 +4,8 @@ import { test, expect } from './coverage-fixture';
 import { setupCatalogueForms } from './catalogue-form-fixture';
 import { mockPublicAuthCsrf } from './public-auth-fixture';
 import { loginFormText } from '@barghsa/i18n/login-forms';
+import { t } from '@barghsa/i18n/auth';
+import { publicShellText } from '@barghsa/i18n/public-shell';
 type Locale = 'en' | 'fa';
 const id = '00000000-0000-4000-8000-000000000001';
 const secret = [' old synthetic ', 'credential '].join('');
@@ -173,6 +175,17 @@ for (const locale of ['en', 'fa'] as const) {
     await submit(page);
     await expect(page.locator('#password')).toHaveValue('');
     await expect(page.locator('#username')).toHaveValue(' Draft@Example.test ');
+    const language = page.getByRole('button', { name: publicShellText('language', locale) });
+    const notice = page
+      .locator('[data-sonner-toast][data-visible="true"]')
+      .filter({ hasText: t('auth.login.passwordChanged', locale) });
+    await expect(notice).toBeVisible();
+    await expect
+      .poll(async () => {
+        const [control, toast] = await Promise.all([language.boundingBox(), notice.boundingBox()]);
+        return control && toast ? toast.y - (control.y + control.height) : 0;
+      })
+      .toBeGreaterThanOrEqual(15.5);
     state.mode = 'otp';
     await page.locator('#password').fill(secret);
     await submit(page);

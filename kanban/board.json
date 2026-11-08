@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-08T04:05:41+00:00",
-  "source_commit": "2443529d476bbda7836fe67e628b0f0b763d5f5a",
+  "updated": "2026-11-08T04:16:55+00:00",
+  "source_commit": "7382fb588bcd4f867e75a3a2d6da5835fc195bca",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -14537,7 +14537,7 @@
             },
             {
               "path": "apps/web/src/components/AuthLayout.tsx",
-              "sha256": "239bf12cf347f964fc06eadce2d93a08fb189f5e405a65f16a16002a2c7c731c"
+              "sha256": "e8e1a436a60e745ca80c603fb7bb8f2c553db06956b32783175d0aa9a47192bd"
             },
             {
               "path": "apps/web/src/routes/registration-native-forms.test.tsx",
@@ -15153,7 +15153,7 @@
             },
             {
               "path": "apps/web/src/components/AuthLayout.tsx",
-              "sha256": "239bf12cf347f964fc06eadce2d93a08fb189f5e405a65f16a16002a2c7c731c"
+              "sha256": "e8e1a436a60e745ca80c603fb7bb8f2c553db06956b32783175d0aa9a47192bd"
             },
             {
               "path": "apps/web/src/routes/registration-native-forms.test.tsx",
@@ -15895,7 +15895,7 @@
             },
             {
               "path": "apps/web/src/components/AuthLayout.tsx",
-              "sha256": "239bf12cf347f964fc06eadce2d93a08fb189f5e405a65f16a16002a2c7c731c"
+              "sha256": "e8e1a436a60e745ca80c603fb7bb8f2c553db06956b32783175d0aa9a47192bd"
             },
             {
               "path": "apps/web/src/routes/registration-native-forms.test.tsx",
@@ -16502,7 +16502,7 @@
             },
             {
               "path": "apps/web/src/components/AuthLayout.tsx",
-              "sha256": "239bf12cf347f964fc06eadce2d93a08fb189f5e405a65f16a16002a2c7c731c"
+              "sha256": "e8e1a436a60e745ca80c603fb7bb8f2c553db06956b32783175d0aa9a47192bd"
             },
             {
               "path": "apps/web/src/routes/registration-native-forms.test.tsx",
@@ -17123,7 +17123,7 @@
             },
             {
               "path": "apps/web/src/components/AuthLayout.tsx",
-              "sha256": "239bf12cf347f964fc06eadce2d93a08fb189f5e405a65f16a16002a2c7c731c"
+              "sha256": "e8e1a436a60e745ca80c603fb7bb8f2c553db06956b32783175d0aa9a47192bd"
             },
             {
               "path": "apps/web/src/routes/registration-native-forms.test.tsx",
@@ -17745,7 +17745,7 @@
             },
             {
               "path": "apps/web/src/components/AuthLayout.tsx",
-              "sha256": "239bf12cf347f964fc06eadce2d93a08fb189f5e405a65f16a16002a2c7c731c"
+              "sha256": "e8e1a436a60e745ca80c603fb7bb8f2c553db06956b32783175d0aa9a47192bd"
             },
             {
               "path": "apps/web/src/routes/registration-native-forms.test.tsx",
@@ -18366,7 +18366,7 @@
             },
             {
               "path": "apps/web/src/components/AuthLayout.tsx",
-              "sha256": "239bf12cf347f964fc06eadce2d93a08fb189f5e405a65f16a16002a2c7c731c"
+              "sha256": "e8e1a436a60e745ca80c603fb7bb8f2c553db06956b32783175d0aa9a47192bd"
             },
             {
               "path": "apps/web/src/routes/registration-native-forms.test.tsx",
@@ -18991,7 +18991,7 @@
             },
             {
               "path": "apps/web/src/components/AuthLayout.tsx",
-              "sha256": "239bf12cf347f964fc06eadce2d93a08fb189f5e405a65f16a16002a2c7c731c"
+              "sha256": "e8e1a436a60e745ca80c603fb7bb8f2c553db06956b32783175d0aa9a47192bd"
             },
             {
               "path": "apps/web/src/routes/registration-native-forms.test.tsx",
@@ -19647,7 +19647,7 @@
             },
             {
               "path": "apps/web/src/components/AuthLayout.tsx",
-              "sha256": "239bf12cf347f964fc06eadce2d93a08fb189f5e405a65f16a16002a2c7c731c"
+              "sha256": "e8e1a436a60e745ca80c603fb7bb8f2c553db06956b32783175d0aa9a47192bd"
             },
             {
               "path": "apps/web/src/components/PasswordField.tsx",
@@ -29181,7 +29181,7 @@
             },
             {
               "path": "apps/web/src/components/AuthLayout.tsx",
-              "sha256": "239bf12cf347f964fc06eadce2d93a08fb189f5e405a65f16a16002a2c7c731c"
+              "sha256": "e8e1a436a60e745ca80c603fb7bb8f2c553db06956b32783175d0aa9a47192bd"
             },
             {
               "path": "apps/web/src/lib/auth-errors.ts",
@@ -63056,7 +63056,7 @@
             },
             {
               "path": "apps/web/src/components/AuthLayout.tsx",
-              "sha256": "239bf12cf347f964fc06eadce2d93a08fb189f5e405a65f16a16002a2c7c731c"
+              "sha256": "e8e1a436a60e745ca80c603fb7bb8f2c553db06956b32783175d0aa9a47192bd"
             },
             {
               "path": "apps/web/src/components/BrandedEmailPreview.tsx",
@@ -493101,7 +493101,7 @@
             },
             {
               "path": "apps/web/e2e/login-native-forms.spec.ts",
-              "sha256": "50623f9c7d28b4d0e1abeb6213ba457e67c46f8d318aa4e7da80ed133950a1d3"
+              "sha256": "68e659f256012288b90ae4a8298ce7e20e2abf1c747effbe8cc015013eddf843"
             },
             {
               "path": "apps/web/e2e/registration-feature.spec.ts",
@@ -496998,7 +496998,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "06295c3583bdd44e610638c659eac2dcaa2cb417882f6b188325c30200df9cc2"
+              "sha256": "6f30e426f2db7c8ffb59194075960816a43d35c22e5ae2c6ee2001b897a81c68"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -497918,7 +497918,7 @@
             },
             {
               "path": "apps/web/e2e/login-native-forms.spec.ts",
-              "sha256": "50623f9c7d28b4d0e1abeb6213ba457e67c46f8d318aa4e7da80ed133950a1d3"
+              "sha256": "68e659f256012288b90ae4a8298ce7e20e2abf1c747effbe8cc015013eddf843"
             },
             {
               "path": "apps/web/e2e/registration-feature.spec.ts",
@@ -515090,7 +515090,7 @@
             },
             {
               "path": "apps/web/src/components/AuthLayout.tsx",
-              "sha256": "239bf12cf347f964fc06eadce2d93a08fb189f5e405a65f16a16002a2c7c731c"
+              "sha256": "e8e1a436a60e745ca80c603fb7bb8f2c553db06956b32783175d0aa9a47192bd"
             },
             {
               "path": "apps/web/src/components/OnlinePaymentReturnPanel.tsx",
@@ -516396,7 +516396,7 @@
             },
             {
               "path": "apps/web/src/components/AuthLayout.tsx",
-              "sha256": "239bf12cf347f964fc06eadce2d93a08fb189f5e405a65f16a16002a2c7c731c"
+              "sha256": "e8e1a436a60e745ca80c603fb7bb8f2c553db06956b32783175d0aa9a47192bd"
             },
             {
               "path": "apps/web/src/components/OnlinePaymentReturnPanel.tsx",
@@ -517597,7 +517597,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "The 93-route populated fixture census includes both languages, themes and contrast settings. Direct evidence also covers onboarding completion overlays, the service-targets notice and breadcrumb, the scrollable More menu and public Terms and Support gradients. Other reported overlap, clipped text and conditional control states still need review."
+        "The 93-route populated fixture census includes both languages, themes and contrast settings. Direct evidence covers onboarding, the auth language switch, service-targets notices, electricity and saving breadcrumbs, the More menu and public gradients. The staff queue and AI navigation text measurements reached the contrast thresholds after scrolling. The upload-policy dialog title and description also passed. Remaining clipped text and conditional control states outside these measured cases need review."
       ],
       "owner": null,
       "depends_on": [],
@@ -517624,7 +517624,8 @@
           "release-0.5-otp-and-saving-contrast",
           "release-0.5-current-contrast",
           "release-0.5-contrast-mode-closure",
-          "release-0.5-contrast-occlusion"
+          "release-0.5-contrast-occlusion",
+          "release-0.5-reveal-clipped-text"
         ],
         "current_acceptance": null
       }
@@ -518905,7 +518906,7 @@
             },
             {
               "path": "apps/web/src/components/AuthLayout.tsx",
-              "sha256": "239bf12cf347f964fc06eadce2d93a08fb189f5e405a65f16a16002a2c7c731c"
+              "sha256": "e8e1a436a60e745ca80c603fb7bb8f2c553db06956b32783175d0aa9a47192bd"
             },
             {
               "path": "apps/web/src/components/MaintenanceNotice.tsx",
@@ -519733,7 +519734,7 @@
             },
             {
               "path": "apps/web/src/components/AuthLayout.tsx",
-              "sha256": "239bf12cf347f964fc06eadce2d93a08fb189f5e405a65f16a16002a2c7c731c"
+              "sha256": "e8e1a436a60e745ca80c603fb7bb8f2c553db06956b32783175d0aa9a47192bd"
             },
             {
               "path": "apps/web/src/components/MaintenanceNotice.tsx",
@@ -521061,7 +521062,7 @@
             },
             {
               "path": "apps/web/src/components/AuthLayout.tsx",
-              "sha256": "239bf12cf347f964fc06eadce2d93a08fb189f5e405a65f16a16002a2c7c731c"
+              "sha256": "e8e1a436a60e745ca80c603fb7bb8f2c553db06956b32783175d0aa9a47192bd"
             },
             {
               "path": "apps/web/src/components/MaintenanceNotice.tsx",
@@ -565858,7 +565859,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "06295c3583bdd44e610638c659eac2dcaa2cb417882f6b188325c30200df9cc2"
+              "sha256": "6f30e426f2db7c8ffb59194075960816a43d35c22e5ae2c6ee2001b897a81c68"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -567752,7 +567753,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "06295c3583bdd44e610638c659eac2dcaa2cb417882f6b188325c30200df9cc2"
+              "sha256": "6f30e426f2db7c8ffb59194075960816a43d35c22e5ae2c6ee2001b897a81c68"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -569701,7 +569702,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "06295c3583bdd44e610638c659eac2dcaa2cb417882f6b188325c30200df9cc2"
+              "sha256": "6f30e426f2db7c8ffb59194075960816a43d35c22e5ae2c6ee2001b897a81c68"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -571595,7 +571596,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "06295c3583bdd44e610638c659eac2dcaa2cb417882f6b188325c30200df9cc2"
+              "sha256": "6f30e426f2db7c8ffb59194075960816a43d35c22e5ae2c6ee2001b897a81c68"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -573489,7 +573490,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "06295c3583bdd44e610638c659eac2dcaa2cb417882f6b188325c30200df9cc2"
+              "sha256": "6f30e426f2db7c8ffb59194075960816a43d35c22e5ae2c6ee2001b897a81c68"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -575383,7 +575384,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "06295c3583bdd44e610638c659eac2dcaa2cb417882f6b188325c30200df9cc2"
+              "sha256": "6f30e426f2db7c8ffb59194075960816a43d35c22e5ae2c6ee2001b897a81c68"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -577277,7 +577278,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "06295c3583bdd44e610638c659eac2dcaa2cb417882f6b188325c30200df9cc2"
+              "sha256": "6f30e426f2db7c8ffb59194075960816a43d35c22e5ae2c6ee2001b897a81c68"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -579171,7 +579172,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "06295c3583bdd44e610638c659eac2dcaa2cb417882f6b188325c30200df9cc2"
+              "sha256": "6f30e426f2db7c8ffb59194075960816a43d35c22e5ae2c6ee2001b897a81c68"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -581065,7 +581066,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "06295c3583bdd44e610638c659eac2dcaa2cb417882f6b188325c30200df9cc2"
+              "sha256": "6f30e426f2db7c8ffb59194075960816a43d35c22e5ae2c6ee2001b897a81c68"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -582959,7 +582960,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "06295c3583bdd44e610638c659eac2dcaa2cb417882f6b188325c30200df9cc2"
+              "sha256": "6f30e426f2db7c8ffb59194075960816a43d35c22e5ae2c6ee2001b897a81c68"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -584853,7 +584854,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "06295c3583bdd44e610638c659eac2dcaa2cb417882f6b188325c30200df9cc2"
+              "sha256": "6f30e426f2db7c8ffb59194075960816a43d35c22e5ae2c6ee2001b897a81c68"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -586747,7 +586748,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "06295c3583bdd44e610638c659eac2dcaa2cb417882f6b188325c30200df9cc2"
+              "sha256": "6f30e426f2db7c8ffb59194075960816a43d35c22e5ae2c6ee2001b897a81c68"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -588641,7 +588642,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "06295c3583bdd44e610638c659eac2dcaa2cb417882f6b188325c30200df9cc2"
+              "sha256": "6f30e426f2db7c8ffb59194075960816a43d35c22e5ae2c6ee2001b897a81c68"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -589904,7 +589905,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "06295c3583bdd44e610638c659eac2dcaa2cb417882f6b188325c30200df9cc2"
+              "sha256": "6f30e426f2db7c8ffb59194075960816a43d35c22e5ae2c6ee2001b897a81c68"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -591274,7 +591275,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "06295c3583bdd44e610638c659eac2dcaa2cb417882f6b188325c30200df9cc2"
+              "sha256": "6f30e426f2db7c8ffb59194075960816a43d35c22e5ae2c6ee2001b897a81c68"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -593168,7 +593169,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "06295c3583bdd44e610638c659eac2dcaa2cb417882f6b188325c30200df9cc2"
+              "sha256": "6f30e426f2db7c8ffb59194075960816a43d35c22e5ae2c6ee2001b897a81c68"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -606943,7 +606944,7 @@
             },
             {
               "path": "apps/web/e2e/login-native-forms.spec.ts",
-              "sha256": "50623f9c7d28b4d0e1abeb6213ba457e67c46f8d318aa4e7da80ed133950a1d3"
+              "sha256": "68e659f256012288b90ae4a8298ce7e20e2abf1c747effbe8cc015013eddf843"
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
@@ -606999,7 +607000,7 @@
             },
             {
               "path": "apps/web/src/components/AuthLayout.tsx",
-              "sha256": "239bf12cf347f964fc06eadce2d93a08fb189f5e405a65f16a16002a2c7c731c"
+              "sha256": "e8e1a436a60e745ca80c603fb7bb8f2c553db06956b32783175d0aa9a47192bd"
             },
             {
               "path": "apps/web/src/components/BrandMark.tsx",
@@ -607770,7 +607771,7 @@
             },
             {
               "path": "apps/web/e2e/login-native-forms.spec.ts",
-              "sha256": "50623f9c7d28b4d0e1abeb6213ba457e67c46f8d318aa4e7da80ed133950a1d3"
+              "sha256": "68e659f256012288b90ae4a8298ce7e20e2abf1c747effbe8cc015013eddf843"
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
@@ -607826,7 +607827,7 @@
             },
             {
               "path": "apps/web/src/components/AuthLayout.tsx",
-              "sha256": "239bf12cf347f964fc06eadce2d93a08fb189f5e405a65f16a16002a2c7c731c"
+              "sha256": "e8e1a436a60e745ca80c603fb7bb8f2c553db06956b32783175d0aa9a47192bd"
             },
             {
               "path": "apps/web/src/components/BrandMark.tsx",
@@ -608597,7 +608598,7 @@
             },
             {
               "path": "apps/web/e2e/login-native-forms.spec.ts",
-              "sha256": "50623f9c7d28b4d0e1abeb6213ba457e67c46f8d318aa4e7da80ed133950a1d3"
+              "sha256": "68e659f256012288b90ae4a8298ce7e20e2abf1c747effbe8cc015013eddf843"
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
@@ -608653,7 +608654,7 @@
             },
             {
               "path": "apps/web/src/components/AuthLayout.tsx",
-              "sha256": "239bf12cf347f964fc06eadce2d93a08fb189f5e405a65f16a16002a2c7c731c"
+              "sha256": "e8e1a436a60e745ca80c603fb7bb8f2c553db06956b32783175d0aa9a47192bd"
             },
             {
               "path": "apps/web/src/components/BrandMark.tsx",
@@ -609424,7 +609425,7 @@
             },
             {
               "path": "apps/web/e2e/login-native-forms.spec.ts",
-              "sha256": "50623f9c7d28b4d0e1abeb6213ba457e67c46f8d318aa4e7da80ed133950a1d3"
+              "sha256": "68e659f256012288b90ae4a8298ce7e20e2abf1c747effbe8cc015013eddf843"
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
@@ -609480,7 +609481,7 @@
             },
             {
               "path": "apps/web/src/components/AuthLayout.tsx",
-              "sha256": "239bf12cf347f964fc06eadce2d93a08fb189f5e405a65f16a16002a2c7c731c"
+              "sha256": "e8e1a436a60e745ca80c603fb7bb8f2c553db06956b32783175d0aa9a47192bd"
             },
             {
               "path": "apps/web/src/components/BrandMark.tsx",
@@ -610251,7 +610252,7 @@
             },
             {
               "path": "apps/web/e2e/login-native-forms.spec.ts",
-              "sha256": "50623f9c7d28b4d0e1abeb6213ba457e67c46f8d318aa4e7da80ed133950a1d3"
+              "sha256": "68e659f256012288b90ae4a8298ce7e20e2abf1c747effbe8cc015013eddf843"
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
@@ -610307,7 +610308,7 @@
             },
             {
               "path": "apps/web/src/components/AuthLayout.tsx",
-              "sha256": "239bf12cf347f964fc06eadce2d93a08fb189f5e405a65f16a16002a2c7c731c"
+              "sha256": "e8e1a436a60e745ca80c603fb7bb8f2c553db06956b32783175d0aa9a47192bd"
             },
             {
               "path": "apps/web/src/components/BrandMark.tsx",
@@ -623060,7 +623061,7 @@
             },
             {
               "path": "apps/web/e2e/login-native-forms.spec.ts",
-              "sha256": "50623f9c7d28b4d0e1abeb6213ba457e67c46f8d318aa4e7da80ed133950a1d3"
+              "sha256": "68e659f256012288b90ae4a8298ce7e20e2abf1c747effbe8cc015013eddf843"
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
@@ -623116,7 +623117,7 @@
             },
             {
               "path": "apps/web/src/components/AuthLayout.tsx",
-              "sha256": "239bf12cf347f964fc06eadce2d93a08fb189f5e405a65f16a16002a2c7c731c"
+              "sha256": "e8e1a436a60e745ca80c603fb7bb8f2c553db06956b32783175d0aa9a47192bd"
             },
             {
               "path": "apps/web/src/components/BrandMark.tsx",
@@ -623887,7 +623888,7 @@
             },
             {
               "path": "apps/web/e2e/login-native-forms.spec.ts",
-              "sha256": "50623f9c7d28b4d0e1abeb6213ba457e67c46f8d318aa4e7da80ed133950a1d3"
+              "sha256": "68e659f256012288b90ae4a8298ce7e20e2abf1c747effbe8cc015013eddf843"
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
@@ -623943,7 +623944,7 @@
             },
             {
               "path": "apps/web/src/components/AuthLayout.tsx",
-              "sha256": "239bf12cf347f964fc06eadce2d93a08fb189f5e405a65f16a16002a2c7c731c"
+              "sha256": "e8e1a436a60e745ca80c603fb7bb8f2c553db06956b32783175d0aa9a47192bd"
             },
             {
               "path": "apps/web/src/components/BrandMark.tsx",
@@ -624714,7 +624715,7 @@
             },
             {
               "path": "apps/web/e2e/login-native-forms.spec.ts",
-              "sha256": "50623f9c7d28b4d0e1abeb6213ba457e67c46f8d318aa4e7da80ed133950a1d3"
+              "sha256": "68e659f256012288b90ae4a8298ce7e20e2abf1c747effbe8cc015013eddf843"
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
@@ -624770,7 +624771,7 @@
             },
             {
               "path": "apps/web/src/components/AuthLayout.tsx",
-              "sha256": "239bf12cf347f964fc06eadce2d93a08fb189f5e405a65f16a16002a2c7c731c"
+              "sha256": "e8e1a436a60e745ca80c603fb7bb8f2c553db06956b32783175d0aa9a47192bd"
             },
             {
               "path": "apps/web/src/components/BrandMark.tsx",
@@ -625541,7 +625542,7 @@
             },
             {
               "path": "apps/web/e2e/login-native-forms.spec.ts",
-              "sha256": "50623f9c7d28b4d0e1abeb6213ba457e67c46f8d318aa4e7da80ed133950a1d3"
+              "sha256": "68e659f256012288b90ae4a8298ce7e20e2abf1c747effbe8cc015013eddf843"
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
@@ -625597,7 +625598,7 @@
             },
             {
               "path": "apps/web/src/components/AuthLayout.tsx",
-              "sha256": "239bf12cf347f964fc06eadce2d93a08fb189f5e405a65f16a16002a2c7c731c"
+              "sha256": "e8e1a436a60e745ca80c603fb7bb8f2c553db06956b32783175d0aa9a47192bd"
             },
             {
               "path": "apps/web/src/components/BrandMark.tsx",
@@ -626368,7 +626369,7 @@
             },
             {
               "path": "apps/web/e2e/login-native-forms.spec.ts",
-              "sha256": "50623f9c7d28b4d0e1abeb6213ba457e67c46f8d318aa4e7da80ed133950a1d3"
+              "sha256": "68e659f256012288b90ae4a8298ce7e20e2abf1c747effbe8cc015013eddf843"
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
@@ -626424,7 +626425,7 @@
             },
             {
               "path": "apps/web/src/components/AuthLayout.tsx",
-              "sha256": "239bf12cf347f964fc06eadce2d93a08fb189f5e405a65f16a16002a2c7c731c"
+              "sha256": "e8e1a436a60e745ca80c603fb7bb8f2c553db06956b32783175d0aa9a47192bd"
             },
             {
               "path": "apps/web/src/components/BrandMark.tsx",
@@ -627195,7 +627196,7 @@
             },
             {
               "path": "apps/web/e2e/login-native-forms.spec.ts",
-              "sha256": "50623f9c7d28b4d0e1abeb6213ba457e67c46f8d318aa4e7da80ed133950a1d3"
+              "sha256": "68e659f256012288b90ae4a8298ce7e20e2abf1c747effbe8cc015013eddf843"
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
@@ -627251,7 +627252,7 @@
             },
             {
               "path": "apps/web/src/components/AuthLayout.tsx",
-              "sha256": "239bf12cf347f964fc06eadce2d93a08fb189f5e405a65f16a16002a2c7c731c"
+              "sha256": "e8e1a436a60e745ca80c603fb7bb8f2c553db06956b32783175d0aa9a47192bd"
             },
             {
               "path": "apps/web/src/components/BrandMark.tsx",
@@ -628022,7 +628023,7 @@
             },
             {
               "path": "apps/web/e2e/login-native-forms.spec.ts",
-              "sha256": "50623f9c7d28b4d0e1abeb6213ba457e67c46f8d318aa4e7da80ed133950a1d3"
+              "sha256": "68e659f256012288b90ae4a8298ce7e20e2abf1c747effbe8cc015013eddf843"
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
@@ -628078,7 +628079,7 @@
             },
             {
               "path": "apps/web/src/components/AuthLayout.tsx",
-              "sha256": "239bf12cf347f964fc06eadce2d93a08fb189f5e405a65f16a16002a2c7c731c"
+              "sha256": "e8e1a436a60e745ca80c603fb7bb8f2c553db06956b32783175d0aa9a47192bd"
             },
             {
               "path": "apps/web/src/components/BrandMark.tsx",
@@ -628849,7 +628850,7 @@
             },
             {
               "path": "apps/web/e2e/login-native-forms.spec.ts",
-              "sha256": "50623f9c7d28b4d0e1abeb6213ba457e67c46f8d318aa4e7da80ed133950a1d3"
+              "sha256": "68e659f256012288b90ae4a8298ce7e20e2abf1c747effbe8cc015013eddf843"
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
@@ -628905,7 +628906,7 @@
             },
             {
               "path": "apps/web/src/components/AuthLayout.tsx",
-              "sha256": "239bf12cf347f964fc06eadce2d93a08fb189f5e405a65f16a16002a2c7c731c"
+              "sha256": "e8e1a436a60e745ca80c603fb7bb8f2c553db06956b32783175d0aa9a47192bd"
             },
             {
               "path": "apps/web/src/components/BrandMark.tsx",
@@ -629676,7 +629677,7 @@
             },
             {
               "path": "apps/web/e2e/login-native-forms.spec.ts",
-              "sha256": "50623f9c7d28b4d0e1abeb6213ba457e67c46f8d318aa4e7da80ed133950a1d3"
+              "sha256": "68e659f256012288b90ae4a8298ce7e20e2abf1c747effbe8cc015013eddf843"
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
@@ -629732,7 +629733,7 @@
             },
             {
               "path": "apps/web/src/components/AuthLayout.tsx",
-              "sha256": "239bf12cf347f964fc06eadce2d93a08fb189f5e405a65f16a16002a2c7c731c"
+              "sha256": "e8e1a436a60e745ca80c603fb7bb8f2c553db06956b32783175d0aa9a47192bd"
             },
             {
               "path": "apps/web/src/components/BrandMark.tsx",
@@ -630503,7 +630504,7 @@
             },
             {
               "path": "apps/web/e2e/login-native-forms.spec.ts",
-              "sha256": "50623f9c7d28b4d0e1abeb6213ba457e67c46f8d318aa4e7da80ed133950a1d3"
+              "sha256": "68e659f256012288b90ae4a8298ce7e20e2abf1c747effbe8cc015013eddf843"
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
@@ -630559,7 +630560,7 @@
             },
             {
               "path": "apps/web/src/components/AuthLayout.tsx",
-              "sha256": "239bf12cf347f964fc06eadce2d93a08fb189f5e405a65f16a16002a2c7c731c"
+              "sha256": "e8e1a436a60e745ca80c603fb7bb8f2c553db06956b32783175d0aa9a47192bd"
             },
             {
               "path": "apps/web/src/components/BrandMark.tsx",
@@ -631330,7 +631331,7 @@
             },
             {
               "path": "apps/web/e2e/login-native-forms.spec.ts",
-              "sha256": "50623f9c7d28b4d0e1abeb6213ba457e67c46f8d318aa4e7da80ed133950a1d3"
+              "sha256": "68e659f256012288b90ae4a8298ce7e20e2abf1c747effbe8cc015013eddf843"
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
@@ -631386,7 +631387,7 @@
             },
             {
               "path": "apps/web/src/components/AuthLayout.tsx",
-              "sha256": "239bf12cf347f964fc06eadce2d93a08fb189f5e405a65f16a16002a2c7c731c"
+              "sha256": "e8e1a436a60e745ca80c603fb7bb8f2c553db06956b32783175d0aa9a47192bd"
             },
             {
               "path": "apps/web/src/components/BrandMark.tsx",
@@ -632157,7 +632158,7 @@
             },
             {
               "path": "apps/web/e2e/login-native-forms.spec.ts",
-              "sha256": "50623f9c7d28b4d0e1abeb6213ba457e67c46f8d318aa4e7da80ed133950a1d3"
+              "sha256": "68e659f256012288b90ae4a8298ce7e20e2abf1c747effbe8cc015013eddf843"
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
@@ -632213,7 +632214,7 @@
             },
             {
               "path": "apps/web/src/components/AuthLayout.tsx",
-              "sha256": "239bf12cf347f964fc06eadce2d93a08fb189f5e405a65f16a16002a2c7c731c"
+              "sha256": "e8e1a436a60e745ca80c603fb7bb8f2c553db06956b32783175d0aa9a47192bd"
             },
             {
               "path": "apps/web/src/components/BrandMark.tsx",
@@ -723623,7 +723624,7 @@
       "release": "0.5.0",
       "launch_required": true,
       "remaining": [
-        "Existing forms, wallet, staff knowledge search, notifications, export and guide recovery retain evidence. The populated contrast census, onboarding overlay checks, notice placement, the More menu and public headings have direct evidence. Remaining contrast observations and broader conditional UI adoption stay open."
+        "Existing forms, wallet, staff knowledge search, notifications, export and guide recovery retain evidence. The auth language switch remains usable during the verified password-change notice. The affected staff headings, electricity and saving breadcrumbs and upload-policy dialog have direct contrast evidence. Remaining contrast observations and broader conditional UI adoption stay open."
       ],
       "owner": null,
       "depends_on": [],
@@ -723721,7 +723722,8 @@
           "release-0.5-schema-form-census",
           "release-0.5-current-contrast",
           "release-0.5-contrast-mode-closure",
-          "release-0.5-contrast-occlusion"
+          "release-0.5-contrast-occlusion",
+          "release-0.5-reveal-clipped-text"
         ]
       }
     },
@@ -723861,7 +723863,7 @@
             },
             {
               "path": "apps/web/src/components/AuthLayout.tsx",
-              "sha256": "239bf12cf347f964fc06eadce2d93a08fb189f5e405a65f16a16002a2c7c731c"
+              "sha256": "e8e1a436a60e745ca80c603fb7bb8f2c553db06956b32783175d0aa9a47192bd"
             },
             {
               "path": "apps/web/src/components/BankReceiptFinancialReview.tsx",
@@ -725359,7 +725361,8 @@
             "Customer guide answer deadlines passed current production, coverage and bundle checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-assistant-stream-deadlines/proof.json",
             "Saved-address, maintenance and reconciliation form semantics passed current production, coverage and bundle checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-schema-form-census/proof.json",
             "Renewed production contrast and verified settings feedback checks. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-contrast-mode-closure/proof.json",
-            "Renewed onboarding, navigation and feedback browser and performance evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-contrast-occlusion/proof.json"
+            "Renewed onboarding, navigation and feedback browser and performance evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-contrast-occlusion/proof.json",
+            "Renewed auth layout transfer, bundle and browser evidence. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-reveal-clipped-text/proof.json"
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -793340,6 +793343,45 @@
       "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-contrast-occlusion/renewed-bindings.json",
       "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-contrast-occlusion/reviewed.patch",
       "release_disposition": "Verified the onboarding and service-targets overlap fixes and measured the More menu and public headings. Other v0.5.0 acceptance criteria remain open."
+    },
+    "release-0.5-reveal-clipped-text": {
+      "batch": "release-0.5-reveal-clipped-text",
+      "base_commit": "7382fb588bcd4f867e75a3a2d6da5835fc195bca",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.05.01.08",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "partial_task_keys": [
+        "07-ui-ux-design.md#T-07.05.01.08",
+        "release-readiness#R-04.01"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/login-native-forms.spec.ts",
+          "sha256": "68e659f256012288b90ae4a8298ce7e20e2abf1c747effbe8cc015013eddf843"
+        },
+        {
+          "path": "apps/web/src/components/AuthLayout.tsx",
+          "sha256": "e8e1a436a60e745ca80c603fb7bb8f2c553db06956b32783175d0aa9a47192bd"
+        },
+        {
+          "path": "docs/design/notification-recovery.md",
+          "sha256": "6f30e426f2db7c8ffb59194075960816a43d35c22e5ae2c6ee2001b897a81c68"
+        }
+      ],
+      "checks": [
+        "The original login journey showed the password-change notice covering the language switch. The new regression measured a negative 52-pixel gap before the fix. The shared auth toolbar now anchors notices below the switch. The same test checks at least 15.5 pixels of separation in English and Persian on Chromium and Mobile Safari.",
+        "25 production Chromium fixture replays checked reported overlaps on login, saving and electricity, along with clipped staff headings and navigation. 468 text states met their contrast threshold after scrolling into view. Across all 512 measured text states the minimum was 4.8803:1. Missing or hidden selector states were excluded from measured passes.",
+        "The upload-policy dialog title and description were located by their active accessibility relationships. 32 measurements passed in both browsers, languages and themes with a minimum of 5.3129:1.",
+        "28 production browser cases, 10 instrumented Chromium cases, 47 related unit cases, eight source-bound coverage groups, 98 bundle budgets, six fresh cold-auth measurements, scoped formatting, lint and web typecheck passed."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-reveal-clipped-text",
+      "source_scope_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-reveal-clipped-text/proof.json",
+      "source_scope_proof_sha256": "8353a04e86fcc2cac1b70055f2dfca15304f267801a49c969477d78d0e322608",
+      "source_renewal_proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-reveal-clipped-text/renewed-bindings.json",
+      "review_diff": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-reveal-clipped-text/reviewed.patch",
+      "release_disposition": "Reproduced and fixed the login language switch overlap. Checked reported clipping in staff queues and AI administration and the upload dialog title and description. Other v0.5.0 acceptance criteria remain open."
     }
   },
   "historical_improvements": [

@@ -67,7 +67,7 @@ export function AuthLayout({ locale = 'fa', children, footer }: AuthLayoutProps)
         </p>
       </aside>
       <div className="flex min-w-0 flex-col">
-        <div className="flex items-center justify-end px-5 py-4 md:px-10 md:py-6">
+        <div className="flex items-center justify-end px-5 py-4 md:px-10 md:py-6" data-toast-anchor>
           <LanguageSwitcher />
         </div>
         <main

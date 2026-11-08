@@ -26,7 +26,7 @@ In electricity and saving order discussions, an explicit retry after a transport
 
 `useToast` supports localized keys or domain-localized strings, all four severities, and a promise helper. Pass a validated operation promise. Its rejection still reaches the caller; it does not retry the operation. Only the latest operation owns the persistent progress notice, and a profile-context dismissal prevents a late result from restoring old content.
 
-The Sonner host loads on demand. It uses semantic severity colors, at most three visible notices, a localized close button and direction-aware swiping. Notices appear below the current breadcrumb or onboarding heading. The topbar supplies the offset on pages without an explicit anchor, including when an account banner moves it. Notices fade in and yield while a dialog or popover is open. Financial dialogs keep their own persistent feedback and focus protocol.
+The Sonner host loads on demand. It uses semantic severity colors, at most three visible notices, a localized close button and direction-aware swiping. Notices appear below the current breadcrumb, onboarding heading or public auth language switch. The topbar supplies the offset on pages without an explicit anchor, including when an account banner moves it. Notices fade in and yield while a dialog or popover is open. Financial dialogs keep their own persistent feedback and focus protocol.
 
 ## Inbox and time
 
